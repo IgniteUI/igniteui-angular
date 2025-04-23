@@ -7,20 +7,24 @@
 }
 
 <ng-template #label>
+
     <ng-content select="[igxLabel]"></ng-content>
 </ng-template>
 
 <ng-template #uploadButton>
     @if (isFileType) {
-        <button
-                igxButton="contained"
-                type="button"
-                (click)="uploadButtonHandler()"
-                [disabled]="disabled"
-                [ngClass]="{ 'igx-input-group__upload-button': isTypeLine }"
-        >
-            {{ resourceStrings.igx_input_upload_button }}
-        </button>
+        <div class="igx-input-group__upload">
+            <button
+                    igxButton
+                    type="button"
+                    class="igx-input-group__upload-button"
+                    [disabled]="disabled"
+                    tabindex="-1"
+                    (click)="uploadButtonHandler()"
+            >
+                {{ resourceStrings.igx_input_upload_button }}
+            </button>
+        </div>
     }
 </ng-template>
 
@@ -53,22 +57,21 @@
     <div class="igx-input-group__bundle">
         <div class="igx-input-group__bundle-start">
             <ng-content select="igx-prefix, [igxPrefix]"></ng-content>
-
-            @if (isFileType) {
-                <ng-container *ngTemplateOutlet="uploadButton"></ng-container>
-            }
         </div>
+
+        @if (isFileType) {
+            <ng-container *ngTemplateOutlet="uploadButton"></ng-container>
+        }
 
         @if (isTypeBorder) {
             <div class="igx-input-group__notch">
                 <ng-container *ngTemplateOutlet="label"></ng-container>
-
             </div>
         } @else {
             <ng-container *ngTemplateOutlet="label"></ng-container>
         }
 
-        <div class="igx-input-group__bundle-main">
+        <div class="igx-input-group__bundle-main" (click)="isFileType ? uploadButtonHandler() : null">
             <ng-content select="[igxInput]"></ng-content>
 
             @if (isFileType) {

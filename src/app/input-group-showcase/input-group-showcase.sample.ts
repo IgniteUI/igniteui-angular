@@ -19,6 +19,7 @@ import {
     IgxComboComponent,
 } from 'igniteui-angular';
 import {PropertyPanelConfig, PropertyChangeService, Properties} from '../properties-panel/property-change.service';
+import {NgClass} from "@angular/common";
 
 // Define Ignite UI Web Components
 defineComponents(
@@ -43,6 +44,7 @@ defineComponents(
         IgxSelectComponent,
         IgxSelectItemComponent,
         IgxComboComponent,
+        NgClass,
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
@@ -68,7 +70,7 @@ export class InputGroupShowcaseSampleComponent {
             control: {
                 type: 'button-group',
                 options: ['box', 'border', 'line', 'search'],
-                defaultValue: ''
+                defaultValue: 'box'
             }
         },
         type: {
@@ -117,14 +119,14 @@ export class InputGroupShowcaseSampleComponent {
             }
         },
         hidePrefix: {
-            label: 'Hide Prefix',
+            label: 'Hide Prefix using (@if)',
             control: {
                 type: 'boolean',
                 defaultValue: false
             }
         },
         hideSuffix: {
-            label: 'Hide Suffix',
+            label: 'Hide Suffix using( [hidden] )',
             control: {
                 type: 'boolean',
                 defaultValue: false
@@ -224,7 +226,7 @@ export class InputGroupShowcaseSampleComponent {
     public isRequired = computed(() => !!this.properties()?.required);
     public isDisabled = computed(() => !!this.properties()?.disabled);
     public isReadonly = computed(() => !!this.properties()?.readonly);
-    public hidePrefix = computed(() => !!this.properties()?.hidePrefix);
+    public hidePrefix = computed(() => !this.properties()?.hidePrefix);
     public hideSuffix = computed(() => !!this.properties()?.hideSuffix);
 }
 

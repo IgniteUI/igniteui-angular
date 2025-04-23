@@ -18,7 +18,11 @@
             @if (getLabel()) {
                 <label igxLabel>{{ getLabel() }}</label>
             }
-            <igx-icon igxPrefix [hidden]="hidePrefix()">face</igx-icon>
+
+            @if (hidePrefix()) {
+                <igx-icon igxPrefix>face</igx-icon>
+            }
+
             <input
                 formControlName="field"
                 [type]="getNativeInputType()"
@@ -34,12 +38,16 @@
         <!-- Angular Textarea Group -->
         <igx-input-group
             #fieldTextarea
+            [ngClass]="{ 'hidden': getInputGroupType() === 'search' }"
             [type]="getInputGroupType()"
             [style.--ig-size]="getSize()">
             @if (getLabel()) {
                 <label igxLabel>{{ getLabel() }}</label>
             }
-            <igx-icon igxPrefix [hidden]="hidePrefix()">face</igx-icon>
+
+            @if (hidePrefix()) {
+                <igx-icon igxPrefix>face</igx-icon>
+            }
             <textarea
                 formControlName="fieldTextarea"
                 [readOnly]="isReadonly()"
@@ -61,7 +69,11 @@
             @if (getLabel()) {
                 <label igxLabel>{{ getLabel() }}</label>
             }
-            <igx-icon igxPrefix [hidden]="hidePrefix()">favorite</igx-icon>
+
+            @if (hidePrefix()) {
+                <igx-icon igxPrefix>favorite</igx-icon>
+            }
+
             <igx-hint>
                 I am a Hint
             </igx-hint>
@@ -92,10 +104,15 @@
             #fieldFile
             [type]="getInputGroupType()"
             [style.--ig-size]="getSize()">
+
             @if (getLabel()) {
-                <label igxLabel>{{ getLabel() }} ("No file chosen" is not an actual value)</label>
+                <label igxLabel>File</label>
             }
-            <igx-icon igxPrefix [hidden]="hidePrefix()">face</igx-icon>
+
+            @if (hidePrefix()) {
+                <igx-icon igxPrefix>face</igx-icon>
+            }
+
             <input
                 formControlName="fieldFile"
                 [required]="isRequired()"
@@ -151,7 +168,11 @@
                 [attr.placeholder]="getPlaceholder()"
                 [type]="getNativeInputType()"
                 [outlined]="isOutlined()">
-            <span slot="prefix" [hidden]="hidePrefix()"><igc-icon name="face"></igc-icon></span>
+
+            @if (hidePrefix()) {
+                <span slot="prefix"><igc-icon name="face"></igc-icon></span>
+            }
+
             <span slot="suffix" [hidden]="hideSuffix()"><igc-icon name="face"></igc-icon></span>
             <span slot="helper-text">Type your web address</span>
         </igc-input>
@@ -165,7 +186,11 @@
                 [attr.value]="getValue()"
                 [attr.placeholder]="getPlaceholder()"
                 [outlined]="isOutlined()">
-            <span slot="prefix" [hidden]="hidePrefix()"><igc-icon name="face"></igc-icon></span>
+
+            @if (hidePrefix()) {
+                <span slot="prefix"><igc-icon name="face"></igc-icon></span>
+            }
+
             <span slot="suffix" [hidden]="hideSuffix()"><igc-icon name="face"></igc-icon></span>
             <span slot="helper-text">Hint text</span>
         </igc-textarea>
@@ -177,7 +202,11 @@
             [disabled]="isDisabled()"
             [outlined]="isOutlined()"
             [style.--ig-size]="getSize()">
-            <igc-icon slot="prefix" [hidden]="hidePrefix()" name="favorite"></igc-icon>
+
+            @if (hidePrefix()) {
+                <span slot="prefix"><igc-icon name="face"></igc-icon></span>
+            }
+
             <igc-icon slot="suffix" [hidden]="hideSuffix()" name="favorite"></igc-icon>
             <span slot="helper-text">I am a Hint</span>
             <igc-select-item [value]="'Apple'" [disabled]="true">Apple</igc-select-item>
