@@ -32,16 +32,11 @@
     }
 
     $theme: digest-schema($divider-schema);
-    $meta: map.get($theme, '_meta');
 
     @return extend($theme, (
         name: $name,
         color: $color,
         inset: $inset,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme'),
-        )),
     ));
 }
 
@@ -51,7 +46,7 @@
 @mixin divider($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     %igx-divider-display {
         position: relative;
