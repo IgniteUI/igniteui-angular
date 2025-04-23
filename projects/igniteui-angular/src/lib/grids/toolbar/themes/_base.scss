@@ -1,0 +1,155 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use './light/list/tokens' as list;
+@use './light/toolbar/tokens' as toolbar;
+
+$_theme: toolbar.$base;
+$_theme-dd: list.$base;
+
+@include layer(base) {
+    @include b(igx-grid-toolbar) {
+        @include sizable();
+
+        --component-size: var(--ig-size, var(--ig-size-large));
+        position: relative;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        grid-row: 1;
+        font-size: rem(16px);
+        border-bottom: rem(1px) solid var-get($_theme, 'border-color');
+        background: var-get($_theme, 'background-color');
+        height: auto;
+        min-height: var-get($_theme, 'size');
+        padding-block: 0;
+        padding-inline-start: pad-inline(rem(12px), rem(16px), rem(24px));
+        padding-inline-end: pad-inline(rem(8px), rem(12px), rem(16px));
+
+        [igxButton] {
+            margin-inline-start: pad-inline(rem(8px), rem(12px), rem(16px));
+
+            &:first-of-type {
+                margin-inline-start: 0;
+            }
+
+            &:last-of-type {
+                margin-inline-end: 0;
+            }
+        }
+
+        &[dir='rtl'] {
+            text-align: end;
+
+            [igxButton] {
+                margin-inline-start: 0;
+                margin-inline-end: rem(8);
+
+                &:last-child {
+                    margin-inline-end: 0;
+                }
+            }
+        }
+
+        @include e(title) {
+            @include ellipsis();
+
+            color: var-get($_theme, 'title-text-color');
+            flex: 1 1 auto;
+            max-width: 40ch;
+            margin-inline-end: rem(16px);
+
+            &:empty {
+                display: none;
+            }
+
+            &:empty + .igx-grid-toolbar__custom-content:empty {
+                + igx-grid-toolbar-actions {
+                    width: 100%;
+                    margin-inline-start: 0;
+                    justify-content: flex-end;
+                }
+            }
+        }
+
+        @include e(custom-content) {
+            display: flex;
+            flex-wrap: wrap;
+            flex-grow: 1;
+            justify-content: flex-end;
+            margin-inline-end: rem(16px);
+
+            &:empty {
+                display: none;
+            }
+        }
+
+        @include e(actions) {
+            display: flex;
+            align-items: center;
+            flex-flow: row wrap;
+            margin-inline-start: auto;
+            gap: rem(16px);
+
+            > * {
+                display: flex;
+            }
+
+            &:empty {
+                display: none;
+            }
+        }
+
+        @include e(progress-bar) {
+            position: absolute;
+            width: 100%;
+            inset-inline-start: 0;
+            inset-inline-end: 0;
+            bottom: rem(-1px);
+            height: rem(2px);
+            overflow: hidden;
+            background: var-get($_theme, 'background-color');
+
+            igx-linear-bar > * {
+                border-radius: 0;
+
+                &:first-child > div {
+                    background: color($color: 'secondary');
+                }
+            }
+        }
+
+        @include e(dropdown){
+            position: relative;
+        }
+
+        @include e(dd-list){
+            list-style: none;
+            background: var-get($_theme-dd, 'dropdown-background');
+            margin: 0;
+            padding: 0;
+            box-shadow: var(--ig-elevation-8);
+        }
+
+        @include e(dd-list-items){
+            cursor: pointer;
+            position: relative;
+            padding: rem(8px) rem(16px);
+            color: var-get($_theme-dd, 'item-text-color');
+            white-space: nowrap;
+
+            &:hover {
+                background: var-get($_theme-dd, 'item-hover-background');
+                color: var-get($_theme-dd, 'item-hover-text-color');
+            }
+
+            &:focus {
+                background: var-get($_theme-dd, 'item-focus-background');
+                color: var-get($_theme-dd, 'item-focus-text-color');
+            }
+        }
+    }
+}
