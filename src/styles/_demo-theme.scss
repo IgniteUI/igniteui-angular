@@ -11,14 +11,8 @@ body {
     color: $foreground-color;
 }
 
-$custom-theme: slider-theme(
-    $schema: $light-indigo-schema,
-    $thumb-border-color: rgb(42, 138, 138)
-);
-
 :root {
     --some-dynamic-color: hsl(#{math.random(360)}, 100%, 50%);
-    @include css-vars($custom-theme);
 }
 
 @include core();
