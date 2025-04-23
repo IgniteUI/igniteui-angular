@@ -327,6 +327,10 @@
         margin-inline-start: auto;
         gap: rem(8px);
 
+        [igxIconButton] {
+            color: var-get($theme, 'actions-text-color');
+        }
+
         &:empty {
             display: none;
         }
@@ -337,6 +341,10 @@
         align-items: center;
         order: 0;
         gap: rem(8px);
+
+        [igxIconButton] {
+            color: var-get($theme, 'actions-text-color');
+        }
 
         &:empty {
             display: none;

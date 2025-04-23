@@ -103,16 +103,16 @@ export enum RowPinningPosition {
     Bottom
 }
 
-/* mustCoerceToInt */
 /**
  * Enumeration representing different paging modes for the grid.
  * - Local: The grid will use local data to extract pages during paging.
  * - Remote: The grid will expect pages to be delivered from a remote location and will only raise events during paging interactions.
  */
-export enum GridPagingMode {
-    Local,
-    Remote
-}
+export const GridPagingMode = /*@__PURE__*/mkenum({
+    Local: 'local',
+    Remote: 'remote'
+});
+export type GridPagingMode = (typeof GridPagingMode)[keyof typeof GridPagingMode];
 
 /**
  * @hidden @internal
