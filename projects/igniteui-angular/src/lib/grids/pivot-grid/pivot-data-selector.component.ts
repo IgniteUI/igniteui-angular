@@ -108,8 +108,15 @@ export class IgxPivotDataSelectorComponent {
     public columnsExpanded = true;
 
     /**
-     * @hidden
-     */
+    /**
+     * Emitted when the columns panel is expanded or collapsed.
+     *
+     * @example
+     * ```html
+     * <igx-pivot-data-selector #grid [data]="localData" [height]="'305px'"
+     *              (columnsExpandedChange)="columnsExpandedChange($event)"></igx-pivot-data-selector>
+     * ```
+    */
     @Output()
     public columnsExpandedChange = new EventEmitter<boolean>();
 
@@ -133,8 +140,14 @@ export class IgxPivotDataSelectorComponent {
     public rowsExpanded = true;
 
     /**
-     * @hidden
-     */
+     * Emitted when the rows panel is expanded or collapsed.
+     *
+     * @example
+     * ```html
+     * <igx-pivot-data-selector #grid [data]="localData" [height]="'305px'"
+     *              (rowsExpandedChange)="rowsExpandedChange($event)"></igx-pivot-data-selector>
+     * ```
+    */
     @Output()
     public rowsExpandedChange = new EventEmitter<boolean>();
 
@@ -158,8 +171,14 @@ export class IgxPivotDataSelectorComponent {
     public filtersExpanded = true;
 
     /**
-     * @hidden
-     */
+     * Emitted when the filters panel is expanded or collapsed.
+     *
+     * @example
+     * ```html
+     * <igx-pivot-data-selector #grid [data]="localData" [height]="'305px'"
+     *              (filtersExpandedChange)="filtersExpandedChange($event)"></igx-pivot-data-selector>
+     * ```
+    */
     @Output()
     public filtersExpandedChange = new EventEmitter<boolean>();
 
@@ -183,9 +202,14 @@ export class IgxPivotDataSelectorComponent {
     public valuesExpanded = true;
 
     /**
-     * @hidden
-     */
-    @Output()
+     * Emitted when the values panel is expanded or collapsed.
+     *
+     * @example
+     * ```html
+     * <igx-pivot-data-selector #grid [data]="localData" [height]="'305px'"
+     *              (valuesExpandedChange)="valuesExpandedChange($event)"></igx-pivot-data-selector>
+     * ```
+    */
     public valuesExpandedChange = new EventEmitter<boolean>();
 
     private _grid: PivotGridType;

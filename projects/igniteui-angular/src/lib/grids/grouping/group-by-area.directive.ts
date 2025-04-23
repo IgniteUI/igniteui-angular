@@ -67,6 +67,14 @@ export abstract class IgxGroupByAreaDirective {
         this._dropAreaMessage = value;
     }
 
+    /**
+     * Emitted when grouping is performed.
+     *
+     * @example
+     * ```html
+     * <igx-grid-group-by-area (expressionsChange)="expressionsChange($event)"></igx-grid-group-by-area>
+     * ```
+     */
     @Output()
     public expressionsChange = new EventEmitter<IGroupingExpression[]>();
 

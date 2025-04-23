@@ -27,7 +27,6 @@ import {
     Optional,
     Output,
     QueryList,
-    TemplateRef,
     ViewChild,
     ViewChildren,
     ViewContainerRef
@@ -992,13 +991,25 @@ export abstract class IgxGridBaseDirective implements GridType,
     public gridCopy = new EventEmitter<IGridClipboardEvent>();
 
     /**
-     * @hidden @internal
+     * Emitted when the rows are expanded or collapsed.
+     *
+     * @example
+     * ```html
+     * <igx-grid [data]="employeeData" (selectedRowsChange)="selectedRowsChange($event)" [autoGenerate]="true"></igx-grid>
+     * ```
      */
     @Output()
     public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
 
     /* blazorInclude */
-    /** @hidden @internal */
+    /**
+     * Emitted when the rows are selected or deselected.
+     *
+     * @example
+     * ```html
+     * <igx-grid [data]="employeeData" (selectedRowsChange)="selectedRowsChange($event)" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
     @Output()
     public selectedRowsChange = new EventEmitter<any[]>();
 
@@ -1036,7 +1047,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     public rowPinned = new EventEmitter<IPinRowEventArgs>();
 
     /**
-     * Emmited when the active node is changed.
+     * Emitted when the active node is changed.
      *
      * @example
      * ```
@@ -1089,7 +1100,12 @@ export abstract class IgxGridBaseDirective implements GridType,
     public rendered = new EventEmitter<boolean>();
 
     /**
-     * @hidden @internal
+     * Emitted when the locale of the grid is changed.
+     *
+     * @example
+     * ```html
+     * <igx-grid [data]="employeeData" (localeChange)="localeChange($event)" [autoGenerate]="true"></igx-grid>
+     * ```
      */
     @Output()
     public localeChange = new EventEmitter<boolean>();

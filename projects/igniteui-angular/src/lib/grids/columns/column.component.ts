@@ -405,23 +405,67 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
 
     /**
-     * @hidden
+     * Emitted when the column is hidden or shown.
+     *
+     * ```html
+     * <igx-column (hiddenChange)="hiddenChange($event)">
+     * </igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
      */
     @Output()
     public hiddenChange = new EventEmitter<boolean>();
 
-    /** @hidden */
+    /**
+     * Emitted when the column expanded or collapsed.
+     *
+     * ```html
+     * <igx-column (expandedChange)="expandedChange($event)">
+     * </igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
     @Output()
     public expandedChange = new EventEmitter<boolean>();
 
-    /** @hidden */
+    /**
+     * Emitted when the column property `collapsible` changes.
+     *
+     * ```html
+     * <igx-column (collapsibleChange)="collapsibleChange($event)">
+     * </igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
     @Output()
     public collapsibleChange = new EventEmitter<boolean>();
-    /** @hidden */
+
+    /**
+     * Emitted when the column property `visibleWhenCollapsed` changes.
+     *
+     * ```html
+     * <igx-column (visibleWhenCollapsedChange)="visibleWhenCollapsedChange($event)">
+     * </igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
     @Output()
     public visibleWhenCollapsedChange = new EventEmitter<boolean>();
 
-    /** @hidden */
+    /**
+     * Emitted when the column changed.
+     *
+     * ```html
+     * <igx-column (columnChange)="columnChange($event)">
+     * </igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
     @Output()
     public columnChange = new EventEmitter<void>();
 
@@ -861,13 +905,27 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public additionalTemplateContext: any;
 
     /**
-     * @hidden
+     * Emitted when the column width changes.
+     *
+     * ```html
+     * <igx-column (widthChange)="widthChange($event)">
+     * </igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
      */
     @Output()
     public widthChange = new EventEmitter<string>();
 
     /**
-     * @hidden
+     * Emitted when the column is pinned/unpinned.
+     *
+     * ```html
+     * <igx-column (pinnedChange)="pinnedChange($event)">
+     * </igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
      */
     @Output()
     public pinnedChange = new EventEmitter<boolean>();
