@@ -119,19 +119,22 @@
         @if not($thumb-focus-color) and $thumb-color {
             $thumb-focus-color: hsla(from var(--thumb-color) h s l / 0.5);
         }
-
-        @if not($label-background-color) and $thumb-color {
-            $label-background-color: var(--thumb-color);
-        }
     }
 
     @if not($track-hover-color) and $track-color {
         $track-hover-color: hsl(from var(--track-color) h s calc(l * 1.1));
     }
 
-    @if not($label-background-color) and $track-color {
-        $label-background-color: var(--track-color);
+    @if $variant != 'bootstrap' {
+        @if not($label-background-color) and $track-color {
+            $label-background-color: var(--track-color);
+        }
+    } @else {
+        @if not($label-background-color) and $thumb-color {
+            $label-background-color: var(--thumb-color);
+        }
     }
+
 
     @if not($label-text-color) and $label-background-color {
         $label-text-color: adaptive-contrast($label-background-color);
