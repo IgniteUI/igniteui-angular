@@ -41,6 +41,7 @@ $theme: $material;
             @include animation(fade-in 0.35s ease-out);
             --ig-size: 1;
             box-shadow: none;
+            color: var-get($theme, 'button-color');
         }
 
         @include e(message) {
