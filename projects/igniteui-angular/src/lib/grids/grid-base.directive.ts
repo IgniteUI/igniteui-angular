@@ -26,6 +26,7 @@ import {
     OnInit,
     Optional,
     Output,
+    TemplateRef,
     QueryList,
     ViewChild,
     ViewChildren,
