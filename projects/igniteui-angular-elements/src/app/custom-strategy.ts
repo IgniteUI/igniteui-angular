@@ -1,4 +1,5 @@
-import { ApplicationRef, ChangeDetectorRef, ComponentFactory, ComponentRef, EventEmitter, Injector, OnChanges, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
+import { ApplicationRef, ChangeDetectorRef, ComponentFactory, ComponentRef, DestroyRef, EventEmitter, Injector, OnChanges, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgElement, NgElementStrategyEvent } from '@angular/elements';
 import { fromEvent, Observable } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
@@ -48,6 +49,14 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             this._templateWrapper = viewRef.createComponent(TemplateWrapperComponent).instance;
         }
         return this._templateWrapper;
+    }
+
+    private _configSelectors: string;
+    public get configSelectors(): string {
+        if (!this._configSelectors) {
+            this._configSelectors = this.config.map(x => x.selector).join(',');
+        }
+        return this._configSelectors;
     }
 
     constructor(private _componentFactory: ComponentFactory<any>, private _injector: Injector, private config: ComponentConfig[]) {
@@ -235,6 +244,14 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             }
             value = this.templateWrapper.addTemplate(value);
             // TODO: discard oldValue
+
+            // check template for any angular-element components
+            this.templateWrapper.templateRendered.pipe(takeUntilDestroyed(componentRef.injector.get(DestroyRef))).subscribe((element) => {
+                element.querySelectorAll<IgcNgElement>(this.configSelectors)?.forEach((c) => {
+                    // tie to angularParent lifecycle for cached scenarios like detailTemplate:
+                    c.ngElementStrategy.angularParent = componentRef;
+                });
+            });
         }
         if (componentRef && componentConfig?.boolProps?.includes(property)) {
             // bool coerce:

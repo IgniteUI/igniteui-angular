@@ -1,4 +1,5 @@
 import { IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
+import { html } from 'lit-html';
 import { firstValueFrom, fromEvent, skip, timer } from 'rxjs';
 import { ComponentRefKey, IgcNgElement } from './custom-strategy';
 import hgridData from '../assets/data/projects-hgrid.js';
@@ -52,6 +53,43 @@ describe('Elements: ', () => {
             const gridComponent = (await gridEl.ngElementStrategy[ComponentRefKey]).instance as IgxGridComponent;
             const columnComponent = (await columnEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
             expect(gridComponent.columnList.toArray()).toContain(columnComponent);
+        });
+
+        it(`should keep IgcNgElement instance in template of another IgcNgElement #15678`, async () => {
+            const gridEl = document.createElement("igc-grid");
+            testContainer.appendChild(gridEl);
+            const columnEl = document.createElement("igc-column") as IgcNgElement;
+            gridEl.appendChild(columnEl);
+            gridEl.primaryKey = 'id';
+            gridEl.data = [{ id: '1' }];
+            (gridEl as any).detailTemplate = (ctx) => {
+                return html`<div>
+                    <igc-grid id="child${ctx.implicit.id}"></igc-grid>
+                </div>`;
+            }
+
+            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+
+            // sigh (。﹏。*)
+            (gridEl as any).toggleRow('1');
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+
+            let detailGrid = document.querySelector<IgcNgElement>('#child1');
+            expect(detailGrid).toBeDefined();
+            let detailGridComponent = (await detailGrid?.ngElementStrategy[ComponentRefKey])?.instance as IgxGridComponent;
+            expect(detailGridComponent).toBeDefined();
+
+            // close and re-expand row detail:
+            (gridEl as any).toggleRow('1');
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            (gridEl as any).toggleRow('1');
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+
+            detailGrid = document.querySelector<IgcNgElement>('#child1');
+            expect(detailGrid).toBeDefined();
+            detailGridComponent = (await detailGrid?.ngElementStrategy[ComponentRefKey])?.instance as IgxGridComponent;
+            expect(detailGridComponent).toBeDefined("Detail child grid was destroyed on re-expand");
         });
     });
 

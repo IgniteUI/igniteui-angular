@@ -195,7 +195,11 @@
             <igc-combo ${ref(focusCallback)} style="width:100%; height:100%" .data=${northwindProducts} value-key="ProductName" @igcChange=${(e) => ctx.cell.editValue = e.detail.newValue} single-select>
             </igc-combo>
         `;
-        grid1.detailTemplate = (ctx) => html`<div><span class="categoryStyle">Stock: ${ctx.implicit.InStock}</span></div>`;
+        grid1.detailTemplate = (ctx) => {
+            return html`<div>
+            <igc-grid auto-generate="true"></igc-grid>
+        </div>`;
+        }
 
         grid2.querySelector('igc-column[field="ProductName"]').inlineEditorTemplate = (ctx) =>
             html`
