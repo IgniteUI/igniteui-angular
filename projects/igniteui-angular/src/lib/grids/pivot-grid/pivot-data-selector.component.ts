@@ -108,7 +108,6 @@ export class IgxPivotDataSelectorComponent {
     public columnsExpanded = true;
 
     /**
-    /**
      * Emitted when the columns panel is expanded or collapsed.
      *
      * @example
@@ -210,6 +209,7 @@ export class IgxPivotDataSelectorComponent {
      *              (valuesExpandedChange)="valuesExpandedChange($event)"></igx-pivot-data-selector>
      * ```
     */
+    @Output()
     public valuesExpandedChange = new EventEmitter<boolean>();
 
     private _grid: PivotGridType;
