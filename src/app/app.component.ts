@@ -577,6 +577,10 @@ export class AppComponent implements OnInit {
             icon: 'view_column',
             name: 'Hierarchical Grid'
         }, {
+            link: '/hierarchicalGridAdvancedFiltering',
+            icon: 'view_column',
+            name: 'Hierarchical Grid Advanced Filtering'
+        }, {
             link: '/hierarchicalGridRemote',
             icon: 'swap_vert',
             name: 'Hierarchical Grid Remote Load on Demand'
