@@ -418,6 +418,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             return value;
         }
 
+        // TO DO!: Not very reliable as it is a very internal API and could be subject to change. If something comes up, should be changed.
         if (value?.__ngContext__) {
             const componentConfig = this.config.find((info: ComponentConfig) => value.constructor === info.component);
             if (componentConfig?.templateProps) {
