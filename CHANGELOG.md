@@ -13,6 +13,7 @@ All notable changes for each version of this project will be documented in this 
     - A column's `minWidth` and `maxWidth` constrain the user-specified `width` so that it cannot go outside their bounds.
     - In SSR mode grid with height 100% or with no height will render on the server with % size and with no data. The grid will show either the empty grid template or the loading indicator (if isLoading is true).
     - In SSR mode grid with width 100% or with no width will render on the server with % size and with all columns.
+    - The `pagingMode` property can now be set as simple strings `'local'` and `'remote'` and does not require importing the `GridPagingMode` enum.
 - `IgxHierarchicalGrid`
     - Introduced a new advanced filtering capability that enables top-level records to be dynamically refined based on the attributes or data of their associated child records.
     - Added a new `schema` input property that can be used to pass collection of `EntityType` objects. This property is required for remote data scenarios.

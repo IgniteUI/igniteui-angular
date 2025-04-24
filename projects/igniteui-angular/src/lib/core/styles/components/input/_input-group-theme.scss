@@ -913,6 +913,14 @@
         background: var-get($theme, 'search-disabled-background');
         box-shadow: var-get($theme, 'search-disabled-shadow');
         border-color: var-get($theme, 'disabled-border-color');
+
+        igx-prefix,
+        [igxPrefix],
+        igx-suffix,
+        [igxSuffix] {
+            background: inherit;
+            color: var-get($theme, 'disabled-text-color');
+        }
     }
 
     %form-group-bundle-main--border {
@@ -1667,6 +1675,11 @@
         [igxPrefix] {
             display: none;
         }
+
+        igx-suffix,
+        [igxSuffix] {
+            color: var(--igx-input-group-input-suffix-color--focused, var(--ig-gray-900));
+        }
     }
 
     // Bundle
@@ -1831,8 +1844,13 @@
         transform-origin: top left;
         margin-top: 0 !important;
         height: auto;
-        margin-block-end: rem(4px);
         color: var-get($theme, 'idle-secondary-color');
+
+        @if $variant == 'fluent' {
+            margin-block-end: rem(5px);
+        } @else {
+            margin-block-end: rem(4px);
+        }
 
         [dir='rtl'] & {
             transform-origin: top right;
