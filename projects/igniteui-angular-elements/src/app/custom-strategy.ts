@@ -1,4 +1,5 @@
-import { ApplicationRef, ChangeDetectorRef, ComponentFactory, ComponentRef, Injector, OnChanges, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
+import { ApplicationRef, ChangeDetectorRef, ComponentFactory, ComponentRef, DestroyRef, Injector, OnChanges, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgElement } from '@angular/elements';
 import { fromEvent } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -235,7 +236,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             // TODO: discard oldValue
 
             // check template for any angular-element components
-            this.templateWrapper.templateRendered.subscribe((element) => {
+            this.templateWrapper.templateRendered.pipe(takeUntilDestroyed(componentRef.injector.get(DestroyRef))).subscribe((element) => {
                 const igComponents = this.config.flatMap(x => [
                     x.selector,
                     reflectComponentType(x.component).selector
