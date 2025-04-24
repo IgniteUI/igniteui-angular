@@ -240,7 +240,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                     x.selector,
                     reflectComponentType(x.component).selector
                 ]).join(',');
-                const children = element.querySelectorAll(igComponents);
+                const children = element.querySelectorAll<IgcNgElement>(igComponents);
                 children?.forEach((c) => {
                     c.ngElementStrategy.angularParent = componentRef;
                 });
