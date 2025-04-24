@@ -370,7 +370,7 @@ describe('IgxChip', () => {
 
             expect(secondChipComp.selectedChanging.emit).not.toHaveBeenCalled();
             expect(secondChipComp.selectedChanged.emit).not.toHaveBeenCalled();
-            console.log('id', secondChipComp.id);
+            // console.log('id', secondChipComp.id);
         });
     });
 

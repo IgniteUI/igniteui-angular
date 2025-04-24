@@ -460,12 +460,13 @@ describe('IgxSplitter pane collapse', () => {
 });
 
 describe('IgxSplitter resizing with minSize and browser window is shrinked', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => TestBed.configureTestingModule({
-        imports: [
-            SplitterMinSiezComponent
-        ]
-    }).compileComponents()));
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                SplitterMinSiezComponent
+            ]
+        }).compileComponents();
+    }));
 
     let fixture; let splitter;
     beforeEach(waitForAsync(() => {

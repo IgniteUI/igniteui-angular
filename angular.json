@@ -194,6 +194,9 @@
             "styles": [
               "src/styles/styles.scss"
             ],
+            "assets": [
+              "projects/igniteui-angular/src/assets"
+            ],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules"
