@@ -1,6 +1,6 @@
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { yieldingLoop } from '../../core/utils';
-import { ExportHeaderType, IColumnInfo } from '../exporter-common/base-export-service';
+import { IColumnInfo } from '../exporter-common/base-export-service';
 
 /**
  * @hidden

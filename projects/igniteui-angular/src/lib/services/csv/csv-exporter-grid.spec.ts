@@ -553,7 +553,6 @@ describe('CSV Grid Exporter', () => {
 
         it('should export pivot grid successfully.', async () => {
             await wait();
-            debugger
             const wrapper = await getExportedData(pivotGrid, options);
             wrapper.verifyData(wrapper.pivotGridData);
         });
