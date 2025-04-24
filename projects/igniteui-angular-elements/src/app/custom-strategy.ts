@@ -49,6 +49,14 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         return this._templateWrapper;
     }
 
+    private _configSelectors: string;
+    public get configSelectors(): string {
+        if (!this._configSelectors) {
+            this._configSelectors = this.config.map(x => x.selector).join(',');
+        }
+        return this._configSelectors;
+    }
+
     constructor(private _componentFactory: ComponentFactory<any>, private _injector: Injector, private config: ComponentConfig[]) {
         super(_componentFactory, _injector);
     }
@@ -237,12 +245,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
             // check template for any angular-element components
             this.templateWrapper.templateRendered.pipe(takeUntilDestroyed(componentRef.injector.get(DestroyRef))).subscribe((element) => {
-                const igComponents = this.config.flatMap(x => [
-                    x.selector,
-                    reflectComponentType(x.component).selector
-                ]).join(',');
-                const children = element.querySelectorAll<IgcNgElement>(igComponents);
-                children?.forEach((c) => {
+                element.querySelectorAll<IgcNgElement>(this.configSelectors)?.forEach((c) => {
+                    // tie to angularParent lifecycle for cached scenarios like detailTemplate:
                     c.ngElementStrategy.angularParent = componentRef;
                 });
             });
