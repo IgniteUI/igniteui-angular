@@ -13,7 +13,6 @@ import {
     IgcGridStateComponent,
 } from './components';
 import { defineComponents } from '../utils/register';
-import { html } from 'lit-html';
 
 describe('Elements: ', () => {
     let testContainer: HTMLDivElement;
