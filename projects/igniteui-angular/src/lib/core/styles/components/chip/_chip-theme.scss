@@ -106,94 +106,116 @@
     }
 
     $theme: digest-schema($chip-schema);
-    $meta: map.get($theme, '_meta');
+    $variant: map.get($theme, '_meta', 'theme');
 
     @if not($text-color) and $background {
-        $text-color: text-contrast($background);
+        $text-color: adaptive-contrast(var(--background));
+    }
+
+    @if not($border-color) and $background {
+        $border-color: var(--background);
     }
 
     @if not($hover-background) and $background {
-        $luminance: luminance($background);
-
-        @if meta.type-of($luminance) == 'color' and $luminance + .05 < .5 {
-            $hover-background: color.scale($background, $lightness: 14%);
-        } @else {
-            $hover-background: color.scale($background, $lightness: -4%);
-        }
+        $hover-background: hsl(from var(--background) h s calc(l * 0.9));
     }
 
     @if not($hover-text-color) and $hover-background {
-        $hover-text-color: text-contrast(to-opaque($hover-background));
+        $hover-text-color: adaptive-contrast(var(--hover-background));
     }
 
     @if not($focus-background) and $background {
-        $luminance: luminance($background);
+        $focus-background: hsl(from var(--background) h s calc(l * 0.8));
+    }
 
-        @if meta.type-of($luminance) == 'color' and $luminance + .05 < .5 {
-            $focus-background: color.scale($background, $lightness: 22%);
-        } @else {
-            $focus-background: color.scale($background, $lightness: -8%);
+    @if $variant == 'fluent' {
+        @if not($focus-background) and $selected-background {
+            $focus-background: var(--selected-background);
         }
     }
 
     @if not($focus-text-color) and $focus-background {
-        $focus-text-color: text-contrast(to-opaque($focus-background));
+        $focus-text-color: adaptive-contrast(var(--focus-background));
     }
 
-    @if not($selected-background) and $background {
-        $luminance: luminance($background);
-
-        @if meta.type-of($luminance) == 'color' and $luminance + .05 < .5 {
-            $selected-background: color.scale($background, $lightness: 22%);
-        } @else {
-            $selected-background: color.scale($background, $lightness: -8%);
+    @if $variant != 'indigo' and $variant != 'fluent' {
+        @if not($selected-background) and $background {
+            $selected-background: var(--background);
+        }
+    } @else {
+        @if not($selected-background) and $background {
+            $selected-background: hsl(from var(--background) h s calc(l * 1.1));
         }
     }
 
     @if not($selected-text-color) and $selected-background {
-        $selected-text-color: text-contrast(to-opaque($selected-background));
+        $selected-text-color: adaptive-contrast(var(--selected-background));
     }
 
-    @if not($hover-selected-background) and $hover-background {
-        $hover-selected-background: $hover-background;
+    @if not($hover-selected-background) and $selected-background {
+        $hover-selected-background: hsl(from var(--selected-background) h s calc(l * 0.9));
     }
 
     @if not($hover-selected-text-color) and $hover-selected-background {
-        $hover-selected-text-color: text-contrast(to-opaque($hover-selected-background));
+        $hover-selected-text-color: adaptive-contrast(var(--hover-selected-background));
     }
 
-    @if not($focus-selected-background) and $selected-background {
-        $luminance: luminance($selected-background);
-
-        @if meta.type-of($luminance) == 'color' and $luminance + .05 < .5 {
-            $focus-selected-background: color.scale($background, $lightness: 32%);
-        } @else {
-            $focus-selected-background: color.scale($background, $lightness: -16%);
+    @if $variant != 'indigo' {
+        @if not($focus-selected-background) and $selected-background {
+            $focus-selected-background: hsl(from var(--selected-background) h s calc(l * 0.8));
+        }
+    } @else {
+        @if not($focus-selected-background) and $selected-background {
+            $focus-selected-background: var(--selected-background);
         }
     }
 
     @if not($focus-selected-text-color) and $focus-selected-background {
-        $focus-selected-text-color: text-contrast(to-opaque($focus-selected-background));
+        $focus-selected-text-color: adaptive-contrast(var(--focus-selected-background));
     }
 
     @if not($hover-border-color) and $border-color {
-        $hover-border-color: $border-color;
+        $hover-border-color: var(--border-color);
     }
 
     @if not($focus-border-color) and $border-color {
-        $focus-border-color: $border-color;
+        $focus-border-color: var(--border-color);
     }
 
     @if not($selected-border-color) and $border-color {
-        $selected-border-color: $border-color;
+        $selected-border-color: var(--border-color);
     }
 
     @if not($hover-selected-border-color) and $border-color {
-        $hover-selected-border-color: $border-color;
+        $hover-selected-border-color: var(--border-color);
     }
 
     @if not($focus-selected-border-color) and $border-color {
-        $focus-selected-border-color: $border-color;
+        $focus-selected-border-color: var(--border-color);
+    }
+
+    @if $variant == 'indigo' {
+        @if not($selected-border-color) and $selected-background {
+            $selected-border-color: var(--selected-background);
+        }
+
+        @if not($hover-selected-border-color) and $hover-selected-background {
+            $hover-selected-border-color: var(--hover-selected-background);
+        }
+
+        @if not($focus-selected-border-color) and $focus-selected-background {
+            $focus-selected-border-color: var(--focus-selected-background);
+        }
+    }
+
+    @if $variant == 'bootstrap' or $variant == 'indigo' {
+        @if not($focus-outline-color) and $focus-background {
+            $focus-outline-color: hsla(from var(--focus-background) h s l / 0.4);
+        }
+
+        @if not($focus-selected-outline-color) and $focus-selected-background {
+            $focus-selected-outline-color: hsla(from var(--focus-selected-background) h s l / 0.4);
+        }
     }
 
     @if not($ghost-shadow) {
@@ -240,11 +262,6 @@
         remove-icon-color-focus: $remove-icon-color-focus,
         focus-selected-outline-color: $focus-selected-outline-color,
         focus-outline-color: $focus-outline-color,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme'),
-            theme-variant: map.get($schema, '_meta', 'variant')
-        )),
         size: $size,
     ));
 }
@@ -256,8 +273,8 @@
     @include css-vars($theme);
     $chip-max-width: 32ch;
 
-    $variant: map.get($theme, '_meta', 'variant');
-    $theme-variant: map.get($theme, '_meta', 'theme-variant');
+    $variant: map.get($theme, '_meta', 'theme');
+    $theme-variant: map.get($theme, '_meta', 'variant');
 
     $chip-padding: (
         comfortable: rem(if($variant != 'indigo', 12px, 7px)),
@@ -268,14 +285,14 @@
     $box-shadow-focus: map.get((
         'material': null,
         'fluent': null,
-        'bootstrap': 0 0 0 rem(2px) var-get($theme, 'focus-outline-color'),
+        'bootstrap': 0 0 0 rem(4px) var-get($theme, 'focus-outline-color'),
         'indigo': 0 0 0 rem(3px) var-get($theme, 'focus-outline-color')
     ), $variant);
 
     $box-shadow-focus-selected: map.get((
         'material': null,
         'fluent': null,
-        'bootstrap': 0 0 0 rem(2px) var-get($theme, 'focus-selected-outline-color'),
+        'bootstrap': 0 0 0 rem(4px) var-get($theme, 'focus-selected-outline-color'),
         'indigo': 0 0 0 rem(3px) var-get($theme, 'focus-selected-outline-color')
     ), $variant);
 
@@ -378,9 +395,12 @@
         }
 
         igx-avatar,
-        igx-circular-bar,
         igx-icon {
             --component-size: var(--chip-size);
+        }
+
+        igx-circular-bar {
+            --diameter: #{sizable(rem(14px), rem(18px), rem(24px))};
         }
 
         @if $variant == 'indigo' {
@@ -389,8 +409,7 @@
             }
         }
 
-        igx-avatar,
-        igx-circular-bar {
+        igx-avatar {
             max-height: 100%;
             width: sizable(rem(14px), rem(18px), rem(24px));
             max-width: sizable(rem(14px), rem(18px), rem(24px));
@@ -427,9 +446,17 @@
     %igx-chip%igx-chip--primary {
         &:focus {
             %igx-chip__item {
-                color: contrast-color($color: 'primary', $variant: 800);
-                background: color($color: 'primary', $variant: 800);
-                border-color: color($color: 'primary', $variant: 800);
+                @if $variant != 'bootstrap' and $variant != 'indigo' {
+                    color: contrast-color($color: 'primary', $variant: 800);
+                    background: color($color: 'primary', $variant: 800);
+                    border-color: color($color: 'primary', $variant: 800);
+                }
+
+                @if $variant == "bootstrap" {
+                    color: contrast-color($color: 'primary', $variant: 500);
+                    background: color($color: 'primary', $variant: 500);
+                    border-color: color($color: 'primary', $variant: 500);
+                }
 
                 @if $variant == 'indigo' {
                     color: contrast-color($color: 'primary', $variant: 900);
@@ -439,7 +466,7 @@
                 }
 
                 @if $variant == 'bootstrap' {
-                    box-shadow: 0 0 0 rem(2px) color($color: 'primary', $variant: 200);
+                    box-shadow: 0 0 0 rem(4px) color($color: 'primary', $variant: 500, $opacity: .38);
                 }
             }
         }
@@ -472,15 +499,18 @@
                 background: color($color: 'info', $variant: 800);
                 border-color: color($color: 'info', $variant: 800);
 
-                @if $variant == 'indigo' {
+                @if $variant == 'indigo' or $variant == 'bootstrap' {
                     color: contrast-color($color: 'info', $variant: 500);
                     background: color($color: 'info', $variant: 500);
                     border-color: color($color: 'info', $variant: 500);
+                }
+
+                @if $variant == 'indigo' {
                     box-shadow: 0 0 0 rem(3px) color($color: 'info', $variant: if($theme-variant == 'light', 100, 800));
                 }
 
                 @if $variant == 'bootstrap' {
-                    box-shadow: 0 0 0 rem(2px) color($color: 'info', $variant: 200);
+                    box-shadow: 0 0 0 rem(4px) color($color: 'info', $variant: 500, $opacity: .38);
                 }
             }
         }
@@ -517,15 +547,19 @@
                 background: color($color: 'success', $variant: 800);
                 border-color: color($color: 'success', $variant: 800);
 
-                @if $variant == 'indigo' {
-                    color: contrast-color($color: 'success', $variant: 900);
+                @if $variant == 'indigo' or $variant == 'bootstrap' {
                     background: color($color: 'success', $variant: 500);
                     border-color: color($color: 'success', $variant: 500);
                     box-shadow: 0 0 0 rem(3px) color($color: 'success', $variant: if($theme-variant == 'light', 200, 800));
                 }
 
+                @if $variant == 'indigo' {
+                    color: contrast-color($color: 'success', $variant: 900);
+                }
+
                 @if $variant == 'bootstrap' {
-                    box-shadow: 0 0 0 rem(2px) color($color: 'success', $variant: 200);
+                    color: contrast-color($color: 'success', $variant: 600);
+                    box-shadow: 0 0 0 rem(4px) color($color: 'success', $variant: 500, $opacity: .38);
                 }
             }
         }
@@ -558,15 +592,18 @@
                 background: color($color: 'warn', $variant: 800);
                 border-color: color($color: 'warn', $variant: 800);
 
-                @if $variant == 'indigo' {
+                @if $variant == 'indigo' or $variant == 'bootstrap' {
                     color: contrast-color($color: 'warn', $variant: 900);
                     background: color($color: 'warn', $variant: 500);
                     border-color: color($color: 'warn', $variant: 500);
+                }
+
+                @if $variant == 'indigo' {
                     box-shadow: 0 0 0 rem(3px) color($color: 'warn', $variant: if($theme-variant == 'light', 100, 900));
                 }
 
                 @if $variant == 'bootstrap' {
-                    box-shadow: 0 0 0 rem(2px) color($color: 'warn', $variant: 200);
+                    box-shadow: 0 0 0 rem(4px) color($color: 'warn', $variant: 500, $opacity: .38);
                 }
             }
         }
@@ -603,15 +640,19 @@
                 background: color($color: 'error', $variant: 800);
                 border-color: color($color: 'error', $variant: 800);
 
-                @if $variant == 'indigo' {
-                    color: contrast-color($color: 'error', $variant: 900);
+                @if $variant == 'indigo' or $variant == 'bootstrap' {
                     background: color($color: 'error', $variant: 500);
                     border-color: color($color: 'error', $variant: 500);
+                }
+
+                @if $variant == 'indigo' {
+                    color: contrast-color($color: 'error', $variant: 900);
                     box-shadow: 0 0 0 rem(3px) color($color: 'error', $variant: if($theme-variant == 'light', 100, 900));
                 }
 
                 @if $variant == 'bootstrap' {
-                    box-shadow: 0 0 0 rem(2px) color($color: 'error', $variant: 200);
+                    color: contrast-color($color: 'error', $variant: 600);
+                    box-shadow: 0 0 0 rem(4px) color($color: 'error', $variant: 500, $opacity: .38);
                 }
             }
         }

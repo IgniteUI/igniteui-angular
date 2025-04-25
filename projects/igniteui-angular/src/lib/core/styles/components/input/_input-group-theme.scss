@@ -846,6 +846,10 @@
         position: relative;
 
         grid-area: 1 / 2;
+
+        %form-group-label {
+            color: var-get($theme, 'idle-secondary-color');
+        }
     }
 
     %igx-input-group__notch--border {
@@ -1073,6 +1077,14 @@
         background: var-get($theme, 'search-disabled-background');
         box-shadow: var-get($theme, 'search-disabled-shadow');
         border-color: var-get($theme, 'disabled-border-color');
+
+        igx-prefix,
+        [igxPrefix],
+        igx-suffix,
+        [igxSuffix] {
+            background: inherit;
+            color: var-get($theme, 'disabled-text-color');
+        }
     }
 
     %form-group-bundle-main--border {
@@ -1808,12 +1820,29 @@
         [igxPrefix] {
             overflow: hidden;
         }
+
+        igx-prefix,
+        [igxPrefix] {
+            background: var(--igx-input-group-input-prefix-background, transparent);
+            color: var(--igx-input-group-input-prefix-color, var(--ig-primary-500));
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            background: var(--igx-input-group-input-suffix-background, transparent);
+            color: var(--igx-input-group-input-suffix-color, var(--ig-primary-500));
+        }
     }
 
     %igx-input-group-fluent-search--focused {
         igx-prefix,
         [igxPrefix] {
             display: none;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            color: var(--igx-input-group-input-suffix-color--focused, var(--ig-gray-900));
         }
     }
 
@@ -1891,6 +1920,10 @@
     %form-group-bundle--fluent--focus {
         border-color: var-get($theme, 'focused-border-color');
         border-width: rem(2px);
+
+        &:hover {
+            border-color: var-get($theme, 'focused-border-color');
+        }
     }
 
     %form-group-bundle-error--fluent,
@@ -1975,8 +2008,13 @@
         transform-origin: top left;
         margin-top: 0 !important;
         height: auto;
-        margin-block-end: rem(4px);
         color: var-get($theme, 'idle-secondary-color');
+
+        @if $variant == 'fluent' {
+            margin-block-end: rem(5px);
+        } @else {
+            margin-block-end: rem(4px);
+        }
 
         [dir='rtl'] & {
             transform-origin: top right;
@@ -2006,7 +2044,6 @@
     }
 
     %fluent-label-focused {
-        color: color(null, 'gray', 800);
         transform: translateY(0) scale(1);
     }
 

@@ -152,6 +152,13 @@ export class CardSampleComponent implements OnInit {
                 defaultValue: false
             }
         },
+        justifyActions: {
+            label: 'Justify actions(Angular Only)',
+            control: {
+                type: 'boolean',
+                defaultValue: true
+            }
+        },
     };
 
     public properties: Properties;

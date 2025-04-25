@@ -94,160 +94,140 @@
     }
 
     $theme: digest-schema($list-schema);
-    $meta: map.get($theme, '_meta');
+    $variant: map.get($theme, '_meta', 'theme');
 
     @if not($header-background) and $background {
-        $header-background: $background;
+        $header-background: var(--background);
     }
 
     @if not($header-background) and $item-background {
-        $header-background: $item-background;
+        $header-background: var(--item-background);
     }
 
     @if not($item-background) and $background {
-        $item-background: $background;
+        $item-background: var(--background);
     }
 
     @if not($background) and $item-background {
-        $background: $item-background;
+        $background: var(--item-background);
     }
 
     @if not($item-background-hover) and $item-background {
-        @if meta.type-of($item-background) == 'color' {
-            @if luminance($item-background) < .5 {
-                $item-background-hover: color.scale($item-background, $lightness: 8%);
-            } @else {
-                $item-background-hover: color.scale($item-background, $lightness: -8%);
-            }
-        }
+        $item-background-hover: hsl(from var(--item-background) h s calc(l * 0.9));
     }
 
     @if not($item-background-active) and $item-background {
-        @if meta.type-of($item-background) == 'color' {
-            @if luminance($item-background) < .5 {
-                $item-background-active: color.scale($item-background, $lightness: 8%);
-            } @else {
-                $item-background-active: color.scale($item-background, $lightness: -8%);
-            }
-        }
+        $item-background-active: hsl(from var(--item-background) h s calc(l * 0.9));
     }
 
     @if not($item-background-selected) and $item-background {
-        @if meta.type-of($item-background) == 'color' {
-            @if luminance($item-background) < .5 {
-                $item-background-selected: color.scale($item-background, $lightness: 8%);
-            } @else {
-                $item-background-selected: color.scale($item-background, $lightness: -8%);
-            }
-        }
+        $item-background-selected: hsl(from var(--item-background) h s calc(l * 0.9));
     }
 
     @if not($header-text-color) and $header-background {
-        $header-text-color: text-contrast($header-background);
+        $header-text-color: adaptive-contrast(var(--header-background));
     }
 
     @if not($item-text-color) and $item-background {
-        $item-text-color: text-contrast($item-background);
+        $item-text-color: adaptive-contrast(var(--item-background));
     }
 
     @if not($item-title-color) and $item-background {
-        $item-title-color: text-contrast($item-background);
+        $item-title-color: adaptive-contrast(var(--item-background));
     }
 
     @if not($item-action-color) and $item-background {
-        $item-action-color: text-contrast($item-background);
+        $item-action-color: adaptive-contrast(var(--item-background));
     }
 
     @if not($item-thumbnail-color) and $item-background {
-        $item-thumbnail-color: text-contrast($item-background);
+        $item-thumbnail-color: adaptive-contrast(var(--item-background));
     }
 
     @if not($item-subtitle-color) and $item-background {
-        @if meta.type-of($item-background) == 'color' {
-            $item-subtitle-color: rgba(text-contrast($item-background), .74);
-        }
+        $item-subtitle-color: hsla(from adaptive-contrast(var(--item-background)) h s l / .74);
     }
 
     @if not($item-subtitle-color) and $item-text-color {
-        $item-subtitle-color: $item-text-color;
+        $item-subtitle-color: var(--item-text-color);
     }
 
     @if not($item-text-color-hover) and $item-background-hover {
-        $item-text-color-hover: text-contrast($item-background-hover);
+        $item-text-color-hover: adaptive-contrast(var(--item-background-hover));
     }
 
     @if not($item-title-color-hover) and $item-background-hover {
-        $item-title-color-hover: text-contrast($item-background-hover);
+        $item-title-color-hover: adaptive-contrast(var(--item-background-hover));
     }
 
     @if not($item-action-color-hover) and $item-background-hover {
-        $item-action-color-hover: text-contrast($item-background-hover);
+        $item-action-color-hover: adaptive-contrast(var(--item-background-hover));
     }
 
     @if not($item-thumbnail-color-hover) and $item-background-hover {
-        $item-thumbnail-color-hover: text-contrast($item-background-hover);
+        $item-thumbnail-color-hover: adaptive-contrast(var(--item-background-hover));
     }
 
     @if not($item-subtitle-color-hover) and $item-background-hover {
-        @if meta.type-of($item-background-hover) == 'color' {
-            $item-subtitle-color-hover: rgba(text-contrast($item-background-hover), .74);
-        }
+        $item-subtitle-color-hover: hsla(from adaptive-contrast(var(--item-background-hover)) h s l / .74);
     }
 
     @if not($item-subtitle-color-hover) and $item-text-color-hover {
-        $item-subtitle-color-hover: $item-text-color-hover;
+        $item-subtitle-color-hover: var(--item-text-color-hover);
     }
 
     @if not($item-text-color-active) and $item-background-active {
-        $item-text-color-active: text-contrast($item-background-active);
+        $item-text-color-active: adaptive-contrast(var(--item-background-active));
     }
 
     @if not($item-text-color-selected) and $item-background-selected {
-        $item-text-color-selected: text-contrast($item-background-selected);
+        $item-text-color-selected: adaptive-contrast(var(--item-background-selected));
     }
 
     @if not($item-title-color-active) and $item-background-active {
-        $item-title-color-active: text-contrast($item-background-active);
+        $item-title-color-active: adaptive-contrast(var(--item-background-active));
     }
 
     @if not($item-title-color-selected) and $item-background-selected {
-        $item-title-color-selected: text-contrast($item-background-selected);
+        $item-title-color-selected: adaptive-contrast(var(--item-background-selected));
     }
 
     @if not($item-action-color-active) and $item-background-active {
-        $item-action-color-active: text-contrast($item-background-active);
+        $item-action-color-active: adaptive-contrast(var(--item-background-active));
     }
 
     @if not($item-action-color-selected) and $item-background-selected {
-        $item-action-color-selected: text-contrast($item-background-selected);
+        $item-action-color-selected: adaptive-contrast(var(--item-background-selected));
     }
 
     @if not($item-thumbnail-color-active) and $item-background-active {
-        $item-thumbnail-color-active: text-contrast($item-background-active);
+        $item-thumbnail-color-active: adaptive-contrast(var(--item-background-active));
     }
 
     @if not($item-thumbnail-color-selected) and $item-background-selected {
-        $item-thumbnail-color-selected: text-contrast($item-background-selected);
+        $item-thumbnail-color-selected: adaptive-contrast(var(--item-background-selected));
     }
 
     @if not($item-subtitle-color-active) and $item-background-active {
-        @if meta.type-of($item-background-active) == 'color' {
-            $item-subtitle-color-active: rgba(text-contrast($item-background-active), .74);
-        }
+        $item-subtitle-color-active: hsla(from adaptive-contrast(var(--item-background-active)) h s l / .74);
     }
 
     @if not($item-subtitle-color-selected) and $item-background-selected {
-        @if meta.type-of($item-background-selected) == 'color' {
-            $item-subtitle-color-selected: rgba(text-contrast($item-background-selected), .74);
-        }
+        $item-subtitle-color-selected: hsla(from adaptive-contrast(var(--item-background-selected)) h s l / .74);
     }
 
     @if not($item-subtitle-color-active) and $item-text-color-active {
-        $item-subtitle-color-active: $item-text-color-active;
+        $item-subtitle-color-active: var(--item-text-color-active);
     }
 
     @if not($item-subtitle-color-selected) and $item-text-color-selected {
-        $item-subtitle-color-selected: $item-text-color-selected;
+        $item-subtitle-color-selected: var(--item-text-color-selected);
+    }
+
+    @if $variant == 'fluent' or $variant == 'bootstrap'{
+        @if not($border-color) and $item-background {
+            $border-color: hsla(from adaptive-contrast(var(--item-background)) h s l / .15);
+        }
     }
 
     @return extend($theme, (
@@ -283,10 +263,6 @@
         item-thumbnail-color-selected: $item-thumbnail-color-selected,
         border-color: $border-color,
         border-width: $border-width,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -296,7 +272,7 @@
 @mixin list($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $bootstrap-theme: $variant == 'bootstrap';
 
     $theme-padding-block-l: map.get((
@@ -425,7 +401,6 @@
         justify-content: center;
         border-radius: var-get($theme, 'item-border-radius');
         color: var-get($theme, 'item-text-color');
-        background: var-get($theme, 'item-background');
 
         @if $bootstrap-theme or $variant == 'fluent' {
             border-bottom: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
@@ -436,9 +411,6 @@
         }
 
         &:hover {
-            color: var-get($theme, 'item-text-color-hover');
-            background: var-get($theme, 'item-background-hover');
-
             %igx-list__item-lines {
                 color: currentColor;
             }
@@ -544,9 +516,15 @@
         align-items: center;
         position: relative;
         border-radius: var-get($theme, 'item-border-radius');
-        background: inherit;
+        background: var-get($theme, 'item-background');
         z-index: 2;
         gap: if($variant == 'indigo', rem(8px), rem(16px));
+
+        &:hover,
+        &:focus-within {
+            color: var-get($theme, 'item-text-color-hover');
+            background: var-get($theme, 'item-background-hover');
+        }
     }
 
     %igx-list-header,
