@@ -542,14 +542,23 @@
     }
 
     @if is-used('igx-icon-button', $exclude) {
-        $icon-button-theme-map: icon-button-theme(
+        $flat-theme-map: flat-icon-button-theme(
             $schema: $schema,
         );
-        $icon-button-theme-map: meta.call(
-            $theme-handler,
-            $icon-button-theme-map
+
+        $contained-theme-map: contained-icon-button-theme(
+            $schema: $schema,
         );
-        @include icon-button($icon-button-theme-map);
+
+        $outlined-theme-map: outlined-icon-button-theme(
+            $schema: $schema,
+        );
+
+        @include icon-button(
+            $flat: meta.call($theme-handler, $flat-theme-map),
+            $contained: meta.call($theme-handler, $contained-theme-map),
+            $outlined: meta.call($theme-handler, $outlined-theme-map),
+        );
     }
 
     @if is-used('igx-input-group', $exclude) {
