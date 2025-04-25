@@ -46,7 +46,39 @@
     }
 
     $theme: digest-schema($select-schema);
-    $meta: map.get($theme, '_meta');
+    $variant: map.get($theme, '_meta', 'theme');
+
+    @if not($toggle-button-foreground) and $toggle-button-background {
+        $toggle-button-foreground: adaptive-contrast(var(--toggle-button-background));
+    }
+
+    @if not($toggle-button-foreground-filled) and $toggle-button-background {
+        $toggle-button-foreground-filled: adaptive-contrast(var(--toggle-button-background));
+    }
+
+    @if $variant == 'material' {
+        @if not($toggle-button-background-focus) and $toggle-button-background {
+            $toggle-button-background-focus: hsl(from var(--toggle-button-background) h s calc(l * 0.9));
+        }
+    } @else {
+        @if not($toggle-button-background-focus) and $toggle-button-background {
+            $toggle-button-background-focus: var(--toggle-button-background);
+        }
+    }
+
+    @if $variant == 'bootstrap' or $variant == 'indigo' {
+        @if not($toggle-button-background-focus--border) and $toggle-button-background {
+            $toggle-button-background-focus--border: var(--toggle-button-background)
+        }
+
+        @if not($toggle-button-foreground-focus) and $toggle-button-background-focus--border {
+            $toggle-button-foreground-focus: adaptive-contrast(var(--toggle-button-background-focus--border));
+        }
+    } @else {
+        @if not($toggle-button-foreground-focus) and $toggle-button-background-focus {
+            $toggle-button-foreground-focus: adaptive-contrast(var(--toggle-button-background-focus));
+        }
+    }
 
     @return extend($theme, (
         name: $name,
@@ -59,10 +91,6 @@
         toggle-button-foreground-disabled: $toggle-button-foreground-disabled,
         toggle-button-foreground-filled: $toggle-button-foreground-filled,
         toggle-button-background-focus--border: $toggle-button-background-focus--border,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -71,7 +99,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin select($theme) {
     @include css-vars($theme);
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     %igx-select {
         position: relative;
