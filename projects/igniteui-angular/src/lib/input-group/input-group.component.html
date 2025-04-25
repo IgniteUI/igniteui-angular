@@ -54,6 +54,11 @@
 </ng-template>
 
 <ng-template #bundle>
+
+    @if(this._theme !== 'material') {
+        <ng-container *ngTemplateOutlet="label"></ng-container>
+    }
+
     <div class="igx-input-group__bundle">
         <div class="igx-input-group__bundle-start">
             <ng-content select="igx-prefix, [igxPrefix]"></ng-content>
@@ -67,7 +72,7 @@
             <div class="igx-input-group__notch">
                 <ng-container *ngTemplateOutlet="label"></ng-container>
             </div>
-        } @else {
+        } @else if (this._theme === 'material') {
             <ng-container *ngTemplateOutlet="label"></ng-container>
         }
 

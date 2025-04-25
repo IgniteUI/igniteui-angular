@@ -129,7 +129,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     private _destroyRef = inject(DestroyRef);
     private _type: IgxInputGroupType = null;
     private _filled = false;
-    private _theme: IgxTheme;
+    protected _theme: IgxTheme;
     private _resourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
 
     /** @hidden */
@@ -312,6 +312,20 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
         );
     }
 
+    /**
+     * Returns whether the `IgxInputGroupComponent` type is line.
+     * ```typescript
+     * @ViewChild("MyInputGroup1")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit(){
+     *    let isTypeLine = this.inputGroup.isTypeLine;
+     * }
+     * ```
+     */
+    public get isTypeLine(): boolean {
+        return this.type === 'line' && this._theme === 'material';
+    }
+
     /** @hidden @internal */
     @HostBinding('class.igx-input-group--base')
     public get isNotBorder(): boolean {
@@ -368,6 +382,8 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     public get isTypeBorder() {
         return this.type === 'border' && this._theme === 'material';
     }
+
+
 
     /**
      * Returns whether the `IgxInputGroupComponent` type is search.

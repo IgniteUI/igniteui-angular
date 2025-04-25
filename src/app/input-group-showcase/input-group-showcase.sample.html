@@ -38,7 +38,6 @@
         <!-- Angular Textarea Group -->
         <igx-input-group
             #fieldTextarea
-            [ngClass]="{ 'hidden': getInputGroupType() === 'search' }"
             [type]="getInputGroupType()"
             [style.--ig-size]="getSize()">
             @if (getLabel()) {
@@ -71,7 +70,7 @@
             }
 
             @if (hidePrefix()) {
-                <igx-icon igxPrefix>favorite</igx-icon>
+                <igx-icon igxPrefix>face</igx-icon>
             }
 
             <igx-hint>
@@ -106,7 +105,7 @@
             [style.--ig-size]="getSize()">
 
             @if (getLabel()) {
-                <label igxLabel>File</label>
+                <label igxLabel>{{ getLabel() }}</label>
             }
 
             @if (hidePrefix()) {
@@ -226,9 +225,21 @@
         </igc-combo>
 
 
-        <div class="showcase__placeholder">
-            NO file type in web components
-        </div>
+        <igc-file-input
+            [style.--ig-size]="getSize()"
+            [label]="getLabel()"
+            [required]="isRequired()"
+            [disabled]="isDisabled()"
+            [readOnly]="isReadonly()"
+            [attr.value]="getValue()"
+            [outlined]="isOutlined()">
+            @if (hidePrefix()) {
+                <span slot="prefix"><igc-icon name="face"></igc-icon></span>
+            }
+
+            <span slot="suffix" [hidden]="hideSuffix()"><igc-icon name="face"></igc-icon></span>
+            <span slot="helper-text">Type your web address</span>
+        </igc-file-input>
     </div>
 </section>
 
