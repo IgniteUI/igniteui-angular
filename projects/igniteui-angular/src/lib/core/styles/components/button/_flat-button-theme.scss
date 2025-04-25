@@ -44,12 +44,12 @@
 /// @param {Color} $active-shadow [null] - The shadow of the button in its focus state.
 /// @param {Color} $disabled-background [null] - The disabled background color of the button.
 /// @param {Color} $disabled-foreground [null] - The disabled text color of the button.
-/// @param {Color} $disabled-icon-color [null] - The disabled icon color of the ©button.
+/// @param {Color} $disabled-icon-color [null] - The disabled icon color of the button.
 /// @param {Color} $disabled-border-color [null] - The disabled border color of the button.
 ///
 /// @requires $light-material-schema
 ///
-/// @example scss Change the background and text colors in contained buttons
+/// @example scss Change the text colors in flat buttons
 ///   $my-button-theme: flat-button-theme(
 ///     $foreground: black,
 ///   );
@@ -136,6 +136,10 @@
             $hover-foreground: hsla(from var(--hover-background) h s l / 1);
         }
 
+        @if not($icon-color-hover) and $hover-foreground {
+            $icon-color-hover: var(--hover-foreground);
+        }
+
         @if not($focus-foreground) and $focus-background {
             $focus-foreground: hsla(from var(--focus-background) h s l / 1);
         }
@@ -198,6 +202,10 @@
             $hover-foreground: hsl(from var(--foreground) h s calc(l * 0.9));
         }
 
+        @if not($icon-color-hover) and $hover-foreground {
+            $icon-color-hover: var(--hover-foreground);
+        }
+
         @if $variant == 'bootstrap' {
             @if not($focus-foreground) and $foreground {
                 $focus-foreground: hsl(
@@ -224,6 +232,10 @@
 
         @if not($disabled-foreground) and $foreground {
             $disabled-foreground: hsl(from (var(--foreground) h s l / 0.5));
+        }
+
+        @if not($disabled-icon-color) and $disabled-foreground {
+            $disabled-icon-color: var(--disabled-foreground);
         }
 
         @if $variant == 'bootstrap' {

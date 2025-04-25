@@ -105,6 +105,7 @@
     $disabled-border-color: null,
     $size: null,
 ) {
+    $name: 'igx-button';
     $button-schema: ();
 
     @if map.has-key($schema, 'button') {
@@ -674,11 +675,7 @@
             &::after {
                 @extend %fluent-border;
 
-                box-shadow: 0
-                    0
-                    0
-                    rem(1px)
-                    var-get($flat-theme, 'focus-visible-border-color');
+                box-shadow: 0 0 0 rem(1px) var-get($flat-theme, 'focus-visible-border-color');
             }
         }
 
