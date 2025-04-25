@@ -8,19 +8,8 @@
 
 $theme: $base;
 
-$variant: map.get($theme, 'variant');
-$transition-timing: .25s $out-cubic;
-$material-theme: $variant == 'material';
-$indigo-theme: $variant == 'indigo';
-$fluent-theme: $variant == 'fluent';
-$bootstrap-theme: $variant == 'bootstrap';
-$NOT-material-theme: $variant != 'material';
-$NOT-indigo-theme: $variant != 'indigo';
-$NOT-fluent-theme: $variant != 'fluent';
-$NOT-bootstrap-theme: $variant != 'bootstrap';
-
 $required-symbol: '*';
-$required-symbol-margin: rem(2px);
+$transition-timing: .25s $out-cubic;
 
 // This creates an inverse relationship
 // between the value of the base scale size and
@@ -32,44 +21,6 @@ $base-scale-size: (
     'cosy': 19px,
     'compact': 22px
 );
-
-$bootstrap-inline-padding: (
-    'comfortable': rem(16px),
-    'cosy': rem(12px),
-    'compact': rem(8px)
-);
-
-$bootstrap-block-padding: (
-    'comfortable': rem(8px),
-    'cosy': rem(6px),
-    'compact': rem(4px)
-);
-
-$bootstrap-font-size: (
-    'comfortable': rem(20px),
-    'cosy': rem(16px),
-    'compact': rem(14px),
-);
-
-$bundle-padding-top: (
-    'comfortable': rem(18px, map.get($base-scale-size, 'comfortable')),
-    'cosy': rem(18px, map.get($base-scale-size, 'cosy')),
-    'compact': rem(18px, map.get($base-scale-size, 'compact')),
-);
-
-$hint-spacing-block: map.get((
-    'material': rem(4px),
-    'fluent': rem(5px),
-    'bootstrap': rem(4px),
-    'indigo': rem(4px),
-), $variant);
-
-$hint-spacing-inline: map.get((
-    'material': sizable(rem(14px), rem(16px), rem(18px)),
-    'fluent': 0,
-    'bootstrap': 0,
-    'indigo': 0,
-), $variant);
 
 @include layer(base) {
     %bundle-start-end {
@@ -84,8 +35,8 @@ $hint-spacing-inline: map.get((
         --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
         --input-size: var(--component-size);
         --input-icon: #{sizable(rem(14px), rem(16px), rem(18px))};
-        --_input-template-columns: auto 1fr auto;
-        --_input-template-rows: auto var-get($theme, 'size');
+        --_bundle-template-columns: auto 1fr auto;
+        --_bundle-template-rows: auto #{var-get($theme, 'size')};
 
         display: grid;
         position: relative;
@@ -107,22 +58,13 @@ $hint-spacing-inline: map.get((
             display: inline-flex;
             align-items: center;
 
-            // !important is needed, otherwise the icon overrides the width set by the prefix/suffix
+            // !important is needed, otherwise if the directive is set directly on the igx-icon
+            // the icon overrides the width/height set by the prefix/suffix
             width: max-content !important;
             height: auto !important;
             min-height: 100%;
             outline-style: none;
             transition: color $transition-timing, background $transition-timing;
-
-            &:not(:empty) {
-                @if $material-theme {
-                    padding-inline: pad-inline(rem(12px), rem(14px), rem(16px));
-                } @else if $indigo-theme {
-                    padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
-                } @else {
-                    padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
-                }
-            }
         }
 
         igx-prefix,
@@ -139,15 +81,19 @@ $hint-spacing-inline: map.get((
 
         @include e(bundle) {
             display: grid;
-            grid-template-columns: var(--_input-template-columns);
+            grid-template-columns: var(--_bundle-template-columns);
             position: relative;
             max-width: 100%;
             font-size: rem(16px);
             height: var-get($theme, 'size');
-            grid-template-rows: var(--_input-template-rows);
+            min-height: var-get($theme, 'size');
+            grid-template-rows: var(--_bundle-template-rows);
         }
 
         @include e(label) {
+            color: #{var-get($theme, 'idle-secondary-color')};
+
+            display: inline-block;
             grid-row: 1;
             grid-column: 1 / -1;
         }
@@ -159,11 +105,13 @@ $hint-spacing-inline: map.get((
 
         @include e(bundle-end) {
             @extend %bundle-start-end;
+
             grid-column: 3;
         }
 
         @include e(bundle-main) {
             grid-row: 2;
+            min-width: 0;
         }
 
         %input-textarea-common {
@@ -176,8 +124,8 @@ $hint-spacing-inline: map.get((
             color: var-get($theme, 'filled-text-color');
             outline-style: none;
             box-shadow: none;
-            overflow: hidden;
             text-overflow: ellipsis;
+            z-index: 0;
 
             &::-webkit-input-placeholder {
                 line-height: normal;
@@ -211,6 +159,8 @@ $hint-spacing-inline: map.get((
 
         @include e(input) {
             @extend %input-textarea-common;
+
+            overflow: hidden;
             height: calc(var-get($theme, 'size') - 1px);
 
             &:not([type='date']) {
@@ -232,22 +182,15 @@ $hint-spacing-inline: map.get((
 
             @extend %input-textarea-common;
 
+            padding: 0;
             min-height: var(--textarea-size);
             resize: vertical;
             z-index: 1;
-            //line-height: normal !important;
-
-            @if $material-theme {
-                padding: 0;
-                inset-block-start: rem(-3px);
-            }
-
-            &:not([type='*']) {
-                //line-height: normal !important;
-            }
         }
 
         @include e(hint) {
+            @include type-style(caption);
+
             color: var-get($theme, 'helper-text-color');
             position: relative;
             display: flex;
@@ -259,6 +202,8 @@ $hint-spacing-inline: map.get((
         }
 
         @include e(file-input) {
+            --_bundle-template-columns: auto auto 1fr auto;
+
             width: 100%;
             max-width: 100%;
             overflow: hidden;
@@ -276,7 +221,39 @@ $hint-spacing-inline: map.get((
             }
         }
 
+        @include m(file) {
+            @include e(bundle-main) {
+                cursor: pointer;
+            }
+
+            @include e(label) {
+                pointer-events: none;
+            }
+        }
+
+        @include e(upload) {
+            display: flex;
+            height: 100%;
+            grid-column: 2;
+        }
+
+        @include e(clear-icon) {
+            cursor: pointer;
+        }
+
+        @include e(upload-button) {
+            --igx-button-background: transparent;
+            --igx-button-hover-background: transparent;
+            --igx-button-focus-background: transparent;
+            --igx-button-focus-visible-background: transparent;
+            --igx-button-active-background: transparent;
+
+            min-width: min-content;
+        }
+
         @include m(textarea-group) {
+            --_bundle-template-rows: auto;
+
             @include e(bundle) {
                 height: auto;
             }
@@ -294,7 +271,45 @@ $hint-spacing-inline: map.get((
             }
         }
 
+        @include m(filled) {
+            igx-prefix,
+            [igxPrefix] {
+                color: var-get($theme, 'input-prefix-color--filled');
+                background: var-get($theme, 'input-prefix-background--filled');
+            }
+
+            igx-suffix,
+            [igxSuffix] {
+                color: var-get($theme, 'input-suffix-color--filled');
+                background: var-get($theme, 'input-suffix-background--filled');
+            }
+        }
+
+        @include m(focused) {
+            igx-prefix,
+            [igxPrefix] {
+                color: var-get($theme, 'input-prefix-color--focused');
+                background: var-get($theme, 'input-prefix-background--focused');
+            }
+
+            igx-suffix,
+            [igxSuffix] {
+                color: var-get($theme, 'input-suffix-color--focused');
+                background: var-get($theme, 'input-suffix-background--focused');
+            }
+        }
+
         @include m(disabled) {
+            %input-textarea-disabled-colors {
+                cursor: default;
+
+                color: var-get($theme, 'disabled-text-color');
+
+                &::placeholder {
+                    color: var-get($theme, 'disabled-placeholder-color');
+                }
+            }
+
             igx-prefix,
             [igxPrefix],
             igx-suffix,
@@ -307,14 +322,34 @@ $hint-spacing-inline: map.get((
             }
 
             @include e(input) {
-                cursor: default;
+                @extend %input-textarea-disabled-colors;
+            }
 
+            @include e(textarea) {
+                @extend %input-textarea-disabled-colors;
+
+                resize: none;
+            }
+
+            @include e(hint) {
                 color: var-get($theme, 'disabled-text-color');
+            }
 
-                &::placeholder {
-                    color: var-get($theme, 'disabled-placeholder-color');
+            @include e(file-input) {
+                color: var-get($theme, 'disabled-text-color');
+            }
+
+            /* stylelint-disable max-nesting-depth */
+            &:hover {
+                @include e(input) {
+                    @extend %input-textarea-disabled-colors;
+                }
+
+                @include e(textarea) {
+                    @extend %input-textarea-disabled-colors;
                 }
             }
+            /* stylelint-enable max-nesting-depth */
         }
     }
 }
