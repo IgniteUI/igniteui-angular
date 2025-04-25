@@ -184,16 +184,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     protected override actionStripComponents: QueryList<IgxActionStripToken>;
 
     /**
-     * Event emitted when a layout of the row island is changed.
-     * ```html
-     * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
-     *      <igx-row-island [key]="'childData'" (layoutChange)="layoutChange($event)" #rowIsland>
-     *          <!-- ... -->
-     *      </igx-row-island>
-     * </igx-hierarchical-grid>
-     * ```
-     *
-     * @memberof IgxRowIslandComponent
+     * @hidden
      */
     @Output()
     public layoutChange = new EventEmitter<any>();

@@ -430,42 +430,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Output()
     public expandedChange = new EventEmitter<boolean>();
 
-    /**
-     * Emitted when the column property `collapsible` changes.
-     *
-     * ```html
-     * <igx-column (collapsibleChange)="collapsibleChange($event)">
-     * </igx-column>
-     * ```
-     *
-     * @memberof IgxColumnComponent
-     */
+    /** @hidden */
     @Output()
     public collapsibleChange = new EventEmitter<boolean>();
 
-    /**
-     * Emitted when the column property `visibleWhenCollapsed` changes.
-     *
-     * ```html
-     * <igx-column (visibleWhenCollapsedChange)="visibleWhenCollapsedChange($event)">
-     * </igx-column>
-     * ```
-     *
-     * @memberof IgxColumnComponent
-     */
+    /** @hidden */
     @Output()
     public visibleWhenCollapsedChange = new EventEmitter<boolean>();
 
-    /**
-     * Emitted when the column changed.
-     *
-     * ```html
-     * <igx-column (columnChange)="columnChange($event)">
-     * </igx-column>
-     * ```
-     *
-     * @memberof IgxColumnComponent
-     */
+    /** @hidden @internal */
     @Output()
     public columnChange = new EventEmitter<void>();
 

@@ -116,14 +116,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     public sortingChanged = new EventEmitter();
 
     /**
-     * Emitted when the column changed.
-     *
-     * ```html
-     * <igx-grid-excel-style-filtering (columnChange)="columnChange($event)">
-     * </igx-grid-excel-style-filtering>
-     * ```
-     *
-     * @memberof IgxGridExcelStyleFilteringComponent
+     * @hidden @internal
      */
     @Output()
     public columnChange = new EventEmitter<ColumnType>();
