@@ -153,6 +153,14 @@
             $focus-foreground: adaptive-contrast(var(--focus-background));
         }
 
+        @if not($focus-hover-background) and $focus-background {
+            $focus-hover-background: hsl(from var(--focus-background) h s calc(l * 0.9));
+        }
+
+        @if not($focus-hover-foreground) and $focus-hover-background {
+            $focus-hover-foreground: adaptive-contrast(var(--focus-hover-background));
+        }
+
         @if not($active-background) and $foreground {
             $active-background: hsl(from var(--foreground) h s calc(l * 0.8));
         }
