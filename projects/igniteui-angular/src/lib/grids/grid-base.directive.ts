@@ -1103,12 +1103,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     public rendered = new EventEmitter<boolean>();
 
     /**
-     * Emitted when the locale of the grid is changed.
-     *
-     * @example
-     * ```html
-     * <igx-grid [data]="employeeData" (localeChange)="localeChange($event)" [autoGenerate]="true"></igx-grid>
-     * ```
+     * @hidden @internal
      */
     @Output()
     public localeChange = new EventEmitter<boolean>();
