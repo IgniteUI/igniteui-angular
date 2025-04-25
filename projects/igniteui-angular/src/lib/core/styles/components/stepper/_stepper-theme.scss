@@ -186,50 +186,222 @@
     }
 
     $theme: digest-schema($stepper-schema);
-    $meta: map.get($theme, '_meta');
+
+    //default step
+    @if not($step-hover-background) and $step-background {
+        $step-hover-background: hsl(from var(--step-background) h s calc(l * 0.8));
+    }
+
+    @if not($step-focus-background) and $step-background {
+        $step-focus-background: hsl(from var(--step-background) h s calc(l * 0.9));
+    }
 
     @if not($indicator-background) and $step-background {
-        $indicator-background: text-contrast($step-background);
+        $indicator-background: hsla(from adaptive-contrast(var(--step-background)) h s l / .6);
+    }
+
+    @if not($indicator-outline) and $indicator-background {
+        $indicator-outline: var(--indicator-background);
     }
 
     @if not($indicator-color) and $indicator-background {
-        $indicator-color: text-contrast($indicator-background);
-    }
-
-    @if not($complete-indicator-color) and $complete-indicator-background {
-        $complete-indicator-color: text-contrast($complete-indicator-background);
-    }
-
-    @if not($invalid-indicator-color) and $invalid-indicator-background {
-        $invalid-indicator-color: text-contrast($invalid-indicator-background);
-    }
-
-    @if not($current-indicator-color) and $current-indicator-background {
-        $current-indicator-color: text-contrast($current-indicator-background);
+        $indicator-color: hsla(from adaptive-contrast(var(--indicator-background)) h s l / 1);
     }
 
     @if not($title-color) and $step-background {
-        $title-color: text-contrast($step-background);
+        $title-color: adaptive-contrast(var(--step-background));
     }
 
     @if not($subtitle-color) and $step-background {
-        $subtitle-color: text-contrast($step-background);
+        $subtitle-color: adaptive-contrast(var(--step-background));
     }
 
     @if not($title-hover-color) and $step-hover-background {
-        $title-hover-color: text-contrast($step-hover-background);
+        $title-hover-color: adaptive-contrast(var(--step-hover-background));
     }
 
     @if not($subtitle-hover-color) and $step-hover-background {
-        $subtitle-hover-color: text-contrast($step-hover-background);
+        $subtitle-hover-color: adaptive-contrast(var(--step-hover-background));
     }
 
     @if not($title-focus-color) and $step-focus-background {
-        $title-focus-color: text-contrast($step-focus-background);
+        $title-focus-color: adaptive-contrast(var(--step-focus-background));
     }
 
     @if not($subtitle-focus-color) and $step-focus-background {
-        $subtitle-focus-color: text-contrast($step-focus-background);
+        $subtitle-focus-color: adaptive-contrast(var(--step-focus-background));
+    }
+
+    //current step
+    @if not($current-step-background) and $step-background {
+        $current-step-background: var(--step-background);
+    }
+
+    @if not($current-step-hover-background) and $current-step-background {
+        $current-step-hover-background: hsl(from var(--current-step-background) h s calc(l * 0.8));
+    }
+
+    @if not($current-step-focus-background) and $current-step-background {
+        $current-step-focus-background: hsl(from var(--current-step-background) h s calc(l * 0.9));
+    }
+
+    @if not($current-indicator-background) and $current-step-background {
+        $current-indicator-background: hsl(from var(--current-step-background) h s calc(l * 0.6));
+    }
+
+    @if not($current-indicator-outline) and $current-indicator-background {
+        $current-indicator-outline: var(--current-indicator-background);
+    }
+
+    @if not($current-indicator-color) and $current-indicator-background {
+        $current-indicator-color: adaptive-contrast(var(--current-indicator-background));
+    }
+
+    @if not($current-title-color) and $current-step-background {
+        $current-title-color: adaptive-contrast(var(--current-step-background));
+    }
+
+    @if not($current-subtitle-color) and $current-step-background {
+        $current-subtitle-color: adaptive-contrast(var(--current-step-background));
+    }
+
+    @if not($current-title-hover-color) and $current-step-hover-background {
+        $current-title-hover-color: adaptive-contrast(var(--current-step-hover-background));
+    }
+
+    @if not($current-subtitle-hover-color) and $current-step-hover-background {
+        $current-subtitle-hover-color: adaptive-contrast(var(--current-step-hover-background));
+    }
+
+    @if not($current-title-focus-color) and $current-step-focus-background {
+        $current-title-focus-color: adaptive-contrast(var(--current-step-focus-background));
+    }
+
+    @if not($current-subtitle-focus-color) and $current-step-focus-background {
+        $current-subtitle-focus-color: adaptive-contrast(var(--current-step-focus-background));
+    }
+
+    //invalid step
+    @if not($invalid-step-background) and $step-background {
+        $invalid-step-background: var(--step-background);
+    }
+
+    @if not($invalid-step-hover-background) and $invalid-step-background {
+        $invalid-step-hover-background: hsl(from var(--invalid-step-background) h s calc(l * 0.8));
+    }
+
+    @if not($invalid-step-focus-background) and $invalid-step-background {
+        $invalid-step-focus-background: hsl(from var(--invalid-step-background) h s calc(l * 0.9));
+    }
+
+    @if not($invalid-indicator-background) and not($step-background) and $invalid-step-background {
+        $invalid-indicator-background: adaptive-contrast(var(--invalid-step-background));
+    }
+
+    @if not($invalid-indicator-outline) and $invalid-indicator-background {
+        $invalid-indicator-outline: var(--invalid-indicator-background);
+    }
+
+    @if not($invalid-indicator-color) and not($step-background) and $invalid-indicator-background {
+        $invalid-indicator-color: adaptive-contrast(var(--invalid-indicator-background));
+    }
+
+    @if not($invalid-title-color) and $invalid-indicator-background {
+        $invalid-title-color: var(--invalid-indicator-background);
+    }
+
+    @if not($invalid-subtitle-color) and $invalid-indicator-background {
+        $invalid-subtitle-color: var(--invalid-indicator-background);
+    }
+
+    @if not($invalid-title-hover-color) and $invalid-indicator-background {
+        $invalid-title-hover-color: var(--invalid-indicator-background);
+    }
+
+    @if not($invalid-subtitle-hover-color) and $invalid-indicator-background {
+        $invalid-subtitle-hover-color: var(--invalid-indicator-background);
+    }
+
+    @if not($invalid-title-focus-color) and $invalid-indicator-background {
+        $invalid-title-focus-color: var(--invalid-indicator-background);
+    }
+
+    @if not($invalid-subtitle-focus-color) and $invalid-indicator-background {
+        $invalid-subtitle-focus-color: var(--invalid-indicator-background);
+    }
+
+    //completed step
+    @if not($complete-step-background) and $step-background {
+        $complete-step-background: var(--step-background);
+    }
+
+    @if not($complete-step-hover-background) and $complete-step-background {
+        $complete-step-hover-background: hsl(from var(--complete-step-background) h s calc(l * 0.8));
+    }
+
+    @if not($complete-step-focus-background) and $complete-step-background {
+        $complete-step-focus-background: hsl(from var(--complete-step-background) h s calc(l * 0.9));
+    }
+
+    @if not($complete-indicator-background) and $complete-step-background {
+        $complete-indicator-background: adaptive-contrast(var(--complete-step-background));
+    }
+
+    @if not($complete-indicator-color) and $complete-indicator-background {
+        $complete-indicator-color: adaptive-contrast(var(--complete-indicator-background));
+    }
+
+    @if not($complete-title-color) and $complete-step-background {
+        $complete-title-color: adaptive-contrast(var(--complete-step-background));
+    }
+
+    @if not($complete-subtitle-color) and $complete-step-background {
+        $complete-subtitle-color: adaptive-contrast(var(--complete-step-background));
+    }
+
+    @if not($complete-title-hover-color) and $complete-step-hover-background {
+        $complete-title-hover-color: adaptive-contrast(var(--complete-step-hover-background));
+    }
+
+    @if not($complete-subtitle-hover-color) and $complete-step-hover-background {
+        $complete-subtitle-hover-color: adaptive-contrast(var(--complete-step-hover-background));
+    }
+
+    @if not($complete-title-focus-color) and $complete-step-focus-background {
+        $complete-title-focus-color: adaptive-contrast(var(--complete-step-focus-background));
+    }
+
+    @if not($complete-subtitle-focus-color) and $complete-step-focus-background {
+        $complete-subtitle-focus-color: adaptive-contrast(var(--complete-step-focus-background));
+    }
+
+    //disabled step
+    @if not($disabled-indicator-background) and $step-background {
+        $disabled-indicator-background: hsla(from (adaptive-contrast(var(--step-background)) h s l / 0.5));
+    }
+
+    @if not($disabled-indicator-color) and $disabled-indicator-background {
+        $disabled-indicator-color: hsla(from (adaptive-contrast(var(--disabled-indicator-background)) h s l / 0.5));
+    }
+
+    @if not($disabled-indicator-outline) and $disabled-indicator-background {
+        $disabled-indicator-outline: var(--disabled-indicator-background);
+    }
+
+    @if not($disabled-title-color) and $step-background {
+        $disabled-title-color: hsla(from (adaptive-contrast(var(--step-background)) h s l / 0.3));
+    }
+
+    @if not($disabled-subtitle-color) and $step-background {
+        $disabled-subtitle-color: hsla(from (adaptive-contrast(var(--step-background)) h s l / 0.3));
+    }
+
+    @if not($step-separator-color) and $step-background {
+        $step-separator-color: var(--step-background);
+    }
+
+    @if not($step-separator-color) and $indicator-background {
+        $step-separator-color: var(--indicator-background);
     }
 
     @if not($border-radius-indicator) {
@@ -318,10 +490,6 @@
         // Border-radius
         border-radius-indicator: $border-radius-indicator,
         border-radius-step-header: $border-radius-step-header,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -331,7 +499,7 @@
 @mixin stepper($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     $indicator-size: map.get((
         'material': rem(24px),
