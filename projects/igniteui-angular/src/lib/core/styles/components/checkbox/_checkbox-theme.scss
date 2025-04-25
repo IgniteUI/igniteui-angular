@@ -29,8 +29,11 @@
 /// @param {List} $border-radius [null] - The border radius used for checkbox component.
 /// @param {List} $border-radius-ripple [null] - The border radius used for checkbox ripple.
 /// @param {Color} $focus-outline-color [null] - The focus outlined color.
+/// @param {Color} $focus-outline-color-focused [null] - The focus outlined color for focused state.
+/// @param {Color} $focus-border-color [null] - The focus border color.
 /// @param {Color} $error-color [null] - The border and fill colors in invalid state.
 /// @param {Color} $error-color-hover [null] - The border and fill colors in invalid state on hover.
+/// @param {Color} $focus-outline-color-error [null] - The focus outline error color.
 /// Set to light when the surrounding area is dark.
 ///
 /// @requires $light-material-schema
@@ -58,8 +61,11 @@
     $disabled-color-label: null,
     $border-radius-ripple: null,
     $focus-outline-color: null,
+    $focus-outline-color-focused: null,
+    $focus-border-color: null,
     $error-color: null,
     $error-color-hover: null,
+    $focus-outline-color-error: null,
 ) {
     $name: 'igx-checkbox';
     $checkbox-schema: ();
@@ -71,7 +77,55 @@
     }
 
     $theme: digest-schema($checkbox-schema);
-    $meta: map.get($theme, '_meta');
+    $variant: map.get($theme, '_meta', 'theme');
+
+    @if not($empty-color-hover) and $empty-color {
+        $empty-color-hover: hsl(from var(--empty-color) h s calc(l * 0.9));
+    }
+
+    @if not($fill-color-hover) and $fill-color {
+        $fill-color-hover: hsl(from var(--fill-color) h s calc(l * 0.9));
+    }
+
+    @if not($tick-color) and $fill-color {
+        $tick-color: adaptive-contrast(var(--fill-color));
+    }
+
+    @if not($label-color-hover) and $label-color {
+        $label-color-hover: hsl(from var(--label-color) h s calc(l * 0.9));
+    }
+
+    @if not($focus-border-color) and $fill-color {
+        $focus-border-color: var(--fill-color);
+    }
+
+    @if not($disabled-indeterminate-color) and $fill-color {
+        $disabled-indeterminate-color: hsla(from var(--fill-color) h s l / 0.5);
+    }
+
+    @if not($error-color-hover) and $error-color {
+        $error-color-hover: hsl(from var(--error-color) h s calc(l * 0.9));
+    }
+
+    @if not($focus-outline-color-error) and $error-color {
+        $focus-outline-color-error: hsla(from var(--error-color) h s l / .5);
+    }
+
+    @if $variant == 'bootstrap' {
+        @if not($focus-outline-color) and $fill-color {
+            $focus-outline-color: hsla(from var(--fill-color) h s l / .5);
+        }
+    }
+
+    @if $variant == 'indigo' {
+        @if not($focus-outline-color) and $empty-color {
+            $focus-outline-color: hsla(from var(--empty-color) h s l / .5);
+        }
+
+        @if not($focus-outline-color-focused) and $fill-color {
+            $focus-outline-color-focused: hsla(from var(--fill-color) h s l / .5);
+        }
+    }
 
     @return extend($theme, (
         name: $name,
@@ -91,13 +145,11 @@
         border-radius: $border-radius,
         border-radius-ripple: $border-radius-ripple,
         focus-outline-color: $focus-outline-color,
+        focus-outline-color-focused: $focus-outline-color-focused,
+        focus-border-color: $focus-border-color,
         error-color: $error-color,
         error-color-hover: $error-color-hover,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme'),
-            theme-variant: map.get($schema, '_meta', 'variant')
-        )),
+        focus-outline-color-error: $focus-outline-color-error
     ));
 }
 
@@ -106,8 +158,8 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin checkbox($theme) {
     @include css-vars($theme);
-    $theme-variant: map.get($theme, '_meta', 'theme-variant');
-    $variant: map.get($theme, '_meta', 'variant');
+    $theme-variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $material-theme: $variant == 'material';
     $bootstrap-theme: $variant == 'bootstrap';
 
@@ -591,14 +643,14 @@
     %igx-checkbox--focused-bootstrap {
         %cbx-composite {
             border-radius: var-get($theme, 'border-radius');
-            border-color: color($color: 'primary', $variant: 200);
+            border-color: var-get($theme, 'focus-border-color');
             box-shadow: 0 0 0 rem(4px) var-get($theme, 'focus-outline-color');
         }
     }
 
-    %igx-checkbox--focused-hovered {
+    %igx-checkbox--focused-hovered-bootstrap {
         %cbx-composite {
-            border-color: color($color: 'primary', $variant: 300);
+            border-color: hsl(from var-get($theme, 'focus-border-color') h calc(s * 1.12) calc(l * 0.82));
         }
     }
 

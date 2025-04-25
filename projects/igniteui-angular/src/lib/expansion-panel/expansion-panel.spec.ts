@@ -1348,7 +1348,7 @@ export class IgxExpansionPanelGridComponent {
         </igx-expansion-panel>
     </div>
     `,
-    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxListComponent, IgxListItemComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective]
+    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxListComponent, IgxListItemComponent, IgxExpansionPanelTitleDirective]
 })
 export class IgxExpansionPanelListComponent {
     @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent, static: true })

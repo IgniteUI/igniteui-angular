@@ -3053,7 +3053,7 @@ class IgxSelectTemplateFormComponent {
                 <igx-icon>alarm</igx-icon>
             </igx-prefix>
             <igx-select-item>None</igx-select-item>
-            @for (item of items; track item) {
+            @for (item of items; track item.field) {
                 <igx-select-item [value]="item.field">
                     {{ item.field }}
                 </igx-select-item>
@@ -3133,7 +3133,7 @@ class IgxSelectCDRComponent {
             }
         </igx-select>
     `,
-    imports: [IgxSelectComponent, IgxSelectItemComponent, IgxLabelDirective]
+    imports: [IgxSelectComponent, IgxSelectItemComponent]
 })
 class IgxSelectWithIdComponent {
     @ViewChild(IgxSelectComponent, { read: IgxSelectComponent, static: true })

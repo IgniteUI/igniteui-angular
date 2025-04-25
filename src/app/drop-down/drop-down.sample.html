@@ -108,8 +108,8 @@
     </igx-drop-down>
 
     <div igxToggle #toggle="toggle" style="height: 300px; overflow: auto">
-        @for(item of items; track item) {
-        <div>{{ item.field }}</div>
+        @for(item of items; track item.field) {
+            <div>{{ item.field }}</div>
         }
     </div>
 

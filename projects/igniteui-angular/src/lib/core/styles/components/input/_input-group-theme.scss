@@ -380,14 +380,17 @@
         } @else {
             min-height: 100% !important;
         }
+
         transition: color $transition-timing, background $transition-timing;
 
-        @if $material-theme {
-            padding-inline: pad-inline(rem(12px), rem(14px), rem(16px));
-        } @else if $indigo-theme {
-            padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
-        } @else {
-            padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        &:not(:empty) {
+            @if $material-theme {
+                padding-inline: pad-inline(rem(12px), rem(14px), rem(16px));
+            } @else if $indigo-theme {
+                padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
+            } @else {
+                padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+            }
         }
     }
 
@@ -816,16 +819,16 @@
             %form-group-bundle-start {
                 border-color: var-get($theme, 'hover-border-color');
             }
-    
+
             %igx-input-group__filler {
                 border-color: var-get($theme, 'hover-border-color');
             }
-    
+
             %igx-input-group__notch {
                 border-block-start-color: var-get($theme, 'hover-border-color');
                 border-block-end-color: var-get($theme, 'hover-border-color');
             }
-    
+
             %form-group-bundle-end {
                 border-color: var-get($theme, 'hover-border-color');
             }
@@ -910,6 +913,14 @@
         background: var-get($theme, 'search-disabled-background');
         box-shadow: var-get($theme, 'search-disabled-shadow');
         border-color: var-get($theme, 'disabled-border-color');
+
+        igx-prefix,
+        [igxPrefix],
+        igx-suffix,
+        [igxSuffix] {
+            background: inherit;
+            color: var-get($theme, 'disabled-text-color');
+        }
     }
 
     %form-group-bundle-main--border {
@@ -1009,8 +1020,8 @@
     }
 
     %form-group-label--focused-border:not(:is(
-        %form-group-border--error, 
-        %form-group-border--warning, 
+        %form-group-border--error,
+        %form-group-border--warning,
         %form-group-border--success))
     {
         &:hover {
@@ -1645,12 +1656,29 @@
         [igxPrefix] {
             overflow: hidden;
         }
+
+        igx-prefix,
+        [igxPrefix] {
+            background: var(--igx-input-group-input-prefix-background, transparent);
+            color: var(--igx-input-group-input-prefix-color, var(--ig-primary-500));
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            background: var(--igx-input-group-input-suffix-background, transparent);
+            color: var(--igx-input-group-input-suffix-color, var(--ig-primary-500));
+        }
     }
 
     %igx-input-group-fluent-search--focused {
         igx-prefix,
         [igxPrefix] {
             display: none;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            color: var(--igx-input-group-input-suffix-color--focused, var(--ig-gray-900));
         }
     }
 
@@ -1728,6 +1756,10 @@
     %form-group-bundle--fluent--focus {
         border-color: var-get($theme, 'focused-border-color');
         border-width: rem(2px);
+
+        &:hover {
+            border-color: var-get($theme, 'focused-border-color');
+        }
     }
 
     %form-group-bundle-error--fluent,
@@ -1812,8 +1844,13 @@
         transform-origin: top left;
         margin-top: 0 !important;
         height: auto;
-        margin-block-end: rem(4px);
         color: var-get($theme, 'idle-secondary-color');
+
+        @if $variant == 'fluent' {
+            margin-block-end: rem(5px);
+        } @else {
+            margin-block-end: rem(4px);
+        }
 
         [dir='rtl'] & {
             transform-origin: top right;
@@ -1843,7 +1880,6 @@
     }
 
     %fluent-label-focused {
-        color: color(null, 'gray', 800);
         transform: translateY(0) scale(1);
     }
 
@@ -1887,7 +1923,9 @@
     %form-group-suffix-fluent,
     %form-group-prefix-fluent-search,
     %form-group-suffix-fluent-search {
-        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        &:not(:empty) {
+            padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        }
     }
 
     %fluent-upload-button {

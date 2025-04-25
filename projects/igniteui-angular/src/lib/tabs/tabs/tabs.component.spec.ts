@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import {
     AddingSelectedTabComponent, TabsContactsComponent, TabsDisabledTestComponent, TabsRoutingDisabledTestComponent,
-    TabsRoutingGuardTestComponent, TabsRoutingTestComponent, TabsRtlComponent, TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component,
+    TabsRoutingGuardTestComponent, TabsRoutingTestComponent, TabsRtlComponent, TabsTabsOnlyModeTest1Component,
     TabsTest2Component, TabsTestBug4420Component, TabsTestComponent, TabsTestCustomStylesComponent,
     TabsTestHtmlAttributesComponent, TabsTestSelectedTabComponent, TabsWithPrefixSuffixTestComponent,
     TemplatedTabsTestComponent
@@ -29,7 +29,7 @@ const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: tr
 const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: ' ', bubbles: true });
 
 describe('IgxTabs', () => {
-    configureTestSuite();
+    configureTestSuite({ checkLeaks: true });
 
     const tabItemNormalCssClass = 'igx-tabs__header-item';
     const tabItemSelectedCssClass = 'igx-tabs__header-item--selected';
@@ -58,7 +58,6 @@ describe('IgxTabs', () => {
                 TabsTestBug4420Component,
                 TabsRoutingTestComponent,
                 TabsTabsOnlyModeTest1Component,
-                TabsTabsOnlyModeTest2Component,
                 TabsDisabledTestComponent,
                 TabsRoutingGuardTestComponent,
                 TabsWithPrefixSuffixTestComponent,
@@ -493,7 +492,7 @@ describe('IgxTabs', () => {
             expect(tabs.items.length).toBe(2);
             expect(tabs.selectedIndex).toBe(0);
 
-            fixture.componentInstance.addTab(3);
+            fixture.componentInstance.addTab();
             fixture.detectChanges();
             tick(100);
 
@@ -877,8 +876,9 @@ describe('IgxTabs', () => {
         let headerElements;
 
         beforeEach(waitForAsync(() => {
-            fixture = TestBed.createComponent(TabsTabsOnlyModeTest2Component);
+            fixture = TestBed.createComponent(TabsTabsOnlyModeTest1Component);
             tabsComp = fixture.componentInstance.tabs;
+            tabsComp.selectedIndex = 2;
             fixture.detectChanges();
             tabItems = tabsComp.items.toArray();
             headerElements = tabItems.map(item => item.headerComponent.nativeElement);
