@@ -590,10 +590,7 @@
     }
 
     %igx-button--flat {
-        --component-size: var(
-            --ig-size,
-            #{var-get($flat-theme, 'default-size')}
-        );
+        --component-size: var(--ig-size, #{var-get($flat-theme, 'default-size')});
         background: var-get($flat-theme, 'background');
         color: var-get($flat-theme, 'foreground');
         border-radius: var-get($flat-theme, 'border-radius');
@@ -691,10 +688,7 @@
     }
 
     %igx-button--outlined {
-        --component-size: var(
-            --ig-size,
-            #{var-get($outlined-theme, 'default-size')}
-        );
+        --component-size: var(--ig-size, #{var-get($outlined-theme, 'default-size')});
         background: var-get($outlined-theme, 'background');
         color: var-get($outlined-theme, 'foreground');
         border-color: var-get($outlined-theme, 'border-color');
@@ -802,20 +796,13 @@
             &::after {
                 @extend %fluent-border;
 
-                box-shadow: 0
-                    0
-                    0
-                    rem(1px)
-                    var-get($outlined-theme, 'focus-visible-border-color');
+                box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-border-color');
             }
         }
     }
 
     %igx-button--contained {
-        --component-size: var(
-            --ig-size,
-            #{var-get($contained-theme, 'default-size')}
-        );
+        --component-size: var(--ig-size, #{var-get($contained-theme, 'default-size')});
         color: var-get($contained-theme, 'foreground');
         background: var-get($contained-theme, 'background');
         border-color: var-get($contained-theme, 'border-color');
@@ -885,11 +872,7 @@
             &::after {
                 @extend %fluent-border;
 
-                box-shadow: 0
-                    0
-                    0
-                    rem(1px)
-                    var-get($contained-theme, 'focus-visible-border-color');
+                box-shadow: 0 0 0 rem(1px) var-get($contained-theme, 'focus-visible-border-color');
             }
         }
 
@@ -936,10 +919,7 @@
     }
 
     %igx-button--fab {
-        --component-size: var(
-            --ig-size,
-            #{var-get($fab-theme, 'default-size')}
-        );
+        --component-size: var(--ig-size, #{var-get($fab-theme, 'default-size')});
         padding-block: pad-block(
             map.get($button-floating-padding-block, 'compact'),
             map.get($button-floating-padding-block, 'cosy'),
@@ -1023,14 +1003,8 @@
             &::after {
                 @extend %fluent-border;
                 $btn-indent: rem(2px);
-                border-radius: calc(
-                    #{var-get($fab-theme, 'border-radius')} - #{$btn-indent}
-                );
-                box-shadow: 0
-                    0
-                    0
-                    rem(1px)
-                    var-get($fab-theme, 'focus-visible-border-color');
+                border-radius: calc(#{var-get($fab-theme, 'border-radius')} - #{$btn-indent});
+                box-shadow: 0 0 0 rem(1px) var-get($fab-theme, 'focus-visible-border-color');
             }
         }
 
