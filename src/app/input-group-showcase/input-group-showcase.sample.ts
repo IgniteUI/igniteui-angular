@@ -8,6 +8,7 @@ import {
     IgcSelectComponent,
     IgcSelectItemComponent,
     IgcSelectHeaderComponent,
+    IgcFileInputComponent,
 } from 'igniteui-webcomponents';
 import {
     IGX_INPUT_GROUP_DIRECTIVES,
@@ -19,7 +20,6 @@ import {
     IgxComboComponent,
 } from 'igniteui-angular';
 import {PropertyPanelConfig, PropertyChangeService, Properties} from '../properties-panel/property-change.service';
-import {NgClass} from "@angular/common";
 
 // Define Ignite UI Web Components
 defineComponents(
@@ -28,7 +28,8 @@ defineComponents(
     IgcSelectGroupComponent,
     IgcSelectComponent,
     IgcSelectItemComponent,
-    IgcSelectHeaderComponent
+    IgcSelectHeaderComponent,
+    IgcFileInputComponent
 );
 
 @Component({
@@ -44,7 +45,6 @@ defineComponents(
         IgxSelectComponent,
         IgxSelectItemComponent,
         IgxComboComponent,
-        NgClass,
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

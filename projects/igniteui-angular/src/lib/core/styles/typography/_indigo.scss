@@ -74,10 +74,10 @@
     // ));
     @include excel-filtering-typography();
     @include icon-button-typography();
-    @include input-group-typography($categories: (
-        helper-text: 'caption',
-        input-text: 'body-2'
-    ));
+    //@include input-group-typography($categories: (
+    //    helper-text: 'caption',
+    //    input-text: 'body-2'
+    //));
     @include linear-bar-typography();
     // @include list-typography($categories: (
     //     header: 'overline',
