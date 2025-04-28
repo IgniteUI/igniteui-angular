@@ -44,6 +44,9 @@ export interface IExportRecord {
     summaryKey?: string;
     hierarchicalOwner?: string;
     references?: IColumnInfo[];
+    /* Adding `rawData` and `dimesnionKeys` properties to support properly exporting pivot grid data to CSV. */
+    rawData?: any;
+    dimensionKeys?: string[];
 }
 
 export interface IColumnList {
@@ -448,12 +451,17 @@ export abstract class IgxBaseExporter {
         if (!isSpecialData) {
             const owner = record.owner === undefined ? DEFAULT_OWNER : record.owner;
             const ownerCols = this._ownersMap.get(owner).columns;
+            const hasRowHeaders = ownerCols.some(c => c.headerType === ExportHeaderType.RowHeader);
 
             if (record.type !== ExportRecordType.HeaderRecord) {
                 const columns = ownerCols
                     .filter(c => c.headerType === ExportHeaderType.ColumnHeader && !c.skip)
                     .sort((a, b) => a.startIndex - b.startIndex)
                     .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
+
+                if (hasRowHeaders) {
+                    record.rawData = record.data;
+                }
 
                 record.data = columns.reduce((a, e) => {
                     if (!e.skip) {
@@ -591,6 +599,10 @@ export abstract class IgxBaseExporter {
             };
 
             this.flatRecords.push(pivotGridRecord);
+        }
+
+        if (this.flatRecords.length) {
+            this.flatRecords[0].dimensionKeys = Object.values(this.pivotGridRowDimensionsMap);
         }
     }
 
@@ -1342,8 +1354,8 @@ export abstract class IgxBaseExporter {
 
             for (const k of Object.keys(groupedRecords)) {
                 groupedRecords[k] = groupedRecords[k].filter(row => mapKeys.every(mk => Object.keys(row).includes(mk))
-                    && mapValues.every(mv => Object.values(row).includes(mv)));
-
+                && mapValues.every(mv => Object.values(row).includes(mv)));
+                
                 if (groupedRecords[k].length === 0) {
                     delete groupedRecords[k];
                 }
