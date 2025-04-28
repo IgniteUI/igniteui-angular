@@ -422,7 +422,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     }
 
     protected patchOutputComponents(eventArgs: any) {
-        return this.createProxyForComponentValue(eventArgs, 0);
+        return this.createProxyForComponentValue(eventArgs, 1).value;
     }
 
     /**
@@ -430,30 +430,48 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
      * If event args are array of angular component instances should return array of proxies of each of those instances.
      * If event args are object that has a single property being angular component should return same object except the angular component being a proxy of itself.
      */
-    protected createProxyForComponentValue(value: any, depth: number) {
+    protected createProxyForComponentValue(value: any, depth: number): { value: any, hasProxies: boolean } {
         if (depth > this.maxEventProxyDepth) {
-            return value;
+            return { value, hasProxies: false };
         }
 
+        let hasProxies = false;
         // TO DO!: Not very reliable as it is a very internal API and could be subject to change. If something comes up, should be changed.
         if (value?.__ngContext__) {
             const componentConfig = this.config.find((info: ComponentConfig) => value.constructor === info.component);
             if (componentConfig?.templateProps) {
-                return this.createElementsComponentProxy(value, componentConfig);
+                return { value: this.createElementsComponentProxy(value, componentConfig), hasProxies: true };
             }
         } else if (Array.isArray(value)) {
-            return value.map(item => this.createProxyForComponentValue(item, depth + 1))
-        } else if (typeof value === "object" && Object.entries(value).length) {
+            if (!value[0]) {
+                return { value, hasProxies: false };
+            } else {
+                // For array limit their parsing to first level and check if first item has created proxy inside.
+                const firstItem = this.createProxyForComponentValue(value[0], this.maxEventProxyDepth);
+                if (firstItem.hasProxies) {
+                    const mappedArray = value.slice(1, value.length).map(item => this.createProxyForComponentValue(item, depth + 1));
+                    mappedArray.unshift(firstItem);
+                    return { value: mappedArray, hasProxies: true };
+                }
+            }
+        } else if (typeof value === "object" && Object.entries(value).length && !(value instanceof Event)) {
             for (const [key, item] of Object.entries(value)) {
-                value[key] = this.createProxyForComponentValue(item, depth + 1);
+                if (!item) {
+                    value[key] = item;
+                } else {
+                    const parsedItem = this.createProxyForComponentValue(item, depth + 1);
+                    value[key] = parsedItem.value;
+                    hasProxies = parsedItem.hasProxies || hasProxies;
+                }
             }
         }
 
-        return value;
+        return { value, hasProxies };
     }
 
     /** Create proxy for a component that handles setting template props, making sure it provides correct TemplateRef and not Lit template */
     protected createElementsComponentProxy(component: any, config: ComponentConfig) {
+        console.log("createProxy");
         const parentThis = this;
         return new Proxy(component, {
             set(target: any, prop: string, newValue: any) {
