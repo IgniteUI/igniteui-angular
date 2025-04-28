@@ -1,8 +1,15 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use 'sass:color';
+@use 'sass:list';
+@use 'sass:string';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
+
+@forward './flat-button-theme';
+@forward './contained-button-theme';
+@forward './outlined-button-theme';
+@forward './fab-button-theme';
 
 ////
 /// @group themes
@@ -122,61 +129,39 @@
         }
 
         @if not($foreground) and $background {
-            $foreground: text-contrast($background);
-        }
-
-        @if not($hover-background) and $background {
-            @if meta.type-of($background) == 'color' {
-                $hover-background: color.scale($background, $lightness: 5%);
-            }
-        }
-
-        @if not($hover-foreground) and $hover-background {
-            @if meta.type-of($hover-background) == 'color' {
-                $hover-foreground: text-contrast($hover-background);
-            }
+            $foreground: adaptive-contrast(var(--background));
         }
 
         @if not($icon-color) and $background {
-            @if meta.type-of($background) == 'color' {
-                $icon-color: text-contrast($background);
-            }
+            $icon-color: adaptive-contrast(var(--background));
+        }
+
+        @if not($hover-foreground) and $hover-background {
+            $hover-foreground: adaptive-contrast(var(--hover-background));
         }
 
         @if not($icon-color-hover) and $hover-foreground {
-            @if meta.type-of($hover-background) == 'color' {
-                $icon-color-hover: $hover-foreground;
-            }
-        }
-
-        @if not($focus-background) and $background {
-            $focus-background: color.scale($background, $lightness: 5%);
+            $icon-color-hover: var(--hover-foreground);
         }
 
         @if not($focus-foreground) and $focus-background {
-            $focus-foreground: text-contrast($focus-background);
-        }
-
-        @if not($focus-hover-background) and $background {
-            @if meta.type-of($background) == 'color' {
-                $focus-hover-background: color.scale($background, $lightness: 5%);
-            }
+            $focus-foreground: adaptive-contrast(var(--focus-background));
         }
 
         @if not($focus-hover-foreground) and $focus-hover-background {
-            $focus-hover-foreground: text-contrast($focus-hover-background);
+            $focus-hover-foreground: adaptive-contrast(var(--focus-hover-background));
         }
 
         @if not($focus-visible-background) and $focus-background {
-            $focus-visible-background: $focus-background;
+            $focus-visible-background: var(--focus-background);
         }
 
-        @if not($focus-visible-foreground) and $focus-foreground {
-            $focus-visible-foreground: $focus-foreground;
+        @if not($focus-visible-foreground) and $focus-visible-background {
+            $focus-visible-foreground: adaptive-contrast(var(--focus-visible-foreground));
         }
 
         @if not($focus-visible-border-color) and $focus-border-color {
-            $focus-visible-border-color: $focus-border-color;
+            $focus-visible-border-color: var(--focus-border-color);
         }
 
         @if not($_resting-shadow) {
@@ -242,7 +227,6 @@
                 disabled-icon-color: $disabled-icon-color,
                 disabled-border-color: $disabled-border-color,
                 size: $size,
-                theme: map.get($schema, '_meta', 'theme'),
             ))
         ));
     }
@@ -256,28 +240,60 @@
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
-/// @param {Map} $theme - The theme used to style the component.
-@mixin button($theme) {
+/// @param {Map} $flat [null] - The flat theme used to style the component.
+/// @param {Map} $contained [null] - The contained theme used to style the component.
+/// @param {Map} $outlined [null] - The outlined theme used to style the component.
+/// @param {Map} $fab [null] - The fab theme used to style the component.
+@mixin button($themes...) {
     $button-width: rem(88px);
+    $flat-theme: null;
+    $contained-theme: null;
+    $outlined-theme: null;
+    $fab-theme: null;
+    $variant: 'material';
 
-    $variant: map.get($theme, variant);
+    $required: ('flat', 'contained', 'outlined', 'fab');
+    $added: ();
+    $missing: ();
 
-    $flat-theme: map.get(map.get($theme, 'themes'), 'flat');
-    $outlined-theme: map.get(map.get($theme, 'themes'), 'outlined');
-    $contained-theme: map.get(map.get($theme, 'themes'), 'contained');
-    $fab-theme: map.get(map.get($theme, 'themes'), 'fab');
+    @each $key, $theme in meta.keywords($themes) {
+        $type: map.get($theme, _meta, type);
 
-    @include css-vars($flat-theme);
-    @include css-vars($outlined-theme);
-    @include css-vars($contained-theme);
-    @include css-vars($fab-theme);
+        $added: list.append($added, $key);
 
-    $time: map.get((
-        'material': .1s,
-        'fluent': .1s,
-        'bootstrap': .15s,
-        'indigo': .15s
-    ), $variant);
+        @if $type == 'flat' {
+            $flat-theme: $theme;
+        } @else if $type == 'contained' {
+            $contained-theme: $theme;
+        } @else if $type == 'outlined' {
+            $outlined-theme: $theme;
+        } @else if $type == 'fab' {
+            $fab-theme: $theme;
+        }
+
+        $variant: map.get($theme, '_meta', 'theme');
+        @include css-vars($theme);
+    }
+
+    @each $item in $required {
+        @if not(list.index($added, $item)) {
+            $missing: list.append($missing, '$#{$item}', $separator: comma);
+        }
+    }
+
+    @if list.length($missing) != 0 {
+        @error meta.inspect(string.unquote("Missing theme properties:") #{$missing});
+    }
+
+    $time: map.get(
+        (
+            'material': 0.1s,
+            'fluent': 0.1s,
+            'bootstrap': 0.15s,
+            'indigo': 0.15s,
+        ),
+        $variant
+    );
 
     $button-transition: color $time ease-in-out,
         background-color $time ease-in-out,
@@ -292,89 +308,101 @@
     $button-padding-inline: (
         comfortable: rem(16px, 16px),
         cosy: rem(12px, 16px),
-        compact: rem(8px, 16px)
+        compact: rem(8px, 16px),
     );
 
     $button-padding-indigo-inline: (
         comfortable: rem(24px, 16px),
         cosy: rem(16px, 16px),
-        compact: rem(10px, 16px)
+        compact: rem(10px, 16px),
     );
 
     $button-padding-material-block: (
         comfortable: rem(7px, 16px),
         cosy: rem(4px, 16px),
-        compact: rem(1px, 16px)
+        compact: rem(1px, 16px),
     );
 
     $button-padding-fluent-block: (
         comfortable: 0,
         cosy: 0,
-        compact: 0
+        compact: 0,
     );
 
     $button-padding-bootstrap-block: (
         comfortable: rem(6px, 16px),
         cosy: rem(4px, 16px),
-        compact: rem(2px, 16px)
+        compact: rem(2px, 16px),
     );
 
     $button-padding-indigo-block: (
         comfortable: 0,
         cosy: 0,
-        compact: 0
+        compact: 0,
     );
 
-    $button-padding-inline: map.get((
-        'material': $button-padding-inline,
-        'fluent': $button-padding-inline,
-        'bootstrap': $button-padding-inline,
-        'indigo': $button-padding-indigo-inline,
-    ), $variant);
+    $button-padding-inline: map.get(
+        (
+            'material': $button-padding-inline,
+            'fluent': $button-padding-inline,
+            'bootstrap': $button-padding-inline,
+            'indigo': $button-padding-indigo-inline,
+        ),
+        $variant
+    );
 
-    $button-padding-block: map.get((
-        'material': $button-padding-material-block,
-        'fluent': $button-padding-fluent-block,
-        'bootstrap': $button-padding-bootstrap-block,
-        'indigo': $button-padding-indigo-block,
-    ), $variant);
+    $button-padding-block: map.get(
+        (
+            'material': $button-padding-material-block,
+            'fluent': $button-padding-fluent-block,
+            'bootstrap': $button-padding-bootstrap-block,
+            'indigo': $button-padding-indigo-block,
+        ),
+        $variant
+    );
 
-    $outlined-button-padding-inline: map.get((
-        'material': $button-padding-inline,
-        'fluent': $button-padding-inline,
-        'bootstrap': $button-padding-inline,
-        'indigo': $button-padding-indigo-inline,
-    ), $variant);
+    $outlined-button-padding-inline: map.get(
+        (
+            'material': $button-padding-inline,
+            'fluent': $button-padding-inline,
+            'bootstrap': $button-padding-inline,
+            'indigo': $button-padding-indigo-inline,
+        ),
+        $variant
+    );
 
-    $outlined-button-padding-block: map.get((
-        'material': $button-padding-material-block,
-        'fluent': $button-padding-fluent-block,
-        'bootstrap': $button-padding-bootstrap-block,
-        'indigo': $button-padding-indigo-block
-    ), $variant);
+    $outlined-button-padding-block: map.get(
+        (
+            'material': $button-padding-material-block,
+            'fluent': $button-padding-fluent-block,
+            'bootstrap': $button-padding-bootstrap-block,
+            'indigo': $button-padding-indigo-block,
+        ),
+        $variant
+    );
 
     $button-floating-padding-block: (
         comfortable: rem(8px),
         cosy: rem(4px),
-        compact: 0
+        compact: 0,
     );
 
     $button-floating-padding-inline: (
         comfortable: rem(14px),
         cosy: rem(10px),
-        compact: rem(6px)
+        compact: rem(6px),
     );
 
     $button-floating-padding-indigo-inline: (
         comfortable: rem(10px),
         cosy: rem(8px),
-        compact: rem(6px)
+        compact: rem(6px),
     );
 
     $items-gap: (
         comfortable: rem(12px),
         cosy: rem(8px),
-        compact: rem(4px)
+        compact: rem(4px),
     );
 
     $items-gap-indigo-comfortable: rem(8px);
@@ -382,73 +410,102 @@
     $filtering-row-button-size: (
         comfortable: rem(40px),
         cosy: rem(30px),
-        compact: rem(21px)
+        compact: rem(21px),
     );
 
-    $icon-sizes: map.get((
-        'material': rem(18px),
-        'fluent': rem(18px),
-        'bootstrap': rem(18px),
-        'indigo': rem(16px),
-    ), $variant);
+    $icon-sizes: map.get(
+        (
+            'material': rem(18px),
+            'fluent': rem(18px),
+            'bootstrap': rem(18px),
+            'indigo': rem(16px),
+        ),
+        $variant
+    );
 
     $icon-in-button-size: $icon-sizes;
 
-    $contained-shadow: map.get((
-        'material': var-get($contained-theme, 'resting-shadow'),
-        'fluent': none,
-        'bootstrap': none,
-        'indigo': none
-    ), $variant);
+    $contained-shadow: map.get(
+        (
+            'material': var-get($contained-theme, 'resting-shadow'),
+            'fluent': none,
+            'bootstrap': none,
+            'indigo': none,
+        ),
+        $variant
+    );
 
-    $contained-shadow--hover: map.get((
-        'material': var-get($contained-theme, 'hover-shadow'),
-        'fluent': none,
-        'bootstrap': none,
-        'indigo': none
-    ), $variant);
+    $contained-shadow--hover: map.get(
+        (
+            'material': var-get($contained-theme, 'hover-shadow'),
+            'fluent': none,
+            'bootstrap': none,
+            'indigo': none,
+        ),
+        $variant
+    );
 
-    $contained-shadow--focus: map.get((
-        'material': var-get($contained-theme, 'focus-shadow'),
-        'fluent': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'),
-        'bootstrap': 0 0 0 rem(4px) var-get($contained-theme, 'shadow-color'),
-        'indigo': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color')
-    ), $variant);
+    $contained-shadow--focus: map.get(
+        (
+            'material': var-get($contained-theme, 'focus-shadow'),
+            'fluent': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'),
+            'bootstrap': 0 0 0 rem(4px)
+                var-get($contained-theme, 'shadow-color'),
+            'indigo': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'),
+        ),
+        $variant
+    );
 
-    $contained-shadow--active: map.get((
-        'material': var-get($contained-theme, 'active-shadow'),
-        'fluent': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'),
-        'bootstrap': 0 0 0 rem(4px) var-get($contained-theme, 'shadow-color'),
-        'indigo': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color')
-    ), $variant);
+    $contained-shadow--active: map.get(
+        (
+            'material': var-get($contained-theme, 'active-shadow'),
+            'fluent': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'),
+            'bootstrap': 0 0 0 rem(4px)
+                var-get($contained-theme, 'shadow-color'),
+            'indigo': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'),
+        ),
+        $variant
+    );
 
-    $fab-shadow: map.get((
-        'material': var-get($fab-theme, 'resting-shadow'),
-        'fluent': none,
-        'bootstrap': none,
-        'indigo': none
-    ), $variant);
+    $fab-shadow: map.get(
+        (
+            'material': var-get($fab-theme, 'resting-shadow'),
+            'fluent': none,
+            'bootstrap': none,
+            'indigo': none,
+        ),
+        $variant
+    );
 
-    $fab-shadow--hover: map.get((
-        'material': var-get($fab-theme, 'hover-shadow'),
-        'fluent': none,
-        'bootstrap': none,
-        'indigo': none
-    ), $variant);
+    $fab-shadow--hover: map.get(
+        (
+            'material': var-get($fab-theme, 'hover-shadow'),
+            'fluent': none,
+            'bootstrap': none,
+            'indigo': none,
+        ),
+        $variant
+    );
 
-    $fab-shadow--focus: map.get((
-        'material': var-get($fab-theme, 'focus-shadow'),
-        'fluent':  0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
-        'bootstrap': 0 0 0 rem(4px) var-get($fab-theme, 'shadow-color'),
-        'indigo': 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color')
-    ), $variant);
+    $fab-shadow--focus: map.get(
+        (
+            'material': var-get($fab-theme, 'focus-shadow'),
+            'fluent': 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
+            'bootstrap': 0 0 0 rem(4px) var-get($fab-theme, 'shadow-color'),
+            'indigo': 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
+        ),
+        $variant
+    );
 
-    $fab-shadow--active: map.get((
-        'material': var-get($fab-theme, 'active-shadow'),
-        'fluent':  0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
-        'bootstrap': 0 0 0 rem(4px) var-get($fab-theme, 'shadow-color'),
-        'indigo': 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color')
-    ), $variant);
+    $fab-shadow--active: map.get(
+        (
+            'material': var-get($fab-theme, 'active-shadow'),
+            'fluent': 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
+            'bootstrap': 0 0 0 rem(4px) var-get($fab-theme, 'shadow-color'),
+            'indigo': 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
+        ),
+        $variant
+    );
 
     %fluent-border {
         &::after {
@@ -514,10 +571,10 @@
     igx-grid-filtering-row {
         @if $variant == 'bootstrap' {
             --filtering-row-button-size: #{sizable(
-                #{map.get($filtering-row-button-size, 'compact')},
-                #{map.get($filtering-row-button-size, 'cosy')},
-                #{map.get($filtering-row-button-size, 'comfortable')}
-            )};
+                    #{map.get($filtering-row-button-size, 'compact')},
+                    #{map.get($filtering-row-button-size, 'cosy')},
+                    #{map.get($filtering-row-button-size, 'comfortable')}
+                )};
 
             %igx-button-display {
                 min-height: var(--filtering-row-button-size);
@@ -994,7 +1051,11 @@
 /// Uses the 'button' category from the typographic scale.
 /// @group typography
 /// @param {String} $categories [(text: 'button')] - The category from the typographic scale used for type styles.
-@mixin button-typography($categories: (text: 'button')) {
+@mixin button-typography(
+    $categories: (
+        text: 'button',
+    )
+) {
     $text: map.get($categories, 'text');
 
     %igx-button-display {
