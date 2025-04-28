@@ -72,6 +72,11 @@ describe('IgxSimpleCombo', () => {
         mockSelection.get.and.returnValue(new Set([]));
         const platformUtil = null;
         const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
+        jasmine.getEnv().allowRespy(true);
+
+        afterAll(() => {
+            jasmine.getEnv().allowRespy(false);
+        });
 
         it('should properly call dropdown methods on toggle', () => {
             combo = new IgxSimpleComboComponent(
@@ -1910,8 +1915,6 @@ describe('IgxSimpleCombo', () => {
         });
 
         it('should not change selection when selectionChanging event is canceled', () => {
-            spyOn(combo.selectionChanging, 'emit').and.callThrough();
-
             fixture.detectChanges();
 
             combo.select('Connecticut');
@@ -1947,7 +1950,6 @@ describe('IgxSimpleCombo', () => {
 
 
         it('should preserved the input value of the combo when selectionChanging event is canceled', () => {
-            spyOn(combo.selectionChanging, 'emit').and.callThrough();
             fixture.detectChanges();
 
             const comboInput = fixture.debugElement.query(By.css(`.igx-input-group__input`));

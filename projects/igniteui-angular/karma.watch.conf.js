@@ -7,7 +7,8 @@ module.exports = function (config) {
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
     files: [
       { pattern: '../../node_modules/hammerjs/hammer.min.js', watched: false },
-      { pattern: '../../node_modules/hammer-simulator/index.js', watched: false }
+      { pattern: '../../node_modules/hammer-simulator/index.js', watched: false },
+      { pattern: './test.css', watched: false }
     ],
     plugins: [
         'karma-jasmine',
