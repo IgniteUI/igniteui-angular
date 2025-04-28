@@ -37,16 +37,9 @@ $input-bottom-padding: rem(6px);
 }
 
 @include themed-block(igx-input-group, material) {
-    row-gap: rem(4px);
+    --_prefix-suffix-spacing: #{pad-inline(rem(12px), rem(14px), rem(16px))};
 
-    igx-prefix,
-    [igxPrefix],
-    igx-suffix,
-    [igxSuffix] {
-        &:not(:empty) {
-            padding-inline: pad-inline(rem(12px), rem(14px), rem(16px));
-        }
-    }
+    row-gap: rem(4px);
 
     @include e(file-input) {
         @extend %input-paddings;
@@ -597,8 +590,6 @@ $input-bottom-padding: rem(6px);
     }
 
     @include m(file, $not: (border)) {
-        --_bundle-template-columns: auto auto 1fr auto;
-
         @include e(label) {
             @extend %box-floating-label;
         }
@@ -714,7 +705,6 @@ $input-bottom-padding: rem(6px);
         }
     }
 
-    // TODO DISCUS THIS WITH SIMO
     .igx-input-group__bundle-start:not(:empty) + .igx-input-group__upload {
         padding-inline-start: rem(4px);
     }
