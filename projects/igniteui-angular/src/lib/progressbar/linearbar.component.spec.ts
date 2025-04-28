@@ -16,8 +16,6 @@ describe('IgxLinearProgressBarComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(IgxLinearProgressBarComponent);
         progress = fixture.componentInstance;
-        // For test fixture destroy
-        progress.id = "root1";
         fixture.detectChanges();
         linearBar = fixture.debugElement.nativeElement;
     });

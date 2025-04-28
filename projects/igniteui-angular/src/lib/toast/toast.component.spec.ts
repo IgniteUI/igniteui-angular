@@ -37,8 +37,6 @@ describe('IgxToast', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(IgxToastComponent);
         toast = fixture.componentInstance;
-        // For test fixture destroy
-        toast.id = "root1";
         fixture.detectChanges();
     });
 

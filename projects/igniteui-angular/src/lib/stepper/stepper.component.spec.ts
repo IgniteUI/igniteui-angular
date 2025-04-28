@@ -928,6 +928,14 @@ describe('Stepper service unit tests', () => {
     let steps: IgxStepComponent[] = [];
     let stepper: IgxStepperComponent;
 
+    beforeAll(() => {
+        jasmine.getEnv().allowRespy(true);
+    });
+
+    afterAll(() => {
+        jasmine.getEnv().allowRespy(false);
+    });
+
     beforeEach(() => {
         mockElement = {
             style: { visibility: '', cursor: '', transitionDuration: '' },

@@ -24,6 +24,15 @@ describe('IgxTree #treeView', () => {
         let mockNodes: QueryList<IgxTreeNodeComponent<any>>;
         let mockNodesArray: IgxTreeNodeComponent<any>[] = [];
         let tree: IgxTreeComponent = null;
+
+        beforeAll(() => {
+            jasmine.getEnv().allowRespy(true);
+        });
+
+        afterAll(() => {
+            jasmine.getEnv().allowRespy(false);
+        });
+
         beforeEach(() => {
             mockNodesArray = [];
             mockNavService = jasmine.createSpyObj('navService',
