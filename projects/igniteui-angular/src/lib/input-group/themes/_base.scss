@@ -37,6 +37,7 @@ $base-scale-size: (
         --input-icon: #{sizable(rem(14px), rem(16px), rem(18px))};
         --_bundle-template-columns: auto 1fr auto;
         --_bundle-template-rows: auto #{var-get($theme, 'size')};
+        --_prefix-suffix-spacing: #{pad-inline(rem(8px), rem(12px), rem(16px))};
 
         display: grid;
         position: relative;
@@ -65,6 +66,10 @@ $base-scale-size: (
             min-height: 100%;
             outline-style: none;
             transition: color $transition-timing, background $transition-timing;
+
+            &:not(:empty) {
+                padding-inline: var(--_prefix-suffix-spacing);
+            }
         }
 
         igx-prefix,
@@ -202,8 +207,6 @@ $base-scale-size: (
         }
 
         @include e(file-input) {
-            --_bundle-template-columns: auto auto 1fr auto;
-
             width: 100%;
             max-width: 100%;
             overflow: hidden;
@@ -221,7 +224,21 @@ $base-scale-size: (
             }
         }
 
+        @include m(file, $not: (border)) {
+            --_bundle-template-columns: auto auto 1fr auto;
+
+
+            @include e(bundle-main) {
+                grid-column: 3;
+            }
+
+            @include e(bundle-end) {
+                grid-column: 4;
+            }
+        }
+
         @include m(file) {
+
             @include e(bundle-main) {
                 cursor: pointer;
             }
@@ -248,7 +265,8 @@ $base-scale-size: (
             --igx-button-focus-visible-background: transparent;
             --igx-button-active-background: transparent;
 
-            min-width: min-content;
+            //min-width: min-content;
+            padding-inline: var(--_prefix-suffix-spacing);
         }
 
         @include m(textarea-group) {
@@ -329,6 +347,12 @@ $base-scale-size: (
                 @extend %input-textarea-disabled-colors;
 
                 resize: none;
+            }
+
+            @include e(bundle) {
+                > * {
+                    cursor: default;
+                }
             }
 
             @include e(hint) {

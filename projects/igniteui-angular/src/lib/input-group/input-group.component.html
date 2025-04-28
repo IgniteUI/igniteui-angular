@@ -7,7 +7,6 @@
 }
 
 <ng-template #label>
-
     <ng-content select="[igxLabel]"></ng-content>
 </ng-template>
 
@@ -54,7 +53,6 @@
 </ng-template>
 
 <ng-template #bundle>
-
     @if(this._theme !== 'material') {
         <ng-container *ngTemplateOutlet="label"></ng-container>
     }

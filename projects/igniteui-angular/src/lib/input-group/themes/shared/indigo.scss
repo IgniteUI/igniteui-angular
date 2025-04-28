@@ -7,16 +7,9 @@
 $_theme: $indigo;
 
 @include themed-block(igx-input-group, indigo) {
-    row-gap: rem(4px);
+    --_prefix-suffix-spacing: #{pad-inline(rem(2px), rem(4px), rem(6px))};
 
-    igx-prefix,
-    [igxPrefix],
-    igx-suffix,
-    [igxSuffix] {
-        &:not(:empty) {
-            padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
-        }
-    }
+    row-gap: rem(4px);
 
     @include e(label) {
         line-height: var(--ig-caption-line-height);
@@ -61,20 +54,10 @@ $_theme: $indigo;
     }
 
     @include m(file) {
-        --_bundle-template-columns: auto auto 1fr auto;
-
         @include e(bundle) {
             > * {
                 grid-row: 1;
             }
-        }
-
-        @include e(bundle-main) {
-            grid-column: 3;
-        }
-
-        @include e(bundle-end) {
-            grid-column: 4;
         }
     }
 
