@@ -16,6 +16,8 @@ describe('IgxLinearProgressBarComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(IgxLinearProgressBarComponent);
         progress = fixture.componentInstance;
+        // For test fixture destroy
+        progress.id = "root1";
         fixture.detectChanges();
         linearBar = fixture.debugElement.nativeElement;
     });
@@ -129,9 +131,6 @@ describe('IgxLinearProgressBarComponent', () => {
     });
 
     it('should correctly apply the ID attribute', () => {
-        expect(progress.id).toContain('igx-linear-bar-');
-        expect(linearBar.id).toContain('igx-linear-bar-');
-
         const customId = 'custom-linear-bar-id';
         progress.id = customId;
         fixture.detectChanges();

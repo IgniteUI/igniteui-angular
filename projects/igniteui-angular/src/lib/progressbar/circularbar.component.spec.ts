@@ -20,6 +20,8 @@ describe('IgxCircularProgressBarComponent', () => {
 
         fixture = TestBed.createComponent(IgxCircularProgressBarComponent);
         progress = fixture.componentInstance;
+        // For test fixture destroy
+        progress.id = "root1";
         fixture.detectChanges();
         circularBar = fixture.debugElement.nativeElement;
     });
