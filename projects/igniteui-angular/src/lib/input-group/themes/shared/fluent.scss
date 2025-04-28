@@ -1,4 +1,5 @@
 @use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color' as *;
 @use 'igniteui-theming/sass/bem' as *;
 @use 'styles/themes/standalone' as *;
 @use '../light/tokens' as *;
@@ -6,12 +7,185 @@
 $_theme: $fluent;
 
 @include themed-block(igx-input-group, fluent) {
-    igx-prefix,
-    [igxPrefix],
-    igx-suffix,
-    [igxSuffix] {
-        &:not(:empty) {
-            padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+    --_bundle-template-rows: auto;
+
+    row-gap: rem(5px);
+
+    @include m(file) {
+        @include e(bundle) {
+            > * {
+                grid-row: 1;
+            }
+        }
+    }
+
+    @include e(hint) {
+        min-height: rem(18px);
+    }
+
+    @include e(input) {
+        @include type-style(body-2);
+
+        padding-inline: rem(8px);
+    }
+
+    @include e(textarea) {
+        padding: rem(8px)
+    }
+
+    @include e(file-input) {
+        @include type-style(body-2);
+    }
+
+    @include e(bundle) {
+        background: var-get($_theme, 'border-background');
+        border-radius: var-get($_theme, 'border-border-radius');
+        border: rem(1px) solid var-get($_theme, 'border-color');
+
+        > * {
+            min-height: 0;
+        }
+
+        &:hover {
+            border-color: var-get($_theme, 'hover-border-color');
+        }
+    }
+
+    @include e(bundle-start) {
+        grid-row: 1;
+        overflow: hidden;
+        border-start-start-radius: var-get($_theme, 'border-border-radius');
+        border-end-start-radius: var-get($_theme, 'border-border-radius');
+    }
+
+    @include e(bundle-main) {
+        grid-row: 1;
+
+        padding-inline-end: rem(8px);
+    }
+
+    @include e(bundle-end) {
+        grid-row: 1;
+        overflow: hidden;
+        border-start-end-radius: var-get($_theme, 'border-border-radius');
+        border-end-end-radius: var-get($_theme, 'border-border-radius');
+    }
+
+    @include m(search) {
+        igx-prefix,
+        [igxPrefix],
+        igx-suffix,
+        [igxSuffix] {
+            background: transparent;
+            color: color($color: 'primary', $variant: 500);
+        }
+    }
+
+    @include mx(search, focused) {
+        igx-prefix,
+        [igxPrefix] {
+            // !important is needed, otherwise if the directive is set directly on the igx-icon
+            // the icon overrides the display set by the prefix/suffix
+            display: none !important;
+        }
+    }
+
+    @include m(invalid) {
+        @include e(label) {
+            &::after {
+                color: var-get($_theme, 'error-secondary-color');
+            }
+        }
+
+        @include e(bundle) {
+            border-color: var-get($_theme, 'error-secondary-color');
+        }
+
+        @include e(hint) {
+            color: var-get($_theme, 'error-secondary-color');
+        }
+    }
+
+    @include m(warning) {
+        @include e(label) {
+            &::after {
+                color: var-get($_theme, 'warning-secondary-color');
+            }
+        }
+
+        @include e(bundle) {
+            border-color: var-get($_theme, 'warning-secondary-color');
+        }
+
+        @include e(hint) {
+            color: var-get($_theme, 'warning-secondary-color');
+        }
+    }
+
+    @include m(valid) {
+        @include e(label) {
+            &::after {
+                color: var-get($_theme, 'success-secondary-color');
+            }
+        }
+
+        @include e(bundle) {
+            border-color: var-get($_theme, 'success-secondary-color');
+        }
+
+        @include e(hint) {
+            color: var-get($_theme, 'success-secondary-color');
+        }
+    }
+
+    @include m(focused) {
+        @include e(bundle) {
+            border-color: transparent;
+
+            &::after {
+                content: '';
+                position: absolute;
+                pointer-events: none;
+                user-select: none;
+                inset-block-start: rem(-1px);
+                inset-inline-start: rem(-1px);
+                width: calc(100% + #{rem(2px)});
+                height: calc(100% + #{rem(2px)});
+                border-radius: var-get($_theme, 'border-border-radius');
+                border: rem(2px) solid var-get($_theme, 'focused-border-color');
+            }
+        }
+    }
+
+    @include mx(focused, valid) {
+        @include e(bundle) {
+            &::after {
+                border-color: var-get($_theme, 'success-secondary-color');
+            }
+        }
+    }
+
+    @include mx(focused, warning) {
+        @include e(bundle) {
+            &::after {
+                border-color: var-get($_theme, 'warning-secondary-color');
+            }
+        }
+    }
+
+    @include mx(focused, invalid) {
+        @include e(bundle) {
+            &::after {
+                border-color: var-get($_theme, 'error-secondary-color');
+            }
+        }
+    }
+
+    @include m(disabled) {
+        @include e(bundle) {
+            background: var-get($_theme, 'border-disabled-background');
+            border-color: var-get($_theme, 'disabled-border-color');
         }
     }
 }
+

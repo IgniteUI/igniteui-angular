@@ -29,9 +29,13 @@
                 [readOnly]="isReadonly()"
                 igxInput
             />
-            <igx-suffix [hidden]="hideSuffix()">
-                <igx-icon>face</igx-icon>
-            </igx-suffix>
+
+            @if (hideSuffix()) {
+                <igx-suffix>
+                    <igx-icon>face</igx-icon>
+                </igx-suffix>
+            }
+
             <igx-hint>Type your web address</igx-hint>
         </igx-input-group>
 
@@ -52,9 +56,12 @@
                 [readOnly]="isReadonly()"
                 igxInput>
             </textarea>
-            <igx-suffix [hidden]="hideSuffix()">
+
+            @if (hideSuffix()) {
+            <igx-suffix>
                 <igx-icon>face</igx-icon>
             </igx-suffix>
+            }
             <igx-hint>Hint text</igx-hint>
         </igx-input-group>
 
@@ -76,9 +83,13 @@
             <igx-hint>
                 I am a Hint
             </igx-hint>
-            <igx-suffix [hidden]="hideSuffix()">
-                <igx-icon>favorite</igx-icon>
-            </igx-suffix>
+
+            @if (hideSuffix()) {
+                <igx-suffix>
+                    <igx-icon>favorite</igx-icon>
+                </igx-suffix>
+            }
+
             <igx-select-item [value]="'Apple'" [disabled]="true">Apple</igx-select-item>
             <igx-select-item [value]="'Orange'">Orange</igx-select-item>
             <igx-select-item [value]="'Grapes'">Grapes</igx-select-item>
@@ -119,9 +130,13 @@
                 [readOnly]="isReadonly()"
                 igxInput
             />
-            <igx-suffix [hidden]="hideSuffix()">
-                <igx-icon>face</igx-icon>
-            </igx-suffix>
+
+            @if (hideSuffix()) {
+                <igx-suffix>
+                    <igx-icon>face</igx-icon>
+                </igx-suffix>
+            }
+
             <igx-hint>Type your web address</igx-hint>
         </igx-input-group>
     </form>
@@ -169,10 +184,12 @@
                 [outlined]="isOutlined()">
 
             @if (hidePrefix()) {
-                <span slot="prefix"><igc-icon name="face"></igc-icon></span>
+                <igc-icon slot="prefix" name="face"></igc-icon>
             }
 
-            <span slot="suffix" [hidden]="hideSuffix()"><igc-icon name="face"></igc-icon></span>
+            @if (hideSuffix()) {
+                <igc-icon slot="suffix" name="face"></igc-icon>
+            }
             <span slot="helper-text">Type your web address</span>
         </igc-input>
 
@@ -187,10 +204,12 @@
                 [outlined]="isOutlined()">
 
             @if (hidePrefix()) {
-                <span slot="prefix"><igc-icon name="face"></igc-icon></span>
+                <igc-icon slot="prefix" name="face"></igc-icon>
             }
 
-            <span slot="suffix" [hidden]="hideSuffix()"><igc-icon name="face"></igc-icon></span>
+            @if (hideSuffix()) {
+                <igc-icon slot="suffix" name="face"></igc-icon>
+            }
             <span slot="helper-text">Hint text</span>
         </igc-textarea>
 
@@ -203,10 +222,13 @@
             [style.--ig-size]="getSize()">
 
             @if (hidePrefix()) {
-                <span slot="prefix"><igc-icon name="face"></igc-icon></span>
+                <igc-icon slot="prefix" name="face"></igc-icon>
             }
 
-            <igc-icon slot="suffix" [hidden]="hideSuffix()" name="favorite"></igc-icon>
+            @if (hideSuffix()) {
+                <igc-icon slot="suffix" name="favorite"></igc-icon>
+            }
+
             <span slot="helper-text">I am a Hint</span>
             <igc-select-item [value]="'Apple'" [disabled]="true">Apple</igc-select-item>
             <igc-select-item [value]="'Orange'" [selected]="getValue()">Orange</igc-select-item>
@@ -234,10 +256,12 @@
             [attr.value]="getValue()"
             [outlined]="isOutlined()">
             @if (hidePrefix()) {
-                <span slot="prefix"><igc-icon name="face"></igc-icon></span>
+                <igc-icon slot="prefix" name="face"></igc-icon>
             }
 
-            <span slot="suffix" [hidden]="hideSuffix()"><igc-icon name="face"></igc-icon></span>
+            @if (hideSuffix()) {
+                <igc-icon slot="suffix" name="face"></igc-icon>
+            }
             <span slot="helper-text">Type your web address</span>
         </igc-file-input>
     </div>

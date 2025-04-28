@@ -276,7 +276,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     /** @hidden @internal */
     @HostBinding('class.igx-input-group--prefixed')
     public get hasPrefixes() {
-        return this._prefixes.length > 0 || this.isFileType;
+        return this._prefixes.length > 0;
     }
 
     /** @hidden @internal */
@@ -287,7 +287,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     /** @hidden @internal */
     @HostBinding('class.igx-input-group--suffixed')
     public get hasSuffixes() {
-        return this._suffixes.length > 0 || this.isFileType && this.isFilled;
+        return this._suffixes.length > 0;
     }
 
     /** @hidden @internal */

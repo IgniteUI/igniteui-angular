@@ -4,14 +4,173 @@
 @use '../light/tokens' as *;
 
 $_theme: $bootstrap;
+$border-size: rem(1px);
+$border-style: solid;
+$border-color: var-get($_theme, 'border-color');
+$border-radius: var-get($_theme, 'border-border-radius');
+
+@layer ig.bootstrap {
+    @container style(--ig-theme: bootstrap) {
+        %border-styles {
+            border-style: $border-style;
+            border-color: $border-color;
+        }
+
+        igx-input-group:not(.igx-input-group--prefixed, .igx-input-group--file) {
+            .igx-input-group__bundle-main {
+                border-start-start-radius: $border-radius;
+                border-end-start-radius: $border-radius;
+            }
+        }
+
+        igx-input-group:not(.igx-input-group--suffixed) {
+            .igx-input-group__bundle-main {
+                border-start-end-radius: $border-radius;
+                border-end-end-radius: $border-radius;
+            }
+        }
+
+        //igx-input-group--prefixed:has(.igx-input-group__bundle-start:empty) {
+        //    display: none;
+        //}
+    }
+}
 
 @include themed-block(igx-input-group, bootstrap) {
-    igx-prefix,
-    [igxPrefix],
-    igx-suffix,
-    [igxSuffix] {
-        &:not(:empty) {
-            padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+    row-gap: rem(4px);
+
+    @include e(upload) {
+        @extend %border-styles;
+
+        border-width: $border-size;
+        background: var-get($_theme, 'input-prefix-background');
+    }
+
+    @include e(upload-button) {
+        @include type-style(body-1);
+
+        font-size: sizable(rem(16px), rem(16px), rem(20px));
+
+        --igx-button-foreground: #{var-get($_theme, 'input-prefix-color')};
+        --igx-button-background: #{var-get($_theme, 'input-prefix-background')};
+        --igx-button-hover-foreground: #{var-get($_theme, 'input-prefix-color')};
+        --igx-button-hover-background: #{var-get($_theme, 'input-prefix-background')};
+        --igx-button-active-foreground: #{var-get($_theme, 'input-prefix-color')};
+        --igx-button-active-background: #{var-get($_theme, 'input-prefix-background')};
+        --igx-button-focus-visible-foreground: #{var-get($_theme, 'input-prefix-color')};
+        --igx-button-focus-visible-background: #{var-get($_theme, 'input-prefix-background')};
+        --igx-button-disabled-foreground: #{var-get($_theme, 'disabled-text-color')};
+        --igx-button-disabled-background: #{var-get($_theme, 'border-disabled-background')};
+        border: 0;
+        border-radius: 0;
+    }
+
+    @include e(label) {
+        @include type-style(body-1);
+    }
+
+    @include e(hint) {
+        @include type-style(body-2);
+    }
+
+    @include e(input) {
+        @include type-style(body-1);
+
+        font-size: sizable(rem(16px), rem(16px), rem(20px));
+        padding-block: 0;
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+    }
+
+    @include e(file-input) {
+        @include type-style(body-1);
+
+        font-size: sizable(rem(16px), rem(16px), rem(20px));
+        height: 100%;
+        padding-block: 0;
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+    }
+
+    @include e(textarea) {
+        @include type-style(body-1);
+
+        font-size: sizable(rem(16px), rem(16px), rem(20px));
+        padding-block: pad-block(rem(4px), rem(6px), rem(8px));
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+    }
+
+    @include e(bundle-main) {
+        @extend %border-styles;
+
+        z-index: 1;
+        grid-row: 1;
+        transition: box-shadow .15s ease-out, border .15s ease-out;
+        border-width: $border-size;
+    }
+
+    @include m(file) {
+        @include e(bundle-main) {
+            border-inline-start-width: 0;
+        }
+    }
+
+    @include m(file, $not: (prefixed)) {
+        @include e(upload) {
+            border-start-start-radius: $border-radius;
+            border-end-start-radius: $border-radius;
+        }
+
+        @include e(upload-button) {
+            border-start-start-radius: $border-radius;
+            border-end-start-radius: $border-radius;
+        }
+    }
+
+    @include e(bundle-start) {
+        grid-row: 1;
+
+        &:empty {
+            border: 0;
+            visibility: hidden;
+        }
+    }
+
+    @include e(bundle-end) {
+        grid-row: 1;
+    }
+
+    @include m(prefixed) {
+        @include e(bundle-start) {
+            @extend %border-styles;
+
+            z-index: 0;
+            border-block-width: $border-size;
+            border-inline-start-width: $border-size;
+            border-inline-end-width: 0;
+            border-start-start-radius: $border-radius;
+            border-end-start-radius: $border-radius;
+            overflow: hidden;
+        }
+    }
+
+    @include m(suffixed) {
+        @include e(bundle-end) {
+            @extend %border-styles;
+
+            z-index: 0;
+            border-block-width: $border-size;
+            border-inline-end-width: $border-size;
+            border-inline-start-width: 0;
+
+            border-start-end-radius: $border-radius;
+            border-end-end-radius: $border-radius;
+            overflow: hidden;
+        }
+    }
+
+    @include m(focused) {
+        @include e(bundle-main) {
+            border-color: var-get($_theme, 'focused-border-color');
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'focused-secondary-color');
         }
     }
 }

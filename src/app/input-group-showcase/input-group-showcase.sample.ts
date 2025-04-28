@@ -66,7 +66,7 @@ export class InputGroupShowcaseSampleComponent {
             }
         },
         inputType: {
-            label: 'Input Group Type',
+            label: 'Input Group Type (Only Material theme has border/box and line types)',
             control: {
                 type: 'button-group',
                 options: ['box', 'border', 'line', 'search'],
@@ -227,6 +227,6 @@ export class InputGroupShowcaseSampleComponent {
     public isDisabled = computed(() => !!this.properties()?.disabled);
     public isReadonly = computed(() => !!this.properties()?.readonly);
     public hidePrefix = computed(() => !this.properties()?.hidePrefix);
-    public hideSuffix = computed(() => !!this.properties()?.hideSuffix);
+    public hideSuffix = computed(() => !this.properties()?.hideSuffix);
 }
 
