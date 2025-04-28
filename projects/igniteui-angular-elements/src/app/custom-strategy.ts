@@ -471,7 +471,6 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
     /** Create proxy for a component that handles setting template props, making sure it provides correct TemplateRef and not Lit template */
     protected createElementsComponentProxy(component: any, config: ComponentConfig) {
-        console.log("createProxy");
         const parentThis = this;
         return new Proxy(component, {
             set(target: any, prop: string, newValue: any) {
