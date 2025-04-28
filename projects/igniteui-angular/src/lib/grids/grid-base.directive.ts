@@ -998,7 +998,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @example
      * ```html
-     * <igx-grid [data]="employeeData" (selectedRowsChange)="selectedRowsChange($event)" [autoGenerate]="true"></igx-grid>
+     * <igx-grid [data]="employeeData" (expansionStatesChange)="expansionStatesChange($event)" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
