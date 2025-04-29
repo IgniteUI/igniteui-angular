@@ -503,7 +503,6 @@
         &:hover {
             background: var-get($theme, 'step-hover-background');
 
-
             %igx-stepper__step-title {
                 color: var-get($theme, 'title-hover-color');
             }
