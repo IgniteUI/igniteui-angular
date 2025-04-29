@@ -84,8 +84,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         // }
         let parentInjector: Injector;
         let parentAnchor: ViewContainerRef;
-        const parents: IgcNgElement[] = [];
-        let parentConfig: ComponentConfig;
+        const parents: WeakRef<IgcNgElement>[] = [];
         const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
 
         const configParents = componentConfig?.parents
@@ -100,11 +99,11 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                     reflectComponentType(x.component).selector
                 ]).join(','));
                 if (node) {
-                    parents.push(node);
+                    parents.push(new WeakRef(node));
                 }
             }
             // select closest of all possible config parents
-            let parent = parents[0];
+            let parent = parents[0]?.deref();
 
             // Collected parents may include direct Angular HGrids, so only wait for configured parent elements:
             const configParent = configParents.find(x => x.selector === parent?.tagName.toLocaleLowerCase());
@@ -185,38 +184,20 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         // componentRef should also likely be protected:
         const componentRef = (this as any).componentRef as ComponentRef<any>;
 
-        for (let i = 0; i < parents.length; i++) {
-            const parent = parents[i];
+        const parentQueries = this.getParentContentQueries(componentConfig, parents, configParents);
 
-            // find the respective config entry
-            parentConfig = configParents.find(x => x.selector === parent?.tagName.toLocaleLowerCase());
-
-            if (!parentConfig) {
-                continue;
-            }
-
-            const componentType = this._componentFactory.componentType;
-            // TODO - look into more cases where query expects a certain base class but gets a subclass.
-            // Related to https://github.com/IgniteUI/igniteui-angular/pull/12134#discussion_r983147259
-            const contentQueries = parentConfig.contentQueries.filter(x => x.childType === componentType || x.childType === componentConfig.provideAs);
-
-            for (const query of contentQueries) {
-                if (i > 0 && !query.descendants) {
-                    continue;
+        for (const { parent, query } of parentQueries) {
+            if (query.isQueryList) {
+                parent.ngElementStrategy.scheduleQueryUpdate(query.property);
+                if (this.angularParent) {
+                    // Cache the component in the parent (currently only paginator for HGrid),
+                    // so it is kept in the query even when detached from DOM
+                    this.addToParentCache(parent, query.property);
                 }
-
+            } else {
                 const parentRef = await parent.ngElementStrategy[ComponentRefKey];
-                if (query.isQueryList) {
-                    parent.ngElementStrategy.scheduleQueryUpdate(query.property);
-                    if (this.angularParent) {
-                        // Cache the component in the parent (currently only paginator for HGrid),
-                        // so it is kept in the query even when detached from DOM
-                        this.addToParentCache(parent, query.property);
-                    }
-                } else {
-                    parentRef.instance[query.property] = componentRef.instance;
-                    parentRef.changeDetectorRef.detectChanges();
-                }
+                parentRef.instance[query.property] = componentRef.instance;
+                parentRef.changeDetectorRef.detectChanges();
             }
         }
 
@@ -230,6 +211,16 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 this._templateWrapperRef.destroy();
                 this._templateWrapperRef = null;
             }
+
+            // also schedule query updates on all parents:
+            this.getParentContentQueries(componentConfig, parents, configParents)
+                .filter(x => x.parent?.isConnected && x.query.isQueryList)
+                .forEach(({ parent, query }) => {
+                    parent.ngElementStrategy.scheduleQueryUpdate(query.property);
+                    if (this.angularParent) {
+                        this.removeFromParentCache(parent, query.property);
+                    }
+                });
         });
     }
 
@@ -359,9 +350,44 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     }
 
     private addToParentCache(parentElement: IgcNgElement, queryName: string) {
-        var cachedComponents = parentElement.ngElementStrategy.cachedChildComponents.get(queryName) || [];
+        const cachedComponents = parentElement.ngElementStrategy.cachedChildComponents.get(queryName) || [];
         cachedComponents.push((this as any).componentRef.instance);
         parentElement.ngElementStrategy.cachedChildComponents.set(queryName, cachedComponents);
+    }
+
+    private removeFromParentCache(parentElement: IgcNgElement, queryName: string) {
+        let cachedComponents = parentElement.ngElementStrategy.cachedChildComponents.get(queryName) || [];
+        cachedComponents = cachedComponents.filter(x => x !== (this as any).componentRef.instance);
+        parentElement.ngElementStrategy.cachedChildComponents.set(queryName, cachedComponents);
+    }
+
+    /** Get all matching content questions from all parents */
+    private getParentContentQueries(componentConfig: ComponentConfig, parents: WeakRef<IgcNgElement>[], configParents: ComponentConfig[]): { parent: IgcNgElement, query: ContentQueryMeta }[] {
+        const queries: { parent: IgcNgElement, query: ContentQueryMeta }[] = [];
+
+        for (let i = 0; i < parents.length; i++) {
+            const parent = parents[i]?.deref();
+
+            // find the respective config entry
+            const parentConfig = configParents.find(x => x.selector === parent?.tagName.toLocaleLowerCase());
+            if (!parentConfig) {
+                continue;
+            }
+
+            const componentType = this._componentFactory.componentType;
+            // TODO - look into more cases where query expects a certain base class but gets a subclass.
+            // Related to https://github.com/IgniteUI/igniteui-angular/pull/12134#discussion_r983147259
+            const contentQueries = parentConfig.contentQueries.filter(x => x.childType === componentType || x.childType === componentConfig.provideAs);
+
+            for (const query of contentQueries) {
+                if (i > 0 && !query.descendants) {
+                    continue;
+                }
+                queries.push({ parent, query });
+            }
+        }
+
+        return queries;
     }
     //#endregion schedule query update
 
