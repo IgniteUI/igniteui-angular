@@ -1751,7 +1751,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it(`Should remove first condition chip when click 'clear' button and focus 'more' icon.`, fakeAsync(() => {
-            grid.getColumnByName('ProductName').width = '160px';
+            grid.getColumnByName('ProductName').width = '200px';
             tick(DEBOUNCE_TIME);
             fix.detectChanges();
 
