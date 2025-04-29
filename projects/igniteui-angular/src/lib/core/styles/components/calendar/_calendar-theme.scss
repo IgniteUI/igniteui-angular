@@ -775,6 +775,14 @@
     @if not($ym-current-hover-foreground) and $ym-current-hover-background {
         $ym-current-hover-foreground: hsla(from adaptive-contrast(var(--ym-current-hover-background) h s l / 1));
     }
+
+    @if not($ym-selected-current-foreground) and $ym-selected-current-background {
+        $ym-selected-current-foreground: hsla(from adaptive-contrast($ym-selected-current-background) h s l / 1);
+    }
+
+    @if not($ym-selected-current-hover-foreground) and $ym-selected-current-hover-background {
+        $ym-selected-current-hover-foreground: hsla(from adaptive-contrast($ym-selected-current-hover-background) h s l / 1);
+    }
     //calendar views end
 
     //date range start
