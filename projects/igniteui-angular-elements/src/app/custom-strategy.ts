@@ -414,14 +414,18 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         const eventEmitters: Observable<NgElementStrategyEvent>[] = this._componentFactory.outputs.map(
             ({ propName, templateName }) => {
                 const emitter: EventEmitter<any> = componentRef.instance[propName];
-                return emitter.pipe(map((value: any) => ({ name: templateName, value: this.patchOutputComponents(value) })));
+                return emitter.pipe(map((value: any) => ({ name: templateName, value: this.patchOutputComponents(propName, value) })));
             },
         );
 
         (this as any).eventEmitters.next(eventEmitters);
     }
 
-    protected patchOutputComponents(eventArgs: any) {
+    protected patchOutputComponents(eventName: string, eventArgs: any) {
+        // Single out only `columnInit` event for now. If more events pop up will require a config generation.
+        if (eventName !== "columnInit") {
+            return eventArgs;
+        }
         return this.createProxyForComponentValue(eventArgs, 1).value;
     }
 
