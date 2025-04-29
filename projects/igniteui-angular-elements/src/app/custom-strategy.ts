@@ -24,6 +24,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     // public override componentRef: ComponentRef<any>|null = null;
 
     protected element: IgcNgElement;
+    /** The parent _component_'s element (a.k.a the semantic parent, rather than the DOM one after projection) */
+    protected parentElement?: WeakRef<IgcNgElement>;
     /** Native Angular parent (if any) the Element is created under, usually as template of dynamic component (e.g. HGrid row island paginator) */
     protected angularParent: ComponentRef<any>;
     /** Cached child instances per query prop. Used for dynamic components's child templates that normally persist in Angular runtime */
@@ -76,10 +78,10 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         // TODO: Fail handling or cancellation needed?
         (this as any).componentRef = {};
 
-        const toBeOrphanedChildren = Array.from(element.children).filter(x => !this._componentFactory.ngContentSelectors.some(sel => x.matches(sel)));
-        for (const iterator of toBeOrphanedChildren) {
-            // TODO: special registration OR config for custom
-        }
+        // const toBeOrphanedChildren = Array.from(element.children).filter(x => !this._componentFactory.ngContentSelectors.some(sel => x.matches(sel)));
+        // for (const iterator of toBeOrphanedChildren) {
+        //     // TODO: special registration OR config for custom
+        // }
         let parentInjector: Injector;
         let parentAnchor: ViewContainerRef;
         const parents: IgcNgElement[] = [];
@@ -113,6 +115,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             // ngElementStrategy getter is protected and also has initialization logic, though that should be safe at this point
             if (parent?.ngElementStrategy) {
                 this.angularParent = parent.ngElementStrategy.angularParent;
+                this.parentElement = new WeakRef(parent);
                 let parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
                 parentInjector = parentComponentRef?.injector;
 
