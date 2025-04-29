@@ -1,4 +1,3 @@
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { waitForAsync, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxTreeNavigationComponent, IgxTreeScrollComponent, IgxTreeSimpleComponent } from './tree-samples.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -13,12 +12,11 @@ import { IgxTree, IgxTreeNode, IgxTreeSelectionType } from './common';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 
 describe('IgxTree - Navigation #treeView', () => {
-    configureTestSuite();
 
     describe('Navigation - UI Tests', () => {
         let fix;
         let tree: IgxTreeComponent;
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
