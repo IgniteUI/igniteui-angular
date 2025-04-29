@@ -2,8 +2,7 @@
 
 # Current Milestone
 
-## Milestone 38,  version 20.0 (Due by Jun, 2025)
-
+## Milestone 38, version 20.0 (Due by Jun, 2025)
 1. Support of Angular 20.0
 
 ## Going down the road
