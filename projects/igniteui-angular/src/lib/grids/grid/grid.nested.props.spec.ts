@@ -1,5 +1,4 @@
-import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed, ComponentFixture, fakeAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -207,10 +206,12 @@ describe('Grid - nested data source properties #grid', () => {
             fixture.detectChanges();
         };
 
-        configureTestSuite((() => {
-            return TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, NestedPropertiesGridComponent]
-            });
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule, NestedPropertiesGridComponent
+                ]
+            }).compileComponents();
         }));
 
         beforeEach(fakeAsync(() => {
@@ -339,10 +340,12 @@ describe('Grid nested data advanced editing #grid', () => {
         fixture.detectChanges();
     };
 
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, NestedPropertiesGrid2Component]
-        });
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule, NestedPropertiesGrid2Component
+            ]
+        }).compileComponents();
     }));
 
     beforeEach(() => {
@@ -497,10 +500,12 @@ describe('Edit cell with data of type Array #grid', () => {
         fixture.detectChanges();
     };
 
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, NestedPropertyGridComponent]
-        });
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule, NestedPropertyGridComponent
+            ]
+        }).compileComponents();
     }));
 
     beforeEach(fakeAsync(() => {

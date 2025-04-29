@@ -1,8 +1,8 @@
-import { ApplicationRef, ChangeDetectorRef, ComponentFactory, ComponentRef, DestroyRef, Injector, OnChanges, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
+import { ApplicationRef, ChangeDetectorRef, ComponentFactory, ComponentRef, DestroyRef, EventEmitter, Injector, OnChanges, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgElement } from '@angular/elements';
-import { fromEvent } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { NgElement, NgElementStrategyEvent } from '@angular/elements';
+import { fromEvent, Observable } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { ComponentConfig, ContentQueryMeta } from './component-config';
 
 import { ComponentNgElementStrategy, ComponentNgElementStrategyFactory, extractProjectableNodes, isFunction } from './ng-element-strategy';
@@ -29,6 +29,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     /** Cached child instances per query prop. Used for dynamic components's child templates that normally persist in Angular runtime */
     protected cachedChildComponents: Map<string, ComponentRef<any>[]> = new Map();
     private setComponentRef: (value: ComponentRef<any>) => void;
+    /** The maximum depth at which event arguments are processed and angular components wrapped with Proxies, that handle template set */
+    private maxEventProxyDepth = 3;
 
     /**
      * Resolvable component reference.
@@ -405,6 +407,94 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             super.disconnect();
         }
     }
+
+    //#region Handle event args that return reference to components, since they return angular ref and not custom elements.
+    /** Sets up listeners for the component's outputs so that the events stream emits the events. */
+    protected override initializeOutputs(componentRef: ComponentRef<any>): void {
+        const eventEmitters: Observable<NgElementStrategyEvent>[] = this._componentFactory.outputs.map(
+            ({ propName, templateName }) => {
+                const emitter: EventEmitter<any> = componentRef.instance[propName];
+                return emitter.pipe(map((value: any) => ({ name: templateName, value: this.patchOutputComponents(propName, value) })));
+            },
+        );
+
+        (this as any).eventEmitters.next(eventEmitters);
+    }
+
+    protected patchOutputComponents(eventName: string, eventArgs: any) {
+        // Single out only `columnInit` event for now. If more events pop up will require a config generation.
+        if (eventName !== "columnInit") {
+            return eventArgs;
+        }
+        return this.createProxyForComponentValue(eventArgs, 1).value;
+    }
+
+    /**
+     * Nested search of event args that contain angular components and replace them with proxies.
+     * If event args are array of angular component instances should return array of proxies of each of those instances.
+     * If event args are object that has a single property being angular component should return same object except the angular component being a proxy of itself.
+     */
+    protected createProxyForComponentValue(value: any, depth: number): { value: any, hasProxies: boolean } {
+        if (depth > this.maxEventProxyDepth) {
+            return { value, hasProxies: false };
+        }
+
+        let hasProxies = false;
+        // TO DO!: Not very reliable as it is a very internal API and could be subject to change. If something comes up, should be changed.
+        if (value?.__ngContext__) {
+            const componentConfig = this.config.find((info: ComponentConfig) => value.constructor === info.component);
+            if (componentConfig?.templateProps) {
+                return { value: this.createElementsComponentProxy(value, componentConfig), hasProxies: true };
+            }
+        } else if (Array.isArray(value)) {
+            if (!value[0]) {
+                return { value, hasProxies: false };
+            } else {
+                // For array limit their parsing to first level and check if first item has created proxy inside.
+                const firstItem = this.createProxyForComponentValue(value[0], this.maxEventProxyDepth);
+                if (firstItem.hasProxies) {
+                    const mappedArray = value.slice(1, value.length).map(item => this.createProxyForComponentValue(item, depth + 1));
+                    mappedArray.unshift(firstItem);
+                    return { value: mappedArray, hasProxies: true };
+                }
+            }
+        } else if (typeof value === "object" && Object.entries(value).length && !(value instanceof Event)) {
+            for (const [key, item] of Object.entries(value)) {
+                if (!item) {
+                    value[key] = item;
+                } else {
+                    const parsedItem = this.createProxyForComponentValue(item, depth + 1);
+                    value[key] = parsedItem.value;
+                    hasProxies = parsedItem.hasProxies || hasProxies;
+                }
+            }
+        }
+
+        return { value, hasProxies };
+    }
+
+    /** Create proxy for a component that handles setting template props, making sure it provides correct TemplateRef and not Lit template */
+    protected createElementsComponentProxy(component: any, config: ComponentConfig) {
+        const parentThis = this;
+        return new Proxy(component, {
+            set(target: any, prop: string, newValue: any) {
+                // For now handle only template props
+                if (config.templateProps.includes(prop)) {
+                    const oldRef = target[prop];
+                    const oldValue = oldRef && parentThis.templateWrapper.getTemplateFunction(oldRef);
+                    if (oldValue === newValue) {
+                        newValue = oldRef;
+                    } else {
+                        newValue = parentThis.templateWrapper.addTemplate(newValue);
+                    }
+                }
+                target[prop] = newValue;
+
+                return true;
+            }
+        });
+    }
+    //#endregion
 }
 
 /**

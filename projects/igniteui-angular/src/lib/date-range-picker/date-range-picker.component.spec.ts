@@ -7,7 +7,6 @@ import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormContro
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { HelperTestFunctions } from '../test-utils/calendar-helper-utils';
 import { CancelableEventArgs } from '../core/utils';
 import { DateRange, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent } from './date-range-picker-inputs.common';
@@ -308,8 +307,7 @@ describe('IgxDateRangePicker', () => {
 
         describe('Single Input', () => {
             let singleInputElement: DebugElement;
-            configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
@@ -815,8 +813,7 @@ describe('IgxDateRangePicker', () => {
         describe('Two Inputs', () => {
             let startInput: DebugElement;
             let endInput: DebugElement;
-            configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
@@ -1388,8 +1385,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         describe('Rendering', () => {
-            configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
