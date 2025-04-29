@@ -9,7 +9,6 @@ import { IgxDropDownItemComponent, ISelectionEventArgs } from '../drop-down/publ
 import { IgxHintDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../input-group/public_api';
 import { IgxSelectComponent, IgxSelectFooterDirective, IgxSelectHeaderDirective } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../services/public_api';
 import { addScrollDivToElement } from '../services/overlay/overlay.spec';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
@@ -83,9 +82,7 @@ describe('igxSelect', () => {
         expect(select.toggle).toHaveBeenCalledTimes(toggleCallCounter);
     };
 
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

@@ -8,7 +8,6 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { TransactionType, Transaction } from '../../services/public_api';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { clearGridSubs, setElementSize, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
@@ -37,8 +36,8 @@ const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
 const DEBOUNCETIME = 30;
 
 describe('IgxGrid - Row Editing #grid', () => {
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridRowEditingComponent,
@@ -50,7 +49,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 IgxGridCustomRowEditTemplateComponent,
                 VirtualGridComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('General tests', () => {
@@ -73,6 +72,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it('Should throw a warning when [rowEditable] is set on a grid w/o [primaryKey]', () => {
+            jasmine.getEnv().allowRespy(true);
             grid.primaryKey = null;
             grid.rowEditable = false;
             fix.detectChanges();
@@ -89,6 +89,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
             expect(console.warn).toHaveBeenCalledWith('The grid must have a `primaryKey` specified when using `rowEditable`!');
             expect(console.warn).toHaveBeenCalledTimes(1);
+            jasmine.getEnv().allowRespy(false);
         });
 
         it('Should be able to enter edit mode on dblclick, enter and f2', () => {
@@ -149,7 +150,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             spyOn(grid.cellEditEnter, 'emit').and.callThrough();
             spyOn(grid.cellEdit, 'emit').and.callThrough();
             spyOn(grid.cellEditDone, 'emit').and.callThrough();
-            spyOn(grid.cellEditExit, 'emit').and.callThrough();
             spyOn(grid.cellEditExit, 'emit').and.callThrough();
             spyOn(grid.rowEditEnter, 'emit').and.callThrough();
             spyOn(grid.rowEdit, 'emit').and.callThrough();

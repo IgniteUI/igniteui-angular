@@ -31,7 +31,6 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridSummariesKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
@@ -52,12 +51,11 @@ import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyCompo
 import { IgxPivotGridComponent, PivotRowLayoutType } from '../../grids/pivot-grid/public_api';
 
 describe('Excel Exporter', () => {
-    configureTestSuite();
     let exporter: IgxExcelExporterService;
     let actualData: FileContentData;
     let options: IgxExcelExporterOptions;
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

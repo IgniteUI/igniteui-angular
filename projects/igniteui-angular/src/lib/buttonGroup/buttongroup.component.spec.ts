@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, flushMicrotasks, waitForAsync } from '@angular/core/testing';
 import { ButtonGroupAlignment, IgxButtonGroupComponent } from './buttonGroup.component';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxButtonDirective } from '../directives/button/button.directive';
@@ -46,8 +45,7 @@ class Button {
 
 
 describe('IgxButtonGroup', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
