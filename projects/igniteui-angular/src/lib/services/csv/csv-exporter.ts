@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { DEFAULT_OWNER, IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
+import { DEFAULT_OWNER, ExportHeaderType, IColumnInfo, IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { CharSeparatedValueData } from './char-separated-value-data';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
@@ -52,10 +52,29 @@ export class IgxCsvExporterService extends IgxBaseExporter {
     private _stringData: string;
 
     protected exportDataImplementation(data: IExportRecord[], options: IgxCsvExporterOptions, done: () => void) {
-        data = data.map((item) => item.data);
+        const dimensionKeys = data[0]?.dimensionKeys;
+        data = dimensionKeys?.length ? 
+            data.map((item) => item.rawData):
+            data.map((item) => item.data);
         const columnList = this._ownersMap.get(DEFAULT_OWNER);
+        const columns = columnList?.columns.filter(c => c.headerType === ExportHeaderType.ColumnHeader);
+        if (dimensionKeys) {
+            const dimensionCols = dimensionKeys.map((key) => {               
+                const columnInfo: IColumnInfo = {
+                    header: key,
+                    field: key,
+                    dataType: 'string',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    columnSpan: 1,
+                    startIndex: 0
+                };
+                return columnInfo;
+            });
+            columns.unshift(...dimensionCols);
+        }
 
-        const csvData = new CharSeparatedValueData(data, options.valueDelimiter, columnList?.columns);
+        const csvData = new CharSeparatedValueData(data, options.valueDelimiter, columns);
         csvData.prepareDataAsync((r) => {
             this._stringData = r;
             this.saveFile(options);
