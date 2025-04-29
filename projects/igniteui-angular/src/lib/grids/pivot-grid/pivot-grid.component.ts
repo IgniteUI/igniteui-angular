@@ -32,7 +32,7 @@ import {
 } from '@angular/core';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
-import { first, take, takeUntil} from 'rxjs/operators';
+import { first, take, takeUntil } from 'rxjs/operators';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
@@ -1666,7 +1666,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public autoSizeRowDimension(dimension: IPivotDimension) {
         if (this.getDimensionType(dimension) === PivotDimensionType.Row) {
             const relatedDims: string[] = PivotUtil.flatten([dimension]).map((x: IPivotDimension) => x.memberName);
-            const contentCollection =  this.getContentCollection(dimension);
+            const contentCollection = this.getContentCollection(dimension);
             const content = contentCollection.filter(x => relatedDims.indexOf(x.dimension.memberName) !== -1);
             const headers = content.map(x => x.headerGroups.toArray()).flat().map(x => x.header && x.header.refInstance);
             if (this.pivotUI.showRowHeaders) {
@@ -1940,8 +1940,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public getRowDimensionByName(memberName: string) {
         const visibleRows = this.pivotUI.rowLayout === PivotRowLayoutType.Vertical ?
-         this.pivotConfiguration.rows :
-         PivotUtil.flatten(this.pivotConfiguration.rows);
+            this.pivotConfiguration.rows :
+            PivotUtil.flatten(this.pivotConfiguration.rows);
         const dimIndex = visibleRows.findIndex((target) => target.memberName === memberName);
         const dim = visibleRows[dimIndex];
         return dim;
@@ -2265,7 +2265,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const separator = this.pivotKeys.columnDimensionSeparator;
         const dataArr = fields.map(x => x.split(separator)).sort(x => x.length);
         const hierarchy = new Map<string, any>();
-        const columnDimensions =  PivotUtil.flatten(this.columnDimensions);
+        const columnDimensions = PivotUtil.flatten(this.columnDimensions);
         dataArr.forEach(arr => {
             let currentHierarchy = hierarchy;
             const path = [];
@@ -2285,9 +2285,23 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         });
         return hierarchy;
     }
-
-    /** @hidden @internal */
-    public currencyColumnSet: Set<string> = new Set();
+    private updateColumnDataTypeByAggregator(column: any) {
+        this.values.forEach((aggregatorValue) => {
+            if ((aggregatorValue.dataType === GridColumnDataType.Currency || aggregatorValue.dataType === GridColumnDataType.Percent) && aggregatorValue.aggregate?.key?.toLowerCase() === 'count') {
+                if (column.field?.includes(aggregatorValue.member) || this.values.length === 1) {
+                    column.dataType = GridColumnDataType.Number;
+                }
+            } else if (aggregatorValue.dataType === GridColumnDataType.Currency && aggregatorValue.aggregate?.key?.toLowerCase() !== 'count') {
+                if (column.field?.includes(aggregatorValue.member) || this.values.length === 1) {
+                    column.dataType = GridColumnDataType.Currency;
+                }
+            } else if (aggregatorValue.dataType === GridColumnDataType.Percent && aggregatorValue.aggregate?.key?.toLowerCase() !== 'count') {
+                if (column.field?.includes(aggregatorValue.member) || this.values.length === 1) {
+                    column.dataType = GridColumnDataType.Percent;
+                }
+            }
+        })
+    }
     protected generateColumnHierarchy(fields: Map<string, any>, data, parent = null): IgxColumnComponent[] {
         let columns = [];
         if (fields.size === 0) {
@@ -2295,8 +2309,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
                 let columnDataType = value.dataType || this.resolveDataTypes(data.length ? data[0][value.member] : null);
 
-                if (value.aggregate?.key?.toLowerCase() === 'count' && columnDataType === GridColumnDataType.Currency) {
-                    this.currencyColumnSet.add(value.member);
+                if (value.aggregate?.key?.toLowerCase() === 'count' && (columnDataType === GridColumnDataType.Currency || columnDataType == GridColumnDataType.Percent)) {
                     columnDataType = GridColumnDataType.Number;
                 }
 
@@ -2319,32 +2332,14 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             if (shouldGenerate && (value.children == null || value.children.length === 0 || value.children.size === 0)) {
                 const col = this.createColumnForDimension(value, data, parent, this.hasMultipleValues);
 
-                this.values.forEach((aggregatorValue) => {
-                    if (col.dataType === GridColumnDataType.Currency && aggregatorValue.aggregate?.key?.toLowerCase() === 'count') {
-                        col.dataType = GridColumnDataType.Number;
-                        this.currencyColumnSet.add(aggregatorValue.member);
-                    } else if (this.currencyColumnSet.has(aggregatorValue.member) && aggregatorValue.aggregate?.key?.toLowerCase() !== 'count') {
-                        col.dataType = GridColumnDataType.Currency;
-                        this.currencyColumnSet.delete(aggregatorValue.member);
-                    }
-                })
+                this.updateColumnDataTypeByAggregator(col);
 
                 columns.push(col);
                 if (this.hasMultipleValues) {
                     const measureChildren = this.getMeasureChildren(data, col, false, value.dimension.width);
 
                     measureChildren.forEach((child) => {
-                        this.values.forEach((aggregatorValue) => {
-                            if (child.field.includes(aggregatorValue.member)) {
-                                if (child.dataType === GridColumnDataType.Currency && aggregatorValue.aggregate?.key?.toLowerCase() === 'count') {
-                                    child.dataType = GridColumnDataType.Number;
-                                    this.currencyColumnSet.add(aggregatorValue.member);
-                                } else if (this.currencyColumnSet.has(aggregatorValue.member) && aggregatorValue.aggregate?.key?.toLowerCase() !== 'count') {
-                                    child.dataType = GridColumnDataType.Currency;
-                                    this.currencyColumnSet.delete(aggregatorValue.member);
-                                }
-                            }
-                        })
+                        this.updateColumnDataTypeByAggregator(child);
                     })
 
                     col.children.reset(measureChildren);
@@ -2416,20 +2411,20 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                         };
                         values.push(value);
                         break;
-                }
-            case "date":
-            {
-                const dimension: IPivotDimension = new IgxPivotDateDimension(
-                    {
-                        memberName: field,
-                        enabled: isFirstDate,
-                        dataType: dataType
                     }
-                )
-                rowDimensions.push(dimension);
-                isFirstDate = false;
-                break;
-            }
+                case "date":
+                    {
+                        const dimension: IPivotDimension = new IgxPivotDateDimension(
+                            {
+                                memberName: field,
+                                enabled: isFirstDate,
+                                dataType: dataType
+                            }
+                        )
+                        rowDimensions.push(dimension);
+                        isFirstDate = false;
+                        break;
+                    }
                 default: {
                     const dimension: IPivotDimension = {
                         memberName: field,

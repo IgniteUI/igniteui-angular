@@ -1338,8 +1338,6 @@ export interface PivotGridType extends GridType {
     excelStyleFilterMinHeight: string;
     valueChipTemplate: TemplateRef<any>;
     rowDimensionHeaderTemplate: TemplateRef<IgxColumnTemplateContext>;
-    /** @hidden @internal */
-    currencyColumnSet: Set<string>
 }
 
 export interface GridSVGIcon {

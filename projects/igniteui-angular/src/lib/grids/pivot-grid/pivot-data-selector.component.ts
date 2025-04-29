@@ -545,45 +545,12 @@ export class IgxPivotDataSelectorComponent {
 
         if (!this.isSelected(event.newSelection.value)) {
             this.value.aggregate = event.newSelection.value;
+            const isSingleValue = this.grid.values.length === 1;
 
-            this.handleCountAggregator();
+            PivotUtil.handleCountAggregator(this.grid.columns, this.value, isSingleValue);
 
             this.grid.pipeTrigger++;
             this.grid.cdr.markForCheck();
-        }
-    }
-
-    private handleCountAggregator() {
-        const valueMember = this.value.member;
-        const columns = this.grid.columns;
-        const isCountAggregator = this.value.aggregate.key.toLowerCase() === 'count';
-        const isSingleValue = this.grid.values.length === 1;
-        let shouldRemoveFromSet: boolean = false;
-
-        columns.forEach(column => {
-            const isRelevantColumn = column.field?.includes(valueMember);
-            const isCurrencyColumn = column.dataType === GridColumnDataType.Currency;
-
-            if (isSingleValue) {
-                if (isCountAggregator && isCurrencyColumn) {
-                    column.dataType = GridColumnDataType.Number;
-                    this.grid.currencyColumnSet.add(valueMember);
-                } else if (this.grid.currencyColumnSet.has(valueMember)) {
-                    column.dataType = GridColumnDataType.Currency;
-                }
-            } else if (isRelevantColumn) {
-                if (isCountAggregator && isCurrencyColumn) {
-                    column.dataType = GridColumnDataType.Number;
-                    this.grid.currencyColumnSet.add(valueMember);
-                } else if (this.grid.currencyColumnSet.has(valueMember)) {
-                    column.dataType = GridColumnDataType.Currency;
-                    shouldRemoveFromSet = true;
-                }
-            }
-        });
-
-        if (shouldRemoveFromSet) {
-            this.grid.currencyColumnSet.delete(valueMember);
         }
     }
 
