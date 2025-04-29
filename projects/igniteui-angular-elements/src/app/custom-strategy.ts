@@ -41,14 +41,14 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
      */
     public [ComponentRefKey] = new Promise<ComponentRef<any>>((resolve, _) => this.setComponentRef = resolve);
 
-    private _templateWrapper: TemplateWrapperComponent;
+    private _templateWrapperRef: ComponentRef<TemplateWrapperComponent>;
     protected get templateWrapper(): TemplateWrapperComponent {
-        if (!this._templateWrapper) {
+        if (!this._templateWrapperRef) {
             const componentRef = (this as any).componentRef as ComponentRef<any>;
             const viewRef = componentRef.injector.get(ViewContainerRef);
-            this._templateWrapper = viewRef.createComponent(TemplateWrapperComponent).instance;
+            this._templateWrapperRef = viewRef.createComponent(TemplateWrapperComponent);
         }
-        return this._templateWrapper;
+        return this._templateWrapperRef.instance;
     }
 
     private _configSelectors: string;
@@ -63,7 +63,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         super(_componentFactory, _injector);
     }
 
-    override async initializeComponent(element: HTMLElement) {
+    protected override async initializeComponent(element: HTMLElement) {
         if (!element.isConnected) {
             // D.P. 2022-09-20 do not initialize on connectedCallback that is not actually connected
             // connectedCallback may be called once your element is no longer connected
@@ -113,7 +113,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             // ngElementStrategy getter is protected and also has initialization logic, though that should be safe at this point
             if (parent?.ngElementStrategy) {
                 this.angularParent = parent.ngElementStrategy.angularParent;
-                const parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
+                let parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
                 parentInjector = parentComponentRef?.injector;
 
                 // TODO: Consider general solution (as in Parent w/ @igxAnchor tag)
@@ -121,7 +121,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                     || element.tagName.toLocaleLowerCase() === 'igc-paginator') {
                     // NOPE: viewcontainerRef will re-render this node again, no option for rootNode :S
                     // this.componentRef = parentAnchor.createComponent(this.componentFactory.componentType, { projectableNodes, injector: childInjector });
-                    const parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
+                    parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
                     parentAnchor = parentComponentRef?.instance.anchor;
                 }
             } else if ((parent as any)?.__componentRef) {
@@ -220,6 +220,14 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         if (['igc-grid', 'igc-tree-grid', 'igc-hierarchical-grid'].includes(element.tagName.toLocaleLowerCase())) {
             this.patchGridPopups();
         }
+
+        // instead of duplicating super.disconnect() w/ the scheduled destroy:
+        componentRef.onDestroy(() => {
+            if (this._templateWrapperRef) {
+                this._templateWrapperRef.destroy();
+                this._templateWrapperRef = null;
+            }
+        });
     }
 
     public override setInputValue(property: string, value: any, transform?: (value: any) => any): void {
@@ -354,17 +362,6 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     }
     //#endregion schedule query update
 
-    /**
-     * assignTemplateCallback
-     */
-    public assignTemplateCallback(templateProp: string, callback: any) {
-        const componentRef = (this as any).componentRef as ComponentRef<any>;
-        if (componentRef) {
-            const templateRef = this.templateWrapper.addTemplate(callback);
-            componentRef.instance[templateProp] = templateRef;
-            componentRef.changeDetectorRef.detectChanges();
-        }
-    }
 
     //#region Grid popups hide on scroll
     /**
@@ -400,7 +397,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     }
     //#endregion
 
-    override disconnect(): void {
+    public override disconnect(): void {
         if (this.angularParent) {
             this.angularParent.onDestroy(() => super.disconnect());
         } else {
