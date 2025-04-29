@@ -412,7 +412,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * </igx-column>
      * ```
      *
-     * @memberof IgxColumnComponent
      */
     @Output()
     public hiddenChange = new EventEmitter<boolean>();
@@ -425,7 +424,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * </igx-column>
      * ```
      *
-     * @memberof IgxColumnComponent
      */
     @Output()
     public expandedChange = new EventEmitter<boolean>();
@@ -885,7 +883,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * </igx-column>
      * ```
      *
-     * @memberof IgxColumnComponent
      */
     @Output()
     public widthChange = new EventEmitter<string>();
@@ -898,7 +895,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * </igx-column>
      * ```
      *
-     * @memberof IgxColumnComponent
      */
     @Output()
     public pinnedChange = new EventEmitter<boolean>();

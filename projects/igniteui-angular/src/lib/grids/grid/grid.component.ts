@@ -170,8 +170,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * Emitted when grouping is performed.
      *
-     * @remarks
-     * Returns the grouping expressions.
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" [autoGenerate]="true" (groupingExpressionsChange)="groupingExpressionsChange($event)"></igx-grid>
@@ -183,8 +181,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * Emitted when groups are expanded/collapsed.
      *
-     * @remarks
-     * Returns the grouping expansion states.
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" [autoGenerate]="true" (groupingExpansionStateChange)="groupingExpansionStateChange($event)"></igx-grid>
