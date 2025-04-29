@@ -327,6 +327,14 @@ describe('Rendering Tests', () => {
     });
 
     describe('Appearance', () => {
+        beforeAll(() => {
+            jasmine.getEnv().allowRespy(true);
+        });
+
+        afterAll(() => {
+            jasmine.getEnv().allowRespy(false);
+        });
+
         it('should apply the appropriate class to a stepper in horizontal mode', () => {
             stepper.orientation = IgxStepperOrientation.Horizontal;
             fix.detectChanges();
