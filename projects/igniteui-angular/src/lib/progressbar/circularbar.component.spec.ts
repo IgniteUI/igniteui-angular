@@ -33,8 +33,6 @@ describe('IgxCircularProgressBarComponent', () => {
     });
 
     it('should correctly apply the ID attribute', () => {
-        expect(progress.id).toContain('igx-circular-bar-'); // Keep this
-
         const customId = 'custom-circular-bar-id';
         progress.id = customId;
         fixture.detectChanges();

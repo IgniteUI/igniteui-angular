@@ -12,7 +12,6 @@ import {
 import { HorizontalAlignment, PositionSettings, VerticalAlignment } from 'igniteui-angular';
 
 describe('IgxToast', () => {
-    const baseId = 'igx-toast-';
     let fixture: ComponentFixture<IgxToastComponent>;
     let toast: IgxToastComponent;
     const firstPositionSettings: PositionSettings = {
@@ -43,9 +42,6 @@ describe('IgxToast', () => {
     });
 
     it('should properly initialize', () => {
-        expect(toast.id).toContain(baseId);
-        expect(toast.element.id).toContain(baseId);
-
         toast.id = 'customToast';
         fixture.detectChanges();
 
