@@ -322,6 +322,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
      * }
      * ```
      */
+    @HostBinding('class.igx-input-group--line')
     public get isTypeLine(): boolean {
         return this.type === 'line' && this._theme === 'material';
     }

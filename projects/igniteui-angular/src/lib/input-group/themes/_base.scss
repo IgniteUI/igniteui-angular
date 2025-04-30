@@ -40,6 +40,8 @@ $base-scale-size: (
         --_prefix-suffix-spacing: #{pad-inline(rem(8px), rem(12px), rem(16px))};
 
         display: grid;
+        grid-template-columns: var(--_bundle-template-columns);
+        grid-template-rows: var(--_bundle-template-rows);
         position: relative;
         color: var-get($theme, 'idle-text-color');
 
@@ -86,13 +88,14 @@ $base-scale-size: (
 
         @include e(bundle) {
             display: grid;
-            grid-template-columns: var(--_bundle-template-columns);
+            grid-template-columns: subgrid;
+            grid-template-rows: subgrid;
             position: relative;
             max-width: 100%;
             font-size: rem(16px);
             height: var-get($theme, 'size');
             min-height: var-get($theme, 'size');
-            grid-template-rows: var(--_bundle-template-rows);
+            grid-column: 1 / -1;
         }
 
         @include e(label) {
@@ -200,6 +203,8 @@ $base-scale-size: (
             position: relative;
             display: flex;
             justify-content: space-between;
+            grid-row: 3;
+            grid-column: 1 / -1;
 
             &:empty {
                 display: none;
@@ -211,7 +216,7 @@ $base-scale-size: (
             max-width: 100%;
             overflow: hidden;
             height: calc(var-get($theme, 'size') - 2px);
-            color: var-get($theme, 'filled-text-color');
+            color: var-get($theme, 'idle-text-color');
 
             span {
                 @include ellipsis();
@@ -226,6 +231,10 @@ $base-scale-size: (
 
         @include m(file, $not: (border)) {
             --_bundle-template-columns: auto auto 1fr auto;
+
+            @include e(upload) {
+                grid-column: 2;
+            }
 
 
             @include e(bundle-main) {
@@ -270,7 +279,7 @@ $base-scale-size: (
         }
 
         @include m(textarea-group) {
-            --_bundle-template-rows: auto;
+            --_bundle-template-rows: auto auto auto;
 
             @include e(bundle) {
                 height: auto;
@@ -300,6 +309,10 @@ $base-scale-size: (
             [igxSuffix] {
                 color: var-get($theme, 'input-suffix-color--filled');
                 background: var-get($theme, 'input-suffix-background--filled');
+            }
+
+            @include e(file-input) {
+                color: var-get($theme, 'filled-text-color');
             }
         }
 
@@ -357,6 +370,7 @@ $base-scale-size: (
 
             @include e(hint) {
                 color: var-get($theme, 'disabled-text-color');
+                grid-column: 1 / -1;
             }
 
             @include e(file-input) {

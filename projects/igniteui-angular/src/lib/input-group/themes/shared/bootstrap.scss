@@ -16,6 +16,12 @@ $border-radius: var-get($_theme, 'border-border-radius');
             border-color: $border-color;
         }
 
+        %disabled-styles {
+            background: var-get($_theme, 'border-disabled-background');
+            color: var-get($_theme, 'disabled-text-color');
+            border-color: var-get($_theme, 'disabled-border-color');
+        }
+
         igx-input-group:not(.igx-input-group--prefixed, .igx-input-group--file) {
             .igx-input-group__bundle-main {
                 border-start-start-radius: $border-radius;
@@ -30,37 +36,51 @@ $border-radius: var-get($_theme, 'border-border-radius');
             }
         }
 
-        //igx-input-group--prefixed:has(.igx-input-group__bundle-start:empty) {
-        //    display: none;
-        //}
+        igx-input-group:not(.igx-input-group--textarea-group) {
+            .igx-input-group__bundle {
+                border-radius: $border-radius;
+            }
+        }
     }
 }
 
 @include themed-block(igx-input-group, bootstrap) {
+    --_bundle-template-rows: auto;
+
     row-gap: rem(4px);
+
+    @include e(bundle) {
+        border-radius: $border-radius;
+        height: revert;
+    }
+
 
     @include e(upload) {
         @extend %border-styles;
 
-        border-width: $border-size;
+        border-block-width: $border-size;
+        border-inline-start-width: $border-size;
+        border-inline-end-width: 0;
         background: var-get($_theme, 'input-prefix-background');
+        grid-row: 2;
     }
 
     @include e(upload-button) {
-        @include type-style(body-1);
-
-        font-size: sizable(rem(16px), rem(16px), rem(20px));
-
-        --igx-button-foreground: #{var-get($_theme, 'input-prefix-color')};
         --igx-button-background: #{var-get($_theme, 'input-prefix-background')};
-        --igx-button-hover-foreground: #{var-get($_theme, 'input-prefix-color')};
         --igx-button-hover-background: #{var-get($_theme, 'input-prefix-background')};
-        --igx-button-active-foreground: #{var-get($_theme, 'input-prefix-color')};
         --igx-button-active-background: #{var-get($_theme, 'input-prefix-background')};
-        --igx-button-focus-visible-foreground: #{var-get($_theme, 'input-prefix-color')};
         --igx-button-focus-visible-background: #{var-get($_theme, 'input-prefix-background')};
+        --igx-button-foreground: #{var-get($_theme, 'input-prefix-color')};
+        --igx-button-hover-foreground: #{var-get($_theme, 'input-prefix-color')};
+        --igx-button-active-foreground: #{var-get($_theme, 'input-prefix-color')};
+        --igx-button-focus-visible-foreground: #{var-get($_theme, 'input-prefix-color')};
         --igx-button-disabled-foreground: #{var-get($_theme, 'disabled-text-color')};
         --igx-button-disabled-background: #{var-get($_theme, 'border-disabled-background')};
+
+        @include type-style(body-1);
+
+        min-height: revert;
+        font-size: sizable(rem(16px), rem(16px), rem(20px));
         border: 0;
         border-radius: 0;
     }
@@ -102,15 +122,8 @@ $border-radius: var-get($_theme, 'border-border-radius');
         @extend %border-styles;
 
         z-index: 1;
-        grid-row: 1;
-        transition: box-shadow .15s ease-out, border .15s ease-out;
         border-width: $border-size;
-    }
-
-    @include m(file) {
-        @include e(bundle-main) {
-            border-inline-start-width: 0;
-        }
+        min-height: var-get($_theme, 'size');
     }
 
     @include m(file, $not: (prefixed)) {
@@ -126,16 +139,10 @@ $border-radius: var-get($_theme, 'border-border-radius');
     }
 
     @include e(bundle-start) {
-        grid-row: 1;
-
         &:empty {
             border: 0;
             visibility: hidden;
         }
-    }
-
-    @include e(bundle-end) {
-        grid-row: 1;
     }
 
     @include m(prefixed) {
@@ -157,10 +164,8 @@ $border-radius: var-get($_theme, 'border-border-radius');
             @extend %border-styles;
 
             z-index: 0;
-            border-block-width: $border-size;
-            border-inline-end-width: $border-size;
+            border-width: $border-size;
             border-inline-start-width: 0;
-
             border-start-end-radius: $border-radius;
             border-end-end-radius: $border-radius;
             overflow: hidden;
@@ -169,8 +174,214 @@ $border-radius: var-get($_theme, 'border-border-radius');
 
     @include m(focused) {
         @include e(bundle-main) {
+            transition: border .15s ease-out;
             border-color: var-get($_theme, 'focused-border-color');
+        }
+    }
+
+    @include m(invalid) {
+        @include e(bundle-main) {
+            border-color: var-get($_theme, 'error-secondary-color');
+        }
+
+        @include e(hint) {
+            color: var-get($_theme, 'error-secondary-color');
+        }
+    }
+
+    @include m(warning) {
+        @include e(bundle-main) {
+            border-color: var-get($_theme, 'warning-secondary-color');
+        }
+
+        @include e(hint) {
+            color: var-get($_theme, 'warning-secondary-color');
+        }
+    }
+
+    @include m(valid) {
+        @include e(bundle-main) {
+            border-color: var-get($_theme, 'success-secondary-color');
+        }
+
+        @include e(hint) {
+            color: var-get($_theme, 'success-secondary-color');
+        }
+    }
+
+    @include mx(focused, invalid) {
+        @include e(bundle-main) {
+            border-color: var-get($_theme, 'error-secondary-color');
+        }
+    }
+
+    @include mx(focused, warning) {
+        @include e(bundle-main) {
+            border-color: var-get($_theme, 'warning-secondary-color');
+        }
+    }
+
+    @include mx(focused, valid) {
+        @include e(bundle-main) {
+            border-color: var-get($_theme, 'success-secondary-color');
+        }
+    }
+
+    @include m(focused, $not: (file)) {
+        @include e(bundle-main) {
+            transition: box-shadow .15s ease-out;
             box-shadow: 0 0 0 rem(4px) var-get($_theme, 'focused-secondary-color');
         }
     }
+
+    @include mx(focused, valid, ('not': (file))) {
+        @include e(bundle-main) {
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'success-shadow-color');
+        }
+    }
+
+    @include mx(focused, invalid, ('not': (file))) {
+        @include e(bundle-main) {
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'error-shadow-color');
+        }
+    }
+
+    // TODO: This state has no schema variable
+    //@include mx(focused, warning, ('not': (file))) {
+    //    @include e(bundle-main) {
+    //        box-shadow: 0 0 0 rem(4px) var-get($_theme, 'warning-shadow-color');
+    //    }
+    //}
+
+    $transition-border: border .15s ease-out;
+    $transition-box-shadow: box-shadow .15s ease-out;
+
+    @include m(file) {
+        @include e(bundle) {
+            transition: $transition-box-shadow
+        }
+
+        @include e(upload) {
+            transition: $transition-border;
+        }
+
+        @include e(bundle-start) {
+            transition: $transition-border;
+        }
+
+        @include e(bundle-end) {
+            transition: $transition-border;
+        }
+    }
+
+    @include mx(focused, file) {
+        @include e(bundle) {
+            transition: $transition-box-shadow;
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'focused-secondary-color');
+        }
+
+        @include e(upload) {
+            border-color: var-get($_theme, 'focused-border-color');
+        }
+
+        @include e(bundle-start) {
+            border-color: var-get($_theme, 'focused-border-color');
+        }
+
+        @include e(bundle-end) {
+            border-color: var-get($_theme, 'focused-border-color');
+        }
+    }
+
+    @include mx(file, valid) {
+        @include e(upload) {
+            border-color: var-get($_theme, 'success-secondary-color');
+        }
+
+        @include e(bundle-start) {
+            border-color: var-get($_theme, 'success-secondary-color');
+        }
+
+        @include e(bundle-end) {
+            border-color: var-get($_theme, 'success-secondary-color');
+        }
+    }
+
+    @include mx(file, invalid) {
+        @include e(upload) {
+            border-color: var-get($_theme, 'error-secondary-color');
+        }
+
+        @include e(bundle-start) {
+            border-color: var-get($_theme, 'error-secondary-color');
+        }
+
+        @include e(bundle-end) {
+            border-color: var-get($_theme, 'error-secondary-color');
+        }
+    }
+
+    @include mx(file, warning) {
+        @include e(upload) {
+            border-color: var-get($_theme, 'warning-secondary-color');
+        }
+
+        @include e(bundle-start) {
+            border-color: var-get($_theme, 'warning-secondary-color');
+        }
+
+        @include e(bundle-end) {
+            border-color: var-get($_theme, 'warning-secondary-color');
+        }
+    }
+
+    @include mx(file, focused, valid) {
+        @include e(bundle) {
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'success-shadow-color');
+        }
+    }
+
+    @include mx(file, focused, invalid) {
+        @include e(bundle) {
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'error-shadow-color');
+        }
+    }
+
+    @include mx(file, focused, warning) {
+        // TODO: This state has no schema variable
+        //@include e(bundle) {
+        //    box-shadow: 0 0 0 rem(4px) var-get($_theme, 'warning-shadow-color');
+        //}
+    }
+
+    @include m(disabled) {
+        @include e(bundle) {
+            @extend %disabled-styles;
+        }
+
+        @include e(bundle-main) {
+            @extend %disabled-styles;
+        }
+
+        @include e(bundle-start) {
+            @extend %disabled-styles;
+        }
+
+        @include e(bundle-end) {
+            @extend %disabled-styles;
+        }
+
+        @include e(upload) {
+            @extend %disabled-styles;
+        }
+
+        igx-prefix,
+        [igxPrefix],
+        igx-suffix,
+        [igxSuffix] {
+            background: var-get($_theme, 'border-disabled-background');
+            color: var-get($_theme, 'disabled-text-color');
+        }
+    }
 }
+
