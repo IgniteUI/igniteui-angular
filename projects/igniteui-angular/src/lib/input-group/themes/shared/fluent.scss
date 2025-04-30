@@ -11,6 +11,13 @@ $_theme: $fluent;
 
     row-gap: rem(5px);
 
+    @include e(clear-icon) {
+        &:focus {
+            color: contrast-color($color: 'primary', $variant: 600);
+            background: color($color: 'primary', $variant: 500);
+        }
+    }
+
     @include m(file) {
         @include e(bundle) {
             > * {
@@ -192,7 +199,7 @@ $_theme: $fluent;
     @include m(disabled) {
         igx-prefix,
         [igxPrefix],
-        igx-suffix,
+        igx-suffix:not(.igx-input-group__toggle-button),
         [igxSuffix] {
             color: var-get($_theme, 'disabled-text-color');
         }
