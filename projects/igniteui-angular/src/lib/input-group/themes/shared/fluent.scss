@@ -19,6 +19,14 @@ $_theme: $fluent;
         }
     }
 
+    @include e(upload-button) {
+        --igx-button-background: transparent;
+        --igx-button-hover-background: transparent;
+        --igx-button-focus-background: transparent;
+        --igx-button-focus-visible-background: transparent;
+        --igx-button-active-background: transparent;
+    }
+
     @include e(hint) {
         min-height: rem(18px);
     }
@@ -182,6 +190,13 @@ $_theme: $fluent;
     }
 
     @include m(disabled) {
+        igx-prefix,
+        [igxPrefix],
+        igx-suffix,
+        [igxSuffix] {
+            color: var-get($_theme, 'disabled-text-color');
+        }
+
         @include e(bundle) {
             background: var-get($_theme, 'border-disabled-background');
             border-color: var-get($_theme, 'disabled-border-color');

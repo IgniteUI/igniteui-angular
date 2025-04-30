@@ -22,7 +22,7 @@ $input-bottom-padding: rem(6px);
         %box-floating-text-area-label {
             transform: translateY(0);
             inset-block-start: calc(#{$input-top-padding} / 4);
-            position: absolute;
+
         }
 
         %border-textarea-floating-label {
@@ -43,11 +43,6 @@ $input-bottom-padding: rem(6px);
 
     @include e(file-input) {
         @extend %input-paddings;
-    }
-
-    @include e(label) {
-        will-change: font-size, color, transform;
-        transition: all $transition-timing;
     }
 
     @include e(bundle-start) {
@@ -84,6 +79,8 @@ $input-bottom-padding: rem(6px);
         @include e(bundle) {
             transition: border-bottom-color $transition-timing;
             align-items: center;
+            grid-column: 1 / -1;
+            grid-row: 1;
 
             > * {
                 grid-row: 1;
@@ -98,14 +95,9 @@ $input-bottom-padding: rem(6px);
         @include e(label) {
             padding-inline: $input-inline-padding;
             grid-column: 2;
-        }
-
-        @include e(wrapper) {
-            border-start-start-radius: var-get($_theme, 'box-border-radius');
-            border-start-end-radius: var-get($_theme, 'box-border-radius');
-            border-end-start-radius: 0;
-            border-end-end-radius: 0;
-            overflow: clip;
+            z-index: 1;
+            grid-row: 1;
+            align-self: center;
         }
 
         @include e(input) {
@@ -113,28 +105,45 @@ $input-bottom-padding: rem(6px);
 
             padding-inline: 0;
         }
+
+        @include e(hint) {
+            grid-row: 2;
+        }
     }
 
     @include m(base, $not: (search)) {
-        @include e(bundle) {
-            border-block-end: rem(1px) solid var-get($_theme, 'idle-bottom-line-color');
+        border-block-start: rem(1px) solid transparent;
 
+        @include e(bundle) {
+            &::before,
             &::after {
                 content: '';
                 position: absolute;
                 width: 100%;
                 inset-inline-end: 0;
-                inset-block-end: rem(-1px);
+            }
+
+            &::before {
+                inset-block-end: 0;
+                height: rem(1px);
+                border-block-end: rem(1px) solid var-get($_theme, 'idle-bottom-line-color');
+                z-index: 1;
+            }
+
+            &::after {
+                inset-block-end: rem(0px);
                 height: rem(2px);
                 align-self: end;
                 transform: scaleX(0);
                 transform-origin: center;
                 background: var-get($_theme, 'focused-secondary-color');
-                z-index: 1;
+                z-index: 2;
             }
 
             &:hover {
-                border-block-end-color: var-get($_theme, 'hover-bottom-line-color');
+                &::before {
+                    border-block-end-color:  var-get($_theme, 'hover-bottom-line-color');
+                }
             }
         }
     }
@@ -156,7 +165,9 @@ $input-bottom-padding: rem(6px);
 
     @include mx(base, valid) {
         @include e(bundle) {
-            border-block-end-color: var-get($_theme, 'success-secondary-color');
+            &::before {
+                border-block-end-color: rem(1px) solid var-get($_theme, 'success-secondary-color');
+            }
 
             &::after {
                 background: var-get($_theme, 'success-secondary-color');
@@ -166,20 +177,36 @@ $input-bottom-padding: rem(6px);
 
     @include mx(base, warning) {
         @include e(bundle) {
-            border-block-end-color: var-get($_theme, 'warning-secondary-color');
+            &::before {
+                border-block-end-color: var-get($_theme, 'warning-secondary-color');
+            }
 
             &::after {
                 background: var-get($_theme, 'warning-secondary-color');
+            }
+
+            &:hover {
+                &::before {
+                    border-block-end-color: var-get($_theme, 'warning-secondary-color');
+                }
             }
         }
     }
 
     @include mx(base, invalid) {
         @include e(bundle) {
-            border-block-end-color: var-get($_theme, 'error-secondary-color');
+            &::before {
+                border-block-end-color: var-get($_theme, 'error-secondary-color');
+            }
 
             &::after {
                 background: var-get($_theme, 'error-secondary-color');
+            }
+
+            &:hover {
+                &::before {
+                    border-block-end-color: var-get($_theme, 'error-secondary-color');
+                }
             }
         }
     }
@@ -234,6 +261,9 @@ $input-bottom-padding: rem(6px);
     @include m(box) {
         @include e(bundle) {
             background: var-get($_theme, 'box-background');
+            border-start-start-radius: var-get($_theme, 'box-border-radius');
+            border-start-end-radius: var-get($_theme, 'box-border-radius');
+            overflow: clip;
         }
 
         &:hover {
@@ -246,19 +276,23 @@ $input-bottom-padding: rem(6px);
     @include mx(box, focused) {
         @include e(bundle) {
             background: var-get($_theme, 'box-background-focus');
+            border-bottom-color: transparent;
         }
     }
 
     @include mx(base, disabled, ('not': (border, search))) {
         @include e(bundle) {
-            border-block-end-color: var-get($_theme, 'disabled-bottom-line-color');
-            border-block-end-style: dashed;
+            &::before {
+                border-block-end-color: var-get($_theme, 'disabled-bottom-line-color');
+                border-block-end-style: dashed;
+            }
         }
-
 
         &:hover {
             @include e(bundle) {
-                border-block-end-color: var-get($_theme, 'disabled-bottom-line-color');
+                &::before {
+                    border-block-end-color: var-get($_theme, 'disabled-bottom-line-color');
+                }
             }
         }
     }
@@ -343,6 +377,7 @@ $input-bottom-padding: rem(6px);
     @include m(border) {
         --_label-position: #{sizable(18px, 22px, 26px)};
         --_bundle-template-columns: auto auto 1fr auto;
+        --_bundle-template-rows: #{var-get($_theme, 'size')} auto;
         --_input-border-size: #{rem(1px)};
         --_input-border-style: solid;
         --_label-translate-top: translateY(calc(var(--_label-position) * -1));
@@ -356,6 +391,9 @@ $input-bottom-padding: rem(6px);
         }
 
         @include e(bundle) {
+            grid-column: 1 / -1;
+            grid-row: 1;
+
             > * {
                 grid-row: 1;
             }
@@ -424,6 +462,10 @@ $input-bottom-padding: rem(6px);
             padding: 0;
         }
 
+        @include e(hint) {
+            grid-row: 2;
+        }
+
         &:hover {
             @include e(bundle-start) {
                 border-color: var-get($_theme, 'hover-border-color');
@@ -445,6 +487,10 @@ $input-bottom-padding: rem(6px);
                 border-color: var-get($_theme, 'hover-border-color');
             }
         }
+    }
+
+    @include mx(border, textarea-group) {
+        --_bundle-template-rows: auto auto;
     }
 
     @include mx(border, focused) {
@@ -702,6 +748,40 @@ $input-bottom-padding: rem(6px);
     @include e(notch) {
         &:empty {
             display: none;
+        }
+    }
+
+    @include e(label) {
+        @include type-style(subtitle-1);
+
+        will-change: font-size, color, transform;
+        transition: all $transition-timing;
+        pointer-events: none;
+    }
+
+    @include e(input) {
+        @include type-style(subtitle-1);
+    }
+
+    @include e(textarea) {
+        @include type-style(subtitle-1);
+    }
+
+    @include m(filled) {
+        @include e(label) {
+            @include type-style(caption);
+        }
+    }
+
+    @include m(focused) {
+        @include e(label) {
+            @include type-style(caption);
+        }
+    }
+
+    @include m(placeholder) {
+        @include e(label) {
+            @include type-style(caption);
         }
     }
 
