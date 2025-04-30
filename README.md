@@ -108,6 +108,7 @@ Some of the Angular chart types included are: [Polar chart](https://www.infragis
 |stepper|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/stepper/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/stepper)|13.0.0|
 |switch|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/switch/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/switch)|2.0.0|||||
 |tabs|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/tabs/tabs/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabs)|5.1.0||||
+|tile manager|:white_check_mark:||[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tile-manager)|19.2.0||||
 |time picker|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/time-picker/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/time-picker)|5.3.0||||
 |toast|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/toast/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast)|5.1.0||||
 |tree|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/tree/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tree)|12.0.0||||
@@ -162,6 +163,8 @@ Some of the Angular chart types included are: [Polar chart](https://www.infragis
 |18.1.0|22-Jul-24|[Milestone #33](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-33-due-by-jul-2024)|
 |18.2.0|25-Oct-24|[Milestone #34](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-34-version-182-released-oct-25th-2024)|
 |19.0.0|25-Nov-24|[Milestone #35](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-35-version-190-released-nov-25th-2024)|
+|19.1.0|27-Feb-25|[Milestone #36](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-36--version-191-released-feb-27th-2025)|
+|19.2.0|16-Apr-25|[Milestone #37]()|
 
 
 ### Components available in [igniteui-angular-charts](https://www.npmjs.com/package/igniteui-angular-charts)
