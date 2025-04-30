@@ -16,7 +16,7 @@
             [type]="getInputGroupType()"
             [style.--ig-size]="getSize()">
             @if (getLabel()) {
-                <label igxLabel>{{ getLabel() }}</label>
+                <label igxLabel (click)="uploadButtonHandler()">{{ getLabel() }}</label>
             }
 
             @if (hidePrefix()) {
@@ -84,11 +84,7 @@
                 I am a Hint
             </igx-hint>
 
-            @if (hideSuffix()) {
-                <igx-suffix>
-                    <igx-icon>favorite</igx-icon>
-                </igx-suffix>
-            }
+
 
             <igx-select-item [value]="'Apple'" [disabled]="true">Apple</igx-select-item>
             <igx-select-item [value]="'Orange'">Orange</igx-select-item>
@@ -210,6 +206,7 @@
             @if (hideSuffix()) {
                 <igc-icon slot="suffix" name="face"></igc-icon>
             }
+
             <span slot="helper-text">Hint text</span>
         </igc-textarea>
 
@@ -223,10 +220,6 @@
 
             @if (hidePrefix()) {
                 <igc-icon slot="prefix" name="face"></igc-icon>
-            }
-
-            @if (hideSuffix()) {
-                <igc-icon slot="suffix" name="favorite"></igc-icon>
             }
 
             <span slot="helper-text">I am a Hint</span>

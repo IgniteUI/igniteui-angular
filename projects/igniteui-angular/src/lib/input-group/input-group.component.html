@@ -1,10 +1,4 @@
-@if (isTypeBox) {
-    <div class="igx-input-group__wrapper">
-        <ng-container *ngTemplateOutlet="bundle"></ng-container>
-    </div>
-} @else {
-    <ng-container *ngTemplateOutlet="bundle"></ng-container>
-}
+<ng-container *ngTemplateOutlet="bundle"></ng-container>
 
 <ng-template #label>
     <ng-content select="[igxLabel]"></ng-content>
@@ -53,8 +47,8 @@
 </ng-template>
 
 <ng-template #bundle>
-    @if(this._theme !== 'material') {
-        <ng-container *ngTemplateOutlet="label"></ng-container>
+    @if (!isTypeBorder) {
+        <ng-container (click)="isFileType ? uploadButtonHandler() : null" *ngTemplateOutlet="label"></ng-container>
     }
 
     <div class="igx-input-group__bundle">
@@ -70,8 +64,6 @@
             <div class="igx-input-group__notch">
                 <ng-container *ngTemplateOutlet="label"></ng-container>
             </div>
-        } @else if (this._theme === 'material') {
-            <ng-container *ngTemplateOutlet="label"></ng-container>
         }
 
         <div class="igx-input-group__bundle-main" (click)="isFileType ? uploadButtonHandler() : null">
@@ -94,8 +86,9 @@
             <ng-content select="igx-suffix, [igxSuffix]"></ng-content>
         </div>
     </div>
-</ng-template>
 
-<div class="igx-input-group__hint" (click)="hintClickHandler($event)">
-    <ng-content select="igx-hint, [igxHint]"></ng-content>
-</div>
+
+    <div class="igx-input-group__hint" (click)="hintClickHandler($event)">
+        <ng-content select="igx-hint, [igxHint]"></ng-content>
+    </div>
+</ng-template>
