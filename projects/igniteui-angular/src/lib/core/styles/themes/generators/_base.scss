@@ -344,21 +344,21 @@
         @include column-actions($column-actions-theme-map);
     }
 
-    @if is-used('igx-combo', $exclude) {
-        $combo-theme-map: combo-theme(
-            $schema: $schema,
-        );
-        $combo-theme-map: meta.call($theme-handler, $combo-theme-map);
-        @include combo($combo-theme-map);
-    }
+    //@if is-used('igx-combo', $exclude) {
+    //    $combo-theme-map: combo-theme(
+    //        $schema: $schema,
+    //    );
+    //    $combo-theme-map: meta.call($theme-handler, $combo-theme-map);
+    //    @include combo($combo-theme-map);
+    //}
 
-    @if is-used('igx-select', $exclude) {
-        $select-theme-map: select-theme(
-            $schema: $schema,
-        );
-        $select-theme-map: meta.call($theme-handler, $select-theme-map);
-        @include select($select-theme-map);
-    }
+    //@if is-used('igx-select', $exclude) {
+    //    $select-theme-map: select-theme(
+    //        $schema: $schema,
+    //    );
+    //    $select-theme-map: meta.call($theme-handler, $select-theme-map);
+    //    @include select($select-theme-map);
+    //}
 
     //@if is-used('igx-date-picker', $exclude) {
     //    $calendar-theme-map: calendar-theme(
