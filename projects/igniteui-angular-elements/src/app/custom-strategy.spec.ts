@@ -52,6 +52,10 @@ describe('Elements: ', () => {
             const gridComponent = (await gridEl.ngElementStrategy[ComponentRefKey]).instance as IgxGridComponent;
             const columnComponent = (await columnEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
             expect(gridComponent.columnList.toArray()).toContain(columnComponent);
+
+            columnEl.remove();
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY: DESTROY + QUERY */ * 3));
+            expect(gridComponent.columnList.toArray()).toEqual([]);
         });
 
         it(`should keep IgcNgElement instance in template of another IgcNgElement #15678`, async () => {
