@@ -16,7 +16,7 @@
             [type]="getInputGroupType()"
             [style.--ig-size]="getSize()">
             @if (getLabel()) {
-                <label igxLabel (click)="uploadButtonHandler()">{{ getLabel() }}</label>
+                <label igxLabel>{{ getLabel() }}</label>
             }
 
             @if (hidePrefix()) {
