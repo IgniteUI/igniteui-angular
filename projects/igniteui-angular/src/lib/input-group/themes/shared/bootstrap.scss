@@ -1,4 +1,5 @@
 @use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color' as *;
 @use 'igniteui-theming/sass/bem' as *;
 @use 'styles/themes/standalone' as *;
 @use '../light/tokens' as *;
@@ -48,6 +49,13 @@ $border-radius: var-get($_theme, 'border-border-radius');
     --_bundle-template-rows: auto;
 
     row-gap: rem(4px);
+
+    @include e(clear-icon) {
+        &:focus {
+            color: contrast-color($color: 'primary', $variant: 600);
+            background: color($color: 'primary', $variant: 500);
+        }
+    }
 
     @include e(bundle) {
         border-radius: $border-radius;
@@ -377,7 +385,7 @@ $border-radius: var-get($_theme, 'border-border-radius');
 
         igx-prefix,
         [igxPrefix],
-        igx-suffix,
+        igx-suffix:not(.igx-input-group__toggle-button),
         [igxSuffix] {
             background: var-get($_theme, 'border-disabled-background');
             color: var-get($_theme, 'disabled-text-color');
