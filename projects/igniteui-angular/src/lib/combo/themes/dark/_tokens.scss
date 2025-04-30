@@ -1,0 +1,7 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/dark/combo' as *;
+
+$material: digest-schema($dark-material-combo);
+$bootstrap: digest-schema($dark-bootstrap-combo);
+$fluent: digest-schema($dark-fluent-combo);
+$indigo: digest-schema($dark-indigo-combo);
