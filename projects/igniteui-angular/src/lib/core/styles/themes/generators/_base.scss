@@ -344,37 +344,37 @@
         @include column-actions($column-actions-theme-map);
     }
 
-    @if is-used('igx-combo', $exclude) {
-        $combo-theme-map: combo-theme(
-            $schema: $schema,
-        );
-        $combo-theme-map: meta.call($theme-handler, $combo-theme-map);
-        @include combo($combo-theme-map);
-    }
+    //@if is-used('igx-combo', $exclude) {
+    //    $combo-theme-map: combo-theme(
+    //        $schema: $schema,
+    //    );
+    //    $combo-theme-map: meta.call($theme-handler, $combo-theme-map);
+    //    @include combo($combo-theme-map);
+    //}
 
-    @if is-used('igx-select', $exclude) {
-        $select-theme-map: select-theme(
-            $schema: $schema,
-        );
-        $select-theme-map: meta.call($theme-handler, $select-theme-map);
-        @include select($select-theme-map);
-    }
+    //@if is-used('igx-select', $exclude) {
+    //    $select-theme-map: select-theme(
+    //        $schema: $schema,
+    //    );
+    //    $select-theme-map: meta.call($theme-handler, $select-theme-map);
+    //    @include select($select-theme-map);
+    //}
 
-    @if is-used('igx-date-picker', $exclude) {
-        $calendar-theme-map: calendar-theme(
-            $schema: $schema,
-        );
-        $calendar-theme-map: meta.call($theme-handler, $calendar-theme-map);
-        @include date-picker($calendar-theme-map);
-    }
+    //@if is-used('igx-date-picker', $exclude) {
+    //    $calendar-theme-map: calendar-theme(
+    //        $schema: $schema,
+    //    );
+    //    $calendar-theme-map: meta.call($theme-handler, $calendar-theme-map);
+    //    @include date-picker($calendar-theme-map);
+    //}
 
-    @if is-used('igx-date-range-picker', $exclude) {
-        $date-range-picker-theme-map: date-range-picker-theme(
-            $schema: $schema,
-        );
-        $date-range-picker-theme-map: meta.call($theme-handler, $date-range-picker-theme-map);
-        @include date-range-picker($date-range-picker-theme-map);
-    }
+    //@if is-used('igx-date-range-picker', $exclude) {
+    //    $date-range-picker-theme-map: date-range-picker-theme(
+    //        $schema: $schema,
+    //    );
+    //    $date-range-picker-theme-map: meta.call($theme-handler, $date-range-picker-theme-map);
+    //    @include date-range-picker($date-range-picker-theme-map);
+    //}
 
     // @if is-used('igx-dialog', $exclude) {
     //     $dialog-theme-map: dialog-theme(
