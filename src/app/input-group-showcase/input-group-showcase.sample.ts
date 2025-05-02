@@ -1,5 +1,6 @@
 import {Component, CUSTOM_ELEMENTS_SCHEMA, inject, signal, computed, viewChild, DestroyRef} from '@angular/core';
 import {FormsModule, ReactiveFormsModule, UntypedFormBuilder, Validators} from '@angular/forms';
+
 import {
     defineComponents,
     IgcInputComponent,
@@ -84,7 +85,13 @@ export class InputGroupShowcaseSampleComponent {
         label: {
             control: {
                 type: 'text',
-                defaultValue: 'Web address'
+                defaultValue: 'Label text'
+            }
+        },
+        hint: {
+            control: {
+                type: 'text',
+                defaultValue: 'Hint text'
             }
         },
         value: {
@@ -219,6 +226,12 @@ export class InputGroupShowcaseSampleComponent {
     public getSize = computed(() => `var(--ig-size-${this.properties()?.size || 'medium'})`);
     public getPlaceholder = computed(() => this.properties()?.placeholder || null);
     public getLabel = computed(() => this.properties()?.label || '');
+
+    public getHint = computed(() => {
+        const hint = this.properties()?.hint || '';
+        return hint.trim() ? hint : null;
+    });
+
     public getNativeInputType = computed(() => this.properties()?.type || 'text');
     public getInputGroupType = computed(() => this.properties()?.inputType || '');
 

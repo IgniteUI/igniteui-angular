@@ -9,21 +9,19 @@ $_theme: $material;
 $transition-timing: .25s $out-cubic;
 $bundle-start-end-min-width: pad(rem(10px), rem(12px), rem(14px));
 $input-inline-padding: rem(4px);
-$input-top-padding: rem(20px);
-$input-bottom-padding: rem(6px);
+$input-top-spacing: rem(20px);
+$input-bottom-spacing: rem(6px);
 
 // TODO: Talk to simo about this
 @layer ig.material {
     @container style(--ig-theme: material) {
         %box-floating-label {
-            @include type-style(caption);
-            transform: translateY(-73%);
+            transform: translateY(rem(-12px));
         }
 
         %box-floating-text-area-label {
             transform: translateY(0);
-            inset-block-start: calc(#{$input-top-padding} / 4);
-
+            inset-block-start: calc(var(--_input-top-spacing) / 4);
         }
 
         %border-textarea-floating-label {
@@ -39,9 +37,27 @@ $input-bottom-padding: rem(6px);
 
 @include themed-block(igx-input-group, material) {
     --_prefix-suffix-spacing: #{pad-inline(rem(12px), rem(14px), rem(16px))};
-    --_bundle-template-rows: #{var-get($_theme, 'size')} auto;
+    --_bundle-template-rows: #{var-get($_theme, 'size')};
+
+    &:has([igxLabel], igx-label), {
+        --_input-top-spacing: #{$input-top-spacing};
+        --_input-bottom-spacing: #{$input-bottom-spacing};
+        --_label-row: 1;
+        --_bundle-row: 1;
+        --_hint-row: 2;
+    }
+
+    &:has(:not([igxLabel], igx-label)) {
+        --_hint-row: 2;
+    }
 
     row-gap: rem(4px);
+
+    @include e(bundle) {
+        grid-row: var(--_bundle-row);
+
+        grid-template-columns: subgrid;
+    }
 
     @include e(file-input) {
         @extend %input-paddings;
@@ -69,10 +85,27 @@ $input-bottom-padding: rem(6px);
         }
     }
 
+    @include e(bundle) {
+        > * {
+            grid-row: var(--_bundle-row);
+        }
+    }
+
+    @include e(hint) {
+        grid-row: var(--_hint-row);
+    }
+
+
+    @include m(focused) {
+        @include e(label) {
+            @include type-style(caption);
+        }
+    }
+
     @include m(base) {
         %input-paddings {
-            padding-block-start: $input-top-padding;
-            padding-block-end: $input-bottom-padding;
+            padding-block-start: var(--_input-top-spacing);
+            padding-block-end: var(--_input-bottom-spacing);
 
         }
 
@@ -80,11 +113,6 @@ $input-bottom-padding: rem(6px);
             transition: border-bottom-color $transition-timing;
             align-items: center;
             grid-column: 1 / -1;
-            grid-row: 1;
-
-            > * {
-                grid-row: 1;
-            }
         }
 
         @include e(bundle-main) {
@@ -96,7 +124,6 @@ $input-bottom-padding: rem(6px);
             padding-inline: $input-inline-padding;
             grid-column: 2;
             z-index: 1;
-            grid-row: 1;
             align-self: center;
         }
 
@@ -104,10 +131,6 @@ $input-bottom-padding: rem(6px);
             @extend %input-paddings;
 
             padding-inline: 0;
-        }
-
-        @include e(hint) {
-            grid-row: 2;
         }
     }
 
@@ -132,7 +155,7 @@ $input-bottom-padding: rem(6px);
                 inset-block-end: rem(0px);
                 height: rem(2px);
                 align-self: end;
-                transform: scaleX(0);
+                scale: 0;
                 transform-origin: center;
                 background: var-get($_theme, 'focused-secondary-color');
                 z-index: 2;
@@ -154,12 +177,11 @@ $input-bottom-padding: rem(6px);
         }
     }
 
-
     @include mx(base, focused) {
         @include e(bundle) {
             &::after {
-                transform: scaleX(1);
-                transition: transform $transition-timing;
+                scale: 1;
+                transition: scale $transition-timing;
             }
         }
 
@@ -230,22 +252,48 @@ $input-bottom-padding: rem(6px);
         }
     }
 
-    @include mx(base, disabled, ('not': (line))) {
+    @include mx(box, disabled) {
         @include e(bundle) {
             background: var-get($_theme, 'box-disabled-background');
+
+            &:hover {
+                background: var-get($_theme, 'box-disabled-background');
+            }
         }
     }
 
-    @include mx(base, textarea-group) {
-        --_bundle-template-rows: auto;
+    @include mx(border, disabled) {
+        &:hover {
+            @include e(bundle-start) {
+                border-color: var-get($_theme, 'border-color');
+            }
 
-        @include e(label) {
-            top: calc($input-top-padding - #{rem(1px)});
-            margin-block-end: auto;
+            @include e(bundle-end) {
+                border-color: var-get($_theme, 'border-color');
+            }
+
+            @include e(notch) {
+                border-color: var-get($_theme, 'border-color');
+            }
+
+            @include e(filler) {
+                border-color: var-get($_theme, 'border-color');
+            }
+
+            @include e(upload) {
+                border-color: var-get($_theme, 'border-color');
+            }
         }
+    }
 
-        @include e(bundle-main) {
-            padding-block-start: $input-top-padding;
+    @include m(textarea-group) {
+        --_bundle-template-rows: auto;
+    }
+
+    @include mx(base, textarea-group) {
+        @include e(label) {
+            top: var(--_input-top-spacing);
+            margin-block-end: auto;
         }
     }
 
@@ -275,8 +323,8 @@ $input-bottom-padding: rem(6px);
             overflow: clip;
         }
 
-        &:hover {
-            @include e(bundle) {
+        @include e(bundle) {
+            &:hover {
                 background: var-get($_theme, 'box-background-hover');
             }
         }
@@ -338,16 +386,18 @@ $input-bottom-padding: rem(6px);
 
     @include mx(border, textarea-group) {
         @include e(label) {
-            top: calc($input-top-padding - #{rem(1px)});
+            top: var(--_input-top-spacing);
             margin-block-end: auto;
             transform-origin: top left;
-            inset-block-start: calc($input-top-padding - #{rem(2px)});
-            padding-inline-end: rem(4px);
             transition:
                 transform 150ms cubic-bezier(.4, 0, .2, 1),
                 color 150ms cubic-bezier(.4, 0, .2, 1),
                 font-size 150ms cubic-bezier(.4, 0, .2, 1);
             will-change: transform;
+        }
+
+        @include e(textarea) {
+            margin-block-start: $input-top-spacing;
         }
     }
 
@@ -360,6 +410,10 @@ $input-bottom-padding: rem(6px);
     @include mx(border, textarea-group, focused) {
         @include e(label) {
             @extend %border-textarea-floating-label;
+        }
+
+        @include e(notch) {
+            border-block-start-width: rem(1px);
         }
     }
 
@@ -388,7 +442,7 @@ $input-bottom-padding: rem(6px);
         --_bundle-template-columns: auto auto 1fr auto;
         --_input-border-size: #{rem(1px)};
         --_input-border-style: solid;
-        --_label-translate-top: translateY(calc(var(--_label-position) * -1));
+        --_label-translate-top: calc(var(--_label-position) * -1);
 
         $border-size: rem(1px);
 
@@ -400,11 +454,6 @@ $input-bottom-padding: rem(6px);
 
         @include e(bundle) {
             grid-column: 1 / -1;
-            grid-row: 1;
-
-            > * {
-                grid-row: 1;
-            }
         }
 
         @include e(inut) {
@@ -465,15 +514,6 @@ $input-bottom-padding: rem(6px);
             border-end-end-radius: var-get($_theme, 'border-border-radius');
         }
 
-        @include e(textarea) {
-            margin-block-start: $input-top-padding;
-            padding: 0;
-        }
-
-        @include e(hint) {
-            grid-row: 2;
-        }
-
         &:hover {
             @include e(bundle-start) {
                 border-color: var-get($_theme, 'hover-border-color');
@@ -497,21 +537,13 @@ $input-bottom-padding: rem(6px);
         }
     }
 
-    @include mx(border, textarea-group) {
-        --_bundle-template-rows: auto auto;
-    }
-
     @include mx(border, focused) {
         --_input-border-size: #{rem(2px)};
 
         $negative-margin: calc((var(--_input-border-size) / 2) * -1);
 
         @include e(label) {
-            @include type-style(caption);
-
-            inset-block-start: calc(var(--_input-border-size) / 2);
-            transform: var(--_label-translate-top);
-
+            transform: translateY(var(--_label-translate-top));
             color: var-get($_theme, 'focused-secondary-color');
         }
 
@@ -534,8 +566,8 @@ $input-bottom-padding: rem(6px);
         }
 
         @include e(notch) {
-            border-block-start-width: 0;
             border-color: var-get($_theme, 'focused-border-color');
+            border-block-start-color: transparent;
         }
 
         @include e(filler) {
@@ -547,27 +579,33 @@ $input-bottom-padding: rem(6px);
         }
     }
 
-    @include mx(border, filled) {
+    @include mx(border, focused, ('not': (placeholder, textarea-group))) {
         @include e(label) {
-            @include type-style(caption);
-
-            transform: var(--_label-translate-top);
-        }
-
-        @include e(notch) {
-            border-block-start-width: 0;
+            transform: translateY(var(--_label-translate-top));
         }
     }
 
-    @include mx(border, placeholder) {
+    @include mx(border, filled, ('not': (placeholder, textarea-group))) {
         @include e(label) {
             @include type-style(caption);
 
-            transform: var(--_label-translate-top);
+            transform: translateY(var(--_label-translate-top));
+        }
+    }
+
+    @include mx(border, filled) {
+        @include e(notch) {
+            border-block-start-color: transparent;
+        }
+    }
+
+    @include mx(border, placeholder, ('not': (focused))) {
+        @include e(label) {
+            transform: translateY(var(--_label-translate-top));
         }
 
         @include e(notch) {
-            border-block-start-width: 0;
+            border-block-start-color: transparent;
         }
     }
 
@@ -595,6 +633,12 @@ $input-bottom-padding: rem(6px);
         }
     }
 
+    @include mx(border, valid, focused) {
+        @include e(notch) {
+            border-block-start-color: transparent;
+        }
+    }
+
     @include mx(border, warning) {
         @include e(bundle-start) {
             border-color: var-get($_theme, 'warning-secondary-color');
@@ -616,6 +660,12 @@ $input-bottom-padding: rem(6px);
             @include e(upload) {
                 border-color: var-get($_theme, 'warning-secondary-color');
             }
+        }
+    }
+
+    @include mx(border, warning, focused) {
+        @include e(notch) {
+            border-block-start-color: transparent;
         }
     }
 
@@ -643,6 +693,12 @@ $input-bottom-padding: rem(6px);
         }
     }
 
+    @include mx(border, invalid, focused) {
+        @include e(notch) {
+            border-block-start-color: transparent;
+        }
+    }
+
     @include m(file, $not: (border)) {
         @include e(label) {
             @extend %box-floating-label;
@@ -655,11 +711,11 @@ $input-bottom-padding: rem(6px);
         @include e(label) {
             @include type-style(caption);
 
-            transform: var(--_label-translate-top);
+            transform: translateY(var(--_label-translate-top));
         }
 
         @include e(notch)  {
-            border-block-start-width: 0;
+            border-block-start-color: transparent;
             grid-column: 3
         }
 
@@ -773,6 +829,8 @@ $input-bottom-padding: rem(6px);
 
     @include e(textarea) {
         @include type-style(subtitle-1);
+
+        margin-block-start: var(--_input-top-spacing);
     }
 
     @include m(filled) {
@@ -787,7 +845,13 @@ $input-bottom-padding: rem(6px);
         }
     }
 
-    @include m(placeholder) {
+    @include m(placeholder, $not: (focused, file)) {
+        @include e(label) {
+            @include type-style(caption);
+        }
+    }
+
+    @include m(file, $not: (focused)) {
         @include e(label) {
             @include type-style(caption);
         }

@@ -18,14 +18,6 @@ $_theme: $fluent;
         }
     }
 
-    @include m(file) {
-        @include e(bundle) {
-            > * {
-                grid-row: 1;
-            }
-        }
-    }
-
     @include e(upload-button) {
         --igx-button-background: transparent;
         --igx-button-hover-background: transparent;
@@ -56,8 +48,10 @@ $_theme: $fluent;
         background: var-get($_theme, 'border-background');
         border-radius: var-get($_theme, 'border-border-radius');
         border: rem(1px) solid var-get($_theme, 'border-color');
+        grid-template-rows: revert;
 
         > * {
+            grid-row: revert;
             min-height: 0;
         }
 
@@ -67,20 +61,12 @@ $_theme: $fluent;
     }
 
     @include e(bundle-start) {
-        grid-row: 1;
         overflow: hidden;
         border-start-start-radius: var-get($_theme, 'border-border-radius');
         border-end-start-radius: var-get($_theme, 'border-border-radius');
     }
 
-    @include e(bundle-main) {
-        grid-row: 1;
-
-        padding-inline-end: rem(8px);
-    }
-
     @include e(bundle-end) {
-        grid-row: 1;
         overflow: hidden;
         border-start-end-radius: var-get($_theme, 'border-border-radius');
         border-end-end-radius: var-get($_theme, 'border-border-radius');
