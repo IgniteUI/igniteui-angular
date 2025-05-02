@@ -28,7 +28,7 @@ $base-scale-size: (
         display: flex;
         min-width: 0;
         min-height: 100%;
-        grid-row: 2;
+        grid-row: var(--_bundle-row);
     }
 
     @include b(igx-input-group) {
@@ -39,6 +39,17 @@ $base-scale-size: (
         --_bundle-template-columns: auto 1fr auto;
         --_bundle-template-rows: auto #{var-get($theme, 'size')};
         --_prefix-suffix-spacing: #{pad-inline(rem(8px), rem(12px), rem(16px))};
+
+        &:has([igxLabel], igx-label) {
+            --_label-row: 1;
+            --_bundle-row: 2;
+            --_hint-row: 3;
+        }
+
+        &:not(:has([igxLabel], igx-label)) {
+            --_bundle-row: 1;
+            --_hint-row: 2;
+        }
 
         display: grid;
         grid-template-columns: var(--_bundle-template-columns);
@@ -102,7 +113,9 @@ $base-scale-size: (
 
         @include e(bundle) {
             display: grid;
-            grid-template-columns: subgrid;
+
+            // Safari can't handle subgrid correctly that's why i need to add the template here
+            grid-template-columns: var(--_bundle-template-columns);
             grid-template-rows: subgrid;
             position: relative;
             max-width: 100%;
@@ -116,7 +129,7 @@ $base-scale-size: (
             color: #{var-get($theme, 'idle-secondary-color')};
 
             display: inline-block;
-            grid-row: 1;
+            grid-row: var(--_label-row);
             grid-column: 1 / -1;
         }
 
@@ -132,7 +145,7 @@ $base-scale-size: (
         }
 
         @include e(bundle-main) {
-            grid-row: 2;
+            grid-row: var(--_bundle-row);
             min-width: 0;
         }
 
@@ -211,16 +224,10 @@ $base-scale-size: (
         }
 
         @include e(textarea) {
-            --textarea-size: #{sizable(
-                rem(82px, map.get($base-scale-size, 'compact')),
-                rem(82px, map.get($base-scale-size, 'cosy')),
-                rem(82px, map.get($base-scale-size, 'comfortable'))
-            )};
-
             @extend %input-textarea-common;
 
             padding: 0;
-            min-height: var(--textarea-size);
+            min-height: var(--_textarea-size);
             resize: vertical;
             z-index: 1;
         }
@@ -232,11 +239,14 @@ $base-scale-size: (
             position: relative;
             display: flex;
             justify-content: space-between;
-            grid-row: 3;
+            grid-row: var(--_hint-row);
             grid-column: 1 / -1;
 
             &:empty {
+                --_hint-row: 1;
+
                 display: none;
+                z-index: -1;
             }
         }
 
@@ -305,6 +315,11 @@ $base-scale-size: (
 
         @include m(textarea-group) {
             --_bundle-template-rows: auto auto auto;
+            --_textarea-size: #{sizable(
+                rem(82px, map.get($base-scale-size, 'compact')),
+                rem(82px, map.get($base-scale-size, 'cosy')),
+                rem(82px, map.get($base-scale-size, 'comfortable'))
+            )};
 
             @include e(bundle) {
                 height: auto;

@@ -46,7 +46,7 @@ $border-radius: var-get($_theme, 'border-border-radius');
 }
 
 @include themed-block(igx-input-group, bootstrap) {
-    --_bundle-template-rows: auto;
+    --_bundle-template-rows: revert;
 
     row-gap: rem(4px);
 
@@ -59,9 +59,7 @@ $border-radius: var-get($_theme, 'border-border-radius');
 
     @include e(bundle) {
         border-radius: $border-radius;
-        height: revert;
     }
-
 
     @include e(upload) {
         @extend %border-styles;
@@ -104,6 +102,7 @@ $border-radius: var-get($_theme, 'border-border-radius');
     @include e(input) {
         @include type-style(body-1);
 
+        min-height: 100%;
         font-size: sizable(rem(16px), rem(16px), rem(20px));
         padding-block: 0;
         padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
@@ -121,9 +120,17 @@ $border-radius: var-get($_theme, 'border-border-radius');
     @include e(textarea) {
         @include type-style(body-1);
 
+        min-height: 100%;
         font-size: sizable(rem(16px), rem(16px), rem(20px));
         padding-block: pad-block(rem(4px), rem(6px), rem(8px));
         padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+    }
+
+    @include m(textarea-group) {
+        @include e(bundle-main) {
+            min-height: var(--_textarea-size);
+            height: revert;
+        }
     }
 
     @include e(bundle-main) {
@@ -131,7 +138,7 @@ $border-radius: var-get($_theme, 'border-border-radius');
 
         z-index: 1;
         border-width: $border-size;
-        min-height: var-get($_theme, 'size');
+        height: var(--size);
     }
 
     @include m(file, $not: (prefixed)) {
@@ -271,6 +278,8 @@ $border-radius: var-get($_theme, 'border-border-radius');
 
         @include e(upload) {
             transition: $transition-border;
+
+            min-height: var-get($_theme, 'size');
         }
 
         @include e(bundle-start) {
