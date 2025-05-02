@@ -19,6 +19,8 @@ $_theme: $material;
         min-width: rem(180px);
 
         @include e(header-title) {
+            @include type-style(subtitle-1);
+
             color: var-get($_theme, 'title-color');
             margin: 0;
             padding: rem(16px) rem(16px) rem(8px);
