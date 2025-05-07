@@ -7,5 +7,12 @@
 $_theme: $indigo;
 
 @include themed-block(igx-combo, indigo) {
+    --_search-input-inline-padding: #{pad-inline(rem(12px))};
+    --_search-input-block-padding: #{pad-block(rem(12px))};
 
+    @include e(search) {
+        igx-input-group {
+            --ig-size: 2;
+        }
+    }
 }

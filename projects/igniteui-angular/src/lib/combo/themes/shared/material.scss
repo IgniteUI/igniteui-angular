@@ -7,5 +7,28 @@
 $_theme: $material;
 
 @include themed-block(igx-combo, material) {
+    @include e(checkbox) {
+        margin-inline-end: rem(16px);
 
+        div {
+            padding: 0;
+        }
+    }
+
+    @include e(search) {
+        .igx-input-group__bundle {
+            padding-block-start: 0;
+            height: auto;
+        }
+
+        .igx-input-group__bundle-main {
+            // The important here can't be removed, otherwise we have to break BEM
+            padding-inline-start: 0 !important;
+        }
+
+        .igx-input-group__bundle-start,
+        .igx-input-group__bundle-end {
+            min-width: 0;
+        }
+    }
 }

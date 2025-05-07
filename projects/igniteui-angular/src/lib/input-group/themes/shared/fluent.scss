@@ -7,7 +7,7 @@
 $_theme: $fluent;
 
 @include themed-block(igx-input-group, fluent) {
-    --_bundle-template-rows: auto;
+    --_bundle-template-rows: revert;
 
     row-gap: rem(5px);
 
@@ -48,7 +48,6 @@ $_theme: $fluent;
         background: var-get($_theme, 'border-background');
         border-radius: var-get($_theme, 'border-border-radius');
         border: rem(1px) solid var-get($_theme, 'border-color');
-        grid-template-rows: revert;
 
         > * {
             grid-row: revert;
