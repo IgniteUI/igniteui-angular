@@ -59,6 +59,12 @@ $base-scale-size: (
         position: relative;
         color: var-get($theme, 'idle-text-color');
 
+        igx-icon,
+        igx-icon[igxPrefix],
+        igx-icon[igxSuffix] {
+            --component-size: var(--input-size);
+        }
+
         igx-suffix:not(igx-icon),
         [igxSuffix]:not(igx-icon),
         igx-prefix:not(igx-icon),
