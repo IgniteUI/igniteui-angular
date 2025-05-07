@@ -85,10 +85,13 @@
                 <igx-icon igxPrefix>face</igx-icon>
             }
 
+            @if (hideSuffix()) {
+                <igx-icon igxSuffix>face</igx-icon>
+            }
+
             @if (getHint()) {
                 <igx-hint>{{getHint()}}</igx-hint>
             }
-
             <igx-select-item [value]="'Apple'" [disabled]="true">Apple</igx-select-item>
             <igx-select-item [value]="'Orange'">Orange</igx-select-item>
             <igx-select-item [value]="'Grapes'">Grapes</igx-select-item>
@@ -102,9 +105,23 @@
             [placeholder]="getPlaceholder()"
             [type]="getInputGroupType()"
             [style.--ig-size]="getSize()">
+
             @if (getLabel()) {
                 <label igxLabel>{{ getLabel() }}</label>
             }
+
+            @if (hidePrefix()) {
+                <igx-prefix>
+                    <igx-icon>face</igx-icon>
+                </igx-prefix>
+            }
+
+            @if (hideSuffix()) {
+                <igx-suffix>
+                    <igx-icon>favorite</igx-icon>
+                </igx-suffix>
+            }
+
             @if (getHint()) {
                 <igx-hint>{{getHint()}}</igx-hint>
             }

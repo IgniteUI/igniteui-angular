@@ -7,6 +7,23 @@
 $_theme: $fluent;
 
 @include themed-block(igx-combo, fluent) {
+    --_search-input-inline-padding: #{pad-inline(rem(2px), rem(4px), rem(8px))};
+    --_search-input-block-padding: #{pad-block(rem(2px), rem(4px), rem(8px))};
 
+    @include e(search) {
+        .igx-input-group__bundle {
+            border-inline-width: 0;
+            border-block-start-width: 0;
+        }
+
+        .igx-input-group__input {
+            padding-inline-start: 0;
+        }
+
+        .igx-input-group--focused .igx-input-group__bundle::after {
+            border-inline-width: 0;
+            border-block-start-width: 0;
+        }
+    }
 }
 

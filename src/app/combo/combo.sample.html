@@ -15,7 +15,6 @@
             #remoteSimpleCombo
             class="input-container"
             [itemsMaxHeight]="250"
-            [itemHeight]="48"
             [data]="rData | async"
             [valueKey]="'ProductID'"
             [displayKey]="'ProductName'"
@@ -41,7 +40,7 @@
                 Add Missouri
             </button>
             <button igxButton="outlined" (click)="values1 = []">
-                <span><igx-icon>clear</igx-icon></span>
+                <igx-icon>clear</igx-icon>
                 <span>Clear values</span>
             </button>
         </div>
@@ -107,22 +106,8 @@
             >
         </div>
 
-        <igx-buttongroup>
-            <button
-                igxButton
-                [disabled]="playgroundCombo.itemHeight === 56"
-                (click)="playgroundCombo.itemHeight = 56"
-            >
-                Set ItemHeight to 56
-            </button>
-            <button
-                igxButton
-                [disabled]="playgroundCombo.itemHeight === null"
-                (click)="playgroundCombo.itemHeight = null"
-            >
-                Reset ItemHeight
-            </button>
-        </igx-buttongroup>
+        <igx-switch [(ngModel)]="isChecked">Change item height to 46px</igx-switch>
+
         <small>Overlay Settings</small>
         <igx-buttongroup [alignment]="alignment">
             <button igxButton (click)="changeOverlaySettings(1)">

@@ -66,23 +66,11 @@ $input-bottom-spacing: rem(6px);
     @include e(bundle-start) {
         overflow: clip;
         min-width: $bundle-start-end-min-width;
-
-        border: {
-            start: {
-                start-radius: calc(var-get($_theme, 'box-border-radius') - rem(1px));
-            };
-        }
     }
 
     @include e(bundle-end) {
         overflow: clip;
         min-width: $bundle-start-end-min-width;
-
-        border: {
-            start: {
-                end-radius: calc(var-get($_theme, 'box-border-radius') - rem(1px));
-            }
-        }
     }
 
     @include e(bundle) {
@@ -157,7 +145,7 @@ $input-bottom-spacing: rem(6px);
                 align-self: end;
                 scale: 0;
                 transform-origin: center;
-                background: var-get($_theme, 'focused-secondary-color');
+                background: var-get($_theme, 'focused-bottom-line-color');
                 z-index: 2;
             }
 
@@ -263,25 +251,49 @@ $input-bottom-spacing: rem(6px);
     }
 
     @include mx(border, disabled) {
+        @include e(bundle) {
+            background: var-get($_theme, 'border-disabled-background');
+        }
+
+        @include e(bundle-start) {
+            border-color: var-get($_theme, 'disabled-border-color');
+        }
+
+        @include e(bundle-end) {
+            border-color: var-get($_theme, 'disabled-border-color');
+        }
+
+        @include e(notch) {
+            border-color: var-get($_theme, 'disabled-border-color');
+        }
+
+        @include e(filler) {
+            border-color: var-get($_theme, 'disabled-border-color');
+        }
+
+        @include e(upload) {
+            border-color: var-get($_theme, 'disabled-border-color');
+        }
+
         &:hover {
             @include e(bundle-start) {
-                border-color: var-get($_theme, 'border-color');
+                border-color: var-get($_theme, 'disabled-border-color');
             }
 
             @include e(bundle-end) {
-                border-color: var-get($_theme, 'border-color');
+                border-color: var-get($_theme, 'disabled-border-color');
             }
 
             @include e(notch) {
-                border-color: var-get($_theme, 'border-color');
+                border-color: var-get($_theme, 'disabled-border-color');
             }
 
             @include e(filler) {
-                border-color: var-get($_theme, 'border-color');
+                border-color: var-get($_theme, 'disabled-border-color');
             }
 
             @include e(upload) {
-                border-color: var-get($_theme, 'border-color');
+                border-color: var-get($_theme, 'disabled-border-color');
             }
         }
     }
@@ -326,6 +338,22 @@ $input-bottom-spacing: rem(6px);
         @include e(bundle) {
             &:hover {
                 background: var-get($_theme, 'box-background-hover');
+            }
+        }
+
+        @include e(bundle-start) {
+            border: {
+                start: {
+                    start-radius: calc(var-get($_theme, 'box-border-radius') - rem(1px));
+                };
+            }
+        }
+
+        @include e(bundle-end) {
+            border: {
+                start: {
+                    end-radius: calc(var-get($_theme, 'box-border-radius') - rem(1px));
+                }
             }
         }
     }
@@ -454,6 +482,8 @@ $input-bottom-spacing: rem(6px);
 
         @include e(bundle) {
             grid-column: 1 / -1;
+            background: var-get($_theme, 'border-background');
+            border-radius: var-get($_theme, 'border-border-radius');
         }
 
         @include e(inut) {
@@ -550,8 +580,8 @@ $input-bottom-spacing: rem(6px);
         @include e(bundle-start) {
             border-color: var-get($_theme, 'focused-border-color');
 
-            igx-prefix,
-            [igxPrefix] {
+            &:has(igx-prefix),
+            &:has([igxPrefix]) {
                 margin-inline-start: $negative-margin;
             }
         }
@@ -559,8 +589,8 @@ $input-bottom-spacing: rem(6px);
         @include e(bundle-end) {
             border-color: var-get($_theme, 'focused-border-color');
 
-            igx-suffix,
-            [igxSuffix] {
+            &:has(igx-suffix),
+            &:has([igxSuffix]) {
                 margin-inline-end: $negative-margin;
             }
         }
@@ -830,7 +860,7 @@ $input-bottom-spacing: rem(6px);
     @include e(textarea) {
         @include type-style(subtitle-1);
 
-        margin-block-start: var(--_input-top-spacing);
+        margin-block-start: $input-top-spacing;
     }
 
     @include m(filled) {

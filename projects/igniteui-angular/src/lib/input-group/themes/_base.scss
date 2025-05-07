@@ -39,6 +39,8 @@ $base-scale-size: (
         --_bundle-template-columns: auto 1fr auto;
         --_bundle-template-rows: auto #{var-get($theme, 'size')};
         --_prefix-suffix-spacing: #{pad-inline(rem(8px), rem(12px), rem(16px))};
+        --_bundle-row: 1;
+
 
         &:has([igxLabel], igx-label) {
             --_label-row: 1;
@@ -92,15 +94,22 @@ $base-scale-size: (
             background: var-get($theme, 'input-prefix-background');
         }
 
-        igx-suffix:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon),
-        [igxSuffix] {
+        igx-suffix:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon),
+        [igxSuffix]:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon) {
             color: var-get($theme, 'input-suffix-color');
             background: var-get($theme, 'input-suffix-background');
         }
 
         @include e(toggle-button) {
+            cursor: pointer;
             color: var(--toggle-button-foreground);
             background: var(--toggle-button-background);
+        }
+
+        @include e(clear-button) {
+            cursor: pointer;
+            color: var(--clear-button-foreground);
+            background: var(--clear-button-background);
         }
 
         @include e(clear-icon) {
@@ -117,6 +126,7 @@ $base-scale-size: (
             // Safari can't handle subgrid correctly that's why i need to add the template here
             grid-template-columns: var(--_bundle-template-columns);
             grid-template-rows: subgrid;
+            grid-row: var(--_bundle-row);
             position: relative;
             max-width: 100%;
             font-size: rem(16px);
@@ -244,8 +254,7 @@ $base-scale-size: (
 
             &:empty {
                 --_hint-row: 1;
-
-                display: none;
+                visibility: hidden;
                 z-index: -1;
             }
         }
@@ -345,8 +354,8 @@ $base-scale-size: (
                 background: var-get($theme, 'input-prefix-background--filled');
             }
 
-            igx-suffix:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon),
-            [igxSuffix] {
+            igx-suffix:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon),
+            [igxSuffix]:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon) {
                 color: var-get($theme, 'input-suffix-color--filled');
                 background: var-get($theme, 'input-suffix-background--filled');
             }
@@ -359,6 +368,11 @@ $base-scale-size: (
                 color: var(--toggle-button-foreground-filled);
                 background: var(--toggle-button-background);
             }
+
+            @include e(clear-button) {
+                color: var(--clear-button-foreground);
+                background: var(--clear-button-background);
+            }
         }
 
         @include m(focused) {
@@ -368,8 +382,8 @@ $base-scale-size: (
                 background: var-get($theme, 'input-prefix-background--focused');
             }
 
-            igx-suffix:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon),
-            [igxSuffix] {
+            igx-suffix:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon),
+            [igxSuffix]:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon) {
                 color: var-get($theme, 'input-suffix-color--focused');
                 background: var-get($theme, 'input-suffix-background--focused');
             }
@@ -377,6 +391,11 @@ $base-scale-size: (
             @include e(toggle-button) {
                 color: var(--toggle-button-foreground-focus);
                 background: var(--toggle-button-background-focus);
+            }
+
+            @include e(clear-button) {
+                color: var(--clear-button-foreground-focus);
+                background: var(--clear-button-background-focus);
             }
         }
 
@@ -405,8 +424,8 @@ $base-scale-size: (
 
             igx-prefix,
             [igxPrefix],
-            igx-suffix:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon),
-            [igxSuffix] {
+            igx-suffix:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__case-icon),
+            [igxSuffix]:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__case-icon) {
                 color: var-get($theme, 'disabled-text-color');
             }
 
@@ -442,6 +461,10 @@ $base-scale-size: (
             @include e(toggle-button) {
                 color: var(--toggle-button-foreground-disabled);
                 background: var(--toggle-button-background-disabled);
+            }
+
+            @include e(clear-icon) {
+                display: none;
             }
 
             /* stylelint-disable max-nesting-depth */
