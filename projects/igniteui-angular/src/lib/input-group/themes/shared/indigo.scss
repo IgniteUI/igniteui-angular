@@ -9,6 +9,11 @@ $_theme: $indigo;
 
 @include themed-block(igx-input-group, indigo) {
     --_prefix-suffix-spacing: #{pad-inline(rem(2px), rem(4px), rem(6px))};
+    --_bundle-template-rows: revert;
+
+    igx-icon {
+        --size: var(--input-icon);
+    }
 
     row-gap: rem(4px);
 
@@ -122,6 +127,12 @@ $_theme: $indigo;
     @include mx(invalid, focused) {
         @include e(bundle) {
             border-block-end: rem(1px) solid var-get($_theme, 'error-secondary-color');
+        }
+    }
+
+    @include e(case-icon) {
+        igx-icon {
+            --size: #{rem(16px)};
         }
     }
 

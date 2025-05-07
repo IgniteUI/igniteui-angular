@@ -6,5 +6,21 @@
 $_theme: $bootstrap;
 
 @include themed-block(igx-combo, bootstrap) {
+    @include e(search) {
+        --igx-input-group-border-border-radius: 0;
+
+        .igx-input-group__bundle-main {
+            border-inline-width: 0;
+            border-block-start-width: 0;
+        }
+
+        .igx-input-group__input {
+            padding-inline-start: 0;
+        }
+
+        .igx-input-group--focused:not(.igx-input-group--file) .igx-input-group__bundle-main {
+            box-shadow: none;
+        }
+    }
 }
 

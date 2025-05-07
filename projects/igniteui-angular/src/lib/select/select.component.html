@@ -22,7 +22,7 @@
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
     </ng-container>
-    <igx-suffix class="igx-input-group__toggle-button igx-input-group__toggle-button--select">
+    <igx-suffix class="igx-input-group__toggle-button">
         @if (toggleIconTemplate) {
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: this.collapsed}"></ng-container>
         }
