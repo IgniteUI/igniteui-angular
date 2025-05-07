@@ -200,19 +200,15 @@
         igx-icon,
         igc-icon {
             --component-size: 3;
-            cursor: pointer;
-        }
 
-        > igx-icon,
-        > igc-icon {
+            cursor: pointer;
+            user-select: none;
             transition: color .15s $out-quad;
             color: var-get($theme, 'idle-icon-color');
 
             &:hover {
                 color: var-get($theme, 'hover-icon-color');
             }
-
-            user-select: none;
         }
 
         @if $variant == 'indigo' {
