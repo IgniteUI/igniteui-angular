@@ -49,6 +49,10 @@
         $text-color: adaptive-contrast(var(--background));
     }
 
+    @if not($hover-icon-color) and $idle-icon-color {
+        $hover-icon-color: hsl(from (var(--idle-icon-color)) h s calc(l * 1.1));
+    }
+
     @if not($idle-icon-color) and $background {
         $idle-icon-color: adaptive-contrast(var(--background));
     }
