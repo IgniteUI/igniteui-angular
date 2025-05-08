@@ -76,8 +76,7 @@ $_theme: $indigo;
 
     @include m(focused) {
         @include e(bundle) {
-            // TODO: Log issue to fix Master & WebC to use the :focus variable for background and update the component schema
-            background: var-get($_theme, 'box-background-hover');
+            background: var-get($_theme, 'box-background-focus');
             border-block-end-color: var-get($_theme, 'focused-bottom-line-color');
         }
     }
