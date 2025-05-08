@@ -318,8 +318,7 @@ $base-scale-size: (
             --igx-button-focus-visible-background: transparent;
             --igx-button-active-background: transparent;
 
-            //min-width: min-content;
-            padding-inline: var(--_prefix-suffix-spacing);
+            //padding-inline: var(--_prefix-suffix-spacing);
         }
 
         @include m(textarea-group) {
