@@ -405,6 +405,12 @@ $input-bottom-spacing: rem(6px);
         }
     }
 
+    @include mx(search, focused) {
+        @include e(bundle) {
+            box-shadow: var-get($_theme, 'search-hover-elevation');
+        }
+    }
+
     @include mx(search, disabled) {
         @include e(bundle) {
             background: var-get($_theme, 'search-disabled-background');
