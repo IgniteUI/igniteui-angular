@@ -32,17 +32,16 @@
 
             @for (contact of contacts; track contact.id) {
                 <igc-tab [disabled]="properties.disabled" [selected]="contact.id === selectedTabId" [panel]="contact.i">
-                    @if(!properties.hideIcon) {
-                        <igc-icon name="folder"></igc-icon>
+                    @if (!properties.hideIcon) {
+                        <igc-icon name="folder" slot="label"></igc-icon>
                     }
-                    @if(!properties.hideText) {
-                    <span>{{ contact.text }}</span>
-                    }
-                </igc-tab>
 
-                <igc-tab-panel [id]="contact.id">
+                    @if (!properties.hideText) {
+                        <span slot="label">{{ contact.text }}</span>
+                    }
+
                     Phone: {{ contact.phone }}
-                </igc-tab-panel>
+                </igc-tab>
             }
         </igc-tabs>
     </div>

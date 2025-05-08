@@ -20,14 +20,14 @@ import {
     defineComponents,
     IgcTabsComponent,
     IgcTabComponent,
-    IgcTabPanelComponent, registerIconFromText,
+    registerIconFromText,
 } from 'igniteui-webcomponents';
 import {
     PropertyChangeService,
     Properties,
 } from '../properties-panel/property-change.service';
 
-defineComponents(IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent);
+defineComponents(IgcTabsComponent, IgcTabComponent);
 
 const icons = [
     {
