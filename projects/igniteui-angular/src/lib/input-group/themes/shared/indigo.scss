@@ -32,6 +32,7 @@ $_theme: $indigo;
         @include type-style(body-2);
 
         padding-block: rem(6px);
+        padding-inline: 0;
 
         &::placeholder {
             font-style: italic;
@@ -76,7 +77,7 @@ $_theme: $indigo;
 
     @include m(focused) {
         @include e(bundle) {
-            background: var-get($_theme, 'box-background-focus');
+            background: var-get($_theme, 'box-background-hover');
             border-block-end-color: var-get($_theme, 'focused-bottom-line-color');
         }
     }
