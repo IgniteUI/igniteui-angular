@@ -81,7 +81,7 @@ $theme: $base;
             justify-content: center;
             align-items: center;
             position: relative;
-            padding: rem(16px);
+            padding: rem(16px) rem(24px);
             gap: rem(16px);
             background: var-get($theme, 'empty-list-background');
         }
