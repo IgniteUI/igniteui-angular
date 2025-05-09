@@ -276,7 +276,7 @@ describe('IgxTooltip', () => {
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
-            debugger
+            
             fix.componentInstance.showButton = false;
             fix.detectChanges();
             flush();

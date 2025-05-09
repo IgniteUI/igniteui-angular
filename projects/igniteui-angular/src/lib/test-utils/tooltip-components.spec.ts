@@ -23,7 +23,7 @@ import { IgxToggleActionDirective, IgxToggleDirective } from '../directives/togg
 })
 export class IgxTooltipSingleTargetComponent {
     @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
-    @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
+    @ViewChild(IgxTooltipTargetDirective, { static: false }) public tooltipTarget: IgxTooltipTargetDirective;
     public cancelShowing = false;
     public cancelHiding = false;
     public showButton = true;
