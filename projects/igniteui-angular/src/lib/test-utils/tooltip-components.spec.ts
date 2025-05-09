@@ -43,9 +43,9 @@ export class IgxTooltipSingleTargetComponent {
 
 @Component({
     template: `
-        <button class="buttonOne" #targetOne="tooltipTarget" [igxTooltipTarget]="tooltipRef" style="margin: 100px">
-            Target One
-        </button>
+    <button class="buttonOne" #targetOne="tooltipTarget" [igxTooltipTarget]="tooltipRef" style="margin: 100px">
+        Target One
+    </button>
 
     <button class="buttonTwo" #targetTwo="tooltipTarget" [igxTooltipTarget]="tooltipRef" style="margin: 100px">
         Target Two
