@@ -6,28 +6,29 @@ const PREFIX_IMPLICIT_PROP = '$implicit';
 
 /**
  * Wraps a template ref and exposes the entire context to the template as additional prop
+ * @internal
  */
 export class TemplateRefWrapper<C extends object> extends TemplateRef<C> {
 
-    get elementRef(): ElementRef<any> {
+    public override get elementRef(): ElementRef<any> {
         return this.innerTemplateRef.elementRef;
     }
 
     /** Create a wrapper around TemplateRef with the context exposed */
-    constructor(public innerTemplateRef: TemplateRef<C>, private _templateFunction: any) {
+    constructor(public innerTemplateRef: TemplateRef<C>, private _templateFunction: any, private embeddedViewDestroyCallback: (container: HTMLElement) => void) {
         super();
     }
 
     private _contentContext = new Map<string, TemplateRefWrapperContentContext>();
 
-    override createEmbeddedView(context: C, injector?: Injector): EmbeddedViewRef<C> {
+    public override createEmbeddedView(context: C, injector?: Injector): EmbeddedViewRef<C> {
         return this.createEmbeddedViewImpl(context, injector);
     }
 
     /** @internal Angular 16 impl gets called directly... */
-    createEmbeddedViewImpl(context: C, injector?: Injector, _hydrationInfo: any = null): EmbeddedViewRef<C> {
+    public createEmbeddedViewImpl(context: C, injector?: Injector, _hydrationInfo: any = null): EmbeddedViewRef<C> {
         //#region bridged template props
-        let isBridged = !!this._templateFunction.___isBridged;
+        const isBridged = !!this._templateFunction.___isBridged;
         let contentContext: TemplateRefWrapperContentContext;
         let contentId: string;
         let root: any;
@@ -35,7 +36,7 @@ export class TemplateRefWrapper<C extends object> extends TemplateRef<C> {
 
         // https://github.com/angular/angular/pull/51887
         /**  Angular 17+ context is behind a proxy: will throw on set for templates without context & underlying object will change, so Proxy extra props on top */
-        let ctx = <C>new Proxy(context, {
+        const ctx = <C>new Proxy(context, {
             has(_target, prop): boolean {
                 if (prop === IMPLICIT_PROP) {
                     return true;
@@ -79,24 +80,28 @@ export class TemplateRefWrapper<C extends object> extends TemplateRef<C> {
             this._contentContext.set(contentId, contentContext);
             this._templateFunction.___onTemplateInit(this._templateFunction, root, contentContext);
             //contentContext.templateFunction.___onTemplateContextChanged(contentContext.templateFunction, contentContext.root, context);
-
-            viewRef.onDestroy(() => {
-                this.destroyingBridgedView(contentContext);
-            });
         }
+
+        viewRef.onDestroy(() => {
+            this.embeddedViewDestroyCallback(viewRef.rootNodes[0]);
+            if (isBridged) {
+                this.destroyingBridgedView(contentContext);
+            }
+        });
 
         return viewRef;
     }
 
-    destroyingBridgedView(contentContext: TemplateRefWrapperContentContext) {
+    private destroyingBridgedView(contentContext: TemplateRefWrapperContentContext) {
         this._templateFunction.___onTemplateTeardown(this._templateFunction, contentContext.root, contentContext);
         this._contentContext.delete(contentContext._id);
     }
 
 }
 
+/** @internal */
 class TemplateRefWrapperContentContext {
-    _id: string;
-    root: any;
-    templateFunction: any;
+    public _id: string;
+    public root: any;
+    public templateFunction: any;
 }

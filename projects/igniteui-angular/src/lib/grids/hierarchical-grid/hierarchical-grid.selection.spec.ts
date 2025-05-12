@@ -1,4 +1,3 @@
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
@@ -26,9 +25,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
     let rowIsland2;
     const gridData = SampleTestData.generateHGridData(5, 3);
 
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

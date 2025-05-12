@@ -3,7 +3,6 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { BottomTabBarTestComponent,
         TabBarRoutingTestComponent,
         TabBarTabsOnlyModeTestComponent,
@@ -18,20 +17,18 @@ import { RoutingTestGuard } from '../../test-utils/routing-test-guard.spec';
 import { RoutingView1Component, RoutingView2Component, RoutingView3Component, RoutingView4Component, RoutingView5Component } from '../../test-utils/routing-view-components.spec';
 
 describe('IgxBottomNav', () => {
-    configureTestSuite();
 
     const tabItemNormalCssClass = 'igx-bottom-nav__menu-item';
     const tabItemSelectedCssClass = 'igx-bottom-nav__menu-item--selected';
+    const testRoutes = [
+        { path: 'view1', component: RoutingView1Component, canActivate: [RoutingTestGuard] },
+        { path: 'view2', component: RoutingView2Component, canActivate: [RoutingTestGuard] },
+        { path: 'view3', component: RoutingView3Component, canActivate: [RoutingTestGuard] },
+        { path: 'view4', component: RoutingView4Component, canActivate: [RoutingTestGuard] },
+        { path: 'view5', component: RoutingView5Component, canActivate: [RoutingTestGuard] },
+    ];
 
-    beforeAll(waitForAsync(() => {
-        const testRoutes = [
-            { path: 'view1', component: RoutingView1Component, canActivate: [RoutingTestGuard] },
-            { path: 'view2', component: RoutingView2Component, canActivate: [RoutingTestGuard] },
-            { path: 'view3', component: RoutingView3Component, canActivate: [RoutingTestGuard] },
-            { path: 'view4', component: RoutingView4Component, canActivate: [RoutingTestGuard] },
-            { path: 'view5', component: RoutingView5Component, canActivate: [RoutingTestGuard] },
-        ];
-
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

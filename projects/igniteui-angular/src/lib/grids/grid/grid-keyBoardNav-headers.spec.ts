@@ -1,10 +1,9 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { IgxGridComponent } from './grid.component';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     SelectionWithScrollsComponent,
     MRLTestComponent,
@@ -24,10 +23,12 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridHeader: IgxGridHeaderRowComponent;
-        configureTestSuite((() => {
-            return TestBed.configureTestingModule({
-                imports: [SelectionWithScrollsComponent, NoopAnimationsModule]
-            });
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [
+                    SelectionWithScrollsComponent, NoopAnimationsModule
+                ]
+            }).compileComponents();
         }));
 
         beforeEach(() => {
@@ -727,10 +728,12 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridHeader: IgxGridHeaderRowComponent;
-        configureTestSuite((() => {
-            return TestBed.configureTestingModule({
-                imports: [MRLTestComponent, NoopAnimationsModule]
-            });
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [
+                    MRLTestComponent, NoopAnimationsModule
+                ]
+            }).compileComponents();
         }));
 
         beforeEach(() => {
@@ -929,10 +932,12 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridHeader: IgxGridHeaderRowComponent;
-        configureTestSuite((() => {
-            return TestBed.configureTestingModule({
-                imports: [ColumnGroupsNavigationTestComponent, NoopAnimationsModule]
-            });
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [
+                    ColumnGroupsNavigationTestComponent, NoopAnimationsModule
+                ]
+            }).compileComponents();
         }));
 
         beforeEach(() => {
