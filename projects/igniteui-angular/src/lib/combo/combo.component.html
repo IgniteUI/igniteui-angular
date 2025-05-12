@@ -42,6 +42,7 @@
     [width]="itemsWidth || '100%'" (opening)="handleOpening($event)" (closing)="handleClosing($event)"
     (opened)="handleOpened()" (closed)="handleClosed()">
 
+    <!-- The igx-combo class is needed here in order to scope the css variables -->
     <div class="igx-combo">
         @if (displaySearchInput) {
             <div class="igx-combo__search">
@@ -91,6 +92,7 @@
                 }
             </igx-combo-item>
         </div>
+
         @if (filteredData.length === 0 || isAddButtonVisible()) {
             <div class="igx-combo__add">
                 @if (filteredData.length === 0) {

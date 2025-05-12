@@ -1,7 +1,7 @@
 <div class="combo-sample">
     <section class="combo-sample__section">
         <h1 class="combo-sample__title">Remote Binding (Combo & Simple-combo)</h1>
-        <igx-combo #remoteCombo class="input-container" [itemsMaxHeight]="250" [itemHeight]="48"
+        <igx-combo #remoteCombo class="input-container" [itemsMaxHeight]="250"
                    [data]="rData | async" [valueKey]="'ProductID'" [displayKey]="'ProductName'" placeholder="Product(s)"
                    (dataPreLoad)="dataLoading()" (searchInputUpdate)="searchInput($event)"
                    (selectionChanging)="handleSelectionChanging($event)" (closing)="onClosing()"
@@ -14,7 +14,6 @@
         <igx-simple-combo
             #remoteSimpleCombo
             class="input-container"
-            [itemsMaxHeight]="250"
             [data]="rData | async"
             [valueKey]="'ProductID'"
             [displayKey]="'ProductName'"
@@ -62,6 +61,23 @@
                 <label igxLabel>States</label>
                 <igx-hint>Please select the states you've visited</igx-hint>
             </igx-combo>
+
+            <igx-simple-combo
+                class="input-container"
+                [placeholder]="'Locations'"
+                name="anyName"
+                #comboModel="ngModel"
+                [(ngModel)]="values1"
+                minlength="2"
+                required
+                [data]="items"
+                [displayKey]="valueKeyVar"
+                [valueKey]="valueKeyVar"
+                [groupKey]="valueKeyVar ? 'region' : ''"
+            >
+                <label igxLabel>Simple combo</label>
+                <igx-hint>Please select the states you've visited</igx-hint>
+            </igx-simple-combo>
         </form>
     </section>
 
