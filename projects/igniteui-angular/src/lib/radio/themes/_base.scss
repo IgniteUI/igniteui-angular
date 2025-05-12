@@ -448,6 +448,11 @@ $_theme: $material;
             margin-inline-end: var(--horizontal-group-margin);
         }
 
+        [igxLabel] {
+            display: block;
+            margin-block-end: rem(16px);
+        }
+
         @include m(vertical) {
             display: flex;
             flex-flow: column;
@@ -455,6 +460,18 @@ $_theme: $material;
             igx-radio:not(:last-of-type) {
                 margin-inline-end: 0;
                 margin-block-end: var(--vertical-group-margin);
+            }
+        }
+
+        @include mx(before, vertical) {
+            [igxLabel] {
+                text-align: end;
+            }
+        }
+
+        @include m(disabled) {
+            [igxLabel] {
+                color: var-get($_theme, 'disabled-color');
             }
         }
     }
