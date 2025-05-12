@@ -611,21 +611,22 @@
     %radio-group-display--vertical {
         display: flex;
         flex-flow: column;
+
         %radio-display:not(:last-of-type) {
             margin-inline-end: 0;
             margin-block-end: $vertical-group-margin;
+        }
+
+        &%radio-group-display--before {
+            [igxLabel] {
+                text-align: end;
+            }
         }
     }
 
     %radio-group-display--disabled {
         [igxLabel] {
             color: var-get($theme, 'disabled-color');
-        }
-    }
-
-    %radio-group-display--before {
-        [igxLabel] {
-            text-align: end;
         }
     }
 }
