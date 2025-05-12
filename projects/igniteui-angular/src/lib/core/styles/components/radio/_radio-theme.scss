@@ -601,6 +601,11 @@
         %radio-display:not(:last-of-type) {
             margin-inline-end: $horizontal-group-margin;
         }
+
+        [igxLabel] {
+            display: block;
+            margin-block-end: rem(16px);
+        }
     }
 
     %radio-group-display--vertical {
@@ -609,6 +614,18 @@
         %radio-display:not(:last-of-type) {
             margin-inline-end: 0;
             margin-block-end: $vertical-group-margin;
+        }
+    }
+
+    %radio-group-display--disabled {
+        [igxLabel] {
+            color: var-get($theme, 'disabled-color');
+        }
+    }
+
+    %radio-group-display--before {
+        [igxLabel] {
+            text-align: end;
         }
     }
 }
