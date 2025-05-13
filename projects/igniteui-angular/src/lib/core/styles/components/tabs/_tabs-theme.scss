@@ -106,6 +106,34 @@
          }
     }
 
+    @if not($item-active-background) {
+        @if $variant != 'bootstrap' {
+            @if not($item-active-icon-color) and $item-icon-color {
+                $item-active-icon-color: var(--item-icon-color);
+            }
+
+            @if not($item-active-color) and $item-text-color {
+                $item-active-color: var(--item-text-color);
+            }
+        }
+    } @else {
+        @if not($item-active-icon-color) and $item-active-color {
+            $item-active-icon-color: var(--item-active-color);
+        }
+
+        @if not($item-active-color) and $item-active-icon-color {
+            $item-active-color: var(--item-active-icon-color);
+        }
+
+        @if not($item-active-icon-color) and $item-active-background {
+            $item-active-icon-color: adaptive-contrast(var(--item-active-background));
+        }
+
+        @if not($item-active-color) and $item-active-background {
+            $item-active-color: adaptive-contrast(var(--item-active-background));
+        }
+    }
+
     @if $variant == 'bootstrap' {
         @if not($item-hover-color) and $item-text-color {
             $item-hover-color: hsl(from var(--item-text-color) h s calc(l * 0.9));
@@ -140,29 +168,14 @@
                 $indicator-color: var(--item-icon-color);
             }
         } @else {
+            @if not($indicator-color) and $item-active-color {
+                $indicator-color: var(--item-active-color);
+            }
+
+
             @if not($indicator-color) {
                 $indicator-color: adaptive-contrast(var(--item-background));
             }
-        }
-    }
-
-    @if not($item-active-background) {
-        @if $variant != 'bootstrap' {
-            @if not($item-active-icon-color) and $item-icon-color {
-                $item-active-icon-color: var(--item-icon-color);
-            }
-
-            @if not($item-active-color) and $item-text-color {
-                $item-active-color: var(--item-text-color);
-            }
-        }
-    } @else {
-        @if not($item-active-icon-color) and $item-active-background {
-            $item-active-icon-color: adaptive-contrast(var(--item-active-background));
-        }
-
-        @if not($item-active-color) and $item-active-background {
-            $item-active-color: adaptive-contrast(var(--item-active-background));
         }
     }
 
