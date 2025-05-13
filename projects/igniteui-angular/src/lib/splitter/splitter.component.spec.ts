@@ -34,7 +34,7 @@ describe('IgxSplitter', () => {
         const secondPane = splitter.panes.toArray()[1].element;
         expect(firstPane.textContent.trim()).toBe('Pane 1');
         expect(secondPane.textContent.trim()).toBe('Pane 2');
-
+        fixture.detectChanges();
         const splitterBar = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).nativeElement;
         expect(firstPane.style.order).toBe('0');
         expect(splitterBar.style.order).toBe('1');
