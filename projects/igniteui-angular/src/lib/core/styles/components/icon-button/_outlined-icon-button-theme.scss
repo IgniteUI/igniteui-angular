@@ -58,6 +58,10 @@
         $focus-hover-foreground: adaptive-contrast(var(--focus-hover-background));
     }
 
+    @if not($active-foreground) and $active-background {
+        $active-foreground: adaptive-contrast(var(--active-background));
+    }
+
     @if $variant == 'material' or $variant == 'fluent' {
         @if not($hover-foreground) and $foreground {
             $hover-foreground: var(--foreground);

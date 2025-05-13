@@ -130,6 +130,10 @@
         $focus-hover-foreground: adaptive-contrast(var(--focus-hover-background));
     }
 
+    @if not($active-foreground) and $active-background {
+        $active-foreground: adaptive-contrast(var(--active-background));
+    }
+
     @if not($focus-visible-background) and $focus-background {
         $focus-visible-background: var(--focus-background);
     }
