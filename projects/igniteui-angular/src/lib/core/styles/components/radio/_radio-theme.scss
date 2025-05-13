@@ -598,6 +598,8 @@
 
     %radio-group-display {
         display: block;
+        width: max-content;
+
         %radio-display:not(:last-of-type) {
             margin-inline-end: $horizontal-group-margin;
         }
