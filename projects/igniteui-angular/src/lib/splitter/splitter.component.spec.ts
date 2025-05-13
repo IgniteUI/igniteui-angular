@@ -345,6 +345,7 @@ describe('IgxSplitter pane toggle', () => {
         fixture = TestBed.createComponent(SplitterTogglePaneComponent);
         fixture.detectChanges();
         splitter = fixture.componentInstance.splitter;
+        fixture.detectChanges();
     }));
 
     it('should collapse/expand panes', () => {
