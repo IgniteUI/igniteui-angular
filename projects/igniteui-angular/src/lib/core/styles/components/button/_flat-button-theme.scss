@@ -115,6 +115,34 @@
     $theme: digest-schema($button-schema);
     $variant: map.get($schema, '_meta', 'theme');
 
+    @if not($hover-foreground) and $hover-background {
+        $hover-foreground: adaptive-contrast(var(--hover-background));
+    }
+
+    @if not($icon-color-hover) and $hover-foreground {
+        $icon-color-hover: var(--hover-foreground);
+    }
+
+    @if not($focus-foreground) and $focus-background {
+        $focus-foreground: adaptive-contrast(var(--focus-background));
+    }
+
+    @if not($focus-hover-foreground) and $focus-hover-background {
+        $focus-hover-foreground: adaptive-contrast(var(--focus-hover-background));
+    }
+
+    @if not($focus-visible-background) and $focus-background {
+        $focus-visible-background: var(--focus-background);
+    }
+
+    @if not($focus-visible-foreground) and $focus-visible-background {
+        $focus-visible-foreground: adaptive-contrast(var(--focus-visible-foreground));
+    }
+
+    @if not($focus-visible-border-color) and $focus-border-color {
+        $focus-visible-border-color: var(--focus-border-color);
+    }
+
     @if $variant == 'material' or $variant == 'fluent' {
         @if not($hover-background) and $foreground {
             $hover-background: hsla(from var(--foreground) h s l / 0.08);

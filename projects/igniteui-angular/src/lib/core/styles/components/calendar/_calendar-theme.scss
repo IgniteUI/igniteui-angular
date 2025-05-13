@@ -769,19 +769,19 @@
     }
 
     @if not($ym-current-foreground) and $ym-current-background {
-        $ym-current-foreground: hsla(from adaptive-contrast(var(--ym-current-background) h s l / 1));
+        $ym-current-foreground: adaptive-contrast(var(--ym-current-background));
     }
 
     @if not($ym-current-hover-foreground) and $ym-current-hover-background {
-        $ym-current-hover-foreground: hsla(from adaptive-contrast(var(--ym-current-hover-background) h s l / 1));
+        $ym-current-hover-foreground: adaptive-contrast(var(--ym-current-hover-background));
     }
 
     @if not($ym-selected-current-foreground) and $ym-selected-current-background {
-        $ym-selected-current-foreground: hsla(from adaptive-contrast($ym-selected-current-background) h s l / 1);
+        $ym-selected-current-foreground: adaptive-contrast(var(--ym-selected-current-background));
     }
 
     @if not($ym-selected-current-hover-foreground) and $ym-selected-current-hover-background {
-        $ym-selected-current-hover-foreground: hsla(from adaptive-contrast($ym-selected-current-hover-background) h s l / 1);
+        $ym-selected-current-hover-foreground: adaptive-contrast(var(--ym-selected-current-hover-background));
     }
     //calendar views end
 

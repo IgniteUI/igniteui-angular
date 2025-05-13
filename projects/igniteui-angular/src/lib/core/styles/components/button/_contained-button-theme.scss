@@ -115,6 +115,30 @@
     $theme: digest-schema($button-schema);
     $variant: map.get($schema, '_meta', 'theme');
 
+    @if not($hover-foreground) and $foreground {
+        $hover-foreground: var(--foreground);
+    }
+
+    @if not($focus-foreground) and $foreground {
+        $focus-foreground: var(--foreground);
+    }
+
+    @if not($focus-hover-foreground) and $foreground {
+        $focus-hover-foreground: var(--foreground);
+    }
+
+    @if not($focus-visible-foreground) and $foreground {
+        $focus-visible-foreground: var(--foreground);
+    }
+
+    @if not($active-foreground) and $foreground {
+        $active-foreground: var(--foreground);
+    }
+
+    @if not($icon-color-hover) and $icon-color {
+        $icon-color-hover: var(--icon-color);
+    }
+
     @if not($foreground) and $background {
         $foreground: adaptive-contrast(var(--background));
     }
@@ -144,27 +168,15 @@
     }
 
     @if not($hover-foreground) and $hover-background {
-        $hover-foreground: if(
-            $foreground,
-            var(--foreground),
-            adaptive-contrast(var(--hover-background))
-        );
+        $hover-foreground: adaptive-contrast(var(--hover-background));
     }
 
     @if not($icon-color-hover) and $hover-background {
-        $icon-color-hover: if(
-            $icon-color,
-            var(--icon-color),
-            adaptive-contrast(var(--hover-background))
-        );
+        $icon-color-hover: adaptive-contrast(var(--hover-background));
     }
 
     @if not($focus-foreground) and $focus-background {
-        $focus-foreground: if(
-            $foreground,
-            var(--foreground),
-            adaptive-contrast(var(--focus-background))
-        );
+        $focus-foreground: adaptive-contrast(var(--focus-background));
     }
 
     @if not($focus-hover-background) and $hover-background {
@@ -172,11 +184,7 @@
     }
 
     @if not($focus-hover-foreground) and $focus-hover-background {
-        $focus-hover-foreground: if(
-            $foreground,
-            var(--foreground),
-            adaptive-contrast(var(--focus-hover-background))
-        );
+        $focus-hover-foreground: adaptive-contrast(var(--focus-hover-background));
     }
 
     @if not($focus-visible-background) and $focus-background {
@@ -184,9 +192,7 @@
     }
 
     @if not($focus-visible-foreground) and $focus-visible-background {
-        $focus-visible-foreground: adaptive-contrast(
-            var(--focus-visible-background)
-        );
+        $focus-visible-foreground: adaptive-contrast(var(--focus-visible-background));
     }
 
     @if $variant == 'fluent' {

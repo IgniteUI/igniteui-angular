@@ -116,12 +116,12 @@
         $item-background-hover: hsl(from var(--item-background) h s calc(l * 0.9));
     }
 
-    @if not($item-background-active) and $item-background {
-        $item-background-active: hsl(from var(--item-background) h s calc(l * 0.9));
+    @if not($item-background-active) and $item-background-hover {
+        $item-background-active: var(--item-background-hover);
     }
 
-    @if not($item-background-selected) and $item-background {
-        $item-background-selected: hsl(from var(--item-background) h s calc(l * 0.9));
+    @if not($item-background-selected) and $item-background-active {
+        $item-background-selected: var(--item-background-active);
     }
 
     @if not($header-text-color) and $header-background {

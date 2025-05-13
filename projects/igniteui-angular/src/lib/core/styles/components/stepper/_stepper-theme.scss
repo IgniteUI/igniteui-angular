@@ -205,7 +205,7 @@
     }
 
     @if not($indicator-color) and $indicator-background {
-        $indicator-color: hsla(from adaptive-contrast(var(--indicator-background)) h s l / 1);
+        $indicator-color: adaptive-contrast(var(--indicator-background));
     }
 
     @if not($title-color) and $step-background {

@@ -105,7 +105,7 @@
     }
 
     @if not($active-item-foreground) and $active-item-background {
-        $active-item-foreground: hsla(from adaptive-contrast(var(--active-item-background)) h s l / 1);
+        $active-item-foreground: adaptive-contrast(var(--active-item-background));
     }
 
     @if not($selected-text-color) and $background-color {

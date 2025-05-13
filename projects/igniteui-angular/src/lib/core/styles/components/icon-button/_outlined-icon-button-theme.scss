@@ -46,6 +46,18 @@
     $theme: digest-schema($icon-button-schema);
     $variant: map.get($schema, '_meta', 'theme');
 
+    @if not($hover-foreground) and $hover-background {
+        $hover-foreground: adaptive-contrast(var(--hover-background));
+    }
+
+    @if not($focus-foreground) and $focus-background {
+        $focus-foreground: adaptive-contrast(var(--focus-background));
+    }
+
+    @if not($focus-hover-foreground) and $focus-hover-background {
+        $focus-hover-foreground: adaptive-contrast(var(--focus-hover-background));
+    }
+
     @if $variant == 'material' or $variant == 'fluent' {
         @if not($hover-foreground) and $foreground {
             $hover-foreground: var(--foreground);

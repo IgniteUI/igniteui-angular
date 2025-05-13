@@ -103,11 +103,11 @@
     }
 
     @if not($item-active-text-color) and $item-active-background {
-        $item-active-text-color: adaptive-contrast(hsla(from $item-active-background h s l / 1));
+        $item-active-text-color: adaptive-contrast(var(--item-active-background));
     }
 
     @if not($item-active-icon-color) and $item-active-background {
-        $item-active-icon-color: adaptive-contrast(hsla(from $item-active-background h s l / 1));
+        $item-active-icon-color: adaptive-contrast(var(--item-active-background));
     }
 
     @if not($item-disabled-text-color) and $background {
