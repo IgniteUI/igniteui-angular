@@ -323,6 +323,13 @@ describe('IgxSplitter', () => {
 
         expect(splitterBarComponent.style.transform).not.toBe('translate3d(0px, 0px, 0px)');
     });
+
+    it('should render correctly panes created dynamically using @for', () => {
+        fixture = TestBed.createComponent(SplitterForOfPanesComponent);
+        fixture.detectChanges();
+        splitter = fixture.componentInstance.splitter;
+        expect(splitter.panes.length).toBe(3);
+    });
 });
 
 describe('IgxSplitter pane toggle', () => {
@@ -602,4 +609,20 @@ export class SplitterTogglePaneComponent extends SplitterTestComponent {
     imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
 })
 export class SplitterCollapsedPaneComponent extends SplitterTestComponent {
+}
+
+@Component({
+    template: `
+<igx-splitter>
+    @for (number of numbers; track number) {
+    <igx-splitter-pane>
+      <p>{{ number }}</p>
+    </igx-splitter-pane>
+    }
+  </igx-splitter>
+    `,
+    imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
+})
+export class SplitterForOfPanesComponent extends SplitterTestComponent {
+    public numbers = [1, 2, 3];
 }
