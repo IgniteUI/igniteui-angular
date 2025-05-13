@@ -155,7 +155,7 @@
     }
 
     .igx-input-group.igx-input-group--focused:not(.igx-input-group--box) {
-        @if $variant != 'fluent' {
+        @if $variant != 'fluent' and $variant != 'material' {
             %igx-select__toggle-button {
                 background: var-get($theme, 'toggle-button-background-focus--border');
             }
