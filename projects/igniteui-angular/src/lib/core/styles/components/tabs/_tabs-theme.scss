@@ -187,6 +187,7 @@
         button-ripple-color: $button-ripple-color,
         border-color: $border-color,
         border-radius: $border-radius,
+        border-color--hover: $border-color--hover,
         theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme'),
@@ -454,7 +455,7 @@
             &:focus {
                 border-top: rem(1px) solid transparent;
                 border-inline: none;
-                border-bottom: rem(1px) solid var-get($theme, 'border-color');
+                border-bottom: rem(1px) solid var-get($theme, 'border-color--hover');
             }
 
             igx-icon {
