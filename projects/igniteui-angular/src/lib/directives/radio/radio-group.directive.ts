@@ -2,7 +2,8 @@ import {
     AfterContentInit,
     AfterViewInit,
     ChangeDetectorRef,
-    ContentChildren, Directive, DoCheck, EventEmitter, HostBinding, HostListener, Input, OnDestroy, Optional, Output, QueryList, Self, booleanAttribute, AfterViewChecked
+    ContentChildren, Directive, DoCheck, EventEmitter, HostBinding, HostListener, Input, OnDestroy, Optional, Output, QueryList, Self, booleanAttribute,
+    contentChildren
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { fromEvent, noop, Subject } from 'rxjs';
@@ -51,7 +52,7 @@ let nextId = 0;
     selector: 'igx-radio-group, [igxRadioGroup]',
     standalone: true
 })
-export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, ControlValueAccessor, OnDestroy, DoCheck, AfterViewChecked {
+export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, ControlValueAccessor, OnDestroy, DoCheck {
     /**
      * Returns reference to the child radio buttons.
      *
@@ -61,6 +62,8 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
      * ```
      */
     @ContentChildren(IgxRadioComponent, { descendants: true }) public radioButtons: QueryList<IgxRadioComponent>;
+
+    public RadioBtnSignal = contentChildren(IgxRadioComponent, { descendants: true });
 
     /**
      * Sets/gets the `value` attribute.
@@ -203,7 +206,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
      * @internal
      */
     @HostBinding('class.igx-radio-group--before')
-    private _labelBefore = false;
+    protected get labelBefore() {
+        return this.RadioBtnSignal().some((radio) => radio.labelPosition === 'before');
+    }
 
     /**
      * A css class applied to the component if all 
@@ -213,7 +218,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
      * @internal
      */
     @HostBinding('class.igx-radio-group--disabled')
-    private _disabled = false;
+    protected get disabled() {
+        return this.RadioBtnSignal().every((radio) => radio.disabled);
+    }
 
     @HostListener('click', ['$event'])
     protected handleClick(event: MouseEvent) {
@@ -345,11 +352,6 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
      * @internal
      */
     private queryChange$ = new Subject<void>();
-    /**
-     * @hidden
-     * @internal
-     */
-    private _lastDisabledState = false;
 
     /**
      * @hidden
@@ -373,17 +375,6 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
                 }
             });
         }
-
-        this.updateDisabled();
-        this.getLabelPosition();
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public ngAfterViewChecked() {
-        this.updateDisabled();
     }
 
     /**
@@ -422,37 +413,6 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
      * @hidden
      * @internal
      */
-    private getDisabled(): boolean {
-        return this.radioButtons?.toArray().every(button => button.disabled);
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    private updateDisabled() {
-        const allDisabled = this.getDisabled();
-
-        if (this._lastDisabledState !== allDisabled) {
-            this._lastDisabledState = allDisabled;
-            setTimeout(() => {
-                this._disabled = allDisabled;
-            });
-        }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    private getLabelPosition() {
-        this._labelBefore = this.radioButtons?.some(button => button.labelPosition === 'before') ?? false;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
     private updateValidityOnBlur() {
         this.radioButtons.forEach((button) => {
             button.focused = false;
@@ -481,7 +441,6 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
 
     public ngDoCheck(): void {
         this._updateTabIndex();
-        this.getLabelPosition();
     }
 
     private _updateTabIndex() {
