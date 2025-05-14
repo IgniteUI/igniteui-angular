@@ -1,0 +1,43 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $fluent;
+
+@include themed-block(igx-circular-bar, fluent) {
+    // Do not use rem values here
+    // This will break the component in Safari
+    // https://github.com/IgniteUI/igniteui-webcomponents/issues/377
+    --stroke-thickness: 2px;
+    --scale-factor: 2.75;
+
+    @include e(text) {
+        font-weight: 700;
+    }
+}
+
+@include themed-block(igx-circular-svg, fluent) {
+    @include e(outer) {
+        stroke-width: var(--stroke-thickness);
+        animation: igx-initial-dashoffset var(--_transition-duration) linear;
+    }
+
+    @include m(indeterminate) {
+        transform-origin: 50% 50%;
+
+        @include e(outer) {
+            stroke-linecap: round;
+            animation: 2s linear 0s infinite normal none running igx-indeterminate-circular-fluent;
+            stroke-dasharray: 289;
+        }
+
+        &:dir(rtl) {
+            animation-direction: reverse;
+
+            @include e(outer) {
+                animation-direction: reverse;
+            }
+        }
+    }
+}
