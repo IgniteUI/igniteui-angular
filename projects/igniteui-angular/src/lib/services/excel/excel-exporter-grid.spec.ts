@@ -1458,7 +1458,7 @@ describe('Excel Exporter', () => {
         let grid: IgxPivotGridComponent;
 
         beforeEach(waitForAsync(() => {
-            options = createExportOptions('PivotGridGridExcelExport');
+            options = createExportOptions('PivotGridExcelExport');
         }));
 
         it('should export pivot grid', async () => {
@@ -1491,39 +1491,40 @@ describe('Excel Exporter', () => {
             fix.componentInstance.data = SALES_DATA;
             fix.componentInstance.pivotConfigHierarchy = {
                 rows: [
-                 {
-                    memberName: 'All_Srep Codes',
-                    enabled: true,
-                    width: '150px',
-                    childLevel: {
-                      memberName: 'SREP_CODE',
-                      displayName: 'Srep Code',
-                      sortDirection: 1,
+                    {
+                      memberName: 'All_Srep Code Alts',
                       enabled: true,
+                      width: '150px',
+                      childLevel: {
+                        memberName: 'SREP_CODE_ALT',
+                        displayName: 'Srep Code Alt',
+                        sortDirection: 1,
+                        enabled: true,
+                      },
                     },
-                  },
-                  {
-                    memberName: 'All_Srep Code Alts',
-                    enabled: true,
-                    width: '150px',
-                    childLevel: {
-                      memberName: 'SREP_CODE_ALT',
-                      displayName: 'Srep Code Alt',
-                      sortDirection: 1,
-                      enabled: true,
+                    {
+                        memberName: 'All_Srep Codes',
+                        enabled: true,
+                        width: '150px',
+                            childLevel: {
+                            memberName: 'SREP_CODE',
+                            displayName: 'Srep Code',
+                            sortDirection: 1,
+                            enabled: true,
+                        },
                     },
-                  },
-                  {
-                    memberName: 'All_Customers',
-                    enabled: true,
-                    width: '150px',
-                    childLevel: {
-                      memberName: 'CUST_CODE',
-                      displayName: 'Customer',
-                      sortDirection: 1,
-                      enabled: true,
-                    },
-                  }
+                    {
+                        // memberFunction: () => 'All Customers',
+                        memberName: 'All_Customers',
+                        enabled: true,
+                        width: '150px',
+                        childLevel: {
+                            memberName: 'CUST_CODE',
+                            displayName: 'Customer',
+                            sortDirection: 1,
+                            enabled: true,
+                        },
+                    }
                 ],
                 columns: [],
                 values: [
@@ -1554,7 +1555,7 @@ describe('Excel Exporter', () => {
             fix.detectChanges();
             await wait(300);
 
-            await exportAndVerify(grid, options, actualData.exportPivotGridDataWithHeaders, false);
+            await exportAndVerify(grid, options, actualData.exportPivotGridHierarchicalRowDimensions, false);
         });
 
         it('should export hierarchical pivot grid', async () => {
