@@ -1,8 +1,8 @@
 import {
-    Directive, ElementRef, Input, ChangeDetectorRef, Optional, HostBinding, Inject
+    Directive, ElementRef, Input, ChangeDetectorRef, Optional, HostBinding, Inject,
+    HostListener
 } from '@angular/core';
 import { IgxOverlayService } from '../../services/overlay/overlay';
-import { OverlaySettings } from '../../services/public_api';
 import { IgxNavigationService } from '../../core/navigation';
 import { IgxToggleDirective } from '../toggle/toggle.directive';
 
@@ -61,6 +61,13 @@ export class IgxTooltipDirective extends IgxToggleDirective {
     @Input()
     public context;
 
+
+    /**
+     * Specifies if the tooltip remains visible until the user closes it via the close button or Esc key.
+     */
+    @Input()
+    public sticky = false;
+
     /**
      * Identifier for the tooltip.
      * If this is property is not explicitly set, it will be automatically generated.
@@ -102,6 +109,16 @@ export class IgxTooltipDirective extends IgxToggleDirective {
      */
     public toBeShown = false;
 
+    /**
+     * @hidden
+     */
+    public onShow: (event?: Event) => void;
+
+    /**
+     * @hidden
+     */
+    public onHide: (event?: Event) => void;
+
     /** @hidden */
     constructor(
         elementRef: ElementRef,
@@ -113,45 +130,31 @@ export class IgxTooltipDirective extends IgxToggleDirective {
     }
 
     /**
-     * If there is open animation in progress this method will finish is.
-     * If there is no open animation in progress this method will open the toggle with no animation.
-     *
-     * @param overlaySettings setting to use for opening the toggle
+     * @hidden
      */
-    protected forceOpen(overlaySettings?: OverlaySettings) {
-        const info = this.overlayService.getOverlayById(this._overlayId);
-        const hasOpenAnimation = info ? info.openAnimationPlayer : false;
-        if (hasOpenAnimation) {
-            info.openAnimationPlayer.finish();
-            info.openAnimationPlayer.reset();
-            info.openAnimationPlayer = null;
-        } else if (this.collapsed) {
-            const animation = overlaySettings.positionStrategy.settings.openAnimation;
-            overlaySettings.positionStrategy.settings.openAnimation = null;
-            this.open(overlaySettings);
-            overlaySettings.positionStrategy.settings.openAnimation = animation;
-        }
+    @HostListener('mouseenter')
+    public onMouseEnter() {
+        this.onShow();
     }
 
     /**
-     * If there is close animation in progress this method will finish is.
-     * If there is no close animation in progress this method will close the toggle with no animation.
-     *
-     * @param overlaySettings settings to use for closing the toggle
+     * @hidden
      */
-    protected forceClose(overlaySettings?: OverlaySettings) {
-        const info = this.overlayService.getOverlayById(this._overlayId);
-        const hasCloseAnimation = info ? info.closeAnimationPlayer : false;
+    @HostListener('mouseleave')
+    public onMouseLeave() {
+        this.onHide();
+    }
 
-        if (hasCloseAnimation) {
-            info.closeAnimationPlayer.finish();
+    protected stopAnimations() {
+        const info = this.overlayService.getOverlayById(this._overlayId);
+
+        if (!info) return;
+
+        if (info.openAnimationPlayer) {
+            info.openAnimationPlayer.reset();
+        }
+        if (info.closeAnimationPlayer) {
             info.closeAnimationPlayer.reset();
-            info.closeAnimationPlayer = null;
-        } else if (!this.collapsed) {
-            const animation = overlaySettings.positionStrategy.settings.closeAnimation;
-            overlaySettings.positionStrategy.settings.closeAnimation = null;
-            this.close();
-            overlaySettings.positionStrategy.settings.closeAnimation = animation;
         }
     }
 }
