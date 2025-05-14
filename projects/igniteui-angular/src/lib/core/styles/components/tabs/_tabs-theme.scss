@@ -509,7 +509,7 @@
 
         @if $indigo-theme {
             &:hover,
-            &:focus-visible {
+            &:focus-within {
                 background: var-get($theme, 'item-hover-background');
             }
         }
