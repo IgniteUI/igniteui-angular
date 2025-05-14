@@ -1337,7 +1337,7 @@ export abstract class IgxBaseExporter {
         }
 
         const records = this.flatRecords.map(r => r.data);
-        let groupedRecords = this.groupByKeys(records, keys);
+        const groupedRecords = this.groupByKeys(records, keys);
 
         this.createRowDimension(groupedRecords, keys, columnGroupParent);
     }
