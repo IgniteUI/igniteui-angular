@@ -46,8 +46,8 @@ describe('IgxTooltip', () => {
         }));
 
         it('IgxTooltipTargetDirective default values', () => {
-            expect(tooltipTarget.showDelay).toBe(500);
-            expect(tooltipTarget.hideDelay).toBe(500);
+            expect(tooltipTarget.showDelay).toBe(200);
+            expect(tooltipTarget.hideDelay).toBe(300);
             expect(tooltipTarget.tooltipDisabled).toBe(false);
             expect(tooltipTarget.overlaySettings).toBeUndefined();
         });
@@ -156,20 +156,17 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
-        it('showing tooltip through API respects showDelay', fakeAsync(() => {
+        it('showing tooltip through API does NOT respect showDelay', fakeAsync(() => {
             tooltipTarget.showDelay = 400;
             fix.detectChanges();
 
             tooltipTarget.showTooltip();
 
             tick(300);
-            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
-
-            tick(100);
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
         }));
 
-        it('hiding tooltip through API respects hideDelay', fakeAsync(() => {
+        it('hiding tooltip through API does NOT respect hideDelay', fakeAsync(() => {
             tooltipTarget.hideDelay = 450;
             fix.detectChanges();
 
@@ -179,9 +176,6 @@ describe('IgxTooltip', () => {
             tooltipTarget.hideTooltip();
 
             tick(400);
-            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
-
-            tick(50);
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
@@ -193,25 +187,21 @@ describe('IgxTooltip', () => {
 
             hoverElement(button);
 
-            tick(250);
+            tick(100);
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
 
-            tick(250);
+            tick(100);
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
         }));
 
         it('IgxTooltip closes and reopens if opening it through API multiple times', fakeAsync(() => {
-            tooltipTarget.showTooltip();
-            tick(500);
-
-            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+            spyOn(tooltipTarget.target, 'forceClose').and.callThrough();
 
             tooltipTarget.showTooltip();
-            tick(250);
-            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+            tick();
 
-            tick(250);
-            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+            tooltipTarget.showTooltip();
+            expect(tooltipTarget.target.forceClose).toHaveBeenCalledTimes(1);
         }));
 
         it('IgxTooltip respects the passed overlaySettings', fakeAsync(() => {
