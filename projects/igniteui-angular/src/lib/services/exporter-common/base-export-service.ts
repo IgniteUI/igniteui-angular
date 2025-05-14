@@ -1343,10 +1343,10 @@ export abstract class IgxBaseExporter {
     }
 
     private groupByKeys(items: any[], keys: any[]): any {
-        const group = (data: any[], currentKeys: any[]): any => {
-          if (keys.length === 0) return data;
+        const group = (data: any[], groupKeys: any[]): any => {
+          if (groupKeys.length === 0) return data;
       
-          const newKeys = [...currentKeys];
+          const newKeys = [...groupKeys];
           const key = newKeys.shift().name;
           const map = new Map<string, any>();
       
