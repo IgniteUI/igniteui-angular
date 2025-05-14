@@ -1336,36 +1336,60 @@ export abstract class IgxBaseExporter {
             return;
         }
 
-        let startIndex = 0;
-        const key = keys[0];
         const records = this.flatRecords.map(r => r.data);
-        const groupedRecords = {};
-        records.forEach(obj => {
-            const keyValue = obj[key.name];
-            if (!groupedRecords[keyValue]) {
-                groupedRecords[keyValue] = [];
-            }
-            groupedRecords[keyValue].push(obj);
-        });
+        let groupedRecords = this.groupByKeys(records, keys);
 
-        if (columnGroupParent) {
-            const mapKeys = [...this.pivotGridKeyValueMap.keys()];
-            const mapValues = [...this.pivotGridKeyValueMap.values()];
+        this.createRowDimension(groupedRecords, keys, columnGroupParent);
+    }
 
-            for (const k of Object.keys(groupedRecords)) {
-                groupedRecords[k] = groupedRecords[k].filter(row => mapKeys.every(mk => Object.keys(row).includes(mk))
-                && mapValues.every(mv => Object.values(row).includes(mv)));
-                
-                if (groupedRecords[k].length === 0) {
-                    delete groupedRecords[k];
-                }
+    private groupByKeys(items: any[], keys: any[]): any {
+        const group = (data: any[], keys: any[]): any => {
+          if (keys.length === 0) return data;
+      
+          const newKeys = [...keys];
+          const key = newKeys.shift().name;
+          const map = new Map<string, any>();
+      
+          for (const item of data) {
+            const keyValue = item[key];
+            if (!map.has(keyValue)) {
+              map.set(keyValue, []);
             }
+            map.get(keyValue).push(item);
+          }
+      
+          for (const [keyValue, value] of map) {
+            map.set(keyValue, group(value, newKeys));
+          }
+      
+          return map;
+        };
+      
+        return group(items, keys);
+    }
+
+    private calculateRowSpan(value: any): number {
+        if (value instanceof Map) {
+            return Array.from(value.values()).reduce(
+                (total, current) => total + this.calculateRowSpan(current),
+                0
+            )
+        } else if (Array.isArray(value)) {
+            return value.length;
         }
 
-        for (const k of Object.keys(groupedRecords)) {
-            let groupKey = k;
-            const rowSpan = groupedRecords[k].length;
+        return 0;
+    }
 
+    private createRowDimension(node: any, keys: any[], columnGroupParent?: string) {
+        if (!(node instanceof Map)) return;
+
+        const key = keys[0];        
+        const newKeys = keys.filter(k => k.level > key.level);
+        let startIndex = 0;
+        for (const k of node.keys()) {
+            let groupKey = k;
+            const rowSpan = this.calculateRowSpan(node.get(k));
 
             const rowDimensionColumn: IColumnInfo = {
                 columnSpan: 1,
@@ -1377,31 +1401,27 @@ export abstract class IgxBaseExporter {
                 pinnedIndex: 0,
                 level: key.level,
                 dataType: 'string',
-                headerType: groupedRecords[groupKey].length > 1 ? ExportHeaderType.MultiRowHeader : ExportHeaderType.RowHeader,
+                headerType: rowSpan > 1 ? ExportHeaderType.MultiRowHeader : ExportHeaderType.RowHeader,
             };
-            if (groupKey === 'undefined') {
-                this.pivotGridColumns[this.pivotGridColumns.length - 1].columnSpan += 1;
+            
+            if (!groupKey) {
+                // if (this.pivotGridColumns?.length)
+                //     this.pivotGridColumns[this.pivotGridColumns.length - 1].columnSpan += 1;
                 rowDimensionColumn.headerType = ExportHeaderType.PivotMergedHeader;
                 groupKey = columnGroupParent;
             }
-            if (columnGroupParent) {
+            if (key.level > 0) {
                 rowDimensionColumn.columnGroupParent = columnGroupParent;
             } else {
                 rowDimensionColumn.columnGroup = groupKey;
             }
 
             this.pivotGridColumns.push(rowDimensionColumn);
-
-            if (keys.length > 1) {
-                if (groupKey !== columnGroupParent) {
-                    this.pivotGridKeyValueMap.set(key.name, groupKey);
-                }
-                const newKeys = keys.filter(kdd => kdd !== key);
-                this.preparePivotGridColumns(newKeys, groupKey)
-                this.pivotGridKeyValueMap.delete(key.name);
-            }
-
             startIndex += rowSpan;
+        }
+
+        for (const k of node.keys()) {
+            this.createRowDimension(node.get(k), newKeys, columnGroupParent);            
         }
     }
 
