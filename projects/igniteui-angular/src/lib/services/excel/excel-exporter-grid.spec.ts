@@ -1491,16 +1491,16 @@ describe('Excel Exporter', () => {
             fix.componentInstance.data = SALES_DATA;
             fix.componentInstance.pivotConfigHierarchy = {
                 rows: [
-                    {
-                      memberName: 'All_Srep Code Alts',
-                      enabled: true,
-                      width: '150px',
-                      childLevel: {
-                        memberName: 'SREP_CODE_ALT',
-                        displayName: 'Srep Code Alt',
-                        sortDirection: 1,
+                    {                     
+                        memberName: 'All_Srep Code Alts',
                         enabled: true,
-                      },
+                        width: '150px',
+                        childLevel: {
+                            memberName: 'SREP_CODE_ALT',
+                            displayName: 'Srep Code Alt',
+                            sortDirection: 1,
+                            enabled: true,
+                        },
                     },
                     {
                         memberName: 'All_Srep Codes',
@@ -1514,7 +1514,6 @@ describe('Excel Exporter', () => {
                         },
                     },
                     {
-                        // memberFunction: () => 'All Customers',
                         memberName: 'All_Customers',
                         enabled: true,
                         width: '150px',
