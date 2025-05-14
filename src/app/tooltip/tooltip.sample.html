@@ -1,28 +1,36 @@
 <div class="column-container">
     <article class="column">
         <h4 class="sample-title">Simple tooltip</h4>
-        <igx-avatar #target="tooltipTarget" [igxTooltipTarget]="simple" [tooltip]="'Infragistics Inc. HQ'" [overlaySettings]="settings"
+        <igx-avatar #target="tooltipTarget" [igxTooltipTarget]="simple" [tooltip]="'Infragistics Inc. HQ'"
+                    [sticky]="true"
+                    [overlaySettings]="settings"
                     src="assets/images/avatar/10.jpg" size="medium"
                     (onTooltipShow)="showing()"
                     (onTooltipHide)="hiding()"
                     aria-describedby="myid">
         </igx-avatar>
 
+        <ng-template #customClose>
+            <button class="my-close-btn" (click)="simple.close()">Close Me</button>
+          </ng-template>
+
         <div class="custom-width" #simple="tooltip" igxTooltip id="myid">
             Her name is Toola Tipa
-        </div>            
+        </div>
+
     </article>
 
     <article class="column">
         <h4 class="sample-title">Tooltip input</h4>
         <div class="sample-tooltip-input">
-            <igx-avatar class="bottomMargin" src="assets/images/avatar/10.jpg" size="medium" igxTooltipTarget [tooltip]="'Her name is Toola Tipa'">
+
+            <igx-avatar class="bottomMargin" src="assets/images/avatar/10.jpg" size="medium" igxTooltipTarget [tooltip]="'Her name is Toola Tipa'" [disableArrow]="true">
             </igx-avatar>
 
             <igx-icon igxTooltipTarget [tooltip]="'Infragistics Inc. HQ'">
                 info
             </igx-icon>
-        </div>      
+        </div>
     </article>
 
     <article class="column">
@@ -103,5 +111,5 @@
                 </igx-column>
             </igx-grid>
         </div>
-    </article>    
+    </article>
 </div>

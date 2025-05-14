@@ -1,5 +1,5 @@
 import { useAnimation } from '@angular/animations';
-import { Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener, Input, EventEmitter, booleanAttribute } from '@angular/core';
+import { Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener, Input, EventEmitter, booleanAttribute, TemplateRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService } from '../../core/navigation';
@@ -74,6 +74,96 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     @Input()
     public hideDelay = 500;
+
+    /**
+     * Controls whether the arrow element of the tooltip is rendered.
+     * Set to true to hide the arrow. Default value is `false`.
+     *
+     * ```typescript
+     * // get
+     * let isArrowDisabled = this.tooltip.disableArrow;
+     * ```
+     *
+     * ```typescript
+     * // set
+     * this.tooltip.disableArrow = false;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-icon igxTooltipTarget [disableArrow]="true" [tooltip]="'Infragistics Inc. HQ'">info</igx-icon>
+     * ```
+     */
+    @Input()
+    public set disableArrow(value: boolean) {
+        this.target._disableArrow = value;
+    }
+
+    public get disableArrow(): boolean {
+        return this.target._disableArrow;
+    }
+
+    /**
+     * Specifies if the tooltip remains visible until the user closes it via the close button or Esc key.
+     *
+     * ```typescript
+     * // get
+     * let isSticky = this.tooltip.sticky;
+     * ```
+     *
+     * ```typescript
+     * // set
+     * this.tooltip.sticky = true;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-icon igxTooltipTarget [sticky]="true" [tooltip]="'Infragistics Inc. HQ'">info</igx-icon>
+     * ```
+     */
+    @Input()
+    public set sticky (value: boolean) {
+        this.target._sticky = value;
+    };
+
+    public get sticky (): boolean {
+        return this.target._sticky;
+    }
+
+    /**
+     *  Allows full control over the appearance of the close button inside the tooltip.
+     *
+     * ```typescript
+     * // get
+     * let customCloseTemplate = this.tooltip.customCloseTemplate;
+     * ```
+     *
+     * ```typescript
+     * // set
+     * this.tooltip.customCloseTemplate = TemplateRef<any>;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-icon igxTooltipTarget [closeButtonTemplate]="customClose" [tooltip]="'Infragistics Inc. HQ'">info</igx-icon>
+     * <ng-template #customClose>
+     *      <button class="my-close-btn">Close Me</button>
+     * </ng-template>
+     * ```
+     */
+    @Input('closeButtonTemplate')
+    public set customCloseTemplate(value: TemplateRef<any>) {
+        this.target._customCloseTemplate = value;
+        if (value) {
+            this.target.renderCustomCloseTemplate();
+        } else {
+            this.target.appendDefaultCloseIcon();
+        }
+    }
+
+    public get customCloseTemplate(): TemplateRef<any> | undefined {
+        return this.target._customCloseTemplate;
+    }
 
     /**
      * Specifies if the tooltip should not show when hovering its target with the mouse. (defaults to false)
@@ -236,6 +326,10 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     @HostListener('mouseleave')
     public onMouseLeave() {
+        if (this.sticky) {
+            return;
+        }
+
         if (this.tooltipDisabled) {
             return;
         }
