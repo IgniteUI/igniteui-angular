@@ -48,8 +48,8 @@ import { IgxHierarchicalGridExportComponent,
 import { IgxHierarchicalGridComponent } from '../../grids/hierarchical-grid/public_api';
 import { IgxHierarchicalRowComponent } from '../../grids/hierarchical-grid/hierarchical-row.component';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent } from '../../test-utils/pivot-grid-samples.spec';
-import { IgxPivotGridComponent, PivotRowLayoutType } from '../../grids/pivot-grid/public_api';
+import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent, SALES_DATA } from '../../test-utils/pivot-grid-samples.spec';
+import { IgxPivotGridComponent, IgxPivotNumericAggregate, PivotRowLayoutType } from '../../grids/pivot-grid/public_api';
 
 describe('Excel Exporter', () => {
     configureTestSuite();
@@ -1476,6 +1476,142 @@ describe('Excel Exporter', () => {
             fix.detectChanges();
 
             grid = fix.componentInstance.pivotGrid;
+            fix.componentInstance.data = SALES_DATA;
+            fix.componentInstance.pivotConfigHierarchy = {
+                rows: [
+                  {
+                    memberName: 'All_Customers',
+                    enabled: true,
+                    width: '150px',
+                    childLevel: {
+                      memberName: 'CUST_CODE',
+                      displayName: 'Customer',
+                      sortDirection: 1,
+                      enabled: true,
+                    },
+                  },
+                  {
+                    memberName: 'All_Srep Codes',
+                    enabled: true,
+                    width: '150px',
+                    childLevel: {
+                      memberName: 'SREP_CODE',
+                      displayName: 'Srep Code',
+                      sortDirection: 1,
+                      enabled: true,
+                    },
+                  },
+                  {
+                    memberName: 'All_Srep Code Alts',
+                    enabled: true,
+                    width: '150px',
+                    childLevel: {
+                      memberName: 'SREP_CODE_ALT',
+                      displayName: 'Srep Code Alt',
+                      sortDirection: 1,
+                      enabled: true,
+                    },
+                  },
+                ],
+                columns: [],
+                values: [
+                  {
+                    member: 'JOBS',
+                    aggregate: {
+                      key: 'Count of Jobs',
+                      aggregator: IgxPivotNumericAggregate.count,
+                      label: 'Count of Jobs',
+                    },
+                    enabled: true,
+                    dataType: 'number',
+                  },
+                  {
+                    member: 'INV_SALES',
+                    aggregate: {
+                      key: 'Sum of Sales',
+                      aggregator: IgxPivotNumericAggregate.sum,
+                      label: 'Sum of Sales',
+                    },
+                    enabled: true,
+                    dataType: 'number',
+                  },
+                ],
+                filters: [],
+              };
+            grid.pivotUI.showRowHeaders = true;
+            fix.detectChanges();
+            await wait(300);
+
+            await exportAndVerify(grid, options, actualData.exportPivotGridDataWithHeaders, false);
+        });
+
+        it('should export pivot grid with child levels.', async () => {
+            fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
+            fix.detectChanges();
+
+            grid = fix.componentInstance.pivotGrid;
+            fix.componentInstance.data = SALES_DATA;
+            fix.componentInstance.pivotConfigHierarchy = {
+                rows: [
+                  {
+                    memberName: 'All_Customers',
+                    enabled: true,
+                    width: '150px',
+                    childLevel: {
+                      memberName: 'CUST_CODE',
+                      displayName: 'Customer',
+                      sortDirection: 1,
+                      enabled: true,
+                    },
+                  },
+                  {
+                    memberName: 'All_Srep Codes',
+                    enabled: true,
+                    width: '150px',
+                    childLevel: {
+                      memberName: 'SREP_CODE',
+                      displayName: 'Srep Code',
+                      sortDirection: 1,
+                      enabled: true,
+                    },
+                  },
+                  {
+                    memberName: 'All_Srep Code Alts',
+                    enabled: true,
+                    width: '150px',
+                    childLevel: {
+                      memberName: 'SREP_CODE_ALT',
+                      displayName: 'Srep Code Alt',
+                      sortDirection: 1,
+                      enabled: true,
+                    },
+                  },
+                ],
+                columns: [],
+                values: [
+                  {
+                    member: 'JOBS',
+                    aggregate: {
+                      key: 'Count of Jobs',
+                      aggregator: IgxPivotNumericAggregate.count,
+                      label: 'Count of Jobs',
+                    },
+                    enabled: true,
+                    dataType: 'number',
+                  },
+                  {
+                    member: 'INV_SALES',
+                    aggregate: {
+                      key: 'Sum of Sales',
+                      aggregator: IgxPivotNumericAggregate.sum,
+                      label: 'Sum of Sales',
+                    },
+                    enabled: true,
+                    dataType: 'number',
+                  },
+                ],
+                filters: [],
+              };
             grid.pivotUI.showRowHeaders = true;
             fix.detectChanges();
             await wait(300);
