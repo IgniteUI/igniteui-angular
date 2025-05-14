@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
+@use '../../../styles/themes/standalone' as *;
 
 ////
 /// @group themes
@@ -61,15 +62,17 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin highlight($theme) {
-    @include css-vars($theme);
+    @include layer(base) {
+        @include css-vars($theme);
 
-    %igx-highlight {
-        color: var-get($theme, 'resting-color');
-        background: var-get($theme, 'resting-background');
-    }
+        %igx-highlight {
+            color: var-get($theme, 'resting-color');
+            background: var-get($theme, 'resting-background');
+        }
 
-    %igx-highlight--active {
-        color: var-get($theme, 'active-color');
-        background: var-get($theme, 'active-background');
+        %igx-highlight--active {
+            color: var-get($theme, 'active-color');
+            background: var-get($theme, 'active-background');
+        }
     }
 }
