@@ -6,11 +6,14 @@ import { IgxToggleActionDirective, IgxToggleDirective } from '../directives/togg
 @Component({
     template: `
     <div class="dummyDiv">dummy div for touch tests</div>
-    <button [igxTooltipTarget]="tooltipRef" [tooltip]="'Infragistics Inc. HQ'"
-            (tooltipShow)="showing($event)" (tooltipHide)="hiding($event)"
-            style="margin: 200px">
-        Hover me
-    </button>
+    
+    @if (showButton) {
+        <button [igxTooltipTarget]="tooltipRef" [tooltip]="'Infragistics Inc. HQ'"
+                (tooltipShow)="showing($event)" (tooltipHide)="hiding($event)"
+                style="margin: 200px">
+            Hover me
+        </button>
+    }
     <div igxTooltip #tooltipRef="tooltip">
         Hello, I am a tooltip!
     </div>
@@ -20,9 +23,10 @@ import { IgxToggleActionDirective, IgxToggleDirective } from '../directives/togg
 })
 export class IgxTooltipSingleTargetComponent {
     @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
-    @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
+    @ViewChild(IgxTooltipTargetDirective, { static: false }) public tooltipTarget: IgxTooltipTargetDirective;
     public cancelShowing = false;
     public cancelHiding = false;
+    public showButton = true;
 
     public showing(args: ITooltipShowEventArgs) {
         if (this.cancelShowing) {
