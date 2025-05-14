@@ -1154,6 +1154,17 @@ export abstract class IgxGridBaseDirective implements GridType,
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent> = new QueryList<IgxColumnComponent>();
 
+    /* reactContentChildren */
+    /* blazorInclude */
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: ColumnCollection */
+    /* ngQueryListName: columnList */
+    /**
+     * @hidden @internal
+     */
+    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: false })
+    private immediateColumns: QueryList<IgxColumnComponent> = new QueryList<IgxColumnComponent>();
+
     /* contentChildren */
     /* blazorInclude */
     /* blazorTreatAsCollection */
@@ -3112,7 +3123,10 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected _allowFiltering = false;
     protected _allowAdvancedFiltering = false;
     protected _filterMode: FilterMode = FilterMode.quickFilter;
-
+    /**
+     * @hidden @internal A column list cache
+     */
+    protected _columnList: Array<IgxColumnComponent> = null;
 
     protected _defaultTargetRecordNumber = 10;
     protected _expansionStates: Map<any, boolean> = new Map<any, boolean>();
@@ -3667,24 +3681,24 @@ export abstract class IgxGridBaseDirective implements GridType,
             throttleTime(40, animationFrameScheduler, { leading: true, trailing: true }),
             destructor
         )
-        .subscribe(() => {
-            this.zone.run(() => {
-                // do not trigger reflow if element is detached.
-                if (this.nativeElement.isConnected) {
-                    if (this.shouldResize) {
-                        // resizing occurs due to the change of --ig-size css var
-                        this._gridSize = this.gridSize;
-                        this.updateDefaultRowHeight();
-                        this._autoSize = this.isPercentHeight && this.calcHeight !== this.getDataBasedBodyHeight();
-                        this.crudService.endEdit(false);
-                        if (this._summaryRowHeight === 0) {
-                            this.summaryService.summaryHeight = 0;
+            .subscribe(() => {
+                this.zone.run(() => {
+                    // do not trigger reflow if element is detached.
+                    if (this.nativeElement.isConnected) {
+                        if (this.shouldResize) {
+                            // resizing occurs due to the change of --ig-size css var
+                            this._gridSize = this.gridSize;
+                            this.updateDefaultRowHeight();
+                            this._autoSize = this.isPercentHeight && this.calcHeight !== this.getDataBasedBodyHeight();
+                            this.crudService.endEdit(false);
+                            if (this._summaryRowHeight === 0) {
+                                this.summaryService.summaryHeight = 0;
+                            }
                         }
+                        this.notifyChanges(true);
                     }
-                    this.notifyChanges(true);
-                }
+                });
             });
-        });
 
         this.pipeTriggerNotifier.pipe(takeUntil(this.destroy$)).subscribe(() => this.pipeTrigger++);
         this.columnMovingEnd.pipe(destructor).subscribe(() => this.crudService.endEdit(false));
@@ -3770,10 +3784,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             throttleTime(0, animationFrameScheduler, { leading: false, trailing: true }),
             destructor
         )
-        .subscribe(() => {
-            this.autoSizeColumnsInView();
-            this._firstAutoResize = false;
-        });
+            .subscribe(() => {
+                this.autoSizeColumnsInView();
+                this._firstAutoResize = false;
+            });
     }
 
     /**
@@ -5459,7 +5473,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             visibleChildColumns.length - columnsWithSetWidths.length;
         const sumExistingWidths = columnsWithSetWidths
             .reduce((prev, curr) => {
-                const colInstance =  this.hasColumnLayouts ? curr.ref : curr;
+                const colInstance = this.hasColumnLayouts ? curr.ref : curr;
                 const colWidth = !colInstance.widthConstrained ? curr.width : colInstance.calcPixelWidth;
                 let widthValue = parseFloat(colWidth);
                 if (isNaN(widthValue)) {
@@ -6725,7 +6739,22 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     protected getColumnList() {
-        return this.columnList.toArray();
+        if (!this._columnList) {
+            this._columnList = [];
+            this.immediateColumns.toArray().forEach((col) => {
+                this.addColumnsFromQueryList(col);
+            });
+        }
+        return this._columnList;
+    }
+
+    private addColumnsFromQueryList(col: IgxColumnComponent) {
+        this._columnList.push(col);
+        if (col.columnGroup) {
+            col.children.toArray().forEach((child) => {
+                this.addColumnsFromQueryList(child);
+            });
+        }
     }
 
     /**
@@ -6779,10 +6808,14 @@ export abstract class IgxGridBaseDirective implements GridType,
             return;
         }
         if (diff) {
+            delete this._columnList;
             let added = false;
             let removed = false;
             let pinning = false;
             diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                if (this.getColumnList().indexOf(record.item) === -1) {
+                    return;
+                }
                 added = true;
                 if (record.item.pinned) {
                     this._pinnedColumns.push(record.item);
@@ -6792,12 +6825,15 @@ export abstract class IgxGridBaseDirective implements GridType,
                 }
             });
 
-            this.initColumns(this.columnList.toArray(), (col: IgxColumnComponent) => this.columnInit.emit(col));
+            this.initColumns(this.getColumnList(), (col: IgxColumnComponent) => this.columnInit.emit(col));
             if (pinning) {
                 this.initPinning();
             }
 
             diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent | IgxColumnGroupComponent>) => {
+                if (this.getColumnList().indexOf(record.item) === -1) {
+                    return;
+                }
                 const isColumnGroup = record.item instanceof IgxColumnGroupComponent;
                 if (!isColumnGroup) {
                     // Clear Grouping

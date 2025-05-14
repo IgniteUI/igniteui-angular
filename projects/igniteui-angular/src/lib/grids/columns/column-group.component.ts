@@ -48,7 +48,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     /**
      * @deprecated in version 18.1.0. Use the `childColumns` property instead.
      */
-    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent,  })
+    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: false })
     public override children = new QueryList<IgxColumnComponent>();
 
     /**
