@@ -4,168 +4,9 @@
 @use 'igniteui-theming/sass/typography/index' as *;
 @use 'styles/themes/standalone' as *;
 @use 'light/tokens' as *;
+@use 'animations' as *;
 
 $theme: $base;
-
-@mixin striped-gradient($variant: default, $gradient-orientation, $stripe-color) {
-    $fill-color-default: if($variant == 'indigo', transparent, $stripe-color);
-    $stripes-color: if($variant == 'indigo', $stripe-color, transparent);
-
-    & {
-        background-image: repeating-linear-gradient(
-                $gradient-orientation,
-                $stripes-color,
-                $stripes-color var(--stripe-size),
-                $fill-color-default var(--stripe-size),
-                $fill-color-default calc(var(--stripe-size) * 2)
-        );
-    }
-}
-
-$easing-curves: (
-    // Primary translate easing curves
-    primary-translate-start: cubic-bezier(0.5, 0, 0.7017, 0.4958),
-    primary-translate-mid: cubic-bezier(0.3024, 0.3813, 0.55, 0.9563),
-    // Primary scale easing curves
-    primary-scale-slow-start: cubic-bezier(0.3347, 0.124, 0.7858, 1),
-    primary-scale-quick-end: cubic-bezier(0.06, 0.11, 0.6, 1),
-    // Secondary translate easing curves
-    secondary-translate-start: cubic-bezier(0.15, 0, 0.515, 0.4096),
-    secondary-translate-mid: cubic-bezier(0.31, 0.284, 0.8, 0.7337),
-    secondary-translate-end: cubic-bezier(0.4, 0.627, 0.6, 0.902),
-    // Secondary scale easing curves
-    secondary-scale-slow-start: cubic-bezier(0.15, 0, 0.515, 0.4096),
-    secondary-scale-mid: cubic-bezier(0.31, 0.284, 0.8, 0.7337),
-    secondary-scale-smooth-end: cubic-bezier(0.4, 0.627, 0.6, 0.902)
-);
-
-// Helper function to retrieve easing curves
-@function get-easing($curve) {
-    @if not map.has-key($easing-curves, $curve) {
-        @warn 'Easing curve #{$curve} does not exist.';
-    }
-    @return map.get($easing-curves, $curve);
-}
-
-// Primary animation
-@keyframes igx-indeterminate-primary {
-    0% {
-        transform: translateX(0);
-    }
-
-    20% {
-        animation-timing-function: get-easing('primary-translate-start');
-        transform: translateX(0);
-    }
-
-    59.15% {
-        animation-timing-function: get-easing('primary-translate-mid');
-        transform: translateX(83.671%);
-    }
-
-    100% {
-        transform: translateX(200.611%);
-    }
-}
-
-@keyframes igx-indeterminate-primary-scale {
-    0% {
-        transform: scaleX(0.08);
-    }
-
-    36.65% {
-        animation-timing-function: get-easing('primary-scale-slow-start');
-        transform: scaleX(0.08);
-    }
-
-    69.15% {
-        animation-timing-function: get-easing('primary-scale-quick-end');
-        transform: scaleX(0.6614);
-    }
-
-    100% {
-        transform: scaleX(0.08);
-    }
-}
-
-// Secondary animation
-@keyframes igx-indeterminate-secondary {
-    0% {
-        animation-timing-function: get-easing('secondary-translate-start');
-        transform: translateX(0);
-    }
-
-    25% {
-        animation-timing-function: get-easing('secondary-translate-mid');
-        transform: translateX(37.6519%);
-    }
-
-    48.35% {
-        animation-timing-function: get-easing('secondary-translate-end');
-        transform: translateX(84.3861%);
-    }
-
-    100% {
-        transform: translateX(160.2777%);
-    }
-}
-
-@keyframes igx-indeterminate-secondary-scale {
-    0% {
-        animation-timing-function: get-easing('secondary-scale-slow-start');
-        transform: scaleX(0.08);
-    }
-
-    19.15% {
-        animation-timing-function: get-easing('secondary-scale-mid');
-        transform: scaleX(0.4571);
-    }
-
-    44.15% {
-        animation-timing-function: get-easing('secondary-scale-smooth-end');
-        transform: scaleX(0.727);
-    }
-
-    100% {
-        transform: scaleX(0.08);
-    }
-}
-
-// Fluent linear animations
-@keyframes igx-indeterminate-bar-fluent {
-    0% {
-        transform: translateX(-100%);
-        transform-origin: left;
-    }
-
-    100% {
-        transform: translateX(310%);
-        transform-origin: right;
-    }
-}
-
-@keyframes igx-indeterminate-bar-fluent-rtl {
-    0% {
-        transform: translateX(100%);
-        transform-origin: right;
-    }
-
-    100% {
-        transform: translateX(-310%);
-        transform-origin: left;
-    }
-}
-
-// Initial animations
-@keyframes igx-initial-width {
-    from {
-        width: 0;
-    }
-
-    to {
-        width: calc(var(--_progress-whole, 0) * 1%);
-    }
-}
 
 @include layer(base) {
     // TODO change this once Not selector can be added to the block
@@ -299,9 +140,9 @@ $easing-curves: (
 
             @include e(indicator) {
                 @include striped-gradient(
-                        map.get($theme, 'variant'),
-                        var(--linear-strips-orientation),
-                        var-get($theme, 'stripes-color')
+                    map.get($theme, 'variant'),
+                    var(--linear-strips-orientation),
+                    var-get($theme, 'stripes-color')
                 );
             }
         }
