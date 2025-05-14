@@ -262,6 +262,7 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnInit, O
         this._arrowEl.style.height = '8px';
         this._arrowEl.style.transform = 'rotate(45deg)';
         this._arrowEl.style.background = 'inherit';
+        this._arrowEl.style.display = 'none'
         this.element.appendChild(this._arrowEl);
     }
 
