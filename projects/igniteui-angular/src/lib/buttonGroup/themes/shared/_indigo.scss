@@ -1,0 +1,108 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $indigo;
+
+@include themed-block(igx-button-group, indigo) {
+    --item-min-width: rem(32px);
+
+    %hover {
+        border-color: var-get($_theme, 'item-hover-border-color');
+        color: var-get($_theme, 'item-hover-text-color');
+        background: var-get($_theme, 'item-hover-background');
+
+        igx-icon {
+            color: var-get($_theme, 'item-hover-icon-color');
+        }
+    }
+    
+    %hover-selected {
+        background: var-get($_theme, 'item-selected-hover-background');
+        color: var-get($_theme, 'item-selected-hover-text-color');
+        border-color: var-get($_theme, 'item-selected-hover-border-color');
+
+        igx-icon {
+            color: var-get($_theme, 'item-selected-hover-icon-color');
+        }
+    }
+
+    @include e(item) {
+        @include type-style(body-2);
+
+        padding-inline: pad-inline(rem(6px), rem(8px), rem(10px));
+
+        igx-icon {
+            $icon-size: rem(16px);
+
+            --ig-icon-size: #{$icon-size};
+            --igx-icon-size: #{$icon-size};
+        }
+
+        &:hover {
+            @extend %hover;
+
+            z-index: 1;
+        }
+
+        &:active {
+            @extend %hover;
+
+            z-index: 2;
+        }
+
+        &[igxButton].igx-button--focused {
+            color: var-get($_theme, 'item-focused-text-color');
+            background: var-get($_theme, 'item-focused-background');
+            border-color: var-get($_theme, 'item-focused-border-color');
+            z-index: 2;
+
+            igx-icon {
+                color: var-get($_theme, 'item-icon-color');
+            }
+
+            &:hover,
+            &:active {
+                @extend %hover;
+            }
+        }
+    }
+
+    @include e(item, $m: selected) {
+        &:hover,
+        &:active {
+            @extend %hover-selected;
+        }
+
+        &[igxButton].igx-button--focused {
+            box-shadow: 0 0 0 rem(3px) var-get($_theme, 'selected-shadow-color');
+            border-color: var-get($_theme, 'item-selected-border-color');
+            background: var-get($_theme, 'item-selected-background');
+            color: var-get($_theme, 'item-selected-text-color');
+
+            igx-icon {
+                color: var-get($_theme, 'item-selected-icon-color');
+            }
+
+            &:hover,
+            &:active {
+                @extend %hover-selected;
+            }
+        }
+
+        &[igxButton][disabled='true'] {
+            color: var-get($_theme, 'disabled-selected-text-color');
+            background: var-get($_theme, 'disabled-selected-background');
+            border: none;
+
+            igx-icon {
+                color: var-get($_theme, 'disabled-selected-icon-color');
+            }
+
+            &::before {
+                display: none;
+            }
+        }
+    }
+}

@@ -7,6 +7,7 @@ import {
     Input,
     Output,
     Renderer2,
+    ViewEncapsulation,
     booleanAttribute
 } from "@angular/core";
 import { first } from "rxjs/operators";
@@ -83,7 +84,9 @@ interface IDataSelectorPanel {
  */
 @Component({
     selector: "igx-pivot-data-selector",
+    styleUrl: "pivot-data-selector.component.css",
     templateUrl: "./pivot-data-selector.component.html",
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, IgxInputDirective, IgxListComponent, IgxListItemComponent, IgxCheckboxComponent, IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxDropDirective, IgxExpansionPanelTitleDirective, IgxChipComponent, IgxExpansionPanelBodyComponent, IgxDragDirective, IgxDropDownItemNavigationDirective, IgxDragHandleDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxFilterPivotItemsPipe]
 })
 export class IgxPivotDataSelectorComponent {

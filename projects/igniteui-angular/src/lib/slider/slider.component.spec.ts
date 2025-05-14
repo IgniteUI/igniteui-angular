@@ -21,7 +21,7 @@ const SLIDER_PRIMARY_GROUP_TICKS_CLASS_NAME = 'igx-slider__ticks-group--tall';
 const SLIDER_PRIMARY_GROUP_TICKS_CLASS = `.${SLIDER_PRIMARY_GROUP_TICKS_CLASS_NAME}`;
 const SLIDER_GROUP_TICKS_CLASS = '.igx-slider__ticks-group';
 const SLIDER_TICK_LABELS_CLASS = '.igx-slider__ticks-label';
-const SLIDER_TICK_LABELS_HIDDEN_CLASS = 'igx-slider__tick-label--hidden';
+const SLIDER_TICK_LABELS_HIDDEN_CLASS = 'igx-ticks__label--hidden';
 const TOP_TO_BOTTOM_TICK_LABLES = '.igx-slider__tick-labels--top-bottom';
 const BOTTOM_TO_TOP_TICK_LABLES = '.igx-slider__tick-labels--bottom-top';
 
