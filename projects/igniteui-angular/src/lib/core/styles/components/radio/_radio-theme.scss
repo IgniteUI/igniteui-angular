@@ -597,31 +597,33 @@
     }
 
     %radio-group-display {
-        display: block;
+        display: grid;
+        column-gap: $horizontal-group-margin;
+        align-items: start;
         width: max-content;
+    }
 
-        %radio-display:not(:last-of-type) {
-            margin-inline-end: $horizontal-group-margin;
+    %radio-group-display:not(%radio-group-display--vertical) {
+        [igxLabel] {
+            margin-block-end: rem(16px);
         }
 
-        [igxLabel] {
-            display: block;
-            margin-block-end: rem(16px);
+        igx-radio {
+            grid-row: 2;
         }
     }
 
     %radio-group-display--vertical {
-        display: flex;
-        flex-flow: column;
+        row-gap: $vertical-group-margin;
 
-        %radio-display:not(:last-of-type) {
-            margin-inline-end: 0;
-            margin-block-end: $vertical-group-margin;
+        [igxLabel] {
+            margin-block-end: if($variant == 'material', rem(16px), rem(8px));
         }
 
         &%radio-group-display--before {
+            igx-radio,
             [igxLabel] {
-                text-align: end;
+                justify-self: flex-end;
             }
         }
     }
