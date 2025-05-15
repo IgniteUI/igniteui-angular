@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { IgxIconComponent} from 'igniteui-angular';
+import { IgxIconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'igx-tooltip-close-button',
