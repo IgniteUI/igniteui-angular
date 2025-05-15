@@ -258,26 +258,27 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * @hidden
      */
-    @HostListener('touchstart')
     public onTouchStart() {
         if (this.tooltipDisabled) {
             return;
         }
 
+        this.target.tooltipTarget = this;
         this.showTooltip();
     }
 
     /**
      * @hidden
      */
-    @HostListener('document:touchstart', ['$event'])
     public onDocumentTouchStart(event) {
         if (this.tooltipDisabled) {
             return;
         }
 
-        if (this.nativeElement !== event.target &&
-            !this.nativeElement.contains(event.target)
+        const tooltipTarget = this.target.tooltipTarget.nativeElement;
+
+        if (tooltipTarget !== event.target &&
+            !tooltipTarget.contains(event.target)
         ) {
             this.hideTooltip();
         }
@@ -308,6 +309,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
                 event.cancel = true;
             }
         });
+
+        this.nativeElement.addEventListener('touchstart', this.onTouchStart.bind(this), { passive: true });
+        this.target.onDocumentTouchStart = this.onDocumentTouchStart.bind(this);
     }
 
     /**
@@ -315,6 +319,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     public ngOnDestroy() {
         this.hideTooltip();
+        this.nativeElement.removeEventListener('touchstart', this.onTouchStart);
         this.destroy$.next();
         this.destroy$.complete();
     }
