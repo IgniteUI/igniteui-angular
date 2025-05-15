@@ -267,6 +267,21 @@
                 }
             }
         }
+	    
+	    @if $bootstrap-theme {
+		    position: relative;
+		    
+		    &::after {
+			    content: '';
+			    position: absolute;
+			    bottom: 0;
+			    inset-inline-start: 0;
+			    width: 100%;
+			    height: rem(1px);
+			    background: var-get($theme, 'border-color');
+			    z-index: 0;
+		    }
+	    }
     }
 
     %tabs-header-content {
@@ -278,19 +293,6 @@
     %tabs-header-wrapper {
         position: relative;
         flex-grow: 1;
-
-        @if $bootstrap-theme {
-            &::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                inset-inline-start: 0;
-                width: 100%;
-                height: rem(1px);
-                background: var-get($theme, 'border-color');
-                z-index: 0;
-            }
-        }
     }
 
     %tabs-header-scroll {
