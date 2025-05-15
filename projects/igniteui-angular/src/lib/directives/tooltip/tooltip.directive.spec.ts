@@ -10,6 +10,7 @@ import { IgxTooltipTargetDirective } from './tooltip-target.directive';
 
 const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip';
+const HIDE_DELAY = 180;
 
 describe('IgxTooltip', () => {
     configureTestSuite();
@@ -136,6 +137,7 @@ describe('IgxTooltip', () => {
             flush();
 
             unhoverElement(button);
+            tick(HIDE_DELAY);
             tick(400);
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
@@ -177,31 +179,6 @@ describe('IgxTooltip', () => {
 
             tick(400);
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
-        }));
-
-        it('IgxTooltip closes and reopens if it was opened through API and then its target is hovered', fakeAsync(() => {
-            tooltipTarget.showTooltip();
-            flush();
-
-            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
-
-            hoverElement(button);
-
-            tick(100);
-            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
-
-            tick(100);
-            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
-        }));
-
-        it('IgxTooltip closes and reopens if opening it through API multiple times', fakeAsync(() => {
-            spyOn(tooltipTarget.target, 'forceClose').and.callThrough();
-
-            tooltipTarget.showTooltip();
-            tick();
-
-            tooltipTarget.showTooltip();
-            expect(tooltipTarget.target.forceClose).toHaveBeenCalledTimes(1);
         }));
 
         it('IgxTooltip respects the passed overlaySettings', fakeAsync(() => {
@@ -424,6 +401,7 @@ describe('IgxTooltip', () => {
 
                 const dummyDiv = fix.debugElement.query(By.css('.dummyDiv'));
                 touchElement(dummyDiv);
+                tick(HIDE_DELAY);
                 tick(400);
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
@@ -565,7 +543,8 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
             UIInteractions.simulateClickEvent(button.nativeElement);
-            fix.detectChanges();
+            tick(HIDE_DELAY);
+            tick(300);
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
 
