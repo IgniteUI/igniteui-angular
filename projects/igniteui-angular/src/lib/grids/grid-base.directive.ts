@@ -69,7 +69,7 @@ import { GridResourceStringsEN, IGridResourceStrings } from '../core/i18n/grid-r
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxGridSelectionService } from './selection/selection.service';
-import { IgxEditRow, IgxCell, IgxAddRow } from './common/crud.service';
+import { IgxEditRow, IgxCell } from './common/crud.service';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
 import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-style/excel-style-search.component';
 import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
@@ -3341,7 +3341,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 .map(t => t.newValue));
         }
 
-        if (this.crudService.row && this.crudService.row.getClassName() === IgxAddRow.name) {
+        if (this.crudService.row && this.crudService.row.isAddRow) {
             result.splice(this.crudService.row.index, 0, this.crudService.row.data);
         }
 
