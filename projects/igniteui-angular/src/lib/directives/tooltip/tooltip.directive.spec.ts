@@ -276,7 +276,7 @@ describe('IgxTooltip', () => {
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
-            
+
             fix.componentInstance.showButton = false;
             fix.detectChanges();
             flush();
@@ -566,6 +566,20 @@ describe('IgxTooltip', () => {
             verifyTooltipPosition(tooltipNativeElement, buttonTwo, true);
             // Tooltip is NOT visible and positioned relative to buttonOne
             verifyTooltipPosition(tooltipNativeElement, buttonOne, false);
+        }));
+
+        it('Should not call `hideTooltip` multiple times on document:touchstart', fakeAsync(() => {
+            spyOn(targetOne, 'hideTooltip').and.callThrough();
+            spyOn(targetTwo, 'hideTooltip').and.callThrough();
+
+            touchElement(buttonOne);
+            tick(500);
+
+            const dummyDiv = fix.debugElement.query(By.css('.dummyDiv'));
+            touchElement(dummyDiv);
+
+            expect(targetOne.hideTooltip).not.toHaveBeenCalled();
+            expect(targetTwo.hideTooltip).toHaveBeenCalledTimes(1);
         }));
     });
 
