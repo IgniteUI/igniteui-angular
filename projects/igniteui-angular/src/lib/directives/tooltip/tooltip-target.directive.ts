@@ -277,6 +277,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     private _destroy$ = new Subject<void>();
     private _autoHideDelay = 180;
+    private _isForceClosed = false;
 
     constructor(private _element: ElementRef,
         @Optional() private _navigationService: IgxNavigationService, private _viewContainerRef: ViewContainerRef) {
@@ -303,6 +304,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }
 
         this._checkOutletAndOutsideClick();
+        this._checkTooltipForMultipleTargets();
         this._showOnInteraction();
     }
 
@@ -311,10 +313,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     @HostListener('mouseleave')
     public onMouseLeave() {
-        if (this.sticky) {
-            return;
-        }
-
         if (this.tooltipDisabled) {
             return;
         }
@@ -433,8 +431,12 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
 
     private _showTooltip(withDelay: boolean, withEvents: boolean): void {
-        if (!this.target.collapsed) {
+        if (!this.target.collapsed && !this._isForceClosed) {
             return;
+        }
+
+        if (this._isForceClosed) {
+            this._isForceClosed = false;
         }
 
         if (withEvents) {
@@ -457,7 +459,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
 
     private _hideOnInteraction(): void {
-        if (!this.target.sticky) {
+        if (!this.sticky) {
             this._setAutoHide();
         }
     }
@@ -470,8 +472,31 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }, this._autoHideDelay);
     }
 
+    /**
+     * Used when the browser animations are set to a lower percentage
+     * and the user interacts with the target or tooltip __while__ an animation is playing.
+     * It stops the running animation, and the tooltip is instantly shown.
+     */
     private _stopTimeoutAndAnimation(): void {
         clearTimeout(this.target.timeoutId);
         this.target.stopAnimations();
+    }
+
+    /**
+     * Used when a single tooltip is used for multiple targets.
+     * If the tooltip is shown for one target and the user interacts with another target,
+     * the tooltip is instantly hidden for the first target.
+     */
+    private _checkTooltipForMultipleTargets(): void {
+        if (!this.target.tooltipTarget) {
+            this.target.tooltipTarget = this;
+        }
+
+        if (this.target.tooltipTarget !== this) {
+            clearTimeout(this.target.timeoutId);
+            this.target.stopAnimations(true);
+            this.target.tooltipTarget = this;
+            this._isForceClosed = true;
+        }
     }
 }

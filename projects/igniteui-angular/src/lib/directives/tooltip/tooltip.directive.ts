@@ -72,13 +72,6 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnInit, O
     @Input()
     public context;
 
-
-    /**
-     * Specifies if the tooltip remains visible until the user closes it via the close button or Esc key.
-     */
-    @Input()
-    public sticky = false;
-
     /**
      * Identifier for the tooltip.
      * If this is property is not explicitly set, it will be automatically generated.
@@ -110,15 +103,8 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnInit, O
 
     /**
      * @hidden
-     * Returns whether close time out has started
      */
-    public toBeHidden = false;
-
-    /**
-     * @hidden
-     * Returns whether open time out has started
-     */
-    public toBeShown = false;
+    public tooltipTarget;
 
     /**
      * @hidden
@@ -181,16 +167,31 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnInit, O
         this.onHide();
     }
 
-    protected stopAnimations() {
+    /**
+     * If there is an animation in progress, this method will reset it to its initial state.
+     * Optional `force` parameter that ends the animation.
+     *
+     * @hidden
+     * @param force if set to `true`, the animation will be ended.
+     */
+    protected stopAnimations(force: boolean = false) {
         const info = this.overlayService.getOverlayById(this._overlayId);
 
         if (!info) return;
 
         if (info.openAnimationPlayer) {
             info.openAnimationPlayer.reset();
+            if (force) {
+                info.openAnimationPlayer.finish();
+                info.openAnimationPlayer = null;
+            }
         }
         if (info.closeAnimationPlayer) {
             info.closeAnimationPlayer.reset();
+            if (force) {
+                info.closeAnimationPlayer.finish();
+                info.closeAnimationPlayer = null;
+            }
         }
     }
 
