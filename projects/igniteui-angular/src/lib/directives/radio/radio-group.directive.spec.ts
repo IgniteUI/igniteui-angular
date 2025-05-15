@@ -33,16 +33,16 @@ describe('IgxRadioGroupDirective', () => {
         fixture.detectChanges();
         tick();
 
-        expect(radioInstance.radioButtons).toBeDefined();
-        expect(radioInstance.radioButtons.length).toEqual(3);
+        expect(radioInstance.radioButtons()).toBeDefined();
+        expect(radioInstance.radioButtons().length).toEqual(3);
 
-        const allRequiredButtons = radioInstance.radioButtons.filter((btn) => btn.required);
-        expect(allRequiredButtons.length).toEqual(radioInstance.radioButtons.length);
+        const allRequiredButtons = radioInstance.radioButtons().filter((btn) => btn.required);
+        expect(allRequiredButtons.length).toEqual(radioInstance.radioButtons().length);
 
-        const allButtonsWithGroupName = radioInstance.radioButtons.filter((btn) => btn.name === radioInstance.name);
-        expect(allButtonsWithGroupName.length).toEqual(radioInstance.radioButtons.length);
+        const allButtonsWithGroupName = radioInstance.radioButtons().filter((btn) => btn.name === radioInstance.name);
+        expect(allButtonsWithGroupName.length).toEqual(radioInstance.radioButtons().length);
 
-        const buttonWithGroupValue = radioInstance.radioButtons.find((btn) => btn.value === radioInstance.value);
+        const buttonWithGroupValue = radioInstance.radioButtons().find((btn) => btn.value === radioInstance.value);
         expect(buttonWithGroupValue).toBeDefined();
         expect(buttonWithGroupValue).toEqual(radioInstance.selected);
     }));
@@ -64,28 +64,28 @@ describe('IgxRadioGroupDirective', () => {
         fixture.detectChanges();
         tick();
 
-        expect(radioInstance.radioButtons).toBeDefined();
+        expect(radioInstance.radioButtons()).toBeDefined();
 
         // name
         radioInstance.name = 'newGroupName';
         fixture.detectChanges();
 
-        const allButtonsWithNewName = radioInstance.radioButtons.filter((btn) => btn.name === 'newGroupName');
-        expect(allButtonsWithNewName.length).toEqual(radioInstance.radioButtons.length);
+        const allButtonsWithNewName = radioInstance.radioButtons().filter((btn) => btn.name === 'newGroupName');
+        expect(allButtonsWithNewName.length).toEqual(radioInstance.radioButtons().length);
 
         // required
         radioInstance.required = true;
         fixture.detectChanges();
 
-        const allRequiredButtons = radioInstance.radioButtons.filter((btn) => btn.required);
-        expect(allRequiredButtons.length).toEqual(radioInstance.radioButtons.length);
+        const allRequiredButtons = radioInstance.radioButtons().filter((btn) => btn.required);
+        expect(allRequiredButtons.length).toEqual(radioInstance.radioButtons().length);
 
         // invalid
         radioInstance.invalid = true;
         fixture.detectChanges();
 
-        const allInvalidButtons = radioInstance.radioButtons.filter((btn) => btn.invalid);
-        expect(allInvalidButtons.length).toEqual(radioInstance.radioButtons.length);
+        const allInvalidButtons = radioInstance.radioButtons().filter((btn) => btn.invalid);
+        expect(allInvalidButtons.length).toEqual(radioInstance.radioButtons().length);
     }));
 
     it('Set value should change selected property', fakeAsync(() => {
@@ -99,7 +99,7 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioInstance.value).toEqual('Baz');
 
         expect(radioInstance.selected).toBeDefined();
-        expect(radioInstance.selected).toEqual(radioInstance.radioButtons.last);
+        expect(radioInstance.selected).toEqual(radioInstance.radioButtons()[radioInstance.radioButtons().length - 1]);
 
         spyOn(radioInstance.change, 'emit');
 
@@ -107,7 +107,7 @@ describe('IgxRadioGroupDirective', () => {
         fixture.detectChanges();
 
         expect(radioInstance.value).toEqual('Foo');
-        expect(radioInstance.selected).toEqual(radioInstance.radioButtons.first);
+        expect(radioInstance.selected).toEqual(radioInstance.radioButtons()[0]);
         expect(radioInstance.change.emit).not.toHaveBeenCalled();
     }));
 
@@ -122,15 +122,15 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioInstance.value).toEqual('Baz');
 
         expect(radioInstance.selected).toBeDefined();
-        expect(radioInstance.selected).toEqual(radioInstance.radioButtons.last);
+        expect(radioInstance.selected).toEqual(radioInstance.radioButtons()[radioInstance.radioButtons().length - 1]);
 
         spyOn(radioInstance.change, 'emit');
 
-        radioInstance.selected = radioInstance.radioButtons.first;
+        radioInstance.selected = radioInstance.radioButtons()[0];
         fixture.detectChanges();
 
         expect(radioInstance.value).toEqual('Foo');
-        expect(radioInstance.selected).toEqual(radioInstance.radioButtons.first);
+        expect(radioInstance.selected).toEqual(radioInstance.radioButtons()[0]);
         expect(radioInstance.change.emit).not.toHaveBeenCalled();
     }));
 
@@ -141,12 +141,12 @@ describe('IgxRadioGroupDirective', () => {
         fixture.detectChanges();
         tick();
 
-        radioInstance.radioButtons.first.nativeLabel.nativeElement.click();
+        radioInstance.radioButtons()[0].nativeLabel.nativeElement.click();
         fixture.detectChanges();
         tick();
 
         expect(radioInstance.value).toEqual('Winter');
-        expect(radioInstance.selected).toEqual(radioInstance.radioButtons.first);
+        expect(radioInstance.selected).toEqual(radioInstance.radioButtons()[0]);
     }));
 
     it('Updating the model should select a radio button.', fakeAsync(() => {
@@ -161,7 +161,7 @@ describe('IgxRadioGroupDirective', () => {
         tick();
 
         expect(radioInstance.value).toEqual('Winter');
-        expect(radioInstance.selected).toEqual(radioInstance.radioButtons.first);
+        expect(radioInstance.selected).toEqual(radioInstance.radioButtons()[0]);
     }));
 
     it('Properly update the model when radio group is hosted in Reactive forms.', fakeAsync(() => {
@@ -191,7 +191,7 @@ describe('IgxRadioGroupDirective', () => {
 
         const radioGroup = fixture.componentInstance.radioGroup;
         expect(radioGroup.value).toEqual(0);
-        expect(radioGroup.radioButtons.first.checked).toEqual(true);
+        expect(radioGroup.radioButtons()[0].checked).toEqual(true);
     }));
 
     it('Properly rebind dynamically added components', fakeAsync(() => {
@@ -204,12 +204,12 @@ describe('IgxRadioGroupDirective', () => {
         fixture.detectChanges();
         tick();
 
-        radioInstance.radioButtons.last.nativeLabel.nativeElement.click();
+        radioInstance.radioButtons()[radioInstance.radioButtons().length - 1].nativeLabel.nativeElement.click();
         fixture.detectChanges();
         tick();
 
         expect(radioInstance.value).toEqual(7);
-        expect(radioInstance.selected).toEqual(radioInstance.radioButtons.last);
+        expect(radioInstance.selected).toEqual(radioInstance.radioButtons()[radioInstance.radioButtons().length - 1]);
     }));
 
     it('Updates checked radio button correctly', fakeAsync(() => {
@@ -218,15 +218,15 @@ describe('IgxRadioGroupDirective', () => {
         tick();
 
         const radioGroup = fixture.componentInstance.radioGroup;
-        expect(radioGroup.radioButtons.first.checked).toEqual(true);
-        expect(radioGroup.radioButtons.last.checked).toEqual(false);
+        expect(radioGroup.radioButtons()[0].checked).toEqual(true);
+        expect(radioGroup.radioButtons()[radioGroup.radioButtons().length - 1].checked).toEqual(false);
 
-        radioGroup.radioButtons.last.select();
+        radioGroup.radioButtons()[radioGroup.radioButtons().length - 1].select();
         fixture.detectChanges();
         tick();
 
-        expect(radioGroup.radioButtons.first.checked).toEqual(false);
-        expect(radioGroup.radioButtons.last.checked).toEqual(true);
+        expect(radioGroup.radioButtons()[0].checked).toEqual(false);
+        expect(radioGroup.radioButtons()[radioGroup.radioButtons().length - 1].checked).toEqual(true);
     }));
 
     it('Should update styles correctly when required radio group\'s value is set.', fakeAsync(() => {
@@ -252,13 +252,13 @@ describe('IgxRadioGroupDirective', () => {
         dispatchRadioEvent('keyup', domRadio, fixture);
         expect(domRadio.classList.contains('igx-radio--focused')).toBe(true);
 
-        radioGroup.radioButtons.first.select();
+        radioGroup.radioButtons()[0].select();
         fixture.detectChanges();
         tick();
 
         expect(domRadio.classList.contains('igx-radio--checked')).toBe(true);
         expect(radioGroup.invalid).toBe(false);
-        expect(radioGroup.radioButtons.first.checked).toEqual(true);
+        expect(radioGroup.radioButtons()[0].checked).toEqual(true);
         expect(domRadio.classList.contains('igx-radio--invalid')).toBe(false);
     }));
 });
@@ -448,3 +448,4 @@ const dispatchRadioEvent = (eventName, radioNativeElement, fixture) => {
     radioNativeElement.dispatchEvent(new Event(eventName));
     fixture.detectChanges();
 };
+
