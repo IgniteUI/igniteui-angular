@@ -275,9 +275,10 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
-        const tooltipTarget = this.target.tooltipTarget.nativeElement;
+        const tooltipTarget = this.target.tooltipTarget?.nativeElement;
 
-        if (tooltipTarget !== event.target &&
+        if (tooltipTarget &&
+            tooltipTarget !== event.target &&
             !tooltipTarget.contains(event.target)
         ) {
             this.hideTooltip();
@@ -310,7 +311,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             }
         });
 
-        this.nativeElement.addEventListener('touchstart', this.onTouchStart.bind(this), { passive: true });
+        this.nativeElement.addEventListener('touchstart', this.onTouchStart = this.onTouchStart.bind(this), { passive: true });
         this.target.onDocumentTouchStart = this.onDocumentTouchStart.bind(this);
     }
 
