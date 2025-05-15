@@ -6,7 +6,7 @@ import { IgxToggleActionDirective, IgxToggleDirective } from '../directives/togg
 @Component({
     template: `
     <div class="dummyDiv">dummy div for touch tests</div>
-    
+
     @if (showButton) {
         <button [igxTooltipTarget]="tooltipRef" [tooltip]="'Infragistics Inc. HQ'"
                 (tooltipShow)="showing($event)" (tooltipHide)="hiding($event)"
@@ -42,6 +42,8 @@ export class IgxTooltipSingleTargetComponent {
 
 @Component({
     template: `
+    <div class="dummyDiv">dummy div for touch tests</div>
+
     <button class="buttonOne" #targetOne="tooltipTarget" [igxTooltipTarget]="tooltipRef" style="margin: 100px">
         Target One
     </button>
