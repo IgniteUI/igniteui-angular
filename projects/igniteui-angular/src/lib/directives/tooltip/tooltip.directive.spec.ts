@@ -577,6 +577,7 @@ describe('IgxTooltip', () => {
 
             const dummyDiv = fix.debugElement.query(By.css('.dummyDiv'));
             touchElement(dummyDiv);
+            flush();
 
             expect(targetOne.hideTooltip).not.toHaveBeenCalled();
             expect(targetTwo.hideTooltip).toHaveBeenCalledTimes(1);
