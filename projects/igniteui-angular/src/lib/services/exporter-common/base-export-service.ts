@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { cloneArray, cloneValue, IBaseEventArgs, resolveNestedPath, yieldingLoop } from '../../core/utils';
+import { cloneArray, cloneValue, columnFieldPath, IBaseEventArgs, resolveNestedPath, yieldingLoop } from '../../core/utils';
 import { GridColumnDataType, DataUtil } from '../../data-operations/data-util';
 import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
@@ -276,7 +276,7 @@ export abstract class IgxBaseExporter {
         }
 
         this.summaries = this.prepareSummaries(grid);
-        this._setChildSummaries =  this.summaries.size > 1 && grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly;
+        this._setChildSummaries = this.summaries.size > 1 && grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly;
 
         this.addLevelColumns();
         this.prepareData(grid);
@@ -465,7 +465,7 @@ export abstract class IgxBaseExporter {
 
                 record.data = columns.reduce((a, e) => {
                     if (!e.skip) {
-                        let rawValue = resolveNestedPath(record.data, e.field);
+                        let rawValue = resolveNestedPath(record.data, columnFieldPath(e.field)) as any;
 
                         const shouldApplyFormatter = e.formatter && !e.skipFormatter && record.type !== ExportRecordType.GroupedRecord;
                         const isOfDateType = e.dataType === 'date' || e.dataType === 'dateTime' || e.dataType === 'time';
@@ -515,7 +515,7 @@ export abstract class IgxBaseExporter {
         const filteredColumns = columns.filter(c => !c.skip);
         const length = filteredColumns.length;
         const specificIndicesColumns = filteredColumns.filter((col) => !isNaN(col.exportIndex))
-                                                      .sort((a,b) => a.exportIndex - b.exportIndex);
+            .sort((a, b) => a.exportIndex - b.exportIndex);
         const indices = specificIndicesColumns.map(col => col.exportIndex);
 
         specificIndicesColumns.forEach(col => {
@@ -683,7 +683,7 @@ export abstract class IgxBaseExporter {
         if (this.options.exportSummaries && grid.summaryService.summaryCacheMap.size > 0) {
             const summaryCacheMap = grid.summaryService.summaryCacheMap;
 
-            switch(grid.summaryCalculationMode) {
+            switch (grid.summaryCalculationMode) {
                 case GridSummaryCalculationMode.childLevelsOnly:
                     summaryCacheMap.delete(GRID_ROOT_SUMMARY);
                     break;
@@ -949,7 +949,7 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private getTreeGridChildData(recordChildren: ITreeGridRecord[], key: string, level:number, parentExpanded = true) {
+    private getTreeGridChildData(recordChildren: ITreeGridRecord[], key: string, level: number, parentExpanded = true) {
         const hierarchicalOwner = `${GRID_CHILD}${++this.rowIslandCounter}`
         let summaryLevel = level;
         let summaryHidden = !parentExpanded;
@@ -1009,7 +1009,7 @@ export abstract class IgxBaseExporter {
                 const obj = {}
 
                 for (const [key, value] of rootSummary) {
-                    const summaries = value.map(s => ({label: s.label, value: s.summaryResult}))
+                    const summaries = value.map(s => ({ label: s.label, value: s.summaryResult }))
                     obj[key] = summaries[i];
                 }
 
@@ -1048,8 +1048,8 @@ export abstract class IgxBaseExporter {
             const hierarchy = getHierarchy(record);
             const expandState: IGroupByExpandState = groupingState.expansion.find((s) =>
                 isHierarchyMatch(s.hierarchy || [{ fieldName: record.expression.fieldName, value: recordVal }],
-                hierarchy,
-                grid.groupingExpressions));
+                    hierarchy,
+                    grid.groupingExpressions));
             const expanded = expandState ? expandState.expanded : groupingState.defaultExpanded;
 
             const isDate = recordVal instanceof Date;
@@ -1344,27 +1344,27 @@ export abstract class IgxBaseExporter {
 
     private groupByKeys(items: any[], keys: any[]): any {
         const group = (data: any[], groupKeys: any[]): any => {
-          if (groupKeys.length === 0) return data;
-      
-          const newKeys = [...groupKeys];
-          const key = newKeys.shift().name;
-          const map = new Map<string, any>();
-      
-          for (const item of data) {
-            const keyValue = item[key];
-            if (!map.has(keyValue)) {
-              map.set(keyValue, []);
+            if (groupKeys.length === 0) return data;
+
+            const newKeys = [...groupKeys];
+            const key = newKeys.shift().name;
+            const map = new Map<string, any>();
+
+            for (const item of data) {
+                const keyValue = item[key];
+                if (!map.has(keyValue)) {
+                    map.set(keyValue, []);
+                }
+                map.get(keyValue).push(item);
             }
-            map.get(keyValue).push(item);
-          }
-      
-          for (const [keyValue, value] of map) {
-            map.set(keyValue, group(value, newKeys));
-          }
-      
-          return map;
+
+            for (const [keyValue, value] of map) {
+                map.set(keyValue, group(value, newKeys));
+            }
+
+            return map;
         };
-      
+
         return group(items, keys);
     }
 
@@ -1384,7 +1384,7 @@ export abstract class IgxBaseExporter {
     private createRowDimension(node: any, keys: any[], columnGroupParent?: string) {
         if (!(node instanceof Map)) return;
 
-        const key = keys[0];        
+        const key = keys[0];
         const newKeys = keys.filter(k => k.level > key.level);
         let startIndex = 0;
         for (const k of node.keys()) {
@@ -1403,7 +1403,7 @@ export abstract class IgxBaseExporter {
                 dataType: 'string',
                 headerType: rowSpan > 1 ? ExportHeaderType.MultiRowHeader : ExportHeaderType.RowHeader,
             };
-            
+
             if (!groupKey) {
                 // if (this.pivotGridColumns?.length)
                 //     this.pivotGridColumns[this.pivotGridColumns.length - 1].columnSpan += 1;
@@ -1421,7 +1421,7 @@ export abstract class IgxBaseExporter {
         }
 
         for (const k of node.keys()) {
-            this.createRowDimension(node.get(k), newKeys, columnGroupParent);            
+            this.createRowDimension(node.get(k), newKeys, columnGroupParent);
         }
     }
 
@@ -1447,7 +1447,7 @@ export abstract class IgxBaseExporter {
 
     private addLevelData() {
         if (this.options.exportSummaries && this.summaries.size > 0) {
-            for(const r of this.flatRecords){
+            for (const r of this.flatRecords) {
                 if (r.type === ExportRecordType.DataRecord || r.type === ExportRecordType.TreeGridRecord || r.type === ExportRecordType.HierarchicalGridRecord) {
                     r.data[GRID_LEVEL_COL] = r.level;
                 }

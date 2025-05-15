@@ -1,6 +1,6 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
-import { resolveNestedPath, parseDate, formatDate, formatCurrency } from '../core/utils';
+import { resolveNestedPath, parseDate, formatDate, formatCurrency, columnFieldPath } from '../core/utils';
 import { ColumnType, EntityType, GridType } from '../grids/common/grid.interface';
 import { GridColumnDataType } from './data-util';
 import { SortingDirection } from './sorting-strategy';
@@ -26,7 +26,7 @@ export interface IFilteringStrategy {
     filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree,
         grid?: GridType): any[];
     /* csSuppress */
-    getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree) : Promise<IgxFilterItem[]>;
+    getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]>;
 }
 
 /* csSuppress */
@@ -37,7 +37,7 @@ export interface IgxFilterItem {
 }
 
 /* csSuppress */
-export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
+export abstract class BaseFilteringStrategy implements IFilteringStrategy {
     // protected
     public findMatchByExpression(rec: any, expr: IFilteringExpression, isDate?: boolean, isTime?: boolean, grid?: GridType): boolean {
         if (expr.searchTree) {
@@ -45,8 +45,6 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
             const shouldMatchRecords = expr.conditionName === 'inQuery';
             if (!records) { // child grid is not yet created
                 return true;
-            } else if (records.length === 0) { // child grid is empty
-                return false;
             }
 
             for (let index = 0; index < records.length; index++) {
@@ -74,7 +72,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
                 const operator = expressionsTree.operator as FilteringLogic;
                 let matchOperand;
 
-                if (expressionsTree.filteringOperands && expressionsTree.filteringOperands.length) {
+                if (expressionsTree.filteringOperands?.length) {
                     for (const operand of expressionsTree.filteringOperands) {
                         matchOperand = this.matchRecord(rec, operand, grid, entity);
 
@@ -137,9 +135,9 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
         data = column.grid.gridAPI.sortDataByExpressions(data,
             [{ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase }]);
 
-        const columnField = column.field;
+        const pathParts = columnFieldPath(column.field)
         let filterItems: IgxFilterItem[] = data.map(record => {
-            let value = resolveNestedPath(record, columnField);
+            let value = resolveNestedPath(record, pathParts);
             const applyFormatter = column.formatter && this.shouldFormatFilterValues(column);
 
             value = applyFormatter ?
@@ -239,9 +237,6 @@ export class NoopFilteringStrategy extends BaseFilteringStrategy {
 export class FilteringStrategy extends BaseFilteringStrategy {
     private static _instance: FilteringStrategy = null;
 
-    constructor() {
-        super();
-    }
 
     public static instance() {
         return this._instance || (this._instance = new this());
@@ -249,26 +244,18 @@ export class FilteringStrategy extends BaseFilteringStrategy {
 
     public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree: IFilteringExpressionsTree,
         grid: GridType): T[] {
-        let i;
-        let rec;
-        const len = data.length;
-        const res: T[] = [];
 
-        if ((FilteringExpressionsTree.empty(expressionsTree) && FilteringExpressionsTree.empty(advancedExpressionsTree)) || !len) {
+
+        if ((FilteringExpressionsTree.empty(expressionsTree) && FilteringExpressionsTree.empty(advancedExpressionsTree))) {
             return data;
         }
-        for (i = 0; i < len; i++) {
-            rec = data[i];
-            if (this.matchRecord(rec, expressionsTree, grid) && this.matchRecord(rec, advancedExpressionsTree, grid)) {
-                res.push(rec);
-            }
-        }
-        return res;
+
+        return data.filter(record => this.matchRecord(record, expressionsTree, grid) && this.matchRecord(record, advancedExpressionsTree, grid));
     }
 
     protected getFieldValue(rec: any, fieldName: string, isDate = false, isTime = false, grid?: GridType): any {
         const column = grid?.getColumnByName(fieldName);
-        let value = resolveNestedPath(rec, fieldName);
+        let value = resolveNestedPath(rec, columnFieldPath(fieldName));
 
         value = column?.formatter && this.shouldFormatFilterValues(column) ?
             column.formatter(value, rec) :
