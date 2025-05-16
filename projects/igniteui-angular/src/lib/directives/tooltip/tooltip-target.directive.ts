@@ -366,7 +366,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         const positionSettings: PositionSettings = {
             horizontalDirection: HorizontalAlignment.Center,
             horizontalStartPoint: HorizontalAlignment.Center,
-            openAnimation: useAnimation(scaleInCenter, { params: { duration: '1150ms' } }),
+            openAnimation: useAnimation(scaleInCenter, { params: { duration: '150ms' } }),
             closeAnimation: useAnimation(fadeOut, { params: { duration: '75ms' } })
         };
 
