@@ -1,5 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Inject, Input, Output, QueryList, booleanAttribute, forwardRef } from '@angular/core';
+import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Inject, Input, Output, QueryList, booleanAttribute, forwardRef, DOCUMENT } from '@angular/core';
 import { DragDirection, IDragMoveEventArgs, IDragStartEventArgs, IgxDragDirective, IgxDragIgnoreDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 

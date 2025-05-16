@@ -1,4 +1,4 @@
-import { DOCUMENT, formatNumber, getLocaleNumberFormat, NumberFormatStyle } from '@angular/common';
+import { formatNumber, getLocaleNumberFormat, NumberFormatStyle } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -30,7 +30,8 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
-    ViewContainerRef
+    ViewContainerRef,
+    DOCUMENT
 } from '@angular/core';
 import { formatDate, resizeObservable } from '../core/utils';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
