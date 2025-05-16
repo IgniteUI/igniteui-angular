@@ -1,15 +1,18 @@
 import { useAnimation } from '@angular/animations';
-import { Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener, Input, EventEmitter, booleanAttribute, TemplateRef, ComponentRef, Renderer2 } from '@angular/core';
+import { Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener, Input, EventEmitter, booleanAttribute, TemplateRef, ComponentRef, Renderer2, AfterViewInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService } from '../../core/navigation';
 import { IBaseEventArgs } from '../../core/utils';
-import { AutoPositionStrategy, HorizontalAlignment, PositionSettings } from '../../services/public_api';
+import { PositionSettings } from '../../services/public_api';
 import { IgxToggleActionDirective } from '../toggle/toggle.directive';
 import { IgxTooltipComponent } from './tooltip.component';
 import { IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipCloseButtonComponent } from './tooltip-close-button.component';
 import { fadeOut, scaleInCenter } from 'igniteui-angular/animations';
+import { TooltipPlacement } from './enums';
+import { IgxTooltipPositionStrategy, PositionsMap, TooltipRegexes } from './tooltip.common';
+import { IgxDirectionality } from '../../services/direction/directionality';
 
 export interface ITooltipShowEventArgs extends IBaseEventArgs {
     target: IgxTooltipTargetDirective;
@@ -41,7 +44,7 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
     selector: '[igxTooltipTarget]',
     standalone: true
 })
-export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit, OnDestroy {
+export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit, AfterViewInit, OnDestroy {
 
     private _closeButtonRef?: ComponentRef<IgxTooltipCloseButtonComponent>;
     private _closeTemplate: TemplateRef<any>;
@@ -80,6 +83,32 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     @Input()
     public hideDelay = 300;
+
+
+    /**
+     * Where to place the tooltip relative to the target element. Default value is `top`.
+     * ```html
+     * <igx-icon [igxTooltipTarget]="tooltipRef" placement="bottom-start">info</igx-icon>
+     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+     * ```
+     */
+    @Input()
+    public set placement(value: TooltipPlacement) {
+        this._placement = value;
+
+        if (this._overlayDefaults && this.target) {
+            this._overlayDefaults.positionStrategy = new IgxTooltipPositionStrategy(this._positionsSettingsByPlacement, value, this.offset);
+            this.target.positionArrow(value, this._arrowOffset);
+        }
+    }
+
+    public get placement(): TooltipPlacement {
+        return this._placement;
+    }
+
+    /** The offset of the tooltip from the target in pixels. Default value is 6. */
+    @Input()
+    public offset = 6;
 
     /**
      * Controls whether the arrow element of the tooltip is rendered.
@@ -286,9 +315,15 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     private _destroy$ = new Subject<void>();
     private _autoHideDelay = 180;
     private _isForceClosed = false;
+    private _placement: TooltipPlacement = TooltipPlacement.top;
 
-    constructor(private _element: ElementRef,
-        @Optional() private _navigationService: IgxNavigationService, private _viewContainerRef: ViewContainerRef, private _renderer: Renderer2) {
+    constructor(
+        private _element: ElementRef,
+        @Optional() private _navigationService: IgxNavigationService,
+        private _viewContainerRef: ViewContainerRef,
+        private _renderer: Renderer2,
+        private _dir: IgxDirectionality,
+    ) {
         super(_element, _navigationService);
     }
 
@@ -363,14 +398,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     public override ngOnInit() {
         super.ngOnInit();
 
-        const positionSettings: PositionSettings = {
-            horizontalDirection: HorizontalAlignment.Center,
-            horizontalStartPoint: HorizontalAlignment.Center,
-            openAnimation: useAnimation(scaleInCenter, { params: { duration: '150ms' } }),
-            closeAnimation: useAnimation(fadeOut, { params: { duration: '75ms' } })
-        };
-
-        this._overlayDefaults.positionStrategy = new AutoPositionStrategy(positionSettings);
+        this._overlayDefaults.positionStrategy = new IgxTooltipPositionStrategy(this._positionsSettingsByPlacement, this.placement, this.offset);
         this._overlayDefaults.closeOnOutsideClick = false;
         this._overlayDefaults.closeOnEscape = true;
 
@@ -385,6 +413,13 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         this.target.onShow = this._showOnInteraction.bind(this);
         this.target.onHide = this._hideOnInteraction.bind(this);
+    }
+
+    /**
+     * @hidden
+     */
+    public ngAfterViewInit() {
+        this.target.positionArrow(this.placement, this._arrowOffset);
     }
 
     /**
@@ -419,6 +454,36 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     private get _mergedOverlaySettings() {
         return Object.assign({}, this._overlayDefaults, this.overlaySettings);
+    }
+
+    private get _positionsSettingsByPlacement(): PositionSettings {
+        const positions = PositionsMap.get(this.placement);
+        const animations = {
+            openAnimation: useAnimation(scaleInCenter, { params: { duration: '150ms' } }),
+            closeAnimation: useAnimation(fadeOut, { params: { duration: '75ms' } })
+        }
+        return Object.assign({}, animations, positions);
+    }
+
+    private get _arrowOffset(): number {
+        if (this.placement.includes('-')) {
+            // Horizontal start | end placement
+            if (TooltipRegexes.horizontalStart.test(this.placement)) {
+                return -8;
+            }
+            if (TooltipRegexes.horizontalEnd.test(this.placement)) {
+                return 8;
+            }
+
+            // Vertical start | end placement
+            if (TooltipRegexes.start.test(this.placement)) {
+                return this._dir.rtl ? 8 : -8;
+            }
+            if (TooltipRegexes.end.test(this.placement)) {
+                return this._dir.rtl ? -8 : 8;
+            }
+        }
+        return 0;
     }
 
     private _checkOutletAndOutsideClick(): void {
