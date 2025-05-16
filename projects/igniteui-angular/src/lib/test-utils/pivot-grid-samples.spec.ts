@@ -396,3 +396,153 @@ export class IgxTotalSaleAggregate {
         return max;
     };
 }
+
+export const SALES_DATA =[
+    {
+        "JOBS": 35,
+        "INV_SALES": 2497.11,
+        "CUST_CODE": "1057802",
+        "SREP_CODE": "231",
+        "SREP_CODE_ALT": "060"
+    },
+    {
+        "JOBS": 1241,
+        "INV_SALES": 98731.63,
+        "CUST_CODE": "CW9211",
+        "SREP_CODE": "162",
+        "SREP_CODE_ALT": "024"
+    },
+    {
+        "JOBS": 619,
+        "INV_SALES": 58532.89,
+        "CUST_CODE": "VS02524",
+        "SREP_CODE": "238",
+        "SREP_CODE_ALT": "060"
+    },
+    {
+        "JOBS": 534,
+        "INV_SALES": 37109.5,
+        "CUST_CODE": "80033239",
+        "SREP_CODE": "604",
+        "SREP_CODE_ALT": "041"
+    },
+    {
+        "JOBS": 262,
+        "INV_SALES": 16352.73,
+        "CUST_CODE": "8049699",
+        "SREP_CODE": "103",
+        "SREP_CODE_ALT": "029"
+    },
+    {
+        "JOBS": 1621,
+        "INV_SALES": 176455.66,
+        "CUST_CODE": "5062088",
+        "SREP_CODE": "421",
+        "SREP_CODE_ALT": "047"
+    },
+    {
+        "JOBS": 150,
+        "INV_SALES": 13113.94,
+        "CUST_CODE": "1060983",
+        "SREP_CODE": "220",
+        "SREP_CODE_ALT": "060"
+    },
+    {
+        "JOBS": 400,
+        "INV_SALES": 24663.14,
+        "CUST_CODE": "2038891",
+        "SREP_CODE": "111",
+        "SREP_CODE_ALT": "056"
+    },
+    {
+        "JOBS": 62,
+        "INV_SALES": 4418.15,
+        "CUST_CODE": "VS0568",
+        "SREP_CODE": "263",
+        "SREP_CODE_ALT": "053"
+    },
+    {
+        "JOBS": 128,
+        "INV_SALES": 10792.43,
+        "CUST_CODE": "1486",
+        "SREP_CODE": "410",
+        "SREP_CODE_ALT": "047"
+    },
+    {
+        "JOBS": 393,
+        "INV_SALES": 30797.93,
+        "CUST_CODE": "5049856",
+        "SREP_CODE": "603",
+        "SREP_CODE_ALT": "041"
+    },
+    {
+        "JOBS": 458,
+        "INV_SALES": 24370.78,
+        "CUST_CODE": "5044928",
+        "SREP_CODE": "622",
+        "SREP_CODE_ALT": "041"
+    },
+    {
+        "JOBS": 289,
+        "INV_SALES": 30413.87,
+        "CUST_CODE": "5053596",
+        "SREP_CODE": "159",
+        "SREP_CODE_ALT": "037"
+    },
+    {
+        "JOBS": 372,
+        "INV_SALES": 27565.64,
+        "CUST_CODE": "VS00862",
+        "SREP_CODE": "256",
+        "SREP_CODE_ALT": "020"
+    },
+    {
+        "JOBS": 354,
+        "INV_SALES": 40424.75,
+        "CUST_CODE": "80018567",
+        "SREP_CODE": "183",
+        "SREP_CODE_ALT": "024"
+    },
+    {
+        "JOBS": 356,
+        "INV_SALES": 31745.11,
+        "CUST_CODE": "80033864",
+        "SREP_CODE": "256",
+        "SREP_CODE_ALT": "020"
+    },
+    {
+        "JOBS": 910,
+        "INV_SALES": 58081.95,
+        "CUST_CODE": "80015557",
+        "SREP_CODE": "254",
+        "SREP_CODE_ALT": "020"
+    },
+    {
+        "JOBS": 166,
+        "INV_SALES": 7229.73,
+        "CUST_CODE": "5059647",
+        "SREP_CODE": "419",
+        "SREP_CODE_ALT": "047"
+    },
+    {
+        "JOBS": 304,
+        "INV_SALES": 18192.16,
+        "CUST_CODE": "2053968",
+        "SREP_CODE": "110",
+        "SREP_CODE_ALT": "056"
+    },
+    {
+        "JOBS": 40,
+        "INV_SALES": 3253.31,
+        "CUST_CODE": "4523057",
+        "SREP_CODE": "538",
+        "SREP_CODE_ALT": "006"
+    },
+    {
+        "JOBS": 332,
+        "INV_SALES": 18538.62,
+        "CUST_CODE": "8046621",
+        "SREP_CODE": "103",
+        "SREP_CODE_ALT": "029"
+    }
+];
