@@ -1,23 +1,31 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, HostBinding, HostListener, Input, TemplateRef } from '@angular/core';
 import { IgxIconComponent } from '../../icon/icon.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'igx-tooltip-close-button',
   template: `
-    <div class="close-button">
-        <igx-icon
-            name="close"
-            ariaLabel="Close tooltip"
-            (click)="handleClick()">
-        </igx-icon>
-    </div>
+        <ng-container *ngIf="customTemplate; else defaultTemplate">
+            <ng-container *ngTemplateOutlet="customTemplate"></ng-container>
+        </ng-container>
+        <ng-template #defaultTemplate>
+            <igx-icon aria-hidden="true" family="default" name="close"></igx-icon>
+        </ng-template>
   `,
-  imports: [IgxIconComponent],
+  imports: [IgxIconComponent, CommonModule],
 })
-export class TooltipCloseButtonComponent {
-  @Output() public clicked = new EventEmitter<void>();
+export class IgxTooltipCloseButtonComponent {
+    @Input()
+    public customTemplate: TemplateRef<any>;
 
-  public handleClick(): void {
-    this.clicked.emit();
-  }
+    @Output()
+    public clicked = new EventEmitter<void>();
+
+    @HostBinding('class')
+    private _defaultClass = 'igx-tooltip-close-button';
+
+    @HostListener('click')
+    public handleClick() {
+        this.clicked.emit();
+    }
 }

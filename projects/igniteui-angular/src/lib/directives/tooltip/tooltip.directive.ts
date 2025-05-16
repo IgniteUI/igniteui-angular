@@ -1,15 +1,13 @@
 import {
     Directive, ElementRef, Input, ChangeDetectorRef, Optional, HostBinding, Inject,
-    TemplateRef,
-    ViewContainerRef, OnInit, OnDestroy, AfterViewInit,
-    HostListener
+    ViewContainerRef, OnInit, OnDestroy,
+    HostListener,
 } from '@angular/core';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../../services/public_api';
 import { IgxNavigationService } from '../../core/navigation';
 import { IgxToggleDirective } from '../toggle/toggle.directive';
 import { takeUntil } from 'rxjs';
-import { TooltipCloseButtonComponent } from './tooltip-close-button.component';
 
 let NEXT_ID = 0;
 /**
@@ -31,12 +29,9 @@ let NEXT_ID = 0;
     selector: '[igxTooltip]',
     standalone: true
 })
-export class IgxTooltipDirective extends IgxToggleDirective implements OnInit, OnDestroy, AfterViewInit {
+export class IgxTooltipDirective extends IgxToggleDirective implements OnInit, OnDestroy {
     private _arrowEl: HTMLElement;
-    private _customCloseTemplate: TemplateRef<any>;
-    private _disableArrow = false;
-    private _sticky = false;
-    private _offset = 6;
+    private _role: "tooltip" | "status" = "tooltip"
 
     /**
      * @hidden
@@ -92,8 +87,12 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnInit, O
      * ```
      */
     @HostBinding('attr.role')
+    @Input()
+    public set role(value: "tooltip" | "status"){
+        this._role = value;
+    }
     public get role() {
-        return 'tooltip';
+        return this._role;
     }
 
     /**
@@ -129,26 +128,19 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnInit, O
 
     public override ngOnInit() {
         super.ngOnInit();
-        this.createArrowElement();
+        this.createArrow();
 
-        this.opened.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this._arrowEl.style.display = this._disableArrow ? 'none' : 'block';
-            this.positionArrow(this.overlayService.getOverlayById(this._overlayId).settings);
+        this.overlayService.animationStarting.pipe(takeUntil(this.destroy$)).subscribe( () => {
+            if(this._overlayId && this._arrowEl) {
+                this.positionArrow(this.overlayService.getOverlayById(this._overlayId).settings);
+            }
         });
-    }
-
-
-    public ngAfterViewInit() {
-        if(this._sticky && !this._customCloseTemplate){
-            this.appendDefaultCloseIcon();
-        }
     }
 
 
     public override ngOnDestroy() {
         super.ngOnDestroy();
         this.removeArrow();
-        this.removeCloseButton();
     }
 
     /**
@@ -195,23 +187,6 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnInit, O
         }
     }
 
-    private setOffsetTooltip(settings: OverlaySettings) {
-        const pos = settings.positionStrategy.settings;
-        if (!pos) return;
-
-        if (pos.verticalDirection === VerticalAlignment.Top) {
-            this.setOffset(0, -this._offset);
-        } else if (pos.verticalDirection === VerticalAlignment.Bottom) {
-            this.setOffset(0, this._offset);
-        } else if (pos.horizontalDirection === HorizontalAlignment.Left) {
-            this.setOffset(this._offset, 0);
-        } else if (pos.horizontalDirection === HorizontalAlignment.Right) {
-            this.setOffset(-this._offset, 0);
-        }
-    }
-
-    //TO DO:
-    // Fix arrow flicker on animation played
     public positionArrow(settings?: OverlaySettings) {
         const pos = settings?.positionStrategy?.settings;
         if (!pos || !this._arrowEl) return;
@@ -226,73 +201,35 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnInit, O
         style.right = '';
         style.transform = '';
 
-        const set = (s: Partial<CSSStyleDeclaration>) => Object.assign(style, s);
-
         if (pos.verticalDirection === VerticalAlignment.Top) {
-            set({
-                bottom: `-${offset}px`,
-                left: '50%',
-                transform: 'translateX(-50%)'
-            });
+            style.bottom = `-${offset}px`;
+            style.left = '50%';
+            style.transform = 'translateX(-50%)';
         } else if (pos.verticalDirection === VerticalAlignment.Bottom) {
-            set({
-                top: `-${offset}px`,
-                left: '50%',
-                transform: 'translateX(-50%)',
-            });
+            style.top = `-${offset}px`;
+            style.left = '50%';
+            style.transform = 'translateX(-50%)';
         } else if (pos.horizontalDirection === HorizontalAlignment.Left) {
-            set({
-                right: `-${offset}px`,
-                top: '50%',
-                transform: 'translateY(-50%)'
-            });
+            style.right = `-${offset}px`;
+            style.top = '50%';
+            style.transform = 'translateY(-50%)';
         } else if (pos.horizontalDirection === HorizontalAlignment.Right) {
-            set({
-                left: `-${offset}px`,
-                top: '50%',
-                transform: 'translateY(-50%)'
-            });
+            style.left = `-${offset}px`;
+            style.top = '50%';
+            style.transform = 'translateY(-50%)';
         }
     }
 
-    private createArrowElement() {
+    private createArrow() {
         this._arrowEl = document.createElement('div');
-        this._arrowEl.classList.add('igx-tooltip--arrow');
+        this._arrowEl.classList.add('igx-tooltip-arrow');
         this._arrowEl.style.position = 'absolute';
         this._arrowEl.style.width = '8px';
         this._arrowEl.style.height = '8px';
+        this._arrowEl.style.backgroundColor = 'inherit';
         this._arrowEl.style.transform = 'rotate(45deg)';
-        this._arrowEl.style.background = 'inherit';
-        this._arrowEl.style.display = 'none'
+        this._arrowEl.style.display = 'block';
         this.element.appendChild(this._arrowEl);
-    }
-
-    protected renderCustomCloseTemplate(): void {
-        this.removeCloseButton();
-
-        const view = this.viewContainerRef.createEmbeddedView(this._customCloseTemplate);
-        view.detectChanges();
-
-        for (const node of view.rootNodes) {
-          if (node instanceof HTMLElement) {
-            node.classList.add('close-button');
-            this.element.appendChild(node);
-          }
-        }
-    }
-
-    protected appendDefaultCloseIcon(): void {
-        this.removeCloseButton();
-        const buttonRef = this.viewContainerRef.createComponent(TooltipCloseButtonComponent);
-        buttonRef.instance.clicked.pipe(takeUntil(this.destroy$)).subscribe(() => this.close());
-        this.element.appendChild(buttonRef.location.nativeElement);
-    }
-
-    private removeCloseButton(){
-        const closeButton = this.element.querySelector('.close-button');
-        if (closeButton) {
-            closeButton.remove();
-        }
     }
 
     private removeArrow() {

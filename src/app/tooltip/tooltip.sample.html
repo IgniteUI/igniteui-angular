@@ -3,6 +3,7 @@
         <h4 class="sample-title">Simple tooltip</h4>
         <igx-avatar #target="tooltipTarget" [igxTooltipTarget]="simple" [tooltip]="'Infragistics Inc. HQ'"
                     [sticky]="true"
+                    [closeButtonTemplate]="customClose"
                     [overlaySettings]="settings"
                     src="assets/images/avatar/10.jpg" size="medium"
                     (onTooltipShow)="showing()"
@@ -11,7 +12,7 @@
         </igx-avatar>
 
         <ng-template #customClose>
-            <button class="my-close-btn" (click)="simple.close()">Close Me</button>
+            <button class="my-close-btn">Close Me</button>
           </ng-template>
 
         <div class="custom-width" #simple="tooltip" igxTooltip id="myid">

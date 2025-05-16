@@ -1,7 +1,7 @@
 import { fakeAsync, TestBed, tick, flush, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent } from '../../test-utils/tooltip-components.spec';
+import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent, IgxTooltipWithCloseButtonComponent } from '../../test-utils/tooltip-components.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../services/public_api';
@@ -26,7 +26,8 @@ describe('IgxTooltip', () => {
                 IgxTooltipSingleTargetComponent,
                 IgxTooltipMultipleTargetsComponent,
                 IgxTooltipPlainStringComponent,
-                IgxTooltipWithToggleActionComponent
+                IgxTooltipWithToggleActionComponent,
+                IgxTooltipWithCloseButtonComponent
             ]
         }).compileComponents();
         UIInteractions.clearOverlay();
@@ -552,6 +553,73 @@ describe('IgxTooltip', () => {
             fix.detectChanges();
 
             expect(fix.componentInstance.toggleDir.collapsed).toBe(false);
+        }));
+    });
+
+    describe('Tooltip Sticky with Close Button', () => {
+        beforeEach(() => {
+            fix = TestBed.createComponent(IgxTooltipWithCloseButtonComponent);
+            fix.detectChanges();
+            tooltipNativeElement = fix.debugElement.query(By.directive(IgxTooltipDirective)).nativeElement;
+            tooltipTarget = fix.componentInstance.tooltipTarget as IgxTooltipTargetDirective;
+            button = fix.debugElement.query(By.directive(IgxTooltipTargetDirective));
+        });
+
+        it('should render custom close button when sticky is true', fakeAsync(() => {
+            const closeBtn = document.querySelector('.my-close-btn');
+            expect(closeBtn).toBeTruthy();
+        }));
+
+        it('should destroy close button when sticky is set to false', fakeAsync(() => {
+            tooltipTarget.sticky = false;
+            fix.detectChanges();
+            tick();
+
+            hoverElement(button);
+            flush();
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+
+            const closeBtn = document.querySelector('.my-close-btn');
+            expect(closeBtn).toBeFalsy();
+
+        }));
+
+        it('should call hideTooltip when custom close button is clicked', fakeAsync(() => {
+            const spy = spyOn(tooltipTarget, 'hideTooltip');
+
+            hoverElement(button);
+            flush();
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+
+            const closeBtn = document.querySelector('.my-close-btn') as HTMLElement;
+            closeBtn.click();
+            fix.detectChanges();
+            tick();
+
+            expect(spy).toHaveBeenCalledOnceWith();
+        }));
+
+        it('should use default close icon when no custom template is passed', fakeAsync(() => {
+            // Clear custom template
+            tooltipTarget.closeTemplate = null;
+            fix.detectChanges();
+            tick();
+
+            const icon = document.querySelector('igx-icon');
+            expect(icon).toBeTruthy();
+            expect(icon?.textContent?.trim().toLowerCase()).toBe('close');
+        }));
+
+        it('should update the DOM role attribute correctly when sticky changes', fakeAsync(() => {
+            // Initially sticky
+            fix.detectChanges();
+            tick();
+            expect(tooltipNativeElement.getAttribute('role')).toBe('status');
+
+            tooltipTarget.sticky = false;
+            fix.detectChanges();
+            tick();
+            expect(tooltipNativeElement.getAttribute('role')).toBe('tooltip');
         }));
     });
 });

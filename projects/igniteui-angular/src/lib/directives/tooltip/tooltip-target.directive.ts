@@ -1,5 +1,5 @@
 import { useAnimation } from '@angular/animations';
-import { Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener, Input, EventEmitter, booleanAttribute, TemplateRef } from '@angular/core';
+import { Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener, Input, EventEmitter, booleanAttribute, TemplateRef, ComponentRef, Renderer2 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService } from '../../core/navigation';
@@ -8,6 +8,7 @@ import { AutoPositionStrategy, HorizontalAlignment, PositionSettings } from '../
 import { IgxToggleActionDirective } from '../toggle/toggle.directive';
 import { IgxTooltipComponent } from './tooltip.component';
 import { IgxTooltipDirective } from './tooltip.directive';
+import { IgxTooltipCloseButtonComponent } from './tooltip-close-button.component';
 import { fadeOut, scaleInCenter } from 'igniteui-angular/animations';
 
 export interface ITooltipShowEventArgs extends IBaseEventArgs {
@@ -41,6 +42,11 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
     standalone: true
 })
 export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit, OnDestroy {
+
+    private _closeButtonRef?: ComponentRef<IgxTooltipCloseButtonComponent>;
+    private _closeTemplate: TemplateRef<any>;
+    private _sticky = false;
+
     /**
      * Gets/sets the amount of milliseconds that should pass before showing the tooltip.
      *
@@ -96,11 +102,11 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     @Input()
     public set disableArrow(value: boolean) {
-        this.target._disableArrow = value;
+        this.target.disableArrow = value;
     }
 
     public get disableArrow(): boolean {
-        return this.target._disableArrow;
+        return this.target.disableArrow;
     }
 
     /**
@@ -123,12 +129,19 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     @Input()
     public set sticky (value: boolean) {
-        this.target._sticky = value;
+        const changed = this._sticky !== value;
+        this._sticky = value;
+
+        if (changed) {
+            this._evaluateCloseButtonState();
+            this.target.role = value ? "status" : "tooltip"
+        }
     };
 
     public get sticky (): boolean {
-        return this.target._sticky;
+        return this._sticky;
     }
+
 
     /**
      *  Allows full control over the appearance of the close button inside the tooltip.
@@ -152,17 +165,12 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * ```
      */
     @Input('closeButtonTemplate')
-    public set customCloseTemplate(value: TemplateRef<any>) {
-        this.target._customCloseTemplate = value;
-        if (value) {
-            this.target.renderCustomCloseTemplate();
-        } else {
-            this.target.appendDefaultCloseIcon();
-        }
+    public set closeTemplate(value: TemplateRef<any>) {
+        this._closeTemplate = value;
+        this._evaluateCloseButtonState();
     }
-
-    public get customCloseTemplate(): TemplateRef<any> | undefined {
-        return this.target._customCloseTemplate;
+    public get closeTemplate(): TemplateRef<any> | undefined {
+        return this._closeTemplate;
     }
 
     /**
@@ -280,7 +288,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     private _isForceClosed = false;
 
     constructor(private _element: ElementRef,
-        @Optional() private _navigationService: IgxNavigationService, private _viewContainerRef: ViewContainerRef) {
+        @Optional() private _navigationService: IgxNavigationService, private _viewContainerRef: ViewContainerRef, private _renderer: Renderer2) {
         super(_element, _navigationService);
     }
 
@@ -358,7 +366,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         const positionSettings: PositionSettings = {
             horizontalDirection: HorizontalAlignment.Center,
             horizontalStartPoint: HorizontalAlignment.Center,
-            openAnimation: useAnimation(scaleInCenter, { params: { duration: '150ms' } }),
+            openAnimation: useAnimation(scaleInCenter, { params: { duration: '1150ms' } }),
             closeAnimation: useAnimation(fadeOut, { params: { duration: '75ms' } })
         };
 
@@ -497,6 +505,47 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             this.target.stopAnimations(true);
             this.target.tooltipTarget = this;
             this._isForceClosed = true;
+        }
+    }
+
+
+    private _evaluateCloseButtonState(): void {
+        if (!this.target || !(this.target instanceof IgxTooltipDirective)) {
+            return;
+        }
+
+        if (this._sticky) {
+            this._removeCloseButton();
+            this._createCloseTemplate(this._closeTemplate);
+        } else {
+            this._removeCloseButton();
+        }
+    }
+
+
+    private _createCloseTemplate(template?: TemplateRef<any> | undefined) {
+        if(this.target instanceof IgxTooltipDirective) {
+
+            this._closeTemplate = template;
+
+            const componentRef = this._viewContainerRef.createComponent(IgxTooltipCloseButtonComponent);
+            this._closeButtonRef = componentRef;
+
+            componentRef.instance.customTemplate = template;
+            componentRef.instance.clicked.pipe(takeUntil(this._destroy$)).subscribe(() => {
+                this.hideTooltip();
+            });
+
+            if (this.target.element instanceof HTMLElement) {
+                this._renderer.appendChild(this.target.element, componentRef.location.nativeElement);
+            }
+        }
+    }
+
+    private _removeCloseButton(){
+        if (this._closeButtonRef) {
+            this._closeButtonRef.destroy();
+            this._closeButtonRef = undefined;
         }
     }
 }

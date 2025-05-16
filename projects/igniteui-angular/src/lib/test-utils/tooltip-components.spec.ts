@@ -86,3 +86,22 @@ export class IgxTooltipWithToggleActionComponent {
     @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
     @ViewChild(IgxToggleDirective, { static: true }) public toggleDir: IgxToggleDirective;
 }
+
+@Component({
+    template: `
+    <button [igxTooltipTarget]="tooltipRef" [sticky]="true" [closeButtonTemplate]="customClose">
+        Options
+    </button>
+
+    <ng-template #customClose>
+            <button class="my-close-btn">Close Me</button>
+    </ng-template>
+
+    <div #tooltipRef="tooltip" igxTooltip>Test</div>
+    `,
+    imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
+})
+export class IgxTooltipWithCloseButtonComponent {
+    @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
+    @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
+}
