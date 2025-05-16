@@ -469,13 +469,12 @@ describe('igxBanner', () => {
             const banner = fixture.componentInstance.banner;
             const panel = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             expect(panel).not.toBeNull();
-            expect(panel.attributes.getNamedItem('ng-reflect-collapsed').nodeValue).toEqual('true');
+            expect(panel.attributes.getNamedItem('aria-expanded').nodeValue).toEqual('false');
             expect(panel.childElementCount).toEqual(0);
 
             banner.open();
             tick();
             fixture.detectChanges();
-            expect(panel.attributes.getNamedItem('ng-reflect-collapsed').nodeValue).toEqual('false');
             expect(panel.childElementCount).toEqual(1);
 
             const panelBody = panel.children[0];

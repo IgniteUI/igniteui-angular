@@ -1192,7 +1192,9 @@ describe('IgxGrid - search API #grid', () => {
             grid.findNext('Tanya Bennett');
             fix.detectChanges();
 
-            const highlightDirectives = fix.debugElement.queryAll(By.css('div[ng-reflect-value="Tanya Bennett"]'));
+            const highlightDirectives = fix.debugElement.queryAll(By.css('div[igxtexthighlight]')).filter((el) => {
+                return el.nativeElement.innerText === 'Tanya Bennett';
+            });
             const firstHighlight = highlightDirectives[0].injector.get(IgxTextHighlightDirective);
             const secondHighlight = highlightDirectives[1].injector.get(IgxTextHighlightDirective);
 

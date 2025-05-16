@@ -1056,7 +1056,7 @@ describe('igxCombo', () => {
                 expect(input.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
 
                 const dropdown = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_DROPDOWN}`));
-                expect(dropdown.nativeElement.getAttribute('ng-reflect-labelled-by')).toEqual(combo.placeholder);
+                expect(dropdown.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
 
                 combo.open();
                 tick();
