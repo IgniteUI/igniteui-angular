@@ -1823,7 +1823,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         }));
 
         it('Should correctly change resource strings for hierarchical Advanced Filtering dialog.', fakeAsync(() => {
-            debugger
             hgrid.closeAdvancedFilteringDialog(false);
             tick(200);
             fix.detectChanges(); 
@@ -1883,7 +1882,10 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             const valueInput: any = QueryBuilderFunctions.getQueryBuilderValueInput(fix);
             expect(valueInput.querySelector('input').placeholder).toBe('My sub-query results');
-
+            
+            const entitySelect = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 1);
+            const selectLabel = entitySelect.previousElementSibling as HTMLSpanElement;
+            expect(selectLabel.innerText).toBe('My from');
         }));
     });
 });
