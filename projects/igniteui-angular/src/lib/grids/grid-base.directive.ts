@@ -6755,12 +6755,12 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     protected resetColumns(change: QueryList<IgxColumnComponent>) {
-        const diff = this.columnListDiffer.diff(change);
-        if (diff) {
+        //const diff = this.columnListDiffer.diff(change);
+        //if (diff) {
             delete this._columnList;
             this.initColumns(this.getColumnList(), (col: IgxColumnComponent) => this.columnInit.emit(col));
             this.resetCaches();
-        }
+        //}
     }
 
     private addColumnsFromQueryList(col: IgxColumnComponent) {
