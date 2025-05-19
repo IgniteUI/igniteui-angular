@@ -979,7 +979,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 const chips = excelMenu.querySelectorAll('igx-chip');
                 expect(chips[0].id).toBe('SellerName');
-                expect(chips[0].attributes.getNamedItem('aria-selected').nodeValue).toEqual('aria-selected');
+                expect(chips[0].attributes.getNamedItem('aria-selected').nodeValue).toEqual('true');
                 expect(chips[1].id).toBe('ProductCategory');
                 expect(chips[1].attributes.getNamedItem('aria-selected')).toEqual(null);
 

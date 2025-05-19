@@ -1055,7 +1055,7 @@ describe('igxCombo', () => {
                 expect(input.nativeElement.getAttribute('aria-controls')).toEqual(combo.dropdown.listId);
                 expect(input.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
 
-                const dropdown = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_DROPDOWN}`));
+                const dropdown = fixture.debugElement.query(By.css(`div[role="listbox"]`));
                 expect(dropdown.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
 
                 combo.open();
