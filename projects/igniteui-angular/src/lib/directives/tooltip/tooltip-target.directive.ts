@@ -211,6 +211,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
+        this.target.tooltipTarget = this;
+
         this.checkOutletAndOutsideClick();
         const shouldReturn = this.preMouseEnterCheck();
         if (shouldReturn) {
@@ -303,6 +305,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this._overlayDefaults.closeOnEscape = true;
 
         this.target.closing.pipe(takeUntil(this.destroy$)).subscribe((event) => {
+            if (this.target.tooltipTarget !== this) {
+                return;
+            }
             const hidingArgs = { target: this, tooltip: this.target, cancel: false };
             this.tooltipHide.emit(hidingArgs);
 
@@ -334,6 +339,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     public showTooltip() {
         clearTimeout(this.target.timeoutId);
+
+        this.target.tooltipTarget = this;
 
         if (!this.target.collapsed) {
             //  if close animation has started finish it, or close the tooltip with no animation
