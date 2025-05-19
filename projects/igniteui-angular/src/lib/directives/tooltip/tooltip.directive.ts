@@ -1,13 +1,13 @@
 import {
     Directive, ElementRef, Input, ChangeDetectorRef, Optional, HostBinding, Inject,
-    ViewContainerRef, OnInit, OnDestroy,
+    OnDestroy,
     HostListener,
 } from '@angular/core';
 import { IgxOverlayService } from '../../services/overlay/overlay';
-import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../../services/public_api';
 import { IgxNavigationService } from '../../core/navigation';
 import { IgxToggleDirective } from '../toggle/toggle.directive';
-import { takeUntil } from 'rxjs';
+import { TooltipPlacement } from './enums';
+import { first } from '../../core/utils';
 
 let NEXT_ID = 0;
 /**
@@ -29,7 +29,7 @@ let NEXT_ID = 0;
     selector: '[igxTooltip]',
     standalone: true
 })
-export class IgxTooltipDirective extends IgxToggleDirective implements OnInit, OnDestroy {
+export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy {
     private _arrowEl: HTMLElement;
     private _role: "tooltip" | "status" = "tooltip"
 
@@ -120,27 +120,15 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnInit, O
         elementRef: ElementRef,
         cdr: ChangeDetectorRef,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        @Optional() navigationService: IgxNavigationService,
-        private viewContainerRef: ViewContainerRef) {
+        @Optional() navigationService: IgxNavigationService) {
         // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
         super(elementRef, cdr, overlayService, navigationService);
+        this._createArrow();
     }
-
-    public override ngOnInit() {
-        super.ngOnInit();
-        this.createArrow();
-
-        this.overlayService.animationStarting.pipe(takeUntil(this.destroy$)).subscribe( () => {
-            if(this._overlayId && this._arrowEl) {
-                this.positionArrow(this.overlayService.getOverlayById(this._overlayId).settings);
-            }
-        });
-    }
-
 
     public override ngOnDestroy() {
         super.ngOnDestroy();
-        this.removeArrow();
+        this._removeArrow();
     }
 
     /**
@@ -166,7 +154,7 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnInit, O
      * @hidden
      * @param force if set to `true`, the animation will be ended.
      */
-    protected stopAnimations(force: boolean = false) {
+    public stopAnimations(force: boolean = false): void {
         const info = this.overlayService.getOverlayById(this._overlayId);
 
         if (!info) return;
@@ -187,52 +175,44 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnInit, O
         }
     }
 
-    public positionArrow(settings?: OverlaySettings) {
-        const pos = settings?.positionStrategy?.settings;
-        if (!pos || !this._arrowEl) return;
+    // TODO: adjust arrow position when start/end placement is used
+    public positionArrow(placement: TooltipPlacement, arrowOffset: number): void {
 
-        const style = this._arrowEl.style;
-        const offset = 4;
+        this._resetArrowPositionStyles();
+        const currentPlacement = first(placement.split('-'));
 
-        // Reset all directions and transforms
-        style.top = '';
-        style.bottom = '';
-        style.left = '';
-        style.right = '';
-        style.transform = '';
+        // The opposite side where the arrow element should render based on the `currentPlacement`
+        const staticSide = {
+            top: 'bottom',
+            right: 'left',
+            bottom: 'top',
+            left: 'right',
+        }[currentPlacement]!;
 
-        if (pos.verticalDirection === VerticalAlignment.Top) {
-            style.bottom = `-${offset}px`;
-            style.left = '50%';
-            style.transform = 'translateX(-50%)';
-        } else if (pos.verticalDirection === VerticalAlignment.Bottom) {
-            style.top = `-${offset}px`;
-            style.left = '50%';
-            style.transform = 'translateX(-50%)';
-        } else if (pos.horizontalDirection === HorizontalAlignment.Left) {
-            style.right = `-${offset}px`;
-            style.top = '50%';
-            style.transform = 'translateY(-50%)';
-        } else if (pos.horizontalDirection === HorizontalAlignment.Right) {
-            style.left = `-${offset}px`;
-            style.top = '50%';
-            style.transform = 'translateY(-50%)';
-        }
+        this._arrowEl.classList.add(`igx-tooltip--${currentPlacement}`);
+
+        Object.assign(this._arrowEl.style, {
+            // left: x != null ? `${roundByDPR(x + arrowOffset)}px` : '',
+            // top: y != null ? `${roundByDPR(y + arrowOffset)}px` : '',
+            [staticSide]: '-4px',
+        });
     }
 
-    private createArrow() {
+    private _createArrow(): void {
         this._arrowEl = document.createElement('div');
-        this._arrowEl.classList.add('igx-tooltip-arrow');
+        this._arrowEl.classList.add('igx-tooltip--arrow');
         this._arrowEl.style.position = 'absolute';
-        this._arrowEl.style.width = '8px';
-        this._arrowEl.style.height = '8px';
-        this._arrowEl.style.backgroundColor = 'inherit';
-        this._arrowEl.style.transform = 'rotate(45deg)';
-        this._arrowEl.style.display = 'block';
         this.element.appendChild(this._arrowEl);
     }
 
-    private removeArrow() {
+    private _resetArrowPositionStyles(): void {
+        this._arrowEl.style.top = '';
+        this._arrowEl.style.bottom = '';
+        this._arrowEl.style.left = '';
+        this._arrowEl.style.right = '';
+    }
+
+    private _removeArrow(): void {
         this._arrowEl.remove();
         this._arrowEl = null;
     }

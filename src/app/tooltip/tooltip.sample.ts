@@ -12,6 +12,8 @@ import {
     IgxIconButtonDirective,
     IgxIconComponent,
     IgxRippleDirective,
+    IgxSelectComponent,
+    IgxSelectItemComponent,
     IgxSliderComponent,
     IgxSwitchComponent,
     IgxTooltipDirective,
@@ -22,7 +24,7 @@ import {
     selector: 'app-tooltip-sample',
     styleUrls: ['tooltip.sample.css'],
     templateUrl: 'tooltip.sample.html',
-    imports: [IgxAvatarComponent, IgxTooltipTargetDirective, IgxTooltipDirective, IgxIconComponent, IgxIconButtonDirective, IgxSwitchComponent, FormsModule, IgxSliderComponent, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardActionsComponent, IgxRippleDirective, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
+    imports: [IgxAvatarComponent, IgxTooltipTargetDirective, IgxTooltipDirective, IgxIconComponent, IgxIconButtonDirective, IgxSwitchComponent, FormsModule, IgxSliderComponent, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardActionsComponent, IgxRippleDirective, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxSelectComponent, IgxSelectItemComponent]
 })
 export class TooltipSampleComponent implements OnInit {
 
@@ -35,6 +37,21 @@ export class TooltipSampleComponent implements OnInit {
         // closeOnOutsideClick: false,
         // modal: false
     };
+
+    public placementPositions = [
+        'top',
+        'top-start',
+        'top-end',
+        'bottom',
+        'bottom-start',
+        'bottom-end',
+        'right',
+        'right-start',
+        'right-end',
+        'left',
+        'left-start',
+        'left-end',
+    ];
 
     public data: any[];
 
