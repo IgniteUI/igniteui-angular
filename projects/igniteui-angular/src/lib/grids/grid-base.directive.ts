@@ -993,6 +993,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     @Output()
     public gridCopy = new EventEmitter<IGridClipboardEvent>();
 
+    /* blazorCSSuppress */
     /**
      * Emitted when the rows are expanded or collapsed.
      *
@@ -4194,7 +4195,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         col.toggleVisibility(args.newValue);
     }
 
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     /**
      * Gets/Sets a list of key-value pairs [row ID, expansion state].
      *
@@ -4212,7 +4213,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this._expansionStates;
     }
 
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     public set expansionStates(value) {
         this._expansionStates = new Map<any, boolean>(value);
         this.expansionStatesChange.emit(this._expansionStates);
