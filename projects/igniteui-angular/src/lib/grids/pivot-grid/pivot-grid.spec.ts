@@ -981,7 +981,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(chips[0].id).toBe('SellerName');
                 expect(chips[0].attributes.getNamedItem('aria-selected').nodeValue).toEqual('true');
                 expect(chips[1].id).toBe('ProductCategory');
-                expect(chips[1].attributes.getNamedItem('aria-selected')).toEqual(null);
+                expect(chips[1].attributes.getNamedItem('aria-selected').nodeValue).toEqual('false');
 
                 let esfSearch = GridFunctions.getExcelFilteringSearchComponent(fixture, excelMenu, 'igx-pivot-grid');
                 let checkBoxes = esfSearch.querySelectorAll('igx-checkbox');
