@@ -464,8 +464,11 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
 
         effect(() => {
             this.initialize();
-            this.setRadioButtons();
-        })
+
+            Promise.resolve().then(() => {
+                this.setRadioButtons();
+            });
+        });
     }
 
     /**
@@ -476,7 +479,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         // The initial value can possibly be set by NgModel and it is possible that
         // the OnInit of the NgModel occurs after the OnInit of this class.
         this._isInitialized.set(true);
-    
+
         if (this.ngControl) {
             this.ngControl.statusChanges
                 .pipe(takeUntil(this.destroy$))
