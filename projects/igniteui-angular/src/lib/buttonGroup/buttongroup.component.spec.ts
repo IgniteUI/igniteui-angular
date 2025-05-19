@@ -408,25 +408,25 @@ describe('IgxButtonGroup', () => {
 
         const radioGroup = fixture.componentInstance.radioGroup;
         const buttonGroup = fixture.componentInstance.buttonGroup;
-        expect(radioGroup.radioButtons.last.checked).toBe(true);
+        expect(radioGroup.radioButtons()[radioGroup.radioButtons().length - 1].checked).toBe(true);
         expect(buttonGroup.buttons[1].selected).toBe(true);
         expect(buttonGroup.buttons[1].nativeElement.classList.contains('igx-button-group__item--selected')).toBe(true);
 
-        radioGroup.radioButtons.first.select();
+        radioGroup.radioButtons()[0].select();
         fixture.detectChanges();
         await wait();
 
-        expect(radioGroup.radioButtons.first.checked).toBe(true);
+        expect(radioGroup.radioButtons()[0].checked).toBe(true);
         expect(buttonGroup.buttons[0].selected).toBe(true);
         expect(buttonGroup.buttons[0].nativeElement.classList.contains('igx-button-group__item--selected')).toBe(true);
         expect(buttonGroup.buttons[1].selected).toBe(false);
         expect(buttonGroup.buttons[1].nativeElement.classList.contains('igx-button-group__item--selected')).toBe(false);
 
-        radioGroup.radioButtons.last.select();
+        radioGroup.radioButtons()[radioGroup.radioButtons().length - 1].select();
         fixture.detectChanges();
         await wait();
 
-        expect(radioGroup.radioButtons.last.checked).toBe(true);
+        expect(radioGroup.radioButtons()[radioGroup.radioButtons().length - 1].checked).toBe(true);
         expect(buttonGroup.buttons[1].selected).toBe(true);
         expect(buttonGroup.buttons[1].nativeElement.classList.contains('igx-button-group__item--selected')).toBe(true);
         expect(buttonGroup.buttons[0].selected).toBe(false);
