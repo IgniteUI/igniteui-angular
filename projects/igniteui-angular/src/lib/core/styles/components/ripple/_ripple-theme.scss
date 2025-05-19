@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
+@use '../../../styles/themes/standalone' as *;
 
 ////
 /// @group themes
@@ -45,23 +46,25 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin ripple($theme) {
-    @include css-vars($theme);
+    @include layer(base) {
+        @include css-vars($theme);
 
-    %igx-ripple-display {
-        display: block;
-        position: absolute;
-        border-radius: border-radius(50%);
-        background: var-get($theme, 'color');
-        pointer-events: none;
-        transform-origin: center;
-        transform: translate3d(0, 0, 0) scale(0);
-        will-change: opacity, transform;
-        opacity: .5;
-        margin: 0 !important;
-        border: none !important;
-    }
+        %igx-ripple-display {
+            display: block;
+            position: absolute;
+            border-radius: border-radius(50%);
+            background: var-get($theme, 'color');
+            pointer-events: none;
+            transform-origin: center;
+            transform: translate3d(0, 0, 0) scale(0);
+            will-change: opacity, transform;
+            opacity: .5;
+            margin: 0 !important;
+            border: none !important;
+        }
 
-    %igx-ripple-wrapper {
-        overflow: hidden;
+        %igx-ripple-wrapper {
+            overflow: hidden;
+        }
     }
 }

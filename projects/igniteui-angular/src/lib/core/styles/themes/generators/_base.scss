@@ -336,13 +336,13 @@
     //     @include chip($chip-theme-map);
     // }
 
-    @if is-used('igx-column-actions', $exclude) {
-        $column-actions-theme-map: column-actions-theme(
-            $schema: $schema,
-        );
-        $column-actions-theme-map: meta.call($theme-handler, $column-actions-theme-map);
-        @include column-actions($column-actions-theme-map);
-    }
+    // @if is-used('igx-column-actions', $exclude) {
+    //     $column-actions-theme-map: column-actions-theme(
+    //         $schema: $schema,
+    //     );
+    //     $column-actions-theme-map: meta.call($theme-handler, $column-actions-theme-map);
+    //     @include column-actions($column-actions-theme-map);
+    // }
 
     @if is-used('igx-combo', $exclude) {
         $combo-theme-map: combo-theme(
@@ -448,13 +448,13 @@
     //     @include grid-toolbar($grid-toolbar-theme-map);
     // }
 
-    @if is-used('igx-pivot-data-selector', $exclude) {
-        $pivot-data-selector-theme-map: pivot-data-selector-theme(
-            $schema: $schema,
-        );
-        $pivot-data-selector-theme-map: meta.call($theme-handler, $pivot-data-selector-theme-map);
-        @include pivot-data-selector($pivot-data-selector-theme-map);
-    }
+    // @if is-used('igx-pivot-data-selector', $exclude) {
+    //     $pivot-data-selector-theme-map: pivot-data-selector-theme(
+    //         $schema: $schema,
+    //     );
+    //     $pivot-data-selector-theme-map: meta.call($theme-handler, $pivot-data-selector-theme-map);
+    //     @include pivot-data-selector($pivot-data-selector-theme-map);
+    // }
 
     @if is-used('igx-highlight', $exclude) {
         $highlight-theme-map: highlight-theme(
@@ -536,21 +536,21 @@
     //     @include paginator($paginator-theme-map);
     // }
 
-    @if is-used('igx-circular-bar', $exclude) {
-        $progress-circular-theme-map: progress-circular-theme(
-            $schema: $schema,
-        );
-        $progress-circular-theme-map: meta.call($theme-handler, $progress-circular-theme-map);
-        @include progress-circular($progress-circular-theme-map);
-    }
+    //@if is-used('igx-circular-bar', $exclude) {
+    //    $progress-circular-theme-map: progress-circular-theme(
+    //        $schema: $schema,
+    //    );
+    //    $progress-circular-theme-map: meta.call($theme-handler, $progress-circular-theme-map);
+    //    @include progress-circular($progress-circular-theme-map);
+    //}
 
-    @if is-used('igx-linear-bar', $exclude) {
-        $progress-linear-theme-map: progress-linear-theme(
-            $schema: $schema,
-        );
-        $progress-linear-theme-map: meta.call($theme-handler, $progress-linear-theme-map);
-        @include progress-linear($progress-linear-theme-map);
-    }
+    //@if is-used('igx-linear-bar', $exclude) {
+    //    $progress-linear-theme-map: progress-linear-theme(
+    //        $schema: $schema,
+    //    );
+    //    $progress-linear-theme-map: meta.call($theme-handler, $progress-linear-theme-map);
+    //    @include progress-linear($progress-linear-theme-map);
+    //}
 
     // @if is-used('igx-radio', $exclude) {
     //     $radio-theme-map: radio-theme(

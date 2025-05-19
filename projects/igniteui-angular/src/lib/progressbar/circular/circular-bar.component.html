@@ -1,10 +1,11 @@
 <svg #svg
      role="progressbar"
      aria-valuemin="0"
+     [ngClass]="{'igx-circular-svg': true, 'igx-circular-svg--indeterminate': indeterminate}"
      [attr.aria-valuemax]="max"
      [attr.aria-valuenow]="value">
-    <svg:circle class="igx-circular-bar__inner" />
-    <svg:circle #circle class="igx-circular-bar__outer"/>
+    <svg:circle class="igx-circular-svg__inner" />
+    <svg:circle #circle class="igx-circular-bar__outer igx-circular-svg__outer"/>
 
     <svg:defs>
         <ng-container
@@ -15,8 +16,8 @@
 
     <ng-template #defaultGradientTemplate>
         <svg:linearGradient [id]="gradientId" gradientTransform="rotate(90)">
-            <stop offset="0%"   class="igx-circular-bar__gradient-start" />
-            <stop offset="100%" class="igx-circular-bar__gradient-end" />
+            <stop offset="0%"   class="igx-circular-svg__gradient-start" />
+            <stop offset="100%" class="igx-circular-svg__gradient-end" />
         </svg:linearGradient>
     </ng-template>
 </svg>
