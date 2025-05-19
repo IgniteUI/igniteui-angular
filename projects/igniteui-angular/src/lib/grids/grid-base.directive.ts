@@ -40,7 +40,7 @@ import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, Pla
 import { GridColumnDataType } from '../data-operations/data-util';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { IForOfDataChangingEventArgs, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
+import { IForOfDataChangeEventArgs, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightService } from '../directives/text-highlight/text-highlight.service';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { IgxGridBodyDirective, RowEditPositionStrategy } from './grid.common';
@@ -1118,7 +1118,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```
      */
     @Output()
-    public dataChanging = new EventEmitter<IForOfDataChangingEventArgs>();
+    public dataChanging = new EventEmitter<IForOfDataChangeEventArgs>();
 
     /**
      * Emitted after the grid's data view is changed because of a data operation, rebinding, etc.
@@ -1129,7 +1129,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```
      */
     @Output()
-    public dataChanged = new EventEmitter<any>();
+    public dataChanged = new EventEmitter<IForOfDataChangeEventArgs>();
 
 
     /**
@@ -3921,7 +3921,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public dataRebinding(event: IForOfDataChangingEventArgs) {
+    public dataRebinding(event: IForOfDataChangeEventArgs) {
         if (event.state.chunkSize == 0) {
             this._shouldRecalcRowHeight = true;
         }
@@ -3931,7 +3931,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public dataRebound(event) {
+    public dataRebound(event: IForOfDataChangeEventArgs) {
         this.selectionService.clearHeaderCBState();
         if (this._shouldRecalcRowHeight) {
             this._shouldRecalcRowHeight = false;
