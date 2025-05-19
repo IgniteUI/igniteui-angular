@@ -217,7 +217,6 @@ $base-scale-size: (
                 @include hide-default();
             }
 
-
             &[type='number'] {
                 -moz-appearance: textfield;
             }
@@ -230,6 +229,21 @@ $base-scale-size: (
             &[type='search']::-webkit-search-cancel-button,
             &[type='search']::-webkit-search-decoration {
                 -webkit-appearance: none;
+            }
+
+            // This is a hack that removes the autofill background and it's essential,
+            // otherwise the background is on top of the floating label in material theme.
+            // The !important flag is because bootstrap theme(and potentially feature themes) is overriding the transition delay.
+            &:-webkit-autofill,
+            &:-webkit-autofill:hover,
+            &:-webkit-autofill:focus,
+            &:-webkit-autofill:active,
+            &:autofill,
+            &:autofill:hover,
+            &:autofill:focus,
+            &:autofill:active, {
+                -webkit-transition-delay: 99999s !important;
+                transition-delay: 99999s !important;
             }
         }
 

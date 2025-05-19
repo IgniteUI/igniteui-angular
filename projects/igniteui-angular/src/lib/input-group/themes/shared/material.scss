@@ -32,6 +32,30 @@ $input-bottom-spacing: rem(6px);
             transform: translateY(-50%);
             margin-block-end: auto;
         }
+
+        // Handle AutoFill START
+        igx-input-group:not(.igx-input-group--focused, .igx-input-group--filled):has(input:-webkit-autofill, input:autofill) {
+            .igx-input-group__label {
+                @include type-style(caption);
+            }
+        }
+
+        .igx-input-group--base:not(.igx-input-group--focused, .igx-input-group--filled):has(input:-webkit-autofill, input:autofill) {
+            .igx-input-group__label {
+                @extend %box-floating-label;
+            }
+        }
+
+        .igx-input-group--border:not(.igx-input-group--focused, .igx-input-group--filled):has(input:-webkit-autofill, input:autofill) {
+            .igx-input-group__notch {
+                border-block-start-color: transparent;
+            }
+
+            .igx-input-group__label {
+                @extend %border-textarea-floating-label;
+            }
+        }
+        // Handle AutoFill END
     }
 }
 
@@ -82,7 +106,6 @@ $input-bottom-spacing: rem(6px);
     @include e(hint) {
         grid-row: var(--_hint-row);
     }
-
 
     @include m(focused) {
         @include e(label) {
