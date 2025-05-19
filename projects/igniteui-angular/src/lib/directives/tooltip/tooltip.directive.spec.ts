@@ -575,6 +575,29 @@ describe('IgxTooltip', () => {
             expect(targetOne.hideTooltip).not.toHaveBeenCalled();
             expect(targetTwo.hideTooltip).toHaveBeenCalledTimes(1);
         }));
+
+        it('should not emit tooltipHide event multiple times', fakeAsync(() => {
+            spyOn(targetOne.tooltipHide, 'emit');
+            spyOn(targetTwo.tooltipHide, 'emit');
+
+            hoverElement(buttonOne);
+            flush();
+
+            unhoverElement(buttonOne);
+            tick(500);
+            expect(targetOne.tooltipHide.emit).toHaveBeenCalledTimes(1);
+            expect(targetTwo.tooltipHide.emit).not.toHaveBeenCalled();
+            flush();
+
+            hoverElement(buttonTwo);
+            flush();
+
+            unhoverElement(buttonTwo);
+            tick(500);
+            expect(targetOne.tooltipHide.emit).toHaveBeenCalledTimes(1);
+            expect(targetTwo.tooltipHide.emit).toHaveBeenCalledTimes(1);
+            flush();
+        }))
     });
 
     describe('Tooltip integration', () => {
