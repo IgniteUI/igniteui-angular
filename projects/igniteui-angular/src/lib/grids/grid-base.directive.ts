@@ -6736,6 +6736,12 @@ export abstract class IgxGridBaseDirective implements GridType,
             .subscribe((change: QueryList<IgxColumnComponent>) => {
                 this.onColumnsChanged(change);
             });
+
+        this.immediateColumns.changes
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((change: QueryList<IgxColumnComponent>) => {
+                this.resetColumns(change);
+            });
     }
 
     protected getColumnList() {
@@ -6746,6 +6752,15 @@ export abstract class IgxGridBaseDirective implements GridType,
             });
         }
         return this._columnList;
+    }
+
+    protected resetColumns(change: QueryList<IgxColumnComponent>) {
+        const diff = this.columnListDiffer.diff(change);
+        if (diff) {
+            delete this._columnList;
+            this.initColumns(this.getColumnList(), (col: IgxColumnComponent) => this.columnInit.emit(col));
+            this.resetCaches();
+        }
     }
 
     private addColumnsFromQueryList(col: IgxColumnComponent) {
@@ -6813,9 +6828,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             let removed = false;
             let pinning = false;
             diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                if (this.getColumnList().indexOf(record.item) === -1) {
-                    return;
-                }
                 added = true;
                 if (record.item.pinned) {
                     this._pinnedColumns.push(record.item);
@@ -6825,15 +6837,11 @@ export abstract class IgxGridBaseDirective implements GridType,
                 }
             });
 
-            this.initColumns(this.getColumnList(), (col: IgxColumnComponent) => this.columnInit.emit(col));
             if (pinning) {
                 this.initPinning();
             }
 
             diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent | IgxColumnGroupComponent>) => {
-                if (this.getColumnList().indexOf(record.item) === -1) {
-                    return;
-                }
                 const isColumnGroup = record.item instanceof IgxColumnGroupComponent;
                 if (!isColumnGroup) {
                     // Clear Grouping
@@ -6858,7 +6866,6 @@ export abstract class IgxGridBaseDirective implements GridType,
                 removed = true;
             });
 
-            this.resetCaches();
 
             if (added || removed) {
                 this.onColumnsAddedOrRemoved();
