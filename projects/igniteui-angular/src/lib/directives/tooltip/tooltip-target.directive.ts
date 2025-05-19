@@ -133,8 +133,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this._sticky = value;
 
         if (changed) {
-            this._evaluateCloseButtonState();
-            this.target.role = value ? "status" : "tooltip"
+            this._ensureTooltipTargetOwnership();
         }
     };
 
@@ -167,7 +166,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     @Input('closeButtonTemplate')
     public set closeTemplate(value: TemplateRef<any>) {
         this._closeTemplate = value;
-        this._evaluateCloseButtonState();
+        this._ensureTooltipTargetOwnership();
     }
     public get closeTemplate(): TemplateRef<any> | undefined {
         return this._closeTemplate;
@@ -308,6 +307,10 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     @HostListener('mouseenter')
     public onMouseEnter() {
         if (this.tooltipDisabled) {
+            return;
+        }
+
+        if (!this.target.collapsed && this.target.tooltipTarget.sticky) {
             return;
         }
 
@@ -467,9 +470,11 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
 
     private _hideOnInteraction(): void {
-        if (!this.sticky) {
-            this._setAutoHide();
+        if (this.target?.tooltipTarget?.sticky) {
+            return;
         }
+
+        this._setAutoHide();
     }
 
     private _setAutoHide(): void {
@@ -499,46 +504,58 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         if (!this.target.tooltipTarget) {
             this.target.tooltipTarget = this;
         }
-
         if (this.target.tooltipTarget !== this) {
+            if (this.target.tooltipTarget.sticky) {
+                this.target.tooltipTarget._removeCloseButton();
+            }
+
             clearTimeout(this.target.timeoutId);
             this.target.stopAnimations(true);
+
             this.target.tooltipTarget = this;
             this._isForceClosed = true;
+
+            this._evaluateStickyState();
         }
     }
 
+    private _ensureTooltipTargetOwnership(): void {
+        if (!this.target.tooltipTarget) {
+            this.target.tooltipTarget = this;
+        }
 
-    private _evaluateCloseButtonState(): void {
-        if (!this.target || !(this.target instanceof IgxTooltipDirective)) {
+        if(this.target.tooltipTarget !== this){
             return;
         }
 
+        this._removeCloseButton();
+        this._evaluateStickyState();
+    }
+
+    private _evaluateStickyState(): void {
         if (this._sticky) {
-            this._removeCloseButton();
             this._createCloseTemplate(this._closeTemplate);
-        } else {
-            this._removeCloseButton();
+            this.target.role = "status"
+        } else if (!this.sticky) {
+            this.target.role = "tooltip"
         }
     }
 
 
+
     private _createCloseTemplate(template?: TemplateRef<any> | undefined) {
-        if(this.target instanceof IgxTooltipDirective) {
+        this._closeTemplate = template;
 
-            this._closeTemplate = template;
+        const componentRef = this._viewContainerRef.createComponent(IgxTooltipCloseButtonComponent);
+        this._closeButtonRef = componentRef;
 
-            const componentRef = this._viewContainerRef.createComponent(IgxTooltipCloseButtonComponent);
-            this._closeButtonRef = componentRef;
+        componentRef.instance.customTemplate = template;
+        componentRef.instance.clicked.pipe(takeUntil(this._destroy$)).subscribe(() => {
+            this._hideTooltip(true);
+        });
 
-            componentRef.instance.customTemplate = template;
-            componentRef.instance.clicked.pipe(takeUntil(this._destroy$)).subscribe(() => {
-                this.hideTooltip();
-            });
-
-            if (this.target.element instanceof HTMLElement) {
-                this._renderer.appendChild(this.target.element, componentRef.location.nativeElement);
-            }
+        if (this.target.element instanceof HTMLElement) {
+            this._renderer.appendChild(this.target.element, componentRef.location.nativeElement);
         }
     }
 

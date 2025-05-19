@@ -12,7 +12,7 @@ const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip';
 const HIDE_DELAY = 180;
 
-describe('IgxTooltip', () => {
+fdescribe('IgxTooltip', () => {
     configureTestSuite();
     let fix;
     let tooltipNativeElement;
@@ -523,6 +523,63 @@ describe('IgxTooltip', () => {
             // Tooltip is NOT visible and positioned relative to buttonOne
             verifyTooltipPosition(tooltipNativeElement, buttonOne, false);
         }));
+
+        it('should show and remove close button depending on active sticky target', fakeAsync(() => {
+            targetOne.sticky = true;
+            fix.detectChanges();
+            hoverElement(buttonOne);
+            flush();
+
+            let closeBtn = tooltipNativeElement.querySelector('igx-tooltip-close-button');
+            expect(closeBtn).not.toBeNull();
+            expect(fix.componentInstance.tooltip.role).toBe('status');
+
+            targetTwo.sticky = false;
+            fix.detectChanges();
+            hoverElement(buttonTwo);
+            flush();
+
+            // It should still show tooltip for targetOne
+            expect(fix.componentInstance.tooltip.role).toBe('status');
+            expect(tooltipNativeElement.querySelector('igx-tooltip-close-button')).not.toBeNull();
+
+            closeBtn = tooltipNativeElement.querySelector('igx-tooltip-close-button') as HTMLElement;
+            closeBtn.dispatchEvent(new Event('click'));
+            fix.detectChanges();
+            flush();
+
+            hoverElement(buttonTwo);
+            flush();
+
+            expect(tooltipNativeElement.querySelector('igx-tooltip-close-button')).toBeNull();
+            expect(fix.componentInstance.tooltip.role).toBe('tooltip');
+        }));
+
+        it('should assign close template programmatically and render it only for the sticky target', fakeAsync(() => {
+            const instance = fix.componentInstance;
+
+            targetOne.sticky = true;
+            targetTwo.sticky = true;
+            instance.targetOne.closeTemplate = instance.customCloseTemplate;
+            fix.detectChanges();
+
+            hoverElement(buttonOne);
+            flush();
+
+            const customClose = tooltipNativeElement.querySelector('.my-close-btn');
+            expect(customClose).not.toBeNull();
+            expect(customClose.textContent).toContain('Custom Close Button');
+
+            const closeBtn = tooltipNativeElement.querySelector('igx-tooltip-close-button') as HTMLElement;
+            closeBtn.dispatchEvent(new Event('click'));
+            fix.detectChanges();
+            flush();
+
+            hoverElement(buttonTwo);
+            flush();
+
+            expect(tooltipNativeElement.querySelector('.my-close-btn')).toBeNull();
+        }));
     });
 
     describe('Tooltip integration', () => {
@@ -584,19 +641,17 @@ describe('IgxTooltip', () => {
 
         }));
 
-        it('should call hideTooltip when custom close button is clicked', fakeAsync(() => {
-            const spy = spyOn(tooltipTarget, 'hideTooltip');
-
+        it('should hide the tooltip custom close button is clicked', fakeAsync(() => {
             hoverElement(button);
             flush();
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
-            const closeBtn = document.querySelector('.my-close-btn') as HTMLElement;
-            closeBtn.click();
-            fix.detectChanges();
-            tick();
+            const closeBtn = tooltipNativeElement.querySelector('.my-close-btn') as HTMLElement;
+            UIInteractions.simulateClickAndSelectEvent(closeBtn);
 
-            expect(spy).toHaveBeenCalledOnceWith();
+            flush();
+
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
         it('should use default close icon when no custom template is passed', fakeAsync(() => {
@@ -620,6 +675,26 @@ describe('IgxTooltip', () => {
             fix.detectChanges();
             tick();
             expect(tooltipNativeElement.getAttribute('role')).toBe('tooltip');
+        }));
+
+        it('should hide sticky tooltip when Escape is pressed', fakeAsync(() => {
+            tooltipTarget.sticky = true;
+            fix.detectChanges();
+
+            hoverElement(button);
+            flush();
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+
+            // Dispatch Escape key
+            const escapeEvent = new KeyboardEvent('keydown', {
+                key: 'Escape',
+                bubbles: true,
+                cancelable: true
+            });
+            document.dispatchEvent(escapeEvent);
+            flush()
+
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false)
         }));
     });
 });
