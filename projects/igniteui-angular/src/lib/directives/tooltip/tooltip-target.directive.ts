@@ -340,6 +340,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     public showTooltip() {
         clearTimeout(this.target.timeoutId);
 
+        this.target.tooltipTarget = this;
+
         if (!this.target.collapsed) {
             //  if close animation has started finish it, or close the tooltip with no animation
             this.target.forceClose(this.mergedOverlaySettings);

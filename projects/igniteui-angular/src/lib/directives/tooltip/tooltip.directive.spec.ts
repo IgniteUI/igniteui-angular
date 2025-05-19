@@ -583,9 +583,12 @@ describe('IgxTooltip', () => {
             hoverElement(buttonOne);
             flush();
 
+            const tooltipHideArgsTargetOne = { target: targetOne, tooltip: fix.componentInstance.tooltip, cancel: false };
+            const tooltipHideArgsTargetTwo = { target: targetTwo, tooltip: fix.componentInstance.tooltip, cancel: false };
+
             unhoverElement(buttonOne);
             tick(500);
-            expect(targetOne.tooltipHide.emit).toHaveBeenCalledTimes(1);
+            expect(targetOne.tooltipHide.emit).toHaveBeenCalledOnceWith(tooltipHideArgsTargetOne);
             expect(targetTwo.tooltipHide.emit).not.toHaveBeenCalled();
             flush();
 
@@ -594,10 +597,10 @@ describe('IgxTooltip', () => {
 
             unhoverElement(buttonTwo);
             tick(500);
-            expect(targetOne.tooltipHide.emit).toHaveBeenCalledTimes(1);
-            expect(targetTwo.tooltipHide.emit).toHaveBeenCalledTimes(1);
+            expect(targetOne.tooltipHide.emit).toHaveBeenCalledOnceWith(tooltipHideArgsTargetOne);
+            expect(targetTwo.tooltipHide.emit).toHaveBeenCalledOnceWith(tooltipHideArgsTargetTwo);
             flush();
-        }))
+        }));
     });
 
     describe('Tooltip integration', () => {
