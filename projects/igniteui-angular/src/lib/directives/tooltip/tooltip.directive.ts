@@ -202,10 +202,6 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
         this._arrowEl = document.createElement('div');
         this._arrowEl.classList.add('igx-tooltip--arrow');
         this._arrowEl.style.position = 'absolute';
-        this._arrowEl.style.width = '8px';
-        this._arrowEl.style.height = '8px';
-        this._arrowEl.style.transform = 'rotate(45deg)';
-        this._arrowEl.style.background = 'inherit';
         this.element.appendChild(this._arrowEl);
     }
 
