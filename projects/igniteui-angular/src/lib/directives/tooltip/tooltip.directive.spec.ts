@@ -12,7 +12,7 @@ const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip';
 const HIDE_DELAY = 180;
 
-fdescribe('IgxTooltip', () => {
+describe('IgxTooltip', () => {
     configureTestSuite();
     let fix;
     let tooltipNativeElement;
