@@ -208,6 +208,10 @@
             cursor: pointer;
             user-select: none;
             transition: color .15s $out-quad;
+        }
+
+        >igx-icon,
+        >igc-icon {
             color: var-get($theme, 'idle-icon-color');
 
             &:hover {
