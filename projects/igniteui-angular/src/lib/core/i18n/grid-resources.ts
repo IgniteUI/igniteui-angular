@@ -109,6 +109,12 @@ export interface IGridResourceStrings {
     igx_grid_advanced_filter_value_placeholder?: string;
     igx_grid_advanced_filter_query_value_placeholder?: string;
     igx_grid_advanced_filter_switch_group?: string;
+    igx_grid_advanced_filter_dialog_title? : string;
+    igx_grid_advanced_filter_dialog_message? : string;
+    igx_grid_advanced_filter_dialog_checkbox_text? : string;
+    igx_grid_advanced_filter_drop_ghost_text?: string;
+    igx_grid_advanced_filter_select_entity?: string;
+    igx_grid_advanced_filter_select_return_field_single?: string;
     igx_grid_pinned_row_indicator?: string;
     igx_grid_hiding_check_all_label?: string;
     igx_grid_hiding_uncheck_all_label?: string;
@@ -283,6 +289,12 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_advanced_filter_column_placeholder: 'Select column',
     igx_grid_advanced_filter_value_placeholder: 'Value',
     igx_grid_advanced_filter_query_value_placeholder: 'Sub-query results',
+    igx_grid_advanced_filter_select_entity: 'Select entity',
+    igx_grid_advanced_filter_select_return_field_single: 'Select return field',
+    igx_grid_advanced_filter_dialog_title: 'Confirmation',
+    igx_grid_advanced_filter_dialog_message: 'By changing the entity, you will lose your current settings. Are you sure you want to do that?',
+    igx_grid_advanced_filter_dialog_checkbox_text: 'Do not show this dialog again',
+    igx_grid_advanced_filter_drop_ghost_text: 'Drop here to insert',
     igx_grid_pinned_row_indicator: 'Pinned',
     igx_grid_hiding_check_all_label: 'Show All',
     igx_grid_hiding_uncheck_all_label: 'Hide All',

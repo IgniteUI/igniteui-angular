@@ -1862,6 +1862,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 igx_grid_advanced_filter_delete_filters: 'My delete filters',
                 igx_grid_advanced_filter_from_label: 'My from',
                 igx_grid_advanced_filter_query_value_placeholder: 'My sub-query results',
+                igx_grid_advanced_filter_select_entity: 'Select my entity',
+                igx_grid_advanced_filter_select_return_field_single: 'Select my return fields',
             };
 
             hgrid.resourceStrings = {
@@ -1886,6 +1888,9 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const entitySelect = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 1);
             const selectLabel = entitySelect.previousElementSibling as HTMLSpanElement;
             expect(selectLabel.innerText).toBe('My from');
+            expect(entitySelect.querySelector('input').placeholder).toBe('Select my entity');
+            const fieldsCombo = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, 1);
+            expect(fieldsCombo.querySelector('input').placeholder).toBe('Select my return fields');
         }));
     });
 });
