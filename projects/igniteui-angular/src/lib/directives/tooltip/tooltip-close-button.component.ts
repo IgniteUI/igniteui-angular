@@ -21,9 +21,6 @@ export class IgxTooltipCloseButtonComponent {
     @Output()
     public clicked = new EventEmitter<void>();
 
-    @HostBinding('class')
-    private _defaultClass = 'igx-tooltip-close-button';
-
     @HostListener('click')
     public handleClick() {
         this.clicked.emit();

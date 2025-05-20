@@ -79,7 +79,7 @@
     $color-border: rem(4px) solid var-get($theme, 'background');
 
     %tooltip-display {
-        display: inline-flex;
+        display: flex;
         align-items: flex-start;
         text-align: start;
         background: var-get($theme, 'background');
@@ -94,6 +94,10 @@
 
         igx-icon {
             --component-size: 1;
+        }
+
+        igx-tooltip-close-button {
+            display: flex;
         }
     }
 
