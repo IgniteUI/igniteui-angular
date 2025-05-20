@@ -641,9 +641,9 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
             const dropdownItems = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement);
             expect(dropdownItems.length).toBe(4);
-            expect((dropdownItems[0] as HTMLElement).innerText).toBe('ID');
+            expect((dropdownItems[0] as HTMLElement).innerText).toBe('HeaderID');
             expect((dropdownItems[1] as HTMLElement).innerText).toBe('ProductName');
-            expect((dropdownItems[2] as HTMLElement).innerText).toBe('AnotherField');
+            expect((dropdownItems[2] as HTMLElement).innerText).toBe('Another Field');
             expect((dropdownItems[3] as HTMLElement).innerText).toBe('ReleaseTime');
         }));
 
@@ -1360,7 +1360,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             QueryBuilderFunctions.clickQueryBuilderColumnSelect(fix);
             fix.detectChanges();
             const dropdownValues = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
-            const expectedValues = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'AnotherField', 'DateTimeCreated'];
+            const expectedValues = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'Another Field', 'DateTimeCreated'];
             expect(expectedValues).toEqual(dropdownValues);
         }));
     });
