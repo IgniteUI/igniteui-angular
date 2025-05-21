@@ -4,7 +4,6 @@ import { waitForAsync, TestBed, fakeAsync, ComponentFixture, tick } from '@angul
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective } from '../expansion-panel/public_api';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IAccordionCancelableEventArgs, IAccordionEventArgs, IgxAccordionComponent } from './accordion.component';
 import { slideInLeft, slideOutRight } from 'igniteui-angular/animations';
@@ -14,10 +13,9 @@ const PANEL_TAG = 'IGX-EXPANSION-PANEL';
 const ACCORDION_TAG = 'IGX-ACCORDION';
 
 describe('Rendering Tests', () => {
-    configureTestSuite();
     let fix: ComponentFixture<IgxAccordionSampleTestComponent>;
     let accordion: IgxAccordionComponent;
-    beforeAll(
+    beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [

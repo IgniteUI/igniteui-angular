@@ -3,7 +3,6 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent, IgxTooltipWithCloseButtonComponent } from '../../test-utils/tooltip-components.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../services/public_api';
 import { IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipTargetDirective } from './tooltip-target.directive';
@@ -13,13 +12,12 @@ const TOOLTIP_CLASS = 'igx-tooltip';
 const HIDE_DELAY = 180;
 
 describe('IgxTooltip', () => {
-    configureTestSuite();
     let fix;
     let tooltipNativeElement;
     let tooltipTarget: IgxTooltipTargetDirective;
     let button;
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -38,7 +36,6 @@ describe('IgxTooltip', () => {
     });
 
     describe('Single target with single tooltip', () => {
-        // configureTestSuite();
         beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTooltipSingleTargetComponent);
             fix.detectChanges();
@@ -239,8 +236,20 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
+        it('IgxTooltip is hidden when its target is destroyed', fakeAsync(() => {
+            hoverElement(button);
+            flush();
+
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+            
+            fix.componentInstance.showButton = false;
+            fix.detectChanges();
+            flush();
+
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+        }));
+
         describe('Tooltip events', () => {
-            // configureTestSuite();
             it('should emit the proper events when hovering/unhovering target', fakeAsync(() => {
                 spyOn(tooltipTarget.tooltipShow, 'emit');
                 spyOn(tooltipTarget.tooltipHide, 'emit');
@@ -347,7 +356,6 @@ describe('IgxTooltip', () => {
         });
 
         describe('Tooltip touch', () => {
-            // configureTestSuite();
             it('IgxTooltip is shown/hidden when touching/untouching its target', fakeAsync(() => {
                 touchElement(button);
                 flush();
@@ -416,7 +424,6 @@ describe('IgxTooltip', () => {
     });
 
     describe('Plain string tooltip input', () => {
-        // configureTestSuite();
         beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTooltipPlainStringComponent);
             fix.detectChanges();
@@ -445,7 +452,6 @@ describe('IgxTooltip', () => {
     });
 
     describe('Multiple targets with single tooltip', () => {
-        // configureTestSuite();
         let targetOne: IgxTooltipTargetDirective;
         let targetTwo: IgxTooltipTargetDirective;
         let buttonOne;
@@ -708,7 +714,7 @@ const touchElement = (element) => element.nativeElement.dispatchEvent(new TouchE
 const verifyTooltipVisibility = (tooltipNativeElement, tooltipTarget, shouldBeVisible: boolean) => {
     expect(tooltipNativeElement.classList.contains(TOOLTIP_CLASS)).toBe(shouldBeVisible);
     expect(tooltipNativeElement.classList.contains(HIDDEN_TOOLTIP_CLASS)).not.toBe(shouldBeVisible);
-    expect(tooltipTarget.tooltipHidden).not.toBe(shouldBeVisible);
+    expect(tooltipTarget?.tooltipHidden).not.toBe(shouldBeVisible);
 };
 
 const verifyTooltipPosition = (tooltipNativeElement, actualTarget, shouldBeAligned: boolean) => {
