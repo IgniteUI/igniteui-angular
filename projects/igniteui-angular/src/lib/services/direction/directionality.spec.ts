@@ -9,10 +9,10 @@ interface FakeDoc {
 
 describe('IgxDirectionality', () => {
     describe('DI', () => {
-        beforeAll(waitForAsync(() =>
+        beforeEach(waitForAsync(() =>
             TestBed.configureTestingModule({
-    imports: [InjectsIgxDirectionalityComponent]
-}).compileComponents()
+                imports: [InjectsIgxDirectionalityComponent]
+            }).compileComponents()
         ));
 
         it('should inject the document through the injectionToken properly', () => {

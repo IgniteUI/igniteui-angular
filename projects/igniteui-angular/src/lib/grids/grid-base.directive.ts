@@ -26,8 +26,8 @@ import {
     OnInit,
     Optional,
     Output,
-    QueryList,
     TemplateRef,
+    QueryList,
     ViewChild,
     ViewChildren,
     ViewContainerRef,
@@ -995,13 +995,25 @@ export abstract class IgxGridBaseDirective implements GridType,
     public gridCopy = new EventEmitter<IGridClipboardEvent>();
 
     /**
-     * @hidden @internal
+     * Emitted when the rows are expanded or collapsed.
+     *
+     * @example
+     * ```html
+     * <igx-grid [data]="employeeData" (expansionStatesChange)="expansionStatesChange($event)" [autoGenerate]="true"></igx-grid>
+     * ```
      */
     @Output()
     public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
 
     /* blazorInclude */
-    /** @hidden @internal */
+    /**
+     * Emitted when the rows are selected or deselected.
+     *
+     * @example
+     * ```html
+     * <igx-grid [data]="employeeData" (selectedRowsChange)="selectedRowsChange($event)" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
     @Output()
     public selectedRowsChange = new EventEmitter<any[]>();
 
@@ -1039,7 +1051,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     public rowPinned = new EventEmitter<IPinRowEventArgs>();
 
     /**
-     * Emmited when the active node is changed.
+     * Emitted when the active node is changed.
      *
      * @example
      * ```

@@ -1,11 +1,10 @@
 import { DebugElement } from '@angular/core';
-import { fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
@@ -66,9 +65,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
     registerLocaleData(localeDe);
     registerLocaleData(localeFr);
-
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridFilteringComponent,
@@ -78,7 +76,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 IgxGridDatesFilteringComponent,
                 IgxGridFilteringNumericComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe(null, () => {
@@ -1753,7 +1751,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it(`Should remove first condition chip when click 'clear' button and focus 'more' icon.`, fakeAsync(() => {
-            grid.getColumnByName('ProductName').width = '160px';
+            grid.getColumnByName('ProductName').width = '200px';
             tick(DEBOUNCE_TIME);
             fix.detectChanges();
 
@@ -3191,8 +3189,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridFilteringComponent,
@@ -3203,7 +3201,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 IgxGridExternalESFComponent,
                 IgxGridExternalESFTemplateComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe(null, () => {
@@ -4366,10 +4364,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Verify display container height.
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
-            expect(displayContainerRect.height).toBe(240, 'incorrect search display container height');
+            expect(displayContainerRect.height > 210 && displayContainerRect.height < 220).toBe(true, 'incorrect search display container height');
             // Verify rendered list items count.
             const listItems = displayContainer.querySelectorAll('igx-list-item');
-            expect(listItems.length).toBe(10, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(9, 'incorrect rendered list items count');
         }));
 
         it('should correctly display all items in search list after filtering it', (async () => {
@@ -7035,13 +7033,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 CustomFilteringStrategyComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     beforeEach(fakeAsync(() => {

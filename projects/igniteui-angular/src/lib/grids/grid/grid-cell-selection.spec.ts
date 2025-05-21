@@ -1,7 +1,6 @@
-import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     SelectionWithScrollsComponent,
     SelectionWithTransactionsComponent,
@@ -20,8 +19,8 @@ import { DropPosition } from '../moving/moving.service';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
 describe('IgxGrid - Cell selection #grid', () => {
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 SelectionWithScrollsComponent,
@@ -29,7 +28,7 @@ describe('IgxGrid - Cell selection #grid', () => {
                 CellSelectionNoneComponent,
                 CellSelectionSingleComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('Base', () => {
