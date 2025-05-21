@@ -1,9 +1,8 @@
 import { Component, ViewChild, DebugElement, QueryList, TemplateRef } from '@angular/core';
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { DataParent, SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { Point } from '../../services/public_api';
@@ -59,14 +58,16 @@ describe('Row Drag Tests', () => {
                 let rows: IgxRowDirective[];
                 let dragRows: DebugElement[];
                 let rowToDrag: IgxRowDirective;
-                configureTestSuite((() => {
-                    return TestBed.configureTestingModule({
+
+                beforeEach(waitForAsync(() => {
+                    TestBed.configureTestingModule({
                         imports: [
                             NoopAnimationsModule,
                             IgxGridRowDraggableComponent
                         ]
-                    });
+                    }).compileComponents();
                 }));
+
                 beforeEach(() => {
                     fixture = TestBed.createComponent(IgxGridRowDraggableComponent);
                     grid = fixture.componentInstance.instance;
@@ -407,13 +408,14 @@ describe('Row Drag Tests', () => {
                 let grid: IgxGridComponent;
                 let rows: IgxRowDirective[];
                 let dragRows: DebugElement[];
-                configureTestSuite((() => {
-                    return TestBed.configureTestingModule({
+
+                beforeEach(waitForAsync(() => {
+                    TestBed.configureTestingModule({
                         imports: [
                             NoopAnimationsModule,
                             IgxGridRowCustomGhostDraggableComponent
                         ]
-                    });
+                    }).compileComponents();
                 }));
                 beforeEach(() => {
                     fixture = TestBed.createComponent(IgxGridRowCustomGhostDraggableComponent);
@@ -492,13 +494,14 @@ describe('Row Drag Tests', () => {
             let dragGridRows: IgxRowDirective[];
             let dropGridRows: IgxRowDirective[];
             let dragRows: DebugElement[];
-            configureTestSuite((() => {
-                return TestBed.configureTestingModule({
+
+            beforeEach(waitForAsync(() => {
+                TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         IgxGridFeaturesRowDragComponent
                     ]
-                });
+                }).compileComponents();
             }));
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxGridFeaturesRowDragComponent);
@@ -944,14 +947,15 @@ describe('Row Drag Tests', () => {
         let dragGrid: IgxHierarchicalGridComponent;
         let dragRows: DebugElement[];
         let pointerMoveToDropEvent: PointerEvent;
-        configureTestSuite((() => {
-            return TestBed.configureTestingModule({
+
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxHierarchicalGridTestComponent,
                     IgxHierarchicalGridCustomGhostTestComponent
                 ]
-            });
+            }).compileComponents();
         }));
         it('should be able to drag row on every hierarchical level', () => {
             fixture = TestBed.createComponent(IgxHierarchicalGridTestComponent);
@@ -1093,13 +1097,14 @@ describe('Row Drag Tests', () => {
         let dragGrid: IgxTreeGridComponent;
         let dragRows: DebugElement[];
         let pointerMoveToDropEvent: PointerEvent;
-        configureTestSuite((() => {
-            return TestBed.configureTestingModule({
+
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxTreeGridTestComponent
                 ]
-            });
+            }).compileComponents();
         }));
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxTreeGridTestComponent);

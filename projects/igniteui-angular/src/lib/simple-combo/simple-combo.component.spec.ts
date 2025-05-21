@@ -12,7 +12,6 @@ import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxInputState, IgxLabelDirective } from '../input-group/public_api';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, ConnectedPositioningStrategy } from '../services/public_api';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxSimpleComboComponent, ISimpleComboSelectionChangingEventArgs } from './public_api';
 import { IgxGridComponent } from '../grids/grid/grid.component';
@@ -37,8 +36,6 @@ const CSS_CLASS_COMBO_INPUTGROUP = 'igx-input-group__input';
 const CSS_CLASS_INPUTGROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
-const CSS_CLASS_ITEM = 'igx-drop-down__item';
-const CSS_CLASS_HEADER_ITEM = 'igx-drop-down__header';
 const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const defaultDropdownItemHeight = 40;
@@ -50,8 +47,6 @@ describe('IgxSimpleCombo', () => {
     let input: DebugElement;
     let reactiveForm: NgForm;
     let reactiveControl: any;
-
-    configureTestSuite();
 
     describe('Unit tests: ', () => {
         const data = ['Item1', 'Item2', 'Item3', 'Item4', 'Item5', 'Item6', 'Item7'];
@@ -77,6 +72,11 @@ describe('IgxSimpleCombo', () => {
         mockSelection.get.and.returnValue(new Set([]));
         const platformUtil = null;
         const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
+        jasmine.getEnv().allowRespy(true);
+
+        afterAll(() => {
+            jasmine.getEnv().allowRespy(false);
+        });
 
         it('should properly call dropdown methods on toggle', () => {
             combo = new IgxSimpleComboComponent(
@@ -552,7 +552,7 @@ describe('IgxSimpleCombo', () => {
     });
 
     describe('Initialization and rendering tests: ', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -938,7 +938,7 @@ describe('IgxSimpleCombo', () => {
     });
 
     describe('Binding tests: ', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -1106,7 +1106,7 @@ describe('IgxSimpleCombo', () => {
 
     describe('Keyboard navigation and interactions', () => {
         let dropdown: IgxComboDropDownComponent;
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -1915,8 +1915,6 @@ describe('IgxSimpleCombo', () => {
         });
 
         it('should not change selection when selectionChanging event is canceled', () => {
-            spyOn(combo.selectionChanging, 'emit').and.callThrough();
-
             fixture.detectChanges();
 
             combo.select('Connecticut');
@@ -1952,7 +1950,6 @@ describe('IgxSimpleCombo', () => {
 
 
         it('should preserved the input value of the combo when selectionChanging event is canceled', () => {
-            spyOn(combo.selectionChanging, 'emit').and.callThrough();
             fixture.detectChanges();
 
             const comboInput = fixture.debugElement.query(By.css(`.igx-input-group__input`));
@@ -2144,7 +2141,7 @@ describe('IgxSimpleCombo', () => {
     describe('Form control tests: ', () => {
         describe('Template form tests: ', () => {
             let inputGroupRequired: DebugElement;
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
@@ -2403,7 +2400,7 @@ describe('IgxSimpleCombo', () => {
             }));
         });
         describe('Reactive form tests: ', () => {
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
@@ -2695,7 +2692,7 @@ describe('IgxSimpleCombo', () => {
     });
 
     describe('Selection tests: ', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -2829,7 +2826,7 @@ describe('IgxSimpleCombo', () => {
     describe('Integration', () => {
         let grid: IgxGridComponent;
 
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
