@@ -147,7 +147,7 @@
     $search-hover-elevation: map.get($input-group-schema, 'search-hover-elevation');
     $search-disabled-elevation: map.get($input-group-schema, 'search-disabled-elevation');
 
-    @if $variant == 'material' {
+    @if $variant == 'material' and $box-background != transparent {
         @if not($box-background-hover) and $box-background {
             $box-background-hover: var(--box-background);
         }
@@ -296,73 +296,74 @@
     }
 
     //material search input
+    @if $search-background != transparent {
+        @if not($placeholder-color) and $search-background {
+            $placeholder-color: hsla(from adaptive-contrast(var(--search-background)) h s l / 0.6);
+        }
 
-    @if not($placeholder-color) and $search-background {
-        $placeholder-color: hsla(from adaptive-contrast(var(--search-background)) h s l / 0.6);
-    }
+        @if not($hover-placeholder-color) and $placeholder-color {
+            $hover-placeholder-color: var(--placeholder-color);
+        }
 
-    @if not($hover-placeholder-color) and $placeholder-color {
-        $hover-placeholder-color: var(--placeholder-color);
-    }
+        @if not($idle-secondary-color) and $placeholder-color {
+            $idle-secondary-color: var(--placeholder-color);
+        }
 
-    @if not($idle-secondary-color) and $placeholder-color {
-        $idle-secondary-color: var(--placeholder-color);
-    }
+        @if not($idle-text-color) and $search-background {
+            $idle-text-color: adaptive-contrast(var(--search-background));
+        }
 
-    @if not($idle-text-color) and $search-background {
-        $idle-text-color: adaptive-contrast(var(--search-background));
-    }
+        @if not($focused-secondary-color) and $search-background {
+            $focused-secondary-color: adaptive-contrast(var(--search-background));
+        }
 
-    @if not($focused-secondary-color) and $search-background {
-        $focused-secondary-color: adaptive-contrast(var(--search-background));
-    }
+        @if not($filled-text-color) and $search-background {
+            $filled-text-color: adaptive-contrast(var(--search-background));
+        }
 
-    @if not($filled-text-color) and $search-background {
-        $filled-text-color: adaptive-contrast(var(--search-background));
-    }
+        @if not($filled-text-hover-color) and $search-background {
+            $filled-text-hover-color: adaptive-contrast(var(--search-background));
+        }
 
-    @if not($filled-text-hover-color) and $search-background {
-        $filled-text-hover-color: adaptive-contrast(var(--search-background));
-    }
+        @if not($focused-text-color) and $search-background {
+            $focused-text-color: adaptive-contrast(var(--search-background));
+        }
 
-    @if not($focused-text-color) and $search-background {
-        $focused-text-color: adaptive-contrast(var(--search-background));
-    }
+        @if not($input-prefix-color) and $search-background {
+            $input-prefix-color: hsla(from adaptive-contrast(var(--search-background)) h s l / 0.6);
+        }
 
-    @if not($input-prefix-color) and $search-background {
-        $input-prefix-color: hsla(from adaptive-contrast(var(--search-background)) h s l / 0.6);
-    }
+        @if not($input-prefix-color--filled) and $search-background {
+            $input-prefix-color--filled: adaptive-contrast(var(--search-background));
+        }
 
-    @if not($input-prefix-color--filled) and $search-background {
-        $input-prefix-color--filled: adaptive-contrast(var(--search-background));
-    }
+        @if not($input-prefix-color--focused) and $search-background {
+            $input-prefix-color--focused: adaptive-contrast(var(--search-background));
+        }
 
-    @if not($input-prefix-color--focused) and $search-background {
-        $input-prefix-color--focused: adaptive-contrast(var(--search-background));
-    }
+        @if not($input-suffix-color) and $search-background {
+            $input-suffix-color: hsla(from adaptive-contrast(var(--search-background)) h s l / 0.6);
+        }
 
-    @if not($input-suffix-color) and $search-background {
-        $input-suffix-color: hsla(from adaptive-contrast(var(--search-background)) h s l / 0.6);
-    }
+        @if not($input-suffix-color--filled) and $search-background {
+            $input-suffix-color--filled: adaptive-contrast(var(--search-background));
+        }
 
-    @if not($input-suffix-color--filled) and $search-background {
-        $input-suffix-color--filled: adaptive-contrast(var(--search-background));
-    }
+        @if not($input-suffix-color--focused) and $search-background {
+            $input-suffix-color--focused: adaptive-contrast(var(--search-background));
+        }
 
-    @if not($input-suffix-color--focused) and $search-background {
-        $input-suffix-color--focused: adaptive-contrast(var(--search-background));
-    }
+        @if not($search-disabled-background) and $search-background {
+            $search-disabled-background: hsla(from var(--search-background) h s l / 0.4);
+        }
 
-    @if not($search-disabled-background) and $search-background {
-        $search-disabled-background: hsla(from var(--search-background) h s l / 0.4);
-    }
+        @if not($disabled-placeholder-color) and $search-disabled-background {
+            $disabled-placeholder-color: adaptive-contrast(var(--search-disabled-background));
+        }
 
-    @if not($disabled-placeholder-color) and $search-disabled-background {
-        $disabled-placeholder-color: adaptive-contrast(var(--search-disabled-background));
-    }
-
-    @if not($disabled-text-color) and $search-disabled-background {
-        $disabled-text-color: adaptive-contrast(var(--search-disabled-background));
+        @if not($disabled-text-color) and $search-disabled-background {
+            $disabled-text-color: adaptive-contrast(var(--search-disabled-background));
+        }
     }
 
     @if not($search-resting-shadow) {
@@ -377,7 +378,7 @@
         $search-disabled-shadow: elevation($search-disabled-elevation);
     }
 
-    //end material search input
+    // //end material search input
 
     @if not($input-prefix-color) and $input-suffix-color {
         $input-prefix-color: var(--input-suffix-color);
