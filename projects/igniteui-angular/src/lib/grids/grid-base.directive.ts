@@ -6739,7 +6739,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     protected getColumnList() {
-        return this.columnList.toArray();
+        return this.columnList.toArray().filter((col) => col.grid === this);
     }
 
     /**
@@ -6797,6 +6797,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             let removed = false;
             let pinning = false;
             diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                if (record.item.grid !== this) {
+                    return;
+                }
                 added = true;
                 if (record.item.pinned) {
                     this._pinnedColumns.push(record.item);
@@ -6806,12 +6809,15 @@ export abstract class IgxGridBaseDirective implements GridType,
                 }
             });
 
-            this.initColumns(this.columnList.toArray(), (col: IgxColumnComponent) => this.columnInit.emit(col));
+            this.initColumns(this.getColumnList(), (col: IgxColumnComponent) => this.columnInit.emit(col));
             if (pinning) {
                 this.initPinning();
             }
 
             diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent | IgxColumnGroupComponent>) => {
+                if (record.item.grid !== this) {
+                    return;
+                }
                 const isColumnGroup = record.item instanceof IgxColumnGroupComponent;
                 if (!isColumnGroup) {
                     // Clear Grouping
