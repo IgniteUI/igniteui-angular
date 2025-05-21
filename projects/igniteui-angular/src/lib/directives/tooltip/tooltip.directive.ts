@@ -6,8 +6,6 @@ import {
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { IgxNavigationService } from '../../core/navigation';
 import { IgxToggleDirective } from '../toggle/toggle.directive';
-import { TooltipPlacement } from './enums';
-import { first } from '../../core/utils';
 
 let NEXT_ID = 0;
 /**
@@ -30,9 +28,6 @@ let NEXT_ID = 0;
     standalone: true
 })
 export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy {
-    private _arrowEl: HTMLElement;
-    private _role: "tooltip" | "status" = "tooltip"
-
     /**
      * @hidden
      */
@@ -96,6 +91,17 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
     }
 
     /**
+     * Get the arrow element of the tooltip.
+     *
+     * ```typescript
+     * let tooltipArrow = this.tooltip.arrow;
+     * ```
+     */
+    public get arrow(): HTMLElement {
+        return this._arrowEl;
+    }
+
+    /**
      * @hidden
      */
     public timeoutId;
@@ -114,6 +120,9 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
      * @hidden
      */
     public onHide: (event?: Event) => void;
+
+    private _arrowEl: HTMLElement;
+    private _role: "tooltip" | "status" = "tooltip"
 
     /** @hidden */
     constructor(
@@ -175,41 +184,10 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
         }
     }
 
-    // TODO: adjust arrow position when start/end placement is used
-    public positionArrow(placement: TooltipPlacement, arrowOffset: number): void {
-
-        this._resetArrowPositionStyles();
-        const currentPlacement = first(placement.split('-'));
-
-        // The opposite side where the arrow element should render based on the `currentPlacement`
-        const staticSide = {
-            top: 'bottom',
-            right: 'left',
-            bottom: 'top',
-            left: 'right',
-        }[currentPlacement]!;
-
-        this._arrowEl.classList.add(`igx-tooltip--${currentPlacement}`);
-
-        Object.assign(this._arrowEl.style, {
-            // left: x != null ? `${roundByDPR(x + arrowOffset)}px` : '',
-            // top: y != null ? `${roundByDPR(y + arrowOffset)}px` : '',
-            [staticSide]: '-4px',
-        });
-    }
-
     private _createArrow(): void {
         this._arrowEl = document.createElement('div');
-        this._arrowEl.classList.add('igx-tooltip--arrow');
         this._arrowEl.style.position = 'absolute';
         this.element.appendChild(this._arrowEl);
-    }
-
-    private _resetArrowPositionStyles(): void {
-        this._arrowEl.style.top = '';
-        this._arrowEl.style.bottom = '';
-        this._arrowEl.style.left = '';
-        this._arrowEl.style.right = '';
     }
 
     private _removeArrow(): void {

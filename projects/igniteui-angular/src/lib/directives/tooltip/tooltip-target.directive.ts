@@ -1,18 +1,20 @@
 import { useAnimation } from '@angular/animations';
-import { Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener, Input, EventEmitter, booleanAttribute, TemplateRef, ComponentRef, Renderer2, AfterViewInit } from '@angular/core';
+import {
+    Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener,
+    Input, EventEmitter, booleanAttribute, TemplateRef, ComponentRef, Renderer2, OnChanges, SimpleChanges,
+} from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService } from '../../core/navigation';
 import { IBaseEventArgs } from '../../core/utils';
-import { PositionSettings } from '../../services/public_api';
+import {  PositionSettings } from '../../services/public_api';
 import { IgxToggleActionDirective } from '../toggle/toggle.directive';
 import { IgxTooltipComponent } from './tooltip.component';
 import { IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipCloseButtonComponent } from './tooltip-close-button.component';
 import { fadeOut, scaleInCenter } from 'igniteui-angular/animations';
 import { TooltipPlacement } from './enums';
-import { IgxTooltipPositionStrategy, PositionsMap, TooltipRegexes } from './tooltip.common';
-import { IgxDirectionality } from '../../services/direction/directionality';
+import { TooltipPositionStrategy, PositionsMap } from './tooltip.common';
 
 export interface ITooltipShowEventArgs extends IBaseEventArgs {
     target: IgxTooltipTargetDirective;
@@ -44,12 +46,7 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
     selector: '[igxTooltipTarget]',
     standalone: true
 })
-export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit, AfterViewInit, OnDestroy {
-
-    private _closeButtonRef?: ComponentRef<IgxTooltipCloseButtonComponent>;
-    private _closeTemplate: TemplateRef<any>;
-    private _sticky = false;
-
+export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnChanges, OnInit, OnDestroy {
     /**
      * Gets/sets the amount of milliseconds that should pass before showing the tooltip.
      *
@@ -97,8 +94,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this._placement = value;
 
         if (this._overlayDefaults && this.target) {
-            this._overlayDefaults.positionStrategy = new IgxTooltipPositionStrategy(this._positionsSettingsByPlacement, value, this.offset);
-            this.target.positionArrow(value, this._arrowOffset);
+            this._overlayDefaults.positionStrategy = new TooltipPositionStrategy(this._positionsSettingsByPlacement, this);
         }
     }
 
@@ -108,7 +104,17 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     /** The offset of the tooltip from the target in pixels. Default value is 6. */
     @Input()
-    public offset = 6;
+    public set offset(value: number) {
+        this._offset = value;
+
+        if (this._overlayDefaults && this.target) {
+            this._overlayDefaults.positionStrategy = new TooltipPositionStrategy(this._positionsSettingsByPlacement, this);
+        }
+    }
+
+    public get offset(): number {
+        return this._offset;
+    }
 
     /**
      * Controls whether the arrow element of the tooltip is rendered.
@@ -131,11 +137,14 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     @Input()
     public set disableArrow(value: boolean) {
-        this.target.disableArrow = value;
+        if (this.target) {
+            this.target.arrow.style.display = value ? 'none' : '';
+        }
+        this._disableArrow = value;
     }
 
     public get disableArrow(): boolean {
-        return this.target.disableArrow;
+        return this._disableArrow;
     }
 
     /**
@@ -314,14 +323,18 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     private _destroy$ = new Subject<void>();
     private _autoHideDelay = 180;
     private _isForceClosed = false;
+    private _disableArrow = false;
+    private _offset = 6;
     private _placement: TooltipPlacement = TooltipPlacement.top;
+    private _closeButtonRef?: ComponentRef<IgxTooltipCloseButtonComponent>;
+    private _closeTemplate: TemplateRef<any>;
+    private _sticky = false;
 
     constructor(
         private _element: ElementRef,
         @Optional() private _navigationService: IgxNavigationService,
         private _viewContainerRef: ViewContainerRef,
         private _renderer: Renderer2,
-        private _dir: IgxDirectionality,
     ) {
         super(_element, _navigationService);
     }
@@ -395,13 +408,23 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }
     }
 
+
+    /**
+     * @hidden
+     */
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes['disableArrow']) {
+            this.target.arrow.style.display = changes['disableArrow'].currentValue ? 'none' : '';
+        }
+    }
+
     /**
      * @hidden
      */
     public override ngOnInit() {
         super.ngOnInit();
 
-        this._overlayDefaults.positionStrategy = new IgxTooltipPositionStrategy(this._positionsSettingsByPlacement, this.placement, this.offset);
+        this._overlayDefaults.positionStrategy = new TooltipPositionStrategy(this._positionsSettingsByPlacement, this);
         this._overlayDefaults.closeOnOutsideClick = false;
         this._overlayDefaults.closeOnEscape = true;
 
@@ -416,13 +439,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         this.target.onShow = this._showOnInteraction.bind(this);
         this.target.onHide = this._hideOnInteraction.bind(this);
-    }
-
-    /**
-     * @hidden
-     */
-    public ngAfterViewInit() {
-        this.target.positionArrow(this.placement, this._arrowOffset);
     }
 
     /**
@@ -466,27 +482,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             closeAnimation: useAnimation(fadeOut, { params: { duration: '75ms' } })
         }
         return Object.assign({}, animations, positions);
-    }
-
-    private get _arrowOffset(): number {
-        if (this.placement.includes('-')) {
-            // Horizontal start | end placement
-            if (TooltipRegexes.horizontalStart.test(this.placement)) {
-                return -8;
-            }
-            if (TooltipRegexes.horizontalEnd.test(this.placement)) {
-                return 8;
-            }
-
-            // Vertical start | end placement
-            if (TooltipRegexes.start.test(this.placement)) {
-                return this._dir.rtl ? 8 : -8;
-            }
-            if (TooltipRegexes.end.test(this.placement)) {
-                return this._dir.rtl ? -8 : 8;
-            }
-        }
-        return 0;
     }
 
     private _checkOutletAndOutsideClick(): void {

@@ -1,19 +1,27 @@
 import { AutoPositionStrategy } from '../../services/overlay/position/auto-position-strategy';
-import { ConnectedFit, HorizontalAlignment, PositionSettings, VerticalAlignment } from '../../services/overlay/utilities';
+import { ConnectedFit, HorizontalAlignment, Point, PositionSettings, Size, VerticalAlignment } from '../../services/overlay/utilities';
+import { IgxTooltipTargetDirective } from './tooltip-target.directive';
 import { TooltipPlacement } from './enums';
+import { first } from '../../core/utils';
 
 export const TooltipRegexes = Object.freeze({
-  /** Matches horizontal `PopoverPlacement` start positions. */
-  horizontalStart: /^(left|right)-start$/,
+    /** Matches horizontal `TooltipPlacement` end positions. `left-end` | `right-end` */
+    horizontalEnd: /^(left|right)-end$/,
 
-  /** Matches horizontal `PopoverPlacement` end positions. */
-  horizontalEnd: /^(left|right)-end$/,
+    /** Matches vertical `TooltipPlacement` centered positions. `left` | `right` */
+    horizontalCenter:  /^(left|right)$/,
 
-  /** Matches vertical `PopoverPlacement` start positions. */
-  start: /start$/,
+    /**
+     * Matches vertical `TooltipPlacement` positions.
+     * `top` | `top-start` | `top-end` | `bottom` | `bottom-start` | `bottom-end`
+     */
+    vertical:  /^(top|bottom)(-(start|end))?$/,
 
-  /** Matches vertical `PopoverPlacement` end positions. */
-  end: /end$/,
+    /** Matches vertical `TooltipPlacement` end positions. `top-end` | `bottom-end` */
+    verticalEnd: /^(top|bottom)-end$/,
+
+    /** Matches vertical `TooltipPlacement` centered positions. `top` | `bottom` */
+    verticalCenter:  /^(top|bottom)$/,
 });
 
 export const PositionsMap = new Map<TooltipPlacement, PositionSettings>([
@@ -91,14 +99,68 @@ export const PositionsMap = new Map<TooltipPlacement, PositionSettings>([
     }]
 ]);
 
-export class IgxTooltipPositionStrategy extends AutoPositionStrategy {
+export class TooltipPositionStrategy extends AutoPositionStrategy {
+    private _placement: TooltipPlacement;
+    private _offSet: number;
+    private _arrow: HTMLElement;
+    private _tooltipSize: DOMRect;
 
     constructor(
         settings: PositionSettings,
-        private _placement: TooltipPlacement,
-        private _offSet: number
+        tooltipTarget: IgxTooltipTargetDirective
     ) {
         super(settings);
+
+        this._placement = tooltipTarget.placement;
+        this._offSet = tooltipTarget.offset;
+        this._arrow = tooltipTarget.target.arrow;
+    }
+
+    public override position(
+        contentElement: HTMLElement,
+        size: Size,
+        document?: Document,
+        initialCall?: boolean,
+        target?: Point | HTMLElement
+    ): void {
+        this._tooltipSize = contentElement.getBoundingClientRect();
+        this.positionArrow(this._arrow, this._placement);
+        super.position(contentElement, size, document, initialCall, target);
+    }
+
+    protected override fitInViewport(element: HTMLElement, connectedFit: ConnectedFit): void {
+        super.fitInViewport(element, connectedFit);
+
+        this._placement = this._getPlacementByPositionSettings(this.settings);
+        this.positionArrow(this._arrow, this._placement);
+    }
+
+    /**
+     * Sets the position of the arrow relative to the tooltip element.
+     *
+     * @param arrow the arrow element of the tooltip.
+     * @param placement the placement of the tooltip. Used to determine where the arrow should render.
+     */
+    protected positionArrow(arrow: HTMLElement, placement: TooltipPlacement) {
+        this._resetArrowPositionStyles(arrow);
+
+        const currentPlacement = first(placement.split('-'));
+
+        // The opposite side where the arrow element should render based on the `currentPlacement`
+        const staticSide = {
+            top: 'bottom',
+            right: 'left',
+            bottom: 'top',
+            left: 'right',
+        }[currentPlacement]!;
+
+        arrow.className = `igx-tooltip--${currentPlacement}`;
+
+        Object.assign(arrow.style, {
+            top: this._getArrowPositionStyles(placement, arrow, 'horizontal'),
+            left: this._getArrowPositionStyles(placement, arrow, 'vertical'),
+            [staticSide]: '-4px',
+        });
     }
 
     protected override setStyle(
@@ -140,5 +202,54 @@ export class IgxTooltipPositionStrategy extends AutoPositionStrategy {
         }
 
         super.setStyle(element, targetRect, elementRect, connectedFit);
+    }
+
+    private _resetArrowPositionStyles(arrow: HTMLElement): void {
+        arrow.style.top = '';
+        arrow.style.bottom = '';
+        arrow.style.left = '';
+        arrow.style.right = '';
+    }
+
+    private _getArrowPositionStyles(placement: TooltipPlacement, arrow: HTMLElement, direction: 'horizontal' | 'vertical') {
+        const arrowRects = arrow.getBoundingClientRect();
+
+        const arrowSize = TooltipRegexes.vertical.test(placement)
+            ? arrowRects.width
+            : arrowRects.height;
+
+        const tooltipSize = TooltipRegexes.vertical.test(placement)
+            ? this._tooltipSize.width
+            : this._tooltipSize.height;
+
+        const center = `${direction}Center`
+        const end = `${direction}End`
+
+        if (TooltipRegexes[center].test(placement)) {
+            const offset = tooltipSize / 2 - arrowSize / 2;
+            return `${Math.round(offset)}px`;
+        }
+        if (TooltipRegexes[end].test(placement)) {
+            const endOffset = TooltipRegexes.vertical.test(placement) ? 8 : 4;
+            const offset = tooltipSize - (endOffset + arrowSize);
+            return `${Math.round(offset)}px`;
+        }
+
+        return '';
+    }
+
+    private _getPlacementByPositionSettings(settings: PositionSettings): TooltipPlacement {
+        const { horizontalDirection, horizontalStartPoint, verticalDirection, verticalStartPoint }  = settings;
+
+        const mapArray = Array.from(PositionsMap.entries());
+        const placement = mapArray.find(
+            ([_, val]) =>
+                val.horizontalDirection === horizontalDirection &&
+                val.horizontalStartPoint === horizontalStartPoint &&
+                val.verticalDirection === verticalDirection &&
+                val.verticalStartPoint === verticalStartPoint
+        );
+
+        return placement ? placement[0] : undefined;
     }
 }
