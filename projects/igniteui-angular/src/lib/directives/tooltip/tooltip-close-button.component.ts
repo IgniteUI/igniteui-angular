@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, HostBinding, HostListener, Input, TemplateRef } from '@angular/core';
+import { Component, Output, EventEmitter, HostListener, Input, TemplateRef } from '@angular/core';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { CommonModule } from '@angular/common';
 

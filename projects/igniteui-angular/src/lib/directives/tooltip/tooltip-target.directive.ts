@@ -345,7 +345,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
-        if (!this.target.collapsed && this.target.tooltipTarget.sticky) {
+        if (!this.target.collapsed && this.target?.tooltipTarget?.sticky) {
             return;
         }
 

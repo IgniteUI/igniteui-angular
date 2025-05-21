@@ -7,10 +7,17 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../services/public_api';
 import { IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipTargetDirective } from './tooltip-target.directive';
+import { TooltipPlacement } from 'igniteui-angular';
 
 const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip';
 const HIDE_DELAY = 180;
+const PLACEMENTS: TooltipPlacement[] = [
+    'top', 'top-start', 'top-end',
+    'bottom', 'bottom-start', 'bottom-end',
+    'left', 'left-start', 'left-end',
+    'right', 'right-start', 'right-end'
+];
 
 describe('IgxTooltip', () => {
     configureTestSuite();
@@ -95,7 +102,7 @@ describe('IgxTooltip', () => {
         it('verify tooltip default position', fakeAsync(() => {
             hoverElement(button);
             flush();
-            verifyTooltipPosition(tooltipNativeElement, button, true);
+            verifyTooltipPosition(tooltipNativeElement, button);
         }));
 
         it('IgxTooltip is not shown when is disabled and hovering its target', fakeAsync(() => {
@@ -187,7 +194,7 @@ describe('IgxTooltip', () => {
             hoverElement(button);
             flush();
             // Verify default position of the tooltip.
-            verifyTooltipPosition(tooltipNativeElement, button, true);
+            verifyTooltipPosition(tooltipNativeElement, button);
             unhoverElement(button);
             flush();
 
@@ -467,7 +474,7 @@ describe('IgxTooltip', () => {
 
             // Tooltip is positioned relative to buttonOne and NOT relative to buttonTwo
             verifyTooltipVisibility(tooltipNativeElement, targetOne, true);
-            verifyTooltipPosition(tooltipNativeElement, buttonOne, true);
+            verifyTooltipPosition(tooltipNativeElement, buttonOne);
             verifyTooltipPosition(tooltipNativeElement, buttonTwo, false);
 
             unhoverElement(buttonOne);
@@ -477,7 +484,7 @@ describe('IgxTooltip', () => {
 
             // Tooltip is positioned relative to buttonTwo and NOT relative to buttonOne
             verifyTooltipVisibility(tooltipNativeElement, targetTwo, true);
-            verifyTooltipPosition(tooltipNativeElement, buttonTwo, true);
+            verifyTooltipPosition(tooltipNativeElement, buttonTwo);
             verifyTooltipPosition(tooltipNativeElement, buttonOne, false);
         }));
 
@@ -496,7 +503,7 @@ describe('IgxTooltip', () => {
             // Tooltip is visible and positioned relative to buttonTwo
             // and it was not closed due to buttonOne mouseLeave logic.
             verifyTooltipVisibility(tooltipNativeElement, targetTwo, true);
-            verifyTooltipPosition(tooltipNativeElement, buttonTwo, true);
+            verifyTooltipPosition(tooltipNativeElement, buttonTwo);
             verifyTooltipPosition(tooltipNativeElement, buttonOne, false);
             flush();
         }));
@@ -519,7 +526,7 @@ describe('IgxTooltip', () => {
 
             // Tooltip is visible and positioned relative to buttonTwo
             verifyTooltipVisibility(tooltipNativeElement, targetTwo, true);
-            verifyTooltipPosition(tooltipNativeElement, buttonTwo, true);
+            verifyTooltipPosition(tooltipNativeElement, buttonTwo);
             // Tooltip is NOT visible and positioned relative to buttonOne
             verifyTooltipPosition(tooltipNativeElement, buttonOne, false);
         }));
@@ -697,6 +704,63 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false)
         }));
     });
+
+    describe('IgxTooltip placement and offset', () => {
+        beforeEach(waitForAsync(() => {
+            fix = TestBed.createComponent(IgxTooltipSingleTargetComponent);
+            fix.detectChanges();
+            tooltipNativeElement = fix.debugElement.query(By.directive(IgxTooltipDirective)).nativeElement;
+            tooltipTarget = fix.componentInstance.tooltipTarget as IgxTooltipTargetDirective;
+            button = fix.debugElement.query(By.directive(IgxTooltipTargetDirective));
+        }));
+
+        afterEach(() => {
+            UIInteractions.clearOverlay();
+        });
+
+
+        for (const placement of PLACEMENTS) {
+            it(`should correctly position tooltip for placement="${placement}"`, fakeAsync(() => {
+                tooltipTarget.placement = placement;
+                fix.detectChanges();
+
+                hoverElement(button);
+                flush();
+
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+                verifyTooltipPosition(tooltipNativeElement, button, true, placement);
+
+                unhoverElement(button);
+                flush();
+            }));
+        }
+
+        it('should respect custom positive offset', fakeAsync(() => {
+            const customOffset = 20;
+            tooltipTarget.placement = 'bottom';
+            tooltipTarget.offset = customOffset;
+            fix.detectChanges();
+
+            hoverElement(button);
+            flush();
+
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+            verifyTooltipPosition(tooltipNativeElement, button, true, 'bottom', customOffset);
+        }));
+
+        it('should respect custom negative offset', fakeAsync(() => {
+            const customOffset = -10;
+            tooltipTarget.placement = 'right';
+            tooltipTarget.offset = customOffset;
+            fix.detectChanges();
+
+            hoverElement(button);
+            flush();
+
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+            verifyTooltipPosition(tooltipNativeElement, button, true, 'right', customOffset);
+        }));
+    })
 });
 
 const hoverElement = (element) => element.nativeElement.dispatchEvent(new MouseEvent('mouseenter'));
@@ -711,25 +775,89 @@ const verifyTooltipVisibility = (tooltipNativeElement, tooltipTarget, shouldBeVi
     expect(tooltipTarget.tooltipHidden).not.toBe(shouldBeVisible);
 };
 
-const verifyTooltipPosition = (tooltipNativeElement, actualTarget, shouldBeAligned: boolean) => {
-    const targetRect = actualTarget.nativeElement.getBoundingClientRect();
-    const tooltipRect = tooltipNativeElement.getBoundingClientRect();
+const directionTolerance = 2;
+const alignmentTolerance = 2;
 
-    const targetRectMidX = targetRect.left + targetRect.width / 2;
-    const tooltipRectMidX = tooltipRect.left + tooltipRect.width / 2;
 
-    const horizontalOffset = Math.abs(targetRectMidX - tooltipRectMidX);
-    const verticalOffset = tooltipRect.top - targetRect.bottom;
+export const verifyTooltipPosition = (
+    tooltipNativeElement: HTMLElement,
+    actualTarget: { nativeElement: HTMLElement },
+    shouldAlign:boolean = true,
+    placement: TooltipPlacement = 'top',
+    offset: number = 6
+) => {
+    const tooltip = tooltipNativeElement.getBoundingClientRect();
+    const target = actualTarget.nativeElement.getBoundingClientRect();
 
-    if (shouldBeAligned) {
-        // Verify that tooltip and target are horizontally aligned with approximately same center
-        expect(horizontalOffset >= 0).toBe(true, 'tooltip and target are horizontally MISaligned');
-        expect(horizontalOffset <= 0.5).toBe(true, 'tooltip and target are horizontally MISaligned');
-        // Verify that tooltip is vertically aligned beneath the target
-        expect(verticalOffset >= 0).toBe(true, 'tooltip and target are vertically MISaligned');
-        expect(verticalOffset <= 6).toBe(true, 'tooltip and target are vertically MISaligned');
+    let directionCheckPassed = false;
+    let alignmentCheckPassed = false;
+
+    let actualOffset;
+
+    // --- placement check ---
+    if (placement.startsWith('top')) {
+        actualOffset = target.top - tooltip.bottom;
+        directionCheckPassed = Math.abs(actualOffset - offset) <= directionTolerance;
+    } else if (placement.startsWith('bottom')) {
+        actualOffset = tooltip.top - target.bottom;
+        directionCheckPassed = Math.abs(actualOffset - offset) <= directionTolerance;
+    } else if (placement.startsWith('left')) {
+        actualOffset = target.left - tooltip.right;
+        directionCheckPassed = Math.abs(actualOffset - offset) <= directionTolerance;
+    } else if (placement.startsWith('right')) {
+        actualOffset = tooltip.left - target.right;
+        directionCheckPassed = Math.abs(actualOffset - offset) <= directionTolerance;
+    }
+
+
+    // --- alignment check ---
+    if (placement.startsWith('top') || placement.startsWith('bottom')) {
+        alignmentCheckPassed = horizontalAlignmentMatches(tooltip, target, placement);
     } else {
-        // Verify that tooltip and target are NOT horizontally aligned with approximately same center
-        expect(horizontalOffset > 0.1).toBe(true, 'tooltip and target are horizontally aligned');
+        alignmentCheckPassed = verticalAlignmentMatches(tooltip, target, placement);
+    }
+
+    const result = directionCheckPassed && alignmentCheckPassed;
+
+    if (shouldAlign) {
+        expect(result).toBeTruthy(
+            `Tooltip misaligned for "${placement}": actual offset=${actualOffset}, wanted offset=${offset}, accurate placement=${directionCheckPassed}, accurate alignment=${alignmentCheckPassed}`
+        );
+    } else {
+        expect(result).toBeFalsy(
+            `Tooltip was unexpectedly aligned`
+        );
     }
 };
+
+function horizontalAlignmentMatches(
+    tooltip: DOMRect,
+    target: DOMRect,
+    placement: TooltipPlacement
+): boolean {
+    if (placement.endsWith('start')) {
+        return Math.abs(tooltip.left - target.left) <= alignmentTolerance;
+    } else if (placement.endsWith('end')) {
+        return Math.abs(tooltip.right - target.right) <= alignmentTolerance;
+    } else {
+        const tooltipMid = tooltip.left + tooltip.width / 2;
+        const targetMid = target.left + target.width / 2;
+        return Math.abs(tooltipMid - targetMid) <= alignmentTolerance;
+    }
+}
+
+function verticalAlignmentMatches(
+    tooltip: DOMRect,
+    target: DOMRect,
+    placement: TooltipPlacement
+): boolean {
+    if (placement.endsWith('start')) {
+        return Math.abs(tooltip.top - target.top) <= alignmentTolerance;
+    } else if (placement.endsWith('end')) {
+        return Math.abs(tooltip.bottom - target.bottom) <= alignmentTolerance;
+    } else {
+        const tooltipMid = tooltip.top + tooltip.height / 2;
+        const targetMid = target.top + target.height / 2;
+        return Math.abs(tooltipMid - targetMid) <= alignmentTolerance;
+    }
+}
