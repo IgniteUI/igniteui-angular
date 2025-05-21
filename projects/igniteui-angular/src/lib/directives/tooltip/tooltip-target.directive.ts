@@ -211,13 +211,13 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
-        this.target.tooltipTarget = this;
-
         this.checkOutletAndOutsideClick();
         const shouldReturn = this.preMouseEnterCheck();
         if (shouldReturn) {
             return;
         }
+
+        this.target.tooltipTarget = this;
 
         const showingArgs = { target: this, tooltip: this.target, cancel: false };
         this.tooltipShow.emit(showingArgs);
@@ -265,7 +265,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
-        this.target.tooltipTarget = this;
         this.showTooltip();
     }
 
@@ -304,10 +303,18 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this._overlayDefaults.closeOnOutsideClick = false;
         this._overlayDefaults.closeOnEscape = true;
 
+        this.target.opening.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            if (this.target.tooltipTarget === this) {
+                document.addEventListener('touchstart', this.onDocumentTouchStart = this.onDocumentTouchStart.bind(this), { passive: true });
+            }
+        });
+
         this.target.closing.pipe(takeUntil(this.destroy$)).subscribe((event) => {
             if (this.target.tooltipTarget !== this) {
                 return;
             }
+
+            document.removeEventListener('touchstart', this.onDocumentTouchStart);
             const hidingArgs = { target: this, tooltip: this.target, cancel: false };
             this.tooltipHide.emit(hidingArgs);
 
@@ -316,8 +323,11 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             }
         });
 
+        this.target.forceClosed.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            document.removeEventListener('touchstart', this.onDocumentTouchStart);
+        });
+
         this.nativeElement.addEventListener('touchstart', this.onTouchStart = this.onTouchStart.bind(this), { passive: true });
-        this.target.onDocumentTouchStart = this.onDocumentTouchStart.bind(this);
     }
 
     /**
@@ -326,6 +336,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     public ngOnDestroy() {
         this.hideTooltip();
         this.nativeElement.removeEventListener('touchstart', this.onTouchStart);
+        document.removeEventListener('touchstart', this.onDocumentTouchStart);
         this.destroy$.next();
         this.destroy$.complete();
     }
@@ -340,13 +351,12 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     public showTooltip() {
         clearTimeout(this.target.timeoutId);
 
-        this.target.tooltipTarget = this;
-
         if (!this.target.collapsed) {
             //  if close animation has started finish it, or close the tooltip with no animation
             this.target.forceClose(this.mergedOverlaySettings);
             this.target.toBeHidden = false;
         }
+        this.target.tooltipTarget = this;
 
         const showingArgs = { target: this, tooltip: this.target, cancel: false };
         this.tooltipShow.emit(showingArgs);

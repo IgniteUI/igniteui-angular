@@ -572,8 +572,8 @@ describe('IgxTooltip', () => {
             touchElement(dummyDiv);
             flush();
 
-            expect(targetOne.hideTooltip).not.toHaveBeenCalled();
-            expect(targetTwo.hideTooltip).toHaveBeenCalledTimes(1);
+            expect(targetOne.hideTooltip).toHaveBeenCalledTimes(1);
+            expect(targetTwo.hideTooltip).not.toHaveBeenCalled();
         }));
 
         it('should not emit tooltipHide event multiple times', fakeAsync(() => {
