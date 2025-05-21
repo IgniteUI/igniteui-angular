@@ -607,7 +607,7 @@ describe('IgxTooltip', () => {
 
             targetOne.sticky = true;
             targetTwo.sticky = true;
-            instance.targetOne.closeTemplate = instance.customCloseTemplate;
+            targetOne.closeTemplate = instance.customCloseTemplate;
             fix.detectChanges();
 
             hoverElement(buttonOne);
@@ -626,6 +626,77 @@ describe('IgxTooltip', () => {
             flush();
 
             expect(tooltipNativeElement.querySelector('.my-close-btn')).toBeNull();
+        }));
+
+        it('should not update tooltip state when non-active target changes sticky or closeTemplate', fakeAsync(() => {
+            const instance = fix.componentInstance as IgxTooltipMultipleTargetsComponent;
+
+            targetOne.sticky = true;
+            targetTwo.sticky = false;
+            targetOne.closeTemplate = instance.customCloseTemplate;
+            fix.detectChanges();
+
+            hoverElement(buttonOne);
+            flush();
+
+            // Tooltip should be shown for targetOne with custom close button and correct role
+            const tooltip = tooltipNativeElement;
+            const customClose = tooltip.querySelector('.my-close-btn');
+            const roleAttr = tooltip.getAttribute('role');
+
+            expect(customClose).not.toBeNull();
+            expect(customClose.textContent).toContain('Custom Close Button');
+            expect(roleAttr).toBe('status');
+
+            const closeButton = tooltip.querySelector('igx-tooltip-close-button');
+
+            // Change sticky and template on targetTwo while tooltip is still shown for targetOne
+            targetTwo.sticky = true;
+            targetTwo.closeTemplate = instance.secondCustomCloseTemplate;
+
+            fix.detectChanges();
+            flush();
+
+            expect(tooltip.querySelector('igx-tooltip-close-button')).toBe(closeButton); // same reference
+            expect(tooltip.querySelector('.my-close-btn')).not.toBeNull(); // still the custom one
+            expect(tooltip.getAttribute('role')).toBe('status');
+            expect(instance.tooltip.tooltipTarget).toBe(targetOne);
+        }));
+
+        it('should update tooltip state when active target changes closeTemplate or sticky', fakeAsync(() => {
+            const instance = fix.componentInstance as IgxTooltipMultipleTargetsComponent;
+
+            targetOne.sticky = true;
+            targetOne.closeTemplate = instance.customCloseTemplate;
+            fix.detectChanges();
+
+            hoverElement(buttonOne);
+            flush();
+            fix.detectChanges();
+
+            const tooltip = tooltipNativeElement;
+            const customClose = tooltip.querySelector('.my-close-btn');
+            const roleAttr = tooltip.getAttribute('role');
+
+            expect(customClose).not.toBeNull();
+            expect(customClose.textContent).toContain('Custom Close Button');
+            expect(roleAttr).toBe('status');
+
+            // Change closeTemplate of active targetOne
+            targetOne.closeTemplate = instance.secondCustomCloseTemplate;
+            fix.detectChanges();
+            flush();
+
+            const updatedCustomClose = tooltip.querySelector('.my-second-close-btn');
+            expect(updatedCustomClose).not.toBeNull();
+            expect(updatedCustomClose.textContent).toContain('Second Custom Close Button');
+
+            targetOne.sticky = false;
+            fix.detectChanges();
+            flush();
+
+            expect(tooltip.getAttribute('role')).toBe('tooltip');
+            expect(tooltip.querySelector('igx-tooltip-close-button')).toBeNull();
         }));
 
         it('should correctly manage arrow state between different targets', fakeAsync(() => {
@@ -690,11 +761,15 @@ describe('IgxTooltip', () => {
         });
 
         it('should render custom close button when sticky is true', fakeAsync(() => {
+            hoverElement(button);
+            flush();
+
+            verifyTooltipVisibility(tooltipNativeElement, button, true);
             const closeBtn = document.querySelector('.my-close-btn');
             expect(closeBtn).toBeTruthy();
         }));
 
-        it('should destroy close button when sticky is set to false', fakeAsync(() => {
+        it('should remove close button when sticky is set to false', fakeAsync(() => {
             tooltipTarget.sticky = false;
             fix.detectChanges();
             tick();
@@ -727,15 +802,20 @@ describe('IgxTooltip', () => {
             fix.detectChanges();
             tick();
 
+            hoverElement(button);
+            flush();
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+
             const icon = document.querySelector('igx-icon');
             expect(icon).toBeTruthy();
             expect(icon?.textContent?.trim().toLowerCase()).toBe('close');
         }));
 
         it('should update the DOM role attribute correctly when sticky changes', fakeAsync(() => {
-            // Initially sticky
-            fix.detectChanges();
-            tick();
+            hoverElement(button);
+            flush();
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+
             expect(tooltipNativeElement.getAttribute('role')).toBe('status');
 
             tooltipTarget.sticky = false;

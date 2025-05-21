@@ -2,6 +2,8 @@ import { useAnimation } from '@angular/animations';
 import {
     Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener,
     Input, EventEmitter, booleanAttribute, TemplateRef, ComponentRef, Renderer2, OnChanges, SimpleChanges,
+    EnvironmentInjector,
+    createComponent,
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -171,7 +173,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this._sticky = value;
 
         if (changed) {
-            this._ensureTooltipTargetOwnership();
+            this._createCloseTemplate(this._closeTemplate);
+            this._evaluateStickyState();
         }
     };
 
@@ -204,7 +207,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     @Input('closeButtonTemplate')
     public set closeTemplate(value: TemplateRef<any>) {
         this._closeTemplate = value;
-        this._ensureTooltipTargetOwnership();
+        this._createCloseTemplate(this._closeTemplate);
+        this._evaluateStickyState();
     }
     public get closeTemplate(): TemplateRef<any> | undefined {
         return this._closeTemplate;
@@ -335,6 +339,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         @Optional() private _navigationService: IgxNavigationService,
         private _viewContainerRef: ViewContainerRef,
         private _renderer: Renderer2,
+        private _envInjector: EnvironmentInjector
     ) {
         super(_element, _navigationService);
     }
@@ -364,6 +369,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         this._checkOutletAndOutsideClick();
         this._checkTooltipForMultipleTargets();
+        this._evaluateStickyState();
         this._showOnInteraction();
     }
 
@@ -446,6 +452,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     public ngOnDestroy() {
         this.hideTooltip();
+        this._destroyCloseButton();
         this._destroy$.next();
         this._destroy$.complete();
     }
@@ -567,7 +574,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }
         if (this.target.tooltipTarget !== this) {
             if (this.target.tooltipTarget.sticky) {
-                this.target.tooltipTarget._removeCloseButton();
+                this.target.tooltipTarget._removeCloseButtonFromTooltip();
             }
 
             clearTimeout(this.target.timeoutId);
@@ -575,52 +582,67 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
             this.target.tooltipTarget = this;
             this._isForceClosed = true;
-
-            this._evaluateStickyState();
         }
     }
 
-    private _ensureTooltipTargetOwnership(): void {
-        if (!this.target.tooltipTarget) {
-            this.target.tooltipTarget = this;
-        }
-
-        if(this.target.tooltipTarget !== this){
-            return;
-        }
-
-        this._removeCloseButton();
-        this._evaluateStickyState();
-    }
-
+    /**
+     * Updates the tooltip's sticky-related state, but only if the current target owns the tooltip.
+     *
+     * This method ensures that when the active target modifies its `sticky` or `closeTemplate` properties
+     * at runtime, the tooltip reflects those changes accordingly:
+     */
     private _evaluateStickyState(): void {
-        if (this._sticky) {
-            this._createCloseTemplate(this._closeTemplate);
+        if(this?.target?.tooltipTarget === this) {
+            if (this.sticky) {
+                this._appendCloseButtonToTooltip();
+            } else if (!this.sticky) {
+                this._removeCloseButtonFromTooltip();
+            }
+        }
+    }
+
+    /**
+     * Creates (if not already created) an instance of the IgxTooltipCloseButtonComponent,
+     * and assigns it the provided custom template.
+     */
+    private _createCloseTemplate(template?: TemplateRef<any> | undefined): void {
+        if (!this._closeButtonRef) {
+            this._closeButtonRef = createComponent(IgxTooltipCloseButtonComponent, {
+                environmentInjector: this._envInjector
+              });
+
+            this._closeButtonRef.instance.customTemplate = template;
+            this._closeButtonRef.instance.clicked.pipe(takeUntil(this._destroy$)).subscribe(() => {
+                this._hideTooltip(true);
+            });
+        } else {
+            this._closeButtonRef.instance.customTemplate = template;
+        }
+    }
+
+    /**
+     * Appends the close button to the tooltip.
+     */
+    private _appendCloseButtonToTooltip(): void {
+        if (this?.target && this._closeButtonRef) {
+            this._renderer.appendChild(this.target.element, this._closeButtonRef.location.nativeElement);
+            this._closeButtonRef.changeDetectorRef.detectChanges();
             this.target.role = "status"
-        } else if (!this.sticky) {
+        }
+    }
+
+    /**
+     * Removes the close button from the tooltip.
+     */
+    private _removeCloseButtonFromTooltip() {
+        if (this?.target && this._closeButtonRef) {
+            this._renderer.removeChild(this.target.element, this._closeButtonRef.location.nativeElement);
+            this._closeButtonRef.changeDetectorRef.detectChanges();
             this.target.role = "tooltip"
         }
     }
 
-
-
-    private _createCloseTemplate(template?: TemplateRef<any> | undefined) {
-        this._closeTemplate = template;
-
-        const componentRef = this._viewContainerRef.createComponent(IgxTooltipCloseButtonComponent);
-        this._closeButtonRef = componentRef;
-
-        componentRef.instance.customTemplate = template;
-        componentRef.instance.clicked.pipe(takeUntil(this._destroy$)).subscribe(() => {
-            this._hideTooltip(true);
-        });
-
-        if (this.target.element instanceof HTMLElement) {
-            this._renderer.appendChild(this.target.element, componentRef.location.nativeElement);
-        }
-    }
-
-    private _removeCloseButton(){
+    private _destroyCloseButton(): void {
         if (this._closeButtonRef) {
             this._closeButtonRef.destroy();
             this._closeButtonRef = undefined;

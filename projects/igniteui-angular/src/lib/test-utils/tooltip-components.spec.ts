@@ -57,6 +57,10 @@ export class IgxTooltipSingleTargetComponent {
     <ng-template #customClose>
         <div class="my-close-btn">Custom Close Button</div>
     </ng-template>
+
+    <ng-template #secondCustomClose>
+        <div class="my-second-close-btn">Second Custom Close Button</div>
+    </ng-template>
     `,
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
@@ -65,6 +69,7 @@ export class IgxTooltipMultipleTargetsComponent {
     @ViewChild('targetTwo', { read: IgxTooltipTargetDirective, static: true }) public targetTwo: IgxTooltipTargetDirective;
     @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
     @ViewChild('customClose', { static: true }) public customCloseTemplate: TemplateRef<any>;
+    @ViewChild('secondCustomClose', { static: true }) public secondCustomCloseTemplate: TemplateRef<any>;
 }
 
 
