@@ -156,18 +156,6 @@
             $box-background-focus: hsl(from var(--box-background) h s calc(l * 0.9));
         }
 
-        @if not($box-disabled-background) and $box-background {
-            $box-disabled-background: hsla(from var(--box-background) h s l / 0.4);
-        }
-
-        @if not($disabled-placeholder-color) and $box-disabled-background {
-            $disabled-placeholder-color: adaptive-contrast(var(--box-disabled-background));
-        }
-
-        @if not($disabled-text-color) and $box-disabled-background {
-            $disabled-text-color: adaptive-contrast(var(--box-disabled-background));
-        }
-
         @if not($placeholder-color) and $box-background {
             $placeholder-color: hsla(from adaptive-contrast(var(--box-background)) h s l / 0.9);
         }
@@ -218,6 +206,32 @@
 
         @if not($input-suffix-color--focused) and $box-background-focus {
             $input-suffix-color--focused: adaptive-contrast(var(--box-background-focus));
+        }
+
+        @if $box-background != transparent {
+            @if not($box-disabled-background) and $box-background {
+                $box-disabled-background: hsla(from var(--box-background) h s l / 0.4);
+            }
+
+            @if not($disabled-placeholder-color) and $box-disabled-background {
+                $disabled-placeholder-color: adaptive-contrast(var(--box-disabled-background));
+            }
+
+            @if not($disabled-text-color) and $box-disabled-background {
+                $disabled-text-color: adaptive-contrast(var(--box-disabled-background));
+            }
+        } @else {
+            @if not($box-disabled-background) and $box-background {
+                $box-disabled-background: var(--box-background);
+            }
+
+            @if not($disabled-placeholder-color) and $placeholder-color {
+                $disabled-placeholder-color: hsla(from var(--placeholder-color) h s l / 0.7);
+            }
+
+            @if not($disabled-text-color) and $idle-text-color {
+                $disabled-text-color: hsla(from var(--idle-text-color) h s l / 0.7);
+            }
         }
     }
 
@@ -355,6 +369,18 @@
 
         @if not($disabled-text-color) and $search-disabled-background {
             $disabled-text-color: adaptive-contrast(var(--search-disabled-background));
+        }
+    } @else {
+        @if not($search-disabled-background) and $search-background {
+            $search-disabled-background: var(--search-background);
+        }
+
+        @if not($disabled-placeholder-color) and $placeholder-color {
+            $disabled-placeholder-color: hsla(from var(--placeholder-color) h s l / 0.7);
+        }
+
+        @if not($disabled-text-color) and $idle-text-color {
+            $disabled-text-color: hsla(from var(--idle-text-color) h s l / 0.7);
         }
     }
 
