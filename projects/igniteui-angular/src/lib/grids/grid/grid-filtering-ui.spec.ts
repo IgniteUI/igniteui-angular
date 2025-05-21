@@ -3472,7 +3472,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const ddItem = fix.nativeElement.querySelector('.igx-drop-down__item--selected');
             expect(ddItem).toBeDefined();
-            expect(ddItem.getAttribute('ng-reflect-value')).toMatch('contains');
+            expect(ddItem.outerText.toLowerCase()).toMatch('contains');
 
             GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
             tick(100);
@@ -3506,7 +3506,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const ddItem = fix.nativeElement.querySelector('.igx-drop-down__item--selected');
             expect(ddItem).toBeDefined();
-            expect(ddItem.getAttribute('ng-reflect-value')).toMatch('contains');
+            expect(ddItem.outerText.toLowerCase()).toMatch('contains');
 
             GridFunctions.clickOperatorFromCascadeMenu(fix, 1);
             tick(100);

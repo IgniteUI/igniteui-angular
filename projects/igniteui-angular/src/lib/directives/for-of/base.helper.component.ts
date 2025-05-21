@@ -6,9 +6,9 @@ import {
     Directive,
     AfterViewInit,
     Inject,
-    NgZone
+    NgZone,
+    DOCUMENT
 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
 import { Subject } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
 import { resizeObservable, PlatformUtil } from '../../core/utils';

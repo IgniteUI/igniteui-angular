@@ -24,10 +24,10 @@ import {
     Output,
     QueryList,
     TemplateRef,
-    ViewContainerRef
+    ViewContainerRef,
+    DOCUMENT
 } from '@angular/core';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
-import { DOCUMENT } from '@angular/common';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';

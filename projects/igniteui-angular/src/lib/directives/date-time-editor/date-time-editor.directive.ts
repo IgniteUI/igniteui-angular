@@ -1,5 +1,5 @@
 import {
-    Directive, Input, ElementRef,
+    Directive, Input, ElementRef, DOCUMENT,
     Renderer2, Output, EventEmitter, Inject,
     LOCALE_ID, OnChanges, SimpleChanges, HostListener, OnInit, booleanAttribute
 } from '@angular/core';
@@ -7,7 +7,6 @@ import {
     ControlValueAccessor,
     Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from '@angular/forms';
-import { DOCUMENT } from '@angular/common';
 import { IgxMaskDirective } from '../mask/mask.directive';
 import { MaskParsingService } from '../mask/mask-parsing.service';
 import { isDate, PlatformUtil } from '../../core/utils';
