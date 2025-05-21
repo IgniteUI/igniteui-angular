@@ -52,6 +52,8 @@ export const GridResourceStringsBG = {
     igx_grid_filter_false: 'False',
     igx_grid_filter_all: 'Всички',
     igx_grid_filter_condition_placeholder: 'Изберете филтър',
+    igx_grid_filter_in: 'In',
+    igx_grid_filter_notIn: 'Not In',
     igx_grid_summary_count: 'Брой',
     igx_grid_summary_min: 'Минимално',
     igx_grid_summary_max: 'Максимално',

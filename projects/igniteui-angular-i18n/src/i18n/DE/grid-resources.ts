@@ -50,6 +50,8 @@ export const GridResourceStringsDE = {
     igx_grid_filter_false: 'Falsch',
     igx_grid_filter_all: 'Alle',
     igx_grid_filter_condition_placeholder: 'Wähle Filter',
+    igx_grid_filter_in: 'In',
+    igx_grid_filter_notIn: 'Not In',
     igx_grid_summary_count: 'Anzahl',
     igx_grid_summary_min: 'Min',
     igx_grid_summary_max: 'Max',

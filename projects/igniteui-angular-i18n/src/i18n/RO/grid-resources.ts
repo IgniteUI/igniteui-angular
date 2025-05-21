@@ -52,6 +52,8 @@ export const GridResourceStringsRO = {
     igx_grid_filter_false: 'False',
     igx_grid_filter_all: 'Toate',
     igx_grid_filter_condition_placeholder: 'Selectați filtrul',
+    igx_grid_filter_in: 'In',
+    igx_grid_filter_notIn: 'Not In',
     igx_grid_summary_count: 'Numără',
     igx_grid_summary_min: 'Min',
     igx_grid_summary_max: 'Max',

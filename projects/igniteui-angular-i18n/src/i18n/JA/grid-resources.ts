@@ -50,6 +50,8 @@ export const GridResourceStringsJA = {
     igx_grid_filter_false: 'False',
     igx_grid_filter_all: 'すべて',
     igx_grid_filter_condition_placeholder: 'フィルターの選択',
+    igx_grid_filter_in: 'In',
+    igx_grid_filter_notIn: 'Not In',
     igx_grid_summary_count: 'カウント',
     igx_grid_summary_min: '最小',
     igx_grid_summary_max: '最大',

@@ -50,6 +50,8 @@ export const GridResourceStringsKO = {
     igx_grid_filter_false: '거짓',
     igx_grid_filter_all: '모두',
     igx_grid_filter_condition_placeholder: '필터 선택',
+    igx_grid_filter_in: 'In',
+    igx_grid_filter_notIn: 'Not In',
     igx_grid_summary_count: '셈',
     igx_grid_summary_min: '최소',
     igx_grid_summary_max: '최대',

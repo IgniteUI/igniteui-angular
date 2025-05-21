@@ -50,6 +50,8 @@ export const GridResourceStringsZHHANT = {
     igx_grid_filter_false: 'False',
     igx_grid_filter_all: '全部',
     igx_grid_filter_condition_placeholder: '選擇篩選條件',
+    igx_grid_filter_in: 'In',
+    igx_grid_filter_notIn: 'Not In',
     igx_grid_summary_count: '計數',
     igx_grid_summary_min: '最小',
     igx_grid_summary_max: '最大',

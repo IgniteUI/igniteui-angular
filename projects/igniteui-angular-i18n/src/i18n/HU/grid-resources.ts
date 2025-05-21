@@ -52,6 +52,8 @@ export const GridResourceStringsHU = {
     igx_grid_filter_false: 'False',
     igx_grid_filter_all: 'Összes',
     igx_grid_filter_condition_placeholder: 'Szűrő kiválasztása',
+    igx_grid_filter_in: 'In',
+    igx_grid_filter_notIn: 'Not In',
     igx_grid_summary_count: 'Darab',
     igx_grid_summary_min: 'Min',
     igx_grid_summary_max: 'Max',

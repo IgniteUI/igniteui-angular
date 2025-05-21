@@ -1864,6 +1864,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 igx_grid_advanced_filter_query_value_placeholder: 'My sub-query results',
                 igx_grid_advanced_filter_select_entity: 'Select my entity',
                 igx_grid_advanced_filter_select_return_field_single: 'Select my return fields',
+                igx_grid_filter_in: 'My In',
+                igx_grid_filter_notIn: 'My Not In'
             };
 
             hgrid.resourceStrings = {
@@ -1891,6 +1893,10 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(entitySelect.querySelector('input').placeholder).toBe('Select my entity');
             const fieldsCombo = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, 1);
             expect(fieldsCombo.querySelector('input').placeholder).toBe('Select my return fields');
+
+            var operatorSelect = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix, 0);
+            expect(operatorSelect.querySelector('input').value).toBe('My In');
+            expect(Array.from(operatorSelect.querySelectorAll('igx-select-item')).pop().textContent).toBe('My Not In');
         }));
     });
 });

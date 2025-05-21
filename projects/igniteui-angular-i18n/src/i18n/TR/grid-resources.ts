@@ -52,6 +52,8 @@ export const GridResourceStringsTR = {
     igx_grid_filter_false: 'Yanlış',
     igx_grid_filter_all: 'Tümü',
     igx_grid_filter_condition_placeholder: 'Filtre seç',
+    igx_grid_filter_in: 'In',
+    igx_grid_filter_notIn: 'Not In',
     igx_grid_summary_count: 'Sayım',
     igx_grid_summary_min: 'Min',
     igx_grid_summary_max: 'Maks',

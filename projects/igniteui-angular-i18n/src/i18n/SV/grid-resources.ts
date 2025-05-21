@@ -52,6 +52,8 @@ export const GridResourceStringsSV = {
     igx_grid_filter_false: 'False',
     igx_grid_filter_all: 'Allt',
     igx_grid_filter_condition_placeholder: 'Välj filter',
+    igx_grid_filter_in: 'In',
+    igx_grid_filter_notIn: 'Not In',
     igx_grid_summary_count: 'Räkna',
     igx_grid_summary_min: 'Min',
     igx_grid_summary_max: 'Max',

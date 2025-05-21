@@ -45,6 +45,8 @@ export interface IGridResourceStrings {
     igx_grid_filter_true?: string;
     igx_grid_filter_false?: string;
     igx_grid_filter_all?: string;
+    igx_grid_filter_in?: string;
+    igx_grid_filter_notIn?: string;
     igx_grid_filter_condition_placeholder?: string;
     igx_grid_summary_count?: string;
     igx_grid_summary_min?: string;
@@ -226,6 +228,8 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_filter_false: 'False',
     igx_grid_filter_all: 'All',
     igx_grid_filter_condition_placeholder: 'Select filter',
+    igx_grid_filter_in: 'In',
+    igx_grid_filter_notIn: 'Not In',
     igx_grid_summary_count: 'Count',
     igx_grid_summary_min: 'Min',
     igx_grid_summary_max: 'Max',
