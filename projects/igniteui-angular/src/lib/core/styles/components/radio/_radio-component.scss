@@ -115,6 +115,10 @@
             @include e(label) {
                 @extend %radio-label--disabled !optional;
             }
+
+            @include e(label, $m: before) {
+                @extend %radio-label--disabled !optional;
+            }
         }
 
         @include m(invalid) {
@@ -216,6 +220,14 @@
 
         @include m(vertical) {
             @extend %radio-group-display--vertical !optional;
+        }
+
+        @include m(before) {
+            @extend %radio-group-display--before !optional;
+        }
+
+        @include m(disabled) {
+            @extend %radio-group-display--disabled !optional;
         }
     }
 }
