@@ -211,13 +211,13 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
-        this.target.tooltipTarget = this;
-
         this.checkOutletAndOutsideClick();
         const shouldReturn = this.preMouseEnterCheck();
         if (shouldReturn) {
             return;
         }
+
+        this.target.tooltipTarget = this;
 
         const showingArgs = { target: this, tooltip: this.target, cancel: false };
         this.tooltipShow.emit(showingArgs);
@@ -265,7 +265,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
-        this.target.tooltipTarget = this;
         this.showTooltip();
     }
 
@@ -277,11 +276,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
-        const tooltipTarget = this.target.tooltipTarget?.nativeElement;
-
-        if (tooltipTarget &&
-            tooltipTarget !== event.target &&
-            !tooltipTarget.contains(event.target)
+        if (this.nativeElement !== event.target &&
+            !this.nativeElement.contains(event.target)
         ) {
             this.hideTooltip();
         }
@@ -308,6 +304,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             if (this.target.tooltipTarget !== this) {
                 return;
             }
+
             const hidingArgs = { target: this, tooltip: this.target, cancel: false };
             this.tooltipHide.emit(hidingArgs);
 
@@ -317,7 +314,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         });
 
         this.nativeElement.addEventListener('touchstart', this.onTouchStart = this.onTouchStart.bind(this), { passive: true });
-        this.target.onDocumentTouchStart = this.onDocumentTouchStart.bind(this);
     }
 
     /**
@@ -340,13 +336,13 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     public showTooltip() {
         clearTimeout(this.target.timeoutId);
 
-        this.target.tooltipTarget = this;
-
         if (!this.target.collapsed) {
             //  if close animation has started finish it, or close the tooltip with no animation
             this.target.forceClose(this.mergedOverlaySettings);
             this.target.toBeHidden = false;
         }
+
+        this.target.tooltipTarget = this;
 
         const showingArgs = { target: this, tooltip: this.target, cancel: false };
         this.tooltipShow.emit(showingArgs);

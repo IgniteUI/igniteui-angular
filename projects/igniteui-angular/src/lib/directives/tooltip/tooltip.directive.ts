@@ -1,12 +1,12 @@
 import {
-    Directive, ElementRef, Input, ChangeDetectorRef, Optional, HostBinding, Inject,
-    OnDestroy
+    Directive, ElementRef, Input, ChangeDetectorRef, Optional, HostBinding, Inject, OnDestroy
 } from '@angular/core';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { OverlaySettings } from '../../services/public_api';
 import { IgxNavigationService } from '../../core/navigation';
 import { IgxToggleDirective } from '../toggle/toggle.directive';
-import { first, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
+import { IgxTooltipTargetDirective } from './tooltip-target.directive';
 
 let NEXT_ID = 0;
 /**
@@ -104,11 +104,10 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
      */
     public toBeShown = false;
 
-    /** @hidden */
-    public tooltipTarget;
-
-    /** @hidden */
-    public onDocumentTouchStart: (event?: Event) => void;
+    /**
+     * @hidden
+     */
+    public tooltipTarget: IgxTooltipTargetDirective;
 
     private _destroy$ = new Subject<boolean>();
 
@@ -121,8 +120,12 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
         // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
         super(elementRef, cdr, overlayService, navigationService);
 
-        this.opening.pipe(first(), takeUntil(this._destroy$)).subscribe(() => {
+        this.onDocumentTouchStart = this.onDocumentTouchStart.bind(this);
+        this.overlayService.opening.pipe(takeUntil(this._destroy$)).subscribe(() => {
             document.addEventListener('touchstart', this.onDocumentTouchStart, { passive: true });
+        });
+        this.overlayService.closed.pipe(takeUntil(this._destroy$)).subscribe(() => {
+            document.removeEventListener('touchstart', this.onDocumentTouchStart);
         });
     }
 
@@ -176,5 +179,9 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
             this.close();
             overlaySettings.positionStrategy.settings.closeAnimation = animation;
         }
+    }
+
+    private onDocumentTouchStart(event) {
+        this.tooltipTarget?.onDocumentTouchStart(event);
     }
 }
