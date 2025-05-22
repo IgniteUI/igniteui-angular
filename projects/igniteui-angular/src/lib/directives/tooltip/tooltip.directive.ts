@@ -132,7 +132,10 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
     /** @hidden */
     public override ngOnDestroy() {
         super.ngOnDestroy();
+
         document.removeEventListener('touchstart', this.onDocumentTouchStart);
+        this._destroy$.next(true);
+        this._destroy$.complete();
     }
 
     /**
