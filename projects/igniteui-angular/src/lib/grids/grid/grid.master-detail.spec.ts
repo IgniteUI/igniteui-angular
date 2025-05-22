@@ -358,6 +358,16 @@ describe('IgxGrid Master Detail #grid', () => {
             const firstDetail = GridFunctions.getMasterRowDetail(gridRows[0]);
             expect(firstDetail.textContent.trim()).toBe('NEW TEMPLATE');
         });
+
+        it('should allow grids in details view without breaking the column collection of the master grid', () => {
+            grid = fix.componentInstance.grid;
+            grid.detailTemplate = fix.componentInstance.gridTemplate;
+            fix.detectChanges();
+            grid.toggleRow(fix.componentInstance.data[0].ID);
+            fix.detectChanges();
+            expect(grid.unpinnedColumns.map(c => c.field)).toEqual(['ContactName', 'CompanyName']);
+            expect(fix.componentInstance.childGrid.unpinnedColumns.map(c => c.field)).toEqual(['ColA', 'ColB']);
+        });
     });
 
     describe('Keyboard Navigation ', () => {
@@ -1282,6 +1292,12 @@ describe('IgxGrid Master Detail #grid', () => {
             NEW TEMPLATE
         </div>
     </ng-template>
+    <ng-template igxGridDetail #gridTemplate>
+        <igx-grid #childGrid>
+            <igx-column [field]="'ColA'" [width]="'400px'"></igx-column>
+            <igx-column [field]="'ColB'" [width]="'400px'"></igx-column>
+        </igx-grid>
+    </ng-template>
     `,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxCheckboxComponent, IgxPaginatorComponent, IgxInputGroupComponent, IgxInputDirective]
 })
@@ -1291,6 +1307,12 @@ export class DefaultGridMasterDetailComponent {
 
     @ViewChild('detailTemplate', { read: TemplateRef, static: true })
     public detailTemplate: TemplateRef<any>;
+
+    @ViewChild('gridTemplate', { read: TemplateRef, static: true })
+    public gridTemplate: TemplateRef<any>;
+
+    @ViewChild('childGrid', { read: IgxGridComponent, static: true })
+    public childGrid: IgxGridComponent;
 
     public width = '800px';
     public height = '500px';
