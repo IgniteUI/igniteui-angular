@@ -11,6 +11,7 @@ import { WorksheetData } from './worksheet-data';
 import { IBaseEventArgs } from '../../core/utils';
 import { WorksheetFile } from './excel-files';
 
+/* csSuppress */
 export interface IExcelExportEndedEventArgs extends IBaseEventArgs {
     xlsx?: Object
 }
@@ -18,6 +19,7 @@ export interface IExcelExportEndedEventArgs extends IBaseEventArgs {
 const EXCEL_MAX_ROWS = 1048576;
 const EXCEL_MAX_COLS = 16384;
 
+/* csSuppress */
 /**
  * **Ignite UI for Angular Excel Exporter Service** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/exporter_excel.html)
