@@ -85,7 +85,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
 
     /**
-     * Where to place the tooltip relative to the target element. Default value is `top`.
+     * Where to place the tooltip relative to the target element. Default value is `bottom`.
      * ```html
      * <igx-icon [igxTooltipTarget]="tooltipRef" placement="bottom-start">info</igx-icon>
      * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
@@ -124,29 +124,29 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      *
      * ```typescript
      * // get
-     * let isArrowDisabled = this.tooltip.disableArrow;
+     * let isArrowDisabled = this.tooltip.hasArrow;
      * ```
      *
      * ```typescript
      * // set
-     * this.tooltip.disableArrow = false;
+     * this.tooltip.hasArrow = false;
      * ```
      *
      * ```html
      * <!--set-->
-     * <igx-icon igxTooltipTarget [disableArrow]="true" [tooltip]="'Infragistics Inc. HQ'">info</igx-icon>
+     * <igx-icon igxTooltipTarget [hasArrow]="true" [tooltip]="'Infragistics Inc. HQ'">info</igx-icon>
      * ```
      */
     @Input()
-    public set disableArrow(value: boolean) {
+    public set hasArrow(value: boolean) {
         if (this.target) {
-            this.target.arrow.style.display = value ? 'none' : '';
+            this.target.arrow.style.display = value ? '' : 'none';
         }
-        this._disableArrow = value;
+        this._hasArrow = value;
     }
 
-    public get disableArrow(): boolean {
-        return this._disableArrow;
+    public get hasArrow(): boolean {
+        return this._hasArrow;
     }
 
     /**
@@ -327,9 +327,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     private _destroy$ = new Subject<void>();
     private _autoHideDelay = 180;
     private _isForceClosed = false;
-    private _disableArrow = false;
+    private _hasArrow = false;
     private _offset = 6;
-    private _placement: TooltipPlacement = TooltipPlacement.top;
+    private _placement: TooltipPlacement = TooltipPlacement.bottom;
     private _closeButtonRef?: ComponentRef<IgxTooltipCloseButtonComponent>;
     private _closeTemplate: TemplateRef<any>;
     private _sticky = false;
@@ -419,8 +419,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * @hidden
      */
     public ngOnChanges(changes: SimpleChanges): void {
-        if (changes['disableArrow']) {
-            this.target.arrow.style.display = changes['disableArrow'].currentValue ? 'none' : '';
+        if (changes['hasArrow']) {
+            this.target.arrow.style.display = changes['hasArrow'].currentValue ? '' : 'none';
         }
     }
 
@@ -570,9 +570,11 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     private _checkTooltipForMultipleTargets(): void {
         if (!this.target.tooltipTarget) {
+            this.hasArrow = this._hasArrow;
             this.target.tooltipTarget = this;
         }
         if (this.target.tooltipTarget !== this) {
+            this.hasArrow = this._hasArrow;
             if (this.target.tooltipTarget.sticky) {
                 this.target.tooltipTarget._removeCloseButtonFromTooltip();
             }
