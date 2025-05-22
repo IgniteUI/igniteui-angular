@@ -49,6 +49,27 @@
                 [value]="properties.value? properties.value : 'Bar'">Bar</igx-radio>
             </igx-radio-group>
         </article>
+
+        <article>
+            <strong>Angular Radio Group with Label</strong>
+            <i>* When any of the buttons label position is "before",
+                <br> the group label should be right-aligned.</i>
+
+            <igx-radio-group [alignment]="alignment">
+                <label igxLabel>Radio Group Label</label>
+                <igx-radio
+                [checked]="properties.checked"
+                [disabled]="properties.disabled"
+                [invalid]="properties.invalid"
+                >Radio Button</igx-radio>
+
+                <igx-radio
+                [disabled]="properties.disabled"
+                [invalid]="properties.invalid"
+                [labelPosition]="properties.labelPosition"
+                >Second Radio Button</igx-radio>
+            </igx-radio-group>
+        </article>
     </div>
 
     <div class="wc-inputs">

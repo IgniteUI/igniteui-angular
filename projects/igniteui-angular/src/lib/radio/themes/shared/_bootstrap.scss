@@ -12,8 +12,6 @@ $_theme: $bootstrap;
     --label-margin: #{rem(8px)};
     --scale: scale(0.4375);
     --border-width: #{rem(1px)};
-    --horizontal-group-margin: #{rem(8px)};
-    --vertical-group-margin: #{rem(8px)};
 
     @include e(label) {
         @include type-style(body-1) {
@@ -208,4 +206,9 @@ $_theme: $bootstrap;
             }
         }
     }
+}
+
+@include themed-block(igx-radio-group, bootstrap) {
+    --horizontal-group-margin: #{rem(8px)};
+    --vertical-group-margin: #{rem(8px)};
 }

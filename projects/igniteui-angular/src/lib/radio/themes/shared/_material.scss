@@ -11,8 +11,6 @@ $_theme: $material;
     --label-margin: #{rem(2px)};
     --scale: scale(0.5);
     --border-width: #{rem(2px)};
-    --horizontal-group-margin: #{rem(16px)};
-    --vertical-group-margin: 0;
 
     @include e(composite) {
         &::before,
@@ -40,6 +38,17 @@ $_theme: $material;
             @include e(composite) {
                 border-color: var-get($_theme, 'error-color');
             }
+        }
+    }
+}
+
+@include themed-block(igx-radio-group, material) {
+    --horizontal-group-margin: #{rem(16px)};
+    --vertical-group-margin: 0;
+
+    @include m(vertical) {
+        [igxLabel] {
+            margin-block-end: rem(16px);
         }
     }
 }
