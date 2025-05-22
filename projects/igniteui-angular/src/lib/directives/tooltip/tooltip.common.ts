@@ -5,6 +5,9 @@ import { TooltipPlacement } from './enums';
 import { first } from '../../core/utils';
 
 export const TooltipRegexes = Object.freeze({
+    /** Used for parsing the strings passed in the tooltip `show/hide-trigger` properties. */
+    triggers: /[,\s]+/,
+
     /** Matches horizontal `TooltipPlacement` end positions. `left-end` | `right-end` */
     horizontalEnd: /^(left|right)-end$/,
 
@@ -23,6 +26,15 @@ export const TooltipRegexes = Object.freeze({
     /** Matches vertical `TooltipPlacement` centered positions. `top` | `bottom` */
     verticalCenter:  /^(top|bottom)$/,
 });
+
+export function parseTriggers(triggerString: string): Set<string> {
+    return new Set(
+        (triggerString ?? '')
+            .split(TooltipRegexes.triggers)
+            .map(s => s.trim())
+            .filter(Boolean)
+    );
+}
 
 export const PositionsMap = new Map<TooltipPlacement, PositionSettings>([
     ['top', {
