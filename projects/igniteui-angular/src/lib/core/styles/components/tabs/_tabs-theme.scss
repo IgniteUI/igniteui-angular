@@ -322,6 +322,21 @@
         flex: 0 0 auto;
         background: var-get($theme, 'item-background');
         z-index: 1;
+	    
+	    @if $bootstrap-theme {
+		    position: relative;
+		    
+		    &::after {
+			    content: '';
+			    position: absolute;
+			    bottom: 0;
+			    inset-inline-start: 0;
+			    width: 100%;
+			    height: rem(1px);
+			    background: var-get($theme, 'border-color');
+			    z-index: 0;
+		    }
+	    }
     }
 
     %tabs-header-content {
@@ -333,19 +348,6 @@
     %tabs-header-wrapper {
         position: relative;
         flex-grow: 1;
-
-        @if $bootstrap-theme {
-            &::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                inset-inline-start: 0;
-                width: 100%;
-                height: rem(1px);
-                background: var-get($theme, 'border-color');
-                z-index: 0;
-            }
-        }
     }
 
     %tabs-header-scroll {
@@ -476,7 +478,7 @@
             &:focus {
                 border-top: rem(1px) solid transparent;
                 border-inline: none;
-                border-bottom: rem(1px) solid var-get($theme, 'border-color');
+                border-bottom: rem(1px) solid var-get($theme, 'border-color--hover');
             }
 
             igx-icon {
@@ -578,7 +580,7 @@
 
         @if $indigo-theme {
             &:hover,
-            &:focus-visible {
+            &:focus-within {
                 background: var-get($theme, 'item-hover-background');
             }
         }

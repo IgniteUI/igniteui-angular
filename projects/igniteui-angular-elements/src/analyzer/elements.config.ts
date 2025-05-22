@@ -447,7 +447,7 @@ export var registerConfig = [
   {
     component: IgxGridToolbarAdvancedFilteringComponent,
     selector: "igc-grid-toolbar-advanced-filtering",
-    parents: [IgxGridToolbarComponent],
+    parents: [IgxGridToolbarComponent, IgxGridToolbarActionsComponent],
     contentQueries: [],
     additionalProperties: [],
     methods: [],
@@ -472,7 +472,7 @@ export var registerConfig = [
   {
     component: IgxGridToolbarExporterComponent,
     selector: "igc-grid-toolbar-exporter",
-    parents: [IgxGridToolbarComponent],
+    parents: [IgxGridToolbarComponent, IgxGridToolbarActionsComponent],
     contentQueries: [],
     additionalProperties: [],
     methods: ["export"],
@@ -481,7 +481,7 @@ export var registerConfig = [
   {
     component: IgxGridToolbarHidingComponent,
     selector: "igc-grid-toolbar-hiding",
-    parents: [IgxGridToolbarComponent],
+    parents: [IgxGridToolbarComponent, IgxGridToolbarActionsComponent],
     contentQueries: [],
     additionalProperties: [],
     methods: ["checkAll", "uncheckAll"],
@@ -491,7 +491,7 @@ export var registerConfig = [
   {
     component: IgxGridToolbarPinningComponent,
     selector: "igc-grid-toolbar-pinning",
-    parents: [IgxGridToolbarComponent],
+    parents: [IgxGridToolbarComponent, IgxGridToolbarActionsComponent],
     contentQueries: [],
     additionalProperties: [],
     methods: ["checkAll", "uncheckAll"],

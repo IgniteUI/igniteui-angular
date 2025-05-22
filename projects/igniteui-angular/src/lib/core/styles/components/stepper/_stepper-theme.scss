@@ -670,7 +670,14 @@
 
         &:hover {
             background: var-get($theme, 'step-hover-background');
-            color: var-get($theme, 'title-hover-color');
+
+            %igx-stepper__step-title {
+                color: var-get($theme, 'title-hover-color');
+            }
+
+            %igx-stepper__step-subtitle {
+                color: var-get($theme, 'subtitle-hover-color');
+            }
         }
 
         @if $variant != material {
