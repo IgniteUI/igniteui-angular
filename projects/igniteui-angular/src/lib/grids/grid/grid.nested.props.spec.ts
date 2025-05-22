@@ -2,7 +2,7 @@ import { TestBed, ComponentFixture, fakeAsync, waitForAsync } from '@angular/cor
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { cloneArray, resolveNestedPath } from '../../core/utils';
+import { cloneArray, columnFieldPath, resolveNestedPath } from '../../core/utils';
 import { Component, DebugElement, ViewChild } from '@angular/core';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
@@ -187,10 +187,10 @@ describe('Grid - nested data source properties #grid', () => {
 
         it('should correctly resolve key paths in nested data', () => {
             expect(
-                DATA.map(record => resolveNestedPath(record, 'user.name.first'))
+                DATA.map(record => resolveNestedPath(record, columnFieldPath("user.name.first")))
             ).toEqual(NAMES);
             expect(
-                DATA.map(record => resolveNestedPath(record, 'user.age'))
+                DATA.map(record => resolveNestedPath(record, columnFieldPath("user.age")))
             ).toEqual(AGES);
         });
     });

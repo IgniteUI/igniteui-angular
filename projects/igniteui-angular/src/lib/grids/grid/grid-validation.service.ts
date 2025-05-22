@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { resolveNestedPath } from '../../core/utils';
-import { ColumnType, GridType, IFieldValidationState, IGridFormGroupCreatedEventArgs, IRecordValidationState, ValidationStatus } from '../common/grid.interface';
+import { columnFieldPath, resolveNestedPath } from '../../core/utils';
+import type { ColumnType, GridType, IFieldValidationState, IGridFormGroupCreatedEventArgs, IRecordValidationState, ValidationStatus } from '../common/grid.interface';
 
 @Injectable()
 export class IgxGridValidationService {
@@ -16,7 +16,7 @@ export class IgxGridValidationService {
 
     /** Gets whether state is valid.
     */
-    public get valid() : boolean {
+    public get valid(): boolean {
         return this._valid;
     }
 
@@ -57,7 +57,7 @@ export class IgxGridValidationService {
     * @internal
     */
     private addFormControl(formGroup: FormGroup, data: any, column: ColumnType) {
-        const value = resolveNestedPath(data || {}, column.field);
+        const value = resolveNestedPath(data || {}, columnFieldPath(column.field));
         const field = this.getFieldKey(column.field);
         const control = new FormControl(value, { updateOn: this.grid.validationTrigger });
         control.addValidators(column.validators);
