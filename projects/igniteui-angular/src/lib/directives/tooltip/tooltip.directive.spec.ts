@@ -699,6 +699,33 @@ describe('IgxTooltip', () => {
             expect(tooltip.querySelector('igx-tooltip-close-button')).toBeNull();
         }));
 
+        it('should correctly update tooltip when showing programmatically for sticky and non-sticky targets', fakeAsync(() => {
+            const tooltip = tooltipNativeElement;
+
+            targetOne.sticky = true;
+            fix.detectChanges();
+            targetOne.showTooltip();
+            flush();
+
+            verifyTooltipVisibility(tooltip, targetOne, true);
+            expect(tooltip.role).toBe('status');
+
+            // Programmatically show tooltip for targetTwo (non-sticky) without closing sticky tooltip
+            targetTwo.sticky = false;
+            targetTwo.showTooltip();
+            flush();
+            verifyTooltipPosition(tooltip, targetTwo, false);
+            expect(tooltip.role).toBe('status');
+
+            targetOne.hideTooltip();
+            flush();
+
+            targetTwo.showTooltip();
+            flush();
+            verifyTooltipPosition(tooltip, targetTwo, true);
+            expect(tooltip.role).toBe('tooltip');
+        }));
+
         it('should correctly manage arrow state between different targets', fakeAsync(() => {
             targetOne.hasArrow = true;
             fix.detectChanges();
@@ -842,6 +869,18 @@ describe('IgxTooltip', () => {
             flush()
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false)
+        }));
+
+        it('should correctly display a sticky tooltip on touchstart', fakeAsync(() => {
+            tooltipTarget.sticky = true;
+            fix.detectChanges();
+            touchElement(button);
+            flush();
+
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+            const closeBtn = document.querySelector('.my-close-btn');
+            expect(closeBtn).toBeTruthy();
+            expect(tooltipNativeElement.getAttribute('role')).toBe('status');
         }));
     });
 

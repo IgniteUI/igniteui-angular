@@ -359,18 +359,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     @HostListener('mouseenter')
     public onMouseEnter() {
-        if (this.tooltipDisabled) {
-            return;
-        }
-
-        if (!this.target.collapsed && this.target?.tooltipTarget?.sticky) {
-            return;
-        }
-
-        this._checkOutletAndOutsideClick();
-        this._checkTooltipForMultipleTargets();
-        this._evaluateStickyState();
-        this._showOnInteraction();
+        this._checksBeforeShowing(() => this._showOnInteraction());
     }
 
     /**
@@ -391,11 +380,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     @HostListener('touchstart')
     public onTouchStart() {
-        if (this.tooltipDisabled) {
-            return;
-        }
-
-        this._showOnInteraction();
+        this._checksBeforeShowing(() => this._showOnInteraction());
     }
 
     /**
@@ -403,7 +388,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     @HostListener('document:touchstart', ['$event'])
     public onDocumentTouchStart(event) {
-        if (this.tooltipDisabled) {
+        if (this.tooltipDisabled || this?.target?.tooltipTarget !== this) {
             return;
         }
 
@@ -465,7 +450,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * ```
      */
     public showTooltip() {
-        this._showTooltip(false, true);
+        this._checksBeforeShowing(() => this._showTooltip(false, true));
     }
 
     /**
@@ -498,6 +483,20 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }
     }
 
+    /**
+     * A guard method that performs precondition checks before showing the tooltip.
+     * It ensures that the tooltip is not disabled and not already shown in sticky mode.
+     * If all conditions pass, it executes the provided `action` callback.
+     */
+    private _checksBeforeShowing(action: () => void): void {
+        if (this.tooltipDisabled) return;
+        if (!this.target.collapsed && this.target?.tooltipTarget?.sticky) return;
+
+        this._checkOutletAndOutsideClick();
+        this._checkTooltipForMultipleTargets();
+        action();
+    }
+
     private _hideTooltip(withDelay: boolean): void {
         if (this.target.collapsed) {
             return;
@@ -524,6 +523,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
             if (showingArgs.cancel) return;
         }
+
+        this._evaluateStickyState();
 
         this.target.timeoutId = setTimeout(() => {
             // Call open() of IgxTooltipDirective
