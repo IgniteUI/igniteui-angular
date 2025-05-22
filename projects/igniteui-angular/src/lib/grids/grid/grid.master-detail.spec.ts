@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, DebugElement, QueryList, TemplateRef } from '@angular/core';
+import { Component, ViewChild, OnInit, DebugElement, QueryList, TemplateRef, ContentChild, ViewChildren } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -366,7 +366,7 @@ describe('IgxGrid Master Detail #grid', () => {
             grid.toggleRow(fix.componentInstance.data[0].ID);
             fix.detectChanges();
             expect(grid.unpinnedColumns.map(c => c.field)).toEqual(['ContactName', 'CompanyName']);
-            expect(fix.componentInstance.childGrid.unpinnedColumns.map(c => c.field)).toEqual(['ColA', 'ColB']);
+            expect(fix.componentInstance.childGrid.first.unpinnedColumns.map(c => c.field)).toEqual(['ColA', 'ColB']);
         });
     });
 
@@ -1311,7 +1311,7 @@ export class DefaultGridMasterDetailComponent {
     @ViewChild('gridTemplate', { read: TemplateRef, static: true })
     public gridTemplate: TemplateRef<any>;
 
-    @ViewChild('childGrid', { read: IgxGridComponent, static: true })
+    @ViewChildren('childGrid', { read: IgxGridComponent })
     public childGrid: IgxGridComponent;
 
     public width = '800px';
