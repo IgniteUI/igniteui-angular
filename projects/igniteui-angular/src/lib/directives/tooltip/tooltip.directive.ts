@@ -176,8 +176,6 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
             this.close();
             overlaySettings.positionStrategy.settings.closeAnimation = animation;
         }
-
-        document.removeEventListener('touchstart', this.onDocumentTouchStart);
     }
 
     private onDocumentTouchStart(event) {
