@@ -276,11 +276,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
-        const tooltipTarget = this.target.tooltipTarget?.nativeElement;
-
-        if (tooltipTarget &&
-            tooltipTarget !== event.target &&
-            !tooltipTarget.contains(event.target)
+        if (this.nativeElement !== event.target &&
+            !this.nativeElement.contains(event.target)
         ) {
             this.hideTooltip();
         }
@@ -303,28 +300,17 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this._overlayDefaults.closeOnOutsideClick = false;
         this._overlayDefaults.closeOnEscape = true;
 
-        this.target.opening.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            if (this.target.tooltipTarget === this) {
-                document.addEventListener('touchstart', this.onDocumentTouchStart = this.onDocumentTouchStart.bind(this), { passive: true });
-            }
-        });
-
         this.target.closing.pipe(takeUntil(this.destroy$)).subscribe((event) => {
             if (this.target.tooltipTarget !== this) {
                 return;
             }
 
-            document.removeEventListener('touchstart', this.onDocumentTouchStart);
             const hidingArgs = { target: this, tooltip: this.target, cancel: false };
             this.tooltipHide.emit(hidingArgs);
 
             if (hidingArgs.cancel) {
                 event.cancel = true;
             }
-        });
-
-        this.target.forceClosed.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            document.removeEventListener('touchstart', this.onDocumentTouchStart);
         });
 
         this.nativeElement.addEventListener('touchstart', this.onTouchStart = this.onTouchStart.bind(this), { passive: true });
@@ -336,7 +322,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     public ngOnDestroy() {
         this.hideTooltip();
         this.nativeElement.removeEventListener('touchstart', this.onTouchStart);
-        document.removeEventListener('touchstart', this.onDocumentTouchStart);
         this.destroy$.next();
         this.destroy$.complete();
     }
