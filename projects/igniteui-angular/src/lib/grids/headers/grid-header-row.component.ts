@@ -11,7 +11,7 @@ import {
     ViewChildren,
     booleanAttribute
 } from '@angular/core';
-import { flatten, trackByIdentity } from '../../core/utils';
+import { trackByIdentity } from '../../core/utils';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { ColumnType, GridType, IgxHeadSelectorTemplateContext } from '../common/grid.interface';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
@@ -80,7 +80,7 @@ export class IgxGridHeaderRowComponent implements DoCheck {
      * @hidden @internal
      */
     public get groups(): IgxGridHeaderGroupComponent[] {
-        return flatten(this._groups?.toArray() ?? []);
+        return (this._groups?.toArray() ?? []).flat();
     }
 
     /** Header components in the header row. */
