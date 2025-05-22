@@ -66,7 +66,6 @@ import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxActionStripToken } from '../../action-strip/token';
-import { flatten } from '../../core/utils';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 
 let NEXT_ID = 0;
@@ -1269,7 +1268,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         let fields = [];
         let childEntities;
         if (!rowIsland.autoGenerate) {
-            fields = flatten(rowIsland.childColumns.toArray()).filter(col => col.field)
+            fields = rowIsland.childColumns.toArray().flat().filter(col => col.field)
                 .map(f => ({ field: f.field, dataType: f.dataType })) as FieldType[];
         } else if (firstRowData) {
             const rowIslandFields = Object.keys(firstRowData).map(key => {
