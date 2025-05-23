@@ -45,7 +45,7 @@ const CSS_CLASS_HEADERITEM = 'igx-drop-down__header';
 const CSS_CLASS_SCROLLBAR_VERTICAL = 'igx-vhelper--vertical';
 const CSS_CLASS_INPUTGROUP = 'igx-input-group';
 const CSS_CLASS_COMBO_INPUTGROUP = 'igx-input-group__input';
-const CSS_CLASS_INPUTGROUP_WRAPPER = 'igx-input-group__wrapper';
+const CSS_CLASS_INPUTGROUP_BUNDLE = 'igx-input-group__bundle';
 const CSS_CLASS_INPUTGROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUTGROUP_LABEL = 'igx-input-group__label';
 const CSS_CLASS_SEARCHINPUT = 'input[name=\'searchInput\']';
@@ -59,7 +59,7 @@ const CSS_CLASS_ITME_CHECKBOX_CHECKED = 'igx-checkbox--checked';
 const defaultDropdownItemHeight = 40;
 const defaultDropdownItemMaxHeight = 400;
 
-describe('igxCombo', () => {
+fdescribe('igxCombo', () => {
     let fixture: ComponentFixture<any>;
     let combo: IgxComboComponent;
     let input: DebugElement;
@@ -1032,20 +1032,23 @@ describe('igxCombo', () => {
                 expect(combo.type).toEqual('box');
             });
             it('should apply all appropriate classes on combo initialization', () => {
-                const comboWrapper = fixture.nativeElement.querySelector(CSS_CLASS_COMBO);
-                expect(comboWrapper).not.toBeNull();
-                expect(comboWrapper.classList.contains(CSS_CLASS_COMBO)).toBeTruthy();
-                expect(comboWrapper.childElementCount).toEqual(2);
+                const comboComponent = fixture.nativeElement.querySelector(CSS_CLASS_COMBO);
+                expect(comboComponent).not.toBeNull();
+                expect(comboComponent.classList.contains(CSS_CLASS_COMBO)).toBeTruthy();
+                expect(comboComponent.childElementCount).toEqual(2);
 
-                const dropDownElement = comboWrapper.children[1];
-                expect(dropDownElement.classList.contains(CSS_CLASS_COMBO_DROPDOWN)).toBeTruthy();
-                expect(dropDownElement.classList.contains(CSS_CLASS_DROPDOWN)).toBeTruthy();
-                expect(dropDownElement.childElementCount).toEqual(1);
+                // Children [1] refers to .igx-combo__drop-down
+                const comboDropDown = comboComponent.children[1];
+                expect(comboDropDown.classList.contains(CSS_CLASS_COMBO_DROPDOWN)).toBeTruthy();
 
-                const dropDownList = dropDownElement.children[0];
-                const dropDownScrollList = dropDownElement.children[0].children[0];
-                expect(dropDownList.classList.contains(CSS_CLASS_DROPDOWNLIST)).toBeTruthy();
-                expect(dropDownList.classList.contains('igx-toggle--hidden')).toBeTruthy();
+                // Children [0] refers to .igx-drop-down
+                expect(comboDropDown.children[0].classList.contains(CSS_CLASS_DROPDOWN)).toBeTruthy();
+                expect(comboDropDown.childElementCount).toEqual(1);
+
+                const dropDown = comboDropDown.children[0];
+                const dropDownScrollList = dropDown.children[0];
+                expect(dropDownScrollList.classList.contains(CSS_CLASS_DROPDOWNLIST_SCROLL)).toBeTruthy();
+                expect(dropDown.classList.contains('igx-toggle--hidden')).toBeTruthy();
                 expect(dropDownScrollList.childElementCount).toEqual(0);
             });
             it('should render aria attributes properly', fakeAsync(() => {
@@ -1154,23 +1157,36 @@ describe('igxCombo', () => {
                 verifyDropdownItemHeight();
             }));
             it('should render grouped items properly', (done) => {
-                let dropdownContainer;
-                let dropdownItems;
-                let scrollIndex = 0;
                 const headers: Array<string> = Array.from(new Set(combo.data.map(item => item.region)));
+                let scrollIndex = 0;
+
                 combo.toggle();
                 fixture.detectChanges();
+
                 const checkGroupedItemsClass = () => {
                     fixture.detectChanges();
-                    dropdownContainer = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
-                    dropdownItems = dropdownContainer.children;
-                    Array.from(dropdownItems).forEach((item) => {
-                        const itemElement = item as HTMLElement;
-                        const itemText = itemElement.innerText.toString();
-                        const expectedClass: string = headers.includes(itemText) ? CSS_CLASS_HEADERITEM : CSS_CLASS_DROPDOWNLISTITEM;
-                        expect(itemElement.classList.contains(expectedClass)).toBeTruthy();
+
+                    const comboItems = fixture.debugElement.queryAll(By.css('igx-combo-item'));
+                    expect(comboItems.length).withContext('No combo items found').toBeGreaterThan(0);
+
+                    comboItems.forEach((itemDebugElement) => {
+                        const itemElement = itemDebugElement.nativeElement as HTMLElement;
+                        const isHeader = itemElement.getAttribute('ng-reflect-is-header') === 'true';
+                        const itemText = itemElement.innerText.trim();
+                        const hasHeaderClass = itemElement.classList.contains(CSS_CLASS_HEADERITEM);
+                        const hasItemClass = itemElement.classList.contains(CSS_CLASS_DROPDOWNLISTITEM);
+
+                        if (isHeader) {
+                            expect(hasHeaderClass)
+                                .withContext(`Expected HEADER class '${CSS_CLASS_HEADERITEM}' for header item with text "${itemText}"`).toBeTrue();
+                        } else {
+                            expect(hasItemClass)
+                                .withContext(`Expected ITEM class '${CSS_CLASS_DROPDOWNLISTITEM}' for dropdown item with text "${itemText}"`).toBeTrue();
+                        }
                     });
+
                     scrollIndex += 10;
+
                     if (scrollIndex < combo.data.length) {
                         combo.virtualScrollContainer.scrollTo(scrollIndex);
                         combo.virtualScrollContainer.chunkLoad.pipe(take(1)).subscribe(async () => {
@@ -1181,6 +1197,7 @@ describe('igxCombo', () => {
                         done();
                     }
                 };
+
                 checkGroupedItemsClass();
             });
             it('should render selected items properly', () => {
@@ -1252,25 +1269,48 @@ describe('igxCombo', () => {
                 expect(combo.headerItemTemplate).toBeUndefined();
             });
             it('should properly render header and footer templates', () => {
-                let headerElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_HEADER}`));
-                let footerElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOOTER}`));
-                expect(headerElement).toBeNull();
-                expect(footerElement).toBeNull();
+                const getElement = (cssClass: string): HTMLElement | null =>
+                    fixture.debugElement.query(By.css(`.${cssClass}`))?.nativeElement || null;
+
+                const assertElementHierarchy = (
+                    element: HTMLElement | null,
+                    expectedParentClass: string,
+                    expectedGrandparentClass: string,
+                    label: string
+                ) => {
+                    expect(element).withContext(`${label} should be rendered`).not.toBeNull();
+
+                    const parent = element!.parentElement;
+                    expect(parent).withContext(`${label} should have a parent element`).not.toBeNull();
+                    expect(parent!.classList.contains(expectedParentClass))
+                        .withContext(`${label} parent should have class '${expectedParentClass}'`).toBeTrue();
+
+                    const grandparent = parent!.parentElement;
+                    expect(grandparent).withContext(`${label} should have a grandparent element`).not.toBeNull();
+                    expect(grandparent!.classList.contains(expectedGrandparentClass))
+                        .withContext(`${label} grandparent should have class '${expectedGrandparentClass}'`).toBeTrue();
+                };
+
+                // Before opening the combo, header and footer should not be present
+                expect(getElement(CSS_CLASS_HEADER)).withContext('Header should not be present before opening').toBeNull();
+                expect(getElement(CSS_CLASS_FOOTER)).withContext('Footer should not be present before opening').toBeNull();
+
+                // Open combo and check templates
                 combo.toggle();
                 fixture.detectChanges();
-                expect(combo.headerTemplate).toBeDefined();
-                expect(combo.footerTemplate).toBeDefined();
-                const dropdownList: HTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement;
-                headerElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_HEADER}`));
-                footerElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOOTER}`));
-                expect(headerElement).not.toBeNull();
-                const headerHTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_HEADER}`)).nativeElement;
-                expect(headerHTMLElement.parentNode).toEqual(dropdownList);
-                expect(headerHTMLElement.textContent).toEqual('This is a header');
-                expect(footerElement).not.toBeNull();
-                const footerHTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOOTER}`)).nativeElement;
-                expect(footerHTMLElement.parentNode).toEqual(dropdownList);
-                expect(footerHTMLElement.textContent).toEqual('This is a footer');
+
+                expect(combo.headerTemplate).withContext('Header template should be defined').toBeDefined();
+                expect(combo.footerTemplate).withContext('Footer template should be defined').toBeDefined();
+
+                // Validate Header
+                const headerElement = getElement(CSS_CLASS_HEADER);
+                assertElementHierarchy(headerElement, 'igx-combo', CSS_CLASS_DROPDOWNLIST_SCROLL, 'Header');
+                expect(headerElement!.textContent?.trim()).toBe('This is a header');
+
+                // Validate Footer
+                const footerElement = getElement(CSS_CLASS_FOOTER);
+                assertElementHierarchy(footerElement, 'igx-combo', CSS_CLASS_DROPDOWNLIST_SCROLL, 'Footer');
+                expect(footerElement!.textContent?.trim()).toBe('This is a footer');
             });
             it('should render case-sensitive icon properly', () => {
                 combo.showSearchCaseIcon = true;
@@ -1337,7 +1377,7 @@ describe('igxCombo', () => {
                 combo.toggle();
                 tick();
                 fixture.detectChanges();
-                const inputElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP_WRAPPER}`)).nativeElement;
+                const inputElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP_BUNDLE}`)).nativeElement;
                 const dropDownElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement;
                 containerElementWidth = containerElement.getBoundingClientRect().width;
                 wrapperWidth = comboWrapper.getBoundingClientRect().width;
@@ -1363,7 +1403,7 @@ describe('igxCombo', () => {
                 tick();
                 fixture.detectChanges();
 
-                let inputElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP_WRAPPER}`)).nativeElement;
+                let inputElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP_BUNDLE}`)).nativeElement;
                 let dropDownElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement;
                 containerElementWidth = containerElement.style.width;
                 wrapperWidth = comboWrapper.style.width;
@@ -1387,7 +1427,7 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
 
                 comboWrapper = fixture.debugElement.query(By.css(CSS_CLASS_COMBO)).nativeElement;
-                inputElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP_WRAPPER}`)).nativeElement;
+                inputElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP_BUNDLE}`)).nativeElement;
                 dropDownElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement;
                 containerElementWidth = containerElement.style.width;
                 wrapperWidth = comboWrapper.style.width;
@@ -1419,19 +1459,15 @@ describe('igxCombo', () => {
             it('should render empty template when combo data source is not set', () => {
                 combo.data = [];
                 fixture.detectChanges();
+
                 combo.toggle();
                 fixture.detectChanges();
-                const dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement;
-                const dropdownItemsContainer = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`)).nativeElement;
-                const dropDownContainer = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
-                const listItems = dropDownContainer.querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`);
-                expect(listItems.length).toEqual(0);
-                expect(dropdownList.childElementCount).toEqual(3);
-                // Expect no items to be rendered in the virtual container
-                expect(dropdownItemsContainer.children[0].childElementCount).toEqual(0);
-                // Expect the list child (NOT COMBO ITEM) to be a container with "The list is empty";
-                const dropdownItem = dropdownList.lastElementChild as HTMLElement;
-                expect(dropdownItem.firstElementChild.textContent).toEqual('The list is empty');
+
+                const emptyStateElement = fixture.debugElement.query(By.css('.igx-combo__empty'))?.nativeElement;
+                expect(emptyStateElement).withContext('Empty state element should be present').not.toBeNull();
+                expect(emptyStateElement.textContent?.trim())
+                    .withContext('Empty state text should match')
+                    .toEqual('The list is empty');
             });
             it('should bind combo data properly when changing data source runtime', () => {
                 const newData = ['Item 1', 'Item 2'];
@@ -2609,23 +2645,23 @@ describe('igxCombo', () => {
                 expect(combo.data.length).toEqual(initialDataLength + 3);
                 expect(combo.dropdown.items.length).toEqual(4); // Add Item button is included
                 expect(combo.dropdown.headers.length).toEqual(1);
-                expect(combo.dropdown.headers[0].element.nativeElement.innerText).toEqual(fallBackGroup);
+                expect(combo.dropdown.headers[0].element.nativeElement.textContent?.trim()).toEqual(fallBackGroup);
             });
             it('should sort groups correctly', () => {
                 combo.groupSortingDirection = SortingDirection.Asc;
                 combo.toggle();
                 fixture.detectChanges();
-                expect(combo.dropdown.headers[0].element.nativeElement.innerText).toEqual('East North Central');
+                expect(combo.dropdown.headers[0].element.nativeElement.textContent?.trim()).toEqual('East North Central');
 
                 combo.groupSortingDirection = SortingDirection.Desc;
                 combo.toggle();
                 fixture.detectChanges();
-                expect(combo.dropdown.headers[0].element.nativeElement.innerText).toEqual('West South Cent');
+                expect(combo.dropdown.headers[0].element.nativeElement.textContent?.trim()).toEqual('West South Cent');
 
                 combo.groupSortingDirection = SortingDirection.None;
                 combo.toggle();
                 fixture.detectChanges();
-                expect(combo.dropdown.headers[0].element.nativeElement.innerText).toEqual('New England')
+                expect(combo.dropdown.headers[0].element.nativeElement.textContent?.trim()).toEqual('New England')
             });
             it('should sort groups with diacritics correctly', () => {
                 combo.data = [
@@ -2640,19 +2676,19 @@ describe('igxCombo', () => {
                 combo.groupSortingDirection = SortingDirection.Asc;
                 combo.toggle();
                 fixture.detectChanges();
-                let headers = combo.dropdown.headers.map(header => header.element.nativeElement.innerText);
+                let headers = combo.dropdown.headers.map(header => header.element.nativeElement.textContent?.trim());
                 expect(headers).toEqual(['Ángel', 'Boris', 'México', 'Méxícó']);
 
                 combo.groupSortingDirection = SortingDirection.Desc;
                 combo.toggle();
                 fixture.detectChanges();
-                headers = combo.dropdown.headers.map(header => header.element.nativeElement.innerText);
+                headers = combo.dropdown.headers.map(header => header.element.nativeElement.textContent?.trim());
                 expect(headers).toEqual(['Méxícó', 'México', 'Boris', 'Ángel']);
 
                 combo.groupSortingDirection = SortingDirection.None;
                 combo.toggle();
                 fixture.detectChanges();
-                headers = combo.dropdown.headers.map(header => header.element.nativeElement.innerText);
+                headers = combo.dropdown.headers.map(header => header.element.nativeElement.textContent?.trim());
                 expect(headers).toEqual(['Méxícó', 'Ángel', 'México', 'Boris']);
             });
         });

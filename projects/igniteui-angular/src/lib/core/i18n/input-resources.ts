@@ -4,6 +4,6 @@ export interface IInputResourceStrings {
 }
 
 export const InputResourceStringsEN: IInputResourceStrings = {
-    igx_input_upload_button: 'Upload File',
+    igx_input_upload_button: 'Browse',
     igx_input_file_placeholder: 'No file chosen',
 };
