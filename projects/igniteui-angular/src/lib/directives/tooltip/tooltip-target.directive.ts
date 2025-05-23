@@ -119,8 +119,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
 
     /**
-     * Controls whether the arrow element of the tooltip is rendered.
-     * Set to true to hide the arrow. Default value is `false`.
+     * Controls whether to display an arrow indicator for the tooltip.
+     * Set to true to show the arrow. Default value is `false`.
      *
      * ```typescript
      * // get
@@ -129,7 +129,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      *
      * ```typescript
      * // set
-     * this.tooltip.hasArrow = false;
+     * this.tooltip.hasArrow = true;
      * ```
      *
      * ```html
