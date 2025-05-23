@@ -442,19 +442,39 @@ $_theme: $material;
     }
 
     @include b(igx-radio-group) {
-        display: block;
+        display: grid;
+        column-gap: var(--horizontal-group-margin);
+        align-items: start;
+        width: max-content;
 
-        igx-radio:not(:last-of-type) {
-            margin-inline-end: var(--horizontal-group-margin);
+        &:not(.igx-radio-group--vertical) {
+            [igxLabel] {
+                margin-block-end: rem(16px);
+            }
+
+            igx-radio {
+                grid-row: 2;
+            }
         }
 
         @include m(vertical) {
-            display: flex;
-            flex-flow: column;
+            row-gap: var(--vertical-group-margin);
 
-            igx-radio:not(:last-of-type) {
-                margin-inline-end: 0;
-                margin-block-end: var(--vertical-group-margin);
+            [igxLabel] {
+                margin-block-end: rem(8px);
+            }
+        }
+
+        @include mx(before, vertical) {
+            igx-radio,
+            [igxLabel] {
+                justify-self: flex-end;
+            }
+        }
+
+        @include m(disabled) {
+            [igxLabel] {
+                color: var-get($_theme, 'disabled-color');
             }
         }
     }

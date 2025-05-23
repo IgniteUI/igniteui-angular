@@ -1,12 +1,12 @@
 import {
-    AfterContentInit,
-    AfterViewInit,
     ChangeDetectorRef,
-    ContentChildren, Directive, DoCheck, EventEmitter, HostBinding, HostListener, Input, OnDestroy, Optional, Output, QueryList, Self, booleanAttribute
+    Directive, DoCheck, EventEmitter, HostBinding, HostListener, Input, OnDestroy, Optional, Output, QueryList, Self, booleanAttribute,
+    contentChildren,
+    effect,
+    signal
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
-import { fromEvent, noop, Subject } from 'rxjs';
-import { startWith, takeUntil } from 'rxjs/operators';
+import { fromEvent, noop, Subject, takeUntil } from 'rxjs';
 import { mkenum } from '../../core/utils';
 import { IgxRadioComponent } from '../../radio/radio.component';
 import { IgxDirectionality } from '../../services/direction/directionality';
@@ -51,7 +51,7 @@ let nextId = 0;
     selector: 'igx-radio-group, [igxRadioGroup]',
     standalone: true
 })
-export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, ControlValueAccessor, OnDestroy, DoCheck {
+export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, DoCheck {
     /**
      * Returns reference to the child radio buttons.
      *
@@ -60,7 +60,14 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
      * let radioButtons =  this.radioGroup.radioButtons;
      * ```
      */
-    @ContentChildren(IgxRadioComponent, { descendants: true }) public radioButtons: QueryList<IgxRadioComponent>;
+    private _radioButtons = contentChildren(IgxRadioComponent, { descendants: true });
+    private _radioButtonsList = new QueryList<IgxRadioComponent>();
+
+    public get radioButtons(): QueryList<IgxRadioComponent> {
+        const buttons = Array.from(this._radioButtons());
+        this._radioButtonsList.reset(buttons);
+        return this._radioButtonsList;
+    }
 
     /**
      * Sets/gets the `value` attribute.
@@ -74,6 +81,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
     public get value(): any {
         return this._value;
     }
+
     public set value(newValue: any) {
         if (this._value !== newValue) {
             this._value = newValue;
@@ -93,6 +101,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
     public get name(): string {
         return this._name;
     }
+
     public set name(newValue: string) {
         if (this._name !== newValue) {
             this._name = newValue;
@@ -115,6 +124,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
     public get required(): boolean {
         return this._required;
     }
+
     public set required(value: boolean) {
         this._required = value;
         this._setRadioButtonsRequired();
@@ -133,6 +143,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
     public get selected() {
         return this._selected;
     }
+
     public set selected(selected: IgxRadioComponent | null) {
         if (this._selected !== selected) {
             this._selected = selected;
@@ -155,6 +166,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
     public get invalid(): boolean {
         return this._invalid;
     }
+
     public set invalid(value: boolean) {
         this._invalid = value;
         this._setRadioButtonsInvalid();
@@ -195,6 +207,30 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
     @HostBinding('class.igx-radio-group--vertical')
     private vertical = false;
 
+    /**
+     * A css class applied to the component if any of the
+     * child radio buttons labelPosition is set to `before`.
+     *
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-radio-group--before')
+    protected get labelBefore() {
+        return this._radioButtons().some((radio) => radio.labelPosition === 'before');
+    }
+
+    /**
+     * A css class applied to the component if all 
+     * child radio buttons are disabled.
+     *
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-radio-group--disabled')
+    protected get disabled() {
+        return this._radioButtons().every((radio) => radio.disabled);
+    }
+
     @HostListener('click', ['$event'])
     protected handleClick(event: MouseEvent) {
         event.stopPropagation();
@@ -207,7 +243,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
     @HostListener('keydown', ['$event'])
     protected handleKeyDown(event: KeyboardEvent) {
         const { key } = event;
-        const buttons = this.radioButtons.filter(radio => !radio.disabled);
+        const buttons = this._radioButtons().filter(radio => !radio.disabled);
         const checked = buttons.find((radio) => radio.checked);
 
         if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
@@ -304,7 +340,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
      * @hidden
      * @internal
      */
-    private _isInitialized = false;
+    private _isInitialized = signal(false);
     /**
      * @hidden
      * @internal
@@ -330,64 +366,8 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
      * @hidden
      * @internal
      */
-    public ngAfterContentInit() {
-        // The initial value can possibly be set by NgModel and it is possible that
-        // the OnInit of the NgModel occurs after the OnInit of this class.
-        this._isInitialized = true;
-
-        this.radioButtons.changes.pipe(startWith(0), takeUntil(this.destroy$)).subscribe(() => {
-            this.queryChange$.next();
-            setTimeout(() => this._initRadioButtons());
-        });
-
-
-        if (this.ngControl) {
-            this.radioButtons.forEach((button) => {
-                if (this.ngControl.disabled) {
-                    button.disabled = this.ngControl.disabled;
-                }
-            });
-        }
-    }
-
-    /**
-     * @hidden
-     * @internal
-    */
-    public ngAfterViewInit() {
-        if (this.ngControl) {
-            this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                this.invalid = false;
-            });
-
-            if (this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
-                this._required = this.ngControl?.control?.hasValidator(Validators.required);
-            }
-        }
-
-        if (this.radioButtons) {
-            this.radioButtons.forEach((button) => {
-                button.blurRadio
-                    .pipe(takeUntil(this.destroy$))
-                    .subscribe(() => {
-                        this.updateValidityOnBlur()
-                    });
-
-                fromEvent(button.nativeElement, 'keyup')
-                    .pipe(takeUntil(this.destroy$))
-                    .subscribe((event: KeyboardEvent) => {
-                        this.updateOnKeyUp(event)
-                    });
-            });
-        }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
     private updateValidityOnBlur() {
-        this.radioButtons.forEach((button) => {
+        this._radioButtons().forEach((button) => {
             button.focused = false;
 
             if (button.invalid) {
@@ -401,10 +381,10 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
      * @internal
      */
     private updateOnKeyUp(event: KeyboardEvent) {
-        const checked = this.radioButtons.find(x => x.checked);
+        const checked = this._radioButtons().find(x => x.checked);
 
         if (event.key === "Tab") {
-            this.radioButtons.forEach((radio) => {
+            this._radioButtons().forEach((radio) => {
                 if (radio === checked) {
                     checked.focused = true;
                 }
@@ -420,10 +400,10 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
         // Needed so that the keyboard navigation of a radio group
         // placed inside a dialog works properly
         if (this.radioButtons) {
-            const checked = this.radioButtons.find(x => x.checked);
+            const checked = this._radioButtons().find(x => x.checked);
 
             if (checked) {
-                this.radioButtons.forEach((button) => {
+                this._radioButtons().forEach((button) => {
                     checked.nativeElement.tabIndex = 0;
 
                     if (button !== checked) {
@@ -469,7 +449,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
      */
     public registerOnTouched(fn: () => void) {
         if (this.radioButtons) {
-            this.radioButtons.forEach((button) => {
+            this._radioButtons().forEach((button) => {
                 button.registerOnTouched(fn);
             });
         }
@@ -492,29 +472,40 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
         if (this.ngControl !== null) {
             this.ngControl.valueAccessor = this;
         }
+
+        effect(() => {
+            this.initialize();
+
+            Promise.resolve().then(() => {
+                this.setRadioButtons();
+            });
+        });
     }
 
     /**
      * @hidden
      * @internal
      */
-    private _initRadioButtons() {
-        if (this.radioButtons) {
-            const props = { name: this._name, required: this._required };
-            this.radioButtons.forEach((button) => {
-                Object.assign(button, props);
+    private initialize() {
+        // The initial value can possibly be set by NgModel and it is possible that
+        // the OnInit of the NgModel occurs after the OnInit of this class.
+        this._isInitialized.set(true);
 
-                if (button.value === this._value) {
-                    button.checked = true;
-                    this._selected = button;
-                    this.cdr.markForCheck();
+        if (this.ngControl) {
+            this.ngControl.statusChanges
+                .pipe(takeUntil(this.destroy$))
+                .subscribe(() => {
+                    this.invalid = false;
+                });
+    
+            if (this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
+                this._required = this.ngControl?.control?.hasValidator(Validators.required);
+            }
+
+            this._radioButtons().forEach((button) => {
+                if (this.ngControl.disabled) {
+                    button.disabled = this.ngControl.disabled;
                 }
-
-                button.change.pipe(
-                    takeUntil(button.destroy$),
-                    takeUntil(this.destroy$),
-                    takeUntil(this.queryChange$)
-                ).subscribe((ev) => this._selectedRadioButtonChanged(ev));
             });
         }
     }
@@ -523,8 +514,47 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
      * @hidden
      * @internal
      */
+    private setRadioButtons() {
+        this._radioButtons().forEach((button) => {
+            button.name = this._name;
+            button.required = this._required;
+
+            if (button.value === this._value) {
+                button.checked = true;
+                this._selected = button;
+                this.cdr.markForCheck();
+            }
+
+            this._setRadioButtonEvents(button);
+        });
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    private _setRadioButtonEvents(button: any) {
+        button.change.pipe(
+            takeUntil(button.destroy$),
+            takeUntil(this.destroy$),
+            takeUntil(this.queryChange$)
+        ).subscribe((ev) => this._selectedRadioButtonChanged(ev));
+    
+        button.blurRadio
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(() => this.updateValidityOnBlur());
+
+        fromEvent(button.nativeElement, 'keyup')
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((event: KeyboardEvent) => this.updateOnKeyUp(event));
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     private _selectedRadioButtonChanged(args: IChangeCheckboxEventArgs) {
-        this.radioButtons.forEach((button) => {
+        this._radioButtons().forEach((button) => {
             button.checked = button.id === args.owner.id;
             if (button.checked && button.ngControl) {
                 this.invalid = button.ngControl.invalid;
@@ -548,7 +578,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
      */
     private _setRadioButtonNames() {
         if (this.radioButtons) {
-            this.radioButtons.forEach((button) => {
+            this._radioButtons().forEach((button) => {
                 button.name = this._name;
             });
         }
@@ -560,7 +590,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
      */
     private _selectRadioButton() {
         if (this.radioButtons) {
-            this.radioButtons.forEach((button) => {
+            this._radioButtons().forEach((button) => {
                 if (this._value === null) {
                     // no value - uncheck all radio buttons
                     if (button.checked) {
@@ -593,7 +623,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
      */
     private _setRadioButtonsRequired() {
         if (this.radioButtons) {
-            this.radioButtons.forEach((button) => {
+            this._radioButtons().forEach((button) => {
                 button.required = this._required;
             });
         }
@@ -605,7 +635,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
      */
     private _setRadioButtonsInvalid() {
         if (this.radioButtons) {
-            this.radioButtons.forEach((button) => {
+            this._radioButtons().forEach((button) => {
                 button.invalid = this._invalid;
             });
         }

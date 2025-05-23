@@ -11,8 +11,6 @@ $_theme: $fluent;
     --label-margin: #{rem(8px)};
     --scale: scale(0.5);
     --border-width: #{rem(1px)};
-    --horizontal-group-margin: #{rem(12px)};
-    --vertical-group-margin: #{rem(8px)};
 
     @include e(label) {
         @include type-style(body-2) {
@@ -38,4 +36,9 @@ $_theme: $fluent;
             box-shadow: 0 0 0 rem(1px) var-get($_theme, 'focus-outline-color');
         }
     }
+}
+
+@include themed-block(igx-radio-group, fluent) {
+    --horizontal-group-margin: #{rem(12px)};
+    --vertical-group-margin: #{rem(8px)};
 }
