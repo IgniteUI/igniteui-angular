@@ -46,15 +46,18 @@
     }
 
     $theme: digest-schema($toast-schema);
-    $meta: map.get($theme, '_meta');
+
+    @if not($text-color) and $background {
+        $text-color: adaptive-contrast(var(--background));
+    }
+
+    @if not($border-color) and $text-color {
+        $border-color: hsla(from var(--text-color) h s l / 0.3);
+    }
 
     @if not($shadow) {
         $elevation: map.get($toast-schema, 'elevation');
         $shadow: elevation($elevation);
-    }
-
-    @if not($text-color) and $background {
-        $text-color: text-contrast($background);
     }
 
     @return extend($theme, (
@@ -64,10 +67,6 @@
         text-color: $text-color,
         border-color: $border-color,
         shadow: $shadow,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -77,8 +76,8 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin toast($theme) {
     @include css-vars($theme);
-    $variant: map.get($theme, '_meta', 'variant');
 
+    $variant: map.get($theme, '_meta', 'theme');
     $width: rem(52px);
     $margin: rem(42px) auto;
 
