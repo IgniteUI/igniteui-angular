@@ -12,7 +12,6 @@
 
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Color} $background-color [null] - The summaries background color is inherited form igx-grid__tfoot
-/// @param {Color} $focus-background-color [null] - The background color when a summary item is on focus.
 /// @param {Color} $label-color [null] - The summaries label color.
 /// @param {Color} $result-color [null] - The summaries value/result color.
 /// @param {Color} $border-color [null] - The summaries border color.
@@ -32,7 +31,6 @@
     $schema: $light-material-schema,
 
     $background-color: null,
-    $focus-background-color: null,
     $label-color: null,
     $result-color: null,
     $border-color: null,
@@ -74,7 +72,6 @@
         name: $name,
         selector: $selector,
         background-color: $background-color,
-        focus-background-color: $focus-background-color,
         label-color: $label-color,
         result-color: $result-color,
         border-color: $border-color,
@@ -130,15 +127,6 @@
         background: var-get($theme, 'background-color', inherit);
         overflow: hidden;
         outline-style: none;
-
-        &::after {
-            position: absolute;
-            inset: 0;
-        }
-
-        &:focus::after {
-            background: var-get($theme, 'focus-background-color');
-        }
 
         @if $variant == 'indigo' {
             border-top: rem(1px) solid var-get($theme, 'border-color');
