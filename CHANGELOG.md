@@ -2,6 +2,41 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 20.0.0
+### General
+- `IgxTooltipTarget`
+    - **Behavioral Changes**
+        - The `showDelay` input property now defaults to `200`.
+        - The `hideDelay` input property now defaults to `300`.
+        - The `showTooltip` and `hideTooltip` methods do not take `showDelay`/`hideDelay` into account.
+
+### New Features
+- `IgxTooltip`
+    - The tooltip now remains open while interacting with it.
+- `IgxTooltipTarget`
+    - Introduced a new `hasArrow` input property. Controls whether to display an arrow indicator for the tooltip. Defaults to `false`.
+    - Introduced a new `sticky` input property. When set to `true`, the tooltip renders a default close icon `x`. The tooltip remains visible until the user closes it via the close icon `x` or `Esc` key. Defaults to `false`.
+    - Introduced a new `closeButtonTemplate` input property that allows templating the default close icon `x`.
+    ```html
+    <igx-icon [igxTooltipTarget]="tooltipRef" [closeButtonTemplate]="customClose">info</igx-icon>
+    <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+
+    <ng-template #customClose>
+        <button igxButton>Close</button>
+    </ng-template>
+    ```
+
+    - Introduced a new `placement` input property of type `TooltipPlacement`. Controls where to place the tooltip relative to the target element. Default value is `bottom`. Supported values are `top`, `top-start`, `top-end`, `bottom`, `bottom-start`, `bottom-end`, `right`, `right-start`, `right-end`, `left`, `left-start`, `left-end`.
+
+    _Note:_ Positioning the arrow is based on the `placement` property. If `hasArrow` is set to `true`, changing the `placement` property will change the arrow position as well.
+    ```html
+    <igx-icon [igxTooltipTarget]="tooltipRef" [placement]="'top-start'">info</igx-icon>
+    <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+    ```
+    - Introduced a new `offset` input property. Controls the offset of the tooltip from the target in pixels. Default value is 6.
+
+    _Note:_ If a custom `positionStrategy` is used, the `placement` and `offset` properties (if set) will not be taken into account and the arrow (if enabled) will not be displayed.
+
 ## 19.2.0
 
 ### General
