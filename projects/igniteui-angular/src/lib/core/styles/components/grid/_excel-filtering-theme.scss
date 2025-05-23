@@ -308,7 +308,7 @@
         }
 
         igx-icon {
-            --component-size: #{if($variant == 'indigo', 2, var(--grid-size))};
+            --component-size: #{if($variant == 'indigo', 2, 1)};
 
             display: initial;
             width: var(--size) !important;
