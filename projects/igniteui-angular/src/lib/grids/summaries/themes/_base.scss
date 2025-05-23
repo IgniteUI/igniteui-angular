@@ -24,15 +24,6 @@ $_theme: $material;
         overflow: hidden;
         outline-style: none;
 
-        &::after {
-            position: absolute;
-            inset: 0;
-        }
-
-        &:focus::after {
-            background: var-get($_theme, 'focus-background-color');
-        }
-
         @include e(item) {
             display: flex;
             align-items: center;
