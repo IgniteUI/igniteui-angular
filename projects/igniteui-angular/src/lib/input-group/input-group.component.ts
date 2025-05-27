@@ -1,4 +1,4 @@
-import { DOCUMENT, NgTemplateOutlet, NgClass } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectorRef,
     Component,
@@ -7,12 +7,17 @@ import {
     DestroyRef,
     ElementRef,
     HostBinding,
-    HostListener, Inject, Input,
-    Optional, QueryList, booleanAttribute,
-    inject
+    HostListener,
+    Inject,
+    Input,
+    Optional,
+    QueryList,
+    booleanAttribute,
+    inject,
+    ViewEncapsulation,
 } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
-import { PlatformUtil, getComponentTheme } from '../core/utils';
+import { PlatformUtil } from '../core/utils';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import {
@@ -31,8 +36,10 @@ import { IgxTheme, THEME_TOKEN, ThemeToken } from '../services/theme/theme.token
 @Component({
     selector: 'igx-input-group',
     templateUrl: 'input-group.component.html',
+    styleUrl: 'input-group.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }],
-    imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent]
+    imports: [NgTemplateOutlet, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
 })
 export class IgxInputGroupComponent implements IgxInputGroupBase {
     /**
@@ -122,7 +129,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     private _destroyRef = inject(DestroyRef);
     private _type: IgxInputGroupType = null;
     private _filled = false;
-    private _theme: IgxTheme;
+    protected _theme: IgxTheme;
     private _resourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
 
     /** @hidden */
@@ -269,7 +276,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     /** @hidden @internal */
     @HostBinding('class.igx-input-group--prefixed')
     public get hasPrefixes() {
-        return this._prefixes.length > 0 || this.isFileType;
+        return this._prefixes.length > 0;
     }
 
     /** @hidden @internal */
@@ -280,7 +287,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     /** @hidden @internal */
     @HostBinding('class.igx-input-group--suffixed')
     public get hasSuffixes() {
-        return this._suffixes.length > 0 || this.isFileType && this.isFilled;
+        return this._suffixes.length > 0;
     }
 
     /** @hidden @internal */
@@ -315,8 +322,15 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
      * }
      * ```
      */
+    @HostBinding('class.igx-input-group--line')
     public get isTypeLine(): boolean {
         return this.type === 'line' && this._theme === 'material';
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-input-group--base')
+    public get isNotBorder(): boolean {
+        return this.type !== 'border' && this._theme === 'material';
     }
 
     /**
@@ -370,50 +384,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
         return this.type === 'border' && this._theme === 'material';
     }
 
-    /**
-     * Returns true if the `IgxInputGroupComponent` theme is Fluent.
-     * ```typescript
-     * @ViewChild("MyInputGroup1")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit(){
-     *    let isTypeFluent = this.inputGroup.isTypeFluent;
-     * }
-     * ```
-     */
-    @HostBinding('class.igx-input-group--fluent')
-    public get isTypeFluent() {
-        return this._theme === 'fluent';
-    }
 
-    /**
-     * Returns true if the `IgxInputGroupComponent` theme is Bootstrap.
-     * ```typescript
-     * @ViewChild("MyInputGroup1")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit(){
-     *    let isTypeBootstrap = this.inputGroup.isTypeBootstrap;
-     * }
-     * ```
-     */
-    @HostBinding('class.igx-input-group--bootstrap')
-    public get isTypeBootstrap() {
-        return this._theme === 'bootstrap';
-    }
-
-    /**
-     * Returns true if the `IgxInputGroupComponent` theme is Indigo.
-     * ```typescript
-     * @ViewChild("MyInputGroup1")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit(){
-     *    let isTypeIndigo = this.inputGroup.isTypeIndigo;
-     * }
-     * ```
-     */
-    @HostBinding('class.igx-input-group--indigo')
-    public get isTypeIndigo() {
-        return this._theme === 'indigo';
-    }
 
     /**
      * Returns whether the `IgxInputGroupComponent` type is search.
@@ -440,21 +411,5 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     /** @hidden */
     public set filled(val) {
         this._filled = val;
-    }
-
-    private setComponentTheme() {
-        if (!this.themeToken.preferToken) {
-            const theme = getComponentTheme(this.element.nativeElement);
-
-            if (theme && theme !== this._theme) {
-                this.theme = theme;
-                this.cdr.markForCheck();
-            }
-        }
-    }
-
-    /** @hidden @internal */
-    public ngAfterContentChecked() {
-        this.setComponentTheme();
     }
 }
