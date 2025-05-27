@@ -15,7 +15,7 @@ import { GridPagingMode, IgxButtonDirective, IgxCardComponent, IgxCardContentDir
 export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
-    public mode: GridPagingMode = GridPagingMode.Remote;
+    public mode: GridPagingMode = 'remote';
     public page = 0;
     public totalCount = 0;
     public pages = [];

@@ -4,7 +4,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridFilteringComponent, IgxTreeGridFilteringESFTemplatesComponent, IgxTreeGridFilteringRowEditingComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../data-operations/filtering-condition';
 import { FilteringStrategy } from '../../data-operations/filtering-strategy';
 import { TreeGridFilteringStrategy, TreeGridFormattedValuesFilteringStrategy, TreeGridMatchingRecordsOnlyFilteringStrategy } from './tree-grid.filtering.strategy';
@@ -18,11 +17,10 @@ import { GridColumnDataType } from '../../data-operations/data-util';
 const IGX_CHECKBOX_LABEL = '.igx-checkbox__label';
 
 describe('IgxTreeGrid - Filtering actions #tGrid', () => {
-    configureTestSuite();
     let fix;
     let grid;
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -757,7 +755,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             tGrid.columns[0].dataType = GridColumnDataType.String;
             fix.detectChanges();
             spyOn(console, 'error');
-            
+
             GridFunctions.clickExcelFilterIcon(fix, 'ID');
             fix.detectChanges();
             tick();
@@ -772,7 +770,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             GridFunctions.clickApplyExcelStyleFiltering(fix, null, 'igx-tree-grid');
             fix.detectChanges();
             tick();
-            
+
             expect(console.error).not.toHaveBeenCalled();
         }));
     });

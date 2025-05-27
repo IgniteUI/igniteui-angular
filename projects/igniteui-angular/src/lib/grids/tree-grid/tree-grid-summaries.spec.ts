@@ -8,7 +8,6 @@ import {
     IgxTreeGridSummariesScrollingComponent,
     IgxTreeGridSummariesKeyScroliingComponent
 } from '../../test-utils/tree-grid-components.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridSummaryFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
@@ -18,10 +17,9 @@ import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 
 describe('IgxTreeGrid - Summaries #tGrid', () => {
-    configureTestSuite();
     const DEBOUNCETIME = 30;
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
