@@ -1,13 +1,13 @@
-import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
-import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
+import { FilteringLogic, type IFilteringExpression } from './filtering-expression.interface';
+import { FilteringExpressionsTree, type IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { resolveNestedPath, parseDate, formatDate, formatCurrency, columnFieldPath } from '../core/utils';
-import { ColumnType, EntityType, GridType } from '../grids/common/grid.interface';
+import type { ColumnType, EntityType, GridType } from '../grids/common/grid.interface';
 import { GridColumnDataType } from './data-util';
 import { SortingDirection } from './sorting-strategy';
 import { formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
-import { IFilteringState } from './filtering-state.interface';
+import type { IFilteringState } from './filtering-state.interface';
 import { isTree } from './expressions-tree-util';
-import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarchical-grid.component';
+import type { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarchical-grid.component';
 
 const DateType = 'date';
 const DateTimeType = 'dateTime';
@@ -130,19 +130,18 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy {
     }
 
     public getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
+        const applyFormatter = column.formatter && this.shouldFormatFilterValues(column);
 
         let data = column.grid.gridAPI.filterDataByExpressions(tree);
         data = column.grid.gridAPI.sortDataByExpressions(data,
             [{ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase }]);
 
+
         const pathParts = columnFieldPath(column.field)
         let filterItems: IgxFilterItem[] = data.map(record => {
-            let value = resolveNestedPath(record, pathParts);
-            const applyFormatter = column.formatter && this.shouldFormatFilterValues(column);
-
-            value = applyFormatter ?
-                column.formatter(value, record) :
-                value;
+            const value = applyFormatter ?
+                column.formatter(resolveNestedPath(record, pathParts), record) :
+                resolveNestedPath(record, pathParts);
 
             return {
                 value,
