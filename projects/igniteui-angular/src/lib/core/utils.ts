@@ -504,7 +504,7 @@ export function columnFieldPath(path?: string): string[] {
  * @internal
  */
 export function resolveNestedPath<T extends object, U>(obj: unknown, pathParts: string[], defaultValue?: U): T | U | undefined {
-    if (!_isObject(obj)) {
+    if (!_isObject(obj) || pathParts.length < 1) {
         return defaultValue;
     }
 
