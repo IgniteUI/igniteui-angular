@@ -52,28 +52,21 @@
     }
 
     $theme: digest-schema($card-schema);
-    $meta: map.get($theme, '_meta');
 
     @if not($header-text-color) and $background {
-        $header-text-color: text-contrast($background);
+        $header-text-color: adaptive-contrast(var(--background));
     }
 
     @if not($actions-text-color) and $background {
-        @if meta.type-of($background) == 'color' {
-            $actions-text-color: rgba(text-contrast($background), .5);
-        }
+        $actions-text-color: adaptive-contrast(var(--background));
     }
 
     @if not($content-text-color) and $background {
-        @if meta.type-of($background) == 'color' {
-            $content-text-color: rgba(text-contrast($background), .7);
-        }
+        $content-text-color: hsl(from adaptive-contrast(var(--background)) h s calc(l * 0.85));
     }
 
     @if not($subtitle-text-color) and $background {
-        @if meta.type-of($background) == 'color' {
-            $subtitle-text-color: rgba(text-contrast($background), .7);
-        }
+        $subtitle-text-color: hsl(from adaptive-contrast(var(--background)) h s calc(l * 0.85));
     }
 
     @if not($resting-shadow) {
@@ -97,10 +90,6 @@
         actions-text-color: $actions-text-color,
         resting-shadow: $resting-shadow,
         hover-shadow: $hover-shadow,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -110,7 +99,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin card($theme) {
     @include css-vars($theme);
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $not-material-theme: $variant != 'material';
 
     $card-heading-padding: rem(16px, 16px);

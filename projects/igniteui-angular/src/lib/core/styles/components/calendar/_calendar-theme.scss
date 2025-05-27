@@ -328,195 +328,589 @@
     }
 
     $theme: digest-schema($calendar-schema);
-    $meta: map.get($theme, '_meta');
     $variant: map.get($schema, '_meta', 'theme');
 
-    @if $variant == 'bootstrap' {
-        @if not($picker-background) and $header-background {
-            @if meta.type-of($header-background) == 'color' {
-                $picker-background: $header-background;
-            }
-        }
-    } @else {
-        @if not($picker-background) and $content-background {
-            @if meta.type-of($picker-background) == 'color' {
-                $picker-background: $content-background;
-            }
-        }
-
-        @if not($weekday-color) and $content-background {
-            @if meta.type-of($content-background) == 'color' {
-                $weekday-color: text-contrast($content-background);
-            }
-        }
-
-        @if not($navigation-color) and $content-background {
-            @if meta.type-of($content-background) == 'color' {
-                $navigation-color: text-contrast($content-background);
-            }
-        }
-
-        @if not($navigation-focus-color) and $navigation-hover-color {
-            @if meta.type-of($navigation-hover-color) == 'color' {
-                $navigation-focus-color: $navigation-hover-color;
-            }
-        }
-    }
-
+    //base start
     @if not($header-foreground) and $header-background {
-        @if meta.type-of($header-background) == 'color' {
-            $header-foreground: text-contrast($header-background);
-        }
-    }
-
-    @if not($weekend-color) and $content-foreground {
-        @if meta.type-of($content-foreground) == 'color' {
-            $weekend-color: $content-foreground;
-        }
-    }
-
-    @if $variant != 'fluent' and $variant != 'bootstrap' {
-        @if not($date-current-background) and $content-background {
-            @if meta.type-of($content-background) == 'color' {
-                $date-current-background: $content-background;
-            }
-        }
-
-        @if not($date-current-foreground) and $content-background {
-            @if meta.type-of($content-background) == 'color' {
-                $date-current-foreground: text-contrast($content-background);
-            }
-        }
+        $header-foreground: adaptive-contrast(var(--header-background));
     }
 
     @if not($content-foreground) and $content-background {
-        @if meta.type-of($content-background) == 'color' {
-            $content-foreground: text-contrast($content-background);
+        $content-foreground: adaptive-contrast(var(--content-background));
+    }
+
+    @if not($weekend-color) and $content-foreground {
+        $weekend-color: var(--content-foreground);
+    }
+
+    @if not($inactive-color) and $content-background {
+        $inactive-color: hsla(from adaptive-contrast(var(--content-background)) h s l / .5);
+    }
+
+    @if not($weekday-color) and $inactive-color {
+        $weekday-color: var(--inactive-color);
+    }
+
+    @if not($week-number-background) and $content-background {
+        $week-number-background: hsla(from var(--content-background) h s calc(l * 0.8));
+    }
+
+    @if not($week-number-foreground) and $week-number-background {
+        $week-number-foreground: hsla(from adaptive-contrast(var(--week-number-background)) h s l / 0.5);
+    }
+    //base end
+
+    //picker start
+    @if $variant == 'bootstrap' {
+        @if not($picker-background) and $header-background {
+            $picker-background: var(--header-background);
+        }
+
+        @if not($picker-hover-foreground) and $picker-background {
+            $picker-hover-foreground: hsla(from adaptive-contrast(var(--picker-background)) h s l / 0.8);
+        }
+
+        @if not($weekday-color) and $header-background {
+            $weekday-color: hsla(from adaptive-contrast(var(--header-background)) h s l / 0.8);
+        }
+    } @else {
+        @if not($picker-background) and $content-background {
+            $picker-background: var(--content-background);
+        }
+
+        @if not($picker-hover-foreground) and $header-background {
+            $picker-hover-foreground: var(--header-background);
         }
     }
 
-    @if not($weekend-color) and $content-background {
-        @if meta.type-of($content-background) == 'color' {
-            $weekend-color: rgba($content-foreground, .5);
+    @if not($picker-foreground) and $picker-background {
+        $picker-foreground: adaptive-contrast(var(--picker-background));
+    }
+
+    @if not($picker-focus-foreground) and $picker-hover-foreground {
+        $picker-focus-foreground: var(--picker-hover-foreground);
+    }
+
+    @if not($navigation-color) and $picker-background {
+        $navigation-color: adaptive-contrast(var(--picker-background));
+    }
+
+    @if not($navigation-hover-color) and $picker-hover-foreground {
+        $navigation-hover-color: var(--picker-hover-foreground);
+    }
+
+    @if not($navigation-focus-color) and $navigation-hover-color {
+        $navigation-focus-color: var(--navigation-hover-color);
+    }
+    //picker end
+
+    //date start
+    @if not($date-hover-background) and $content-background {
+        $date-hover-background: hsl(from var(--content-background) h s calc(l * 0.9));
+    }
+
+    @if not($date-hover-foreground) and $date-hover-background {
+        $date-hover-foreground: adaptive-contrast(var(--date-hover-background));
+    }
+
+    @if not($date-focus-background) and $date-hover-background {
+        $date-focus-background: var(--date-hover-background)
+    }
+
+    @if not($date-focus-foreground) and $date-hover-foreground {
+        $date-focus-foreground: var(--date-hover-foreground);
+    }
+
+    @if not($ym-hover-background) and $date-hover-background {
+        $ym-hover-background: var(--date-hover-background);
+    }
+
+    @if not($ym-hover-foreground) and $ym-hover-background {
+        $ym-hover-foreground: adaptive-contrast(var(--ym-hover-background));
+    }
+    //date end
+
+    //date current start
+    @if $variant == 'indigo' {
+        @if not($date-current-background) and $header-background {
+            $date-current-background: hsla(from var(--header-background) h s l / 0.4);
+        }
+
+        @if not($date-current-border-color) and $date-current-background {
+            $date-current-border-color: hsla(from var(--date-current-background) h s l / 0.6);
+        }
+
+        @if not($date-current-hover-background) and $date-current-background {
+            $date-current-hover-background: hsl(from var(--date-current-background) h s calc(l * 0.9));
+        }
+
+        @if not($date-current-hover-border-color) and $date-current-border-color {
+            $date-current-hover-border-color: hsl(from var(--date-current-border-color) h s calc(l * 0.9));
+        }
+
+        @if not($date-current-focus-background) and $date-current-hover-background {
+            $date-current-focus-background: var(--date-current-hover-background);
+        }
+
+        @if not($date-current-focus-border-color) and $date-current-hover-border-color {
+            $date-current-focus-border-color: var(--date-current-hover-border-color);
+        }
+
+        @if not($date-current-foreground) and $date-current-background {
+            $date-current-foreground: adaptive-contrast(var(--date-current-background));
+        }
+
+        @if not($date-current-foreground) and $content-foreground {
+            $date-current-foreground: var(--content-foreground);
+        }
+
+        @if not($date-current-hover-foreground) and $date-current-foreground {
+            $date-current-hover-foreground: var(--date-current-foreground);
+        }
+
+        @if not($date-current-focus-foreground) and $date-current-foreground {
+            $date-current-focus-foreground: var(--date-current-foreground);
         }
     }
 
-    @if not($picker-foreground) and $content-background {
-        @if meta.type-of($content-background) == 'color' {
-            $picker-foreground: text-contrast($content-background);
+    @if $variant == 'fluent' {
+        @if not($date-current-background) and $header-background {
+            $date-current-background: var(--header-background);
         }
     }
 
-    @if not($date-selected-foreground) and $date-selected-background {
-        @if meta.type-of($date-selected-background) == 'color' {
-            $date-selected-foreground: text-contrast($date-selected-background);
+    @if $variant == 'material' or $variant == 'bootstrap' {
+        @if not($date-current-background) and $content-background {
+            $date-current-background: var(--content-background);
         }
     }
 
-    @if not($date-selected-hover-foreground) and $date-selected-background {
-        @if meta.type-of($date-selected-background) == 'color' {
-            $date-selected-hover-foreground: text-contrast($date-selected-background);
+    @if $variant != 'indigo' {
+        @if not($date-current-foreground) and $date-current-background {
+            $date-current-foreground: adaptive-contrast(var(--date-current-background));
+        }
+
+        @if not($date-current-hover-background) and $date-hover-background {
+            $date-current-hover-background: var(--date-hover-background);
+        }
+
+        @if not($date-current-focus-background) and $date-focus-background {
+            $date-current-focus-background: var(--date-focus-background);
+        }
+
+        @if $variant == 'fluent' {
+            @if not($date-current-hover-foreground) and $date-current-background {
+                $date-current-hover-foreground: adaptive-contrast(var(--date-current-background));
+            }
+
+            @if not($date-current-focus-foreground) and $date-current-background {
+                $date-current-focus-foreground: adaptive-contrast(var(--date-current-background));
+            }
+        }
+
+        @if not($date-current-hover-foreground) and $date-current-hover-background {
+            $date-current-hover-foreground: adaptive-contrast(var(--date-current-hover-background));
+        }
+
+        @if not($date-current-focus-foreground) and $date-current-hover-background {
+            $date-current-focus-foreground: adaptive-contrast(var(--date-current-hover-background));
         }
     }
 
-    @if not($date-selected-focus-foreground) and $date-selected-background {
-        @if meta.type-of($date-selected-background) == 'color' {
-            $date-selected-focus-foreground: text-contrast($date-selected-background);
+    @if $variant == 'material' or $variant == 'bootstrap' {
+        @if not($date-current-border-color) and $date-current-foreground {
+            $date-current-border-color: var(--date-current-foreground);
+        }
+
+        @if not($date-current-hover-border-color) and $date-current-hover-foreground {
+            $date-current-hover-border-color: var(--date-current-hover-foreground);
+        }
+
+        @if not($date-current-focus-border-color) and $date-current-focus-foreground {
+            $date-current-focus-border-color: var(--date-current-focus-foreground);
         }
     }
+    //date current end
 
-    @if not($date-selected-hover-foreground) and $date-selected-hover-background {
-        @if meta.type-of($date-selected-hover-background) == 'color' {
-            $date-selected-hover-foreground: text-contrast($date-selected-hover-background);
+    //date selected start
+
+    @if $variant == 'fluent' {
+        @if not($date-selected-background) and $date-hover-background {
+            $date-selected-background: var(--date-hover-background);
         }
-    }
-
-    @if not($date-selected-focus-foreground) and $date-selected-focus-background {
-        @if meta.type-of($date-selected-focus-background) == 'color' {
-            $date-selected-focus-foreground: text-contrast($date-selected-focus-background);
-        }
-    }
-
-    @if not($date-selected-current-foreground) and $date-selected-background {
-        @if meta.type-of($date-selected-background) == 'color' {
-            $date-selected-current-foreground: text-contrast($date-selected-background);
-        }
-    }
-
-    @if not($date-selected-current-hover-foreground) and $date-selected-background {
-        @if meta.type-of($date-selected-background) == 'color' {
-            $date-selected-current-hover-foreground: text-contrast($date-selected-background);
-        }
-    }
-
-    @if not($date-selected-current-focus-foreground) and $date-selected-background {
-        @if meta.type-of($date-selected-background) == 'color' {
-            $date-selected-current-focus-foreground: text-contrast($date-selected-background);
+    } @else {
+        @if not($date-selected-background) and $header-background {
+            $date-selected-background: var(--header-background);
         }
     }
 
     @if not($date-selected-current-background) and $date-selected-background {
-        @if meta.type-of($date-selected-background) == 'color' {
-            $date-selected-current-background: $date-selected-background;
-        }
-    }
-
-    @if not($date-selected-current-hover-background) and $date-selected-background {
-        @if meta.type-of($date-selected-background) == 'color' {
-            $date-selected-current-hover-background: $date-selected-background;
-        }
-    }
-
-    @if not($date-selected-current-focus-background) and $date-selected-background {
-        @if meta.type-of($date-selected-background) == 'color' {
-            $date-selected-current-focus-background: $date-selected-background;
-        }
-    }
-
-    @if not($date-selected-current-focus-background) and $date-selected-background {
-        @if meta.type-of($date-selected-background) == 'color' {
-            $date-selected-current-focus-background: $date-selected-background;
-        }
+        $date-selected-current-background: var(--date-selected-background);
     }
 
     @if not($date-selected-hover-background) and $date-selected-background {
-        @if meta.type-of($date-selected-background) == 'color' {
-            $date-selected-hover-background: $date-selected-background;
-        }
+        $date-selected-hover-background: hsl(from var(--date-selected-background) h s calc(l * 0.9));
     }
 
-    @if not($date-selected-focus-background) and $date-selected-background {
-        @if meta.type-of($date-selected-background) == 'color' {
-            $date-selected-focus-background: $date-selected-background;
+    @if not($date-selected-current-hover-background) and $date-selected-hover-background {
+        $date-selected-current-hover-background: var(--date-selected-hover-background);
+    }
+
+    @if not($date-selected-focus-background) and $date-selected-hover-background {
+        $date-selected-focus-background: var(--date-selected-hover-background);
+    }
+
+    @if not($date-selected-current-focus-background) and $date-selected-focus-background {
+        $date-selected-current-focus-background: var(--date-selected-focus-background);
+    }
+
+    @if not($date-selected-foreground) and $date-selected-background {
+        $date-selected-foreground: adaptive-contrast(var(--date-selected-background));
+    }
+
+    @if not($date-selected-hover-foreground) and $date-selected-background {
+        $date-selected-hover-foreground: adaptive-contrast(var(--date-selected-background));
+    }
+
+    @if not($date-selected-focus-foreground) and $date-selected-background {
+        $date-selected-focus-foreground: adaptive-contrast(var(--date-selected-background));
+    }
+
+    @if $variant == 'indigo' {
+        @if not($date-selected-current-border-color) and $date-selected-current-background {
+            $date-selected-current-border-color: hsl(from var(--date-selected-current-background) h calc(s * 0.9) calc(l * 1.5));
+        }
+    } @else {
+        @if not($date-selected-current-border-color) and $content-foreground {
+            $date-selected-current-border-color: var(--content-foreground);
         }
     }
 
     @if not($date-selected-current-hover-background) and $date-selected-hover-background {
-        @if meta.type-of($date-selected-hover-background) == 'color' {
-            $date-selected-current-hover-background: $date-selected-hover-background;
+        $date-selected-current-hover-background: var(--date-selected-hover-background);
+    }
+
+    @if not($date-selected-current-hover-border-color) and $date-selected-current-border-color {
+        $date-selected-current-hover-border-color: var(--date-selected-current-border-color);
+    }
+
+    @if $variant == 'fluent' {
+        @if not($date-selected-current-foreground) and $date-current-background {
+            $date-selected-current-foreground: adaptive-contrast(var(--date-current-background));
+        }
+
+        @if not($date-selected-current-hover-foreground) and $date-current-background {
+            $date-selected-current-hover-foreground: adaptive-contrast(var(--date-current-background));
+        }
+
+        @if not($date-selected-current-focus-foreground) and $date-current-background {
+            $date-selected-current-focus-foreground: adaptive-contrast(var(--date-current-background));
+        }
+    } @else {
+        @if not($date-selected-current-foreground) and $date-selected-background {
+            $date-selected-current-foreground: adaptive-contrast(var(--date-selected-background));
+        }
+
+        @if not($date-selected-current-hover-foreground) and $date-selected-background {
+            $date-selected-current-hover-foreground: adaptive-contrast(var(--date-selected-background));
+        }
+
+        @if not($date-selected-current-focus-foreground) and $date-selected-current-focus-background {
+            $date-selected-current-focus-foreground: adaptive-contrast(var(--date-selected-current-focus-background));
         }
     }
 
-    @if not($date-selected-current-focus-background) and $date-selected-focus-background {
-        @if meta.type-of($date-selected-focus-background) == 'color' {
-            $date-selected-current-focus-background: $date-selected-focus-background;
+    @if not($date-selected-current-focus-border-color) and $date-selected-current-hover-border-color {
+        $date-selected-current-focus-border-color: var(--date-selected-current-hover-border-color);
+    }
+    //date selected end
+
+    //date special start
+    @if $variant == 'fluent' or $variant == 'bootstrap' {
+        @if not($date-special-foreground) and $content-foreground {
+            $date-special-foreground: var(--content-foreground);
+        }
+
+        @if not($date-special-border-color) and $header-background {
+            $date-special-border-color: var(--header-background);
+        }
+
+        @if not($date-special-hover-border-color) and $date-special-border-color {
+            $date-special-hover-border-color: var(--date-special-border-color);
+        }
+
+        @if not($date-special-focus-foreground) and $date-special-foreground {
+            $date-special-focus-foreground: var(--date-special-foreground);
+        }
+    } @else {
+        @if not($date-special-foreground) and $header-background {
+            $date-special-foreground: var(--header-background);
+        }
+
+        @if not($date-special-border-color) and $date-special-foreground {
+            $date-special-border-color: var(--date-special-foreground);
+        }
+
+        @if not($date-special-hover-foreground) and $date-special-foreground {
+            $date-special-hover-foreground: hsl(from var(--date-special-foreground) h s calc(l * 0.8));
+        }
+
+        @if not($date-special-hover-border-color) and $date-special-hover-foreground {
+            $date-special-hover-border-color: var(--date-special-hover-foreground);
+        }
+
+        @if not($date-special-focus-foreground) and $date-special-hover-border-color {
+            $date-special-focus-foreground: var(--date-special-hover-border-color);
         }
     }
 
-    @if not($ym-hover-foreground) and $ym-hover-background {
-        @if meta.type-of($ym-hover-background) == 'color' {
-            $ym-hover-foreground: text-contrast($ym-hover-background);
+    @if not($date-special-hover-foreground) and $date-special-foreground {
+        $date-special-hover-foreground: hsl(from var(--date-special-foreground) h s calc(l * 0.8));
+    }
+
+    @if not($date-special-hover-background) and $date-hover-background {
+        $date-special-hover-background: var(--date-hover-background);
+    }
+
+    @if not($date-special-focus-background) and $date-focus-background {
+        $date-special-focus-background: var(--date-focus-background);
+    }
+
+    @if not($date-special-range-focus-background) and $date-special-focus-background {
+        $date-special-range-focus-background: var(--date-special-focus-background);
+    }
+
+    @if $variant != 'fluent' {
+        @if not($date-selected-special-border-color) and $date-selected-foreground {
+            $date-selected-special-border-color: var(--date-selected-foreground);
+        }
+
+        @if not($date-selected-special-hover-border-color) and $date-selected-hover-foreground {
+            $date-selected-special-hover-border-color: var(--date-selected-hover-foreground);
+        }
+
+        @if not($date-selected-special-focus-border-color) and $date-selected-focus-foreground {
+            $date-selected-special-focus-border-color: var(--date-selected-focus-foreground);
+        }
+    } @else {
+        @if not($date-selected-special-border-color) and $date-special-border-color {
+            $date-selected-special-border-color: var(--date-special-border-color);
+        }
+
+        @if not($date-selected-special-hover-border-color) and $date-selected-special-border-color {
+            $date-selected-special-hover-border-color: var(--date-selected-special-border-color);
+        }
+
+        @if not($date-selected-special-focus-border-color) and $date-selected-special-border-color {
+            $date-selected-special-focus-border-color: var(--date-selected-special-border-color);
+        }
+    }
+    //date special end
+
+    //calendar views start
+    @if $variant != 'fluent' {
+        @if not($ym-selected-background) and $header-background {
+            $ym-selected-background: var(--header-background);
+        }
+
+        @if not($ym-selected-hover-background) and $ym-selected-background {
+            $ym-selected-hover-background: hsl(from var(--ym-selected-background) h s calc(l * 0.9));
+        }
+
+        @if not($ym-current-background) and $date-current-background {
+            $ym-current-background: var(--date-current-background);
+        }
+
+        @if not($ym-current-hover-background) and $date-current-hover-background {
+            $ym-current-hover-background: var(--date-current-hover-background);
+        }
+
+        @if not($ym-current-outline-color) and $date-current-border-color {
+            $ym-current-outline-color: var(--date-current-border-color);
+        }
+
+        @if not($ym-current-outline-hover-color) and $ym-current-outline-color {
+            $ym-current-outline-hover-color: var(--ym-current-outline-color);
+        }
+
+        @if not($ym-current-outline-focus-color) and $ym-current-outline-hover-color {
+            $ym-current-outline-focus-color: var(--ym-current-outline-hover-color);
+        }
+
+        @if not($ym-selected-current-outline-color) and $ym-current-outline-color {
+            $ym-selected-current-outline-color: var(--ym-current-outline-color);
+        }
+
+        @if not($ym-selected-current-outline-hover-color) and $ym-current-outline-hover-color {
+            $ym-selected-current-outline-hover-color: var(--ym-current-outline-hover-color);
+        }
+
+        @if not($ym-selected-current-outline-focus-color) and $ym-current-outline-focus-color {
+            $ym-selected-current-outline-focus-color: var(--ym-current-outline-focus-color);
+        }
+    } @else {
+        @if not($ym-selected-background) and $header-background {
+            $ym-selected-background: hsla(from var(--header-background) h s l / 0.3);
+        }
+
+        @if not($ym-current-background) and $date-selected-background {
+            $ym-current-background: var(--date-selected-background);
+        }
+
+        @if not($ym-current-hover-background) and $ym-current-background {
+            $ym-current-hover-background: hsl(from var(--ym-current-background) h s calc(l * 0.9));
+        }
+
+        @if not($ym-selected-hover-background) and $ym-selected-background {
+            $ym-selected-hover-background: hsla(from var(--ym-selected-background) h s calc(l * 0.9) / 0.5);
+        }
+
+        @if not($ym-selected-current-outline-color) and $ym-selected-current-foreground {
+            $ym-selected-current-outline-color: var(--ym-selected-current-foreground);
+        }
+
+        @if not($ym-selected-foreground) and $content-foreground {
+            $ym-selected-foreground: var(--content-foreground);
+        }
+
+        @if not($ym-selected-hover-foreground) and $ym-selected-foreground {
+            $ym-selected-hover-foreground: var(--content-foreground);
         }
     }
 
-    @if not($ym-current-hover-foreground) and $ym-hover-background {
-        @if meta.type-of($ym-hover-background) == 'color' {
-            $ym-current-hover-foreground: text-contrast($ym-hover-background);
+    @if not($ym-selected-current-background) and $ym-selected-background {
+        $ym-selected-current-background: var(--ym-selected-background);
+    }
+
+    @if not($ym-selected-current-hover-background) and $ym-selected-hover-background {
+        $ym-selected-current-hover-background: var(--ym-selected-hover-background);
+    }
+
+    @if not($ym-current-foreground) and $ym-current-background {
+        $ym-current-foreground: adaptive-contrast(var(--ym-current-background));
+    }
+
+    @if not($ym-current-hover-foreground) and $ym-current-hover-background {
+        $ym-current-hover-foreground: adaptive-contrast(var(--ym-current-hover-background));
+    }
+
+    @if not($ym-selected-current-foreground) and $ym-selected-current-background {
+        $ym-selected-current-foreground: adaptive-contrast(var(--ym-selected-current-background));
+    }
+
+    @if not($ym-selected-current-hover-foreground) and $ym-selected-current-hover-background {
+        $ym-selected-current-hover-foreground: adaptive-contrast(var(--ym-selected-current-hover-background));
+    }
+    //calendar views end
+
+    //date range start
+    @if not($date-selected-range-foreground) and $content-foreground {
+        $date-selected-range-foreground: var(--content-foreground);
+    }
+
+    @if $variant == 'fluent' {
+        @if not($date-selected-range-background) and $date-selected-background {
+            $date-selected-range-background: var(--date-selected-background);
+        }
+
+        @if not($date-selected-current-range-background) and $date-selected-range-background {
+            $date-selected-current-range-background: var(--date-selected-range-background);
+        }
+
+        @if not($date-selected-range-hover-background) and $date-selected-hover-background {
+            $date-selected-range-hover-background: var(--date-selected-hover-background);
+        }
+
+        @if not($date-selected-range-focus-background) and $date-selected-hover-background {
+            $date-selected-range-focus-background: var(--date-selected-hover-background);
+        }
+
+        @if not($date-selected-current-range-hover-foreground) and $date-current-background {
+            $date-selected-current-range-hover-foreground: adaptive-contrast(var(--date-current-background));
+        }
+
+        @if not($date-selected-current-range-focus-background) and $date-current-background {
+            $date-selected-current-range-focus-background: adaptive-contrast(var(--date-current-background));
+        }
+    } @else {
+        @if not($date-selected-range-background) and $date-selected-background {
+            $date-selected-range-background: hsla(from var(--date-selected-background) h s l / 0.24);
+        }
+
+         @if not($date-range-preview-border-color) and $date-selected-background {
+            $date-range-preview-border-color: var(--date-selected-background);
+        }
+
+        @if not($date-selected-current-range-hover-foreground) and $date-selected-current-range-hover-background {
+            $date-selected-current-range-hover-foreground: adaptive-contrast(var(--date-selected-current-range-hover-background));
+        }
+
+        @if not($date-selected-current-range-hover-foreground) and $content-foreground {
+            $date-selected-current-range-hover-foreground: var(--content-foreground);
+        }
+
+        @if not($date-selected-current-range-focus-background) and $date-selected-current-range-hover-background {
+            $date-selected-current-range-focus-background: var(--date-selected-current-range-hover-background);
         }
     }
 
-    @if not($week-number-foreground) and $week-number-background {
-        $week-number-foreground: text-contrast($week-number-background);
+    @if not($date-selected-range-hover-background) and $date-hover-background {
+        $date-selected-range-hover-background: var(--date-hover-background);
+    }
+
+    @if not($date-selected-range-focus-background) and $date-selected-range-hover-background {
+        $date-selected-range-focus-background: var(--date-selected-range-hover-background);
+    }
+
+    @if not($date-selected-range-hover-foreground) and $date-selected-range-hover-background {
+        $date-selected-range-hover-foreground: adaptive-contrast(hsla(from var(--date-selected-range-hover-background) h s l / 1));
+    }
+
+    @if not($date-selected-range-focus-foreground) and $date-selected-range-focus-background {
+        $date-selected-range-focus-foreground: adaptive-contrast(hsla(from var(--date-selected-range-focus-background) h s l / 1));
+    }
+
+    @if $variant == 'indigo' {
+        @if not($date-selected-current-range-background) and $date-selected-background {
+            $date-selected-current-range-background: hsla(from var(--date-selected-background) h s calc(l * 0.9) / 0.12);
+        }
+
+        @if not($date-selected-current-range-hover-background) and $date-selected-background {
+            $date-selected-current-range-hover-background: hsla(from var(--date-selected-background) h s calc(l * 0.9) / 0.24);
+        }
+
+        @if not($date-selected-current-range-foreground) and $date-current-background {
+            $date-selected-current-range-foreground: adaptive-contrast(var(--date-current-background));
+        }
+    } @else {
+        @if not($date-selected-current-range-foreground) and $date-current-background {
+            $date-selected-current-range-foreground: adaptive-contrast(var(--date-current-background));
+        }
+
+        @if not($date-selected-current-range-foreground) and $content-foreground {
+            $date-selected-current-range-foreground: var(--content-foreground);
+        }
+    }
+
+    @if not($date-special-range-foreground) and $date-special-foreground {
+        $date-special-range-foreground: hsl(from var(--date-special-foreground) h s calc(l * 0.8));
+    }
+
+    @if not($date-special-range-border-color) and $date-special-range-foreground {
+        $date-special-range-border-color: var(--date-special-range-foreground);
+    }
+
+    @if not($date-special-range-hover-background) and $date-selected-range-hover-background {
+        $date-special-range-hover-background: var(--date-selected-range-hover-background);
+    }
+    //date range end
+
+    @if not($date-disabled-foreground) and $content-background {
+        $date-disabled-foreground: hsla(from adaptive-contrast(var(--content-background)) h s l / .3);
+    }
+
+    @if not($date-disabled-range-foreground) and $date-selected-range-background {
+        $date-disabled-range-foreground: hsla(from adaptive-contrast(var(--content-background)) h s l / .3);
     }
 
     @return extend($theme, (
@@ -658,10 +1052,6 @@
         actions-divider-color: $actions-divider-color,
         size: $size,
         inner-size: $inner-size,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -671,7 +1061,7 @@
 @mixin calendar($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $bootstrap-theme: $variant == 'bootstrap';
 
     $cal-picker-padding: map.get((

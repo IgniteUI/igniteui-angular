@@ -52,30 +52,29 @@
     }
 
     $theme: digest-schema($grid-toolbar-schema);
-    $meta: map.get($theme, '_meta');
 
     @if not($title-text-color) and $background-color {
-        $title-text-color: text-contrast($background-color);
+        $title-text-color: adaptive-contrast(var(--background-color));
     }
 
     @if not($item-text-color) and $dropdown-background {
-        $item-text-color: text-contrast($dropdown-background);
+        $item-text-color: adaptive-contrast(var(--dropdown-background));
     }
 
     @if not($item-hover-text-color) and $dropdown-background {
-        $item-hover-text-color: text-contrast($dropdown-background);
+        $item-hover-text-color: adaptive-contrast(var(--dropdown-background));
     }
 
     @if not($item-focus-text-color) and $dropdown-background {
-        $item-focus-text-color: text-contrast($dropdown-background);
+        $item-focus-text-color: adaptive-contrast(var(--dropdown-background));
     }
 
     @if not($item-hover-text-color) and $item-hover-background {
-        $item-hover-text-color: text-contrast($item-hover-background);
+        $item-hover-text-color: adaptive-contrast(var(--item-hover-background));
     }
 
     @if not($item-focus-text-color) and $item-focus-background {
-        $item-focus-text-color: text-contrast($item-focus-background);
+        $item-focus-text-color: adaptive-contrast(var(--item-focus-background));
     }
 
     @return extend($theme, (
@@ -89,10 +88,6 @@
         item-hover-text-color: $item-hover-text-color,
         item-focus-background: $item-focus-background,
         item-focus-text-color: $item-focus-text-color,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
         size: $size,
         border-color: $border-color
     ));
@@ -104,7 +99,7 @@
 @mixin grid-toolbar($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $bootstrap-theme: $variant == 'bootstrap';
 
     // Caption

@@ -41,10 +41,13 @@
     }
 
     $theme: digest-schema($avatar-schema);
-    $meta: map.get($theme, '_meta');
 
     @if not($color) and $background {
-        $color: text-contrast($background);
+        $color: adaptive-contrast(var(--background));
+    }
+
+    @if not($icon-color) and $background {
+        $icon-color: adaptive-contrast(var(--background));
     }
 
     @return extend($theme, (
@@ -54,10 +57,6 @@
         icon-color: $icon-color,
         border-radius: $border-radius,
         size: $size,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -67,8 +66,8 @@
 @mixin avatar($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
- 
+    $variant: map.get($theme, '_meta', 'theme');
+
     %igx-avatar-display {
         @include sizable();
 
