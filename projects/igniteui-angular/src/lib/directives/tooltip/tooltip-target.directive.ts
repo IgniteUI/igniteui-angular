@@ -1,9 +1,10 @@
 import { useAnimation } from '@angular/animations';
 import {
-    Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener,
+    Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef,
     Input, EventEmitter, booleanAttribute, TemplateRef, ComponentRef, Renderer2, OnChanges, SimpleChanges,
     EnvironmentInjector,
     createComponent,
+    HostListener,
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -353,7 +354,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     private _closeButtonRef?: ComponentRef<IgxTooltipCloseButtonComponent>;
     private _closeTemplate: TemplateRef<any>;
     private _sticky = false;
-    private _unlisteners: (() => void)[] = [];
+    private _removeEventListeners: (() => void)[] = [];
     private _showTriggers = new Set<string>(['mouseenter', 'touchstart']);
     private _hideTriggers = new Set<string>(['mouseleave', 'click']);
 
@@ -368,6 +369,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
 
 
+    /**
+     * Handles the logic for show triggers (e.g., 'mouseenter', 'touchstart').
+     */
     private _handleShowTrigger = () => {
         if (this.tooltipDisabled) return;
         if (!this.target.collapsed && this.target?.tooltipTarget?.sticky) return;
@@ -378,89 +382,31 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this._showOnInteraction();
     };
 
+    /**
+     * Handles the logic for hide triggers (e.g., 'mouseleave', 'click').
+     */
     private _handleHideTrigger = () => {
-        if (this.tooltipDisabled || this.target.collapsed) return;
+        if (this.tooltipDisabled) return;
 
         this._checkOutletAndOutsideClick();
         this._hideOnInteraction();
     };
 
+    /**
+     * Handles global document touch interactions (typically for mobile).
+     */
     private _handleDocumentTouch = (event: Event) => {
-        if (this.tooltipDisabled) return;
+        if (this.tooltipDisabled || this.sticky) return;
         if (this.nativeElement !== event.target && !this.nativeElement.contains(event.target)) {
             this._hideOnInteraction();
         }
     };
-    // /**
-    //  * @hidden
-    //  */
-    // @HostListener('click')
-    // public override onClick() {
-    //     if (!this.target.collapsed) {
-    //         this._hideOnInteraction();
-    //     }
-    // }
 
-    // /**
-    //  * @hidden
-    //  */
-    // @HostListener('mouseenter')
-    // public onMouseEnter() {
-    //     if (this.tooltipDisabled) {
-    //         return;
-    //     }
+    // The IgxToggleActionDirective's onClick method is overridden to prevent the default click behavior
+    @HostListener('click')
+    public override onClick() {
 
-    //     if (!this.target.collapsed && this.target?.tooltipTarget?.sticky) {
-    //         return;
-    //     }
-
-    //     this._checkOutletAndOutsideClick();
-    //     this._checkTooltipForMultipleTargets();
-    //     this._evaluateStickyState();
-    //     this._showOnInteraction();
-    // }
-
-    // /**
-    //  * @hidden
-    //  */
-    // @HostListener('mouseleave')
-    // public onMouseLeave() {
-    //     if (this.tooltipDisabled) {
-    //         return;
-    //     }
-
-    //     this._checkOutletAndOutsideClick();
-    //     this._hideOnInteraction();
-    // }
-
-    // /**
-    //  * @hidden
-    //  */
-    // @HostListener('touchstart')
-    // public onTouchStart() {
-    //     if (this.tooltipDisabled) {
-    //         return;
-    //     }
-
-    //     this._showOnInteraction();
-    // }
-
-    // /**
-    //  * @hidden
-    //  */
-    // @HostListener('document:touchstart', ['$event'])
-    // public onDocumentTouchStart(event) {
-    //     if (this.tooltipDisabled) {
-    //         return;
-    //     }
-
-    //     if (this.nativeElement !== event.target &&
-    //         !this.nativeElement.contains(event.target)
-    //     ) {
-    //         this._hideOnInteraction();
-    //     }
-    // }
-
+    }
 
     /**
      * @hidden
@@ -502,7 +448,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this.hideTooltip();
         this._destroyCloseButton();
         this._clearTriggers();
-        this._unlisteners.forEach(unlisten => unlisten());
+        this._removeEventListeners.forEach(unlisten => unlisten());
         this._destroy$.next();
         this._destroy$.complete();
     }
@@ -591,7 +537,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         if (this.target?.tooltipTarget?.sticky) {
             return;
         }
-
         this._setAutoHide();
     }
 
@@ -700,6 +645,19 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
 
 
+    /**
+     * Binds user-defined show/hide triggers to the target element.
+     *
+     * This method first clears any previously attached event listeners using `_clearTriggers()`.
+     * It then iterates through the configured `showTriggers` and `hideTriggers`, mapping each trigger
+     * (e.g. 'click', 'mouseenter', 'mouseleave') to the corresponding handler method.
+     *
+     * For each trigger, it registers an event listener on the native element and stores the listener
+     * function in `_removeEventListeners` for proper cleanup later.
+     *
+     * Additionally, a global 'touchstart' listener is added to the document to handle outside touch
+     * interactions for tooltip dismissal on mobile devices.
+     */
     private _bindDynamicTriggers(): void {
         const native = this.nativeElement;
         this._clearTriggers();
@@ -712,16 +670,19 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         triggerMap.forEach(([event, handler]) => {
             const unlisten = this._renderer.listen(native, event, handler);
-            this._unlisteners.push(unlisten);
+            this._removeEventListeners.push(unlisten);
         });
 
         // Special case for global document touch
         const unlisten = this._renderer.listen('document', 'touchstart', this._handleDocumentTouch);
-        this._unlisteners.push(unlisten);
+        this._removeEventListeners.push(unlisten);
     }
 
+    /**
+     * Removes all previously bound event listeners from the target element and document.
+     */
     private _clearTriggers(): void {
-        this._unlisteners.forEach(fn => fn());
-        this._unlisteners.length = 0;
+        this._removeEventListeners.forEach(fn => fn());
+        this._removeEventListeners.length = 0;
     }
 }
