@@ -299,6 +299,17 @@ describe('IgxHighlight', () => {
         expect(() => component.highlight.activateIfNecessary()).not.toThrowError();
     });
 
+    it('Should not throw when attempting to activate a non-existing group.', () => {
+        const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
+        fix.detectChanges();
+
+        const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
+        component.highlightText('a');
+        component.groupName = 'test1';
+        fix.detectChanges();
+
+        expect(() => component.highlight.activateIfNecessary()).not.toThrowError();
+    });
 });
 
 @Component({

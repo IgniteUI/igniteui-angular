@@ -271,6 +271,19 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
+        it('IgxTooltip is hidden when its target is destroyed', fakeAsync(() => {
+            hoverElement(button);
+            flush();
+
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+            
+            fix.componentInstance.showButton = false;
+            fix.detectChanges();
+            flush();
+
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+        }));
+
         describe('Tooltip events', () => {
             // configureTestSuite();
             it('should emit the proper events when hovering/unhovering target', fakeAsync(() => {
@@ -596,7 +609,7 @@ const touchElement = (element) => element.nativeElement.dispatchEvent(new TouchE
 const verifyTooltipVisibility = (tooltipNativeElement, tooltipTarget, shouldBeVisible: boolean) => {
     expect(tooltipNativeElement.classList.contains(TOOLTIP_CLASS)).toBe(shouldBeVisible);
     expect(tooltipNativeElement.classList.contains(HIDDEN_TOOLTIP_CLASS)).not.toBe(shouldBeVisible);
-    expect(tooltipTarget.tooltipHidden).not.toBe(shouldBeVisible);
+    expect(tooltipTarget?.tooltipHidden).not.toBe(shouldBeVisible);
 };
 
 const verifyTooltipPosition = (tooltipNativeElement, actualTarget, shouldBeAligned: boolean) => {
