@@ -6137,7 +6137,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public trackColumnChanges(_index, col) {
-        return col.field + col._calcWidth;
+        return col.field + col._calcWidth.toString();
     }
 
     /**
