@@ -133,6 +133,10 @@
             $focus-hover-foreground: var(--hover-foreground);
         }
 
+        @if not($disabled-foreground) and $foreground {
+        $disabled-foreground: hsla(from var(--foreground) h s l / 0.5);
+    }
+
         @if $variant == 'bootstrap' {
             @if not($active-foreground) and $foreground {
                 $active-foreground: hsl(from var(--foreground) h s calc(l * 0.7));
@@ -149,16 +153,6 @@
             @if not($focus-border-color) and $foreground {
                 $focus-border-color: hsla(from var(--foreground) h s l / 0.3);
             }
-        }
-    }
-
-    @if not($disabled-foreground) and $foreground {
-        $disabled-foreground: hsla(from var(--foreground) h s l / 0.5);
-    }
-
-    @if $variant == 'fluent' {
-        @if not($disabled-background) and $foreground {
-            $disabled-background: hsla(from var(--foreground) h s l / 0.1);
         }
     }
 

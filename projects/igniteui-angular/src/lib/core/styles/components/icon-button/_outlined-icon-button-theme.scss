@@ -111,10 +111,6 @@
             @if not($border-color) and $foreground {
                 $border-color: hsla(from var(--foreground) h s l / 0.7);
             }
-
-            @if not($disabled-background) and $foreground {
-                $disabled-background: hsla(from var(--foreground) h s l / 0.1);
-            }
         }
     }
 
@@ -194,12 +190,14 @@
         }
     }
 
-    @if not($disabled-foreground) and $foreground {
-        $disabled-foreground: hsla(from var(--foreground) h s l / 0.5);
-    }
+    @if $variant == 'bootstrap' or $variant == 'indigo' {
+        @if not($disabled-foreground) and $foreground {
+            $disabled-foreground: hsla(from var(--foreground) h s l / 0.5);
+        }
 
-    @if not($disabled-border-color) and $border-color {
-        $disabled-border-color: hsla(from var(--border-color) h s l / 0.2);
+        @if not($disabled-border-color) and $border-color {
+            $disabled-border-color: hsla(from var(--border-color) h s l / 0.2);
+        }
     }
 
     @return extend(
