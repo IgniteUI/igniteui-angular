@@ -88,23 +88,24 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
-        it('should render a default arrow', fakeAsync(() => {
-            expect(tooltipTarget.disableArrow).toBeFalse();
+        it('should not render a default arrow', fakeAsync(() => {
+            expect(tooltipTarget.hasArrow).toBeFalse();
 
             hoverElement(button);
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
-            const arrow = tooltipNativeElement.querySelector('.igx-tooltip--top');
+            const arrow = tooltipNativeElement.querySelector('.igx-tooltip--bottom');
             expect(arrow).not.toBeNull();
+            expect(arrow.style.display).toEqual("none");
         }));
 
-        it('should show/hide the arrow via the `disableArrow` property', fakeAsync(() => {
-            expect(tooltipTarget.disableArrow).toBeFalse();
-            expect(tooltipNativeElement.querySelector('.igx-tooltip--top')).toBeNull();
+        it('should show/hide the arrow via the `hasArrow` property', fakeAsync(() => {
+            expect(tooltipTarget.hasArrow).toBeFalse();
+            expect(tooltipNativeElement.querySelector('.igx-tooltip--bottom')).toBeNull();
 
-            tooltipTarget.disableArrow = true;
+            tooltipTarget.hasArrow = true;
             fix.detectChanges();
 
             hoverElement(button);
@@ -112,14 +113,13 @@ describe('IgxTooltip', () => {
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
-            expect(tooltipTarget.disableArrow).toBeTrue();
-            const arrow = tooltipNativeElement.querySelector('.igx-tooltip--top');
-            expect(arrow.style.display).toEqual("none");
-
-            tooltipTarget.disableArrow = false;
-            fix.detectChanges();
+            expect(tooltipTarget.hasArrow).toBeTrue();
+            const arrow = tooltipNativeElement.querySelector('.igx-tooltip--bottom');
             expect(arrow.style.display).toEqual("");
-            expect(arrow.style.left).toEqual("75px");
+
+            tooltipTarget.hasArrow = false;
+            fix.detectChanges();
+            expect(arrow.style.display).toEqual("none");
         }));
 
         it('show target tooltip when hovering its target and ignore [tooltip] input', fakeAsync(() => {
@@ -699,15 +699,42 @@ describe('IgxTooltip', () => {
             expect(tooltip.querySelector('igx-tooltip-close-button')).toBeNull();
         }));
 
+        it('should correctly update tooltip when showing programmatically for sticky and non-sticky targets', fakeAsync(() => {
+            const tooltip = tooltipNativeElement;
+
+            targetOne.sticky = true;
+            fix.detectChanges();
+            targetOne.showTooltip();
+            flush();
+
+            verifyTooltipVisibility(tooltip, targetOne, true);
+            expect(tooltip.role).toBe('status');
+
+            // Programmatically show tooltip for targetTwo (non-sticky) without closing sticky tooltip
+            targetTwo.sticky = false;
+            targetTwo.showTooltip();
+            flush();
+            verifyTooltipPosition(tooltip, targetTwo, false);
+            expect(tooltip.role).toBe('status');
+
+            targetOne.hideTooltip();
+            flush();
+
+            targetTwo.showTooltip();
+            flush();
+            verifyTooltipPosition(tooltip, targetTwo, true);
+            expect(tooltip.role).toBe('tooltip');
+        }));
+
         it('should correctly manage arrow state between different targets', fakeAsync(() => {
-            targetOne.disableArrow = true;
+            targetOne.hasArrow = true;
             fix.detectChanges();
 
             hoverElement(buttonOne);
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, targetOne, true);
-            expect(tooltipNativeElement.querySelector('.igx-tooltip--top').style.display).toEqual('none');
+            expect(tooltipNativeElement.querySelector('.igx-tooltip--bottom').style.display).toEqual('');
 
             unhoverElement(buttonOne);
             flush();
@@ -716,7 +743,7 @@ describe('IgxTooltip', () => {
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, targetTwo, true);
-            expect(tooltipNativeElement.querySelector('.igx-tooltip--top').style.display).toEqual('');
+            expect(tooltipNativeElement.querySelector('.igx-tooltip--bottom').style.display).toEqual('none');
         }));
     });
 
@@ -843,6 +870,18 @@ describe('IgxTooltip', () => {
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false)
         }));
+
+        it('should correctly display a sticky tooltip on touchstart', fakeAsync(() => {
+            tooltipTarget.sticky = true;
+            fix.detectChanges();
+            touchElement(button);
+            flush();
+
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+            const closeBtn = document.querySelector('.my-close-btn');
+            expect(closeBtn).toBeTruthy();
+            expect(tooltipNativeElement.getAttribute('role')).toBe('status');
+        }));
     });
 
     describe('IgxTooltip placement and offset', () => {
@@ -938,7 +977,7 @@ export const verifyTooltipPosition = (
     tooltipNativeElement: HTMLElement,
     actualTarget: { nativeElement: HTMLElement },
     shouldAlign:boolean = true,
-    placement: TooltipPlacement = 'top',
+    placement: TooltipPlacement = 'bottom',
     offset: number = 6
 ) => {
     const tooltip = tooltipNativeElement.getBoundingClientRect();
