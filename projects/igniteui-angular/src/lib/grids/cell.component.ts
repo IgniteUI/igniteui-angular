@@ -1,4 +1,5 @@
-﻿import {
+﻿import { useAnimation } from '@angular/animations';
+import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -52,6 +53,7 @@ import { IgxFocusDirective } from '../directives/focus/focus.directive';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxChipComponent } from '../chips/chip.component';
+import { fadeOut, scaleInCenter } from 'igniteui-angular/animations';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -885,7 +887,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 modal: false,
                 positionStrategy: new AutoPositionStrategy({
                     horizontalStartPoint: HorizontalAlignment.Center,
-                    horizontalDirection: HorizontalAlignment.Center
+                    horizontalDirection: HorizontalAlignment.Center,
+                    openAnimation: useAnimation(scaleInCenter, { params: { duration: '150ms' } }),
+                    closeAnimation: useAnimation(fadeOut, { params: { duration: '75ms' } })
                 })
             }
         );
