@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
 import { ITooltipHideEventArgs, ITooltipShowEventArgs, IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
 import { IgxToggleActionDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
@@ -53,6 +53,14 @@ export class IgxTooltipSingleTargetComponent {
     <div igxTooltip #tooltipRef="tooltip">
         Hello, I am a tooltip!
     </div>
+
+    <ng-template #customClose>
+        <div class="my-close-btn">Custom Close Button</div>
+    </ng-template>
+
+    <ng-template #secondCustomClose>
+        <div class="my-second-close-btn">Second Custom Close Button</div>
+    </ng-template>
     `,
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
@@ -60,6 +68,8 @@ export class IgxTooltipMultipleTargetsComponent {
     @ViewChild('targetOne', { read: IgxTooltipTargetDirective, static: true }) public targetOne: IgxTooltipDirective;
     @ViewChild('targetTwo', { read: IgxTooltipTargetDirective, static: true }) public targetTwo: IgxTooltipTargetDirective;
     @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
+    @ViewChild('customClose', { static: true }) public customCloseTemplate: TemplateRef<any>;
+    @ViewChild('secondCustomClose', { static: true }) public secondCustomCloseTemplate: TemplateRef<any>;
 }
 
 
@@ -89,4 +99,23 @@ export class IgxTooltipWithToggleActionComponent {
     @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
     @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
     @ViewChild(IgxToggleDirective, { static: true }) public toggleDir: IgxToggleDirective;
+}
+
+@Component({
+    template: `
+    <button [igxTooltipTarget]="tooltipRef" [sticky]="true" [closeButtonTemplate]="customClose">
+        Options
+    </button>
+
+    <ng-template #customClose>
+            <button class="my-close-btn">Close Me</button>
+    </ng-template>
+
+    <div #tooltipRef="tooltip" igxTooltip>Test</div>
+    `,
+    imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
+})
+export class IgxTooltipWithCloseButtonComponent {
+    @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
+    @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
 }
