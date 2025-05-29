@@ -375,22 +375,6 @@ export class PlatformUtil {
     }
 }
 
-/**
- * @hidden
- */
-export const flatten = (arr: any[]) => {
-    let result = [];
-
-    arr.forEach(el => {
-        result.push(el);
-        if (el.children) {
-            const children = Array.isArray(el.children) ? el.children : el.children.toArray();
-            result = result.concat(flatten(children));
-        }
-    });
-    return result;
-};
-
 export interface CancelableEventArgs {
     /**
      * Provides the ability to cancel the event.
