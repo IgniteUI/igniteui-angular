@@ -1,5 +1,5 @@
 import { Inject, Pipe, PipeTransform } from '@angular/core';
-import { cloneArray, resolveNestedPath } from '../../core/utils';
+import { cloneArray, columnFieldPath, resolveNestedPath } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { DefaultPivotGridRecordSortingStrategy } from '../../data-operations/pivot-sort-strategy';
@@ -154,7 +154,7 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
                     defaultExpand,
                     horizontalRowDimensions,
                     this.grid.pivotUI.horizontalSummariesPosition
-            );
+                );
             } else {
                 PivotUtil.flattenGroups(data, row, expansionStates, defaultExpand);
             }
@@ -169,7 +169,7 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
                 this.grid.visibleRowDimensions = enabledRows;
             }
             finalData = enabledRows.length > 0 ?
-            finalData.filter(x => x.dimensions.length === enabledRows.length) : finalData;
+                finalData.filter(x => x.dimensions.length === enabledRows.length) : finalData;
         }
 
         if (this.grid) {
@@ -201,7 +201,7 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
 
         let groupData: IPivotGridGroupRecord[] = [];
         let prevId;
-        const enabledRows = this.grid.hasHorizontalLayout ? (this.grid as any).visibleRowDimensions :  config.rows?.filter(x => x.enabled);
+        const enabledRows = this.grid.hasHorizontalLayout ? (this.grid as any).visibleRowDimensions : config.rows?.filter(x => x.enabled);
         const dimIndex = enabledRows.indexOf(dim);
         for (const rec of data) {
             let currentDim;
@@ -298,7 +298,7 @@ export class IgxPivotGridHorizontalRowCellMerging implements PipeTransform {
         const res: IPivotGridHorizontalGroup[] = [];
 
         // Merge vertically for each row dimension.
-        const verticalMergeGroups: IPivotGridHorizontalGroup[][] = [ ...data.map(_ => []) ];
+        const verticalMergeGroups: IPivotGridHorizontalGroup[][] = [...data.map(_ => [])];
         for (let dimIndex = 0; dimIndex < this.grid.visibleRowDimensions.length; dimIndex++) {
             const curDim = this.grid.visibleRowDimensions[dimIndex];
             let curGroup: IPivotGridHorizontalGroup = {
@@ -311,7 +311,7 @@ export class IgxPivotGridHorizontalRowCellMerging implements PipeTransform {
                 dimensions: [curDim],
                 records: [data[0]]
             };
-            for(let i = 1; i < data.length; i++) {
+            for (let i = 1; i < data.length; i++) {
                 const curRec = data[i];
                 const curRecValue = curRec.dimensionValues.get(curDim.memberName);
                 const previousRowCell = verticalMergeGroups[i][verticalMergeGroups[i].length - 1];
@@ -527,11 +527,12 @@ export class IgxPivotGridCellStyleClassesPipe implements PipeTransform {
         }
 
         const result = [];
+        const pathParts = columnFieldPath(columnData.field);
 
         for (const cssClass of Object.keys(cssClasses)) {
             const callbackOrValue = cssClasses[cssClass];
             const apply = typeof callbackOrValue === 'function' ?
-                callbackOrValue(rowData, columnData, resolveNestedPath(rowData, columnData.field), index) : callbackOrValue;
+                callbackOrValue(rowData, columnData, resolveNestedPath(rowData, pathParts), index) : callbackOrValue;
             if (apply) {
                 result.push(cssClass);
             }
