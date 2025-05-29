@@ -22,6 +22,7 @@ export declare interface IExpressionTree {
 export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpressionTree {
     filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[];
     /* alternateName: treeType */
+    /* mustCoerceToInt */
     type?: FilteringExpressionsTreeType;
 
     /* blazorSuppress */
