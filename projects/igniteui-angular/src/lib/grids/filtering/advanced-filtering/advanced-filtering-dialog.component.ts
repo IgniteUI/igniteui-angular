@@ -208,8 +208,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
                     fields: this.filterableFields.map(f => ({
                             field: f.field,
                             dataType: f.dataType,
-                        //  label: f.label,
-                        //  header: f.header,
+                            label: f.label,
+                            header: f.header,
                             editorOptions: f.editorOptions,
                             filters: f.filters,
                             pipeArgs: f.pipeArgs,

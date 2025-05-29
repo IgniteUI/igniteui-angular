@@ -331,7 +331,7 @@ export class IgxTreeGridAddRowPipe implements PipeTransform {
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any, isPinned = false, _pipeTrigger: number) {
-        if (!this.grid.rowEditable || !this.grid.crudService.row || this.grid.crudService.row.getClassName() !== IgxAddRow.name ||
+        if (!this.grid.rowEditable || !this.grid.crudService.row || !this.grid.crudService.row.isAddRow ||
             !this.grid.gridAPI.crudService.addRowParent || isPinned !== this.grid.gridAPI.crudService.addRowParent.isPinned) {
             return collection;
         }

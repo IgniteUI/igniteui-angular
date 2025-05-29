@@ -1,5 +1,5 @@
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { IgxAddRow, IgxEditRow } from './common/crud.service';
+import { IgxEditRow } from './common/crud.service';
 import { GridSummaryCalculationMode, GridSummaryPosition } from './common/enums';
 import { IgxGridCell } from './grid-public-cell';
 import { IgxSummaryResult } from './summaries/grid-summary';
@@ -47,7 +47,7 @@ abstract class BaseRow implements RowType {
      */
     public get addRowUI(): boolean {
         return !!this.grid.crudService.row &&
-            this.grid.crudService.row.getClassName() === IgxAddRow.name &&
+            this.grid.crudService.row.isAddRow &&
             this.grid.crudService.row.id === this.key;
     }
 
