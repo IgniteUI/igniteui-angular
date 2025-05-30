@@ -9,8 +9,7 @@ module.exports = function (config) {
     frameworks: ['parallel', 'jasmine', '@angular-devkit/build-angular'],
     files: [
       { pattern: '../../node_modules/hammerjs/hammer.min.js', watched: false },
-      { pattern: '../../node_modules/hammer-simulator/index.js', watched: false },
-      { pattern: './test.css', watched: false }
+      { pattern: '../../node_modules/hammer-simulator/index.js', watched: false }
     ],
     plugins: [
       'karma-parallel',
@@ -46,7 +45,7 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['ChromeHeadlessNoSandbox'],
-    browserDisconnectTimeout: 4000,
+    browserDisconnectTimeout: 20000,
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',
