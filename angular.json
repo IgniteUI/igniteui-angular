@@ -192,7 +192,8 @@
               "hammerjs"
             ],
             "styles": [
-              "src/styles/styles.scss"
+              "src/styles/styles.scss",
+              "projects/igniteui-angular/test.css"
             ],
             "assets": [
               "projects/igniteui-angular/src/assets"
@@ -401,7 +402,8 @@
             "tsConfig": "projects/bundle-test/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "styles": [
-              "projects/bundle-test/src/styles.scss"
+              "projects/bundle-test/src/styles.scss",
+              "projects/igniteui-angular/test.css"
             ],
             "scripts": [],
             "stylePreprocessorOptions": {
