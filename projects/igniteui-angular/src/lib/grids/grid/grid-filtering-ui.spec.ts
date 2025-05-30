@@ -19,6 +19,7 @@ import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxBadgeComponent } from '../../badge/badge.component';
+import { IgxIconComponent } from '../../icon/icon.component';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { igxI18N } from '../../core/i18n/resources';
@@ -7240,13 +7241,13 @@ const verifyPinningHidingSize = (fix: ComponentFixture<any>, expectedSize: Size)
 
     // Get column pinning and column hiding icons from header (if present at all)
     const headerTitle = excelMenu.querySelector('h4');
-    const headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix, excelMenu);
+    const headerIcons: DebugElement[] = GridFunctions.getExcelFilteringHeaderIconsDebugElements(fix, excelMenu);
     const headerAreaPinIcon: HTMLElement =
-        headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin"') !== -1) as HTMLElement;
+        headerIcons.find((buttonIcon: DebugElement) => buttonIcon.query(By.directive(IgxIconComponent)).componentInstance.name === "pin")?.nativeElement;
     const headerAreaUnpinIcon: HTMLElement
-        = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin"') !== -1) as HTMLElement;
+        = headerIcons.find((buttonIcon: DebugElement) => buttonIcon.query(By.directive(IgxIconComponent)).componentInstance.name === "unpin")?.nativeElement;
     const headerAreaColumnHidingIcon: HTMLElement =
-        headerIcons.find((buttonIcon: any) => buttonIcon.innerText === 'visibility_off') as HTMLElement;
+        headerIcons.find((buttonIcon: DebugElement) => buttonIcon.query(By.directive(IgxIconComponent)).componentInstance.name === 'hide')?.nativeElement;
 
     // Get column pinning and column hiding icons from actionsArea (if present at all)
     const actionsPinArea = GridFunctions.getExcelFilteringPinContainer(fix, excelMenu);
