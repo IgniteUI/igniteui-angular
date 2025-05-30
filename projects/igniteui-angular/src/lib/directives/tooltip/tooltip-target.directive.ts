@@ -217,6 +217,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
+        this.target.tooltipTarget = this;
+
         const showingArgs = { target: this, tooltip: this.target, cancel: false };
         this.tooltipShow.emit(showingArgs);
 
@@ -258,7 +260,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * @hidden
      */
-    @HostListener('touchstart')
     public onTouchStart() {
         if (this.tooltipDisabled) {
             return;
@@ -270,7 +271,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * @hidden
      */
-    @HostListener('document:touchstart', ['$event'])
     public onDocumentTouchStart(event) {
         if (this.tooltipDisabled) {
             return;
@@ -301,6 +301,10 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this._overlayDefaults.closeOnEscape = true;
 
         this.target.closing.pipe(takeUntil(this.destroy$)).subscribe((event) => {
+            if (this.target.tooltipTarget !== this) {
+                return;
+            }
+
             const hidingArgs = { target: this, tooltip: this.target, cancel: false };
             this.tooltipHide.emit(hidingArgs);
 
@@ -308,12 +312,16 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
                 event.cancel = true;
             }
         });
+
+        this.nativeElement.addEventListener('touchstart', this.onTouchStart = this.onTouchStart.bind(this), { passive: true });
     }
 
     /**
      * @hidden
      */
     public ngOnDestroy() {
+        this.hideTooltip();
+        this.nativeElement.removeEventListener('touchstart', this.onTouchStart);
         this.destroy$.next();
         this.destroy$.complete();
     }
@@ -333,6 +341,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             this.target.forceClose(this.mergedOverlaySettings);
             this.target.toBeHidden = false;
         }
+
+        this.target.tooltipTarget = this;
 
         const showingArgs = { target: this, tooltip: this.target, cancel: false };
         this.tooltipShow.emit(showingArgs);
