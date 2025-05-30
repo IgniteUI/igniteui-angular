@@ -1,6 +1,5 @@
-import { Inject, Injectable, NgZone } from '@angular/core';
+import { Inject, Injectable, NgZone, DOCUMENT } from '@angular/core';
 import { ɵgetDOM as getDOM } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
 import { PlatformUtil } from './utils';
 import { HammerManager, HammerOptions, HammerStatic } from './touch-annotations';
 

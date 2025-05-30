@@ -1,4 +1,4 @@
-import { DOCUMENT, NgTemplateOutlet, NgClass } from '@angular/common';
+import { NgTemplateOutlet, NgClass } from '@angular/common';
 import {
     ChangeDetectorRef,
     Component,
@@ -9,7 +9,8 @@ import {
     HostBinding,
     HostListener, Inject, Input,
     Optional, QueryList, booleanAttribute,
-    inject
+    inject,
+    DOCUMENT
 } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
 import { PlatformUtil, getComponentTheme } from '../core/utils';

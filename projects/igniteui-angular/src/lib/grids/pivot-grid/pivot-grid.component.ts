@@ -27,9 +27,10 @@ import {
     CUSTOM_ELEMENTS_SCHEMA,
     booleanAttribute,
     OnChanges,
-    SimpleChanges
+    SimpleChanges,
+    DOCUMENT
 } from '@angular/core';
-import { DOCUMENT, NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
+import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
 import { first, take, takeUntil} from 'rxjs/operators';
 import { IgxGridBaseDirective } from '../grid-base.directive';

@@ -16,8 +16,7 @@ module.exports = function (config) {
       require('karma-jasmine'),
       require('karma-coverage'),
       require('karma-chrome-launcher'),
-      require('karma-jasmine-spec-tags'),
-      require('@angular-devkit/build-angular/plugins/karma')
+      require('karma-jasmine-spec-tags')
     ],
     parallelOptions: {
       executors: 2,

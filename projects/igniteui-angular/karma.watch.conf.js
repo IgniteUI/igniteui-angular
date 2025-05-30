@@ -13,8 +13,7 @@ module.exports = function (config) {
     plugins: [
         'karma-jasmine',
         'karma-chrome-launcher',
-        'karma-spec-reporter',
-        '@angular-devkit/build-angular/plugins/karma'
+        'karma-spec-reporter'
     ],
     client: {
       clearContext: false, // leave Jasmine Spec Runner output visible in browser
