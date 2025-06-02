@@ -10,13 +10,11 @@ const PREFIX_IMPLICIT_PROP = '$implicit';
  */
 export class TemplateRefWrapper<C extends object> extends TemplateRef<C> {
 
-    public override get elementRef(): ElementRef<any> {
-        return this.innerTemplateRef.elementRef;
-    }
-
+    public override readonly elementRef: ElementRef<any>;
     /** Create a wrapper around TemplateRef with the context exposed */
     constructor(public innerTemplateRef: TemplateRef<C>, private _templateFunction: any, private embeddedViewDestroyCallback: (container: HTMLElement) => void) {
         super();
+        this.elementRef = innerTemplateRef.elementRef;
     }
 
     private _contentContext = new Map<string, TemplateRefWrapperContentContext>();
