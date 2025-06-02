@@ -360,7 +360,9 @@
           "builder": "@angular/build:karma",
           "options": {
             "main": "projects/igniteui-angular-elements/src/test.ts",
-            "polyfills": "projects/igniteui-angular-elements/src/polyfills.ts",
+            "polyfills":  [
+              "projects/igniteui-angular-elements/src/polyfills.ts"
+            ],
             "tsConfig": "projects/igniteui-angular-elements/tsconfig.spec.json",
             "karmaConfig": "projects/igniteui-angular-elements/karma.conf.js",
             "inlineStyleLanguage": "scss",
