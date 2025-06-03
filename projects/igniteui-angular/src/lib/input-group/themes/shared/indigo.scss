@@ -31,11 +31,23 @@ $_theme: $indigo;
     @include e(input) {
         @include type-style(body-2);
 
+        padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
         padding-block: rem(6px);
-        padding-inline: 0;
 
         &::placeholder {
             font-style: italic;
+        }
+    }
+
+    @include m(suffixed) {
+        @include e(input) {
+            padding-inline-end: 0;
+        }
+    }
+
+    @include m(prefixed) {
+        @include e(input) {
+            padding-inline-start: 0;
         }
     }
 
