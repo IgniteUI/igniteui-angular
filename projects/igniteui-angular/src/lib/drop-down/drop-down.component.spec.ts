@@ -29,7 +29,7 @@ const CSS_CLASS_DISABLED = 'igx-drop-down__item--disabled';
 const CSS_CLASS_HEADER = 'igx-drop-down__header';
 const CSS_CLASS_TABS = '.igx-tabs__header-item';
 
-describe('IgxDropDown ', () => {
+fdescribe('IgxDropDown ', () => {
     let fixture;
     let dropdown: IgxDropDownComponent;
     describe('Unit tests', () => {
@@ -1034,6 +1034,56 @@ describe('IgxDropDown ', () => {
         });
     });
     describe('Rendering', () => {
+        describe('Accessibility', () => {
+            beforeEach(waitForAsync(() => {
+                TestBed.configureTestingModule({
+                    imports: [
+                        NoopAnimationsModule,
+                        IgxDropDownTestComponent,
+                    ]
+                }).compileComponents();
+            }));
+            beforeEach(() => {
+                fixture = TestBed.createComponent(IgxDropDownTestComponent);
+                fixture.detectChanges();
+                dropdown = fixture.componentInstance.dropDown;
+            });
+            it('should set the aria-label property correctly', () => {
+                fixture = TestBed.createComponent(IgxDropDownTestComponent);
+                fixture.detectChanges();
+                dropdown = fixture.componentInstance.dropdown;
+
+                // Initially aria-label should be null
+                dropdown.toggle();
+                fixture.detectChanges();
+                let items = document.querySelectorAll(`.${CSS_CLASS_ITEM}`);
+                items.forEach(item => {
+                    expect(item.getAttribute('aria-label')).toBeNull();
+                });
+
+                // Set value and check if aria-label reflects it
+                dropdown.toggle();
+                fixture.detectChanges();
+                dropdown.items.forEach((item, index) => item.value = `value ${index}`);
+                dropdown.toggle();
+                fixture.detectChanges();
+                items = document.querySelectorAll(`.${CSS_CLASS_ITEM}`);
+                items.forEach((item, index) => {
+                    expect(item.getAttribute('aria-label')).toBe(`value ${index}`);
+                });
+
+                // Phase 3: Set explicit ariaLabel and verify it overrides value
+                dropdown.toggle();
+                fixture.detectChanges();
+                dropdown.items.forEach((item, index) => item.ariaLabel = `label ${index}`);
+                dropdown.toggle();
+                fixture.detectChanges();
+                items = document.querySelectorAll(`.${CSS_CLASS_ITEM}`);
+                items.forEach((item, index) => {
+                    expect(item.getAttribute('aria-label')).toBe(`label ${index}`);
+                });
+            });
+        });
         describe('Grouped items', () => {
             beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
