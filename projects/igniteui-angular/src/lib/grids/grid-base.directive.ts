@@ -41,7 +41,7 @@ import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, Pla
 import { GridColumnDataType } from '../data-operations/data-util';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { IForOfDataChangingEventArgs, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
+import { IForOfDataChangeEventArgs, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightService } from '../directives/text-highlight/text-highlight.service';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { IgxGridBodyDirective, RowEditPositionStrategy } from './grid.common';
@@ -70,7 +70,7 @@ import { GridResourceStringsEN, IGridResourceStrings } from '../core/i18n/grid-r
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxGridSelectionService } from './selection/selection.service';
-import { IgxEditRow, IgxCell, IgxAddRow } from './common/crud.service';
+import { IgxEditRow, IgxCell } from './common/crud.service';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
 import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-style/excel-style-search.component';
 import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
@@ -994,6 +994,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     @Output()
     public gridCopy = new EventEmitter<IGridClipboardEvent>();
 
+    /* blazorCSSuppress */
     /**
      * Emitted when the rows are expanded or collapsed.
      *
@@ -1118,7 +1119,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```
      */
     @Output()
-    public dataChanging = new EventEmitter<IForOfDataChangingEventArgs>();
+    public dataChanging = new EventEmitter<IForOfDataChangeEventArgs>();
 
     /**
      * Emitted after the grid's data view is changed because of a data operation, rebinding, etc.
@@ -1129,7 +1130,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```
      */
     @Output()
-    public dataChanged = new EventEmitter<any>();
+    public dataChanged = new EventEmitter<IForOfDataChangeEventArgs>();
 
 
     /**
@@ -3342,7 +3343,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 .map(t => t.newValue));
         }
 
-        if (this.crudService.row && this.crudService.row.getClassName() === IgxAddRow.name) {
+        if (this.crudService.row && this.crudService.row.isAddRow) {
             result.splice(this.crudService.row.index, 0, this.crudService.row.data);
         }
 
@@ -3921,7 +3922,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public dataRebinding(event: IForOfDataChangingEventArgs) {
+    public dataRebinding(event: IForOfDataChangeEventArgs) {
         if (event.state.chunkSize == 0) {
             this._shouldRecalcRowHeight = true;
         }
@@ -3931,7 +3932,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public dataRebound(event) {
+    public dataRebound(event: IForOfDataChangeEventArgs) {
         this.selectionService.clearHeaderCBState();
         if (this._shouldRecalcRowHeight) {
             this._shouldRecalcRowHeight = false;
@@ -4195,7 +4196,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         col.toggleVisibility(args.newValue);
     }
 
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     /**
      * Gets/Sets a list of key-value pairs [row ID, expansion state].
      *
@@ -4213,7 +4214,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this._expansionStates;
     }
 
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     public set expansionStates(value) {
         this._expansionStates = new Map<any, boolean>(value);
         this.expansionStatesChange.emit(this._expansionStates);

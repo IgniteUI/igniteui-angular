@@ -51,7 +51,7 @@
 
         @include e(input) {
             @extend %form-group-input !optional;
-            @extend %chrome-autofill-fix !optional;
+            @extend %autofill-background-fix !optional;
             @extend %edge-clear-icon-fix !optional;
 
             &:hover {
@@ -421,6 +421,7 @@
 
         // Type border START
         @include m(border) {
+            @extend %form-group-display--border !optional;
             @extend %form-group-display--no-margin !optional;
 
             @include e(bundle) {

@@ -226,7 +226,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * ```
      */
     @Output()
-    public dataChanged = new EventEmitter<any>();
+    public dataChanged = new EventEmitter<IForOfDataChangeEventArgs>();
 
     @Output()
     public beforeViewDestroyed = new EventEmitter<EmbeddedViewRef<any>>();
@@ -1513,10 +1513,15 @@ export interface IForOfState extends IBaseEventArgs {
     chunkSize?: number;
 }
 
+/**
+ * @deprecated in 19.2.7. Use `IForOfDataChangeEventArgs` instead.
+ */
 export interface IForOfDataChangingEventArgs extends IBaseEventArgs {
     containerSize: number;
     state: IForOfState;
 }
+
+export interface IForOfDataChangeEventArgs extends IForOfDataChangingEventArgs {}
 
 export class IgxGridForOfContext<T, U extends T[] = T[]> extends IgxForOfContext<T, U> {
     constructor(
@@ -1586,7 +1591,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
      * An event that is emitted after data has been changed but before the view is refreshed
      */
     @Output()
-    public dataChanging = new EventEmitter<IForOfDataChangingEventArgs>();
+    public dataChanging = new EventEmitter<IForOfDataChangeEventArgs>();
 
     constructor(
         _viewContainer: ViewContainerRef,

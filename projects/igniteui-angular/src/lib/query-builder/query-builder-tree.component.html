@@ -9,7 +9,7 @@
 <ng-template #selectFromTemplate>
     <div class="igx-filter-tree__inputs" [style.display]="(isInEditMode() && (!this.isAdvancedFiltering() || this.isHierarchicalNestedQuery())) ? 'flex' : 'none'">
         <div class="igx-filter-tree__inputs-field">
-            <span class="igx-query-builder__label">From</span>
+            <span class="igx-query-builder__label">{{ this.resourceStrings.igx_query_builder_from_label }}</span>
             <igx-select #entitySelect
                 type="box"
                 (selectionChanging)="onEntitySelectChanging($event)"
@@ -30,7 +30,7 @@
 
         <div class="igx-filter-tree__inputs-field">
             @if (!this.isHierarchicalNestedQuery()) {
-                <span class="igx-query-builder__label">Select</span>
+                <span class="igx-query-builder__label">{{ this.resourceStrings.igx_query_builder_select_label }}</span>
             }
             @if (!parentExpression) {
                 <igx-combo
