@@ -3,7 +3,6 @@ import { SampleTestData } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings } from './template-strings.spec';
 import { IgxGridComponent } from '../grids/grid/grid.component';
 import { IgxColumnActionsComponent } from '../grids/column-actions/column-actions.component';
-import { GridPagingMode } from '../grids/common/enums';
 import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxGridToolbarComponent } from '../grids/toolbar/grid-toolbar.component';
 import { IgxGridToolbarHidingComponent } from '../grids/toolbar/grid-toolbar-hiding.component';
@@ -123,7 +122,7 @@ export class PagingComponent extends GridWithSizeComponent {
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class RemotePagingComponent extends GridWithSizeComponent {
-    public pagingMode = GridPagingMode.Remote;
+    public pagingMode = 'remote';
     public perPage = 3;
     public totalRecords = 10;
     public override data = SampleTestData.personJobDataFull();

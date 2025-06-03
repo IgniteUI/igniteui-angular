@@ -13,6 +13,14 @@ All notable changes for each version of this project will be documented in this 
     - A column's `minWidth` and `maxWidth` constrain the user-specified `width` so that it cannot go outside their bounds.
     - In SSR mode grid with height 100% or with no height will render on the server with % size and with no data. The grid will show either the empty grid template or the loading indicator (if isLoading is true).
     - In SSR mode grid with width 100% or with no width will render on the server with % size and with all columns.
+    - The `pagingMode` property can now be set as simple strings `'local'` and `'remote'` and does not require importing the `GridPagingMode` enum.
+- `IgxHierarchicalGrid`
+    - Introduced a new advanced filtering capability that enables top-level records to be dynamically refined based on the attributes or data of their associated child records.
+    - Added a new `schema` input property that can be used to pass collection of `EntityType` objects. This property is required for remote data scenarios.
+- `IgxQueryBuilderComponent`, `IgxAdvancedFilteringDialogComponent`
+    - Added support for entities with hierarchical structure.
+- `EntityType`
+    - A new optional property called `childEntities` has been introduced that can be used to create nested entities.
 
 ## 19.1.1
 ### New Features
@@ -30,7 +38,7 @@ All notable changes for each version of this project will be documented in this 
     - Introduced a new `expanded` input property, enabling dynamic control over the banner's state. The banner can now be programmatically set to expanded (visible) or collapsed (hidden) both initially and at runtime. Animations will trigger during runtime updates — the **open animation** plays when `expanded` is set to `true`, and the **close animation** plays when set to `false`. However, no animations will trigger when the property is set initially.
     - The banner's event lifecycle (`opening`, `opened`, `closing`, `closed`) only triggers through **user interactions** (e.g., clicking to open/close). Programmatic updates using the `expanded` property will not fire any events.
     - If the `expanded` property changes during an ongoing animation, the current animation will **stop** and the opposite animation will begin from the **point where the previous animation left off**. For instance, if the open animation (10 seconds) is interrupted at 6 seconds and `expanded` is set to `false`, the close animation (5 seconds) will start from its 3rd second.
-- `IgxQueryBuilder` has new design that comes with updated appearance and new functionality
+- `IgxQueryBuilder` has a new design that comes with an updated appearance and new functionality
     - `IgxQueryBuilderComponent`
         - Introduced the ability to create nested queries by specifying IN/NOT IN operators.
         - Introduced the ability to reposition condition chips by dragging or using `Arrow Up/Down`.
