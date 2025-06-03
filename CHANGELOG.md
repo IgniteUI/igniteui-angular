@@ -2,6 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 20.0.0
+
+### General
+- **Angular 20 Compatibility** - Ignite UI for Angular now plays nice with Angular 20! Upgrade your apps and enjoy the latest features.
+- `IgxActionStrip`
+    - **Behavioral Changes** - When using the Action Strip standalone, outside of Grid, scenarios the component is no longer initially visible and the `hidden` property now defaults to `true`.
+
 ## 19.2.0
 
 ### General
