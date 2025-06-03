@@ -1,13 +1,12 @@
-import { mkenum } from '../core/utils';
 
 /**
  * Sets the selection type - single, multi or range.
  */
-export const CalendarSelection = /*@__PURE__*/mkenum({
+export const CalendarSelection = {
     SINGLE: 'single',
     MULTI: 'multi',
     RANGE: 'range'
-});
+} as const;
 export type CalendarSelection = (typeof CalendarSelection)[keyof typeof CalendarSelection];
 
 export const enum ScrollDirection {
@@ -21,11 +20,11 @@ export interface IViewDateChangeEventArgs {
     currentValue: Date;
 }
 
-export const IgxCalendarView = /*@__PURE__*/mkenum({
+export const IgxCalendarView = {
     Month: 'month',
     Year: 'year',
     Decade: 'decade'
-});
+} as const;
 
 /**
  * Determines the Calendar active view - days, months or years.

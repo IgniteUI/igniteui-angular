@@ -17,7 +17,7 @@ import {
     DOCUMENT
 } from '@angular/core';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
-import { IBaseEventArgs, mkenum } from '../core/utils';
+import { IBaseEventArgs } from '../core/utils';
 import { ChipResourceStringsEN, IChipResourceStrings } from '../core/i18n/chip-resources';
 import { Subject } from 'rxjs';
 import { IgxIconComponent } from '../icon/icon.component';
@@ -25,13 +25,13 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { Size } from '../grids/common/enums';
 
-export const IgxChipTypeVariant = /*@__PURE__*/mkenum({
+export const IgxChipTypeVariant = {
     PRIMARY: 'primary',
     INFO: 'info',
     SUCCESS: 'success',
     WARNING: 'warning',
     DANGER: 'danger'
-});
+} as const;
 
 export interface IBaseChipEventArgs extends IBaseEventArgs {
     originalEvent: IDragBaseEventArgs | IDropBaseEventArgs | KeyboardEvent | MouseEvent | TouchEvent;
