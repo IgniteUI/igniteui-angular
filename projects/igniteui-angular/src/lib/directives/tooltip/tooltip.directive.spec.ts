@@ -271,6 +271,19 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
+        it('IgxTooltip is hidden when its target is destroyed', fakeAsync(() => {
+            hoverElement(button);
+            flush();
+
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+
+            fix.componentInstance.showButton = false;
+            fix.detectChanges();
+            flush();
+
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+        }));
+
         describe('Tooltip events', () => {
             // configureTestSuite();
             it('should emit the proper events when hovering/unhovering target', fakeAsync(() => {
@@ -554,6 +567,47 @@ describe('IgxTooltip', () => {
             // Tooltip is NOT visible and positioned relative to buttonOne
             verifyTooltipPosition(tooltipNativeElement, buttonOne, false);
         }));
+
+        it('Should not call `hideTooltip` multiple times on document:touchstart', fakeAsync(() => {
+            spyOn(targetOne, 'hideTooltip').and.callThrough();
+            spyOn(targetTwo, 'hideTooltip').and.callThrough();
+
+            touchElement(buttonOne);
+            tick(500);
+
+            const dummyDiv = fix.debugElement.query(By.css('.dummyDiv'));
+            touchElement(dummyDiv);
+            flush();
+
+            expect(targetOne.hideTooltip).toHaveBeenCalledTimes(1);
+            expect(targetTwo.hideTooltip).not.toHaveBeenCalled();
+        }));
+
+        it('should not emit tooltipHide event multiple times', fakeAsync(() => {
+            spyOn(targetOne.tooltipHide, 'emit');
+            spyOn(targetTwo.tooltipHide, 'emit');
+
+            hoverElement(buttonOne);
+            flush();
+
+            const tooltipHideArgsTargetOne = { target: targetOne, tooltip: fix.componentInstance.tooltip, cancel: false };
+            const tooltipHideArgsTargetTwo = { target: targetTwo, tooltip: fix.componentInstance.tooltip, cancel: false };
+
+            unhoverElement(buttonOne);
+            tick(500);
+            expect(targetOne.tooltipHide.emit).toHaveBeenCalledOnceWith(tooltipHideArgsTargetOne);
+            expect(targetTwo.tooltipHide.emit).not.toHaveBeenCalled();
+            flush();
+
+            hoverElement(buttonTwo);
+            flush();
+
+            unhoverElement(buttonTwo);
+            tick(500);
+            expect(targetOne.tooltipHide.emit).toHaveBeenCalledOnceWith(tooltipHideArgsTargetOne);
+            expect(targetTwo.tooltipHide.emit).toHaveBeenCalledOnceWith(tooltipHideArgsTargetTwo);
+            flush();
+        }))
     });
 
     describe('Tooltip integration', () => {
@@ -596,7 +650,7 @@ const touchElement = (element) => element.nativeElement.dispatchEvent(new TouchE
 const verifyTooltipVisibility = (tooltipNativeElement, tooltipTarget, shouldBeVisible: boolean) => {
     expect(tooltipNativeElement.classList.contains(TOOLTIP_CLASS)).toBe(shouldBeVisible);
     expect(tooltipNativeElement.classList.contains(HIDDEN_TOOLTIP_CLASS)).not.toBe(shouldBeVisible);
-    expect(tooltipTarget.tooltipHidden).not.toBe(shouldBeVisible);
+    expect(tooltipTarget?.tooltipHidden).not.toBe(shouldBeVisible);
 };
 
 const verifyTooltipPosition = (tooltipNativeElement, actualTarget, shouldBeAligned: boolean) => {
