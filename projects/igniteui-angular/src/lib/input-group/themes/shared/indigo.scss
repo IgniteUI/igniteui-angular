@@ -31,6 +31,7 @@ $_theme: $indigo;
     @include e(input) {
         @include type-style(body-2);
 
+        caret-color: var-get($_theme, 'focused-bottom-line-color');
         padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
         padding-block: rem(6px);
 
@@ -53,6 +54,8 @@ $_theme: $indigo;
 
     @include e(textarea) {
         @include type-style(body-2);
+
+        caret-color: var-get($_theme, 'focused-bottom-line-color');
     }
 
     @include e(file-input) {
