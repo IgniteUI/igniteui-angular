@@ -94,7 +94,7 @@ export class TestNgZone extends NgZone {
 
 // TODO: enable on re-run by selecting enable debug logging
 // https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/troubleshooting-workflows/enabling-debug-logging
-const shardLogging = true;
+const shardLogging = false;
 if (shardLogging) {
     const myReporter = {
         suiteStarted: function(result) {
