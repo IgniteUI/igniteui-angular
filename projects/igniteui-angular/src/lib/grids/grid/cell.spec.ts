@@ -151,7 +151,7 @@ describe('IgxGrid - Cell component #grid', () => {
         });
     });
 
-    xdescribe('Cells in virtualized grid ', () => {
+    describe('Cells in virtualized grid ', () => {
         let fix;
         let grid: IgxGridComponent;
 
