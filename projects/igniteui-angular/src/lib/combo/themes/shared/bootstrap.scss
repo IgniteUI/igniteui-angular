@@ -8,6 +8,14 @@ $_theme: $bootstrap;
 @include themed-block(igx-combo, bootstrap) {
     @include e(search) {
         --igx-input-group-border-border-radius: 0;
+        --igx-input-group-border-color: transparent;
+
+        .igx-input-group--focused {
+            .igx-input-group__bundle-start,
+            .igx-input-group__bundle-end {
+                border-block-end-color: var(--focused-border-color);
+            }
+        }
 
         .igx-input-group__bundle-main {
             border-inline-width: 0;

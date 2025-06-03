@@ -47,7 +47,8 @@ $theme: $base;
             background: transparent;
 
             .igx-icon--inactive {
-                --igx-icon-disabled-color: map.get($theme, 'input-suffix-color)');
+                --igx-icon-disabled-color: var(--input-suffix-color);
+
                 opacity: 1;
             }
         }
