@@ -1,5 +1,5 @@
 import { waitForAsync, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
-import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxChipComponent, IgxComboComponent, IgxDateFilteringOperand, IgxNumberFilteringOperand, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxQueryBuilderSearchValueTemplateDirective } from 'igniteui-angular';
+import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxChipComponent, IgxComboComponent, IgxDateFilteringOperand, IgxIconComponent, IgxInputGroupComponent, IgxNumberFilteringOperand, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxQueryBuilderSearchValueTemplateDirective, IgxSelectComponent } from 'igniteui-angular';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -830,8 +830,10 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
 
       // Verify operator icon
-      // const operatorInputGroup = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix).querySelector('igx-input-group') as HTMLElement;
-      // expect(operatorInputGroup.querySelector('igx-icon').attributes.getNamedItem('ng-reflect-name').nodeValue).toEqual('in');
+      const operatorSelectDebugElement = fix.debugElement.queryAll(By.directive(IgxSelectComponent))[2];
+      const inputDebugElement = operatorSelectDebugElement.query(By.directive(IgxInputGroupComponent));
+      const iconDebugElem = inputDebugElement.query(By.directive(IgxIconComponent));
+      expect(iconDebugElem.componentInstance.name).toEqual('in');
 
       const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
       // Verify value input placeholder
@@ -907,8 +909,10 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 11); // Select 'Not-In' operator.
 
       // Verify operator icon
-      // const operatorInputGroup = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix).querySelector('igx-input-group') as HTMLElement;
-      // expect(operatorInputGroup.querySelector('igx-icon').attributes.getNamedItem('ng-reflect-name').nodeValue).toEqual('not-in');
+      const operatorSelectDebugElement = fix.debugElement.queryAll(By.directive(IgxSelectComponent))[2];
+      const inputDebugElement = operatorSelectDebugElement.query(By.directive(IgxInputGroupComponent));
+      const iconDebugElem = inputDebugElement.query(By.directive(IgxIconComponent));
+      expect(iconDebugElem.componentInstance.name).toEqual('not-in');
 
       const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
       // Verify value input placeholder
