@@ -179,6 +179,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
                 this.handleSpace();
                 break;
             case DropDownActionKey.ESCAPE:
+            case DropDownActionKey.TAB:
                 this.close();
         }
     }
