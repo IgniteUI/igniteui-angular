@@ -40,7 +40,7 @@ import {
     IgcButtonComponent,
     IgcInputComponent,
     registerIconFromText,
-    IgcActiveStepChangingArgs,
+    IgcActiveStepChangingEventArgs,
 } from 'igniteui-webcomponents';
 import {
     Properties,
@@ -318,7 +318,7 @@ export class IgxStepperSampleComponent {
 
     // Handle changes from Web Component Stepper
     public onWcStepperChange(
-        event: CustomEvent<IgcActiveStepChangingArgs>
+        event: CustomEvent<IgcActiveStepChangingEventArgs>
     ): void {
         if (this.isSyncing) return;
 

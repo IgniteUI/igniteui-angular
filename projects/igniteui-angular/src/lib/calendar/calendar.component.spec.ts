@@ -30,7 +30,6 @@ import {
     DateRangeType,
 } from "../core/dates/dateRange";
 
-import { configureTestSuite } from "../test-utils/configure-suite";
 import { IgxDayItemComponent } from "./days-view/day-item.component";
 import { HelperTestFunctions } from "../test-utils/calendar-helper-utils";
 
@@ -128,9 +127,8 @@ describe("IgxCalendar - ", () => {
     });
 
     describe("Basic -", () => {
-        configureTestSuite({ checkLeaks: true });
 
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,

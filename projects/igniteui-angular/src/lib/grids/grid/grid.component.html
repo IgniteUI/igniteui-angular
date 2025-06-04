@@ -70,7 +70,7 @@
                 }
             }
         </ng-template>
-        <ng-template igxGridFor let-rowData [igxGridForOf]="data
+        <ng-template igxGridFor let-rowData [igxGridForOf]="renderData
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
@@ -277,8 +277,8 @@
     <div class="igx-banner__message">
         <span class="igx-banner__text">
             <ng-container
-                *ngTemplateOutlet="this.crudService.row?.getClassName() === 'IgxAddRow' ? rowAddTextTemplate : rowEditTextTemplate ? rowEditTextTemplate : defaultRowEditText;
-                context: { $implicit: this.crudService.row?.getClassName() !== 'IgxAddRow' ? rowChangesCount : null }">
+                *ngTemplateOutlet="this.crudService.row?.isAddRow ? rowAddTextTemplate : rowEditTextTemplate ? rowEditTextTemplate : defaultRowEditText;
+                context: { $implicit: !this.crudService.row?.isAddRow ? rowChangesCount : null }">
             </ng-container>
         </span>
     </div>

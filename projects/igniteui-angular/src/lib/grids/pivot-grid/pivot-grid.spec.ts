@@ -7,7 +7,6 @@ import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-sort-strategy';
 import { DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { PivotGridFunctions } from '../../test-utils/pivot-grid-functions.spec';
 import { IgxPivotGridFlexContainerComponent, IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponent, IgxTotalSaleAggregate } from '../../test-utils/pivot-grid-samples.spec';
@@ -29,9 +28,8 @@ const CSS_CLASS_ITEM = 'igx-drop-down__item';
 const ACTIVE_CELL_CSS_CLASS = '.igx-grid-th--active';
 
 describe('IgxPivotGrid #pivotGrid', () => {
-    configureTestSuite();
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -979,9 +977,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 const chips = excelMenu.querySelectorAll('igx-chip');
                 expect(chips[0].id).toBe('SellerName');
-                expect(chips[0].attributes.getNamedItem('ng-reflect-selected').nodeValue).toEqual('true');
+                expect(chips[0].attributes.getNamedItem('aria-selected').nodeValue).toEqual('true');
                 expect(chips[1].id).toBe('ProductCategory');
-                expect(chips[1].attributes.getNamedItem('ng-reflect-selected').nodeValue).toEqual('false');
+                expect(chips[1].attributes.getNamedItem('aria-selected').nodeValue).toEqual('false');
 
                 let esfSearch = GridFunctions.getExcelFilteringSearchComponent(fixture, excelMenu, 'igx-pivot-grid');
                 let checkBoxes = esfSearch.querySelectorAll('igx-checkbox');

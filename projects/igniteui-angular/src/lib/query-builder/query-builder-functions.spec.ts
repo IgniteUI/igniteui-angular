@@ -311,14 +311,14 @@ export class QueryBuilderFunctions {
         return outlet;
     }
 
-    public static getQueryBuilderSelectDropdown(queryBuilderElement: HTMLElement) {
+    public static getQueryBuilderSelectDropdown(queryBuilderElement: HTMLElement, index = 0) {
         const outlet = QueryBuilderFunctions.getQueryBuilderOutlet(queryBuilderElement);
-        const selectDropdown = outlet.querySelector(`.${QueryBuilderSelectors.DROP_DOWN_LIST_SCROLL}`);
+        const selectDropdown = outlet.querySelectorAll(`.${QueryBuilderSelectors.DROP_DOWN_LIST_SCROLL}`).item(index);
         return selectDropdown;
     }
 
-    public static getQueryBuilderSelectDropdownItems(queryBuilderElement: HTMLElement) {
-        const selectDropdown = QueryBuilderFunctions.getQueryBuilderSelectDropdown(queryBuilderElement);
+    public static getQueryBuilderSelectDropdownItems(queryBuilderElement: HTMLElement, index = 0) {
+        const selectDropdown = QueryBuilderFunctions.getQueryBuilderSelectDropdown(queryBuilderElement, index);
         const items = Array.from(selectDropdown.querySelectorAll('.igx-drop-down__item'));
         return items;
     }
@@ -841,13 +841,13 @@ export class QueryBuilderFunctions {
         fix.detectChanges();
     }
 
-    public static selectEntityAndClickInitialAddCondition(fix: ComponentFixture<any>, entityIndex: number, groupIndex = 0) {
-        QueryBuilderFunctions.selectEntityInEditModeExpression(fix, entityIndex);
+    public static selectEntityAndClickInitialAddCondition(fix: ComponentFixture<any>, entityIndex: number, level = 0) {
+        QueryBuilderFunctions.selectEntityInEditModeExpression(fix, entityIndex, level);
         tick(100);
         fix.detectChanges();
 
         // Click the initial 'Add Condition' button.
-        QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, groupIndex);
+        QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, level);
         tick(100);
         fix.detectChanges();
     }

@@ -3,15 +3,13 @@ import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angul
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSnackbarComponent } from './snackbar.component';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { useAnimation } from '@angular/animations';
 import { HorizontalAlignment, PositionSettings, VerticalAlignment } from '../services/public_api';
 import { slideInLeft, slideInRight } from 'igniteui-angular/animations';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 
 describe('IgxSnackbar', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -188,8 +186,7 @@ describe('IgxSnackbar', () => {
 });
 
 describe('IgxSnackbar with custom content', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
