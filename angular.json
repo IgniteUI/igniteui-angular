@@ -323,7 +323,7 @@
               ],
               "outputHashing": "none",
               "optimization": true,
-              "externalDependencies": ["lit-html"]
+              "externalDependencies": ["lit"]
             },
             "development": {
               "optimization": false,

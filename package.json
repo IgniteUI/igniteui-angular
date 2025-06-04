@@ -75,7 +75,7 @@
     "express": "^5.1.0",
     "fflate": "^0.8.1",
     "igniteui-theming": "^18.0.1",
-    "igniteui-trial-watermark": "^3.0.2",
+    "igniteui-trial-watermark": "^3.1.0",
     "lodash-es": "^4.17.21",
     "rxjs": "^7.8.2",
     "tslib": "^2.3.0",
