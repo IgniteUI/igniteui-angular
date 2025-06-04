@@ -97,7 +97,7 @@ describe('IgxTooltip', () => {
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
-            const arrow = tooltipNativeElement.querySelector('.igx-tooltip--bottom');
+            const arrow = tooltipNativeElement.querySelector('.igx-tooltip--bottom') as HTMLElement;
             expect(arrow).not.toBeNull();
             expect(arrow.style.display).toEqual("none");
         }));
@@ -115,7 +115,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
             expect(tooltipTarget.hasArrow).toBeTrue();
-            const arrow = tooltipNativeElement.querySelector('.igx-tooltip--bottom');
+            const arrow = tooltipNativeElement.querySelector('.igx-tooltip--bottom') as HTMLElement;
             expect(arrow.style.display).toEqual("");
 
             tooltipTarget.hasArrow = false;
@@ -573,8 +573,8 @@ describe('IgxTooltip', () => {
         }));
 
         it('Should not call `hideTooltip` multiple times on document:touchstart', fakeAsync(() => {
-            spyOn(targetOne, 'hideTooltip').and.callThrough();
-            spyOn(targetTwo, 'hideTooltip').and.callThrough();
+            spyOn<any>(targetOne, '_hideOnInteraction').and.callThrough();
+            spyOn<any>(targetTwo, '_hideOnInteraction').and.callThrough();
 
             touchElement(buttonOne);
             tick(500);
@@ -583,8 +583,8 @@ describe('IgxTooltip', () => {
             touchElement(dummyDiv);
             flush();
 
-            expect(targetOne.hideTooltip).toHaveBeenCalledTimes(1);
-            expect(targetTwo.hideTooltip).not.toHaveBeenCalled();
+            expect(targetOne['_hideOnInteraction']).toHaveBeenCalledTimes(1);
+            expect(targetTwo['_hideOnInteraction']).not.toHaveBeenCalled();
         }));
 
         it('should not emit tooltipHide event multiple times', fakeAsync(() => {
@@ -793,7 +793,8 @@ describe('IgxTooltip', () => {
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, targetOne, true);
-            expect(tooltipNativeElement.querySelector('.igx-tooltip--bottom').style.display).toEqual('');
+            let arrow = tooltipNativeElement.querySelector('.igx-tooltip--bottom') as HTMLElement;
+            expect(arrow.style.display).toEqual('');
 
             unhoverElement(buttonOne);
             flush();
@@ -801,8 +802,9 @@ describe('IgxTooltip', () => {
             hoverElement(buttonTwo);
             flush();
 
+            arrow = tooltipNativeElement.querySelector('.igx-tooltip--bottom') as HTMLElement;
             verifyTooltipVisibility(tooltipNativeElement, targetTwo, true);
-            expect(tooltipNativeElement.querySelector('.igx-tooltip--bottom').style.display).toEqual('none');
+            expect(arrow.style.display).toEqual('none');
         }));
     });
 
@@ -1009,7 +1011,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
             verifyTooltipPosition(tooltipNativeElement, button, true, tooltipTarget.placement);
 
-            const arrow = tooltipNativeElement.querySelector('.igx-tooltip--bottom');
+            const arrow = tooltipNativeElement.querySelector('.igx-tooltip--bottom') as HTMLElement;
             expect(arrow).not.toBeNull();
             expect(arrow.style.left).toBe("");
         }));
