@@ -4,6 +4,13 @@ All notable changes for each version of this project will be documented in this 
 
 ## 20.0.0
 
+### General
+- **Angular 20 Compatibility** - Ignite UI for Angular now plays nice with Angular 20! Upgrade your apps and enjoy the latest features.
+- `IgxActionStrip`
+    - **Behavioral Changes** - When using the Action Strip standalone, outside of Grid, scenarios the component is no longer initially visible and the `hidden` property now defaults to `true`.
+- `IgxChip`
+    - **Behavioral Change** The `variant` is now strictly typed with the union of supported options and no longer accepts invalid values for the default state, provide no value (nullish) instead is needed.
+
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
   - Added a new `igxGridEmpty` template directive that allows assigning the `emptyGridTemplate` declaratively, without the need to get and assign reference, like other grid templates like:
