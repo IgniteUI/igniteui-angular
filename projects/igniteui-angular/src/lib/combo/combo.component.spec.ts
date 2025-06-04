@@ -1939,6 +1939,16 @@ describe('igxCombo', () => {
                     fixture.detectChanges();
                     expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
                 }));
+                it('should close the dropdown list on pressing Tab key', fakeAsync(() => {
+                    combo.toggle();
+                    fixture.detectChanges();
+
+                    const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+                    UIInteractions.triggerEventHandlerKeyDown('Tab', dropdownContent);
+                    tick();
+                    fixture.detectChanges();
+                    expect(combo.collapsed).toBeTruthy();
+                }));
             });
             describe('primitive data dropdown: ', () => {
                 it('should properly navigate with HOME/END keys when no virtScroll is necessary', async () => {
