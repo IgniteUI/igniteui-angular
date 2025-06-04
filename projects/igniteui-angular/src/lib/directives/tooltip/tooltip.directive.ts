@@ -6,6 +6,8 @@ import {
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { IgxNavigationService } from '../../core/navigation';
 import { IgxToggleDirective } from '../toggle/toggle.directive';
+import { IgxTooltipTargetDirective } from './tooltip-target.directive';
+import { Subject, takeUntil } from 'rxjs';
 
 let NEXT_ID = 0;
 /**
@@ -109,11 +111,6 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
     /**
      * @hidden
      */
-    public tooltipTarget;
-
-    /**
-     * @hidden
-     */
     public onShow: (event?: Event) => void;
 
     /**
@@ -124,6 +121,13 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
     private _arrowEl: HTMLElement;
     private _role: "tooltip" | "status" = "tooltip"
 
+    /**
+     * @hidden
+     */
+    public tooltipTarget: IgxTooltipTargetDirective;
+
+    private _destroy$ = new Subject<boolean>();
+
     /** @hidden */
     constructor(
         elementRef: ElementRef,
@@ -132,11 +136,25 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
         @Optional() navigationService: IgxNavigationService) {
         // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
         super(elementRef, cdr, overlayService, navigationService);
+
+        this.onDocumentTouchStart = this.onDocumentTouchStart.bind(this);
+        this.overlayService.opening.pipe(takeUntil(this._destroy$)).subscribe(() => {
+            document.addEventListener('touchstart', this.onDocumentTouchStart, { passive: true });
+        });
+        this.overlayService.closed.pipe(takeUntil(this._destroy$)).subscribe(() => {
+            document.removeEventListener('touchstart', this.onDocumentTouchStart);
+        });
+
         this._createArrow();
     }
 
+    /** @hidden */
     public override ngOnDestroy() {
         super.ngOnDestroy();
+
+        document.removeEventListener('touchstart', this.onDocumentTouchStart);
+        this._destroy$.next(true);
+        this._destroy$.complete();
         this._removeArrow();
     }
 
@@ -193,5 +211,9 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
     private _removeArrow(): void {
         this._arrowEl.remove();
         this._arrowEl = null;
+    }
+
+    private onDocumentTouchStart(event) {
+        this.tooltipTarget?.onDocumentTouchStart(event);
     }
 }

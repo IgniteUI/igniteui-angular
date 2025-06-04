@@ -1,7 +1,6 @@
-import { inject, InjectionToken } from "@angular/core";
+import { inject, InjectionToken, DOCUMENT } from "@angular/core";
 import { mkenum } from "../../core/utils";
 import { BehaviorSubject } from "rxjs";
-import { DOCUMENT } from "@angular/common";
 
 export class ThemeToken {
     private document = inject(DOCUMENT);

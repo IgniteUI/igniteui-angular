@@ -7,8 +7,8 @@ import {
     Output,
     OnInit,
     OnDestroy,
+    DOCUMENT
 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
 import { Subject, fromEvent, animationFrameScheduler, interval } from 'rxjs';
 import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
 

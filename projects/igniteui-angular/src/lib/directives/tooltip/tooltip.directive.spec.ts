@@ -1,4 +1,5 @@
-import { fakeAsync, TestBed, tick, flush, waitForAsync } from '@angular/core/testing';
+import { DebugElement } from '@angular/core';
+import { fakeAsync, TestBed, tick, flush, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent, IgxTooltipWithCloseButtonComponent } from '../../test-utils/tooltip-components.spec';
@@ -19,10 +20,10 @@ const PLACEMENTS: TooltipPlacement[] = [
 ];
 
 describe('IgxTooltip', () => {
-    let fix;
-    let tooltipNativeElement;
+    let fix: ComponentFixture<any>;
+    let tooltipNativeElement: HTMLElement;
     let tooltipTarget: IgxTooltipTargetDirective;
-    let button;
+    let button: DebugElement;
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -502,8 +503,8 @@ describe('IgxTooltip', () => {
             fix = TestBed.createComponent(IgxTooltipMultipleTargetsComponent);
             fix.detectChanges();
             tooltipNativeElement = fix.debugElement.query(By.directive(IgxTooltipDirective)).nativeElement;
-            targetOne = fix.componentInstance.targetOne as IgxTooltipTargetDirective;
-            targetTwo = fix.componentInstance.targetTwo as IgxTooltipTargetDirective;
+            targetOne = fix.componentInstance.targetOne;
+            targetTwo = fix.componentInstance.targetTwo;
             buttonOne = fix.debugElement.query(By.css('.buttonOne'));
             buttonTwo = fix.debugElement.query(By.css('.buttonTwo'));
         }));
@@ -569,6 +570,64 @@ describe('IgxTooltip', () => {
             verifyTooltipPosition(tooltipNativeElement, buttonTwo);
             // Tooltip is NOT visible and positioned relative to buttonOne
             verifyTooltipPosition(tooltipNativeElement, buttonOne, false);
+        }));
+
+        it('Should not call `hideTooltip` multiple times on document:touchstart', fakeAsync(() => {
+            spyOn(targetOne, 'hideTooltip').and.callThrough();
+            spyOn(targetTwo, 'hideTooltip').and.callThrough();
+
+            touchElement(buttonOne);
+            tick(500);
+
+            const dummyDiv = fix.debugElement.query(By.css('.dummyDiv'));
+            touchElement(dummyDiv);
+            flush();
+
+            expect(targetOne.hideTooltip).toHaveBeenCalledTimes(1);
+            expect(targetTwo.hideTooltip).not.toHaveBeenCalled();
+        }));
+
+        it('should not emit tooltipHide event multiple times', fakeAsync(() => {
+            spyOn(targetOne.tooltipHide, 'emit');
+            spyOn(targetTwo.tooltipHide, 'emit');
+
+            hoverElement(buttonOne);
+            flush();
+
+            const tooltipHideArgsTargetOne = { target: targetOne, tooltip: fix.componentInstance.tooltip, cancel: false };
+            const tooltipHideArgsTargetTwo = { target: targetTwo, tooltip: fix.componentInstance.tooltip, cancel: false };
+
+            unhoverElement(buttonOne);
+            tick(500);
+            expect(targetOne.tooltipHide.emit).toHaveBeenCalledOnceWith(tooltipHideArgsTargetOne);
+            expect(targetTwo.tooltipHide.emit).not.toHaveBeenCalled();
+            flush();
+
+            hoverElement(buttonTwo);
+            flush();
+
+            unhoverElement(buttonTwo);
+            tick(500);
+            expect(targetOne.tooltipHide.emit).toHaveBeenCalledOnceWith(tooltipHideArgsTargetOne);
+            expect(targetTwo.tooltipHide.emit).toHaveBeenCalledOnceWith(tooltipHideArgsTargetTwo);
+            flush();
+        }));
+
+
+        it('IgxTooltip hides when touch one target, then another, then outside', fakeAsync(() => {
+            touchElement(targetOne);
+            flush();
+            verifyTooltipVisibility(tooltipNativeElement, targetOne, true);
+            verifyTooltipPosition(tooltipNativeElement, targetOne, true);
+
+            touchElement(targetTwo);
+            flush();
+            verifyTooltipVisibility(tooltipNativeElement, targetTwo, true);
+            verifyTooltipPosition(tooltipNativeElement, targetTwo, true);
+
+            touchElement(fix.debugElement);
+            flush();
+            verifyTooltipVisibility(tooltipNativeElement, targetTwo, false);
         }));
 
         it('should show and remove close button depending on active sticky target', fakeAsync(() => {
@@ -957,11 +1016,15 @@ describe('IgxTooltip', () => {
     })
 });
 
-const hoverElement = (element) => element.nativeElement.dispatchEvent(new MouseEvent('mouseenter'));
+interface ElementRefLike {
+    nativeElement: HTMLElement
+}
 
-const unhoverElement = (element) => element.nativeElement.dispatchEvent(new MouseEvent('mouseleave'));
+const hoverElement = (element: ElementRefLike) => element.nativeElement.dispatchEvent(new MouseEvent('mouseenter'));
 
-const touchElement = (element) => element.nativeElement.dispatchEvent(new TouchEvent('touchstart', { bubbles: true }));
+const unhoverElement = (element: ElementRefLike) => element.nativeElement.dispatchEvent(new MouseEvent('mouseleave'));
+
+const touchElement = (element: ElementRefLike) => element.nativeElement.dispatchEvent(new TouchEvent('touchstart', { bubbles: true }));
 
 const verifyTooltipVisibility = (tooltipNativeElement, tooltipTarget, shouldBeVisible: boolean) => {
     expect(tooltipNativeElement.classList.contains(TOOLTIP_CLASS)).toBe(shouldBeVisible);
