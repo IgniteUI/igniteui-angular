@@ -187,7 +187,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         if (columnDimensions.length === 0) {
             return 1;
         }
-        let totalDepth = columnDimensions.map(x => this.grid.data.length > 0 ? PivotUtil.getDimensionDepth(x) + 1 : 0).reduce((acc, val) => acc + val);
+        let totalDepth = columnDimensions.map(x => this.grid.data?.length > 0 ? PivotUtil.getDimensionDepth(x) + 1 : 0).reduce((acc, val) => acc + val);
         if (this.grid.hasMultipleValues) {
             totalDepth += 1;
         }

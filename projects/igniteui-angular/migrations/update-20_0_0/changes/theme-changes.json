@@ -1,0 +1,11 @@
+{
+  "$schema": "../../common/schema/theme-changes.schema.json",
+  "changes": [
+    {
+      "name": "$focus-background-color",
+      "remove": true,
+      "owner": "grid-summary-theme",
+      "type": "property"
+    }
+  ]
+}

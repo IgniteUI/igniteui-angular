@@ -1,5 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Inject, Input, Output, QueryList, booleanAttribute, forwardRef } from '@angular/core';
+import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Inject, Input, Output, QueryList, booleanAttribute, forwardRef, DOCUMENT } from '@angular/core';
 import { DragDirection, IDragMoveEventArgs, IDragStartEventArgs, IgxDragDirective, IgxDragIgnoreDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 
@@ -239,7 +238,15 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
 
     public onMoveEnd(delta: number) {
-        const [ paneSize, siblingSize ] = this.calcNewSizes(delta);
+        let [ paneSize, siblingSize ] = this.calcNewSizes(delta);
+
+        if (paneSize + siblingSize > this.getTotalSize() && delta < 0) {
+            paneSize = this.getTotalSize();
+            siblingSize = 0;
+        } else if(paneSize + siblingSize > this.getTotalSize() && delta > 0) {
+            paneSize = 0;
+            siblingSize = this.getTotalSize();
+        }
 
         if (this.pane.isPercentageSize) {
             // handle % resizes

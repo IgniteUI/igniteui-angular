@@ -6,7 +6,6 @@ import { IgxExpansionPanelComponent } from './expansion-panel.component';
 import { ExpansionPanelHeaderIconPosition, IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
 import { IgxGridComponent } from '../grids/grid/public_api';
 import { IgxExpansionPanelDescriptionDirective, IgxExpansionPanelIconDirective, IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { By } from '@angular/platform-browser';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxListComponent } from '../list/list.component';
@@ -33,8 +32,7 @@ const enum IconPositionClass {
 }
 
 describe('igxExpansionPanel', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -49,7 +47,6 @@ describe('igxExpansionPanel', () => {
 
 
     describe('General tests: ', () => {
-        // configureTestSuite();
         it('Should initialize the expansion panel component properly', () => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
@@ -294,7 +291,6 @@ describe('igxExpansionPanel', () => {
     });
 
     describe('Expansion tests: ', () => {
-        // configureTestSuite();
         const verifyPanelExpansionState = (
             collapsed: boolean,
             panel: IgxExpansionPanelComponent,
@@ -307,10 +303,6 @@ describe('igxExpansionPanel', () => {
             const ariaExpanded = collapsed ? 'false' : 'true';
             expect(panelHeader.querySelector('div [role = \'button\']').getAttribute('aria-expanded')).toMatch(ariaExpanded);
             expect(panelHeader.classList.contains(CSS_CLASS_HEADER_EXPANDED)).toEqual(!collapsed);
-            if (button.children.length > 1) {
-                const iconName = collapsed ? 'expand_more' : 'expand_less';
-                expect(button.getAttribute('ng-reflect-icon-name')).toMatch(iconName);
-            }
             if (collapsed) {
                 expect(panelContainer.lastElementChild.nodeName).toEqual('IGX-EXPANSION-PANEL-HEADER');
             } else {
@@ -966,7 +958,6 @@ describe('igxExpansionPanel', () => {
     });
 
     describe('Aria tests', () => {
-        // configureTestSuite();
         it('Should properly apply default aria properties', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
@@ -1089,7 +1080,6 @@ describe('igxExpansionPanel', () => {
     });
 
     describe('Rendering tests: ', () => {
-        // configureTestSuite();
         it('Should apply all appropriate classes on combo initialization', fakeAsync(() => {
             const fixture: ComponentFixture<IgxExpansionPanelSampleComponent> = TestBed.createComponent(IgxExpansionPanelSampleComponent);
             fixture.detectChanges();
@@ -1195,9 +1185,6 @@ describe('igxExpansionPanel', () => {
             expect(grid.attributes.getNamedItem('role').nodeValue).toEqual('grid');
             expect(grid.attributes.getNamedItem('id').nodeValue).toEqual(fixture.componentInstance.grid1.id);
             expect(grid.attributes.getNamedItem('tabindex').nodeValue).toEqual('0');
-            expect(grid.attributes.getNamedItem('ng-reflect-auto-generate').nodeValue).toEqual('true');
-            expect(grid.attributes.getNamedItem('ng-reflect-width').nodeValue).toEqual(fixture.componentInstance.width);
-            expect(grid.attributes.getNamedItem('ng-reflect-height').nodeValue).toEqual(fixture.componentInstance.height);
             expect(grid.childElementCount).toEqual(6);
         }));
         it('Should apply all appropriate classes on combo initialization_image + text content', fakeAsync(() => {

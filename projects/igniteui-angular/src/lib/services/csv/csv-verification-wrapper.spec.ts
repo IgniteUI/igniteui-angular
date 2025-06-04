@@ -288,4 +288,12 @@ export class CSVWrapper {
         `B's Beverages${this._delimiter}Victoria Ashworth${this._delimiter}Fauntleroy Circus${this._delimiter}0${this._delimiter}` +
         `2500${this._delimiter}5000${this._eor}`;
     }
+
+    public get pivotGridData() {
+        return `ProductCategory${this._delimiter}Bulgaria${this._delimiter}USA${this._delimiter}Uruguay${this._eor}` +
+        `Accessories${this._delimiter}${this._delimiter}293${this._delimiter}${this._eor}` +
+        `Bikes${this._delimiter}${this._delimiter}${this._delimiter}68${this._eor}` +
+        `Clothing${this._delimiter}774${this._delimiter}296${this._delimiter}456${this._eor}` +
+        `Components${this._delimiter}${this._delimiter}240${this._delimiter}${this._eor}`;
+    }
 }

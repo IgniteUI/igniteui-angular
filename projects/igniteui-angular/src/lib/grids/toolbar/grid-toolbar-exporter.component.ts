@@ -44,7 +44,7 @@ export interface IgxExporterEvent {
  * in order to export something.
  *
  * @igxModule IgxGridToolbarModule
- * @igxParent IgxGridToolbarComponent
+ * @igxParent IgxGridToolbarComponent, IgxGridToolbarActionsComponent
  *
  */
 @Component({

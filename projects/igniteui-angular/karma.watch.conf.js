@@ -8,14 +8,12 @@ module.exports = function (config) {
     files: [
       { pattern: '../../node_modules/hammerjs/hammer.min.js', watched: false },
       { pattern: '../../node_modules/hammer-simulator/index.js', watched: false },
-      { pattern: './test.css', watched: false },
-      { pattern: '../../dist/igniteui-angular/styles/igniteui-angular.css', watched: false }
+      { pattern: './test.css', watched: false }
     ],
     plugins: [
         'karma-jasmine',
         'karma-chrome-launcher',
-        'karma-spec-reporter',
-        '@angular-devkit/build-angular/plugins/karma'
+        'karma-spec-reporter'
     ],
     client: {
       clearContext: false, // leave Jasmine Spec Runner output visible in browser

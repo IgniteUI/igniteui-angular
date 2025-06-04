@@ -1,6 +1,5 @@
 import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { EventEmitter, QueryList } from '@angular/core';
 import { IgxTreeComponent } from './tree.component';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
@@ -13,8 +12,7 @@ import { IgxTreeNavigationService } from './tree-navigation.service';
 import { IgxTreeSelectionSampleComponent, IgxTreeSimpleComponent } from './tree-samples.spec';
 
 describe('IgxTree - Selection #treeView', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

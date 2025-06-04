@@ -405,23 +405,38 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
 
     /**
-     * @hidden
+     * Emitted when the column is hidden or shown.
+     *
+     * ```html
+     * <igx-column (hiddenChange)="hiddenChange($event)">
+     * </igx-column>
+     * ```
+     *
      */
     @Output()
     public hiddenChange = new EventEmitter<boolean>();
 
-    /** @hidden */
+    /**
+     * Emitted when the column expanded or collapsed.
+     *
+     * ```html
+     * <igx-column (expandedChange)="expandedChange($event)">
+     * </igx-column>
+     * ```
+     *
+     */
     @Output()
     public expandedChange = new EventEmitter<boolean>();
 
     /** @hidden */
     @Output()
     public collapsibleChange = new EventEmitter<boolean>();
+
     /** @hidden */
     @Output()
     public visibleWhenCollapsedChange = new EventEmitter<boolean>();
 
-    /** @hidden */
+    /** @hidden @internal */
     @Output()
     public columnChange = new EventEmitter<void>();
 
@@ -861,13 +876,25 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public additionalTemplateContext: any;
 
     /**
-     * @hidden
+     * Emitted when the column width changes.
+     *
+     * ```html
+     * <igx-column (widthChange)="widthChange($event)">
+     * </igx-column>
+     * ```
+     *
      */
     @Output()
     public widthChange = new EventEmitter<string>();
 
     /**
-     * @hidden
+     * Emitted when the column is pinned/unpinned.
+     *
+     * ```html
+     * <igx-column (pinnedChange)="pinnedChange($event)">
+     * </igx-column>
+     * ```
+     *
      */
     @Output()
     public pinnedChange = new EventEmitter<boolean>();
@@ -1422,7 +1449,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this.grid.dataView
             .map((rec, index) => {
                 if (!this.grid.isGroupByRecord(rec) && !this.grid.isSummaryRow(rec)) {
-                    this.grid.pagingMode === 1 && this.grid.page !== 0 ? index = index + this.grid.perPage * this.grid.page : index = this.grid.dataRowList.first.index + index;
+                    this.grid.pagingMode === 'remote' && this.grid.page !== 0 ?
+                        index = index + this.grid.perPage * this.grid.page : index = this.grid.dataRowList.first.index + index;
                     const cell = new IgxGridCell(this.grid as any, index, this);
                     return cell;
                 }

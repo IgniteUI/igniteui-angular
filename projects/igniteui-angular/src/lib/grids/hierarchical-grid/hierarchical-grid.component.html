@@ -54,7 +54,7 @@
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && isRowPinningToTop ? pinnedRecordsTemplate : null">
         </ng-container>
-        <ng-template igxGridFor let-rowData let-rowIndex="index" [igxGridForOf]="data
+        <ng-template igxGridFor let-rowData let-rowIndex="index" [igxGridForOf]="renderData
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
@@ -233,8 +233,8 @@
     <div class="igx-banner__message">
         <span class="igx-banner__text">
             <ng-container
-                *ngTemplateOutlet="this.crudService.row?.getClassName() === 'IgxAddRow' ? rowAddTextTemplate : resolveRowEditText || defaultRowEditText;
-                context: { $implicit: this.crudService.row?.getClassName() !== 'IgxAddRow' ? rowChangesCount : null }">
+                *ngTemplateOutlet="this.crudService.row?.isAddRow ? rowAddTextTemplate : resolveRowEditText || defaultRowEditText;
+                context: { $implicit: !this.crudService.row?.isAddRow ? rowChangesCount : null }">
             </ng-container>
         </span>
     </div>
