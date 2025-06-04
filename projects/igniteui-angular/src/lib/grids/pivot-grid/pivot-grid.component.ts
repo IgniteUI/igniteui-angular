@@ -103,7 +103,7 @@ import { IgxTextHighlightService } from '../../directives/text-highlight/text-hi
 import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
-import { IgxPivotGridRow } from 'igniteui-angular';
+import { IgxPivotGridRow } from  '../grid-public-row';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;

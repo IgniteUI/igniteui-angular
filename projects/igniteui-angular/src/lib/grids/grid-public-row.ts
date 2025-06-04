@@ -4,7 +4,7 @@ import { GridSummaryCalculationMode, GridSummaryPosition } from './common/enums'
 import { IgxGridCell } from './grid-public-cell';
 import { IgxSummaryResult } from './summaries/grid-summary';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
-import { IgxPivotGridComponent } from 'igniteui-angular';
+import { IgxPivotGridComponent } from './pivot-grid/pivot-grid.component';
 import { PivotUtil } from './pivot-grid/pivot-util';
 import { mergeWith } from 'lodash-es';
 import { CellType, GridServiceType, GridType, IGridValidationState, RowType, ValidationStatus } from './common/grid.interface';
