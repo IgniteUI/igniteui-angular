@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 20.0.0
+
+### General
+- `IgxChip`
+    - **Behavioral Change** The `variant` is now strictly typed with the union of supported options and no longer accepts invalid values for the default state, provide no value (nullish) instead is needed.
+
 ## 19.2.0
 
 ### General
