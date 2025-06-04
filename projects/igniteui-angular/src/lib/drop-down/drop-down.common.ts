@@ -1,4 +1,4 @@
-import { CancelableEventArgs, CancelableBrowserEventArgs, IBaseEventArgs, mkenum } from '../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { IToggleView } from '../core/navigation/IToggleView';
 import { EventEmitter, InjectionToken } from '@angular/core';
@@ -10,11 +10,11 @@ export enum Navigate {
 }
 
 /** Key actions that have designated handlers in IgxDropDownComponent */
-export const DropDownActionKey = /*@__PURE__*/mkenum({
+export const DropDownActionKey = {
     ESCAPE: 'escape',
     ENTER: 'enter',
     SPACE: 'space'
-});
+} as const;
 export type DropDownActionKey = (typeof DropDownActionKey)[keyof typeof DropDownActionKey];
 
 /**

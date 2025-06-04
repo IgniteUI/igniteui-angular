@@ -17,7 +17,7 @@ import {
     AfterViewInit,
 } from '@angular/core';
 import { NgControl, Validators } from '@angular/forms';
-import { IBaseEventArgs, getComponentTheme, mkenum } from '../core/utils';
+import { IBaseEventArgs, getComponentTheme } from '../core/utils';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
@@ -26,10 +26,10 @@ import {
     ThemeToken,
 } from '../services/theme/theme.token';
 
-export const LabelPosition = /*@__PURE__*/ mkenum({
+export const LabelPosition = {
     BEFORE: 'before',
     AFTER: 'after'
-});
+} as const;
 export type LabelPosition = typeof LabelPosition[keyof typeof LabelPosition];
 
 export interface IChangeCheckboxEventArgs extends IBaseEventArgs {
