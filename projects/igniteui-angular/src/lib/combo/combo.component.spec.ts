@@ -86,6 +86,11 @@ describe('igxCombo', () => {
         });
         mockSelection.get.and.returnValue(new Set([]));
         const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
+        jasmine.getEnv().allowRespy(true);
+
+        afterAll(() => {
+            jasmine.getEnv().allowRespy(false);
+        });
 
         it('should correctly implement interface methods - ControlValueAccessor ', () => {
             combo = new IgxComboComponent(

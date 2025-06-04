@@ -19,17 +19,18 @@ import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { IgxPivotGridComponent } from '../../grids/pivot-grid/pivot-grid.component';
+import { IgxPivotGridTestBaseComponent } from '../../test-utils/pivot-grid-samples.spec';
+import { IgxPivotNumericAggregate } from '../../grids/pivot-grid/pivot-grid-aggregate';
 
 describe('CSV Grid Exporter', () => {
-    configureTestSuite();
     let exporter: IgxCsvExporterService;
     let options: IgxCsvExporterOptions;
     const data = SampleTestData.personJobData();
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -515,6 +516,48 @@ describe('CSV Grid Exporter', () => {
 
             const wrapper = await getExportedData(treeGrid, options);
             wrapper.verifyData(wrapper.treeGridWithAdvancedFilters, 'Should export only filtered data!');
+        });
+    });
+
+    describe('Pivot Grid CSV export', () => {
+        let fix;
+        let pivotGrid: IgxPivotGridComponent;
+        beforeEach(() => {
+            fix = TestBed.createComponent(IgxPivotGridTestBaseComponent);
+            fix.detectChanges();
+            pivotGrid = fix.componentInstance.pivotGrid;
+            pivotGrid.pivotConfiguration = {
+                columns: [
+                    {
+                        enabled: true,
+                        memberName: 'Country'
+                    }
+                ],
+                rows: [
+                    {
+                        enabled: true,
+                        memberName: 'ProductCategory'
+                    }
+                ],
+                values: [
+                    {
+                        enabled: true,
+                        member: 'UnitsSold',
+                        aggregate: {
+                            aggregator: IgxPivotNumericAggregate.sum,
+                            key: 'SUM',
+                            label: 'Sum',
+                        },
+                    }
+                ]
+            };
+            fix.detectChanges();
+        });
+
+        it('should export pivot grid successfully.', async () => {
+            await wait();
+            const wrapper = await getExportedData(pivotGrid, options);
+            wrapper.verifyData(wrapper.pivotGridData);
         });
     });
 

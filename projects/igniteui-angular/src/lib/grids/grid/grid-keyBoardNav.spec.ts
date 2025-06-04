@@ -5,7 +5,6 @@ import { IGridCellEventArgs, IActiveNodeChangeEventArgs } from '../common/events
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     VirtualGridComponent,
     NoScrollsComponent,

@@ -26,13 +26,13 @@ import {
     OnInit,
     Optional,
     Output,
-    QueryList,
     TemplateRef,
+    QueryList,
     ViewChild,
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
-import { formatDate, resizeObservable } from '../core/utils';
+import { columnFieldPath, formatDate, resizeObservable } from '../core/utils';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
@@ -40,7 +40,7 @@ import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, Pla
 import { GridColumnDataType } from '../data-operations/data-util';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { IForOfDataChangingEventArgs, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
+import { IForOfDataChangeEventArgs, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightService } from '../directives/text-highlight/text-highlight.service';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { IgxGridBodyDirective, RowEditPositionStrategy } from './grid.common';
@@ -69,7 +69,7 @@ import { GridResourceStringsEN, IGridResourceStrings } from '../core/i18n/grid-r
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxGridSelectionService } from './selection/selection.service';
-import { IgxEditRow, IgxCell, IgxAddRow } from './common/crud.service';
+import { IgxEditRow, IgxCell } from './common/crud.service';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
 import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-style/excel-style-search.component';
 import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
@@ -147,7 +147,8 @@ import {
     ISizeInfo,
     RowType,
     IPinningConfig,
-    IClipboardOptions
+    IClipboardOptions,
+    EntityType
 } from './common/grid.interface';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
@@ -179,7 +180,8 @@ import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
-import { isTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
+import { isTree, recreateTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
+import { getUUID } from './common/random';
 
 interface IMatchInfoCache {
     row: any;
@@ -991,14 +993,27 @@ export abstract class IgxGridBaseDirective implements GridType,
     @Output()
     public gridCopy = new EventEmitter<IGridClipboardEvent>();
 
+    /* blazorCSSuppress */
     /**
-     * @hidden @internal
+     * Emitted when the rows are expanded or collapsed.
+     *
+     * @example
+     * ```html
+     * <igx-grid [data]="employeeData" (expansionStatesChange)="expansionStatesChange($event)" [autoGenerate]="true"></igx-grid>
+     * ```
      */
     @Output()
     public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
 
     /* blazorInclude */
-    /** @hidden @internal */
+    /**
+     * Emitted when the rows are selected or deselected.
+     *
+     * @example
+     * ```html
+     * <igx-grid [data]="employeeData" (selectedRowsChange)="selectedRowsChange($event)" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
     @Output()
     public selectedRowsChange = new EventEmitter<any[]>();
 
@@ -1036,7 +1051,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     public rowPinned = new EventEmitter<IPinRowEventArgs>();
 
     /**
-     * Emmited when the active node is changed.
+     * Emitted when the active node is changed.
      *
      * @example
      * ```
@@ -1103,7 +1118,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```
      */
     @Output()
-    public dataChanging = new EventEmitter<IForOfDataChangingEventArgs>();
+    public dataChanging = new EventEmitter<IForOfDataChangeEventArgs>();
 
     /**
      * Emitted after the grid's data view is changed because of a data operation, rebinding, etc.
@@ -1114,7 +1129,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```
      */
     @Output()
-    public dataChanged = new EventEmitter<any>();
+    public dataChanged = new EventEmitter<IForOfDataChangeEventArgs>();
 
 
     /**
@@ -1858,7 +1873,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
             value.type = FilteringExpressionsTreeType.Regular;
             if (value && this._columns?.length > 0) {
-                this._filteringExpressionsTree = recreateTreeFromFields(value, this._columns) as IFilteringExpressionsTree;
+                this._filteringExpressionsTree = this.getRecreatedTree(value);
             } else {
                 this._filteringExpressionsTree = value;
             }
@@ -1908,7 +1923,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (value && isTree(value)) {
             value.type = FilteringExpressionsTreeType.Advanced;
             if (this._columns && this._columns.length > 0) {
-                this._advancedFilteringExpressionsTree = recreateTreeFromFields(value, this._columns) as IFilteringExpressionsTree;
+                this._advancedFilteringExpressionsTree = this.getRecreatedTree(value);
             } else {
                 this._advancedFilteringExpressionsTree = value;
             }
@@ -3051,7 +3066,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden
      */
-    protected _pagingMode = GridPagingMode.Local;
+    protected _pagingMode: GridPagingMode = 'local';
     /**
      * @hidden
      */
@@ -3137,6 +3152,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         matchCount: 0,
         content: ''
     };
+    protected _hGridSchema: EntityType[];
     protected gridComputedStyles;
 
     /** @hidden @internal */
@@ -3326,7 +3342,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 .map(t => t.newValue));
         }
 
-        if (this.crudService.row && this.crudService.row.getClassName() === IgxAddRow.name) {
+        if (this.crudService.row && this.crudService.row.isAddRow) {
             result.splice(this.crudService.row.index, 0, this.crudService.row.data);
         }
 
@@ -3363,12 +3379,26 @@ export abstract class IgxGridBaseDirective implements GridType,
     private get hasZeroResultFilter(): boolean {
         return this.filteredData && this.filteredData.length === 0;
     }
+    protected get totalCalcWidth() {
+        return this.platform.isBrowser ? this.calcWidth : undefined;
+    }
+
+    protected get renderData() {
+        // omit data if not in the browser and size is %
+        return !this.platform.isBrowser && this.isPercentHeight ? undefined : this.data;
+    }
+
+    @HostBinding('style.display')
+    protected displayStyle = 'grid';
+
+    @HostBinding('style.grid-template-rows')
+    protected templateRows = 'auto auto auto 1fr auto auto';
 
     /**
      * @hidden @internal
      */
     private get hasNoData(): boolean {
-        return !this.data || this.dataLength === 0;
+        return !this.data || this.dataLength === 0 || !this.platform.isBrowser;
     }
 
     /**
@@ -3650,24 +3680,24 @@ export abstract class IgxGridBaseDirective implements GridType,
             throttleTime(40, animationFrameScheduler, { leading: true, trailing: true }),
             destructor
         )
-        .subscribe(() => {
-            this.zone.run(() => {
-                // do not trigger reflow if element is detached.
-                if (this.nativeElement.isConnected) {
-                    if (this.shouldResize) {
-                        // resizing occurs due to the change of --ig-size css var
-                        this._gridSize = this.gridSize;
-                        this.updateDefaultRowHeight();
-                        this._autoSize = this.isPercentHeight && this.calcHeight !== this.getDataBasedBodyHeight();
-                        this.crudService.endEdit(false);
-                        if (this._summaryRowHeight === 0) {
-                            this.summaryService.summaryHeight = 0;
+            .subscribe(() => {
+                this.zone.run(() => {
+                    // do not trigger reflow if element is detached.
+                    if (this.nativeElement.isConnected) {
+                        if (this.shouldResize) {
+                            // resizing occurs due to the change of --ig-size css var
+                            this._gridSize = this.gridSize;
+                            this.updateDefaultRowHeight();
+                            this._autoSize = this.isPercentHeight && this.calcHeight !== this.getDataBasedBodyHeight();
+                            this.crudService.endEdit(false);
+                            if (this._summaryRowHeight === 0) {
+                                this.summaryService.summaryHeight = 0;
+                            }
                         }
+                        this.notifyChanges(true);
                     }
-                    this.notifyChanges(true);
-                }
+                });
             });
-        });
 
         this.pipeTriggerNotifier.pipe(takeUntil(this.destroy$)).subscribe(() => this.pipeTrigger++);
         this.columnMovingEnd.pipe(destructor).subscribe(() => this.crudService.endEdit(false));
@@ -3753,10 +3783,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             throttleTime(0, animationFrameScheduler, { leading: false, trailing: true }),
             destructor
         )
-        .subscribe(() => {
-            this.autoSizeColumnsInView();
-            this._firstAutoResize = false;
-        });
+            .subscribe(() => {
+                this.autoSizeColumnsInView();
+                this._firstAutoResize = false;
+            });
     }
 
     /**
@@ -3787,7 +3817,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const primaryColumn = this._columns.find(col => col.field === this.primaryKey);
         const idType = this.data.length ?
             this.resolveDataTypes(this.data[0][this.primaryKey]) : primaryColumn ? primaryColumn.dataType : 'string';
-        return idType === 'string' ? crypto.randomUUID() : FAKE_ROW_ID--;
+        return idType === 'string' ? getUUID() : FAKE_ROW_ID--;
     }
 
     /**
@@ -3891,7 +3921,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public dataRebinding(event: IForOfDataChangingEventArgs) {
+    public dataRebinding(event: IForOfDataChangeEventArgs) {
         if (event.state.chunkSize == 0) {
             this._shouldRecalcRowHeight = true;
         }
@@ -3901,7 +3931,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public dataRebound(event) {
+    public dataRebound(event: IForOfDataChangeEventArgs) {
         this.selectionService.clearHeaderCBState();
         if (this._shouldRecalcRowHeight) {
             this._shouldRecalcRowHeight = false;
@@ -4165,7 +4195,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         col.toggleVisibility(args.newValue);
     }
 
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     /**
      * Gets/Sets a list of key-value pairs [row ID, expansion state].
      *
@@ -4183,7 +4213,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this._expansionStates;
     }
 
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     public set expansionStates(value) {
         this._expansionStates = new Map<any, boolean>(value);
         this.expansionStatesChange.emit(this._expansionStates);
@@ -4608,7 +4638,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     protected _getDataViewIndex(index: number): number {
         let newIndex = index;
-        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 1 && this.page !== 0) {
+        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 'remote' && this.page !== 0) {
             newIndex = index - this.perPage * this.page;
         } else if (this.gridAPI.grid.verticalScrollContainer.isRemote) {
             newIndex = index - this.gridAPI.grid.virtualizationState.startIndex;
@@ -5168,7 +5198,8 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /** @hidden @internal */
     public get totalHeight() {
-        return this.calcHeight ? this.calcHeight + this.pinnedRowHeight : this.calcHeight;
+        const height = this.calcHeight ? this.calcHeight + this.pinnedRowHeight : this.calcHeight;
+        return this.platform.isBrowser ? height : undefined;
     }
 
     /**
@@ -5441,7 +5472,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             visibleChildColumns.length - columnsWithSetWidths.length;
         const sumExistingWidths = columnsWithSetWidths
             .reduce((prev, curr) => {
-                const colInstance =  this.hasColumnLayouts ? curr.ref : curr;
+                const colInstance = this.hasColumnLayouts ? curr.ref : curr;
                 const colWidth = !colInstance.widthConstrained ? curr.width : colInstance.calcPixelWidth;
                 let widthValue = parseFloat(colWidth);
                 if (isNaN(widthValue)) {
@@ -6622,10 +6653,10 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._unpinnedColumns = newColumns.filter((c) => !c.pinned);
         this._columns = newColumns;
         if (this._columns && this._columns.length && this._filteringExpressionsTree) {
-            this._filteringExpressionsTree = recreateTreeFromFields(this._filteringExpressionsTree, this.columns) as IFilteringExpressionsTree;
+            this._filteringExpressionsTree = this.getRecreatedTree(this._filteringExpressionsTree);
         }
         if (this._columns && this._columns.length && this._advancedFilteringExpressionsTree) {
-            this._advancedFilteringExpressionsTree = recreateTreeFromFields(this._advancedFilteringExpressionsTree, this.columns) as IFilteringExpressionsTree;
+            this._advancedFilteringExpressionsTree = this.getRecreatedTree(this._advancedFilteringExpressionsTree);
         }
         this.resetCaches();
     }
@@ -6690,10 +6721,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             this._columns = this.getColumnList();
         }
         if (this._columns && this._columns.length && this._filteringExpressionsTree) {
-            this._filteringExpressionsTree = recreateTreeFromFields(this._filteringExpressionsTree, this._columns) as IFilteringExpressionsTree;
+            this._filteringExpressionsTree = this.getRecreatedTree(this._filteringExpressionsTree);
         }
         if (this._columns && this._columns.length && this._advancedFilteringExpressionsTree) {
-            this._advancedFilteringExpressionsTree = recreateTreeFromFields(this._advancedFilteringExpressionsTree, this._columns) as IFilteringExpressionsTree;
+            this._advancedFilteringExpressionsTree = this.getRecreatedTree(this._advancedFilteringExpressionsTree);
         }
 
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
@@ -6707,7 +6738,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     protected getColumnList() {
-        return this.columnList.toArray();
+        return this.columnList.toArray().filter((col) => col.grid === this);
     }
 
     /**
@@ -6765,6 +6796,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             let removed = false;
             let pinning = false;
             diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                if (record.item.grid !== this) {
+                    return;
+                }
                 added = true;
                 if (record.item.pinned) {
                     this._pinnedColumns.push(record.item);
@@ -6774,12 +6808,15 @@ export abstract class IgxGridBaseDirective implements GridType,
                 }
             });
 
-            this.initColumns(this.columnList.toArray(), (col: IgxColumnComponent) => this.columnInit.emit(col));
+            this.initColumns(this.getColumnList(), (col: IgxColumnComponent) => this.columnInit.emit(col));
             if (pinning) {
                 this.initPinning();
             }
 
             diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent | IgxColumnGroupComponent>) => {
+                if (record.item.grid !== this) {
+                    return;
+                }
                 const isColumnGroup = record.item instanceof IgxColumnGroupComponent;
                 if (!isColumnGroup) {
                     // Clear Grouping
@@ -7252,7 +7289,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         // eslint-disable-next-line prefer-const
         for (let [row, set] of selectionMap) {
-            row = this.paginator && (this.pagingMode === GridPagingMode.Local && source === this.filteredSortedData) ? row + (this.perPage * this.page) : row;
+            row = this.paginator && (this.pagingMode === 'local' && source === this.filteredSortedData) ? row + (this.perPage * this.page) : row;
             row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
@@ -7265,7 +7302,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                         const key = this.type !== 'pivot' && headers ? col.header || col.field : col.field;
                         const rowData = source[row].ghostRecord ? source[row].recordRef : source[row];
                         const value = this.type === 'pivot' ? rowData.aggregationValues.get(col.field)
-                            : resolveNestedPath(rowData, col.field);
+                            : resolveNestedPath(rowData, columnFieldPath(col.field));
                         record[key] = formatters && col.formatter ? col.formatter(value, rowData) : value;
                         if (columnData) {
                             if (!record[key]) {
@@ -7777,15 +7814,16 @@ export abstract class IgxGridBaseDirective implements GridType,
         const searchText = caseSensitive ? this._lastSearchInfo.searchText : this._lastSearchInfo.searchText.toLowerCase();
         const data = this.filteredSortedData;
         const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
+        const columnsPathParts = columnItems.map(col => columnFieldPath(col.field));
 
         data.forEach((dataRow, rowIndex) => {
-            columnItems.forEach((c) => {
+            columnItems.forEach((c, cid) => {
                 const pipeArgs = this.getColumnByName(c.field).pipeArgs;
-                const value = c.formatter ? c.formatter(resolveNestedPath(dataRow, c.field), dataRow) :
-                    c.dataType === 'number' ? formatNumber(resolveNestedPath(dataRow, c.field), this.locale, pipeArgs.digitsInfo) :
+                const value = c.formatter ? c.formatter(resolveNestedPath(dataRow, columnsPathParts[cid]), dataRow) :
+                    c.dataType === 'number' ? formatNumber(resolveNestedPath(dataRow, columnsPathParts[cid]) as number, this.locale, pipeArgs.digitsInfo) :
                         c.dataType === 'date'
-                            ? formatDate(resolveNestedPath(dataRow, c.field), pipeArgs.format, this.locale, pipeArgs.timezone)
-                            : resolveNestedPath(dataRow, c.field);
+                            ? formatDate(resolveNestedPath(dataRow, columnsPathParts[cid]) as string, pipeArgs.format, this.locale, pipeArgs.timezone)
+                            : resolveNestedPath(dataRow, columnsPathParts[cid]);
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
 
@@ -7905,5 +7943,13 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.navigation.lastActiveNode = this.navigation.activeNode;
         this.navigation.activeNode = {} as IActiveNode;
         this.notifyChanges();
+    }
+
+    private getRecreatedTree(value: IFilteringExpressionsTree): IFilteringExpressionsTree {
+        if (this._hGridSchema) {
+            return recreateTree(value, this._hGridSchema, true) as IFilteringExpressionsTree;
+        } else {
+            return recreateTreeFromFields(value, this._columns) as IFilteringExpressionsTree;
+        }
     }
 }

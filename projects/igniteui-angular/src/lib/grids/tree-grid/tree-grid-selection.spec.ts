@@ -19,7 +19,6 @@ import {
     TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS
 } from '../../test-utils/tree-grid-functions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxActionStripComponent } from '../../action-strip/public_api';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
@@ -32,7 +31,6 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxGridCell } from '../public_api';
 
 describe('IgxTreeGrid - Selection #tGrid', () => {
-    configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
     let actionStrip: IgxActionStripComponent;
@@ -42,7 +40,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         const endEvent = new AnimationEvent('animationend');
         animationElem.dispatchEvent(endEvent);
     };
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

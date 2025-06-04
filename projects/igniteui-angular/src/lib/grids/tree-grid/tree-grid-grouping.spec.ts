@@ -1,6 +1,5 @@
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { IgxTreeGridGroupByAreaTestComponent, IgxTreeGridGroupingComponent } from '../../test-utils/tree-grid-components.spec';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
@@ -9,9 +8,8 @@ import { IgxTreeGridComponent } from './tree-grid.component';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
 describe('IgxTreeGrid', () => {
-    configureTestSuite();
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

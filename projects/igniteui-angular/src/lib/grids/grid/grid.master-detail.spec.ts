@@ -1,6 +1,5 @@
-import { Component, ViewChild, OnInit, DebugElement, QueryList, TemplateRef } from '@angular/core';
+import { Component, ViewChild, OnInit, DebugElement, QueryList, TemplateRef, ContentChild, ViewChildren } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait, waitForActiveNodeChange } from '../../test-utils/ui-interactions.spec';
@@ -358,6 +357,16 @@ describe('IgxGrid Master Detail #grid', () => {
             const gridRows = grid.rowList.toArray();
             const firstDetail = GridFunctions.getMasterRowDetail(gridRows[0]);
             expect(firstDetail.textContent.trim()).toBe('NEW TEMPLATE');
+        });
+
+        it('should allow grids in details view without breaking the column collection of the master grid', () => {
+            grid = fix.componentInstance.grid;
+            grid.detailTemplate = fix.componentInstance.gridTemplate;
+            fix.detectChanges();
+            grid.toggleRow(fix.componentInstance.data[0].ID);
+            fix.detectChanges();
+            expect(grid.unpinnedColumns.map(c => c.field)).toEqual(['ContactName', 'CompanyName']);
+            expect(fix.componentInstance.childGrid.first.unpinnedColumns.map(c => c.field)).toEqual(['ColA', 'ColB']);
         });
     });
 
@@ -1283,6 +1292,12 @@ describe('IgxGrid Master Detail #grid', () => {
             NEW TEMPLATE
         </div>
     </ng-template>
+    <ng-template igxGridDetail #gridTemplate>
+        <igx-grid #childGrid>
+            <igx-column [field]="'ColA'" [width]="'400px'"></igx-column>
+            <igx-column [field]="'ColB'" [width]="'400px'"></igx-column>
+        </igx-grid>
+    </ng-template>
     `,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxCheckboxComponent, IgxPaginatorComponent, IgxInputGroupComponent, IgxInputDirective]
 })
@@ -1292,6 +1307,12 @@ export class DefaultGridMasterDetailComponent {
 
     @ViewChild('detailTemplate', { read: TemplateRef, static: true })
     public detailTemplate: TemplateRef<any>;
+
+    @ViewChild('gridTemplate', { read: TemplateRef, static: true })
+    public gridTemplate: TemplateRef<any>;
+
+    @ViewChildren('childGrid', { read: IgxGridComponent })
+    public childGrid: IgxGridComponent;
 
     public width = '800px';
     public height = '500px';
