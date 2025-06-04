@@ -2,6 +2,27 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 20.0.0
+
+### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
+  - Added a new `igxGridEmpty` template directive that allows assigning the `emptyGridTemplate` declaratively, without the need to get and assign reference, like other grid templates like:
+    ```html
+    <igx-grid>
+      <ng-template igxGridEmpty>
+        <!-- content to show when the grid is empty -->
+      </ng-template>
+    </igx-grid>
+    ```
+  - Added a new `igxGridLoading` template directive that allows assigning the `loadingGridTemplate` declaratively, without the need to get and assign reference, like other grid templates like:
+    ```html
+    <igx-grid>
+      <ng-template igxGridLoading>
+        <!-- content to show when the grid is loading -->
+      </ng-template>
+    </igx-grid>
+    ```
+
 ## 19.2.0
 
 ### General
