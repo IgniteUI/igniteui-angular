@@ -25,7 +25,7 @@
     </ng-container>
 
     <igx-suffix *ngIf="hasSelectedItem" [attr.aria-label]="resourceStrings.igx_combo_clearItems_placeholder" class="igx-combo__clear-button"
-        (click)="handleClear($event)">
+        (click)="handleClear($event)" (keydown)="handleClearKeyDown($event)" [tabindex]="disabled ? -1 : 0" role="button">
         <ng-container *ngIf="clearIconTemplate">
             <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
         </ng-container>
