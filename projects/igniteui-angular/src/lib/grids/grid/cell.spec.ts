@@ -248,7 +248,7 @@ describe('IgxGrid - Cell component #grid', () => {
             });
         });
 
-        xit('Should not clear selected cell when scrolling with mouse wheel', (async () => {
+        it('Should not clear selected cell when scrolling with mouse wheel', (async () => {
             const cell = grid.gridAPI.get_cell_by_index(3, 'value');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
@@ -260,8 +260,8 @@ describe('IgxGrid - Cell component #grid', () => {
 
             const gridContent = GridFunctions.getGridContent(fix);
             UIInteractions.triggerEventHandlerKeyDown('arrowup', gridContent);
+            await wait(16);
             fix.detectChanges();
-            await wait(30);
 
             expect(grid.getCellByColumn(2, 'value').selected).toBeTruthy();
         }));
