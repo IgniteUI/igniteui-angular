@@ -96,6 +96,7 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
 @Component({
     selector: 'igx-combo',
     templateUrl: 'combo.component.html',
+    styleUrl: 'combo.component.css',
     encapsulation: ViewEncapsulation.None,
     providers: [
         IgxComboAPIService,

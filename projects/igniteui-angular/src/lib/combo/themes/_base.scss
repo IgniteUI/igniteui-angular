@@ -1,0 +1,107 @@
+@use 'sass:map';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color' as *;
+@use 'styles/themes/standalone' as *;
+@use 'igniteui-theming/sass/animations/easings' as *;
+@use './light/tokens' as *;
+
+$theme: $base;
+
+@include layer(base) {
+    @include b(igx-drop-down) {
+        --_search-input-inline-padding: #{pad-inline(rem(4px), rem(8px), rem(16px))};
+        --_search-input-block-padding: #{pad-block(rem(8px))};
+
+        .igx-combo {
+            display: contents;
+        }
+    }
+
+    @include b(igx-combo) {
+        position: relative;
+        display: block;
+
+        @include e(checkbox) {
+            margin-inline-end: rem(8px);
+        }
+
+        @include e(search) {
+            --igx-input-group-border-border-radius: 0;
+
+            padding-inline: var(--_search-input-inline-padding);
+            padding-block: var(--_search-input-block-padding);
+            z-index: 26;
+            border-bottom: rem(1px) dashed var-get($theme, 'search-separator-border-color');
+
+            igx-input-group {
+                --ig-size: 1;
+            }
+        }
+
+        @include e(case-icon) {
+            cursor: pointer;
+
+            color: color($color: 'gray', $variant: 600);
+            background: transparent;
+
+            .igx-icon--inactive {
+                --igx-icon-disabled-color: color($color: 'gray', $variant: 600);
+
+                opacity: 1;
+            }
+        }
+
+        @include e(case-icon, $m: 'active') {
+            color: color($color: 'primary')
+        }
+
+        @include e(content) {
+            .igx-vhelper--vertical {
+                position: relative;
+            }
+
+            &:has(.igx-vhelper--vertical) {
+                display: grid;
+                grid-template-columns: 1fr auto;
+            }
+
+            position: relative;
+            overflow: hidden;
+            max-height: calc(var(--size) * 10);
+
+            &:focus {
+                outline: transparent;
+            }
+        }
+
+        @include e(add) {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: rem(16px) rem(24px);
+            gap: rem(16px);
+            background: var-get($theme, 'empty-list-background');
+        }
+
+        @include e(add-item) {
+            height: auto;
+            background: var-get($theme, 'empty-list-background');
+            justify-content: center;
+            outline: none;
+        }
+
+        @include e(empty) {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            color: var-get($theme, 'empty-list-placeholder-color');
+            padding: 0 rem(24px);
+            font-size: rem(13px);
+        }
+    }
+}

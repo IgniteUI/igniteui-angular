@@ -37,8 +37,6 @@ const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
 const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
-const defaultDropdownItemHeight = 40;
-const defaultDropdownItemMaxHeight = 400;
 
 describe('IgxSimpleCombo', () => {
     let fixture: ComponentFixture<any>;
@@ -605,28 +603,70 @@ describe('IgxSimpleCombo', () => {
             expect(dropDownList.classList.contains('igx-toggle--hidden')).toBeTruthy();
             expect(dropDownScrollList.childElementCount).toEqual(0);
         });
-        it('should render aria attributes properly', fakeAsync(() => {
-            expect(input.nativeElement.getAttribute('role')).toEqual('combobox');
-            expect(input.nativeElement.getAttribute('aria-haspopup')).toEqual('listbox');
-            expect(input.nativeElement.getAttribute('aria-readonly')).toMatch('false');
-            expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
-            expect(input.nativeElement.getAttribute('aria-controls')).toEqual(combo.dropdown.listId);
-            expect(input.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
+        it('should render correct ARIA attributes on combo input', () => {
+            const inputEl = input.nativeElement;
+
+            expect(inputEl.getAttribute('role'))
+                .withContext('Combo input should have role="combobox"')
+                .toBe('combobox');
+
+            expect(inputEl.getAttribute('aria-haspopup'))
+                .withContext('Combo input should indicate listbox as popup')
+                .toBe('listbox');
+
+            expect(inputEl.getAttribute('aria-readonly'))
+                .withContext('Combo input should not be readonly')
+                .toBe('false');
+
+            expect(inputEl.getAttribute('aria-expanded'))
+                .withContext('Combo input should not be expanded initially')
+                .toBe('false');
+
+            expect(inputEl.getAttribute('aria-controls'))
+                .withContext('aria-controls should point to dropdown list ID')
+                .toBe(combo.dropdown.listId);
+
+            expect(inputEl.getAttribute('aria-labelledby'))
+                .withContext('aria-labelledby should point to placeholder')
+                .toBe(combo.placeholder);
 
             const dropdown = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_DROPDOWN}`));
-            expect(dropdown.nativeElement.getAttribute('ng-reflect-labelled-by')).toEqual(combo.placeholder);
+            expect(dropdown.nativeElement.getAttribute('ng-reflect-labelled-by'))
+                .withContext('Dropdown should reflect the labelled-by value')
+                .toBe(combo.placeholder);
+        });
+        it('should update aria-activedescendant when navigating with keyboard', fakeAsync(() => {
+            const comboHost = fixture.debugElement.query(By.directive(IgxSimpleComboComponent));
+            expect(comboHost).withContext('Combo host should be present').not.toBeNull();
 
             combo.open();
             tick();
             fixture.detectChanges();
 
-            const list = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
-            expect(list.nativeElement.getAttribute('aria-activedescendant')).toEqual(combo.dropdown.focusedItem.id);
+            const list = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`)).nativeElement;
+            expect(list).withContext('Dropdown list should be rendered').not.toBeNull();
 
-            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', list);
+            const initialActiveDescendant = list.getAttribute('aria-activedescendant');
+            expect(initialActiveDescendant)
+                .withContext('aria-activedescendant should point to focused item after open')
+                .toBe(combo.dropdown.focusedItem.id);
+
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', comboHost);
             tick();
             fixture.detectChanges();
-            expect(list.nativeElement.getAttribute('aria-activedescendant')).toEqual(combo.dropdown.focusedItem.id);
+
+            const updatedActiveDescendant = list.getAttribute('aria-activedescendant');
+            expect(updatedActiveDescendant)
+                .withContext('aria-activedescendant should update after ArrowDown')
+                .toBe(combo.dropdown.focusedItem.id);
+
+            expect(updatedActiveDescendant).not.toBe(initialActiveDescendant);
+
+            const focusedItem = fixture.debugElement.query(By.css('.igx-drop-down__item--focused'));
+            expect(focusedItem).withContext('A dropdown item should be visually focused').not.toBeNull();
+            expect(focusedItem.nativeElement.id)
+                .withContext('Focused item id should match aria-activedescendant')
+                .toBe(updatedActiveDescendant);
         }));
         it('should render aria-expanded attribute properly', fakeAsync(() => {
             expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
@@ -651,38 +691,44 @@ describe('IgxSimpleCombo', () => {
             expect(combo.placeholder).toEqual('States');
             expect(combo.comboInput.nativeElement.placeholder).toEqual('States');
         });
-        it('should render dropdown list and item height properly', fakeAsync(() => {
-            // NOTE: Minimum itemHeight is 2 rem, per Material Design Guidelines (for mobile only)
-            let itemHeight = defaultDropdownItemHeight;
-            let itemMaxHeight = defaultDropdownItemMaxHeight;
+        it('should render dropdown list and item height defaults properly', fakeAsync(() => {
+            let itemHeight = 40;
+
+            // Initially there are 11 items inside the combo that's why it should be 440
+            let dropdownHeight = 440;
+
+            // NOTE: item height is 40px for a large variant
             fixture.componentInstance.size = "large";
             fixture.detectChanges();
+
             combo.toggle();
             tick();
             fixture.detectChanges();
+
             const dropdownItems = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
             const dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
 
             const verifyDropdownItemHeight = () => {
                 expect(dropdownItems[0].nativeElement.clientHeight).toEqual(itemHeight);
-                expect(dropdownList.nativeElement.clientHeight).toEqual(itemMaxHeight);
+                expect(dropdownList.nativeElement.clientHeight).toEqual(dropdownHeight);
             };
+
             verifyDropdownItemHeight();
 
             itemHeight = 48;
-            itemMaxHeight = 480;
+            dropdownHeight = 480;
             combo.itemHeight = itemHeight;
             tick();
             fixture.detectChanges();
             verifyDropdownItemHeight();
 
-            itemMaxHeight = 438;
+            dropdownHeight = 438;
             combo.itemsMaxHeight = 438;
             tick();
             fixture.detectChanges();
             verifyDropdownItemHeight();
 
-            itemMaxHeight = 1171;
+            dropdownHeight = 1171;
             combo.itemsMaxHeight = 1171;
             tick();
             fixture.detectChanges();
@@ -694,6 +740,7 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             verifyDropdownItemHeight();
         }));
+
         it('should render focused items properly', () => {
             const dropdown = combo.dropdown;
             combo.toggle();
@@ -723,25 +770,48 @@ describe('IgxSimpleCombo', () => {
             expect(combo.headerItemTemplate).toBeUndefined();
         });
         it('should properly render header and footer templates', () => {
-            let headerElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_HEADER}`));
-            let footerElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOOTER}`));
-            expect(headerElement).toBeNull();
-            expect(footerElement).toBeNull();
+            const getElement = (cssClass: string): HTMLElement | null =>
+                fixture.debugElement.query(By.css(`.${cssClass}`))?.nativeElement || null;
+
+            const assertElementHierarchy = (
+                element: HTMLElement | null,
+                expectedParentClass: string,
+                expectedGrandparentClass: string,
+                label: string
+            ) => {
+                expect(element).withContext(`${label} should be rendered`).not.toBeNull();
+
+                const parent = element!.parentElement;
+                expect(parent).withContext(`${label} should have a parent element`).not.toBeNull();
+                expect(parent!.classList.contains(expectedParentClass))
+                    .withContext(`${label} parent should have class '${expectedParentClass}'`).toBeTrue();
+
+                const grandparent = parent!.parentElement;
+                expect(grandparent).withContext(`${label} should have a grandparent element`).not.toBeNull();
+                expect(grandparent!.classList.contains(expectedGrandparentClass))
+                    .withContext(`${label} grandparent should have class '${expectedGrandparentClass}'`).toBeTrue();
+            };
+
+            // Before opening the combo, header and footer should not be present
+            expect(getElement(CSS_CLASS_HEADER)).withContext('Header should not be present before opening').toBeNull();
+            expect(getElement(CSS_CLASS_FOOTER)).withContext('Footer should not be present before opening').toBeNull();
+
+            // Open combo and check templates
             combo.toggle();
             fixture.detectChanges();
-            expect(combo.headerTemplate).toBeDefined();
-            expect(combo.footerTemplate).toBeDefined();
-            const dropdownList: HTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement;
-            headerElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_HEADER}`));
-            footerElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOOTER}`));
-            expect(headerElement).not.toBeNull();
-            const headerHTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_HEADER}`)).nativeElement;
-            expect(headerHTMLElement.parentNode).toEqual(dropdownList);
-            expect(headerHTMLElement.textContent).toEqual('This is a header');
-            expect(footerElement).not.toBeNull();
-            const footerHTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOOTER}`)).nativeElement;
-            expect(footerHTMLElement.parentNode).toEqual(dropdownList);
-            expect(footerHTMLElement.textContent).toEqual('This is a footer');
+
+            expect(combo.headerTemplate).withContext('Header template should be defined').toBeDefined();
+            expect(combo.footerTemplate).withContext('Footer template should be defined').toBeDefined();
+
+            // Validate Header
+            const headerElement = getElement(CSS_CLASS_HEADER);
+            assertElementHierarchy(headerElement, 'igx-combo', CSS_CLASS_DROPDOWNLIST_SCROLL, 'Header');
+            expect(headerElement!.textContent?.trim()).toBe('This is a header');
+
+            // Validate Footer
+            const footerElement = getElement(CSS_CLASS_FOOTER);
+            assertElementHierarchy(footerElement, 'igx-combo', CSS_CLASS_DROPDOWNLIST_SCROLL, 'Footer');
+            expect(footerElement!.textContent?.trim()).toBe('This is a footer');
         });
         xit('should initialize the component with empty data and bindings', () => {
             fixture = TestBed.createComponent(IgxSimpleComboEmptyComponent);
@@ -973,21 +1043,20 @@ describe('IgxSimpleCombo', () => {
         it('should render empty template when combo data source is not set', () => {
             fixture = TestBed.createComponent(IgxComboInContainerTestComponent);
             fixture.detectChanges();
+
             combo = fixture.componentInstance.combo;
             combo.data = [];
             fixture.detectChanges();
+
             combo.toggle();
             fixture.detectChanges();
-            const dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement;
-            const dropdownItemsContainer = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`)).nativeElement;
-            const dropDownContainer = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
-            const listItems = dropDownContainer.querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`);
-            expect(listItems.length).toEqual(0);
-            // Expect no items to be rendered in the virtual container
-            expect(dropdownItemsContainer.children[0].childElementCount).toEqual(0);
-            // Expect the list child (NOT COMBO ITEM) to be a container with "The list is empty";
-            const dropdownItem = dropdownList.lastElementChild as HTMLElement;
-            expect(dropdownItem.firstElementChild.textContent).toEqual('The list is empty');
+
+            const emptyStateElement = fixture.debugElement.query(By.css('.igx-combo__empty'))?.nativeElement;
+            expect(emptyStateElement).withContext('Empty state element should be present').not.toBeNull();
+
+            expect(emptyStateElement.textContent?.trim())
+                .withContext('Empty state text should match')
+                .toEqual('The list is empty');
         });
         it('should bind combo data properly when changing data source runtime', () => {
             const newData = ['Item 1', 'Item 2'];

@@ -76,10 +76,10 @@
     // ));
     @include excel-filtering-typography();
     @include icon-button-typography();
-    @include input-group-typography($categories: (
-        helper-text: 'body-2',
-        input-text: 'body-1'
-    ));
+    //@include input-group-typography($categories: (
+    //    helper-text: 'body-2',
+    //    input-text: 'body-1'
+    //));
     @include linear-bar-typography();
     // @include list-typography($categories: (
     //     item: 'body-2',
