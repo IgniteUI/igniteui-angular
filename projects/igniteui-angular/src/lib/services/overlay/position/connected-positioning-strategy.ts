@@ -27,10 +27,17 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     verticalStartPoint: VerticalAlignment.Bottom,
     openAnimation: scaleInVerTop,
     closeAnimation: scaleOutVerTop,
-    minSize: { width: 0, height: 0 }
+    minSize: { width: 0, height: 0 },
+    offset: 0
   };
 
   constructor(settings?: PositionSettings) {
+
+    if (Util.canUsePlacement(settings)) {
+        const placementPositionSettings = Util.getPositionSettingsByPlacement(settings.placement);
+        settings = Object.assign({}, settings, placementPositionSettings);
+    }
+
     this.settings = Object.assign({}, this._defaultSettings, settings);
   }
 
@@ -81,8 +88,9 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
    * @param elementRect Bounding rectangle of the element
    */
   protected setStyle(element: HTMLElement, targetRect: Partial<DOMRect>, elementRect: Partial<DOMRect>, connectedFit: ConnectedFit) {
-    const horizontalOffset = connectedFit.horizontalOffset ? connectedFit.horizontalOffset : 0;
-    const verticalOffset = connectedFit.verticalOffset ? connectedFit.verticalOffset : 0;
+    const horizontalOffset = Util.getHorizontalOffset(connectedFit, this.settings);
+    const verticalOffset = Util.getVerticalOffset(connectedFit, this.settings);
+
     const startPoint: Point = {
       x: targetRect.right + targetRect.width * this.settings.horizontalStartPoint + horizontalOffset,
       y: targetRect.bottom + targetRect.height * this.settings.verticalStartPoint + verticalOffset

@@ -42,24 +42,26 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
      * @param connectedFit connectedFit to update
      */
     protected updateViewPortFit(connectedFit: ConnectedFit) {
+        const horizontalOffset = Util.getHorizontalOffset(connectedFit, this.settings);
         connectedFit.left = this.calculateLeft(
             connectedFit.targetRect,
             connectedFit.contentElementRect,
             this.settings.horizontalStartPoint,
             this.settings.horizontalDirection,
-            connectedFit.horizontalOffset ? connectedFit.horizontalOffset : 0);
+            horizontalOffset);
         connectedFit.right = connectedFit.left + connectedFit.contentElementRect.width;
         connectedFit.fitHorizontal = {
             back: Math.round(connectedFit.left),
             forward: Math.round(connectedFit.viewPortRect.width - connectedFit.right)
         };
 
+        const verticalOffset = Util.getVerticalOffset(connectedFit, this.settings);
         connectedFit.top = this.calculateTop(
             connectedFit.targetRect,
             connectedFit.contentElementRect,
             this.settings.verticalStartPoint,
             this.settings.verticalDirection,
-            connectedFit.verticalOffset ? connectedFit.verticalOffset : 0);
+            verticalOffset);
         connectedFit.bottom = connectedFit.top + connectedFit.contentElementRect.height;
         connectedFit.fitVertical = {
             back: Math.round(connectedFit.top),
