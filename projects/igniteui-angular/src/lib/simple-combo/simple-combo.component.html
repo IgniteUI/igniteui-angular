@@ -5,7 +5,7 @@
     </ng-container>
 
     <ng-container ngProjectAs="igx-prefix">
-        <ng-content select="igx-prefix"></ng-content>
+        <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
     </ng-container>
 
     <ng-container ngProjectAs="igx-hint, [igxHint]">
@@ -21,7 +21,7 @@
         (keyup)="handleKeyUp($event)" (keydown)="handleKeyDown($event)" (blur)="onBlur()" (paste)="handleInputChange($event)"/>
 
     <ng-container ngProjectAs="igx-suffix">
-        <ng-content select="igx-suffix"></ng-content>
+        <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
     </ng-container>
 
     <igx-suffix *ngIf="hasSelectedItem" [attr.aria-label]="resourceStrings.igx_combo_clearItems_placeholder" class="igx-combo__clear-button"
