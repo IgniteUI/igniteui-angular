@@ -43,11 +43,11 @@ $theme: $base;
         @include e(case-icon) {
             cursor: pointer;
 
-            color: map.get($theme, 'input-suffix-color)');
+            color: color($color: 'gray', $variant: 600);
             background: transparent;
 
             .igx-icon--inactive {
-                --igx-icon-disabled-color: var(--input-suffix-color);
+                --igx-icon-disabled-color: color($color: 'gray', $variant: 600);
 
                 opacity: 1;
             }
