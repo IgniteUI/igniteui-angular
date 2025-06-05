@@ -10,7 +10,7 @@ export * from './overlay/overlay';
 export * from './overlay/position';
 export * from './overlay/scroll';
 export {
-    AbsolutePosition, HorizontalAlignment, OverlayAnimationEventArgs, OverlayCancelableEventArgs, OverlayClosingEventArgs,
+    AbsolutePosition, ArrowFit, HorizontalAlignment, OverlayAnimationEventArgs, OverlayCancelableEventArgs, OverlayClosingEventArgs,
     OverlayCreateSettings, OverlayEventArgs, OverlaySettings, Placement, Point, PositionSettings, RelativePosition, RelativePositionStrategy, VerticalAlignment
 } from './overlay/utilities';
 export * from './transaction/base-transaction';

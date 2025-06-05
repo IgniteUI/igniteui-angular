@@ -212,6 +212,17 @@ export interface ConnectedFit {
     verticalOffset?: number;
 }
 
+export interface ArrowFit {
+    /** Rectangle of the arrow element. */
+    arrowRect?: Partial<DOMRect>;
+    /** Rectangle of the tooltip element. */
+    tooltipRect?: Partial<DOMRect>;
+    /** Direction in which the arrow points. */
+    direction?: 'top' | 'bottom' | 'right' | 'left';
+    /** Tooltip placement. */
+    tooltipPlacement?: Placement;
+}
+
 export interface OverlayCreateSettings extends OverlaySettings {
     /**
      * An `Injector` instance to add in the created component ref's injectors tree.

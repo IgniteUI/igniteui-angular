@@ -4,19 +4,26 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent, IgxTooltipWithCloseButtonComponent } from '../../test-utils/tooltip-components.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../services/public_api';
+import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy, Placement } from '../../services/public_api';
 import { IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipTargetDirective } from './tooltip-target.directive';
-import { TooltipPlacement } from 'igniteui-angular';
 
 const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip';
 const HIDE_DELAY = 180;
-const PLACEMENTS: TooltipPlacement[] = [
-    'top', 'top-start', 'top-end',
-    'bottom', 'bottom-start', 'bottom-end',
-    'left', 'left-start', 'left-end',
-    'right', 'right-start', 'right-end'
+const PLACEMENTS: Placement[] = [
+    Placement.Top,
+    Placement.TopStart,
+    Placement.TopEnd,
+    Placement.Bottom,
+    Placement.BottomStart,
+    Placement.BottomEnd,
+    Placement.Left,
+    Placement.LeftStart,
+    Placement.LeftEnd,
+    Placement.Right,
+    Placement.RightStart,
+    Placement.RightEnd,
 ];
 
 describe('IgxTooltip', () => {
@@ -961,7 +968,9 @@ describe('IgxTooltip', () => {
 
         for (const placement of PLACEMENTS) {
             it(`should correctly position tooltip for placement="${placement}"`, fakeAsync(() => {
-                tooltipTarget.placement = placement;
+                tooltipTarget.positionSettings = {
+                    placement: placement
+                };
                 fix.detectChanges();
 
                 hoverElement(button);
@@ -977,39 +986,45 @@ describe('IgxTooltip', () => {
 
         it('should respect custom positive offset', fakeAsync(() => {
             const customOffset = 20;
-            tooltipTarget.placement = 'bottom';
-            tooltipTarget.offset = customOffset;
+            tooltipTarget.positionSettings = {
+                placement: Placement.Bottom,
+                offset: customOffset
+            };
             fix.detectChanges();
 
             hoverElement(button);
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
-            verifyTooltipPosition(tooltipNativeElement, button, true, 'bottom', customOffset);
+            verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Bottom, customOffset);
         }));
 
         it('should respect custom negative offset', fakeAsync(() => {
             const customOffset = -10;
-            tooltipTarget.placement = 'right';
-            tooltipTarget.offset = customOffset;
+            tooltipTarget.positionSettings = {
+                placement: Placement.Right,
+                offset: customOffset
+            };
             fix.detectChanges();
 
             hoverElement(button);
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
-            verifyTooltipPosition(tooltipNativeElement, button, true, 'right', customOffset);
+            verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Right, customOffset);
         }));
 
         it('should correctly position arrow based on tooltip placement', fakeAsync(() => {
-            tooltipTarget.placement = 'bottom-start';
+            tooltipTarget.positionSettings = {
+                placement: Placement.BottomStart,
+            };
             fix.detectChanges();
 
             hoverElement(button);
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
-            verifyTooltipPosition(tooltipNativeElement, button, true, tooltipTarget.placement);
+            verifyTooltipPosition(tooltipNativeElement, button, true, Placement.BottomStart);
 
             const arrow = tooltipNativeElement.querySelector('.igx-tooltip--bottom') as HTMLElement;
             expect(arrow).not.toBeNull();
@@ -1042,7 +1057,7 @@ export const verifyTooltipPosition = (
     tooltipNativeElement: HTMLElement,
     actualTarget: { nativeElement: HTMLElement },
     shouldAlign:boolean = true,
-    placement: TooltipPlacement = 'bottom',
+    placement: Placement = Placement.Bottom,
     offset: number = 6
 ) => {
     const tooltip = tooltipNativeElement.getBoundingClientRect();
@@ -1092,7 +1107,7 @@ export const verifyTooltipPosition = (
 function horizontalAlignmentMatches(
     tooltip: DOMRect,
     target: DOMRect,
-    placement: TooltipPlacement
+    placement: Placement
 ): boolean {
     if (placement.endsWith('start')) {
         return Math.abs(tooltip.left - target.left) <= alignmentTolerance;
@@ -1108,7 +1123,7 @@ function horizontalAlignmentMatches(
 function verticalAlignmentMatches(
     tooltip: DOMRect,
     target: DOMRect,
-    placement: TooltipPlacement
+    placement: Placement
 ): boolean {
     if (placement.endsWith('start')) {
         return Math.abs(tooltip.top - target.top) <= alignmentTolerance;

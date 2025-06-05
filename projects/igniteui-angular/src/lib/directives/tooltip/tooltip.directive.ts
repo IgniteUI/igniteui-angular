@@ -205,6 +205,7 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
     private _createArrow(): void {
         this._arrowEl = document.createElement('div');
         this._arrowEl.style.position = 'absolute';
+        this._arrowEl.setAttribute('data-arrow', 'true');
         this.element.appendChild(this._arrowEl);
     }
 

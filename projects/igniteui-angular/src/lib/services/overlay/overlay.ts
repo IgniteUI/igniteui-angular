@@ -18,7 +18,7 @@ import { fromEvent, Subject, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
 import { fadeIn, fadeOut, IAnimationParams, scaleInHorLeft, scaleInHorRight, scaleInVerBottom, scaleInVerTop, scaleOutHorLeft, scaleOutHorRight, scaleOutVerBottom, scaleOutVerTop, slideInBottom, slideInTop, slideOutBottom, slideOutTop } from 'igniteui-angular/animations';
-import { PlatformUtil } from '../../core/utils';
+import { first, PlatformUtil } from '../../core/utils';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
 import { IgxAngularAnimationService } from '../animation/angular-animation-service';
 import { AnimationService } from '../animation/animation';
@@ -31,6 +31,7 @@ import { IPositionStrategy } from './position/IPositionStrategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import {
     AbsolutePosition,
+    ArrowFit,
     HorizontalAlignment,
     OffsetMode,
     OverlayAnimationEventArgs,
@@ -40,12 +41,15 @@ import {
     OverlayEventArgs,
     OverlayInfo,
     OverlaySettings,
+    Placement,
     Point,
     PositionSettings,
     RelativePosition,
     RelativePositionStrategy,
+    Util,
     VerticalAlignment
 } from './utilities';
+import { ITooltipPositionStrategy } from './position/ITooltipPositionStrategy';
 
 /**
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay-main)
@@ -437,6 +441,14 @@ export class IgxOverlayService implements OnDestroy {
             this._document,
             true,
             info.settings.target);
+
+        // Allows positioning the igxTooltip arrow when a custom position strategy is used.
+        // The strategy should implement ITooltipPositionStrategy.
+        const tooltipPositionStrategy = info.settings.positionStrategy as ITooltipPositionStrategy;
+        if (tooltipPositionStrategy.positionArrow) {
+            this.positionArrow(info, tooltipPositionStrategy);
+        }
+
         this.addModalClasses(info);
         if (info.settings.positionStrategy.settings.openAnimation) {
             // TODO: should we build players again. This was already done in attach!!!
@@ -1006,5 +1018,41 @@ export class IgxOverlayService implements OnDestroy {
             const size = componentSize || globalSize;
             info.size = size;
         }
+    }
+
+    private positionArrow(info: OverlayInfo, positionStrategy: ITooltipPositionStrategy) {
+        const arrow = info.elementRef.nativeElement.querySelector('div[data-arrow="true"]');
+        if (!arrow) {
+            return;
+        }
+
+        let placement: Placement;
+
+        if (Util.canUsePlacement(positionStrategy.settings)) {
+            placement = positionStrategy.settings.placement;
+        } else {
+            placement = Util.getPlacementByPositionSettings(positionStrategy.settings) ?? Placement.Bottom;
+        }
+        const currentPlacement = first(placement.split('-')) as Placement;
+        arrow.className = `igx-tooltip--${currentPlacement}`;
+
+        // Arrow direction is the opposite of current placement.
+        const arrowDiretion = {
+            top: 'bottom',
+            right: 'left',
+            bottom: 'top',
+            left: 'right',
+        }[currentPlacement] as 'top' | 'bottom' | 'right' | 'left';
+
+        const arrowRect = arrow.getBoundingClientRect();
+        const tooltipRect = info.elementRef.nativeElement.getBoundingClientRect();
+        const arrowFit: ArrowFit = {
+            arrowRect: arrowRect,
+            tooltipRect: tooltipRect,
+            direction: arrowDiretion,
+            tooltipPlacement: placement,
+        };
+
+        positionStrategy.positionArrow(arrow, arrowFit);
     }
 }

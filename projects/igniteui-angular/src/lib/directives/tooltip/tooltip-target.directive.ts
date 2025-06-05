@@ -1,4 +1,3 @@
-import { useAnimation } from '@angular/animations';
 import {
     Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener,
     Input, EventEmitter, booleanAttribute, TemplateRef, ComponentRef, Renderer2, OnChanges, SimpleChanges,
@@ -9,14 +8,12 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService } from '../../core/navigation';
 import { IBaseEventArgs } from '../../core/utils';
-import {  PositionSettings } from '../../services/public_api';
+import { PositionSettings } from '../../services/public_api';
 import { IgxToggleActionDirective } from '../toggle/toggle.directive';
 import { IgxTooltipComponent } from './tooltip.component';
 import { IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipCloseButtonComponent } from './tooltip-close-button.component';
-import { fadeOut, scaleInCenter } from 'igniteui-angular/animations';
-import { TooltipPlacement } from './enums';
-import { TooltipPositionStrategy, PositionsMap } from './tooltip.common';
+import { TooltipPositionStrategy } from './tooltip.common';
 
 export interface ITooltipShowEventArgs extends IBaseEventArgs {
     target: IgxTooltipTargetDirective;
@@ -82,41 +79,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     @Input()
     public hideDelay = 300;
-
-
-    /**
-     * Where to place the tooltip relative to the target element. Default value is `bottom`.
-     * ```html
-     * <igx-icon [igxTooltipTarget]="tooltipRef" placement="bottom-start">info</igx-icon>
-     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
-     * ```
-     */
-    @Input()
-    public set placement(value: TooltipPlacement) {
-        this._placement = value;
-
-        if (this._overlayDefaults && this.target) {
-            this._overlayDefaults.positionStrategy = new TooltipPositionStrategy(this._positionsSettingsByPlacement, this);
-        }
-    }
-
-    public get placement(): TooltipPlacement {
-        return this._placement;
-    }
-
-    /** The offset of the tooltip from the target in pixels. Default value is 6. */
-    @Input()
-    public set offset(value: number) {
-        this._offset = value;
-
-        if (this._overlayDefaults && this.target) {
-            this._overlayDefaults.positionStrategy = new TooltipPositionStrategy(this._positionsSettingsByPlacement, this);
-        }
-    }
-
-    public get offset(): number {
-        return this._offset;
-    }
 
     /**
      * Controls whether to display an arrow indicator for the tooltip.
@@ -212,6 +174,42 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
     public get closeTemplate(): TemplateRef<any> | undefined {
         return this._closeTemplate;
+    }
+
+    /**
+     * Get the position and animation settings used by the tooltip.
+     * ```typescript
+     * let positionSettings = this.tooltipTarget.positionSettings;
+     * ```
+     */
+    @Input()
+    public get positionSettings(): PositionSettings {
+        return this._positionSettings;
+    }
+
+    /**
+     * Set the position and animation settings used by the tooltip.
+     * ```html
+     * <igx-icon [igxTooltipTarget]="tooltipRef" [positionSettings]="newPositionSettings">info</igx-icon>
+     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+     * ```
+     * ```typescript
+     *
+     * import { PositionSettings, HorizontalAlignment, VerticalAlignment } from 'igniteui-angular';
+     * ...
+     * public newPositionSettings: PositionSettings = {
+     *     horizontalDirection: HorizontalAlignment.Right,
+     *     horizontalStartPoint: HorizontalAlignment.Left,
+     *     verticalDirection: VerticalAlignment.Top,
+     *     verticalStartPoint: VerticalAlignment.Top,
+     * };
+     * ```
+     */
+    public set positionSettings(settings: PositionSettings) {
+        this._positionSettings = settings;
+        if (this._overlayDefaults) {
+            this._overlayDefaults.positionStrategy = new TooltipPositionStrategy(this._positionSettings);
+        }
     }
 
     /**
@@ -328,11 +326,10 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     private _autoHideDelay = 180;
     private _isForceClosed = false;
     private _hasArrow = false;
-    private _offset = 6;
-    private _placement: TooltipPlacement = TooltipPlacement.bottom;
     private _closeButtonRef?: ComponentRef<IgxTooltipCloseButtonComponent>;
     private _closeTemplate: TemplateRef<any>;
     private _sticky = false;
+    private _positionSettings: PositionSettings;
 
     constructor(
         private _element: ElementRef,
@@ -413,7 +410,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     public override ngOnInit() {
         super.ngOnInit();
 
-        this._overlayDefaults.positionStrategy = new TooltipPositionStrategy(this._positionsSettingsByPlacement, this);
+        this._overlayDefaults.positionStrategy = new TooltipPositionStrategy(this._positionSettings);
         this._overlayDefaults.closeOnOutsideClick = false;
         this._overlayDefaults.closeOnEscape = true;
 
@@ -471,15 +468,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     private get _mergedOverlaySettings() {
         return Object.assign({}, this._overlayDefaults, this.overlaySettings);
-    }
-
-    private get _positionsSettingsByPlacement(): PositionSettings {
-        const positions = PositionsMap.get(this.placement);
-        const animations = {
-            openAnimation: useAnimation(scaleInCenter, { params: { duration: '150ms' } }),
-            closeAnimation: useAnimation(fadeOut, { params: { duration: '75ms' } })
-        }
-        return Object.assign({}, animations, positions);
     }
 
     private _checkOutletAndOutsideClick(): void {
