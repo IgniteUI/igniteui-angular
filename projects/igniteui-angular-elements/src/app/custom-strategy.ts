@@ -529,7 +529,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         if (localeStringsInput) {
             const closestElement = componentRef.location.nativeElement.closest('[lang]') as HTMLElement;
             if (closestElement) {
-                const lang = closestElement ? closestElement.lang.toUpperCase() : 'EN';
+                // Do not assign anything if no tag found. By default all grids have assigned EN resource strings.
+                const lang = closestElement.lang.toUpperCase();
                 const resourceStrings = GridLocaleConfig.has(lang) ? GridLocaleConfig.get(lang) : componentRef.instance[localeStringsInput.propName];
                 componentRef.instance[localeStringsInput.propName] = resourceStrings;
             }
