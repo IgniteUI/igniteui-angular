@@ -10,7 +10,8 @@
   },
   "files": [
     "src/test.ts",
-    "src/polyfills.ts"
+    "src/polyfills.ts",
+      "../../projects/igniteui-angular-i18n/src/i18n/expand-type.ts"
   ],
   "include": [
     "src/**/*.spec.ts",

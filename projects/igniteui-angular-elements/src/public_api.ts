@@ -12,7 +12,7 @@ import { IgxPivotDateDimension } from 'projects/igniteui-angular/src/lib/grids/p
 import { PivotDimensionType } from 'projects/igniteui-angular/src/lib/grids/pivot-grid/pivot-grid.interface';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxTimeSummaryOperand } from 'projects/igniteui-angular/src/lib/grids/summaries/grid-summary';
 import { HorizontalAlignment, VerticalAlignment } from 'projects/igniteui-angular/src/lib/services/overlay/utilities';
-
+import { GridResourceStringsBG, GridResourceStringsCS, GridResourceStringsDA, GridResourceStringsDE, GridResourceStringsES, GridResourceStringsFR, GridResourceStringsHU, GridResourceStringsIT, GridResourceStringsJA, GridResourceStringsKO, GridResourceStringsNB, GridResourceStringsNL, GridResourceStringsPL, GridResourceStringsPT, GridResourceStringsRO, GridResourceStringsSV, GridResourceStringsTR, GridResourceStringsZHHANS, GridResourceStringsZHHANT } from 'igniteui-angular-i18n';
 
 /** Export Public API, TODO: reorganize, Generate all w/ renames? */
 export {
@@ -54,4 +54,25 @@ export {
     // overlay position settings (used in grids, paginator, toolbar)
     HorizontalAlignment,
     VerticalAlignment,
+
+    //Localization strings
+    GridResourceStringsBG,
+    GridResourceStringsCS,
+    GridResourceStringsDA,
+    GridResourceStringsDE,
+    GridResourceStringsES,
+    GridResourceStringsFR,
+    GridResourceStringsHU,
+    GridResourceStringsIT,
+    GridResourceStringsJA,
+    GridResourceStringsKO,
+    GridResourceStringsNB,
+    GridResourceStringsNL,
+    GridResourceStringsPL,
+    GridResourceStringsPT,
+    GridResourceStringsRO,
+    GridResourceStringsSV,
+    GridResourceStringsTR,
+    GridResourceStringsZHHANS,
+    GridResourceStringsZHHANT,
 }
