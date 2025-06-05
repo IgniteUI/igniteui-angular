@@ -525,9 +525,15 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     //#endregion
 
     protected initializeLocale(componentRef: ComponentRef<any>) {
+        const componentTag = this.element.tagName.toLowerCase();
+        if (componentTag !== 'igc-grid' && componentTag !== 'igc-tree-grid' &&
+            componentTag !== 'igc-pivot-grid' && componentTag !== 'igc-hierarchical-grid') {
+            // For now only main grid elements?
+            return;
+        }
         const localeStringsInput = this._componentFactory.inputs.find(input => input.propName === "resourceStrings");
         if (localeStringsInput) {
-            const closestElement = componentRef.location.nativeElement.closest('[lang]') as HTMLElement;
+            const closestElement = this.element.closest('[lang]') as HTMLElement;
             if (closestElement) {
                 // Do not assign anything if no tag found. By default all grids have assigned EN resource strings.
                 const lang = closestElement.lang.toUpperCase();
