@@ -8,6 +8,7 @@
         <div
             igxTextHighlight class="igx-grid__td-text"
             [cssClass]="highlightClass"
+            [class.igx-grid__td--number]="column.dataType === 'number' || column.dataType === 'percent' || column.dataType === 'currency'"
             [activeCssClass]="activeHighlightClass"
             [groupName]="gridID"
             [value]="formatter ? (value | columnFormatter:formatter:rowData)
@@ -32,11 +33,13 @@
     }
 
     @if (column.dataType === 'boolean' && !this.formatter) {
+    <div [class.igx-grid__td--bool]="column.dataType === 'boolean'">
         <igx-icon
             family="default"
             [name]="value ? 'confirm' : 'close'"
             [ngClass]="{ 'igx-icon--success': value, 'igx-icon--error': !value }">
         </igx-icon>
+    </div>
     }
     @if (column.dataType === 'image') {
         <img [src]="value" [alt]="value | igxCellImageAlt" />
