@@ -87,6 +87,8 @@
             @if (getLabel()) {
                 <label igxLabel>{{ getLabel() }}</label>
             }
+            <igx-icon igxPrefix [hidden]="hidePrefix()">favorite</igx-icon>
+            <igx-icon igxSuffix [hidden]="hideSuffix()">favorite</igx-icon>
             <igx-hint>Select a unique falsy value</igx-hint>
         </igx-combo>
 
