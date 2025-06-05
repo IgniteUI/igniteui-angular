@@ -1,7 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxIconComponent, IgxPivotGridComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+import { CellType, FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IGridCellEventArgs, IgxIconComponent, IgxPivotGridComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-sort-strategy';
@@ -22,6 +22,7 @@ import { Size } from '../common/enums';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
+import { IgxGridCellComponent } from '../cell.component';
 
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
@@ -2104,8 +2105,23 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 expect(pivotGrid.rowList.length).toBe(10);
             });
-        });
 
+            it('should have the correct IGridCellEventArgs when clicking on a cell', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                spyOn(pivotGrid.cellClick, 'emit').and.callThrough();
+                fixture.detectChanges();
+
+                const cell = pivotGrid.gridAPI.get_cell_by_index(0, 'Bulgaria-UnitsSold') as CellType;
+
+                pivotGrid.cellClick.emit({ cell, event: null });
+                cell.nativeElement.click();
+                const cellClickargs: IGridCellEventArgs = { cell, event: new MouseEvent('click') };
+
+                const gridCell = cellClickargs.cell as  IgxGridCellComponent;
+                const firstEntry = gridCell.rowData.aggregationValues.entries().next().value;
+                expect(firstEntry).toEqual(['USA-UnitsSold', 829]);
+            });
+        });
     });
 
     describe('IgxPivotGrid complex hierarchy #pivotGrid', () => {
