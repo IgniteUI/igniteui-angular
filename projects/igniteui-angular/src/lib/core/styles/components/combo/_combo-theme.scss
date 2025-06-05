@@ -171,8 +171,8 @@
     // in order to override the !important rule of .igx-icon--inactive.
     %igx-combo__case-icon {
         igx-icon {
-            // Important is needed since the .igx-icon--inactive has !important
-            color: color($color: 'gray', $variant: 600) !important;
+            --igx-icon-disabled-color: var(--ig-gray-600);
+            
             opacity: 1;
         }
     }
