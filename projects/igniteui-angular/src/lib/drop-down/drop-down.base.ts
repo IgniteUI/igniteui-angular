@@ -105,6 +105,17 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
     public cssClass = true;
 
     /**
+     * Gets/sets the `role` attribute of the drop down. Default is 'listbox'.
+     *
+     * ```html
+     *  <igx-drop-down [role]="customRole"></igx-drop-down-item>
+     * ```
+     */
+    @Input()
+    @HostBinding('attr.role')
+    public role = 'listbox';
+
+    /**
      * Get all non-header items
      *
      * ```typescript

@@ -52,6 +52,7 @@ export interface IDropDownList {
     height: string;
     id: string;
     maxHeight: string;
+    role: string;
     collapsed: boolean;
     items: IgxDropDownItemBaseDirective[];
     headers: IgxDropDownItemBaseDirective[];
