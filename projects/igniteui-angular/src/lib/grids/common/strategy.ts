@@ -127,8 +127,8 @@ export class IgxSorting implements IGridSortingStrategy {
                     fullResult.data.push(groupItem);
                 }
                 if (expanded) {
-                    metadata.push(...fullResult.metadata.slice(fullResult.metadata.length - group.length));
-                    result.push(...fullResult.data.slice(fullResult.data.length - group.length));
+                    metadata = metadata.concat(fullResult.metadata.slice(fullResult.metadata.length - group.length));
+                    result = result.concat(fullResult.data.slice(fullResult.data.length - group.length));
                 }
             }
             i += group.length;
