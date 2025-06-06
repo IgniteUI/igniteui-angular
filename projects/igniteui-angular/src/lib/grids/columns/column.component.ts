@@ -1235,7 +1235,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             return '80';
         }
         // the paddings + the min allowed cell content
-        return this.grid.defaultHeaderGroupMinWidth + CELL_CONTENT_MIN;
+        return (this.grid.defaultHeaderGroupMinWidth + CELL_CONTENT_MIN).toString();
     }
     /**
      * Returns a reference to the `summaryTemplate`.

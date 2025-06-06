@@ -199,9 +199,10 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
 
             expect(column.width).toEqual('80px');
-            setElementSize(grid.nativeElement, Size.Medium)
+            setElementSize(grid.nativeElement, Size.Medium);
             tick(16); // needed because of the throttleTime of the resize obserer
             fixture.detectChanges();
+            (grid as any).updateDefaultSizes();
 
             expect(column.defaultMinWidth).toBe('64');
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 80, 0);
@@ -214,9 +215,10 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
 
             expect(column.width).toEqual('64px');
-            setElementSize(grid.nativeElement, Size.Small)
+            setElementSize(grid.nativeElement, Size.Small);
             tick(16); // needed because of the throttleTime of the resize obserer
             fixture.detectChanges();
+            (grid as any).updateDefaultSizes();
 
             expect(column.defaultMinWidth).toBe('56');
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 64, 0);
