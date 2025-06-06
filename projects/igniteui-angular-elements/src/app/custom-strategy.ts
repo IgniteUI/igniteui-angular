@@ -7,7 +7,8 @@ import { ComponentConfig, ContentQueryMeta } from './component-config';
 
 import { ComponentNgElementStrategy, ComponentNgElementStrategyFactory, extractProjectableNodes, isFunction } from './ng-element-strategy';
 import { TemplateWrapperComponent } from './wrapper/wrapper.component';
-import { GridLocaleConfig } from '../lib/locale.config';
+import { GridLocalizationConfig, GridLocalizedComponents, LocalizationConfig } from '../lib/locale';
+import { changei18n } from 'igniteui-angular';
 
 export const ComponentRefKey = Symbol('ComponentRef');
 const SCHEDULE_DELAY = 10;
@@ -524,11 +525,10 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     }
     //#endregion
 
+    // Probably not needed if BroadcastChannel is used.
     protected initializeLocale(componentRef: ComponentRef<any>) {
-        const componentTag = this.element.tagName.toLowerCase();
-        if (componentTag !== 'igc-grid' && componentTag !== 'igc-tree-grid' &&
-            componentTag !== 'igc-pivot-grid' && componentTag !== 'igc-hierarchical-grid') {
-            // For now only main grid elements?
+        const componentTag = this.element.tagName.toLowerCase().replace("igc-", "");
+        if (!GridLocalizationConfig.has(<GridLocalizedComponents>componentTag)) {
             return;
         }
         const localeStringsInput = this._componentFactory.inputs.find(input => input.propName === "resourceStrings");
@@ -536,9 +536,12 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             const closestElement = this.element.closest('[lang]') as HTMLElement;
             if (closestElement) {
                 // Do not assign anything if no tag found. By default all grids have assigned EN resource strings.
-                const lang = closestElement.lang.toUpperCase();
-                const resourceStrings = GridLocaleConfig.has(lang) ? GridLocaleConfig.get(lang) : componentRef.instance[localeStringsInput.propName];
-                componentRef.instance[localeStringsInput.propName] = resourceStrings;
+                const lang = closestElement.lang.toLocaleLowerCase();
+                //const localizationStrings = GridLocalizationConfig.get(<GridLocalizedComponents>componentTag);
+                const resourceStrings = LocalizationConfig.has(lang) ? LocalizationConfig.get(lang) : componentRef.instance[localeStringsInput.propName];
+                //const resourceStrings = localizationStrings.has(lang) ? localizationStrings.get(lang) : componentRef.instance[localeStringsInput.propName];
+                //componentRef.instance[localeStringsInput.propName] = resourceStrings;
+                changei18n(resourceStrings);
             }
         }
     }

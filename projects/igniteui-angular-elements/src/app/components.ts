@@ -29,6 +29,8 @@ import { IgxGridStateComponent } from '../lib/state.component';
 import { IgxIconBroadcastService } from '../lib/icon.broadcast.service';
 import { injector } from '../utils/injector-ref';
 import { registerComponent } from '../utils/register';
+import { createGenericLocaleObject } from '../lib/locale';
+import { IgxResourceStringsBG, IgxResourceStringsCS, IgxResourceStringsDA, IgxResourceStringsDE, IgxResourceStringsES, IgxResourceStringsFR, IgxResourceStringsHU, IgxResourceStringsIT, IgxResourceStringsJA, IgxResourceStringsKO, IgxResourceStringsNB, IgxResourceStringsNL, IgxResourceStringsPL, IgxResourceStringsPT, IgxResourceStringsRO, IgxResourceStringsSV, IgxResourceStringsTR, IgxResourceStringsZHHANS, IgxResourceStringsZHHANT } from 'igniteui-angular-i18n';
 
 // force-create icon service, TODO: move to initializer or register/define mechanic to avoid side-effect?
 const _iconBroadcast: IgxIconBroadcastService = injector.get(IgxIconBroadcastService);
@@ -95,6 +97,26 @@ const IgcGridToolbarExporterComponent = withRegister(toolbarExport, () => { regi
 const toolbarFilter = createIgxCustomElement(IgxGridToolbarAdvancedFilteringComponent, { injector, registerConfig });
 const IgcGridToolbarAdvancedFilteringComponent = withRegister(toolbarFilter, () => { registerComponent(IgcGridToolbarAdvancedFilteringComponent) });
 
+const ResourceStringsBG = createGenericLocaleObject(IgxResourceStringsBG);
+const ResourceStringsCS = createGenericLocaleObject(IgxResourceStringsCS);
+const ResourceStringsDA = createGenericLocaleObject(IgxResourceStringsDA);
+const ResourceStringsDE = createGenericLocaleObject(IgxResourceStringsDE);
+const ResourceStringsES = createGenericLocaleObject(IgxResourceStringsES);
+const ResourceStringsFR = createGenericLocaleObject(IgxResourceStringsFR);
+const ResourceStringsHU = createGenericLocaleObject(IgxResourceStringsHU);
+const ResourceStringsIT = createGenericLocaleObject(IgxResourceStringsIT);
+const ResourceStringsJA = createGenericLocaleObject(IgxResourceStringsJA);
+const ResourceStringsKO = createGenericLocaleObject(IgxResourceStringsKO);
+const ResourceStringsNB = createGenericLocaleObject(IgxResourceStringsNB);
+const ResourceStringsNL = createGenericLocaleObject(IgxResourceStringsNL);
+const ResourceStringsPL = createGenericLocaleObject(IgxResourceStringsPL);
+const ResourceStringsPT = createGenericLocaleObject(IgxResourceStringsPT);
+const ResourceStringsRO = createGenericLocaleObject(IgxResourceStringsRO);
+const ResourceStringsSV = createGenericLocaleObject(IgxResourceStringsSV);
+const ResourceStringsTR = createGenericLocaleObject(IgxResourceStringsTR);
+const ResourceStringsZHHANS = createGenericLocaleObject(IgxResourceStringsZHHANS);
+const ResourceStringsZHHANT = createGenericLocaleObject(IgxResourceStringsZHHANT);
+
 export {
     IgcGridComponent,
     IgcTreeGridComponent,
@@ -117,6 +139,26 @@ export {
     IgcGridToolbarPinningComponent,
     IgcGridToolbarExporterComponent,
     IgcGridToolbarAdvancedFilteringComponent,
+
+    ResourceStringsBG,
+    ResourceStringsCS,
+    ResourceStringsDA,
+    ResourceStringsDE,
+    ResourceStringsES,
+    ResourceStringsFR,
+    ResourceStringsHU,
+    ResourceStringsIT,
+    ResourceStringsJA,
+    ResourceStringsKO,
+    ResourceStringsNB,
+    ResourceStringsNL,
+    ResourceStringsPL,
+    ResourceStringsPT,
+    ResourceStringsRO,
+    ResourceStringsSV,
+    ResourceStringsTR,
+    ResourceStringsZHHANS,
+    ResourceStringsZHHANT,
 }
 
 // TODO: Custom elements JSON as well

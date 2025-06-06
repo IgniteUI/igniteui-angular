@@ -12,7 +12,12 @@ import { IgxPivotDateDimension } from 'projects/igniteui-angular/src/lib/grids/p
 import { PivotDimensionType } from 'projects/igniteui-angular/src/lib/grids/pivot-grid/pivot-grid.interface';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxTimeSummaryOperand } from 'projects/igniteui-angular/src/lib/grids/summaries/grid-summary';
 import { HorizontalAlignment, VerticalAlignment } from 'projects/igniteui-angular/src/lib/services/overlay/utilities';
-import { GridResourceStringsBG, GridResourceStringsCS, GridResourceStringsDA, GridResourceStringsDE, GridResourceStringsES, GridResourceStringsFR, GridResourceStringsHU, GridResourceStringsIT, GridResourceStringsJA, GridResourceStringsKO, GridResourceStringsNB, GridResourceStringsNL, GridResourceStringsPL, GridResourceStringsPT, GridResourceStringsRO, GridResourceStringsSV, GridResourceStringsTR, GridResourceStringsZHHANS, GridResourceStringsZHHANT } from 'igniteui-angular-i18n';
+import {
+    GridResourceStringsBG, GridResourceStringsCS, GridResourceStringsDA, GridResourceStringsDE, GridResourceStringsES, GridResourceStringsFR, GridResourceStringsHU, GridResourceStringsIT, GridResourceStringsJA, GridResourceStringsKO, GridResourceStringsNB, GridResourceStringsNL, GridResourceStringsPL, GridResourceStringsPT, GridResourceStringsRO, GridResourceStringsSV, GridResourceStringsTR, GridResourceStringsZHHANS, GridResourceStringsZHHANT,
+    IgxResourceStringsBG,
+    PaginatorResourceStringsBG, PaginatorResourceStringsCS, PaginatorResourceStringsDA, PaginatorResourceStringsDE, PaginatorResourceStringsES, PaginatorResourceStringsFR, PaginatorResourceStringsHU, PaginatorResourceStringsIT, PaginatorResourceStringsJA, PaginatorResourceStringsKO, PaginatorResourceStringsNB, PaginatorResourceStringsNL, PaginatorResourceStringsPL, PaginatorResourceStringsPT, PaginatorResourceStringsRO, PaginatorResourceStringsSV, PaginatorResourceStringsTR, PaginatorResourceStringsZHHANS, PaginatorResourceStringsZHHANT
+} from 'igniteui-angular-i18n';
+import { addGridResourceStrings, changeGridsI18n, createGenericLocaleObject, GridLocalizationConfig, GridLocalizationStrings, registerGridLocale } from './lib/locale';
 
 /** Export Public API, TODO: reorganize, Generate all w/ renames? */
 export {
@@ -55,7 +60,13 @@ export {
     HorizontalAlignment,
     VerticalAlignment,
 
-    //Localization strings
+    changeGridsI18n,
+    addGridResourceStrings,
+    registerGridLocale,
+    GridLocalizationStrings,
+    GridLocalizationConfig,
+
+    //Grid Localization strings
     GridResourceStringsBG,
     GridResourceStringsCS,
     GridResourceStringsDA,
@@ -75,4 +86,25 @@ export {
     GridResourceStringsTR,
     GridResourceStringsZHHANS,
     GridResourceStringsZHHANT,
+
+    //Paginator Localization strings
+    PaginatorResourceStringsBG,
+    PaginatorResourceStringsCS,
+    PaginatorResourceStringsDA,
+    PaginatorResourceStringsDE,
+    PaginatorResourceStringsES,
+    PaginatorResourceStringsFR,
+    PaginatorResourceStringsHU,
+    PaginatorResourceStringsIT,
+    PaginatorResourceStringsJA,
+    PaginatorResourceStringsKO,
+    PaginatorResourceStringsNB,
+    PaginatorResourceStringsNL,
+    PaginatorResourceStringsPL,
+    PaginatorResourceStringsPT,
+    PaginatorResourceStringsRO,
+    PaginatorResourceStringsSV,
+    PaginatorResourceStringsTR,
+    PaginatorResourceStringsZHHANS,
+    PaginatorResourceStringsZHHANT,
 }
