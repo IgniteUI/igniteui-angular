@@ -2521,4 +2521,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             this.regroupTrigger++;
         }
     }
+
+    protected override getUnpinnedWidth(takeHidden = false) {
+            return this.isPercentWidth ?
+            this.calcWidth :
+            super.getUnpinnedWidth(takeHidden);
+    }
 }
