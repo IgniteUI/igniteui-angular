@@ -349,6 +349,10 @@ export class Util {
             return connectedFit.horizontalOffset;
         }
 
+        if (settings.offset == null) {
+            return 0;
+        }
+
         if (
             settings.horizontalDirection === HorizontalAlignment.Left &&
             settings.horizontalStartPoint === HorizontalAlignment.Left
@@ -371,6 +375,10 @@ export class Util {
     public static getVerticalOffset(connectedFit: ConnectedFit, settings: PositionSettings): number {
         if (connectedFit.verticalOffset != null) {
             return connectedFit.verticalOffset;
+        }
+
+        if (settings.offset == null) {
+            return 0;
         }
 
         if (

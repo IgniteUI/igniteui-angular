@@ -27,8 +27,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     verticalStartPoint: VerticalAlignment.Bottom,
     openAnimation: scaleInVerTop,
     closeAnimation: scaleOutVerTop,
-    minSize: { width: 0, height: 0 },
-    offset: 0
+    minSize: { width: 0, height: 0 }
   };
 
   constructor(settings?: PositionSettings) {
