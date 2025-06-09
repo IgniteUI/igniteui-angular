@@ -46,6 +46,7 @@ export interface IGridStateInfo {
 @Component({
     selector: 'igx-grid-state',
     template: ``,
+    styles: `:host { display: none }`,
     standalone: true
 })
 export class IgxGridStateComponent extends IgxGridStateBaseDirective {

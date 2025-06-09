@@ -2,7 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 20.0.0
+## 20.1.0
 ### General
 - `IgxTooltipTarget`
     - **Behavioral Changes**
@@ -11,10 +11,18 @@ All notable changes for each version of this project will be documented in this 
         - The `showTooltip` and `hideTooltip` methods do not take `showDelay`/`hideDelay` into account.
 
 ### New Features
+
+- `IgxOverlay`
+    - Position Settings now accept a new optional `placement` input property of type `Placement`. Controls where to place the element relative to the target element. Supported values are `top`, `top-start`, `top-end`, `bottom`, `bottom-start`, `bottom-end`, `right`, `right-start`, `right-end`, `left`, `left-start`, `left-end`.
+
+    _Note:_ `horizontalDirection`, `horizontalStartPoint`, `verticalDirection`, and `verticalStartPoint` has priority.
+
+    - Position Settings now accept a new optional `offset` input property of type `number`. Used to set the offset of the element from the target in pixels when shown in connected, elastic, or auto position strategy.
+
 - `IgxTooltip`
     - The tooltip now remains open while interacting with it.
 - `IgxTooltipTarget`
-    - Introduced a new `hasArrow` input property. Controls whether to display an arrow indicator for the tooltip. Defaults to `false`.
+    - Introduced a new `positionSettings` input property. Controls the position and animation settings used by the tooltip.
     - Introduced a new `sticky` input property. When set to `true`, the tooltip renders a default close icon `x`. The tooltip remains visible until the user closes it via the close icon `x` or `Esc` key. Defaults to `false`.
     - Introduced a new `closeButtonTemplate` input property that allows templating the default close icon `x`.
     ```html
@@ -26,16 +34,85 @@ All notable changes for each version of this project will be documented in this 
     </ng-template>
     ```
 
-    - Introduced a new `placement` input property of type `TooltipPlacement`. Controls where to place the tooltip relative to the target element. Default value is `bottom`. Supported values are `top`, `top-start`, `top-end`, `bottom`, `bottom-start`, `bottom-end`, `right`, `right-start`, `right-end`, `left`, `left-start`, `left-end`.
+    - Introduced a new `hasArrow` input property. Controls whether to display an arrow indicator for the tooltip. Defaults to `false`.
 
-    _Note:_ Positioning the arrow is based on the `placement` property. If `hasArrow` is set to `true`, changing the `placement` property will change the arrow position as well.
+    _Note:_ The arrow's position takes `positionSettings.placement` property into account. If `hasArrow` is set to `true`, changing the `placement` property will change the arrow position as well.
     ```html
-    <igx-icon [igxTooltipTarget]="tooltipRef" [placement]="'top-start'">info</igx-icon>
+    <igx-icon [igxTooltipTarget]="tooltipRef" [hasArrow]="true" [positionSettings]="settings">info</igx-icon>
     <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
     ```
-    - Introduced a new `offset` input property. Controls the offset of the tooltip from the target in pixels. Default value is 6.
+    ```ts
+    public settings: PositionSettings = {
+        placement: Placement.TopStart
+    }
+    ```
 
-    _Note:_ If a custom `positionStrategy` is used, the `placement` and `offset` properties (if set) will not be taken into account and the arrow (if enabled) will not be displayed.
+    _Note:_ The tooltip uses the `TooltipPositionStrategy` to position the tooltip and arrow element. If a custom position strategy is used (`overlaySettings.positionStrategy`) and `hasArrow` is set to `true`, the custom strategy should implement the `ITooltipPositionStrategy` interface that exposes the `positionArrow(arrow: HTMLElement, arrowFit: ArrowFit)` method. Otherwise, the arrow will not be displayed.
+
+    _Note:_ The arrow element is positioned based on the `positionSettings.placement` property. If `horizontalDirection`, `horizontalStartPoint`, `verticalDirection`, and `verticalStartPoint` are used and the direction and starting point do not correspond to any of the predefined placement values, the arrow is positioned based on `Placement.Bottom` (top middle side of the tooltip).
+    
+    The arrow can be positioned via a custom position strategy that implements the `positionArrow(arrow: HTMLElement, arrowFit: ArrowFit)` method.
+
+    For example:
+
+    ```ts
+    export class CustomStrategy extends ConnectedPositioningStrategy implements ITooltipPositionStrategy {
+        constructor(settings?: PositionSettings) {
+            super(settings);
+        }
+
+        public positionArrow(arrow: HTMLElement, arrowFit: ArrowFit): void {
+            Object.assign(arrow.style, {
+                left: '-0.25rem',
+                transform: 'rotate(-45deg)',
+                [arrowFit.direction]: '-0.25rem',
+            });
+        }
+    }
+
+    public overlaySettings: OverlaySettings = {
+        positionStrategy: new CustomStrategy({
+            offset: 4,
+            horizontalDirection: HorizontalAlignment.Right,
+            horizontalStartPoint: HorizontalAlignment.Right,
+            verticalDirection: VerticalAlignment.Bottom,
+            verticalStartPoint: VerticalAlignment.Bottom,
+        })
+    };
+    ```
+
+    ```html
+    <igx-icon [igxTooltipTarget]="tooltipRef" [hasArrow]="true" [overlaySettings]="overlaySettings">info</igx-icon>
+    <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+    ```
+
+## 20.0.0
+
+### General
+- **Angular 20 Compatibility** - Ignite UI for Angular now plays nice with Angular 20! Upgrade your apps and enjoy the latest features.
+- `IgxActionStrip`
+    - **Behavioral Changes** - When using the Action Strip standalone, outside of Grid, scenarios the component is no longer initially visible and the `hidden` property now defaults to `true`.
+- `IgxChip`
+    - **Behavioral Change** The `variant` is now strictly typed with the union of supported options and no longer accepts invalid values for the default state, provide no value (nullish) instead is needed.
+
+### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
+  - Added a new `igxGridEmpty` template directive that allows assigning the `emptyGridTemplate` declaratively, without the need to get and assign reference, like other grid templates like:
+    ```html
+    <igx-grid>
+      <ng-template igxGridEmpty>
+        <!-- content to show when the grid is empty -->
+      </ng-template>
+    </igx-grid>
+    ```
+  - Added a new `igxGridLoading` template directive that allows assigning the `loadingGridTemplate` declaratively, without the need to get and assign reference, like other grid templates like:
+    ```html
+    <igx-grid>
+      <ng-template igxGridLoading>
+        <!-- content to show when the grid is loading -->
+      </ng-template>
+    </igx-grid>
+    ```
 
 ## 19.2.0
 
