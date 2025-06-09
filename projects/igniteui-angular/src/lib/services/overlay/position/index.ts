@@ -1,6 +1,7 @@
 
 // Export position strategies
 export * from './IPositionStrategy';
+export * from './ITooltipPositionStrategy';
 export * from './global-position-strategy';
 export * from './container-position-strategy';
 export * from './connected-positioning-strategy';

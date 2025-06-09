@@ -38,7 +38,7 @@ export class TooltipPositionStrategy extends AutoPositionStrategy implements ITo
             settings = Object.assign({}, positionSettings, settings);
         }
 
-        super(settings);
+        super(settings || positionSettings);
     }
 
     /**

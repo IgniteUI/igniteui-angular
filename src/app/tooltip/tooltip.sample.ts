@@ -17,7 +17,10 @@ import {
     IgxSliderComponent,
     IgxSwitchComponent,
     IgxTooltipDirective,
-    IgxTooltipTargetDirective, OverlaySettings
+    IgxTooltipTargetDirective,
+    ISelectionEventArgs,
+    OverlaySettings,
+    Placement,
 } from 'igniteui-angular';
 
 @Component({
@@ -59,6 +62,10 @@ export class TooltipSampleComponent implements OnInit {
     }
 
     public ngOnInit() {
+        this.tooltipTarget.positionSettings = {
+            placement: Placement.Bottom,
+        };
+
         this.data = [
             {
                 Brand: 'Samsung',
@@ -127,9 +134,11 @@ export class TooltipSampleComponent implements OnInit {
         this.tooltipTarget.hideTooltip();
     }
 
-    public showing() {
-    }
+    public setPlacement(args: ISelectionEventArgs) {
+        const placement: Placement = args.newSelection.value;
 
-    public hiding() {
+        this.tooltipTarget.positionSettings = {
+            placement: placement,
+        };
     }
 }

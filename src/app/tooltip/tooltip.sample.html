@@ -3,14 +3,15 @@
     <igx-avatar src="assets/images/avatar/10.jpg" size="medium"
         #target="tooltipTarget"
         [igxTooltipTarget]="positionTooltip"
+        [hasArrow]="true"
     >
     </igx-avatar>
 
     <div #positionTooltip="tooltip" igxTooltip>
-        Tooltip placement is {{ target.placement }}
+        Tooltip placement is {{ target.positionSettings?.placement }}
     </div>
 
-    <igx-select [(ngModel)]="target.placement">
+    <igx-select (selectionChanging)="setPlacement($event)" [value]="target.positionSettings?.placement">
         @for (placement of placementPositions; track placement) {
             <igx-select-item [value]="placement">
                 {{placement}}
@@ -27,8 +28,6 @@
                     [closeButtonTemplate]="customClose"
                     [overlaySettings]="settings"
                     src="assets/images/avatar/10.jpg" size="medium"
-                    (onTooltipShow)="showing()"
-                    (onTooltipHide)="hiding()"
                     aria-describedby="myid">
         </igx-avatar>
 
