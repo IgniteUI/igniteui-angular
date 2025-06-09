@@ -130,6 +130,8 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
         this.toolbar.showProgress = true;
 
         if (args.cancel) {
+            this.isExporting = false;
+            this.toolbar.showProgress = false;
             return;
         }
 
