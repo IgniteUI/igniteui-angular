@@ -24,7 +24,7 @@ import { ISortingExpression, SortingDirection } from '../../data-operations/sort
 import { GRID_SCROLL_CLASS } from '../../test-utils/grid-functions.spec';
 import { AsyncPipe } from '@angular/common';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../../paginator/paginator.component';
-import { IGridRowEventArgs, IgxColumnGroupComponent, IgxGridFooterComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
+import { IGridRowEventArgs, IgxColumnGroupComponent, IgxGridEmptyTemplateDirective, IgxGridFooterComponent, IgxGridLoadingTemplateDirective, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
 import { getComponentSize } from '../../core/utils';
 import { setElementSize, ymd } from '../../test-utils/helper-utils.spec';
 
@@ -580,9 +580,9 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
         }));
 
-        it('should allow applying custom loading indicator', fakeAsync(() => {
+        it('should allow applying custom empty and loading indicator', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridRemoteOnDemandComponent);
-            fixture.componentInstance.instance.loadingGridTemplate = fixture.componentInstance.customTemplate;
+            fixture.componentInstance.customLoading = true;
             fixture.detectChanges();
             tick(16);
 
@@ -590,6 +590,18 @@ describe('IgxGrid Component Tests #grid', () => {
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
             const gridHead = fixture.debugElement.query(By.css(THEAD_CLASS));
 
+            grid.isLoading = false;
+            tick();
+            fixture.detectChanges();
+            expect(gridBody.nativeElement.textContent).toEqual('No Data 😢');
+            grid.isLoading = true;
+            tick();
+            fixture.detectChanges();
+            expect(gridBody.nativeElement.textContent).toEqual('Loading 🔃');
+
+            grid.loadingGridTemplate = fixture.componentInstance.customTemplate;
+            grid.markForCheck();
+            fixture.detectChanges();
             expect(gridBody.nativeElement.textContent).toEqual('Loading...');
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
@@ -3612,6 +3624,10 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
 @Component({
     template: `
         <igx-grid [data]="data | async" (dataPreLoad)="dataLoading($event)" [isLoading]="true" [autoGenerate]="true" [height]="'600px'">
+            <span *igxGridEmpty>No Data 😢</span>
+            @if (customLoading) {
+                <ng-template igxGridLoading>Loading 🔃</ng-template>
+            }
         </igx-grid>
 
         <ng-template #customTemplate>
@@ -3619,7 +3635,7 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
         </ng-template>
     `,
     providers: [LocalService],
-    imports: [IgxGridComponent, AsyncPipe]
+    imports: [IgxGridComponent, IgxGridEmptyTemplateDirective, IgxGridLoadingTemplateDirective, AsyncPipe]
 })
 export class IgxGridRemoteOnDemandComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3627,6 +3643,7 @@ export class IgxGridRemoteOnDemandComponent {
     @ViewChild('customTemplate', { read: TemplateRef, static: true })
     public customTemplate: TemplateRef<any>;
     public data;
+    public customLoading = false;
     constructor(private localService: LocalService, public cdr: ChangeDetectorRef) { }
 
     public bind() {
