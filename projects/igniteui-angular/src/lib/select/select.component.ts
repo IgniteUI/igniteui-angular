@@ -21,9 +21,10 @@ import {
     Output,
     QueryList,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    DOCUMENT
 } from '@angular/core';
-import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

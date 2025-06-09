@@ -583,10 +583,12 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         it('should autosize column with % width programmatically.', fakeAsync(() => {
             grid.height = null;
             fixture.detectChanges();
-            expect(grid.columnList.get(0).width).toBe('25%');
-            grid.columnList.get(0).autosize();
+            const col = grid.columnList.get(0);
+            expect(col.width).toBe('25%');
+            col.autosize();
             fixture.detectChanges();
-            expect(grid.columnList.get(0).width).toBe('32%');
+            const calcPercent = (col.getHeaderCellWidths().width + col.getHeaderCellWidths().padding) / grid.calcWidth * 100;
+            expect(grid.columnList.get(0).width).toBe(calcPercent + '%');
         }));
 
         it('should autosize column with % width on double click.', fakeAsync(() => {
@@ -598,7 +600,9 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             UIInteractions.simulateMouseEvent('dblclick', headerResArea, 0, 0);
             tick(200);
             fixture.detectChanges();
-            expect(grid.columnList.get(0).width).toBe('32%');
+            const col = grid.columnList.get(0);
+            const calcPercent = (col.getHeaderCellWidths().width + col.getHeaderCellWidths().padding) / grid.calcWidth * 100;
+            expect(col.width).toBe(calcPercent + '%');
         }));
     });
 

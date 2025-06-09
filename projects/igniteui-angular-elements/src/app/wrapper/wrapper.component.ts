@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, QueryList, TemplateRef, ViewChildren } fr
 import { Subject } from 'rxjs';
 import { TemplateRefWrapper } from './template-ref-wrapper';
 
-import { render, type RootPart, type TemplateResult } from 'lit-html';
+import { render, type RootPart, type TemplateResult } from 'lit';
 
 type TemplateFunction = (arg: any) => TemplateResult;
 

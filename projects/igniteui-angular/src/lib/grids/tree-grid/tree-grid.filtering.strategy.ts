@@ -1,11 +1,11 @@
-import { parseDate, resolveNestedPath } from '../../core/utils';
+import { columnFieldPath, parseDate, resolveNestedPath } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
-import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { BaseFilteringStrategy, IgxFilterItem } from '../../data-operations/filtering-strategy';
+import { FilteringExpressionsTree, type IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { BaseFilteringStrategy, type IgxFilterItem } from '../../data-operations/filtering-strategy';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { ColumnType, GridType } from '../common/grid.interface';
-import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { ITreeGridRecord } from './tree-grid.interfaces';
+import type { ColumnType, GridType } from '../common/grid.interface';
+import type { IgxTreeGridAPIService } from './tree-grid-api.service';
+import type { ITreeGridRecord } from './tree-grid.interfaces';
 
 export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
 
@@ -23,7 +23,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
         const hierarchicalRecord = rec as ITreeGridRecord;
         let value = this.isHierarchicalFilterField(fieldName) ?
             this.getHierarchicalFieldValue(hierarchicalRecord, fieldName) :
-            resolveNestedPath(hierarchicalRecord.data, fieldName);
+            resolveNestedPath(hierarchicalRecord.data, columnFieldPath(fieldName));
 
         value = column?.formatter && this.shouldFormatFilterValues(column) ?
             column.formatter(value, rec.data) :
@@ -33,7 +33,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
     }
 
     private getHierarchicalFieldValue(record: ITreeGridRecord, field: string) {
-        const value = resolveNestedPath(record.data, field);
+        const value = resolveNestedPath(record.data, columnFieldPath(field));
 
         return record.parent ?
             `${this.getHierarchicalFieldValue(record.parent, field)}${value ? `.[${value}]` : ''}` :
@@ -91,8 +91,9 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
     }
 
     private getHierarchicalFilterItems(records: ITreeGridRecord[], column: ColumnType, parent?: IgxFilterItem): IgxFilterItem[] {
+        const pathParts = columnFieldPath(column.field);
         return records?.map(record => {
-            let value = resolveNestedPath(record.data, column.field);
+            let value = resolveNestedPath(record.data, pathParts);
             const applyFormatter = column.formatter && this.shouldFormatFilterValues(column);
 
             value = applyFormatter ?

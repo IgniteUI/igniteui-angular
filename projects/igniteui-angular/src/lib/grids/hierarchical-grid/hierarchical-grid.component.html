@@ -233,8 +233,8 @@
     <div class="igx-banner__message">
         <span class="igx-banner__text">
             <ng-container
-                *ngTemplateOutlet="this.crudService.row?.getClassName() === 'IgxAddRow' ? rowAddTextTemplate : resolveRowEditText || defaultRowEditText;
-                context: { $implicit: this.crudService.row?.getClassName() !== 'IgxAddRow' ? rowChangesCount : null }">
+                *ngTemplateOutlet="this.crudService.row?.isAddRow ? rowAddTextTemplate : resolveRowEditText || defaultRowEditText;
+                context: { $implicit: !this.crudService.row?.isAddRow ? rowChangesCount : null }">
             </ng-container>
         </span>
     </div>
@@ -257,9 +257,8 @@
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
 @if (platform.isElements) {
-    <div #sink style="display: none;">
-        <ng-content select="igx-grid-state,igc-grid-state"></ng-content>
-        <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group,igx-action-strip,igc-action-strip"></ng-content>
-        <ng-content select="igx-row-island,igc-row-island"></ng-content>
-    </div>
+    <div #sink style="display: none;"></div>
+    <ng-content select="igx-grid-state,igc-grid-state"></ng-content>
+    <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group,igx-action-strip,igc-action-strip"></ng-content>
+    <ng-content select="igx-row-island,igc-row-island"></ng-content>
 }
