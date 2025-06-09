@@ -1,4 +1,4 @@
-import { IPositionStrategy } from 'igniteui-angular';
+import { IPositionStrategy } from './IPositionStrategy';
 import { ArrowFit } from '../utilities';
 
 /**
