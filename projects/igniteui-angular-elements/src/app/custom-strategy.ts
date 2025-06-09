@@ -61,14 +61,6 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         return this._configSelectors;
     }
 
-    private _configSelectors: string;
-    public get configSelectors(): string {
-        if (!this._configSelectors) {
-            this._configSelectors = this.config.map(x => x.selector).join(',');
-        }
-        return this._configSelectors;
-    }
-
     constructor(private _componentFactory: ComponentFactory<any>, private _injector: Injector, private config: ComponentConfig[]) {
         super(_componentFactory, _injector);
     }
