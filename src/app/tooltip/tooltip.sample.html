@@ -1,25 +1,3 @@
-<div class="custom-container">
-    <h5 style="margin-top: 0px;">Tooltip Placement</h5>
-    <igx-avatar src="assets/images/avatar/10.jpg" size="medium"
-        #target="tooltipTarget"
-        [igxTooltipTarget]="positionTooltip"
-        [hasArrow]="true"
-    >
-    </igx-avatar>
-
-    <div #positionTooltip="tooltip" igxTooltip>
-        Tooltip placement is {{ target.positionSettings?.placement }}
-    </div>
-
-    <igx-select (selectionChanging)="setPlacement($event)" [value]="target.positionSettings?.placement">
-        @for (placement of placementPositions; track placement) {
-            <igx-select-item [value]="placement">
-                {{placement}}
-            </igx-select-item>
-        }
-    </igx-select>
-</div>
-
 <div class="column-container">
     <article class="column">
         <h4 class="sample-title">Simple tooltip</h4>

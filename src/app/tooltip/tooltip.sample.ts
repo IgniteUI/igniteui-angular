@@ -12,22 +12,18 @@ import {
     IgxIconButtonDirective,
     IgxIconComponent,
     IgxRippleDirective,
-    IgxSelectComponent,
-    IgxSelectItemComponent,
     IgxSliderComponent,
     IgxSwitchComponent,
     IgxTooltipDirective,
     IgxTooltipTargetDirective,
-    ISelectionEventArgs,
     OverlaySettings,
-    Placement,
 } from 'igniteui-angular';
 
 @Component({
     selector: 'app-tooltip-sample',
     styleUrls: ['tooltip.sample.css'],
     templateUrl: 'tooltip.sample.html',
-    imports: [IgxAvatarComponent, IgxTooltipTargetDirective, IgxTooltipDirective, IgxIconComponent, IgxIconButtonDirective, IgxSwitchComponent, FormsModule, IgxSliderComponent, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardActionsComponent, IgxRippleDirective, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxSelectComponent, IgxSelectItemComponent]
+    imports: [IgxAvatarComponent, IgxTooltipTargetDirective, IgxTooltipDirective, IgxIconComponent, IgxIconButtonDirective, IgxSwitchComponent, FormsModule, IgxSliderComponent, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardActionsComponent, IgxRippleDirective, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class TooltipSampleComponent implements OnInit {
 
@@ -41,31 +37,12 @@ export class TooltipSampleComponent implements OnInit {
         // modal: false
     };
 
-    public placementPositions = [
-        'top',
-        'top-start',
-        'top-end',
-        'bottom',
-        'bottom-start',
-        'bottom-end',
-        'right',
-        'right-start',
-        'right-end',
-        'left',
-        'left-start',
-        'left-end',
-    ];
-
     public data: any[];
 
     constructor() {
     }
 
     public ngOnInit() {
-        this.tooltipTarget.positionSettings = {
-            placement: Placement.Bottom,
-        };
-
         this.data = [
             {
                 Brand: 'Samsung',
@@ -132,13 +109,5 @@ export class TooltipSampleComponent implements OnInit {
 
     public hideTooltip() {
         this.tooltipTarget.hideTooltip();
-    }
-
-    public setPlacement(args: ISelectionEventArgs) {
-        const placement: Placement = args.newSelection.value;
-
-        this.tooltipTarget.positionSettings = {
-            placement: placement,
-        };
     }
 }

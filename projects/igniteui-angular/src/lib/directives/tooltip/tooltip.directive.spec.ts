@@ -4,27 +4,15 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent, IgxTooltipWithCloseButtonComponent } from '../../test-utils/tooltip-components.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy, Placement } from '../../services/public_api';
+import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../services/public_api';
 import { IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipTargetDirective } from './tooltip-target.directive';
+import { Placement, PositionsMap } from './tooltip.common';
 
 const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip';
 const HIDE_DELAY = 180;
-const PLACEMENTS: Placement[] = [
-    Placement.Top,
-    Placement.TopStart,
-    Placement.TopEnd,
-    Placement.Bottom,
-    Placement.BottomStart,
-    Placement.BottomEnd,
-    Placement.Left,
-    Placement.LeftStart,
-    Placement.LeftEnd,
-    Placement.Right,
-    Placement.RightStart,
-    Placement.RightEnd,
-];
+const TOOLTIP_ARROW_SELECTOR = 'div[data-arrow="true"]';
 
 describe('IgxTooltip', () => {
     let fix: ComponentFixture<any>;
@@ -104,14 +92,13 @@ describe('IgxTooltip', () => {
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
-            const arrow = tooltipNativeElement.querySelector('.igx-tooltip--bottom') as HTMLElement;
+            const arrow = tooltipNativeElement.querySelector(TOOLTIP_ARROW_SELECTOR) as HTMLElement;
             expect(arrow).not.toBeNull();
             expect(arrow.style.display).toEqual("none");
         }));
 
         it('should show/hide the arrow via the `hasArrow` property', fakeAsync(() => {
             expect(tooltipTarget.hasArrow).toBeFalse();
-            expect(tooltipNativeElement.querySelector('.igx-tooltip--bottom')).toBeNull();
 
             tooltipTarget.hasArrow = true;
             fix.detectChanges();
@@ -122,7 +109,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
             expect(tooltipTarget.hasArrow).toBeTrue();
-            const arrow = tooltipNativeElement.querySelector('.igx-tooltip--bottom') as HTMLElement;
+            const arrow = tooltipNativeElement.querySelector(TOOLTIP_ARROW_SELECTOR) as HTMLElement;
             expect(arrow.style.display).toEqual("");
 
             tooltipTarget.hasArrow = false;
@@ -800,7 +787,7 @@ describe('IgxTooltip', () => {
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, targetOne, true);
-            let arrow = tooltipNativeElement.querySelector('.igx-tooltip--bottom') as HTMLElement;
+            let arrow = tooltipNativeElement.querySelector(TOOLTIP_ARROW_SELECTOR) as HTMLElement;
             expect(arrow.style.display).toEqual('');
 
             unhoverElement(buttonOne);
@@ -809,7 +796,7 @@ describe('IgxTooltip', () => {
             hoverElement(buttonTwo);
             flush();
 
-            arrow = tooltipNativeElement.querySelector('.igx-tooltip--bottom') as HTMLElement;
+            arrow = tooltipNativeElement.querySelector(TOOLTIP_ARROW_SELECTOR) as HTMLElement;
             verifyTooltipVisibility(tooltipNativeElement, targetTwo, true);
             expect(arrow.style.display).toEqual('none');
         }));
@@ -965,29 +952,10 @@ describe('IgxTooltip', () => {
             UIInteractions.clearOverlay();
         });
 
-
-        for (const placement of PLACEMENTS) {
-            it(`should correctly position tooltip for placement="${placement}"`, fakeAsync(() => {
-                tooltipTarget.positionSettings = {
-                    placement: placement
-                };
-                fix.detectChanges();
-
-                hoverElement(button);
-                flush();
-
-                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
-                verifyTooltipPosition(tooltipNativeElement, button, true, placement);
-
-                unhoverElement(button);
-                flush();
-            }));
-        }
-
         it('should respect custom positive offset', fakeAsync(() => {
             const customOffset = 20;
             tooltipTarget.positionSettings = {
-                placement: Placement.Bottom,
+                ...PositionsMap.get(Placement.Bottom),
                 offset: customOffset
             };
             fix.detectChanges();
@@ -1002,7 +970,7 @@ describe('IgxTooltip', () => {
         it('should respect custom negative offset', fakeAsync(() => {
             const customOffset = -10;
             tooltipTarget.positionSettings = {
-                placement: Placement.Right,
+                ...PositionsMap.get(Placement.Right),
                 offset: customOffset
             };
             fix.detectChanges();
@@ -1016,7 +984,7 @@ describe('IgxTooltip', () => {
 
         it('should correctly position arrow based on tooltip placement', fakeAsync(() => {
             tooltipTarget.positionSettings = {
-                placement: Placement.BottomStart,
+                ...PositionsMap.get(Placement.BottomStart),
             };
             fix.detectChanges();
 
@@ -1026,7 +994,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
             verifyTooltipPosition(tooltipNativeElement, button, true, Placement.BottomStart);
 
-            const arrow = tooltipNativeElement.querySelector('.igx-tooltip--bottom') as HTMLElement;
+            const arrow = tooltipNativeElement.querySelector(TOOLTIP_ARROW_SELECTOR) as HTMLElement;
             expect(arrow).not.toBeNull();
             expect(arrow.style.left).toBe("");
         }));

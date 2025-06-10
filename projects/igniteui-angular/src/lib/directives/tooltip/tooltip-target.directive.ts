@@ -13,7 +13,7 @@ import { IgxToggleActionDirective } from '../toggle/toggle.directive';
 import { IgxTooltipComponent } from './tooltip.component';
 import { IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipCloseButtonComponent } from './tooltip-close-button.component';
-import { TooltipPositionStrategy } from './tooltip.common';
+import { TooltipPositionSettings, TooltipPositionStrategy } from './tooltip.common';
 
 export interface ITooltipShowEventArgs extends IBaseEventArgs {
     target: IgxTooltipTargetDirective;
@@ -329,7 +329,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     private _closeButtonRef?: ComponentRef<IgxTooltipCloseButtonComponent>;
     private _closeTemplate: TemplateRef<any>;
     private _sticky = false;
-    private _positionSettings: PositionSettings;
+    private _positionSettings: PositionSettings = TooltipPositionSettings;
 
     constructor(
         private _element: ElementRef,

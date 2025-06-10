@@ -31,12 +31,6 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
   };
 
   constructor(settings?: PositionSettings) {
-
-    if (Util.canUsePlacement(settings)) {
-        const placementPositionSettings = Util.getPositionSettingsByPlacement(settings.placement);
-        settings = Object.assign({}, settings, placementPositionSettings);
-    }
-
     this.settings = Object.assign({}, this._defaultSettings, settings);
   }
 

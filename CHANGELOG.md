@@ -13,11 +13,7 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 
 - `IgxOverlay`
-    - Position Settings now accept a new optional `placement` input property of type `Placement`. Controls where to place the element relative to the target element. Supported values are `top`, `top-start`, `top-end`, `bottom`, `bottom-start`, `bottom-end`, `right`, `right-start`, `right-end`, `left`, `left-start`, `left-end`.
-
-    _Note:_ `horizontalDirection`, `horizontalStartPoint`, `verticalDirection`, and `verticalStartPoint` has priority.
-
-    - Position Settings now accept a new optional `offset` input property of type `number`. Used to set the offset of the element from the target in pixels when shown in connected, elastic, or auto position strategy.
+    - Position Settings now accept a new optional `offset` input property of type `number`. Used to set the offset of the element from the target in pixels.
 
 - `IgxTooltip`
     - The tooltip now remains open while interacting with it.
@@ -36,32 +32,39 @@ All notable changes for each version of this project will be documented in this 
 
     - Introduced a new `hasArrow` input property. Controls whether to display an arrow indicator for the tooltip. Defaults to `false`.
 
-    _Note:_ The arrow's position takes `positionSettings.placement` property into account. If `hasArrow` is set to `true`, changing the `placement` property will change the arrow position as well.
-    ```html
-    <igx-icon [igxTooltipTarget]="tooltipRef" [hasArrow]="true" [positionSettings]="settings">info</igx-icon>
-    <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
-    ```
-    ```ts
-    public settings: PositionSettings = {
-        placement: Placement.TopStart
-    }
-    ```
+    _Note:_ The tooltip uses the `TooltipPositionStrategy` to position the tooltip and arrow element. If a custom position strategy is used (`overlaySettings.positionStrategy`) and `hasArrow` is set to `true`, the custom strategy should extend the `TooltipPositionStrategy`. Otherwise, the arrow will not be displayed.
 
-    _Note:_ The tooltip uses the `TooltipPositionStrategy` to position the tooltip and arrow element. If a custom position strategy is used (`overlaySettings.positionStrategy`) and `hasArrow` is set to `true`, the custom strategy should implement the `ITooltipPositionStrategy` interface that exposes the `positionArrow(arrow: HTMLElement, arrowFit: ArrowFit)` method. Otherwise, the arrow will not be displayed.
+    _Note:_ The arrow element is positioned based on the provided position settings. If the directions and starting points do not correspond to any of the predefined position values, the arrow is positioned in the top middle side of the tooltip (default tooltip position `bottom`).
 
-    _Note:_ The arrow element is positioned based on the `positionSettings.placement` property. If `horizontalDirection`, `horizontalStartPoint`, `verticalDirection`, and `verticalStartPoint` are used and the direction and starting point do not correspond to any of the predefined placement values, the arrow is positioned based on `Placement.Bottom` (top middle side of the tooltip).
-    
-    The arrow can be positioned via a custom position strategy that implements the `positionArrow(arrow: HTMLElement, arrowFit: ArrowFit)` method.
+
+    | Position     | Horizontal Direction          | Horizontal Start Point         | Vertical Direction            | Vertical Start Point           |
+    |--------------|-------------------------------|--------------------------------|-------------------------------|--------------------------------|
+    | top          | HorizontalAlignment.Center    | HorizontalAlignment.Center     | VerticalAlignment.Top         | VerticalAlignment.Top          |
+    | top-start    | HorizontalAlignment.Right     | HorizontalAlignment.Left       | VerticalAlignment.Top         | VerticalAlignment.Top          |
+    | top-end      | HorizontalAlignment.Left      | HorizontalAlignment.Right      | VerticalAlignment.Top         | VerticalAlignment.Top          |
+    | bottom       | HorizontalAlignment.Center    | HorizontalAlignment.Center     | VerticalAlignment.Bottom      | VerticalAlignment.Bottom       |
+    | bottom-start | HorizontalAlignment.Right     | HorizontalAlignment.Left       | VerticalAlignment.Bottom      | VerticalAlignment.Bottom       |
+    | bottom-end   | HorizontalAlignment.Left      | HorizontalAlignment.Right      | VerticalAlignment.Bottom      | VerticalAlignment.Bottom       |
+    | right        | HorizontalAlignment.Right     | HorizontalAlignment.Right      | VerticalAlignment.Middle      | VerticalAlignment.Middle       |
+    | right-start  | HorizontalAlignment.Right     | HorizontalAlignment.Right      | VerticalAlignment.Bottom      | VerticalAlignment.Top          |
+    | right-end    | HorizontalAlignment.Right     | HorizontalAlignment.Right      | VerticalAlignment.Top         | VerticalAlignment.Bottom       |
+    | left         | HorizontalAlignment.Left      | HorizontalAlignment.Left       | VerticalAlignment.Middle      | VerticalAlignment.Middle       |
+    | left-start   | HorizontalAlignment.Left      | HorizontalAlignment.Left       | VerticalAlignment.Bottom      | VerticalAlignment.Top          |
+    | left-end     | HorizontalAlignment.Left      | HorizontalAlignment.Left       | VerticalAlignment.Top         | VerticalAlignment.Bottom       |
+
+
+
+    The arrow's position can be customized by overriding the `positionArrow(arrow: HTMLElement, arrowFit: ArrowFit)` method.
 
     For example:
 
     ```ts
-    export class CustomStrategy extends ConnectedPositioningStrategy implements ITooltipPositionStrategy {
+    export class CustomStrategy extends TooltipPositioningStrategy {
         constructor(settings?: PositionSettings) {
             super(settings);
         }
 
-        public positionArrow(arrow: HTMLElement, arrowFit: ArrowFit): void {
+        public override positionArrow(arrow: HTMLElement, arrowFit: ArrowFit): void {
             Object.assign(arrow.style, {
                 left: '-0.25rem',
                 transform: 'rotate(-45deg)',
@@ -72,7 +75,6 @@ All notable changes for each version of this project will be documented in this 
 
     public overlaySettings: OverlaySettings = {
         positionStrategy: new CustomStrategy({
-            offset: 4,
             horizontalDirection: HorizontalAlignment.Right,
             horizontalStartPoint: HorizontalAlignment.Right,
             verticalDirection: VerticalAlignment.Bottom,

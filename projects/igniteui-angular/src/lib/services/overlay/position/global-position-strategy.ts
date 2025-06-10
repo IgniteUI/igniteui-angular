@@ -1,5 +1,5 @@
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
-import { HorizontalAlignment, Placement, PositionSettings, Util, VerticalAlignment } from './../utilities';
+import { HorizontalAlignment, PositionSettings, Util, VerticalAlignment } from './../utilities';
 import { IPositionStrategy } from './IPositionStrategy';
 
 /**
@@ -23,16 +23,6 @@ export class GlobalPositionStrategy implements IPositionStrategy {
     };
 
     constructor(settings?: PositionSettings) {
-
-        if (Util.canUsePlacement(settings)) {
-            const placement = this.shouldFlip(settings.placement)
-                ? this.getOppositePlacement(settings.placement)
-                : settings.placement;
-
-            const placementPositionSettings = Util.getPositionSettingsByPlacement(placement);
-            settings = Object.assign({}, settings, placementPositionSettings);
-        }
-
         this.settings = Object.assign({}, this._defaultSettings, settings);
     }
 
@@ -92,25 +82,5 @@ export class GlobalPositionStrategy implements IPositionStrategy {
             default:
                 break;
         }
-    }
-
-    private shouldFlip(placement: Placement): boolean {
-        const endStartPositionsRegExp = /^(?:top|bottom|right|left)-(?:start|end)$/;
-        return endStartPositionsRegExp.test(placement);
-    }
-
-    private getOppositePlacement(placement: Placement): Placement {
-        const oppositePlacements: { [key: string]: string } = {
-            [Placement.TopStart]: Placement.TopEnd,
-            [Placement.TopEnd]: Placement.TopStart,
-            [Placement.BottomStart]: Placement.BottomEnd,
-            [Placement.BottomEnd]: Placement.BottomStart,
-            [Placement.LeftStart]: Placement.LeftEnd,
-            [Placement.LeftEnd]: Placement.LeftStart,
-            [Placement.RightStart]: Placement.RightEnd,
-            [Placement.RightEnd]: Placement.RightStart,
-        };
-
-        return oppositePlacements[placement] as Placement;
     }
 }

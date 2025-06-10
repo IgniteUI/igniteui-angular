@@ -21,24 +21,6 @@ export enum VerticalAlignment {
 }
 
 /**
- * Defines the possible positions for the element relative to its target.
- */
-export enum Placement {
-    Top = 'top',
-    TopStart = 'top-start',
-    TopEnd = 'top-end',
-    Bottom = 'bottom',
-    BottomStart = 'bottom-start',
-    BottomEnd = 'bottom-end',
-    Right = 'right',
-    RightStart = 'right-start',
-    RightEnd = 'right-end',
-    Left = 'left',
-    LeftStart = 'left-start',
-    LeftEnd = 'left-end'
-}
-
-/**
  * Defines the possible values of the overlays' position strategy.
  */
 export enum RelativePositionStrategy {
@@ -105,9 +87,7 @@ export interface PositionSettings {
     closeAnimation?: AnimationReferenceMetadata;
     /** The size up to which element may shrink when shown in elastic position strategy */
     minSize?: Size;
-    /** Where to place the element relative to its target. Used to set the direction and starting point. */
-    placement?: Placement;
-    /** The offset of the element from the target in pixels when shown in connected position strategy. */
+    /** The offset of the element from the target in pixels */
     offset?: number;
 }
 
@@ -212,17 +192,6 @@ export interface ConnectedFit {
     verticalOffset?: number;
 }
 
-export interface ArrowFit {
-    /** Rectangle of the arrow element. */
-    arrowRect?: Partial<DOMRect>;
-    /** Rectangle of the tooltip element. */
-    tooltipRect?: Partial<DOMRect>;
-    /** Direction in which the arrow points. */
-    direction?: 'top' | 'bottom' | 'right' | 'left';
-    /** Tooltip placement. */
-    tooltipPlacement?: Placement;
-}
-
 export interface OverlayCreateSettings extends OverlaySettings {
     /**
      * An `Injector` instance to add in the created component ref's injectors tree.
@@ -296,51 +265,6 @@ export class Util {
     }
 
     /**
-     * Gets the position settings that correspond to the given placement.
-     *
-     * @param placement Placement for which to get the corresponding position settings.
-     */
-    public static getPositionSettingsByPlacement(placement: Placement): PositionSettings {
-        return PositionsMap.get(placement);
-    }
-
-    /**
-     * Gets the placement that correspond to the given position settings.
-     * Returns `undefined` if the position settings do not match any of the predefined placement values.
-     *
-     * @param settings Position settings for which to get the corresponding placement.
-     */
-    public static getPlacementByPositionSettings(settings: PositionSettings): Placement {
-        const { horizontalDirection, horizontalStartPoint, verticalDirection, verticalStartPoint } = settings;
-
-        const mapArray = Array.from(PositionsMap.entries());
-        const placement = mapArray.find(
-            ([_, val]) =>
-                val.horizontalDirection === horizontalDirection &&
-                val.horizontalStartPoint === horizontalStartPoint &&
-                val.verticalDirection === verticalDirection &&
-                val.verticalStartPoint === verticalStartPoint
-        );
-
-        return placement ? placement[0] : undefined;
-    }
-
-    /**
-     * Returns `false` if a direction or starting point is specified by
-     * `horizontalDirection`, `horizontalStartPoint`, `verticalDirection`, or `verticalStartPoint`.
-     *
-     * @param settings Position settings for which to check if any directions or starting points are defined.
-     */
-    public static canUsePlacement(settings: PositionSettings): boolean {
-        return settings
-            && settings.placement
-            && settings.horizontalDirection == null
-            && settings.horizontalStartPoint == null
-            && settings.verticalDirection == null
-            && settings.verticalStartPoint == null;
-    }
-
-    /**
      * Gets horizontal offset by connectedFit `horizontalOffset` or position settings `offset`.
      * ConnectedFit `horizontalOffset` has priority.
      */
@@ -395,83 +319,5 @@ export class Util {
 
         return 0;
     }
-
 }
 
-/**
- * Maps the predefined placement values to the corresponding directions and starting points.
- */
-export const PositionsMap = new Map<Placement, PositionSettings>([
-    [Placement.Top, {
-        horizontalDirection: HorizontalAlignment.Center,
-        horizontalStartPoint: HorizontalAlignment.Center,
-        verticalDirection: VerticalAlignment.Top,
-        verticalStartPoint: VerticalAlignment.Top,
-    }],
-    [Placement.TopStart, {
-        horizontalDirection: HorizontalAlignment.Right,
-        horizontalStartPoint: HorizontalAlignment.Left,
-        verticalDirection: VerticalAlignment.Top,
-        verticalStartPoint: VerticalAlignment.Top,
-    }],
-    [Placement.TopEnd, {
-        horizontalDirection: HorizontalAlignment.Left,
-        horizontalStartPoint: HorizontalAlignment.Right,
-        verticalDirection: VerticalAlignment.Top,
-        verticalStartPoint: VerticalAlignment.Top,
-    }],
-    [Placement.Bottom, {
-        horizontalDirection: HorizontalAlignment.Center,
-        horizontalStartPoint: HorizontalAlignment.Center,
-        verticalDirection: VerticalAlignment.Bottom,
-        verticalStartPoint: VerticalAlignment.Bottom,
-    }],
-    [Placement.BottomStart, {
-        horizontalDirection: HorizontalAlignment.Right,
-        horizontalStartPoint: HorizontalAlignment.Left,
-        verticalDirection: VerticalAlignment.Bottom,
-        verticalStartPoint: VerticalAlignment.Bottom,
-    }],
-    [Placement.BottomEnd, {
-        horizontalDirection: HorizontalAlignment.Left,
-        horizontalStartPoint: HorizontalAlignment.Right,
-        verticalDirection: VerticalAlignment.Bottom,
-        verticalStartPoint: VerticalAlignment.Bottom,
-    }],
-    [Placement.Right, {
-        horizontalDirection: HorizontalAlignment.Right,
-        horizontalStartPoint: HorizontalAlignment.Right,
-        verticalDirection: VerticalAlignment.Middle,
-        verticalStartPoint: VerticalAlignment.Middle,
-    }],
-    [Placement.RightStart, {
-        horizontalDirection: HorizontalAlignment.Right,
-        horizontalStartPoint: HorizontalAlignment.Right,
-        verticalDirection: VerticalAlignment.Bottom,
-        verticalStartPoint: VerticalAlignment.Top,
-    }],
-    [Placement.RightEnd, {
-        horizontalDirection: HorizontalAlignment.Right,
-        horizontalStartPoint: HorizontalAlignment.Right,
-        verticalDirection: VerticalAlignment.Top,
-        verticalStartPoint: VerticalAlignment.Bottom,
-    }],
-    [Placement.Left, {
-        horizontalDirection: HorizontalAlignment.Left,
-        horizontalStartPoint: HorizontalAlignment.Left,
-        verticalDirection: VerticalAlignment.Middle,
-        verticalStartPoint: VerticalAlignment.Middle,
-    }],
-    [Placement.LeftStart, {
-        horizontalDirection: HorizontalAlignment.Left,
-        horizontalStartPoint: HorizontalAlignment.Left,
-        verticalDirection: VerticalAlignment.Bottom,
-        verticalStartPoint: VerticalAlignment.Top,
-    }],
-    [Placement.LeftEnd, {
-        horizontalDirection: HorizontalAlignment.Left,
-        horizontalStartPoint: HorizontalAlignment.Left,
-        verticalDirection: VerticalAlignment.Top,
-        verticalStartPoint: VerticalAlignment.Bottom,
-    }]
-]);
