@@ -234,7 +234,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     /**
      * Set the position and animation settings used by the dialog.
      * ```typescript
-     * import { slideInLeft, slideOutRight } from 'igniteui-angular';
+     * import { slideInLeft, slideOutRight } from 'igniteui-angular/animations';
      * ...
      * @ViewChild('alert', { static: true }) public alert: IgxDialogComponent;
      *  public newPositionSettings: PositionSettings = {
