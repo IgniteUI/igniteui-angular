@@ -4,7 +4,7 @@ import { mergeWith } from 'lodash-es';
 import { NEVER, Observable } from 'rxjs';
 import { setImmediate } from './setImmediate';
 import { isDevMode } from '@angular/core';
-import { IgxTheme } from '../services/theme/theme.token';
+import type { IgxTheme } from '../services/theme/theme.token';
 
 /** @hidden @internal */
 export const ELEMENTS_TOKEN = /*@__PURE__*/new InjectionToken<boolean>('elements environment');
@@ -20,8 +20,6 @@ export const showMessage = (message: string, isMessageShown: boolean): boolean =
     return true;
 };
 
-export const mkenum = <T extends { [index: string]: U }, U extends string>(x: T) => x;
-
 /**
  *
  * @hidden @internal
@@ -31,17 +29,9 @@ export const getResizeObserver = () => globalThis.window?.ResizeObserver;
 /**
  * @hidden
  */
-export const cloneArray = (array: any[], deep?: boolean) => {
-    const arr = [];
-    if (!array) {
-        return arr;
-    }
-    let i = array.length;
-    while (i--) {
-        arr[i] = deep ? cloneValue(array[i]) : array[i];
-    }
-    return arr;
-};
+export function cloneArray<T>(array: T[], deep = false): T[] {
+    return deep ? (array ?? []).map(cloneValue) : (array ?? []).slice();
+}
 
 /**
  * Doesn't clone leaf items
@@ -108,7 +98,7 @@ export const cloneValue = (value: any): any => {
         return new Date(value.getTime());
     }
     if (Array.isArray(value)) {
-        return [...value];
+        return value.slice();
     }
 
     if (value instanceof Map || value instanceof Set) {
@@ -255,7 +245,7 @@ export class PlatformUtil {
     /** @hidden @internal */
     public isElements = inject(ELEMENTS_TOKEN, { optional: true });
 
-    public KEYMAP = mkenum({
+    public KEYMAP = {
         ENTER: 'Enter',
         SPACE: ' ',
         ESCAPE: 'Escape',
@@ -277,7 +267,7 @@ export class PlatformUtil {
         X: 'x',
         Y: 'y',
         Z: 'z'
-    });
+    } as const;
 
     constructor(@Inject(PLATFORM_ID) private platformId: any) { }
 
@@ -298,7 +288,7 @@ export class PlatformUtil {
      */
     public getNodeSizeViaRange(range: Range, node: HTMLElement, sizeHoldingNode?: HTMLElement) {
         let overflow = null;
-        let nodeStyles;
+        let nodeStyles: string[];
 
         if (!this.isFirefox) {
             overflow = node.style.overflow;
@@ -455,17 +445,17 @@ export const resizeObservable = (target: HTMLElement): Observable<ResizeObserver
     // check whether we are on server env or client env
     if (resizeObserver) {
         return new Observable((observer) => {
-                const instance = new resizeObserver((entries: ResizeObserverEntry[]) => {
-                    observer.next(entries);
-                });
-                instance.observe(target);
-                const unsubscribe = () => instance.disconnect();
-                return unsubscribe;
+            const instance = new resizeObserver((entries: ResizeObserverEntry[]) => {
+                observer.next(entries);
+            });
+            instance.observe(target);
+            const unsubscribe = () => instance.disconnect();
+            return unsubscribe;
         });
-    } else {
-        // if on a server env return a empty observable that does not complete immediately
-        return NEVER;
     }
+    // if on a server env return a empty observable that does not complete immediately
+    return NEVER;
+
 }
 
 /**
@@ -476,7 +466,7 @@ export const resizeObservable = (target: HTMLElement): Observable<ResizeObserver
  */
 export const compareMaps = (map1: Map<any, any>, map2: Map<any, any>): boolean => {
     if (!map2) {
-        return !map1 ? true : false;
+        return !map1;
     }
     if (map1.size !== map2.size) {
         return false;
@@ -496,26 +486,38 @@ export const compareMaps = (map1: Map<any, any>, map2: Map<any, any>): boolean =
     return match;
 };
 
+function _isObject(entity: unknown): entity is object {
+    return entity != null && typeof entity === 'object';
+}
+
+export function columnFieldPath(path?: string): string[] {
+    return path?.split('.') ?? [];
+}
+
 /**
- *
  * Given a property access path in the format `x.y.z` resolves and returns
  * the value of the `z` property in the passed object.
  *
  * @hidden
  * @internal
  */
-export const resolveNestedPath = (obj: any, path: string) => {
-    const parts = path?.split('.') ?? [];
-    let current = obj[parts.shift()];
+export function resolveNestedPath<T extends object, U>(obj: unknown, pathParts: string[], defaultValue?: U): T | U | undefined {
+    if (!_isObject(obj) || pathParts.length < 1) {
+        return defaultValue;
+    }
 
-    parts.forEach(prop => {
-        if (current) {
-            current = current[prop];
+    let current = obj;
+
+    for (const key of pathParts) {
+        if (_isObject(current) && key in (current as T)) {
+            current = current[key];
+        } else {
+            return defaultValue;
         }
-    });
+    }
 
-    return current;
-};
+    return current as T;
+}
 
 /**
  *
@@ -628,12 +630,12 @@ export function modulo(n: number, d: number) {
  * ```
  */
 export function* intoChunks<T>(arr: T[], size: number) {
-  if (size < 1) {
-    throw new Error('size must be an integer >= 1');
-  }
-  for (let i = 0; i < arr.length; i += size) {
-    yield arr.slice(i, i + size);
-  }
+    if (size < 1) {
+        throw new Error('size must be an integer >= 1');
+    }
+    for (let i = 0; i < arr.length; i += size) {
+        yield arr.slice(i, i + size);
+    }
 }
 
 /**
@@ -646,7 +648,6 @@ export function getComponentCssSizeVar(size: string) {
             return 'var(--ig-size, var(--ig-size-small))';
         case "2":
             return 'var(--ig-size, var(--ig-size-medium))';
-        case "3":
         default:
             return 'var(--ig-size, var(--ig-size-large))';
     }
@@ -662,9 +663,9 @@ export function normalizeURI(path: string) {
 
 export function getComponentTheme(el: Element) {
     return globalThis.window
-    ?.getComputedStyle(el)
-    .getPropertyValue('--theme')
-    .trim() as IgxTheme;
+        ?.getComputedStyle(el)
+        .getPropertyValue('--theme')
+        .trim() as IgxTheme;
 }
 
 /**

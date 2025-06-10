@@ -1,7 +1,6 @@
 import { TestBed, inject, waitForAsync } from '@angular/core/testing';
-import { Component } from '@angular/core';
+import { Component, DOCUMENT } from '@angular/core';
 import { IgxDirectionality, DIR_DOCUMENT } from './directionality';
-import { DOCUMENT } from '@angular/common';
 
 interface FakeDoc {
     body: { dir?: string };

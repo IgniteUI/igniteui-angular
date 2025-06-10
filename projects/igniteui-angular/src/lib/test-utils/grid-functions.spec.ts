@@ -825,10 +825,10 @@ export class GridFunctions {
     public static clickPinIconInExcelStyleFiltering(fix: ComponentFixture<any>, isIconInHeader = true) {
         let pinUnpinIcon: any;
         if (isIconInHeader) {
-            const headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix);
-            const headerAreaPinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin"') !== -1);
-            const headerAreaUnpinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin"') !== -1);
-            pinUnpinIcon = headerAreaPinIcon ? headerAreaPinIcon : headerAreaUnpinIcon;
+            const headerIcons: DebugElement[] = GridFunctions.getExcelFilteringHeaderIconsDebugElements(fix);
+            const headerAreaPinIcon = headerIcons.find((buttonIcon: DebugElement) => buttonIcon.query(By.directive(IgxIconComponent)).componentInstance.name === "pin");
+            const headerAreaUnpinIcon = headerIcons.find((buttonIcon: DebugElement) => buttonIcon.query(By.directive(IgxIconComponent)).componentInstance.name === "unpin");
+            pinUnpinIcon = headerAreaPinIcon ? headerAreaPinIcon.nativeElement : headerAreaUnpinIcon.nativeElement;
         } else {
             const pinContainer = GridFunctions.getExcelFilteringPinContainer(fix);
             const unpinContainer = GridFunctions.getExcelFilteringUnpinContainer(fix);
@@ -1144,6 +1144,11 @@ export class GridFunctions {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         const headerArea = excelMenu.querySelector('.igx-excel-filter__menu-header');
         return Array.from(headerArea.querySelectorAll('.igx-icon-button'));
+    }
+
+    public static getExcelFilteringHeaderIconsDebugElements(fix: ComponentFixture<any>, menu = null) {
+        const headerArea = fix.debugElement.query(By.css('.igx-excel-filter__menu-header'));
+        return Array.from(headerArea.queryAll(By.css('.igx-icon-button')));
     }
 
     public static getExcelFilteringPinContainer(fix: ComponentFixture<any>, menu = null): HTMLElement {
