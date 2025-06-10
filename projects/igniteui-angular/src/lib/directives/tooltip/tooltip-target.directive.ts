@@ -428,9 +428,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         });
 
         this.nativeElement.addEventListener('touchstart', this.onTouchStart = this.onTouchStart.bind(this), { passive: true });
-
-        this.target.onShow = this._showOnInteraction.bind(this);
-        this.target.onHide = this._hideOnInteraction.bind(this);
     }
 
     /**

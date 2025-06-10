@@ -111,21 +111,10 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
     /**
      * @hidden
      */
-    public onShow: (event?: Event) => void;
-
-    /**
-     * @hidden
-     */
-    public onHide: (event?: Event) => void;
-
-    private _arrowEl: HTMLElement;
-    private _role: "tooltip" | "status" = "tooltip"
-
-    /**
-     * @hidden
-     */
     public tooltipTarget: IgxTooltipTargetDirective;
 
+    private _arrowEl: HTMLElement;
+    private _role: 'tooltip' | 'status' = 'tooltip';
     private _destroy$ = new Subject<boolean>();
 
     /** @hidden */
@@ -163,7 +152,7 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
      */
     @HostListener('mouseenter')
     public onMouseEnter() {
-        this.onShow();
+        this.tooltipTarget?.onMouseEnter();
     }
 
     /**
@@ -171,7 +160,7 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
      */
     @HostListener('mouseleave')
     public onMouseLeave() {
-        this.onHide();
+        this.tooltipTarget?.onMouseLeave();
     }
 
     /**
