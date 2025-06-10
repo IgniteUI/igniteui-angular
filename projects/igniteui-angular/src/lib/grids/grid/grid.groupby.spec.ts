@@ -3822,6 +3822,32 @@ describe('IgxGrid - GroupBy #grid', () => {
         }
     });
 
+    it('should be able to build groups with 100 000+ records', () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+
+        const data = [];
+        for (let i = 0; i < 1000000; i++) {
+          data.push({
+                Downloads: i,
+                ID: 1,
+                ProductName: 'Test'
+            });
+        }
+
+        fix.componentInstance.data = data;
+        fix.detectChanges();
+
+        grid.groupBy({
+            fieldName: 'ProductName',
+            dir: SortingDirection.Asc
+        });
+        fix.detectChanges();
+
+        let groupRows = grid.groupsRowList.toArray();
+        checkGroups(groupRows, ['Test']);
+    });
+
     describe('GroupBy with state directive', () => {
         let fix: ComponentFixture<GridGroupByStateComponent>;
         let state: IgxGridStateDirective;
