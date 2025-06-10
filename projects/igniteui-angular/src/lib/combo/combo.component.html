@@ -13,6 +13,7 @@
         role="combobox" aria-haspopup="listbox"
         [attr.aria-expanded]="!dropdown.collapsed" [attr.aria-controls]="dropdown.listId"
         [attr.aria-labelledby]="ariaLabelledBy || label?.id || placeholder"
+        [attr.aria-label]="getAriaLabel()"
         (blur)="onBlur()" />
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix"></ng-content>
@@ -28,7 +29,7 @@
             }
         </igx-suffix>
     }
-    <igx-suffix class="igx-combo__toggle-button">
+    <igx-suffix class="igx-combo__toggle-button" (keydown)="handleToggleKeyDown($event)" [tabindex]="disabled ? -1 : 0" role="button">
         @if (toggleIconTemplate) {
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: collapsed}"></ng-container>
         }
