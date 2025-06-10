@@ -265,14 +265,9 @@ export class Util {
     }
 
     /**
-     * Gets horizontal offset by connectedFit `horizontalOffset` or position settings `offset`.
-     * ConnectedFit `horizontalOffset` has priority.
+     * Gets horizontal offset by position settings `offset`.
      */
-    public static getHorizontalOffset(connectedFit: ConnectedFit, settings: PositionSettings): number {
-        if (connectedFit.horizontalOffset != null) {
-            return connectedFit.horizontalOffset;
-        }
-
+    public static getHorizontalOffset(settings: PositionSettings): number {
         if (settings.offset == null) {
             return 0;
         }
@@ -293,14 +288,9 @@ export class Util {
     }
 
     /**
-     * Gets vertical offset by connectedFit `verticalOffset` or position settings `offset`.
-     * ConnectedFit `verticalOffset` has priority.
+     * Gets vertical offset by position settings `offset`.
      */
-    public static getVerticalOffset(connectedFit: ConnectedFit, settings: PositionSettings): number {
-        if (connectedFit.verticalOffset != null) {
-            return connectedFit.verticalOffset;
-        }
-
+    public static getVerticalOffset(settings: PositionSettings): number {
         if (settings.offset == null) {
             return 0;
         }
