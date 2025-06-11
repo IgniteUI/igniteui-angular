@@ -95,10 +95,6 @@
         --ig-spacing-block-large: 1;
     }
 
-    #{$scope} {
-        --igx-vhelper-scrollbar-size: 1rem;
-    }
-
     @if not(list.index($exclude, 'palette')) {
         @include palette($palette);
     }

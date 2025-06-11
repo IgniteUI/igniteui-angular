@@ -124,6 +124,12 @@
         inherits: true;
     }
 
+    @property --vhelper-scollbar-size {
+        syntax: '<integer>';
+        initial-value: 0;
+        inherits: true;
+    }
+
     // Component styles
     @include ripple.component();
     @include action-strip.component();

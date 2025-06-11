@@ -12,10 +12,10 @@ export class VirtualHelperComponent extends VirtualHelperBaseDirective implement
     @HostBinding('scrollTop')
     public scrollTop;
 
-    @HostBinding('style.--igx-vhelper--scrollbar-size')
+    @HostBinding('style.--vhelper-scrollbar-size')
     public get scrollbarSize(): string {
         const value = `${this.scrollNativeSize}px`;
-        this.document.documentElement.style.setProperty('--igx-vhelper--scrollbar-size', value);
+        this.document.documentElement.style.setProperty('--vhelper-scrollbar-size', value);
         return value;
     }
 
