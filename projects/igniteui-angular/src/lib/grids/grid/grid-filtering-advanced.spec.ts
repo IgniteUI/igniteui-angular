@@ -27,7 +27,7 @@ import { QueryBuilderFunctions } from '../../query-builder/query-builder-functio
 import { By } from '@angular/platform-browser';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
 import { QueryBuilderSelectors } from '../../query-builder/query-builder.common';
-import { IgxHGridRemoteOnDemandComponent } from '../hierarchical-grid/hierarchical-grid.spec';
+import { IgxHGridRemoteOnDemandComponent, IgxHierarchicalGridToggleRIComponent } from '../hierarchical-grid/hierarchical-grid.spec';
 import { IGridResourceStrings } from '../../core/i18n/grid-resources';
 
 describe('IgxGrid - Advanced Filtering #grid - ', () => {
@@ -1750,76 +1750,69 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(hgrid.filteredData.length).toBe(5);
         }));
 
-        it('Should have proper fields in UI when schema is defined with load on demand.', fakeAsync(() => {
-            const fixture = TestBed.createComponent(IgxHGridRemoteOnDemandComponent);
-            const hierarchicalGrid = fixture.componentInstance.instance;
+        it('Should update root grid schema when row island is expanded.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxHierarchicalGridToggleRIComponent);
+            const hierarchicalGrid = fixture.componentInstance.hgrid;
             hierarchicalGrid.allowAdvancedFiltering = true;
-            hierarchicalGrid.schema = [
-                {
-                    name: 'rootLevel',
-                    fields: [
-                        { field: 'ID', dataType: 'string' },
-                        { field: 'ChildLevels', dataType: 'number' },
-                        { field: 'ProductName', dataType: 'string' },
-                        { field: 'Col1', dataType: 'number' },
-                        { field: 'Col2', dataType: 'number' },
-                        { field: 'Col3', dataType: 'number' }
-                    ],
-                    childEntities: [
-                        {
-                            name: 'childData',
-                            fields: [
-                                { field: 'ID', dataType: 'string' },
-                                { field: 'ProductName', dataType: 'string' }
-                            ],
-                            childEntities: [
-                                {
-                                    name: 'childData2',
-                                    fields: [
-                                        { field: 'ID', dataType: 'string' },
-                                        { field: 'ProductName', dataType: 'string' }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
             fixture.detectChanges();
 
-            hierarchicalGrid.openAdvancedFilteringDialog();
+            // Open advanced filtering dialog and create an 'In' condition.
+            const createInConditionAndGetReturnFields = () => {
+                // Open Advanced Filtering dialog.
+                hierarchicalGrid.openAdvancedFilteringDialog();
+                fixture.detectChanges();
+
+                // Click the initial 'Add Condition' button.
+                QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fixture, 0);
+                tick(100);
+                fixture.detectChanges();
+                // Populate edit inputs.
+                QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 0); // Select 'ID' column.
+                QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 10); // Select 'In' operator.
+                tick(100);
+                fixture.detectChanges();
+
+                // Verify entities
+                QueryBuilderFunctions.clickQueryBuilderEntitySelect(fixture, 1);
+                fixture.detectChanges();
+                const queryBuilderElement: HTMLElement = fixture.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[1].nativeElement;
+                let dropdownValues: string[] = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
+                let expectedValues = ['childData'];
+                expect(dropdownValues).toEqual(expectedValues);
+
+                // Verify return fields
+                QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fixture, 1);
+                fixture.detectChanges();
+                const innerQueryReturnFields = QueryBuilderFunctions.getQueryBuilderSelectDropdown(queryBuilderElement, 1);
+
+                return innerQueryReturnFields;
+            };
+
+            let innerQueryReturnFields = createInConditionAndGetReturnFields();
+            expect(innerQueryReturnFields).toBeNull();
+
+            // Close Advanced Filtering dialog.
+            hierarchicalGrid.closeAdvancedFilteringDialog(false);
+            tick(200);
             fixture.detectChanges();
 
-            // Click the initial 'Add Condition' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fixture, 0);
-            tick(100);
-            fixture.detectChanges();
-            // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 0); // Select 'ID' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 10); // Select 'In' operator.
-            tick(100);
+            // Expand row island
+            const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as any;
+            UIInteractions.simulateClickAndSelectEvent(row.expander);
             fixture.detectChanges();
 
-            const entityInputGroup = QueryBuilderFunctions.getQueryBuilderEntitySelect(fixture, 1).querySelector('input');
-            expect(entityInputGroup.value).toBe('childData');
-
-            const fieldInputGroup = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fixture, 1).querySelector('input');
-            expect(fieldInputGroup.value).toBe('ID');
-
-            // Verify entities
-            QueryBuilderFunctions.clickQueryBuilderEntitySelect(fixture, 1);
-            fixture.detectChanges();
-            const queryBuilderElement: HTMLElement = fixture.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[1].nativeElement;
-            let dropdownValues: string[] = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
-            let expectedValues = ['childData'];
-            expect(dropdownValues).toEqual(expectedValues);
-
-            // Verify return fileds
-            QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fixture, 1);
-            fixture.detectChanges();
-            dropdownValues = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement, 1).map((x: any) => x.innerText);
-            expectedValues = ['ID', 'ProductName'];
-            expect(dropdownValues).toEqual(expectedValues);
+            // Open advanced filtering dialog and verify that schema is updated.
+            innerQueryReturnFields = createInConditionAndGetReturnFields();
+            expect(innerQueryReturnFields).not.toBeNull();
+            const items = Array.from(innerQueryReturnFields.querySelectorAll('.igx-drop-down__item'));
+            expect(items.length).toBe(7);
+            expect((items[0] as HTMLElement).innerText).toBe('ID');
+            expect((items[1] as HTMLElement).innerText).toBe('ChildLevels');
+            expect((items[2] as HTMLElement).innerText).toBe('ProductName');
+            expect((items[3] as HTMLElement).innerText).toBe('Col1');
+            expect((items[4] as HTMLElement).innerText).toBe('Col2');
+            expect((items[5] as HTMLElement).innerText).toBe('Col3');
+            expect((items[6] as HTMLElement).innerText).toBe('childData2');
         }));
 
         it('Should correctly change resource strings for hierarchical Advanced Filtering dialog.', fakeAsync(() => {
