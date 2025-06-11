@@ -3,7 +3,7 @@ import { DataUtil, GridColumnDataType } from '../../data-operations/data-util';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
-import { PivotGridType } from '../common/grid.interface';
+import { ColumnType, PivotGridType } from '../common/grid.interface';
 import { IGridSortingStrategy, IgxSorting } from '../common/strategy';
 import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
 import { IPivotAggregator, IPivotConfiguration, IPivotDimension, IPivotGridRecord, IPivotKeys, IPivotValue, PivotDimensionType, PivotSummaryPosition } from './pivot-grid.interface';
@@ -508,5 +508,28 @@ export class PivotUtil {
         }
     }
 
+    public static handleCountAggregator(columns: ColumnType[], value: IPivotValue, isSingleValue: boolean): void {
+        const isCountAggregator = value.aggregate.aggregator?.name?.toLowerCase() === 'count' || value.aggregate.aggregatorName?.toLowerCase() === 'count';
 
+        if ((value.dataType === GridColumnDataType.Currency || value.dataType === GridColumnDataType.Percent) && isCountAggregator) {
+            columns.forEach(column => {
+                console.log(column.field?.includes(value.member))
+                if (column.field?.includes(value.member) || isSingleValue) {
+                    column.dataType = GridColumnDataType.Number;
+                }                
+            });
+        } else if (value.dataType === GridColumnDataType.Currency && !isCountAggregator) {
+            columns.forEach(column => {
+                if (column.field?.includes(value.member) || isSingleValue) {
+                    column.dataType = GridColumnDataType.Currency;
+                }  
+            });
+        } else if (value.dataType === GridColumnDataType.Percent && !isCountAggregator) {
+            columns.forEach(column => {
+                if (column.field?.includes(value.member) || isSingleValue) {
+                    column.dataType = GridColumnDataType.Percent;
+                }  
+            });
+        }
+    }
 }
