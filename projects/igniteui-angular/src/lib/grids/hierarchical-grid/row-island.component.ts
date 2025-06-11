@@ -24,10 +24,10 @@ import {
     Output,
     QueryList,
     TemplateRef,
-    ViewContainerRef
+    ViewContainerRef,
+    DOCUMENT
 } from '@angular/core';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
-import { DOCUMENT } from '@angular/common';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
@@ -72,10 +72,8 @@ import { IgxPaginatorComponent } from '../../paginator/paginator.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-row-island',
     template: `@if (platform.isElements) {
-        <div #sink style="display: none;">
-            <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group,igx-action-strip,igc-action-strip"></ng-content>
-            <ng-content select="igx-row-island,igc-row-island"></ng-content>
-        </div>
+        <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group,igx-action-strip,igc-action-strip"></ng-content>
+        <ng-content select="igx-row-island,igc-row-island"></ng-content>
     }`,
     providers: [
         IgxRowIslandAPIService,
@@ -282,6 +280,24 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     public override get dataView(): any[] {
         return [];
     }
+
+    //#region inert, not-a-grid component
+    /** @hidden @internal */
+    public override tabindex = -1;
+
+    /** @hidden @internal */
+    public override hostRole = null;
+
+    protected override baseClass = null;
+
+    /** @hidden @internal */
+    public override get hostWidth(): any {
+        return null;
+    }
+
+    protected override displayStyle = 'none';
+    protected override templateRows = null;
+    //#endregion
 
     private ri_columnListDiffer;
     private layout_id = `igx-row-island-`;

@@ -1,4 +1,4 @@
-import { DOCUMENT, formatNumber, getLocaleNumberFormat, NumberFormatStyle } from '@angular/common';
+import { formatNumber, getLocaleNumberFormat, NumberFormatStyle } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -30,9 +30,10 @@ import {
     QueryList,
     ViewChild,
     ViewChildren,
-    ViewContainerRef
+    ViewContainerRef,
+    DOCUMENT
 } from '@angular/core';
-import { formatDate, resizeObservable } from '../core/utils';
+import { columnFieldPath, formatDate, resizeObservable } from '../core/utils';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
@@ -40,7 +41,7 @@ import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, Pla
 import { GridColumnDataType } from '../data-operations/data-util';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { IForOfDataChangingEventArgs, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
+import { IForOfDataChangeEventArgs, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightService } from '../directives/text-highlight/text-highlight.service';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { IgxGridBodyDirective, RowEditPositionStrategy } from './grid.common';
@@ -69,7 +70,7 @@ import { GridResourceStringsEN, IGridResourceStrings } from '../core/i18n/grid-r
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxGridSelectionService } from './selection/selection.service';
-import { IgxEditRow, IgxCell, IgxAddRow } from './common/crud.service';
+import { IgxEditRow, IgxCell } from './common/crud.service';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
 import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-style/excel-style-search.component';
 import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
@@ -79,7 +80,8 @@ import { FilteringStrategy, IFilteringStrategy } from '../data-operations/filter
 import {
     IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective,
     IgxHeaderCollapsedIndicatorDirective, IgxExcelStyleHeaderIconDirective, IgxSortAscendingHeaderIconDirective,
-    IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective
+    IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective,
+    IgxGridLoadingTemplateDirective, IgxGridEmptyTemplateDirective,
 } from './grid.directives';
 import {
     GridKeydownTargetType,
@@ -259,11 +261,22 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @example
      * ```html
+     * <ng-template igxGridEmpty>
+     *   <!-- content to show when the grid is empty -->
+     * </ng-template>
+     * ```
+     * Or
+     * ```html
      * <igx-grid [id]="'igx-grid-1'" [data]="Data" [emptyGridTemplate]="myTemplate" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Input()
-    public emptyGridTemplate: TemplateRef<IgxGridTemplateContext>;
+    public get emptyGridTemplate(): TemplateRef<IgxGridTemplateContext> {
+        return this._emptyGridTemplate || this.emptyDirectiveTemplate;
+    }
+    public set emptyGridTemplate(template: TemplateRef<IgxGridTemplateContext>) {
+        this._emptyGridTemplate = template;
+    }
 
     /**
      * Gets/Sets a custom template for adding row UI when grid is empty.
@@ -281,11 +294,22 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @example
      * ```html
+     * <ng-template igxGridLoading>
+     *   <!-- content to show when the grid is loading -->
+     * </ng-template>
+     * ```
+     * Or
+     * ```html
      * <igx-grid [id]="'igx-grid-1'" [data]="Data" [loadingGridTemplate]="myTemplate" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Input()
-    public loadingGridTemplate: TemplateRef<IgxGridTemplateContext>;
+    public get loadingGridTemplate(): TemplateRef<IgxGridTemplateContext> {
+        return this._loadingGridTemplate || this.loadingDirectiveTemplate;
+    }
+    public set loadingGridTemplate(template: TemplateRef<IgxGridTemplateContext>) {
+        this._loadingGridTemplate = template;
+    }
 
     /**
      * Get/Set IgxSummaryRow height
@@ -993,6 +1017,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     @Output()
     public gridCopy = new EventEmitter<IGridClipboardEvent>();
 
+    /* blazorCSSuppress */
     /**
      * Emitted when the rows are expanded or collapsed.
      *
@@ -1117,7 +1142,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```
      */
     @Output()
-    public dataChanging = new EventEmitter<IForOfDataChangingEventArgs>();
+    public dataChanging = new EventEmitter<IForOfDataChangeEventArgs>();
 
     /**
      * Emitted after the grid's data view is changed because of a data operation, rebinding, etc.
@@ -1128,7 +1153,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```
      */
     @Output()
-    public dataChanged = new EventEmitter<any>();
+    public dataChanged = new EventEmitter<IForOfDataChangeEventArgs>();
 
 
     /**
@@ -1706,6 +1731,13 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @ContentChildren(IgxDragIndicatorIconDirective, { read: TemplateRef, descendants: false })
     public dragIndicatorIconTemplates: QueryList<TemplateRef<IgxGridEmptyTemplateContext>>;
+
+
+    @ContentChild(IgxGridLoadingTemplateDirective, { read: TemplateRef })
+    protected loadingDirectiveTemplate: TemplateRef<IgxGridTemplateContext>;
+
+    @ContentChild(IgxGridEmptyTemplateDirective, { read: TemplateRef })
+    protected emptyDirectiveTemplate: TemplateRef<IgxGridTemplateContext>;
 
     /**
      * @hidden @internal
@@ -3184,6 +3216,8 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _rowCollapsedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext>;
     private _headerExpandIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
     private _headerCollapseIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
+    private _emptyGridTemplate: TemplateRef<IgxGridTemplateContext>;
+    private _loadingGridTemplate: TemplateRef<IgxGridTemplateContext>;
 
     private _cdrRequests = false;
     private _resourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
@@ -3341,7 +3375,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 .map(t => t.newValue));
         }
 
-        if (this.crudService.row && this.crudService.row.getClassName() === IgxAddRow.name) {
+        if (this.crudService.row && this.crudService.row.isAddRow) {
             result.splice(this.crudService.row.index, 0, this.crudService.row.data);
         }
 
@@ -3679,24 +3713,24 @@ export abstract class IgxGridBaseDirective implements GridType,
             throttleTime(40, animationFrameScheduler, { leading: true, trailing: true }),
             destructor
         )
-        .subscribe(() => {
-            this.zone.run(() => {
-                // do not trigger reflow if element is detached.
-                if (this.nativeElement.isConnected) {
-                    if (this.shouldResize) {
-                        // resizing occurs due to the change of --ig-size css var
-                        this._gridSize = this.gridSize;
-                        this.updateDefaultRowHeight();
-                        this._autoSize = this.isPercentHeight && this.calcHeight !== this.getDataBasedBodyHeight();
-                        this.crudService.endEdit(false);
-                        if (this._summaryRowHeight === 0) {
-                            this.summaryService.summaryHeight = 0;
+            .subscribe(() => {
+                this.zone.run(() => {
+                    // do not trigger reflow if element is detached.
+                    if (this.nativeElement.isConnected) {
+                        if (this.shouldResize) {
+                            // resizing occurs due to the change of --ig-size css var
+                            this._gridSize = this.gridSize;
+                            this.updateDefaultRowHeight();
+                            this._autoSize = this.isPercentHeight && this.calcHeight !== this.getDataBasedBodyHeight();
+                            this.crudService.endEdit(false);
+                            if (this._summaryRowHeight === 0) {
+                                this.summaryService.summaryHeight = 0;
+                            }
                         }
+                        this.notifyChanges(true);
                     }
-                    this.notifyChanges(true);
-                }
+                });
             });
-        });
 
         this.pipeTriggerNotifier.pipe(takeUntil(this.destroy$)).subscribe(() => this.pipeTrigger++);
         this.columnMovingEnd.pipe(destructor).subscribe(() => this.crudService.endEdit(false));
@@ -3782,10 +3816,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             throttleTime(0, animationFrameScheduler, { leading: false, trailing: true }),
             destructor
         )
-        .subscribe(() => {
-            this.autoSizeColumnsInView();
-            this._firstAutoResize = false;
-        });
+            .subscribe(() => {
+                this.autoSizeColumnsInView();
+                this._firstAutoResize = false;
+            });
     }
 
     /**
@@ -3920,7 +3954,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public dataRebinding(event: IForOfDataChangingEventArgs) {
+    public dataRebinding(event: IForOfDataChangeEventArgs) {
         if (event.state.chunkSize == 0) {
             this._shouldRecalcRowHeight = true;
         }
@@ -3930,7 +3964,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public dataRebound(event) {
+    public dataRebound(event: IForOfDataChangeEventArgs) {
         this.selectionService.clearHeaderCBState();
         if (this._shouldRecalcRowHeight) {
             this._shouldRecalcRowHeight = false;
@@ -4194,7 +4228,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         col.toggleVisibility(args.newValue);
     }
 
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     /**
      * Gets/Sets a list of key-value pairs [row ID, expansion state].
      *
@@ -4212,7 +4246,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this._expansionStates;
     }
 
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     public set expansionStates(value) {
         this._expansionStates = new Map<any, boolean>(value);
         this.expansionStatesChange.emit(this._expansionStates);
@@ -5471,7 +5505,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             visibleChildColumns.length - columnsWithSetWidths.length;
         const sumExistingWidths = columnsWithSetWidths
             .reduce((prev, curr) => {
-                const colInstance =  this.hasColumnLayouts ? curr.ref : curr;
+                const colInstance = this.hasColumnLayouts ? curr.ref : curr;
                 const colWidth = !colInstance.widthConstrained ? curr.width : colInstance.calcPixelWidth;
                 let widthValue = parseFloat(colWidth);
                 if (isNaN(widthValue)) {
@@ -6737,7 +6771,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     protected getColumnList() {
-        return this.columnList.toArray();
+        return this.columnList.toArray().filter((col) => col.grid === this);
     }
 
     /**
@@ -6795,6 +6829,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             let removed = false;
             let pinning = false;
             diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                if (record.item.grid !== this) {
+                    return;
+                }
                 added = true;
                 if (record.item.pinned) {
                     this._pinnedColumns.push(record.item);
@@ -6804,12 +6841,15 @@ export abstract class IgxGridBaseDirective implements GridType,
                 }
             });
 
-            this.initColumns(this.columnList.toArray(), (col: IgxColumnComponent) => this.columnInit.emit(col));
+            this.initColumns(this.getColumnList(), (col: IgxColumnComponent) => this.columnInit.emit(col));
             if (pinning) {
                 this.initPinning();
             }
 
             diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent | IgxColumnGroupComponent>) => {
+                if (record.item.grid !== this) {
+                    return;
+                }
                 const isColumnGroup = record.item instanceof IgxColumnGroupComponent;
                 if (!isColumnGroup) {
                     // Clear Grouping
@@ -7295,7 +7335,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                         const key = this.type !== 'pivot' && headers ? col.header || col.field : col.field;
                         const rowData = source[row].ghostRecord ? source[row].recordRef : source[row];
                         const value = this.type === 'pivot' ? rowData.aggregationValues.get(col.field)
-                            : resolveNestedPath(rowData, col.field);
+                            : resolveNestedPath(rowData, columnFieldPath(col.field));
                         record[key] = formatters && col.formatter ? col.formatter(value, rowData) : value;
                         if (columnData) {
                             if (!record[key]) {
@@ -7807,15 +7847,16 @@ export abstract class IgxGridBaseDirective implements GridType,
         const searchText = caseSensitive ? this._lastSearchInfo.searchText : this._lastSearchInfo.searchText.toLowerCase();
         const data = this.filteredSortedData;
         const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
+        const columnsPathParts = columnItems.map(col => columnFieldPath(col.field));
 
         data.forEach((dataRow, rowIndex) => {
-            columnItems.forEach((c) => {
+            columnItems.forEach((c, cid) => {
                 const pipeArgs = this.getColumnByName(c.field).pipeArgs;
-                const value = c.formatter ? c.formatter(resolveNestedPath(dataRow, c.field), dataRow) :
-                    c.dataType === 'number' ? formatNumber(resolveNestedPath(dataRow, c.field), this.locale, pipeArgs.digitsInfo) :
+                const value = c.formatter ? c.formatter(resolveNestedPath(dataRow, columnsPathParts[cid]), dataRow) :
+                    c.dataType === 'number' ? formatNumber(resolveNestedPath(dataRow, columnsPathParts[cid]) as number, this.locale, pipeArgs.digitsInfo) :
                         c.dataType === 'date'
-                            ? formatDate(resolveNestedPath(dataRow, c.field), pipeArgs.format, this.locale, pipeArgs.timezone)
-                            : resolveNestedPath(dataRow, c.field);
+                            ? formatDate(resolveNestedPath(dataRow, columnsPathParts[cid]) as string, pipeArgs.format, this.locale, pipeArgs.timezone)
+                            : resolveNestedPath(dataRow, columnsPathParts[cid]);
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
 

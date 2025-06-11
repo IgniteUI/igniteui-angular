@@ -21,9 +21,10 @@ import {
     Injector,
     EnvironmentInjector,
     CUSTOM_ELEMENTS_SCHEMA,
-    booleanAttribute
+    booleanAttribute,
+    DOCUMENT
 } from '@angular/core';
-import { DOCUMENT, NgClass, NgTemplateOutlet, NgStyle } from '@angular/common';
+import { NgClass, NgTemplateOutlet, NgStyle } from '@angular/common';
 
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';

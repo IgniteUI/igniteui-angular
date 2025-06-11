@@ -1,7 +1,6 @@
 import { Component, ElementRef, HostBinding, Input, ViewChild, ViewContainerRef,
-     ChangeDetectorRef, OnDestroy, Inject, NgZone } from '@angular/core';
+    ChangeDetectorRef, OnDestroy, OnInit, Inject, NgZone, DOCUMENT } from '@angular/core';
 import { VirtualHelperBaseDirective } from './base.helper.component';
-import { DOCUMENT } from '@angular/common';
 import { PlatformUtil } from '../../core/utils';
 
 @Component({

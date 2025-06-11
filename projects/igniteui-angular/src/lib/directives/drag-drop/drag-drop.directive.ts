@@ -19,13 +19,13 @@ import {
     RendererStyleFlags2,
     booleanAttribute,
     EmbeddedViewRef,
-    inject
+    inject,
+    DOCUMENT
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Subject } from 'rxjs';
 import { takeUntil, throttle } from 'rxjs/operators';
 import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
 import { IDropStrategy, IgxDefaultDropStrategy } from './drag-drop.strategy';
-import { DOCUMENT } from '@angular/common';
 
 enum DragScrollDirection {
     UP,
