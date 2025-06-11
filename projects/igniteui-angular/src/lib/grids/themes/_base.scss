@@ -1,0 +1,40 @@
+@use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use '../../../lib/core/styles/themes/standalone' as *;
+@use 'light/tokens' as *;
+
+$theme: $material;
+
+@include layer(base) {
+    @include b(igx-grid) {
+        @include sizable();
+
+        --component-size: var(--ig-size, var(--ig-size-large));
+        --grid-size: var(--component-size);
+
+        @include e(td) {
+            border-inline-end: rem(1px) solid
+                var-get($theme, 'header-border-color');
+            border-bottom: rem(1px) solid var-get($theme, 'header-border-color');
+        }
+
+        @include e(td, $m: active) {
+            box-shadow: inset 0 0 0 rem(1px)
+                var-get($theme, 'cell-active-border-color');
+
+            // > %igx-grid__filtering-cell,
+            // > %grid-cell-header {
+            //     border-inline-end-color: var-get(
+            //         $theme,
+            //         'cell-active-border-color'
+            //     );
+            //     border-bottom-color: var-get(
+            //         $theme,
+            //         'cell-active-border-color'
+            //     );
+            // }
+        }
+    }
+}
