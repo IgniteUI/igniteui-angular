@@ -12,7 +12,7 @@ import { Placement, PositionsMap } from './tooltip.common';
 const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip';
 const HIDE_DELAY = 180;
-const TOOLTIP_ARROW_SELECTOR = 'div[data-arrow="true"]';
+const TOOLTIP_ARROW_SELECTOR = '[data-arrow="true"]';
 
 describe('IgxTooltip', () => {
     let fix: ComponentFixture<any>;
