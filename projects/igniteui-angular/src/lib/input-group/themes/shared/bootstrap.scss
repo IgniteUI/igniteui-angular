@@ -1,0 +1,404 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $bootstrap;
+$border-size: rem(1px);
+$border-style: solid;
+$border-color: var-get($_theme, 'border-color');
+$border-radius: var-get($_theme, 'border-border-radius');
+
+@layer ig.bootstrap {
+    @container style(--ig-theme: bootstrap) {
+        %border-styles {
+            border-style: $border-style;
+            border-color: $border-color;
+        }
+
+        %disabled-styles {
+            background: var-get($_theme, 'border-disabled-background');
+            color: var-get($_theme, 'disabled-text-color');
+            border-color: var-get($_theme, 'disabled-border-color');
+        }
+
+        igx-input-group:not(.igx-input-group--prefixed, .igx-input-group--file) {
+            .igx-input-group__bundle-main {
+                border-start-start-radius: $border-radius;
+                border-end-start-radius: $border-radius;
+            }
+        }
+
+        igx-input-group:not(.igx-input-group--suffixed) {
+            .igx-input-group__bundle-main {
+                border-start-end-radius: $border-radius;
+                border-end-end-radius: $border-radius;
+            }
+        }
+
+        igx-input-group:not(.igx-input-group--textarea-group) {
+            .igx-input-group__bundle {
+                border-radius: $border-radius;
+            }
+        }
+    }
+}
+
+@include themed-block(igx-input-group, bootstrap) {
+    --_bundle-template-rows: revert;
+
+    row-gap: rem(4px);
+
+    @include e(clear-icon) {
+        &:focus {
+            color: contrast-color($color: 'primary', $variant: 600);
+            background: color($color: 'primary', $variant: 500);
+        }
+    }
+
+    @include e(bundle) {
+        border-radius: $border-radius;
+    }
+
+    @include e(upload) {
+        @extend %border-styles;
+
+        border-block-width: $border-size;
+        border-inline-start-width: $border-size;
+        border-inline-end-width: 0;
+        background: var-get($_theme, 'input-prefix-background');
+        grid-row: 2;
+    }
+
+    @include e(upload-button) {
+        --igx-button-background: #{var-get($_theme, 'input-prefix-background')};
+        --igx-button-hover-background: #{var-get($_theme, 'input-prefix-background')};
+        --igx-button-active-background: #{var-get($_theme, 'input-prefix-background')};
+        --igx-button-focus-visible-background: #{var-get($_theme, 'input-prefix-background')};
+        --igx-button-foreground: #{var-get($_theme, 'input-prefix-color')};
+        --igx-button-hover-foreground: #{var-get($_theme, 'input-prefix-color')};
+        --igx-button-active-foreground: #{var-get($_theme, 'input-prefix-color')};
+        --igx-button-focus-visible-foreground: #{var-get($_theme, 'input-prefix-color')};
+        --igx-button-disabled-foreground: #{var-get($_theme, 'disabled-text-color')};
+        --igx-button-disabled-background: #{var-get($_theme, 'border-disabled-background')};
+
+        @include type-style(body-1);
+
+        min-height: revert;
+        font-size: sizable(rem(16px), rem(16px), rem(20px));
+        border: 0;
+        border-radius: 0;
+    }
+
+    @include e(label) {
+        @include type-style(body-1);
+    }
+
+    @include e(hint) {
+        @include type-style(body-2);
+    }
+
+    @include e(input) {
+        @include type-style(body-1);
+
+        min-height: 100%;
+        font-size: sizable(rem(16px), rem(16px), rem(20px));
+        padding-block: 0;
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+    }
+
+    @include e(file-input) {
+        @include type-style(body-1);
+
+        font-size: sizable(rem(16px), rem(16px), rem(20px));
+        height: 100%;
+        padding-block: 0;
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+    }
+
+    @include e(textarea) {
+        @include type-style(body-1);
+
+        min-height: 100%;
+        font-size: sizable(rem(16px), rem(16px), rem(20px));
+        padding-block: pad-block(rem(4px), rem(6px), rem(8px));
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+    }
+
+    @include m(textarea-group) {
+        @include e(bundle-main) {
+            min-height: var(--_textarea-size);
+            height: revert;
+        }
+    }
+
+    @include e(bundle-main) {
+        @extend %border-styles;
+
+        z-index: 1;
+        border-width: $border-size;
+        height: var(--size);
+    }
+
+    @include m(file, $not: (prefixed)) {
+        @include e(upload) {
+            border-start-start-radius: $border-radius;
+            border-end-start-radius: $border-radius;
+        }
+
+        @include e(upload-button) {
+            border-start-start-radius: $border-radius;
+            border-end-start-radius: $border-radius;
+        }
+    }
+
+    @include e(bundle-start) {
+        &:empty {
+            border: 0;
+            visibility: hidden;
+        }
+    }
+
+    @include m(prefixed) {
+        @include e(bundle-start) {
+            @extend %border-styles;
+
+            z-index: 0;
+            border-block-width: $border-size;
+            border-inline-start-width: $border-size;
+            border-inline-end-width: 0;
+            border-start-start-radius: $border-radius;
+            border-end-start-radius: $border-radius;
+            overflow: hidden;
+        }
+    }
+
+    @include m(suffixed) {
+        @include e(bundle-end) {
+            @extend %border-styles;
+
+            z-index: 0;
+            border-width: $border-size;
+            border-inline-start-width: 0;
+            border-start-end-radius: $border-radius;
+            border-end-end-radius: $border-radius;
+            overflow: hidden;
+        }
+    }
+
+    @include m(focused) {
+        @include e(bundle-main) {
+            transition: border .15s ease-out;
+            border-color: var-get($_theme, 'focused-border-color');
+        }
+    }
+
+    @include m(invalid) {
+        @include e(bundle-main) {
+            border-color: var-get($_theme, 'error-secondary-color');
+        }
+
+        @include e(hint) {
+            color: var-get($_theme, 'error-secondary-color');
+        }
+    }
+
+    @include m(warning) {
+        @include e(bundle-main) {
+            border-color: var-get($_theme, 'warning-secondary-color');
+        }
+
+        @include e(hint) {
+            color: var-get($_theme, 'warning-secondary-color');
+        }
+    }
+
+    @include m(valid) {
+        @include e(bundle-main) {
+            border-color: var-get($_theme, 'success-secondary-color');
+        }
+
+        @include e(hint) {
+            color: var-get($_theme, 'success-secondary-color');
+        }
+    }
+
+    @include mx(focused, invalid) {
+        @include e(bundle-main) {
+            border-color: var-get($_theme, 'error-secondary-color');
+        }
+    }
+
+    @include mx(focused, warning) {
+        @include e(bundle-main) {
+            border-color: var-get($_theme, 'warning-secondary-color');
+        }
+    }
+
+    @include mx(focused, valid) {
+        @include e(bundle-main) {
+            border-color: var-get($_theme, 'success-secondary-color');
+        }
+    }
+
+    @include m(focused, $not: (file)) {
+        @include e(bundle-main) {
+            transition: box-shadow .15s ease-out;
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'focused-secondary-color');
+        }
+    }
+
+    @include mx(focused, valid, ('not': (file))) {
+        @include e(bundle-main) {
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'success-shadow-color');
+        }
+    }
+
+    @include mx(focused, invalid, ('not': (file))) {
+        @include e(bundle-main) {
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'error-shadow-color');
+        }
+    }
+
+    // TODO: This state has no schema variable
+    //@include mx(focused, warning, ('not': (file))) {
+    //    @include e(bundle-main) {
+    //        box-shadow: 0 0 0 rem(4px) var-get($_theme, 'warning-shadow-color');
+    //    }
+    //}
+
+    $transition-border: border .15s ease-out;
+    $transition-box-shadow: box-shadow .15s ease-out;
+
+    @include m(file) {
+        @include e(bundle) {
+            transition: $transition-box-shadow
+        }
+
+        @include e(upload) {
+            transition: $transition-border;
+
+            min-height: var-get($_theme, 'size');
+        }
+
+        @include e(bundle-start) {
+            transition: $transition-border;
+        }
+
+        @include e(bundle-end) {
+            transition: $transition-border;
+        }
+    }
+
+    @include mx(focused, file) {
+        @include e(bundle) {
+            transition: $transition-box-shadow;
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'focused-secondary-color');
+        }
+
+        @include e(upload) {
+            border-color: var-get($_theme, 'focused-border-color');
+        }
+
+        @include e(bundle-start) {
+            border-color: var-get($_theme, 'focused-border-color');
+        }
+
+        @include e(bundle-end) {
+            border-color: var-get($_theme, 'focused-border-color');
+        }
+    }
+
+    @include mx(file, valid) {
+        @include e(upload) {
+            border-color: var-get($_theme, 'success-secondary-color');
+        }
+
+        @include e(bundle-start) {
+            border-color: var-get($_theme, 'success-secondary-color');
+        }
+
+        @include e(bundle-end) {
+            border-color: var-get($_theme, 'success-secondary-color');
+        }
+    }
+
+    @include mx(file, invalid) {
+        @include e(upload) {
+            border-color: var-get($_theme, 'error-secondary-color');
+        }
+
+        @include e(bundle-start) {
+            border-color: var-get($_theme, 'error-secondary-color');
+        }
+
+        @include e(bundle-end) {
+            border-color: var-get($_theme, 'error-secondary-color');
+        }
+    }
+
+    @include mx(file, warning) {
+        @include e(upload) {
+            border-color: var-get($_theme, 'warning-secondary-color');
+        }
+
+        @include e(bundle-start) {
+            border-color: var-get($_theme, 'warning-secondary-color');
+        }
+
+        @include e(bundle-end) {
+            border-color: var-get($_theme, 'warning-secondary-color');
+        }
+    }
+
+    @include mx(file, focused, valid) {
+        @include e(bundle) {
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'success-shadow-color');
+        }
+    }
+
+    @include mx(file, focused, invalid) {
+        @include e(bundle) {
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'error-shadow-color');
+        }
+    }
+
+    @include mx(file, focused, warning) {
+        // TODO: This state has no schema variable
+        //@include e(bundle) {
+        //    box-shadow: 0 0 0 rem(4px) var-get($_theme, 'warning-shadow-color');
+        //}
+    }
+
+    @include m(disabled) {
+        @include e(bundle) {
+            @extend %disabled-styles;
+        }
+
+        @include e(bundle-main) {
+            @extend %disabled-styles;
+        }
+
+        @include e(bundle-start) {
+            @extend %disabled-styles;
+        }
+
+        @include e(bundle-end) {
+            @extend %disabled-styles;
+        }
+
+        @include e(upload) {
+            @extend %disabled-styles;
+        }
+
+        igx-prefix,
+        [igxPrefix],
+        igx-suffix:not(.igx-input-group__toggle-button),
+        [igxSuffix] {
+            background: var-get($_theme, 'border-disabled-background');
+            color: var-get($_theme, 'disabled-text-color');
+        }
+    }
+}
+

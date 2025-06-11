@@ -1,5 +1,6 @@
 import {Component, CUSTOM_ELEMENTS_SCHEMA, inject, signal, computed, viewChild, DestroyRef} from '@angular/core';
 import {FormsModule, ReactiveFormsModule, UntypedFormBuilder, Validators} from '@angular/forms';
+
 import {
     defineComponents,
     IgcInputComponent,
@@ -8,6 +9,7 @@ import {
     IgcSelectComponent,
     IgcSelectItemComponent,
     IgcSelectHeaderComponent,
+    IgcFileInputComponent,
 } from 'igniteui-webcomponents';
 import {
     IGX_INPUT_GROUP_DIRECTIVES,
@@ -27,7 +29,8 @@ defineComponents(
     IgcSelectGroupComponent,
     IgcSelectComponent,
     IgcSelectItemComponent,
-    IgcSelectHeaderComponent
+    IgcSelectHeaderComponent,
+    IgcFileInputComponent
 );
 
 @Component({
@@ -64,11 +67,11 @@ export class InputGroupShowcaseSampleComponent {
             }
         },
         inputType: {
-            label: 'Input Group Type',
+            label: 'Input Group Type (Only Material theme has border/box and line types)',
             control: {
                 type: 'button-group',
                 options: ['box', 'border', 'line', 'search'],
-                defaultValue: ''
+                defaultValue: 'box'
             }
         },
         type: {
@@ -82,7 +85,13 @@ export class InputGroupShowcaseSampleComponent {
         label: {
             control: {
                 type: 'text',
-                defaultValue: 'Web address'
+                defaultValue: 'Label text'
+            }
+        },
+        hint: {
+            control: {
+                type: 'text',
+                defaultValue: 'Hint text'
             }
         },
         value: {
@@ -117,14 +126,14 @@ export class InputGroupShowcaseSampleComponent {
             }
         },
         hidePrefix: {
-            label: 'Hide Prefix',
+            label: 'Hide Prefix using (@if)',
             control: {
                 type: 'boolean',
                 defaultValue: false
             }
         },
         hideSuffix: {
-            label: 'Hide Suffix',
+            label: 'Hide Suffix using( [hidden] )',
             control: {
                 type: 'boolean',
                 defaultValue: false
@@ -217,6 +226,12 @@ export class InputGroupShowcaseSampleComponent {
     public getSize = computed(() => `var(--ig-size-${this.properties()?.size || 'medium'})`);
     public getPlaceholder = computed(() => this.properties()?.placeholder || null);
     public getLabel = computed(() => this.properties()?.label || '');
+
+    public getHint = computed(() => {
+        const hint = this.properties()?.hint || '';
+        return hint.trim() ? hint : null;
+    });
+
     public getNativeInputType = computed(() => this.properties()?.type || 'text');
     public getInputGroupType = computed(() => this.properties()?.inputType || '');
 
@@ -224,7 +239,7 @@ export class InputGroupShowcaseSampleComponent {
     public isRequired = computed(() => !!this.properties()?.required);
     public isDisabled = computed(() => !!this.properties()?.disabled);
     public isReadonly = computed(() => !!this.properties()?.readonly);
-    public hidePrefix = computed(() => !!this.properties()?.hidePrefix);
-    public hideSuffix = computed(() => !!this.properties()?.hideSuffix);
+    public hidePrefix = computed(() => !this.properties()?.hidePrefix);
+    public hideSuffix = computed(() => !this.properties()?.hideSuffix);
 }
 
