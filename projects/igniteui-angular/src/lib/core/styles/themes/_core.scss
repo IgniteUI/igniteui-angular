@@ -125,8 +125,8 @@
     }
 
     @property --vhelper-scollbar-size {
-        syntax: '<integer>';
-        initial-value: 0;
+        syntax: '<length>';
+        initial-value: 16px;
         inherits: true;
     }
 
