@@ -41,7 +41,6 @@
         color: $color,
         size: $size,
         disabled-color: $disabled-color,
-        theme: map.get($schema, '_meta', 'theme'),
     ));
 }
 

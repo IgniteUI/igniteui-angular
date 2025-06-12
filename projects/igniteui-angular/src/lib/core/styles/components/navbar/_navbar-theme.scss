@@ -43,18 +43,32 @@
     }
 
     $theme: digest-schema($navbar-schema);
-    $meta: map.get($theme, '_meta');
+    $variant: map.get($theme, '_meta', 'theme');
 
     @if not($text-color) and $background {
-        $text-color: text-contrast($background);
+        $text-color: adaptive-contrast(var(--background));
+    }
+
+    @if not($hover-icon-color) and $idle-icon-color {
+        $hover-icon-color: hsl(from (var(--idle-icon-color)) h s calc(l * 1.1));
     }
 
     @if not($idle-icon-color) and $background {
-        $idle-icon-color: text-contrast($background);
+        $idle-icon-color: adaptive-contrast(var(--background));
     }
 
-    @if not($hover-icon-color) and $background {
-        $hover-icon-color: text-contrast($background);
+    @if $variant == 'indigo' {
+        @if not($border-color) and $background {
+            $border-color: hsla(from adaptive-contrast(var(--background)) h s l / 0.3);
+        }
+
+        @if not($hover-icon-color) and $background {
+            $hover-icon-color: hsla(from adaptive-contrast(var(--background)) h s l / 0.7);
+        }
+    } @else {
+        @if not($hover-icon-color) and $background {
+            $hover-icon-color: adaptive-contrast(var(--background));
+        }
     }
 
     @if not($shadow) {
@@ -74,10 +88,6 @@
         idle-icon-color: $idle-icon-color,
         hover-icon-color: $hover-icon-color,
         shadow: $shadow,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -86,7 +96,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin navbar($theme) {
     @include css-vars($theme);
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     $navbar-padding: rem(16px);
     $navbar-title-fz: rem(18px, 16px);
@@ -194,19 +204,19 @@
         igx-icon,
         igc-icon {
             --component-size: 3;
+
             cursor: pointer;
+            user-select: none;
+            transition: color .15s $out-quad;
         }
 
-        > igx-icon,
-        > igc-icon {
-            transition: color .15s $out-quad;
+        >igx-icon,
+        >igc-icon {
             color: var-get($theme, 'idle-icon-color');
 
             &:hover {
                 color: var-get($theme, 'hover-icon-color');
             }
-
-            user-select: none;
         }
 
         @if $variant == 'indigo' {

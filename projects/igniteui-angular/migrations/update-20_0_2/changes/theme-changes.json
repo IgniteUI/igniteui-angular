@@ -1,0 +1,11 @@
+{
+  "$schema": "../../common/schema/theme-changes.schema.json",
+  "changes": [
+    {
+      "name": "$interim-bottom-line-color",
+      "remove": true,
+      "owner": "input-group-theme",
+      "type": "property"
+    }
+  ]
+}
