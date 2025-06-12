@@ -8,9 +8,12 @@ import { PlatformUtil } from '../../core/utils';
     template: '<div #container class="igx-vhelper__placeholder-content" [style.height.px]="size"></div>',
     standalone: true
 })
-export class VirtualHelperComponent extends VirtualHelperBaseDirective implements OnDestroy  {
+export class VirtualHelperComponent extends VirtualHelperBaseDirective implements OnInit, OnDestroy  {
     @HostBinding('scrollTop')
     public scrollTop;
+
+    @HostBinding('style.width.px')
+    public scrollWidth;
 
     @HostBinding('style.--vhelper-scrollbar-size')
     public get scrollbarSize(): string {
@@ -27,6 +30,10 @@ export class VirtualHelperComponent extends VirtualHelperBaseDirective implement
 
     constructor(elementRef: ElementRef, cdr: ChangeDetectorRef, zone: NgZone, @Inject(DOCUMENT) document, platformUtil: PlatformUtil) {
         super(elementRef, cdr, zone, document, platformUtil);
+    }
+
+    public ngOnInit() {
+        this.scrollWidth = this.scrollNativeSize;
     }
 
     protected override restoreScroll() {
