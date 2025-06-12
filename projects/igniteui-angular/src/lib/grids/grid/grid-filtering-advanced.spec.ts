@@ -27,7 +27,7 @@ import { QueryBuilderFunctions } from '../../query-builder/query-builder-functio
 import { By } from '@angular/platform-browser';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
 import { QueryBuilderSelectors } from '../../query-builder/query-builder.common';
-import { IgxHGridRemoteOnDemandComponent } from '../hierarchical-grid/hierarchical-grid.spec';
+import { IgxHGridRemoteOnDemandComponent, IgxHierarchicalGridMissingChildDataComponent } from '../hierarchical-grid/hierarchical-grid.spec';
 import { IGridResourceStrings } from '../../core/i18n/grid-resources';
 
 describe('IgxGrid - Advanced Filtering #grid - ', () => {
@@ -1897,6 +1897,19 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             var operatorSelect = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix, 0);
             expect(operatorSelect.querySelector('input').value).toBe('My In');
             expect(Array.from(operatorSelect.querySelectorAll('igx-select-item')).pop().textContent).toBe('My Not In');
+        }));
+
+        it('Should not throw an error when some child data is missing.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxHierarchicalGridMissingChildDataComponent);
+            const hierarchicalGrid = fixture.componentInstance.hGrid;
+            hierarchicalGrid.allowAdvancedFiltering = true;
+            fixture.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            expect(() => {
+                hierarchicalGrid.openAdvancedFilteringDialog();
+                fixture.detectChanges();
+            }).not.toThrow();
         }));
     });
 });
