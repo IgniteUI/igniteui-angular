@@ -12,15 +12,7 @@ export class VirtualHelperComponent extends VirtualHelperBaseDirective implement
     @HostBinding('scrollTop')
     public scrollTop;
 
-    @HostBinding('style.width.px')
     public scrollWidth;
-
-    @HostBinding('style.--vhelper-scrollbar-size')
-    public get scrollbarSize(): string {
-        const value = `${this.scrollNativeSize}px`;
-        this.document.documentElement.style.setProperty('--vhelper-scrollbar-size', value);
-        return value;
-    }
 
     @ViewChild('container', { read: ViewContainerRef, static: true }) public _vcr;
     @Input() public itemsLength: number;
@@ -34,6 +26,10 @@ export class VirtualHelperComponent extends VirtualHelperBaseDirective implement
 
     public ngOnInit() {
         this.scrollWidth = this.scrollNativeSize;
+        this.document.documentElement.style.setProperty(
+            '--vhelper-scrollbar-size',
+            `${this.scrollNativeSize}px`
+        );
     }
 
     protected override restoreScroll() {
