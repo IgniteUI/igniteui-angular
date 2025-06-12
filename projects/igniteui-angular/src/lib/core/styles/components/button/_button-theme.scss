@@ -46,7 +46,7 @@
 /// @param {Color} $resting-shadow [null] - The shadow of the button in its idle state.
 /// @param {Color} $hover-shadow [null] - The shadow of the button in its hover state.
 /// @param {Color} $focus-shadow [null] - The shadow of the button in its focus state.
-/// @param {Color} $active-shadow [null] - The shadow of the button in its focus state.
+/// @param {Color} $active-shadow [null] - The shadow of the button in its active state.
 /// @param {Color} $disabled-background [null] - The disabled background color of the button.
 /// @param {Color} $disabled-foreground [null] - The disabled text color of the button.
 /// @param {Color} $disabled-icon-color [null] - The disabled icon color of the button.
@@ -828,7 +828,7 @@
             color: var-get($contained-theme, 'active-foreground');
             background: var-get($contained-theme, 'active-background');
             border-color: var-get($contained-theme, 'active-border-color');
-            box-shadow: var-get($contained-theme, 'hover-shadow');
+            box-shadow: var-get($contained-theme, 'active-shadow');
 
             igx-icon {
                 color: var-get($contained-theme, 'active-foreground');
@@ -968,7 +968,7 @@
             color: var-get($fab-theme, 'active-foreground');
             background: var-get($fab-theme, 'active-background');
             border-color: var-get($fab-theme, 'active-border-color');
-            box-shadow: var-get($fab-theme, 'focus-shadow');
+            box-shadow: var-get($fab-theme, 'active-shadow');
 
             igx-icon {
                 color: var-get($fab-theme, 'active-foreground');
