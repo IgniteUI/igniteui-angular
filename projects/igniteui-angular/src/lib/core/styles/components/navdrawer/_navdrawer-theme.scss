@@ -73,42 +73,48 @@
     }
 
     $theme: digest-schema($navdrawer-schema);
-    $meta: map.get($theme, '_meta');
 
     @if not($item-header-text-color) and $background {
-        $item-header-text-color: text-contrast($background);
+        $item-header-text-color: adaptive-contrast(var(--background));
     }
 
     @if not($item-text-color) and $background {
-        $item-text-color: text-contrast($background);
+        $item-text-color: adaptive-contrast(var(--background));
     }
 
     @if not($item-icon-color) and $background {
-        $item-icon-color: text-contrast($background);
-    }
-
-    @if not($item-active-background) and $background {
-        @if meta.type-of($background) == 'color' {
-            $item-active-background: rgba(text-contrast($background), .24);
-        }
-    }
-
-    @if not($item-active-text-color) and $item-active-background {
-        $item-active-text-color: text-contrast($item-active-background);
-    }
-
-    @if not($item-active-icon-color) and $item-active-background {
-        $item-active-icon-color: text-contrast($item-active-background);
+        $item-icon-color: adaptive-contrast(var(--background));
     }
 
     @if not($item-hover-background) and $background {
-        @if meta.type-of($background) == 'color' {
-            $item-hover-background: rgba(text-contrast($background), .08);
-        }
+        $item-hover-background: hsla(from adaptive-contrast(var(--background)) h s l / .08);
     }
 
     @if not($item-hover-text-color) and $background {
-        $item-hover-text-color: text-contrast($background);
+        $item-hover-text-color: adaptive-contrast(var(--background));
+    }
+
+    @if not($item-hover-icon-color) and $background {
+        $item-hover-icon-color: adaptive-contrast(var(--background));
+    }
+
+    @if not($item-active-background) and $background {
+        $item-active-background: hsla(from adaptive-contrast(var(--background)) h s l / .24);
+    }
+
+    @if not($item-active-text-color) and $item-active-background {
+        $item-active-text-color: adaptive-contrast(var(--item-active-background));
+    }
+
+    @if not($item-active-icon-color) and $item-active-background {
+        $item-active-icon-color: adaptive-contrast(var(--item-active-background));
+    }
+
+    @if not($item-disabled-text-color) and $background {
+        $item-disabled-text-color: hsla(from adaptive-contrast(var(--background)) h s l / .38);
+    }
+    @if not($item-disabled-icon-color) and $background {
+        $item-disabled-icon-color: hsla(from adaptive-contrast(var(--background)) h s l / .38);
     }
 
     @if not($shadow) {
@@ -133,11 +139,7 @@
         item-hover-icon-color: $item-hover-icon-color,
         item-disabled-text-color:$item-disabled-text-color,
         item-disabled-icon-color: $item-disabled-icon-color,
-        shadow: $shadow,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
+        shadow: $shadow
     ));
 }
 
@@ -147,7 +149,7 @@
 @mixin navdrawer($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $drawer-icon-size: rem(24px);
 
     $aside-padding: map.get((
