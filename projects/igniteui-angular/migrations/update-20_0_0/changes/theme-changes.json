@@ -6,12 +6,6 @@
       "remove": true,
       "owner": "grid-summary-theme",
       "type": "property"
-    },
-    {
-      "name": "$interim-bottom-line-color",
-      "remove": true,
-      "owner": "input-group-theme",
-      "type": "property"
     }
   ]
 }

@@ -34,24 +34,4 @@ describe(`Update to ${version}`, () => {
             );`
         );
     });
-
-    it('should remove the $interim-bottom-line-color property from the input-group theme', async () => {
-        const testFilePath = `/testSrc/appPrefix/component/test.component.scss`;
-
-        appTree.create(
-            testFilePath,
-            `$my-input-group-theme: input-group-theme(
-                $box-background: #ccc,
-                $interim-bottom-line-color: orange,
-            );`
-        );
-
-        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
-
-        expect(tree.readContent(testFilePath)).toEqual(
-            `$my-input-group-theme: input-group-theme(
-                $box-background: #ccc,
-            );`
-        );
-    });
 });
