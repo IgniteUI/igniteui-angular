@@ -34,7 +34,6 @@
 /// @param {Color} $idle-bottom-line-color [null] - The bottom line and border colors in the idle state.
 /// @param {Color} $hover-bottom-line-color [null] - The bottom line and border colors in the hover state.
 /// @param {Color} $focused-bottom-line-color [null] - The bottom line and border colors in the focused state.
-/// @param {Color} $interim-bottom-line-color [null] - The bottom line and border colors during the to-focused transition.
 /// @param {Color} $disabled-bottom-line-color [null] - The bottom line and border colors in the disabled state.
 /// @param {Color} $border-color [null] - The border color for input groups of type border and fluent.
 /// @param {Color} $hover-border-color [null] - The hover input border for input groups of type border and fluent.
@@ -86,7 +85,6 @@
     $idle-bottom-line-color: null,
     $hover-bottom-line-color: null,
     $focused-bottom-line-color: null,
-    $interim-bottom-line-color: null,
     $disabled-bottom-line-color: null,
 
     $border-color: null,
@@ -234,7 +232,6 @@
         idle-bottom-line-color: $idle-bottom-line-color,
         hover-bottom-line-color: $hover-bottom-line-color,
         focused-bottom-line-color: $focused-bottom-line-color,
-        interim-bottom-line-color: $interim-bottom-line-color,
         disabled-bottom-line-color: $disabled-bottom-line-color,
         border-color: $border-color,
         hover-border-color: $hover-border-color,
