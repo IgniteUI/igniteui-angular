@@ -438,7 +438,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             .subscribe(() => {
                 this.updateChildren();
                 // update existing grids since their child ri have been changed.
-                this.getGridsForIsland(this.key).forEach(grid => {
+                this.rowIslandAPI.getChildGrids(false).forEach(grid => {
                     (grid as any).onRowIslandChange(this.children);
                 });
             });
