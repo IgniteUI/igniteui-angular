@@ -1,8 +1,8 @@
-import { ApplicationRef, ChangeDetectorRef, ComponentFactory, ComponentRef, DestroyRef, Injector, OnChanges, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
+import { ApplicationRef, ChangeDetectorRef, ComponentFactory, ComponentRef, DestroyRef, EventEmitter, Injector, OnChanges, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgElement } from '@angular/elements';
-import { fromEvent } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { NgElement, NgElementStrategyEvent } from '@angular/elements';
+import { fromEvent, Observable } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { ComponentConfig, ContentQueryMeta } from './component-config';
 
 import { ComponentNgElementStrategy, ComponentNgElementStrategyFactory, extractProjectableNodes, isFunction } from './ng-element-strategy';
@@ -24,11 +24,15 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     // public override componentRef: ComponentRef<any>|null = null;
 
     protected element: IgcNgElement;
+    /** The parent _component_'s element (a.k.a the semantic parent, rather than the DOM one after projection) */
+    protected parentElement?: WeakRef<IgcNgElement>;
     /** Native Angular parent (if any) the Element is created under, usually as template of dynamic component (e.g. HGrid row island paginator) */
     protected angularParent: ComponentRef<any>;
     /** Cached child instances per query prop. Used for dynamic components's child templates that normally persist in Angular runtime */
     protected cachedChildComponents: Map<string, ComponentRef<any>[]> = new Map();
     private setComponentRef: (value: ComponentRef<any>) => void;
+    /** The maximum depth at which event arguments are processed and angular components wrapped with Proxies, that handle template set */
+    private maxEventProxyDepth = 3;
 
     /**
      * Resolvable component reference.
@@ -39,14 +43,14 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
      */
     public [ComponentRefKey] = new Promise<ComponentRef<any>>((resolve, _) => this.setComponentRef = resolve);
 
-    private _templateWrapper: TemplateWrapperComponent;
+    private _templateWrapperRef: ComponentRef<TemplateWrapperComponent>;
     protected get templateWrapper(): TemplateWrapperComponent {
-        if (!this._templateWrapper) {
+        if (!this._templateWrapperRef) {
             const componentRef = (this as any).componentRef as ComponentRef<any>;
             const viewRef = componentRef.injector.get(ViewContainerRef);
-            this._templateWrapper = viewRef.createComponent(TemplateWrapperComponent).instance;
+            this._templateWrapperRef = viewRef.createComponent(TemplateWrapperComponent);
         }
-        return this._templateWrapper;
+        return this._templateWrapperRef.instance;
     }
 
     private _configSelectors: string;
@@ -61,7 +65,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         super(_componentFactory, _injector);
     }
 
-    override async initializeComponent(element: HTMLElement) {
+    protected override async initializeComponent(element: HTMLElement) {
         if (!element.isConnected) {
             // D.P. 2022-09-20 do not initialize on connectedCallback that is not actually connected
             // connectedCallback may be called once your element is no longer connected
@@ -74,14 +78,13 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         // TODO: Fail handling or cancellation needed?
         (this as any).componentRef = {};
 
-        const toBeOrphanedChildren = Array.from(element.children).filter(x => !this._componentFactory.ngContentSelectors.some(sel => x.matches(sel)));
-        for (const iterator of toBeOrphanedChildren) {
-            // TODO: special registration OR config for custom
-        }
+        // const toBeOrphanedChildren = Array.from(element.children).filter(x => !this._componentFactory.ngContentSelectors.some(sel => x.matches(sel)));
+        // for (const iterator of toBeOrphanedChildren) {
+        //     // TODO: special registration OR config for custom
+        // }
         let parentInjector: Injector;
         let parentAnchor: ViewContainerRef;
-        const parents: IgcNgElement[] = [];
-        let parentConfig: ComponentConfig;
+        const parents: WeakRef<IgcNgElement>[] = [];
         const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
 
         const configParents = componentConfig?.parents
@@ -96,11 +99,11 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                     reflectComponentType(x.component).selector
                 ]).join(','));
                 if (node) {
-                    parents.push(node);
+                    parents.push(new WeakRef(node));
                 }
             }
             // select closest of all possible config parents
-            let parent = parents[0];
+            let parent = parents[0]?.deref();
 
             // Collected parents may include direct Angular HGrids, so only wait for configured parent elements:
             const configParent = configParents.find(x => x.selector === parent?.tagName.toLocaleLowerCase());
@@ -111,7 +114,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             // ngElementStrategy getter is protected and also has initialization logic, though that should be safe at this point
             if (parent?.ngElementStrategy) {
                 this.angularParent = parent.ngElementStrategy.angularParent;
-                const parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
+                this.parentElement = new WeakRef(parent);
+                let parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
                 parentInjector = parentComponentRef?.injector;
 
                 // TODO: Consider general solution (as in Parent w/ @igxAnchor tag)
@@ -119,7 +123,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                     || element.tagName.toLocaleLowerCase() === 'igc-paginator') {
                     // NOPE: viewcontainerRef will re-render this node again, no option for rootNode :S
                     // this.componentRef = parentAnchor.createComponent(this.componentFactory.componentType, { projectableNodes, injector: childInjector });
-                    const parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
+                    parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
                     parentAnchor = parentComponentRef?.instance.anchor;
                 }
             } else if ((parent as any)?.__componentRef) {
@@ -180,44 +184,44 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         // componentRef should also likely be protected:
         const componentRef = (this as any).componentRef as ComponentRef<any>;
 
-        for (let i = 0; i < parents.length; i++) {
-            const parent = parents[i];
+        const parentQueries = this.getParentContentQueries(componentConfig, parents, configParents);
 
-            // find the respective config entry
-            parentConfig = configParents.find(x => x.selector === parent?.tagName.toLocaleLowerCase());
-
-            if (!parentConfig) {
-                continue;
-            }
-
-            const componentType = this._componentFactory.componentType;
-            // TODO - look into more cases where query expects a certain base class but gets a subclass.
-            // Related to https://github.com/IgniteUI/igniteui-angular/pull/12134#discussion_r983147259
-            const contentQueries = parentConfig.contentQueries.filter(x => x.childType === componentType || x.childType === componentConfig.provideAs);
-
-            for (const query of contentQueries) {
-                if (i > 0 && !query.descendants) {
-                    continue;
+        for (const { parent, query } of parentQueries) {
+            if (query.isQueryList) {
+                parent.ngElementStrategy.scheduleQueryUpdate(query.property);
+                if (this.angularParent) {
+                    // Cache the component in the parent (currently only paginator for HGrid),
+                    // so it is kept in the query even when detached from DOM
+                    this.addToParentCache(parent, query.property);
                 }
-
+            } else {
                 const parentRef = await parent.ngElementStrategy[ComponentRefKey];
-                if (query.isQueryList) {
-                    parent.ngElementStrategy.scheduleQueryUpdate(query.property);
-                    if (this.angularParent) {
-                        // Cache the component in the parent (currently only paginator for HGrid),
-                        // so it is kept in the query even when detached from DOM
-                        this.addToParentCache(parent, query.property);
-                    }
-                } else {
-                    parentRef.instance[query.property] = componentRef.instance;
-                    parentRef.changeDetectorRef.detectChanges();
-                }
+                parentRef.instance[query.property] = componentRef.instance;
+                parentRef.changeDetectorRef.detectChanges();
             }
         }
 
         if (['igc-grid', 'igc-tree-grid', 'igc-hierarchical-grid'].includes(element.tagName.toLocaleLowerCase())) {
             this.patchGridPopups();
         }
+
+        // instead of duplicating super.disconnect() w/ the scheduled destroy:
+        componentRef.onDestroy(() => {
+            if (this._templateWrapperRef) {
+                this._templateWrapperRef.destroy();
+                this._templateWrapperRef = null;
+            }
+
+            // also schedule query updates on all parents:
+            this.getParentContentQueries(componentConfig, parents, configParents)
+                .filter(x => x.parent?.isConnected && x.query.isQueryList)
+                .forEach(({ parent, query }) => {
+                    parent.ngElementStrategy.scheduleQueryUpdate(query.property);
+                    if (this.angularParent) {
+                        this.removeFromParentCache(parent, query.property);
+                    }
+                });
+        });
     }
 
     public override setInputValue(property: string, value: any, transform?: (value: any) => any): void {
@@ -346,23 +350,47 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     }
 
     private addToParentCache(parentElement: IgcNgElement, queryName: string) {
-        var cachedComponents = parentElement.ngElementStrategy.cachedChildComponents.get(queryName) || [];
+        const cachedComponents = parentElement.ngElementStrategy.cachedChildComponents.get(queryName) || [];
         cachedComponents.push((this as any).componentRef.instance);
         parentElement.ngElementStrategy.cachedChildComponents.set(queryName, cachedComponents);
     }
+
+    private removeFromParentCache(parentElement: IgcNgElement, queryName: string) {
+        let cachedComponents = parentElement.ngElementStrategy.cachedChildComponents.get(queryName) || [];
+        cachedComponents = cachedComponents.filter(x => x !== (this as any).componentRef.instance);
+        parentElement.ngElementStrategy.cachedChildComponents.set(queryName, cachedComponents);
+    }
+
+    /** Get all matching content questions from all parents */
+    private getParentContentQueries(componentConfig: ComponentConfig, parents: WeakRef<IgcNgElement>[], configParents: ComponentConfig[]): { parent: IgcNgElement, query: ContentQueryMeta }[] {
+        const queries: { parent: IgcNgElement, query: ContentQueryMeta }[] = [];
+
+        for (let i = 0; i < parents.length; i++) {
+            const parent = parents[i]?.deref();
+
+            // find the respective config entry
+            const parentConfig = configParents.find(x => x.selector === parent?.tagName.toLocaleLowerCase());
+            if (!parentConfig) {
+                continue;
+            }
+
+            const componentType = this._componentFactory.componentType;
+            // TODO - look into more cases where query expects a certain base class but gets a subclass.
+            // Related to https://github.com/IgniteUI/igniteui-angular/pull/12134#discussion_r983147259
+            const contentQueries = parentConfig.contentQueries.filter(x => x.childType === componentType || x.childType === componentConfig.provideAs);
+
+            for (const query of contentQueries) {
+                if (i > 0 && !query.descendants) {
+                    continue;
+                }
+                queries.push({ parent, query });
+            }
+        }
+
+        return queries;
+    }
     //#endregion schedule query update
 
-    /**
-     * assignTemplateCallback
-     */
-    public assignTemplateCallback(templateProp: string, callback: any) {
-        const componentRef = (this as any).componentRef as ComponentRef<any>;
-        if (componentRef) {
-            const templateRef = this.templateWrapper.addTemplate(callback);
-            componentRef.instance[templateProp] = templateRef;
-            componentRef.changeDetectorRef.detectChanges();
-        }
-    }
 
     //#region Grid popups hide on scroll
     /**
@@ -398,13 +426,101 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     }
     //#endregion
 
-    override disconnect(): void {
+    public override disconnect(): void {
         if (this.angularParent) {
             this.angularParent.onDestroy(() => super.disconnect());
         } else {
             super.disconnect();
         }
     }
+
+    //#region Handle event args that return reference to components, since they return angular ref and not custom elements.
+    /** Sets up listeners for the component's outputs so that the events stream emits the events. */
+    protected override initializeOutputs(componentRef: ComponentRef<any>): void {
+        const eventEmitters: Observable<NgElementStrategyEvent>[] = this._componentFactory.outputs.map(
+            ({ propName, templateName }) => {
+                const emitter: EventEmitter<any> = componentRef.instance[propName];
+                return emitter.pipe(map((value: any) => ({ name: templateName, value: this.patchOutputComponents(propName, value) })));
+            },
+        );
+
+        (this as any).eventEmitters.next(eventEmitters);
+    }
+
+    protected patchOutputComponents(eventName: string, eventArgs: any) {
+        // Single out only `columnInit` event for now. If more events pop up will require a config generation.
+        if (eventName !== "columnInit") {
+            return eventArgs;
+        }
+        return this.createProxyForComponentValue(eventArgs, 1).value;
+    }
+
+    /**
+     * Nested search of event args that contain angular components and replace them with proxies.
+     * If event args are array of angular component instances should return array of proxies of each of those instances.
+     * If event args are object that has a single property being angular component should return same object except the angular component being a proxy of itself.
+     */
+    protected createProxyForComponentValue(value: any, depth: number): { value: any, hasProxies: boolean } {
+        if (depth > this.maxEventProxyDepth) {
+            return { value, hasProxies: false };
+        }
+
+        let hasProxies = false;
+        // TO DO!: Not very reliable as it is a very internal API and could be subject to change. If something comes up, should be changed.
+        if (value?.__ngContext__) {
+            const componentConfig = this.config.find((info: ComponentConfig) => value.constructor === info.component);
+            if (componentConfig?.templateProps) {
+                return { value: this.createElementsComponentProxy(value, componentConfig), hasProxies: true };
+            }
+        } else if (Array.isArray(value)) {
+            if (!value[0]) {
+                return { value, hasProxies: false };
+            } else {
+                // For array limit their parsing to first level and check if first item has created proxy inside.
+                const firstItem = this.createProxyForComponentValue(value[0], this.maxEventProxyDepth);
+                if (firstItem.hasProxies) {
+                    const mappedArray = value.slice(1, value.length).map(item => this.createProxyForComponentValue(item, depth + 1));
+                    mappedArray.unshift(firstItem);
+                    return { value: mappedArray, hasProxies: true };
+                }
+            }
+        } else if (typeof value === "object" && Object.entries(value).length && !(value instanceof Event)) {
+            for (const [key, item] of Object.entries(value)) {
+                if (!item) {
+                    value[key] = item;
+                } else {
+                    const parsedItem = this.createProxyForComponentValue(item, depth + 1);
+                    value[key] = parsedItem.value;
+                    hasProxies = parsedItem.hasProxies || hasProxies;
+                }
+            }
+        }
+
+        return { value, hasProxies };
+    }
+
+    /** Create proxy for a component that handles setting template props, making sure it provides correct TemplateRef and not Lit template */
+    protected createElementsComponentProxy(component: any, config: ComponentConfig) {
+        const parentThis = this;
+        return new Proxy(component, {
+            set(target: any, prop: string, newValue: any) {
+                // For now handle only template props
+                if (config.templateProps.includes(prop)) {
+                    const oldRef = target[prop];
+                    const oldValue = oldRef && parentThis.templateWrapper.getTemplateFunction(oldRef);
+                    if (oldValue === newValue) {
+                        newValue = oldRef;
+                    } else {
+                        newValue = parentThis.templateWrapper.addTemplate(newValue);
+                    }
+                }
+                target[prop] = newValue;
+
+                return true;
+            }
+        });
+    }
+    //#endregion
 }
 
 /**

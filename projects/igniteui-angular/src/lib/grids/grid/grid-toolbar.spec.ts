@@ -1,9 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, ComponentFixture, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, ComponentFixture, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from '../../services/public_api';
 import { IgxGridComponent } from './public_api';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from "../../test-utils/grid-functions.spec";
 import { By } from "@angular/platform-browser";
 import { IgxGridToolbarComponent } from '../toolbar/grid-toolbar.component';
@@ -35,8 +34,9 @@ const DATA = [
 ];
 
 describe('IgxGrid - Grid Toolbar #grid - ', () => {
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 DefaultToolbarComponent,
@@ -46,7 +46,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
                 IgxExcelExporterService,
                 IgxCsvExporterService
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('Basic Tests - ', () => {
@@ -173,6 +173,18 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             expect($('#csvEntry').textContent).toMatch(instance.customCSVText);
         });
 
+        it('progress indicator should stop on canceling the export', () => {
+            fixture.componentInstance.exportStartCancelled = true;
+            fixture.detectChanges();
+            $(TOOLBAR_EXPORTER_TAG).querySelector('button').click();
+            fixture.detectChanges();
+            $('#excelEntry').click();
+            fixture.detectChanges();
+
+            expect(instance.exporterAction.isExporting).toBeFalse();
+            expect(instance.exporterAction.toolbar.showProgress).toBeFalse();
+        });
+
         it('Setting overlaySettings for each toolbar columns action', () => {
             const defaultSettings = instance.pinningAction.overlaySettings;
             const defaultFiltSettings = instance.advancedFiltAction.overlaySettings;
@@ -297,7 +309,7 @@ export class DefaultToolbarComponent {
                 <igx-grid-toolbar-advanced-filtering #advancedFiltAction>
                     {{ advancedFilteringTitle }}
                 </igx-grid-toolbar-advanced-filtering>
-                <igx-grid-toolbar-exporter #exporterAction [exportCSV]="exportCSV" [exportExcel]="exportExcel" [filename]="exportFilename">
+                <igx-grid-toolbar-exporter #exporterAction [exportCSV]="exportCSV" [exportExcel]="exportExcel" [filename]="exportFilename" (exportStarted)="exportStarted($event)">
                     {{ exporterText }}
                     <span id="excelEntry" excelText>{{ customExcelText }}</span>
                     <span id="csvEntry" csvText>{{ customCSVText }}</span>
@@ -346,8 +358,15 @@ export class ToolbarActionsComponent {
         modal: true,
         closeOnEscape: false
     };
+    public exportStartCancelled = false;
 
     constructor() {
         this.data = [...DATA];
+    }
+
+    public exportStarted(args) {
+        if (this.exportStartCancelled) {
+            args.cancel = true;
+        }
     }
 }

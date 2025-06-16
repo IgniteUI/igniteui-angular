@@ -1,4 +1,3 @@
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGridCreatedEventArgs } from './public_api';
@@ -24,9 +23,8 @@ import { getComponentSize } from '../../core/utils';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
-    configureTestSuite();
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -639,6 +637,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         });
 
         it('should throw a warning when primaryKey is set to a non-existing data field', () => {
+            jasmine.getEnv().allowRespy(true);
             spyOn(console, 'warn');
             hierarchicalGrid.primaryKey = 'testField';
             fixture.componentInstance.rowIsland.primaryKey = 'testField-rowIsland';
@@ -667,6 +666,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(console.warn).toHaveBeenCalledWith(
                 `Field "${rowIsland.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
             );
+            jasmine.getEnv().allowRespy(false);
         });
     });
 

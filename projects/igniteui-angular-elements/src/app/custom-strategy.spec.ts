@@ -52,6 +52,10 @@ describe('Elements: ', () => {
             const gridComponent = (await gridEl.ngElementStrategy[ComponentRefKey]).instance as IgxGridComponent;
             const columnComponent = (await columnEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
             expect(gridComponent.columnList.toArray()).toContain(columnComponent);
+
+            columnEl.remove();
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY: DESTROY + QUERY */ * 3));
+            expect(gridComponent.columnList.toArray()).toEqual([]);
         });
 
         it(`should keep IgcNgElement instance in template of another IgcNgElement #15678`, async () => {
@@ -139,6 +143,29 @@ describe('Elements: ', () => {
 
             expect(gridEl.dataView.length).toEqual(3);
             expect(paginator.totalRecords).toEqual(gridEl.data.length);
+        });
+
+        it(`should correctly apply column template when set through event`, async () => {
+            const gridEl = document.createElement("igc-grid");
+
+            const columnID = document.createElement("igc-column");
+            columnID.setAttribute("field", "ProductID");
+            gridEl.appendChild(columnID);
+            const columnName = document.createElement("igc-column");
+            columnName.setAttribute("field", "ProductName");
+            gridEl.appendChild(columnName);
+
+            gridEl.data = SampleTestData.foodProductData();
+            gridEl.addEventListener("columnInit", (args: CustomEvent<any>) => {
+                args.detail.headerTemplate = (ctx) => html`<span>Templated ${args.detail.field}</span>`;
+            });
+            testContainer.appendChild(gridEl);
+
+            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+
+            const header = document.getElementsByTagName("igx-grid-header").item(0) as HTMLElement;
+            expect(header.innerText).toEqual('Templated ProductID');
         });
 
         it(`should initialize pivot grid with state persistence component`, async () => {

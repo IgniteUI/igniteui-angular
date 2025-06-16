@@ -17,7 +17,6 @@ import {
     IgxGridPercentColumnComponent,
     IgxGridDateTimeColumnComponent
 } from '../../test-utils/grid-samples.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
@@ -39,8 +38,8 @@ describe('IgxGrid - Column properties #grid', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
 
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 ColumnCellFormatterComponent,
                 ColumnHiddenFromMarkupComponent,
@@ -58,7 +57,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 ResizableColumnsComponent,
                 DOMAttributesAsSettersComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     it('should correctly initialize column templates', () => {

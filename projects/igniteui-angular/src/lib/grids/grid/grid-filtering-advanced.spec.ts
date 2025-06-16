@@ -1,8 +1,7 @@
-import { fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     IgxNumberFilteringOperand,
     IgxStringFilteringOperand
@@ -29,10 +28,11 @@ import { By } from '@angular/platform-browser';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
 import { QueryBuilderSelectors } from '../../query-builder/query-builder.common';
 import { IgxHGridRemoteOnDemandComponent } from '../hierarchical-grid/hierarchical-grid.spec';
+import { IGridResourceStrings } from '../../core/i18n/grid-resources';
 
 describe('IgxGrid - Advanced Filtering #grid - ', () => {
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridAdvancedFilteringColumnGroupComponent,
@@ -46,7 +46,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 IgxHierarchicalGridExportComponent,
                 IgxHGridRemoteOnDemandComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('General tests - ', () => {
@@ -641,9 +641,9 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
             const dropdownItems = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement);
             expect(dropdownItems.length).toBe(4);
-            expect((dropdownItems[0] as HTMLElement).innerText).toBe('ID');
+            expect((dropdownItems[0] as HTMLElement).innerText).toBe('HeaderID');
             expect((dropdownItems[1] as HTMLElement).innerText).toBe('ProductName');
-            expect((dropdownItems[2] as HTMLElement).innerText).toBe('AnotherField');
+            expect((dropdownItems[2] as HTMLElement).innerText).toBe('Another Field');
             expect((dropdownItems[3] as HTMLElement).innerText).toBe('ReleaseTime');
         }));
 
@@ -1264,7 +1264,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         it('Should correctly change resource strings for Advanced Filtering dialog.', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
             const grid: IgxGridComponent = fix.componentInstance.grid;
-            grid.resourceStrings = Object.assign({}, grid.resourceStrings, {
+            const myResourceStrings: IGridResourceStrings = {
                 igx_grid_filter_operator_and: 'My and',
                 igx_grid_filter_operator_or: 'My or',
                 igx_grid_advanced_filter_title: 'My advanced filter',
@@ -1272,11 +1272,29 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 igx_grid_advanced_filter_create_and_group: 'My create and group',
                 igx_grid_advanced_filter_and_label: 'My and',
                 igx_grid_advanced_filter_or_label: 'My or',
+                igx_grid_advanced_filter_add_condition: 'Add my condition',
                 igx_grid_advanced_filter_add_condition_root: 'My condition',
                 igx_grid_advanced_filter_add_group_root: 'My group',
+                igx_grid_advanced_filter_add_group: 'Add my group',
                 igx_grid_advanced_filter_ungroup: 'My ungroup',
+                igx_grid_advanced_filter_switch_group: 'My switch to {0}',
                 igx_grid_advanced_filter_delete_filters: 'My delete filters'
+            };
+
+            grid.resourceStrings = {
+                ...grid.resourceStrings,
+                ...myResourceStrings
+            };
+
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'ProductName',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                searchVal: 'angular',
+                ignoreCase: true
             });
+
+            grid.advancedFilteringExpressionsTree = tree;
             fix.detectChanges();
 
             // Open Advanced Filtering dialog.
@@ -1284,27 +1302,37 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fix).trim()).toBe('My advanced filter');
-            expect(QueryBuilderFunctions.getQueryBuilderInitialAddConditionBtn(fix).querySelector('span').innerText)
-                .toBe('My condition');
-
-            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
-            tick(100);
-            fix.detectChanges();
-
-
-            // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
-
-            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
-            UIInteractions.clickAndSendInputElementValue(input, 'angular', fix); // Type filter value.
-            // Commit the populated expression.
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
-            fix.detectChanges();
             expect((QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement).querySelector('span').innerText)
                 .toBe('My condition');
             expect((QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[1] as HTMLElement).querySelector('span').innerText)
                 .toBe('My group');
+
+            QueryBuilderFunctions.clickQueryBuilderGroupContextMenu(fix, 0);
+            tick(100);
+            fix.detectChanges();
+            
+            const groupDDLItems = QueryBuilderFunctions.getQueryBuilderGroupContextMenuDropDownItems(fix);
+            expect(groupDDLItems[0].innerText).toBe('My switch to MY OR');
+            expect(groupDDLItems[1].innerText).toBe('My ungroup');
+
+            QueryBuilderFunctions.clickQueryBuilderGroupContextMenu(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Hover the condition chip to show the add button
+            const expressionItem = fix.nativeElement.querySelectorAll(`.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM}`)[0];
+            expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
+            tick();
+            fix.detectChanges();
+
+            // Click the add icon to display the adding buttons and verify their content.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChipIcon(fix, [0], 'add');
+            fix.detectChanges();
+            tick(50);
+
+            const addingButtons: any = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0);
+            expect(addingButtons[0].innerText).toBe('add\nMy condition');
+            expect(addingButtons[1].innerText).toBe('add\nMy group');
         }));
     });
 
@@ -1332,7 +1360,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             QueryBuilderFunctions.clickQueryBuilderColumnSelect(fix);
             fix.detectChanges();
             const dropdownValues = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
-            const expectedValues = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'AnotherField', 'DateTimeCreated'];
+            const expectedValues = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'Another Field', 'DateTimeCreated'];
             expect(expectedValues).toEqual(dropdownValues);
         }));
     });
@@ -1792,6 +1820,83 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             dropdownValues = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement, 1).map((x: any) => x.innerText);
             expectedValues = ['ID', 'ProductName'];
             expect(dropdownValues).toEqual(expectedValues);
+        }));
+
+        it('Should correctly change resource strings for hierarchical Advanced Filtering dialog.', fakeAsync(() => {
+            hgrid.closeAdvancedFilteringDialog(false);
+            tick(200);
+            fix.detectChanges(); 
+            
+            const innerTree = new FilteringExpressionsTree(0, undefined, 'childData', ['ID']);
+            innerTree.filteringOperands.push({
+                fieldName: 'ID',
+                ignoreCase: false,
+                conditionName: IgxStringFilteringOperand.instance().condition('contains').name,
+                searchVal: '39'
+            });
+    
+            const tree = new FilteringExpressionsTree(0, undefined, 'rootData', ['ID']);
+            tree.filteringOperands.push({
+                fieldName: 'ID',
+                conditionName: IgxStringFilteringOperand.instance().condition('inQuery').name,
+                ignoreCase: false,
+                searchTree: innerTree
+            });
+
+            hgrid.advancedFilteringExpressionsTree = tree;
+            
+            const myResourceStrings: IGridResourceStrings = {
+                igx_grid_filter_operator_and: 'My and',
+                igx_grid_filter_operator_or: 'My or',
+                igx_grid_advanced_filter_title: 'My advanced filter',
+                igx_grid_advanced_filter_end_group: 'My end group',
+                igx_grid_advanced_filter_create_and_group: 'My create and group',
+                igx_grid_advanced_filter_and_label: 'My and',
+                igx_grid_advanced_filter_or_label: 'My or',
+                igx_grid_advanced_filter_add_condition: 'Add my condition',
+                igx_grid_advanced_filter_add_condition_root: 'My condition',
+                igx_grid_advanced_filter_add_group_root: 'My group',
+                igx_grid_advanced_filter_add_group: 'Add my group',
+                igx_grid_advanced_filter_ungroup: 'My ungroup',
+                igx_grid_advanced_filter_switch_group: 'My switch to {0}',
+                igx_grid_advanced_filter_delete_filters: 'My delete filters',
+                igx_grid_advanced_filter_from_label: 'My from',
+                igx_grid_advanced_filter_query_value_placeholder: 'My sub-query results',
+                igx_grid_advanced_filter_select_entity: 'Select my entity',
+                igx_grid_advanced_filter_select_return_field_single: 'Select my return fields',
+                igx_grid_filter_in: 'My In',
+                igx_grid_filter_notIn: 'My Not In'
+            };
+
+            hgrid.resourceStrings = {
+                ...hgrid.resourceStrings,
+                ...myResourceStrings
+            };
+
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            hgrid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+            
+            // Open up the sub-query
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
+            tick(100);
+            fix.detectChanges();
+
+            const valueInput: any = QueryBuilderFunctions.getQueryBuilderValueInput(fix);
+            expect(valueInput.querySelector('input').placeholder).toBe('My sub-query results');
+            
+            const entitySelect = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 1);
+            const selectLabel = entitySelect.previousElementSibling as HTMLSpanElement;
+            expect(selectLabel.innerText).toBe('My from');
+            expect(entitySelect.querySelector('input').placeholder).toBe('Select my entity');
+            const fieldsCombo = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, 1);
+            expect(fieldsCombo.querySelector('input').placeholder).toBe('Select my return fields');
+
+            var operatorSelect = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix, 0);
+            expect(operatorSelect.querySelector('input').value).toBe('My In');
+            expect(Array.from(operatorSelect.querySelectorAll('igx-select-item')).pop().textContent).toBe('My Not In');
         }));
     });
 });
