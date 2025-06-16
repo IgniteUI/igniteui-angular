@@ -120,12 +120,6 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             if (parent?.ngElementStrategy) {
                 this.angularParent = parent.ngElementStrategy.angularParent;
 
-                // action strip is reused in row island child grid
-                // assign parent so it's not destroyed on detach/attach.
-                if (element.tagName.toLocaleLowerCase() === 'igc-action-strip') {
-                    this.angularParent = (parent.ngElementStrategy as any).componentRef;
-                }
-
                 this.parentElement = new WeakRef(parent);
                 let parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
                 parentInjector = parentComponentRef?.injector;
@@ -137,6 +131,12 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                     // this.componentRef = parentAnchor.createComponent(this.componentFactory.componentType, { projectableNodes, injector: childInjector });
                     parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
                     parentAnchor = parentComponentRef?.instance.anchor;
+                }
+
+                // action strip is reused for all rows
+                // assign parent so it's not destroyed on detach/attach.
+                if (element.tagName.toLocaleLowerCase() === 'igc-action-strip' || configParent.selector === 'igc-action-strip') {
+                    this.angularParent = parentComponentRef;
                 }
             } else if ((parent as any)?.__componentRef) {
                 this.angularParent = (parent as any).__componentRef;
