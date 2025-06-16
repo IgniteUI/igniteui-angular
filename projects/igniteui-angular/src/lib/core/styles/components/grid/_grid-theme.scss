@@ -225,104 +225,113 @@
     }
 
     $theme: digest-schema($grid-schema);
-    $meta: map.get($theme, '_meta');
-
-    @if not($cell-selected-within-text-color) and $cell-selected-within-background {
-        $cell-selected-within-text-color: text-contrast($cell-selected-within-background);
-    }
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
-        @if meta.type-of($ghost-header-background) == 'color' {
-            $ghost-header-icon-color: rgba(text-contrast($ghost-header-background), .07);
-        }
+        $ghost-header-icon-color: hsla(from adaptive-contrast(var(--ghost-header-background)) h s l / .07);
     }
 
     @if not($ghost-header-text-color) and $ghost-header-background {
-        $ghost-header-text-color: text-contrast($ghost-header-background);
-    }
-
-    @if $header-background and meta.type-of($header-background) == 'color' {
-        $header-background: to-opaque($header-background, color($color: 'surface'));
+        $ghost-header-text-color: adaptive-contrast(var(--ghost-header-background));
     }
 
     @if not($header-text-color) and $header-background {
-        $header-text-color: text-contrast($header-background);
+        $header-text-color: adaptive-contrast(var(--header-background));
+    }
+
+    @if not($header-selected-background) and $header-background {
+        $header-selected-background: hsl(from var(--header-background) h s calc(l * 0.9));
     }
 
     @if not($header-selected-text-color) and $header-selected-background {
-        $header-selected-text-color: text-contrast($header-selected-background);
+        $header-selected-text-color: adaptive-contrast(var(--header-selected-background));
     }
 
     @if not($header-border-color) and $header-background {
-        @if meta.type-of($header-background) == 'color' {
-            $header-border-color: rgba(text-contrast($header-background), .24);
-        }
+        $header-border-color: hsla(from adaptive-contrast(var(--header-background)) h s l / .24);
     }
 
     @if not($content-text-color) and $content-background {
-        $content-text-color: text-contrast($content-background);
+        $content-text-color: adaptive-contrast(var(--content-background));
     }
 
     @if not($row-odd-background) and $content-background {
-        $row-odd-background: $content-background;
-    }
-
-    @if $row-odd-background and meta.type-of($row-odd-background) == 'color' and color.alpha($row-odd-background) != 1 {
-        $cbg: if($content-background, $content-background, map.get($theme, 'content-background'));
-
-        $row-odd-background: to-opaque($row-odd-background, $cbg);
+        $row-odd-background: hsl(from var(--content-background) h calc(s - 10) l);
     }
 
     @if not($row-odd-text-color) and $row-odd-background {
-        $row-odd-text-color: text-contrast($row-odd-background);
+        $row-odd-text-color: adaptive-contrast(var(--row-odd-background));
     }
 
     @if not($row-even-background) and $content-background {
-        $row-even-background: $content-background;
-    }
-
-    @if $row-even-background and meta.type-of($row-even-background) == 'color' and color.alpha($row-even-background) != 1 {
-        $cbg: if($content-background, $content-background, map.get($theme, 'content-background'));
-
-        $row-even-background: to-opaque($row-even-background, $cbg);
+        $row-even-background: hsl(from var(--content-background) h calc(s + 10) l);
     }
 
     @if not($row-even-text-color) and $row-even-background {
-        $row-even-text-color: text-contrast($row-even-background);
+        $row-even-text-color: adaptive-contrast(var(--row-even-background));
     }
 
     @if not($row-hover-background) and $content-background {
-        @if meta.type-of($content-background) == 'color' {
-            $row-hover-background: to-opaque(rgba(text-contrast($content-background), .08), $content-background)
-        }
+        $row-hover-background: hsl(from var(--content-background) h s calc(l * 0.85));
     }
 
     @if not($row-hover-text-color) and $row-hover-background {
-        $row-hover-text-color: text-contrast($row-hover-background);
+        $row-hover-text-color: adaptive-contrast(var(--row-hover-background));
+    }
+
+    @if not($cell-selected-background) and $content-background {
+        $cell-selected-background: hsl(from var(--content-background) h s calc(l * 0.9));
     }
 
     @if not($cell-selected-text-color) and $cell-selected-background {
-        $cell-selected-text-color: text-contrast($cell-selected-background);
+        $cell-selected-text-color: adaptive-contrast(var(--cell-selected-background));
+    }
+
+    @if not($row-selected-background) and $content-background {
+        $row-selected-background: hsl(from var(--content-background) h s calc(l * 0.9));
     }
 
     @if not($row-selected-text-color) and $row-selected-background {
-        $row-selected-text-color: text-contrast($row-selected-background);
+        $row-selected-text-color: adaptive-contrast(var(--row-selected-background));
+    }
+
+    @if not($row-selected-hover-background) and $row-selected-background {
+        $row-selected-hover-background: hsl(from var(--row-selected-background) h s calc(l * 0.85));
     }
 
     @if not($row-selected-hover-text-color) and $row-selected-hover-background {
-        $row-selected-hover-text-color: text-contrast($row-selected-hover-background);
+        $row-selected-hover-text-color: adaptive-contrast(var(--row-selected-hover-background));
     }
 
     @if not($row-border-color) and $content-background {
-        @if meta.type-of($content-background) == 'color' {
-            $row-border-color: rgba(text-contrast($content-background), .08)
-        }
+        $row-border-color: hsla(from adaptive-contrast(var(--content-background)) h s l / .08);
+    }
+
+    @if not($cell-selected-within-background) and $row-selected-background {
+        $cell-selected-within-background: hsl(from var(--row-selected-background) h s calc(l * 0.85));
+    }
+
+    @if not($cell-selected-within-text-color) and $cell-selected-within-background {
+        $cell-selected-within-text-color: adaptive-contrast(var(--cell-selected-within-background));
+    }
+
+    @if not($cell-editing-background) and $content-background {
+        $cell-editing-background: var(--content-background);
+    }
+
+    @if not($cell-editing-foreground) and $cell-editing-background {
+        $cell-editing-foreground: adaptive-contrast(var(--cell-editing-background));
+    }
+
+    @if not($cell-editing-focus-foreground) and $cell-editing-background {
+        $cell-editing-focus-foreground: adaptive-contrast(var(--cell-editing-background));
+    }
+
+    @if not($cell-active-border-color) and $content-background {
+        $cell-active-border-color: hsla(from adaptive-contrast(var(--content-background)) h s l / .5);
     }
 
     @if not($pinned-border-color) and $content-background {
-        @if meta.type-of($content-background) == 'color' {
-            $pinned-border-color: rgba(text-contrast($content-background), .08)
-        }
+        $pinned-border-color: hsla(from adaptive-contrast(var(--content-background)) h s l / .08);
     }
 
     @if not($group-row-background) and $header-background {
@@ -330,61 +339,75 @@
     }
 
     @if not($expand-icon-color) and $group-row-background {
-        $expand-icon-color: text-contrast($group-row-background)
+        $expand-icon-color: adaptive-contrast(var(--group-row-background))
+    }
+
+    @if not($group-row-selected-background) and $group-row-background {
+        $group-row-selected-background: hsl(from var(--group-row-background) h s calc(l * 0.8));
     }
 
     @if not($group-label-text) and $group-row-selected-background {
-        $group-label-text: text-contrast($group-row-selected-background)
+        $group-label-text: adaptive-contrast(var(--group-row-selected-background))
     }
 
     @if not($expand-icon-color) and $group-row-selected-background {
-        $expand-icon-color: text-contrast($group-row-selected-background)
+        $expand-icon-color: adaptive-contrast(var(--group-row-selected-background))
+    }
+
+    @if not($expand-icon-hover-color) and $expand-icon-color {
+        $expand-icon-hover-color: var(--expand-icon-color);
     }
 
     @if not($group-count-background) and $group-row-selected-background {
-        $group-count-background: text-contrast($group-row-selected-background);
+        $group-count-background: adaptive-contrast(var(--group-row-selected-background));
     }
 
     @if not($expand-all-icon-color) and $header-background {
-        @if meta.type-of($header-background) == 'color' {
-            $expand-all-icon-color: rgba(text-contrast($header-background), .87);
-        }
+        $expand-all-icon-color: hsla(from adaptive-contrast(var(--header-background)) h s l / .87);
     }
 
     @if not($expand-all-icon-hover-color) and $header-background {
-        $expand-all-icon-hover-color: text-contrast($header-background);
+        $expand-all-icon-hover-color: adaptive-contrast(var(--header-background));
+    }
+
+    @if not($sorted-header-icon-color) and $header-background {
+        $sorted-header-icon-color: hsla(from adaptive-contrast(var(--header-background)) h s l / 0.8);
+    }
+
+    @if not($sortable-header-icon-hover-color) and $sorted-header-icon-color {
+        $sortable-header-icon-hover-color: hsla(from var(--sorted-header-icon-color) h s l / 1);
+    }
+
+    @if not($edit-mode-color) and $content-background {
+        $edit-mode-color: hsla(from adaptive-contrast(var(--content-background)) h s l / 0.5);
     }
 
     @if not($group-label-text) and $group-row-background {
-        $group-label-text: text-contrast($group-row-background)
+        $group-label-text: adaptive-contrast(var(--group-row-background))
     }
 
     @if not($group-count-background) and $group-row-background {
-        $group-count-background: text-contrast($group-row-background);
+        $group-count-background: adaptive-contrast(var(--group-row-background));
     }
 
     @if not($group-count-text-color) and $group-count-background {
-        $group-count-text-color: text-contrast($group-count-background);
+        $group-count-text-color: adaptive-contrast(var(--group-count-background));
     }
 
     @if not($grouparea-background) and $header-background {
-        $grouparea-background: $header-background
+        $grouparea-background: var(--header-background);
     }
 
     @if not($grouparea-color) and $grouparea-background {
-        @if meta.type-of($grouparea-background) == 'color' {
-            $grouparea-color: rgba(text-contrast($grouparea-background), .8)
-        }
+        $grouparea-color: hsla(from adaptive-contrast(var(--grouparea-background)) h s l / .8);
     }
 
     @if not($grouparea-color) and $header-background {
-        @if meta.type-of($header-background) == 'color' {
-            $grouparea-color: rgba(text-contrast($header-background), .8)
-        }
+        $grouparea-color: hsla(from adaptive-contrast(var(--header-background)) h s l / .8);
     }
 
     @if not($drop-area-background) and $grouparea-background {
-        $drop-area-background: text-contrast($grouparea-background);
+        $drop-area-background: adaptive-contrast(var(--grouparea-background));
     }
 
     @if not($drop-area-on-drop-background) and $drop-area-background {
@@ -392,49 +415,53 @@
     }
 
     @if not($drop-area-text-color) and $drop-area-background {
-        $drop-area-text-color: text-contrast($drop-area-background)
+        $drop-area-text-color: adaptive-contrast(var(--drop-area-background));
     }
 
     @if not($drop-area-icon-color) and $drop-area-background {
-        $drop-area-icon-color: text-contrast($drop-area-background)
+        $drop-area-icon-color: adaptive-contrast(var(--drop-area-background));
     }
 
     @if not($filtering-header-background) and $header-background {
-        @if meta.type-of($header-background) == 'color' {
-            @if luminance($header-background) < .5 {
-                $filtering-header-background: to-opaque(color.scale($header-background, $lightness: 5%));
-            } @else {
-                $filtering-header-background: to-opaque(color.scale($header-background, $lightness: -5%));
-            }
-        }
+        $filtering-header-background: color-mix(in hsl, var(--header-background), #fff 5%);
     }
 
     @if not($filtering-header-text-color) and $filtering-header-background {
-        $filtering-header-text-color: text-contrast($filtering-header-background);
+        $filtering-header-text-color: adaptive-contrast(var(--filtering-header-background));
     }
 
     @if not($filtering-row-background) and $header-background {
-        @if meta.type-of($header-background) == 'color' {
-            @if luminance($header-background) < .5 {
-                $filtering-row-background: to-opaque(color.scale($header-background, $lightness: 5%));
-            } @else {
-                $filtering-row-background: to-opaque(color.scale($header-background, $lightness: -5%));
-            }
-        }
+        $filtering-row-background: color-mix(in hsl, var(--header-background), #fff 5%);
     }
 
     @if not($filtering-row-text-color) and $filtering-row-background {
-        $filtering-row-text-color: text-contrast(to-opaque($filtering-row-background));
+        $filtering-row-text-color: adaptive-contrast(var(--filtering-row-background));
+    }
+
+    @if not($excel-filtering-header-foreground) and $filtering-row-background {
+        $excel-filtering-header-foreground: adaptive-contrast(var(--filtering-row-background));
+    }
+
+    @if not($excel-filtering-subheader-foreground) and $filtering-row-background {
+        $excel-filtering-subheader-foreground: adaptive-contrast(var(--filtering-row-background));
+    }
+
+    @if not($excel-filtering-actions-foreground) and $filtering-row-background {
+        $excel-filtering-actions-foreground: hsla(from adaptive-contrast(var(--filtering-row-background)) h s l / 0.8);
+    }
+
+    @if not($excel-filtering-actions-disabled-foreground) and $filtering-row-background {
+        $excel-filtering-actions-disabled-foreground: hsla(from adaptive-contrast(var(--filtering-row-background)) h s l / 0.5);
     }
 
     @if not($grid-shadow) {
         $grid-elevation: map.get($grid-schema, 'grid-elevation');
-        $grid-shadow: elevation($grid-elevation);
+        $grid-shadow: elevation(var(--grid-elevation));
     }
 
     @if not($drag-shadow) {
         $drag-elevation: map.get($grid-schema, 'drag-elevation');
-        $drag-shadow: elevation($drag-elevation);
+        $drag-shadow: elevation(var(--drag-elevation));
     }
 
     @if not($drop-area-border-radius) {
@@ -553,12 +580,6 @@
 
         cell-selected-within-background: $cell-selected-within-background,
         cell-selected-within-text-color: $cell-selected-within-text-color,
-
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme'),
-            theme-variant: map.get($schema, '_meta', 'variant')
-        )),
     ));
 }
 
@@ -580,8 +601,8 @@
 
     @include scale-in-ver-center();
 
-    $variant: map.get($theme, '_meta', 'variant');
-    $theme-variant: map.get($theme, '_meta', 'theme-variant');
+    $variant: map.get($theme, '_meta', 'theme');
+    $theme-variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: $variant != 'bootstrap';
 
