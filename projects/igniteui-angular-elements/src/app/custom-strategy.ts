@@ -114,6 +114,13 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             // ngElementStrategy getter is protected and also has initialization logic, though that should be safe at this point
             if (parent?.ngElementStrategy) {
                 this.angularParent = parent.ngElementStrategy.angularParent;
+
+                // action strip is reused in row island child grid
+                // assign parent so it's not destroyed on detach/attach.
+                if (element.tagName.toLocaleLowerCase() === 'igc-action-strip') {
+                    this.angularParent = (parent.ngElementStrategy as any).componentRef;
+                }
+
                 this.parentElement = new WeakRef(parent);
                 let parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
                 parentInjector = parentComponentRef?.injector;
