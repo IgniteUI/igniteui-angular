@@ -160,7 +160,9 @@ async function findFiles(patterns) {
   const baseMap = {};
   let files = [];
 
-  for (const pattern of patterns) {
+  for (let pattern of patterns) {
+    pattern = pattern.replace(/\\/g, '/');
+
     const base = getBaseFromGlob(pattern);
     const _files = await globby(pattern, {
       ignore: ['**/schemas/**/!(index|_index).scss'],
