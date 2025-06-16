@@ -1373,7 +1373,9 @@
                 %form-group-textarea-label:not(%textarea-group-label--focused) {
                     @include type-style('subtitle-1');
 
-                    top: calc($input-top-padding - #{rem(1px)});
+                    top: calc($input-top-padding - #{rem(3px)});
+                    transform: translateY(0);
+                    margin-bottom: auto;
                 }
             }
         }
