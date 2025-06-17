@@ -60,7 +60,49 @@
     }
 
     $theme: digest-schema($combo-schema);
-    $meta: map.get($theme, '_meta');
+    $variant: map.get($theme, '_meta', 'theme');
+
+    @if not($empty-list-placeholder-color) and $empty-list-background {
+        $empty-list-placeholder-color: adaptive-contrast(var(--empty-list-background));
+    }
+
+    @if not($toggle-button-foreground) and $toggle-button-background {
+        $toggle-button-foreground: adaptive-contrast(var(--toggle-button-background));
+    }
+
+    @if $variant == 'material' {
+        @if not($toggle-button-background-focus) and $toggle-button-background {
+            $toggle-button-background-focus: hsl(from var(--toggle-button-background) h s calc(l * 0.9));
+        }
+    } @else {
+        @if not($toggle-button-background-focus) and $toggle-button-background {
+            $toggle-button-background-focus: var(--toggle-button-background);
+        }
+    }
+
+    @if not($toggle-button-foreground-focus) and $toggle-button-background-focus {
+        $toggle-button-foreground-focus: adaptive-contrast(var(--toggle-button-background-focus));
+    }
+
+    @if not($toggle-button-background-focus--border) and $toggle-button-background {
+        $toggle-button-background-focus--border: var(--toggle-button-background);
+    }
+
+    @if not($toggle-button-foreground-filled) and $toggle-button-background {
+        $toggle-button-foreground-filled: adaptive-contrast(var(--toggle-button-background));
+    }
+
+    @if not($toggle-button-background-disabled) and $toggle-button-background {
+        $toggle-button-background-disabled: hsla(from var(--toggle-button-background) h s l / 0.3);
+    }
+
+    @if not($toggle-button-foreground-disabled) and $toggle-button-background {
+        $toggle-button-foreground-disabled: hsla(from adaptive-contrast(var(--toggle-button-background)) h s l / 0.7);
+    }
+
+    @if not($clear-button-foreground-focus) and $clear-button-background-focus {
+        $clear-button-foreground-focus: adaptive-contrast(var(--clear-button-background-focus));
+    }
 
     @return extend($theme, (
         name: $name,
@@ -80,10 +122,6 @@
         clear-button-background-focus: $clear-button-background-focus,
         clear-button-foreground: $clear-button-foreground,
         clear-button-foreground-focus: $clear-button-foreground-focus,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -93,7 +131,7 @@
 @mixin combo($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     $search-input-inline-padding: map.get((
         'material': pad-inline(rem(4px), rem(8px), rem(16px)),
