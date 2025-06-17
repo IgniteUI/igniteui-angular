@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import {
     Component,
     ElementRef,
@@ -56,7 +55,7 @@ let DIALOG_ID = 0;
 @Component({
     selector: 'igx-dialog',
     templateUrl: 'dialog-content.component.html',
-    imports: [IgxToggleDirective, IgxFocusTrapDirective, NgIf, IgxFocusDirective, IgxButtonDirective, IgxRippleDirective]
+    imports: [IgxToggleDirective, IgxFocusTrapDirective, IgxFocusDirective, IgxButtonDirective, IgxRippleDirective]
 })
 export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, AfterContentInit {
     private static NEXT_ID = 1;
@@ -478,6 +477,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         const eventArgs: IDialogCancellableEventArgs = { dialog: this, event: null, cancel: false };
         this.opening.emit(eventArgs);
         if (!eventArgs.cancel) {
+            overlaySettings = { ...{}, ... this._overlayDefaultSettings, ...overlaySettings };
             this.toggleRef.open(overlaySettings);
             this.isOpenChange.emit(true);
             if (!this.leftButtonLabel && !this.rightButtonLabel) {

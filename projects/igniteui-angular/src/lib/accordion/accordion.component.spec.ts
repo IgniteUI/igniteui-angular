@@ -1,11 +1,9 @@
 import { useAnimation } from '@angular/animations';
-import { NgIf } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { waitForAsync, TestBed, fakeAsync, ComponentFixture, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective } from '../expansion-panel/public_api';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IAccordionCancelableEventArgs, IAccordionEventArgs, IgxAccordionComponent } from './accordion.component';
 import { slideInLeft, slideOutRight } from 'igniteui-angular/animations';
@@ -15,10 +13,9 @@ const PANEL_TAG = 'IGX-EXPANSION-PANEL';
 const ACCORDION_TAG = 'IGX-ACCORDION';
 
 describe('Rendering Tests', () => {
-    configureTestSuite();
     let fix: ComponentFixture<IgxAccordionSampleTestComponent>;
     let accordion: IgxAccordionComponent;
-    beforeAll(
+    beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
@@ -401,10 +398,12 @@ describe('Rendering Tests', () => {
                 </div>
             </igx-expansion-panel-body>
         </igx-expansion-panel>
-        <div *ngIf="divChild"></div>
+        @if (divChild) {
+            <div></div>
+        }
     </igx-accordion>
     `,
-    imports: [IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective, NgIf]
+    imports: [IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective]
 })
 export class IgxAccordionSampleTestComponent {
     @ViewChild(IgxAccordionComponent) public accordion: IgxAccordionComponent;

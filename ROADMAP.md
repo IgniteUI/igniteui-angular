@@ -2,12 +2,8 @@
 
 # Current Milestone
 
-## Milestone 35, (Due by Jan, 2025)
-
-1. Tile Manager - new component [#239](https://github.com/IgniteUI/igniteui-angular/issues/239)
-2. Query Builder component update [#14979](https://github.com/IgniteUI/igniteui-angular/issues/14979)
-3. IgxBannerComponent - Support collapsed input [#14890](https://github.com/IgniteUI/igniteui-angular/issues/14890)
-4. Update of the carousel component [#15025](https://github.com/IgniteUI/igniteui-angular/issues/15025)
+## Milestone 38, version 20.0 (Due by Jun, 2025)
+1. Support of Angular 20.0
 
 ## Going down the road
 
@@ -16,6 +12,17 @@
 3. Extend the 18.2 editorOptions property to allow modifying numeric editors to not change the value on up/down arrow press [#14660](https://github.com/IgniteUI/igniteui-angular/issues/14660)
 
 # Previous Milestone
+
+## Milestone 37,  version 19.2 (Released Apr 16th, 2025), [Release Blog 19.2](https://www.infragistics.com/blogs/ignite-ui-for-angular-19-2/)
+
+1. Tile Manager - layout component [#239](https://github.com/IgniteUI/igniteui-angular/issues/239)
+2. SSR Grid Improvements - [15202](https://github.com/IgniteUI/igniteui-angular/issues/15202)
+
+## Milestone 36,  version 19.1 (Released Feb 27th, 2025), [Release Blog 19.1](https://www.infragistics.com/blogs/ignite-ui-for-angular-19-1/)
+
+1. **[DONE]** Query Builder multi-table query support [#14979](https://github.com/IgniteUI/igniteui-angular/issues/14979)
+2. **[DONE]** IgxBannerComponent - Support collapsed input [#14890](https://github.com/IgniteUI/igniteui-angular/issues/14890)
+3. **[DONE]** Carousel component vertical orientation support [#15025](https://github.com/IgniteUI/igniteui-angular/issues/15025)
 
 ## Milestone 35, version 19.0 (Released Nov 25th, 2024)
 
@@ -36,7 +43,7 @@
 10. **[DONE]** All palette colors migrated to [CSS relative colors syntax](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_colors/Relative_colors)
 
 
-## Milestone 33, version 18.1 (Released Jul 22nd, 2024)
+## Milestone 33, version 18.1 (Released Jul 22nd, 2024), [Release Blog 24.1](https://www.infragistics.com/blogs/ignite-ui-24-1/)
 
 1. **[DONE]** Horizontal row dimension expansion for Pivot Grid [#14270](https://github.com/IgniteUI/igniteui-angular/issues/14270)
 2. **[DONE]** Headers focus and keyboard navigation for Pivot Grid Row Dimension Headers [#14249](https://github.com/IgniteUI/igniteui-angular/issues/14249)
@@ -44,7 +51,7 @@
 4. **[DONE]** Translation for "Wk" for week numbers in calendars [#14423](https://github.com/IgniteUI/igniteui-angular/issues/14423)
 5. **[DONE]** Provide a way to replace part of (or all) icons used by components with icons from other icon sets [#13987](https://github.com/IgniteUI/igniteui-angular/issues/13987)
 
-## Milestone 32, version 18.0 (Released Jun 07th, 2024)
+## Milestone 32, version 18.0 (Released Jun 07th, 2024), [Release Blog 24.1](https://www.infragistics.com/blogs/ignite-ui-24-1/)
 
 1. **[DONE]** Support of Angular 18
 2. **[DONE]** Expose a header template for the chip area of the headers of the rows dimension in the pivot grid [#14016](https://github.com/IgniteUI/igniteui-angular/issues/14016)
@@ -52,7 +59,7 @@
 4. **[DONE]** igxToggle: setOffset function increments the offset instead of setting a specific value [#14174](https://github.com/IgniteUI/igniteui-angular/issues/14174)
 5. **[DONE]** BREAKING CHANGE: Depricate of displayDensity property [Update Guide](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide#from-172x-to-180x)
 
-## Milestone 31, version 17.2 (Released Apr 29th, 2024)
+## Milestone 31, version 17.2 (Released Apr 29th, 2024), [Release Blog 24.1](https://www.infragistics.com/blogs/ignite-ui-24-1/)
 
 1. **[DONE]** Update calendar theme to match material [#10400](https://github.com/IgniteUI/igniteui-angular/issues/10400)
 2. **[DONE]** Calendar: Default date formatting in the header [#13811](https://github.com/IgniteUI/igniteui-angular/issues/13811)
@@ -61,7 +68,7 @@
 5. **[DONE]** Date/datetime/time editors should accept the same formats that the angular pipes accept [#14011](https://github.com/IgniteUI/igniteui-angular/issues/14011)
 
 
-## Milestone 30, version 17.1 (Released Feb 26th, 2024)
+## Milestone 30, version 17.1 (Released Feb 26th, 2024), [Release Blog 24.1](https://www.infragistics.com/blogs/ignite-ui-24-1/)
 
 1. **[DONE]** Improve package tree-shaking [#13562](https://github.com/IgniteUI/igniteui-angular/issues/13562)
 2. **[DONE]** Deprecate rowID and rowData in interfaces [#10617](https://github.com/IgniteUI/igniteui-angular/issues/10617)

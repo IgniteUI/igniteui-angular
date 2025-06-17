@@ -3,7 +3,6 @@ import { TestBed, ComponentFixture, tick, fakeAsync, waitForAsync } from '@angul
 import { By } from '@angular/platform-browser';
 import { IgxBannerComponent } from './banner.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxBannerActionsDirective } from './banner.directives';
 import { IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent } from '../card/card.component';
@@ -24,8 +23,7 @@ describe('igxBanner', () => {
     let bannerTextElement: DebugElement = null;
     let bannerActionsElement: DebugElement = null;
 
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -33,7 +31,8 @@ describe('igxBanner', () => {
                 IgxBannerOneButtonComponent,
                 IgxBannerSampleComponent,
                 IgxBannerCustomTemplateComponent,
-                SimpleBannerEventsComponent
+                SimpleBannerEventsComponent,
+                IgxBannerInitializedOpenComponent
             ]
         }).compileComponents();
     }));
@@ -395,6 +394,36 @@ describe('igxBanner', () => {
             expect(banner.closing.emit).toHaveBeenCalledTimes(2);
             expect(banner.closed.emit).toHaveBeenCalledTimes(1);
         }));
+
+        it('Should toggle banner state when expanded property changes', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxBannerInitializedOpenComponent);
+            fixture.detectChanges();
+            const banner = fixture.componentInstance.banner;
+
+            banner.expanded = false;
+            tick();
+            fixture.detectChanges();
+
+            expect(banner.expanded).toBeFalse();
+
+            banner.expanded = true;
+            tick();
+            fixture.detectChanges();
+            expect(banner.expanded).toBeTrue();
+            expect(banner.elementRef.nativeElement.style.display).toEqual('block');
+
+            banner.expanded = false;
+            tick();
+            fixture.detectChanges();
+            expect(banner.expanded).toBeFalse();
+            expect(banner.elementRef.nativeElement.style.display).toEqual('');
+
+            banner.expanded = true;
+            tick();
+            fixture.detectChanges();
+            expect(banner.expanded).toBeTrue();
+            expect(banner.elementRef.nativeElement.style.display).toEqual('block');
+        }));
     });
 
     describe('Rendering tests: ', () => {
@@ -438,13 +467,12 @@ describe('igxBanner', () => {
             const banner = fixture.componentInstance.banner;
             const panel = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             expect(panel).not.toBeNull();
-            expect(panel.attributes.getNamedItem('ng-reflect-collapsed').nodeValue).toEqual('true');
+            expect(panel.attributes.getNamedItem('aria-expanded').nodeValue).toEqual('false');
             expect(panel.childElementCount).toEqual(0);
 
             banner.open();
             tick();
             fixture.detectChanges();
-            expect(panel.attributes.getNamedItem('ng-reflect-collapsed').nodeValue).toEqual('false');
             expect(panel.childElementCount).toEqual(1);
 
             const panelBody = panel.children[0];
@@ -484,6 +512,16 @@ describe('igxBanner', () => {
             expect(panel).not.toBeNull();
             expect(panel.attributes.getNamedItem('role').nodeValue).toEqual('status');
             expect(panel.attributes.getNamedItem('aria-live').nodeValue).toEqual('polite');
+        }));
+
+        it('Should initialize banner as open when expanded is set to true', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxBannerInitializedOpenComponent);
+            fixture.detectChanges();
+            const banner = fixture.componentInstance.banner;
+
+            expect(banner.expanded).toBeTrue();
+            expect(banner.elementRef.nativeElement.style.display).toEqual('block');
+            expect(banner.elementRef.nativeElement.querySelector('.' + CSS_CLASS_BANNER)).not.toBeNull();
         }));
     });
 
@@ -600,4 +638,20 @@ export class SimpleBannerEventsComponent {
     public handleClosing(event: any) {
         event.cancel = this.cancelFlag;
     }
+}
+
+@Component({
+    template: `
+        <div>
+            <igx-banner [expanded]="true">
+                Banner initialized as open.
+            </igx-banner>
+        </div>
+    `,
+    standalone: true,
+    imports: [IgxBannerComponent]
+})
+export class IgxBannerInitializedOpenComponent {
+    @ViewChild(IgxBannerComponent, { static: true })
+    public banner: IgxBannerComponent;
 }

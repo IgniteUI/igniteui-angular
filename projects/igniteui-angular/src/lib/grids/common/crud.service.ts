@@ -73,14 +73,12 @@ export class IgxEditRow {
         return args;
     }
 
-    public getClassName() {
-        return this.constructor.name;
+    public get isAddRow(): boolean {
+        return false;
     }
 }
 
 export class IgxAddRow extends IgxEditRow {
-    public isAddRow = true;
-
     constructor(id: any,
         index: number,
         data: any,
@@ -101,6 +99,10 @@ export class IgxAddRow extends IgxEditRow {
         const args = super.createRowEditDoneEventArgs(null, event);
         args.isAddRow = true;
         return args;
+    }
+
+    public override get isAddRow(): boolean {
+        return true;
     }
 }
 
@@ -376,7 +378,7 @@ export class IgxRowCrudState extends IgxCellCrudState {
 
     /** Enters row edit mode */
     public beginRowEdit(event?: Event) {
-        if (!this.row || !(this.row.getClassName() === IgxEditRow.name)) {
+        if (!this.row || this.row.isAddRow) {
             if (!this.row) {
                 this.createRow(this.cell);
             }
@@ -437,14 +439,14 @@ export class IgxRowCrudState extends IgxCellCrudState {
         let nonCancelableArgs;
         if (!commit) {
             this.grid.transactions.endPending(false);
-            const isAddRow = this.row && this.row.getClassName() === IgxAddRow.name;
+            const isAddRow = this.row && this.row.isAddRow;
             const id = this.row ? this.row.id : this.cell.id.rowID;
             if (isAddRow) {
                 this.grid.validation.clear(id);
             } else {
                 this.grid.validation.update(id, rowEditArgs.oldValue);
             }
-        } else if (this.row.getClassName() === IgxEditRow.name) {
+        } else if (!this.row.isAddRow) {
             rowEditArgs = this.grid.gridAPI.update_row(this.row, this.row.newData, event);
             nonCancelableArgs = this.rowEditDone(rowEditArgs.oldValue, event);
         } else {
@@ -560,7 +562,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
      * @hidden @internal
      */
     public override endRowTransaction(commit: boolean, event?: Event): IGridEditEventArgs | IRowDataCancelableEventArgs {
-        const isAddRow = this.row && this.row.getClassName() === IgxAddRow.name;
+        const isAddRow = this.row && this.row.isAddRow;
         if (isAddRow) {
             this.grid.rowAdded.pipe(first()).subscribe((addRowArgs: IRowDataEventArgs) => {
                 const rowData = addRowArgs.data;
@@ -684,12 +686,13 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
             return;
         }
         this.endEdit(true, event);
-
-        if (parentRow != null && this.grid.expansionStates.get(parentRow.key)) {
-            this.grid.collapseRow(parentRow.key);
+        // work with copy of original row, since context may change on collapse.
+        const parentRowCopy = parentRow ? Object.assign(copyDescriptors(parentRow), parentRow) : null;
+        if (parentRowCopy != null && this.grid.expansionStates.get(parentRowCopy.key)) {
+            this.grid.collapseRow(parentRowCopy.key);
         }
 
-        this.createAddRow(parentRow, asChild);
+        this.createAddRow(parentRowCopy, asChild);
 
         this.grid.transactions.startPending();
         if (this.addRowParent.isPinned) {

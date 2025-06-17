@@ -1,21 +1,21 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, Inject, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
-import { getResizeObserver, mkenum, PlatformUtil } from '../../core/utils';
+import { getResizeObserver, PlatformUtil } from '../../core/utils';
 import { IgxAngularAnimationService } from '../../services/animation/angular-animation-service';
 import { AnimationService } from '../../services/animation/animation';
 import { IgxDirectionality } from '../../services/direction/directionality';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
-import { NgClass, NgFor, NgTemplateOutlet, NgIf } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 import { IgxIconButtonDirective } from '../../directives/button/icon-button.directive';
 
-export const IgxTabsAlignment = /*@__PURE__*/mkenum({
+export const IgxTabsAlignment = {
     start: 'start',
     end: 'end',
     center: 'center',
     justify: 'justify'
-});
+} as const;
 
 /** @hidden */
 const enum TabScrollButtonStyle {
@@ -63,7 +63,7 @@ let NEXT_TAB_ID = 0;
     selector: 'igx-tabs',
     templateUrl: 'tabs.component.html',
     providers: [{ provide: IgxTabsBase, useExisting: IgxTabsComponent }],
-    imports: [IgxRippleDirective, IgxIconComponent, NgClass, NgFor, NgTemplateOutlet, NgIf, IgxIconButtonDirective]
+    imports: [IgxRippleDirective, IgxIconComponent, NgClass, NgTemplateOutlet, IgxIconButtonDirective]
 })
 
 export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit, OnDestroy {

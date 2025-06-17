@@ -10,12 +10,11 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import {
     AddingSelectedTabComponent, TabsContactsComponent, TabsDisabledTestComponent, TabsRoutingDisabledTestComponent,
-    TabsRoutingGuardTestComponent, TabsRoutingTestComponent, TabsRtlComponent, TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component,
+    TabsRoutingGuardTestComponent, TabsRoutingTestComponent, TabsRtlComponent, TabsTabsOnlyModeTest1Component,
     TabsTest2Component, TabsTestBug4420Component, TabsTestComponent, TabsTestCustomStylesComponent,
     TabsTestHtmlAttributesComponent, TabsTestSelectedTabComponent, TabsWithPrefixSuffixTestComponent,
     TemplatedTabsTestComponent
 } from '../../test-utils/tabs-components.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxTabContentComponent } from './tab-content.component';
 import { RoutingTestGuard } from '../../test-utils/routing-test-guard.spec';
@@ -29,20 +28,19 @@ const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: tr
 const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: ' ', bubbles: true });
 
 describe('IgxTabs', () => {
-    configureTestSuite();
 
     const tabItemNormalCssClass = 'igx-tabs__header-item';
     const tabItemSelectedCssClass = 'igx-tabs__header-item--selected';
     const headerScrollCssClass = 'igx-tabs__header-scroll';
+    const testRoutes = [
+        { path: 'view1', component: RoutingView1Component, canActivate: [RoutingTestGuard] },
+        { path: 'view2', component: RoutingView2Component, canActivate: [RoutingTestGuard] },
+        { path: 'view3', component: RoutingView3Component, canActivate: [RoutingTestGuard] },
+        { path: 'view4', component: RoutingView4Component, canActivate: [RoutingTestGuard] },
+        { path: 'view5', component: RoutingView5Component, canActivate: [RoutingTestGuard] }
+    ];
 
-    beforeAll(waitForAsync(() => {
-        const testRoutes = [
-            { path: 'view1', component: RoutingView1Component, canActivate: [RoutingTestGuard] },
-            { path: 'view2', component: RoutingView2Component, canActivate: [RoutingTestGuard] },
-            { path: 'view3', component: RoutingView3Component, canActivate: [RoutingTestGuard] },
-            { path: 'view4', component: RoutingView4Component, canActivate: [RoutingTestGuard] },
-            { path: 'view5', component: RoutingView5Component, canActivate: [RoutingTestGuard] }
-        ];
+    beforeEach(waitForAsync(() => {
 
         TestBed.configureTestingModule({
             imports: [
@@ -58,7 +56,6 @@ describe('IgxTabs', () => {
                 TabsTestBug4420Component,
                 TabsRoutingTestComponent,
                 TabsTabsOnlyModeTest1Component,
-                TabsTabsOnlyModeTest2Component,
                 TabsDisabledTestComponent,
                 TabsRoutingGuardTestComponent,
                 TabsWithPrefixSuffixTestComponent,
@@ -493,7 +490,7 @@ describe('IgxTabs', () => {
             expect(tabs.items.length).toBe(2);
             expect(tabs.selectedIndex).toBe(0);
 
-            fixture.componentInstance.addTab(3);
+            fixture.componentInstance.addTab();
             fixture.detectChanges();
             tick(100);
 
@@ -877,8 +874,9 @@ describe('IgxTabs', () => {
         let headerElements;
 
         beforeEach(waitForAsync(() => {
-            fixture = TestBed.createComponent(TabsTabsOnlyModeTest2Component);
+            fixture = TestBed.createComponent(TabsTabsOnlyModeTest1Component);
             tabsComp = fixture.componentInstance.tabs;
+            tabsComp.selectedIndex = 2;
             fixture.detectChanges();
             tabItems = tabsComp.items.toArray();
             headerElements = tabItems.map(item => item.headerComponent.nativeElement);

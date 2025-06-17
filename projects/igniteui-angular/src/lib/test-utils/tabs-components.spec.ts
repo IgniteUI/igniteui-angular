@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { IgxButtonDirective } from '../directives/button/button.directive';
@@ -99,19 +98,21 @@ export class TabsTestComponent {
     template: `
     <div #wrapperDiv style="display: flex;">
         <igx-tabs>
-            <igx-tab-item *ngFor="let tab of collection">
-                <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
-                <igx-tab-content></igx-tab-content>
-            </igx-tab-item>
+            @for (tab of collection; track trackByItemRef(tab)) {
+                <igx-tab-item>
+                    <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
+                    <igx-tab-content></igx-tab-content>
+                </igx-tab-item>
+            }
         </igx-tabs>
     </div>
     `,
-    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective, NgFor]
+    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsTest2Component {
     @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
     @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
-    public collection: any[];
+    protected collection: any[];
 
     constructor() {
         this.resetCollectionThreeTabs();
@@ -150,6 +151,9 @@ export class TabsTest2Component {
     public resetToEmptyCollection() {
         this.collection = [];
     }
+
+    /** Explicitly track object so collection changes entirely for index logic test */
+    protected trackByItemRef = (x: any) => x;
 }
 
 @Component({
@@ -197,17 +201,19 @@ export class TemplatedTabsTestComponent {
     template: `
     <div>
         <igx-tabs [selectedIndex]="2">
-            <igx-tab-item *ngFor="let tab of collection">
-                <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
-            </igx-tab-item>
+            @for (tab of collection; track tab.name) {
+                <igx-tab-item>
+                    <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
+                </igx-tab-item>
+            }
         </igx-tabs>
     </div>
     `,
-    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabHeaderLabelDirective, NgFor]
+    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsTestSelectedTabComponent {
     @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
-    public collection: any[];
+    protected collection: any[];
 
     constructor() {
         this.collection =
@@ -374,29 +380,6 @@ export class TabsTabsOnlyModeTest1Component {
 @Component({
     template: `
     <div #wrapperDiv>
-        <igx-tabs [selectedIndex]="2">
-            <igx-tab-item>
-                <igx-tab-header><span igxTabHeaderLabel>Tab 1</span></igx-tab-header>
-            </igx-tab-item>
-            <igx-tab-item>
-                <igx-tab-header><span igxTabHeaderLabel>Tab 2</span></igx-tab-header>
-            </igx-tab-item>
-            <igx-tab-item>
-                <igx-tab-header><span igxTabHeaderLabel>Tab 3</span></igx-tab-header>
-            </igx-tab-item>
-        </igx-tabs>
-    </div>
-    `,
-    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabHeaderLabelDirective]
-})
-export class TabsTabsOnlyModeTest2Component {
-    @ViewChild(IgxTabsComponent, { static: true })
-    public tabs: IgxTabsComponent;
-}
-
-@Component({
-    template: `
-    <div #wrapperDiv>
         <igx-tabs>
             <igx-tab-item [disabled]="true">
                 <igx-tab-header><span igxTabHeaderLabel>Tab 1</span></igx-tab-header>
@@ -522,17 +505,19 @@ export class TabsWithPrefixSuffixTestComponent extends TabsTestComponent {
     template: `
     <div #wrapperDiv>
         <igx-tabs>
-            <igx-tab-item *ngFor="let contact of contacts">
-                <igx-tab-header>
-                    <span igxTabHeaderLabel>{{contact.Name}}</span>
-                </igx-tab-header>
-                <igx-tab-content>
-                </igx-tab-content>
-            </igx-tab-item>
+            @for (contact of contacts; track contact.Name) {
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <span igxTabHeaderLabel>{{contact.Name}}</span>
+                    </igx-tab-header>
+                    <igx-tab-content>
+                    </igx-tab-content>
+                </igx-tab-item>
+            }
         </igx-tabs>
     </div>
     `,
-    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective, NgFor]
+    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsContactsComponent extends TabsTestComponent {
     public contacts = SampleTestData.personAvatarData();
@@ -542,18 +527,20 @@ export class TabsContactsComponent extends TabsTestComponent {
     template: `
     <div #wrapperDiv style="display: flex;">
         <igx-tabs>
-            <igx-tab-item *ngFor="let tab of collection" [(selected)]="tab.selected">
-                <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
-                <igx-tab-content></igx-tab-content>
-            </igx-tab-item>
+            @for (tab of collection; track tab.name) {
+                <igx-tab-item [(selected)]="tab.selected">
+                    <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
+                    <igx-tab-content></igx-tab-content>
+                </igx-tab-item>
+            }
         </igx-tabs>
     </div>
     `,
-    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective, NgFor]
+    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class AddingSelectedTabComponent {
     @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
-    public collection: any[];
+    protected collection: any[];
     constructor() {
         this.collection = [
             { name: 'tab1', selected: true },
@@ -561,9 +548,9 @@ export class AddingSelectedTabComponent {
         ];
     }
 
-    public addTab(num: number) {
+    public addTab() {
         this.collection.forEach(t => t.selected = false);
-        this.collection.push({ name: 'tab' + num, selected: true });
+        this.collection.push({ name: 'tab' + (this.collection.length + 1), selected: true });
     }
 }
 
@@ -571,30 +558,29 @@ export class AddingSelectedTabComponent {
     template: `
     <div #wrapperDiv>
         <igx-tabs>
-            <igx-tab-item *ngFor="let tab of collection">
-                <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
-                <igx-tab-content></igx-tab-content>
-            </igx-tab-item>
+            @for (tab of collection; track tab.name) {
+                <igx-tab-item>
+                    <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
+                    <igx-tab-content></igx-tab-content>
+                </igx-tab-item>
+            }
         </igx-tabs>
     </div>
     `,
-    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective, NgFor]
+    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsRtlComponent {
     @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
     @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
-    public collection: any[];
-    constructor() {
-        this.collection = [
-            { name: 'tab1', selected: true },
-            { name: 'tab2', selected: false },
-            { name: 'tab3', selected: false },
-            { name: 'tab4', selected: false },
-            { name: 'tab5', selected: false },
-            { name: 'tab6', selected: false },
-            { name: 'tab7', selected: false },
-            { name: 'tab8', selected: false },
-            { name: 'tab9', selected: false },
-        ];
-    }
+    protected collection = [
+        { name: 'tab1', selected: true },
+        { name: 'tab2', selected: false },
+        { name: 'tab3', selected: false },
+        { name: 'tab4', selected: false },
+        { name: 'tab5', selected: false },
+        { name: 'tab6', selected: false },
+        { name: 'tab7', selected: false },
+        { name: 'tab8', selected: false },
+        { name: 'tab9', selected: false },
+    ];
 }

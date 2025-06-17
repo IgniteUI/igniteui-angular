@@ -3,15 +3,14 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridEditActionsComponent, IgxTreeGridEditActionsPinningComponent } from '../../test-utils/tree-grid-components.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxActionStripComponent } from '../../action-strip/public_api';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { first } from 'rxjs/operators';
 import { IRowDataCancelableEventArgs } from '../public_api';
+import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxTreeGrid - Add Row UI #tGrid', () => {
-    configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
     let actionStrip: IgxActionStripComponent;
@@ -22,7 +21,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
         animationElem.dispatchEvent(endEvent);
     };
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -215,6 +214,48 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             expect(treeGrid.rowList.length).toBe(9);
             const addedRow = treeGrid.getRowByKey(newRowId);
             expect(addedRow.data[treeGrid.foreignKey]).toBe(2);
+        });
+
+        it('should collapse row when child row adding begins and it added row should go under correct parent.', async() => {
+            treeGrid.data = [
+                { ID: 1, ParentID: -1, Name: 'Casey Houston', JobTitle: 'Vice President', Age: 32 },
+                { ID: 2, ParentID: 10, Name: 'Gilberto Todd', JobTitle: 'Director', Age: 41 },
+                { ID: 3, ParentID: 10, Name: 'Tanya Bennett', JobTitle: 'Director', Age: 29 },
+                { ID: 4, ParentID: 6, Name: 'Jack Simon', JobTitle: 'Software Developer', Age: 33 },
+                { ID: 6, ParentID: -1, Name: 'Erma Walsh', JobTitle: 'CEO', Age: 52 },
+                { ID: 7, ParentID: 10, Name: 'Debra Morton', JobTitle: 'Associate Software Developer', Age: 35 },
+                { ID: 9, ParentID: 10, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', Age: 44 },
+                { ID: 10, ParentID: -1, Name: 'Eduardo Ramirez', JobTitle: 'Manager', Age: 53 }
+            ];
+            fix.detectChanges();
+            treeGrid.collapseAll();
+            treeGrid.height = "350px";
+            fix.detectChanges();
+            const parentRow1 = treeGrid.rowList.toArray()[1] as IgxTreeGridRowComponent;
+            treeGrid.expandRow(parentRow1.key);
+            const parentRow2 = treeGrid.rowList.toArray()[3] as IgxTreeGridRowComponent;
+            treeGrid.expandRow(parentRow2.key);
+            treeGrid.triggerPipes();
+            fix.detectChanges();
+
+            // scroll bottom
+            treeGrid.verticalScrollContainer.scrollTo(treeGrid.dataView.length - 1);
+            await wait(50);
+            fix.detectChanges();
+            // start add row
+            parentRow2.beginAddChild();
+            fix.detectChanges();
+            // last row should be add row
+            const addRow = treeGrid.gridAPI.get_row_by_index(4);
+            expect(addRow.addRowUI).toBeTrue();
+            endTransition();
+
+            // end edit
+            treeGrid.gridAPI.crudService.endEdit(true);
+            fix.detectChanges();
+
+            // row should be added under correct parent
+            expect(treeGrid.data[treeGrid.data.length - 1].ParentID).toBe(10);
         });
     });
 });

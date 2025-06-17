@@ -1,4 +1,4 @@
-﻿import { DOCUMENT, NgForOfContext } from '@angular/common';
+﻿import { NgForOfContext } from '@angular/common';
 import {
     ChangeDetectorRef,
     ComponentRef,
@@ -21,7 +21,8 @@ import {
     ViewContainerRef,
     AfterViewInit,
     Inject,
-    booleanAttribute
+    booleanAttribute,
+    DOCUMENT
 } from '@angular/core';
 
 import { DisplayContainerComponent } from './display.container';
@@ -169,6 +170,14 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     public igxForContainerSize: any;
 
     /**
+     * @hidden
+     * @internal
+     * Initial chunk size if no container size is passed. If container size is passed then the igxForOf calculates its chunk size
+     */
+    @Input()
+    public igxForInitialChunkSize: any;
+
+    /**
      * Sets the px-affixed size of the item along the axis of scrolling.
      * For "horizontal" orientation this value is the width of the column and for "vertical" is the height or the row.
      * ```html
@@ -217,7 +226,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * ```
      */
     @Output()
-    public dataChanged = new EventEmitter<any>();
+    public dataChanged = new EventEmitter<IForOfDataChangeEventArgs>();
 
     @Output()
     public beforeViewDestroyed = new EventEmitter<EmbeddedViewRef<any>>();
@@ -1207,7 +1216,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             }
         } else {
             if (this.igxForOf) {
-                chunkSize = this.igxForOf.length;
+                chunkSize = Math.min(this.igxForInitialChunkSize || this.igxForOf.length, this.igxForOf.length);
             }
         }
         return chunkSize;
@@ -1504,10 +1513,15 @@ export interface IForOfState extends IBaseEventArgs {
     chunkSize?: number;
 }
 
+/**
+ * @deprecated in 19.2.7. Use `IForOfDataChangeEventArgs` instead.
+ */
 export interface IForOfDataChangingEventArgs extends IBaseEventArgs {
     containerSize: number;
     state: IForOfState;
 }
+
+export interface IForOfDataChangeEventArgs extends IForOfDataChangingEventArgs {}
 
 export class IgxGridForOfContext<T, U extends T[] = T[]> extends IgxForOfContext<T, U> {
     constructor(
@@ -1577,7 +1591,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
      * An event that is emitted after data has been changed but before the view is refreshed
      */
     @Output()
-    public dataChanging = new EventEmitter<IForOfDataChangingEventArgs>();
+    public dataChanging = new EventEmitter<IForOfDataChangeEventArgs>();
 
     constructor(
         _viewContainer: ViewContainerRef,
@@ -1792,7 +1806,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         changes.forEachItem((item) => {
             if (item.previousIndex !== null &&
                 (numRemovedItems < 2 || !identityChanges.length || identityChanges[item.currentIndex])
-                && this.igxForScrollOrientation !== "horizontal") {
+                && this.igxForScrollOrientation !== "horizontal" && this.individualSizeCache.length > 0) {
                 // Reuse cache on those who have previousIndex.
                 // When there are more than one removed items currently the changes are not readable so ones with identity change
                 // should be racalculated.

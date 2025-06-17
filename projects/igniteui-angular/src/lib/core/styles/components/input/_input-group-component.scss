@@ -51,7 +51,7 @@
 
         @include e(input) {
             @extend %form-group-input !optional;
-            @extend %chrome-autofill-fix !optional;
+            @extend %autofill-background-fix !optional;
             @extend %edge-clear-icon-fix !optional;
 
             &:hover {
@@ -244,6 +244,24 @@
             }
         }
 
+        @include m(warning) {
+            @include e(label) {
+                @extend %form-group-label--warning !optional;
+            }
+
+            @include e(line) {
+                @extend %form-group-line--warning !optional;
+            }
+
+            @include e(hint) {
+                @extend %form-group-helper--warning !optional;
+            }
+
+            @include e(bundle) {
+                @extend %form-group-bundle--warning !optional;
+            }
+        }
+
         @include m(invalid) {
             @include e(label) {
                 @extend %form-group-label--error !optional;
@@ -403,6 +421,7 @@
 
         // Type border START
         @include m(border) {
+            @extend %form-group-display--border !optional;
             @extend %form-group-display--no-margin !optional;
 
             @include e(bundle) {

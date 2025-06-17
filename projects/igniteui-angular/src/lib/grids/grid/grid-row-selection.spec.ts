@@ -3,7 +3,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxBooleanFilteringOperand } from '../../data-operations/filtering-condition';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     RowSelectionComponent,
     SelectionWithScrollsComponent,
@@ -25,9 +24,8 @@ const SCROLL_DEBOUNCETIME = 100;
 
 
 describe('IgxGrid - Row Selection #grid', () => {
-    configureTestSuite();
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -2091,11 +2089,13 @@ describe('IgxGrid - Row Selection #grid', () => {
                 fieldName: 'UnitsInStock',
                 searchVal: 0,
                 condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+                conditionName: 'greaterThan'
             });
             tree.filteringOperands.push({
                 fieldName: 'ProductName',
                 searchVal: 'a',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains',
                 ignoreCase: true
             });
             grid.advancedFilteringExpressionsTree = tree;

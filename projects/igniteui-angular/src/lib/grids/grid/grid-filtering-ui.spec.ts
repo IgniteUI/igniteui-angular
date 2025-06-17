@@ -1,11 +1,10 @@
 import { DebugElement } from '@angular/core';
-import { fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
@@ -20,6 +19,7 @@ import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxBadgeComponent } from '../../badge/badge.component';
+import { IgxIconComponent } from '../../icon/icon.component';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { igxI18N } from '../../core/i18n/resources';
@@ -57,7 +57,7 @@ import { setElementSize } from '../../test-utils/helper-utils.spec';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
 import { IgxTimePickerComponent } from '../../time-picker/time-picker.component';
 
-const DEBOUNCETIME = 30;
+const DEBOUNCE_TIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-line';
@@ -66,9 +66,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
     registerLocaleData(localeDe);
     registerLocaleData(localeFr);
-
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridFilteringComponent,
@@ -78,7 +77,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 IgxGridDatesFilteringComponent,
                 IgxGridFilteringNumericComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe(null, () => {
@@ -288,27 +287,27 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const prefix = GridFunctions.getFilterRowPrefix(fix);
 
             input.triggerEventHandler('click', null);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
 
             UIInteractions.triggerEventHandlerKeyDown(' ', prefix);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix, false);
 
             UIInteractions.triggerEventHandlerKeyDown('Enter', input);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
 
             UIInteractions.triggerEventHandlerKeyDown('Tab', prefix);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix, false);
 
             UIInteractions.triggerEventHandlerKeyDown(' ', input);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
         }));
@@ -480,7 +479,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(inputDirectiveInstance.displayFormat).toMatch('yyyy-dd-MM');
 
             GridFunctions.clickFilterCellChipUI(fix, 'ReleaseTime');
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
 
             filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
@@ -500,11 +499,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             releaseTimeCol.pipeArgs = {
                 format: 'shortTime'
             };
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
 
             GridFunctions.clickFilterCellChipUI(fix, 'ReleaseDateTime');
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
 
             let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
@@ -514,7 +513,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(dateTimeEditor.displayFormat).toMatch('yyyy--dd--MM');
 
             GridFunctions.clickFilterCellChipUI(fix, 'ReleaseTime');
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
 
             filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
@@ -547,12 +546,14 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const expression = {
                 fieldName: 'ProductName',
                 searchVal: 'g',
-                condition: IgxStringFilteringOperand.instance().condition('contains')
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains'
             };
             const expression1 = {
                 fieldName: 'ProductName',
                 searchVal: 'I',
-                condition: IgxStringFilteringOperand.instance().condition('contains')
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains'
             };
             filteringExpressionsTree.filteringOperands.push(expression);
             filteringExpressionsTree.filteringOperands.push(expression1);
@@ -596,7 +597,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const expression = {
                 fieldName: 'ProductName',
                 searchVal: 'Ignite',
-                condition: IgxStringFilteringOperand.instance().condition('startsWith')
+                condition: IgxStringFilteringOperand.instance().condition('startsWith'),
+                conditionName: 'startsWith'
             };
 
             filteringExpressionsTree.filteringOperands.push(expression);
@@ -668,12 +670,14 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const expression = {
                 fieldName: 'ProductName',
                 searchVal: 'Ignite',
-                condition: IgxStringFilteringOperand.instance().condition('startsWith')
+                condition: IgxStringFilteringOperand.instance().condition('startsWith'),
+                conditionName: 'startsWith'
             };
             const expression1 = {
                 fieldName: 'ProductName',
                 searchVal: 'Angular',
-                condition: IgxStringFilteringOperand.instance().condition('contains')
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains'
             };
             filteringExpressionsTree.filteringOperands.push(expression);
             filteringExpressionsTree.filteringOperands.push(expression1);
@@ -832,7 +836,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 const expression = {
                     fieldName: 'ProductName',
                     searchVal: 'I',
-                    condition: IgxStringFilteringOperand.instance().condition('startsWith')
+                    condition: IgxStringFilteringOperand.instance().condition('startsWith'),
+                    conditionName: 'startsWith'
                 };
                 filteringExpressionsTree.filteringOperands.push(expression);
             }
@@ -898,13 +903,15 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const expression1 = {
                 fieldName: 'ProductName',
                 searchVal: 'Ignite',
-                condition: IgxStringFilteringOperand.instance().condition('startsWith')
+                condition: IgxStringFilteringOperand.instance().condition('startsWith'),
+                conditionName: 'startsWith'
             };
 
             const expression2 = {
                 fieldName: 'ProductName',
                 searchVal: 'test',
-                condition: IgxStringFilteringOperand.instance().condition('contains')
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains'
             };
 
             filteringExpressionsTree.filteringOperands.push(expression1);
@@ -1064,12 +1071,14 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const expression = {
                 fieldName: 'ProductName',
                 searchVal: 'Ignite',
-                condition: IgxStringFilteringOperand.instance().condition('startsWith')
+                condition: IgxStringFilteringOperand.instance().condition('startsWith'),
+                conditionName: 'startsWith'
             };
             const expression1 = {
                 fieldName: 'ProductName',
                 searchVal: 'Angular',
-                condition: IgxStringFilteringOperand.instance().condition('contains')
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains'
             };
             filteringExpressionsTree.filteringOperands.push(expression);
             filteringExpressionsTree.filteringOperands.push(expression1);
@@ -1100,12 +1109,14 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const expression = {
                 fieldName: 'ProductName',
                 searchVal: 'Ignite',
-                condition: IgxStringFilteringOperand.instance().condition('startsWith')
+                condition: IgxStringFilteringOperand.instance().condition('startsWith'),
+                conditionName: 'startsWith'
             };
             const expression1 = {
                 fieldName: 'ProductName',
                 searchVal: 'for',
-                condition: IgxStringFilteringOperand.instance().condition('contains')
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains'
             };
             filteringExpressionsTree.filteringOperands.push(expression);
             filteringExpressionsTree.filteringOperands.push(expression1);
@@ -1147,8 +1158,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'o', condition: IgxStringFilteringOperand.instance().condition('contains') }
+                { fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'o', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -1364,7 +1375,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             const input = filterUIRow.query(By.directive(IgxInputDirective));
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', input, true);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
         }));
@@ -1413,7 +1424,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // submit the input with empty value
             UIInteractions.triggerEventHandlerKeyDown('Enter', input);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
 
             filterChip = filterUIRow.query(By.directive(IgxChipComponent));
@@ -1466,9 +1477,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'ProductName', searchVal: 'z', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'n', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'g', condition: IgxStringFilteringOperand.instance().condition('contains') }
+                { fieldName: 'ProductName', searchVal: 'z', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'n', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'g', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -1492,9 +1503,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'ProductName', searchVal: 'n', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'z', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'g', condition: IgxStringFilteringOperand.instance().condition('contains') }
+                { fieldName: 'ProductName', searchVal: 'n', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'z', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'g', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -1550,9 +1561,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'e', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'i', condition: IgxStringFilteringOperand.instance().condition('contains') }
+                { fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'e', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'i', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -1741,17 +1752,17 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it(`Should remove first condition chip when click 'clear' button and focus 'more' icon.`, fakeAsync(() => {
-            grid.getColumnByName('ProductName').width = '160px';
-            tick(DEBOUNCETIME);
+            grid.getColumnByName('ProductName').width = '200px';
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
 
             // Add initial filtering conditions
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'e', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'i', condition: IgxStringFilteringOperand.instance().condition('contains') }
+                { fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'e', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'i', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -1776,16 +1787,16 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it(`Should focus 'grid header' when close filter row.`, fakeAsync(() => {
             grid.getColumnByName('ProductName').width = '80px';
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
 
             // Add initial filtering conditions
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'e', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'i', condition: IgxStringFilteringOperand.instance().condition('contains') }
+                { fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'e', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'i', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -1805,7 +1816,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // close filter row
             GridFunctions.closeFilterRow(fix);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
 
             const header = GridFunctions.getGridHeader(grid);
             expect(document.activeElement).toEqual(header.nativeElement);
@@ -1814,16 +1825,16 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         it('Should update active element when click \'clear\' button of last chip and there is no \'more\' icon.', fakeAsync(() => {
             pending('This this is not valid anymore, so we should probably dellete it.');
             grid.getColumnByName('ProductName').width = '350px';
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
 
             // Add initial filtering conditions
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'e', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'i', condition: IgxStringFilteringOperand.instance().condition('contains') }
+                { fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'e', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'i', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -1838,7 +1849,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Remove last chip.
             // Remove active chip.
             ControlsFunction.clickChipRemoveButton(lastFilterCellChip.nativeElement);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
 
             // Verify chips count.
@@ -1858,8 +1869,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'e', condition: IgxStringFilteringOperand.instance().condition('contains') }
+                { fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'e', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -1943,16 +1954,16 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         it('should scroll correct chip in view when one is deleted', async () => {
             grid.width = '800px';
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
 
             // Add initial filtering conditions
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'e', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'i', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'n', condition: IgxStringFilteringOperand.instance().condition('contains') }
+                { fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'e', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'i', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'n', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -2014,7 +2025,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Add a condition chip without submitting it.
             GridFunctions.typeValueInFilterRowInput('a', fix);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
 
             // Change filterMode to 'excelStyleFilter`
             grid.filterMode = FilterMode.excelStyleFilter;
@@ -2152,7 +2163,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Enter expression
             GridFunctions.typeValueInFilterRowInput('NetAdvantage', fix);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             GridFunctions.closeFilterRow(fix);
             fix.detectChanges();
 
@@ -2262,7 +2273,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             GridFunctions.typeValueInFilterRowInput('3', fix);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             GridFunctions.closeFilterRow(fix);
             fix.detectChanges();
 
@@ -2282,7 +2293,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             GridFunctions.typeValueInFilterRowInput('1:', fix);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             GridFunctions.closeFilterRow(fix);
             fix.detectChanges();
 
@@ -2295,7 +2306,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             GridFunctions.typeValueInFilterRowInput('3', fix);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             const inputGroup = fix.debugElement.query(By.directive(IgxInputGroupComponent));
             const filterRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
             const pendingChip = filterRow.queryAll(By.directive(IgxChipComponent))[0];
@@ -2305,7 +2316,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             inputGroup.nativeElement.dispatchEvent(new Event('focusout'));
             chipCloseButton.dispatchEvent(new Event('mouseup'));
             chipCloseButton.dispatchEvent(new Event('click'));
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
 
             const chips = filterRow.queryAll(By.directive(IgxChipComponent));
@@ -2316,13 +2327,13 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             spyOn(console, 'error');
 
             GridFunctions.clickFilterCellChipUI(fix, 'ReleaseDateTime');
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
 
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             const input = filterUIRow.query(By.directive(IgxInputDirective));
             GridFunctions.typeValueInFilterRowInput('', fix, input);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('Backspace', input);
@@ -2441,11 +2452,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'ProductName', searchVal: 'x', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'y', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'i', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'g', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'n', condition: IgxStringFilteringOperand.instance().condition('contains') }
+                { fieldName: 'ProductName', searchVal: 'x', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'y', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'i', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'g', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'n', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -2517,8 +2528,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'o', condition: IgxStringFilteringOperand.instance().condition('contains') }
+                { fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'o', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -2605,8 +2616,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'Downloads');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'Downloads', searchVal: 25, condition: IgxNumberFilteringOperand.instance().condition('greaterThan') },
-                { fieldName: 'Downloads', searchVal: 200, condition: IgxNumberFilteringOperand.instance().condition('lessThan') }
+                { fieldName: 'Downloads', searchVal: 25, condition: IgxNumberFilteringOperand.instance().condition('greaterThan'), conditionName: 'greaterThan' },
+                { fieldName: 'Downloads', searchVal: 200, condition: IgxNumberFilteringOperand.instance().condition('lessThan'), conditionName: 'lessThan' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -2656,11 +2667,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             GridFunctions.applyFilter('Jav', fix);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
 
             GridFunctions.applyFilter('xy', fix);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
 
             const tBodyContent = GridFunctions.getGridContent(fix);
@@ -2729,7 +2740,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 const expression = {
                     fieldName: 'ProductName',
                     searchVal: 'Ignite',
-                    condition: IgxStringFilteringOperand.instance().condition('startsWith')
+                    condition: IgxStringFilteringOperand.instance().condition('startsWith'),
+                    conditionName: 'startsWith'
                 };
                 filteringExpressionsTree.filteringOperands.push(expression);
                 grid.filteringExpressionsTree = filteringExpressionsTree;
@@ -3019,16 +3031,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             );
         }));
 
-        it('Should emit filteringDone when we clicked reset - Boolean column type', fakeAsync(() => {
-            emitFilteringDoneOnResetClick(
-                fix,
-                grid,
-                true,
-                'Released',
-                IgxBooleanFilteringOperand.instance().condition('true')
-            );
-        }));
-
         it('Should emit filteringDone when we clicked reset - DateTime column type', fakeAsync(() => {
             emitFilteringDoneOnResetClick(
                 fix,
@@ -3076,16 +3078,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 100000,
                 'Revenue',
                 IgxNumberFilteringOperand.instance().condition('equals')
-            );
-        }));
-
-        it('Should emit filteringDone when clear the input of filteringUI - Boolean column type', fakeAsync(() => {
-            emitFilteringDoneOnInputClear(
-                fix,
-                grid,
-                true,
-                'Released',
-                IgxBooleanFilteringOperand.instance().condition('true')
             );
         }));
 
@@ -3172,34 +3164,34 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('should emit filteringDone after chip is close from filtering row - Date column type', fakeAsync(() => {
-            closeChipFromFiteringUIRow(fix, grid, 'ReleaseDate', 4);
+            closeChipFromFilteringUIRow(fix, grid, 'ReleaseDate', 4);
         }));
 
         it('should emit filteringDone after chip is close from filtering row - String column type', fakeAsync(() => {
-            closeChipFromFiteringUIRow(fix, grid, 'ProductName', 9);
+            closeChipFromFilteringUIRow(fix, grid, 'ProductName', 9);
         }));
 
         it('should emit filteringDone after chip is close from filtering row - Number column type', fakeAsync(() => {
-            closeChipFromFiteringUIRow(fix, grid, 'Downloads', 7);
+            closeChipFromFilteringUIRow(fix, grid, 'Downloads', 7);
         }));
 
         it('should emit filteringDone after chip is close from filtering row - Currency column type', fakeAsync(() => {
-            closeChipFromFiteringUIRow(fix, grid, 'Revenue', 7);
+            closeChipFromFilteringUIRow(fix, grid, 'Revenue', 7);
         }));
 
         it('should emit filteringDone after chip is close from filtering row - Boolean column type', fakeAsync(() => {
-            closeChipFromFiteringUIRow(fix, grid, 'Released', 1);
+            closeChipFromFilteringUIRow(fix, grid, 'Released', 1);
         }));
 
         it('should emit filteringDone after chip is close from filtering row - DateTime column type', fakeAsync(() => {
-            closeChipFromFiteringUIRow(fix, grid, 'ReleaseTime', 4);
+            closeChipFromFilteringUIRow(fix, grid, 'ReleaseTime', 4);
         }));
     });
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridFilteringComponent,
@@ -3210,7 +3202,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 IgxGridExternalESFComponent,
                 IgxGridExternalESFTemplateComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe(null, () => {
@@ -3440,8 +3432,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'Downloads');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('equals') },
-                { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('equals') }
+                { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals' },
+                { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -3460,7 +3452,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'ProductName', searchVal: 'Angular', condition: IgxStringFilteringOperand.instance().condition('contains') }
+                { fieldName: 'ProductName', searchVal: 'Angular', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -3481,7 +3473,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const ddItem = fix.nativeElement.querySelector('.igx-drop-down__item--selected');
             expect(ddItem).toBeDefined();
-            expect(ddItem.getAttribute('ng-reflect-value')).toMatch('contains');
+            expect(ddItem.outerText.toLowerCase()).toMatch('contains');
 
             GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
             tick(100);
@@ -3494,7 +3486,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'ProductName', searchVal: 'Angular', condition: IgxStringFilteringOperand.instance().condition('contains') }
+                { fieldName: 'ProductName', searchVal: 'Angular', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -3515,7 +3507,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const ddItem = fix.nativeElement.querySelector('.igx-drop-down__item--selected');
             expect(ddItem).toBeDefined();
-            expect(ddItem.getAttribute('ng-reflect-value')).toMatch('contains');
+            expect(ddItem.outerText.toLowerCase()).toMatch('contains');
 
             GridFunctions.clickOperatorFromCascadeMenu(fix, 1);
             tick(100);
@@ -3528,8 +3520,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'ProductName', searchVal: 'Angular', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'Ignite', condition: IgxStringFilteringOperand.instance().condition('contains') }
+                { fieldName: 'ProductName', searchVal: 'Angular', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'Ignite', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -3557,8 +3549,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'Downloads');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'Downloads', searchVal: 254, condition: IgxNumberFilteringOperand.instance().condition('equals') },
-                { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('equals') }
+                { fieldName: 'Downloads', searchVal: 254, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals' },
+                { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -3583,8 +3575,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'Downloads');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'Downloads', searchVal: 254, condition: IgxNumberFilteringOperand.instance().condition('equals') },
-                { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('equals') }
+                { fieldName: 'Downloads', searchVal: 254, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals' },
+                { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -3616,8 +3608,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'Downloads');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'Downloads', searchVal: 254, condition: IgxNumberFilteringOperand.instance().condition('equals') },
-                { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('equals') }
+                { fieldName: 'Downloads', searchVal: 254, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals' },
+                { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -3672,8 +3664,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'Downloads');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'Downloads', searchVal: 254, condition: IgxNumberFilteringOperand.instance().condition('equals') },
-                { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('lessThan') }
+                { fieldName: 'Downloads', searchVal: 254, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals' },
+                { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('lessThan'), conditionName: 'lessThan' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -3716,8 +3708,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'Downloads');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'Downloads', searchVal: 254, condition: IgxNumberFilteringOperand.instance().condition('equals') },
-                { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('equals') }
+                { fieldName: 'Downloads', searchVal: 254, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals' },
+                { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -3735,8 +3727,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'ProductName', searchVal: 'Angular', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'Ignite', condition: IgxStringFilteringOperand.instance().condition('contains') }
+                { fieldName: 'ProductName', searchVal: 'Angular', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'Ignite', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -3757,14 +3749,14 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should set the \'aria-disabled\' attribute for the ESF dialog clear filter button element with role=\'menuitem\'.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
             expect(grid.filteredData).toBeNull();
-            let clearFilterButtonMenuTiemRole = GridFunctions.getClearFilterInExcelStyleFiltering(fix);
-            expect(clearFilterButtonMenuTiemRole.getAttribute('aria-disabled')).toBe('true');
+            let clearFilterButtonMenuItemRole = GridFunctions.getClearFilterInExcelStyleFiltering(fix);
+            expect(clearFilterButtonMenuItemRole.getAttribute('aria-disabled')).toBe('true');
 
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'ProductName', searchVal: 'Angular', condition: IgxStringFilteringOperand.instance().condition('contains') },
-                { fieldName: 'ProductName', searchVal: 'Ignite', condition: IgxStringFilteringOperand.instance().condition('contains') }
+                { fieldName: 'ProductName', searchVal: 'Angular', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'Ignite', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -3772,8 +3764,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
             expect(grid.filteredData.length).toEqual(2);
-            clearFilterButtonMenuTiemRole = GridFunctions.getClearFilterInExcelStyleFiltering(fix);
-            expect(clearFilterButtonMenuTiemRole.getAttribute('aria-disabled')).toBe('false');
+            clearFilterButtonMenuItemRole = GridFunctions.getClearFilterInExcelStyleFiltering(fix);
+            expect(clearFilterButtonMenuItemRole.getAttribute('aria-disabled')).toBe('false');
 
             const clearFilterButton = GridFunctions.getClearFilterInExcelStyleFiltering(fix);
             clearFilterButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
@@ -3781,8 +3773,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             expect(grid.filteredData).toBeNull();
-            clearFilterButtonMenuTiemRole = GridFunctions.getClearFilterInExcelStyleFiltering(fix);
-            expect(clearFilterButtonMenuTiemRole.getAttribute('aria-disabled')).toBe('true');
+            clearFilterButtonMenuItemRole = GridFunctions.getClearFilterInExcelStyleFiltering(fix);
+            expect(clearFilterButtonMenuItemRole.getAttribute('aria-disabled')).toBe('true');
         }));
 
         it('Should update filter icon when dialog is closed and the filter has been changed.', fakeAsync(() => {
@@ -3862,8 +3854,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'Downloads');
             columnsFilteringTree.filteringOperands = [
-                { fieldName: 'Downloads', searchVal: 254, condition: IgxNumberFilteringOperand.instance().condition('equals') },
-                { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('equals') }
+                { fieldName: 'Downloads', searchVal: 254, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals' },
+                { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals' }
             ];
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -3950,7 +3942,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Move 'ProductName' one step to the right. (should move)
             let moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
             UIInteractions.simulateClickEvent(moveRight);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 0).innerText).toBe('ID');
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 1).innerText).toBe('ProductName');
@@ -3959,7 +3951,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Move 'ProductName' one step to the left. (should move)
             const moveLeft = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[0];
             UIInteractions.simulateClickEvent(moveLeft);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 0).innerText).toBe('ProductName');
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 1).innerText).toBe('ID');
@@ -3972,10 +3964,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Move 'ProductName' two steps to the right. (should move)
             moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
             UIInteractions.simulateClickEvent(moveRight);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
             UIInteractions.simulateClickEvent(moveRight);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 0).innerText).toBe('ID');
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 1).innerText).toBe('ProductName');
@@ -3996,10 +3988,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const moveLeft = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[0];
             UIInteractions.simulateClickEvent(moveLeft);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
             UIInteractions.simulateClickEvent(moveLeft);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
 
             expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 0).innerText).toBe('ProductName');
@@ -4373,10 +4365,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Verify display container height.
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
-            expect(displayContainerRect.height).toBe(240, 'incorrect search display container height');
+            const listHeight = searchComponent.querySelector('igx-list').getBoundingClientRect().height;
+            const itemHeight = displayContainer.querySelector('igx-list-item').getBoundingClientRect().height;
+            expect(displayContainerRect.height > listHeight + itemHeight && displayContainerRect.height < listHeight + (itemHeight * 2)).toBe(true, 'incorrect search display container height');
             // Verify rendered list items count.
             const listItems = displayContainer.querySelectorAll('igx-list-item');
-            expect(listItems.length).toBe(10, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(Math.ceil(listHeight / itemHeight ) + 1, 'incorrect rendered list items count');
         }));
 
         it('should correctly display all items in search list after filtering it', (async () => {
@@ -4612,7 +4606,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify scrollbar is visible for 'comfortable'.
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             expect(isExcelSearchScrollBarVisible(fix)).toBe(true, 'excel search scrollbar should be visible');
@@ -4625,7 +4619,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify scrollbar is NOT visible for 'cosy'.
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             expect(isExcelSearchScrollBarVisible(fix)).toBe(false, 'excel search scrollbar should NOT be visible');
@@ -4638,7 +4632,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify scrollbar is NOT visible for 'compact'.
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             expect(isExcelSearchScrollBarVisible(fix)).toBe(false, 'excel search scrollbar should NOT be visible');
@@ -5138,7 +5132,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.filteredData.length).toEqual(1);
         }));
 
-        it('Should filter grid with miliseconds dates through custom date filter dialog', fakeAsync(() => {
+        it('Should filter grid with milliseconds dates through custom date filter dialog', fakeAsync(() => {
             fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
                 const newRec = Object.assign({}, rec) as any;
                 newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.getTime() : null;
@@ -5690,7 +5684,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(0, 'incorrect rendered list items count');
         }));
 
-        it('Should filter miliseconds date by input string', fakeAsync(() => {
+        it('Should filter milliseconds date by input string', fakeAsync(() => {
             fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
                 const newRec = Object.assign({}, rec) as any;
                 newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.getTime() : null;
@@ -5874,7 +5868,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const list = searchComponent.querySelector('igx-list');
             list.dispatchEvent(new Event('focus'));
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
             const listItems = list.querySelectorAll('igx-list-item');
 
@@ -5922,7 +5916,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const list = searchComponent.querySelector('igx-list');
             list.dispatchEvent(new Event('focus'));
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
             const listItems = list.querySelectorAll('igx-list-item');
 
@@ -6273,6 +6267,41 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 ['Select All', '1:00:00 AM', '12:00:00 PM', '11:00:00 PM'],
                 [true, true, true, true]);
         }));
+
+        it('should clear all filters in the custom dialog when clicking "Clear Filter" button', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 5);
+            tick();
+            fix.detectChanges();
+
+            const expressions = GridFunctions.getExcelCustomFilteringDateExpressions(fix);
+            const lastExpression = expressions[expressions.length - 1];
+            (lastExpression.querySelector('igx-select').querySelector('igx-input-group') as HTMLElement).click();
+            tick();
+            fix.detectChanges();
+            const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+
+            const todayItem = dropdownList.children[0].children.find(item => item.nativeElement?.innerText === 'Today');
+            todayItem.nativeElement.click();
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickClearFilterExcelStyleCustomFiltering(fix);
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.getExcelCustomFilteringDateExpressions(fix).forEach(expr => {
+                const input = expr.children[0].querySelector('input');
+                expect(input.value).toBe('');
+            });
+        }));
     });
 
     describe('Templates: ', () => {
@@ -6517,7 +6546,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
             const parentContainerRect = displayContainer.parentElement.getBoundingClientRect();
-            
+
             expect(displayContainerRect.top - parentContainerRect.top <= 1).toBe(true, 'search scrollbar did not reset');
         });
     });
@@ -6630,7 +6659,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
 
-        it('Verify unique miliseconds date values are loaded correctly in ESF search component.', fakeAsync(() => {
+        it('Verify unique milliseconds date values are loaded correctly in ESF search component.', fakeAsync(() => {
             fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
                 const newRec = Object.assign({}, rec) as any;
                 newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.getTime() : null;
@@ -6871,7 +6900,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
             const moveLeft = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[0];
             UIInteractions.simulateClickEvent(moveLeft);
-            tick(DEBOUNCETIME);
+            tick(DEBOUNCE_TIME);
             fix.detectChanges();
 
             // Verify 'AnotherField' column is successfully pinned next to the column group.
@@ -6977,19 +7006,43 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
         }));
 
+        it('should discard filters through esf menu properly on cancel button click', fakeAsync(() => {
+            grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'));
+            fix.detectChanges();
+
+            expect(fix.debugElement.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).toContain('(1)');
+            expect(grid.filteredData.length).toEqual(2);
+            tick(200);
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.setOperatorESF(fix, 1, 0);
+            GridFunctions.setInputValueESF(fix, 1, 'Angular');
+            GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
+
+            expect(fix.debugElement.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).toContain('(1)');
+            expect(grid.filteredData.length).toEqual(2);
+        }));
+
     });
 });
 
 describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 CustomFilteringStrategyComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     beforeEach(fakeAsync(() => {
@@ -7013,9 +7066,9 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
         fix.detectChanges();
 
         GridFunctions.typeValueInFilterRowInput('ca', fix);
-        tick(DEBOUNCETIME);
+        tick(DEBOUNCE_TIME);
         GridFunctions.submitFilterRowInput(fix);
-        tick(DEBOUNCETIME);
+        tick(DEBOUNCE_TIME);
         fix.detectChanges();
 
         expect(grid.filteredData).toEqual([]);
@@ -7031,9 +7084,9 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
         fix.detectChanges();
 
         GridFunctions.typeValueInFilterRowInput('ca', fix);
-        tick(DEBOUNCETIME);
+        tick(DEBOUNCE_TIME);
         GridFunctions.submitFilterRowInput(fix);
-        tick(DEBOUNCETIME);
+        tick(DEBOUNCE_TIME);
         fix.detectChanges();
 
         expect(grid.filteredData).toEqual(
@@ -7046,9 +7099,9 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
         fix.detectChanges();
 
         GridFunctions.typeValueInFilterRowInput('direct', fix);
-        tick(DEBOUNCETIME);
+        tick(DEBOUNCE_TIME);
         GridFunctions.submitFilterRowInput(fix);
-        tick(DEBOUNCETIME);
+        tick(DEBOUNCE_TIME);
         fix.detectChanges();
 
         expect(grid.filteredData).toEqual([
@@ -7066,9 +7119,9 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
         fix.detectChanges();
 
         GridFunctions.typeValueInFilterRowInput('direct', fix);
-        tick(DEBOUNCETIME);
+        tick(DEBOUNCE_TIME);
         GridFunctions.submitFilterRowInput(fix);
-        tick(DEBOUNCETIME);
+        tick(DEBOUNCE_TIME);
         fix.detectChanges();
 
         expect(grid.filteredData).toEqual([]);
@@ -7078,7 +7131,7 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
         grid.filterStrategy = fix.componentInstance.strategy;
         fix.detectChanges();
         grid.filter('Name', 'D', IgxStringFilteringOperand.instance().condition('contains'));
-        tick(DEBOUNCETIME);
+        tick(DEBOUNCE_TIME);
         fix.detectChanges();
 
         expect(grid.filteredData).toEqual([
@@ -7169,8 +7222,8 @@ const verifyExcelStyleFilteringSize = (fix: ComponentFixture<any>, expectedSize:
     expect(getComponentSize(list)).toBe(expectedSize);
 
     // Verify size of all flat and contained buttons in excel stlye dialog.
-    const flatButtons: HTMLElement[] = excelMenu.querySelectorAll('.igx-button--flat');
-    const containedButtons: HTMLElement[] = excelMenu.querySelectorAll('.igx-button--contained');
+    const flatButtons: HTMLElement[] = excelMenu.querySelectorAll('.igx-button--flat:not(.igx-excel-filter__secondary *):not(.igx-excel-filter__menu-footer)');
+    const containedButtons: HTMLElement[] = excelMenu.querySelectorAll('.igx-button--contained:not(.igx-excel-filter__secondary *):not(.igx-excel-filter__menu-footer)');
     const buttons: HTMLElement[] = Array.from(flatButtons).concat(Array.from(containedButtons));
     buttons.forEach((button) => {
         expect(getComponentSize(button)).toBe(expectedSize);
@@ -7190,13 +7243,13 @@ const verifyPinningHidingSize = (fix: ComponentFixture<any>, expectedSize: Size)
 
     // Get column pinning and column hiding icons from header (if present at all)
     const headerTitle = excelMenu.querySelector('h4');
-    const headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix, excelMenu);
+    const headerIcons: DebugElement[] = GridFunctions.getExcelFilteringHeaderIconsDebugElements(fix, excelMenu);
     const headerAreaPinIcon: HTMLElement =
-        headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin"') !== -1) as HTMLElement;
+        headerIcons.find((buttonIcon: DebugElement) => buttonIcon.query(By.directive(IgxIconComponent)).componentInstance.name === "pin")?.nativeElement;
     const headerAreaUnpinIcon: HTMLElement
-        = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin"') !== -1) as HTMLElement;
+        = headerIcons.find((buttonIcon: DebugElement) => buttonIcon.query(By.directive(IgxIconComponent)).componentInstance.name === "unpin")?.nativeElement;
     const headerAreaColumnHidingIcon: HTMLElement =
-        headerIcons.find((buttonIcon: any) => buttonIcon.innerText === 'visibility_off') as HTMLElement;
+        headerIcons.find((buttonIcon: DebugElement) => buttonIcon.query(By.directive(IgxIconComponent)).componentInstance.name === 'hide')?.nativeElement;
 
     // Get column pinning and column hiding icons from actionsArea (if present at all)
     const actionsPinArea = GridFunctions.getExcelFilteringPinContainer(fix, excelMenu);
@@ -7273,10 +7326,12 @@ const verifySortMoveSize = (fix: ComponentFixture<any>, expectedSize: Size) => {
 const verifyExcelCustomFilterSize = (fix: ComponentFixture<any>, expectedSize: Size) => {
     // Excel style filtering custom filter dialog
     const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
+    // Main container of custom filter dialog
+    const container = customFilterMenu.querySelector('.igx-excel-filter__secondary-main');
 
     // Verify size of all flat and contained buttons in custom filter dialog.
-    const flatButtons = customFilterMenu.querySelectorAll('.igx-button--flat');
-    const containedButtons = customFilterMenu.querySelectorAll('.igx-button--contained');
+    const flatButtons = container.querySelectorAll('.igx-button--flat');
+    const containedButtons = container.querySelectorAll('.igx-button--contained');
     const buttons = Array.from(flatButtons).concat(Array.from(containedButtons));
     buttons.forEach((button) => {
         expect(getComponentSize(button)).toBe(expectedSize);
@@ -7413,7 +7468,7 @@ const verifyRemoveChipFromHeader = (fix, grid, filterVal, columnName, condition,
     verifyEmitFilteringDone(grid, emptyFilter, 2);
 };
 
-const closeChipFromFiteringUIRow = (fix, grid, columnName, index) => {
+const closeChipFromFilteringUIRow = (fix, grid, columnName, index) => {
     GridFunctions.clickFilterCellChip(fix, columnName);
 
     const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));

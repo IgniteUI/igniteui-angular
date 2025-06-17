@@ -15,7 +15,8 @@ import {
     EventEmitter,
     SimpleChanges,
     booleanAttribute,
-    Inject
+    Inject,
+    DOCUMENT
 } from '@angular/core';
 import { IgxToggleDirective, ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
@@ -30,7 +31,6 @@ import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { IgxForOfToken } from '../directives/for-of/for_of.directive';
 import { take } from 'rxjs/operators';
 import { OverlaySettings } from '../services/overlay/utilities';
-import { DOCUMENT, NgIf } from '@angular/common';
 import { ConnectedPositioningStrategy } from '../services/public_api';
 
 /**
@@ -54,7 +54,7 @@ import { ConnectedPositioningStrategy } from '../services/public_api';
     selector: 'igx-drop-down',
     templateUrl: './drop-down.component.html',
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }],
-    imports: [IgxToggleDirective, NgIf]
+    imports: [IgxToggleDirective]
 })
 export class IgxDropDownComponent extends IgxDropDownBaseDirective implements IDropDownBase, OnChanges, AfterViewInit, OnDestroy {
     /**
@@ -243,7 +243,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * ```
      */
     public open(overlaySettings?: OverlaySettings) {
-        const settings = overlaySettings || this.getDefaultOverlaySettings();
+        const settings = { ... {}, ...this.getDefaultOverlaySettings(), ...overlaySettings };
         this.toggleDirective.open(settings);
         this.updateScrollPosition();
     }

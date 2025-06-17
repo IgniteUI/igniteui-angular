@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import {
     FormsModule, NgControl, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
 } from '@angular/forms';
@@ -15,7 +15,6 @@ import { IForOfState } from '../directives/for-of/for_of.directive';
 import { IgxInputState } from '../directives/input/input.directive';
 import { IgxLabelDirective } from '../input-group/public_api';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
@@ -87,6 +86,11 @@ describe('igxCombo', () => {
         });
         mockSelection.get.and.returnValue(new Set([]));
         const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
+        jasmine.getEnv().allowRespy(true);
+
+        afterAll(() => {
+            jasmine.getEnv().allowRespy(false);
+        });
 
         it('should correctly implement interface methods - ControlValueAccessor ', () => {
             combo = new IgxComboComponent(
@@ -986,8 +990,8 @@ describe('igxCombo', () => {
     });
 
     describe('Combo feature tests: ', () => {
-        configureTestSuite(() => {
-            return TestBed.configureTestingModule({
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxComboSampleComponent,
@@ -998,8 +1002,8 @@ describe('igxCombo', () => {
                     IgxComboFormComponent,
                     IgxComboInTemplatedFormComponent
                 ]
-            });
-        });
+            }).compileComponents();
+        }));
 
         describe('Initialization and rendering tests: ', () => {
             beforeEach(() => {
@@ -1025,8 +1029,6 @@ describe('igxCombo', () => {
                 expect(combo.displayKey).toEqual('field');
                 expect(combo.groupKey).toEqual('region');
                 expect(combo.width).toEqual('400px');
-                expect(combo.itemsMaxHeight).toEqual(320);
-                expect(combo.itemHeight).toEqual(32);
                 expect(combo.placeholder).toEqual('Location');
                 expect(combo.disableFiltering).toEqual(false);
                 expect(combo.allowCustomValues).toEqual(false);
@@ -1057,8 +1059,8 @@ describe('igxCombo', () => {
                 expect(input.nativeElement.getAttribute('aria-controls')).toEqual(combo.dropdown.listId);
                 expect(input.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
 
-                const dropdown = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_DROPDOWN}`));
-                expect(dropdown.nativeElement.getAttribute('ng-reflect-labelled-by')).toEqual(combo.placeholder);
+                const dropdown = fixture.debugElement.query(By.css(`div[role="listbox"]`));
+                expect(dropdown.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
 
                 combo.open();
                 tick();
@@ -1125,9 +1127,7 @@ describe('igxCombo', () => {
                 const dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
 
                 const verifyDropdownItemHeight = () => {
-                    expect(combo.itemHeight).toEqual(itemHeight);
                     expect(dropdownItems[0].nativeElement.clientHeight).toEqual(itemHeight);
-                    expect(combo.itemsMaxHeight).toEqual(itemMaxHeight);
                     expect(dropdownList.nativeElement.clientHeight).toEqual(itemMaxHeight);
                 };
                 verifyDropdownItemHeight();
@@ -1764,11 +1764,10 @@ describe('igxCombo', () => {
                 });
                 it('should focus item when onFocus and onBlur are called', () => {
                     expect(dropdown.focusedItem).toEqual(null);
-                    expect(dropdown.items.length).toEqual(9);
                     dropdown.toggle();
                     fixture.detectChanges();
                     expect(dropdown.items).toBeDefined();
-                    expect(dropdown.items.length).toBeTruthy();
+                    expect(dropdown.items.length).toEqual(9);
                     dropdown.onFocus();
                     expect(dropdown.focusedItem).toEqual(dropdown.items[0]);
                     expect(dropdown.focusedItem.focused).toEqual(true);
@@ -2015,7 +2014,8 @@ describe('igxCombo', () => {
                 expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(1);
                 let vContainerScrollHeight = virtDir.getScroll().scrollHeight;
                 expect(virtDir.getScroll().scrollTop).toEqual(0);
-                expect(vContainerScrollHeight).toBeGreaterThan(combo.itemHeight);
+                const itemHeight = parseFloat(combo.dropdown.children.first.element.nativeElement.getBoundingClientRect().height);
+                expect(vContainerScrollHeight).toBeGreaterThan(itemHeight);
                 virtDir.getScroll().scrollTop = Math.floor(vContainerScrollHeight / 2);
                 await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
@@ -3571,24 +3571,6 @@ describe('igxCombo', () => {
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
                     expect(ngModel.touched).toBeTrue();
                 }));
-            });
-        });
-        describe('Display density', () => {
-            beforeEach(() => {
-                fixture = TestBed.createComponent(IgxComboSampleComponent);
-                fixture.detectChanges();
-                combo = fixture.componentInstance.combo;
-            });
-            it('should scale items container depending on size (itemHeight * 10)', () => {
-                combo.toggle();
-                fixture.detectChanges();
-                expect(combo.itemsMaxHeight).toEqual(320);
-                fixture.componentInstance.size = 'small';
-                fixture.detectChanges();
-                expect(combo.itemsMaxHeight).toEqual(280);
-                fixture.componentInstance.size = 'large';
-                fixture.detectChanges();
-                expect(combo.itemsMaxHeight).toEqual(400);
             });
         });
     });

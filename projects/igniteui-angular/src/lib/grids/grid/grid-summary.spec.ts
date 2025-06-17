@@ -1,11 +1,10 @@
 ﻿import { Component, DebugElement, ViewChild } from '@angular/core';
-import { fakeAsync, TestBed, tick, ComponentFixture, flush } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, ComponentFixture, flush, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     ProductsComponent,
     SummaryColumnComponent,
@@ -13,7 +12,7 @@ import {
     SummariesGroupByComponent,
     SummariesGroupByTransactionsComponent
 } from '../../test-utils/grid-samples.spec';
-import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection, ymd } from '../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridSummaryCalculationMode } from '../common/enums';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -32,8 +31,8 @@ describe('IgxGrid - Summaries #grid', () => {
     const EMPTY_SUMMARY_CLASS = 'igx-grid-summary--empty';
     const DEBOUNCETIME = 30;
 
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 CustomSummariesComponent,
@@ -43,7 +42,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 SummariesGroupByComponent,
                 SummariesGroupByTransactionsComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('Base tests: ', () => {
@@ -108,7 +107,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 fixture.detectChanges();
 
                 grid.addRow({
-                    ProductID: 11, ProductName: 'Belgian Chocolate', InStock: true, UnitsInStock: 99000, OrderDate: new Date('2018-03-01')
+                    ProductID: 11, ProductName: 'Belgian Chocolate', InStock: true, UnitsInStock: 99000, OrderDate: ymd('2018-03-01')
                 });
                 await wait(30);
                 fixture.detectChanges();
@@ -160,9 +159,6 @@ describe('IgxGrid - Summaries #grid', () => {
 
                 const column = grid.getColumnByName('UnitsInStock');
 
-                column.disabledSummaries = [];
-                fixture.detectChanges();
-                tick();
                 GridSummaryFunctions.verifyColumnSummaries(
                     GridSummaryFunctions.getRootSummaryRow(fixture), 3,
                     ['Count', 'Min', 'Max', 'Sum', 'Avg'],
@@ -836,7 +832,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
             it('CRUD: should recalculate summary functions rowAdded', () => {
                 grid.addRow({
-                    ProductID: 11, ProductName: 'Belgian Chocolate', InStock: true, UnitsInStock: 99000, OrderDate: new Date('2018-03-01')
+                    ProductID: 11, ProductName: 'Belgian Chocolate', InStock: true, UnitsInStock: 99000, OrderDate: ymd('2018-03-01')
                 });
                 fix.detectChanges();
 
@@ -872,7 +868,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 expect(unitsInStockCell.value).toBe(2760);
 
                 grid.updateRow({
-                    ProductID: 1, ProductName: 'Spearmint', InStock: true, UnitsInStock: 510000, OrderDate: new Date('1984-03-21')
+                    ProductID: 1, ProductName: 'Spearmint', InStock: true, UnitsInStock: 510000, OrderDate: ymd('1984-03-21')
                 }, 1);
                 fix.detectChanges();
 
@@ -2780,4 +2776,3 @@ export class CustomSummariesComponent {
     };
     public locale = 'en-US';
 }
-

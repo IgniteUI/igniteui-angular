@@ -15,7 +15,6 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { BasicGridComponent } from '../../test-utils/grid-base-components.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridSelectionMode, Size } from '../common/enums';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
@@ -23,11 +22,11 @@ import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, Igx
 import { IgxGridRowComponent } from './grid-row.component';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { GRID_SCROLL_CLASS } from '../../test-utils/grid-functions.spec';
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../../paginator/paginator.component';
-import { IGridRowEventArgs, IgxColumnGroupComponent, IgxGridFooterComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
+import { IGridRowEventArgs, IgxColumnGroupComponent, IgxGridEmptyTemplateDirective, IgxGridFooterComponent, IgxGridLoadingTemplateDirective, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
 import { getComponentSize } from '../../core/utils';
-import { setElementSize } from '../../test-utils/helper-utils.spec';
+import { setElementSize, ymd } from '../../test-utils/helper-utils.spec';
 
 
 describe('IgxGrid Component Tests #grid', () => {
@@ -37,10 +36,8 @@ describe('IgxGrid Component Tests #grid', () => {
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid-thead';
 
-    configureTestSuite();
-
     describe('IgxGrid - input properties', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -131,10 +128,10 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.columns.map(col => col.field)).toEqual(['Number', 'Boolean'], 'Invalid columns after exclusion initialized');
         });
 
-        it('should initialize a grid and allow changing columns runtime with ngFor', () => {
+        it('should initialize a grid and allow changing columns runtime with @for', () => {
             const fix = TestBed.createComponent(IgxGridTestComponent);
             fix.detectChanges();
-            // reverse order of ngFor bound collection
+            // reverse order of @for bound collection
             fix.componentInstance.columns.reverse();
             fix.detectChanges();
             // check order
@@ -218,7 +215,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
             // no horizontal scr, since columns have no width hence they should
-            // distrubute the available width between them
+            // distribute the available width between them
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
             const verticalScrollHeight = fix.componentInstance.getVerticalScrollHeight();
 
@@ -562,6 +559,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.filteringExpressionsTree.filteringOperands = [
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('equals'),
+                    conditionName: 'equals',
                     fieldName: 'index',
                     searchVal: 0
                 }
@@ -582,9 +580,9 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
         }));
 
-        it('should allow applying custom loading indicator', fakeAsync(() => {
+        it('should allow applying custom empty and loading indicator', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridRemoteOnDemandComponent);
-            fixture.componentInstance.instance.loadingGridTemplate = fixture.componentInstance.customTemaplate;
+            fixture.componentInstance.customLoading = true;
             fixture.detectChanges();
             tick(16);
 
@@ -592,6 +590,18 @@ describe('IgxGrid Component Tests #grid', () => {
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
             const gridHead = fixture.debugElement.query(By.css(THEAD_CLASS));
 
+            grid.isLoading = false;
+            tick();
+            fixture.detectChanges();
+            expect(gridBody.nativeElement.textContent).toEqual('No Data 😢');
+            grid.isLoading = true;
+            tick();
+            fixture.detectChanges();
+            expect(gridBody.nativeElement.textContent).toEqual('Loading 🔃');
+
+            grid.loadingGridTemplate = fixture.componentInstance.customTemplate;
+            grid.markForCheck();
+            fixture.detectChanges();
             expect(gridBody.nativeElement.textContent).toEqual('Loading...');
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
@@ -675,6 +685,7 @@ describe('IgxGrid Component Tests #grid', () => {
         });
 
         it('should throw a warning when primaryKey is set to a non-existing data field', () => {
+            jasmine.getEnv().allowRespy(true);
             const warnSpy = spyOn(console, 'warn');
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             const grid = fixture.componentInstance.grid;
@@ -702,11 +713,12 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(console.warn).toHaveBeenCalledWith(
                 `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
             );
+            jasmine.getEnv().allowRespy(false);
         });
     });
 
     describe('IgxGrid - virtualization tests', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -839,7 +851,7 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - default rendering for rows and columns', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -897,7 +909,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.columnList.get(0).width).not.toBeLessThan(136);
             expect(grid.columnList.get(4).width).not.toBeLessThan(136);
             expect(grid.columnList.get(14).width).not.toBeLessThan(136);
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
         });
 
         it(`should init columns with width >= 136px and a horizontal scrollbar
@@ -913,7 +925,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.columnList.get(0).width).not.toBeLessThan(136);
             expect(grid.columnList.get(4).width).not.toBeLessThan(136);
             expect(grid.columnList.get(100).width).not.toBeLessThan(136);
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
@@ -949,7 +961,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 }
             });
 
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
+            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
@@ -986,7 +998,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 }
             });
 
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
@@ -1024,7 +1036,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 }
             });
 
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
+            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
@@ -1062,7 +1074,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 }
             });
 
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
@@ -1096,7 +1108,7 @@ describe('IgxGrid Component Tests #grid', () => {
                     expect(width).toEqual(minWidth);
                 }
             });
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
@@ -1126,7 +1138,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 }
             });
 
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
@@ -1157,7 +1169,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 }
             });
 
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
@@ -1500,8 +1512,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(fix.componentInstance.grid.calcHeight).toBeGreaterThan(fix.componentInstance.grid.renderedRowHeight * 10);
         }));
 
-        it('should render correct columns if after scrolling right container size changes so that all columns become visible.',
-            async () => {
+        it('should render correct columns if after scrolling right container size changes so that all columns become visible.', async () => {
                 const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
                 fix.detectChanges();
                 const grid = fix.componentInstance.grid;
@@ -1510,14 +1521,14 @@ describe('IgxGrid Component Tests #grid', () => {
                 fix.detectChanges();
                 await wait(16);
                 fix.detectChanges();
-                expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+                expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
                 const scrollbar = grid.headerContainer.getScroll();
                 scrollbar.scrollLeft = 10000;
                 grid.width = '1500px';
 
                 fix.detectChanges();
                 await wait(100);
-                expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
+                expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
                 const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
                 expect(headers.length).toEqual(5);
                 for (let i = 0; i < headers.length; i++) {
@@ -1613,7 +1624,7 @@ describe('IgxGrid Component Tests #grid', () => {
             });
         });
 
-        it('Should properly handle dates respresented as number of milliseconds', () => {
+        it('Should properly handle dates represented as number of milliseconds', () => {
             const fixture = TestBed.createComponent(IgxGridFormattingComponent);
             const grid = fixture.componentInstance.grid;
             grid.data = fixture.componentInstance.data.map(rec => {
@@ -1716,11 +1727,11 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.detectChanges();
 
             rows = grid.rowList.toArray();
-            expectedValue = '21. März 2005';
+            expectedValue = `${ymd('2005-03-21').getUTCDate()}. März 2005`;
             expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
-            expectedValue = '15. Januar 2008';
+            expectedValue = `${ymd('2005-01-15').getUTCDate()}. Januar 2008`;
             expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
-            expectedValue = '20. November 2010';
+            expectedValue =`${ymd('2005-11-20').getUTCDate()}. November 2010`;
             expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
 
             // verify summaries formatting
@@ -1734,7 +1745,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 }
                 if (earliest) {
                     earliestValue = earliest.nativeElement.nextSibling.innerText;
-                    expect(earliestValue).toBe('17. Mai 1990');
+                    expect(earliestValue).toBe(`${ymd('1990-05-17').getUTCDate()}. Mai 1990`);
                 }
             });
         }));
@@ -1900,6 +1911,21 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(parseInt(grid.hostWidth, 10)).toBe(30 * 136);
         });
 
+        it('should render grid and columns with correct width when all are in % and inside a hidden container.', () => {
+            // in this case since the grid width is 0, the grid will use the sum of the columns
+            // those should resolve to 136px, as per the docs
+            const fix = TestBed.createComponent(IgxGridColumnHiddenPercentageWidthComponent);
+            const grid = fix.componentInstance.grid;
+            grid.width = '100%';
+            // 4 cols - 10% width
+            fix.componentInstance.initColumnsRows(5, 4);
+            fix.detectChanges();
+
+            expect(grid.calcWidth).toBe(136*4);
+            expect(grid.columns[0].calcWidth).toBe(136);
+            expect(grid.columns[1].calcWidth).toBe(136);
+        });
+
         it('should retain column with in % after hiding/showing grid with 100% width', () => {
             const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
             fix.componentInstance.initColumnsRows(5, 3);
@@ -1928,7 +1954,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const fix = TestBed.createComponent(IgxGridColumnHeaderAutoSizeComponent);
             const grid = fix.componentInstance.grid;
 
-            //waiting for reqeustAnimationFrame to finish
+            //waiting for requestAnimationFrame to finish
             await wait(17);
             fix.detectChanges();
 
@@ -1946,7 +1972,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.grid;
             grid.data = [{field1: "Test"}];
 
-            //waiting for reqeustAnimationFrame to finish
+            //waiting for requestAnimationFrame to finish
             fix.detectChanges();
             await wait(17);
             fix.detectChanges();
@@ -1992,20 +2018,279 @@ describe('IgxGrid Component Tests #grid', () => {
         }));
     });
 
+    describe('IgxGrid - min/max width constraints rules', () => {
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxGridDefaultRenderingComponent
+                ]
+            }).compileComponents();
+        }));
+
+        describe('min/max in px', () => {
+
+            it('in column with no width should not go outside bounds.', async() => {
+                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+                // 4 cols
+                fix.componentInstance.initColumnsRows(5, 4);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                grid.width = "1500px";
+                fix.detectChanges();
+                const col1 = grid.columns[0];
+                const col2 = grid.columns[1];
+                const col3 = grid.columns[2];
+                const col4 = grid.columns[3];
+
+                // without constraint, they split width equally
+                expect(col1.calcPixelWidth).toBe(grid.calcWidth / 4);
+                expect(col2.calcPixelWidth).toBe(grid.calcWidth / 4);
+                expect(col3.calcPixelWidth).toBe(grid.calcWidth / 4);
+                expect(col4.calcPixelWidth).toBe(grid.calcWidth / 4);
+
+                // set smaller max in px
+                col1.maxWidth = '100px';
+                fix.detectChanges();
+
+                // first column takes new max
+                expect(col1.calcPixelWidth).toBe(100);
+                // the rest split the remaining width
+                expect(col2.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col3.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col4.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+
+
+                // set larger min in px
+                col1.maxWidth = null;
+                fix.detectChanges();
+
+                col1.minWidth = '600px';
+                fix.detectChanges();
+                await wait(16);
+                fix.detectChanges();
+
+                // first column takes new min
+                expect(col1.calcPixelWidth).toBe(600);
+                // the rest split the remaining width
+                expect(col2.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col3.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col4.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+            });
+
+            it('in column with pixel width should not go outside bounds.', async() => {
+                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+                // 4 cols
+                fix.componentInstance.initColumnsRows(5, 4);
+                fix.detectChanges();
+                const grid = fix.componentInstance.grid;
+                grid.width = "1500px";
+                fix.detectChanges();
+
+                const col1 = grid.columns[0];
+                col1.width = "150px";
+                fix.detectChanges();
+
+                expect(col1.calcPixelWidth).toBe(150);
+
+                // set smaller max in px
+                col1.maxWidth = '100px';
+                fix.detectChanges();
+
+                // first column takes new max
+                expect(col1.calcPixelWidth).toBe(100);
+
+                // set larger min in px
+                col1.maxWidth = null;
+                fix.detectChanges();
+                col1.minWidth = '500px';
+                fix.detectChanges();
+                await wait(100);
+                fix.detectChanges();
+
+                // first column takes new min
+                expect(col1.calcPixelWidth).toBe(500);
+            });
+
+            it('in column with auto width should not go outside bounds.', async() => {
+                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+                // 4 cols
+                fix.componentInstance.initColumnsRows(5, 4);
+                fix.componentInstance.columns[0].header = "Some longer text to auto-size";
+                fix.componentInstance.columns[0].width = 'auto';
+                fix.detectChanges();
+                // wait for auto-sizing
+                await wait(100);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                grid.width = "1500px";
+                fix.detectChanges();
+                const col1 = grid.columns[0];
+
+                // some autosize should be calculated
+                expect(col1.autoSize).not.toBeUndefined();
+
+                // set smaller max in px
+                col1.maxWidth = '100px';
+                fix.detectChanges();
+
+                // first column takes new max
+                expect(col1.calcPixelWidth).toBe(100);
+
+                // set larger min in px
+                col1.maxWidth = null;
+                fix.detectChanges();
+                col1.minWidth = '500px';
+                fix.detectChanges();
+                await wait(100);
+                fix.detectChanges();
+
+                // first column takes new min
+                expect(col1.calcPixelWidth).toBe(500);
+            });
+        });
+
+
+        describe('min/max in %', () => {
+            it('in column with no width should not go outside bounds.', async () => {
+                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+                // 4 cols
+                fix.componentInstance.initColumnsRows(5, 4);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                grid.width = "1500px";
+                fix.detectChanges();
+                const col1 = grid.columns[0];
+                const col2 = grid.columns[1];
+                const col3 = grid.columns[2];
+                const col4 = grid.columns[3];
+
+                // set smaller max in %
+                col1.maxWidth = '10%';
+                fix.detectChanges();
+
+                // first column takes new max
+                expect(col1.calcPixelWidth).toBe(grid.calcWidth * 0.1);
+                // the rest split the remaining width
+                expect(col2.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col3.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col4.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+
+                // set larger min in px
+                col1.maxWidth = null;
+                fix.detectChanges();
+                col1.minWidth = '50%';
+                fix.detectChanges();
+                await wait(100);
+                fix.detectChanges();
+
+                // first column takes new min
+                expect(col1.calcPixelWidth).toBe(grid.calcWidth * 0.5);
+                // the rest split the remaining width
+                expect(col2.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col3.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col4.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+            });
+
+            it('in column with pixel width should not go outside bounds.', async() => {
+                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+                // 4 cols
+                fix.componentInstance.initColumnsRows(5, 4);
+                fix.componentInstance.columns[0].width = '400px';
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                grid.width = "1500px";
+                fix.detectChanges();
+                const col1 = grid.columns[0];
+                const col2 = grid.columns[1];
+                const col3 = grid.columns[2];
+                const col4 = grid.columns[3];
+
+                // set smaller max in %
+                col1.maxWidth = '10%';
+                fix.detectChanges();
+
+                // first column takes new max
+                expect(col1.calcPixelWidth).toBe(grid.calcWidth * 0.1);
+                // the rest split the remaining width
+                expect(col2.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col3.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col4.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+
+                // set larger min in px
+                col1.maxWidth = null;
+                fix.detectChanges();
+                col1.minWidth = '50%';
+                fix.detectChanges();
+                await wait(100);
+                fix.detectChanges();
+
+                // first column takes new min
+                expect(col1.calcPixelWidth).toBe(grid.calcWidth * 0.5);
+                // the rest split the remaining width
+                expect(col2.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col3.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col4.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+            });
+
+            it('in column with auto width should not go outside bounds.', async() => {
+                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+                // 4 cols
+                fix.componentInstance.initColumnsRows(5, 4);
+                fix.componentInstance.columns[0].header = "Some longer text to auto-size";
+                fix.componentInstance.columns[0].width = 'auto';
+                fix.detectChanges();
+                await wait(100);
+                fix.detectChanges();
+
+
+                const grid = fix.componentInstance.grid;
+                grid.width = "1500px";
+                fix.detectChanges();
+                const col1 = grid.columns[0];
+
+                // some autosize should be calculated
+                expect(col1.autoSize).not.toBeUndefined();
+
+                // set smaller max in px
+                col1.maxWidth = '10%';
+                fix.detectChanges();
+
+                // first column takes new max
+                expect(col1.calcPixelWidth).toBe(grid.calcWidth * 0.1);
+
+                // set larger min in px
+                col1.maxWidth = null;
+                fix.detectChanges();
+                col1.minWidth = '50%';
+                fix.detectChanges();
+                await wait(100);
+                fix.detectChanges();
+
+                // first column takes new min
+                expect(col1.calcPixelWidth).toBe(grid.calcWidth * 0.5);
+            });
+        })
+
+    });
+
     describe('IgxGrid - API methods', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxGridDefaultRenderingComponent,
                     IgxGridWrappedInContComponent
                 ]
-            })
-            .compileComponents();
+            }).compileComponents();
         }));
 
         it(`When edit a cell onto filtered data through grid method, the row should
-            disapear and the new value should not persist onto the next row`, fakeAsync(() => {
+            disappear and the new value should not persist onto the next row`, fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(5, 5);
             fix.detectChanges();
@@ -2088,7 +2373,7 @@ describe('IgxGrid Component Tests #grid', () => {
             // when there is no previous cell
             prevCellCoords = grid.getPreviousCell(0, 2, (col) => col.editable);
             expect(prevCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 2 });
-            // when the filter function has no matching colums
+            // when the filter function has no matching columns
             prevCellCoords = grid.getPreviousCell(0, 3, (col) => col.pinned);
             expect(prevCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 3 });
             // when grid has no data
@@ -2254,6 +2539,8 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.getRowData(7)).toEqual({});
         });
 
+        // note: it leaks when grid.groupBy() is executed because template-outlet doesn't destroy the viewrefs
+        // to be addressed in a separate PR
         it(`Verify that getRowByIndex and RowType API returns correct data`, () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(35, 5);
@@ -2462,14 +2749,13 @@ describe('IgxGrid Component Tests #grid', () => {
     describe('IgxGrid - Integration with other Igx Controls', () => {
         let fix;
 
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxGridInsideIgxTabsComponent
                 ]
-            })
-            .compileComponents();
+            }).compileComponents();
         }));
 
         beforeEach(waitForAsync(() => {
@@ -2624,14 +2910,13 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - footer section', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxGridWithCustomFooterComponent
                 ]
-            })
-            .compileComponents();
+            }).compileComponents();
         }));
 
         it('should be able to display custom content', () => {
@@ -2651,14 +2936,13 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - with custom pagination template', () => {
 
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxGridWithCustomPaginationTemplateComponent
                 ]
-            })
-            .compileComponents();
+            }).compileComponents();
         }));
 
         it('should have access to grid context', fakeAsync(() => {
@@ -2677,7 +2961,7 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     // TODO: Enable performance tests again
-    xdescribe('IgxGrid - Performance tests #perf', () => {
+    describe('IgxGrid - Performance tests #perf', () => {
         const MAX_RAW_RENDER = 1967; // two average diffs from 7.3 rendering performance
         const MAX_GROUPED_RENDER = 1500;
         const MAX_VER_SCROLL_O = 220;
@@ -2687,18 +2971,18 @@ describe('IgxGrid Component Tests #grid', () => {
         const MAX_FOCUS = 120;
         let observer: MutationObserver;
 
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxGridPerformanceComponent
                 ]
-            })
-            .compileComponents();
+            }).compileComponents();
         }));
 
         afterEach(() => {
             observer?.disconnect();
+            observer = null;
         });
 
         it('should render the grid in a certain amount of time', async () => {
@@ -2877,15 +3161,14 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('Setting null data', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxGridNoDataComponent,
                     IgxGridTestComponent
                 ]
-            })
-            .compileComponents();
+            }).compileComponents();
         }));
 
         it('should not throw error when data is null', () => {
@@ -2912,12 +3195,14 @@ describe('IgxGrid Component Tests #grid', () => {
 @Component({
     template: `<div style="width: 800px; height: 600px;">
         <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate" [autoGenerateExclude]="autoGenerateExclude" (columnInit)="columnCreated($event)">
-            <igx-column *ngFor="let column of columns;" [field]="column.field" [hasSummary]="column.hasSummary"
-                [header]="column.field" [width]="column.width">
-            </igx-column>
+            @for (column of columns; track column.field) {
+                <igx-column [field]="column.field" [hasSummary]="column.hasSummary"
+                    [header]="column.field" [width]="column.width">
+                </igx-column>
+            }
         </igx-grid>
     </div>`,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridTestComponent {
     @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
@@ -2986,11 +3271,15 @@ export class IgxGridTestComponent {
 
 @Component({
     template: `<igx-grid #grid [data]="data" (columnInit)="initColumns($event)">
-        <igx-column *ngFor="let col of columns" [field]="col.key" [header]="col.key" [dataType]="col.dataType">
-        </igx-column>
-        <igx-paginator *ngIf="paging"></igx-paginator>
+        @for (col of columns; track col.key) {
+            <igx-column [field]="col.key" [header]="col.header || col.key" [dataType]="col.dataType" [width]="col.width">
+            </igx-column>
+        }
+        @if (paging) {
+            <igx-paginator></igx-paginator>
+        }
     </igx-grid>`,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgFor, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxGridDefaultRenderingComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
@@ -3021,7 +3310,7 @@ export class IgxGridDefaultRenderingComponent {
         }
     }
 
-    public isHorizonatScrollbarVisible() {
+    public isHorizontalScrollbarVisible() {
         const scrollbar = this.grid.headerContainer.getScroll();
         return scrollbar.offsetWidth < (scrollbar.children.item(0) as HTMLElement).offsetWidth;
     }
@@ -3110,10 +3399,12 @@ export class IgxGridColumnHeaderInGroupAutoSizeComponent {
 
 @Component({
     template: `<igx-grid #grid [data]="data" [width]="'500px'" (columnInit)="initColumns($event)">
-        <igx-column *ngFor="let col of columns" [field]="col.key" [header]="col.key" [dataType]="col.dataType">
-        </igx-column>
+        @for (col of columns; track col.key) {
+            <igx-column [field]="col.key" [header]="col.key" [dataType]="col.dataType">
+            </igx-column>
+        }
     </igx-grid>`,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderingComponent {
     public override initColumns(column) {
@@ -3121,6 +3412,19 @@ export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderi
             column.width = '40%';
         }
     }
+}
+
+@Component({
+    template: `<igx-grid #grid [hidden]="hidden" [data]="data" [autoGenerate]="false">
+        @for (col of columns; track col.key) {
+            <igx-column [width]="'10%'" [field]="col.key" [header]="col.key" [dataType]="col.dataType">
+            </igx-column>
+        }
+    </igx-grid>`,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class IgxGridColumnHiddenPercentageWidthComponent extends IgxGridDefaultRenderingComponent {
+    public hidden = true;
 }
 
 @Component({
@@ -3143,10 +3447,12 @@ export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
 @Component({
     template: `<div [style.display]="display" [style.width.px]="outerWidth" [style.height.px]="outerHeight">
             <igx-grid #grid [data]="data" [autoGenerate]="true">
-                <igx-paginator *ngIf="paging" [perPage]="pageSize"></igx-paginator>
+                @if (paging) {
+                    <igx-paginator [perPage]="pageSize"></igx-paginator>
+                }
             </igx-grid>
         </div>`,
-    imports: [IgxGridComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxGridComponent, IgxPaginatorComponent]
 })
 export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
     public override data = [];
@@ -3196,10 +3502,12 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
 @Component({
     template: `<div style="height:300px">
             <igx-grid #grid [data]="data" [autoGenerate]="true">
-                <igx-paginator *ngIf="paging" [perPage]="pageSize"></igx-paginator>
+                @if (paging) {
+                    <igx-paginator [perPage]="pageSize"></igx-paginator>
+                }
             </igx-grid>
         </div>`,
-    imports: [IgxGridComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxGridComponent, IgxPaginatorComponent]
 })
 export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContComponent {
     public override paging = false;
@@ -3219,7 +3527,7 @@ export class IgxGridMarkupDeclarationComponent extends IgxGridTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
     public override data = [
-        { ID: 1, Name: 'Johny' },
+        { ID: 1, Name: 'Johnny' },
         { ID: 2, Name: 'Sally' },
         { ID: 3, Name: 'Tim' }
     ];
@@ -3316,6 +3624,10 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
 @Component({
     template: `
         <igx-grid [data]="data | async" (dataPreLoad)="dataLoading($event)" [isLoading]="true" [autoGenerate]="true" [height]="'600px'">
+            <span *igxGridEmpty>No Data 😢</span>
+            @if (customLoading) {
+                <ng-template igxGridLoading>Loading 🔃</ng-template>
+            }
         </igx-grid>
 
         <ng-template #customTemplate>
@@ -3323,14 +3635,15 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
         </ng-template>
     `,
     providers: [LocalService],
-    imports: [IgxGridComponent, AsyncPipe]
+    imports: [IgxGridComponent, IgxGridEmptyTemplateDirective, IgxGridLoadingTemplateDirective, AsyncPipe]
 })
 export class IgxGridRemoteOnDemandComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
     @ViewChild('customTemplate', { read: TemplateRef, static: true })
-    public customTemaplate: TemplateRef<any>;
+    public customTemplate: TemplateRef<any>;
     public data;
+    public customLoading = false;
     constructor(private localService: LocalService, public cdr: ChangeDetectorRef) { }
 
     public bind() {
@@ -3389,12 +3702,13 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
             </igx-tab-header>
             <igx-tab-content>
                 <igx-grid #grid2 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'">
-                    <igx-column
-                        *ngFor="let column of columns"
-                        [field]="column.field"
-                        [header]="column.field"
-                    >
-                    </igx-column>
+                    @for (column of columns; track column.field) {
+                        <igx-column
+                            [field]="column.field"
+                            [header]="column.field"
+                        >
+                        </igx-column>
+                    }
                 </igx-grid>
             </igx-tab-content>
         </igx-tab-item>
@@ -3404,13 +3718,14 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
             </igx-tab-header>
             <igx-tab-content>
                 <igx-grid #grid3 [data]="data" [primaryKey]="'id'">
-                    <igx-column
-                        *ngFor="let column of columns"
-                        [field]="column.field"
-                        [header]="column.field"
-                        [width]="column.width + 'px'"
-                    >
-                    </igx-column>
+                    @for (column of columns; track column.field) {
+                        <igx-column
+                            [field]="column.field"
+                            [header]="column.field"
+                            [width]="column.width + 'px'"
+                        >
+                        </igx-column>
+                    }
                 </igx-grid>
             </igx-tab-content>
         </igx-tab-item>
@@ -3420,13 +3735,14 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
             </igx-tab-header>
             <igx-tab-content>
                 <igx-grid #grid4 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'">
-                    <igx-column
-                        *ngFor="let column of columns"
-                        [field]="column.field"
-                        [header]="column.field"
-                        [hasSummary]="true"
-                    >
-                    </igx-column>
+                    @for (column of columns; track column.field) {
+                        <igx-column
+                            [field]="column.field"
+                            [header]="column.field"
+                            [hasSummary]="true"
+                        >
+                        </igx-column>
+                    }
                     <igx-paginator [perPage]="3"></igx-paginator>
                 </igx-grid>
             </igx-tab-content>
@@ -3437,13 +3753,14 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
             </igx-tab-header>
             <igx-tab-content>
                 <igx-grid #grid5 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'">
-                <igx-column
-                    *ngFor="let column of columns"
-                    [field]="column.field"
-                    [header]="column.field"
-                >
-                </igx-column>
-                <igx-paginator [perPage]="4"></igx-paginator>
+                    @for (column of columns; track column.field) {
+                        <igx-column
+                            [field]="column.field"
+                            [header]="column.field"
+                        >
+                        </igx-column>
+                    }
+                    <igx-paginator [perPage]="4"></igx-paginator>
                 </igx-grid>
             </igx-tab-content>
         </igx-tab-item>
@@ -3454,12 +3771,13 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
             <igx-tab-content>
                 <div style='height:300px;'>
                     <igx-grid #grid6 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'">
-                        <igx-column
-                            *ngFor="let column of columns"
-                            [field]="column.field"
-                            [header]="column.field"
-                        >
-                        </igx-column>
+                        @for (column of columns; track column.field) {
+                            <igx-column
+                                [field]="column.field"
+                                [header]="column.field"
+                            >
+                            </igx-column>
+                        }
                     </igx-grid>
                 </div>
             </igx-tab-content>
@@ -3467,7 +3785,7 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
     </igx-tabs>
   </div>
     `,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxTabsComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabItemComponent, IgxPaginatorComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxTabsComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabItemComponent, IgxPaginatorComponent]
 })
 export class IgxGridInsideIgxTabsComponent {
     @ViewChild('grid2', { read: IgxGridComponent, static: true })
@@ -3512,12 +3830,14 @@ export class IgxGridInsideIgxTabsComponent {
         <igx-grid #grid [data]="data" [autoGenerate]="true">
             <igx-paginator>
                 <igx-paginator-content>
-                    <h2 *ngIf="grid.rendered$ | async" class='records'>{{grid.totalRecords}}</h2>
+                    @if (grid.rendered$ | async) {
+                        <h2 class='records'>{{grid.totalRecords}}</h2>
+                    }
                 </igx-paginator-content>
             </igx-paginator>
         </igx-grid>
     `,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxPaginatorContentDirective, NgIf, AsyncPipe]
+    imports: [IgxGridComponent, IgxPaginatorComponent, IgxPaginatorContentDirective, AsyncPipe]
 })
 export class IgxGridWithCustomPaginationTemplateComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
@@ -3528,9 +3848,11 @@ export class IgxGridWithCustomPaginationTemplateComponent {
 @Component({
     template: `<igx-grid #grid [width]="'2000px'" [height]="'2000px'" [data]="data"
         [autoGenerate]="autoGenerate" [style.--ig-size]="1" [groupingExpressions]="groupingExpressions">
-        <igx-column *ngFor="let column of columns" [field]="column.field" [header]="column.field" [width]="column.width"></igx-column>
+        @for (column of columns; track column.field) {
+            <igx-column [field]="column.field" [header]="column.field" [width]="column.width"></igx-column>
+        }
     </igx-grid>`,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridPerformanceComponent implements AfterViewInit, OnInit {
 

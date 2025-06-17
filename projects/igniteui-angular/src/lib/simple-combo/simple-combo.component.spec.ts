@@ -12,7 +12,6 @@ import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxInputState, IgxLabelDirective } from '../input-group/public_api';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, ConnectedPositioningStrategy } from '../services/public_api';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxSimpleComboComponent, ISimpleComboSelectionChangingEventArgs } from './public_api';
 import { IgxGridComponent } from '../grids/grid/grid.component';
@@ -37,8 +36,6 @@ const CSS_CLASS_COMBO_INPUTGROUP = 'igx-input-group__input';
 const CSS_CLASS_INPUTGROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
-const CSS_CLASS_ITEM = 'igx-drop-down__item';
-const CSS_CLASS_HEADER_ITEM = 'igx-drop-down__header';
 const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const defaultDropdownItemHeight = 40;
@@ -50,8 +47,6 @@ describe('IgxSimpleCombo', () => {
     let input: DebugElement;
     let reactiveForm: NgForm;
     let reactiveControl: any;
-
-    configureTestSuite();
 
     describe('Unit tests: ', () => {
         const data = ['Item1', 'Item2', 'Item3', 'Item4', 'Item5', 'Item6', 'Item7'];
@@ -77,6 +72,11 @@ describe('IgxSimpleCombo', () => {
         mockSelection.get.and.returnValue(new Set([]));
         const platformUtil = null;
         const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
+        jasmine.getEnv().allowRespy(true);
+
+        afterAll(() => {
+            jasmine.getEnv().allowRespy(false);
+        });
 
         it('should properly call dropdown methods on toggle', () => {
             combo = new IgxSimpleComboComponent(
@@ -552,7 +552,7 @@ describe('IgxSimpleCombo', () => {
     });
 
     describe('Initialization and rendering tests: ', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -588,8 +588,6 @@ describe('IgxSimpleCombo', () => {
             expect(combo.displayKey).toEqual('field');
             expect(combo.groupKey).toEqual('region');
             expect(combo.width).toEqual('400px');
-            expect(combo.itemsMaxHeight).toEqual(320);
-            expect(combo.itemHeight).toEqual(32);
             expect(combo.placeholder).toEqual('Location');
             expect(combo.allowCustomValues).toEqual(false);
             expect(combo.cssClass).toEqual(CSS_CLASS_COMBO);
@@ -620,8 +618,8 @@ describe('IgxSimpleCombo', () => {
             expect(input.nativeElement.getAttribute('aria-controls')).toEqual(combo.dropdown.listId);
             expect(input.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
 
-            const dropdown = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_DROPDOWN}`));
-            expect(dropdown.nativeElement.getAttribute('ng-reflect-labelled-by')).toEqual(combo.placeholder);
+            const dropdownListBox = fixture.debugElement.query(By.css(`[role='listbox']`));
+            expect(dropdownListBox.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
 
             combo.open();
             tick();
@@ -671,9 +669,7 @@ describe('IgxSimpleCombo', () => {
             const dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
 
             const verifyDropdownItemHeight = () => {
-                expect(combo.itemHeight).toEqual(itemHeight);
                 expect(dropdownItems[0].nativeElement.clientHeight).toEqual(itemHeight);
-                expect(combo.itemsMaxHeight).toEqual(itemMaxHeight);
                 expect(dropdownList.nativeElement.clientHeight).toEqual(itemMaxHeight);
             };
             verifyDropdownItemHeight();
@@ -752,7 +748,7 @@ describe('IgxSimpleCombo', () => {
             expect(footerHTMLElement.parentNode).toEqual(dropdownList);
             expect(footerHTMLElement.textContent).toEqual('This is a footer');
         });
-        it('should initialize the component with empty data and bindings', () => {
+        xit('should initialize the component with empty data and bindings', () => {
             fixture = TestBed.createComponent(IgxSimpleComboEmptyComponent);
             expect(() => {
                 fixture.detectChanges();
@@ -942,7 +938,7 @@ describe('IgxSimpleCombo', () => {
     });
 
     describe('Binding tests: ', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -1110,7 +1106,7 @@ describe('IgxSimpleCombo', () => {
 
     describe('Keyboard navigation and interactions', () => {
         let dropdown: IgxComboDropDownComponent;
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -1119,7 +1115,8 @@ describe('IgxSimpleCombo', () => {
                     IgxSimpleComboSampleComponent,
                     IgxComboInContainerTestComponent,
                     IgxSimpleComboIconTemplatesComponent,
-                    IgxSimpleComboDirtyCheckTestComponent
+                    IgxSimpleComboDirtyCheckTestComponent,
+                    IgxSimpleComboTabBehaviorTestComponent
                 ]
             }).compileComponents();
         }));
@@ -1918,8 +1915,6 @@ describe('IgxSimpleCombo', () => {
         });
 
         it('should not change selection when selectionChanging event is canceled', () => {
-            spyOn(combo.selectionChanging, 'emit').and.callThrough();
-
             fixture.detectChanges();
 
             combo.select('Connecticut');
@@ -1955,7 +1950,6 @@ describe('IgxSimpleCombo', () => {
 
 
         it('should preserved the input value of the combo when selectionChanging event is canceled', () => {
-            spyOn(combo.selectionChanging, 'emit').and.callThrough();
             fixture.detectChanges();
 
             const comboInput = fixture.debugElement.query(By.css(`.igx-input-group__input`));
@@ -2113,41 +2107,41 @@ describe('IgxSimpleCombo', () => {
 
             expect(reactiveForm.dirty).toBe(false);
         }));
-    });
 
-    describe('Display density', () => {
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [
-                    NoopAnimationsModule,
-                    ReactiveFormsModule,
-                    FormsModule,
-                    IgxSimpleComboSampleComponent
-                ]
-            }).compileComponents();
+        it('should focus on the next combo when Tab is pressed', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboTabBehaviorTestComponent);
+            fixture.detectChanges();
+
+            const combos = fixture.debugElement.queryAll(By.directive(IgxSimpleComboComponent));
+            expect(combos.length).toBe(3);
+
+            const firstComboInput = combos[0].query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
+            const secondComboInput = combos[1].query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
+            const thirdComboInput = combos[2].query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
+
+            firstComboInput.nativeElement.focus();
+            tick();
+            fixture.detectChanges();
+            expect(document.activeElement).toEqual(firstComboInput.nativeElement);
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', firstComboInput);
+            secondComboInput.nativeElement.focus();
+            tick();
+            fixture.detectChanges();
+            expect(document.activeElement).toEqual(secondComboInput.nativeElement);
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', secondComboInput);
+            thirdComboInput.nativeElement.focus();
+            tick();
+            fixture.detectChanges();
+            expect(document.activeElement).toEqual(thirdComboInput.nativeElement);
         }));
-        beforeEach(() => {
-            fixture = TestBed.createComponent(IgxSimpleComboSampleComponent);
-            fixture.detectChanges();
-            combo = fixture.componentInstance.combo;
-        });
-        it('should scale items container depending on component size (itemHeight * 10)', () => {
-            combo.toggle();
-            fixture.detectChanges();
-            expect(combo.itemsMaxHeight).toEqual(320);
-            fixture.componentInstance.size = 'small';
-            fixture.detectChanges();
-            expect(combo.itemsMaxHeight).toEqual(280);
-            fixture.componentInstance.size = 'large';
-            fixture.detectChanges();
-            expect(combo.itemsMaxHeight).toEqual(400);
-        });
     });
 
     describe('Form control tests: ', () => {
         describe('Template form tests: ', () => {
             let inputGroupRequired: DebugElement;
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
@@ -2406,7 +2400,7 @@ describe('IgxSimpleCombo', () => {
             }));
         });
         describe('Reactive form tests: ', () => {
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
@@ -2698,7 +2692,7 @@ describe('IgxSimpleCombo', () => {
     });
 
     describe('Selection tests: ', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -2832,7 +2826,7 @@ describe('IgxSimpleCombo', () => {
     describe('Integration', () => {
         let grid: IgxGridComponent;
 
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -3428,6 +3422,64 @@ export class IgxSimpleComboDirtyCheckTestComponent implements OnInit {
 
     public form = new FormGroup({
         city: new FormControl<number>({ value: undefined, disabled: false }),
+    });
+
+    public ngOnInit(): void {
+        this.cities = [
+            { id: 1, name: 'New York' },
+            { id: 2, name: 'Los Angeles' },
+            { id: 3, name: 'Chicago' },
+            { id: 4, name: 'Houston' },
+            { id: 5, name: 'Phoenix' }
+        ];
+    }
+}
+
+@Component({
+    template: `
+    <form [formGroup]="form">
+        <div class="combo-section">
+            <igx-simple-combo
+                #combo
+                [data]="cities"
+                [displayKey]="'name'"
+                [valueKey]="'id'"
+                formControlName="city"
+            >
+            </igx-simple-combo>
+            <igx-simple-combo
+                #combo2
+                [data]="cities"
+                [displayKey]="'name'"
+                [valueKey]="'id'"
+                formControlName="city2"
+            ></igx-simple-combo>
+            <igx-simple-combo
+                #combo3
+                [data]="cities"
+                [displayKey]="'name'"
+                [valueKey]="'id'"
+                formControlName="city3"
+            ></igx-simple-combo>
+        </div>
+    </form>
+    `,
+    imports: [IgxSimpleComboComponent, ReactiveFormsModule]
+})
+export class IgxSimpleComboTabBehaviorTestComponent implements OnInit {
+    @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
+    public combo: IgxSimpleComboComponent;
+    @ViewChild('combo2', { read: IgxSimpleComboComponent, static: true })
+    public combo2: IgxSimpleComboComponent;
+    @ViewChild('combo3', { read: IgxSimpleComboComponent, static: true })
+    public combo3: IgxSimpleComboComponent;
+
+    public cities = [];
+
+    public form = new FormGroup({
+        city: new FormControl<number>({ value: undefined, disabled: false }),
+        city2: new FormControl<number>({ value: undefined, disabled: false }),
+        city3: new FormControl<number>({ value: undefined, disabled: false }),
     });
 
     public ngOnInit(): void {

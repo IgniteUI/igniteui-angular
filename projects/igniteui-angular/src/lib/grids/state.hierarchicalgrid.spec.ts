@@ -5,7 +5,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IPagingState } from '../data-operations/paging-state.interface';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { IgxRowIslandComponent } from './hierarchical-grid/row-island.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
@@ -15,15 +14,13 @@ import { ISortingExpression, SortingDirection } from '../data-operations/sorting
 import { GridSelectionRange } from './common/types';
 import { IgxColumnComponent } from './public_api';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
-import { NgFor } from '@angular/common';
 import { IColumnState, IGridState } from './state-base.directive';
 
 describe('IgxHierarchicalGridState - input properties #hGrid', () => {
     let fix;
     let grid;
-    configureTestSuite();
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxHierarchicalGridTestExpandedBaseComponent]
         }).compileComponents();
@@ -108,6 +105,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const productFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
         const productExpression = {
             condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains',
             fieldName: 'ProductName',
             ignoreCase: true,
             searchVal: 'A0'
@@ -213,7 +211,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const emptyFiltering = '{"filteringOperands":[],"operator":0}';
         const initialState = HelperFunctions.buildStateString(grid, 'filtering', emptyFiltering, emptyFiltering);
 
-        const filtering = '{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"fieldName":"ProductName","ignoreCase":true,"searchVal":"A0"}],"operator":0,"fieldName":"ProductName"}],"operator":0,"type":0}';
+        const filtering = '{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"fieldName":"ProductName","ignoreCase":true,"searchVal":"A0","conditionName":"contains"}],"operator":0,"fieldName":"ProductName"}],"operator":0,"type":0}';
         const filteringState = HelperFunctions.buildStateString(grid, 'filtering', filtering, filtering);
 
         const filteringStateObject = JSON.parse(filteringState) as IGridState;
@@ -241,7 +239,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const emptyFiltering = '{"filteringOperands":[],"operator":0}';
         const initialState = HelperFunctions.buildStateString(grid, 'filtering', emptyFiltering, emptyFiltering);
 
-        const filtering = '{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"fieldName":"ProductName","ignoreCase":true,"searchVal":"A0"}],"operator":0,"fieldName":"ProductName"}],"operator":0,"type":0}';
+        const filtering = '{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"fieldName":"ProductName","ignoreCase":true,"searchVal":"A0","conditionName":"contains"}],"operator":0,"fieldName":"ProductName"}],"operator":0,"type":0}';
         const filteringState = HelperFunctions.buildStateString(grid, 'filtering', filtering, filtering);
 
         const filteringStateObject = JSON.parse(filteringState) as IGridState;
@@ -349,7 +347,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
 
         const emptyFiltering = '{}';
         const initialState = HelperFunctions.buildStateString(grid, 'advancedFiltering', emptyFiltering, emptyFiltering);
-        const filtering = '{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"searchVal":"A0","ignoreCase":true},{"fieldName":"ID","condition":{"name":"lessThan","isUnary":false,"iconName":"filter_less_than"},"searchVal":3,"ignoreCase":true}],"operator":0,"type":1}';
+        const filtering = '{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"searchVal":"A0","ignoreCase":true,"conditionName":"contains"},{"fieldName":"ID","condition":{"name":"lessThan","isUnary":false,"iconName":"filter_less_than"},"searchVal":3,"ignoreCase":true,"conditionName":"lessThan"}],"operator":0,"type":1}';
         const filteringState = HelperFunctions.buildStateString(grid, 'advancedFiltering', filtering, filtering);
 
         let gridState = state.getState(true, ['advancedFiltering', 'rowIslands']);
@@ -372,7 +370,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
 
         const emptyFiltering = '{}';
         const initialState = HelperFunctions.buildStateString(grid, 'advancedFiltering', emptyFiltering, emptyFiltering);
-        const filtering = '{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"searchVal":"A0","ignoreCase":true},{"fieldName":"ID","condition":{"name":"lessThan","isUnary":false,"iconName":"filter_less_than"},"searchVal":3,"ignoreCase":true}],"operator":0,"type":1}';
+        const filtering = '{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"searchVal":"A0","ignoreCase":true,"conditionName":"contains"},{"fieldName":"ID","condition":{"name":"lessThan","isUnary":false,"iconName":"filter_less_than"},"searchVal":3,"ignoreCase":true,"conditionName":"lessThan"}],"operator":0,"type":1}';
         const filteringState = HelperFunctions.buildStateString(grid, 'advancedFiltering', filtering, filtering);
         const filteringStateObject = JSON.parse(filteringState) as IGridState;
 
@@ -636,30 +634,9 @@ class HelperFunctions {
 @Component({
     template: `
     <igx-hierarchical-grid #hGrid [moving]="true" [data]="data" igxGridState [expandChildren]="true" primaryKey="ID"
-     [autoGenerate]="false" [height]="'800px'" [width]="'800px'" [moving]="true" rowSelection="multiple" cellSelection="multiple">
-        <igx-column *ngFor="let c of columns"
-            [width]="c.width"
-            [sortable]="c.sortable"
-            [editable]="c.editable"
-            [sortingIgnoreCase]="c.sortingIgnoreCase"
-            [filteringIgnoreCase]="c.sortingIgnoreCase"
-            [maxWidth]="c.maxWidth"
-            [hasSummary]="c.hasSummary"
-            [filterable]="c.filterable"
-            [searchable]="c.searchable"
-            [resizable]="c.resizable"
-            [headerClasses]="c.headerClasses"
-            [headerGroupClasses]="c.headerGroupClasses"
-            [groupable]="c.groupable"
-            [field]="c.field"
-            [header]="c.header"
-            [dataType]="c.dataType"
-            [pinned]="c.pinned"
-            [hidden]="c.hidden">
-        </igx-column>
-        <igx-paginator [perPage]="5"></igx-paginator>
-        <igx-row-island [moving]="true" [key]="'childData'" [autoGenerate]="false" #rowIsland primaryKey="ID">
-            <igx-column *ngFor="let c of childColumns"
+        [autoGenerate]="false" [height]="'800px'" [width]="'800px'" [moving]="true" rowSelection="multiple" cellSelection="multiple">
+        @for (c of columns; track c.field) {
+            <igx-column
                 [width]="c.width"
                 [sortable]="c.sortable"
                 [editable]="c.editable"
@@ -679,13 +656,38 @@ class HelperFunctions {
                 [pinned]="c.pinned"
                 [hidden]="c.hidden">
             </igx-column>
+        }
+        <igx-paginator [perPage]="5"></igx-paginator>
+        <igx-row-island [moving]="true" [key]="'childData'" [autoGenerate]="false" #rowIsland primaryKey="ID">
+            @for (c of childColumns; track c.field) {
+                <igx-column
+                    [width]="c.width"
+                    [sortable]="c.sortable"
+                    [editable]="c.editable"
+                    [sortingIgnoreCase]="c.sortingIgnoreCase"
+                    [filteringIgnoreCase]="c.sortingIgnoreCase"
+                    [maxWidth]="c.maxWidth"
+                    [hasSummary]="c.hasSummary"
+                    [filterable]="c.filterable"
+                    [searchable]="c.searchable"
+                    [resizable]="c.resizable"
+                    [headerClasses]="c.headerClasses"
+                    [headerGroupClasses]="c.headerGroupClasses"
+                    [groupable]="c.groupable"
+                    [field]="c.field"
+                    [header]="c.header"
+                    [dataType]="c.dataType"
+                    [pinned]="c.pinned"
+                    [hidden]="c.hidden">
+                </igx-column>
+            }
             <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
             <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2>
                 <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxRowIslandComponent, IgxGridStateDirective, NgFor]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxRowIslandComponent, IgxGridStateDirective]
 })
 export class IgxHierarchicalGridTestExpandedBaseComponent {
     @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;

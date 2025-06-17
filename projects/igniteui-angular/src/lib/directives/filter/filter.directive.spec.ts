@@ -4,12 +4,8 @@ import { IgxListItemComponent } from '../../list/list-item.component';
 import { IgxListComponent } from '../../list/list.component';
 import { IgxFilterDirective, IgxFilterOptions, IgxFilterPipe } from './filter.directive';
 
-import { configureTestSuite } from '../../test-utils/configure-suite';
-import { NgFor } from '@angular/common';
-
 describe('Filter', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [DeclarativeListTestComponent, DynamicListTestComponent],
             providers: [
@@ -214,11 +210,11 @@ class DeclarativeListTestComponent {
 @Component({
     template: `
     <igx-list>
-        <igx-list-item *ngFor="let item of dataSourceItems | igxFilter: fo">
-            {{item.text}}
-        </igx-list-item>
+        @for (item of dataSourceItems | igxFilter: fo; track item.key) {
+            <igx-list-item> {{item.text}} </igx-list-item>
+        }
     </igx-list>`,
-    imports: [IgxListComponent, IgxListItemComponent, IgxFilterPipe, NgFor]
+    imports: [IgxListComponent, IgxListItemComponent, IgxFilterPipe]
 })
 class DynamicListTestComponent {
     @ViewChild(IgxListComponent, { static: true }) public list: IgxListComponent;

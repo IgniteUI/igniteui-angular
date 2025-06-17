@@ -1,4 +1,4 @@
-import { NgFor, NgIf } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { Component, Input, ViewChild, Directive, TemplateRef } from '@angular/core';
 import { AbstractControl, FormsModule, NG_VALIDATORS, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { data } from '../../../../../src/app/shared/data';
@@ -36,14 +36,15 @@ export class ForbiddenValidatorDirective extends Validators {
     template: `
     <igx-grid #grid primaryKey="ProductID" [data]="data" [rowEditable]="rowEditable" [batchEditing]="batchEditing"
         [width]="'1200px'" [height]="'800px'">
-        <igx-column igxAppForbiddenName="bob" minlength="4" maxlength="8" required
-            *ngFor="let c of columns"
-            [editable]="true" [sortable]="true" [filterable]="true" [field]="c.field"
-            [header]="c.field" [resizable]="true" [dataType]="c.dataType" >
-        </igx-column>
+        @for (c of columns; track c.field) {
+            <igx-column igxAppForbiddenName="bob" minlength="4" maxlength="8" required
+                [editable]="true" [sortable]="true" [filterable]="true" [field]="c.field"
+                [header]="c.field" [resizable]="true" [dataType]="c.dataType" >
+            </igx-column>
+        }
     </igx-grid>
     `,
-    imports: [IgxGridComponent, IgxColumnComponent, ForbiddenValidatorDirective, IGX_GRID_VALIDATION_DIRECTIVES, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent, ForbiddenValidatorDirective, IGX_GRID_VALIDATION_DIRECTIVES]
 })
 export class IgxGridValidationTestBaseComponent {
     public batchEditing = false;
@@ -63,19 +64,24 @@ export class IgxGridValidationTestBaseComponent {
     template: `
     <igx-grid #grid primaryKey="ProductID" [data]="data" [rowEditable]="rowEditable"
         [width]="'1200px'" [height]="'800px'">
-        <igx-column igxAppForbiddenName='bob' minlength="4" maxlength='8' required
-            *ngFor="let c of columns"
-            [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
-            [header]="c.field" [resizable]="true" [dataType]="c.dataType">
-            <ng-template igxCellValidationError let-cell='cell' let-defaultErrorTemplate="defaultErrorTemplate">
-                <div *ngIf="cell.validation.errors?.['forbiddenName'] else defaultErrorTemplate">
-                    This name is forbidden.
-                </div>
-            </ng-template>
-        </igx-column>
+        @for (c of columns; track c.field) {
+            <igx-column igxAppForbiddenName='bob' minlength="4" maxlength='8' required
+                [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
+                [header]="c.field" [resizable]="true" [dataType]="c.dataType">
+                <ng-template igxCellValidationError let-cell='cell' let-defaultErrorTemplate="defaultErrorTemplate">
+                    @if (cell.validation.errors?.['forbiddenName']) {
+                        <div>
+                            This name is forbidden.
+                        </div>
+                    } @else {
+                        <ng-template [ngTemplateOutlet]="defaultErrorTemplate"></ng-template>
+                    }
+                </ng-template>
+            </igx-column>
+        }
     </igx-grid>
     `,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxCellValidationErrorDirective, ForbiddenValidatorDirective, IGX_GRID_VALIDATION_DIRECTIVES, NgFor, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellValidationErrorDirective, ForbiddenValidatorDirective, IGX_GRID_VALIDATION_DIRECTIVES]
 })
 export class IgxGridValidationTestCustomErrorComponent extends IgxGridValidationTestBaseComponent {
 }
@@ -84,11 +90,12 @@ export class IgxGridValidationTestCustomErrorComponent extends IgxGridValidation
     template: `
     <igx-grid #grid primaryKey="ProductID" [data]="data" [rowEditable]="rowEditable"
         [width]="'1200px'" [height]="'800px'">
-        <igx-column igxAppForbiddenName='bob' minlength="4" maxlength='8' required
-            *ngFor="let c of columns"
-            [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
-            [header]="c.field" [resizable]="true" [dataType]="c.dataType">
-        </igx-column>
+        @for (c of columns; track c.field) {
+            <igx-column igxAppForbiddenName='bob' minlength="4" maxlength='8' required
+                [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
+                [header]="c.field" [resizable]="true" [dataType]="c.dataType">
+            </igx-column>
+        }
     </igx-grid>
     <ng-template #modelTemplate igxCellEditor let-cell="cell">
        <input [(ngModel)]="cell.editValue"/>
@@ -97,7 +104,7 @@ export class IgxGridValidationTestCustomErrorComponent extends IgxGridValidation
         <input [formControl]="fc"/>
     </ng-template>
     `,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxCellEditorTemplateDirective, ForbiddenValidatorDirective, IGX_GRID_VALIDATION_DIRECTIVES, ReactiveFormsModule, FormsModule, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellEditorTemplateDirective, ForbiddenValidatorDirective, IGX_GRID_VALIDATION_DIRECTIVES, ReactiveFormsModule, FormsModule]
 })
 export class IgxGridCustomEditorsComponent extends IgxGridValidationTestCustomErrorComponent {
     @ViewChild('modelTemplate', {read: TemplateRef })
@@ -110,20 +117,25 @@ export class IgxGridCustomEditorsComponent extends IgxGridValidationTestCustomEr
 @Component({
     template: `
     <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" primaryKey="ID"
-     width="900px" height="600px" [rowEditable]="rowEditable" [batchEditing]="batchEditing">
-        <igx-column igxAppForbiddenName='bob' minlength="4" required
-            *ngFor="let c of columns"
-            [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
-            [header]="c.field" [resizable]="true" [dataType]="c.dataType" >
-            <ng-template igxCellValidationError let-cell='cell' let-defaultErrorTemplate="defaultErrorTemplate">
-                <div *ngIf="cell.validation.errors?.['forbiddenName'] else defaultErrorTemplate">
-                    This name is forbidden.
-                </div>
-            </ng-template>
-        </igx-column>
+        width="900px" height="600px" [rowEditable]="rowEditable" [batchEditing]="batchEditing">
+        @for (c of columns; track c.field) {
+            <igx-column igxAppForbiddenName='bob' minlength="4" required
+                [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
+                [header]="c.field" [resizable]="true" [dataType]="c.dataType" >
+                <ng-template igxCellValidationError let-cell='cell' let-defaultErrorTemplate="defaultErrorTemplate">
+                    @if (cell.validation.errors?.['forbiddenName']) {
+                        <div>
+                            This name is forbidden.
+                        </div>
+                    } @else {
+                        <ng-template [ngTemplateOutlet]="defaultErrorTemplate"></ng-template>
+                    }
+                </ng-template>
+            </igx-column>
+        }
     </igx-tree-grid>
     `,
-    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxCellValidationErrorDirective, ForbiddenValidatorDirective, IGX_GRID_VALIDATION_DIRECTIVES, NgFor, NgIf]
+    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxCellValidationErrorDirective, ForbiddenValidatorDirective, IGX_GRID_VALIDATION_DIRECTIVES, NgTemplateOutlet]
 })
 export class IgxTreeGridValidationTestComponent {
     public batchEditing = false;

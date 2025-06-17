@@ -22,7 +22,6 @@ import {
     IGX_EXPANSION_PANEL_COMPONENT
 } from './expansion-panel.common';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from './toggle-animation-component';
-import { NgIf } from '@angular/common';
 
 let NEXT_ID = 0;
 
@@ -30,7 +29,7 @@ let NEXT_ID = 0;
     selector: 'igx-expansion-panel',
     templateUrl: 'expansion-panel.component.html',
     providers: [{ provide: IGX_EXPANSION_PANEL_COMPONENT, useExisting: IgxExpansionPanelComponent }],
-    imports: [NgIf]
+    imports: []
 })
 export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements IgxExpansionPanelBase, AfterContentInit {
     /**
@@ -276,7 +275,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      * ```
      */
     public expand(evt?: Event) {
-        if (!this.collapsed) { // If the panel is already opened, do nothing
+        if (!this.collapsed && !this.closeAnimationPlayer) { // Check if the panel is currently collapsing or already expanded
             return;
         }
         const args = { event: evt, panel: this, owner: this, cancel: false };

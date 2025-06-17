@@ -31,10 +31,9 @@ import { CellType, ColumnType, IgxColumnTemplateContext } from '../common/grid.i
     providers: [{ provide: IgxColumnComponent, useExisting: forwardRef(() => IgxColumnGroupComponent) }],
     selector: 'igx-column-group',
     template: `@if (platform.isElements) {
-        <div #sink style="display: none;">
-            <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group"></ng-content>
-        </div>
+        <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group"></ng-content>
     }`,
+    styles: `:host { display: none }`,
     standalone: true
 })
 export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit {
@@ -388,7 +387,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             if (val.hidden) {
                 return acc;
             }
-            return acc + parseInt(val.calcWidth, 10);
+            return acc + parseFloat(val.calcWidth);
         }, 0)}`;
         return width + 'px';
     }

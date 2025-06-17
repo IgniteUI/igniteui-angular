@@ -9,7 +9,7 @@ import {
     OnDestroy,
     OnInit,
 } from "@angular/core";
-import { NgIf, NgStyle, NgTemplateOutlet, DatePipe } from "@angular/common";
+import { NgTemplateOutlet, DatePipe } from "@angular/common";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
 
 import { IgxMonthsViewComponent } from "../months-view/months-view.component";
@@ -38,8 +38,6 @@ let NEXT_ID = 0;
     selector: "igx-month-picker",
     templateUrl: "month-picker.component.html",
     imports: [
-        NgIf,
-        NgStyle,
         NgTemplateOutlet,
         DatePipe,
         IgxIconComponent,
@@ -333,9 +331,6 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
             .set("PageUp", this.handlePageUp)
             .set("PageDown", this.handlePageDown);
 
-        this.wrapper.nativeElement.addEventListener('focus', (event: FocusEvent) => this.onWrapperFocus(event));
-        this.wrapper.nativeElement.addEventListener('blur', (event: FocusEvent) => this.onWrapperBlur(event));
-
         this.activeView$.subscribe((view) => {
             this.activeViewChanged.emit(view);
 
@@ -346,12 +341,12 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
         });
     }
 
-    private onWrapperFocus(event: FocusEvent) {
+    protected onWrapperFocus(event: FocusEvent) {
         event.stopPropagation();
         this.showActiveDay = true;
     }
 
-    private onWrapperBlur(event: FocusEvent) {
+    protected onWrapperBlur(event: FocusEvent) {
         event.stopPropagation();
 
         this.showActiveDay = false;
@@ -458,8 +453,6 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
 	 */
 	public ngOnDestroy(): void {
         this.keyboardNavigation.detachKeyboardHandlers();
-        this.wrapper?.nativeElement.removeEventListener('focus', this.onWrapperFocus);
-        this.wrapper?.nativeElement.removeEventListener('blur', this.onWrapperBlur);
 	}
 
 	/**

@@ -25,7 +25,7 @@
 @forward 'grid/pivot-data-selector-theme';
 @forward 'grid-summary/grid-summary-theme';
 @forward 'grid-toolbar/grid-toolbar-theme';
-@forward 'highlight/highlight-theme.scss';
+@forward 'highlight/highlight-theme';
 @forward 'icon/icon-theme';
 @forward 'icon-button/icon-button-theme';
 @forward 'input/input-group-theme';
@@ -35,7 +35,8 @@
 @forward 'navdrawer/navdrawer-theme';
 @forward 'overlay/overlay-theme';
 @forward 'paginator/paginator-theme';
-@forward 'progress/progress-theme';
+@forward 'progress/linear/linear-theme';
+@forward 'progress/circular/circular-theme';
 @forward 'radio/radio-theme';
 @forward 'ripple/ripple-theme';
 @forward 'query-builder/query-builder-theme';
@@ -49,5 +50,5 @@
 @forward 'time-picker/time-picker-theme';
 @forward 'toast/toast-theme';
 @forward 'tooltip/tooltip-theme';
-@forward 'tree/tree-theme.scss';
+@forward 'tree/tree-theme';
 @forward 'watermark/watermark-theme';

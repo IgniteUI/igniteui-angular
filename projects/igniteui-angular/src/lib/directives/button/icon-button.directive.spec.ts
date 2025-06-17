@@ -1,5 +1,4 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, ViewChild } from '@angular/core';
 import { IgxIconButtonDirective } from './icon-button.directive';
@@ -8,7 +7,6 @@ import { By } from '@angular/platform-browser';
 import { IgxIconComponent } from '../../icon/icon.component';
 
 describe('IgxIconButton', () => {
-    configureTestSuite();
 
     const baseClass = 'igx-icon-button';
     const classes = {
@@ -17,7 +15,7 @@ describe('IgxIconButton', () => {
         outlined: `${baseClass}--outlined`,
     };
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

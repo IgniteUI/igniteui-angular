@@ -7,7 +7,6 @@ import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { By } from '@angular/platform-browser';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { GridSummaryFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
@@ -26,13 +25,13 @@ const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid-th__title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid-thead__title';
 const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid-thead__group';
 
- 
+
 describe('IgxGrid - multi-column headers #grid', () => {
-    let fixture: ComponentFixture<any>; let grid: IgxGridComponent; let componentInstance;
+    let fixture: ComponentFixture<any>;
+    let grid: IgxGridComponent;
+    let componentInstance;
 
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -76,7 +75,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             const headerHeight = grid.nativeElement
             .querySelector("igx-grid-header-row")
             .getBoundingClientRect().height;
-            
+
             expect(Math.round(headerHeight)).toEqual(expectedGridHeaderHeight);
         });
 
@@ -551,10 +550,10 @@ describe('IgxGrid - multi-column headers #grid', () => {
             fixture.detectChanges();
             const scrWitdh = grid.nativeElement.querySelector('.igx-grid__tbody-scrollbar').getBoundingClientRect().width;
             const gridWidthInPx = parseInt(gridWidth, 10) - scrWitdh;
-            const colWidth = Math.floor(gridWidthInPx / 3);
+            const colWidth = gridWidthInPx / 3;
             const colWidthPx = colWidth + 'px';
             const locationColGroup = getColGroup(grid, 'Location');
-            expect(locationColGroup.width).toBe((Math.round(colWidth) * 3) + 'px');
+            expect(locationColGroup.width).toBe(colWidth * 3 + 'px');
             const countryColumn = grid.getColumnByName('Country');
             expect(countryColumn.width).toBe(colWidthPx);
             const regionColumn = grid.getColumnByName('Region');
@@ -576,7 +575,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
             // check group has correct size.
             let locationColGroup = getColGroup(grid, 'Location');
-            let expectedWidth = (200 + Math.floor(grid.calcWidth * 0.7)) + 'px';
+            let expectedWidth = (200 + grid.calcWidth * 0.7) + 'px';
             expect(locationColGroup.width).toBe(expectedWidth);
 
             // check header and content have same size.
@@ -600,7 +599,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             fixture.detectChanges();
 
             locationColGroup = getColGroup(grid, 'Location');
-            expectedWidth = (200 + Math.floor(grid.calcWidth * 0.7)) + 'px';
+            expectedWidth = (200 + grid.calcWidth * 0.7) + 'px';
             expect(locationColGroup.width).toBe(expectedWidth);
 
             col2Header = grid.getColumnByName('Region').headerCell.nativeElement;
@@ -625,7 +624,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
             // check group has correct size. Should fill available space in grid since one column has no width.
             const locationColGroup = getColGroup(grid, 'Location');
-            const expectedWidth = grid.calcWidth - 1 + 'px';
+            const expectedWidth = grid.calcWidth + 'px';
             expect(locationColGroup.width).toBe(expectedWidth);
 
             // check header and content have same size.
@@ -651,10 +650,10 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
             const gridWidthInPx = (parseInt(gridWidth, 10) / 100) *
                 parseInt(componentInstance.gridWrapperWidthPx, 10) - scrWitdh;
-            const colWidth = Math.floor(gridWidthInPx / 3);
+            const colWidth = gridWidthInPx / 3;
             const colWidthPx = colWidth + 'px';
             const locationColGroup = getColGroup(grid, 'Location');
-            expect(locationColGroup.width).toBe((Math.round(colWidth) * 3) + 'px');
+            expect(locationColGroup.width).toBe((colWidth * 3) + 'px');
             const countryColumn = grid.getColumnByName('Country');
             expect(countryColumn.width).toBe(colWidthPx);
             const regionColumn = grid.getColumnByName('Region');
@@ -685,7 +684,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             fixture.detectChanges();
 
             const locationColGroup = getColGroup(grid, 'Location');
-            const expectedWidth = (Math.floor(grid.calcWidth * 0.2) * 3) + 'px';
+            const expectedWidth = (grid.calcWidth * 0.2 * 3) + 'px';
             expect(locationColGroup.width).toBe(expectedWidth);
             const countryColumn = grid.getColumnByName('Country');
             expect(countryColumn.width).toBe(gridColWidth);
@@ -717,7 +716,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             fixture.detectChanges();
 
             const locationColGroup = getColGroup(grid, 'Location');
-            const expectedWidth = (Math.floor(grid.calcWidth * 0.2) * 3) + 'px';
+            const expectedWidth = (grid.calcWidth * 0.2 * 3) + 'px';
             expect(locationColGroup.width).toBe(expectedWidth);
             const countryColumn = grid.getColumnByName('Country');
             expect(countryColumn.width).toBe(columnWidth);
@@ -739,11 +738,11 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 .querySelector("igx-grid-header")
                 .getBoundingClientRect().width;
             const expectedWidth = headersWidth * 3;
-            expect(headersWidth).toBe(Math.floor((parseFloat(columnWidth) / 100) * grid.calcWidth));
+            expect(parseFloat(headersWidth.toFixed(1))).toBe((parseFloat(columnWidth) / 100) * grid.calcWidth);
             const locationColGroupHeaderWidth = grid.nativeElement
                 .querySelector("igx-grid-header-group")
                 .getBoundingClientRect().width;
-            expect(locationColGroupHeaderWidth).toBe(expectedWidth);
+            expect(parseFloat(locationColGroupHeaderWidth.toFixed(1))).toBe(parseFloat(expectedWidth.toFixed(1)));
         });
     });
 
@@ -1112,8 +1111,9 @@ describe('IgxGrid - multi-column headers #grid', () => {
             grAdressInf.pinned = true;
             fixture.detectChanges();
 
-            // Verify group and all its children are not pinned
+            // Verify group and all its children are pinned
             testColumnPinning(grAdressInf, true);
+            expect(grid.pinnedColumnsCount).toEqual(10);
 
             expect(grid.getCellByColumn(0, 'ID')).toBeDefined();
             expect(grid.getCellByColumn(0, 'Country')).toBeDefined();
@@ -1203,7 +1203,6 @@ describe('IgxGrid - multi-column headers #grid', () => {
     });
 
     describe('Column moving ', () => {
-        // configureTestSuite();
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnGroupTestComponent);
             fixture.detectChanges();
@@ -1828,4 +1827,4 @@ class NestedColGroupsTests {
             'slaveColGroup', masterColGroupChildrenCount);
     }
 }
- 
+

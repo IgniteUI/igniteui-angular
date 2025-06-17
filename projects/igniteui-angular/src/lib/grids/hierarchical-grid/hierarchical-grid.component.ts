@@ -22,7 +22,7 @@ import {
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
-import { NgIf, NgClass, NgFor, NgTemplateOutlet, NgStyle } from '@angular/common';
+import { NgClass, NgTemplateOutlet, NgStyle } from '@angular/common';
 
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -35,7 +35,7 @@ import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { CellType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
+import { CellType, EntityType, FieldType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxHierarchicalGridRow } from '../grid-public-row';
@@ -66,6 +66,8 @@ import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxActionStripToken } from '../../action-strip/token';
+import { flatten } from '../../core/utils';
+import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 
 let NEXT_ID = 0;
 
@@ -214,7 +216,8 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         this.layout.gridCreated.emit({
             owner: this.layout,
             parentID: this.data.rowID,
-            grid: this.hGrid
+            grid: this.hGrid,
+            parentRowData: this.data.parentRowData,
         });
     }
 
@@ -231,7 +234,8 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         this.layout.gridInitialized.emit({
             owner: this.layout,
             parentID: this.data.rowID,
-            grid: this.hGrid
+            grid: this.hGrid,
+            parentRowData: this.data.parentRowData,
         });
 
         this.hGrid.cdr.detectChanges();
@@ -314,9 +318,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         IgxRowIslandAPIService
     ],
     imports: [
-        NgIf,
         NgClass,
-        NgFor,
         NgTemplateOutlet,
         NgStyle,
         IgxGridHeaderRowComponent,
@@ -448,6 +450,17 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return this.parentIsland ? this.parentIsland.actionStrip : super.actionStrip;
     }
 
+    public override get advancedFilteringExpressionsTree(): IFilteringExpressionsTree {
+        return super.advancedFilteringExpressionsTree;
+    }
+
+    public override set advancedFilteringExpressionsTree(value: IFilteringExpressionsTree) {
+        if (!this._hGridSchema) {
+            this._hGridSchema = this.generateSchema();
+        }
+        super.advancedFilteringExpressionsTree = value;
+    }
+
     private _data;
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
     private childGridTemplates: Map<any, any> = new Map();
@@ -559,6 +572,34 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public get expandChildren(): boolean {
         return this._defaultExpandState;
+    }
+
+    /* blazorSuppress */
+    /**
+     * Gets/Sets the schema for the hierarchical grid.
+     * This schema defines the structure and properties of the data displayed in the grid.
+     * @Input()
+     * @param {EntityType[]} entities - An array of EntityType objects representing the grid's schema.
+     * @remarks
+     * This property is required in remote data filtering scenarios.
+     * @example
+     * ```typescript
+     * const schema = this.grid.schema;
+     * this.grid.schema = [{ name: 'Products', fields: [...], childEntities: [...] }];
+     * ```
+     */
+    @Input()
+    public set schema(entities: EntityType[]) {
+        this._hGridSchema = entities;
+    }
+
+    /* blazorSuppress */
+    public get schema() {
+        if (!this._hGridSchema) {
+            this._hGridSchema = this.generateSchema();
+        }
+
+        return this._hGridSchema;
     }
 
     /**
@@ -1190,5 +1231,75 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             grid.highlightedRowID = null;
             grid.cdr.markForCheck();
         });
+    }
+
+    private generateSchema() {
+        const filterableFields = this.columns.filter((column) => !column.columnGroup && column.filterable);
+        let entities: EntityType[];
+
+        if(filterableFields.length !== 0) {
+            entities = [
+                {
+                    name: null,
+                    fields: filterableFields.map(f => ({
+                            field: f.field,
+                            dataType: f.dataType,
+                        //  label: f.label,
+                        //  header: f.header,
+                            editorOptions: f.editorOptions,
+                            filters: f.filters,
+                            pipeArgs: f.pipeArgs,
+                            defaultTimeFormat: f.defaultTimeFormat,
+                            defaultDateTimeFormat: f.defaultDateTimeFormat
+                        })) as FieldType[]
+                }
+            ];
+
+            entities[0].childEntities = this.childLayoutList.reduce((acc, rowIsland) => {
+                return acc.concat(this.generateChildEntity(rowIsland, this.data[0][rowIsland.key][0]));
+            }
+            , []);
+        }
+
+        return entities;
+    }
+
+    private generateChildEntity(rowIsland: IgxRowIslandComponent, firstRowData: any[]): EntityType {
+        const entityName = rowIsland.key;
+        let fields = [];
+        let childEntities;
+        if (!rowIsland.autoGenerate) {
+            fields = flatten(rowIsland.childColumns.toArray()).filter(col => col.field)
+                .map(f => ({ field: f.field, dataType: f.dataType })) as FieldType[];
+        } else if (firstRowData) {
+            const rowIslandFields = Object.keys(firstRowData).map(key => {
+                if (firstRowData[key] instanceof Array) {
+                    return null;
+                }
+
+                return {
+                    field: key,
+                    dataType: this.resolveDataTypes(firstRowData[key])
+                }
+            });
+            fields = rowIslandFields.filter(f => f !== null) as FieldType[];
+        }
+
+        const rowIslandChildEntities = rowIsland.childLayoutList.reduce((acc, childRowIsland) => {
+            if (!firstRowData) {
+                return null;
+            }
+            return acc.concat(this.generateChildEntity(childRowIsland, firstRowData[childRowIsland.key][0]));
+        }, []);
+
+        if (rowIslandChildEntities?.length > 0) {
+            childEntities = rowIslandChildEntities;
+        }
+
+        return {
+            name: entityName,
+            fields: fields,
+            childEntities: childEntities
+        }
     }
 }

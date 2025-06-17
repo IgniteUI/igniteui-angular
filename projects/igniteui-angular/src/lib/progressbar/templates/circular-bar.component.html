@@ -1,35 +1,36 @@
-<svg #svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
-    viewBox="0 0 100 100"
-    preserveAspectRatio="xMidYMid meet"
-    role="progressbar"
-    aria-valuemin="0"
-    [attr.aria-valuemax]="max"
-    [attr.aria-valuenow]="value">
-    <svg:circle class="igx-circular-bar__inner" cx="50" cy="50" r="46" />
-    <svg:circle #circle class="igx-circular-bar__outer" cx="50" cy="50" r="46" />
+<svg #svg
+     role="progressbar"
+     aria-valuemin="0"
+     [attr.aria-valuemax]="max"
+     [attr.aria-valuenow]="value">
+    <svg:circle class="igx-circular-bar__inner" />
+    <svg:circle #circle class="igx-circular-bar__outer"/>
 
     <svg:defs>
         <ng-container
-            *ngTemplateOutlet="gradientTemplate ? gradientTemplate.template : defaultGradientTemplate;
-            context: { $implicit: gradientId }">
+                *ngTemplateOutlet="gradientTemplate ? gradientTemplate.template : defaultGradientTemplate;
+        context: { $implicit: gradientId }">
         </ng-container>
     </svg:defs>
 
     <ng-template #defaultGradientTemplate>
         <svg:linearGradient [id]="gradientId" gradientTransform="rotate(90)">
-          <stop offset="0%"   class="igx-circular-bar__gradient-start" />
-          <stop offset="100%" class="igx-circular-bar__gradient-end" />
+            <stop offset="0%"   class="igx-circular-bar__gradient-start" />
+            <stop offset="100%" class="igx-circular-bar__gradient-end" />
         </svg:linearGradient>
     </ng-template>
 </svg>
 
-<span class="igx-circular-bar__text" *ngIf="textVisibility">
-    <ng-container *ngTemplateOutlet="textTemplate ? textTemplate.template : defaultTextTemplate;
+@if (textVisibility) {
+    <span class="igx-circular-bar__text" [ngClass]="hasFraction ? 'igx-circular-bar__value--fraction' : ''">
+        <ng-container *ngTemplateOutlet="textTemplate ? textTemplate.template : defaultTextTemplate;
             context: context">
-    </ng-container>
-</span>
+        </ng-container>
+    </span>
+}
 
 <ng-template #defaultTextTemplate>
-    {{textContent ? textContent: valueInPercent + '%'}}
+    {{textContent}}
 </ng-template>
+
 

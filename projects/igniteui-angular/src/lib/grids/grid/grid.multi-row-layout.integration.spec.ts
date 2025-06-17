@@ -1,5 +1,4 @@
-﻿import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
+﻿import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -15,10 +14,9 @@ import { IgxGridToolbarComponent } from '../toolbar/grid-toolbar.component';
 import { IgxGridToolbarActionsComponent } from '../toolbar/common';
 import { IgxGridToolbarHidingComponent } from '../toolbar/grid-toolbar-hiding.component';
 import { IgxGridToolbarPinningComponent } from '../toolbar/grid-toolbar-pinning.component';
-import { NgFor, NgIf } from '@angular/common';
 
 
-type FixtureType = ColumnLayoutGroupingTestComponent | ColumnLayouHidingTestComponent | ColumnLayoutResizingTestComponent
+type FixtureType = ColumnLayoutGroupingTestComponent | ColumnLayoutHidingTestComponent | ColumnLayoutResizingTestComponent
     | ColumnLayoutPinningTestComponent;
 interface ColGroupsType {
     group: string;
@@ -31,22 +29,23 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     let fixture: ComponentFixture<FixtureType>;
     let grid: IgxGridComponent;
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 ColumnLayoutPinningTestComponent,
                 ColumnLayoutFilteringTestComponent,
-                ColumnLayouHidingTestComponent,
+                ColumnLayoutHidingTestComponent,
                 ColumnLayoutGroupingTestComponent,
                 ColumnLayoutResizingTestComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('Hiding ', () => {
         beforeEach(() => {
-            fixture = TestBed.createComponent(ColumnLayouHidingTestComponent);
+            fixture = TestBed.createComponent(ColumnLayoutHidingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
         });
@@ -259,10 +258,10 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(horizontalVirtualization.getSizeAt(2)).toBe(4 * 200);
 
             // check total widths sum
-            let horizonatalScrElem = horizontalVirtualization.getScroll();
+            let horizontalScrElem = horizontalVirtualization.getScroll();
             // 7 column span in total
             let totalExpected = 7 * 200;
-            expect(parseInt((horizonatalScrElem.children[0] as HTMLElement).style.width, 10)).toBe(totalExpected);
+            expect(parseInt((horizontalScrElem.children[0] as HTMLElement).style.width, 10)).toBe(totalExpected);
 
             // hide group 3
             grid.getColumnByName('group3').hidden = true;
@@ -280,10 +279,10 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(horizontalVirtualization.getSizeAt(1)).toBe(4 * 200);
 
             // check total widths sum
-            horizonatalScrElem = horizontalVirtualization.getScroll();
+            horizontalScrElem = horizontalVirtualization.getScroll();
             // 7 column span in total
             totalExpected = 6 * 200;
-            expect(parseInt((horizonatalScrElem.children[0] as HTMLElement).style.width, 10)).toBe(totalExpected);
+            expect(parseInt((horizontalScrElem.children[0] as HTMLElement).style.width, 10)).toBe(totalExpected);
 
             // show group1
             grid.getColumnByName('group1').hidden = false;
@@ -303,10 +302,10 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(horizontalVirtualization.getSizeAt(2)).toBe(4 * 200);
 
             // check total widths sum
-            horizonatalScrElem = horizontalVirtualization.getScroll();
+            horizontalScrElem = horizontalVirtualization.getScroll();
             // 7 column span in total
             totalExpected = 9 * 200;
-            expect(parseInt((horizonatalScrElem.children[0] as HTMLElement).style.width, 10)).toBe(totalExpected);
+            expect(parseInt((horizontalScrElem.children[0] as HTMLElement).style.width, 10)).toBe(totalExpected);
 
             // check last column group can be scrolled in view
             horizontalVirtualization.scrollTo(2);
@@ -620,10 +619,10 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(horizontalVirtualization.getSizeAt(2)).toBe(4 * 200);
 
             // check total widths sum
-            const horizonatalScrElem = horizontalVirtualization.getScroll();
+            const horizontalScrElem = horizontalVirtualization.getScroll();
             // 9 column span in total
             const totalExpected = 9 * 200;
-            expect(parseInt((horizonatalScrElem.children[0] as HTMLElement).style.width, 10)).toBe(totalExpected);
+            expect(parseInt((horizontalScrElem.children[0] as HTMLElement).style.width, 10)).toBe(totalExpected);
 
             // check last column group can be scrolled in view
             horizontalVirtualization.scrollTo(2);
@@ -791,8 +790,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(horizontalVirtualization.getSizeAt(0)).toBe(totalExpected);
 
             // check width scrollbar
-            const horizonatalScrElem = horizontalVirtualization.getScroll();
-            expect(parseInt((horizonatalScrElem.children[0] as HTMLElement).style.width, 10)).toBe(totalExpected);
+            const horizontalScrElem = horizontalVirtualization.getScroll();
+            expect(parseInt((horizontalScrElem.children[0] as HTMLElement).style.width, 10)).toBe(totalExpected);
         });
     });
 
@@ -904,7 +903,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
         it('should create only one ghost element when dragging a column', async () => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-            
+
             const header = headers[1].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 50);
             await wait();
@@ -1226,21 +1225,27 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 @Component({
     template: `
     <igx-grid #grid [data]="data" height="500px">
-        <igx-grid-toolbar *ngIf="showToolbar">
-            <igx-grid-toolbar-actions>
-                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
-            </igx-grid-toolbar-actions>
-        </igx-grid-toolbar>
-        <igx-column-layout *ngFor='let group of colGroups' [field]='group.group' [hidden]='group.hidden'>
-            <igx-column *ngFor='let col of group.columns'
-            [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
-            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
-        </igx-column-layout>
+        @if (showToolbar) {
+            <igx-grid-toolbar>
+                <igx-grid-toolbar-actions>
+                    <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                </igx-grid-toolbar-actions>
+            </igx-grid-toolbar>
+        }
+        @for (group of colGroups; track group.group) {
+            <igx-column-layout [field]='group.group' [hidden]='group.hidden'>
+                @for (col of group.columns; track col.field) {
+                    <igx-column
+                        [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+                        [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
+                }
+            </igx-column-layout>
+        }
     </igx-grid>
     `,
-    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarActionsComponent, NgIf, NgFor]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarActionsComponent]
 })
-export class ColumnLayouHidingTestComponent {
+export class ColumnLayoutHidingTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
     public showToolbar = false;
@@ -1274,19 +1279,25 @@ export class ColumnLayouHidingTestComponent {
 @Component({
     template: `
     <igx-grid #grid [data]="data" height="500px">
-        <igx-grid-toolbar *ngIf="showToolbar">
-            <igx-grid-toolbar-actions>
-                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
-            </igx-grid-toolbar-actions>
-        </igx-grid-toolbar>
-        <igx-column-layout *ngFor='let group of colGroups' [field]='group.group' [pinned]='group.pinned'>
-            <igx-column *ngFor='let col of group.columns'
-            [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
-            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
-        </igx-column-layout>
+        @if (showToolbar) {
+            <igx-grid-toolbar>
+                <igx-grid-toolbar-actions>
+                    <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                </igx-grid-toolbar-actions>
+            </igx-grid-toolbar>
+        }
+        @for (group of colGroups; track group.group) {
+            <igx-column-layout [field]='group.group' [pinned]='group.pinned'>
+                @for (col of group.columns; track col.field) {
+                    <igx-column
+                        [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+                        [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
+                }
+            </igx-column-layout>
+        }
     </igx-grid>
     `,
-    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarPinningComponent, IgxGridToolbarActionsComponent, NgFor, NgIf]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarPinningComponent, IgxGridToolbarActionsComponent]
 })
 export class ColumnLayoutPinningTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1322,14 +1333,18 @@ export class ColumnLayoutPinningTestComponent {
 @Component({
     template: `
     <igx-grid #grid [data]="data" height="500px" [allowFiltering]="true">
-        <igx-column-layout *ngFor='let group of colGroups' [field]='group.group' [pinned]='group.pinned'>
-            <igx-column *ngFor='let col of group.columns'
-            [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
-            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
-        </igx-column-layout>
+        @for (group of colGroups; track group.group) {
+            <igx-column-layout [field]='group.group' [pinned]='group.pinned'>
+                @for (col of group.columns; track col.field) {
+                    <igx-column
+                        [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+                        [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
+                }
+            </igx-column-layout>
+        }
     </igx-grid>
     `,
-    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent]
 })
 export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestComponent {
 }
@@ -1337,14 +1352,18 @@ export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestC
 @Component({
     template: `
     <igx-grid #grid [data]="data" height="500px" [style.--ig-size]="1">
-        <igx-column-layout *ngFor='let group of colGroups' [field]='group.group' [pinned]='group.pinned'>
-            <igx-column *ngFor='let col of group.columns'
-            [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
-            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [groupable]="col.groupable"></igx-column>
-        </igx-column-layout>
+        @for (group of colGroups; track group.group) {
+            <igx-column-layout [field]='group.group' [pinned]='group.pinned'>
+                @for (col of group.columns; track col.field) {
+                    <igx-column
+                        [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+                        [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [groupable]="col.groupable"></igx-column>
+                }
+            </igx-column-layout>
+        }
     </igx-grid>
     `,
-    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent]
 })
 export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestComponent {
     public override showToolbar = false;
@@ -1377,14 +1396,18 @@ export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestCo
 @Component({
     template: `
     <igx-grid #grid [data]="data" height="500px">
-        <igx-column-layout *ngFor='let group of colGroups'>
-            <igx-column *ngFor='let col of group.columns' [field]='col.field' [width]='col.width' [resizable]='col.resizable'
-            [rowStart]="col.rowStart" [colStart]="col.colStart" [colEnd]="col.colEnd" [rowEnd]="col.rowEnd">
-            </igx-column>
-        </igx-column-layout>
+        @for (group of colGroups; track group.group) {
+            <igx-column-layout>
+                @for (col of group.columns; track col.field) {
+                    <igx-column [field]='col.field' [width]='col.width' [resizable]='col.resizable'
+                        [rowStart]="col.rowStart" [colStart]="col.colStart" [colEnd]="col.colEnd" [rowEnd]="col.rowEnd">
+                    </igx-column>
+                }
+            </igx-column-layout>
+        }
     </igx-grid>
     `,
-    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent]
 })
 export class ColumnLayoutResizingTestComponent {
 

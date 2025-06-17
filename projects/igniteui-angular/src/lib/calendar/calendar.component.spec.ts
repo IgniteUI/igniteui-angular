@@ -30,7 +30,6 @@ import {
     DateRangeType,
 } from "../core/dates/dateRange";
 
-import { configureTestSuite } from "../test-utils/configure-suite";
 import { IgxDayItemComponent } from "./days-view/day-item.component";
 import { HelperTestFunctions } from "../test-utils/calendar-helper-utils";
 
@@ -128,9 +127,8 @@ describe("IgxCalendar - ", () => {
     });
 
     describe("Basic -", () => {
-        configureTestSuite();
 
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -154,6 +152,11 @@ describe("IgxCalendar - ", () => {
                 calendar = fixture.componentInstance.calendar;
                 dom = fixture.debugElement;
             }));
+            afterEach(() => {
+                fixture = undefined;
+                calendar = undefined;
+                dom = undefined;
+            });
 
             it("Should initialize a calendar component", () => {
                 expect(fixture.componentInstance).toBeDefined();

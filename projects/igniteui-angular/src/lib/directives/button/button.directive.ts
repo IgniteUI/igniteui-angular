@@ -3,20 +3,19 @@ import {
     ElementRef,
     EventEmitter,
     HostBinding,
+    HostListener,
     Input,
     Output,
     Renderer2,
     booleanAttribute,
-    AfterContentInit
 } from '@angular/core';
-import { mkenum } from '../../core/utils';
 import { IBaseEventArgs } from '../../core/utils';
 import { IgxBaseButtonType, IgxButtonBaseDirective } from './button-base';
 
-const IgxButtonType = /*@__PURE__*/mkenum({
+const IgxButtonType = {
     ...IgxBaseButtonType,
     FAB: 'fab'
-});
+} as const;
 
 /**
  * Determines the Button type.
@@ -46,7 +45,7 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
     selector: '[igxButton]',
     standalone: true
 })
-export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterContentInit {
+export class IgxButtonDirective extends IgxButtonBaseDirective {
     private static ngAcceptInputType_type: IgxButtonType | '';
 
     /**
@@ -92,6 +91,13 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterC
      */
     private _selected = false;
 
+    @HostListener('click')
+    protected emitSelected() {
+        this.buttonSelected.emit({
+            button: this
+        });
+    }
+
     /**
      * Gets or sets whether the button is selected.
      * Mainly used in the IgxButtonGroup component and it will have no effect if set separately.
@@ -118,14 +124,6 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterC
         private _renderer: Renderer2,
     ) {
         super(element);
-    }
-
-    public ngAfterContentInit() {
-        this.nativeElement.addEventListener('click', () => {
-            this.buttonSelected.emit({
-                button: this
-            });
-        });
     }
 
     /**

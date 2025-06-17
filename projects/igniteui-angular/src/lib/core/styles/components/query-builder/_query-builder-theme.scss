@@ -9,25 +9,37 @@
 /// @param {Color} header-background [null] - The background color of the query builder header.
 /// @param {Color} header-foreground [null] - The foreground color of the query builder header.
 /// @param {Color} header-border [null] - The border color of the query builder header.
-/// @param {Map} background-and [null] - The background color of advanced filtering "AND" condition.
-/// @param {Map} background-and--focus [null] - The background color on focus/selected of advanced filtering "AND" condition.
-/// @param {Map} background-or [null] - The background color of advanced filtering "OR" condition.
-/// @param {Map} background-or--focus [null] - The background color on focus/selected of advanced filtering "OR" condition.
+///
+/// @param {Map} subquery-header-background [null] - The background color of the subquery header.
+/// @param {Map} subquery-border-color [null] - The border color of the query block.
+/// @param {Map} separator-color [null] - The separator color of the query block.
+/// @param {Number} subquery-border-radius [null] - The border radius of the subquery block.
+///
+/// @param {Map} label-foreground [null] - The color for query builder labels "from" & "select".
+/// @param {Map} separator-color [null] - The separator color of the query builder tree block.
+/// @param {Number} border-radius [null] - The border radius of the query builder.
+///
+/// @param {Color} color-expression-group-and [null] - The color of advanced filtering "AND" condition group.
+/// @param {Color} color-expression-group-or [null] - The color of advanced filtering "OR" condition group.
+///
 /// @example scss Set custom query-builder colors
-///   $my-query-builder-theme: query-builder-theme($$background: red);
+///   $my-query-builder-theme: query-builder-theme($background: red);
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-query-builder-theme);
 @function query-builder-theme(
     $schema: $light-material-schema,
-
     $background: null,
     $header-background: null,
     $header-foreground: null,
     $header-border: null,
-    $background-and: null,
-    $background-and--focus: null,
-    $background-or: null,
-    $background-or--focus: null,
+    $color-expression-group-and: null,
+    $color-expression-group-or: null,
+    $border-radius: null,
+    $subquery-header-background: null,
+    $subquery-border-color: null,
+    $subquery-border-radius: null,
+    $separator-color: null,
+    $label-foreground: null,
 ) {
     $name: 'igx-query-builder';
     $selector: 'igx-query-builder';
@@ -46,21 +58,29 @@
         $header-foreground: text-contrast($header-background);
     }
 
+    @if not($header-background) and $background {
+        $header-background: $background;
+    }
+
     @return extend($theme, (
         name: $name,
         selector: $selector,
-
         background: $background,
         header-background: $header-background,
         header-foreground: $header-foreground,
         header-border: $header-border,
-        background-and: $background-and,
-        background-and--focus: $background-and--focus,
-        background-or: $background-or,
-        background-or--focus: $background-or--focus,
+        color-expression-group-and: $color-expression-group-and,
+        color-expression-group-or: $color-expression-group-or,
+        subquery-header-background: $subquery-header-background,
+        subquery-border-color: $subquery-border-color,
+        subquery-border-radius: $subquery-border-radius,
+        separator-color: $separator-color,
+        border-radius: $border-radius,
+        label-foreground: $label-foreground,
         theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
+            variant: map.get($schema, '_meta', 'theme'),
+            theme-variant: map.get($schema, '_meta', 'variant')
         )),
     ));
 }
@@ -83,18 +103,12 @@
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: not($bootstrap-theme);
 
-    $filter-empty: (
-        comfortable: rem(144px),
-        cosy: rem(107px),
-        compact: rem(92px)
-    );
+    // Custom colors alpha
+    $alpha-hover: .08;
+    $alpha-focus: .16;
+    $alpha-focus-hover: .24;
 
-    $vertical-space: (
-        comfortable: rem(16px),
-        cosy: rem(12px),
-        compact: rem(8px)
-    );
-
+    $border-radius: var-get($theme, 'border-radius');
     $icon-size: rem(18px);
 
     %advanced-filter {
@@ -103,48 +117,148 @@
         width: auto;
         min-width: rem(660px);
         background-color: var-get($theme, 'background');
-        border-radius: border-radius(rem(4px));
-        box-shadow: elevation(12);
+        border-radius: $border-radius;
+        box-shadow: var-get($theme, 'elevation');
+        overflow: hidden;
+
+        &:has(:not(igx-query-builder-header)) {
+            padding-block-start: if($variant != 'bootstrap', rem(24px), rem(16px))
+        }
+
+        &:has(igx-query-builder-header) {
+            padding-block-start: 0;
+        }
+
+	    .igx-chip__ghost {
+		    position: relative;
+	    }
+    }
+
+    %query-builder-tree {
+        background: var-get($theme, 'background');
+
+        %query-builder-tree {
+            border-radius: var-get($theme, 'subquery-border-radius');
+        }
+    }
+
+    %query-level-0 {
+        display: block;
+        width: 100%;
+        padding-inline: if($variant != 'bootstrap', rem(24px), rem(16px));
+        padding-block:
+            if($variant != 'bootstrap', 0, rem(16px))
+            if($variant != 'bootstrap', rem(24px), rem(16px));
+
+        > %advanced-filter__main {
+            gap: rem(16px);
+
+             > %filter-tree__section {
+                 --sb-size: #{rem(10px)};
+
+                max-height: rem(570px);
+                overflow-y: auto;
+                overflow-x: hidden;
+                padding-inline-end: rem(16px);
+            }
+        }
+    }
+
+    %filter-tree__subquery {
+        max-width: rem(960px);
+
+        // Add styles to the subquery itself only if there is a direct .igx-filter-tree__inputs inside it
+        &:has( > %filter-tree__inputs) {
+            background: var-get($theme, 'subquery-header-background');
+            border: rem(1px) solid var-get($theme, 'subquery-border-color');
+            border-radius: var-get($theme, 'subquery-border-radius');
+        }
+
+        // Hide the subquery itself if there is a tree with display none inside
+        &:has( > %query-builder-tree[style='display: none;']) {
+            display: none;
+        }
+
+        > %filter-tree__inputs {
+            padding: rem(12px);
+            border-radius: inherit;
+
+            > igx-input-group,
+            > igx-date-picker,
+            > igx-time-picker {
+                flex-grow: 1;
+            }
+        }
+
+        %filter-tree__buttons {
+            margin-block-start: rem(8px);
+        }
+
+        %query-builder-tree {
+            border-block-start: rem(1px) dashed var-get($theme, 'separator-color');
+            padding: rem(12px);
+        }
+
+        &:empty {
+            display: none;
+        }
+
+    }
+
+    %filter-tree-details-button {
+        margin-inline-start: auto;
+    }
+
+    %query-builder-dialog {
+        display: flex;
+        flex-direction: column;
+        gap: rem(16px);
+        max-width: rem(310px);
+
+        > * {
+            margin: 0 !important;
+        }
     }
 
     %advanced-filter__header {
-        @if $variant != 'indigo' {
-            @include type-style('h6');
-        } @else {
-            @include type-style('h5');
-
-            border-top-left-radius: border-radius(rem(10px));
-            border-top-right-radius: border-radius(rem(10px));
-        }
-
         display: flex;
         align-items: center;
         background-color: var-get($theme, 'header-background');
         color: var-get($theme, 'header-foreground');
         user-select: none;
+        border-radius: $border-radius $border-radius 0 0;
         margin-bottom: 0;
         border-block-end: rem(1px) solid var-get($theme, 'header-border');
+
+        padding-inline: if($variant != 'bootstrap', rem(24px), rem(16px));
+        padding-block: if($variant != 'bootstrap', rem(24px), rem(16px)) rem(16px);
     }
 
-    %advanced-filter__main {
-        display: block;
-        overflow: auto;
-        min-height: pad(rem(138px), rem(164px), rem(214px));
-        max-height: pad(rem(305px), rem(394px), rem(468px));
-
-        [igxButton] + [igxButton] {
-            margin-inline-start: rem(8px);
+    %advanced-filter__title {
+        &:empty {
+            display: none;
         }
     }
 
-    %advanced-filter__header,
     %advanced-filter__main {
-        padding-inline: pad-inline(
-            map.get($vertical-space, 'compact'),
-            map.get($vertical-space, 'cosy'),
-            map.get($vertical-space, 'comfortable')
-        );
-        padding-block: rem(16px);
+        display: grid;
+        gap: rem(16px);
+    }
+
+    %advanced-filter__root {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+
+        > * {
+            flex-grow: 1;
+        }
+    }
+
+    %advanced-filter__root-actions {
+        display: flex;
+        gap: rem(8px);
+        padding-bottom: rem(16px);
     }
 
     %advanced-filter__outlet {
@@ -158,85 +272,200 @@
 
     %filter-tree {
         display: flex;
+        width: 100%;
 
-        + %filter-tree,
-        + %filter-tree__expression-item,
-        + %filter-tree__inputs {
-            margin-top: pad(
-                map.get($vertical-space, 'compact'),
-                map.get($vertical-space, 'cosy'),
-                map.get($vertical-space, 'comfortable')
-            );
+        %filter-tree {
+            margin-block: rem(8px);
+        }
+    }
+
+    %filter-tree__section {
+        display: flex;
+        flex-direction: column;
+        gap: rem(8px);
+
+        > %filter-tree {
+            margin-block: 0;
+        }
+    }
+
+    %filter-tree__expression-context-menu {
+        display: flex;
+        width: 100%;
+
+        [igxbutton='flat'] {
+            --ig-size: 1;
+
+            @if $variant == 'bootstrap' {
+                --ig-button-text-transform: capitalize;
+            }
+
+            border: none;
+            min-width: auto;
         }
     }
 
     %filter-tree__line {
-        width: rem(8px);
-        min-width: rem(8px);
+        $size: rem(2px);
+        width: $size;
         background-color: white;
-        margin-inline-end: pad(rem(8px), rem(12px), rem(16px));
+        margin-inline-end: calc(rem(8px) - $size);
         outline-style: none;
-        border-radius: border-radius(rem(4px));
-        cursor: pointer;
     }
 
     %filter-tree__line--and {
-        background: var-get($theme, 'background-and');
-
-        &-selected {
-            background: var-get($theme, 'background-and--focus');
-        }
-
-        &:focus {
-            box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'background-and--focus');
-        }
+        background: var-get($theme, 'color-expression-group-and');
     }
 
     %filter-tree__line--or {
-        background: var-get($theme, 'background-or');
-
-        &-selected {
-            background-color: var-get($theme, 'background-or--focus');
-        }
-
-        &:focus {
-            box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'background-or--focus');
-        }
+        background: var-get($theme, 'color-expression-group-or');
     }
 
-    %filter-tree__expression {
+	%filter-tree__button--and {
+		&[igxButton='flat'] {
+			@if $variant == 'material' or $variant == 'indigo' {
+				--focus-hover-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-focus-hover});
+				--focus-visible-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
+				--focus-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
+				--active-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
+				--hover-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-hover});
+				--background: transparent;
+			}
+
+			@if $variant == 'fluent' {
+				--background: transparent;
+				--focus-hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
+				--focus-visible-background: transparent;
+				--focus-background: transparent;
+				--active-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
+				--hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
+			}
+
+			--foreground: #{var-get($theme, 'color-expression-group-and')};
+			--focus-visible-foreground: #{var-get($theme, 'color-expression-group-and')};
+			--icon-color: #{var-get($theme, 'color-expression-group-and')};
+
+			@if $variant != 'bootstrap' {
+				--focus-foreground: #{var-get($theme, 'color-expression-group-and')};
+				--hover-foreground: #{var-get($theme, 'color-expression-group-and')};
+				--icon-color-hover: #{var-get($theme, 'color-expression-group-and')};
+				--focus-hover-foreground: #{var-get($theme, 'color-expression-group-and')};
+				--active-foreground: #{var-get($theme, 'color-expression-group-and')};
+			} @else {
+				$bootstrap-foreground-lightness: if($theme-variant == 'light', 34%, 78% );
+
+				--focus-hover-background: transparent;
+				--focus-visible-background: transparent;
+				--focus-background: transparent;
+				--active-background: transparent;
+				--hover-background: transparent;
+				--background: transparent;
+				--shadow-color: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / .5);
+
+				--icon-color-hover: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
+				--focus-foreground: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
+				--hover-foreground: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
+				--focus-hover-foreground: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
+				--active-foreground: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
+			}
+		}
+    }
+
+	%filter-tree__button--or {
+		&[igxButton='flat'] {
+			@if $variant == 'material' or $variant == 'indigo' {
+				--focus-hover-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus-hover});
+				--focus-visible-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
+				--focus-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
+				--active-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
+				--hover-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-hover});
+				--background: transparent;
+			}
+
+			@if $variant == 'fluent' {
+				--background: transparent;
+				--focus-hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
+				--focus-visible-background: transparent;
+				--focus-background: transparent;
+				--active-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
+				--hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
+			}
+
+			--foreground: #{var-get($theme, 'color-expression-group-or')};
+			--focus-visible-foreground: #{var-get($theme, 'color-expression-group-or')};
+			--icon-color: #{var-get($theme, 'color-expression-group-or')};
+
+			@if $variant != 'bootstrap' {
+				--focus-foreground: #{var-get($theme, 'color-expression-group-or')};
+				--hover-foreground: #{var-get($theme, 'color-expression-group-or')};
+				--icon-color-hover: #{var-get($theme, 'color-expression-group-or')};
+				--focus-hover-foreground: #{var-get($theme, 'color-expression-group-or')};
+				--active-foreground: #{var-get($theme, 'color-expression-group-or')};
+			} @else {
+				$bootstrap-foreground-lightness: if($theme-variant == 'light', 14%, 47%);
+
+				--focus-hover-background: transparent;
+				--focus-visible-background: transparent;
+				--focus-background: transparent;
+				--active-background: transparent;
+				--hover-background: transparent;
+				--background: transparent;
+				--shadow-color: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / .5);
+
+				--icon-color-hover: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
+				--focus-foreground: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
+				--hover-foreground: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
+				--focus-hover-foreground: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
+				--active-foreground: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
+			}
+		}
+    }
+
+    %filter-tree__expressions {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+        flex-grow: 1;
+        gap: rem(8px);
+    }
+
+    %filter-tree__expression-section {
+        $spacing: rem(16px);
+        display: flex;
+        flex-direction: column;
+        width: calc(100% - #{$spacing});
+        gap: rem(8px);
+        margin-inline-start: $spacing;
+
+        &:empty {
+            display: none;
+        }
     }
 
     %filter-tree__expression-item {
         display: flex;
         align-items: center;
+        width: 100%;
+        gap: rem(8px);
+        position: relative;
 
-        + %filter-tree,
-        + %filter-tree__inputs,
-        + %filter-tree__expression-item {
-            margin-top: pad(
-                map.get($vertical-space, 'compact'),
-                map.get($vertical-space, 'cosy'),
-                map.get($vertical-space, 'comfortable')
-            );
+        igx-chip {
+            --ig-size: 3;
+
+            @if $variant != 'indigo' {
+                igx-icon {
+                    --component-size: 1;
+                }
+            }
         }
 
         > igx-chip {
-            @container style(--ig-size: 1) {
-                --ig-size: 2;
-            }
-
-            @if $variant != 'indigo' {
-                .igx-chip__item {
-                    border-block: none;
-                }
-            }
-
-            .igx-filter-tree__expression-column {
+            %filter-tree__expression-column {
                 padding-inline: pad-inline(rem(3px), rem(6px), rem(8px));
+            }
+
+            %filter-tree__expression-condition {
+                padding-inline-start: pad-inline(rem(3px), rem(6px), rem(8px));
             }
 
             igx-prefix {
@@ -249,156 +478,114 @@
         }
     }
 
+
+    %filter-tree__expression-item-ghost {
+        .igx-chip__item {
+            @include type-style('body-2');
+
+            --ig-body-2-text-transform: unset;
+
+            padding-inline: rem(32px);
+
+	        color: color($color: 'gray', $variant: if($theme-variant == 'light', 600, 900));
+	        border: rem(1px) dashed color($color: 'gray', $variant: if($theme-variant == 'light', 600, 300));
+	        background:  transparent;
+        }
+    }
+
+	%filter-tree__expression-item-keyboard-ghost {
+		.igx-chip__item {
+			box-shadow: var(--ghost-shadow);
+            background: var(--ghost-background);
+            color: var(--focus-text-color);
+		}
+
+        .igx-chip:hover {
+            .igx-chip__item {
+                box-shadow: var(--ghost-shadow);
+                background: var(--ghost-background);
+                color: var(--focus-text-color);
+
+                @if $variant == 'indigo' {
+                    border-color: var(--border-color);
+                }
+            }
+        }
+	}
+
     %filter-tree__expression-column {
         padding: 0 rem(8px);
     }
 
     %filter-tree__expression-actions {
         display: inline-flex;
-        margin: 0 rem(8px);
-        gap: rem(8px);
+        gap: if($variant != 'indigo', rem(16px), rem(8px));
+
+        span {
+            display: inline-flex;
+        }
 
         %igx-icon-button-display {
-            --size: #{sizable(rem(20px), rem(24px), if($variant != 'indigo', rem(32px), rem(28px)))};
-        }
+            --ig-size: #{if($variant != 'bootstrap', 2, 1)};
+        };
     }
 
     %filter-tree__expression-condition {
-        opacity: .7;
+        opacity: if($variant != 'indigo', .6, .8);
     }
 
     %filter-tree__buttons {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: pad(
-            map.get($vertical-space, 'compact'),
-            map.get($vertical-space, 'cosy'),
-            map.get($vertical-space, 'comfortable')
-        );
+        --ig-size: 1;
 
-        + %filter-tree,
-        + %filter-tree__expression-item,
-        + %filter-tree__inputs {
-            margin-top: pad(
-                map.get($vertical-space, 'compact'),
-                map.get($vertical-space, 'cosy'),
-                map.get($vertical-space, 'comfortable')
-            );
+        display: flex;
+        align-items: center;
+        gap: rem(8px);
+
+        [igxbutton='flat'] {
+            padding-block: 0;
+            border: none
         }
     }
 
     %filter-tree__inputs {
+        --ig-size: #{if($variant == 'indigo' or $variant == 'bootstrap', 2, 1)};
+
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
+        gap: rem(16px);
+        width: 100%;
+        border-radius: inherit;
 
-        igx-input-group {
-            --ig-size: 1;
+        &:empty {
+            display: none;
         }
+    }
 
-        igx-select + igx-select,
-        igx-select + igx-input-group,
-        igx-select + igx-date-picker,
-        igx-select + igx-time-picker,
-        igx-input-group + igx-select {
-            margin-inline-start: rem(8px);
-        }
+    %filter-tree__inputs-field {
+        display: flex;
+        flex-direction: column;
+        gap: rem(4px);
+        max-width: rem(250px);
+        width: 100%;
+    }
 
-        + %filter-tree,
-        + %filter-tree__expression-item {
-            margin-top: pad(
-                map.get($vertical-space, 'compact'),
-                map.get($vertical-space, 'cosy'),
-                map.get($vertical-space, 'comfortable')
-            );
-        }
+    %advanced-filter__label {
+        @include type-style('body-2');
+
+        color: var-get($theme, 'label-foreground');
     }
 
     %filter-tree__inputs-actions {
+        --ig-size: 2;
+
         display: flex;
-        margin: 0 rem(8px);
+        gap: rem(8px);
         align-items: center;
+        width: auto;
+        align-self: center;
 
         [igxIconButton] {
             transition: none;
-        }
-
-        [igxIconButton] + [igxIconButton] {
-            margin-inline-start: rem(8px);
-        }
-    }
-
-    %filter-legend {
-        display: flex;
-        margin-inline-start: auto;
-        pointer-events: none;
-    }
-
-    %filter-legend__item {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        font-size: rem(12px);
-
-        @if $variant == 'indigo' {
-            font-weight: 400;
-        }
-
-        &::before {
-            content: '';
-            width: rem(24px);
-            height: rem(24px);
-            background: white;
-            border-radius: border-radius(rem(4px));
-            margin-inline-end: rem(8px);
-        }
-
-        + %filter-legend__item {
-            margin-inline-start: rem(24px);
-        }
-    }
-
-    %filter-legend__item--and::before {
-        background: var-get($theme, 'background-and');
-    }
-
-    %filter-legend__item--or::before {
-        background: var-get($theme, 'background-or');
-    }
-
-    %filter-con-menu {
-        position: relative;
-        display: flex;
-        flex-flow: column;
-        width: rem(196px);
-        background-color: var-get($theme, 'background');
-        padding: rem(16px);
-        margin-inline-start: rem(16px);
-        border-radius: border-radius(rem(4px));
-        border: rem(1px) solid color(null, 'gray', 200);
-
-        > [igxButton] + [igxButton],
-        igx-buttongroup + [igxButton],
-        [igxButton] + igx-buttongroup {
-            margin-top: pad(
-                map.get($vertical-space, 'compact'),
-                map.get($vertical-space, 'cosy'),
-                map.get($vertical-space, 'comfortable')
-            );
-        }
-
-        > [igxButton]%filter-con-menu__close-btn + [igxButton],
-        [igxButton]%filter-con-menu__close-btn + igx-buttongroup {
-            margin-top: 0;
-        }
-
-        [igxButton] > igx-icon + * {
-            margin-inline-start: rem(8px);
-        }
-
-        igx-buttongroup > * {
-            box-shadow: none;
         }
     }
 
@@ -422,8 +609,9 @@
 
     %filter-con-menu__close-btn {
         position: absolute;
-        top: rem(-18px);
-        inset-inline-end: rem(-18px);
+        top: 0;
+        inset-inline-start: 100%;
+        transform: translate(-50%, -50%);
         background-color: var-get($theme, 'background');
         border: rem(1px) solid color(null, 'gray', 200);
 
@@ -432,29 +620,6 @@
             @if $not-bootstrap-theme {
                 background-color: var-get($theme, 'background');
             }
-        }
-    }
-
-    %filter-empty {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: pad(
-            map.get($filter-empty, 'compact'),
-            map.get($filter-empty, 'cosy'),
-            map.get($filter-empty, 'comfortable')
-        );
-    }
-
-    %filter-empty__title {
-        @if $variant == 'indigo' {
-            @if $theme-variant == 'light' {
-                color: color(null, 'gray', 600);
-            } @else {
-                color: contrast-color(null, 'gray', 50, .6);
-            }
-        } @else {
-            color: color(null, 'gray', 600);
         }
     }
 
@@ -474,4 +639,20 @@
             flex-grow: 1;
         }
     }
+}
+
+/// Adds typography styles for the igx-query-builder component.
+/// Uses the 'h6' category from the typographic scale.
+/// @group typography
+/// @param {Map} $categories [(title: 'h6')] - The categories from the typographic scale used for type styles.
+@mixin query-builder-typography(
+	$categories: (title: 'h6')
+) {
+	$title: map.get($categories, 'title');
+
+	%advanced-filter__title {
+		@include type-style($title) {
+			margin: 0;
+		}
+	}
 }

@@ -20,7 +20,13 @@ export * from './lib/directives/filter/filter.directive';
 export * from './lib/directives/focus/focus.directive';
 export * from './lib/directives/focus-trap/focus-trap.directive';
 export {
-    IgxForOfContext, IgxForOfDirective, IForOfState, IgxGridForOfContext, IgxGridForOfDirective
+    IForOfDataChangeEventArgs,
+    IForOfDataChangingEventArgs,
+    IForOfState,
+    IgxForOfContext,
+    IgxForOfDirective,
+    IgxGridForOfContext,
+    IgxGridForOfDirective,
 } from './lib/directives/for-of/for_of.directive';
 export * from './lib/directives/button/icon-button.directive';
 export * from './lib/directives/layout/layout.directive';
@@ -28,6 +34,7 @@ export * from './lib/directives/mask/mask.directive';
 export * from './lib/directives/radio/public_api';
 export * from './lib/directives/ripple/ripple.directive';
 export * from './lib/directives/scroll-inertia/scroll_inertia.directive';
+export * from './lib/directives/size/ig-size.directive';
 export * from './lib/directives/text-highlight/text-highlight.directive';
 export * from './lib/directives/text-selection/text-selection.directive';
 export * from './lib/directives/template-outlet/template_outlet.directive';
@@ -45,7 +52,7 @@ export * from './lib/data-operations/filtering-expressions-tree';
 export * from './lib/data-operations/filtering-condition';
 export * from './lib/data-operations/filtering-state.interface';
 export * from './lib/data-operations/filtering-strategy';
-export * from './lib/data-operations/expressions-tree-util';
+export { ExpressionsTreeUtil } from './lib/data-operations/expressions-tree-util';
 export * from './lib/data-operations/groupby-expand-state.interface';
 export * from './lib/data-operations/groupby-record.interface';
 export * from './lib/data-operations/groupby-state.interface';
@@ -66,7 +73,7 @@ export * from './lib/buttonGroup/public_api';
 export * from './lib/calendar/public_api';
 export * from './lib/card/public_api';
 export * from './lib/carousel/public_api';
-export * from './lib/checkbox/checkbox.component';
+export * from './lib/checkbox/public_api';
 export * from './lib/chips/public_api';
 export * from './lib/combo/public_api';
 export * from './lib/simple-combo/public_api';

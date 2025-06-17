@@ -25,6 +25,18 @@ export class IgxFilteringOperand {
             iconName: 'filter_in',
             hidden: true,
             logic: (target: any, searchVal: Set<any>) => this.findValueInSet(target, searchVal)
+        }, {
+            name: 'inQuery',
+            isUnary: false,
+            isNestedQuery: true,
+            iconName: 'in',
+            logic: (target: any, searchVal: Set<any>) => this.findValueInSet(target, searchVal)
+        }, {
+            name: 'notInQuery',
+            isUnary: false,
+            isNestedQuery: true,
+            iconName: 'not-in',
+            logic: (target: any, searchVal: Set<any>) => !this.findValueInSet(target, searchVal)
         }];
     }
 
@@ -33,9 +45,17 @@ export class IgxFilteringOperand {
     }
 
     /**
-     * Returns an array of names of the conditions which are visible in the UI
+     * Returns an array of names of the conditions which are visible in the filtering UI
      */
     public conditionList(): string[] {
+        return this.operations.filter(f => !f.hidden && !f.isNestedQuery).map((element) => element.name);
+    }
+
+    /**
+     * Returns an array of names of the conditions which are visible in the UI, including "In" and "Not In", allowing the creation of sub-queries.
+     * @hidden @internal
+     */
+    public extendedConditionList(): string[] {
         return this.operations.filter(f => !f.hidden).map((element) => element.name);
     }
 
@@ -57,9 +77,6 @@ export class IgxFilteringOperand {
         this.operations.push(operation);
     }
 
-    /**
-     * @hidden
-     */
     protected findValueInSet(target: any, searchVal: Set<any>) {
         return searchVal.has(target);
     }
@@ -74,7 +91,7 @@ export class IgxFilteringOperand {
 export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
     protected constructor() {
         super();
-        this.operations = [{
+        const newOperations: IFilteringOperation[] = [{
             name: 'all',
             isUnary: true,
             iconName: 'filter_all',
@@ -99,7 +116,9 @@ export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
             isUnary: true,
             iconName: 'filter_not_empty',
             logic: (target: boolean) => target !== null && target !== undefined
-        }].concat(this.operations);
+        }];
+
+        this.operations = newOperations.concat(this.operations);
     }
 }
 
@@ -111,7 +130,7 @@ export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
 class IgxBaseDateTimeFilteringOperand extends IgxFilteringOperand {
     protected constructor() {
         super();
-        this.operations = [{
+        const newOperations: IFilteringOperation[] = [{
             name: 'empty',
             isUnary: true,
             iconName: 'filter_empty',
@@ -121,7 +140,9 @@ class IgxBaseDateTimeFilteringOperand extends IgxFilteringOperand {
             isUnary: true,
             iconName: 'filter_not_empty',
             logic: (target: Date) => target !== null && target !== undefined
-        }].concat(this.operations);
+        }];
+
+        this.operations = newOperations.concat(this.operations);
     }
 
     /**
@@ -189,7 +210,7 @@ class IgxBaseDateTimeFilteringOperand extends IgxFilteringOperand {
 export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
     protected constructor() {
         super();
-        this.operations = [{
+        const newOperations: IFilteringOperation[] = [{
             name: 'equals',
             isUnary: false,
             iconName: 'filter_equal',
@@ -389,7 +410,9 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
                 const now = IgxDateFilteringOperand.getDateParts(new Date(), 'y');
                 return d.year === now.year + 1;
             }
-        }].concat(this.operations);
+        }];
+
+        this.operations = newOperations.concat(this.operations);
     }
 
     protected override findValueInSet(target: any, searchVal: Set<any>) {
@@ -406,7 +429,7 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
 export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
     protected constructor() {
         super();
-        this.operations = [{
+        const newOperations: IFilteringOperation[] = [{
             name: 'equals',
             isUnary: false,
             iconName: 'filter_equal',
@@ -608,7 +631,9 @@ export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand
                 const now = IgxDateTimeFilteringOperand.getDateParts(new Date(), 'y');
                 return d.year === now.year + 1;
             }
-        }].concat(this.operations);
+        }];
+
+        this.operations = newOperations.concat(this.operations);
     }
 }
 
@@ -616,7 +641,7 @@ export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand
 export class IgxTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
     protected constructor() {
         super();
-        this.operations = [{
+        const newOperations: IFilteringOperation[] = [{
             name: 'at',
             isUnary: false,
             iconName: 'filter_equal',
@@ -710,7 +735,9 @@ export class IgxTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
                     targetn.hours > search.hours ? true : targetn.hours === search.hours && targetn.minutes > search.minutes ?
                     true : targetn.hours === search.hours && targetn.minutes === search.minutes && targetn.seconds > search.seconds;
             }
-        }].concat(this.operations);
+        }];
+
+        this.operations = newOperations.concat(this.operations);
     }
 
     protected override findValueInSet(target: any, searchVal: Set<any>) {
@@ -730,7 +757,7 @@ export class IgxTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
 export class IgxNumberFilteringOperand extends IgxFilteringOperand {
     protected constructor() {
         super();
-        this.operations = [{
+        const newOperations: IFilteringOperation[] = [{
             name: 'equals',
             isUnary: false,
             iconName: 'filter_equal',
@@ -770,7 +797,9 @@ export class IgxNumberFilteringOperand extends IgxFilteringOperand {
             isUnary: true,
             iconName: 'filter_not_empty',
             logic: (target: number) => target !== null && target !== undefined && !isNaN(target)
-        }].concat(this.operations);
+        }];
+
+        this.operations = newOperations.concat(this.operations);
     }
 }
 
@@ -783,7 +812,7 @@ export class IgxNumberFilteringOperand extends IgxFilteringOperand {
 export class IgxStringFilteringOperand extends IgxFilteringOperand {
     protected constructor() {
         super();
-        this.operations = [{
+        const newOperations: IFilteringOperation[] = [{
             name: 'contains',
             isUnary: false,
             iconName: 'filter_contains',
@@ -847,7 +876,9 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
             isUnary: true,
             iconName: 'filter_not_empty',
             logic: (target: string) => target !== null && target !== undefined && target.length > 0
-        }].concat(this.operations);
+        }];
+
+        this.operations = newOperations.concat(this.operations);
     }
 
     /**
@@ -872,11 +903,12 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
 export interface IFilteringOperation {
     name: string;
     isUnary: boolean;
+    isNestedQuery?: boolean;
     iconName: string;
     hidden?: boolean;
     /* blazorCSSuppress */
     /* blazorAlternateType: FilteringOperationLogicHandler */
-    logic: (value: any, searchVal?: any, ignoreCase?: boolean) => boolean;
+    logic?: null | ((value: any, searchVal?: any, ignoreCase?: boolean) => boolean);
 }
 
 /**

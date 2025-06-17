@@ -3,15 +3,12 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxRadioGroupDirective } from './radio-group.directive';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, FormGroup, FormControl } from '@angular/forms';
 
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { IgxRadioComponent } from '../../radio/radio.component';
-import { NgFor } from '@angular/common';
 
 describe('IgxRadioGroupDirective', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 FormsModule,
@@ -281,12 +278,14 @@ class RadioGroupSimpleComponent {
 
 @Component({
     template: `<igx-radio-group #radioGroup name="radioGroup" value="Baz" required="true">
-    <igx-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}">
-        {{item}}
-    </igx-radio>
-</igx-radio-group>
-`,
-    imports: [IgxRadioComponent, IgxRadioGroupDirective, NgFor]
+        @for (item of ['Foo', 'Bar', 'Baz']; track item) {
+            <igx-radio value="{{item}}">
+                {{item}}
+            </igx-radio>
+        }
+    </igx-radio-group>
+    `,
+    imports: [IgxRadioComponent, IgxRadioGroupDirective]
 })
 class RadioGroupComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
@@ -294,12 +293,14 @@ class RadioGroupComponent {
 
 @Component({
     template: `<igx-radio-group #radioGroup name="radioGroup" required>
-    <igx-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}">
-        {{item}}
-    </igx-radio>
-</igx-radio-group>
-`,
-    imports: [IgxRadioComponent, IgxRadioGroupDirective, NgFor]
+        @for (item of ['Foo', 'Bar', 'Baz']; track item) {
+            <igx-radio value="{{item}}">
+                {{item}}
+            </igx-radio>
+        }
+    </igx-radio-group>
+    `,
+    imports: [IgxRadioComponent, IgxRadioGroupDirective]
 })
 class RadioGroupRequiredComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
@@ -334,12 +335,14 @@ class RadioGroupOnPushComponent {
 
 @Component({
     template: ` <igx-radio-group #radioGroupSeasons name="radioGroupSeasons" [(ngModel)]="personBob.favoriteSeason">
-                    <igx-radio *ngFor="let item of seasons" value="{{item}}">
-                        {{item}}
-                    </igx-radio>
-                </igx-radio-group>
-`,
-    imports: [IgxRadioComponent, IgxRadioGroupDirective, NgFor, FormsModule]
+        @for (item of seasons; track item) {
+            <igx-radio value="{{item}}">
+                {{item}}
+            </igx-radio>
+        }
+    </igx-radio-group>
+    `,
+    imports: [IgxRadioComponent, IgxRadioGroupDirective, FormsModule]
 })
 class RadioGroupWithModelComponent {
     @ViewChild('radioGroupSeasons', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
@@ -358,13 +361,15 @@ class RadioGroupWithModelComponent {
     template: `
 <form [formGroup]="personForm">
     <igx-radio-group formControlName="favoriteSeason" name="radioGroupReactive">
-        <igx-radio *ngFor="let item of seasons" value="{{item}}">
-            {{item}}
-        </igx-radio>
+        @for (item of seasons; track item) {
+            <igx-radio value="{{item}}">
+                {{item}}
+            </igx-radio>
+        }
     </igx-radio-group>
 </form>
 `,
-    imports: [IgxRadioComponent, IgxRadioGroupDirective, NgFor, ReactiveFormsModule]
+    imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule]
 })
 class RadioGroupReactiveFormsComponent {
     public seasons = [
@@ -410,13 +415,15 @@ class RadioGroupReactiveFormsComponent {
     template: `
         <form [formGroup]="group1">
             <igx-radio-group formControlName="favouriteChoice" name="radioGroupReactive">
-                <div *ngFor="let choice of choices">
-                    <p><igx-radio [value]="choice">{{ choice }}</igx-radio></p>
-                </div>
+                @for (choice of choices; track choice) {
+                    <div>
+                        <p><igx-radio [value]="choice">{{ choice }}</igx-radio></p>
+                    </div>
+                }
             </igx-radio-group>
         </form>
     `,
-    imports: [IgxRadioComponent, IgxRadioGroupDirective, NgFor, ReactiveFormsModule]
+    imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule]
 })
 class RadioGroupDeepProjectionComponent {
 
@@ -441,3 +448,4 @@ const dispatchRadioEvent = (eventName, radioNativeElement, fixture) => {
     radioNativeElement.dispatchEvent(new Event(eventName));
     fixture.detectChanges();
 };
+

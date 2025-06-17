@@ -211,6 +211,26 @@
             "version": "19.1.0",
             "description": "Updates Ignite UI for Angular from v18.2.3 to v19.1.0",
             "factory": "./update-19_1_0"
+        },
+        "migration-43": {
+            "version": "19.1.1",
+            "description": "Updates Ignite UI for Angular from v19.1.0 to v19.1.1",
+            "factory": "./update-19_1_1"
+        },
+        "migration-44": {
+            "version": "19.1.4",
+            "description": "Updates Ignite UI for Angular from v19.1.0 to v19.1.4",
+            "factory": "./update-19_1_4"
+        },
+        "migration-45": {
+            "version": "19.2.0",
+            "description": "Updates Ignite UI for Angular from v19.1.0 to v19.2.0",
+            "factory": "./update-19_2_0"
+        },
+        "migration-46": {
+            "version": "20.0.0",
+            "description": "Updates Ignite UI for Angular from v19.2.0 to v20.0.0",
+            "factory": "./update-20_0_0"
         }
     }
 }

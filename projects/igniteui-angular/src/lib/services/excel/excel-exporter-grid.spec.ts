@@ -31,7 +31,6 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridSummariesKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
@@ -40,6 +39,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxHierarchicalGridExportComponent,
+         IgxHierarchicalGridMCHCollapsibleComponent,
          IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
          IgxHierarchicalGridMultiColumnHeadersExportComponent,
          IgxHierarchicalGridSummariesExportComponent
@@ -47,16 +47,15 @@ import { IgxHierarchicalGridExportComponent,
 import { IgxHierarchicalGridComponent } from '../../grids/hierarchical-grid/public_api';
 import { IgxHierarchicalRowComponent } from '../../grids/hierarchical-grid/hierarchical-row.component';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent } from '../../test-utils/pivot-grid-samples.spec';
-import { IgxPivotGridComponent, PivotRowLayoutType } from '../../grids/pivot-grid/public_api';
+import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent, SALES_DATA } from '../../test-utils/pivot-grid-samples.spec';
+import { IgxPivotGridComponent, IgxPivotNumericAggregate, PivotRowLayoutType } from '../../grids/pivot-grid/public_api';
 
 describe('Excel Exporter', () => {
-    configureTestSuite();
     let exporter: IgxExcelExporterService;
     let actualData: FileContentData;
     let options: IgxExcelExporterOptions;
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -602,18 +601,21 @@ describe('Excel Exporter', () => {
                 fieldName: 'Name',
                 searchVal: 'a',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains',
                 ignoreCase: true
             });
             tree.filteringOperands.push({
                 fieldName: 'Name',
                 searchVal: 'r',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains',
                 ignoreCase: true
             });
             tree.filteringOperands.push({
                 fieldName: 'ID',
                 searchVal: 5,
                 condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+                conditionName: 'greaterThan'
             });
 
             grid.advancedFilteringExpressionsTree = tree;
@@ -1013,6 +1015,27 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(hGrid, options, actualData.exportEmptyMultiColumnHeadersDataWithExportedHeaders);
         });
+
+        it('should export collapsible MCH with visibleWhenCollapsed set on 2 columns with the same field', async () => {
+            const fix = TestBed.createComponent(IgxHierarchicalGridMCHCollapsibleComponent);
+            fix.detectChanges();
+
+            const hGrid = fix.componentInstance.hGrid;
+            GridFunctions.clickGroupExpandIndicator(fix, hGrid.columnList.get(1));
+            fix.detectChanges();
+
+            const firstRow = hGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(firstRow.expander);
+            fix.detectChanges();
+
+            const rowIsland = hGrid.childLayoutList.first;
+            GridFunctions.clickGroupExpandIndicator(fix, rowIsland.columnList.get(1));
+            fix.detectChanges();
+
+
+            options = createExportOptions('HierarchicalGridCollapsibleMCHExcelExport');
+            await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithCollapsibleMCH);
+        })
     });
 
     describe('', () => {
@@ -1172,12 +1195,14 @@ describe('Excel Exporter', () => {
                 fieldName: 'Age',
                 searchVal: 40,
                 condition: IgxNumberFilteringOperand.instance().condition('lessThan'),
+                conditionName: 'lessThan',
                 ignoreCase: true
             });
             tree.filteringOperands.push({
                 fieldName: 'Name',
                 searchVal: 'a',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains',
                 ignoreCase: true
             });
 
@@ -1436,7 +1461,7 @@ describe('Excel Exporter', () => {
         let grid: IgxPivotGridComponent;
 
         beforeEach(waitForAsync(() => {
-            options = createExportOptions('PivotGridGridExcelExport');
+            options = createExportOptions('PivotGridExcelExport');
         }));
 
         it('should export pivot grid', async () => {
@@ -1459,6 +1484,80 @@ describe('Excel Exporter', () => {
             await wait(300);
 
             await exportAndVerify(grid, options, actualData.exportPivotGridDataWithHeaders, false);
+        });
+
+        it('should export pivot grid with hierarchical row dimensions.', async () => {
+            fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
+            fix.detectChanges();
+
+            grid = fix.componentInstance.pivotGrid;
+            fix.componentInstance.data = SALES_DATA;
+            fix.componentInstance.pivotConfigHierarchy = {
+                rows: [
+                    {                     
+                        memberName: 'All_Srep Code Alts',
+                        enabled: true,
+                        width: '150px',
+                        childLevel: {
+                            memberName: 'SREP_CODE_ALT',
+                            displayName: 'Srep Code Alt',
+                            sortDirection: 1,
+                            enabled: true,
+                        },
+                    },
+                    {
+                        memberName: 'All_Srep Codes',
+                        enabled: true,
+                        width: '150px',
+                            childLevel: {
+                            memberName: 'SREP_CODE',
+                            displayName: 'Srep Code',
+                            sortDirection: 1,
+                            enabled: true,
+                        },
+                    },
+                    {
+                        memberName: 'All_Customers',
+                        enabled: true,
+                        width: '150px',
+                        childLevel: {
+                            memberName: 'CUST_CODE',
+                            displayName: 'Customer',
+                            sortDirection: 1,
+                            enabled: true,
+                        },
+                    }
+                ],
+                columns: [],
+                values: [
+                  {
+                    member: 'JOBS',
+                    aggregate: {
+                      key: 'Count of Jobs',
+                      aggregator: IgxPivotNumericAggregate.count,
+                      label: 'Count of Jobs',
+                    },
+                    enabled: true,
+                    dataType: 'number',
+                  },
+                  {
+                    member: 'INV_SALES',
+                    aggregate: {
+                      key: 'Sum of Sales',
+                      aggregator: IgxPivotNumericAggregate.sum,
+                      label: 'Sum of Sales',
+                    },
+                    enabled: true,
+                    dataType: 'number',
+                  },
+                ],
+                filters: [],
+              };
+            grid.pivotUI.showRowHeaders = true;
+            fix.detectChanges();
+            await wait(300);
+
+            await exportAndVerify(grid, options, actualData.exportPivotGridHierarchicalRowDimensions, false);
         });
 
         it('should export hierarchical pivot grid', async () => {

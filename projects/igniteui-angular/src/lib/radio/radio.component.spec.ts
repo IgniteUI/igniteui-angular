@@ -4,14 +4,11 @@ import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, Validator
 import { By } from '@angular/platform-browser';
 import { IgxRadioComponent } from './radio.component';
 
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { NgFor } from '@angular/common';
 
 describe('IgxRadio', () => {
-    configureTestSuite();
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -270,10 +267,11 @@ class InitRadioComponent {
 
 @Component({
     template: `
-        <igx-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']"
-                    [value]="item"
-                    name="group" [(ngModel)]="selected">{{item}}</igx-radio>`,
-    imports: [FormsModule, IgxRadioComponent, NgFor]
+        @for (item of ['Foo', 'Bar', 'Baz']; track item) {
+            <igx-radio [value]="item"
+                name="group" [(ngModel)]="selected">{{item}}</igx-radio>
+        }`,
+    imports: [FormsModule, IgxRadioComponent]
 })
 class RadioWithModelComponent {
     @ViewChildren(IgxRadioComponent) public radios;
@@ -283,13 +281,15 @@ class RadioWithModelComponent {
 
 @Component({
     template: `
-    <igx-radio #radios *ngFor="let item of items"
-        [value]="item.value"
-        [(ngModel)]="selected"
-        [disabled]="item.disabled">
-        {{item.value}}
-    </igx-radio>`,
-    imports: [FormsModule, IgxRadioComponent, NgFor]
+    @for (item of items; track item.value) {
+        <igx-radio #radios
+            [value]="item.value"
+            [(ngModel)]="selected"
+            [disabled]="item.disabled">
+            {{item.value}}
+        </igx-radio>
+    }`,
+    imports: [FormsModule, IgxRadioComponent]
 })
 class DisabledRadioComponent {
     @ViewChildren(IgxRadioComponent) public radios;
@@ -307,13 +307,15 @@ class DisabledRadioComponent {
 
 @Component({
     template: `
-    <igx-radio #radios *ngFor="let item of ['Foo', 'Bar']"
-        [value]="item"
-        [(ngModel)]="Foo"
-        required>
-        {{item}}
-    </igx-radio>`,
-    imports: [FormsModule, IgxRadioComponent, NgFor]
+    @for (item of ['Foo', 'Bar']; track item) {
+        <igx-radio #radios
+            [value]="item"
+            [(ngModel)]="Foo"
+            required>
+            {{item}}
+        </igx-radio>
+    }`,
+    imports: [FormsModule, IgxRadioComponent]
 })
 class RequiredRadioComponent {
     @ViewChildren(IgxRadioComponent) public radios;

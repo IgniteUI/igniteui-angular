@@ -1,9 +1,8 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import {
@@ -18,15 +17,16 @@ import { Subject, fromEvent } from 'rxjs';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxColumnComponent } from '../public_api';
 
-const DEBOUNCETIME = 30;
+const DEBOUNCE_TIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
 const CELL_CSS_CLASS_NUMBER_FORMAT = '.igx-grid__td--number';
 const CELL_CLASS_IN_EDIT_MODE = 'igx-grid__td--editing';
 const EDITED_CELL_CSS_CLASS = 'igx-grid__td--edited';
 
 describe('IgxGrid - Cell Editing #grid', () => {
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 CellEditingTestComponent,
@@ -34,7 +34,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 ColumnEditablePropertyTestComponent,
                 SelectionWithTransactionsComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('Base Tests', () => {
@@ -274,7 +274,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(firstCell.editMode).toBeTruthy();
         }));
 
-        it('should end cell editing when clearing or applying advanced filter', () => {
+        it('should end cell editing when clearing or applying advanced filter', fakeAsync(() => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
 
             // Enter cell edit mode
@@ -310,7 +310,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             expect(cell.editMode).toBe(false);
-        });
+        }));
 
         it('should focus the first cell when editing mode is cell', fakeAsync(() => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
@@ -469,7 +469,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', inputElem, true);
             fixture.detectChanges();
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
 
             inputElem = document.activeElement as HTMLInputElement;
             expect(cell.editMode).toBeTruthy();
@@ -499,7 +499,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', inputElem, true);
             fixture.detectChanges();
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
 
             inputElem = document.activeElement as HTMLInputElement;
             expect(cell.editMode).toBeTruthy();
@@ -524,7 +524,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', inputElem, true);
             fixture.detectChanges();
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
 
             const displayContainer = parseInt(virtRow.dc.instance._viewContainer.element.nativeElement.style.left, 10);
             expect(cell.editMode).toBeTruthy();
@@ -551,7 +551,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
             const virtRowStyle = parseInt(virtRow.dc.instance._viewContainer.element.nativeElement.style.left, 10);
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', inputElem, fixture);
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
 
             inputElem = document.activeElement as HTMLInputElement;

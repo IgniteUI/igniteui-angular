@@ -17,7 +17,8 @@ import {
     Output,
     TemplateRef,
     ViewChild,
-    ViewRef
+    ViewRef,
+    DOCUMENT
 } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { PlatformUtil, formatDate, formatCurrency } from '../../../core/utils';
@@ -25,7 +26,7 @@ import { GridColumnDataType } from '../../../data-operations/data-util';
 import { Subscription } from 'rxjs';
 import { GridSelectionMode } from '../../common/enums';
 import { IgxFilterItem } from '../../../data-operations/filtering-strategy';
-import { formatNumber, formatPercent, getLocaleCurrencyCode, NgIf, NgClass, DOCUMENT } from '@angular/common';
+import { formatNumber, formatPercent, getLocaleCurrencyCode, NgClass } from '@angular/common';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem, generateExpressionsList } from './common';
 import { ColumnType, GridType, IGX_GRID_BASE } from '../../common/grid.interface';
@@ -40,6 +41,7 @@ import { IgxExcelStylePinningComponent } from './excel-style-pinning.component';
 import { IgxExcelStyleMovingComponent } from './excel-style-moving.component';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { IgxExcelStyleHeaderComponent } from './excel-style-header.component';
+import { isTree } from '../../../data-operations/expressions-tree-util';
 
 @Directive({
     selector: 'igx-excel-style-column-operations,[igxExcelStyleColumnOperations]',
@@ -69,7 +71,7 @@ export class IgxExcelStyleFilterOperationsTemplateDirective { }
     providers: [{ provide: BaseFilteringComponent, useExisting: forwardRef(() => IgxGridExcelStyleFilteringComponent) }],
     selector: 'igx-grid-excel-style-filtering',
     templateUrl: './excel-style-filtering.component.html',
-    imports: [IgxExcelStyleHeaderComponent, NgIf, IgxExcelStyleSortingComponent, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleHidingComponent, IgxExcelStyleSelectingComponent, IgxExcelStyleClearFiltersComponent, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleSearchComponent, NgClass]
+    imports: [IgxExcelStyleHeaderComponent, IgxExcelStyleSortingComponent, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleHidingComponent, IgxExcelStyleSelectingComponent, IgxExcelStyleClearFiltersComponent, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleSearchComponent, NgClass]
 })
 export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent implements AfterViewInit, OnDestroy {
 
@@ -509,7 +511,8 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         this.filterValues = this.generateFilterValues();
         this.generateListData();
         this.expressionsList.forEach(expr => {
-            if (this.column.dataType === GridColumnDataType.String && this.column.filteringIgnoreCase && expr.expression.searchVal) {
+            if (this.column.dataType === GridColumnDataType.String && this.column.filteringIgnoreCase
+                && expr.expression.searchVal && expr.expression.searchVal instanceof Set) {
                 this.modifyExpression(expr);
             }
         });
@@ -547,7 +550,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         const lowerCaseFilterValues = new Set(Array.from(expr.expression.searchVal).map((value: string) => value.toLowerCase()));
 
         this.grid.data.forEach(item => {
-            if (lowerCaseFilterValues.has(item[this.column.field]?.toLowerCase())) {
+            if (typeof item[this.column.field] === "string" && lowerCaseFilterValues.has(item[this.column.field]?.toLowerCase())) {
                 expr.expression.searchVal.add(item[this.column.field]);
             }
         });
@@ -584,7 +587,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         const expressionsTree = new FilteringExpressionsTree(gridExpressionsTree.operator, gridExpressionsTree.fieldName);
 
         for (const operand of gridExpressionsTree.filteringOperands) {
-            if (operand instanceof FilteringExpressionsTree) {
+            if (isTree(operand)) {
                 const columnExprTree = operand as FilteringExpressionsTree;
                 if (columnExprTree.fieldName === this.column.field) {
                     continue;

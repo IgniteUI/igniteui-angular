@@ -1,6 +1,5 @@
-import { DestroyRef, Inject, Injectable, Optional, SecurityContext } from "@angular/core";
+import { DestroyRef, Inject, Injectable, Optional, SecurityContext, DOCUMENT } from "@angular/core";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
-import { DOCUMENT } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Observable, Subject } from "rxjs";
 import { PlatformUtil } from "../core/utils";
@@ -64,7 +63,7 @@ export class IgxIconService {
         @Optional() private _sanitizer: DomSanitizer,
         @Optional() private _httpClient: HttpClient,
         @Optional() private _platformUtil: PlatformUtil,
-        @Optional() @Inject(THEME_TOKEN) private _themeToken: ThemeToken,
+        @Optional() @Inject(THEME_TOKEN) private _themeToken: ThemeToken | undefined,
         @Optional() @Inject(DestroyRef) private _destroyRef: DestroyRef,
         @Optional() @Inject(DOCUMENT) protected document: Document,
     ) {
@@ -72,11 +71,11 @@ export class IgxIconService {
         this.iconLoaded = this._iconLoaded.asObservable();
         this.setFamily(this._defaultFamily.name, this._defaultFamily.meta);
 
-        const { unsubscribe } = this._themeToken?.onChange((theme) => {
+        const themeChange = this._themeToken?.onChange((theme) => {
             this.setRefsByTheme(theme);
         });
 
-        this._destroyRef.onDestroy(() => unsubscribe);
+        this._destroyRef.onDestroy(() => themeChange?.unsubscribe());
 
         if (this._platformUtil?.isBrowser) {
             this._domParser = new DOMParser();

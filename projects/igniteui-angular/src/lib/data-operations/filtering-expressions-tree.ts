@@ -8,12 +8,16 @@ export enum FilteringExpressionsTreeType {
     Advanced
 }
 
+/* marshalByValue */
 export declare interface IExpressionTree {
     filteringOperands: (IExpressionTree | IFilteringExpression)[];
     operator: FilteringLogic;
-    fieldName?: string;
+    fieldName?: string | null;
+    entity?: string | null;
+    returnFields?: string[] | null;
 }
 
+/* alternateBaseType: ExpressionTree */
 /* marshalByValue */
 export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpressionTree {
     filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[];
@@ -75,7 +79,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
     /**
      * Sets/gets the field name of the column where the filtering expression is placed.
      * ```typescript
-     *  gridExpressionTree.fieldName = 'Column Field';
+     * gridExpressionTree.fieldName = 'Column Field';
      * ```
      * ```typescript
      * let columnField = expressionTree.fieldName;
@@ -89,7 +93,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
     /**
      * Sets/gets the type of the filtering expressions tree.
      * ```typescript
-     *  gridExpressionTree.type = FilteringExpressionsTree.Advanced;
+     * gridExpressionTree.type = FilteringExpressionsTree.Advanced;
      * ```
      * ```typescript
      * let type = expressionTree.type;
@@ -99,11 +103,38 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      */
     public type?: FilteringExpressionsTreeType;
 
-    constructor(operator: FilteringLogic, fieldName?: string) {
+    /**
+     * Sets/gets the entity.
+     * ```typescript
+     * gridExpressionsTree.entity = 'Entity A';
+     * ```
+     * ```typescript
+     * let entity = gridExpressionsTree.entity;
+     * ```
+     *
+     * @memberof FilteringExpressionsTree
+     */
+    public entity?: string;
+
+    /**
+     * Sets/gets the return fields.
+     * ```typescript
+     * gridExpressionsTree.returnFields = ['Column Field 1', 'Column Field 2'];
+     * ```
+     * ```typescript
+     * let returnFields = gridExpressionsTree.returnFields;
+     * ```
+     *
+     * @memberof FilteringExpressionsTree
+     */
+    public returnFields?: string[];
+
+    constructor(operator: FilteringLogic, fieldName?: string, entity?: string, returnFields?: string[]) {
         this.operator = operator;
+        this.entity = entity;
+        this.returnFields = returnFields;
         this.fieldName = fieldName;
     }
-
 
     /**
      * Checks if filtering expressions tree is empty.

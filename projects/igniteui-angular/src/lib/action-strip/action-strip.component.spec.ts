@@ -1,7 +1,6 @@
 import { IgxActionStripComponent, IgxActionStripMenuItemDirective } from './action-strip.component';
 import { Component, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
-import { configureTestSuite } from '../test-utils/configure-suite';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,8 +16,8 @@ describe('igxActionStrip', () => {
     let parentContainer: ElementRef;
     let innerContainer: ViewContainerRef;
 
-    configureTestSuite(() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxActionStripComponent,
@@ -26,8 +25,8 @@ describe('igxActionStrip', () => {
                 IgxActionStripMenuTestingComponent,
                 IgxActionStripCombinedMenuTestingComponent
             ]
-        });
-    });
+        }).compileComponents();
+    }));
 
     describe('Unit tests: ', () => {
 
@@ -35,6 +34,7 @@ describe('igxActionStrip', () => {
             fixture = TestBed.createComponent(IgxActionStripComponent);
             actionStrip = fixture.componentInstance as IgxActionStripComponent;
             fixture.detectChanges();
+            expect(actionStrip.hidden).toBeTruthy();
 
             const el = document.createElement('div');
             fixture.debugElement.nativeElement.appendChild(el);
@@ -163,7 +163,7 @@ describe('igxActionStrip', () => {
                 Lorem ipsum dolor sit
             </p>
         </div>
-        <igx-action-strip #actionStrip>
+        <igx-action-strip #actionStrip [hidden]="false">
             <igx-icon class="asIcon" (click)="onIconClick()">alarm</igx-icon>
         </igx-action-strip>
     </div>
@@ -198,7 +198,7 @@ class IgxActionStripTestingComponent {
                 Lorem ipsum dolor sit
             </p>
         </div>
-        <igx-action-strip #actionStrip>
+        <igx-action-strip #actionStrip [hidden]="false">
             <span *igxActionStripMenuItem>Mark</span>
             <span *igxActionStripMenuItem>Favorite</span>
             <span *igxActionStripMenuItem>Download</span>
@@ -220,7 +220,7 @@ class IgxActionStripMenuTestingComponent {
                 Lorem ipsum dolor sit
             </p>
         </div>
-        <igx-action-strip #actionStrip>
+        <igx-action-strip #actionStrip [hidden]="false">
             <span>Mark</span>
             <span *igxActionStripMenuItem>Favorite</span>
             <span *igxActionStripMenuItem>Download</span>

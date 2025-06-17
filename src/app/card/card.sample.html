@@ -1,394 +1,387 @@
-<div class="grid-container grid-container--fit">
-    <!-- Google Coffee -->
-    <article class="card">
-        <igx-card [elevated]="true">
-            <igx-card-media>
-                <img [src]="cards[8].imageUrl">
-            </igx-card-media>
+<div class="cards-wrapper">
+    <article class="angular-cards">
+        <h2 class="sample-title">Angular Card</h2>
 
-            <igx-card-header>
-                <h3 class="igx-card-header__title">{{ cards[8].title }}</h3>
-                <h5 class="igx-card-header__subtitle">{{ cards[8].subtitle }}</h5>
-            </igx-card-header>
-
-            <igx-card-content>
-                <p>{{ cards[8].content}}</p>
-
-                <igx-divider class="in-content-divider"></igx-divider>
-
-                <span class="chip-label"> Tonight's availability</span>
-
-                <div class="chip-holder">
-                    <igx-chip *ngFor="let chip of cards[8].chip">
-                        <span>{{chip}}</span>
-                    </igx-chip>
-                </div>
-
-            </igx-card-content>
-
-            <!-- Switching default places using igxStart and igxEnd directives -->
-            <igx-card-actions>
-                <button igxIconButton="flat" igxStart>
-                    <igx-icon>drag_indicator</igx-icon>
-                </button>
-                <button igxIconButton="flat" igxStart><igx-icon>favorite</igx-icon></button>
-                <button igxButton igxEnd igxRipple *ngFor="let button of cards[8].buttons">{{ button }}</button>
-            </igx-card-actions>
-        </igx-card>
-    </article>
-    <!-- END Google Coffee -->
-
-    <!-- Google Weather  -->
-    <article class="card">
-        <igx-card class="weather-card" elevated>
-            <igx-card-header>
-                <h3 class="igx-card-header__title">{{ cards[9].title }}</h3>
-                <h5 class="igx-card-header__subtitle">{{ cards[9].subtitle }}</h5>
-            </igx-card-header>
-
-            <igx-card-content>
-                <div class="weather">
-                    <div class="weather-now">
-                        <span class="big-number">
-                            {{ cards[9].content}}
-                            <span class="temp-unit">{{ cards[9].unit}}</span>
-                        </span>
-
-                    </div>
-                    <img  [src]="cards[9].imageUrl">
-                </div>
-
-                <div class="w_details">
-                    <div class="w_details__item">
-                        <igx-icon class="w_details__icon" family="weather-icons" [name]="details[0].icon"></igx-icon>
-                        <span class="w_details__value">{{details[0].value}}</span>
-                        <span class="w_details__label">{{details[0].label}}</span>
-                    </div>
-                    <div class="w_details__item">
-                        <igx-icon class="w_details__icon" family="weather-icons" [name]="details[1].icon"></igx-icon>
-                        <span class="w_details__value">{{details[1].value}}</span>
-                        <span class="w_details__label">{{details[1].label}}</span>
-                    </div>
-                </div>
-
-                <div class="time-wrapper">
-                    <igx-slider [continuous]="true" [minValue]="0" [maxValue]="100" [step]="10" [(ngModel)]="volume"></igx-slider>
-                    <div class="weather-time">
-                        <span>08:00</span>
-                        <span>12:00</span>
-                        <span>16:00</span>
-                        <span>20:00</span>
-                        <span>00:00</span>
-                    </div>
-                </div>
-            </igx-card-content>
-
-            <igx-expansion-panel>
-                <igx-expansion-panel-body>
-                    <igx-list>
-                        <igx-list-item *ngFor="let day of days;">
-                                <div igxListLineTitle>
-                                    <span class="day">{{ day.day }}</span>
-                                </div>
-                                    <span [class]="day.isSunny ? 'isSunny w_icon' : 'w_icon'" class="w_icon">
-                                        <igx-icon>{{day.icon}}</igx-icon>
-                                    </span>
-                                    <span>{{ day.tempHeight}}</span>
-                                    /
-                                    <span>{{day.tempLow}}</span>
-                        </igx-list-item>
-                    </igx-list>
-                </igx-expansion-panel-body>
-            </igx-expansion-panel>
-
-            <igx-divider></igx-divider>
-
-            <igx-card-actions>
-                <button (click)="toggleDetails()" igxButton igxRipple>{{cards[9].buttons}}</button>
-            </igx-card-actions>
-        </igx-card>
-    </article>
-    <!-- END Google Weather  -->
-
-    <!--New York City Card Begins-->
-    <article class="card">
+        <!--New York City Card Begins-->
         <igx-card class="my-cool-card">
-            <igx-card-media>
-                <img [src]="cards[0].imageUrl">
-            </igx-card-media>
+                @for(section of sectionOrder; track section) {
+                <ng-container>
+                    @if(section === 'media' && !properties.hideMedia) {
+                    <igx-card-media>
+                        <img [src]="cards[0].imageUrl" />
+                    </igx-card-media>
+                    }
+                    @if(section === 'header' && !properties.hideHeader) {
+                    <igx-card-header [vertical]="false">
+                        @if(!hideThumbnail) {
+                        <igx-avatar [src]="cards[0].avatarUrl"></igx-avatar>
+                        }
+                        @if(!hideTitle) {
+                        <h1 igxCardHeaderTitle>{{ cards[0].title }}</h1>
+                        }
+                        @if(!hideSubtitle) {
+                        <h2 igxCardHeaderSubtitle>{{ cards[0].subtitle }}</h2>
+                        }
+                    </igx-card-header>
+                    }
+                    @if(section === 'content' && !properties.hideContent) {
+                    <igx-card-content>
+                        <p>{{ cards[0].content }}</p>
+                    </igx-card-content>
+                    }
+                    @if(section === 'actions' && !properties.hideActions) {
+                    <igx-card-actions>
+                        <button igxButton igxRipple>Read More</button>
 
-            <igx-card-header [vertical]="false">
-                <igx-avatar [src]="cards[0].avatarUrl"></igx-avatar>
-                <h1 igxCardHeaderTitle>{{ cards[0].title }}</h1>
-                <h2 igxCardHeaderSubtitle>{{ cards[0].subtitle }}</h2>
-            </igx-card-header>
+                        @for(icon of cards[0].icons; track icon) {
+                            <span
+                                igxIconButton="flat"
+                                igxRipple
+                                [igxRippleCentered]="true"
+                            >
+                                <igx-icon>{{icon}}</igx-icon>
+                            </span>
+                        }
+                    </igx-card-actions>
+                    }
+                </ng-container>
+                }
+            </igx-card>
+        <!--New York City Card End-->
 
-            <igx-card-content>
-                <p>{{ cards[0].content }}</p>
-            </igx-card-content>
+        <igx-card [horizontal]="true">
+                @if(!properties.hideActions) {
 
-            <igx-card-actions>
-                <button igxButton igxRipple>Read More</button>
-                <span igxIconButton="flat" igxRipple [igxRippleCentered]="true" *ngFor="let icon of cards[0].icons">
-                    <igx-icon>{{icon}}</igx-icon>
-                </span>
-            </igx-card-actions>
+                <igx-card-actions [layout]="properties.justifyActions ? 'justify' : 'cantHandleNull'">
+                    @for(icon of cards[1].icons; track icon) {
+                    <button
+                        igxIconButton="flat"
+                        igxRipple
+                        [igxRippleCentered]="true"
+                    >
+                        <igx-icon class="bidirectional-icon">{{icon}}</igx-icon>
+                    </button>
+                    }
+                </igx-card-actions>
+                }
 
-        </igx-card>
-    </article>
-    <!--New York City Card End-->
+                <igx-divider [middle]="true" [vertical]="true"></igx-divider>
 
-    <!--Incepient Dawn Card Begins-->
-    <article class="card">
-        <igx-card elevated>
-            <div style="overflow: hidden; line-height: 0">
-                <img width="100%" height="100%" [src]="cards[2].imageUrl">
-            </div>
-            <igx-card-header>
-                <h3 class="igx-card-header__title">{{ cards[2].title }}</h3>
-                <h5 class="igx-card-header__subtitle">{{ cards[2].subtitle }}</h5>
-            </igx-card-header>
-            <igx-card-actions>
-                <div class="igx-card-actions__bgroup">
-                    <button igxButton igxRipple *ngFor="let button of cards[2].buttons">{{ button }}</button>
+                <div style="flex-direction: row">
+                    @if(!properties.hideHeader) {
+                    <igx-card-header>
+                        @if(!hideTitle) {
+                        <h5 igxCardHeaderTitle>{{cards[1].title}}</h5>
+                        }
+                        @if(!hideSubtitle) {
+                        <h5 igxCardHeaderSubtitle>{{cards[1].subtitle}}</h5>
+                        }
+                    </igx-card-header>
+                    }
+                    @if(!properties.hideContent) {
+                    <igx-card-content>
+                        <p>
+                            New York City comprises 5 boroughs sitting where the
+                            Hudson River meets the Atlantic Ocean.
+                        </p>
+                    </igx-card-content>
+                    }
                 </div>
-            </igx-card-actions>
-        </igx-card>
-    </article>
-    <!--Incepient Dawn Card Ends-->
 
-    <!--Monuments Card Begins-->
-    <article class="card">
-        <igx-card>
-            <div style="overflow: hidden; line-height: 0">
-                <img width="100%" height="100%" [src]="cards[5].imageUrl">
-            </div>
-            <igx-card-actions>
-                <span igxIconButton="flat" igxRipple [igxRippleCentered]="true" *ngFor="let icon of cards[5].icons">
-                    <igx-icon>{{icon}}</igx-icon>
-                </span>
-
-                <div class="igx-card-actions__bgroup">
-                    <button igxButton igxRipple *ngFor="let button of cards[5].buttons">{{ button }}</button>
-                </div>
-            </igx-card-actions>
-        </igx-card>
-    </article>
-    <!--Monuments Card Ends-->
-
-    <!--Rupert Stadler Card Begins-->
-    <article class="card">
-        <igx-card>
-            <igx-card-header class="compact">
-                <igx-avatar [src]="cards[6].avatarUrl"></igx-avatar>
-                <h3 class="igx-card-header__title--small">{{ cards[6].title }}</h3>
-                <h5 class="igx-card-header__subtitle">{{ cards[6].subtitle }}</h5>
-            </igx-card-header>
-            <div style="overflow: hidden; line-height: 0">
-                <img width="100%" height="100%" [src]="cards[6].imageUrl">
-            </div>
-            <igx-card-actions>
-                <span igxIconButton="flat" igxRipple [igxRippleCentered]="true" *ngFor="let icon of cards[6].icons">
-                    <igx-icon>{{icon}}</igx-icon>
-                </span>
-
-                <div class="igx-card-actions__bgroup">
-                    <button igxButton igxRipple *ngFor="let button of cards[6].buttons">{{ button }}</button>
-                </div>
-            </igx-card-actions>
-        </igx-card>
-    </article>
-    <!--Rupert Stadler Card Ends-->
-
-    <!--Ice Forsest Card Begins-->
-    <article class="card">
-        <igx-card>
-            <div style="overflow: hidden">
-                <img width="100%" height="100%" [src]="cards[1].imageUrl">
-            </div>
-
-            <igx-card-actions>
-                <span igxIconButton="flat" igxRipple [igxRippleCentered]="true" *ngFor="let icon of cards[1].icons">
-                    <igx-icon>{{icon}}</igx-icon>
-                </span>
-            </igx-card-actions>
-        </igx-card>
-    </article>
-    <!--Ice Forsest Card Ends-->
-
-    <!--Album Pattern Start-->
-    <article class="card">
-        <igx-card>
-            <igx-card-header>
-                <h5 igxCardHeaderTitle>{{cards[7].title}}</h5>
-                <h5 igxCardHeaderSubtitle>{{cards[7].subtitle}}</h5>
-                <igx-card-media width="64px" height="64px">
-                    <img [src]="cards[7].imageUrl">
+                @if(!properties.hideMedia) {
+                <igx-card-media>
+                    <img [src]="cards[1].imageUrl" />
                 </igx-card-media>
-            </igx-card-header>
+                }
+            </igx-card>
 
-            <igx-divider type="dashed" [middle]="true"></igx-divider>
-
-            <igx-card-actions layout="justify">
-                <button *ngFor="let icon of cards[7].icons;" igxIconButton="flat" igxRipple [igxRippleCentered]="true">
-                    <igx-icon class="bidirectional-icon">{{icon}}</igx-icon>
-                </button>
-            </igx-card-actions>
-        </igx-card>
-    </article>
-    <!--Album Pattern End-->
-
-    <!--Album Pattern Start-->
-    <article class="card">
-        <igx-card [horizontal]="true">
-            <igx-card-actions layout="justify">
-                <button *ngFor="let icon of cards[7].icons;" igxIconButton="flat" igxRipple [igxRippleCentered]="true">
-                    <igx-icon class="bidirectional-icon">{{icon}}</igx-icon>
-                </button>
-            </igx-card-actions>
-
-            <igx-divider [middle]="true" [vertical]="true"></igx-divider>
-
-            <div style="display: flex; flex-flow: column nowrap; flex: 1 1 100%">
-                <igx-card-header>
-                    <h5 igxCardHeaderTitle>{{cards[7].title}}</h5>
-                    <h5 igxCardHeaderSubtitle>{{cards[7].subtitle}}</h5>
-                </igx-card-header>
-
-                <igx-card-content>
-                    <p>New York City comprises 5 boroughs sitting where the Hudson River meets the Atlantic Ocean.</p>
-                </igx-card-content>
-            </div>
-
-            <igx-card-media width="120px">
-                <img [src]="cards[7].imageUrl">
-            </igx-card-media>
-        </igx-card>
-    </article>
-    <!--Album Pattern End-->
-
-    <!--Nico Rosberg Card Begins-->
-    <article class="card">
         <igx-card>
-            <igx-card-header>
-                <h3 class="igx-card-header__title">{{ cards[3].title }}</h3>
-                <h5 class="igx-card-header__subtitle">{{ cards[3].subtitle }}</h5>
-            </igx-card-header>
-            <igx-card-content>
-                <p class="igx-card-content__text">{{ cards[3].content }}</p>
-            </igx-card-content>
-        </igx-card>
-    </article>
-    <!--Nico Rosberg Card Ends-->
+                @if(!properties.hideHeader) {
+                    <igx-card-header>
+                        @if(!hideTitle) {
+                        <h5 igxCardHeaderTitle>{{cards[1].title}}</h5>
+                        }
+                        @if(!hideSubtitle) {
+                        <h5 igxCardHeaderSubtitle>{{cards[1].subtitle}}</h5>
+                        }
+                        @if(!properties.hideMedia) {
+                        <igx-card-media width="62px" height="62px">
+                            <img [src]="cards[1].imageUrl" />
+                        </igx-card-media>
+                        }
+                    </igx-card-header>
+                }
 
-    <!--Melo Di Card Begins-->
-    <article class="card">
+                <igx-divider type="dashed" [middle]="true"></igx-divider>
+
+                @if(!properties.hideActions) {
+                <igx-card-actions [layout]="properties.justifyActions? 'justify': 'cantHandleNull'">
+                    @for(icon of cards[1].icons; track icon) {
+                    <button
+                        igxIconButton="flat"
+                        igxRipple
+                        [igxRippleCentered]="true"
+                    >
+                        <igx-icon class="bidirectional-icon">{{icon}}</igx-icon>
+                    </button>
+                    }
+                </igx-card-actions>
+                }
+            </igx-card>
+
+        <!--Melo Di Card Begins-->
         <igx-card [horizontal]="true">
+                <div
+                    style="
+                        display: flex;
+                        flex-direction: column;
+                        flex: 1 1 auto;
+                    "
+                >
 
-            <div style="display: flex; flex-direction: column; flex: 1 1 auto">
-                <igx-card-header>
-                    <igx-avatar [src]="cards[4].avatarUrl"></igx-avatar>
-                    <h3 igxCardHeaderTitle>{{ cards[4].title }}</h3>
-                    <h5 igxCardHeaderSubtitle>{{ cards[4].subtitle }}</h5>
-                </igx-card-header>
+                    @if(!properties.hideHeader) {
+                        <igx-card-header>
+                            @if(!hideThumbnail) {
+                                <igx-avatar [src]="cards[2].avatarUrl"></igx-avatar>
+                            }
 
-                <igx-card-actions [vertical]="false">
-                    <button igxButton igxRipple *ngFor="let button of cards[4].buttons">{{ button }}</button>
-                </igx-card-actions>
-            </div>
+                            @if(!hideTitle) {
+                                <h3 igxCardHeaderTitle>{{ cards[2].title }}</h3>
+                            }
 
-            <igx-card-media width="86px" height="132px">
-                <img [src]="cards[4].imageUrl">
-            </igx-card-media>
-        </igx-card>
-    </article>
-    <!--Melo Di Card Ends-->
+                            @if(!hideSubtitle) {
+                                <h5 igxCardHeaderSubtitle>{{ cards[2].subtitle }}</h5>
+                            }
+                        </igx-card-header>
+                    }
 
-    <article class="card">
-        <igx-card>
-            <igx-card-header>
-                <igx-avatar src="assets/images/card/avatars/photographer.jpg"></igx-avatar>
-                <h4 igxCardHeaderTitle>Frank Carter</h4>
-                <h5 igxCardHeaderSubtitle>Photographer</h5>
-            </igx-card-header>
-
-            <igx-card-media>
-                <img src="assets/images/card/media/photographer_portfolio.jpg">
-            </igx-card-media>
-
-            <igx-card-content>
-                <p>Photographer Frank Carter won this year national photo contest with his image "Skies" which gathered the most votes in the competition.</p>
-            </igx-card-content>
-
-            <igx-card-actions>
-                <button igxButton>Like</button>
-                <button igxButton>Share</button>
-            </igx-card-actions>
-        </igx-card>
-    </article>
-
-    <!-- Bootstrap Card start -->
-    <article class="bootstrap-sample">
-        <igx-card class="bootstrap-card">
-            <igx-card-media>
-                <svg class="bd-placeholder-img card-img-top" width="100%" height="188" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"></rect><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg>
-            </igx-card-media>
-
-            <igx-card-header>
-                <h3 class="igx-card-header__title">Bootstrap card 🤘</h3>
-            </igx-card-header>
-
-            <igx-card-content>
-                <p>Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            </igx-card-content>
-
-            <igx-card-actions>
-                <div class="igx-card-actions__bgroup">
-                    <button igxButton="contained" >Go somewhere</button>
+                    @if(!properties.hideActions) {
+                        <igx-card-actions [vertical]="false">
+                            @for(button of cards[2].buttons; track button){
+                                <button igxButton igxRipple>{{ button }}</button>
+                            }
+                        </igx-card-actions>
+                    }
                 </div>
-            </igx-card-actions>
-        </igx-card>
+
+                @if(!properties.hideMedia) {
+                <igx-card-media width="86px">
+                    <img [src]="cards[2].imageUrl" />
+                </igx-card-media>
+                }
+            </igx-card>
+        <!--Melo Di Card Ends-->
     </article>
-    <article class="bootstrap-sample">
-        <igx-card class="bootstrap-card">
-            <igx-card-header>
-                <h3 class="igx-card-header__title">Bootstrap card 🤘</h3>
-                <h5 class="igx-card-header__subtitle">Card subtitle</h5>
-            </igx-card-header>
 
-            <igx-card-content>
-                <p> Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            </igx-card-content>
+    <article class="wc-cards">
+        <h2 class="sample-title">WC Card</h2>
 
-            <igx-card-actions>
-                <div class="igx-card-actions__bgroup">
-                    <a class="card-link">Card link</a>
-                    <a class="card-link">Another link</a>
+        <!--New York City Card Begins-->
+        <igc-card>
+                @for(section of sectionOrder; track section) {
+                <ng-container>
+                    @if(section === 'media' && !properties.hideMedia) {
+                    <igc-card-media>
+                        <img src="assets/images/card/media/ny.jpg" />
+                    </igc-card-media>
+                    }
+                    @if(section === 'header' && !properties.hideHeader) {
+                    <igc-card-header>
+                        @if(!hideThumbnail) {
+                        <igc-avatar slot="thumbnail" [src]="cards[0].avatarUrl">
+                        </igc-avatar>
+                        }
+                        @if(!hideTitle) {
+                        <span slot="title">New York City</span>
+                        }
+                        @if(!hideSubtitle) {
+                        <span slot="subtitle">City in New York</span>
+                        }
+                    </igc-card-header>
+                    }
+                    @if(section === 'content' && !properties.hideContent) {
+                    <igc-card-content>
+                        <span>
+                            New York City comspanrises 5 boroughs sitting where
+                            the Hudson River meets the Atlantic Ocean. At its
+                            core is Manhattan, a densely populated borough
+                            that’s among the world’s major commercial, financial
+                            and cultural centers.
+                        </span>
+                    </igc-card-content>
+                    } @if(section === 'actions' && !properties.hideActions) {
+                    <igc-card-actions>
+                        <igc-button slot="start" variant="flat"
+                            >Read More</igc-button
+                        >
+                        @for(icon of cards[0].icons; track icon) {
+                        <igc-icon-button
+                            [name]="icon"
+                            slot="end"
+                            variant="flat"
+                        >
+                        </igc-icon-button>
+                        }
+                    </igc-card-actions>
+                    }
+                </ng-container>
+                }
+            </igc-card>
+        <!--New York City Card End-->
+
+        <igc-card style="flex-direction: row">
+                @if(!properties.hideActions) {
+                <igc-card-actions orientation="vertical">
+                    @for(icon of cards[1].icons; track icon) {
+                    <igc-icon-button [name]="icon" variant="flat">
+                    </igc-icon-button>
+                    }
+                </igc-card-actions>
+                }
+
+                <div>
+                    @if(!properties.hideHeader) {
+                    <igc-card-header>
+                        @if(!hideTitle) {
+                        <span slot="title">{{cards[1].title}}</span>
+                        }
+                        @if(!hideSubtitle) {
+                        <span slot="subtitle">{{cards[1].subtitle}}</span>
+                        }
+                    </igc-card-header>
+                    }
+                    @if(!properties.hideContent) {
+                    <igc-card-content>
+                        New York City comprises 5 boroughs sitting where the
+                        Hudson River meets the Atlantic Ocean.
+                    </igc-card-content>
+                    }
                 </div>
-            </igx-card-actions>
-        </igx-card>
-    </article>
-    <article class="bootstrap-sample">
-        <igx-card class="bootstrap-card bootstrap-card--horizontal" [horizontal]="true">
 
-            <div style="display: flex; flex-direction: column; flex: 1 1 auto">
-                <igx-card-header>
-                    <igx-avatar [src]="cards[4].avatarUrl"></igx-avatar>
-                    <h3 igxCardHeaderTitle>{{ cards[4].title }}</h3>
-                    <h5 igxCardHeaderSubtitle>{{ cards[4].subtitle }}</h5>
-                </igx-card-header>
-                <igx-card-content>
-                    <p> Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </igx-card-content>
-                <igx-card-actions [vertical]="false">
-                    <button igxButton="outlined" *ngFor="let button of cards[4].buttons">{{ button }}</button>
-                </igx-card-actions>
-            </div>
+                @if(!properties.hideMedia) {
+                <igc-card-media>
+                    <img [src]="cards[1].imageUrl" />
+                </igc-card-media>
+                }
+            </igc-card>
 
-            <igx-card-media width="100px">
-                <img [src]="cards[4].imageUrl">
-            </igx-card-media>
-        </igx-card>
+        <igc-card>
+                <div style="
+                display: flex;
+                ">
+                    @if(!properties.hideHeader) {
+                        <igc-card-header>
+                            @if(!properties.hideMedia) {
+                                <div slot="thumbnail">
+                                    <igc-card-media
+                                            slot="thumbnail"
+                                            style="width: 62px; height: 62px"
+                                    >
+                                        <img [src]="cards[1].imageUrl" />
+                                    </igc-card-media>
+                                </div>
+                            }
+
+                            @if(!properties.hideHeader) { @if(!hideTitle) {
+                                <span slot="title">{{cards[1].title}}</span>
+                            }
+                                @if(!hideSubtitle) {
+                                    <span slot="subtitle">{{cards[1].subtitle}}</span>
+                                }
+                            }
+                        </igc-card-header>
+                    }
+                </div>
+
+
+                @if(!properties.hideActions) {
+                    <igc-card-actions>
+                    @for(icon of cards[1].icons; track icon) {
+                    <button
+                        igxIconButton="flat"
+                        igxRipple
+                        [igxRippleCentered]="true"
+                    >
+                        <igx-icon class="bidirectional-icon">{{icon}}</igx-icon>
+                    </button>
+                    }
+                </igc-card-actions>
+                }
+            </igc-card>
+
+        <!--Melo Di Card Begins-->
+        <igc-card style="flex-direction: row">
+                <div
+                    style="
+                        display: flex;
+                        flex-direction: column;
+                        flex: 1 1 auto;
+                    "
+                >
+                    @if(!properties.hideHeader) {
+                        <igc-card-header>
+                            @if(!hideThumbnail) {
+                                <igc-avatar
+                                    slot="thumbnail"
+                                    [src]="cards[2].avatarUrl"
+                                ></igc-avatar>
+                            }
+                            @if(!hideTitle) {
+                            <span slot="title">{{ cards[2].title }}</span>
+                            }
+
+                            @if(!hideSubtitle) {
+                            <span slot="subtitle">{{ cards[2].subtitle }}</span>
+                            }
+                        </igc-card-header>
+                    }
+
+                    @if(!properties.hideActions) {
+                        <igc-card-actions>
+                        @for(button of cards[2].buttons; track button){
+                        <igc-button variant="flat">{{ button }}</igc-button>
+                        }
+                    </igc-card-actions>
+                    }
+                </div>
+
+                @if(!properties.hideMedia) {
+                    <igc-card-media style="width: 86px">
+                        <img [src]="cards[2].imageUrl" />
+                    </igc-card-media>
+                }
+            </igc-card>
+        <!--Melo Di Card Ends-->
     </article>
-    <!-- Bootstrap Card End -->
+
+    <ng-template #customControls>
+        <div class="custom-controls">
+            @if (!properties.hideHeader) {
+            <igx-switch id="hideTitle" [(ngModel)]="hideTitle">
+                <label for="hideTitle">Hide Title</label>
+            </igx-switch>
+
+            <igx-switch id="hideSubtitle" [(ngModel)]="hideSubtitle">
+                <label for="hideSubtitle">Hide Subtitle</label>
+            </igx-switch>
+
+            <igx-switch id="hideThumbnail" [(ngModel)]="hideThumbnail">
+                <label for="hideThumbnail">Hide Thumbnail</label>
+            </igx-switch>
+            }
+
+            <igx-input-group type="border">
+                <label igxLabel>Card Layout Order</label>
+                <input
+                    igxInput
+                    id="orderInput"
+                    [(ngModel)]="orderInput"
+                    igxInput
+                    type="text"
+                    (keyup)="updateSectionOrder()"
+                />
+                <igx-hint>e.g., media, header, content, actions</igx-hint>
+            </igx-input-group>
+        </div>
+    </ng-template>
 </div>

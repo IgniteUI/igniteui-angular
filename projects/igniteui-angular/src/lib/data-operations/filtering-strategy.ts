@@ -1,11 +1,13 @@
-import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
-import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
-import { resolveNestedPath, parseDate, formatDate, formatCurrency } from '../core/utils';
-import { ColumnType, GridType } from '../grids/common/grid.interface';
+import { FilteringLogic, type IFilteringExpression } from './filtering-expression.interface';
+import { FilteringExpressionsTree, type IFilteringExpressionsTree } from './filtering-expressions-tree';
+import { resolveNestedPath, parseDate, formatDate, formatCurrency, columnFieldPath } from '../core/utils';
+import type { ColumnType, EntityType, GridType } from '../grids/common/grid.interface';
 import { GridColumnDataType } from './data-util';
 import { SortingDirection } from './sorting-strategy';
 import { formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
-import { IFilteringState } from './filtering-state.interface';
+import type { IFilteringState } from './filtering-state.interface';
+import { isTree } from './expressions-tree-util';
+import type { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarchical-grid.component';
 
 const DateType = 'date';
 const DateTimeType = 'dateTime';
@@ -24,7 +26,7 @@ export interface IFilteringStrategy {
     filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree,
         grid?: GridType): any[];
     /* csSuppress */
-    getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree) : Promise<IgxFilterItem[]>;
+    getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]>;
 }
 
 /* csSuppress */
@@ -35,25 +37,44 @@ export interface IgxFilterItem {
 }
 
 /* csSuppress */
-export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
+export abstract class BaseFilteringStrategy implements IFilteringStrategy {
     // protected
     public findMatchByExpression(rec: any, expr: IFilteringExpression, isDate?: boolean, isTime?: boolean, grid?: GridType): boolean {
-        const cond = expr.condition;
+        if (expr.searchTree) {
+            const records = rec[expr.searchTree.entity];
+            const shouldMatchRecords = expr.conditionName === 'inQuery';
+            if (!records) { // child grid is not yet created
+                return true;
+            }
+
+            for (let index = 0; index < records.length; index++) {
+                const record = records[index];
+                if ((shouldMatchRecords && this.matchRecord(record, expr.searchTree, grid, expr.searchTree.entity)) ||
+                    (!shouldMatchRecords && !this.matchRecord(record, expr.searchTree, grid, expr.searchTree.entity))) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         const val = this.getFieldValue(rec, expr.fieldName, isDate, isTime, grid);
-        return cond.logic(val, expr.searchVal, expr.ignoreCase);
+        if (expr.condition?.logic) {
+            return expr.condition.logic(val, expr.searchVal, expr.ignoreCase);
+        }
     }
 
     // protected
-    public matchRecord(rec: any, expressions: IFilteringExpressionsTree | IFilteringExpression, grid?: GridType): boolean {
+    public matchRecord(rec: any, expressions: IFilteringExpressionsTree | IFilteringExpression, grid?: GridType, entity?: string): boolean {
         if (expressions) {
-            if (expressions instanceof FilteringExpressionsTree) {
-                const expressionsTree = expressions as IFilteringExpressionsTree;
+            if (isTree(expressions)) {
+                const expressionsTree = expressions;
                 const operator = expressionsTree.operator as FilteringLogic;
                 let matchOperand;
 
-                if (expressionsTree.filteringOperands && expressionsTree.filteringOperands.length) {
+                if (expressionsTree.filteringOperands?.length) {
                     for (const operand of expressionsTree.filteringOperands) {
-                        matchOperand = this.matchRecord(rec, operand, grid);
+                        matchOperand = this.matchRecord(rec, operand, grid, entity);
 
                         // Return false if at least one operand does not match and the filtering logic is And
                         if (!matchOperand && operator === FilteringLogic.And) {
@@ -71,10 +92,20 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
 
                 return true;
             } else {
-                const expression = expressions as IFilteringExpression;
-                const column = grid && grid.getColumnByName(expression.fieldName);
-                const isDate = column ? column.dataType === DateType || column.dataType === DateTimeType : false;
-                const isTime = column ? column.dataType === TimeType : false;
+                const expression = expressions;
+                let dataType = null;
+                if (!entity) {
+                    const column = grid && grid.getColumnByName(expression.fieldName);
+                    dataType = column?.dataType;
+                } else if (grid.type === 'hierarchical') {
+                    const schema = (grid as IgxHierarchicalGridComponent).schema;
+                    const entityMatch = this.findEntityByName(schema, entity);
+                    dataType = entityMatch?.fields.find(f => f.field === expression.fieldName)?.dataType;
+                }
+
+                const isDate = dataType ? dataType === DateType || dataType === DateTimeType : false;
+                const isTime = dataType ? dataType === TimeType : false;
+
                 return this.findMatchByExpression(rec, expression, isDate, isTime, grid);
             }
         }
@@ -82,20 +113,35 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
         return true;
     }
 
+    private findEntityByName(schema: EntityType[], name: string): EntityType | null {
+        for (const entity of schema) {
+            if (entity.name === name) {
+                return entity;
+            }
+
+            if (entity.childEntities && entity.childEntities.length > 0) {
+                const found = this.findEntityByName(entity.childEntities, name);
+                if (found) {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
     public getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
+        const applyFormatter = column.formatter && this.shouldFormatFilterValues(column);
 
         let data = column.grid.gridAPI.filterDataByExpressions(tree);
         data = column.grid.gridAPI.sortDataByExpressions(data,
             [{ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase }]);
 
-        const columnField = column.field;
-        let filterItems: IgxFilterItem[] = data.map(record => {
-            let value = resolveNestedPath(record, columnField);
-            const applyFormatter = column.formatter && this.shouldFormatFilterValues(column);
 
-            value = applyFormatter ?
-                column.formatter(value, record) :
-                value;
+        const pathParts = columnFieldPath(column.field)
+        let filterItems: IgxFilterItem[] = data.map(record => {
+            const value = applyFormatter ?
+                column.formatter(resolveNestedPath(record, pathParts), record) :
+                resolveNestedPath(record, pathParts);
 
             return {
                 value,
@@ -145,7 +191,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
                 item.value = key ? new Date(key) : key;
             } else if (column.dataType === GridColumnDataType.Time) {
                 const date = key ? new Date(key) : key;
-                key = date ? new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds()) : key;
+                key = date ? new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()) : key;
                 item.value = key ? new Date(key) : key;
             } else if (column.dataType === GridColumnDataType.Date) {
                 const date = key ? new Date(key) : key;
@@ -190,9 +236,6 @@ export class NoopFilteringStrategy extends BaseFilteringStrategy {
 export class FilteringStrategy extends BaseFilteringStrategy {
     private static _instance: FilteringStrategy = null;
 
-    constructor() {
-        super();
-    }
 
     public static instance() {
         return this._instance || (this._instance = new this());
@@ -200,26 +243,18 @@ export class FilteringStrategy extends BaseFilteringStrategy {
 
     public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree: IFilteringExpressionsTree,
         grid: GridType): T[] {
-        let i;
-        let rec;
-        const len = data.length;
-        const res: T[] = [];
 
-        if ((FilteringExpressionsTree.empty(expressionsTree) && FilteringExpressionsTree.empty(advancedExpressionsTree)) || !len) {
+
+        if ((FilteringExpressionsTree.empty(expressionsTree) && FilteringExpressionsTree.empty(advancedExpressionsTree))) {
             return data;
         }
-        for (i = 0; i < len; i++) {
-            rec = data[i];
-            if (this.matchRecord(rec, expressionsTree, grid) && this.matchRecord(rec, advancedExpressionsTree, grid)) {
-                res.push(rec);
-            }
-        }
-        return res;
+
+        return data.filter(record => this.matchRecord(record, expressionsTree, grid) && this.matchRecord(record, advancedExpressionsTree, grid));
     }
 
     protected getFieldValue(rec: any, fieldName: string, isDate = false, isTime = false, grid?: GridType): any {
         const column = grid?.getColumnByName(fieldName);
-        let value = resolveNestedPath(rec, fieldName);
+        let value = resolveNestedPath(rec, columnFieldPath(fieldName));
 
         value = column?.formatter && this.shouldFormatFilterValues(column) ?
             column.formatter(value, rec) :

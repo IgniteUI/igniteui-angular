@@ -174,14 +174,14 @@
     // The wrapping element here is needed
     // in order to override the !important rule of .igx-icon--inactive.
     %igx-combo__case-icon {
-        .igx-icon {
+        igx-icon {
             // Important is needed since the .igx-icon--inactive has !important
             color: color($color: 'gray', $variant: 600) !important;
         }
     }
 
     %igx-combo__case-icon--active {
-        .igx-icon {
+        igx-icon {
             color: color($color: 'primary')
         }
     }
@@ -189,6 +189,7 @@
     %igx-combo__content {
         position: relative;
         overflow: hidden;
+        max-height: calc(var(--size) * 10);
 
         &:focus {
             outline: transparent;
@@ -209,7 +210,8 @@
     %igx-combo__add-item {
         height: auto !important;
         background: var-get($theme, 'empty-list-background') !important;
-        justify-content: center !important;
+        justify-content: center;
+        outline: none !important;
     }
 
     %igx-combo__empty {
@@ -259,7 +261,6 @@
         }
     }
 
-    %form-group-bundle:not(%form-group-bundle--disabled):hover,
     %form-group-bundle:not(%form-group-bundle--disabled):focus-within {
         %igx-combo__toggle-button {
             color: var-get($theme, 'toggle-button-foreground-focus');
@@ -269,6 +270,14 @@
         %igx-combo__clear-button {
             color: var-get($theme, 'clear-button-foreground-focus');
             background: var-get($theme, 'clear-button-background-focus');
+        }
+    }
+
+    @if $variant == 'indigo' {
+        %form-group-bundle:not(%form-group-bundle--disabled):hover {
+            %igx-combo__toggle-button {
+                color: var-get($theme, 'toggle-button-foreground-focus');
+            }
         }
     }
 
@@ -291,8 +300,10 @@
     }
 
     .igx-input-group.igx-input-group--focused:not(.igx-input-group--box) {
-        %igx-combo__toggle-button {
-            background: var-get($theme, 'toggle-button-background-focus--border');
+        @if $variant != 'fluent' {
+            %igx-combo__toggle-button {
+                background: var-get($theme, 'toggle-button-background-focus--border');
+            }
         }
     }
 
@@ -305,6 +316,14 @@
         %igx-combo__clear-button {
             @if $variant == 'bootstrap' {
                 border-inline-end: 0;
+            }
+        }
+    }
+
+    %form-group-bundle {
+        &:hover {
+            %igx-combo__clear-button {
+                color: inherit;
             }
         }
     }

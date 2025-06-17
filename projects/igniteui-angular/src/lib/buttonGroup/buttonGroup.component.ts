@@ -1,4 +1,3 @@
-import { NgFor, NgIf } from '@angular/common';
 import {
     AfterViewInit,
     Component,
@@ -21,16 +20,15 @@ import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 
 import { takeUntil } from 'rxjs/operators';
 import { IBaseEventArgs } from '../core/utils';
-import { mkenum } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 
 /**
  * Determines the Button Group alignment
  */
-export const ButtonGroupAlignment = mkenum({
+export const ButtonGroupAlignment = {
     horizontal: 'horizontal',
     vertical: 'vertical'
-});
+} as const;
 export type ButtonGroupAlignment = typeof ButtonGroupAlignment[keyof typeof ButtonGroupAlignment];
 
 let NEXT_ID = 0;
@@ -58,7 +56,7 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-buttongroup',
     templateUrl: 'buttongroup-content.component.html',
-    imports: [NgFor, IgxButtonDirective, IgxRippleDirective, NgIf, IgxIconComponent]
+    imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent]
 })
 export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     /**

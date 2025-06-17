@@ -5,7 +5,6 @@ import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import {
     IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
 } from '../input-group/public_api';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { IFormattingViews, IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, WEEKDAYS } from '../calendar/public_api';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { IgxDatePickerComponent } from './date-picker.component';
@@ -21,12 +20,11 @@ import { DateRangeDescriptor, DateRangeType } from '../core/dates';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-common/public_api';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { NgIf, registerLocaleData } from "@angular/common";
+import { registerLocaleData } from "@angular/common";
 import localeES from "@angular/common/locales/es";
 import localeBg from "@angular/common/locales/bg";
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 
-const CSS_CLASS_CALENDAR = 'igx-calendar';
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
 
 const DATE_PICKER_TOGGLE_ICON = 'calendar_today';
@@ -37,8 +35,7 @@ const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 
 describe('IgxDatePicker', () => {
     describe('Integration tests', () => {
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -1552,13 +1549,17 @@ export class IgxDatePickerTestKbrdComponent {
     template: `
     <igx-date-picker [mode]="mode">
         <label igxLabel>Label</label>
-        <igx-picker-toggle igxPrefix *ngIf="showCustomToggle">CustomToggle</igx-picker-toggle>
+        @if (showCustomToggle) {
+            <igx-picker-toggle igxPrefix>CustomToggle</igx-picker-toggle>
+        }
         <igx-prefix>Prefix</igx-prefix>
-        <igx-picker-clear igxSuffix *ngIf="showCustomClear">CustomClear</igx-picker-clear>
+        @if (showCustomClear) {
+            <igx-picker-clear igxSuffix>CustomClear</igx-picker-clear>
+        }
         <igx-suffix>Suffix</igx-suffix>
         <igx-hint>Hint</igx-hint>
     </igx-date-picker>`,
-    imports: [IgxDatePickerComponent, IgxPickerToggleComponent, IgxPrefixDirective, IgxPickerClearComponent, IgxLabelDirective, IgxSuffixDirective, IgxHintDirective, NgIf]
+    imports: [IgxDatePickerComponent, IgxPickerToggleComponent, IgxPrefixDirective, IgxPickerClearComponent, IgxLabelDirective, IgxSuffixDirective, IgxHintDirective]
 })
 export class IgxDatePickerWithProjectionsComponent {
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;

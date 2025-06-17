@@ -338,14 +338,14 @@
     );
 
     $hint-spacing-block: map.get((
-        'material': rem(5px),
+        'material': rem(4px),
         'fluent': rem(5px),
         'bootstrap': rem(4px),
         'indigo': rem(4px),
     ), $variant);
 
     $hint-spacing-inline: map.get((
-        'material': rem(16px),
+        'material': sizable(rem(14px), rem(16px), rem(18px)),
         'fluent': 0,
         'bootstrap': 0,
         'indigo': 0,
@@ -380,14 +380,36 @@
         } @else {
             min-height: 100% !important;
         }
+
         transition: color $transition-timing, background $transition-timing;
 
-        @if $material-theme {
-            padding-inline: pad-inline(rem(12px), rem(14px), rem(16px));
-        } @else if $indigo-theme {
-            padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
-        } @else {
-            padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        &:not(:empty) {
+            @if $material-theme {
+                padding-inline: pad-inline(rem(12px), rem(14px), rem(16px));
+            } @else if $indigo-theme {
+                padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
+            } @else {
+                padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+            }
+        }
+    }
+
+    @if $variant == 'material' {
+        %form-group-display--border {
+            &:has(input:-webkit-autofill, input:autofill) {
+                %igx-input-group__notch--border {
+                    border-block-start-color: transparent;
+                }
+
+                %form-group-label {
+                    --label-position: #{sizable(18px, 22px, 26px)};
+
+                    transform: translateY(calc(var(--label-position) * -1));
+                    margin-top: 0;
+                    overflow: hidden;
+                    will-change: font-size, color, transform;
+                }
+            }
         }
     }
 
@@ -461,6 +483,20 @@
                 --size: var(--input-icon) !important;
             }
         }
+
+        @if $variant == 'material' {
+            &:not(%form-group-display--border) {
+                &:has(input:-webkit-autofill, input:autofill) {
+                    %form-group-label {
+                        --floating-label-position: -73%;
+
+                        @include type-style('caption');
+
+                        transform: translateY(var(--floating-label-position));
+                    }
+                }
+            }
+        }
     }
 
     %form-group-placeholder {
@@ -512,6 +548,7 @@
     }
 
     %form-group-display--disabled {
+        pointer-events: none;
         user-select: none;
         color: var-get($theme, 'disabled-text-color') !important;
 
@@ -613,6 +650,13 @@
         caret-color: initial;
     }
 
+    %form-group-bundle--warning {
+        &::after {
+            border-block-end-color: var-get($theme, 'warning-secondary-color');
+        }
+        caret-color: initial;
+    }
+
     %form-group-bundle--error {
         &::after {
             border-block-end-color: var-get($theme, 'error-secondary-color');
@@ -675,6 +719,10 @@
         position: relative;
 
         grid-area: 1 / 2;
+
+        %form-group-label {
+            color: var-get($theme, 'idle-secondary-color');
+        }
     }
 
     %igx-input-group__notch--border {
@@ -803,6 +851,25 @@
         &::after {
             display: none;
         }
+
+        &:hover {
+            %form-group-bundle-start {
+                border-color: var-get($theme, 'hover-border-color');
+            }
+
+            %igx-input-group__filler {
+                border-color: var-get($theme, 'hover-border-color');
+            }
+
+            %igx-input-group__notch {
+                border-block-start-color: var-get($theme, 'hover-border-color');
+                border-block-end-color: var-get($theme, 'hover-border-color');
+            }
+
+            %form-group-bundle-end {
+                border-color: var-get($theme, 'hover-border-color');
+            }
+        }
     }
 
     %form-group-bundle-border--disabled {
@@ -883,6 +950,14 @@
         background: var-get($theme, 'search-disabled-background');
         box-shadow: var-get($theme, 'search-disabled-shadow');
         border-color: var-get($theme, 'disabled-border-color');
+
+        igx-prefix,
+        [igxPrefix],
+        igx-suffix,
+        [igxSuffix] {
+            background: inherit;
+            color: var-get($theme, 'disabled-text-color');
+        }
     }
 
     %form-group-bundle-main--border {
@@ -981,6 +1056,21 @@
         }
     }
 
+    %form-group-label--focused-border:not(:is(
+        %form-group-border--error,
+        %form-group-border--warning,
+        %form-group-border--success))
+    {
+        &:hover {
+            %form-group-bundle-start,
+            %form-group-bundle-end,
+            %igx-input-group__filler,
+            %igx-input-group__notch {
+                border-color: var-get($theme, 'focused-border-color');
+            }
+        }
+    }
+
     %form-group-label--float-border {
         --label-position: #{sizable(18px, 22px, 26px)};
 
@@ -1062,6 +1152,10 @@
 
     %form-group-label--focus {
         color: var-get($theme, 'focused-secondary-color');
+    }
+
+    %form-group-label--warning {
+        color: var-get($theme, 'warning-secondary-color');
     }
 
     %form-group-label--success {
@@ -1173,13 +1267,20 @@
         }
     }
 
-    %chrome-autofill-fix {
+    // This is a hack that removes the autofill background and it's essential,
+    // otherwise the background is on top of the floating label in material theme.
+    // The !important flag is because bootstrap theme(and potentially feature themes) is overriding the transition delay.
+    %autofill-background-fix {
         &:-webkit-autofill,
         &:-webkit-autofill:hover,
         &:-webkit-autofill:focus,
-        &:-webkit-autofill:active {
-            -webkit-transition-delay: 99999s;
-            transition-delay: 99999s;
+        &:-webkit-autofill:active,
+        &:autofill,
+        &:autofill:hover,
+        &:autofill:focus,
+        &:autofill:active, {
+            -webkit-transition-delay: 99999s !important;
+            transition-delay: 99999s !important;
         }
     }
 
@@ -1305,10 +1406,19 @@
         %igx-input-group__filler {
             border-block-color: var-get($theme, 'success-secondary-color');
         }
+
+        %form-group-bundle--border:hover {
+            %form-group-bundle-start,
+            %form-group-bundle-end,
+            %igx-input-group__filler,
+            %igx-input-group__notch {
+                border-color: var-get($theme, 'success-secondary-color');
+            }
+        }
     }
 
     %form-group-line--warning {
-        background: var-get($theme, 'error-secondary-color');
+        background: var-get($theme, 'warning-secondary-color');
     }
 
     %form-group-border--warning {
@@ -1327,6 +1437,15 @@
         %igx-input-group__notch,
         %igx-input-group__filler {
             border-block-color: var-get($theme, 'warning-secondary-color');
+        }
+
+        %form-group-bundle--border:hover {
+            %form-group-bundle-start,
+            %form-group-bundle-end,
+            %igx-input-group__filler,
+            %igx-input-group__notch {
+                border-color: var-get($theme, 'warning-secondary-color');
+            }
         }
     }
 
@@ -1350,6 +1469,15 @@
         %igx-input-group__notch,
         %igx-input-group__filler {
             border-block-color: var-get($theme, 'error-secondary-color');
+        }
+
+        %form-group-bundle--border:hover {
+            %form-group-bundle-start,
+            %form-group-bundle-end,
+            %igx-input-group__filler,
+            %igx-input-group__notch {
+                border-color: var-get($theme, 'error-secondary-color');
+            }
         }
     }
 
@@ -1387,7 +1515,7 @@
         position: relative;
         display: flex;
         padding-block-start: $hint-spacing-block;
-        padding-inline-start: $hint-spacing-inline;
+        padding-inline: $hint-spacing-inline;
 
         justify-content: space-between;
 
@@ -1411,6 +1539,10 @@
     @if $variant != 'indigo' {
         %form-group-helper--success {
             color: var-get($theme, 'success-secondary-color');
+        }
+
+        %form-group-helper--warning {
+            color: var-get($theme, 'warning-secondary-color');
         }
 
         %form-group-helper--error {
@@ -1568,12 +1700,29 @@
         [igxPrefix] {
             overflow: hidden;
         }
+
+        igx-prefix,
+        [igxPrefix] {
+            background: var(--igx-input-group-input-prefix-background, transparent);
+            color: var(--igx-input-group-input-prefix-color, var(--ig-primary-500));
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            background: var(--igx-input-group-input-suffix-background, transparent);
+            color: var(--igx-input-group-input-suffix-color, var(--ig-primary-500));
+        }
     }
 
     %igx-input-group-fluent-search--focused {
         igx-prefix,
         [igxPrefix] {
             display: none;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            color: var(--igx-input-group-input-suffix-color--focused, var(--ig-gray-900));
         }
     }
 
@@ -1651,6 +1800,10 @@
     %form-group-bundle--fluent--focus {
         border-color: var-get($theme, 'focused-border-color');
         border-width: rem(2px);
+
+        &:hover {
+            border-color: var-get($theme, 'focused-border-color');
+        }
     }
 
     %form-group-bundle-error--fluent,
@@ -1735,8 +1888,13 @@
         transform-origin: top left;
         margin-top: 0 !important;
         height: auto;
-        margin-block-end: rem(4px);
         color: var-get($theme, 'idle-secondary-color');
+
+        @if $variant == 'fluent' {
+            margin-block-end: rem(5px);
+        } @else {
+            margin-block-end: rem(4px);
+        }
 
         [dir='rtl'] & {
             transform-origin: top right;
@@ -1766,7 +1924,6 @@
     }
 
     %fluent-label-focused {
-        color: color(null, 'gray', 800);
         transform: translateY(0) scale(1);
     }
 
@@ -1810,7 +1967,9 @@
     %form-group-suffix-fluent,
     %form-group-prefix-fluent-search,
     %form-group-suffix-fluent-search {
-        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        &:not(:empty) {
+            padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        }
     }
 
     %fluent-upload-button {
@@ -1973,7 +2132,15 @@
             map.get($bootstrap-inline-padding, 'cosy'),
             map.get($bootstrap-inline-padding, 'comfortable')
         );
-        transition: box-shadow .15s ease-out, border .15s ease-out;
+    }
+
+    // The :not selector is needed otherwise bootstrap will override the %autofill-background-fix
+    %form-group-display--bootstrap {
+        :not(:has(input:-webkit-autofill, input:autofill)) {
+            %bootstrap-input {
+                transition: box-shadow .15s ease-out, border .15s ease-out;
+            }
+        }
     }
 
     %bootstrap-input,

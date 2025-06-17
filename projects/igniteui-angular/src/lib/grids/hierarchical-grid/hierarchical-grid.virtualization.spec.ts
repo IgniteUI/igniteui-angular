@@ -1,5 +1,4 @@
-import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, ViewChild } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
@@ -20,14 +19,15 @@ import { firstValueFrom } from 'rxjs';
 describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridDefaultComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     beforeEach(() => {
@@ -110,7 +110,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         const expression = {
             fieldName: 'ProductName',
             searchVal: 'Product: A0',
-            condition: IgxStringFilteringOperand.instance().condition('startsWith')
+            condition: IgxStringFilteringOperand.instance().condition('startsWith'),
+            conditionName: 'startsWith'
         };
         filteringExpressionsTree.filteringOperands.push(expression);
         childGrid.filter('ProductName', null, filteringExpressionsTree);
@@ -438,14 +439,15 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 });
 
 describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridNoScrollTestComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     it('should show scrollbar after expanding a row with data loaded after initial view initialization', async () => {

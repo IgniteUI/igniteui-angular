@@ -9,20 +9,17 @@ module.exports = function (config) {
     frameworks: ['parallel', 'jasmine', '@angular-devkit/build-angular'],
     files: [
       { pattern: '../../node_modules/hammerjs/hammer.min.js', watched: false },
-      { pattern: '../../node_modules/hammer-simulator/index.js', watched: false },
-      { pattern: './test.css', watched: false },
-      { pattern: '../../dist/igniteui-angular/styles/igniteui-angular.css', watched: false }
+      { pattern: '../../node_modules/hammer-simulator/index.js', watched: false }
     ],
     plugins: [
       'karma-parallel',
       'karma-jasmine',
       'karma-coverage',
       'karma-chrome-launcher',
-      'karma-spec-reporter',
-      '@angular-devkit/build-angular/plugins/karma'
+      'karma-spec-reporter'
     ],
     parallelOptions: {
-      executors: 2,
+      executors: 3,
       shardStrategy: 'round-robin'
     },
     client: {
@@ -48,11 +45,11 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['ChromeHeadlessNoSandbox'],
-    browserDisconnectTimeout: 4000,
+    browserDisconnectTimeout: 20000,
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',
-        flags: ['--no-sandbox', '--disable-gpu', '--window-size=820,800'],
+        flags: ['--no-sandbox', '--disable-gpu', '--window-size=820,800', '--js-flags="--expose-gc"'],
         debug: false
       }
     },

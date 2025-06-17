@@ -1,30 +1,21 @@
-#igniteui-demo-app {
-    .list-sample-component {
-        .sample-space {
-            margin-bottom: 16px;
-        }
-
-        .sample-column.bootstrap {
-            display: none;
-        }
-    }
+.sample-title {
+    text-align: center;
 }
 
-.bootstrap-theme {
-    .bootstrap {
-        max-width: 400px
-    }
-
-    #igniteui-demo-app {
-        .list-sample-component {
-            .sample-column {
-                display: none;
-            }
-
-            .sample-column.bootstrap {
-                display: flex;
-            }
-        }
-    }
+.pan {
+    display: flex;
+    color: white;
+    width: 100%;
+    padding-left: 10px;
+    align-items: center;
 }
 
+.pan--left {
+    flex-direction: row-reverse;
+    background-color:orange;
+}
+
+.pan--right {
+    flex-direction: row;
+    background-color:limegreen;
+}

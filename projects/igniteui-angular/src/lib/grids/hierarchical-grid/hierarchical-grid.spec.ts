@@ -1,4 +1,3 @@
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGridCreatedEventArgs } from './public_api';
@@ -13,7 +12,6 @@ import { IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirecti
 import { GridSelectionMode, Size } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from '../cell.component';
-import { NgFor, NgIf } from '@angular/common';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/excel-style-filtering.component';
 import { IgxExcelStyleHeaderComponent } from '../filtering/excel-style/excel-style-header.component';
@@ -25,9 +23,8 @@ import { getComponentSize } from '../../core/utils';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
-    configureTestSuite();
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -640,6 +637,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         });
 
         it('should throw a warning when primaryKey is set to a non-existing data field', () => {
+            jasmine.getEnv().allowRespy(true);
             spyOn(console, 'warn');
             hierarchicalGrid.primaryKey = 'testField';
             fixture.componentInstance.rowIsland.primaryKey = 'testField-rowIsland';
@@ -668,6 +666,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(console.warn).toHaveBeenCalledWith(
                 `Field "${rowIsland.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
             );
+            jasmine.getEnv().allowRespy(false);
         });
     });
 
@@ -1069,6 +1068,73 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(hierarchicalGrid.childLayoutList.first.columns.length).toEqual(0, 'Columns length should be 0 after toggle');
             expect(hierarchicalGrid.childLayoutList.first.columnList.length).toEqual(0, 'ColumnList length should be 0 after toggle');
         }));
+
+        it('should resolve child grid cols default editable prop correctly based on row island\'s rowEditable.', () => {
+            hierarchicalGrid.rowEditable = false;
+            hierarchicalGrid.childLayoutList.first.rowEditable = true;
+            fixture.detectChanges();
+            // expand row
+            const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(row.expander);
+            fixture.detectChanges();
+
+            //check child grid column are editable
+            const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+            const childGrid1 = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+            expect(childGrid1.columns[0].editable).toBeTrue();
+            expect(childGrid1.columns[1].editable).toBeTrue();
+        });
+
+        it('should update the row island summary UI when disabledSummaries is changed at runtime', fakeAsync(() => {
+            const masterRow = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(masterRow.expander);
+            fixture.detectChanges();
+
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
+            fixture.detectChanges();
+
+            childGrid.columns.forEach(c => c.hasSummary = true);
+            fixture.detectChanges();
+            tick();
+
+            const column = childGrid.columns.find(c => c.field === 'ProductName');
+            expect(column).toBeDefined();
+            fixture.detectChanges();
+            tick();
+
+            const summaryCells = childGrid.nativeElement.querySelectorAll('igx-grid-summary-cell');
+            const summaryCell = summaryCells[1];
+
+            expect(summaryCell).toBeDefined();
+            expect(summaryCell.textContent.trim().length).toBeGreaterThan(0);
+
+            const getterSpy = spyOnProperty(column, 'disabledSummaries', 'get').and.callThrough();
+
+            column.disabledSummaries = ['count'];
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            expect(getterSpy).toHaveBeenCalledTimes(7);
+            expect(summaryCell.textContent.trim()).toEqual('');
+        }));
+
+        it('should verify gridCreated and gridInitialized events emit correct parentRowData', () => {
+            const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            const rowIsland = fixture.componentInstance.rowIsland1;
+
+            spyOn(rowIsland.gridCreated, 'emit').and.callThrough();
+            spyOn(rowIsland.gridInitialized, 'emit').and.callThrough();
+
+            UIInteractions.simulateClickAndSelectEvent(row.expander);
+            fixture.detectChanges();
+
+            expect(rowIsland.gridCreated.emit).toHaveBeenCalledTimes(1);
+            expect(rowIsland.gridCreated.emit).toHaveBeenCalledWith(jasmine.objectContaining({ parentRowData: row.data }));
+            expect(rowIsland.gridInitialized.emit).toHaveBeenCalledTimes(1);
+            expect(rowIsland.gridInitialized.emit).toHaveBeenCalledWith(jasmine.objectContaining({ parentRowData: row.data }));
+        });
     });
 
     describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
@@ -1303,7 +1369,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             hierarchicalGrid = fixture.componentInstance.hgrid;
         });
 
-        it('should render correct columns when setting columns for child in AfterViewInit using ngFor', () => {
+        it('should render correct columns when setting columns for child in AfterViewInit using @for', () => {
             const gridHead = fixture.debugElement.query(By.css(THEAD_CLASS));
             const colHeaders = gridHead.queryAll(By.css('igx-grid-header'));
             expect(colHeaders.length).toEqual(2);
@@ -1339,7 +1405,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(child2Headers[2].nativeElement.innerText).toEqual('Col1');
         });
 
-        it('should render correct columns when setting columns for parent and child post init using ngFor', fakeAsync(() => {
+        it('should render correct columns when setting columns for parent and child post init using @for', fakeAsync(() => {
             const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             UIInteractions.simulateClickAndSelectEvent(row.expander);
             fixture.detectChanges();
@@ -1865,10 +1931,12 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data"
-     [autoGenerate]="false" [height]="'400px'" [width]="width" #hierarchicalGrid>
-     <igx-column field="ID"></igx-column>
-     <igx-column field="AnotherColumn" *ngIf="showAnotherCol"></igx-column>
-     <igx-column field="ProductName"></igx-column>
+        [autoGenerate]="false" [height]="'400px'" [width]="width" #hierarchicalGrid>
+        <igx-column field="ID"></igx-column>
+        @if (showAnotherCol) {
+            <igx-column field="AnotherColumn"></igx-column>
+        }
+        <igx-column field="ProductName"></igx-column>
         <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland>
             <igx-column field="ID"></igx-column>
             <igx-column field="ProductName"></igx-column>
@@ -1879,7 +1947,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, NgIf]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridTestBaseComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
@@ -1917,11 +1985,15 @@ export class IgxHierarchicalGridTestBaseComponent {
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [autoGenerate]="false" [height]="'400px'" [width]="'500px'" #hierarchicalGrid>
-    <igx-column field="ID"></igx-column>
-    <igx-column field="ProductName"></igx-column>
+        <igx-column field="ID"></igx-column>
+        <igx-column field="ProductName"></igx-column>
         <igx-row-island [key]="'childData'" [autoGenerate]="false" [height]="height" #rowIsland1>
-            <igx-column field="ID" *ngIf="toggleColumns"></igx-column>
-            <igx-column field="ProductName" *ngIf="toggleColumns"></igx-column>
+            @if (toggleColumns) {
+                <igx-column field="ID"></igx-column>
+            }
+            @if (toggleColumns) {
+                <igx-column field="ProductName"></igx-column>
+            }
         </igx-row-island>
         <igx-row-island [key]="'childData2'" [autoGenerate]="false" [height]="height" #rowIsland2>
             <igx-column field="Col1"></igx-column>
@@ -1929,7 +2001,7 @@ export class IgxHierarchicalGridTestBaseComponent {
             <igx-column field="Col3"></igx-column>
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, NgIf]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGridTestBaseComponent {
     @ViewChild('rowIsland1', { read: IgxRowIslandComponent, static: true }) public rowIsland1: IgxRowIslandComponent;
@@ -2002,15 +2074,21 @@ export class IgxHGridRemoteOnDemandComponent {
     <igx-hierarchical-grid #hierarchicalGrid [data]="data" [autoGenerate]="false" [height]="'500px'" [width]="'800px'" >
         <igx-column field="ID"></igx-column>
         <igx-column field="ProductName"></igx-column>
-        <igx-column *ngFor="let colField of parentCols" [field]="colField"></igx-column>
+        @for (colField of parentCols; track colField) {
+            <igx-column [field]="colField"></igx-column>
+        }
         <igx-row-island key="childData" [autoGenerate]="false" #rowIsland [height]="'350px'">
-            <igx-column *ngFor="let colField of islandCols1" [field]="colField"></igx-column>
+            @for (colField of islandCols1; track colField) {
+                <igx-column [field]="colField"></igx-column>
+            }
             <igx-row-island key="childData" [autoGenerate]="false" #rowIsland2 [height]="'200px'">
-                <igx-column *ngFor="let colField of islandCols2" [field]="colField"></igx-column>
+                @for (colField of islandCols2; track colField) {
+                    <igx-column [field]="colField"></igx-column>
+                }
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, NgFor]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridColumnsUpdateComponent extends IgxHierarchicalGridTestBaseComponent implements AfterViewInit {
     public cols1 = ['ID', 'ProductName', 'Col1', 'Col2', 'Col3'];
@@ -2063,13 +2141,17 @@ export class IgxHierarchicalGridSizingComponent {
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data"
-     [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid>
-     <igx-row-island *ngIf="toggleRI" key="childData" [autoGenerate]="true">
-        <igx-row-island *ngIf="toggleChildRI" key="childData" [autoGenerate]="true">
-        </igx-row-island>
-     </igx-row-island>
+        [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid>
+        @if (toggleRI) {
+            <igx-row-island key="childData" [autoGenerate]="true">
+                @if (toggleChildRI) {
+                    <igx-row-island key="childData" [autoGenerate]="true">
+                    </igx-row-island>
+                }
+            </igx-row-island>
+        }
     </igx-hierarchical-grid>`,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, NgIf]
+    imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridToggleRIComponent  extends IgxHierarchicalGridTestBaseComponent {
 public toggleRI = true;
@@ -2079,13 +2161,19 @@ public toggleChildRI = true;
 @Component({
     template: `
     <igx-hierarchical-grid #hierarchicalGrid [data]="data"
-     [autoGenerate]="false" [height]="'400px'" [width]="'500px'">
-     <igx-column field="ID" *ngIf="toggleColumns"></igx-column>
-     <igx-column field="ProductName" *ngIf="toggleColumns"></igx-column>
-     <igx-row-island *ngIf="toggleRI" [key]="'childData'" [autoGenerate]="true">
-     </igx-row-island>
+        [autoGenerate]="false" [height]="'400px'" [width]="'500px'">
+        @if (toggleColumns) {
+            <igx-column field="ID"></igx-column>
+        }
+        @if (toggleColumns) {
+            <igx-column field="ProductName"></igx-column>
+        }
+        @if (toggleRI) {
+            <igx-row-island [key]="'childData'" [autoGenerate]="true">
+            </igx-row-island>
+        }
     </igx-hierarchical-grid>`,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, NgIf]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridToggleRIAndColsComponent  extends IgxHierarchicalGridToggleRIComponent {
     public override toggleRI = false;

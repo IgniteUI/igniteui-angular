@@ -1,6 +1,5 @@
-import { DOCUMENT, NgIf, NgTemplateOutlet, NgClass, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
+import { NgTemplateOutlet, NgClass } from '@angular/common';
 import {
-    AfterViewInit,
     ChangeDetectorRef,
     Component,
     ContentChild,
@@ -10,7 +9,8 @@ import {
     HostBinding,
     HostListener, Inject, Input,
     Optional, QueryList, booleanAttribute,
-    inject
+    inject,
+    DOCUMENT
 } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
 import { PlatformUtil, getComponentTheme } from '../core/utils';
@@ -33,9 +33,9 @@ import { IgxTheme, THEME_TOKEN, ThemeToken } from '../services/theme/theme.token
     selector: 'igx-input-group',
     templateUrl: 'input-group.component.html',
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }],
-    imports: [NgIf, NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent, NgSwitch, NgSwitchCase, NgSwitchDefault]
+    imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent]
 })
-export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewInit {
+export class IgxInputGroupComponent implements IgxInputGroupBase {
     /**
      * Sets the resource strings.
      * By default it uses EN resources.
@@ -219,15 +219,13 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewInit 
         private themeToken: ThemeToken
     ) {
         this._theme = this.themeToken.theme;
-
-        const { unsubscribe } = this.themeToken.onChange((theme) => {
+        const themeChange = this.themeToken.onChange((theme) => {
             if (this._theme !== theme) {
                 this._theme = theme;
                 this.cdr.detectChanges();
             }
         });
-
-        this._destroyRef.onDestroy(() => unsubscribe);
+        this._destroyRef.onDestroy(() => themeChange.unsubscribe());
     }
 
     /** @hidden */
@@ -430,7 +428,9 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewInit 
      */
     @HostBinding('class.igx-input-group--search')
     public get isTypeSearch() {
-        return this.type === 'search';
+        if(!this.isFileType && !this.input.isTextArea) {
+            return this.type === 'search';
+        }
     }
 
     /** @hidden */
@@ -455,7 +455,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewInit 
     }
 
     /** @hidden @internal */
-    public ngAfterViewInit() {
+    public ngAfterContentChecked() {
         this.setComponentTheme();
     }
 }

@@ -32,7 +32,8 @@ import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll/absolut
 import { IgxOverlayService } from '../../../services/overlay/overlay';
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { IgxButtonDirective } from '../../../directives/button/button.directive';
-import { NgClass, NgIf, NgFor } from '@angular/common';
+import { NgClass } from '@angular/common';
+import { BaseFilteringComponent } from './base-filtering.component';
 
 /**
  * @hidden
@@ -40,7 +41,7 @@ import { NgClass, NgIf, NgFor } from '@angular/common';
 @Component({
     selector: 'igx-excel-style-custom-dialog',
     templateUrl: './excel-style-custom-dialog.component.html',
-    imports: [IgxToggleDirective, NgClass, NgIf, NgFor, IgxExcelStyleDateExpressionComponent, IgxExcelStyleDefaultExpressionComponent, IgxButtonDirective, IgxIconComponent]
+    imports: [IgxToggleDirective, NgClass, IgxExcelStyleDateExpressionComponent, IgxExcelStyleDefaultExpressionComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     @Input()
@@ -95,6 +96,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         protected overlayService: IgxOverlayService,
         private cdr: ChangeDetectorRef,
         protected platform: PlatformUtil,
+        public esf:BaseFilteringComponent
     ) { }
 
     public ngAfterViewInit(): void {
@@ -136,6 +138,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     public onClearButtonClick() {
         this.filteringService.clearFilter(this.column.field);
+        this.selectedOperator = null;
         this.createInitialExpressionUIElement();
         this.cdr.detectChanges();
     }
@@ -147,6 +150,11 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         } else {
             this.toggle.close();
         }
+    }
+
+    public cancelDialog() {
+        this.esf.cancel();
+        this.closeDialog();
     }
 
     public onApplyButtonClick() {
@@ -167,6 +175,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         const exprUI = new ExpressionUI();
         exprUI.expression = {
             condition: null,
+            conditionName: null,
             fieldName: this.column.field,
             ignoreCase: this.column.filteringIgnoreCase,
             searchVal: null
@@ -246,12 +255,14 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     private createInitialExpressionUIElement() {
         let firstExprUI = new ExpressionUI();
-        if (this.expressionsList.length == 1 && this.expressionsList[0].expression.condition.name === this.selectedOperator) {
+        if (this.expressionsList.length == 1 && this.expressionsList[0].expression.condition?.name === this.selectedOperator) {
             firstExprUI = this.expressionsList.pop();
         } else {
             this.expressionsList = [];
+            const cond = this.createCondition(this.selectedOperator);
             firstExprUI.expression = {
-                condition: this.createCondition(this.selectedOperator),
+                condition: cond,
+                conditionName: cond?.name,
                 fieldName: this.column.field,
                 ignoreCase: this.column.filteringIgnoreCase,
                 searchVal: null
@@ -264,6 +275,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         const secondExprUI = new ExpressionUI();
         secondExprUI.expression = {
             condition: null,
+            conditionName: null,
             fieldName: this.column.field,
             ignoreCase: this.column.filteringIgnoreCase,
             searchVal: null

@@ -1,13 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, ComponentFixture, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, ComponentFixture, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from '../../services/public_api';
 import { IgxGridComponent } from './public_api';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from "../../test-utils/grid-functions.spec";
 import { By } from "@angular/platform-browser";
 import { IgxGridToolbarComponent } from '../toolbar/grid-toolbar.component';
-import { NgIf } from '@angular/common';
 import { IgxGridToolbarActionsComponent, IgxGridToolbarTitleComponent } from '../toolbar/common';
 import { IgxGridToolbarPinningComponent } from '../toolbar/grid-toolbar-pinning.component';
 import { IgxGridToolbarHidingComponent } from '../toolbar/grid-toolbar-hiding.component';
@@ -36,8 +34,9 @@ const DATA = [
 ];
 
 describe('IgxGrid - Grid Toolbar #grid - ', () => {
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 DefaultToolbarComponent,
@@ -47,7 +46,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
                 IgxExcelExporterService,
                 IgxCsvExporterService
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('Basic Tests - ', () => {
@@ -256,14 +255,22 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
 @Component({
     template: `
     <igx-grid [data]="data" [autoGenerate]="true">
-        <igx-grid-toolbar [showProgress]="showProgress" *ngIf="toolbarEnabled">
-            <p *ngIf="customContentEnabled">{{ customContent }}</p>
-            <igx-grid-toolbar-title *ngIf="toolbarTitleEnabled">{{ toolbarTitle }}</igx-grid-toolbar-title>
-            <igx-grid-toolbar-actions *ngIf="toolbarActionsEnabled"></igx-grid-toolbar-actions>
-        </igx-grid-toolbar>
+        @if (toolbarEnabled) {
+            <igx-grid-toolbar [showProgress]="showProgress">
+                @if (customContentEnabled) {
+                    <p>{{ customContent }}</p>
+                }
+                @if (toolbarTitleEnabled) {
+                    <igx-grid-toolbar-title>{{ toolbarTitle }}</igx-grid-toolbar-title>
+                }
+                @if (toolbarActionsEnabled) {
+                    <igx-grid-toolbar-actions></igx-grid-toolbar-actions>
+                }
+            </igx-grid-toolbar>
+        }
     </igx-grid>
     `,
-    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarTitleComponent, NgIf]
+    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarTitleComponent]
 })
 export class DefaultToolbarComponent {
     public toolbarEnabled = true;
@@ -303,7 +310,6 @@ export class DefaultToolbarComponent {
         IgxGridComponent,
         IgxGridToolbarComponent,
         IgxGridToolbarActionsComponent,
-        IgxGridToolbarTitleComponent,
         IgxGridToolbarPinningComponent,
         IgxGridToolbarHidingComponent,
         IgxGridToolbarAdvancedFilteringComponent,

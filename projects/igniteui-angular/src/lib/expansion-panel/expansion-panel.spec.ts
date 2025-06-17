@@ -6,12 +6,10 @@ import { IgxExpansionPanelComponent } from './expansion-panel.component';
 import { ExpansionPanelHeaderIconPosition, IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
 import { IgxGridComponent } from '../grids/grid/public_api';
 import { IgxExpansionPanelDescriptionDirective, IgxExpansionPanelIconDirective, IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { By } from '@angular/platform-browser';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxListComponent } from '../list/list.component';
 import { IgxListItemComponent } from '../list/list-item.component';
-import { NgIf } from '@angular/common';
 import { IGX_EXPANSION_PANEL_DIRECTIVES } from './public_api';
 
 const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';
@@ -34,8 +32,7 @@ const enum IconPositionClass {
 }
 
 describe('igxExpansionPanel', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -50,7 +47,6 @@ describe('igxExpansionPanel', () => {
 
 
     describe('General tests: ', () => {
-        // configureTestSuite();
         it('Should initialize the expansion panel component properly', () => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
@@ -295,7 +291,6 @@ describe('igxExpansionPanel', () => {
     });
 
     describe('Expansion tests: ', () => {
-        // configureTestSuite();
         const verifyPanelExpansionState = (
             collapsed: boolean,
             panel: IgxExpansionPanelComponent,
@@ -308,10 +303,6 @@ describe('igxExpansionPanel', () => {
             const ariaExpanded = collapsed ? 'false' : 'true';
             expect(panelHeader.querySelector('div [role = \'button\']').getAttribute('aria-expanded')).toMatch(ariaExpanded);
             expect(panelHeader.classList.contains(CSS_CLASS_HEADER_EXPANDED)).toEqual(!collapsed);
-            if (button.children.length > 1) {
-                const iconName = collapsed ? 'expand_more' : 'expand_less';
-                expect(button.getAttribute('ng-reflect-icon-name')).toMatch(iconName);
-            }
             if (collapsed) {
                 expect(panelContainer.lastElementChild.nodeName).toEqual('IGX-EXPANSION-PANEL-HEADER');
             } else {
@@ -967,7 +958,6 @@ describe('igxExpansionPanel', () => {
     });
 
     describe('Aria tests', () => {
-        // configureTestSuite();
         it('Should properly apply default aria properties', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
@@ -1090,7 +1080,6 @@ describe('igxExpansionPanel', () => {
     });
 
     describe('Rendering tests: ', () => {
-        // configureTestSuite();
         it('Should apply all appropriate classes on combo initialization', fakeAsync(() => {
             const fixture: ComponentFixture<IgxExpansionPanelSampleComponent> = TestBed.createComponent(IgxExpansionPanelSampleComponent);
             fixture.detectChanges();
@@ -1196,9 +1185,6 @@ describe('igxExpansionPanel', () => {
             expect(grid.attributes.getNamedItem('role').nodeValue).toEqual('grid');
             expect(grid.attributes.getNamedItem('id').nodeValue).toEqual(fixture.componentInstance.grid1.id);
             expect(grid.attributes.getNamedItem('tabindex').nodeValue).toEqual('0');
-            expect(grid.attributes.getNamedItem('ng-reflect-auto-generate').nodeValue).toEqual('true');
-            expect(grid.attributes.getNamedItem('ng-reflect-width').nodeValue).toEqual(fixture.componentInstance.width);
-            expect(grid.attributes.getNamedItem('ng-reflect-height').nodeValue).toEqual(fixture.componentInstance.height);
             expect(grid.childElementCount).toEqual(6);
         }));
         it('Should apply all appropriate classes on combo initialization_image + text content', fakeAsync(() => {
@@ -1349,7 +1335,7 @@ export class IgxExpansionPanelGridComponent {
         </igx-expansion-panel>
     </div>
     `,
-    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxListComponent, IgxListItemComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective]
+    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxListComponent, IgxListItemComponent, IgxExpansionPanelTitleDirective]
 })
 export class IgxExpansionPanelListComponent {
     @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent, static: true })
@@ -1364,19 +1350,27 @@ export class IgxExpansionPanelListComponent {
     <igx-expansion-panel
         (contentCollapsed)="handleCollapsed()"
         (contentExpanded)="handleExpanded()">
-        <igx-expansion-panel-header *ngIf="showHeader" headerHeight="50px">
-            <igx-expansion-panel-title *ngIf="showTitle">Example Title</igx-expansion-panel-title>
-            <igx-expansion-panel-description>Example Description</igx-expansion-panel-description>
-            <igx-expansion-panel-icon *ngIf="customIcon">
-                <span class="custom-test-icon">TEST_ICON</span>
-            </igx-expansion-panel-icon>
-        </igx-expansion-panel-header>
-        <igx-expansion-panel-body *ngIf="showBody">
-        Example body
-        </igx-expansion-panel-body>
+        @if (showHeader) {
+            <igx-expansion-panel-header headerHeight="50px">
+                @if (showTitle) {
+                    <igx-expansion-panel-title>Example Title</igx-expansion-panel-title>
+                }
+                <igx-expansion-panel-description>Example Description</igx-expansion-panel-description>
+                @if (customIcon) {
+                    <igx-expansion-panel-icon>
+                        <span class="custom-test-icon">TEST_ICON</span>
+                    </igx-expansion-panel-icon>
+                }
+            </igx-expansion-panel-header>
+        }
+        @if (showBody) {
+            <igx-expansion-panel-body>
+                Example body
+            </igx-expansion-panel-body>
+        }
     </igx-expansion-panel>
     `,
-    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective, IgxExpansionPanelIconDirective, NgIf]
+    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective, IgxExpansionPanelIconDirective]
 })
 export class IgxExpansionPanelSampleComponent {
     @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })

@@ -10,21 +10,18 @@ import { IgxNumberFilteringOperand } from '../data-operations/filtering-conditio
 import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { GridSelectionMode } from './common/enums';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid/public_api';
 import { ISortingExpression } from '../data-operations/sorting-strategy';
 import { GridSelectionRange } from './common/types';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
-import { NgFor } from '@angular/common';
 import { IgxColumnComponent } from './public_api';
 import { IColumnState, IGridState } from './state-base.directive';
 
 describe('IgxTreeGridState - input properties #tGrid', () => {
-    configureTestSuite();
     let fix;
     let grid;
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxTreeGridTreeDataTestComponent]
         }).compileComponents();
@@ -60,7 +57,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         expect(state.options).toEqual(jasmine.objectContaining(defaultOptions));
     });
 
-    it('getState should return corect IGridState object when options are not default', () => {
+    it('getState should return correct IGridState object when options are not default', () => {
         const options = {
             sorting: false,
             paging: false,
@@ -82,7 +79,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         expect(gridState['moving']).toBeFalsy();
     });
 
-    it('getState should return corect JSON string', () => {
+    it('getState should return correct JSON string', () => {
         const initialGridState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"ID","resizable":true,"searchable":false,"selectable":true,"key":"ID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"Name","width":"150px","header":"Name","resizable":true,"searchable":true,"selectable":true,"key":"Name","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"date","hasSummary":true,"field":"Hire Date","width":"140px","header":"Hire Date","resizable":true,"searchable":true,"selectable":true,"key":"Hire Date","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"Age","width":"110px","header":"Age","resizable":false,"searchable":true,"selectable":true,"key":"Age","columnGroup":false,"disableHiding":false,"disablePinning":false}],"filtering":{"filteringOperands":[],"operator":0},"advancedFiltering":{},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":4,"countRecords":18,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"rowPinning":[],"expansion":[],"moving":true,"rowIslands":[]}';
         fix.detectChanges();
 
@@ -92,7 +89,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         expect(gridState).toBe(initialGridState, 'JSON string representation of the initial grid state is not correct');
     });
 
-    it('getState should return corect IGridState object when using default options', () => {
+    it('getState should return correct IGridState object when using default options', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
 
@@ -100,6 +97,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         const productFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'Age');
         const productExpression = {
             condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+            conditionName: 'greaterThan',
             fieldName: 'Age',
             ignoreCase: true,
             searchVal: 35
@@ -119,7 +117,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         HelperFunctions.verifyFilteringExpressions(filtering, gridState);
     });
 
-    it('getState should return corect filtering state', () => {
+    it('getState should return correct filtering state', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
         const filtering = grid.filteringExpressionsTree;
@@ -134,7 +132,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
     it('setState should correctly restore grid filtering state from string', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
-        const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"greaterThan","isUnary":false,"iconName":"filter_greater_than"},"searchVal":35,"fieldName":"Age","ignoreCase":true}],"operator":0,"fieldName":"Age"}],"operator":0,"type":0}}';
+        const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"greaterThan","isUnary":false,"iconName":"filter_greater_than"},"searchVal":35,"fieldName":"Age","ignoreCase":true,"conditionName":"greaterThan"}],"operator":0,"fieldName":"Age"}],"operator":0,"type":0}}';
         const initialState = '{"filtering":{"filteringOperands":[],"operator":0}}';
 
         let gridState = state.getState(true, 'filtering');
@@ -147,7 +145,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         expect(gridState).toBe(filteringState);
     });
 
-    it('getState should return corect moving state', () => {
+    it('getState should return correct moving state', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
         const moving = grid.moving;
@@ -260,7 +258,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
     it('setState should correctly restore grid advanced filtering state from string', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
-        const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"Age","condition":{"name":"greaterThan","isUnary":false,"iconName":"filter_greater_than"},"searchVal":25,"ignoreCase":true},{"fieldName":"ID","condition":{"name":"greaterThan","isUnary":false,"iconName":"filter_greater_than"},"searchVal":"3","ignoreCase":true}],"operator":0,"type":1}}';
+        const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"Age","condition":{"name":"greaterThan","isUnary":false,"iconName":"filter_greater_than"},"searchVal":25,"ignoreCase":true,"conditionName":"greaterThan"},{"fieldName":"ID","condition":{"name":"greaterThan","isUnary":false,"iconName":"filter_greater_than"},"searchVal":"3","ignoreCase":true,"conditionName":"greaterThan"}],"operator":0,"type":1}}';
         const initialState = '{"advancedFiltering":{}}';
 
         let gridState = state.getState(true, 'advancedFiltering');
@@ -345,30 +343,32 @@ class HelperFunctions {
     <igx-tree-grid [moving]="true" #treeGrid [data]="data" childDataKey="Employees" [expansionDepth]="2" width="900px" height="800px" igxGridState
         primaryKey="ID" rowSelection="multiple" cellSelection="multiple">
 
-        <igx-column *ngFor="let c of columns"
-            [width]="c.width"
-            [sortable]="c.sortable"
-            [editable]="c.editable"
-            [sortingIgnoreCase]="c.sortingIgnoreCase"
-            [filteringIgnoreCase]="c.sortingIgnoreCase"
-            [maxWidth]="c.maxWidth"
-            [hasSummary]="c.hasSummary"
-            [filterable]="c.filterable"
-            [searchable]="c.searchable"
-            [resizable]="c.resizable"
-            [headerClasses]="c.headerClasses"
-            [headerGroupClasses]="c.headerGroupClasses"
-            [groupable]="c.groupable"
-            [field]="c.field"
-            [header]="c.header"
-            [dataType]="c.dataType"
-            [pinned]="c.pinned"
-            [hidden]="c.hidden">
-        </igx-column>
+        @for (c of columns; track c.field) {
+            <igx-column
+                [width]="c.width"
+                [sortable]="c.sortable"
+                [editable]="c.editable"
+                [sortingIgnoreCase]="c.sortingIgnoreCase"
+                [filteringIgnoreCase]="c.sortingIgnoreCase"
+                [maxWidth]="c.maxWidth"
+                [hasSummary]="c.hasSummary"
+                [filterable]="c.filterable"
+                [searchable]="c.searchable"
+                [resizable]="c.resizable"
+                [headerClasses]="c.headerClasses"
+                [headerGroupClasses]="c.headerGroupClasses"
+                [groupable]="c.groupable"
+                [field]="c.field"
+                [header]="c.header"
+                [dataType]="c.dataType"
+                [pinned]="c.pinned"
+                [hidden]="c.hidden">
+            </igx-column>
+        }
         <igx-paginator [perPage]="5"></igx-paginator>
     </igx-tree-grid>
     `,
-    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective, NgFor]
+    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective]
 })
 export class IgxTreeGridTreeDataTestComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;

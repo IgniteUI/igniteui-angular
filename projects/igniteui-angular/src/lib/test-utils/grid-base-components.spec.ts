@@ -3,7 +3,6 @@ import { SampleTestData } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings } from './template-strings.spec';
 import { IgxGridComponent } from '../grids/grid/grid.component';
 import { IgxColumnActionsComponent } from '../grids/column-actions/column-actions.component';
-import { GridPagingMode } from '../grids/common/enums';
 import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxGridToolbarComponent } from '../grids/toolbar/grid-toolbar.component';
 import { IgxGridToolbarHidingComponent } from '../grids/toolbar/grid-toolbar-hiding.component';
@@ -11,7 +10,6 @@ import { IgxGridToolbarActionsComponent } from '../grids/toolbar/common';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
 import { IgxGridToolbarPinningComponent } from '../grids/toolbar/grid-toolbar-pinning.component';
-import { NgFor, NgIf } from '@angular/common';
 import { IgxCellTemplateDirective } from '../grids/columns/templates.directive';
 import { IgxColumnHidingDirective } from '../grids/column-actions/column-hiding.directive';
 import { IgxColumnPinningDirective } from '../grids/column-actions/column-pinning.directive';
@@ -68,7 +66,7 @@ export class GridWithSizeComponent extends GridAutoGenerateComponent {
 
 @Component({
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.generatedEditable),
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridNxMComponent extends GridWithSizeComponent implements OnInit {
     public colsCount: number;
@@ -94,8 +92,11 @@ export class GridNxMComponent extends GridWithSizeComponent implements OnInit {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.idNameJobHireDate, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
+    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.idNameJobHireDate, '',
+            `@if (paging) {
+                <igx-paginator></igx-paginator>
+            }`),
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class BasicGridSearchComponent extends GridWithSizeComponent {
     public highlightClass = 'igx-highlight';
@@ -104,8 +105,11 @@ export class BasicGridSearchComponent extends GridWithSizeComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(``, '', ColumnDefinitions.idNameJobTitle, '', '<igx-paginator *ngIf="paging" [perPage]="perPage"></igx-paginator>'),
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
+    template: GridTemplateStrings.declareGrid(``,
+        '', ColumnDefinitions.idNameJobTitle, '', `@if (paging) {
+            <igx-paginator [perPage]="perPage"></igx-paginator>
+        }`),
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class PagingComponent extends GridWithSizeComponent {
     public paging = true;
@@ -118,7 +122,7 @@ export class PagingComponent extends GridWithSizeComponent {
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class RemotePagingComponent extends GridWithSizeComponent {
-    public pagingMode = GridPagingMode.Remote;
+    public pagingMode = 'remote';
     public perPage = 3;
     public totalRecords = 10;
     public override data = SampleTestData.personJobDataFull();
@@ -163,14 +167,16 @@ export class GridRowConditionalStylingComponent extends GridWithSizeComponent {
 }
 @Component({
     template: `<div>
-    <igx-column-actions
+    @if (showInline) {
+        <igx-column-actions
         igxColumnHiding
         [style.--ig-size]="'var(--ig-size-large)'"
         [grid]="grid"
-        *ngIf="showInline"
         [hideFilter]="hideFilter"></igx-column-actions>
-    ${GridTemplateStrings.declareGrid('#grid [height]="height" [width]="width"', '', ColumnDefinitions.productHidable, '<igx-grid-toolbar><igx-grid-toolbar-actions>' + '<igx-grid-toolbar-hiding buttonText="Hidden"></igx-grid-toolbar-hiding>' +
-        '</igx-grid-toolbar-actions></igx-grid-toolbar>', '<igx-paginator *ngIf="paging"></igx-paginator>')}
+    }
+    ${GridTemplateStrings.declareGrid('#grid [height]="height" [width]="width"', '', ColumnDefinitions.productHidable,
+        '<igx-grid-toolbar><igx-grid-toolbar-actions>' + '<igx-grid-toolbar-hiding buttonText="Hidden"></igx-grid-toolbar-hiding>' +
+        '</igx-grid-toolbar-actions></igx-grid-toolbar>', '@if (paging) { <igx-paginator></igx-paginator> }')}
     </div>`,
     imports: [
         IgxGridComponent,
@@ -180,8 +186,7 @@ export class GridRowConditionalStylingComponent extends GridWithSizeComponent {
         IgxGridToolbarHidingComponent,
         IgxGridToolbarActionsComponent,
         IgxPaginatorComponent,
-        IgxColumnHidingDirective,
-        NgIf
+        IgxColumnHidingDirective
     ]
 })
 export class ColumnHidingTestComponent extends GridWithSizeComponent implements OnInit, AfterViewInit {
@@ -212,10 +217,12 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
 
 @Component({
     template: `<div>
-    <igx-column-actions igxColumnHiding [grid]="grid" *ngIf="showInline"></igx-column-actions>
+    @if (showInline) {
+        <igx-column-actions igxColumnHiding [grid]="grid"></igx-column-actions>
+    }
     ${GridTemplateStrings.declareGrid(' #grid [height]="height" [width]="width" [moving]="true"', '', ColumnDefinitions.contactInfoGroupableColumns)}
     </div>`,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnActionsComponent, IgxColumnGroupComponent, IgxColumnHidingDirective, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnActionsComponent, IgxColumnGroupComponent, IgxColumnHidingDirective]
 })
 export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
     @ViewChild(IgxGridComponent, { static: true }) public override grid: IgxGridComponent;
@@ -229,12 +236,15 @@ export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
 
 @Component({
     template: `<div>
-        <igx-column-actions igxColumnPinning [grid]="grid" *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-actions>
-        ${GridTemplateStrings.declareGrid('#grid [height]="height" [width]="width"', '', ColumnDefinitions.productFilterable, '<igx-grid-toolbar>' +
-        '<igx-grid-toolbar-actions><igx-grid-toolbar-pinning></igx-grid-toolbar-pinning></igx-grid-toolbar-actions>' +
-        '</igx-grid-toolbar>')}
+        @if (showInline) {
+            <igx-column-actions igxColumnPinning [grid]="grid" [hideFilter]="hideFilter"></igx-column-actions>
+        }
+        ${GridTemplateStrings.declareGrid('#grid [height]="height" [width]="width"', '', ColumnDefinitions.productFilterable,
+            '<igx-grid-toolbar>' +
+            '<igx-grid-toolbar-actions><igx-grid-toolbar-pinning></igx-grid-toolbar-pinning></igx-grid-toolbar-actions>' +
+            '</igx-grid-toolbar>')}
     </div>`,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnActionsComponent, IgxColumnPinningDirective, IgxGridToolbarComponent, IgxGridToolbarPinningComponent, IgxGridToolbarActionsComponent, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnActionsComponent, IgxColumnPinningDirective, IgxGridToolbarComponent, IgxGridToolbarPinningComponent, IgxGridToolbarActionsComponent]
 })
 export class ColumnPinningTestComponent extends GridWithSizeComponent implements AfterViewInit, OnInit {
     @ViewChild(IgxColumnActionsComponent) public chooser: IgxColumnActionsComponent;
@@ -281,10 +291,13 @@ export class ColumnPinningWithTemplateTestComponent extends ColumnPinningTestCom
 
 @Component({
     template: `<div>
-    <igx-column-actions igxColumnPinning [grid]="grid" *ngIf="showInline"></igx-column-actions>
-    ${GridTemplateStrings.declareGrid(' #grid [height]="height" [moving]="true"', '', ColumnDefinitions.contactInfoGroupableColumns, '<igx-grid-toolbar></igx-grid-toolbar>')}
+    @if (showInline) {
+        <igx-column-actions igxColumnPinning [grid]="grid"></igx-column-actions>
+    }
+    ${ GridTemplateStrings.declareGrid(' #grid [height]="height" [moving]="true"', '', ColumnDefinitions.contactInfoGroupableColumns,
+        '<igx-grid-toolbar></igx-grid-toolbar>')}
     </div>`,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxGridToolbarComponent, IgxColumnActionsComponent, IgxColumnPinningDirective, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxGridToolbarComponent, IgxColumnActionsComponent, IgxColumnPinningDirective]
 })
 export class ColumnGroupsPinningTestComponent extends ColumnPinningTestComponent {
     public override data = SampleTestData.contactInfoDataFull();

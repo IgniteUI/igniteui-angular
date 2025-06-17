@@ -15,14 +15,14 @@ import {
     Optional,
     Output,
     reflectComponentType,
-    ViewContainerRef
+    ViewContainerRef,
+    DOCUMENT
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxSummaryOperand } from '../summaries/grid-summary';
-import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
@@ -166,7 +166,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         viewRef: ViewContainerRef,
         injector: Injector,
         envInjector: EnvironmentInjector,
-        navigation: IgxHierarchicalGridNavigationService,
+        public override navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
         textHighlightService: IgxTextHighlightService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
@@ -207,6 +207,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         const columns = [];
         const topLevelCols = cols.filter(c => c.level === 0);
         topLevelCols.forEach((col) => {
+            col.grid = this;
             const ref = this._createColumn(col);
             ref.changeDetectorRef.detectChanges();
             columns.push(ref.instance);

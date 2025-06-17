@@ -15,25 +15,23 @@ import {
 } from '@angular/core';
 import { IgxExpansionPanelIconDirective } from './expansion-panel.directives';
 import { IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase, IExpansionPanelCancelableEventArgs } from './expansion-panel.common';
-import { mkenum } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
-import { NgIf } from '@angular/common';
 
 /**
  * @hidden
  */
-export const ExpansionPanelHeaderIconPosition = /*@__PURE__*/mkenum({
+export const ExpansionPanelHeaderIconPosition = {
     LEFT: 'left',
     NONE: 'none',
     RIGHT: 'right'
-});
+} as const;
 export type ExpansionPanelHeaderIconPosition = (typeof ExpansionPanelHeaderIconPosition)[keyof typeof ExpansionPanelHeaderIconPosition];
 
 
 @Component({
     selector: 'igx-expansion-panel-header',
     templateUrl: 'expansion-panel-header.component.html',
-    imports: [NgIf, IgxIconComponent]
+    imports: [IgxIconComponent]
 })
 export class IgxExpansionPanelHeaderComponent {
     /**

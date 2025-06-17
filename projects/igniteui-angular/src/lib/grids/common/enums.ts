@@ -1,14 +1,13 @@
 
-import { mkenum } from '../../core/utils';
 /**
  * Enumeration representing different filter modes for grid filtering.
  * - quickFilter: Default mode with a filter row UI between the column headers and the first row of records.
  * - excelStyleFilter: Filter mode where an Excel-style filter is used.
  */
-export const FilterMode = /*@__PURE__*/mkenum({
+export const FilterMode = {
     quickFilter: 'quickFilter',
     excelStyleFilter: 'excelStyleFilter'
-});
+} as const;
 export type FilterMode = (typeof FilterMode)[keyof typeof FilterMode];
 
 /**
@@ -16,10 +15,10 @@ export type FilterMode = (typeof FilterMode)[keyof typeof FilterMode];
  * - top: Default value; Summary rows are displayed at the top of the grid.
  * - bottom: Summary rows are displayed at the bottom of the grid.
  */
-export const GridSummaryPosition = /*@__PURE__*/mkenum({
+export const GridSummaryPosition = {
     top: 'top',
     bottom: 'bottom'
-});
+} as const;
 export type GridSummaryPosition = (typeof GridSummaryPosition)[keyof typeof GridSummaryPosition];
 
 /**
@@ -28,11 +27,11 @@ export type GridSummaryPosition = (typeof GridSummaryPosition)[keyof typeof Grid
  * - childLevelsOnly: Summaries are calculated only for child levels.
  * - rootAndChildLevels: Default value; Summaries are calculated for both root and child levels.
  */
-export const GridSummaryCalculationMode = /*@__PURE__*/mkenum({
+export const GridSummaryCalculationMode = {
     rootLevelOnly: 'rootLevelOnly',
     childLevelsOnly: 'childLevelsOnly',
     rootAndChildLevels: 'rootAndChildLevels'
-});
+} as const;
 export type GridSummaryCalculationMode = (typeof GridSummaryCalculationMode)[keyof typeof GridSummaryCalculationMode];
 
 /**
@@ -66,19 +65,19 @@ export type GridKeydownTargetType =
  * - 'multiple': Default cell selection mode. More than one element can be selected at a time.
  * - 'multipleCascade': Similar to multiple selection. It is used in hierarchical or tree grids. Allows selection not only to an individual item but also all its related or nested items in a single action
  */
-export const GridSelectionMode = /*@__PURE__*/mkenum({
+export const GridSelectionMode = {
     none: 'none',
     single: 'single',
     multiple: 'multiple',
     multipleCascade: 'multipleCascade'
-});
+} as const;
 export type GridSelectionMode = (typeof GridSelectionMode)[keyof typeof GridSelectionMode];
 
 /** Enumeration representing different column display order options. */
-export const ColumnDisplayOrder = /*@__PURE__*/mkenum({
+export const ColumnDisplayOrder = {
     Alphabetical: 'Alphabetical',
     DisplayOrder: 'DisplayOrder'
-});
+} as const;
 export type ColumnDisplayOrder = (typeof ColumnDisplayOrder)[keyof typeof ColumnDisplayOrder];
 
 /* mustCoerceToInt */
@@ -103,16 +102,16 @@ export enum RowPinningPosition {
     Bottom
 }
 
-/* mustCoerceToInt */
 /**
  * Enumeration representing different paging modes for the grid.
  * - Local: The grid will use local data to extract pages during paging.
  * - Remote: The grid will expect pages to be delivered from a remote location and will only raise events during paging interactions.
  */
-export enum GridPagingMode {
-    Local,
-    Remote
-}
+export const GridPagingMode = {
+    Local: 'local',
+    Remote: 'remote'
+} as const;
+export type GridPagingMode = (typeof GridPagingMode)[keyof typeof GridPagingMode];
 
 /**
  * @hidden @internal
@@ -122,9 +121,9 @@ export enum GridPagingMode {
  * - Medium: This is the middle size with 40px row height. Left and Right paddings are 16px. Minimal column width is 64px.
  * - Large:  this is the default Grid size with the lowest intense and row height equal to 50px. Left and Right paddings are 24px. Minimal column width is 80px.
  */
-export const Size = /*@__PURE__*/mkenum({
+export const Size = {
     Small: '1',
     Medium: '2',
     Large: '3'
-});
+} as const;
 export type Size = (typeof Size)[keyof typeof Size];

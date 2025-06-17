@@ -7,7 +7,7 @@
       "outDir": "./dist/out-tsc",
       "sourceMap": true,
       "declaration": false,
-      "moduleResolution": "node",
+      "moduleResolution": "bundler",
       "experimentalDecorators": true,
       "forceConsistentCasingInFileNames": true,
       "esModuleInterop": true,
@@ -46,6 +46,9 @@
     "angularCompilerOptions": {
         "generateDeepReexports": true,
         "strictTemplates": true,
+        "extendedDiagnostics": {
+            "defaultCategory": "error"
+        },
         "strictInjectionParameters": true,
         "strictInputAccessModifiers": true,
     }

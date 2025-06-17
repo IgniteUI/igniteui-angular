@@ -1,11 +1,10 @@
 import { Directive, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output, booleanAttribute } from '@angular/core';
-import { mkenum } from '../../core/utils';
 
-export const IgxBaseButtonType = /*@__PURE__*/mkenum({
+export const IgxBaseButtonType = {
     Flat: 'flat',
     Contained: 'contained',
     Outlined: 'outlined'
-});
+} as const;
 
 @Directive()
 export abstract class IgxButtonBaseDirective {

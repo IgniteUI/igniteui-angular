@@ -5,7 +5,7 @@ import { defineCustomElements } from 'igniteui-dockmanager/loader';
 import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 
-import { CommonModule, NgFor } from '@angular/common';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SignalRService } from './signal-r.service';
 
@@ -48,8 +48,8 @@ export class DockSlotComponent implements AfterViewInit, OnDestroy {
     styleUrls: ['dockmanager-grid.sample.scss'],
     templateUrl: 'dockmanager-grid.sample.html',
     imports: [
-        NgFor,
-        CommonModule,
+        AsyncPipe,
+        CurrencyPipe,
         FormsModule,
         IGX_GRID_DIRECTIVES,
         IGX_BUTTON_GROUP_DIRECTIVES,
