@@ -77,8 +77,6 @@ import { IgxActionStripToken } from 'igniteui-angular/src/lib/action-strip/token
         IgxForOfScrollSyncService
     ],
     imports: [
-        NgIf,
-        NgFor,
         NgClass,
         NgStyle,
         NgTemplateOutlet,

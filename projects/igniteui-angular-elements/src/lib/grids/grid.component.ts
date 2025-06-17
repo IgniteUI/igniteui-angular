@@ -80,9 +80,7 @@ import { IgxGridDetailsPipe } from '../../../../igniteui-angular/src/lib/grids/g
         IgxForOfScrollSyncService,
     ],
     imports: [
-        NgIf,
         NgClass,
-        NgFor,
         NgStyle,
         NgTemplateOutlet,
         IgxGridGroupByAreaComponent,
