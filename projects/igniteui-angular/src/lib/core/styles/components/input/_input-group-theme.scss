@@ -496,12 +496,23 @@
                     }
                 }
             }
+
+            &:not(%form-group-display--focused, %form-group-display--filled) {
+                &:has(input:not(:placeholder-shown, [type='file'])) {
+                    %form-group-label {
+                        @include type-style('subtitle-1');
+                        transform: translateY(0);
+                    }
+                }
+            }
         }
     }
 
     %form-group-placeholder {
-        %form-group-label {
-            transition: none !important;
+        &:has(input:placeholder-shown, textarea:placeholder-shown) { 
+            %form-group-label {
+                transition: none !important;
+            }
         }
     }
 
@@ -1004,10 +1015,17 @@
 
     %form-group-label--focused-border,
     %form-group-label--filled-border,
-    %form-group-label--placeholder-border,
     %form-group-label--file-border {
         %igx-input-group__notch {
             border-block-start-color: transparent !important;
+        }
+    }
+
+    %form-group-label--placeholder-border {
+        &:has(input:placeholder-shown, textarea:placeholder-shown) {
+            %igx-input-group__notch {
+                border-block-start-color: transparent !important;
+            }
         }
     }
 
@@ -1096,6 +1114,26 @@
         %textarea-group--outlined:not(%suffixed) {
             textarea {
                 width: calc(100% - #{rem(2px)});
+            }
+        }
+
+        %textarea-group:not(%form-group-display--focused, %form-group-display--filled) {
+            &:has(textarea:not(:placeholder-shown)) {
+                %form-group-textarea-label:not(%textarea-group-label--focused) {
+                    @include type-style('subtitle-1');
+
+                    top: calc($input-top-padding - #{rem(3px)});
+                    transform: translateY(0);
+                    margin-bottom: auto;
+                }
+            }
+        }
+
+        %textarea-group:not(%form-group-display--focused, %form-group-display--filled) {
+            &:has(%form-group-display--border, textarea:not(:placeholder-shown)) {
+                %igx-input-group__notch {
+                    border-block-start-width: rem(1px);
+                }
             }
         }
     }
