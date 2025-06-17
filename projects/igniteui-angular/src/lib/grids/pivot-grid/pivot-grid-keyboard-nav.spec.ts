@@ -1,7 +1,6 @@
-import { TestBed, fakeAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestBaseComponent } from '../../test-utils/pivot-grid-samples.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
@@ -19,13 +18,14 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
     describe('General Keyboard Navigation', () => {
         let fixture: ComponentFixture<IgxPivotGridMultipleRowComponent>;
         let pivotGrid: IgxPivotGridComponent;
-        configureTestSuite((() => {
-            return TestBed.configureTestingModule({
+
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxPivotGridMultipleRowComponent
                 ]
-            });
+            }).compileComponents();
         }));
 
         beforeEach(fakeAsync(() => {
@@ -265,13 +265,14 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
     });
     describe('Row Dimension Expand/Collapse Keyboard Interactions', () => {
         let fixture: ComponentFixture<IgxPivotGridTestBaseComponent>;
-        configureTestSuite((() => {
-            return TestBed.configureTestingModule({
+
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxPivotGridTestBaseComponent
                 ]
-            });
+            }).compileComponents();
         }));
 
         beforeEach(fakeAsync(() => {

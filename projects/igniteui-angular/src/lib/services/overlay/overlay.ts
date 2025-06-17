@@ -1,5 +1,4 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
-import { DOCUMENT } from '@angular/common';
 import {
     ApplicationRef,
     ComponentRef,
@@ -12,7 +11,8 @@ import {
     NgZone,
     OnDestroy,
     Type,
-    ViewContainerRef
+    ViewContainerRef,
+    DOCUMENT
 } from '@angular/core';
 import { fromEvent, Subject, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';

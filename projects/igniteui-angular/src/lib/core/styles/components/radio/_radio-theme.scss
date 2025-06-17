@@ -24,6 +24,7 @@
 /// @param {Color} $hover-color [null] - The border and dot colors on hover.
 /// @param {Color} $fill-color-hover [null] - The checked dot color on hover.
 /// @param {Color} $fill-hover-border-color [null] - The checked border color on hover.
+/// @param {Color} $focus-border-color [null] - The focus border color.
 /// @param {Color} $focus-outline-color [null] - The focus outlined color.
 /// @param {Color} $focus-outline-color-filled [null] - The focus outline color when radio is filled.
 /// @param {Color} $error-color [null] - The label, border and dot color in invalid state.
@@ -46,6 +47,7 @@
     $empty-fill-color: null,
     $fill-color: null,
     $fill-hover-border-color: null,
+    $focus-border-color: null,
     $focus-outline-color: null,
     $focus-outline-color-filled: null,
     $disabled-color: null,
@@ -67,7 +69,53 @@
     }
 
     $theme: digest-schema($radio-schema);
-    $meta: map.get($theme, '_meta');
+    $variant: map.get($theme, '_meta', 'theme');
+
+    @if not($hover-color) and $empty-color {
+        $hover-color: hsl(from var(--empty-color) h s calc(l * 0.9));
+    }
+
+    @if not($fill-color-hover) and $fill-color {
+        $fill-color-hover: hsl(from var(--fill-color) h s calc(l * 0.9));
+    }
+
+    @if $variant != 'bootstrap' {
+        @if not($fill-hover-border-color) and $fill-color-hover {
+            $fill-hover-border-color: var(--fill-color-hover);
+        }
+    }
+
+    @if not($label-color-hover) and $label-color {
+        $label-color-hover: hsl(from var(--label-color) h s calc(l * 0.9));
+    }
+
+    @if not($error-color-hover) and $error-color {
+        $error-color-hover: hsl(from var(--error-color) h s calc(l * 0.9));
+    }
+
+    @if not($focus-outline-color-error) and $error-color {
+        $focus-outline-color-error: hsla(from var(--error-color) h s l / .5);
+    }
+
+    @if $variant == 'bootstrap' {
+        @if not($focus-border-color) and $fill-color {
+            $focus-border-color: var(--fill-color);
+        }
+
+        @if not($focus-outline-color) and $fill-color {
+            $focus-outline-color: hsla(from var(--fill-color) h s l / .5);
+        }
+    }
+
+    @if $variant == 'indigo' {
+        @if not($focus-outline-color) and $empty-color {
+            $focus-outline-color: hsla(from var(--empty-color) h s l / .5);
+        }
+
+        @if not($focus-outline-color-filled) and $fill-color {
+            $focus-outline-color-filled: hsla(from var(--fill-color) h s l / .5);
+        }
+    }
 
     @return extend($theme, (
         name: $name,
@@ -82,16 +130,12 @@
         disabled-fill-color: $disabled-fill-color,
         hover-color: $hover-color,
         fill-color-hover: $fill-color-hover,
+        focus-border-color: $focus-border-color,
         focus-outline-color: $focus-outline-color,
         focus-outline-color-filled: $focus-outline-color-filled,
         error-color: $error-color,
         error-color-hover: $error-color-hover,
         focus-outline-color-error: $focus-outline-color-error,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme'),
-            theme-variant: map.get($schema, '_meta', 'variant')
-        )),
     ));
 }
 
@@ -102,8 +146,8 @@
     @include css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
-    $theme-variant: map.get($theme, '_meta', 'theme-variant');
-    $variant: map.get($theme, '_meta', 'variant');
+    $theme-variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $material-theme: $variant == 'material';
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: $variant != 'bootstrap';
@@ -462,7 +506,7 @@
                 box-shadow: 0 0 0 rem(4px) var-get($theme, 'focus-outline-color');
 
                 &::after {
-                    border-color: color($color: 'primary', $variant: 200);
+                    border-color: var-get($theme, 'focus-border-color');
                 }
             }
         }
@@ -478,7 +522,7 @@
     %igx-checkbox--focused-hovered {
         @if $variant == 'bootstrap' {
             %radio-composite:after {
-                border-color: color($color: 'primary', $variant: 300);
+                border-color: hsl(from var-get($theme, 'focus-border-color') h calc(s * 1.12) calc(l * 0.82));
             }
         }
     }
@@ -597,18 +641,40 @@
     }
 
     %radio-group-display {
-        display: block;
-        %radio-display:not(:last-of-type) {
-            margin-inline-end: $horizontal-group-margin;
+        display: grid;
+        column-gap: $horizontal-group-margin;
+        align-items: start;
+        width: max-content;
+    }
+
+    %radio-group-display:not(%radio-group-display--vertical) {
+        [igxLabel] {
+            margin-block-end: rem(16px);
+        }
+
+        igx-radio {
+            grid-row: 2;
         }
     }
 
     %radio-group-display--vertical {
-        display: flex;
-        flex-flow: column;
-        %radio-display:not(:last-of-type) {
-            margin-inline-end: 0;
-            margin-block-end: $vertical-group-margin;
+        row-gap: $vertical-group-margin;
+
+        [igxLabel] {
+            margin-block-end: if($variant == 'material', rem(16px), rem(8px));
+        }
+
+        &%radio-group-display--before {
+            igx-radio,
+            [igxLabel] {
+                justify-self: flex-end;
+            }
+        }
+    }
+
+    %radio-group-display--disabled {
+        [igxLabel] {
+            color: var-get($theme, 'disabled-color');
         }
     }
 }

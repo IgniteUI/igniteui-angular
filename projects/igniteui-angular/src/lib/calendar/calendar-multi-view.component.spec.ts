@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { ymd } from '../test-utils/helper-utils.spec';
 import { IgxCalendarComponent } from './public_api';
@@ -13,9 +12,8 @@ import { HelperTestFunctions } from '../test-utils/calendar-helper-utils';
 describe('Multi-View Calendar - ', () => {
     let fixture: ComponentFixture<any>
     let calendar: any;
-    configureTestSuite();
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

@@ -81,7 +81,6 @@
         sb-corner-bg: $sb-corner-bg,
         sb-corner-border-color: $sb-corner-border-color,
         sb-corner-border-size: $sb-corner-border-size,
-        theme: map.get($schema, '_meta', 'theme'),
     ));
 }
 

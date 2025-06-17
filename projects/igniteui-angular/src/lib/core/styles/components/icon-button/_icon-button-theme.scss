@@ -1,8 +1,13 @@
 @use 'sass:map';
 @use 'sass:meta';
+@use 'sass:list';
 @use 'sass:color';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
+
+@forward './flat-icon-button-theme';
+@forward './contained-icon-button-theme';
+@forward './outlined-icon-button-theme';
 
 ////
 /// @group themes
@@ -57,37 +62,19 @@
         }
 
         @if not($foreground) and $background {
-            $foreground: text-contrast($background);
-        }
-
-        @if not($hover-background) and $background {
-            @if meta.type-of($background) == 'color' {
-                $hover-background: color.scale($background, $lightness: 5%);
-            }
+            $foreground: adaptive-contrast(var(--background));
         }
 
         @if not($hover-foreground) and $hover-background {
-            @if meta.type-of($hover-background) == 'color' {
-                $hover-foreground: text-contrast($hover-background);
-            }
-        }
-
-        @if not($focus-background) and $background {
-            $focus-background: color.scale($background, $lightness: 5%);
+            $hover-foreground: adaptive-contrast(var(--hover-background));
         }
 
         @if not($focus-foreground) and $focus-background {
-            $focus-foreground: text-contrast($focus-background);
-        }
-
-        @if not($focus-hover-background) and $background {
-            @if meta.type-of($background) == 'color' {
-                $focus-hover-background: color.scale($background, $lightness: 5%);
-            }
+            $focus-foreground: adaptive-contrast(var(--focus-background));
         }
 
         @if not($focus-hover-foreground) and $focus-hover-background {
-            $focus-hover-foreground: text-contrast($focus-hover-background);
+            $focus-hover-foreground: adaptive-contrast(var(--focus-hover-background));
         }
 
         $themes: map.merge($themes, (
@@ -117,7 +104,6 @@
                 disabled-foreground: $disabled-foreground,
                 disabled-border-color: $disabled-border-color,
                 size: $size,
-                theme: map.get($schema, '_meta', 'theme'),
             ))
         ));
     }
@@ -132,15 +118,42 @@
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
-@mixin icon-button($theme) {
-    $variant: map.get($theme, variant);
-    $flat-theme: map.get(map.get($theme, 'themes'), 'flat');
-    $outlined-theme: map.get(map.get($theme, 'themes'), 'outlined');
-    $contained-theme: map.get(map.get($theme, 'themes'), 'contained');
+@mixin icon-button($themes...) {
+    $flat-theme: null;
+    $contained-theme: null;
+    $outlined-theme: null;
+    $variant: 'material';
 
-    @include css-vars($flat-theme);
-    @include css-vars($outlined-theme);
-    @include css-vars($contained-theme);
+    $required: ('flat', 'contained', 'outlined');
+    $added: ();
+    $missing: ();
+
+    @each $key, $theme in meta.keywords($themes) {
+        $type: map.get($theme, _meta, type);
+
+        $added: list.append($added, $key);
+
+        @if $type == 'flat' {
+            $flat-theme: $theme;
+        } @else if $type == 'contained' {
+            $contained-theme: $theme;
+        } @else if $type == 'outlined' {
+            $outlined-theme: $theme;
+        }
+
+        $variant: map.get($theme, '_meta', 'theme');
+        @include css-vars($theme);
+    }
+
+    @each $item in $required {
+        @if not(list.index($added, $item)) {
+            $missing: list.append($missing, '$#{$item}', $separator: comma);
+        }
+    }
+
+    @if list.length($missing) != 0 {
+        @error meta.inspect(string.unquote("Missing theme properties:") #{$missing});
+    }
 
     $icon-sizes: map.get((
         'material': rem(18px),
@@ -243,7 +256,7 @@
         }
     }
 
-    [igxIconButton='flat'].igx-button--focused {
+    %igx-icon-button--flat.igx-button--focused {
         background: var-get($flat-theme, 'focus-background');
         color: var-get($flat-theme, 'focus-foreground');
 
@@ -388,7 +401,7 @@
         }
     }
 
-    [igxIconButton='outlined'].igx-button--focused {
+    %igx-icon-button--outlined.igx-button--focused {
         background: var-get($outlined-theme, 'focus-background');
         color: var-get($outlined-theme, 'focus-foreground');
 
