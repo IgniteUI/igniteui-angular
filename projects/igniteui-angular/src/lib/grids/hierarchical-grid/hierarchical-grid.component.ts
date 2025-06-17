@@ -1291,7 +1291,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             if (!firstRowData) {
                 return null;
             }
-            const childFirstRowData = firstRowData?.length > 0 && firstRowData[childRowIsland.key]?.length > 0 ?
+            const childFirstRowData = firstRowData.length > 0 && firstRowData[childRowIsland.key]?.length > 0 ?
                 firstRowData[childRowIsland.key][0] : null;
             return acc.concat(this.generateChildEntity(childRowIsland, childFirstRowData));
         }, []);
