@@ -27,9 +27,10 @@ import {
     CUSTOM_ELEMENTS_SCHEMA,
     booleanAttribute,
     OnChanges,
-    SimpleChanges
+    SimpleChanges,
+    DOCUMENT
 } from '@angular/core';
-import { DOCUMENT, NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
+import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
 import { first, take, takeUntil} from 'rxjs/operators';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -1290,6 +1291,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /** @hidden @internal */
     public get pivotContentCalcWidth() {
+        if (!this.platform.isBrowser) {
+            return undefined;
+        }
         if (!this.visibleRowDimensions.length) {
             return Math.max(0, this.calcWidth - this.pivotRowWidths);
         }

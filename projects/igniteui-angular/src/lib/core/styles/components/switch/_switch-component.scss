@@ -132,56 +132,6 @@
             }
         }
 
-        @include m(invalid) {
-            @include e(composite) {
-                @extend %switch-composite--invalid !optional;
-            }
-
-            &:hover {
-                @include e(ripple) {
-                    @extend %switch-ripple--hover !optional;
-                    @extend %switch-ripple--hover-invalid !optional;
-                }
-
-                @include e(composite) {
-                    @extend %switch-composite--invalid--hover !optional;
-                }
-            }
-
-            &:active {
-                @include e(ripple) {
-                    @extend %switch-ripple--hover !optional;
-                    @extend %switch-ripple--hover-invalid !optional;
-                    @extend %switch-ripple--pressed !optional;
-                }
-            }
-
-            @include e(label) {
-                @extend %switch-label--invalid !optional;
-            }
-          
-            @include e(label, $m: before) {
-                @extend %switch-label--invalid !optional;
-            }
-
-            @include e(thumb) {
-                @extend %switch-thumb--invalid !optional;
-            }
-        }
-
-        @include mx(invalid, checked) {
-            @include e(thumb) {
-                @extend %switch-thumb--x--invalid !optional;
-            }
-
-            &:hover {
-                @include e(ripple) {
-                    @extend %switch-ripple--hover !optional;
-                    @extend %switch-ripple--hover-checked-invalid !optional;
-                }
-            }
-        }
-
         @include m(disabled) {
             @extend %switch-display--disabled !optional;
 
@@ -202,26 +152,11 @@
             }
         }
 
-        @include mx(disabled, invalid) {
-            @include e(thumb) {
-                @extend %switch-thumb--disabled !optional;
-            }
-        }
-
         @include mx(focused, checked) {
             @include e(ripple) {
                 @extend %switch-ripple--focused !optional;
                 @extend %switch-ripple--focused-checked !optional;
             }
-        }
-
-        @include mx(focused, invalid) {
-            @include e(ripple) {
-                @extend %switch-ripple--focused !optional;
-                @extend %switch-ripple--focused-invalid !optional;
-            }
-
-            @extend %igx-switch--focused--invalid !optional;
         }
     }
 }

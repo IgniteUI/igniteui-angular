@@ -20,14 +20,13 @@ import {
     defineComponents,
     IgcTabsComponent,
     IgcTabComponent,
-    IgcTabPanelComponent,
 } from 'igniteui-webcomponents';
 import {
     PropertyChangeService,
     Properties,
 } from '../properties-panel/property-change.service';
 
-defineComponents(IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent);
+defineComponents(IgcTabsComponent, IgcTabComponent);
 
 @Component({
     selector: 'app-tabs-showcase-sample',

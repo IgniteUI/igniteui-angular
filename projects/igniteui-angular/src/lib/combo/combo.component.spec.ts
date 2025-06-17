@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import {
     FormsModule, NgControl, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
 } from '@angular/forms';
@@ -15,7 +15,6 @@ import { IForOfState } from '../directives/for-of/for_of.directive';
 import { IgxInputState } from '../directives/input/input.directive';
 import { IgxLabelDirective } from '../input-group/public_api';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
@@ -87,6 +86,11 @@ describe('igxCombo', () => {
         });
         mockSelection.get.and.returnValue(new Set([]));
         const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
+        jasmine.getEnv().allowRespy(true);
+
+        afterAll(() => {
+            jasmine.getEnv().allowRespy(false);
+        });
 
         it('should correctly implement interface methods - ControlValueAccessor ', () => {
             combo = new IgxComboComponent(
@@ -986,8 +990,8 @@ describe('igxCombo', () => {
     });
 
     describe('Combo feature tests: ', () => {
-        configureTestSuite(() => {
-            return TestBed.configureTestingModule({
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxComboSampleComponent,
@@ -998,8 +1002,8 @@ describe('igxCombo', () => {
                     IgxComboFormComponent,
                     IgxComboInTemplatedFormComponent
                 ]
-            });
-        });
+            }).compileComponents();
+        }));
 
         describe('Initialization and rendering tests: ', () => {
             beforeEach(() => {
@@ -1055,8 +1059,8 @@ describe('igxCombo', () => {
                 expect(input.nativeElement.getAttribute('aria-controls')).toEqual(combo.dropdown.listId);
                 expect(input.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
 
-                const dropdown = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_DROPDOWN}`));
-                expect(dropdown.nativeElement.getAttribute('ng-reflect-labelled-by')).toEqual(combo.placeholder);
+                const dropdown = fixture.debugElement.query(By.css(`div[role="listbox"]`));
+                expect(dropdown.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
 
                 combo.open();
                 tick();

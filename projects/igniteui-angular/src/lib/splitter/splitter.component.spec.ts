@@ -1,4 +1,3 @@
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild, DebugElement } from '@angular/core';
 import { SplitterType, IgxSplitterComponent, ISplitterBarResizeEventArgs } from './splitter.component';
@@ -6,22 +5,22 @@ import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 
-
 const SPLITTERBAR_CLASS = 'igx-splitter-bar';
 const SPLITTERBAR_DIV_CLASS = '.igx-splitter-bar';
 const SPLITTER_BAR_VERTICAL_CLASS = 'igx-splitter-bar--vertical';
 const COLLAPSIBLE_CLASS = 'igx-splitter-bar--collapsible';
 
 describe('IgxSplitter', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => TestBed.configureTestingModule({
-    imports: [
-        SplitterTestComponent
-    ]
-}).compileComponents()));
+    beforeEach(waitForAsync(() =>
+        TestBed.configureTestingModule({
+            imports: [
+                SplitterTestComponent
+            ]
+        }).compileComponents()
+    ));
     let fixture: ComponentFixture<SplitterTestComponent>;
     let splitter: IgxSplitterComponent;
-    
+
     beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(SplitterTestComponent);
         fixture.detectChanges();
@@ -326,8 +325,7 @@ describe('IgxSplitter', () => {
 });
 
 describe('IgxSplitter pane toggle', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => TestBed.configureTestingModule({
         imports: [
             SplitterTogglePaneComponent
         ]
@@ -430,8 +428,7 @@ describe('IgxSplitter pane toggle', () => {
 });
 
 describe('IgxSplitter pane collapse', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => TestBed.configureTestingModule({
         imports: [
             SplitterCollapsedPaneComponent
         ]
@@ -461,6 +458,75 @@ describe('IgxSplitter pane collapse', () => {
         });
     });
 });
+
+describe('IgxSplitter resizing with minSize and browser window is shrinked', () => {
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                SplitterMinSiezComponent
+            ]
+        }).compileComponents();
+    }));
+
+    let fixture; let splitter;
+    beforeEach(waitForAsync(() => {
+        fixture = TestBed.createComponent(SplitterMinSiezComponent);
+        fixture.detectChanges();
+        splitter = fixture.componentInstance.splitter;
+    }));
+
+    it('should set the correct sizes when the user drags one pane to the end of another', () => {
+        const pane1 = splitter.panes.toArray()[0];
+        const pane2 = splitter.panes.toArray()[1];
+        const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
+        const minSize = parseInt(pane1.minSize);
+        spyOn(splitter, 'onMoveEnd').and.callThrough();
+
+        pane1.size = (splitter.getTotalSize() - parseInt(pane2.size)) + 'px';
+        fixture.detectChanges();
+
+        splitterBarComponent.moveStart.emit(pane1);
+        fixture.detectChanges();
+        splitterBarComponent.movingEnd.emit(splitter.getTotalSize() -minSize);
+        fixture.detectChanges();
+
+        splitter.elementRef.nativeElement.style.width = '500px';
+        pane2.size = (splitter.getTotalSize() - minSize) + 'px';
+        fixture.detectChanges();
+
+        splitterBarComponent.moveStart.emit(pane1);
+        fixture.detectChanges();
+        splitterBarComponent.movingEnd.emit(-400);
+        fixture.detectChanges();
+
+        const isFullSize = pane1.size === '100%' || pane1.size === (splitter.getTotalSize() + 'px');
+
+        expect(splitter.onMoveEnd).toHaveBeenCalled();
+        expect(isFullSize).toBeTruthy();
+    });
+});
+
+@Component({
+    template: `
+    <igx-splitter>
+    <igx-splitter-pane minSize="200px">
+        <div>
+           Pane 1
+        </div>
+    </igx-splitter-pane>
+    <igx-splitter-pane size="200px">
+        <div>
+            Pane 2
+         </div>
+    </igx-splitter-pane>
+</igx-splitter>
+    `,
+    imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
+})
+export class SplitterMinSiezComponent {
+    @ViewChild(IgxSplitterComponent, { static: true })
+    public splitter: IgxSplitterComponent;
+}
 
 @Component({
     template: `
