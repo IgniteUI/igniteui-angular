@@ -134,7 +134,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public hidden = false;
+    public hidden = true;
 
 
     /**

@@ -253,6 +253,24 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         return [];
     }
 
+    //#region inert, not-a-grid component
+    /** @hidden @internal */
+    public override tabindex = -1;
+
+    /** @hidden @internal */
+    public override hostRole = null;
+
+    protected override baseClass = null;
+
+    /** @hidden @internal */
+    public override get hostWidth(): any {
+        return null;
+    }
+
+    protected override displayStyle = 'none';
+    protected override templateRows = null;
+    //#endregion
+
     private ri_columnListDiffer;
     private layout_id = `igx-row-island-`;
     private isInit = false;

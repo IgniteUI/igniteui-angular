@@ -80,7 +80,8 @@ import { FilteringStrategy, IFilteringStrategy } from '../data-operations/filter
 import {
     IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective,
     IgxHeaderCollapsedIndicatorDirective, IgxExcelStyleHeaderIconDirective, IgxSortAscendingHeaderIconDirective,
-    IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective
+    IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective,
+    IgxGridLoadingTemplateDirective, IgxGridEmptyTemplateDirective,
 } from './grid.directives';
 import {
     GridKeydownTargetType,
@@ -259,11 +260,22 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @example
      * ```html
+     * <ng-template igxGridEmpty>
+     *   <!-- content to show when the grid is empty -->
+     * </ng-template>
+     * ```
+     * Or
+     * ```html
      * <igx-grid [id]="'igx-grid-1'" [data]="Data" [emptyGridTemplate]="myTemplate" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Input()
-    public emptyGridTemplate: TemplateRef<IgxGridTemplateContext>;
+    public get emptyGridTemplate(): TemplateRef<IgxGridTemplateContext> {
+        return this._emptyGridTemplate || this.emptyDirectiveTemplate;
+    }
+    public set emptyGridTemplate(template: TemplateRef<IgxGridTemplateContext>) {
+        this._emptyGridTemplate = template;
+    }
 
     /**
      * Gets/Sets a custom template for adding row UI when grid is empty.
@@ -281,11 +293,22 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @example
      * ```html
+     * <ng-template igxGridLoading>
+     *   <!-- content to show when the grid is loading -->
+     * </ng-template>
+     * ```
+     * Or
+     * ```html
      * <igx-grid [id]="'igx-grid-1'" [data]="Data" [loadingGridTemplate]="myTemplate" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Input()
-    public loadingGridTemplate: TemplateRef<IgxGridTemplateContext>;
+    public get loadingGridTemplate(): TemplateRef<IgxGridTemplateContext> {
+        return this._loadingGridTemplate || this.loadingDirectiveTemplate;
+    }
+    public set loadingGridTemplate(template: TemplateRef<IgxGridTemplateContext>) {
+        this._loadingGridTemplate = template;
+    }
 
     /**
      * Get/Set IgxSummaryRow height
@@ -1695,6 +1718,13 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @ContentChildren(IgxDragIndicatorIconDirective, { read: TemplateRef, descendants: false })
     public dragIndicatorIconTemplates: QueryList<TemplateRef<IgxGridEmptyTemplateContext>>;
+
+
+    @ContentChild(IgxGridLoadingTemplateDirective, { read: TemplateRef })
+    protected loadingDirectiveTemplate: TemplateRef<IgxGridTemplateContext>;
+
+    @ContentChild(IgxGridEmptyTemplateDirective, { read: TemplateRef })
+    protected emptyDirectiveTemplate: TemplateRef<IgxGridTemplateContext>;
 
     /**
      * @hidden @internal
@@ -3173,6 +3203,8 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _rowCollapsedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext>;
     private _headerExpandIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
     private _headerCollapseIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
+    private _emptyGridTemplate: TemplateRef<IgxGridTemplateContext>;
+    private _loadingGridTemplate: TemplateRef<IgxGridTemplateContext>;
 
     private _cdrRequests = false;
     private _resourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
