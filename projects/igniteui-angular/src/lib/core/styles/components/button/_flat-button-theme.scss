@@ -1,0 +1,356 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:color';
+@use 'sass:list';
+@use 'sass:string';
+@use '../../base' as *;
+@use '../../themes/schemas' as *;
+
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// If only background color is specified, text/icon color
+/// will be assigned automatically to a contrasting color.
+/// Does ___not___ apply for disabled state colors.
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
+/// @param {Color} $background [null] - The background color of the button.
+/// @param {Color} $foreground [null] - The text color of the button.
+/// @param {Color} $icon-color [null] - The icon color in the button.
+/// @param {Color} $icon-color-hover [null] - The icon color in the button on hover.
+/// @param {Color} $hover-background [null] - The hover background color of the button.
+/// @param {Color} $hover-foreground [null] - The hover text color of the button.
+/// @param {Color} $focus-background [null] - The focus background color of the button.
+/// @param {Color} $focus-foreground [null] - The focus text color of the button.
+/// @param {Color} $focus-hover-background [null] - The background color on focus hovered state of the button.
+/// @param {Color} $focus-hover-foreground [null] - The text color on focus hovered state of the button.
+/// @param {Color} $focus-visible-background [null] - The focus-visible background color of the button.
+/// @param {Color} $focus-visible-foreground [null] - The focus-visible text color of the button.
+/// @param {Color} $active-background [null] - The active background of the button.
+/// @param {Color} $active-foreground [null] - The active text color of the button.
+/// @param {List} $border-radius [null] - The border radius of the button.
+/// @param {Color} $border-color [null] - The border color of the button.
+/// @param {Color} $hover-border-color [null] - The hover border color of the button.
+/// @param {Color} $focus-border-color [null] - The focus border color of the button.
+/// @param {Color} $focus-visible-border-color [null] - The focus-visible border color of the button.
+/// @param {Color} $active-border-color [null] - The active border color of the button.
+/// @param {Color} $shadow-color [null] - The shadow color of the button.
+/// @param {Color} $resting-shadow [null] - The shadow of the button in its idle state.
+/// @param {Color} $hover-shadow [null] - The shadow of the button in its hover state.
+/// @param {Color} $focus-shadow [null] - The shadow of the button in its focus state.
+/// @param {Color} $active-shadow [null] - The shadow of the button in its focus state.
+/// @param {Color} $disabled-background [null] - The disabled background color of the button.
+/// @param {Color} $disabled-foreground [null] - The disabled text color of the button.
+/// @param {Color} $disabled-icon-color [null] - The disabled icon color of the button.
+/// @param {Color} $disabled-border-color [null] - The disabled border color of the button.
+///
+/// @requires $light-material-schema
+///
+/// @example scss Change the text colors in flat buttons
+///   $my-button-theme: flat-button-theme(
+///     $foreground: black,
+///   );
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-button-theme);
+@function flat-button-theme(
+    $schema: $light-material-schema,
+
+    $background: null,
+    $foreground: null,
+
+    $hover-background: null,
+    $hover-foreground: null,
+
+    $icon-color: $foreground,
+    $icon-color-hover: $hover-foreground,
+
+    $focus-background: null,
+    $focus-foreground: null,
+
+    $focus-hover-background: null,
+    $focus-hover-foreground: null,
+
+    $focus-visible-background: null,
+    $focus-visible-foreground: null,
+
+    $active-background: null,
+    $active-foreground: null,
+
+    $border-radius: null,
+    $border-color: null,
+    $hover-border-color: null,
+    $focus-border-color: null,
+    $focus-visible-border-color: null,
+    $active-border-color: null,
+
+    $shadow-color: null,
+
+    $resting-shadow: null,
+    $hover-shadow: null,
+    $focus-shadow: null,
+    $active-shadow: null,
+
+    $disabled-background: null,
+    $disabled-foreground: null,
+    $disabled-icon-color: $disabled-foreground,
+    $disabled-border-color: null,
+    $size: null
+) {
+    $name: 'igx-flat-button';
+    $button-schema: ();
+
+    @if map.has-key($schema, 'button') {
+        $button-schema: map.get($schema, 'button');
+
+        @if map.has-key($button-schema, 'flat') {
+            $button-schema: map.get($button-schema, 'flat');
+        } @else {
+            $button-schema: $schema;
+        }
+    }
+
+    $theme: digest-schema($button-schema);
+    $variant: map.get($schema, '_meta', 'theme');
+
+    @if not($hover-foreground) and $hover-background {
+        $hover-foreground: adaptive-contrast(var(--hover-background));
+    }
+
+    @if not($icon-color-hover) and $hover-foreground {
+        $icon-color-hover: var(--hover-foreground);
+    }
+
+    @if not($focus-foreground) and $focus-background {
+        $focus-foreground: adaptive-contrast(var(--focus-background));
+    }
+
+    @if not($focus-hover-foreground) and $focus-hover-background {
+        $focus-hover-foreground: adaptive-contrast(var(--focus-hover-background));
+    }
+
+    @if not($active-foreground) and $active-background {
+        $active-foreground: adaptive-contrast(var(--active-background));
+    }
+
+    @if not($focus-visible-background) and $focus-background {
+        $focus-visible-background: var(--focus-background);
+    }
+
+    @if not($focus-visible-foreground) and $focus-visible-background {
+        $focus-visible-foreground: adaptive-contrast(var(--focus-visible-background));
+    }
+
+    @if not($focus-visible-border-color) and $focus-border-color {
+        $focus-visible-border-color: var(--focus-border-color);
+    }
+
+    @if $variant == 'material' or $variant == 'fluent' {
+        @if not($hover-background) and $foreground {
+            $hover-background: hsla(from var(--foreground) h s l / 0.08);
+        }
+
+        @if not($focus-background) and $foreground {
+            $focus-background: hsla(from var(--foreground) h s l / 0.32);
+        }
+
+        @if not($focus-hover-background) and $foreground {
+            $focus-hover-background: hsla(from var(--foreground) h s l / 0.24);
+        }
+
+        @if not($active-background) and $foreground {
+            $active-background: hsla(from var(--foreground) h s l / 0.16);
+        }
+
+        @if not($hover-foreground) and $hover-background {
+            $hover-foreground: hsla(from var(--hover-background) h s l / 1);
+        }
+
+        @if not($icon-color-hover) and $hover-foreground {
+            $icon-color-hover: var(--hover-foreground);
+        }
+
+        @if not($focus-foreground) and $focus-background {
+            $focus-foreground: hsla(from var(--focus-background) h s l / 1);
+        }
+
+        @if not($focus-hover-foreground) and $focus-hover-background {
+            $focus-hover-foreground: hsla(
+                from var(--focus-hover-background) h s l / 1
+            );
+        }
+
+        @if not($active-foreground) and $active-background {
+            $active-foreground: hsla(from var(--active-background) h s l / 1);
+        }
+
+        @if $variant == 'material' {
+            @if not($focus-visible-background) and $foreground {
+                $focus-visible-background: hsla(
+                    from var(--foreground) h s l / 0.16
+                );
+            }
+
+            @if not($focus-visible-foreground) and $focus-visible-background {
+                $focus-visible-foreground: hsla(
+                    from var(--focus-visible-background) h s l / 1
+                );
+            }
+        } @else {
+            @if not($focus-visible-foreground) and $focus-foreground {
+                $focus-visible-foreground: var(--focus-foreground);
+            }
+        }
+
+        @if $variant == 'fluent' {
+            @if not($focus-visible-border-color) and $focus-visible-foreground {
+                $focus-visible-border-color: var(--focus-visible-foreground);
+            }
+        }
+    }
+
+    @if $variant == 'indigo' {
+        @if not($hover-background) and $foreground {
+            $hover-background: hsla(from var(--foreground) h s l / 0.08);
+        }
+
+        @if not($focus-background) and $foreground {
+            $focus-background: hsla(from var(--foreground) h s l / 0.08);
+        }
+
+        @if not($focus-hover-background) and $foreground {
+            $focus-hover-background: hsla(from var(--foreground) h s l / 0.08);
+        }
+
+        @if not($active-background) and $foreground {
+            $active-background: hsla(from var(--foreground) h s l / 0.08);
+        }
+    }
+
+    @if $variant == 'bootstrap' or $variant == 'indigo' {
+        @if not($hover-foreground) and $foreground {
+            $hover-foreground: hsl(from var(--foreground) h s calc(l * 0.9));
+        }
+
+        @if not($icon-color-hover) and $hover-foreground {
+            $icon-color-hover: var(--hover-foreground);
+        }
+
+        @if $variant == 'bootstrap' {
+            @if not($focus-foreground) and $foreground {
+                $focus-foreground: hsl(
+                    from var(--foreground) h s calc(l * 0.7)
+                );
+            }
+        } @else {
+            @if not($focus-foreground) and $foreground {
+                $focus-foreground: hsl(
+                    from var(--foreground) h s calc(l * 0.9)
+                );
+            }
+        }
+
+        @if not($focus-hover-foreground) and $foreground {
+            $focus-hover-foreground: hsl(
+                from var(--foreground) h s calc(l * 0.9)
+            );
+        }
+
+        @if not($focus-visible-foreground) and $foreground {
+            $focus-visible-foreground: var(--foreground);
+        }
+
+        @if not($disabled-foreground) and $foreground {
+            $disabled-foreground: hsl(from (var(--foreground) h s l / 0.5));
+        }
+
+        @if not($disabled-icon-color) and $disabled-foreground {
+            $disabled-icon-color: var(--disabled-foreground);
+        }
+
+        @if $variant == 'bootstrap' {
+            @if not($active-foreground) and $foreground {
+                $active-foreground: hsl(
+                    from var(--foreground) h s calc(l * 0.7)
+                );
+            }
+
+            @if not($shadow-color) and $focus-visible-foreground {
+                $shadow-color: hsla(
+                    from var(--focus-visible-foreground) h s l / 0.5
+                );
+            }
+        } @else {
+            @if not($active-foreground) and $foreground {
+                $active-foreground: hsl(
+                    from var(--foreground) h s calc(l * 0.9)
+                );
+            }
+
+            @if not($shadow-color) and $focus-visible-foreground {
+                $shadow-color: hsla(
+                    from var(--focus-visible-foreground) h s l / 0.2
+                );
+            }
+        }
+    }
+
+    @if not($resting-shadow) {
+        $resting-elevation: map.get($button-schema, 'resting-elevation');
+        $resting-shadow: elevation($resting-elevation);
+    }
+
+    @if not($hover-shadow) {
+        $hover-elevation: map.get($button-schema, 'hover-elevation');
+        $hover-shadow: elevation($hover-elevation);
+    }
+
+    @if not($focus-shadow) {
+        $focus-elevation: map.get($button-schema, 'focus-elevation');
+        $focus-shadow: elevation($focus-elevation);
+    }
+
+    @if not($active-shadow) {
+        $active-elevation: map.get($button-schema, 'active-elevation');
+        $active-shadow: elevation($active-elevation);
+    }
+
+    @return extend(
+        $theme,
+        (
+            name: $name,
+            background: $background,
+            foreground: $foreground,
+            icon-color: $icon-color,
+            icon-color-hover: $icon-color-hover,
+            hover-background: $hover-background,
+            hover-foreground: $hover-foreground,
+            focus-background: $focus-background,
+            focus-foreground: $focus-foreground,
+            focus-hover-background: $focus-hover-background,
+            focus-hover-foreground: $focus-hover-foreground,
+            focus-visible-background: $focus-visible-background,
+            focus-visible-foreground: $focus-visible-foreground,
+            active-background: $active-background,
+            active-foreground: $active-foreground,
+            border-radius: $border-radius,
+            border-color: $border-color,
+            hover-border-color: $hover-border-color,
+            focus-border-color: $focus-border-color,
+            focus-visible-border-color: $focus-visible-border-color,
+            active-border-color: $active-border-color,
+            shadow-color: $shadow-color,
+            resting-shadow: $resting-shadow,
+            hover-shadow: $hover-shadow,
+            focus-shadow: $focus-shadow,
+            active-shadow: $active-shadow,
+            disabled-background: $disabled-background,
+            disabled-foreground: $disabled-foreground,
+            disabled-icon-color: $disabled-icon-color,
+            disabled-border-color: $disabled-border-color,
+            size: $size,
+        )
+    );
+}
