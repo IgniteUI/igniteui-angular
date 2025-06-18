@@ -26,9 +26,11 @@
                 [attr.placeholder]="getPlaceholder()"
                 igxInput
             />
-            <igx-suffix [hidden]="hideSuffix()">
-                <igx-icon>face</igx-icon>
-            </igx-suffix>
+            @if (!hideSuffix()) {
+                <igx-suffix>
+                    <igx-icon>face</igx-icon>
+                </igx-suffix>
+            }
             <igx-hint>Type your web address</igx-hint>
         </igx-input-group>
 
@@ -48,9 +50,11 @@
                 [attr.placeholder]="getPlaceholder()"
                 igxInput>
             </textarea>
-            <igx-suffix [hidden]="hideSuffix()">
-                <igx-icon>face</igx-icon>
-            </igx-suffix>
+            @if (!hideSuffix()) {
+                <igx-suffix>
+                    <igx-icon>face</igx-icon>
+                </igx-suffix>
+            }
             <igx-hint>Hint text</igx-hint>
         </igx-input-group>
 
@@ -68,9 +72,11 @@
             <igx-hint>
                 I am a Hint
             </igx-hint>
-            <igx-suffix [hidden]="hideSuffix()">
-                <igx-icon>favorite</igx-icon>
-            </igx-suffix>
+            @if (!hideSuffix()) {
+                <igx-suffix>
+                    <igx-icon>favorite</igx-icon>
+                </igx-suffix>
+            }
             <igx-select-item [value]="'Apple'" [disabled]="true">Apple</igx-select-item>
             <igx-select-item [value]="'Orange'">Orange</igx-select-item>
             <igx-select-item [value]="'Grapes'">Grapes</igx-select-item>
@@ -88,7 +94,11 @@
                 <label igxLabel>{{ getLabel() }}</label>
             }
             <igx-icon igxPrefix [hidden]="hidePrefix()">favorite</igx-icon>
-            <igx-icon igxSuffix [hidden]="hideSuffix()">favorite</igx-icon>
+            @if (!hideSuffix()) {
+                <igx-suffix>
+                    <igx-icon>favorite</igx-icon>
+                </igx-suffix>
+            }
             <igx-hint>Select a unique falsy value</igx-hint>
         </igx-combo>
 
@@ -108,9 +118,11 @@
                 [readOnly]="isReadonly()"
                 igxInput
             />
-            <igx-suffix [hidden]="hideSuffix()">
-                <igx-icon>face</igx-icon>
-            </igx-suffix>
+            @if (!hideSuffix()) {
+                <igx-suffix>
+                    <igx-icon>face</igx-icon>
+                </igx-suffix>
+            }
             <igx-hint>Type your web address</igx-hint>
         </igx-input-group>
     </form>
@@ -157,7 +169,9 @@
                 [type]="getNativeInputType()"
                 [outlined]="isOutlined()">
             <span slot="prefix" [hidden]="hidePrefix()"><igc-icon name="face"></igc-icon></span>
-            <span slot="suffix" [hidden]="hideSuffix()"><igc-icon name="face"></igc-icon></span>
+            @if (!hideSuffix()) {
+                <span slot="suffix"><igc-icon name="face"></igc-icon></span>
+            }
             <span slot="helper-text">Type your web address</span>
         </igc-input>
 
@@ -171,7 +185,9 @@
                 [attr.placeholder]="getPlaceholder()"
                 [outlined]="isOutlined()">
             <span slot="prefix" [hidden]="hidePrefix()"><igc-icon name="face"></igc-icon></span>
-            <span slot="suffix" [hidden]="hideSuffix()"><igc-icon name="face"></igc-icon></span>
+            @if (!hideSuffix()) {
+                <span slot="suffix"><igc-icon name="face"></igc-icon></span>
+            }
             <span slot="helper-text">Hint text</span>
         </igc-textarea>
 
@@ -183,7 +199,9 @@
             [outlined]="isOutlined()"
             [style.--ig-size]="getSize()">
             <igc-icon slot="prefix" [hidden]="hidePrefix()" name="favorite"></igc-icon>
-            <igc-icon slot="suffix" [hidden]="hideSuffix()" name="favorite"></igc-icon>
+            @if (!hideSuffix()) {
+                <igc-icon slot="suffix" name="favorite"></igc-icon>
+            }
             <span slot="helper-text">I am a Hint</span>
             <igc-select-item [value]="'Apple'" [disabled]="true">Apple</igc-select-item>
             <igc-select-item [value]="'Orange'" [selected]="getValue()">Orange</igc-select-item>
@@ -199,6 +217,10 @@
                 [disabled]="isDisabled()"
                 [style.--ig-size]="getSize()">
             <span slot="helper-text">I am a Hint</span>
+            <igc-icon slot="prefix" [hidden]="hidePrefix()" name="favorite"></igc-icon>
+            @if (!hideSuffix()) {
+                <igc-icon slot="suffix" name="favorite"></igc-icon>
+            }
         </igc-combo>
 
 
