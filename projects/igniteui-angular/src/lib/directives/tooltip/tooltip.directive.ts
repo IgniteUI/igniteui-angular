@@ -1,5 +1,6 @@
+import { DOCUMENT } from '@angular/common';
 import {
-    Directive, ElementRef, Input, ChangeDetectorRef, Optional, HostBinding, Inject, OnDestroy, inject, DOCUMENT
+    Directive, ElementRef, Input, ChangeDetectorRef, Optional, HostBinding, Inject, OnDestroy, inject
 } from '@angular/core';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { OverlaySettings } from '../../services/public_api';
