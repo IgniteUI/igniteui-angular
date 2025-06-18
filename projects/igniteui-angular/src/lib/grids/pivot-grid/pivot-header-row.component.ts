@@ -414,7 +414,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
             this.value.aggregate = event.newSelection.value;
             const isSingleValue = this.grid.values.length === 1;
 
-            PivotUtil.handleCountAggregator(this.grid.columns, this.value, isSingleValue);
+            PivotUtil.updateColumnTypeByAggregator(this.grid.columns, this.value, isSingleValue);
 
             this.grid.pipeTrigger++;
         }

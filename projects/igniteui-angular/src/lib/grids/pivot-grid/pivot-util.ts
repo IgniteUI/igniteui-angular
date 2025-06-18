@@ -88,13 +88,13 @@ export class PivotUtil {
     }
 
     public static flattenGroupsHorizontally(data: IPivotGridRecord[],
-                                            dimension: IPivotDimension,
-                                            expansionStates,
-                                            defaultExpand: boolean,
-                                            visibleDimensions: IPivotDimension[],
-                                            summariesPosition: PivotSummaryPosition,
-                                            parent?: IPivotDimension,
-                                            parentRec?: IPivotGridRecord) {
+        dimension: IPivotDimension,
+        expansionStates,
+        defaultExpand: boolean,
+        visibleDimensions: IPivotDimension[],
+        summariesPosition: PivotSummaryPosition,
+        parent?: IPivotDimension,
+        parentRec?: IPivotGridRecord) {
         for (let i = 0; i < data.length; i++) {
             const rec = data[i];
             const field = dimension.memberName;
@@ -316,7 +316,7 @@ export class PivotUtil {
                 const aggregationKey = groupName ? groupName + pivotKeys.columnDimensionSeparator + key : key;
                 rec.aggregationValues.set(aggregationKey, aggregationData[key]);
             });
-        } else  if (aggregationKeys.length === 1) {
+        } else if (aggregationKeys.length === 1) {
             const aggregationKey = aggregationKeys[0];
             rec.aggregationValues.set(groupName || aggregationKey, aggregationData[aggregationKey]);
         }
@@ -508,28 +508,24 @@ export class PivotUtil {
         }
     }
 
-    public static handleCountAggregator(columns: ColumnType[], value: IPivotValue, isSingleValue: boolean): void {
+    public static updateColumnTypeByAggregator(columns: any[], value: IPivotValue, isSingleValue: boolean): void {
+        const targetColumnType = PivotUtil.getColumnDataTypeForValue(value);
+        columns.forEach(column => {
+            if (column.field?.includes(value.member) || isSingleValue) {
+                column.dataType = targetColumnType;
+            }
+        })
+    }
+
+    private static getColumnDataTypeForValue(value: IPivotValue): GridColumnDataType {
         const isCountAggregator = value.aggregate.aggregator?.name?.toLowerCase() === 'count' || value.aggregate.aggregatorName?.toLowerCase() === 'count';
 
         if ((value.dataType === GridColumnDataType.Currency || value.dataType === GridColumnDataType.Percent) && isCountAggregator) {
-            columns.forEach(column => {
-                console.log(column.field?.includes(value.member))
-                if (column.field?.includes(value.member) || isSingleValue) {
-                    column.dataType = GridColumnDataType.Number;
-                }                
-            });
+            return GridColumnDataType.Number;
         } else if (value.dataType === GridColumnDataType.Currency && !isCountAggregator) {
-            columns.forEach(column => {
-                if (column.field?.includes(value.member) || isSingleValue) {
-                    column.dataType = GridColumnDataType.Currency;
-                }  
-            });
+            return GridColumnDataType.Currency;
         } else if (value.dataType === GridColumnDataType.Percent && !isCountAggregator) {
-            columns.forEach(column => {
-                if (column.field?.includes(value.member) || isSingleValue) {
-                    column.dataType = GridColumnDataType.Percent;
-                }  
-            });
+            return GridColumnDataType.Percent;
         }
     }
 }
