@@ -2285,23 +2285,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         });
         return hierarchy;
     }
-    private updateColumnDataTypeByAggregator(column: any) {
-        this.values.forEach((aggregatorValue) => {
-            if ((aggregatorValue.dataType === GridColumnDataType.Currency || aggregatorValue.dataType === GridColumnDataType.Percent) && aggregatorValue.aggregate?.key?.toLowerCase() === 'count') {
-                if (column.field?.includes(aggregatorValue.member) || this.values.length === 1) {
-                    column.dataType = GridColumnDataType.Number;
-                }
-            } else if (aggregatorValue.dataType === GridColumnDataType.Currency && aggregatorValue.aggregate?.key?.toLowerCase() !== 'count') {
-                if (column.field?.includes(aggregatorValue.member) || this.values.length === 1) {
-                    column.dataType = GridColumnDataType.Currency;
-                }
-            } else if (aggregatorValue.dataType === GridColumnDataType.Percent && aggregatorValue.aggregate?.key?.toLowerCase() !== 'count') {
-                if (column.field?.includes(aggregatorValue.member) || this.values.length === 1) {
-                    column.dataType = GridColumnDataType.Percent;
-                }
-            }
-        })
-    }
     protected generateColumnHierarchy(fields: Map<string, any>, data, parent = null): IgxColumnComponent[] {
         let columns = [];
         if (fields.size === 0) {
@@ -2332,15 +2315,18 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             if (shouldGenerate && (value.children == null || value.children.length === 0 || value.children.size === 0)) {
                 const col = this.createColumnForDimension(value, data, parent, this.hasMultipleValues);
 
-                this.updateColumnDataTypeByAggregator(col);
+                if (!this.hasMultipleValues && this.values.length > 0) {
+                    PivotUtil.updateColumnTypeByAggregator([col], this.values[0], true);
+                }
 
                 columns.push(col);
                 if (this.hasMultipleValues) {
                     const measureChildren = this.getMeasureChildren(data, col, false, value.dimension.width);
 
-                    measureChildren.forEach((child) => {
-                        this.updateColumnDataTypeByAggregator(child);
-                    })
+                    measureChildren.forEach((child, index) => {
+                        const pivotValue = this.values[index];
+                        PivotUtil.updateColumnTypeByAggregator([child], pivotValue, this.values.length === 1);
+                    });
 
                     col.children.reset(measureChildren);
                     columns = columns.concat(measureChildren);
