@@ -2172,12 +2172,26 @@
 
     %bootstrap-input--success {
         border: rem(1px) solid var-get($theme, 'success-secondary-color');
-        box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
+
+        &:focus {
+            box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
+
+            + %bootstrap-file-input {
+                box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
+            }
+        }
     }
 
     %bootstrap-input--error {
         border: rem(1px) solid var-get($theme, 'error-secondary-color');
-        box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+
+        &:focus {
+            box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+
+            + %bootstrap-file-input {
+                box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+            }
+        }
     }
 
     %bootstrap-input--disabled {
