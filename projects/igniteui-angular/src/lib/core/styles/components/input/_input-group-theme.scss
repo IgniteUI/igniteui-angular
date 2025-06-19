@@ -2232,6 +2232,18 @@
         }
     }
 
+    %bootstrap-input--warning {
+        border: rem(1px) solid var-get($theme, 'warning-secondary-color');
+
+        &:focus {
+            box-shadow: 0 0 0 rem(4px) color($color: 'warn', $variant: 500, $opacity: 0.38);
+
+            + %bootstrap-file-input {
+                box-shadow: 0 0 0 rem(4px) color($color: 'warn', $variant: 500, $opacity: 0.38);
+            }
+        }
+    }
+
     %bootstrap-input--disabled {
         background: var-get($theme, 'border-disabled-background');
         border: rem(1px) solid var-get($theme, 'disabled-border-color');
