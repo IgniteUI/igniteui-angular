@@ -263,6 +263,13 @@
                 padding: 0;
             }
         }
+
+        &:not(.igx-input-group--disabled){
+          %igx-combo__clear-button {
+                color: var-get($theme, 'clear-button-foreground');
+                background: var-get($theme, 'clear-button-background');
+            }
+        }
     }
 
     %form-group-bundle:not(%form-group-bundle--disabled):focus-within {
