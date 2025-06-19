@@ -58,7 +58,6 @@
         color: $color,
         border-color: $border-color,
         border-radius: $border-radius,
-        theme: map.get($schema, '_meta', 'theme'),
     ));
 }
 
