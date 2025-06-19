@@ -596,18 +596,13 @@ describe("IgxCalendar - ", () => {
                         By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS}`),
                     );
 
+                    const expectedWeeks = ["W", "1", "2", "3", "4", "5", "6"];
+
                     calendarRows.forEach((row, idx) => {
                         const firstRowItem = row.nativeElement.children[0];
-
-                        if (idx === 0) {
-                            expect(firstRowItem.firstChild.innerText).toEqual(
-                                "W",
-                            );
-                        } else {
-                            expect(firstRowItem.firstChild.innerText).toEqual(
-                                idx.toString(),
-                            );
-                        }
+                        expect(firstRowItem.firstChild.innerText).toEqual(
+                            expectedWeeks[idx],
+                        );
                     });
                 });
 
@@ -626,12 +621,12 @@ describe("IgxCalendar - ", () => {
                         const firstRowItem = row.nativeElement.children[0];
                         if (idx === 5) {
                             expect(firstRowItem.firstChild.innerText).toEqual(
-                                "13",
+                                "12",
                             );
                         }
                         if (idx === 6) {
                             expect(firstRowItem.firstChild.innerText).toEqual(
-                                "14",
+                                "13",
                             );
                         }
                     });
@@ -665,7 +660,7 @@ describe("IgxCalendar - ", () => {
                         const firstRowItem = row.nativeElement.children[0];
                         if (idx === 6) {
                             expect(firstRowItem.firstChild.innerText).toEqual(
-                                "53",
+                                "1",
                             );
                         }
                     });
