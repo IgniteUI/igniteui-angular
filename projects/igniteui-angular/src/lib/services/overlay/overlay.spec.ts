@@ -15,7 +15,6 @@ import { first } from 'rxjs/operators';
 import { IgxAvatarComponent } from '../../avatar/avatar.component';
 import { IgxCalendarComponent } from '../../calendar/public_api';
 import { IgxCalendarContainerComponent } from '../../date-common/calendar-container/calendar-container.component';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxAngularAnimationService } from '../animation/angular-animation-service';
 import { AnimationService } from '../animation/animation';
@@ -215,7 +214,6 @@ describe('igxOverlay', () => {
     };
 
     describe('Pure Unit Test', () => {
-        configureTestSuite();
         let mockElement: any;
         let mockElementRef: any;
         let mockApplicationRef: any;
@@ -297,6 +295,9 @@ describe('igxOverlay', () => {
             overlay = new IgxOverlayService(
                 mockApplicationRef, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
         });
+        afterEach(() => {
+            overlay.ngOnDestroy();
+        });
 
         it('Should set cursor to pointer on iOS', () => {
             mockPlatformUtil.isIOS = true;
@@ -365,7 +366,6 @@ describe('igxOverlay', () => {
     });
 
     describe('Unit Tests: ', () => {
-        configureTestSuite();
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
@@ -1417,9 +1417,6 @@ describe('igxOverlay', () => {
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
             });
         }));
-        afterAll(() => {
-            TestBed.resetTestingModule();
-        });
         it('Should properly initialize Scroll Strategy - Block.', fakeAsync(async () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
@@ -1589,7 +1586,6 @@ describe('igxOverlay', () => {
     });
 
     describe('Integration tests: ', () => {
-        configureTestSuite();
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]

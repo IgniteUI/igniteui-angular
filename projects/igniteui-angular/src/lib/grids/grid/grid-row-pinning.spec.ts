@@ -1,11 +1,10 @@
 import { ViewChild, Component, DebugElement, OnInit, QueryList } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { IgxGridComponent } from './grid.component';
 import { IgxGridDetailTemplateDirective } from '../public_api';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
@@ -26,9 +25,8 @@ describe('Row Pinning #grid', () => {
 
     let fix;
     let grid: IgxGridComponent;
-
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 GridRowConditionalStylingComponent,
@@ -38,7 +36,7 @@ describe('Row Pinning #grid', () => {
                 GridRowPinningWithTransactionsComponent,
                 GridRowPinningWithInitialPinningComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('', () => {
@@ -206,7 +204,7 @@ describe('Row Pinning #grid', () => {
             });
         });
 
-        it('should be able to set pin possition of row on pin/unpin events.', () => {
+        it('should be able to set pin position of row on pin/unpin events.', () => {
             const row1 = grid.getRowByIndex(0);
             row1.pin();
             expect(row1.pinned).toBe(true);
@@ -1368,7 +1366,7 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
         });
 
-        it('Shoud be able to conditionally style rows. Check is the class present in the row native element class list', () => {
+        it('Should be able to conditionally style rows. Check is the class present in the row native element class list', () => {
             fix.detectChanges();
             const firstRow = grid.gridAPI.get_row_by_index(0);
             const fourthRow = grid.gridAPI.get_row_by_index(3);

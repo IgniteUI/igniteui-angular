@@ -1,4 +1,3 @@
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGridCreatedEventArgs } from './public_api';
@@ -24,9 +23,8 @@ import { getComponentSize } from '../../core/utils';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
-    configureTestSuite();
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -639,6 +637,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         });
 
         it('should throw a warning when primaryKey is set to a non-existing data field', () => {
+            jasmine.getEnv().allowRespy(true);
             spyOn(console, 'warn');
             hierarchicalGrid.primaryKey = 'testField';
             fixture.componentInstance.rowIsland.primaryKey = 'testField-rowIsland';
@@ -667,6 +666,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(console.warn).toHaveBeenCalledWith(
                 `Field "${rowIsland.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
             );
+            jasmine.getEnv().allowRespy(false);
         });
     });
 
@@ -1084,6 +1084,56 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
             expect(childGrid1.columns[0].editable).toBeTrue();
             expect(childGrid1.columns[1].editable).toBeTrue();
+        });
+
+        it('should update the row island summary UI when disabledSummaries is changed at runtime', fakeAsync(() => {
+            const masterRow = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(masterRow.expander);
+            fixture.detectChanges();
+
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
+            fixture.detectChanges();
+
+            childGrid.columns.forEach(c => c.hasSummary = true);
+            fixture.detectChanges();
+            tick();
+
+            const column = childGrid.columns.find(c => c.field === 'ProductName');
+            expect(column).toBeDefined();
+            fixture.detectChanges();
+            tick();
+
+            const summaryCells = childGrid.nativeElement.querySelectorAll('igx-grid-summary-cell');
+            const summaryCell = summaryCells[1];
+
+            expect(summaryCell).toBeDefined();
+            expect(summaryCell.textContent.trim().length).toBeGreaterThan(0);
+
+            const getterSpy = spyOnProperty(column, 'disabledSummaries', 'get').and.callThrough();
+
+            column.disabledSummaries = ['count'];
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            expect(getterSpy).toHaveBeenCalledTimes(7);
+            expect(summaryCell.textContent.trim()).toEqual('');
+        }));
+
+        it('should verify gridCreated and gridInitialized events emit correct parentRowData', () => {
+            const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            const rowIsland = fixture.componentInstance.rowIsland1;
+
+            spyOn(rowIsland.gridCreated, 'emit').and.callThrough();
+            spyOn(rowIsland.gridInitialized, 'emit').and.callThrough();
+
+            UIInteractions.simulateClickAndSelectEvent(row.expander);
+            fixture.detectChanges();
+
+            expect(rowIsland.gridCreated.emit).toHaveBeenCalledTimes(1);
+            expect(rowIsland.gridCreated.emit).toHaveBeenCalledWith(jasmine.objectContaining({ parentRowData: row.data }));
+            expect(rowIsland.gridInitialized.emit).toHaveBeenCalledTimes(1);
+            expect(rowIsland.gridInitialized.emit).toHaveBeenCalledWith(jasmine.objectContaining({ parentRowData: row.data }));
         });
     });
 
@@ -2101,7 +2151,7 @@ export class IgxHierarchicalGridSizingComponent {
             </igx-row-island>
         }
     </igx-hierarchical-grid>`,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+    imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridToggleRIComponent  extends IgxHierarchicalGridTestBaseComponent {
 public toggleRI = true;
@@ -2426,4 +2476,32 @@ export class IgxHierarchicalGridEmptyTemplateComponent extends IgxHierarchicalGr
     public getChildGridRef(grid: IgxHierarchicalGridComponent) {
         this.childGridRef = grid;
     }
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #hGrid [data]="data" [autoGenerate]="false"
+        [height]="'400px'" [width]="'500px'">
+        <igx-column field="root1" [dataType]="'number'"></igx-column>
+        <igx-column field="root2" [dataType]="'number'"></igx-column>
+        <igx-row-island [key]="'level1data'" [autoGenerate]="false">
+            <igx-column field="level1child1" [dataType]="'number'"></igx-column>
+            <igx-column field="level1child2" [dataType]="'number'"></igx-column>
+            <igx-row-island [key]="'level2data'" [autoGenerate]="false">
+                <igx-column field="level2child1" [dataType]="'number'"></igx-column>
+                <igx-column field="level2child2" [dataType]="'number'"></igx-column>
+            </igx-row-island>
+        </igx-row-island>
+    </igx-hierarchical-grid>`,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+})
+export class IgxHierarchicalGridMissingChildDataComponent {
+    @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hGrid: IgxHierarchicalGridComponent;
+
+    public data = [
+        { root1: 1, root2: 1, level1data: [{ level1child1: 11, level1child2: 12 }] }, // missing level2data
+        { root1: 2, root2: 2, level1data: [{ level1child1: 21, level1child2: 22, level2data: [{ level2child1: 31, level2child2: 32 }] }] },
+        { root1: 3, root2: 3, level1data: [] }
+    ];
 }

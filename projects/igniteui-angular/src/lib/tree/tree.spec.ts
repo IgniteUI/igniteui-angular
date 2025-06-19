@@ -5,7 +5,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AnimationService } from '../services/animation/animation';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { TreeTestFunctions } from './tree-functions.spec';
 import { IgxTreeNavigationService } from './tree-navigation.service';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
@@ -17,7 +16,6 @@ const TREE_ROOT_CLASS = 'igx-tree__root';
 const NODE_TAG = 'igx-tree-node';
 
 describe('IgxTree #treeView', () => {
-    configureTestSuite();
     describe('Unit Tests', () => {
         let mockNavService: IgxTreeNavigationService;
         let mockTreeService: IgxTreeService;
@@ -26,6 +24,15 @@ describe('IgxTree #treeView', () => {
         let mockNodes: QueryList<IgxTreeNodeComponent<any>>;
         let mockNodesArray: IgxTreeNodeComponent<any>[] = [];
         let tree: IgxTreeComponent = null;
+
+        beforeAll(() => {
+            jasmine.getEnv().allowRespy(true);
+        });
+
+        afterAll(() => {
+            jasmine.getEnv().allowRespy(false);
+        });
+
         beforeEach(() => {
             mockNodesArray = [];
             mockNavService = jasmine.createSpyObj('navService',
@@ -218,7 +225,7 @@ describe('IgxTree #treeView', () => {
                     expect((n as any).spyProp).toHaveBeenCalledTimes(2);
                 });
             });
-            it('Should deselectAll nodes w/ proper methond', () => {
+            it('Should deselectAll nodes w/ proper method', () => {
                 tree.nodes = mockNodes;
                 tree.deselectAll();
                 expect(mockSelectionService.deselectNodesWithNoEvent).toHaveBeenCalledWith(undefined);
@@ -258,7 +265,7 @@ describe('IgxTree #treeView', () => {
                 node.expanded = false;
                 expect(mockTreeService.collapse).toHaveBeenCalledTimes(1);
                 expect(mockTreeService.collapse).toHaveBeenCalledWith(node);
-                // events are not emitted when chainging state through input
+                // events are not emitted when chaining state through input
                 expect(mockTree.nodeExpanded.emit).not.toHaveBeenCalled();
                 expect(mockTree.nodeCollapsed.emit).not.toHaveBeenCalled();
                 expect(mockTree.nodeExpanding.emit).not.toHaveBeenCalled();
@@ -472,16 +479,14 @@ describe('IgxTree #treeView', () => {
         let fix: ComponentFixture<IgxTreeSampleComponent>;
         let tree: IgxTreeComponent;
 
-        beforeAll(
-            waitForAsync(() => {
-                TestBed.configureTestingModule({
-                    imports: [
-                        NoopAnimationsModule,
-                        IgxTreeSampleComponent
-                    ]
-                }).compileComponents();
-            })
-        );
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxTreeSampleComponent
+                ]
+            }).compileComponents();
+        }));
 
         beforeEach(() => {
             fix = TestBed.createComponent<IgxTreeSampleComponent>(IgxTreeSampleComponent);
@@ -517,7 +522,7 @@ describe('IgxTree #treeView', () => {
                 });
             });
 
-            it('Should apply proper node classes depending on tree displayDenisty', () => {
+            it('Should apply proper node classes depending on tree displayDensity', () => {
                 pending('Test not implemented');
             });
 

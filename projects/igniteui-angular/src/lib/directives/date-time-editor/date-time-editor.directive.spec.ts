@@ -7,7 +7,6 @@ import { FormsModule, UntypedFormGroup, UntypedFormBuilder, ReactiveFormsModule,
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputGroupComponent, IgxInputDirective } from '../../input-group/public_api';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { ViewEncapsulation } from '@angular/core';
@@ -499,8 +498,7 @@ describe('IgxDateTimeEditor', () => {
         let inputElement: DebugElement;
         let dateTimeEditorDirective: IgxDateTimeEditorDirective;
         describe('Key interaction tests', () => {
-            configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
@@ -796,7 +794,7 @@ describe('IgxDateTimeEditor', () => {
                 expect(inputElement.nativeElement.value).toEqual('__/__/____ 2_:__:__:___');
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                date = new Date(2010, 10, 10, 2, 0, 0);
+                date = new Date(2000, 0, 1, 2, 0, 0);
                 result = formatDate(date, 'longTime', 'en-US');
                 expect(inputElement.nativeElement.value).toEqual(result);
             });
@@ -1286,8 +1284,7 @@ describe('IgxDateTimeEditor', () => {
 
         describe('Form control tests: ', () => {
             let form: UntypedFormGroup;
-            configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,

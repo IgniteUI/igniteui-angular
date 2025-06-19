@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Component, ViewChild, PLATFORM_ID } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
@@ -12,13 +12,10 @@ import { IgxNavbarComponent } from '../navbar/navbar.component';
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
 declare let Simulator: any;
-// const oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
 describe('Navigation Drawer', () => {
     let widthSpyOverride: jasmine.Spy;
-    // configureTestSuite();
     beforeEach(waitForAsync(() => {
-        // jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
         TestBed.configureTestingModule({
             imports: [
                 TestComponentPinComponent,
@@ -33,14 +30,6 @@ describe('Navigation Drawer', () => {
         widthSpyOverride = spyOn(IgxNavigationDrawerComponent.prototype as any, 'getWindowWidth')
             .and.returnValue(915 /* chosen at random by fair dice roll*/);
     }));
-
-    // afterEach(() => {
-    //     jasmine.DEFAULT_TIMEOUT_INTERVAL = oldTimeout;
-    // });
-
-    // afterAll(() => {
-    //     TestBed.resetTestingModule();
-    // });
 
     it('should initialize without DI service', waitForAsync(() => {
         TestBed.compileComponents().then(() => {
@@ -192,7 +181,8 @@ describe('Navigation Drawer', () => {
                             </igx-nav-drawer>`;
         TestBed.overrideComponent(TestComponentDIComponent, {
             set: {
-                template
+                template,
+                imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
             }
         });
 
@@ -219,7 +209,8 @@ describe('Navigation Drawer', () => {
                             </igx-nav-drawer>`;
         TestBed.overrideComponent(TestComponentMiniComponent, {
             set: {
-                template
+                template,
+                imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
             }
         });
         let fixture;
@@ -251,7 +242,8 @@ describe('Navigation Drawer', () => {
                             </igx-nav-drawer>`;
         TestBed.overrideComponent(TestComponentPinComponent, {
             set: {
-                template
+                template,
+                imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
             }
         });
 
@@ -444,7 +436,8 @@ describe('Navigation Drawer', () => {
         let fixture: ComponentFixture<TestComponentDIComponent>;
         TestBed.overrideComponent(TestComponentDIComponent, {
             set: {
-                template
+                template,
+                imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
             }
         });
 
@@ -473,7 +466,8 @@ describe('Navigation Drawer', () => {
                         </igx-nav-drawer>`;
         TestBed.overrideComponent(TestComponentDIComponent, {
             set: {
-                template
+                template,
+                imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
             }
         });
 
@@ -690,7 +684,7 @@ class TestComponent {
     providers: [IgxNavigationService],
     selector: 'igx-test-cmp-di',
     template: '<igx-nav-drawer></igx-nav-drawer>',
-    imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
+    imports: [IgxNavigationDrawerComponent]
 })
 class TestComponentDIComponent {
     @ViewChild(IgxNavigationDrawerComponent, { static: true }) public navDrawer: IgxNavigationDrawerComponent;
@@ -702,7 +696,7 @@ class TestComponentDIComponent {
     selector: 'igx-test-cmp-pin',
     providers: [IgxNavigationService],
     template: '<igx-nav-drawer></igx-nav-drawer>',
-    imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
+    imports: [IgxNavigationDrawerComponent]
 })
 class TestComponentPinComponent extends TestComponentDIComponent {
     public pin = true;
@@ -714,7 +708,7 @@ class TestComponentPinComponent extends TestComponentDIComponent {
     selector: 'igx-test-cmp-mini',
     providers: [IgxNavigationService],
     template: '<igx-nav-drawer></igx-nav-drawer>',
-    imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
+    imports: [IgxNavigationDrawerComponent]
 })
 class TestComponentMiniComponent extends TestComponentDIComponent {
     public miniView = true;

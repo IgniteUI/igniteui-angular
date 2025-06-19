@@ -7,7 +7,6 @@ import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-sort-strategy';
 import { DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { PivotGridFunctions } from '../../test-utils/pivot-grid-functions.spec';
 import { IgxPivotGridFlexContainerComponent, IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponent, IgxTotalSaleAggregate } from '../../test-utils/pivot-grid-samples.spec';
@@ -29,9 +28,8 @@ const CSS_CLASS_ITEM = 'igx-drop-down__item';
 const ACTIVE_CELL_CSS_CLASS = '.igx-grid-th--active';
 
 describe('IgxPivotGrid #pivotGrid', () => {
-    configureTestSuite();
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

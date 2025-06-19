@@ -1,7 +1,6 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     CollapsibleColumnGroupTestComponent,
     CollapsibleGroupsTemplatesTestComponent,
@@ -23,15 +22,15 @@ describe('IgxGrid - multi-column headers #grid', () => {
     let countryCol;
     let emptyCol;
 
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 CollapsibleColumnGroupTestComponent,
                 CollapsibleGroupsTemplatesTestComponent,
                 CollapsibleGroupsDynamicColComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('Base Tests', () => {
@@ -352,7 +351,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
             GridFunctions.verifyGroupIsExpanded(fixture, secondGroup);
 
-            GridFunctions.verifyColumnIsHidden(grid.getColumnByName('PostlCode'), false, 6);
+            GridFunctions.verifyColumnIsHidden(grid.getColumnByName('PostalCode'), false, 6);
 
             // delete another column
             fixture.componentInstance.columnGroups[1].columns = fixture.componentInstance.columnGroups[1].columns.splice(2);

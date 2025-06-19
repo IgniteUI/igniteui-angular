@@ -34,7 +34,7 @@
     <div class="igx-grid__tbody-content" tabindex="0" [attr.role]="dataView.length ? null : 'row'" (keydown)="navigation.handleNavigation($event)" (focus)="navigation.focusTbody($event)"
         (dragStop)="selectionService.dragMode = $event" (scroll)="preventContainerScroll($event)"
         (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
-        [style.height.px]="totalHeight" [style.width.px]="calcWidth || null" #tbody [attr.aria-activedescendant]="activeDescendant">
+        [style.height.px]="totalHeight" [style.width.px]="totalCalcWidth" [style.width]="!platform.isBrowser ? '100%' : undefined" #tbody [attr.aria-activedescendant]="activeDescendant">
         @if (moving && columnInDrag && pinnedColumns.length <= 0) {
             <span
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
@@ -70,7 +70,7 @@
                 }
             }
         </ng-template>
-        <ng-template igxGridFor let-rowData [igxGridForOf]="data
+        <ng-template igxGridFor let-rowData [igxGridForOf]="renderData
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
@@ -277,8 +277,8 @@
     <div class="igx-banner__message">
         <span class="igx-banner__text">
             <ng-container
-                *ngTemplateOutlet="this.crudService.row?.getClassName() === 'IgxAddRow' ? rowAddTextTemplate : rowEditTextTemplate ? rowEditTextTemplate : defaultRowEditText;
-                context: { $implicit: this.crudService.row?.getClassName() !== 'IgxAddRow' ? rowChangesCount : null }">
+                *ngTemplateOutlet="this.crudService.row?.isAddRow ? rowAddTextTemplate : rowEditTextTemplate ? rowEditTextTemplate : defaultRowEditText;
+                context: { $implicit: !this.crudService.row?.isAddRow ? rowChangesCount : null }">
             </ng-container>
         </span>
     </div>

@@ -380,14 +380,36 @@
         } @else {
             min-height: 100% !important;
         }
+
         transition: color $transition-timing, background $transition-timing;
 
-        @if $material-theme {
-            padding-inline: pad-inline(rem(12px), rem(14px), rem(16px));
-        } @else if $indigo-theme {
-            padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
-        } @else {
-            padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        &:not(:empty) {
+            @if $material-theme {
+                padding-inline: pad-inline(rem(12px), rem(14px), rem(16px));
+            } @else if $indigo-theme {
+                padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
+            } @else {
+                padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+            }
+        }
+    }
+
+    @if $variant == 'material' {
+        %form-group-display--border {
+            &:has(input:-webkit-autofill, input:autofill) {
+                %igx-input-group__notch--border {
+                    border-block-start-color: transparent;
+                }
+
+                %form-group-label {
+                    --label-position: #{sizable(18px, 22px, 26px)};
+
+                    transform: translateY(calc(var(--label-position) * -1));
+                    margin-top: 0;
+                    overflow: hidden;
+                    will-change: font-size, color, transform;
+                }
+            }
         }
     }
 
@@ -461,11 +483,36 @@
                 --size: var(--input-icon) !important;
             }
         }
+
+        @if $variant == 'material' {
+            &:not(%form-group-display--border) {
+                &:has(input:-webkit-autofill, input:autofill) {
+                    %form-group-label {
+                        --floating-label-position: -73%;
+
+                        @include type-style('caption');
+
+                        transform: translateY(var(--floating-label-position));
+                    }
+                }
+            }
+
+            &:not(%form-group-display--focused, %form-group-display--filled) {
+                &:has(input:not(:placeholder-shown, [type='file'])) {
+                    %form-group-label {
+                        @include type-style('subtitle-1');
+                        transform: translateY(0);
+                    }
+                }
+            }
+        }
     }
 
     %form-group-placeholder {
-        %form-group-label {
-            transition: none !important;
+        &:has(input:placeholder-shown, textarea:placeholder-shown) { 
+            %form-group-label {
+                transition: none !important;
+            }
         }
     }
 
@@ -683,6 +730,10 @@
         position: relative;
 
         grid-area: 1 / 2;
+
+        %form-group-label {
+            color: var-get($theme, 'idle-secondary-color');
+        }
     }
 
     %igx-input-group__notch--border {
@@ -816,16 +867,16 @@
             %form-group-bundle-start {
                 border-color: var-get($theme, 'hover-border-color');
             }
-    
+
             %igx-input-group__filler {
                 border-color: var-get($theme, 'hover-border-color');
             }
-    
+
             %igx-input-group__notch {
                 border-block-start-color: var-get($theme, 'hover-border-color');
                 border-block-end-color: var-get($theme, 'hover-border-color');
             }
-    
+
             %form-group-bundle-end {
                 border-color: var-get($theme, 'hover-border-color');
             }
@@ -910,6 +961,14 @@
         background: var-get($theme, 'search-disabled-background');
         box-shadow: var-get($theme, 'search-disabled-shadow');
         border-color: var-get($theme, 'disabled-border-color');
+
+        igx-prefix,
+        [igxPrefix],
+        igx-suffix,
+        [igxSuffix] {
+            background: inherit;
+            color: var-get($theme, 'disabled-text-color');
+        }
     }
 
     %form-group-bundle-main--border {
@@ -956,10 +1015,17 @@
 
     %form-group-label--focused-border,
     %form-group-label--filled-border,
-    %form-group-label--placeholder-border,
     %form-group-label--file-border {
         %igx-input-group__notch {
             border-block-start-color: transparent !important;
+        }
+    }
+
+    %form-group-label--placeholder-border {
+        &:has(input:placeholder-shown, textarea:placeholder-shown) {
+            %igx-input-group__notch {
+                border-block-start-color: transparent !important;
+            }
         }
     }
 
@@ -1009,8 +1075,8 @@
     }
 
     %form-group-label--focused-border:not(:is(
-        %form-group-border--error, 
-        %form-group-border--warning, 
+        %form-group-border--error,
+        %form-group-border--warning,
         %form-group-border--success))
     {
         &:hover {
@@ -1048,6 +1114,26 @@
         %textarea-group--outlined:not(%suffixed) {
             textarea {
                 width: calc(100% - #{rem(2px)});
+            }
+        }
+
+        %textarea-group:not(%form-group-display--focused, %form-group-display--filled) {
+            &:has(textarea:not(:placeholder-shown)) {
+                %form-group-textarea-label:not(%textarea-group-label--focused) {
+                    @include type-style('subtitle-1');
+
+                    top: calc($input-top-padding - #{rem(3px)});
+                    transform: translateY(0);
+                    margin-bottom: auto;
+                }
+            }
+        }
+
+        %textarea-group:not(%form-group-display--focused, %form-group-display--filled) {
+            &:has(%form-group-display--border, textarea:not(:placeholder-shown)) {
+                %igx-input-group__notch {
+                    border-block-start-width: rem(1px);
+                }
             }
         }
     }
@@ -1219,13 +1305,20 @@
         }
     }
 
-    %chrome-autofill-fix {
+    // This is a hack that removes the autofill background and it's essential,
+    // otherwise the background is on top of the floating label in material theme.
+    // The !important flag is because bootstrap theme(and potentially feature themes) is overriding the transition delay.
+    %autofill-background-fix {
         &:-webkit-autofill,
         &:-webkit-autofill:hover,
         &:-webkit-autofill:focus,
-        &:-webkit-autofill:active {
-            -webkit-transition-delay: 99999s;
-            transition-delay: 99999s;
+        &:-webkit-autofill:active,
+        &:autofill,
+        &:autofill:hover,
+        &:autofill:focus,
+        &:autofill:active, {
+            -webkit-transition-delay: 99999s !important;
+            transition-delay: 99999s !important;
         }
     }
 
@@ -1645,12 +1738,29 @@
         [igxPrefix] {
             overflow: hidden;
         }
+
+        igx-prefix,
+        [igxPrefix] {
+            background: var(--igx-input-group-input-prefix-background, transparent);
+            color: var(--igx-input-group-input-prefix-color, var(--ig-primary-500));
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            background: var(--igx-input-group-input-suffix-background, transparent);
+            color: var(--igx-input-group-input-suffix-color, var(--ig-primary-500));
+        }
     }
 
     %igx-input-group-fluent-search--focused {
         igx-prefix,
         [igxPrefix] {
             display: none;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            color: var(--igx-input-group-input-suffix-color--focused, var(--ig-gray-900));
         }
     }
 
@@ -1728,6 +1838,10 @@
     %form-group-bundle--fluent--focus {
         border-color: var-get($theme, 'focused-border-color');
         border-width: rem(2px);
+
+        &:hover {
+            border-color: var-get($theme, 'focused-border-color');
+        }
     }
 
     %form-group-bundle-error--fluent,
@@ -1812,8 +1926,13 @@
         transform-origin: top left;
         margin-top: 0 !important;
         height: auto;
-        margin-block-end: rem(4px);
         color: var-get($theme, 'idle-secondary-color');
+
+        @if $variant == 'fluent' {
+            margin-block-end: rem(5px);
+        } @else {
+            margin-block-end: rem(4px);
+        }
 
         [dir='rtl'] & {
             transform-origin: top right;
@@ -1843,7 +1962,6 @@
     }
 
     %fluent-label-focused {
-        color: color(null, 'gray', 800);
         transform: translateY(0) scale(1);
     }
 
@@ -1887,7 +2005,9 @@
     %form-group-suffix-fluent,
     %form-group-prefix-fluent-search,
     %form-group-suffix-fluent-search {
-        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        &:not(:empty) {
+            padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        }
     }
 
     %fluent-upload-button {
@@ -2050,7 +2170,15 @@
             map.get($bootstrap-inline-padding, 'cosy'),
             map.get($bootstrap-inline-padding, 'comfortable')
         );
-        transition: box-shadow .15s ease-out, border .15s ease-out;
+    }
+
+    // The :not selector is needed otherwise bootstrap will override the %autofill-background-fix
+    %form-group-display--bootstrap {
+        :not(:has(input:-webkit-autofill, input:autofill)) {
+            %bootstrap-input {
+                transition: box-shadow .15s ease-out, border .15s ease-out;
+            }
+        }
     }
 
     %bootstrap-input,

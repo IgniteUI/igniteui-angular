@@ -17,7 +17,6 @@ import {
     IgxGridPercentColumnComponent,
     IgxGridDateTimeColumnComponent
 } from '../../test-utils/grid-samples.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
@@ -39,8 +38,8 @@ describe('IgxGrid - Column properties #grid', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
 
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 ColumnCellFormatterComponent,
                 ColumnHiddenFromMarkupComponent,
@@ -58,7 +57,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 ResizableColumnsComponent,
                 DOMAttributesAsSettersComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     it('should correctly initialize column templates', () => {
@@ -1244,7 +1243,7 @@ describe('IgxGrid - Column properties #grid', () => {
             firstCell.setEditMode(false);
             fix.detectChanges();
 
-            expect(firstCell.nativeElement.innerText).toContain('8:37:11 AM GMT+');
+            expect(firstCell.nativeElement.innerText).toContain('8:37:11 AM GMT');
 
             firstCell.setEditMode(true);
             fix.detectChanges();
@@ -1564,7 +1563,8 @@ describe('IgxGrid - Column properties #grid', () => {
             tick();
 
             let widths = grid.columns.map(x => x.width);
-            expect(widths).toEqual(['80px', '130px', '121px', '114px', '92px', '80px', '86px', '108px', '82px', '80px']);
+            // default min of 80px is disregarded for user-set widths, including auto.
+            expect(widths).toEqual(['68px', '130px', '121px', '114px', '92px', '72px', '86px', '108px', '82px', '69px']);
             fix.componentInstance.data = SampleTestData.contactInfoData();
             fix.detectChanges();
             tick();

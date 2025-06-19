@@ -3,14 +3,12 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxButtonDirective } from './button.directive';
 
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxRippleDirective } from '../ripple/ripple.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 const BUTTON_COMFORTABLE = 'igx-button';
 
 describe('IgxButton', () => {
-    configureTestSuite();
 
     const baseClass = BUTTON_COMFORTABLE;
     const classes = {
@@ -20,7 +18,7 @@ describe('IgxButton', () => {
         fab: `${baseClass}--fab`,
     };
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

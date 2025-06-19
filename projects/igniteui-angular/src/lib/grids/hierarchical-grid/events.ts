@@ -7,4 +7,5 @@ export interface IGridCreatedEventArgs extends IBaseEventArgs {
     owner: IgxRowIslandComponent;
     parentID: any;
     grid: IgxHierarchicalGridComponent;
+    parentRowData?: any;
 }

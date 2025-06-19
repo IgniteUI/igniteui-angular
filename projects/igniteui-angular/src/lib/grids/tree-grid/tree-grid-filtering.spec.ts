@@ -4,7 +4,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridFilteringComponent, IgxTreeGridFilteringESFTemplatesComponent, IgxTreeGridFilteringRowEditingComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../data-operations/filtering-condition';
 import { FilteringStrategy } from '../../data-operations/filtering-strategy';
 import { TreeGridFilteringStrategy, TreeGridFormattedValuesFilteringStrategy, TreeGridMatchingRecordsOnlyFilteringStrategy } from './tree-grid.filtering.strategy';
@@ -13,15 +12,15 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { By } from '@angular/platform-browser';
+import { GridColumnDataType } from '../../data-operations/data-util';
 
 const IGX_CHECKBOX_LABEL = '.igx-checkbox__label';
 
 describe('IgxTreeGrid - Filtering actions #tGrid', () => {
-    configureTestSuite();
     let fix;
     let grid;
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -750,6 +749,29 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, null, 'igx-tree-grid');
             emptyTextEl = searchComponent.querySelector('.igx-excel-filter__empty');
             expect(emptyTextEl.innerText).toEqual('No matches');
+        }));
+
+        it('Should not throw console error when number column with dataType string is filtered.', fakeAsync(() => {
+            tGrid.columns[0].dataType = GridColumnDataType.String;
+            fix.detectChanges();
+            spyOn(console, 'error');
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ID');
+            fix.detectChanges();
+            tick();
+
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix, 'igx-tree-grid');
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu, 'igx-tree-grid'));
+
+            checkboxes[2].click();
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickApplyExcelStyleFiltering(fix, null, 'igx-tree-grid');
+            fix.detectChanges();
+            tick();
+
+            expect(console.error).not.toHaveBeenCalled();
         }));
     });
 

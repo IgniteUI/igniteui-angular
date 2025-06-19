@@ -9,7 +9,6 @@ import { IgxDropDownItemComponent, ISelectionEventArgs } from '../drop-down/publ
 import { IgxHintDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../input-group/public_api';
 import { IgxSelectComponent, IgxSelectFooterDirective, IgxSelectHeaderDirective } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../services/public_api';
 import { addScrollDivToElement } from '../services/overlay/overlay.spec';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
@@ -83,9 +82,7 @@ describe('igxSelect', () => {
         expect(select.toggle).toHaveBeenCalledTimes(toggleCallCounter);
     };
 
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -2056,7 +2053,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
             }
 
-            // Ciryllic characters
+            // Cyrillic characters
             filteredItemsInxs = fixture.componentInstance.filterCities('с');
             for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keydown', { key: 'с' });
@@ -2169,7 +2166,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
             }
 
-            // Ciryllic characters
+            // Cyrillic characters
             filteredItemsInxs = fixture.componentInstance.filterCities('с');
             for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keydown', { key: 'с' });
@@ -3053,7 +3050,7 @@ class IgxSelectTemplateFormComponent {
                 <igx-icon>alarm</igx-icon>
             </igx-prefix>
             <igx-select-item>None</igx-select-item>
-            @for (item of items; track item) {
+            @for (item of items; track item.field) {
                 <igx-select-item [value]="item.field">
                     {{ item.field }}
                 </igx-select-item>
@@ -3133,7 +3130,7 @@ class IgxSelectCDRComponent {
             }
         </igx-select>
     `,
-    imports: [IgxSelectComponent, IgxSelectItemComponent, IgxLabelDirective]
+    imports: [IgxSelectComponent, IgxSelectItemComponent]
 })
 class IgxSelectWithIdComponent {
     @ViewChild(IgxSelectComponent, { read: IgxSelectComponent, static: true })

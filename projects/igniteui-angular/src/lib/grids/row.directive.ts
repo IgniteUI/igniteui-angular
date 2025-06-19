@@ -21,7 +21,7 @@ import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { TransactionType } from '../services/transaction/transaction';
 import { IgxGridSelectionService } from './selection/selection.service';
-import { IgxAddRow, IgxEditRow } from './common/crud.service';
+import { IgxEditRow } from './common/crud.service';
 import { CellType, ColumnType, GridType, IGX_GRID_BASE } from './common/grid.interface';
 import { mergeWith } from 'lodash-es';
 import { Subject } from 'rxjs';
@@ -140,7 +140,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
 
     public get addRowUI(): any {
         return !!this.grid.crudService.row &&
-            this.grid.crudService.row.getClassName() === IgxAddRow.name &&
+            this.grid.crudService.row.isAddRow &&
             this.grid.crudService.row.id === this.key;
     }
 

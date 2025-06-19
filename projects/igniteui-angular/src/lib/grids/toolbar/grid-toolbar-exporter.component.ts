@@ -44,7 +44,7 @@ export interface IgxExporterEvent {
  * in order to export something.
  *
  * @igxModule IgxGridToolbarModule
- * @igxParent IgxGridToolbarComponent
+ * @igxParent IgxGridToolbarComponent, IgxGridToolbarActionsComponent
  *
  */
 @Component({
@@ -126,12 +126,13 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
 
         this.exportStarted.emit(args);
         this.grid.toolbarExporting.emit(args);
-        this.isExporting = true;
-        this.toolbar.showProgress = true;
 
         if (args.cancel) {
             return;
         }
+
+        this.isExporting = true;
+        this.toolbar.showProgress = true;
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             this.exportEnded.emit();

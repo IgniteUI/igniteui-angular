@@ -6,7 +6,7 @@ import { IDragStartEventArgs, IgxDragDirective, IgxDragHandleDirective } from '.
 import { Subject } from 'rxjs';
 import { IActiveNode } from '../../grid-navigation.service';
 import { PlatformUtil } from '../../../core/utils';
-import { FieldType, GridType } from '../../common/grid.interface';
+import { EntityType, FieldType, GridType } from '../../common/grid.interface';
 import { IgxQueryBuilderComponent } from '../../../query-builder/query-builder.component';
 import { GridResourceStringsEN } from '../../../core/i18n/grid-resources';
 import { IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
@@ -15,6 +15,8 @@ import { IgxQueryBuilderHeaderComponent } from '../../../query-builder/query-bui
 import { NgClass } from '@angular/common';
 import { getCurrentResourceStrings } from '../../../core/i18n/resources';
 import { QueryBuilderResourceStringsEN } from '../../../core/i18n/query-builder-resources';
+import { IgxHierarchicalGridComponent } from '../../hierarchical-grid/hierarchical-grid.component';
+import { IgxRowIslandComponent } from '../../hierarchical-grid/row-island.component';
 
 /**
  * A component used for presenting advanced filtering UI for a Grid.
@@ -191,18 +193,33 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         this.closeDialog();
     }
 
-    
     /**
      * @hidden @internal
      */
     public generateEntity() {
-        const entities = [
-            {
-                name: null, 
-                fields: this.filterableFields
-            }
-        ];
-        return entities;
+        if (this.queryBuilder?.entities) {
+            return this.queryBuilder?.entities;
+        } else if (this.grid.type === 'hierarchical') {
+            return (this.grid as IgxHierarchicalGridComponent).schema;
+        } else {
+            const entities: EntityType[] = [
+                {
+                    name: null,
+                    fields: this.filterableFields.map(f => ({
+                            field: f.field,
+                            dataType: f.dataType,
+                            label: f.label,
+                            header: f.header,
+                            editorOptions: f.editorOptions,
+                            filters: f.filters,
+                            pipeArgs: f.pipeArgs,
+                            defaultTimeFormat: f.defaultTimeFormat,
+                            defaultDateTimeFormat: f.defaultDateTimeFormat
+                        })) as FieldType[]
+                }
+            ];
+            return entities;
+        }
     }
 
     private assignResourceStrings() {

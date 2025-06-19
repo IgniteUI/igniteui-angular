@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef } from '@angular/core';
+import { Component, ViewChild, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
@@ -6,18 +6,16 @@ import {
     ISlideEventArgs
 } from './carousel.component';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSlideComponent } from './slide.component';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { CarouselIndicatorsOrientation, CarouselAnimationType } from './enums';
 
 describe('Carousel', () => {
-    configureTestSuite();
     let fixture;
     let carousel: IgxCarouselComponent;
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -186,7 +184,7 @@ describe('Carousel', () => {
             expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(3);
 
             spyOn(carousel.slideAdded, 'emit');
-            const newSlide = new IgxSlideComponent(null, null);
+            const newSlide = new IgxSlideComponent(null);
             carousel.add(newSlide);
             fixture.detectChanges();
             args = {
@@ -233,37 +231,41 @@ describe('Carousel', () => {
         it('keyboard navigation test', () => {
             spyOn(carousel.slideChanged, 'emit');
             carousel.pause = true;
-            carousel.keyboardSupport = true;
+            const indicators = HelperTestFunctions.getIndicatorsContainer(fixture);
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement, true);
+            indicators.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab' }));
+            fixture.detectChanges();
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', indicators, true);
             fixture.detectChanges();
             HelperTestFunctions.verifyActiveSlide(carousel, 1);
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', indicators, true);
             fixture.detectChanges();
             HelperTestFunctions.verifyActiveSlide(carousel, 2);
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', indicators, true);
             fixture.detectChanges();
             HelperTestFunctions.verifyActiveSlide(carousel, 3);
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', indicators, true);
             fixture.detectChanges();
             HelperTestFunctions.verifyActiveSlide(carousel, 0);
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', carousel.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', indicators, true);
             fixture.detectChanges();
             HelperTestFunctions.verifyActiveSlide(carousel, 3);
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', carousel.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', indicators, true);
             fixture.detectChanges();
             HelperTestFunctions.verifyActiveSlide(carousel, 2);
 
-            UIInteractions.triggerKeyDownEvtUponElem('Home', carousel.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('Home', indicators, true);
             fixture.detectChanges();
             HelperTestFunctions.verifyActiveSlide(carousel, 0);
 
-            UIInteractions.triggerKeyDownEvtUponElem('End', carousel.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('End', indicators, true);
             fixture.detectChanges();
             HelperTestFunctions.verifyActiveSlide(carousel, 3);
 
@@ -400,39 +402,6 @@ describe('Carousel', () => {
             expect(indicatorsContainer).toBeNull();
             indicatorsContainer = HelperTestFunctions.getIndicatorsContainer(fixture, CarouselIndicatorsOrientation.end);
             expect(indicatorsContainer).toBeDefined();
-        });
-
-        it('keyboardSupport changes support for keyboard navigation', () => {
-            expect(carousel.keyboardSupport).toBe(false);
-            carousel.select(carousel.get(1));
-            fixture.detectChanges();
-
-            spyOn(carousel.slideChanged, 'emit');
-
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement, true);
-            fixture.detectChanges();
-            HelperTestFunctions.verifyActiveSlide(carousel, 1);
-
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', carousel.nativeElement, true);
-            fixture.detectChanges();
-            HelperTestFunctions.verifyActiveSlide(carousel, 1);
-
-            UIInteractions.triggerKeyDownEvtUponElem('End', carousel.nativeElement, true);
-            fixture.detectChanges();
-            HelperTestFunctions.verifyActiveSlide(carousel, 1);
-
-            UIInteractions.triggerKeyDownEvtUponElem('Home', carousel.nativeElement, true);
-            fixture.detectChanges();
-            HelperTestFunctions.verifyActiveSlide(carousel, 1);
-
-            expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(0);
-            carousel.keyboardSupport = true;
-            fixture.detectChanges();
-
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement, true);
-            fixture.detectChanges();
-            HelperTestFunctions.verifyActiveSlide(carousel, 2);
-            expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(1);
         });
 
         it('should stop/play on mouse enter/leave ', () => {
@@ -1172,7 +1141,8 @@ class CarouselTestComponent {
             <igx-slide><h3>Slide4</h3></igx-slide>
         </igx-carousel>
     `,
-    imports: [IgxCarouselComponent, IgxSlideComponent]
+    imports: [IgxCarouselComponent, IgxSlideComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 class CarouselAnimationsComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
@@ -1253,7 +1223,7 @@ class CarouselTemplateSetInTypescriptTestComponent {
 @Component({
     template: `
         <igx-carousel #carousel [loop]="loop" [animationType]="'none'">
-            @for (slide of slides; track slide) {
+            @for (slide of slides; track slide.text) {
                 <igx-slide [active]="slide.active">
                     <igx-slide><h3>{{slide.text}}</h3></igx-slide>
                 </igx-slide>
@@ -1269,10 +1239,6 @@ class CarouselDynamicSlidesComponent {
     public slides = [];
 
     constructor() {
-        this.addNewSlide();
-    }
-
-    public addNewSlide() {
         this.slides.push(
             { text: 'Slide 1', active: false },
             { text: 'Slide 2', active: false },

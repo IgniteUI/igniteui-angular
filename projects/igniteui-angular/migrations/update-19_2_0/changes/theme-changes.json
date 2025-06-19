@@ -1,0 +1,59 @@
+{
+    "$schema": "../../common/schema/theme-changes.schema.json",
+    "changes": [
+      {
+        "name": "$label-invalid-color",
+        "remove": true,
+        "owner": "switch-theme",
+        "type": "property"
+      },
+      {
+        "name": "$track-error-color",
+        "remove": true,
+        "owner": "switch-theme",
+        "type": "property"
+      },
+      {
+        "name": "$thumb-on-error-color",
+        "remove": true,
+        "owner": "switch-theme",
+        "type": "property"
+      },
+      {
+        "name": "$error-color",
+        "remove": true,
+        "owner": "switch-theme",
+        "type": "property"
+      },
+      {
+        "name": "$error-color-hover",
+        "remove": true,
+        "owner": "switch-theme",
+        "type": "property"
+      },
+      {
+        "name": "$date-selected-current-outline",
+        "remove": true,
+        "owner": "calendar-theme",
+        "type": "property"
+      },
+      {
+        "name": "$date-selected-current-hover-outline",
+        "remove": true,
+        "owner": "calendar-theme",
+        "type": "property"
+      },
+      {
+        "name": "$date-selected-current-focus-outline",
+        "remove": true,
+        "owner": "calendar-theme",
+        "type": "property"
+      },
+      {
+        "name": "$date-special-current-border-color",
+        "remove": true,
+        "owner": "calendar-theme",
+        "type": "property"
+      }
+    ]
+  }

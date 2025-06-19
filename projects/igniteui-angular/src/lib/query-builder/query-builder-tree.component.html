@@ -7,9 +7,9 @@
 </ng-template>
 
 <ng-template #selectFromTemplate>
-    <div class="igx-filter-tree__inputs" [style.display]="(isInEditMode() && !this.isAdvancedFiltering()) ? 'flex' : 'none'">
+    <div class="igx-filter-tree__inputs" [style.display]="(isInEditMode() && (!this.isAdvancedFiltering() || this.isHierarchicalNestedQuery())) ? 'flex' : 'none'">
         <div class="igx-filter-tree__inputs-field">
-            <span class="igx-query-builder__label">From</span>
+            <span class="igx-query-builder__label">{{ this.resourceStrings.igx_query_builder_from_label }}</span>
             <igx-select #entitySelect
                 type="box"
                 (selectionChanging)="onEntitySelectChanging($event)"
@@ -29,7 +29,9 @@
         </div>
 
         <div class="igx-filter-tree__inputs-field">
-            <span class="igx-query-builder__label">Select</span>
+            @if (!this.isHierarchicalNestedQuery()) {
+                <span class="igx-query-builder__label">{{ this.resourceStrings.igx_query_builder_select_label }}</span>
+            }
             @if (!parentExpression) {
                 <igx-combo
                     #returnFieldsCombo
@@ -125,6 +127,13 @@
 
     <ng-template #operandTemplate let-expressionItem>
         @if (!expressionItem.inEditMode) {
+            @if(dragService.dropGhostExpression && expressionItem === dragService.dropGhostExpression && dragService.isKeyboardDrag === false){
+                <div class="igx-filter-tree__expression-item igx-filter-tree__expression-item-drop-ghost">
+                    <igx-chip [data]="expressionItem">
+                        {{this.resourceStrings.igx_query_builder_drop_ghost_text}}
+                    </igx-chip>
+                </div>
+            } @else {
             <div
                 #dragRef
                 igxDrop
@@ -132,7 +141,10 @@
                 (over)="dragService.onDivOver(dragRef, expressionItem)"
                 (leave)="dragService.onChipLeave()"
                 (dropped)="dragService.onDivDropped(expressionItem)"
-                class="igx-filter-tree__expression-item"
+                [ngClass]="{
+                    'igx-filter-tree__expression-item': true,
+                    'igx-filter-tree__expression-item-keyboard-ghost': expressionItem === dragService.dropGhostExpression
+                  }"
                 (mouseenter)="expressionItem.hovered = true"
                 (mouseleave)="expressionItem.hovered = false"
                 (focusin)="onExpressionFocus(expressionItem)"
@@ -263,6 +275,7 @@
                 }
             </div>
         }
+    }
         <div #editingInputsContainer class="igx-filter-tree__subquery" >
             @if (expressionItem.inEditMode) {
                 <div
@@ -453,9 +466,10 @@
                 <ng-container>
                     <igx-query-builder-tree
                         [style.display]="expressionItem.inEditMode || expressionItem.expanded ? 'block' : 'none'"
-                        [entities]="entities"
+                        [entities]="(this.selectedEntity ? this.selectedEntity.childEntities : entities[0].childEntities) ?? entities"
                         [queryBuilder]="this.queryBuilder"
                         [parentExpression]="expressionItem"
+                        [expectedReturnField]="this.selectedField?.field"
                         [expressionTree]="expressionItem.inEditMode ? (innerQueryNewExpressionTree ?? getExpressionTreeCopy(expressionItem.expression.searchTree, true)) : expressionItem.expression.searchTree"
                         (inEditModeChange)="onInEditModeChanged($event)"
                         [searchValueTemplate]="searchValueTemplate">

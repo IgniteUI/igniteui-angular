@@ -2,7 +2,6 @@ import { Component, ViewChildren, QueryList, ViewChild, ElementRef, TemplateRef,
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait} from '../../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
 import { IgxInsertDropStrategy, IgxAppendDropStrategy, IgxPrependDropStrategy } from './drag-drop.strategy';
 import {
@@ -22,8 +21,7 @@ describe('General igxDrag/igxDrop', () => {
     let dropAreaRects = { top: 0, left: 0, right: 0, bottom: 0};
     let dragDirsRects = [{ top: 0, left: 0, right: 0, bottom: 0}];
 
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [TestDragDropComponent]
         })
@@ -37,6 +35,13 @@ describe('General igxDrag/igxDrop', () => {
         dragDirsRects = getDragDirsRects(fix.componentInstance.dragElems);
         dropArea = fix.componentInstance.dropArea;
         dropAreaRects = getElemRects(dropArea.element.nativeElement);
+    });
+
+    afterEach(() => {
+        fix = null;
+        dragDirsRects = null;
+        dropArea = null;
+        dropAreaRects = null;
     });
 
     it('should correctly initialize drag and drop directives.', () => {
@@ -1386,8 +1391,7 @@ describe('General igxDrag/igxDrop', () => {
 });
 
 describe('Linked igxDrag/igxDrop ', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 TestDragDropLinkedSingleComponent,
@@ -1869,8 +1873,7 @@ describe('Linked igxDrag/igxDrop ', () => {
 });
 
 describe('Nested igxDrag elements', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [TestDragDropNestedComponent]
         })
@@ -2107,13 +2110,13 @@ class TestDragDropStrategiesComponent extends TestDragDropLinkedSingleComponent 
                 <igx-icon igxDragHandle>drag_indicator</igx-icon>
                 <span>Movies list</span>
             </div>
-            @for (category of categoriesNotes; track category) {
+            @for (category of categoriesNotes; track category.text) {
                 <div class="movieListItem" igxDrag [ghost]="false">
                     <div>
                         <igx-icon igxDragHandle>drag_indicator</igx-icon>
                         <span>{{category.text}}</span>
                     </div>
-                    @for (note of getCategoryMovies(category.text); track note) {
+                    @for (note of getCategoryMovies(category.text); track note.text) {
                         <div class="movieListItem" igxDrag [ghost]="false">
                             <div>
                                 <igx-icon igxDragHandle>drag_indicator</igx-icon>
@@ -2128,11 +2131,11 @@ class TestDragDropStrategiesComponent extends TestDragDropLinkedSingleComponent 
     imports: [IgxIconComponent, IgxDragDirective, IgxDragHandleDirective]
 })
 class TestDragDropNestedComponent extends TestDragDropComponent {
-    public categoriesNotes = [
+    protected categoriesNotes = [
         { text: 'Action', dragged: false },
         { text: 'Fantasy', dragged: false }
     ];
-    public listNotes = [
+    protected listNotes = [
         { text: 'Avengers: Endgame', category: 'Action', dragged: false },
         { text: 'Avatar', category: 'Fantasy', dragged: false },
         { text: 'Titanic', category: 'Drama', dragged: false },
@@ -2142,7 +2145,7 @@ class TestDragDropNestedComponent extends TestDragDropComponent {
         { text: 'The Avengers', category: 'Action', dragged: false }
     ];
 
-    public getCategoryMovies(inCategory: string){
+    protected getCategoryMovies(inCategory: string){
         return this.listNotes.filter(item => item.category === inCategory);
     }
  }

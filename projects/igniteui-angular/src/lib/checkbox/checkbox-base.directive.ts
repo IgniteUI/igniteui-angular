@@ -8,7 +8,6 @@ import {
     ViewChild,
     ElementRef,
     ChangeDetectorRef,
-    Renderer2,
     Optional,
     Self,
     booleanAttribute,
@@ -250,7 +249,6 @@ export class CheckboxBaseDirective implements AfterViewInit {
 
     constructor(
         protected cdr: ChangeDetectorRef,
-        protected renderer: Renderer2,
         @Inject(THEME_TOKEN)
         protected themeToken: ThemeToken,
         @Optional() @Self() public ngControl: NgControl

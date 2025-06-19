@@ -191,6 +191,17 @@
               "zone.js/testing",
               "hammerjs"
             ],
+            "styles": [
+              "src/styles/styles.scss"
+            ],
+            "assets": [
+              "projects/igniteui-angular/src/assets"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules"
+              ]
+            },
             "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
             "karmaConfig": "projects/igniteui-angular/karma.conf.js"
           }
@@ -399,7 +410,6 @@
               ]
             },
             "server": "projects/bundle-test/src/main.server.ts",
-            "prerender": true,
             "ssr": {
               "entry": "projects/bundle-test/server.ts"
             }

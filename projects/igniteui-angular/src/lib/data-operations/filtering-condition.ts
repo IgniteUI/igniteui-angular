@@ -48,11 +48,12 @@ export class IgxFilteringOperand {
      * Returns an array of names of the conditions which are visible in the filtering UI
      */
     public conditionList(): string[] {
-        return this.operations.filter(f => !f.hidden && !f.isNestedQuery).map((element) => element.name);    
+        return this.operations.filter(f => !f.hidden && !f.isNestedQuery).map((element) => element.name);
     }
 
     /**
      * Returns an array of names of the conditions which are visible in the UI, including "In" and "Not In", allowing the creation of sub-queries.
+     * @hidden @internal
      */
     public extendedConditionList(): string[] {
         return this.operations.filter(f => !f.hidden).map((element) => element.name);
@@ -76,10 +77,7 @@ export class IgxFilteringOperand {
         this.operations.push(operation);
     }
 
-    /**
-     * @hidden
-     */
-    public findValueInSet(target: any, searchVal: Set<any>) {
+    protected findValueInSet(target: any, searchVal: Set<any>) {
         return searchVal.has(target);
     }
 }
@@ -119,7 +117,7 @@ export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
             iconName: 'filter_not_empty',
             logic: (target: boolean) => target !== null && target !== undefined
         }];
-        
+
         this.operations = newOperations.concat(this.operations);
     }
 }
@@ -143,7 +141,7 @@ class IgxBaseDateTimeFilteringOperand extends IgxFilteringOperand {
             iconName: 'filter_not_empty',
             logic: (target: Date) => target !== null && target !== undefined
         }];
-        
+
         this.operations = newOperations.concat(this.operations);
     }
 
@@ -189,10 +187,7 @@ class IgxBaseDateTimeFilteringOperand extends IgxFilteringOperand {
         return res;
     }
 
-    /**
-     * @hidden
-     */
-    public override findValueInSet(target: any, searchVal: Set<any>) {
+    protected override findValueInSet(target: any, searchVal: Set<any>) {
         if (!target) {
             return false;
         }
@@ -416,11 +411,11 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
                 return d.year === now.year + 1;
             }
         }];
-        
+
         this.operations = newOperations.concat(this.operations);
     }
 
-    public override findValueInSet(target: any, searchVal: Set<any>) {
+    protected override findValueInSet(target: any, searchVal: Set<any>) {
         if (!target) {
             return false;
         }
@@ -637,7 +632,7 @@ export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand
                 return d.year === now.year + 1;
             }
         }];
-        
+
         this.operations = newOperations.concat(this.operations);
     }
 }
@@ -741,14 +736,11 @@ export class IgxTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
                     true : targetn.hours === search.hours && targetn.minutes === search.minutes && targetn.seconds > search.seconds;
             }
         }];
-        
+
         this.operations = newOperations.concat(this.operations);
     }
 
-    /**
-     * @hidden
-     */
-    public override findValueInSet(target: any, searchVal: Set<any>) {
+    protected override findValueInSet(target: any, searchVal: Set<any>) {
         if (!target) {
             return false;
         }
@@ -806,7 +798,7 @@ export class IgxNumberFilteringOperand extends IgxFilteringOperand {
             iconName: 'filter_not_empty',
             logic: (target: number) => target !== null && target !== undefined && !isNaN(target)
         }];
-        
+
         this.operations = newOperations.concat(this.operations);
     }
 }
@@ -885,7 +877,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
             iconName: 'filter_not_empty',
             logic: (target: string) => target !== null && target !== undefined && target.length > 0
         }];
-        
+
         this.operations = newOperations.concat(this.operations);
     }
 
@@ -916,7 +908,7 @@ export interface IFilteringOperation {
     hidden?: boolean;
     /* blazorCSSuppress */
     /* blazorAlternateType: FilteringOperationLogicHandler */
-    logic: (value: any, searchVal?: any, ignoreCase?: boolean) => boolean;
+    logic?: null | ((value: any, searchVal?: any, ignoreCase?: boolean) => boolean);
 }
 
 /**
