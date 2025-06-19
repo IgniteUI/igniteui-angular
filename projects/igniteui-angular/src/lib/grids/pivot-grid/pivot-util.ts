@@ -511,7 +511,7 @@ export class PivotUtil {
     public static updateColumnTypeByAggregator(columns: any[], value: IPivotValue, isSingleValue: boolean): void {
         const targetColumnType = PivotUtil.getColumnDataTypeForValue(value);
         columns.forEach(column => {
-            if (column.field?.includes(value.member) || isSingleValue) {
+            if ((column.field?.includes(value.member) || isSingleValue) && targetColumnType !== undefined) {
                 column.dataType = targetColumnType;
             }
         })
