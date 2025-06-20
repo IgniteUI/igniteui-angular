@@ -6,12 +6,6 @@
 $_theme: $fluent;
 
 @include themed-block(igx-drop-down, fluent) {
-    @include e(item) {
-        igx-icon {
-            --component-size: 3;
-        }
-    }
-
     @include e(item, $m: focused) {
         outline: rem(1px) solid var-get($_theme, 'border-color');
         outline-offset: rem(-1px);
@@ -19,9 +13,5 @@ $_theme: $fluent;
 
     @include e(header) {
         @include type-style(subtitle-2);
-
-        igx-icon {
-            --component-size: 3;
-        }
     }
 }
