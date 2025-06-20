@@ -5,6 +5,7 @@ import { TemplateRefWrapper } from './template-ref-wrapper';
 import { render, type RootPart, type TemplateResult } from 'lit-html';
 
 type TemplateFunction = (arg: any) => TemplateResult;
+const SCHEDULE_DELAY = 10;
 
 @Component({
     selector: 'igx-template-wrapper',
@@ -18,6 +19,7 @@ export class TemplateWrapperComponent {
     public templateRendered = new Subject<HTMLElement>();
 
     private childParts: WeakMap<HTMLElement, RootPart> = new WeakMap();
+    private timeoutId: NodeJS.Timeout | string | number | undefined;
 
     /**
      * All template refs
@@ -30,6 +32,15 @@ export class TemplateWrapperComponent {
     constructor(private cdr: ChangeDetectorRef) { }
 
     protected litRender(container: HTMLElement, templateFunc: (arg: any) => TemplateResult, arg: any) {
+        if (!container.isConnected) {
+            // Wait a bit if it gets attached back, otherwise do nothing
+            this.timeoutId = setTimeout(() =>{
+                if (container.isConnected) {
+                    this.litRender(container, templateFunc, arg);
+                }
+            }, SCHEDULE_DELAY);
+            return;
+        }
         const part = render(templateFunc(arg), container);
 
         let existingPart = this.childParts.get(container);
@@ -71,5 +82,6 @@ export class TemplateWrapperComponent {
             this.childParts.get(container).setConnected(false);
             this.childParts.delete(container);
         }
+        clearTimeout(this.timeoutId);
     }
 }
