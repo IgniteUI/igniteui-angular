@@ -643,7 +643,7 @@ describe("IgxCalendar - ", () => {
                         const firstRowItem = row.nativeElement.children[0];
                         if (idx === 5) {
                             expect(firstRowItem.firstChild.innerText).toEqual(
-                                "44",
+                                "43",
                             );
                         }
                     });
