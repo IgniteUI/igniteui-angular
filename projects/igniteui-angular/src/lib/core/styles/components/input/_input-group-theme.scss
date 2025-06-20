@@ -2461,12 +2461,38 @@
 
     %bootstrap-input--success {
         border: rem(1px) solid var-get($theme, 'success-secondary-color');
-        box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
+
+        &:focus {
+            box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
+
+            + %bootstrap-file-input {
+                box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
+            }
+        }
     }
 
     %bootstrap-input--error {
         border: rem(1px) solid var-get($theme, 'error-secondary-color');
-        box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+
+        &:focus {
+            box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+
+            + %bootstrap-file-input {
+                box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+            }
+        }
+    }
+
+    %bootstrap-input--warning {
+        border: rem(1px) solid var-get($theme, 'warning-secondary-color');
+
+        &:focus {
+            box-shadow: 0 0 0 rem(4px) color($color: 'warn', $variant: 500, $opacity: 0.38);
+
+            + %bootstrap-file-input {
+                box-shadow: 0 0 0 rem(4px) color($color: 'warn', $variant: 500, $opacity: 0.38);
+            }
+        }
     }
 
     %bootstrap-input--disabled {
