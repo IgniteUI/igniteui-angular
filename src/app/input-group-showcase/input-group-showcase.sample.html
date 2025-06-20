@@ -27,6 +27,7 @@
             <input
                 formControlName="field"
                 [type]="getNativeInputType()"
+                [attr.placeholder]="getPlaceholder()"
                 [readOnly]="isReadonly()"
                 igxInput
             />
@@ -56,6 +57,7 @@
             }
             <textarea
                 formControlName="fieldTextarea"
+                [attr.placeholder]="getPlaceholder()"
                 [readOnly]="isReadonly()"
                 igxInput>
             </textarea>
@@ -196,6 +198,7 @@
                 [style.--ig-size]="getSize()"
                 [label]="getLabel()"
                 [required]="isRequired()"
+                [attr.placeholder]="getPlaceholder()"
                 [disabled]="isDisabled()"
                 [readOnly]="isReadonly()"
                 [attr.value]="getValue()"
@@ -221,6 +224,7 @@
                 [disabled]="isDisabled()"
                 [readOnly]="isReadonly()"
                 [attr.value]="getValue()"
+                [placeholder]="getPlaceholder()"
                 [outlined]="isOutlined()">
 
             @if (hidePrefix()) {
