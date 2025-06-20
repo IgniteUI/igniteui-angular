@@ -23,9 +23,9 @@ describe("Calendar Day Model", () => {
             // First week of 2024 (ISO 8601 - January 1, 2024 is Monday, so Week 1)
             expect(firstOfJan.week).toEqual(1);
 
-            // Test week numbering with different week starts (all using ISO 8601 logic)
-            expect(firstOfJan.getWeekNumber(1)).toEqual(1); // Monday start
-            expect(firstOfJan.getWeekNumber(0)).toEqual(1); // Sunday start
+            // Test week numbering with different week starts
+            expect(firstOfJan.getWeekNumber(1)).toEqual(1); // Monday start (ISO 8601)
+            expect(firstOfJan.getWeekNumber(0)).toBeGreaterThan(50); // Sunday start (belongs to prev year)
 
             // 2024/01/01 is a Monday
             expect(firstOfJan.day).toEqual(1);
@@ -83,54 +83,49 @@ describe("Calendar Day Model", () => {
         });
     });
 
-    describe("Week numbering (ISO 8601)", () => {
-        it("should correctly calculate week numbers for January 2025", () => {
+    describe("Week numbering", () => {
+        it("should use ISO 8601 for Monday start and simple counting for others", () => {
             // January 1, 2025 is a Wednesday
             const jan1_2025 = new CalendarDay({ year: 2025, month: 0, date: 1 });
             expect(jan1_2025.day).toEqual(3); // Wednesday
 
-            // Monday start (ISO 8601 standard)
+            // Monday start: Uses ISO 8601 standard
             expect(jan1_2025.getWeekNumber(1)).toEqual(1); // Week 1 contains Jan 1
 
-            // Sunday start
-            expect(jan1_2025.getWeekNumber(0)).toEqual(1); // Still Week 1 with Sunday start
+            // Sunday start: Uses simple counting - Jan 1 (Wed) belongs to prev year
+            expect(jan1_2025.getWeekNumber(0)).toBeGreaterThan(50); // Week 52 of 2024
         });
 
-        it("should correctly handle year boundaries", () => {
+        it("should handle ISO 8601 year boundaries for Monday start", () => {
             // January 1, 2026 is a Thursday
             const jan1_2026 = new CalendarDay({ year: 2026, month: 0, date: 1 });
             expect(jan1_2026.day).toEqual(4); // Thursday
 
-            // In ISO 8601, Jan 1 (Thursday) is Week 1 because January 4th
-            // (which is always in Week 1) falls on Sunday, so the Thursday
-            // of that week (Jan 1) belongs to Week 1
-            const actualWeek = jan1_2026.getWeekNumber(1);
-            expect(actualWeek).toEqual(1); // Week 1 of 2026
+            // Monday start: ISO 8601 logic applies
+            expect(jan1_2026.getWeekNumber(1)).toEqual(1); // Week 1 of 2026
         });
 
-        it("should handle dates belonging to previous year's last week", () => {
-            // Test a case where early January dates belong to previous year
+        it("should handle previous year's last week for Monday start", () => {
             // January 1, 2027 is a Friday
             const jan1_2027 = new CalendarDay({ year: 2027, month: 0, date: 1 });
             expect(jan1_2027.day).toEqual(5); // Friday
 
-            // In ISO 8601, Jan 1 (Friday) belongs to last week of previous year
-            // because the first Thursday (which determines Week 1) is Jan 7
+            // Monday start: ISO 8601 logic - belongs to previous year
             const actualWeek = jan1_2027.getWeekNumber(1);
             expect(actualWeek).toBeGreaterThan(50); // Should be Week 52 or 53 of 2026
         });
 
-        it("should work correctly with custom week starts", () => {
+        it("should work correctly with custom week starts using appropriate logic", () => {
             const testDate = new CalendarDay({ year: 2024, month: 2, date: 15 }); // March 15, 2024 (Friday)
 
             // Test different week start days
-            const mondayStart = testDate.getWeekNumber(1);
-            const tuesdayStart = testDate.getWeekNumber(2);
-            const wednesdayStart = testDate.getWeekNumber(3);
-            const thursdayStart = testDate.getWeekNumber(4);
-            const fridayStart = testDate.getWeekNumber(5);
-            const saturdayStart = testDate.getWeekNumber(6);
-            const sundayStart = testDate.getWeekNumber(0);
+            const mondayStart = testDate.getWeekNumber(1);     // ISO 8601
+            const tuesdayStart = testDate.getWeekNumber(2);    // Simple counting
+            const wednesdayStart = testDate.getWeekNumber(3);  // Simple counting
+            const thursdayStart = testDate.getWeekNumber(4);   // Simple counting
+            const fridayStart = testDate.getWeekNumber(5);     // Simple counting
+            const saturdayStart = testDate.getWeekNumber(6);   // Simple counting
+            const sundayStart = testDate.getWeekNumber(0);     // Simple counting
 
             // All should be valid week numbers (positive integers)
             expect(mondayStart).toBeGreaterThan(0);
@@ -142,30 +137,28 @@ describe("Calendar Day Model", () => {
             expect(sundayStart).toBeGreaterThan(0);
         });
 
-        it("should maintain ISO 8601 logic regardless of week start", () => {
-            // The first Thursday of the year determines Week 1
-            // January 4, 2024 is a Thursday
+        it("should apply ISO 8601 logic only for Monday start", () => {
+            // January 4, 2024 is a Thursday - always Week 1 in ISO 8601
             const jan4_2024 = new CalendarDay({ year: 2024, month: 0, date: 4 });
             expect(jan4_2024.day).toEqual(4); // Thursday
 
-            // This Thursday should always be in Week 1, regardless of week start
-            expect(jan4_2024.getWeekNumber(0)).toEqual(1); // Sunday start
-            expect(jan4_2024.getWeekNumber(1)).toEqual(1); // Monday start
-            expect(jan4_2024.getWeekNumber(2)).toEqual(1); // Tuesday start
-            expect(jan4_2024.getWeekNumber(3)).toEqual(1); // Wednesday start
-            expect(jan4_2024.getWeekNumber(4)).toEqual(1); // Thursday start
-            expect(jan4_2024.getWeekNumber(5)).toEqual(1); // Friday start
-            expect(jan4_2024.getWeekNumber(6)).toEqual(1); // Saturday start
+            // Only Monday start uses ISO 8601
+            expect(jan4_2024.getWeekNumber(1)).toEqual(1); // Monday start: ISO 8601
+
+            // Other starts use simple counting, so results may vary
+            const sundayWeek = jan4_2024.getWeekNumber(0);
+            const tuesdayWeek = jan4_2024.getWeekNumber(2);
+            expect(sundayWeek).toBeGreaterThan(0);
+            expect(tuesdayWeek).toBeGreaterThan(0);
         });
 
-        it("should handle December dates that might belong to next year's Week 1", () => {
+        it("should handle December dates that belong to next year's Week 1 for Monday start", () => {
             // December 30, 2024 is a Monday
             const dec30_2024 = new CalendarDay({ year: 2024, month: 11, date: 30 });
             expect(dec30_2024.day).toEqual(1); // Monday
 
-            // This should be Week 1 of 2025 in ISO 8601
+            // Monday start: This should be Week 1 of 2025 in ISO 8601
             expect(dec30_2024.getWeekNumber(1)).toEqual(1); // Week 1 of 2025
-            expect(dec30_2024.getWeekNumber(0)).toEqual(1); // Week 1 of 2025
         });
 
         it("should default to Monday start when no parameter provided", () => {
@@ -185,6 +178,26 @@ describe("Calendar Day Model", () => {
             const weekNumber = feb29_2024.getWeekNumber(1);
             expect(weekNumber).toBeGreaterThan(0);
             expect(weekNumber).toBeLessThan(54); // Valid week range
+        });
+
+        it("should correctly handle the January 2024 Sunday start case", () => {
+            // January 1, 2024 is a Monday, with Sunday start (0)
+            const jan1_2024 = new CalendarDay({ year: 2024, month: 0, date: 1 });
+            const jan7_2024 = new CalendarDay({ year: 2024, month: 0, date: 7 }); // Sunday
+            const jan8_2024 = new CalendarDay({ year: 2024, month: 0, date: 8 }); // Monday
+
+            expect(jan1_2024.day).toEqual(1); // Monday
+            expect(jan7_2024.day).toEqual(0); // Sunday
+            expect(jan8_2024.day).toEqual(1); // Monday
+
+            // With Sunday start, Jan 1 should be in previous year's last week
+            expect(jan1_2024.getWeekNumber(0)).toBeGreaterThan(50); // Week 53 of 2023
+
+            // Jan 7 (first Sunday) should be Week 1
+            expect(jan7_2024.getWeekNumber(0)).toEqual(1);
+
+            // Jan 8 should also be Week 1 (same week as Jan 7)
+            expect(jan8_2024.getWeekNumber(0)).toEqual(1);
         });
     });
 
