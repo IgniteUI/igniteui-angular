@@ -301,18 +301,14 @@
 
         igx-icon {
             justify-content: center;
-            --component-size: 1;
-
-            @if $variant == 'fluent' {
-                --component-size: 3;
-            }
 
             @if $variant == 'indigo' {
                 $icon-size: sizable(rem(14px), rem(16px), rem(16px));
 
-                width: var(--ig-icon-size, $icon-size);
-                height: var(--ig-icon-size, $icon-size);
-                font-size: var(--ig-icon-size, $icon-size);
+                --ig-icon-size: #{$icon-size};
+                --igx-icon-size: #{$icon-size};
+            } @else {
+                --component-size: 1;
             }
         }
     }
