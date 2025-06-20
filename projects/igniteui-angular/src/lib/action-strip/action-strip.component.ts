@@ -279,6 +279,9 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
      * ```
      */
     public show(context?: any): void {
+        if(!this._originalParent) {
+            this._originalParent = this._viewContainer.element.nativeElement?.parentElement;
+        }
         this.hidden = false;
         if (!context) {
             return;
