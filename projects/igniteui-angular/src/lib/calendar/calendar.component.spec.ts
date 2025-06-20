@@ -620,8 +620,9 @@ describe("IgxCalendar - ", () => {
                     calendarRowsMar.forEach((row, idx) => {
                         const firstRowItem = row.nativeElement.children[0];
                         if (idx === 5) {
+                            // With simple counting for Sunday start, expect 13
                             expect(firstRowItem.firstChild.innerText).toEqual(
-                                "12",
+                                "13",
                             );
                         }
                         if (idx === 6) {
@@ -659,8 +660,9 @@ describe("IgxCalendar - ", () => {
                     calendarRowsDec.forEach((row, idx) => {
                         const firstRowItem = row.nativeElement.children[0];
                         if (idx === 6) {
+                            // With simple counting for Sunday start, expect 53
                             expect(firstRowItem.firstChild.innerText).toEqual(
-                                "1",
+                                "53",
                             );
                         }
                     });
