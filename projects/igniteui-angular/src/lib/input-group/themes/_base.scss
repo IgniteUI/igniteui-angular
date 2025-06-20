@@ -434,6 +434,10 @@ $base-scale-size: (
                 color: var-get($theme, 'disabled-text-color');
             }
 
+            igx-suffix.igx-combo__clear-button {
+              background: var-get($theme, 'border-disabled-background');
+            }
+
             @include e(label) {
                 color: var-get($theme, 'disabled-text-color')
             }
