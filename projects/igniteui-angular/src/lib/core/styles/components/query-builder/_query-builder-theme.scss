@@ -132,10 +132,18 @@
 
         &:has(:not(igx-query-builder-header)) {
             padding-block-start: var(--_query-builder-outer-padding);
+
+            %query-level-0 {
+                padding-block: 0 var(--_query-builder-outer-padding);
+            }
         }
 
         &:has(igx-query-builder-header) {
             padding-block-start: 0;
+
+            %query-level-0 {
+                padding-block: if($variant != 'bootstrap', 0, rem(16px)) var(--_query-builder-outer-padding);
+            }
         }
 
 	    .igx-chip__ghost {
@@ -156,7 +164,6 @@
         width: 100%;
 
         padding-inline: var(--_query-builder-outer-padding);
-        padding-block: if($variant != 'bootstrap', 0, rem(16px)) var(--_query-builder-outer-padding);
 
         > %advanced-filter__main {
             gap: rem(16px);
