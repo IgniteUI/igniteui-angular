@@ -114,6 +114,14 @@
     %advanced-filter {
         @include sizable();
 
+        --_tree-scrollbar-gutter: #{rem(16px)};
+
+        @if $variant == 'bootstrap' {
+            --_query-builder-outer-padding: #{rem(16px)};
+        } @else {
+            --_query-builder-outer-padding: #{rem(24px)};
+        }
+
         width: auto;
         min-width: rem(660px);
         background-color: var-get($theme, 'background');
