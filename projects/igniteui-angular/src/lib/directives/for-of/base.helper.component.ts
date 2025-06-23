@@ -111,12 +111,12 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
         if (hasScrollbar) {
             this.nativeElement.classList.add('has-scrollbar');
             if (prevSibling?.tagName.toLowerCase() === 'igx-display-container') {
-            prevSibling.classList.add('has-scrollbar');
+                prevSibling.classList.add('has-scrollbar');
             }
         } else {
             this.nativeElement.classList.remove('has-scrollbar');
             if (prevSibling?.tagName.toLowerCase() === 'igx-display-container') {
-            prevSibling.classList.remove('has-scrollbar');
+                prevSibling.classList.remove('has-scrollbar');
             }
         }
     }
@@ -131,7 +131,7 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
             this.restoreScroll();
         }
 
-    this.updateScrollbarClass();
+        this.updateScrollbarClass();
     }
 
     protected restoreScroll() {}
