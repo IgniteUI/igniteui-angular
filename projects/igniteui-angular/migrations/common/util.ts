@@ -188,7 +188,7 @@ export const parseFile = (parser: HtmlParser, host: Tree, filePath: string, enco
 
 export const findElementNodes = (root: Node[], tag: string | string[]): Node[] => {
     const tags = new Set(Array.isArray(tag) ? tag : [tag]);
-    return flatten(Array.isArray(root) ? root : [root])
+    return (Array.isArray(root) ? root : [root]).flat()
         .filter((node: Element) => tags.has(node.name));
 };
 
@@ -232,7 +232,7 @@ export const flatten = (list: Node[]) => {
         r.push(node);
 
         if (isElement(node)) {
-            r = r.concat(flatten((node as Element).children));
+            r = r.concat((node as Element).children.flat());
         }
     }
     return r;
