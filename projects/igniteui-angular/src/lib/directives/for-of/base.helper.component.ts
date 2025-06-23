@@ -104,6 +104,23 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
         return this.document.body.contains(this.nativeElement);
     }
 
+    private updateScrollbarClass() {
+        const hasScrollbar = this.nativeElement.scrollHeight > this.nativeElement.clientHeight;
+        const prevSibling = this.nativeElement.previousElementSibling as HTMLElement | null;
+
+        if (hasScrollbar) {
+            this.nativeElement.classList.add('has-scrollbar');
+            if (prevSibling?.tagName.toLowerCase() === 'igx-display-container') {
+            prevSibling.classList.add('has-scrollbar');
+            }
+        } else {
+            this.nativeElement.classList.remove('has-scrollbar');
+            if (prevSibling?.tagName.toLowerCase() === 'igx-display-container') {
+            prevSibling.classList.remove('has-scrollbar');
+            }
+        }
+    }
+
     protected handleMutations(event) {
         const hasSize = !(event[0].contentRect.height === 0 && event[0].contentRect.width === 0);
         if (!hasSize && !this.isAttachedToDom) {
@@ -113,6 +130,8 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
             // attached back now.
             this.restoreScroll();
         }
+
+    this.updateScrollbarClass();
     }
 
     protected restoreScroll() {}
