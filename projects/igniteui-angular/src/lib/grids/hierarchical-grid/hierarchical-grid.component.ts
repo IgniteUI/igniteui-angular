@@ -574,6 +574,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return this._defaultExpandState;
     }
 
+    /* blazorSuppress */
     /**
      * Gets/Sets the schema for the hierarchical grid.
      * This schema defines the structure and properties of the data displayed in the grid.
@@ -592,6 +593,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         this._hGridSchema = entities;
     }
 
+    /* blazorSuppress */
     public get schema() {
         if (!this._hGridSchema) {
             this._hGridSchema = this.generateSchema();
@@ -1233,8 +1235,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     private generateSchema() {
         const filterableFields = this.columns.filter((column) => !column.columnGroup && column.filterable);
-        let entities: EntityType[];  
-      
+        let entities: EntityType[];
+
         if(filterableFields.length !== 0) {
             entities = [
                 {
@@ -1254,7 +1256,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             ];
 
             entities[0].childEntities = this.childLayoutList.reduce((acc, rowIsland) => {
-                return acc.concat(this.generateChildEntity(rowIsland, this.data[0][rowIsland.key][0]));
+                const childFirstRowData = this.data?.length > 0 && this.data[0][rowIsland.key]?.length > 0 ?
+                    this.data[0][rowIsland.key][0] : null;
+                return acc.concat(this.generateChildEntity(rowIsland, childFirstRowData));
             }
             , []);
         }
@@ -1287,12 +1291,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             if (!firstRowData) {
                 return null;
             }
-            return acc.concat(this.generateChildEntity(childRowIsland, firstRowData[childRowIsland.key][0]));
+            const childFirstRowData = firstRowData.length > 0 && firstRowData[childRowIsland.key]?.length > 0 ?
+                firstRowData[childRowIsland.key][0] : null;
+            return acc.concat(this.generateChildEntity(childRowIsland, childFirstRowData));
         }, []);
 
         if (rowIslandChildEntities?.length > 0) {
             childEntities = rowIslandChildEntities;
-        } 
+        }
 
         return {
             name: entityName,
