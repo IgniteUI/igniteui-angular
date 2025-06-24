@@ -234,23 +234,6 @@ describe('IgxDatePicker', () => {
                 expect((datePicker as any).inputDirective.nativeElement.getAttribute('aria-required')).toEqual('true');
             });
 
-            // fit('should update inputGroup isRequired correctly', fakeAsync(() => {
-            //     const inputGroup = (datePicker as any).inputGroup;
-
-            //     expect(datePicker).toBeDefined();
-            //     expect(inputGroup.isRequired).toBeTruthy();
-            //     expect((datePicker as any).inputDirective.nativeElement.getAttribute('aria-required')).toEqual('true');
-
-            //     (fixture.componentInstance as IgxDatePickerNgModelComponent).isRequired = false;
-            //     fixture.detectChanges();
-
-            //     expect(inputGroup.isRequired).toBeFalsy();
-            //     tick();
-            //     console.log((datePicker as any).inputDirective.nativeElement.getAttribute('aria-required'));
-
-            //     //expect((datePicker as any).inputDirective.nativeElement.getAttribute('aria-required')).toEqual('false');
-            // }));
-
             it('should update inputGroup isRequired correctly', fakeAsync(() => {
                 const inputGroup = (datePicker as any).inputGroup;
                 const inputEl = (datePicker as any).inputDirective.nativeElement;
