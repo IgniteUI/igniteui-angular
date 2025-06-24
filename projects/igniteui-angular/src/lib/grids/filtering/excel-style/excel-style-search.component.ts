@@ -254,7 +254,10 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     }
 
     public ngAfterViewInit() {
-        requestAnimationFrame(this.refreshSize);
+        if (this.platform.isBrowser) {
+            // SSR workaround
+            requestAnimationFrame(this.refreshSize);
+        }
     }
 
     public ngOnDestroy(): void {

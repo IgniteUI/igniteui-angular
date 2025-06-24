@@ -165,18 +165,15 @@
     %igx-combo__case-icon,
     %igx-combo__case-icon--active {
         line-height: 0;
-
-        igx-icon {
-            --size: rem(18px);
-        }
     }
 
     // The wrapping element here is needed
     // in order to override the !important rule of .igx-icon--inactive.
     %igx-combo__case-icon {
         igx-icon {
-            // Important is needed since the .igx-icon--inactive has !important
-            color: color($color: 'gray', $variant: 600) !important;
+            --igx-icon-disabled-color: var(--ig-gray-600);
+            
+            opacity: 1;
         }
     }
 
@@ -244,6 +241,13 @@
         }
     }
 
+    @if $variant == 'fluent' or $variant == 'bootstrap' {
+        %igx-combo__search {
+            --igx-input-group-input-suffix-background: transparent;
+            --igx-input-group-input-suffix-background--focused: transparent;
+        }
+    }
+
     .igx-input-group {
         %igx-combo__toggle-button {
             background: var-get($theme, 'toggle-button-background');
@@ -257,6 +261,13 @@
 
             &:empty {
                 padding: 0;
+            }
+        }
+
+        &:not(.igx-input-group--disabled){
+          %igx-combo__clear-button {
+                color: var-get($theme, 'clear-button-foreground');
+                background: var-get($theme, 'clear-button-background');
             }
         }
     }

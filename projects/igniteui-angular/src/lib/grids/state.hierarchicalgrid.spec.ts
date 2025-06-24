@@ -5,7 +5,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IPagingState } from '../data-operations/paging-state.interface';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { IgxRowIslandComponent } from './hierarchical-grid/row-island.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
@@ -20,9 +19,8 @@ import { IColumnState, IGridState } from './state-base.directive';
 describe('IgxHierarchicalGridState - input properties #hGrid', () => {
     let fix;
     let grid;
-    configureTestSuite();
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxHierarchicalGridTestExpandedBaseComponent]
         }).compileComponents();
