@@ -6,6 +6,20 @@
 @use 'app-layout';
 
 /* autoprefixer grid: on */
+// SAP Fiori-inspired theme definition
+$palette: palette(
+    $primary: #0a6ed1, // Fiori blue
+    $secondary: #e9730c, // Fiori orange
+    $surface: #ffffff,
+    $error: #bb0000,
+    $warn: #e9730c,
+    $info: #0a6ed1,
+    $success: #107e3e
+);
+
+$background-color: map-get($palette, background);
+$foreground-color: map-get($palette, foreground);
+
 body {
     background: $background-color;
     color: $foreground-color;
@@ -20,7 +34,12 @@ body {
 @include theme(
     $palette: $palette,
     $schema: $schema,
+    $roundness: 0.25
 );
+
+igx-switch {
+  --ig-radius-factor: 1;
+}
 
 .dock {
     @include css-vars(dock-manager-theme());
