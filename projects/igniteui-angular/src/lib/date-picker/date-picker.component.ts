@@ -790,6 +790,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
                 this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
             if (this._ngControl.control.validator) {
                 this.inputGroup.isRequired = this.required;
+                this._renderer.setAttribute(this.inputDirective.nativeElement, 'aria-required',
+                    (this.required || false).toString());
                 this.cdr.detectChanges();
             }
         }
@@ -862,6 +864,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this.disabled = this._ngControl.disabled;
         this.updateValidity();
         this.inputGroup.isRequired = this.required;
+        this._renderer.setAttribute(this.inputDirective.nativeElement, 'aria-required',
+             (this.required || false).toString());
+
     };
 
     private handleSelection(date: Date): void {
