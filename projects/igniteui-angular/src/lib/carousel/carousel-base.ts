@@ -52,8 +52,14 @@ export abstract class IgxCarouselComponentBase implements OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        this.enterAnimationPlayer?.destroy();
-        this.leaveAnimationPlayer?.destroy();
+        if (this.enterAnimationPlayer) {
+            this.enterAnimationPlayer.destroy();
+            this.enterAnimationPlayer = null;
+        }
+        if (this.leaveAnimationPlayer) {
+            this.leaveAnimationPlayer.destroy();
+            this.leaveAnimationPlayer = null;
+        }
     }
 
     /** @hidden */
