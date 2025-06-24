@@ -1,5 +1,5 @@
 import { Inject, Pipe, PipeTransform } from '@angular/core';
-import { cloneArray, resolveNestedPath } from '../../core/utils';
+import { cloneArray, columnFieldPath, resolveNestedPath } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 
@@ -44,7 +44,7 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
                     v[childKey] = [];
                 }
                 const hasNestedPath = childKey?.includes('.');
-                const childData = !hasNestedPath ? v[childKey] : resolveNestedPath(v, childKey);
+                const childData = !hasNestedPath ? v[childKey] : resolveNestedPath(v, columnFieldPath(childKey));
                 childGridsData[childKey] = childData;
             });
             if (grid.gridAPI.get_row_expansion_state(v)) {
