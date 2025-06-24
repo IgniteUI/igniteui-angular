@@ -163,7 +163,7 @@
             @extend %igx-checkbox--focused-bootstrap !optional;
 
             &:hover {
-                @extend %igx-checkbox--focused-hovered !optional;
+                @extend %igx-checkbox--focused-hovered-bootstrap !optional;
             }
         }
 

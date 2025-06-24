@@ -21,23 +21,23 @@ import {
     IgxProgressBarTextTemplateDirective,
     IgxProgressBarGradientDirective,
 } from './progressbar.common';
-import { IBaseEventArgs, mkenum } from '../core/utils';
+import { IBaseEventArgs } from '../core/utils';
 const ONE_PERCENT = 0.01;
 const MIN_VALUE = 0;
 
-export const IgxTextAlign = /*@__PURE__*/mkenum({
+export const IgxTextAlign = {
     START: 'start',
     CENTER: 'center',
     END: 'end'
-});
+} as const;
 export type IgxTextAlign = (typeof IgxTextAlign)[keyof typeof IgxTextAlign];
 
-export const IgxProgressType = /*@__PURE__*/mkenum({
+export const IgxProgressType = {
     ERROR: 'error',
     INFO: 'info',
     WARNING: 'warning',
     SUCCESS: 'success'
-});
+} as const;
 export type IgxProgressType = (typeof IgxProgressType)[keyof typeof IgxProgressType];
 
 export interface IChangeProgressEventArgs extends IBaseEventArgs {

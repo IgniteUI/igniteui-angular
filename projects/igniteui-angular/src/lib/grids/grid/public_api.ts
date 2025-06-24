@@ -5,7 +5,7 @@ import { IgxGridDetailTemplateDirective, IgxGroupByRowTemplateDirective } from '
 /* Imports that cannot be resolved from IGX_GRID_COMMON_DIRECTIVES spread
     NOTE: Do not remove! Issue: https://github.com/IgniteUI/igniteui-angular/issues/13310
 */
- 
+
 import {
     IgxRowDirective,
     IgxGridFooterComponent,
@@ -17,6 +17,8 @@ import {
     IgxSortAscendingHeaderIconDirective,
     IgxSortDescendingHeaderIconDirective,
     IgxSortHeaderIconDirective,
+    IgxGridEmptyTemplateDirective,
+    IgxGridLoadingTemplateDirective,
     IgxExcelStyleHeaderIconDirective,
     IgxDragIndicatorIconDirective,
     IgxRowDragGhostDirective,
@@ -103,6 +105,8 @@ export const IGX_GRID_DIRECTIVES = [
     IgxSortAscendingHeaderIconDirective,
     IgxSortDescendingHeaderIconDirective,
     IgxSortHeaderIconDirective,
+    IgxGridEmptyTemplateDirective,
+    IgxGridLoadingTemplateDirective,
     IgxDragIndicatorIconDirective,
     IgxRowDragGhostDirective,
     IgxGridStateDirective,

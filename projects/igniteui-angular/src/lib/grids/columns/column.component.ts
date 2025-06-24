@@ -83,6 +83,7 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-column',
     template: ``,
+    styles: `:host { display: none }`,
     standalone: true
 })
 export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnType {
@@ -2309,7 +2310,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         // estimate the exact index at which column will be inserted
         // takes into account initial unpinned index of the column
         if (!hasIndex) {
-            const indices = grid.unpinnedColumns.map(col => col.index);
+            const indices = grid._unpinnedColumns.map(col => col.index);
             indices.push(this.index);
             indices.sort((a, b) => a - b);
             index = indices.indexOf(this.index);
