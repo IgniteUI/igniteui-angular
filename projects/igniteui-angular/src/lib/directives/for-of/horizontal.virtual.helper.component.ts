@@ -1,4 +1,5 @@
-import { Component, ElementRef, HostBinding, Input, ViewChild, ViewContainerRef, ChangeDetectorRef, Inject, NgZone, DOCUMENT, Renderer2, PLATFORM_ID } from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, ViewChild, ViewContainerRef, ChangeDetectorRef, Inject, NgZone, Renderer2, PLATFORM_ID } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { VirtualHelperBaseDirective } from './base.helper.component';
 import { PlatformUtil } from '../../core/utils';
 

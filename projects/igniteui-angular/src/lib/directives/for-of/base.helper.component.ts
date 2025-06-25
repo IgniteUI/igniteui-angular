@@ -7,14 +7,13 @@ import {
     AfterViewInit,
     Inject,
     NgZone,
-    DOCUMENT,
     Renderer2,
     PLATFORM_ID
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
 import { resizeObservable, PlatformUtil } from '../../core/utils';
-import { isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 
 @Directive({
     selector: '[igxVirtualHelperBase]',
