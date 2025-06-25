@@ -43,7 +43,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             detect = () => grid.cdr.detectChanges();
         });
 
-        fit('Should be able to select a range with mouse dragging', () => {
+        it('Should be able to select a range with mouse dragging', () => {
             const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
             const startCell = grid.gridAPI.get_cell_by_index(2, 'ParentID');
             const endCell = grid.gridAPI.get_cell_by_index(3, 'ID');
