@@ -3228,7 +3228,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private overlayIDs = [];
     private _sortingStrategy: IGridSortingStrategy;
     private _pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
-    private _shouldRecalcRowHeight = false;
+    private _shouldRecalcDefaultSizes = false;
 
     private _hostWidth;
     private _advancedFilteringOverlayId: string;
@@ -3302,6 +3302,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _gridSize: Size = Size.Large;
     private _defaultRowHeight = 50;
+    private _defaultCellPadding = 48;
 
     /**
      * @hidden @internal
@@ -3720,7 +3721,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                         if (this.shouldResize) {
                             // resizing occurs due to the change of --ig-size css var
                             this._gridSize = this.gridSize;
-                            this.updateDefaultRowHeight();
+                            this.updateDefaultSizes();
                             this._autoSize = this.isPercentHeight && this.calcHeight !== this.getDataBasedBodyHeight();
                             this.crudService.endEdit(false);
                             if (this._summaryRowHeight === 0) {
@@ -3956,7 +3957,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public dataRebinding(event: IForOfDataChangeEventArgs) {
         if (event.state.chunkSize == 0) {
-            this._shouldRecalcRowHeight = true;
+            this._shouldRecalcDefaultSizes = true;
         }
         this.dataChanging.emit(event);
     }
@@ -3966,9 +3967,9 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public dataRebound(event: IForOfDataChangeEventArgs) {
         this.selectionService.clearHeaderCBState();
-        if (this._shouldRecalcRowHeight) {
-            this._shouldRecalcRowHeight = false;
-            this.updateDefaultRowHeight();
+        if (this._shouldRecalcDefaultSizes) {
+            this._shouldRecalcDefaultSizes = false;
+            this.updateDefaultSizes();
         }
         this.dataChanged.emit(event);
     }
@@ -4400,14 +4401,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * The values below depend on the header cell default right/left padding values.
      */
     public get defaultHeaderGroupMinWidth(): number {
-        switch (this.gridSize) {
-            case Size.Medium:
-                return 32;
-            case Size.Small:
-                return 24;
-            default:
-                return 48;
-        }
+        return this._defaultCellPadding;
     }
 
     /** @hidden @internal */
@@ -6575,14 +6569,10 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         if (this.isPercentWidth) {
             /* width in %*/
-            const computed = this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width');
+            const computed = this.document.defaultView.getComputedStyle(this.tbody.nativeElement).getPropertyValue('width');
             width = computed.indexOf('%') === -1 ? parseFloat(computed) : null;
         } else {
             width = parseInt(this.width, 10);
-        }
-
-        if (!width && this.nativeElement) {
-            width = this.nativeElement.offsetWidth;
         }
 
 
@@ -6593,7 +6583,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.isColumnWidthSum = false;
         }
 
-        if (this.hasVerticalScroll() && this.width !== null) {
+        if (!this.isPercentWidth && this.hasVerticalScroll() && this.width !== null) {
             width -= this.scrollSize;
         }
         if ((Number.isFinite(width) || width === null) && width !== this.calcWidth) {
@@ -6979,55 +6969,8 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden
      */
-    protected getGroupAreaHeight(): number {
-        return 0;
-    }
-
-    /**
-     * @hidden
-     */
     protected getComputedHeight(elem) {
         return elem.offsetHeight ? parseFloat(this.document.defaultView.getComputedStyle(elem).getPropertyValue('height')) : 0;
-    }
-    /**
-     * @hidden
-     */
-    protected getFooterHeight(): number {
-        return this.summaryRowHeight || this.getComputedHeight(this.tfoot.nativeElement);
-    }
-    /**
-     * @hidden
-     */
-    protected getTheadRowHeight(): number {
-        // D.P.: Before CSS loads,theadRow computed height will be 'auto'->NaN, so use 0 fallback
-        const height = this.getComputedHeight(this.theadRow.nativeElement) || 0;
-        return (!this.allowFiltering || (this.allowFiltering && this.filterMode !== FilterMode.quickFilter)) ?
-            height - this.getFilterCellHeight() :
-            height;
-    }
-
-    /**
-     * @hidden
-     */
-    protected getToolbarHeight(): number {
-        let toolbarHeight = 0;
-        if (this.toolbar.first) {
-            toolbarHeight = this.getComputedHeight(this.toolbar.first.nativeElement);
-        }
-        return toolbarHeight;
-    }
-
-    /**
-     * @hidden
-     */
-    protected getPagingFooterHeight(): number {
-        let pagingHeight = 0;
-        if (this.footer) {
-            const height = this.getComputedHeight(this.footer.nativeElement);
-            pagingHeight = this.footer.nativeElement.firstElementChild ?
-                height : 0;
-        }
-        return pagingHeight;
     }
 
     /**
@@ -7048,21 +6991,12 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (!this._height) {
             return null;
         }
-        const actualTheadRow = this.getTheadRowHeight();
-        const footerHeight = this.getFooterHeight();
-        const toolbarHeight = this.getToolbarHeight();
-        const pagingHeight = this.getPagingFooterHeight();
-        const groupAreaHeight = this.getGroupAreaHeight();
-        const scrHeight = this.getComputedHeight(this.scr.nativeElement);
-        const renderedHeight = toolbarHeight + actualTheadRow +
-            footerHeight + pagingHeight + groupAreaHeight +
-            scrHeight;
 
         let gridHeight = 0;
 
         if (this.isPercentHeight) {
             const computed = this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('height');
-            const autoSize = this._shouldAutoSize(renderedHeight);
+            const autoSize = this._shouldAutoSize();
             if (autoSize || computed.indexOf('%') !== -1) {
                 const bodyHeight = this.getDataBasedBodyHeight();
                 return bodyHeight > 0 ? bodyHeight : null;
@@ -7071,7 +7005,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         } else {
             gridHeight = parseInt(this._height, 10);
         }
-        const height = Math.abs(gridHeight - renderedHeight);
+        const height = this.getComputedHeight(this.tbodyContainer.nativeElement) || gridHeight || 0;
 
         if (Math.round(height) === 0 || isNaN(gridHeight)) {
             const bodyHeight = this.defaultTargetBodyHeight;
@@ -7089,12 +7023,14 @@ export abstract class IgxGridBaseDirective implements GridType,
         return origHeight !== height;
     }
 
-    protected _shouldAutoSize(renderedHeight) {
-        this.tbody.nativeElement.style.display = 'none';
+    protected _shouldAutoSize() {
+
         const parentElement = this.nativeElement.parentElement || (this.nativeElement.getRootNode() as any).host;
+        const parentHeight = parentElement?.clientHeight;
+        this.tbody.nativeElement.style.display = 'none';
         let res = !parentElement ||
             parentElement.clientHeight === 0 ||
-            parentElement.clientHeight === renderedHeight;
+            parentElement.clientHeight !== parentHeight;
         if (parentElement && (res || this._autoSize)) {
             // If grid causes the parent container to extend (for example when container is flex)
             // we should always auto-size since the actual size of the container will continuously change as the grid renders elements.
@@ -7896,13 +7832,15 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._lastSearchInfo.matchCount = this._lastSearchInfo.matchInfoCache.length;
     }
 
-    protected updateDefaultRowHeight() {
+    protected updateDefaultSizes() {
         if (this.dataRowList.length > 0 && this.dataRowList.first.cells && this.dataRowList.first.cells.length > 0) {
             const height = parseFloat(this.document.defaultView.getComputedStyle(this.dataRowList.first.cells.first.nativeElement)?.getPropertyValue('height'));
-            if (height) {
+            const padding = parseFloat(this.document.defaultView.getComputedStyle(this.dataRowList.first.cells.first.nativeElement)?.getPropertyValue('padding-left'));
+            if (height && padding) {
                 this._defaultRowHeight = height;
+                this._defaultCellPadding = padding * 2;
             } else {
-                this._shouldRecalcRowHeight = true;
+                this._shouldRecalcDefaultSizes = true;
             }
         }
     }

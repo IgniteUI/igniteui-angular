@@ -1303,6 +1303,8 @@
         overflow: hidden;
         z-index: 1;
         outline-style: none;
+        flex-grow: 1;
+        width: 100%;
     }
 
     %grid-tbody-container {
@@ -1361,6 +1363,7 @@
         background: var-get($theme, 'content-background');
         border-inline-start: rem(1px) solid var-get($theme, 'row-border-color');
         position: relative;
+        grid-column: 2
     }
 
     %grid-tbody-scrollbar-start {
@@ -2084,7 +2087,7 @@
 
         .sort-icon {
             color: var-get($theme, 'header-selected-text-color');
-	        
+
             ::after {
                 background: var-get($theme, 'header-selected-background');
             }
@@ -2112,7 +2115,7 @@
         &%igx-grid-th--sorted {
             .sort-icon {
                 color: var-get($theme, 'header-selected-text-color');
-	            
+
 	            > igx-icon {
 		            color: inherit;
 	            }
@@ -2120,7 +2123,7 @@
                 &:focus,
                 &:hover {
                     color: var-get($theme, 'header-selected-text-color');
-	                
+
 	                > igx-icon {
 		                color: inherit;
 	                }
@@ -2177,14 +2180,14 @@
         .sort-icon {
             opacity: 1;
             color: var-get($theme, 'sorted-header-icon-color');
-	        
+
 	        > igx-icon {
 		        color: inherit;
 	        }
 
             &:hover {
                 color: var-get($theme, 'sortable-header-icon-hover-color');
-	            
+
 	            > igx-icon {
 		            color: inherit;
 	            }
