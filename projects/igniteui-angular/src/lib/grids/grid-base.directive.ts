@@ -3228,7 +3228,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private overlayIDs = [];
     private _sortingStrategy: IGridSortingStrategy;
     private _pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
-    private _shouldRecalcRowHeight = false;
+    private _shouldRecalcDefaultSizes = false;
 
     private _hostWidth;
     private _advancedFilteringOverlayId: string;
@@ -3302,6 +3302,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _gridSize: Size = Size.Large;
     private _defaultRowHeight = 50;
+    private _defaultCellPadding = 48;
 
     /**
      * @hidden @internal
@@ -3720,7 +3721,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                         if (this.shouldResize) {
                             // resizing occurs due to the change of --ig-size css var
                             this._gridSize = this.gridSize;
-                            this.updateDefaultRowHeight();
+                            this.updateDefaultSizes();
                             this._autoSize = this.isPercentHeight && this.calcHeight !== this.getDataBasedBodyHeight();
                             this.crudService.endEdit(false);
                             if (this._summaryRowHeight === 0) {
@@ -3956,7 +3957,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public dataRebinding(event: IForOfDataChangeEventArgs) {
         if (event.state.chunkSize == 0) {
-            this._shouldRecalcRowHeight = true;
+            this._shouldRecalcDefaultSizes = true;
         }
         this.dataChanging.emit(event);
     }
@@ -3966,9 +3967,9 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public dataRebound(event: IForOfDataChangeEventArgs) {
         this.selectionService.clearHeaderCBState();
-        if (this._shouldRecalcRowHeight) {
-            this._shouldRecalcRowHeight = false;
-            this.updateDefaultRowHeight();
+        if (this._shouldRecalcDefaultSizes) {
+            this._shouldRecalcDefaultSizes = false;
+            this.updateDefaultSizes();
         }
         this.dataChanged.emit(event);
     }
@@ -4400,14 +4401,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * The values below depend on the header cell default right/left padding values.
      */
     public get defaultHeaderGroupMinWidth(): number {
-        switch (this.gridSize) {
-            case Size.Medium:
-                return 32;
-            case Size.Small:
-                return 24;
-            default:
-                return 48;
-        }
+        return this._defaultCellPadding;
     }
 
     /** @hidden @internal */
@@ -7838,13 +7832,15 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._lastSearchInfo.matchCount = this._lastSearchInfo.matchInfoCache.length;
     }
 
-    protected updateDefaultRowHeight() {
+    protected updateDefaultSizes() {
         if (this.dataRowList.length > 0 && this.dataRowList.first.cells && this.dataRowList.first.cells.length > 0) {
             const height = parseFloat(this.document.defaultView.getComputedStyle(this.dataRowList.first.cells.first.nativeElement)?.getPropertyValue('height'));
-            if (height) {
+            const padding = parseFloat(this.document.defaultView.getComputedStyle(this.dataRowList.first.cells.first.nativeElement)?.getPropertyValue('padding-left'));
+            if (height && padding) {
                 this._defaultRowHeight = height;
+                this._defaultCellPadding = padding * 2;
             } else {
-                this._shouldRecalcRowHeight = true;
+                this._shouldRecalcDefaultSizes = true;
             }
         }
     }
