@@ -6,12 +6,15 @@ import {
     Directive,
     AfterViewInit,
     Inject,
-    NgZone
+    NgZone,
+    Renderer2,
+    PLATFORM_ID
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Subject } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
 import { resizeObservable, PlatformUtil } from '../../core/utils';
+import { isPlatformBrowser } from '@angular/common';
 
 @Directive({
     selector: '[igxVirtualHelperBase]',
@@ -34,6 +37,9 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
         protected _zone: NgZone,
         @Inject(DOCUMENT) public document: any,
         protected platformUtil: PlatformUtil,
+        private renderer: Renderer2,
+        @Inject(PLATFORM_ID) private platformId: Object,
+        private ngZone: NgZone
     ) {
         this._scrollNativeSize = this.calculateScrollNativeSize();
     }
@@ -104,24 +110,30 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
         return this.document.body.contains(this.nativeElement);
     }
 
-    private updateScrollbarClass() {
-        requestAnimationFrame(() => {
-            const hasScrollbar = this.nativeElement.scrollHeight > this.nativeElement.clientHeight;
-            const prevSibling = this.nativeElement.previousElementSibling as HTMLElement | null;
+    private toggleClass(element: HTMLElement, className: string, add: boolean): void {
+        if (!element) return;
+        add ? this.renderer.addClass(element, className) : this.renderer.removeClass(element, className);
+    }
 
-            if (hasScrollbar) {
-                this.nativeElement.classList.add('has-scrollbar');
-                if (prevSibling?.tagName.toLowerCase() === 'igx-display-container') {
-                    prevSibling.classList.add('has-scrollbar');
-                }
-            } else {
-                this.nativeElement.classList.remove('has-scrollbar');
-                if (prevSibling?.tagName.toLowerCase() === 'igx-display-container') {
-                    prevSibling.classList.remove('has-scrollbar');
-                }
+    private updateScrollbarClass() {
+        if (!isPlatformBrowser(this.platformId)) {
+            return;
+        }
+
+        this.ngZone.runOutsideAngular(() => {
+            requestAnimationFrame(() => {
+            const el = this.nativeElement;
+            const hasScrollbar = el.scrollHeight > el.clientHeight;
+            const prevSibling = el.previousElementSibling as HTMLElement | null;
+            const scrollbarClass = 'igx-display-container--scrollbar';
+
+            if (prevSibling?.tagName.toLowerCase() === 'igx-display-container') {
+                this.toggleClass(prevSibling, scrollbarClass, hasScrollbar);
             }
+            });
         });
     }
+
 
     protected handleMutations(event) {
         const hasSize = !(event[0].contentRect.height === 0 && event[0].contentRect.width === 0);
