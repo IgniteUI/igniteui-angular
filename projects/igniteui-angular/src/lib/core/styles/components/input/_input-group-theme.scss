@@ -396,19 +396,15 @@
 
     @if $variant == 'material' {
         %form-group-display--border {
+            --label-position: calc((#{var-get($theme, 'size')} / 2) - #{rem(1px)});
+
+
             &:has(input:-webkit-autofill, input:autofill) {
                 %igx-input-group__notch--border {
                     border-block-start-color: transparent;
                 }
 
-                %form-group-label {
-                    --label-position: #{sizable(18px, 22px, 26px)};
-
-                    transform: translateY(calc(var(--label-position) * -1));
-                    margin-top: 0;
-                    overflow: hidden;
-                    will-change: font-size, color, transform;
-                }
+                @extend %form-group-label--float-border;
             }
         }
     }
@@ -1005,11 +1001,9 @@
 
     @if $variant == 'material' {
         %form-group-label--float {
-            --floating-label-position: -73%;
-
             @include type-style('caption');
 
-            transform: translateY(var(--floating-label-position));
+            translate: 0 -73%;
         }
     }
 
@@ -1090,12 +1084,19 @@
     }
 
     %form-group-label--float-border {
-        --label-position: #{sizable(18px, 22px, 26px)};
-
-        transform: translateY(calc(var(--label-position) * -1));
+        translate: 0 calc(var(--label-position) * -1);
         margin-top: 0;
         overflow: hidden;
-        will-change: font-size, color, transform;
+        will-change: font-size, color, transform, translate;
+    }
+
+    %textarea-group {
+        // 3 lines * 22px + 8px bottom padding + 8px top padding
+        --textarea-size: #{sizable(
+            rem(82px, map.get($base-scale-size, 'compact')),
+            rem(82px, map.get($base-scale-size, 'cosy')),
+            rem(82px, map.get($base-scale-size, 'comfortable'))
+        )};
     }
 
     @if $variant == 'material' {
@@ -1139,12 +1140,6 @@
     }
 
     %form-group-textarea-group-bundle {
-        // 3 lines * 22px + 8px bottom padding + 8px top padding
-        --textarea-size: #{sizable(
-            rem(82px, map.get($base-scale-size, 'compact')),
-            rem(82px, map.get($base-scale-size, 'cosy')),
-            rem(82px, map.get($base-scale-size, 'comfortable'))
-        )};
         min-height: var(--textarea-size) !important;
         height: auto !important;
 
@@ -1156,12 +1151,12 @@
     @if $material-theme {
         %form-group-textarea-label {
             top: calc($input-top-padding - #{rem(1px)});
-            margin-block-end: auto;
         }
 
         %textarea-group--outlined {
             %form-group-textarea-label {
                 top: calc($input-top-padding - #{rem(3px)});
+                margin-block-end: auto;
             }
         }
 
@@ -1171,16 +1166,10 @@
             }
         }
 
-        %textarea-group-label--focused {
-            transform: translateY(0);
-            top: calc(#{$input-top-padding} / 4);
-        }
-
         %textarea-group-label--filled--border,
         %textarea-group-label--focused--border {
             top: 0;
-            transform: translateY(-50%);
-            margin-block-end: auto !important;
+            translate: 0 -50%;
         }
 
         %textarea-group-notch--focused {
@@ -1361,12 +1350,6 @@
     }
 
     %form-group-textarea {
-        --textarea-size: #{sizable(
-            rem(82px, map.get($base-scale-size, 'compact')),
-            rem(82px, map.get($base-scale-size, 'cosy')),
-            rem(82px, map.get($base-scale-size, 'comfortable'))
-        )};
-
         min-height: var(--textarea-size);
         height: auto;
         resize: vertical;
@@ -1374,7 +1357,7 @@
 
         @if $material-theme {
             padding: 0;
-            inset-block-start: rem(-3px);
+            margin-block-start: rem(20px) !important;
         }
 
         // resets typography styles
@@ -1390,13 +1373,9 @@
     %form-group-textarea-group-bundle-main {
         overflow: hidden;
 
-        @if $material-theme or $indigo-theme {
+        @if $indigo-theme {
             height: calc(100% - #{rem(2px)});
             top: rem(1px);
-        }
-
-        @if $material-theme {
-            padding-block-start: $input-top-padding;
         }
     }
 
