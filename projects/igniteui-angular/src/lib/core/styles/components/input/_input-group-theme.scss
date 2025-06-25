@@ -1928,7 +1928,7 @@
     }
 
     %indigo--box-focused {
-        background: var-get($theme, 'box-background-hover');
+        background: var-get($theme, 'box-background-focus');
     }
 
     %form-group-bundle--indigo--disabled {
