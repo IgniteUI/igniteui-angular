@@ -1804,7 +1804,7 @@
         padding-inline-end: rem(4px) !important;
 
         > igx-icon {
-            margin-inline-start: auto;
+            margin-inline-start: rem(2px);
             color: color($color: 'error');
             width: var(--igx-icon-size, rem(18px));
             height: var(--igx-icon-size, rem(18px));
