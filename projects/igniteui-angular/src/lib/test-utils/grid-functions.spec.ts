@@ -273,6 +273,11 @@ export class GridFunctions {
         expect(header.nativeElement.classList.contains(ACTIVE_HEADER_CLASS)).toBe(focused);
     }
 
+    public static verifyPivotElementActiveDescendant(elem: DebugElement, id: string): void {
+        const activeDescendant = elem.nativeElement.getAttribute('aria-activedescendant');
+        expect(activeDescendant).toBe(id);
+    }
+
     public static verifyHeaderActiveDescendant(headerRow: IgxGridHeaderRowComponent, id: string): void {
         const headerRowElem = headerRow.nativeElement;
         expect(headerRow.activeDescendant).toBe(id);
@@ -1822,7 +1827,7 @@ export class GridSummaryFunctions {
 }
 export class GridSelectionFunctions {
     public static selectCellsRange =
-        async (fix, startCell, endCell, ctrl = false, shift = false)  => {
+        async (fix, startCell, endCell, ctrl = false, shift = false) => {
             UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement, shift, ctrl);
             fix.detectChanges();
             await wait();
