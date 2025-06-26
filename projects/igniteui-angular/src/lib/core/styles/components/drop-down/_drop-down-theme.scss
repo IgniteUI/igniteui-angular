@@ -299,7 +299,8 @@
             bottom: 0;
         }
 
-        igx-icon {
+        igx-icon,
+        igc-icon {
             justify-content: center;
 
             @if $variant == 'indigo' {
