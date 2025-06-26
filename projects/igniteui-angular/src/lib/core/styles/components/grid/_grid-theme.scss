@@ -1513,6 +1513,9 @@
     }
 
     %igx-grid__td--bool {
+        display: flex;
+        flex-grow: 1;
+
         igx-icon {
             --component-size: #{if($variant == 'indigo', 2, 1)};
         }
@@ -2217,6 +2220,7 @@
     %grid-cell-number {
         text-align: $grid-cell-align-num;
         justify-content: flex-end;
+        flex-grow: 1;
 
         %grid-cell-header-icons {
             justify-content: flex-start;
