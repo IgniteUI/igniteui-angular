@@ -58,7 +58,7 @@ const CSS_CLASS_ITME_CHECKBOX_CHECKED = 'igx-checkbox--checked';
 const defaultDropdownItemHeight = 40;
 const defaultDropdownItemMaxHeight = 400;
 
-describe('igxCombo', () => {
+fdescribe('igxCombo', () => {
     let fixture: ComponentFixture<any>;
     let combo: IgxComboComponent;
     let input: DebugElement;
@@ -3436,8 +3436,10 @@ describe('igxCombo', () => {
                 it('should add/remove asterisk when setting validators dynamically', () => {
                     let inputGroupIsRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_REQUIRED));
                     let asterisk = window.getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_LABEL)).nativeElement, ':after').content;
+                    input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
                     expect(asterisk).toBe('"*"');
                     expect(inputGroupIsRequiredClass).toBeDefined();
+                    expect(input.nativeElement.getAttribute('aria-required')).toMatch('true');
 
                     fixture.componentInstance.reactiveForm.controls.townCombo.clearValidators();
                     fixture.componentInstance.reactiveForm.controls.townCombo.updateValueAndValidity();
@@ -3446,6 +3448,7 @@ describe('igxCombo', () => {
                     asterisk = window.getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_LABEL)).nativeElement, ':after').content;
                     expect(asterisk).toBe('none');
                     expect(inputGroupIsRequiredClass).toBeNull();
+                    expect(input.nativeElement.getAttribute('aria-required')).toMatch('false');
 
                     fixture.componentInstance.reactiveForm.controls.townCombo.setValidators(Validators.required);
                     fixture.componentInstance.reactiveForm.controls.townCombo.updateValueAndValidity();
@@ -3454,6 +3457,7 @@ describe('igxCombo', () => {
                     asterisk = window.getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_LABEL)).nativeElement, ':after').content;
                     expect(asterisk).toBe('"*"');
                     expect(inputGroupIsRequiredClass).toBeDefined();
+                    expect(input.nativeElement.getAttribute('aria-required')).toMatch('true');
                 });
 
                 it('Should update validity state when programmatically setting errors on reactive form controls', fakeAsync(() => {
