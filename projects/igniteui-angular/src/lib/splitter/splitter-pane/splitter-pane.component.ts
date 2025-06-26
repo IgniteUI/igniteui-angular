@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, ElementRef, Output, EventEmitter, booleanAttribute, ChangeDetectorRef, signal, WritableSignal } from '@angular/core';
+import { Component, HostBinding, Input, ElementRef, Output, EventEmitter, booleanAttribute, signal } from '@angular/core';
 
 /**
  * Represents individual resizable/collapsible panes.
