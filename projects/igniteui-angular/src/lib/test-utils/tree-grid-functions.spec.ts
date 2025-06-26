@@ -23,6 +23,7 @@ export const NUMBER_CELL_CSS_CLASS = 'igx-grid__td--number';
 export const CELL_VALUE_DIV_CSS_CLASS = '.igx-grid__td-text';
 export const ROW_EDITING_BANNER_OVERLAY_CLASS = 'igx-overlay__content';
 export const TREE_GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
+
 export class TreeGridFunctions {
     public static getHeaderRow(fix) {
         return fix.debugElement.query(By.css(TREE_HEADER_ROW_CSS_CLASS));
