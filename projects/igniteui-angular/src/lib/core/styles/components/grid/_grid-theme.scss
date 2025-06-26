@@ -456,12 +456,12 @@
 
     @if not($grid-shadow) {
         $grid-elevation: map.get($grid-schema, 'grid-elevation');
-        $grid-shadow: elevation(var(--grid-elevation));
+        $grid-shadow: elevation($grid-elevation);
     }
 
     @if not($drag-shadow) {
         $drag-elevation: map.get($grid-schema, 'drag-elevation');
-        $drag-shadow: elevation(var(--drag-elevation));
+        $drag-shadow: elevation($drag-elevation);
     }
 
     @if not($drop-area-border-radius) {
@@ -758,8 +758,7 @@
         igx-time-picker {
             position: relative;
             height: calc(100% - #{$editing-outline-width * 2});
-            width: calc(100% - #{$editing-outline-width * 2}) !important;
-            inset-inline-start: $editing-outline-width;
+            width: 100% !important;
             overflow: hidden;
         }
 
@@ -1804,7 +1803,6 @@
         padding-inline-end: rem(4px) !important;
 
         > igx-icon {
-            margin-inline-start: auto;
             color: color($color: 'error');
             width: var(--igx-icon-size, rem(18px));
             height: var(--igx-icon-size, rem(18px));
@@ -1910,11 +1908,10 @@
     %igx-grid__td--editing {
         background: var-get($theme, 'cell-editing-background') !important;
         box-shadow: inset 0 0 0 $editing-outline-width var-get($theme, 'edit-mode-color');
-        padding: 0 !important;
+        padding-inline: rem(4px);
 
         &.igx-grid__td--invalid {
             box-shadow: inset 0 0 0 rem(2px) color($color: 'error') !important;
-            padding-inline-end: rem(4px) !important;
         }
 
         &%grid-cell-number {
@@ -2105,7 +2102,7 @@
 
         .sort-icon {
             color: var-get($theme, 'header-selected-text-color');
-	        
+
             ::after {
                 background: var-get($theme, 'header-selected-background');
             }
@@ -2133,7 +2130,7 @@
         &%igx-grid-th--sorted {
             .sort-icon {
                 color: var-get($theme, 'header-selected-text-color');
-	            
+
 	            > igx-icon {
 		            color: inherit;
 	            }
@@ -2141,7 +2138,7 @@
                 &:focus,
                 &:hover {
                     color: var-get($theme, 'header-selected-text-color');
-	                
+
 	                > igx-icon {
 		                color: inherit;
 	                }
@@ -2198,14 +2195,14 @@
         .sort-icon {
             opacity: 1;
             color: var-get($theme, 'sorted-header-icon-color');
-	        
+
 	        > igx-icon {
 		        color: inherit;
 	        }
 
             &:hover {
                 color: var-get($theme, 'sortable-header-icon-hover-color');
-	            
+
 	            > igx-icon {
 		            color: inherit;
 	            }
