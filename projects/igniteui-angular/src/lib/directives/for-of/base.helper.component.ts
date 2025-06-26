@@ -110,9 +110,12 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
         return this.document.body.contains(this.nativeElement);
     }
 
-    private toggleClass(element: HTMLElement, className: string, add: boolean): void {
-        if (!element) return;
-        add ? this.renderer.addClass(element, className) : this.renderer.removeClass(element, className);
+    private toggleClass(element: HTMLElement, className: string, shouldHaveClass: boolean): void {
+        if (shouldHaveClass) {
+            this.renderer.addClass(element, className);
+        } else {
+            this.renderer.removeClass(element, className);
+        }
     }
 
     private updateScrollbarClass() {
