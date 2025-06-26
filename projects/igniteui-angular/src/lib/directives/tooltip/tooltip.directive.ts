@@ -1,10 +1,13 @@
+import { DOCUMENT } from '@angular/common';
 import {
-    Directive, ElementRef, Input, ChangeDetectorRef, Optional, HostBinding, Inject
+    Directive, ElementRef, Input, ChangeDetectorRef, Optional, HostBinding, Inject, OnDestroy, inject
 } from '@angular/core';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { OverlaySettings } from '../../services/public_api';
 import { IgxNavigationService } from '../../core/navigation';
 import { IgxToggleDirective } from '../toggle/toggle.directive';
+import { IgxTooltipTargetDirective } from './tooltip-target.directive';
+import { Subject, takeUntil } from 'rxjs';
 
 let NEXT_ID = 0;
 /**
@@ -26,7 +29,7 @@ let NEXT_ID = 0;
     selector: '[igxTooltip]',
     standalone: true
 })
-export class IgxTooltipDirective extends IgxToggleDirective {
+export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy {
     /**
      * @hidden
      */
@@ -102,6 +105,14 @@ export class IgxTooltipDirective extends IgxToggleDirective {
      */
     public toBeShown = false;
 
+    /**
+     * @hidden
+     */
+    public tooltipTarget: IgxTooltipTargetDirective;
+
+    private _destroy$ = new Subject<boolean>();
+    private _document = inject(DOCUMENT);
+
     /** @hidden */
     constructor(
         elementRef: ElementRef,
@@ -110,6 +121,23 @@ export class IgxTooltipDirective extends IgxToggleDirective {
         @Optional() navigationService: IgxNavigationService) {
         // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
         super(elementRef, cdr, overlayService, navigationService);
+
+        this.onDocumentTouchStart = this.onDocumentTouchStart.bind(this);
+        this.overlayService.opening.pipe(takeUntil(this._destroy$)).subscribe(() => {
+            this._document.addEventListener('touchstart', this.onDocumentTouchStart, { passive: true });
+        });
+        this.overlayService.closed.pipe(takeUntil(this._destroy$)).subscribe(() => {
+            this._document.removeEventListener('touchstart', this.onDocumentTouchStart);
+        });
+    }
+
+    /** @hidden */
+    public override ngOnDestroy() {
+        super.ngOnDestroy();
+
+        this._document.removeEventListener('touchstart', this.onDocumentTouchStart);
+        this._destroy$.next(true);
+        this._destroy$.complete();
     }
 
     /**
@@ -153,5 +181,9 @@ export class IgxTooltipDirective extends IgxToggleDirective {
             this.close();
             overlaySettings.positionStrategy.settings.closeAnimation = animation;
         }
+    }
+
+    private onDocumentTouchStart(event) {
+        this.tooltipTarget?.onDocumentTouchStart(event);
     }
 }

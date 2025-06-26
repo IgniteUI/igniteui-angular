@@ -79,8 +79,8 @@
             <igx-buttongroup [selectionMode]="'single'">
                 @for (option of getControlOptions(key); track option) {
                     <button igxButton
-                            [selected]="form.controls[key].value === option"
-                            (click)="form.controls[key].setValue(option)">
+                            [selected]="form.controls[key].value === (option.value || option)"
+                            (click)="form.controls[key].setValue(option.value || option)">
                       {{ getControlLabels(key)[getControlOptions(key).indexOf(option)] }}
                     </button>
                 }
