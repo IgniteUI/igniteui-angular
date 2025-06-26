@@ -3393,7 +3393,6 @@ describe('igxCombo', () => {
                     input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
                     expect(asterisk).toBe('"*"');
                     expect(inputGroupIsRequiredClass).toBeDefined();
-                    console.log(input.nativeElement);
                     expect(input.nativeElement.getAttribute('aria-required')).toMatch('true');
 
                     fixture.componentInstance.reactiveForm.controls.townCombo.clearValidators();
