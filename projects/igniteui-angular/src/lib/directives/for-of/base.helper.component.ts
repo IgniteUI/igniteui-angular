@@ -8,7 +8,8 @@ import {
     Inject,
     NgZone,
     Renderer2,
-    PLATFORM_ID
+    PLATFORM_ID,
+    inject
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
@@ -29,16 +30,16 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
     private _afterViewInit = false;
     private _scrollNativeSize: number;
     private _detached = false;
+    protected renderer = inject(Renderer2);
+    protected platformId = inject(PLATFORM_ID);
+    protected ngZone = inject(NgZone);
 
     constructor(
         public elementRef: ElementRef<HTMLElement>,
         public cdr: ChangeDetectorRef,
         protected _zone: NgZone,
         @Inject(DOCUMENT) public document: any,
-        protected platformUtil: PlatformUtil,
-        private renderer: Renderer2,
-        @Inject(PLATFORM_ID) private platformId: Object,
-        private ngZone: NgZone
+        protected platformUtil: PlatformUtil
     ) {
         this._scrollNativeSize = this.calculateScrollNativeSize();
     }
