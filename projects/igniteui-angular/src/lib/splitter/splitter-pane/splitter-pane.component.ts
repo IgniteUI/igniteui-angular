@@ -22,7 +22,7 @@ import { Component, HostBinding, Input, ElementRef, Output, EventEmitter, boolea
 export class IgxSplitterPaneComponent {
     private _minSize: string;
     private _maxSize: string;
-    private _order: WritableSignal<number> =  signal(null);
+    private _order = signal<number | null>(null);
 
     /**
      * @hidden @internal
@@ -232,7 +232,7 @@ export class IgxSplitterPaneComponent {
     private _collapsed = false;
 
 
-    constructor(private el: ElementRef, private cdr: ChangeDetectorRef) { }
+    constructor(private el: ElementRef) { }
 
     /**
      * Toggles the collapsed state of the pane.
