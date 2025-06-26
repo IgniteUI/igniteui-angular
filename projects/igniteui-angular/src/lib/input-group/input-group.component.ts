@@ -336,11 +336,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     }
 
     /** @hidden @internal */
-    public uploadButtonHandler() {
-        this.input.nativeElement.click();
-    }
-
-    /** @hidden @internal */
     public clearValueHandler() {
         this.input.clear();
     }
