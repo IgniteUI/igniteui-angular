@@ -16,7 +16,7 @@
     <igx-pivot-row-dimension-header
         [attr.role]="role"
         class="igx-grid-th--fw"
-        [id]="grid.id + '_' + header ? header.title : column.field"
+        [id]="header ? grid.id + '_' + header.title : grid.id + '_' + column.field"
         [ngClass]="column.headerClasses"
         [ngStyle]="column.headerStyles | igxHeaderGroupStyle:column:grid.pipeTrigger"
         [igxColumnMovingDrag]="column"
