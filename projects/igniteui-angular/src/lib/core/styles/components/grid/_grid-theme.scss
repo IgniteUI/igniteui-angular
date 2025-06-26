@@ -456,12 +456,12 @@
 
     @if not($grid-shadow) {
         $grid-elevation: map.get($grid-schema, 'grid-elevation');
-        $grid-shadow: elevation(var(--grid-elevation));
+        $grid-shadow: elevation($grid-elevation);
     }
 
     @if not($drag-shadow) {
         $drag-elevation: map.get($grid-schema, 'drag-elevation');
-        $drag-shadow: elevation(var(--drag-elevation));
+        $drag-shadow: elevation($drag-elevation);
     }
 
     @if not($drop-area-border-radius) {
