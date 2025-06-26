@@ -233,9 +233,34 @@
         }
 
         @include m(file) {
+            @extend %form-group-display--file !optional;
+
             @include e(label) {
                 @extend %form-group-label--float !optional;
             }
+        }
+        @include mx(file, focused) {
+            @extend %form-group-display--file-focused !optional;
+        }
+
+        @include mx(file, border) {
+            @extend %form-group-display--file-border !optional;
+        }
+
+        @include mx(file, border, focused) {
+            @extend %form-group-display--file-border-focused !optional;
+        }
+
+        @include mx(file, border, valid) {
+            @extend %form-group-display--file-border-success !optional;
+        }
+
+        @include mx(file, border, warning) {
+            @extend %form-group-display--file-border-warning !optional;
+        }
+
+        @include mx(file, border, invalid) {
+            @extend %form-group-display--file-border-error !optional;
         }
 
         @include m(required) {
@@ -561,6 +586,11 @@
                 @extend %form-group-bundle-search--disabled !optional;
             }
         }
+
+        @include e(upload-button) {
+            @extend %upload-button !optional;
+        }
+
         // BASE END
 
         // ============================== //
@@ -902,6 +932,46 @@
             }
         }
 
+        @include mx(bootstrap, file) {
+            @extend %form-group-display--bootstrap-file !optional;
+
+            @include e(input) {
+                @extend %bootstrap-input-file !optional;
+            }
+
+            @include e(bundle-end) {
+                @extend %bootstrap-bundle-end !optional;
+            }
+        }
+
+        @include mx(bootstrap, file, focused) {
+            @extend %bootstrap-file-focused !optional;
+        }
+
+        @include mx(bootstrap, file, valid) {
+            @extend %bootstrap-file-valid !optional;
+        }
+
+        @include mx(bootstrap, file, warning) {
+            @extend %bootstrap-file-warning !optional;
+        }
+
+        @include mx(bootstrap, file, invalid) {
+            @extend %bootstrap-file-invalid !optional;
+        }
+
+        @include mx(bootstrap, file, valid, focused) {
+            @extend %bootstrap-file-valid-focused !optional;
+        }
+
+        @include mx(bootstrap, file, warning, focused) {
+            @extend %bootstrap-file-warning-focused !optional;
+        }
+
+        @include mx(bootstrap, file, invalid, focused) {
+            @extend %bootstrap-file-invalid-focused !optional;
+        }
+
         @include mx(bootstrap, prefixed) {
             @extend %form-group-display--bootstrap-prefixed !optional;
         }
@@ -966,6 +1036,32 @@
 
                 &:hover {
                     @extend %bootstrap-input--success !optional;
+                }
+            }
+        }
+
+        @include mx(bootstrap, warning) {
+            @include e(input) {
+                @extend %bootstrap-input--warning !optional;
+
+                &:hover {
+                    @extend %bootstrap-input--warning !optional;
+                }
+            }
+
+            @include e(file-input) {
+                @extend %bootstrap-input--warning !optional;
+
+                &:hover {
+                    @extend %bootstrap-input--warning !optional;
+                }
+            }
+
+            @include e(textarea) {
+                @extend %bootstrap-input--warning !optional;
+
+                &:hover {
+                    @extend %bootstrap-input--warning !optional;
                 }
             }
         }
