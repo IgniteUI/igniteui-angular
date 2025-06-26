@@ -1,6 +1,5 @@
 import { Component, ElementRef, HostBinding, Input, ViewChild, ViewContainerRef,
-    ChangeDetectorRef, OnDestroy, OnInit, Inject, NgZone, Renderer2,
-    PLATFORM_ID} from '@angular/core';
+    ChangeDetectorRef, OnDestroy, OnInit, Inject, NgZone} from '@angular/core';
 import { VirtualHelperBaseDirective } from './base.helper.component';
 import { DOCUMENT } from '@angular/common';
 import { PlatformUtil } from '../../core/utils';
@@ -28,11 +27,8 @@ export class VirtualHelperComponent extends VirtualHelperBaseDirective implement
         zone: NgZone,
         @Inject(DOCUMENT) document: any,
         platformUtil: PlatformUtil,
-        renderer: Renderer2,
-        @Inject(PLATFORM_ID) platformId: Object,
-        ngZone: NgZone
     ) {
-        super(elementRef, cdr, zone, document, platformUtil, renderer, platformId, ngZone);
+        super(elementRef, cdr, zone, document, platformUtil);
     }
 
     public ngOnInit() {

@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, Input, ViewChild, ViewContainerRef, ChangeDetectorRef, Inject, NgZone, Renderer2, PLATFORM_ID } from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, ViewChild, ViewContainerRef, ChangeDetectorRef, Inject, NgZone } from '@angular/core';
 import { VirtualHelperBaseDirective } from './base.helper.component';
 import { DOCUMENT } from '@angular/common';
 import { PlatformUtil } from '../../core/utils';
@@ -24,12 +24,9 @@ export class HVirtualHelperComponent extends VirtualHelperBaseDirective {
         cdr: ChangeDetectorRef,
         zone: NgZone,
         @Inject(DOCUMENT) document: any,
-        platformUtil: PlatformUtil,
-        renderer: Renderer2,
-        @Inject(PLATFORM_ID) platformId: Object,
-        ngZone: NgZone
+        platformUtil: PlatformUtil
     ) {
-        super(elementRef, cdr, zone, document, platformUtil, renderer, platformId, ngZone);
+        super(elementRef, cdr, zone, document, platformUtil);
     }
 
     protected override restoreScroll() {
