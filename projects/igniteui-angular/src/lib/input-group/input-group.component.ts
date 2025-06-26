@@ -270,7 +270,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     /** @hidden @internal */
     @HostBinding('class.igx-input-group--prefixed')
     public get hasPrefixes() {
-        return this._prefixes.length > 0 || this.isFileType;
+        return this._prefixes.length > 0;
     }
 
     /** @hidden @internal */
