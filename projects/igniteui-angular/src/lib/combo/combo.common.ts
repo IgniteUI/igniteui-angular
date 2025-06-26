@@ -1322,6 +1322,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     protected manageRequiredAsterisk(): void {
         if (this.ngControl) {
             this.inputGroup.isRequired = this.required;
+            this.comboInput.nativeElement.setAttribute('aria-required', this.required.toString());
         }
     }
 
