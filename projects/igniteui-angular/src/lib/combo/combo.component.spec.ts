@@ -58,7 +58,7 @@ const CSS_CLASS_ITME_CHECKBOX_CHECKED = 'igx-checkbox--checked';
 const defaultDropdownItemHeight = 40;
 const defaultDropdownItemMaxHeight = 400;
 
-fdescribe('igxCombo', () => {
+describe('igxCombo', () => {
     let fixture: ComponentFixture<any>;
     let combo: IgxComboComponent;
     let input: DebugElement;
