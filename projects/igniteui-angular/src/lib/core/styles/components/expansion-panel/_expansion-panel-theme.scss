@@ -53,24 +53,33 @@
     }
 
     $theme: digest-schema($expansion-panel-schema);
-    $meta: map.get($theme, '_meta');
 
     @if not($header-title-color) and $header-background {
-        $header-title-color: text-contrast($header-background);
-    }
-
-    @if not($header-description-color) and $header-background {
-        @if meta.type-of($header-background) == 'color' {
-            $header-description-color: rgba(text-contrast($header-background), .8);
-        }
+        $header-title-color: adaptive-contrast(var(--header-background));
     }
 
     @if not($header-icon-color) and $header-background {
-        $header-icon-color: text-contrast($header-background);
+        $header-icon-color: adaptive-contrast(var(--header-background));
+    }
+
+    @if not($header-description-color) and $header-background {
+        $header-description-color: hsla(from adaptive-contrast(var(--header-background)) h s l / .8);
+    }
+
+    @if not($header-focus-background) and $header-background {
+        $header-focus-background: hsl(from var(--header-background) h s calc(l * 1.1));
     }
 
     @if not($body-color) and $body-background {
-        $body-color: text-contrast($body-background);
+        $body-color: adaptive-contrast(var(--body-background));
+    }
+
+    @if not($disabled-text-color) and $header-background {
+        $disabled-text-color: hsla(from adaptive-contrast(var(--header-background)) h s l / .5);
+    }
+
+    @if not($disabled-description-color) and $header-background {
+        $disabled-description-color: hsla(from adaptive-contrast(var(--header-background)) h s l / .5);
     }
 
     @return extend($theme, (
@@ -86,10 +95,6 @@
         disabled-text-color: $disabled-text-color,
         disabled-description-color: $disabled-description-color,
         expanded-margin: $expanded-margin,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -98,7 +103,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin expansion-panel($theme) {
     @include css-vars($theme);
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     $panel-padding: rem(16px) rem(24px);
     $panel-padding-header-indigo: rem(10px) rem(16px);

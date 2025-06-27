@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, ElementRef, Output, EventEmitter, booleanAttribute } from '@angular/core';
+import { Component, HostBinding, Input, ElementRef, Output, EventEmitter, booleanAttribute, signal } from '@angular/core';
 
 /**
  * Represents individual resizable/collapsible panes.
@@ -22,6 +22,7 @@ import { Component, HostBinding, Input, ElementRef, Output, EventEmitter, boolea
 export class IgxSplitterPaneComponent {
     private _minSize: string;
     private _maxSize: string;
+    private _order = signal<number | null>(null);
 
     /**
      * @hidden @internal
@@ -102,7 +103,12 @@ export class IgxSplitterPaneComponent {
 
     /** @hidden @internal */
     @HostBinding('style.order')
-    public order!: number;
+    public get order() {
+        return this._order();
+    }
+    public set order(val) {
+        this._order.set(val)
+    }
 
     /**
      * @hidden @internal

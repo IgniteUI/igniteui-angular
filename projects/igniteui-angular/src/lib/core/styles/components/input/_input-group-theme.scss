@@ -34,7 +34,6 @@
 /// @param {Color} $idle-bottom-line-color [null] - The bottom line and border colors in the idle state.
 /// @param {Color} $hover-bottom-line-color [null] - The bottom line and border colors in the hover state.
 /// @param {Color} $focused-bottom-line-color [null] - The bottom line and border colors in the focused state.
-/// @param {Color} $interim-bottom-line-color [null] - The bottom line and border colors during the to-focused transition.
 /// @param {Color} $disabled-bottom-line-color [null] - The bottom line and border colors in the disabled state.
 /// @param {Color} $border-color [null] - The border color for input groups of type border and fluent.
 /// @param {Color} $hover-border-color [null] - The hover input border for input groups of type border and fluent.
@@ -86,7 +85,6 @@
     $idle-bottom-line-color: null,
     $hover-bottom-line-color: null,
     $focused-bottom-line-color: null,
-    $interim-bottom-line-color: null,
     $disabled-bottom-line-color: null,
 
     $border-color: null,
@@ -141,24 +139,247 @@
     }
 
     $theme: digest-schema($input-group-schema);
+    $variant: map.get($theme, '_meta', 'theme');
+
     $search-resting-elevation: map.get($input-group-schema, 'search-resting-elevation');
     $search-hover-elevation: map.get($input-group-schema, 'search-hover-elevation');
     $search-disabled-elevation: map.get($input-group-schema, 'search-disabled-elevation');
 
-    @if not($placeholder-color) and $box-background {
-        $placeholder-color: text-contrast($box-background);
+    @if $variant == 'material' {
+        @if not($box-background-hover) and $box-background {
+            $box-background-hover: var(--box-background);
+        }
+
+        @if not($box-background-focus) and $box-background {
+            $box-background-focus: hsl(from var(--box-background) h s calc(l * 0.9));
+        }
+
+        @if not($placeholder-color) and $box-background {
+            $placeholder-color: hsla(from adaptive-contrast(var(--box-background)) h s l / 0.9);
+        }
+
+        @if not($hover-placeholder-color) and $box-background-hover {
+            $hover-placeholder-color: hsla(from adaptive-contrast(var(--box-background-hover)) h s l / 0.9);
+        }
+
+        @if not($idle-text-color) and $box-background {
+            $idle-text-color: adaptive-contrast(var(--box-background));
+        }
+
+        @if not($filled-text-color) and $box-background {
+            $filled-text-color: adaptive-contrast(var(--box-background));
+        }
+
+        @if not($filled-text-hover-color) and $box-background {
+            $filled-text-hover-color: adaptive-contrast(var(--box-background));
+        }
+
+        @if not($focused-text-color) and $box-background-focus {
+            $focused-text-color: adaptive-contrast(var(--box-background-focus));
+        }
+
+        @if not($idle-secondary-color) and $box-background {
+            $idle-secondary-color: hsla(from adaptive-contrast(var(--box-background)) h s l / 0.9);
+        }
+
+        @if not($input-prefix-color) and $box-background {
+            $input-prefix-color: hsla(from adaptive-contrast(var(--box-background)) h s l / 0.9);
+        }
+
+        @if not($input-prefix-color--filled) and $box-background {
+            $input-prefix-color--filled: adaptive-contrast(var(--box-background));
+        }
+
+        @if not($input-prefix-color--focused) and $box-background-focus {
+            $input-prefix-color--focused: adaptive-contrast(var(--box-background-focus));
+        }
+
+        @if not($input-suffix-color) and $box-background {
+            $input-suffix-color: hsla(from adaptive-contrast(var(--box-background)) h s l / 0.9);
+        }
+
+        @if not($input-suffix-color--filled) and $box-background {
+            $input-suffix-color--filled: adaptive-contrast(var(--box-background));
+        }
+
+        @if not($input-suffix-color--focused) and $box-background-focus {
+            $input-suffix-color--focused: adaptive-contrast(var(--box-background-focus));
+        }
+
+        @if $box-background != transparent {
+            @if not($box-disabled-background) and $box-background {
+                $box-disabled-background: hsla(from var(--box-background) h s l / 0.4);
+            }
+
+            @if not($disabled-placeholder-color) and $box-disabled-background {
+                $disabled-placeholder-color: adaptive-contrast(var(--box-disabled-background));
+            }
+
+            @if not($disabled-text-color) and $box-disabled-background {
+                $disabled-text-color: adaptive-contrast(var(--box-disabled-background));
+            }
+        } @else {
+            @if not($box-disabled-background) and $box-background {
+                $box-disabled-background: var(--box-background);
+            }
+
+            @if not($disabled-placeholder-color) and $placeholder-color {
+                $disabled-placeholder-color: hsla(from var(--placeholder-color) h s l / 0.7);
+            }
+
+            @if not($disabled-text-color) and $idle-text-color {
+                $disabled-text-color: hsla(from var(--idle-text-color) h s l / 0.7);
+            }
+        }
     }
 
-    @if not($placeholder-color) and $box-background-hover {
-        $placeholder-color: text-contrast($box-background-hover);
+    @if $variant == 'fluent' or $variant == 'bootstrap' {
+        @if not($input-prefix-background) and $input-suffix-background {
+            $input-prefix-background: var(--input-suffix-background);
+        }
+
+        @if not($input-suffix-background) and $input-prefix-background {
+            $input-suffix-background: var(--input-prefix-background);
+        }
     }
 
-    @if not($placeholder-color) and $box-background-focus {
-        $placeholder-color: text-contrast($box-background-focus);
+    @if $variant == 'material' or $variant == 'indigo' {
+        //bottom line color
+        @if not($hover-bottom-line-color) and $idle-bottom-line-color {
+            $hover-bottom-line-color: hsl(from var(--idle-bottom-line-color) h s calc(l * 0.8));
+        }
+
+        @if not($focused-bottom-line-color) and $hover-bottom-line-color {
+            $focused-bottom-line-color: var(--hover-bottom-line-color);
+        }
+
+        @if $variant == 'material' {
+            @if not($focused-secondary-color) and $focused-bottom-line-color {
+                $focused-secondary-color: var(--focused-bottom-line-color);
+            }
+
+            @if not($border-color) and $idle-bottom-line-color {
+                $border-color: var(--idle-bottom-line-color);
+            }
+        }
     }
 
+    //border-color
+    @if $variant == 'bootstrap' {
+        @if not($focused-border-color) and $border-color {
+            $focused-border-color: hsl(from var(--border-color) h s calc(l * 0.8));
+        }
+
+        @if not($focused-secondary-color) and $focused-border-color {
+            $focused-secondary-color: hsla(from var(--focused-border-color) h s l / 0.4);
+        }
+    } @else {
+        @if not($hover-border-color) and $border-color {
+            $hover-border-color: hsl(from var(--border-color) h s calc(l * 0.8));
+        }
+
+        @if not($focused-border-color) and $hover-border-color {
+            $focused-border-color: var(--hover-border-color);
+        }
+
+        @if $variant != 'indigo' {
+            @if not($focused-secondary-color) and $focused-border-color {
+                $focused-secondary-color: var(--focused-border-color);
+            }
+        }
+    }
+
+    @if $variant == 'material' {
+        @if not($focused-bottom-line-color) and $focused-border-color {
+            $focused-bottom-line-color: var(--focused-border-color);
+        }
+    }
+
+    //search input
     @if not($placeholder-color) and $search-background {
-        $placeholder-color: text-contrast($search-background);
+        $placeholder-color: hsla(from adaptive-contrast(var(--search-background)) h s l / 0.9);
+    }
+
+    @if not($hover-placeholder-color) and $placeholder-color {
+        $hover-placeholder-color: var(--placeholder-color);
+    }
+
+    @if $variant == 'indigo' {
+        @if not($box-background-hover) and $search-background {
+            $box-background-hover: var(--search-background);
+        }
+    } @else {
+        @if not($idle-secondary-color) and $placeholder-color {
+            $idle-secondary-color: var(--placeholder-color);
+        }
+    }
+
+    @if not($idle-text-color) and $search-background {
+        $idle-text-color: adaptive-contrast(var(--search-background));
+    }
+
+    @if not($filled-text-color) and $search-background {
+        $filled-text-color: adaptive-contrast(var(--search-background));
+    }
+
+    @if not($filled-text-hover-color) and $search-background {
+        $filled-text-hover-color: adaptive-contrast(var(--search-background));
+    }
+
+    @if not($focused-text-color) and $search-background {
+        $focused-text-color: adaptive-contrast(var(--search-background));
+    }
+
+    @if not($input-prefix-color) and $search-background {
+        $input-prefix-color: hsla(from adaptive-contrast(var(--search-background)) h s l / 0.9);
+    }
+
+    @if not($input-suffix-color) and $search-background {
+        $input-suffix-color: hsla(from adaptive-contrast(var(--search-background)) h s l / 0.9);
+    }
+
+    @if $variant != 'indigo' {
+        @if not($input-prefix-color--filled) and $search-background {
+            $input-prefix-color--filled: adaptive-contrast(var(--search-background));
+        }
+
+        @if not($input-prefix-color--focused) and $search-background {
+            $input-prefix-color--focused: adaptive-contrast(var(--search-background));
+        }
+
+        @if not($input-suffix-color--filled) and $search-background {
+            $input-suffix-color--filled: adaptive-contrast(var(--search-background));
+        }
+
+        @if not($input-suffix-color--focused) and $search-background {
+            $input-suffix-color--focused: adaptive-contrast(var(--search-background));
+        }
+    }
+
+    @if $search-background != transparent {
+        @if not($search-disabled-background) and $search-background {
+            $search-disabled-background: hsla(from var(--search-background) h s l / 0.4);
+        }
+
+        @if not($disabled-placeholder-color) and $search-disabled-background {
+            $disabled-placeholder-color: adaptive-contrast(var(--search-disabled-background));
+        }
+
+        @if not($disabled-text-color) and $search-disabled-background {
+            $disabled-text-color: adaptive-contrast(var(--search-disabled-background));
+        }
+    } @else {
+        @if not($search-disabled-background) and $search-background {
+            $search-disabled-background: var(--search-background);
+        }
+
+        @if not($disabled-placeholder-color) and $placeholder-color {
+            $disabled-placeholder-color: hsla(from var(--placeholder-color) h s l / 0.7);
+        }
+
+        @if not($disabled-text-color) and $idle-text-color {
+            $disabled-text-color: hsla(from var(--idle-text-color) h s l / 0.7);
+        }
     }
 
     @if not($search-resting-shadow) {
@@ -172,37 +393,70 @@
     @if not($search-disabled-shadow) {
         $search-disabled-shadow: elevation($search-disabled-elevation);
     }
+    //end search input
+
+    @if not($input-prefix-color) and $input-suffix-color {
+        $input-prefix-color: var(--input-suffix-color);
+    }
+
+    @if not($input-suffix-color) and $input-prefix-color {
+        $input-suffix-color: var(--input-prefix-color);
+    }
 
     @if not($input-prefix-background--filled) and $input-prefix-background {
-        $input-prefix-background--filled: $input-prefix-background;
+        $input-prefix-background--filled: var(--input-prefix-background);
     }
 
     @if not($input-prefix-background--focused) and $input-prefix-background {
-        $input-prefix-background--focused: $input-prefix-background;
+        $input-prefix-background--focused: var(--input-prefix-background);
     }
 
     @if not($input-prefix-color) and $input-prefix-background {
-        $input-prefix-color: text-contrast($input-prefix-background);
+        $input-prefix-color: adaptive-contrast(var(--input-prefix-background));
+    }
+
+    @if not($input-prefix-color--filled) and $input-prefix-color {
+        $input-prefix-color--filled: var(--input-prefix-color);
+    }
+
+    @if not($input-prefix-color--focused) and $input-prefix-color--filled {
+        $input-prefix-color--focused: var(--input-prefix-color--filled);
     }
 
     @if not($input-prefix-color--filled) and $input-prefix-background--filled {
-        $input-prefix-color--filled: text-contrast($input-prefix-background--filled);
+        $input-prefix-color--filled: adaptive-contrast(var(--input-prefix-background--filled));
     }
 
     @if not($input-prefix-color--focused) and $input-prefix-background--focused {
-        $input-prefix-color--focused: text-contrast($input-prefix-background--focused);
+        $input-prefix-color--focused: adaptive-contrast(var(--input-prefix-background--focused));
+    }
+
+    @if not($input-suffix-background--filled) and $input-suffix-background {
+        $input-suffix-background--filled: var(--input-suffix-background);
+    }
+
+    @if not($input-suffix-background--focused) and $input-suffix-background {
+        $input-suffix-background--focused: var(--input-suffix-background);
     }
 
     @if not($input-suffix-color) and $input-suffix-background {
-        $input-suffix-color: text-contrast($input-suffix-background);
+        $input-suffix-color: adaptive-contrast(var(--input-suffix-background));
+    }
+
+    @if not($input-suffix-color--filled) and $input-suffix-color {
+        $input-suffix-color--filled: var(--input-suffix-color);
+    }
+
+    @if not($input-suffix-color--focused) and $input-suffix-color--filled {
+        $input-suffix-color--focused: var(--input-suffix-color--filled);
     }
 
     @if not($input-suffix-color--filled) and $input-suffix-background--filled {
-        $input-suffix-color--filled: text-contrast($input-suffix-background--filled);
+        $input-suffix-color--filled: adaptive-contrast(var(--input-suffix-background--filled));
     }
 
     @if not($input-suffix-color--focused) and $input-suffix-background--focused {
-        $input-suffix-color--focused: text-contrast($input-suffix-background--focused);
+        $input-suffix-color--focused: adaptive-contrast(var(--input-suffix-background--focused));
     }
 
     @if not($box-border-radius) {
@@ -234,7 +488,6 @@
         idle-bottom-line-color: $idle-bottom-line-color,
         hover-bottom-line-color: $hover-bottom-line-color,
         focused-bottom-line-color: $focused-bottom-line-color,
-        interim-bottom-line-color: $interim-bottom-line-color,
         disabled-bottom-line-color: $disabled-bottom-line-color,
         border-color: $border-color,
         hover-border-color: $hover-border-color,
@@ -271,8 +524,6 @@
         input-suffix-background--filled: $input-suffix-background--filled,
         input-suffix-color--focused: $input-suffix-color--focused,
         input-suffix-background--focused: $input-suffix-background--focused,
-        theme: map.get($schema, '_meta', 'theme'),
-        variant: map.get($schema, '_meta', 'theme'),
         size: $size,
     ));
 }
@@ -285,7 +536,7 @@
     // when dynamically switching between the input `type` attribute.
     @include css-vars($theme);
 
-    $variant: map.get($theme, 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $transition-timing: .25s $out-cubic;
     $material-theme: $variant == 'material';
     $indigo-theme: $variant == 'indigo';
@@ -496,12 +747,23 @@
                     }
                 }
             }
+
+            &:not(%form-group-display--focused, %form-group-display--filled) {
+                &:has(input:not(:placeholder-shown, [type='file'])) {
+                    %form-group-label {
+                        @include type-style('subtitle-1');
+                        transform: translateY(0);
+                    }
+                }
+            }
         }
     }
 
     %form-group-placeholder {
-        %form-group-label {
-            transition: none !important;
+        &:has(input:placeholder-shown, textarea:placeholder-shown) { 
+            %form-group-label {
+                transition: none !important;
+            }
         }
     }
 
@@ -1004,10 +1266,17 @@
 
     %form-group-label--focused-border,
     %form-group-label--filled-border,
-    %form-group-label--placeholder-border,
     %form-group-label--file-border {
         %igx-input-group__notch {
             border-block-start-color: transparent !important;
+        }
+    }
+
+    %form-group-label--placeholder-border {
+        &:has(input:placeholder-shown, textarea:placeholder-shown) {
+            %igx-input-group__notch {
+                border-block-start-color: transparent !important;
+            }
         }
     }
 
@@ -1096,6 +1365,26 @@
         %textarea-group--outlined:not(%suffixed) {
             textarea {
                 width: calc(100% - #{rem(2px)});
+            }
+        }
+
+        %textarea-group:not(%form-group-display--focused, %form-group-display--filled) {
+            &:has(textarea:not(:placeholder-shown)) {
+                %form-group-textarea-label:not(%textarea-group-label--focused) {
+                    @include type-style('subtitle-1');
+
+                    top: calc($input-top-padding - #{rem(3px)});
+                    transform: translateY(0);
+                    margin-bottom: auto;
+                }
+            }
+        }
+
+        %textarea-group:not(%form-group-display--focused, %form-group-display--filled) {
+            &:has(%form-group-display--border, textarea:not(:placeholder-shown)) {
+                %igx-input-group__notch {
+                    border-block-start-width: rem(1px);
+                }
             }
         }
     }
@@ -1639,7 +1928,7 @@
     }
 
     %indigo--box-focused {
-        background: var-get($theme, 'box-background-hover');
+        background: var-get($theme, 'box-background-focus');
     }
 
     %form-group-bundle--indigo--disabled {
@@ -2172,12 +2461,38 @@
 
     %bootstrap-input--success {
         border: rem(1px) solid var-get($theme, 'success-secondary-color');
-        box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
+
+        &:focus {
+            box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
+
+            + %bootstrap-file-input {
+                box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
+            }
+        }
     }
 
     %bootstrap-input--error {
         border: rem(1px) solid var-get($theme, 'error-secondary-color');
-        box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+
+        &:focus {
+            box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+
+            + %bootstrap-file-input {
+                box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+            }
+        }
+    }
+
+    %bootstrap-input--warning {
+        border: rem(1px) solid var-get($theme, 'warning-secondary-color');
+
+        &:focus {
+            box-shadow: 0 0 0 rem(4px) color($color: 'warn', $variant: 500, $opacity: 0.38);
+
+            + %bootstrap-file-input {
+                box-shadow: 0 0 0 rem(4px) color($color: 'warn', $variant: 500, $opacity: 0.38);
+            }
+        }
     }
 
     %bootstrap-input--disabled {

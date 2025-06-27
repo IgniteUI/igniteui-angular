@@ -39,11 +39,11 @@
     $theme: digest-schema($highlight-schema);
 
     @if not($resting-color) and $resting-background {
-        $resting-color: text-contrast($resting-background);
+        $resting-color: adaptive-contrast(var(--resting-background));
     }
 
     @if not($active-color) and $active-background {
-        $active-color: text-contrast($active-background);
+        $active-color: adaptive-contrast(var(--active-background));
     }
 
     @return extend($theme, (
@@ -53,7 +53,6 @@
         resting-color: $resting-color,
         active-background: $active-background,
         active-color: $active-color,
-        theme: map.get($schema, '_meta', 'theme'),
     ));
 }
 

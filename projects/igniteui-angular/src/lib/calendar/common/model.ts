@@ -115,13 +115,104 @@ export class CalendarDay {
         return this._date.getTime();
     }
 
-    /** Returns the current week number. */
+    /** Returns the ISO 8601 week number. */
     public get week() {
-        const firstDay = new CalendarDay({ year: this.year, month: 0 })
-            .timestamp;
-        const currentDay =
-            (this.timestamp - firstDay + millisecondsInDay) / millisecondsInDay;
-        return Math.ceil(currentDay / daysInWeek);
+        return this.getWeekNumber();
+    }
+
+    /**
+     * Gets the week number based on week start day.
+     * Uses ISO 8601 (first Thursday rule) only when weekStart is Monday (1).
+     * For other week starts, uses simple counting from January 1st.
+     */
+    public getWeekNumber(weekStart: number = 1): number {
+        if (weekStart === 1) {
+            return this.calculateISO8601WeekNumber();
+        } else {
+            return this.calculateSimpleWeekNumber(weekStart);
+        }
+    }
+
+    /**
+     * Calculates week number using ISO 8601 standard (Monday start, first Thursday rule).
+     */
+    private calculateISO8601WeekNumber(): number {
+        const currentThursday = this.getThursdayOfWeek();
+        const firstWeekThursday = this.getFirstWeekThursday(currentThursday.year);
+
+        const weeksDifference = this.getWeeksDifference(currentThursday, firstWeekThursday);
+        const weekNumber = weeksDifference + 1;
+
+        // Handle dates that belong to the previous year's last week
+        if (weekNumber <= 0) {
+            return this.getPreviousYearLastWeek(currentThursday.year - 1);
+        }
+
+        return weekNumber;
+    }
+
+    /**
+     * Calculates week number using simple counting from January 1st.
+     */
+    private calculateSimpleWeekNumber(weekStart: number): number {
+        const yearStart = new CalendarDay({ year: this.year, month: 0, date: 1 });
+        const yearStartDay = yearStart.day;
+
+        const daysUntilFirstWeek = (weekStart - yearStartDay + 7) % 7;
+
+        if (daysUntilFirstWeek > 0) {
+            const firstWeekStart = yearStart.add('day', daysUntilFirstWeek);
+
+            if (this.timestamp < firstWeekStart.timestamp) {
+                const prevYear = this.year - 1;
+                const prevYearDec31 = new CalendarDay({ year: prevYear, month: 11, date: 31 });
+                return prevYearDec31.calculateSimpleWeekNumber(weekStart);
+            }
+
+            const daysSinceFirstWeek = Math.floor((this.timestamp - firstWeekStart.timestamp) / millisecondsInDay);
+            return Math.floor(daysSinceFirstWeek / 7) + 1;
+        } else {
+            const daysSinceYearStart = Math.floor((this.timestamp - yearStart.timestamp) / millisecondsInDay);
+            return Math.floor(daysSinceYearStart / 7) + 1;
+        }
+    }
+
+    /**
+     * Gets the Thursday of the current date's week (ISO 8601 helper).
+     */
+    private getThursdayOfWeek(): CalendarDay {
+        const dayOffset = (this.day - 1 + 7) % 7; // Monday start
+        const thursdayOffset = 3; // Thursday is 3 days from Monday
+        return this.add('day', thursdayOffset - dayOffset);
+    }
+
+    /**
+     * Gets the Thursday of the first week of the given year (ISO 8601 helper).
+     */
+    private getFirstWeekThursday(year: number): CalendarDay {
+        const january4th = new CalendarDay({ year, month: 0, date: 4 });
+        const dayOffset = (january4th.day - 1 + 7) % 7; // Monday start
+        const thursdayOffset = 3; // Thursday is 3 days from Monday
+        return january4th.add('day', thursdayOffset - dayOffset);
+    }
+
+    /**
+     * Calculates the number of weeks between two Thursday dates (ISO 8601 helper).
+     */
+    private getWeeksDifference(currentThursday: CalendarDay, firstWeekThursday: CalendarDay): number {
+        const daysDifference = Math.floor((currentThursday.timestamp - firstWeekThursday.timestamp) / millisecondsInDay);
+        return Math.floor(daysDifference / 7);
+    }
+
+    /**
+     * Gets the last week number of the previous year (ISO 8601 helper).
+     */
+    private getPreviousYearLastWeek(previousYear: number): number {
+        const december31st = new CalendarDay({ year: previousYear, month: 11, date: 31 });
+        const lastWeekThursday = december31st.getThursdayOfWeek();
+        const firstWeekThursday = this.getFirstWeekThursday(previousYear);
+
+        return this.getWeeksDifference(lastWeekThursday, firstWeekThursday) + 1;
     }
 
     /** Returns the underlying native date instance. */

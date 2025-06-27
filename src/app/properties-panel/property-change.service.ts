@@ -21,7 +21,7 @@ export type PropertyPanelConfig = {
         label?: string;
         control: {
             type: ControlType,
-            options?: string[];
+            options?: string[] | { label: string, value: any }[];
             labels?: string[];
             min?: number;
             max?: number;

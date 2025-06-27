@@ -1000,6 +1000,36 @@
             }
         }
 
+        @include mx(bootstrap, warning) {
+          @include e(input) {
+              @extend %bootstrap-input--warning !optional;
+
+              &:hover {
+                  @extend %bootstrap-input--warning !optional;
+              }
+          }
+
+          @include e(file-input) {
+              @extend %bootstrap-input--warning !optional;
+
+              &:hover {
+                  @extend %bootstrap-input--warning !optional;
+              }
+          }
+
+          @include e(label) {
+              @extend %bootstrap-label !optional;
+          }
+
+          @include e(textarea) {
+              @extend %bootstrap-input--warning !optional;
+
+              &:hover {
+                  @extend %bootstrap-input--warning !optional;
+              }
+          }
+      }
+
         @include mx(bootstrap, textarea-group) {
             @include e(bundle) {
                 @extend %form-group-bundle-bootstrap--textarea !optional;

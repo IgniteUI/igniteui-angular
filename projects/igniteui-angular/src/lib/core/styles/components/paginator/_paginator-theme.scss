@@ -38,10 +38,9 @@
     }
 
     $theme: digest-schema($grid-paginator-schema);
-    $meta: map.get($theme, '_meta');
 
     @if not($text-color) and $background-color {
-        $text-color: text-contrast($background-color);
+        $text-color: adaptive-contrast($background-color);
     }
 
     @return extend($theme, (
@@ -49,10 +48,6 @@
         text-color: $text-color,
         background-color: $background-color,
         border-color: $border-color,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -62,7 +57,7 @@
 @mixin paginator($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     $paginator-padding-inline: (
         comfortable: rem(24px),

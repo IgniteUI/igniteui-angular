@@ -596,18 +596,13 @@ describe("IgxCalendar - ", () => {
                         By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS}`),
                     );
 
+                    const expectedWeeks = ["W", "1", "2", "3", "4", "5", "6"];
+
                     calendarRows.forEach((row, idx) => {
                         const firstRowItem = row.nativeElement.children[0];
-
-                        if (idx === 0) {
-                            expect(firstRowItem.firstChild.innerText).toEqual(
-                                "W",
-                            );
-                        } else {
-                            expect(firstRowItem.firstChild.innerText).toEqual(
-                                idx.toString(),
-                            );
-                        }
+                        expect(firstRowItem.firstChild.innerText).toEqual(
+                            expectedWeeks[idx],
+                        );
                     });
                 });
 
@@ -626,12 +621,7 @@ describe("IgxCalendar - ", () => {
                         const firstRowItem = row.nativeElement.children[0];
                         if (idx === 5) {
                             expect(firstRowItem.firstChild.innerText).toEqual(
-                                "13",
-                            );
-                        }
-                        if (idx === 6) {
-                            expect(firstRowItem.firstChild.innerText).toEqual(
-                                "14",
+                                "12",
                             );
                         }
                     });
@@ -648,7 +638,7 @@ describe("IgxCalendar - ", () => {
                         const firstRowItem = row.nativeElement.children[0];
                         if (idx === 5) {
                             expect(firstRowItem.firstChild.innerText).toEqual(
-                                "44",
+                                "43",
                             );
                         }
                     });
@@ -664,6 +654,7 @@ describe("IgxCalendar - ", () => {
                     calendarRowsDec.forEach((row, idx) => {
                         const firstRowItem = row.nativeElement.children[0];
                         if (idx === 6) {
+                            // With simple counting for Sunday start, expect 53
                             expect(firstRowItem.firstChild.innerText).toEqual(
                                 "53",
                             );

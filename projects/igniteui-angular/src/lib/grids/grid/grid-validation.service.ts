@@ -36,6 +36,7 @@ export class IgxGridValidationService {
                 owner: this.grid
             };
             this.grid.formGroupCreated.emit(args);
+            formGroup.patchValue(data);
             this.add(rowId, formGroup);
         } else {
             // reset to pristine.

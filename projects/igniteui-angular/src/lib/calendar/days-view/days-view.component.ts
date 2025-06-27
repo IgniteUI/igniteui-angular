@@ -378,7 +378,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      * @hidden
      */
     public getWeekNumber(date: CalendarDay): number {
-        return date.week;
+        return date.getWeekNumber(this.weekStart);
     }
 
     /**
