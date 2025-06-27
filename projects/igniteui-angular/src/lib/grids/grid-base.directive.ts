@@ -2765,13 +2765,10 @@ export abstract class IgxGridBaseDirective implements GridType,
     public get activeDescendant() {
         const activeElem = this.navigation.activeNode;
 
-        if (!activeElem || !Object.keys(activeElem).length) {
-            return this.id;
+        if (!activeElem || !Object.keys(activeElem).length || activeElem.row < 0) {
+            return null;
         }
-
-        return activeElem.row < 0 ?
-            `${this.id}_${activeElem.row}_${activeElem.mchCache.level}_${activeElem.column}` :
-            `${this.id}_${activeElem.row}_${activeElem.column}`;
+        return `${this.id}_${activeElem.row}_${activeElem.column}`;
     }
 
     /** @hidden @internal */
