@@ -605,19 +605,25 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     protected manageRequiredAsterisk(): void {
         const hasRequiredHTMLAttribute = this.elementRef.nativeElement.hasAttribute('required');
-        if (this.ngControl && this.ngControl.control.validator) {
-            // Run the validation with empty object to check if required is enabled.
-            const error = this.ngControl.control.validator({} as AbstractControl);
-            this.inputGroup.isRequired = error && error.required;
-            this.cdr.markForCheck();
+        let isRequired = false;
 
-            // If validator is dynamically cleared and no required HTML attribute is set,
-            // reset label's required class(asterisk) and IgxInputState #6896
-        } else if (this.inputGroup.isRequired && this.ngControl && !this.ngControl.control.validator && !hasRequiredHTMLAttribute) {
-            this.input.valid = IgxInputState.INITIAL;
-            this.inputGroup.isRequired = false;
-            this.cdr.markForCheck();
+        if (this.ngControl && this.ngControl.control.validator) {
+            const error = this.ngControl.control.validator({} as AbstractControl);
+            isRequired = !!(error && error.required);
         }
+
+        this.inputGroup.isRequired = isRequired;
+
+        if (this.input?.nativeElement) {
+            this.input.nativeElement.setAttribute('aria-required', isRequired.toString());
+        }
+
+        // Handle validator removal case
+        if (!isRequired && !hasRequiredHTMLAttribute) {
+            this.input.valid = IgxInputState.INITIAL;
+        }
+
+        this.cdr.markForCheck();
     }
 
     private setSelection(item: IgxDropDownItemBaseDirective) {
