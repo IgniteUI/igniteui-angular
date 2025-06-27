@@ -63,6 +63,15 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
         return this.column.selected;
     }
 
+    /**
+     * Returns the `aria-sort` of the header.
+     */
+    @HostBinding('attr.aria-sort')
+    public get ariaSort() {
+        return this.sortDirection === SortingDirection.Asc ? 'ascending'
+                : this.sortDirection === SortingDirection.Desc ? 'descending' : null;
+    }
+
     @HostBinding('class.igx-grid-th')
     public get columnGroupStyle() {
         return !this.column.columnGroup;
