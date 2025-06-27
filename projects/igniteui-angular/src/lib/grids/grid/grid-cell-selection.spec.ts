@@ -84,6 +84,10 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             UIInteractions.simulatePointerOverElementEvent('pointerup', endCell.nativeElement);
             detect();
+            // Invoke endEdit() to make sure if no editing is going on,
+            // the cell activation shouldn't be lost (https://infragistics.visualstudio.com/Indigo_Platform/_workitems/edit/37933)
+            grid.endEdit(true, null);
+            fix.detectChanges();
 
             expect(startCell.active).toBe(true);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 3, 1, 0);
