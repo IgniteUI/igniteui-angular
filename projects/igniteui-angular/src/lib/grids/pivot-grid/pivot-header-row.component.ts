@@ -156,7 +156,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
         ref: ElementRef<HTMLElement>,
         cdr: ChangeDetectorRef,
-        protected renderer: Renderer2,
+        protected renderer: Renderer2
     ) {
         super(ref, cdr);
     }
@@ -426,8 +426,13 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @internal
     */
     public onAggregationChange(event: ISelectionEventArgs) {
+
         if (!this.isSelected(event.newSelection.value)) {
             this.value.aggregate = event.newSelection.value;
+            const isSingleValue = this.grid.values.length === 1;
+
+            PivotUtil.updateColumnTypeByAggregator(this.grid.columns, this.value, isSingleValue);
+
             this.grid.pipeTrigger++;
         }
     }
