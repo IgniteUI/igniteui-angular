@@ -3780,7 +3780,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         // notifier for column autosize requests
         this._autoSizeColumnsNotify.pipe(
-            throttleTime(0, animationFrameScheduler, { leading: false, trailing: true }),
+            throttleTime(0, this.platform.isBrowser ? animationFrameScheduler : undefined, { leading: false, trailing: true }),
             destructor
         )
             .subscribe(() => {
@@ -6136,7 +6136,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public trackColumnChanges(_index, col) {
-        return col.field + col._calcWidth;
+        return col.field + col._calcWidth.toString();
     }
 
     /**
