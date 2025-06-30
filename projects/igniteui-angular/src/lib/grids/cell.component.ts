@@ -700,6 +700,16 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         }
     }
 
+    @HostBinding('attr.aria-rowindex')
+    protected get ariaRowIndex(): number {
+        return this.rowIndex + 1;
+    }
+
+    @HostBinding('attr.aria-colindex')
+    protected get ariaColIndex(): number {
+        return this.visibleColumnIndex + 1;
+    }
+
     @ViewChild('defaultCell', { read: TemplateRef, static: true })
     protected defaultCellTemplate: TemplateRef<any>;
 
