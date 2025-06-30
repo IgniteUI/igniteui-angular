@@ -131,6 +131,14 @@
     %advanced-filter {
         @include sizable();
 
+        --_tree-scrollbar-gutter: #{rem(16px)};
+
+        @if $variant == 'bootstrap' {
+            --query-builder-outer-padding: #{rem(16px)};
+        } @else {
+            --query-builder-outer-padding: #{rem(24px)};
+        }
+
         width: auto;
         min-width: rem(660px);
         background-color: var-get($theme, 'background');
@@ -139,11 +147,19 @@
         overflow: hidden;
 
         &:has(:not(igx-query-builder-header)) {
-            padding-block-start: if($variant != 'bootstrap', rem(24px), rem(16px))
+            padding-block-start: var(--query-builder-outer-padding);
+
+            %query-level-0 {
+                padding-block: 0 var(--query-builder-outer-padding);
+            }
         }
 
         &:has(igx-query-builder-header) {
             padding-block-start: 0;
+
+            %query-level-0 {
+                padding-block: if($variant != 'bootstrap', 0, rem(16px)) var(--query-builder-outer-padding);
+            }
         }
 
 	    .igx-chip__ghost {
@@ -162,10 +178,8 @@
     %query-level-0 {
         display: block;
         width: 100%;
-        padding-inline: if($variant != 'bootstrap', rem(24px), rem(16px));
-        padding-block:
-            if($variant != 'bootstrap', 0, rem(16px))
-            if($variant != 'bootstrap', rem(24px), rem(16px));
+
+        padding-inline: var(--query-builder-outer-padding);
 
         > %advanced-filter__main {
             gap: rem(16px);
@@ -176,7 +190,7 @@
                 max-height: rem(570px);
                 overflow-y: auto;
                 overflow-x: hidden;
-                padding-inline-end: rem(16px);
+                padding-inline-end: var(--_tree-scrollbar-gutter);
             }
         }
     }
@@ -247,8 +261,8 @@
         margin-bottom: 0;
         border-block-end: rem(1px) solid var-get($theme, 'header-border');
 
-        padding-inline: if($variant != 'bootstrap', rem(24px), rem(16px));
-        padding-block: if($variant != 'bootstrap', rem(24px), rem(16px)) rem(16px);
+        padding-inline: var(--query-builder-outer-padding);
+        padding-block: var(--query-builder-outer-padding) rem(16px);
     }
 
     %advanced-filter__title {
