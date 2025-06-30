@@ -62,22 +62,49 @@
     }
 
     $theme: digest-schema($tree-schema);
-    $meta: map.get($theme, '_meta');
 
     @if not($foreground) and $background {
-        $foreground: text-contrast($background);
+        $foreground: adaptive-contrast(var(--background));
+    }
+
+    @if not($background-selected) and $background {
+        $background-selected: hsl(from var(--background) h s calc(l * 0.9));
+    }
+
+    @if not($hover-color) and $background {
+        $hover-color: hsla(from adaptive-contrast(var(--background)) h s l / 0.1);
+    }
+
+    @if not($hover-selected-color) and $background-selected {
+        $hover-selected-color: hsl(from var(--background-selected) h s calc(l * 0.9));
     }
 
     @if not($foreground-selected) and $background-selected {
-        $foreground-selected: text-contrast($background-selected);
+        $foreground-selected: adaptive-contrast(var(--background-selected));
+    }
+
+    @if not($background-active) and $background {
+        $background-active: hsl(from var(--background) h s calc(l * 0.9));
     }
 
     @if not($foreground-active) and $background-active {
-        $foreground-active: text-contrast($background-active);
+        $foreground-active: adaptive-contrast(var(--background-active));
+    }
+
+    @if not($background-active-selected) and $background-active {
+        $background-active-selected: hsl(from var(--background-active) h s calc(l * 0.9));
     }
 
     @if not($foreground-active-selected) and $background-active-selected {
-        $foreground-active-selected: text-contrast($background-active-selected);
+        $foreground-active-selected: adaptive-contrast(var(--background-active-selected));
+    }
+
+    @if not($background-disabled) and $background {
+        $background-disabled: color-mix(in hsl, var(--background), transparent 50%);
+    }
+
+    @if not($foreground-disabled) and $background-disabled {
+        $foreground-disabled: adaptive-contrast(var(--background-disabled));
     }
 
     @return extend($theme, (
@@ -98,10 +125,6 @@
         border-color: $border-color,
         hover-color: $hover-color,
         hover-selected-color: $hover-selected-color,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
         size: $size,
     ));
 }
@@ -112,7 +135,7 @@
 @mixin tree($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $indigo-theme: $variant == 'indigo';
 
     $node-indent-default: (

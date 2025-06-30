@@ -285,7 +285,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     }
 
     /** @hidden @internal */
-    public set suffixes(items: QueryList<IgxPrefixDirective>) {
+    public set suffixes(items: QueryList<IgxSuffixDirective>) {
         this._suffixes = items;
     }
 
