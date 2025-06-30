@@ -76,7 +76,7 @@ export class IgxSorting implements IGridSortingStrategy {
         grid: GridType = null,
         groupsRecords: any[] = [],
         fullResult: IGroupByResult = { data: [], metadata: [] }
-    ): any[] {
+    ): IGroupByResult {
         const expressions = state.expressions;
         const expansion = state.expansion;
         let i = 0;
@@ -117,9 +117,10 @@ export class IgxSorting implements IGridSortingStrategy {
             fullResult.metadata.push(null);
             if (level < expressions.length - 1) {
                 recursiveResult = this.groupDataRecursive(group, state, level + 1, groupRow,
-                    expanded ? metadata : [], grid, groupsRecords, fullResult);
+                    [], grid, groupsRecords, fullResult);
                 if (expanded) {
-                    result = result.concat(recursiveResult);
+                    result = result.concat(recursiveResult.data);
+                    metadata = metadata.concat(recursiveResult.metadata);
                 }
             } else {
                 for (const groupItem of group) {
@@ -127,13 +128,13 @@ export class IgxSorting implements IGridSortingStrategy {
                     fullResult.data.push(groupItem);
                 }
                 if (expanded) {
-                    metadata.push(...fullResult.metadata.slice(fullResult.metadata.length - group.length));
-                    result.push(...fullResult.data.slice(fullResult.data.length - group.length));
+                    metadata = metadata.concat(fullResult.metadata.slice(fullResult.metadata.length - group.length));
+                    result = result.concat(fullResult.data.slice(fullResult.data.length - group.length));
                 }
             }
             i += group.length;
         }
-        return result;
+        return { data: result, metadata };
     }
 
     /**
@@ -264,8 +265,8 @@ export class IgxGrouping extends IgxSorting implements IGridGroupingStrategy {
         const grouping = this.groupDataRecursive(data, state, 0, null, metadata, grid, groupsRecords, fullResult);
         grid?.groupingPerformedSubject.next();
         return {
-            data: grouping,
-            metadata
+            data: grouping.data,
+            metadata: grouping.metadata
         };
     }
 }
