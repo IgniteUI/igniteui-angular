@@ -705,12 +705,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     @HostBinding('attr.aria-rowindex')
     protected get ariaRowIndex(): number {
-        return this.rowIndex + 1;
+        // +2 because aria-rowindex is 1-based and the first row is the header
+        return this.rowIndex + 2;
     }
 
     @HostBinding('attr.aria-colindex')
     protected get ariaColIndex(): number {
-        return this.visibleColumnIndex + 1;
+        return this.column.index + 1;
     }
 
     @ViewChild('defaultCell', { read: TemplateRef, static: true })
