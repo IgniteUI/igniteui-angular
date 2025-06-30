@@ -21,7 +21,7 @@ import { FilteringLogic } from '../../data-operations/filtering-expression.inter
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from '../../tabs/tabs/public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
-import { GRID_SCROLL_CLASS } from '../../test-utils/grid-functions.spec';
+import { GRID_SCROLL_CLASS, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { AsyncPipe } from '@angular/common';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../../paginator/paginator.component';
 import { IGridRowEventArgs, IgxColumnGroupComponent, IgxGridEmptyTemplateDirective, IgxGridFooterComponent, IgxGridLoadingTemplateDirective, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
@@ -2017,26 +2017,31 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.columns[2].field).toBe('lastName');
         }));
 
-        it('should specify the correct aria-rowindex and aria-colindex attributes for cells', async () => {
+        it('should set correct aria attributes related to total rows/cols count and indexes', async () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(80, 20);
             fix.detectChanges();
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
+            const gridHeader = GridFunctions.getGridHeader(grid);
+            const headerRowElement = gridHeader.nativeElement.querySelector('[role="row"]');
 
             grid.navigateTo(50, 16);
             fix.detectChanges();
             await wait();
             fix.detectChanges();
 
+            expect(headerRowElement.getAttribute('aria-rowindex')).toBe('1');
+            expect(grid.nativeElement.getAttribute('aria-rowcount')).toBe('81');
+            expect(grid.nativeElement.getAttribute('aria-colcount')).toBe('20');
+
             const cell = grid.gridAPI.get_cell_by_index(50, 'col16');
             // The following attributes indicate to assistive technologies which portions
             // of the content are displayed in case not all are rendered,
             // such as with the built-in virtualization of the grid. 1-based index.
-            expect(cell.nativeElement.getAttribute('aria-rowindex')).toBe('51');
+            expect(cell.nativeElement.getAttribute('aria-rowindex')).toBe('52');
             expect(cell.nativeElement.getAttribute('aria-colindex')).toBe('17');
-
         });
     });
 
