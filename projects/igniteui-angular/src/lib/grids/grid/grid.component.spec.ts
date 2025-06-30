@@ -2004,6 +2004,28 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.columns[1].field).toBe('firstName');
             expect(grid.columns[2].field).toBe('lastName');
         }));
+
+        it('should specify the correct aria-rowindex and aria-colindex attributes for cells', async () => {
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.componentInstance.initColumnsRows(80, 20);
+            fix.detectChanges();
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+
+            grid.navigateTo(50, 16);
+            fix.detectChanges();
+            await wait();
+            fix.detectChanges();
+
+            const cell = grid.gridAPI.get_cell_by_index(50, 'col16');
+            // The following attributes indicate to assistive technologies which portions
+            // of the content are displayed in case not all are rendered,
+            // such as with the built-in virtualization of the grid. 1-based index.
+            expect(cell.nativeElement.getAttribute('aria-rowindex')).toBe('51');
+            expect(cell.nativeElement.getAttribute('aria-colindex')).toBe('17');
+
+        });
     });
 
     describe('IgxGrid - min/max width constraints rules', () => {
