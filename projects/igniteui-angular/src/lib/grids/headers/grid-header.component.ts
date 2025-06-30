@@ -72,6 +72,22 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
                 : this.sortDirection === SortingDirection.Desc ? 'descending' : null;
     }
 
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-colindex')
+    public get ariaColIndx() {
+        return this.column.index + 1;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-rowindex')
+    public get ariaRowIndx() {
+        return 1;
+    }
+
     @HostBinding('class.igx-grid-th')
     public get columnGroupStyle() {
         return !this.column.columnGroup;
