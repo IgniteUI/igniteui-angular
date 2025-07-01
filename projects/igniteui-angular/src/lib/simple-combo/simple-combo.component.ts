@@ -1,6 +1,7 @@
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
-    AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostListener, Inject, Injector,
+    AfterViewInit, booleanAttribute, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostListener, Inject, Injector,
+    Input,
     Optional, Output, ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -113,6 +114,19 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     private _updateInput = true;
 
     private _collapsing = false;
+
+    private _disableFiltering = false;
+
+    /**
+     * Enables/disables filtering in the list. The default is `false`.
+     */
+    @Input({ transform: booleanAttribute })
+    public get disableFiltering(): boolean {
+        return this._disableFiltering;
+    }
+    public set disableFiltering(value: boolean) {
+        this._disableFiltering = value;
+    }
 
     /** @hidden @internal */
     public get filteredData(): any[] | null {
@@ -290,6 +304,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (this.collapsed && this.comboInput.focused) {
             this.open();
         }
+
+        if (this.disableFiltering) {
+            return;
+        }
+
         if (event !== undefined) {
             this.filterValue = this.searchValue = typeof event === 'string' ? event : event.target.value;
         }
