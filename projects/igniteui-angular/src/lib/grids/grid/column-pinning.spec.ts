@@ -108,27 +108,6 @@ describe('Column Pinning UI #grid', () => {
             verifyColumnIsPinned(column, false, 0);
         });
 
-        it('Checks order of columns after unpinning', () => {
-            for (const column of grid.columnList) {
-                column.pin();
-            }
-            fix.detectChanges();
-            grid.getColumnByName('ID').unpin();
-            grid.getColumnByName('ReleaseDate').unpin();
-            grid.getColumnByName('Downloads').unpin();
-            grid.getColumnByName('ProductName').unpin();
-            grid.getColumnByName('Released').unpin();
-            fix.detectChanges();
-            grid.unpinnedColumns.forEach((column, index) => {
-                if (index === grid.unpinnedColumns.length - 1) {
-                    return;
-                }
-                expect(
-                    column.index < grid.unpinnedColumns[index + 1].index
-                ).toBe(true);
-            });
-        });
-
         it('reflects properly grid column pinned value changes.', () => {
             const name = 'ReleaseDate';
             verifyCheckbox(name, false, false, columnChooserElement);
@@ -306,6 +285,36 @@ describe('Column Pinning UI #grid', () => {
                     column.index < grid.unpinnedColumns[index + 1].index
                 ).toBe(true);
             });
+        });
+
+        it('Checks order of columns after unpinning if there are hidden columns', () => {
+            // Columns are ordered like this: ID, ProductName, Downloads, Released, ReleaseDate
+            expect(grid.getColumnByName('Downloads').index).toBe(2);
+            expect(grid.getColumnByName('Released').index).toBe(3);
+
+            grid.getColumnByName('ID').hidden = true;
+            grid.getColumnByName('Downloads').pin();
+            grid.getColumnByName('Released').pin();
+            fix.detectChanges();
+
+            // unpinnedColumns contains only visible cols
+            expect(grid.unpinnedColumns.length).toBe(2);
+            // _unpinnedColumns contains all unpinned cols (including hidden)
+            expect((grid as any)._unpinnedColumns.length).toBe(3);
+
+            grid.getColumnByName('Released').unpin();
+            fix.detectChanges();
+
+            expect(grid.unpinnedColumns.length).toBe(3);
+            expect((grid as any)._unpinnedColumns.length).toBe(4);
+            // Downloads is still pinned; ID is not part of unpinnedColumns
+            expect(grid.getColumnByName('Released').field).toEqual((grid as any).unpinnedColumns[1].field);
+            expect(grid.getColumnByName('Released').field).toEqual((grid as any)._unpinnedColumns[2].field);
+
+            grid.getColumnByName('Downloads').unpin();
+            fix.detectChanges();
+            expect(grid.getColumnByName('Downloads').field).toEqual((grid as any).unpinnedColumns[1].field);
+            expect(grid.getColumnByName('Downloads').field).toEqual((grid as any)._unpinnedColumns[2].field);
         });
     });
 
