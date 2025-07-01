@@ -13,7 +13,6 @@
                     class="igx-input-group__upload-button"
                     [disabled]="disabled"
                     tabindex="-1"
-                    (click)="uploadButtonHandler()"
             >
                 {{ resourceStrings.igx_input_upload_button }}
             </button>
@@ -24,8 +23,8 @@
 <ng-template #files>
     @if (isFileType) {
         <div
-                class="igx-input-group__file-input"
-                [title]="fileNames"
+            class="igx-input-group__file-input"
+            [title]="fileNames"
         >
             <span>{{ fileNames }}</span>
         </div>
@@ -48,7 +47,7 @@
 
 <ng-template #bundle>
     @if (!isTypeBorder) {
-        <ng-container (click)="isFileType ? uploadButtonHandler() : null" *ngTemplateOutlet="label"></ng-container>
+        <ng-container *ngTemplateOutlet="label"></ng-container>
     }
 
     <div class="igx-input-group__bundle">
@@ -66,7 +65,7 @@
             </div>
         }
 
-        <div class="igx-input-group__bundle-main" (click)="isFileType ? uploadButtonHandler() : null">
+        <div class="igx-input-group__bundle-main">
             <ng-content select="[igxInput]"></ng-content>
 
             @if (isFileType) {

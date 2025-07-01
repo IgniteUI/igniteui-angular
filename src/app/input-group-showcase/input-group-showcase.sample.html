@@ -136,7 +136,7 @@
             [style.--ig-size]="getSize()">
 
             @if (getLabel()) {
-                <label igxLabel>{{ getLabel() }}</label>
+                <label igxLabel for="file-in">{{ getLabel() }}</label>
             }
 
             @if (hidePrefix()) {
@@ -144,6 +144,7 @@
             }
 
             <input
+                id="file-in"
                 formControlName="fieldFile"
                 [required]="isRequired()"
                 [type]="'file'"

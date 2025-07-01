@@ -102,6 +102,8 @@ $input-bottom-spacing: rem(6px);
 
     @include e(file-input) {
         @extend %input-paddings;
+
+        padding-inline: $input-inline-padding;
     }
 
     @include e(bundle-start) {
@@ -754,6 +756,7 @@ $input-bottom-spacing: rem(6px);
     @include m(file, $not: (border)) {
         @include e(label) {
             @extend %box-floating-label;
+            grid-row: 1 / -1;
         }
     }
 

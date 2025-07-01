@@ -217,9 +217,16 @@ $base-scale-size: (
             }
 
             &[type='file'] {
-                @include hide-default();
-            }
+                opacity: 0;
+                z-index: 2;
+                width: 100%;
+                height: 100%;
 
+                &::-webkit-file-upload-button {
+                    width: inherit;
+                    height: inherit;
+                }
+            }
 
             &[type='number'] {
                 -moz-appearance: textfield;
@@ -266,8 +273,9 @@ $base-scale-size: (
             width: 100%;
             max-width: 100%;
             overflow: hidden;
-            height: calc(var-get($theme, 'size') - 2px);
+            height: var-get($theme, 'size');
             color: var-get($theme, 'placeholder-color');
+            grid-column: 3 / -2;
 
             span {
                 @include ellipsis();
@@ -277,6 +285,16 @@ $base-scale-size: (
                 max-width: inherit;
                 top: 50%;
                 transform: translateY(-50%);
+            }
+        }
+
+        @include m(file, $not: (disabled)) {
+            @include e(input) {
+                &[type='file'] {
+                    &::-webkit-file-upload-button {
+                        cursor: pointer;
+                    }
+                }
             }
         }
 
@@ -298,13 +316,12 @@ $base-scale-size: (
         }
 
         @include m(file) {
-
-            @include e(bundle-main) {
-                cursor: pointer;
+            @include e(input) {
+                grid-column: 2 / -2;
             }
 
-            @include e(label) {
-                pointer-events: none;
+            @include e(bundle-main) {
+                display: contents;
             }
         }
 

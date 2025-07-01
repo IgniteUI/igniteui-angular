@@ -27,6 +27,7 @@ $border-radius: var-get($_theme, 'border-border-radius');
             .igx-input-group__bundle-main {
                 border-start-start-radius: $border-radius;
                 border-end-start-radius: $border-radius;
+
             }
         }
 
@@ -34,12 +35,27 @@ $border-radius: var-get($_theme, 'border-border-radius');
             .igx-input-group__bundle-main {
                 border-start-end-radius: $border-radius;
                 border-end-end-radius: $border-radius;
+                border-inline-start-width: $border-size;
             }
         }
 
         igx-input-group:not(.igx-input-group--textarea-group) {
             .igx-input-group__bundle {
                 border-radius: $border-radius;
+            }
+        }
+
+        igx-suffix + .igx-input-group__toggle-button,
+        [igxSuffix] + .igx-input-group__toggle-button {
+            // Add border between the toggle button and the rest of the suffixes
+            border-inline-start: $border-size solid $border-color;
+        }
+
+        igx-input-group:not(.igx-input-group--disabled) {
+            .igx-input-group__clear-icon + igx-suffix,
+            .igx-input-group__clear-icon + [igxSuffix] {
+                // Add border between the clear button and the rest of the suffixes
+                border-inline-start: $border-size solid $border-color;
             }
         }
     }
@@ -64,9 +80,7 @@ $border-radius: var-get($_theme, 'border-border-radius');
     @include e(upload) {
         @extend %border-styles;
 
-        border-block-width: $border-size;
-        border-inline-start-width: $border-size;
-        border-inline-end-width: 0;
+        border-width: $border-size;
         background: var-get($_theme, 'input-prefix-background');
         grid-row: 2;
     }
@@ -114,6 +128,8 @@ $border-radius: var-get($_theme, 'border-border-radius');
         font-size: sizable(rem(16px), rem(16px), rem(20px));
         height: 100%;
         padding-block: 0;
+        border-block: $border-size solid $border-color;
+        border-inline-end: $border-size solid $border-color;
         padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
     }
 
@@ -150,6 +166,14 @@ $border-radius: var-get($_theme, 'border-border-radius');
         @include e(upload-button) {
             border-start-start-radius: $border-radius;
             border-end-start-radius: $border-radius;
+        }
+    }
+
+    @include m(file, $not: (suffixed)) {
+        @include e(file-input) {
+            border-start-end-radius: $border-radius;
+            border-end-end-radius: $border-radius;
+            border-inline-start-width: $border-size;
         }
     }
 
@@ -192,10 +216,19 @@ $border-radius: var-get($_theme, 'border-border-radius');
             transition: border .15s ease-out;
             border-color: var-get($_theme, 'focused-border-color');
         }
+
+        @include e(file-input) {
+            transition: border .15s ease-out;
+            border-color: var-get($_theme, 'focused-border-color');
+        }
     }
 
     @include m(invalid) {
         @include e(bundle-main) {
+            border-color: var-get($_theme, 'error-secondary-color');
+        }
+
+        @include e(file-input) {
             border-color: var-get($_theme, 'error-secondary-color');
         }
 
@@ -209,6 +242,10 @@ $border-radius: var-get($_theme, 'border-border-radius');
             border-color: var-get($_theme, 'warning-secondary-color');
         }
 
+        @include e(file-input) {
+            border-color: var-get($_theme, 'warning-secondary-color');
+        }
+
         @include e(hint) {
             color: var-get($_theme, 'warning-secondary-color');
         }
@@ -216,6 +253,10 @@ $border-radius: var-get($_theme, 'border-border-radius');
 
     @include m(valid) {
         @include e(bundle-main) {
+            border-color: var-get($_theme, 'success-secondary-color');
+        }
+
+        @include e(file-input) {
             border-color: var-get($_theme, 'success-secondary-color');
         }
 
@@ -228,10 +269,18 @@ $border-radius: var-get($_theme, 'border-border-radius');
         @include e(bundle-main) {
             border-color: var-get($_theme, 'error-secondary-color');
         }
+
+        @include e(file-input) {
+            border-color: var-get($_theme, 'error-secondary-color');
+        }
     }
 
     @include mx(focused, warning) {
         @include e(bundle-main) {
+            border-color: var-get($_theme, 'warning-secondary-color');
+        }
+
+        @include e(file-input) {
             border-color: var-get($_theme, 'warning-secondary-color');
         }
     }
@@ -239,6 +288,10 @@ $border-radius: var-get($_theme, 'border-border-radius');
     @include mx(focused, valid) {
         @include e(bundle-main) {
             border-color: var-get($_theme, 'success-secondary-color');
+        }
+
+        @include e(bundle-main) {
+            border-color: var-get($_theme, 'warning-secondary-color');
         }
     }
 
@@ -261,12 +314,12 @@ $border-radius: var-get($_theme, 'border-border-radius');
         }
     }
 
-    // TODO: This state has no schema variable
-    //@include mx(focused, warning, ('not': (file))) {
-    //    @include e(bundle-main) {
-    //        box-shadow: 0 0 0 rem(4px) var-get($_theme, 'warning-shadow-color');
-    //    }
-    //}
+    @include mx(focused, warning, ('not': (file))) {
+        @include e(bundle-main) {
+            // TODO: This state has no schema variable
+            box-shadow: 0 0 0 rem(4px) color($color: 'warning', $variant: 500, $opacity: .38);
+        }
+    }
 
     $transition-border: border .15s ease-out;
     $transition-box-shadow: box-shadow .15s ease-out;
@@ -308,6 +361,12 @@ $border-radius: var-get($_theme, 'border-border-radius');
         @include e(bundle-end) {
             border-color: var-get($_theme, 'focused-border-color');
         }
+
+        .igx-input-group__clear-icon + igx-suffix,
+        .igx-input-group__clear-icon + [igxSuffix] {
+            // Add border between the clear button and the rest of the suffixes
+            border-color: var-get($_theme, 'focused-border-color');
+        }
     }
 
     @include mx(file, valid) {
@@ -320,6 +379,12 @@ $border-radius: var-get($_theme, 'border-border-radius');
         }
 
         @include e(bundle-end) {
+            border-color: var-get($_theme, 'success-secondary-color');
+        }
+
+        .igx-input-group__clear-icon + igx-suffix,
+        .igx-input-group__clear-icon + [igxSuffix] {
+            // Add border between the clear button and the rest of the suffixes
             border-color: var-get($_theme, 'success-secondary-color');
         }
     }
@@ -348,6 +413,12 @@ $border-radius: var-get($_theme, 'border-border-radius');
         }
 
         @include e(bundle-end) {
+            border-color: var-get($_theme, 'warning-secondary-color');
+        }
+
+        .igx-input-group__clear-icon + igx-suffix,
+        .igx-input-group__clear-icon + [igxSuffix] {
+            // Add border between the clear button and the rest of the suffixes
             border-color: var-get($_theme, 'warning-secondary-color');
         }
     }
@@ -390,6 +461,18 @@ $border-radius: var-get($_theme, 'border-border-radius');
 
         @include e(upload) {
             @extend %disabled-styles;
+        }
+
+        @include e(file-input) {
+            border-color: var-get($_theme, 'disabled-border-color');
+        }
+
+        @include e(clear-icon) {
+            pointer-events: none;
+        }
+
+        @include e(toggle-button) {
+            border-color: var-get($_theme, 'disabled-border-color') !important;
         }
 
         igx-prefix,

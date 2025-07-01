@@ -287,7 +287,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     /** @hidden @internal */
     @HostBinding('class.igx-input-group--suffixed')
     public get hasSuffixes() {
-        return this._suffixes.length > 0;
+        return this._suffixes.length > 0 || (this.isFileType && this.isFilled && !this.disabled);
     }
 
     /** @hidden @internal */
@@ -346,11 +346,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     @HostBinding('class.igx-input-group--box')
     public get isTypeBox() {
         return this.type === 'box' && this._theme === 'material';
-    }
-
-    /** @hidden @internal */
-    public uploadButtonHandler() {
-        this.input.nativeElement.click();
     }
 
     /** @hidden @internal */
