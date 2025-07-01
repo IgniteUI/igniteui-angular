@@ -6136,7 +6136,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public trackColumnChanges(_index, col) {
-        return col.field + col._calcWidth;
+        return col.field + col._calcWidth.toString();
     }
 
     /**
@@ -6316,6 +6316,9 @@ export abstract class IgxGridBaseDirective implements GridType,
     // TODO: do not remove this, as it is used in rowEditTemplate, but mark is as internal and hidden
     /* blazorCSSuppress */
     public endEdit(commit = true, event?: Event): boolean {
+        if (!this.crudService.cellInEditMode && !this.crudService.rowInEditMode) {
+            return;
+        }
         const document = this.nativeElement?.getRootNode() as Document | ShadowRoot;
         const focusWithin = this.nativeElement?.contains(document.activeElement);
 
