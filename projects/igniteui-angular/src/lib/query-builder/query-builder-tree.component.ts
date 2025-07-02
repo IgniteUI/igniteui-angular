@@ -194,7 +194,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public set expressionTree(expressionTree: IExpressionTree) {
         this._expressionTree = expressionTree;
         if (!expressionTree) {
-            this._selectedEntity = this.isAdvancedFiltering() && this.entities.length === 1 ? this.entities[0] : null;
+            this._selectedEntity = this.entities.length === 1 ? this.entities[0] : null;
             this._selectedReturnFields = this._selectedEntity ? this._selectedEntity.fields?.map(f => f.field) : [];
         }
 
@@ -475,6 +475,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _locale;
     private _entityNewValue: EntityType;
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+    private _viewInitialized = false;
 
     /**
      * Returns if the select entity dropdown at the root level is disabled after the initial selection.
@@ -568,6 +569,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         // Trigger additional change detection cycle
         this.cdr.detectChanges();
+        
+        this._viewInitialized = true;
     }
 
     /**
@@ -866,7 +869,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this._editedExpression = null;
         }
 
-        if (this.selectedReturnFields.length === 0) {
+        if (this.selectedReturnFields?.length === 0) {
             this.selectedReturnFields = this.fields.map(f => f.field);
         }
 
@@ -1186,9 +1189,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this._editedExpression = expressionItem;
         this.cdr.detectChanges();
 
-        this.entitySelectOverlaySettings.target = this.entitySelect.element;
-        this.entitySelectOverlaySettings.excludeFromOutsideClick = [this.entitySelect.element as HTMLElement];
-        this.entitySelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
+        if (this.entitySelect) {
+            this.entitySelectOverlaySettings.target = this.entitySelect.element;
+            this.entitySelectOverlaySettings.excludeFromOutsideClick = [this.entitySelect.element as HTMLElement];
+            this.entitySelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
+        }
 
         if (this.returnFieldSelect) {
             this.returnFieldSelectOverlaySettings.target = this.returnFieldSelect.element;
@@ -1447,8 +1452,13 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return text;
     }
 
+    public isViewInit(): boolean {
+        return this._viewInitialized;
+    }
+
     public isInEditMode(): boolean {
-        return !this.parentExpression || (this.parentExpression && this.parentExpression.inEditMode);
+        const isInEditMode = !this.parentExpression || (this.parentExpression && this.parentExpression.inEditMode);
+        return isInEditMode;
     }
 
     public onInEditModeChanged(expressionItem: ExpressionOperandItem) {

@@ -153,7 +153,7 @@ export class QueryBuilderFunctions {
      * Get the root group.
      */
     public static getQueryBuilderTreeRootGroup(fix: ComponentFixture<any>, level = 0) {
-        const exprContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix, level).children[1];
+        const exprContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix, level).children[0];
         const rootGroup = exprContainer.querySelector(`:scope > .${QueryBuilderSelectors.FILTER_TREE}`);
         return rootGroup;
     }

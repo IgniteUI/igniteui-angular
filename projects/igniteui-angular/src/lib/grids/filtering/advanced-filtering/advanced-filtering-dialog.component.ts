@@ -63,11 +63,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     private _grid: GridType;
 
     constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil) { }
+
     /**
      * @hidden @internal
      */
     public ngAfterViewInit(): void {
         this.queryBuilder.setPickerOutlet(this.grid.outlet);
+        this.queryBuilder.isAdvancedFiltering = true;
     }
 
     /**
