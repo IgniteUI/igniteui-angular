@@ -1,0 +1,53 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use './light/tokens' as *;
+
+$_theme: $material;
+
+@include layer(base) {
+    @include b(igx-column-actions) {
+        display: flex;
+        flex-flow: column nowrap;
+        background: var-get($_theme, 'background-color');
+        box-shadow: var(--ig-elevation-8);
+        width: 100%;
+        flex: 1 1 auto;
+        min-width: rem(180px);
+
+        @include e(header-title) {
+            @include type-style(subtitle-1);
+
+            color: var-get($_theme, 'title-color');
+            margin: 0;
+            padding: rem(16px) rem(16px) rem(8px);
+        }
+
+        @include e(header-input) {
+            font-size: rem(16px);
+            margin: rem(-16px) 0 0 !important;
+            padding: rem(8px) rem(16px);
+        }
+
+        @include e(columns) {
+            display: flex;
+            flex-flow: column nowrap;
+            overflow-y: auto;
+            outline-style: none;
+        }
+
+        @include e(columns-item) {
+            padding: rem(4px) rem(16px);
+            min-height: rem(32px);
+        }
+
+        @include e(buttons) {
+            display: flex;
+            justify-content: flex-end;
+            padding: rem(8px) rem(16px);
+        }
+    }
+}

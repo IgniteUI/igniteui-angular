@@ -1,0 +1,506 @@
+@use 'sass:map';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color' as *;
+@use 'styles/themes/standalone' as *;
+@use 'igniteui-theming/sass/animations/easings' as *;
+@use './light/tokens' as *;
+
+$theme: $base;
+
+$required-symbol: '*';
+$transition-timing: .25s $out-cubic;
+
+// This creates an inverse relationship
+// between the value of the base scale size and
+// the sizing of all inner elements.
+// i.e. the bigger the scale size,
+// the smaller the padding of the inner items.
+$base-scale-size: (
+    'comfortable': 16px,
+    'cosy': 19px,
+    'compact': 22px
+);
+
+@include layer(base) {
+    %bundle-start-end {
+        display: flex;
+        min-width: 0;
+        min-height: 100%;
+        grid-row: var(--_bundle-row);
+    }
+
+    @include b(igx-input-group) {
+        @include sizable();
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+        --_bundle-template-columns: auto 1fr auto;
+        --_bundle-template-rows: auto #{var-get($theme, 'size')};
+        --_prefix-suffix-spacing: #{pad-inline(rem(8px), rem(12px), rem(16px))};
+        --_bundle-row: 1;
+
+        &:has([igxLabel], igx-label) {
+            --_label-row: 1;
+            --_bundle-row: 2;
+            --_hint-row: 3;
+        }
+
+        &:not(:has([igxLabel], igx-label)) {
+            --_bundle-row: 1;
+            --_hint-row: 2;
+        }
+
+        display: grid;
+        grid-template-columns: var(--_bundle-template-columns);
+        grid-template-rows: var(--_bundle-template-rows);
+        position: relative;
+        color: var-get($theme, 'idle-text-color');
+
+        igx-icon,
+        igx-icon[igxPrefix],
+        igx-icon[igxSuffix] {
+            --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+        }
+
+        igx-suffix:not(igx-icon),
+        [igxSuffix]:not(igx-icon),
+        igx-prefix:not(igx-icon),
+        [igxPrefix]:not(igx-icon) {
+            // The :not(igx-icon) makes sure that we don't override the icon font if the prefix/suffix is set on igx-icon
+            @include type-style(subtitle-1);
+        }
+
+        igx-prefix,
+        [igxPrefix],
+        igx-suffix,
+        [igxSuffix] {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+
+            // !important is needed, otherwise if the directive is set directly on the igx-icon
+            // the icon overrides the width/height set by the prefix/suffix
+            width: max-content !important;
+            height: auto !important;
+            min-height: 100%;
+            outline-style: none;
+            transition: color $transition-timing, background $transition-timing;
+
+            &:not(:empty) {
+                padding-inline: var(--_prefix-suffix-spacing);
+            }
+        }
+
+        igx-prefix,
+        [igxPrefix] {
+            color: var-get($theme, 'input-prefix-color');
+            background: var-get($theme, 'input-prefix-background');
+        }
+
+        igx-suffix:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon),
+        [igxSuffix]:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon) {
+            color: var-get($theme, 'input-suffix-color');
+            background: var-get($theme, 'input-suffix-background');
+        }
+
+        @include e(toggle-button) {
+            cursor: pointer;
+            color: var(--toggle-button-foreground);
+            background: var(--toggle-button-background);
+        }
+
+        @include e(clear-button) {
+            cursor: pointer;
+            color: var(--clear-button-foreground);
+            background: var(--clear-button-background);
+        }
+
+        @include e(clear-icon) {
+            cursor: pointer;
+
+            // The clear icon/suffix is visible only when the file type input is filled
+            color: var-get($theme, 'input-suffix-color--filled');
+            background: var-get($theme, 'input-suffix-background--filled');
+        }
+
+        @include e(bundle) {
+            display: grid;
+
+            // Safari can't handle subgrid correctly that's why i need to add the template here
+            grid-template-columns: var(--_bundle-template-columns);
+            grid-template-rows: subgrid;
+            grid-row: var(--_bundle-row);
+            position: relative;
+            max-width: 100%;
+            font-size: rem(16px);
+            height: var-get($theme, 'size');
+            min-height: var-get($theme, 'size');
+            grid-column: 1 / -1;
+        }
+
+        @include e(label) {
+            color: #{var-get($theme, 'idle-secondary-color')};
+
+            display: inline-block;
+            grid-row: var(--_label-row);
+            grid-column: 1 / -1;
+        }
+
+        @include e(bundle-start) {
+            @extend %bundle-start-end;
+            grid-column: 1;
+        }
+
+        @include e(bundle-end) {
+            @extend %bundle-start-end;
+
+            grid-column: 3;
+        }
+
+        @include e(bundle-main) {
+            grid-row: var(--_bundle-row);
+            min-width: 0;
+        }
+
+        %input-textarea-common {
+            position: relative;
+            display: block;
+            border: none;
+            width: 100%;
+            min-width: 0;
+            background: transparent;
+            color: var-get($theme, 'filled-text-color');
+            outline-style: none;
+            box-shadow: none;
+            text-overflow: ellipsis;
+            z-index: 0;
+
+            &::-webkit-input-placeholder {
+                line-height: normal;
+            }
+
+            &::placeholder {
+                color: var-get($theme, 'placeholder-color');
+                opacity: 1;
+
+                /* Fix placeholder position in Safari */
+                line-height: normal;
+            }
+
+            &:hover {
+                color: var-get($theme, 'filled-text-hover-color');
+
+                &::placeholder {
+                    color: var-get($theme, 'hover-placeholder-color');
+                }
+            }
+
+            &:focus {
+                cursor: text;
+                color: var-get($theme, 'focused-text-color');
+
+                &::placeholder {
+                    color: var-get($theme, 'hover-placeholder-color');
+                }
+            }
+        }
+
+        @include e(input) {
+            @extend %input-textarea-common;
+
+            overflow: hidden;
+            height: calc(var-get($theme, 'size') - 1px);
+
+            &:not([type='date']) {
+                /* Reset typography */
+                line-height: 0 !important;
+            }
+
+            &[type='file'] {
+                opacity: 0;
+                z-index: 2;
+                width: 100%;
+                height: 100%;
+
+                &::-webkit-file-upload-button {
+                    width: inherit;
+                    height: inherit;
+                }
+            }
+
+            &[type='number'] {
+                -moz-appearance: textfield;
+            }
+
+            &[type='number']::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                height: auto;
+            }
+
+            &[type='search']::-webkit-search-cancel-button,
+            &[type='search']::-webkit-search-decoration {
+                -webkit-appearance: none;
+            }
+        }
+
+        @include e(textarea) {
+            @extend %input-textarea-common;
+
+            padding: 0;
+            min-height: var(--_textarea-size);
+            resize: vertical;
+            z-index: 1;
+        }
+
+        @include e(hint) {
+            @include type-style(caption);
+
+            color: var-get($theme, 'helper-text-color');
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            grid-row: var(--_hint-row);
+            grid-column: 1 / -1;
+
+            &:empty {
+                --_hint-row: 1;
+                visibility: hidden;
+                z-index: -1;
+            }
+        }
+
+        @include e(file-input) {
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+            height: var-get($theme, 'size');
+            color: var-get($theme, 'placeholder-color');
+            grid-column: 3 / -2;
+
+            span {
+                @include ellipsis();
+                position: relative;
+                display: inline-block;
+                width: inherit;
+                max-width: inherit;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
+
+        @include m(file, $not: (disabled)) {
+            @include e(input) {
+                &[type='file'] {
+                    &::-webkit-file-upload-button {
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+
+        @include m(file, $not: (border)) {
+            --_bundle-template-columns: auto auto 1fr auto;
+
+            @include e(upload) {
+                grid-column: 2;
+            }
+
+
+            @include e(bundle-main) {
+                grid-column: 3;
+            }
+
+            @include e(bundle-end) {
+                grid-column: 4;
+            }
+        }
+
+        @include m(file) {
+            @include e(input) {
+                grid-column: 2 / -2;
+            }
+
+            @include e(bundle-main) {
+                display: contents;
+            }
+        }
+
+        @include e(upload) {
+            display: flex;
+            height: 100%;
+            grid-column: 2;
+        }
+
+        @include e(upload-button) {
+            --background: #{var-get($theme, 'file-selector-button-background')};
+            --foreground: #{var-get($theme, 'file-selector-button-foreground')};
+            --focus-background: #{var-get($theme, 'file-selector-button-background--focused')};
+            --focus-foreground: #{var-get($theme, 'file-selector-button-foreground--focused')};
+            --focus-visible-background: #{var-get($theme, 'file-selector-button-background--focused')};
+            --active-background: #{var-get($theme, 'file-selector-button-background')};
+            --active-foreground: #{var-get($theme, 'file-selector-button-foreground')};
+            --disabled-background: #{var-get($theme, 'file-selector-button-background--disabled')};
+            --disabled-foreground: #{var-get($theme, 'file-selector-button-foreground--disabled')};
+        }
+
+        @include m(textarea-group) {
+            --_bundle-template-rows: auto auto auto;
+            --_textarea-size: #{sizable(
+                rem(82px, map.get($base-scale-size, 'compact')),
+                rem(82px, map.get($base-scale-size, 'cosy')),
+                rem(82px, map.get($base-scale-size, 'comfortable'))
+            )};
+
+            @include e(bundle) {
+                height: auto;
+            }
+        }
+
+        @include m(required) {
+            @include e(label) {
+                &::after {
+                    content: '*';
+                    font-size: inherit;
+                    vertical-align: top;
+                    margin-inline-start: rem(2px);
+                    display: inline-block;
+                }
+            }
+        }
+
+        @include m(filled) {
+            igx-prefix,
+            [igxPrefix] {
+                color: var-get($theme, 'input-prefix-color--filled');
+                background: var-get($theme, 'input-prefix-background--filled');
+            }
+
+            igx-suffix:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon),
+            [igxSuffix]:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon) {
+                color: var-get($theme, 'input-suffix-color--filled');
+                background: var-get($theme, 'input-suffix-background--filled');
+            }
+
+            @include e(file-input) {
+                color: var-get($theme, 'filled-text-color');
+            }
+
+            @include e(toggle-button) {
+                color: var(--toggle-button-foreground-filled);
+                background: var(--toggle-button-background);
+            }
+
+            @include e(clear-button) {
+                color: var(--clear-button-foreground);
+                background: var(--clear-button-background);
+            }
+        }
+
+        @include m(focused) {
+            igx-prefix,
+            [igxPrefix] {
+                color: var-get($theme, 'input-prefix-color--focused');
+                background: var-get($theme, 'input-prefix-background--focused');
+            }
+
+            igx-suffix:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon),
+            [igxSuffix]:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon) {
+                color: var-get($theme, 'input-suffix-color--focused');
+                background: var-get($theme, 'input-suffix-background--focused');
+            }
+
+            @include e(toggle-button) {
+                color: var(--toggle-button-foreground-focus);
+                background: var(--toggle-button-background-focus);
+            }
+
+            @include e(clear-button) {
+                color: var(--clear-button-foreground-focus);
+                background: var(--clear-button-background-focus);
+            }
+        }
+
+        @include mx(focused, border) {
+            @include e(toggle-button) {
+                background: var(--toggle-button-background-focus--border);
+            }
+        }
+
+        @include mx(focused, line) {
+            @include e(toggle-button) {
+                background: var(--toggle-button-background-focus--border);
+            }
+        }
+
+        @include m(disabled) {
+            %input-textarea-disabled-colors {
+                cursor: default;
+
+                color: var-get($theme, 'disabled-text-color');
+
+                &::placeholder {
+                    color: var-get($theme, 'disabled-placeholder-color');
+                }
+            }
+
+            igx-prefix,
+            [igxPrefix],
+            igx-suffix:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__case-icon),
+            [igxSuffix]:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__case-icon) {
+                color: var-get($theme, 'disabled-text-color');
+            }
+
+            @include e(label) {
+                color: var-get($theme, 'disabled-text-color')
+            }
+
+            @include e(input) {
+                @extend %input-textarea-disabled-colors;
+            }
+
+            @include e(textarea) {
+                @extend %input-textarea-disabled-colors;
+
+                resize: none;
+            }
+
+            @include e(bundle) {
+                > * {
+                    cursor: default;
+                }
+            }
+
+            @include e(hint) {
+                color: var-get($theme, 'disabled-text-color');
+                grid-column: 1 / -1;
+            }
+
+            @include e(toggle-button) {
+                color: var(--toggle-button-foreground-disabled);
+                background: var(--toggle-button-background-disabled);
+            }
+
+            @include e(clear-icon) {
+                display: none;
+            }
+
+            @include e(file-input) {
+                background: var-get($theme, 'file-names-background--disabled');
+                color: var-get($theme, 'file-names-foreground--disabled');
+            }
+
+            /* stylelint-disable max-nesting-depth */
+            &:hover {
+                @include e(input) {
+                    @extend %input-textarea-disabled-colors;
+                }
+
+                @include e(textarea) {
+                    @extend %input-textarea-disabled-colors;
+                }
+            }
+            /* stylelint-enable max-nesting-depth */
+        }
+
+    }
+}

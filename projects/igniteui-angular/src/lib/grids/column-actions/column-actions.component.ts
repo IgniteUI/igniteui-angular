@@ -1,4 +1,4 @@
-import { Component, DoCheck, EventEmitter, HostBinding, Inject, Input, IterableDiffer, IterableDiffers, Output, Pipe, PipeTransform, QueryList, ViewChildren, booleanAttribute, forwardRef } from '@angular/core';
+import { Component, DoCheck, EventEmitter, HostBinding, Inject, Input, IterableDiffer, IterableDiffers, Output, Pipe, PipeTransform, QueryList, ViewChildren, ViewEncapsulation, booleanAttribute, forwardRef } from '@angular/core';
 import { ColumnDisplayOrder } from '../common/enums';
 import { ColumnType, GridType } from '../common/grid.interface';
 import { IColumnToggledEventArgs } from '../common/events';
@@ -19,7 +19,9 @@ let NEXT_ID = 0;
  */
 @Component({
     selector: 'igx-column-actions',
+    styleUrl: 'column-actions.component.css',
     templateUrl: './column-actions.component.html',
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxCheckboxComponent, IgxButtonDirective, IgxRippleDirective, forwardRef(() => IgxColumnActionEnabledPipe), forwardRef(() => IgxFilterActionColumnsPipe), forwardRef(() => IgxSortActionColumnsPipe)]
 })
 export class IgxColumnActionsComponent implements DoCheck {

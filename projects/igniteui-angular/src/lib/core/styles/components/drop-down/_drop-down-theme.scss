@@ -81,7 +81,7 @@
     $size: null
 ) {
     $name: 'igx-drop-down';
-    $selector: '.igx-drop-down__list, .igx-grid-toolbar__dd-list';
+    $selector: '.igx-drop-down, .igx-grid-toolbar__dd-list';
     $drop-down-schema: ();
 
     @if map.has-key($schema, 'drop-down') {

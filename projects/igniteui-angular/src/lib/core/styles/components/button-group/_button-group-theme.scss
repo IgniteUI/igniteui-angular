@@ -110,7 +110,7 @@
     $disabled-selected-border-color: null,
 ) {
     $name: 'igx-button-group';
-    $selector: 'igx-buttongroup';
+    $selector: '.igx-button-group';
     $button-group-schema: ();
 
     @if map.has-key($schema, 'button-group') {

@@ -1,0 +1,8 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/combo' as *;
+
+$base: digest-schema($light-combo);
+$material: digest-schema($material-combo);
+$bootstrap: digest-schema($bootstrap-combo);
+$fluent: digest-schema($fluent-combo);
+$indigo: digest-schema($indigo-combo);

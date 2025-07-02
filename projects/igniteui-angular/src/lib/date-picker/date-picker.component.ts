@@ -23,7 +23,7 @@ import {
     Renderer2,
     ViewChild,
     ViewContainerRef,
-    booleanAttribute
+    booleanAttribute, ViewEncapsulation
 } from '@angular/core';
 import {
     AbstractControl,
@@ -90,6 +90,8 @@ let NEXT_ID = 0;
     ],
     selector: 'igx-date-picker',
     templateUrl: 'date-picker.component.html',
+    styleUrls: ['date-picker.component.css'],
+    encapsulation: ViewEncapsulation.None,
     styles: [':host { display: block; }'],
     imports: [
         IgxInputGroupComponent,
