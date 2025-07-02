@@ -1,4 +1,4 @@
-import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectorRef,
     Component,
@@ -15,6 +15,7 @@ import {
     booleanAttribute,
     inject,
     ViewEncapsulation,
+    DOCUMENT
 } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
 import { PlatformUtil } from '../core/utils';

@@ -54,14 +54,14 @@
                     shape="circle"
                 ></igc-avatar>
                 } @if (hasPrefix) {
-                <span slot="prefix"><igc-icon name="face"></igc-icon></span>
+                <igc-icon slot="prefix" name="face"></igc-icon>
                 } @if (customIcons) {
                 <span slot="select"
                     ><igc-icon name="check_circle"></igc-icon
                 ></span>
                 <span slot="remove"><igc-icon name="delete"></igc-icon></span>
                 } @if (hasSuffix) {
-                <span slot="suffix"><igc-icon name="face"></igc-icon></span>
+                <igc-icon slot="suffix" name="face"></igc-icon>
                 } @if (hasProgressbar) {
                 <igc-circular-progress
                     class="circular-sample"

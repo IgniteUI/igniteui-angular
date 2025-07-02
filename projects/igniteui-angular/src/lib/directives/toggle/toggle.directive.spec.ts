@@ -9,15 +9,13 @@ import {
 } from '../../services/public_api';
 import { CancelableEventArgs } from '../../core/utils';
 
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
 import { OffsetMode } from '../../services/overlay/utilities';
 
 describe('IgxToggle', () => {
-    configureTestSuite();
     const HIDDEN_TOGGLER_CLASS = 'igx-toggle--hidden';
     const TOGGLER_CLASS = 'igx-toggle';
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -507,7 +505,6 @@ describe('IgxToggle', () => {
     }));
 
     describe('overlay settings', () => {
-        // configureTestSuite();
         it('should pass correct defaults from IgxToggleActionDirective and respect outsideClickClose', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
             fixture.detectChanges();

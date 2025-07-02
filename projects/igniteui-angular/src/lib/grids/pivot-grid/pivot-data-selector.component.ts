@@ -48,6 +48,7 @@ import { IgxIconComponent } from "../../icon/icon.component";
 import { IgxInputGroupComponent } from "../../input-group/input-group.component";
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { Size } from '../common/enums';
+import { GridColumnDataType } from '../../data-operations/data-util';
 
 interface IDataSelectorPanel {
     name: string;
@@ -111,8 +112,14 @@ export class IgxPivotDataSelectorComponent {
     public columnsExpanded = true;
 
     /**
-     * @hidden
-     */
+     * Emitted when the columns panel is expanded or collapsed.
+     *
+     * @example
+     * ```html
+     * <igx-pivot-data-selector #grid [data]="localData" [height]="'305px'"
+     *              (columnsExpandedChange)="columnsExpandedChange($event)"></igx-pivot-data-selector>
+     * ```
+    */
     @Output()
     public columnsExpandedChange = new EventEmitter<boolean>();
 
@@ -136,8 +143,14 @@ export class IgxPivotDataSelectorComponent {
     public rowsExpanded = true;
 
     /**
-     * @hidden
-     */
+     * Emitted when the rows panel is expanded or collapsed.
+     *
+     * @example
+     * ```html
+     * <igx-pivot-data-selector #grid [data]="localData" [height]="'305px'"
+     *              (rowsExpandedChange)="rowsExpandedChange($event)"></igx-pivot-data-selector>
+     * ```
+    */
     @Output()
     public rowsExpandedChange = new EventEmitter<boolean>();
 
@@ -161,8 +174,14 @@ export class IgxPivotDataSelectorComponent {
     public filtersExpanded = true;
 
     /**
-     * @hidden
-     */
+     * Emitted when the filters panel is expanded or collapsed.
+     *
+     * @example
+     * ```html
+     * <igx-pivot-data-selector #grid [data]="localData" [height]="'305px'"
+     *              (filtersExpandedChange)="filtersExpandedChange($event)"></igx-pivot-data-selector>
+     * ```
+    */
     @Output()
     public filtersExpandedChange = new EventEmitter<boolean>();
 
@@ -186,8 +205,14 @@ export class IgxPivotDataSelectorComponent {
     public valuesExpanded = true;
 
     /**
-     * @hidden
-     */
+     * Emitted when the values panel is expanded or collapsed.
+     *
+     * @example
+     * ```html
+     * <igx-pivot-data-selector #grid [data]="localData" [height]="'305px'"
+     *              (valuesExpandedChange)="valuesExpandedChange($event)"></igx-pivot-data-selector>
+     * ```
+    */
     @Output()
     public valuesExpandedChange = new EventEmitter<boolean>();
 
@@ -520,8 +545,13 @@ export class IgxPivotDataSelectorComponent {
      * @internal
      */
     public onAggregationChange(event: ISelectionEventArgs) {
+
         if (!this.isSelected(event.newSelection.value)) {
             this.value.aggregate = event.newSelection.value;
+            const isSingleValue = this.grid.values.length === 1;
+
+            PivotUtil.updateColumnTypeByAggregator(this.grid.columns, this.value, isSingleValue);
+
             this.grid.pipeTrigger++;
             this.grid.cdr.markForCheck();
         }

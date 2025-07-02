@@ -45,6 +45,8 @@ export interface IGridResourceStrings {
     igx_grid_filter_true?: string;
     igx_grid_filter_false?: string;
     igx_grid_filter_all?: string;
+    igx_grid_filter_in?: string;
+    igx_grid_filter_notIn?: string;
     igx_grid_filter_condition_placeholder?: string;
     igx_grid_summary_count?: string;
     igx_grid_summary_min?: string;
@@ -89,6 +91,7 @@ export interface IGridResourceStrings {
     igx_grid_excel_no_matches?: string;
     igx_grid_excel_matches_count?: string;
     igx_grid_advanced_filter_title?: string;
+    igx_grid_advanced_filter_from_label?: string;
     igx_grid_advanced_filter_and_group?: string;
     igx_grid_advanced_filter_or_group?: string;
     igx_grid_advanced_filter_end_group?: string;
@@ -97,12 +100,23 @@ export interface IGridResourceStrings {
     igx_grid_advanced_filter_and_label?: string;
     igx_grid_advanced_filter_or_label?: string;
     igx_grid_advanced_filter_add_condition?: string;
+    igx_grid_advanced_filter_add_condition_root?: string;
+    igx_grid_advanced_filter_add_group?: string;
+    igx_grid_advanced_filter_add_group_root?: string;
     igx_grid_advanced_filter_ungroup?: string;
     igx_grid_advanced_filter_delete?: string;
     igx_grid_advanced_filter_delete_filters?: string;
     igx_grid_advanced_filter_initial_text?: string;
     igx_grid_advanced_filter_column_placeholder?: string;
     igx_grid_advanced_filter_value_placeholder?: string;
+    igx_grid_advanced_filter_query_value_placeholder?: string;
+    igx_grid_advanced_filter_switch_group?: string;
+    igx_grid_advanced_filter_dialog_title? : string;
+    igx_grid_advanced_filter_dialog_message? : string;
+    igx_grid_advanced_filter_dialog_checkbox_text? : string;
+    igx_grid_advanced_filter_drop_ghost_text?: string;
+    igx_grid_advanced_filter_select_entity?: string;
+    igx_grid_advanced_filter_select_return_field_single?: string;
     igx_grid_pinned_row_indicator?: string;
     igx_grid_hiding_check_all_label?: string;
     igx_grid_hiding_uncheck_all_label?: string;
@@ -214,6 +228,8 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_filter_false: 'False',
     igx_grid_filter_all: 'All',
     igx_grid_filter_condition_placeholder: 'Select filter',
+    igx_grid_filter_in: 'In',
+    igx_grid_filter_notIn: 'Not In',
     igx_grid_summary_count: 'Count',
     igx_grid_summary_min: 'Min',
     igx_grid_summary_max: 'Max',
@@ -257,6 +273,7 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_excel_no_matches: 'No matches',
     igx_grid_excel_matches_count: '{0} matches.',
     igx_grid_advanced_filter_title: 'Advanced Filtering',
+    igx_grid_advanced_filter_from_label: 'From',
     igx_grid_advanced_filter_and_group: '"And" Group',
     igx_grid_advanced_filter_or_group: '"Or" Group',
     igx_grid_advanced_filter_end_group: 'End Group',
@@ -264,13 +281,24 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_advanced_filter_create_or_group: 'Create "Or" Group',
     igx_grid_advanced_filter_and_label: 'and',
     igx_grid_advanced_filter_or_label: 'or',
-    igx_grid_advanced_filter_add_condition: 'Condition',
+    igx_grid_advanced_filter_switch_group: 'Switch to {0}',
+    igx_grid_advanced_filter_add_condition: 'Add condition',
+    igx_grid_advanced_filter_add_group: 'Add group',
+    igx_grid_advanced_filter_add_condition_root: 'Condition',
+    igx_grid_advanced_filter_add_group_root: 'Group',
     igx_grid_advanced_filter_ungroup: 'Ungroup',
     igx_grid_advanced_filter_delete: 'Delete',
     igx_grid_advanced_filter_delete_filters: 'Delete filters',
     igx_grid_advanced_filter_initial_text: 'Start with creating a group of conditions linked with "And" or "Or"',
     igx_grid_advanced_filter_column_placeholder: 'Select column',
     igx_grid_advanced_filter_value_placeholder: 'Value',
+    igx_grid_advanced_filter_query_value_placeholder: 'Sub-query results',
+    igx_grid_advanced_filter_select_entity: 'Select entity',
+    igx_grid_advanced_filter_select_return_field_single: 'Select return field',
+    igx_grid_advanced_filter_dialog_title: 'Confirmation',
+    igx_grid_advanced_filter_dialog_message: 'By changing the entity, you will lose your current settings. Are you sure you want to do that?',
+    igx_grid_advanced_filter_dialog_checkbox_text: 'Do not show this dialog again',
+    igx_grid_advanced_filter_drop_ghost_text: 'Drop here to insert',
     igx_grid_pinned_row_indicator: 'Pinned',
     igx_grid_hiding_check_all_label: 'Show All',
     igx_grid_hiding_uncheck_all_label: 'Hide All',

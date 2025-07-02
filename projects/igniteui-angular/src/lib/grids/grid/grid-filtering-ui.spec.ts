@@ -1,11 +1,10 @@
 import { DebugElement } from '@angular/core';
-import { fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
@@ -20,6 +19,7 @@ import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxBadgeComponent } from '../../badge/badge.component';
+import { IgxIconComponent } from '../../icon/icon.component';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { igxI18N } from '../../core/i18n/resources';
@@ -66,9 +66,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
     registerLocaleData(localeDe);
     registerLocaleData(localeFr);
-
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridFilteringComponent,
@@ -78,7 +77,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 IgxGridDatesFilteringComponent,
                 IgxGridFilteringNumericComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe(null, () => {
@@ -1753,7 +1752,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it(`Should remove first condition chip when click 'clear' button and focus 'more' icon.`, fakeAsync(() => {
-            grid.getColumnByName('ProductName').width = '160px';
+            grid.getColumnByName('ProductName').width = '200px';
             tick(DEBOUNCE_TIME);
             fix.detectChanges();
 
@@ -3191,8 +3190,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridFilteringComponent,
@@ -3203,7 +3202,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 IgxGridExternalESFComponent,
                 IgxGridExternalESFTemplateComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe(null, () => {
@@ -3474,7 +3473,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const ddItem = fix.nativeElement.querySelector('.igx-drop-down__item--selected');
             expect(ddItem).toBeDefined();
-            expect(ddItem.getAttribute('ng-reflect-value')).toMatch('contains');
+            expect(ddItem.outerText.toLowerCase()).toMatch('contains');
 
             GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
             tick(100);
@@ -3508,7 +3507,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const ddItem = fix.nativeElement.querySelector('.igx-drop-down__item--selected');
             expect(ddItem).toBeDefined();
-            expect(ddItem.getAttribute('ng-reflect-value')).toMatch('contains');
+            expect(ddItem.outerText.toLowerCase()).toMatch('contains');
 
             GridFunctions.clickOperatorFromCascadeMenu(fix, 1);
             tick(100);
@@ -4366,10 +4365,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Verify display container height.
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
-            expect(displayContainerRect.height).toBe(240, 'incorrect search display container height');
+            const listHeight = searchComponent.querySelector('igx-list').getBoundingClientRect().height;
+            const itemHeight = displayContainer.querySelector('igx-list-item').getBoundingClientRect().height;
+            expect(displayContainerRect.height > listHeight + itemHeight && displayContainerRect.height < listHeight + (itemHeight * 2)).toBe(true, 'incorrect search display container height');
             // Verify rendered list items count.
             const listItems = displayContainer.querySelectorAll('igx-list-item');
-            expect(listItems.length).toBe(10, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(Math.ceil(listHeight / itemHeight ) + 1, 'incorrect rendered list items count');
         }));
 
         it('should correctly display all items in search list after filtering it', (async () => {
@@ -7035,13 +7036,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 CustomFilteringStrategyComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     beforeEach(fakeAsync(() => {
@@ -7242,13 +7243,13 @@ const verifyPinningHidingSize = (fix: ComponentFixture<any>, expectedSize: Size)
 
     // Get column pinning and column hiding icons from header (if present at all)
     const headerTitle = excelMenu.querySelector('h4');
-    const headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix, excelMenu);
+    const headerIcons: DebugElement[] = GridFunctions.getExcelFilteringHeaderIconsDebugElements(fix, excelMenu);
     const headerAreaPinIcon: HTMLElement =
-        headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin"') !== -1) as HTMLElement;
+        headerIcons.find((buttonIcon: DebugElement) => buttonIcon.query(By.directive(IgxIconComponent)).componentInstance.name === "pin")?.nativeElement;
     const headerAreaUnpinIcon: HTMLElement
-        = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin"') !== -1) as HTMLElement;
+        = headerIcons.find((buttonIcon: DebugElement) => buttonIcon.query(By.directive(IgxIconComponent)).componentInstance.name === "unpin")?.nativeElement;
     const headerAreaColumnHidingIcon: HTMLElement =
-        headerIcons.find((buttonIcon: any) => buttonIcon.innerText === 'visibility_off') as HTMLElement;
+        headerIcons.find((buttonIcon: DebugElement) => buttonIcon.query(By.directive(IgxIconComponent)).componentInstance.name === 'hide')?.nativeElement;
 
     // Get column pinning and column hiding icons from actionsArea (if present at all)
     const actionsPinArea = GridFunctions.getExcelFilteringPinContainer(fix, excelMenu);

@@ -3,7 +3,6 @@ import { TestBed, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxAutocompleteDirective, AutocompleteOverlaySettings } from './autocomplete.directive';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxInputDirective } from '../input/input.directive';
 import { IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../input-group/public_api';
@@ -25,9 +24,8 @@ describe('IgxAutocomplete', () => {
     let group: IgxInputGroupComponent;
     let input: IgxInputDirective;
     let dropDown: IgxDropDownComponent;
-    configureTestSuite();
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

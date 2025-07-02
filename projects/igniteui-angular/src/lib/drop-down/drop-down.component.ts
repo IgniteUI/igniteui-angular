@@ -16,7 +16,8 @@ import {
     SimpleChanges,
     booleanAttribute,
     Inject,
-    ViewEncapsulation
+    ViewEncapsulation,
+    DOCUMENT
 } from '@angular/core';
 import { IgxToggleDirective, ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
@@ -31,7 +32,6 @@ import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { IgxForOfToken } from '../directives/for-of/for_of.directive';
 import { take } from 'rxjs/operators';
 import { OverlaySettings } from '../services/overlay/utilities';
-import { DOCUMENT } from '@angular/common';
 import { ConnectedPositioningStrategy } from '../services/public_api';
 
 /**

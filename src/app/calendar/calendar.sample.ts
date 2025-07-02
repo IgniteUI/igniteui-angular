@@ -76,8 +76,29 @@ export class CalendarSampleComponent implements OnInit {
             label: 'Change Locale',
             control: {
                 type: 'button-group',
-                options: ['EN', 'BG', 'DE', 'FR', 'JP'],
-                defaultValue: 'EN'
+                options: [
+                    {
+                        value: 'en-US',
+                        label: 'EN'
+                    },
+                    {
+                        value: 'bg-BG',
+                        label: 'BG'
+                    },
+                    {
+                        value: 'de-DE',
+                        label: 'DE'
+                    },
+                    {
+                        value: 'fr-FR',
+                        label: 'FR'
+                    },
+                    {
+                        value: 'ja-JP',
+                        label: 'JP'
+                    }
+                ],
+                defaultValue: 'en-US'
             }
         },
         weekStart: {
