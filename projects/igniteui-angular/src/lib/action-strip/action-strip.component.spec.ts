@@ -34,6 +34,7 @@ describe('igxActionStrip', () => {
             fixture = TestBed.createComponent(IgxActionStripComponent);
             actionStrip = fixture.componentInstance as IgxActionStripComponent;
             fixture.detectChanges();
+            expect(actionStrip.hidden).toBeTruthy();
 
             const el = document.createElement('div');
             fixture.debugElement.nativeElement.appendChild(el);
@@ -162,7 +163,7 @@ describe('igxActionStrip', () => {
                 Lorem ipsum dolor sit
             </p>
         </div>
-        <igx-action-strip #actionStrip>
+        <igx-action-strip #actionStrip [hidden]="false">
             <igx-icon class="asIcon" (click)="onIconClick()">alarm</igx-icon>
         </igx-action-strip>
     </div>
@@ -197,7 +198,7 @@ class IgxActionStripTestingComponent {
                 Lorem ipsum dolor sit
             </p>
         </div>
-        <igx-action-strip #actionStrip>
+        <igx-action-strip #actionStrip [hidden]="false">
             <span *igxActionStripMenuItem>Mark</span>
             <span *igxActionStripMenuItem>Favorite</span>
             <span *igxActionStripMenuItem>Download</span>
@@ -219,7 +220,7 @@ class IgxActionStripMenuTestingComponent {
                 Lorem ipsum dolor sit
             </p>
         </div>
-        <igx-action-strip #actionStrip>
+        <igx-action-strip #actionStrip [hidden]="false">
             <span>Mark</span>
             <span *igxActionStripMenuItem>Favorite</span>
             <span *igxActionStripMenuItem>Download</span>
