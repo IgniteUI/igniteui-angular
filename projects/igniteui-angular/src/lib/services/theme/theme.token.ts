@@ -4,18 +4,12 @@ import { BehaviorSubject } from "rxjs";
 export class ThemeToken {
     private document = inject(DOCUMENT);
     public subject: BehaviorSubject<IgxTheme>;
-    public variant: IgxThemeVariant;
 
     constructor(private t?: IgxTheme) {
         const globalTheme = globalThis.window
             ?.getComputedStyle(this.document.body)
             .getPropertyValue("--ig-theme")
             .trim() || 'material' as IgxTheme;
-
-        this.variant = globalThis.window
-            ?.getComputedStyle(this.document.body)
-            .getPropertyValue("--ig-theme-variant")
-            .trim() as IgxThemeVariant;
 
         const _theme = t ?? globalTheme as IgxTheme;
         this.subject = new BehaviorSubject(_theme);
@@ -50,14 +44,7 @@ const Theme = {
     IndigoDesign: "indigo",
 } as const;
 
-const ThemeVariant = /*@__PURE__*/ mkenum({
-    Light: "light",
-    Dark: "dark"
-});
-
 /**
  * Determines the component theme.
  */
 export type IgxTheme = (typeof Theme)[keyof typeof Theme];
-
-export type IgxThemeVariant = (typeof ThemeVariant)[keyof typeof ThemeVariant];
