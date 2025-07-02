@@ -194,7 +194,7 @@
     [cellSelectionMode]="grid.cellSelection"
     [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"
     [style.height.px]="data.cellMergeMeta.get(col.field).rowSpan * (this.grid.rowHeight + 1)"
-    [style.zIndex]="100"
+    [style.zIndex]="data.cellMergeMeta.get(col.field).rowSpan"
     [style.min-width]="col.resolvedWidth"
     [style.max-width]="col.resolvedWidth"
     [style.flex-basis]="col.resolvedWidth"
