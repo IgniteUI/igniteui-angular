@@ -73,6 +73,20 @@ export const GridSelectionMode = {
 } as const;
 export type GridSelectionMode = (typeof GridSelectionMode)[keyof typeof GridSelectionMode];
 
+
+/**
+ * Enumeration representing different cell merging modes for the grid elements.
+ * - 'never': Never merge cells.
+ * - 'always': Always merge adjacent cells based on merge strategy.
+ * - 'onSort': Only merge cells in column that are sorted.
+ */
+export const GridCellMergeMode = {
+    never: 'never',
+    always: 'always',
+    onSort: 'onSort'
+} as const;
+export type GridCellMergeMode = (typeof GridCellMergeMode)[keyof typeof GridCellMergeMode];
+
 /** Enumeration representing different column display order options. */
 export const ColumnDisplayOrder = {
     Alphabetical: 'Alphabetical',

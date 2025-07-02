@@ -27,6 +27,7 @@ import { mergeWith } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { trackByIdentity } from '../core/utils';
+import { IMergeByResult } from './grid/grid.pipes';
 
 @Directive({
     selector: '[igxRowBaseComponent]',
@@ -115,6 +116,10 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      */
     public get pinned(): boolean {
         return this.grid.isRecordPinned(this.data);
+    }
+
+    public get hasMergedCells(): boolean {
+            return this.grid.isRecordMerged(this.data);
     }
 
     /**
@@ -590,6 +595,11 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     public animationEndHandler() {
         this.triggerAddAnimationClass = false;
         this.addAnimationEnd.emit(this);
+    }
+
+    protected getMergeCellSpan(col: ColumnType){
+        const rowCount = this.data.cellMergeMeta.get(col.field).rowSpan;
+        return `repeat(${rowCount},51px)`;
     }
 
     /**
