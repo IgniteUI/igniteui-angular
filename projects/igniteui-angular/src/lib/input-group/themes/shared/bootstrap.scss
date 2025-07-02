@@ -81,22 +81,10 @@ $border-radius: var-get($_theme, 'border-border-radius');
         @extend %border-styles;
 
         border-width: $border-size;
-        background: var-get($_theme, 'input-prefix-background');
         grid-row: 2;
     }
 
     @include e(upload-button) {
-        --igx-button-background: #{var-get($_theme, 'input-prefix-background')};
-        --igx-button-hover-background: #{var-get($_theme, 'input-prefix-background')};
-        --igx-button-active-background: #{var-get($_theme, 'input-prefix-background')};
-        --igx-button-focus-visible-background: #{var-get($_theme, 'input-prefix-background')};
-        --igx-button-foreground: #{var-get($_theme, 'input-prefix-color')};
-        --igx-button-hover-foreground: #{var-get($_theme, 'input-prefix-color')};
-        --igx-button-active-foreground: #{var-get($_theme, 'input-prefix-color')};
-        --igx-button-focus-visible-foreground: #{var-get($_theme, 'input-prefix-color')};
-        --igx-button-disabled-foreground: #{var-get($_theme, 'disabled-text-color')};
-        --igx-button-disabled-background: #{var-get($_theme, 'border-disabled-background')};
-
         @include type-style(body-1);
 
         min-height: revert;
@@ -460,7 +448,7 @@ $border-radius: var-get($_theme, 'border-border-radius');
         }
 
         @include e(upload) {
-            @extend %disabled-styles;
+            border-color: var-get($_theme, 'disabled-border-color');
         }
 
         @include e(file-input) {

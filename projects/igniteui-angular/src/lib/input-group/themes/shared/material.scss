@@ -450,6 +450,34 @@ $input-bottom-spacing: rem(6px);
         }
     }
 
+    @include m(file) {
+        @include e(file-input) {
+            background: var-get($_theme, 'file-names-background');
+            color: var-get($_theme, 'file-names-foreground');
+        }
+    }
+
+    @include mx(file, filled) {
+        @include e(file-input) {
+            background: var-get($_theme, 'file-names-background--filled');
+            color: var-get($_theme, 'file-names-foreground--filled');
+        }
+    }
+
+    @include mx(file, focused) {
+        @include e(file-input) {
+            background: var-get($_theme, 'file-names-background--focused');
+            color: var-get($_theme, 'file-names-foreground--focused');
+        }
+    }
+
+    @include mx(file, disabled) {
+        @include e(file-input) {
+            background: var-get($_theme, 'file-names-background--disabled');
+            color: var-get($_theme, 'file-names-foreground--disabled');
+        }
+    }
+
     @include mx(border, textarea-group) {
         @include e(label) {
             top: var(--_input-top-spacing);
