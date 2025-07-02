@@ -123,7 +123,7 @@
     "ig-typedoc-theme": "^6.0.0",
     "igniteui-dockmanager": "^1.16.1",
     "igniteui-sassdoc-theme": "^1.2.3",
-    "igniteui-webcomponents": "6.0.1",
+    "igniteui-webcomponents": "6.1.1",
     "jasmine": "^5.6.0",
     "jasmine-core": "^5.6.0",
     "karma": "^6.4.4",
