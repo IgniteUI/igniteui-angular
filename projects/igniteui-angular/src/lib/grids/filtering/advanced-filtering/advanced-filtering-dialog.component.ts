@@ -197,6 +197,10 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public generateEntity() {
+        if (this.queryBuilder) {
+            this.queryBuilder.isAdvancedFiltering = true;
+        }
+
         if (this.queryBuilder?.entities) {
             return this.queryBuilder?.entities;
         } else if (this.grid.type === 'hierarchical') {

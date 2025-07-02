@@ -167,6 +167,13 @@ export class IgxQueryBuilderComponent implements OnDestroy {
 
     /**
      * @hidden @internal
+     *
+     * used by the grid
+     */
+    public isAdvancedFiltering = false;
+
+    /**
+     * @hidden @internal
      */
     @ContentChild(IgxQueryBuilderSearchValueTemplateDirective, { read: TemplateRef })
     public searchValueTemplate: TemplateRef<any>;

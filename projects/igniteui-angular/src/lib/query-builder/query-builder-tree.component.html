@@ -75,7 +75,7 @@
                     (selectionChanging)="onReturnFieldSelectChanging($event)"
                     [overlaySettings]="returnFieldSelectOverlaySettings"
                     [disabled]="!selectedEntity"
-                    [ngModel]="selectedReturnFields[0]"
+                    [ngModel]="selectedReturnFields ? selectedReturnFields[0] : null"
                     [placeholder]="this.resourceStrings.igx_query_builder_select_return_field_single"
                     [style.display]="isInEditMode() ? 'block' : 'none'"
                     (opening)="exitEditAddMode()"
@@ -466,7 +466,7 @@
                 <ng-container>
                     <igx-query-builder-tree
                         [style.display]="expressionItem.inEditMode || expressionItem.expanded ? 'block' : 'none'"
-                        [entities]="(this.selectedEntity ? this.selectedEntity.childEntities : entities[0].childEntities) ?? entities"
+                        [entities]="(this.selectedEntity ? this.selectedEntity.childEntities : entities[0]?.childEntities) ?? entities"
                         [queryBuilder]="this.queryBuilder"
                         [parentExpression]="expressionItem"
                         [expectedReturnField]="this.selectedField?.field"
