@@ -9,6 +9,7 @@ import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridSortingStrategy, IGridGroupingStrategy } from '../common/strategy';
+import { GridCellMergeMode } from 'igniteui-angular';
 
 /**
  * @hidden
@@ -74,6 +75,45 @@ export class IgxGridGroupingPipe implements PipeTransform {
         this.grid.groupingMetadata = fullResult.metadata;
         return result;
     }
+}
+
+@Pipe({
+    name: 'gridCellMerge',
+    standalone: true
+})
+export class IgxGridCellMergePipe implements PipeTransform {
+
+    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
+
+    public transform(collection: any, _pipeTrigger: number) {
+        if (this.grid.cellMergeMode === GridCellMergeMode.never) {
+            return collection;
+        }
+        const visibleColumns = this.grid.visibleColumns;
+        let prev = null;
+        let result = [];
+        for (const rec of collection) {
+            let recData = { recordRef: rec, cellMergeMeta: new Map<string, IMergeByResult>() };
+            for (const col of visibleColumns) {
+                    recData.cellMergeMeta.set(col.field, { rowSpan: 1 });
+                    //TODO condition can be a strategy or some callback that the user can set.
+                    //TODO can also be limited to only sorted columns
+                    if ( prev && prev.recordRef[col.field] === rec[col.field]) {
+                        const root = prev.cellMergeMeta.get(col.field)?.root ?? prev;
+                        root.cellMergeMeta.get(col.field).rowSpan += 1;
+                        recData.cellMergeMeta.get(col.field).root = root;
+                    }
+            }
+            prev = recData;
+            result.push(recData);
+        }
+        return result;
+    }
+}
+
+export interface IMergeByResult {
+    rowSpan: number;
+    root?: any;
 }
 
 /**

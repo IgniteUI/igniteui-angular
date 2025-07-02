@@ -1,4 +1,4 @@
-import { ColumnPinningPosition, FilterMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition, GridValidationTrigger, RowPinningPosition, Size } from './enums';
+import { ColumnPinningPosition, FilterMode, GridCellMergeMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition, GridValidationTrigger, RowPinningPosition, Size } from './enums';
 import {
     ISearchInfo, IGridCellEventArgs, IRowSelectionEventArgs, IColumnSelectionEventArgs,
     IPinColumnCancellableEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs,
@@ -690,6 +690,7 @@ export interface GridServiceType {
 export interface GridType extends IGridDataBindable {
     /** Represents the locale of the grid: `USD`, `EUR`, `GBP`, `CNY`, `JPY`, etc. */
     locale: string;
+    cellMergeMode: GridCellMergeMode;
     resourceStrings: IGridResourceStrings;
     /* blazorSuppress */
     /** Represents the native HTML element itself */
@@ -1180,6 +1181,7 @@ export interface GridType extends IGridDataBindable {
     getEmptyRecordObjectFor(inRow: RowType): any;
     isSummaryRow(rec: any): boolean;
     isRecordPinned(rec: any): boolean;
+    isRecordMerged(rec: any): boolean;
     getInitialPinnedIndex(rec: any): number;
     isRecordPinnedByViewIndex(rowIndex: number): boolean;
     isColumnGrouped(fieldName: string): boolean;

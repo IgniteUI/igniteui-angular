@@ -93,7 +93,8 @@ import {
     RowPinningPosition,
     GridPagingMode,
     GridValidationTrigger,
-    Size
+    Size,
+    GridCellMergeMode
 } from './common/enums';
 import {
     IGridCellEventArgs,
@@ -2912,6 +2913,14 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     /**
+     * Gets/Sets cell merge mode.
+     *
+     */
+    @WatchChanges()
+    @Input()
+    public cellMergeMode: GridCellMergeMode = GridCellMergeMode.never;
+
+    /**
      * Gets/Sets row selection mode
      *
      * @remarks
@@ -3633,6 +3642,14 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public isRecordPinned(rec) {
         return this.getInitialPinnedIndex(rec) !== -1;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public isRecordMerged(rec) {
+        return rec.cellMergeMeta;
     }
 
     /**

@@ -1,0 +1,19 @@
+.sample-actions {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+    gap: 0.5rem;
+}
+
+.density-chooser {
+    margin-bottom: 1rem;
+
+    igx-buttongroup {
+        display: block;
+        width: 500px;
+    }
+}
+
+.grid-size {
+    --ig-size: var(--ig-size-small);
+}

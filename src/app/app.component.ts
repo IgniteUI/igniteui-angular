@@ -212,6 +212,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Cell Editing'
         },
         {
+            link: '/gridCellMerging',
+            icon: 'view_column',
+            name: 'Grid Cell Merging'
+        },
+        {
             link: '/gridClipboard',
             icon: 'insert_comment',
             name: 'Grid Clipboard Interaction'
