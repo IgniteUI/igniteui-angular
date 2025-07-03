@@ -1685,6 +1685,33 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
         });
 
+        it('should allow changing row islands runtime in nested child grid.', () => {
+            const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(row.expander);
+            fixture.detectChanges();
+
+            let childGrid = hierarchicalGrid.gridAPI.getChildGrids()[0];
+            const childRow = childGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(childRow.expander);
+            fixture.detectChanges();
+
+            let hGrids = fixture.debugElement.queryAll(By.css('igx-hierarchical-grid'));
+            expect(hGrids.length).toBe(3);
+            expect(childGrid.gridAPI.getChildGrids().length).toBe(1);
+
+            fixture.componentInstance.toggleRINested = true;
+            fixture.detectChanges();
+
+            const nestedChildGrid = childGrid.gridAPI.getChildGrids()[0];
+            const nestedChildRow = nestedChildGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(nestedChildRow.expander);
+            fixture.detectChanges();
+
+            hGrids = fixture.debugElement.queryAll(By.css('igx-hierarchical-grid'));
+            expect(hGrids.length).toBe(4);
+            expect(nestedChildGrid.gridAPI.getChildGrids().length).toBe(1);
+        });
+
         it(`Should apply template to both parent and child grids`, () => {
             const customFixture = TestBed.createComponent(IgxHierarchicalGridCustomRowEditOverlayComponent);
             customFixture.detectChanges();
@@ -2146,6 +2173,10 @@ export class IgxHierarchicalGridSizingComponent {
             <igx-row-island key="childData" [autoGenerate]="true">
                 @if (toggleChildRI) {
                     <igx-row-island key="childData" [autoGenerate]="true">
+                    @if (toggleRINested) {
+                        <igx-row-island [key]="'childData'" [autoGenerate]="true">
+                        </igx-row-island>
+                    }
                     </igx-row-island>
                 }
             </igx-row-island>
@@ -2156,6 +2187,7 @@ export class IgxHierarchicalGridSizingComponent {
 export class IgxHierarchicalGridToggleRIComponent  extends IgxHierarchicalGridTestBaseComponent {
 public toggleRI = true;
 public toggleChildRI = true;
+public toggleRINested = false;
 }
 
 @Component({
@@ -2476,4 +2508,32 @@ export class IgxHierarchicalGridEmptyTemplateComponent extends IgxHierarchicalGr
     public getChildGridRef(grid: IgxHierarchicalGridComponent) {
         this.childGridRef = grid;
     }
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #hGrid [data]="data" [autoGenerate]="false"
+        [height]="'400px'" [width]="'500px'">
+        <igx-column field="root1" [dataType]="'number'"></igx-column>
+        <igx-column field="root2" [dataType]="'number'"></igx-column>
+        <igx-row-island [key]="'level1data'" [autoGenerate]="false">
+            <igx-column field="level1child1" [dataType]="'number'"></igx-column>
+            <igx-column field="level1child2" [dataType]="'number'"></igx-column>
+            <igx-row-island [key]="'level2data'" [autoGenerate]="false">
+                <igx-column field="level2child1" [dataType]="'number'"></igx-column>
+                <igx-column field="level2child2" [dataType]="'number'"></igx-column>
+            </igx-row-island>
+        </igx-row-island>
+    </igx-hierarchical-grid>`,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+})
+export class IgxHierarchicalGridMissingChildDataComponent {
+    @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hGrid: IgxHierarchicalGridComponent;
+
+    public data = [
+        { root1: 1, root2: 1, level1data: [{ level1child1: 11, level1child2: 12 }] }, // missing level2data
+        { root1: 2, root2: 2, level1data: [{ level1child1: 21, level1child2: 22, level2data: [{ level2child1: 31, level2child2: 32 }] }] },
+        { root1: 3, root2: 3, level1data: [] }
+    ];
 }

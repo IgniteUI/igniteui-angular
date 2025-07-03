@@ -21,7 +21,8 @@ import {
     Output,
     QueryList,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    ViewChildren
 } from '@angular/core';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -121,6 +122,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     @ContentChildren(IgxSuffixDirective, { descendants: true })
     protected suffixes: QueryList<IgxSuffixDirective>;
+
+    @ViewChildren(IgxSuffixDirective)
+    protected internalSuffixes: QueryList<IgxSuffixDirective>;
 
     /** @hidden @internal */
     @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label: IgxLabelDirective;
@@ -545,8 +549,15 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this.inputGroup.prefixes = this.prefixes;
         }
 
-        if (this.inputGroup && this.suffixes?.length > 0) {
-            this.inputGroup.suffixes = this.suffixes;
+        if (this.inputGroup) {
+            const suffixesArray = this.suffixes?.toArray() ?? [];
+            const internalSuffixesArray = this.internalSuffixes?.toArray() ?? [];
+            const mergedSuffixes = new QueryList<IgxSuffixDirective>();
+            mergedSuffixes.reset([
+                ...suffixesArray,
+                ...internalSuffixesArray
+            ]);
+            this.inputGroup.suffixes = mergedSuffixes;
         }
     }
 

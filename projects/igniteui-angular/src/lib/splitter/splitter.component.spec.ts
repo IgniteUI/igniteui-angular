@@ -33,7 +33,7 @@ describe('IgxSplitter', () => {
         const secondPane = splitter.panes.toArray()[1].element;
         expect(firstPane.textContent.trim()).toBe('Pane 1');
         expect(secondPane.textContent.trim()).toBe('Pane 2');
-
+        fixture.detectChanges();
         const splitterBar = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).nativeElement;
         expect(firstPane.style.order).toBe('0');
         expect(splitterBar.style.order).toBe('1');
@@ -322,6 +322,13 @@ describe('IgxSplitter', () => {
 
         expect(splitterBarComponent.style.transform).not.toBe('translate3d(0px, 0px, 0px)');
     });
+
+    it('should render correctly panes created dynamically using @for', () => {
+        fixture = TestBed.createComponent(SplitterForOfPanesComponent);
+        fixture.detectChanges();
+        splitter = fixture.componentInstance.splitter;
+        expect(splitter.panes.length).toBe(3);
+    });
 });
 
 describe('IgxSplitter pane toggle', () => {
@@ -336,6 +343,7 @@ describe('IgxSplitter pane toggle', () => {
         fixture = TestBed.createComponent(SplitterTogglePaneComponent);
         fixture.detectChanges();
         splitter = fixture.componentInstance.splitter;
+        fixture.detectChanges();
     }));
 
     it('should collapse/expand panes', () => {
@@ -600,4 +608,20 @@ export class SplitterTogglePaneComponent extends SplitterTestComponent {
     imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
 })
 export class SplitterCollapsedPaneComponent extends SplitterTestComponent {
+}
+
+@Component({
+    template: `
+<igx-splitter>
+    @for (number of numbers; track number) {
+    <igx-splitter-pane>
+      <p>{{ number }}</p>
+    </igx-splitter-pane>
+    }
+  </igx-splitter>
+    `,
+    imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
+})
+export class SplitterForOfPanesComponent extends SplitterTestComponent {
+    public numbers = [1, 2, 3];
 }
