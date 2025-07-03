@@ -492,6 +492,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
 
         effect(() => {
             this.initialize();
+            this._radioButtons();
 
             Promise.resolve().then(() => {
                 this.setRadioButtons();
