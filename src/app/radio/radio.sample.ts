@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterContentInit, inject, ViewContainerRef } from '@angular/core';
+import { Component, ViewChild, AfterContentInit, ViewContainerRef, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { UntypedFormGroup, UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IgxRadioGroupDirective, IgxLayoutDirective, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxCardActionsComponent, IgxRippleDirective, IgxButtonDirective, IgxRadioComponent, RadioGroupAlignment } from 'igniteui-angular';
@@ -42,6 +42,8 @@ export class RadioSampleComponent implements AfterContentInit {
     public alignment: RadioGroupAlignment = RadioGroupAlignment.vertical;
     private viewContainerRef = inject(ViewContainerRef);
 
+    private cdr = inject(ChangeDetectorRef);
+
     constructor(private _formBuilder: UntypedFormBuilder) {
         this._createPersonKirkForm();
     }
@@ -60,14 +62,33 @@ export class RadioSampleComponent implements AfterContentInit {
           { value: 2, label: 'Radio 2' },
           { value: 3, label: 'Radio 3' },
         ];
+
+        this.cdr.detectChanges();
     }
 
-    public get diagnostic() {
-        return JSON.stringify(this.personBob);
+    public removeRadioGroupComponent() {
+        this.viewContainerRef.clear();
+        this.cdr.detectChanges();
     }
 
     public ngAfterContentInit(): void {
         setTimeout(() => this.selectedValue = this.radioGroup.value);
+    }
+
+    private _createPersonKirkForm() {
+        this.personKirkForm = this._formBuilder.group({
+            name: '',
+            favoriteSeason: ''
+        });
+
+        this.personKirkForm.setValue({
+            name: this.personKirk.name,
+            favoriteSeason: this.personKirk.favoriteSeason
+        });
+    }
+
+    public get diagnostic() {
+        return JSON.stringify(this.personBob);
     }
 
     public onBtnClick() {
@@ -86,17 +107,5 @@ export class RadioSampleComponent implements AfterContentInit {
 
     public onSubmit() {
         this.personBob.favoriteSeason = this.seasons[1].name;
-    }
-
-    private _createPersonKirkForm() {
-        this.personKirkForm = this._formBuilder.group({
-            name: '',
-            favoriteSeason: ''
-        });
-
-        this.personKirkForm.setValue({
-            name: this.personKirk.name,
-            favoriteSeason: this.personKirk.favoriteSeason
-        });
     }
 }
