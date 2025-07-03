@@ -99,15 +99,15 @@ export class IgxGridCellMergePipe implements PipeTransform {
                     //TODO condition can be a strategy or some callback that the user can set.
                     //TODO can also be limited to only sorted columns
                     if ( prev && prev.recordRef[col.field] === rec[col.field]) {
-                        // const root = prev.cellMergeMeta.get(col.field)?.root ?? prev;
-                        // root.cellMergeMeta.get(col.field).rowSpan += 1;
-                        // recData.cellMergeMeta.get(col.field).root = root;
-                        recData.cellMergeMeta.get(col.field).prev = prev;
-                        let curr = prev;
-                        while(curr) {
-                            curr.cellMergeMeta.get(col.field).rowSpan += 1;
-                            curr =  curr.cellMergeMeta.get(col.field).prev;
-                        }
+                        const root = prev.cellMergeMeta.get(col.field)?.root ?? prev;
+                        root.cellMergeMeta.get(col.field).rowSpan += 1;
+                        recData.cellMergeMeta.get(col.field).root = root;
+                        // recData.cellMergeMeta.get(col.field).prev = prev;
+                        // let curr = prev;
+                        // while(curr) {
+                        //     curr.cellMergeMeta.get(col.field).rowSpan += 1;
+                        //     curr =  curr.cellMergeMeta.get(col.field).prev;
+                        // }
                     }
             }
             prev = recData;

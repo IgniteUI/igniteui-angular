@@ -47,6 +47,14 @@
         }
         <ng-container *ngTemplateOutlet="hasPinnedRecords && isRowPinningToTop ? pinnedRecordsTemplate : null">
         </ng-container>
+
+
+        @for (rowData of mergedData; track rowData; let rowIndex = $index) {
+            <igx-grid-row [style.background]="'red'" [style.position]="'absolute'" [gridID]="id" [index]="rowIndex" [data]="rowData" [style.top.px]="getMergeCellOffset(rowData)"
+            [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:rowData:pipeTrigger"
+            [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
+            </igx-grid-row>
+        }
         <ng-template #pinnedRecordsTemplate>
             @if (data
                 | gridTransaction:id:pipeTrigger

@@ -389,6 +389,17 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private _groupByRowSelectorTemplate: TemplateRef<IgxGroupByRowSelectorTemplateContext>;
     private _detailTemplate;
 
+    public get mergedData() {
+        const startIndex = this.verticalScrollContainer.state.startIndex;
+        const chunkSize = this.verticalScrollContainer.state.chunkSize;
+        const mergeRecs = this.verticalScrollContainer.igxForOf?.filter((x, index) => {
+            if (!x.cellMergeMeta) { return false;}
+            const maxSpan = Math.max(...x.cellMergeMeta.values().toArray().map(x => x.rowSpan));
+           return startIndex > index && startIndex <= (index + maxSpan) && startIndex + chunkSize >= (index + maxSpan);
+    });
+        return mergeRecs;
+    }
+
 
     /**
      * Gets/Sets the array of data that populates the component.

@@ -3652,6 +3652,11 @@ export abstract class IgxGridBaseDirective implements GridType,
         return rec.cellMergeMeta;
     }
 
+    public getMergeCellOffset(rec) {
+        const index = this.verticalScrollContainer.igxForOf.indexOf(rec);
+        return -(this.verticalScrollContainer.scrollPosition - this.verticalScrollContainer.getScrollForIndex(index));
+    }
+
     /**
      * @hidden
      * @internal
