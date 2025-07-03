@@ -12,7 +12,6 @@ import {
     QueryList,
     Self,
     booleanAttribute,
-    contentChildren,
     effect,
     signal
 } from '@angular/core';
@@ -62,7 +61,7 @@ let nextId = 0;
     standalone: true
 })
 export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, DoCheck {
-    private _radioButtons = contentChildren(IgxRadioComponent, { descendants: true });
+    private _radioButtons = signal<IgxRadioComponent[]>([]);
     private _radioButtonsList = new QueryList<IgxRadioComponent>();
 
     /**
@@ -74,8 +73,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * ```
      */
     public get radioButtons(): QueryList<IgxRadioComponent> {
-        const buttons = Array.from(this._radioButtons());
-        this._radioButtonsList.reset(buttons);
+        this._radioButtonsList.reset(this._radioButtons());
         return this._radioButtonsList;
     }
 
@@ -492,7 +490,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
 
         effect(() => {
             this.initialize();
-            this._radioButtons();
 
             Promise.resolve().then(() => {
                 this.setRadioButtons();
@@ -645,6 +642,32 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
                 button.required = this._required;
             });
         }
+    }
+
+
+    /**
+     * Registers a radio button with this radio group.
+     * This method is called by radio button components when they are created.
+     * @hidden @internal
+     */
+    public _addRadioButton(radioButton: IgxRadioComponent): void {
+        this._radioButtons.update(buttons => {
+            if (!buttons.includes(radioButton)) {
+                return [...buttons, radioButton];
+            }
+            return buttons;
+        });
+    }
+
+    /**
+     * Unregisters a radio button from this radio group.
+     * This method is called by radio button components when they are destroyed.
+     * @hidden @internal
+     */
+    public _removeRadioButton(radioButton: IgxRadioComponent): void {
+        this._radioButtons.update(buttons =>
+            buttons.filter(btn => btn !== radioButton)
+        );
     }
 
     /**

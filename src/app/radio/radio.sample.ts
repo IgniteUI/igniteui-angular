@@ -1,9 +1,7 @@
 import {
-  ChangeDetectorRef,
   Component,
   inject,
   ViewContainerRef,
-  ApplicationRef
 } from '@angular/core';
 import { IgxButtonDirective } from 'igniteui-angular';
 import { RadioGroupComponent } from 'igniteui-angular/src/lib/radio/radio-group.component';
@@ -16,25 +14,20 @@ import { RadioGroupComponent } from 'igniteui-angular/src/lib/radio/radio-group.
 })
 export class RadioSampleComponent {
     private viewContainerRef = inject(ViewContainerRef);
-    private cdr = inject(ChangeDetectorRef);
-    private appRef = inject(ApplicationRef);
 
-  public createRadioGroupComponent() {
-    this.viewContainerRef.clear();
+    public createRadioGroupComponent() {
+        this.viewContainerRef.clear();
 
-    const componentRef = this.viewContainerRef.createComponent(RadioGroupComponent);
-    const radioGroup = componentRef.instance as RadioGroupComponent;
+        const componentRef = this.viewContainerRef.createComponent(RadioGroupComponent);
+        const radioGroup = componentRef.instance as RadioGroupComponent;
 
-    radioGroup.value = 1;
-    radioGroup.required = true;
+        radioGroup.value = 1;
+        radioGroup.required = true;
 
-    radioGroup.radios = [
-      { value: 1, label: 'Radio 1' },
-      { value: 2, label: 'Radio 2' },
-      { value: 3, label: 'Radio 3' },
-    ];
-
-    this.cdr.detectChanges();
-    this.appRef.tick();
-  }
+        radioGroup.radios = [
+          { value: 1, label: 'Radio 1' },
+          { value: 2, label: 'Radio 2' },
+          { value: 3, label: 'Radio 3' },
+        ];
+    }
 }
