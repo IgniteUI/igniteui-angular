@@ -1112,16 +1112,7 @@
     }
 
     %form-group-display--bootstrap-file {
-        .igx-button--flat {
-            --foreground: #{var-get($theme, 'input-prefix-color')};
-            --hover-foreground: #{var-get($theme, 'input-prefix-color')};
-            --active-foreground: #{var-get($theme, 'input-prefix-color')};
-            --focus-visible-foreground: #{var-get($theme, 'input-prefix-color')};
-            --disabled-foreground: var-get($theme, 'disabled-text-color');
-        }
-
         %upload-button {
-            background: var-get($theme, 'input-prefix-background');
             border: rem(1px) solid var-get($theme, 'border-color');
             border-inline-end-width: 0;
         }
@@ -1133,6 +1124,10 @@
                 height: var-get($theme, 'size');
             }
         }
+    }
+
+    %bootstrap-file-disabled-upload-button {
+        border-color: var-get($theme, 'disabled-border-color');
     }
 
     %bootstrap-file-focused,
@@ -1877,6 +1872,14 @@
         cursor: default;
 
         color: var-get($theme, 'disabled-text-color') !important;
+
+        &::placeholder {
+            color: var-get($theme, 'disabled-placeholder-color');
+        }
+    }
+
+    %form-group-file-input--disabled {
+        cursor: default;
 
         &::placeholder {
             color: var-get($theme, 'disabled-placeholder-color');
@@ -2808,6 +2811,11 @@
 
     %bootstrap-input--disabled {
         background: var-get($theme, 'border-disabled-background');
+        border: rem(1px) solid var-get($theme, 'disabled-border-color');
+        box-shadow: none;
+    }
+
+    %bootstrap-file-input--disabled {
         border: rem(1px) solid var-get($theme, 'disabled-border-color');
         box-shadow: none;
     }

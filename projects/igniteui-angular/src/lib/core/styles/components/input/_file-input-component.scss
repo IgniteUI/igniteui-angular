@@ -11,14 +11,16 @@
             $deps: (igx-input-group)
         );
 
-        @extend %file-display !optional;
-
         @include e(file-names) {
             @extend %file-names !optional;
         }
 
+        @include e(upload-button-wrapper) {
+            @extend %upload-button-wrapper !optional;
+        }
+
         @include e(upload-button) {
-            @extend %upload-buton !optional;
+            @extend %upload-button !optional;
         }
 
         @include e(clear-icon) {
@@ -30,12 +32,12 @@
                 @extend %file-names--filled !optional;
             }
 
-            @include e(upload-button) {
-                @extend %upload-buton--filled !optional;
+            @include e(upload-button-wrapper) {
+                @extend %upload-button-wrapper--filled !optional;
             }
 
-            @include e(clear-icon) {
-                @extend %clear-icon--filled !optional;
+            @include e(upload-button) {
+                @extend %upload-button--filled !optional;
             }
         }
 
@@ -44,28 +46,26 @@
                 @extend %file-names--focused !optional;
             }
 
-            @include e(upload-button) {
-                @extend %upload-buton--focused !optional;
+            @include e(upload-button-wrapper) {
+                @extend %upload-button-wrapper--focused !optional;
             }
 
-            @include e(clear-icon) {
-                @extend %clear-icon--focused !optional;
+            @include e(upload-button) {
+                @extend %upload-button--focused !optional;
             }
         }
 
         @include m(disabled) {
-            @include m(focused) {
-                @include e(file-names) {
-                    @extend %file-names--disabled !optional;
-                }
+            @include e(file-names) {
+                @extend %file-names--disabled !optional;
+            }
 
-                @include e(upload-buton) {
-                    @extend %upload-buton--disabled !optional;
-                }
+            @include e(upload-button-wrapper) {
+                @extend %upload-button-wrapper--disabled !optional;
+            }
 
-                @include e(clear-icon) {
-                    @extend %clear-icon--disabled !optional;
-                }
+            @include e(upload-button) {
+                @extend %upload-button--disabled !optional;
             }
         }
     }

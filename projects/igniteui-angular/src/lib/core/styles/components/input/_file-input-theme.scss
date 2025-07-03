@@ -117,38 +117,48 @@
         background-color: var-get($theme, 'file-names-background--disabled');
     }
 
-    %upload-buton {
+    %upload-button-wrapper {
+        background: #{var-get($theme, 'file-selector-button-background')}
+    }
+
+    %upload-button {
         // That button can't have :focus, :active, :hover states, that's why we dont need to override them here.
         --foreground: #{var-get($theme, 'file-selector-button-foreground')};
-        --background: #{var-get($theme, 'file-selector-button-background')};
-
-        // we override the rest of the variables in order to prevent any change if the user creates a flat button theme.
+        --background: transparent;
         --resting-elevation: none;
-        --hover-elevation: none;
-        --focus-elevation: none;
-        --active-elevation: none;
         --shadow-color: none;
-        --border-color: transparent;
-        --hover-border-color: transparent;
-        --focus-border-color: transparent;
-        --focus-visible-border-color: transparent;
-        --active-border-color: transparent;
-        --disabled-border-color: transparent;
+        --border-radius: 0;
     }
 
-    %upload-buton--filled {
+
+    %upload-button-wrapper--filled {
+        color: #{var-get($theme, 'file-selector-button-foreground--filled')};
+        background: #{var-get($theme, 'file-selector-button-background--filled')};
+    }
+
+    %upload-button--filled {
         --foreground: #{var-get($theme, 'file-selector-button-foreground--filled')};
-        --background: #{var-get($theme, 'file-selector-button-background--filled')};
+        --background: transparent;
     }
 
-    %upload-buton--focused {
+    %upload-button-wrapper--focused {
+        color: #{var-get($theme, 'file-selector-button-foreground--focused')};
+        background: #{var-get($theme, 'file-selector-button-background--focused')};
+    }
+
+    %upload-button--focused {
         --foreground: #{var-get($theme, 'file-selector-button-foreground--focused')};
-        --background: #{var-get($theme, 'file-selector-button-background--focused')};
+        --background: transparent;
     }
 
-    %upload-buton--disabled {
+    %upload-button-wrapper--disabled {
+        color: #{var-get($theme, 'file-selector-button-foreground--disabled')};
+        background: #{var-get($theme, 'file-selector-button-background--disabled')};
+    }
+
+    %upload-button--disabled {
         --disabled-foreground: #{var-get($theme, 'file-selector-button-foreground--disabled')};
-        --disabled-background: #{var-get($theme, 'file-selector-button-background--disabled')};
+        --disabled-background: transparent;
     }
 
     %clear-icon {

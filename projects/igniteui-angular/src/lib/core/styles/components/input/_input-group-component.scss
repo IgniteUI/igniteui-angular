@@ -344,7 +344,7 @@
             }
 
             @include e(file-input) {
-                @extend %form-group-input--disabled !optional;
+                @extend %form-group-file-input--disabled !optional;
             }
 
             @include e(hint) {
@@ -958,6 +958,12 @@
             }
         }
 
+        @include mx(bootstrap, file, disabled) {
+            @include e(upload-button) {
+                @extend %bootstrap-file-disabled-upload-button !optional;
+            }
+        }
+
         @include mx(bootstrap, file, focused) {
             @extend %bootstrap-file-focused !optional;
         }
@@ -1146,7 +1152,7 @@
             }
 
             @include e(file-input) {
-                @extend %bootstrap-input--disabled !optional;
+                @extend %bootstrap-file-input--disabled !optional;
             }
 
             @include e(textarea) {
