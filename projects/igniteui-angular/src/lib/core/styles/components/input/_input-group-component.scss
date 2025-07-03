@@ -637,6 +637,20 @@
             }
         }
 
+        @include mx(fluent, file) {
+            @include e(bundle) {
+                @extend %form-group-bundle-file--fluent !optional;
+            }
+
+            @include e(bundle-start) {
+                @extend %form-group-bundle-start-file--fluent !optional;
+            }
+
+            @include e(bundle-end) {
+                @extend %form-group-bundle-end-file--fluent !optional;
+            }
+        }
+
         @include mx(fluent, placeholder) {
             @extend %form-group-placeholder !optional;
 
@@ -948,15 +962,15 @@
             @extend %bootstrap-file-focused !optional;
         }
 
-        @include mx(bootstrap, file, valid) {
+        @include mx(bootstrap, file, valid, focused) {
             @extend %bootstrap-file-valid !optional;
         }
 
-        @include mx(bootstrap, file, warning) {
+        @include mx(bootstrap, file, warning, focused) {
             @extend %bootstrap-file-warning !optional;
         }
 
-        @include mx(bootstrap, file, invalid) {
+        @include mx(bootstrap, file, invalid, focused) {
             @extend %bootstrap-file-invalid !optional;
         }
 
@@ -978,6 +992,22 @@
 
         @include mx(bootstrap, suffixed) {
             @extend %form-group-display--bootstrap-suffixed !optional;
+        }
+
+        @include mx(bootstrap, suffixed, focused) {
+            @extend %form-group-display--bootstrap-suffixed-focused !optional;
+        }
+
+        @include mx(bootstrap, suffixed, valid) {
+            @extend %form-group-display--bootstrap-suffixed-valid !optional;
+        }
+
+        @include mx(bootstrap, suffixed, warning) {
+            @extend %form-group-display--bootstrap-suffixed-warning !optional;
+        }
+
+        @include mx(bootstrap, suffixed, invalid) {
+            @extend %form-group-display--bootstrap-suffixed-invalid !optional;
         }
 
         @include mx(bootstrap, search) {
@@ -1040,32 +1070,6 @@
             }
         }
 
-        @include mx(bootstrap, warning) {
-            @include e(input) {
-                @extend %bootstrap-input--warning !optional;
-
-                &:hover {
-                    @extend %bootstrap-input--warning !optional;
-                }
-            }
-
-            @include e(file-input) {
-                @extend %bootstrap-input--warning !optional;
-
-                &:hover {
-                    @extend %bootstrap-input--warning !optional;
-                }
-            }
-
-            @include e(textarea) {
-                @extend %bootstrap-input--warning !optional;
-
-                &:hover {
-                    @extend %bootstrap-input--warning !optional;
-                }
-            }
-        }
-
         @include mx(bootstrap, invalid) {
             @include e(input) {
                 @extend %bootstrap-input--error !optional;
@@ -1097,34 +1101,34 @@
         }
 
         @include mx(bootstrap, warning) {
-          @include e(input) {
+            @include e(input) {
               @extend %bootstrap-input--warning !optional;
 
               &:hover {
                   @extend %bootstrap-input--warning !optional;
               }
-          }
+            }
 
-          @include e(file-input) {
+            @include e(file-input) {
               @extend %bootstrap-input--warning !optional;
 
               &:hover {
                   @extend %bootstrap-input--warning !optional;
               }
-          }
+            }
 
-          @include e(label) {
+            @include e(label) {
               @extend %bootstrap-label !optional;
-          }
+            }
 
-          @include e(textarea) {
+            @include e(textarea) {
               @extend %bootstrap-input--warning !optional;
 
               &:hover {
                   @extend %bootstrap-input--warning !optional;
               }
-          }
-      }
+            }
+        }
 
         @include mx(bootstrap, textarea-group) {
             @include e(bundle) {
@@ -1147,34 +1151,6 @@
 
             @include e(textarea) {
                 @extend %bootstrap-input--disabled !optional;
-            }
-        }
-
-        @include mx(bootstrap, disabled, prefixed) {
-            @include e(input) {
-                @extend %bootstrap-input--disabled--prefixed !optional;
-            }
-
-            @include e(file-input) {
-                @extend %bootstrap-input--disabled--prefixed !optional;
-            }
-
-            @include e(textarea) {
-                @extend %bootstrap-input--disabled--prefixed !optional;
-            }
-        }
-
-        @include mx(bootstrap, disabled, suffixed) {
-            @include e(input) {
-                @extend %bootstrap-input--disabled--suffixed !optional;
-            }
-
-            @include e(file-input) {
-                @extend %bootstrap-input--disabled--suffixed !optional;
-            }
-
-            @include e(textarea) {
-                @extend %bootstrap-input--disabled--suffixed !optional;
             }
         }
         // BOOTSTRAP END

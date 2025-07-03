@@ -1807,6 +1807,7 @@
         padding-block-start: $input-top-padding;
         padding-block-end: $input-bottom-padding;
         height: var-get($theme, 'size');
+        max-height: 100%;
         color: var-get($theme, 'filled-text-color');
 
         span {
@@ -1823,6 +1824,13 @@
         @if $variant == 'indigo' {
             font-size: rem(12px);
             line-height: rem(16px);
+        }
+    }
+
+    @if $variant == 'fluent' {
+        %form-group-file-input,
+        %upload-button {
+            max-height: calc(var-get($theme, 'size') - #{rem(2px)});
         }
     }
 
@@ -2549,6 +2557,39 @@
                     end-radius: 0;
                 };
             }
+        }
+
+        .igx-input-group__clear-icon + igx-suffix,
+        .igx-input-group__clear-icon + [igxPrefix] {
+            border-inline-start: rem(1px) solid var-get($theme, 'border-color');
+        }
+    }
+
+    %form-group-display--bootstrap-suffixed-focused {
+        .igx-input-group__clear-icon + igx-suffix,
+        .igx-input-group__clear-icon + [igxPrefix] {
+            border-color: var-get($theme, 'focused-border-color');
+        }
+    }
+
+    %form-group-display--bootstrap-suffixed-valid {
+        .igx-input-group__clear-icon + igx-suffix,
+        .igx-input-group__clear-icon + [igxPrefix] {
+            border-color: var-get($theme, 'success-secondary-color');
+        }
+    }
+
+    %form-group-display--bootstrap-suffixed-form-group-display--bootstrap-suffixed-warning {
+        .igx-input-group__clear-icon + igx-suffix,
+        .igx-input-group__clear-icon + [igxPrefix] {
+            border-color: var-get($theme, 'warning-secondary-color');
+        }
+    }
+
+    %form-group-display--bootstrap-suffixed-invalid {
+        .igx-input-group__clear-icon + igx-suffix,
+        .igx-input-group__clear-icon + [igxPrefix] {
+            border-color: var-get($theme, 'error-secondary-color');
         }
     }
 
