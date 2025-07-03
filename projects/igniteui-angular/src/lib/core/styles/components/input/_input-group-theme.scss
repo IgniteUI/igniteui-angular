@@ -1043,27 +1043,6 @@
     }
 
     %form-group-display--file {
-        .igx-button--flat {
-            --background: transparent;
-            --hover-background: transparent;
-            --focus-background: transparent;
-            --focus-visible-background: transparent;
-            --focus-hover-background: transparent;
-            --active-background: transparent;
-            --disabled-background: transparent;
-            --resting-elevation: none;
-            --hover-elevation: none;
-            --focus-elevation: none;
-            --active-elevation: none;
-            --shadow-color: none;
-            --border-color: transparent;
-            --hover-border-color: transparent;
-            --focus-border-color: transparent;
-            --focus-visible-border-color: transparent;
-            --active-border-color: transparent;
-            --disabled-border-color: transparent
-        }
-
         %form-group-bundle {
             grid-template-columns: auto auto auto 1fr auto;
         }
@@ -1111,7 +1090,6 @@
             border: none;
             inset: 0;
             width: 100%;
-            height: 100%;
             appearance: none;
             opacity: 0;
             z-index: 2;
@@ -1827,11 +1805,12 @@
         overflow: hidden;
         padding-block-start: $input-top-padding;
         padding-block-end: $input-bottom-padding;
-        height: calc(var-get($theme, 'size') - 2px);
+        height: var-get($theme, 'size');
         color: var-get($theme, 'filled-text-color');
 
         span {
             @include ellipsis();
+
             position: relative;
             display: inline-block;
             width: inherit;
@@ -1843,22 +1822,6 @@
         @if $variant == 'indigo' {
             font-size: rem(12px);
             line-height: rem(16px);
-        }
-    }
-
-    %form-group-clear-icon {
-        &:focus {
-            background-color: color($color: 'primary', $variant: 500);
-            color: contrast-color($color: 'primary', $variant: 600);
-
-            @if $variant == 'material' {
-                background-color: transparent;
-                color: color($color: 'secondary', $variant: 500);
-            }
-
-            @if $variant == 'bootstrap' {
-                color: contrast-color($color: 'primary', $variant: 600);
-            }
         }
     }
 
@@ -1876,12 +1839,6 @@
         &:autofill:active, {
             -webkit-transition-delay: 99999s !important;
             transition-delay: 99999s !important;
-        }
-    }
-
-    %edge-clear-icon-fix {
-        &::-ms-clear {
-            display: none;
         }
     }
 

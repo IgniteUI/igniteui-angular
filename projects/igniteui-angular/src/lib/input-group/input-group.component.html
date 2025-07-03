@@ -33,7 +33,7 @@
                 type="button"
                 tabindex="-1"
                 [disabled]="disabled"
-                [ngClass]="{ 'igx-input-group__upload-button': isTypeLine }"
+                class="igx-file-input__upload-button"
             >
                 {{ resourceStrings.igx_input_upload_button }}
             </button>
@@ -44,7 +44,7 @@
 <ng-template #files>
     @if (isFileType) {
         <div
-            class="igx-input-group__file-input"
+            class="igx-input-group__file-input igx-file-input__file-names"
             [title]="fileNames"
         >
             <span>{{ fileNames }}</span>
@@ -55,7 +55,7 @@
 <ng-template #clear>
     @if (isFileType && isFilled) {
         <igx-suffix
-            class="igx-input-group__clear-icon"
+            class="igx-input-group__clear-icon igx-file-input__clear-icon"
             (click)="clearValueHandler()"
             (keydown.Enter)="clearValueHandler()"
             title="clear files"
