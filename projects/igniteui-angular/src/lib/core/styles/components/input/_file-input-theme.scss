@@ -165,6 +165,7 @@
 
             @if $variant == 'bootstrap' {
                 color: contrast-color($color: 'primary', $variant: 600);
+                background-color: color($color: 'primary', $variant: 500);
             }
         }
     }
