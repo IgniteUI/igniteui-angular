@@ -19,7 +19,6 @@ import {
   imports: [IgxRadioGroupDirective],
 })
 export class RadioGroupComponent implements OnInit {
-
   @Input() public alignment!: RadioGroupAlignment;
   @Input() public required!: boolean;
   @Input() public value!: unknown;
