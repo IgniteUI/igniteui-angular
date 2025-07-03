@@ -42,14 +42,13 @@
     }
 
     $theme: digest-schema($snackbar-schema);
-    $meta: map.get($theme, '_meta');
 
     @if not($button-color) and $background {
-        $button-color: text-contrast($background);
+        $button-color: adaptive-contrast(var(--background));
     }
 
     @if not($text-color) and $background {
-        $text-color: text-contrast($background);
+        $text-color: adaptive-contrast(var(--background));
     }
 
     @if not($shadow) {
@@ -64,10 +63,6 @@
         text-color: $text-color,
         button-color: $button-color,
         shadow: $shadow,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -78,7 +73,7 @@
     @include css-vars($theme);
     @include fade-in();
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     $snackbar-min-height: rem(48px);
     $snackbar-padding: rem(7px) rem(24px);
