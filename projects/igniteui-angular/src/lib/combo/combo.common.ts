@@ -1222,7 +1222,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /** @hidden @internal */
     public getAriaLabel(): string {
-        return this.displayValue ? `Selected options` : 'No options selected';
+        return this.displayValue ? this.resourceStrings.igx_combo_aria_label_options : this.resourceStrings.igx_combo_aria_label_no_options;
     }
 
     /** @hidden @internal */
