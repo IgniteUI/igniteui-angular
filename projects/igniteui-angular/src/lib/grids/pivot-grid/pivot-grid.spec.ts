@@ -2222,6 +2222,54 @@ describe('IgxPivotGrid #pivotGrid', () => {
             GridSelectionFunctions.verifyColumnSelected(amountOfSale, false);
             GridSelectionFunctions.verifyColumnGroupSelected(fixture, group, false);
         });
+
+        it('should provide value formatter column data for second value', () => {
+            let correctFirstColumnData = true;
+            let correctSecondColumnData = true;
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotGrid.pivotConfiguration = {
+                columns: fixture.componentInstance.pivotConfigHierarchy.columns,
+                rows: fixture.componentInstance.pivotConfigHierarchy.rows,
+                values: [
+                {
+                    member: 'UnitsSold',
+                    aggregate: {
+                        aggregator: IgxPivotNumericAggregate.sum,
+                        key: 'SUM',
+                        label: 'Sum'
+                    },
+                    enabled: true,
+                    formatter: (value, row, column) => {
+                        if (!column || !column.value || column.value.member !== 'UnitsSold') {
+                            correctFirstColumnData = false;
+                        }
+                        return value;
+                    }
+                },
+                {
+                    member: 'AmountOfSale',
+                    displayName: 'Amount of Sale',
+                    aggregate: {
+                        aggregator: IgxTotalSaleAggregate.totalSale,
+                        key: 'TOTAL',
+                        label: 'Total'
+                    },
+                    enabled: true,
+                    formatter: (value, row, column) => {
+                        if (!column || !column.value || column.value.member !== 'AmountOfSale') {
+                            correctSecondColumnData = false;
+                        }
+                        return value;
+                    }
+                }
+            ]
+            };
+
+            pivotGrid.width = '1500px';
+            fixture.detectChanges();
+            expect(correctFirstColumnData).toBeTruthy();
+            expect(correctSecondColumnData).toBeTruthy();
+        });
     });
 
     describe('IgxPivotGrid Resizing #pivotGrid', () => {
