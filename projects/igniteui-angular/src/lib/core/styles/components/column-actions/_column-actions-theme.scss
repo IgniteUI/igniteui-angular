@@ -1,53 +1,5 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
-
-/// Column actions Theme
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Color} $title-color [null]- The text color used for the title of the list.
-/// @param {Color} $background-color [null] - The background color of the panel.
-///
-/// @requires $light-material-schema
-///
-/// @example scss Change the title color
-///   $column-actions-theme: igx-column-actions-theme($title-color: black);
-///   // Pass the theme to the css-vars mixin
-///   @include css-vars($column-actions-theme);
-////
-@function column-actions-theme(
-    $schema: $light-material-schema,
-
-    $title-color: null,
-    $background-color: null
-) {
-    $name: 'igx-column-actions';
-    $column-actions-schema: ();
-
-    @if map.has-key($schema, 'column-actions') {
-        $column-actions-schema: map.get($schema, 'column-actions');
-    } @else {
-        $column-actions-schema: $schema;
-    }
-
-    $theme: digest-schema($column-actions-schema);
-
-    @if not($title-color) and $background-color {
-        $title-color: adaptive-contrast(var(--background-color));
-    }
-
-    @return extend($theme, (
-        name: $name,
-        title-color: $title-color,
-        background-color: $background-color,
-    ));
-}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
