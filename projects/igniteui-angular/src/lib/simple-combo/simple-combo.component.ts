@@ -1,9 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostListener, Inject, Injector,
-    Optional, Output, ViewChild, DOCUMENT,
-    Input,
-    booleanAttribute
+    Optional, Output, ViewChild, DOCUMENT
 } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
@@ -118,7 +116,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /** @hidden @internal */
     public get filteredData(): any[] | null {
-        return this.disableFiltering ? this.data : this._filteredData;
+        return this._filteredData;
     }
     /** @hidden @internal */
     public set filteredData(val: any[] | null) {
@@ -291,9 +289,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     public override handleInputChange(event?: any): void {
         if (this.collapsed && this.comboInput.focused) {
             this.open();
-        }
-        if (this.disableFiltering) {
-            return;
         }
         if (event !== undefined) {
             this.filterValue = this.searchValue = typeof event === 'string' ? event : event.target.value;
