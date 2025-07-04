@@ -1,8 +1,8 @@
-import { Component, ViewChild, AfterContentInit } from '@angular/core';
+import { Component, ViewChild, AfterContentInit, inject, ViewContainerRef } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { UntypedFormGroup, UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IgxRadioGroupDirective, IgxLayoutDirective, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxCardActionsComponent, IgxRippleDirective, IgxButtonDirective, IgxRadioComponent, RadioGroupAlignment } from 'igniteui-angular';
-
+import { RadioGroupComponent } from './radio-group.component';
 
 class Person {
     public favoriteSeason: string;
@@ -40,9 +40,26 @@ export class RadioSampleComponent implements AfterContentInit {
     public personKirk: Person = new Person('Kirk', this.seasons[1].name);
     public personKirkForm: UntypedFormGroup;
     public alignment: RadioGroupAlignment = RadioGroupAlignment.vertical;
+    private viewContainerRef = inject(ViewContainerRef);
 
     constructor(private _formBuilder: UntypedFormBuilder) {
         this._createPersonKirkForm();
+    }
+
+    public createRadioGroupComponent() {
+        this.viewContainerRef.clear();
+
+        const componentRef = this.viewContainerRef.createComponent(RadioGroupComponent);
+        const radioGroup = componentRef.instance as RadioGroupComponent;
+
+        radioGroup.value = 1;
+        radioGroup.required = true;
+
+        radioGroup.radios = [
+          { value: 1, label: 'Radio 1' },
+          { value: 2, label: 'Radio 2' },
+          { value: 3, label: 'Radio 3' },
+        ];
     }
 
     public get diagnostic() {
