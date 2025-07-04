@@ -1234,7 +1234,6 @@ describe('IgxSimpleCombo', () => {
             combo.disableFiltering = true;
             fixture.detectChanges();
             combo.focusSearchInput();
-            expect(combo.filteredData.length).toEqual(combo.data.length);
 
             UIInteractions.simulateTyping('con', input);
             expect(combo.comboInput.value).toEqual('con');
@@ -1247,7 +1246,9 @@ describe('IgxSimpleCombo', () => {
             combo.disableFiltering = false;
             fixture.detectChanges();
             combo.focusSearchInput();
-            expect(combo.filteredData.length).toEqual(combo.data.length);
+
+            combo.comboInput.value = '';
+            fixture.detectChanges();
             UIInteractions.simulateTyping('con', input);
             expect(combo.comboInput.value).toEqual('con');
             fixture.detectChanges();

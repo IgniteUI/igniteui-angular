@@ -1,7 +1,6 @@
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
-    AfterViewInit, booleanAttribute, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostListener, Inject, Injector,
-    Input,
+    AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostListener, Inject, Injector,
     Optional, Output, ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -290,10 +289,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     public override handleInputChange(event?: any): void {
         if (this.collapsed && this.comboInput.focused) {
             this.open();
-        }
-
-        if (this.disableFiltering) {
-            return;
         }
 
         if (event !== undefined) {
