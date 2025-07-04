@@ -1230,6 +1230,30 @@ describe('IgxSimpleCombo', () => {
             expect(combo.displayValue).toEqual('Wisconsin');
         });
 
+        it('should not filter the data when disableFiltering is true', () => {
+            combo.disableFiltering = true;
+            fixture.detectChanges();
+            combo.focusSearchInput();
+
+            UIInteractions.simulateTyping('con', input);
+            expect(combo.comboInput.value).toEqual('con');
+            fixture.detectChanges();
+
+            expect(combo.filteredData.length).toEqual(combo.data.length);
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+
+            combo.disableFiltering = false;
+            fixture.detectChanges();
+            combo.focusSearchInput();
+            combo.comboInput.value = '';
+            fixture.detectChanges();
+            UIInteractions.simulateTyping('con', input);
+            expect(combo.comboInput.value).toEqual('con');
+            fixture.detectChanges();
+            expect(combo.filteredData.length).toEqual(2);
+        });
+
         it('should display the AddItem button when allowCustomValues is true and there is a partial match', fakeAsync(() => {
             fixture.componentInstance.allowCustomValues = true;
             fixture.detectChanges();
