@@ -14,6 +14,7 @@
 /// @param {Map} $theme - The calendar theme used to style the component.
 @mixin date-picker($theme) {
     $variant: map.get($theme, '_meta', 'variant');
+    $theme-variant: map.get($theme, '_meta', 'theme-variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $border-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color');
 
@@ -26,10 +27,16 @@
 
     %date-picker {
         // TODO move the shadow in the schemas
-        box-shadow: $border-shadow, elevation(24),;
+        box-shadow: $border-shadow, elevation(24);
         border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'content-background');
         overflow: hidden;
+
+        @if $variant == 'indigo' and  $theme-variant == 'light' {
+            box-shadow: $border-shadow, elevation(5);
+        } @else if $variant == 'indigo' and $theme-variant == 'dark' {
+            box-shadow: $border-shadow, elevation(7);
+        }
 
         igx-calendar,
         %days-view,
