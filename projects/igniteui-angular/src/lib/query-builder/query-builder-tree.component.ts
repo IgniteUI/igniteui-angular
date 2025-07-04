@@ -1410,7 +1410,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public getFormat(field: string) {
-        return this.fields?.find(el => el.field === field).pipeArgs.format;
+        return this.fields?.find(el => el.field === field)?.pipeArgs.format;
     }
 
     /**
