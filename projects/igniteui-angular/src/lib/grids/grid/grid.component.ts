@@ -34,7 +34,7 @@ import { IGridGroupingStrategy } from '../common/strategy';
 import { IgxGridValidationService } from './grid-validation.service';
 import { IgxGridDetailsPipe } from './grid.details.pipe';
 import { IgxGridSummaryPipe } from './grid.summary.pipe';
-import { IgxGridGroupingPipe, IgxGridPagingPipe, IgxGridSortingPipe, IgxGridFilteringPipe } from './grid.pipes';
+import { IgxGridGroupingPipe, IgxGridPagingPipe, IgxGridSortingPipe, IgxGridFilteringPipe, IgxGridCellMergePipe } from './grid.pipes';
 import { IgxSummaryDataPipe } from '../summaries/grid-root-summary.pipe';
 import { IgxGridTransactionPipe, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridAddRowPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe, IgxStringReplacePipe } from '../common/pipes';
 import { IgxGridColumnResizerComponent } from '../resizing/resizer.component';
@@ -151,7 +151,8 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxGridFilteringPipe,
         IgxGridSummaryPipe,
         IgxGridDetailsPipe,
-        IgxStringReplacePipe
+        IgxStringReplacePipe,
+        IgxGridCellMergePipe
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -387,6 +388,17 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     private _groupByRowSelectorTemplate: TemplateRef<IgxGroupByRowSelectorTemplateContext>;
     private _detailTemplate;
+
+    public get mergedData() {
+        const startIndex = this.verticalScrollContainer.state.startIndex;
+        const chunkSize = this.verticalScrollContainer.state.chunkSize;
+        const mergeRecs = this.verticalScrollContainer.igxForOf?.filter((x, index) => {
+            if (!x.cellMergeMeta) { return false;}
+            const maxSpan = Math.max(...x.cellMergeMeta.values().toArray().map(x => x.rowSpan));
+           return startIndex > index && startIndex <= (index + maxSpan) && startIndex + chunkSize >= (index + maxSpan);
+    });
+        return mergeRecs;
+    }
 
 
     /**
