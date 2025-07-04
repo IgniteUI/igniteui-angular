@@ -115,19 +115,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     private _collapsing = false;
 
-    private _disableFiltering = false;
-
-    /**
-     * Enables/disables filtering in the list. The default is `false`.
-     */
-    @Input({ transform: booleanAttribute })
-    public get disableFiltering(): boolean {
-        return this._disableFiltering;
-    }
-    public set disableFiltering(value: boolean) {
-        this._disableFiltering = value;
-    }
-
     /** @hidden @internal */
     public get filteredData(): any[] | null {
         return this._filteredData;

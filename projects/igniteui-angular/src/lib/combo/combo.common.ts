@@ -123,6 +123,18 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     @Input({ transform: booleanAttribute })
     public showSearchCaseIcon = false;
 
+     /**
+     * Enables/disables filtering in the list. The default is `false`.
+     */
+    @Input({ transform: booleanAttribute })
+    public get disableFiltering(): boolean {
+        return this._disableFiltering;
+    }
+    public set disableFiltering(value: boolean) {
+        this._disableFiltering = value;
+    }
+
+
     /**
      * Set custom overlay settings that control how the combo's list of items is displayed.
      * Set:
@@ -945,6 +957,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     protected computedStyles;
 
     private _id: string = `igx-combo-${NEXT_ID++}`;
+    private _disableFiltering = false;
     private _type = null;
     private _dataType = '';
     private _itemHeight = undefined;
