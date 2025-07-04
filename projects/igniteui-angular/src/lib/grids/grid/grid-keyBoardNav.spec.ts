@@ -43,7 +43,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             let selectedCell: CellType;
 
             grid.selected.subscribe((event: IGridCellEventArgs) => {
-                selectedCell = event.cell;
+                selectedCell = grid.gridAPI.get_cell_by_index(event.cell.row.index, event.cell.column.field);
             });
 
             // Focus and select first cell
@@ -54,30 +54,34 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
             expect(selectedCell.value).toEqual(2);
             expect(selectedCell.column.field).toMatch('ID');
+            GridFunctions.verifyGridContentActiveDescendant(gridContent, selectedCell.nativeElement.id);
 
             UIInteractions.triggerEventHandlerKeyDown('arrowright', gridContent);
             fix.detectChanges();
 
             expect(selectedCell.value).toEqual('Gilberto Todd');
             expect(selectedCell.column.field).toMatch('Name');
+            GridFunctions.verifyGridContentActiveDescendant(gridContent, selectedCell.nativeElement.id);
 
             UIInteractions.triggerEventHandlerKeyDown('arrowup', gridContent);
             fix.detectChanges();
 
             expect(selectedCell.value).toEqual('Casey Houston');
             expect(selectedCell.column.field).toMatch('Name');
+            GridFunctions.verifyGridContentActiveDescendant(gridContent, selectedCell.nativeElement.id);
 
             UIInteractions.triggerEventHandlerKeyDown('arrowleft', gridContent);
             fix.detectChanges();
 
             expect(selectedCell.value).toEqual(1);
             expect(selectedCell.column.field).toMatch('ID');
+            GridFunctions.verifyGridContentActiveDescendant(gridContent, selectedCell.nativeElement.id);
         });
 
         it('should  jump to first/last cell with Ctrl', () => {
             let selectedCell: CellType;
             grid.selected.subscribe((event: IGridCellEventArgs) => {
-                selectedCell = event.cell;
+                selectedCell = grid.gridAPI.get_cell_by_index(event.cell.row.index, event.cell.column.field);
             });
 
             GridFunctions.focusFirstCell(fix, grid);
@@ -87,12 +91,14 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
             expect(selectedCell.value).toEqual('Company A');
             expect(selectedCell.column.field).toMatch('Company');
+            GridFunctions.verifyGridContentActiveDescendant(gridContent, selectedCell.nativeElement.id);
 
             UIInteractions.triggerEventHandlerKeyDown('arrowleft', gridContent, false, false, true);
             fix.detectChanges();
 
             expect(selectedCell.value).toEqual(1);
             expect(selectedCell.column.field).toMatch('ID');
+            GridFunctions.verifyGridContentActiveDescendant(gridContent, selectedCell.nativeElement.id);
         });
 
         it('should allow vertical keyboard navigation in pinned area.', () => {
@@ -256,6 +262,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(cell).toBeDefined();
             GridSelectionFunctions.verifyCellActive(cell);
             GridSelectionFunctions.verifyCellSelected(cell);
+            GridFunctions.verifyGridContentActiveDescendant(GridFunctions.getGridContent(fix), cell.nativeElement.id);
         });
 
         it('should allow navigating down', async () => {
@@ -401,7 +408,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             const rows = GridFunctions.getRows(fix);
-            const cell = grid.gridAPI.get_cell_by_index(3, '1');
+            let cell = grid.gridAPI.get_cell_by_index(3, '1');
             const bottomRowHeight = rows[4].nativeElement.offsetHeight;
             const displayContainer = GridFunctions.getGridDisplayContainer(fix).nativeElement;
             const bottomCellVisibleHeight = displayContainer.parentElement.offsetHeight % bottomRowHeight;
@@ -409,16 +416,22 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait();
             fix.detectChanges();
 
-            expect(fix.componentInstance.selectedCell.value).toEqual(30);
-            expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
+            let selectedCell = fix.componentInstance.selectedCell;
+            expect(selectedCell.value).toEqual(30);
+            expect(selectedCell.column.field).toMatch('1');
+            cell = grid.gridAPI.get_cell_by_index(selectedCell.row.index, selectedCell.column.field);
+            GridFunctions.verifyGridContentActiveDescendant(GridFunctions.getGridContent(fix), cell.nativeElement.id);
             UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
+            selectedCell = fix.componentInstance.selectedCell;
             expect(parseInt(displayContainer.style.top, 10)).toBeLessThanOrEqual(-1 * (grid.rowHeight - bottomCellVisibleHeight));
             expect(displayContainer.parentElement.scrollTop).toEqual(0);
-            expect(fix.componentInstance.selectedCell.value).toEqual(40);
-            expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
+            expect(selectedCell.value).toEqual(40);
+            expect(selectedCell.column.field).toMatch('1');
+            cell = grid.gridAPI.get_cell_by_index(selectedCell.row.index, selectedCell.column.field);
+            GridFunctions.verifyGridContentActiveDescendant(GridFunctions.getGridContent(fix), cell.nativeElement.id);
         });
 
         it('should scroll into view the not fully visible cells when navigating up', async () => {

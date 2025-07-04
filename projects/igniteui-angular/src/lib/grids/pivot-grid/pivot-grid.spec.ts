@@ -1398,6 +1398,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 let expectedOrder = [829, undefined, 240, 293, 296];
                 let columnValues = pivotGrid.dataView.map(x => (x as IPivotGridRecord).aggregationValues.get('USA-UnitsSold'));
                 expect(columnValues).toEqual(expectedOrder);
+                expect(headerCell.attributes['aria-sort']).toBe('ascending');
 
                 headerCell = GridFunctions.getColumnHeader('USA-UnitsSold', fixture);
                 // sort desc
@@ -1407,6 +1408,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expectedOrder = [829, 296, 293, 240, undefined];
                 columnValues = pivotGrid.dataView.map(x => (x as IPivotGridRecord).aggregationValues.get('USA-UnitsSold'));
                 expect(columnValues).toEqual(expectedOrder);
+                expect(headerCell.attributes['aria-sort']).toBe('descending');
 
                 // remove sort
                 headerCell = GridFunctions.getColumnHeader('USA-UnitsSold', fixture);
