@@ -43,6 +43,10 @@ All notable changes for each version of this project will be documented in this 
 
 ## 19.2.0
 
+### New Features
+- `IgxSimpleCombo`
+    - Added `disableFiltering` to the `IgxSimpleCombo`, which enables/disables the filtering in the list. The default is `false`.
+
 ### General
 - `IgxCarousel`
     - Removed deprecated property `keyboardSupport`.
