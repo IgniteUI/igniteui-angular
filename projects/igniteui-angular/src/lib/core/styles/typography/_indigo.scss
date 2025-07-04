@@ -32,6 +32,7 @@
 @use '../components/tree/tree-theme' as *;
 @use '../components/label/label-theme' as *;
 @use '../components/query-builder/query-builder-theme' as *;
+@use '../components/input/file-input-theme' as *;
 
 @mixin typography($type-scale) {
     @include badge-typography($categories: (
@@ -78,6 +79,11 @@
         helper-text: 'caption',
         input-text: 'body-2'
     ));
+
+    @include file-input-typography($categories: (
+        file-text: 'body-2'
+    ));
+
     @include linear-bar-typography();
     @include list-typography($categories: (
         header: 'overline',

@@ -18,7 +18,11 @@
             @if (getLabel()) {
                 <label igxLabel>{{ getLabel() }}</label>
             }
-            <igx-icon igxPrefix [hidden]="hidePrefix()">face</igx-icon>
+
+            @if (!hidePrefix()) {
+                <igx-icon igxPrefix>face</igx-icon>
+            }
+
             <input
                 formControlName="field"
                 [type]="getNativeInputType()"
@@ -42,7 +46,11 @@
             @if (getLabel()) {
                 <label igxLabel>{{ getLabel() }}</label>
             }
-            <igx-icon igxPrefix [hidden]="hidePrefix()">face</igx-icon>
+
+            @if (!hidePrefix()) {
+                <igx-icon igxPrefix>face</igx-icon>
+            }
+
             <textarea
                 formControlName="fieldTextarea"
                 [required]="isRequired()"
@@ -68,7 +76,11 @@
             @if (getLabel()) {
                 <label igxLabel>{{ getLabel() }}</label>
             }
-            <igx-icon igxPrefix [hidden]="hidePrefix()">favorite</igx-icon>
+
+            @if (!hidePrefix()) {
+                <igx-icon igxPrefix>favorite</igx-icon>
+            }
+
             <igx-hint>
                 I am a Hint
             </igx-hint>
@@ -93,7 +105,11 @@
             @if (getLabel()) {
                 <label igxLabel>{{ getLabel() }}</label>
             }
-            <igx-icon igxPrefix [hidden]="hidePrefix()">favorite</igx-icon>
+
+            @if (!hidePrefix()) {
+                <igx-icon igxPrefix>favorite</igx-icon>
+            }
+
             @if (!hideSuffix()) {
                 <igx-suffix>
                     <igx-icon>favorite</igx-icon>
@@ -108,9 +124,13 @@
             [type]="getInputGroupType()"
             [style.--ig-size]="getSize()">
             @if (getLabel()) {
-                <label igxLabel>{{ getLabel() }} ("No file chosen" is not an actual value)</label>
+                <label igxLabel>Files to upload</label>
             }
-            <igx-icon igxPrefix [hidden]="hidePrefix()">face</igx-icon>
+
+            @if (!hidePrefix()) {
+                <igx-icon igxPrefix>face</igx-icon>
+            }
+
             <input
                 formControlName="fieldFile"
                 [required]="isRequired()"
@@ -168,7 +188,11 @@
                 [attr.placeholder]="getPlaceholder()"
                 [type]="getNativeInputType()"
                 [outlined]="isOutlined()">
-            <span slot="prefix" [hidden]="hidePrefix()"><igc-icon name="face"></igc-icon></span>
+
+            @if (!hidePrefix()) {
+                <span slot="prefix"><igc-icon name="face"></igc-icon></span>
+            }
+
             @if (!hideSuffix()) {
                 <span slot="suffix"><igc-icon name="face"></igc-icon></span>
             }
@@ -184,7 +208,11 @@
                 [attr.value]="getValue()"
                 [attr.placeholder]="getPlaceholder()"
                 [outlined]="isOutlined()">
-            <span slot="prefix" [hidden]="hidePrefix()"><igc-icon name="face"></igc-icon></span>
+
+            @if (!hidePrefix()) {
+                <span slot="prefix"><igc-icon name="face"></igc-icon></span>
+            }
+
             @if (!hideSuffix()) {
                 <span slot="suffix"><igc-icon name="face"></igc-icon></span>
             }
@@ -198,7 +226,11 @@
             [disabled]="isDisabled()"
             [outlined]="isOutlined()"
             [style.--ig-size]="getSize()">
-            <igc-icon slot="prefix" [hidden]="hidePrefix()" name="favorite"></igc-icon>
+
+            @if (!hidePrefix()) {
+                <igc-icon slot="prefix" name="favorite"></igc-icon>
+            }
+
             @if (!hideSuffix()) {
                 <igc-icon slot="suffix" name="favorite"></igc-icon>
             }
@@ -217,7 +249,11 @@
                 [disabled]="isDisabled()"
                 [style.--ig-size]="getSize()">
             <span slot="helper-text">I am a Hint</span>
-            <igc-icon slot="prefix" [hidden]="hidePrefix()" name="favorite"></igc-icon>
+
+            @if (!hidePrefix()) {
+                <igc-icon slot="prefix" name="favorite"></igc-icon>
+            }
+
             @if (!hideSuffix()) {
                 <igc-icon slot="suffix" name="favorite"></igc-icon>
             }
