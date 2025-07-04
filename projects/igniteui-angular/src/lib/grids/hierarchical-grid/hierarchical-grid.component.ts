@@ -1237,7 +1237,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     private generateSchema() {
-        const filterableFields = this.columns.filter((column) => !column.columnGroup && column.filterable);
+        const filterableFields: FieldType[] = this.columns.filter((column) => !column.columnGroup && column.filterable);
         let entities: EntityType[];
 
         if(filterableFields.length !== 0) {
@@ -1247,8 +1247,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                     fields: filterableFields.map(f => ({
                             field: f.field,
                             dataType: f.dataType,
-                        //  label: f.label,
-                        //  header: f.header,
+                            label: f.label,
+                            header: f.header,
                             editorOptions: f.editorOptions,
                             filters: f.filters,
                             pipeArgs: f.pipeArgs,
@@ -1282,25 +1282,25 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
         path.reverse();
         if (path.length > 0) {
-            let childLevel = path[0];
-            let childEntity;
-            while (childLevel) {
-                childEntity = schema[0].childEntities.find(e => e.name === childLevel);
-                childLevel = path.shift();
+            let childEntity = schema[0];
+            for (let i = 0; i < path.length; i++) {
+                childEntity = childEntity.childEntities.find(e => e.name === path[i]);
             }
 
-            childEntity.fields = event.columns.filter((column) => !column.columnGroup && column.filterable)
-                .map(f => ({
-                            field: f.field,
-                            dataType: f.dataType,
-                            label: f.label,
-                            header: f.header,
-                            editorOptions: f.editorOptions,
-                            filters: f.filters,
-                            pipeArgs: f.pipeArgs,
-                            defaultTimeFormat: f.defaultTimeFormat,
-                            defaultDateTimeFormat: f.defaultDateTimeFormat
-                        })) as FieldType[];
+            if (childEntity) {
+                childEntity.fields = event.columns.filter((column) => !column.columnGroup && column.filterable)
+                    .map(f => ({
+                                field: f.field,
+                                dataType: f.dataType,
+                                label: f.label,
+                                header: f.header,
+                                editorOptions: f.editorOptions,
+                                filters: f.filters,
+                                pipeArgs: f.pipeArgs,
+                                defaultTimeFormat: f.defaultTimeFormat,
+                                defaultDateTimeFormat: f.defaultDateTimeFormat
+                            })) as FieldType[];
+            }
         }
     }
 
