@@ -637,7 +637,7 @@ export class IgxGridSelectionService {
         if (this.areEqualCollections(currSelection, newSelection)) {
             return;
         }
-        
+
         const args: IRowSelectionEventArgs = {
             owner: this.grid,
             oldSelection: currSelection,
@@ -857,8 +857,7 @@ export class IgxGridSelectionService {
         this.pointerEventInGridBody = false;
         this.grid.document.body.removeEventListener('pointerup', this.pointerOriginHandler);
 
-        const targetTagName = event.target.tagName.toLowerCase();
-        if (targetTagName !== 'igx-grid-cell' && targetTagName !== 'igx-tree-grid-cell') {
+        if (!event.target.closest('igx-grid-cell') && !event.target.closest('igx-tree-grid-cell')) {
             this.pointerUp(this._lastSelectedNode, this.grid.rangeSelected, true);
         }
     };
