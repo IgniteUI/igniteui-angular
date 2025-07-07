@@ -602,6 +602,10 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         return `repeat(${rowCount},51px)`;
     }
 
+    protected getRowHeight() {
+        return this.grid.rowHeight;
+    }
+
     /**
      * @hidden
      */

@@ -32,9 +32,10 @@
         }
         <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]="grid.unpinnedWidth" [igxForSizePropName]="'calcPixelWidth'" [igxForTrackBy]="grid.trackColumnChanges" #igxDirRef>
             @if (this.hasMergedCells) {
-                <div [style.height.px]="this.grid.rowHeight"
+                <div [style.height.px]="getRowHeight()"
+                     class="igx-grid__mrl-block"
                      [style.visibility]="this.data.cellMergeMeta.get(col.field).root ? 'hidden' : 'visible'"
-                     class="igx-grid__mrl-block" [ngStyle]="{
+                     [ngStyle]="{
                     'grid-template-rows':this.getMergeCellSpan(col)
                 }">
                 <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : mergedCellTemplate; context: getContext(col, this)"></ng-container>
@@ -173,6 +174,7 @@
 <ng-template #mergedCellTemplate let-col>
     <igx-grid-cell
     class="igx-grid__td igx-grid__td--fw"
+    [class.igx-grid__td--merged]="data.cellMergeMeta.get(col.field).rowSpan > 1"
     [class.igx-grid__td--edited]="key | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
     [class.igx-grid__td--pinned]="col.pinned"
     [class.igx-grid__td--number]="col.dataType === 'number' || col.dataType === 'percent' || col.dataType === 'currency'"
@@ -193,7 +195,7 @@
     [active]="isCellActive(col.visibleIndex)"
     [cellSelectionMode]="grid.cellSelection"
     [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"
-    [style.height.px]="data.cellMergeMeta.get(col.field).rowSpan * (this.grid.rowHeight + 1)"
+    [style.gridRow]="'1 / -1'"
     [style.zIndex]="data.cellMergeMeta.get(col.field).rowSpan"
     [style.min-width]="col.resolvedWidth"
     [style.max-width]="col.resolvedWidth"

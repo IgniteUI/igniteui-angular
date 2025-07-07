@@ -126,7 +126,7 @@ export class IgxGridRowClassesPipe implements PipeTransform {
             [dirty, 'igx-grid__tr--edited'],
             [deleted, 'igx-grid__tr--deleted'],
             [dragging, 'igx-grid__tr--drag'],
-            [mrl, 'igx-grid__tr--mrl'],
+            [mrl || _rowData.cellMergeMeta, 'igx-grid__tr--mrl'],
             // Tree grid only
             [filteredOut, 'igx-grid__tr--filtered']
         ];
