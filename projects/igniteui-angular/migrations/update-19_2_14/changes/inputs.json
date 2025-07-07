@@ -1,0 +1,13 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "filteringOptions.filterable",
+            "replaceWith": "disableFiltering",
+            "owner": {
+                "selector": "igx-simple-combo",
+                "type": "component"
+            }
+        }
+    ]
+}
