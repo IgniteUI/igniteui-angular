@@ -12,7 +12,6 @@ import {
 import { takeUntil } from 'rxjs/operators';
 
 import { IgxColumnComponent } from './column.component';
-import { flatten } from '../../core/utils';
 import { CellType, ColumnType, IgxColumnTemplateContext } from '../common/grid.interface';
 
 /* blazorElement */
@@ -351,7 +350,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 
     /** @hidden @internal **/
     public override get allChildren(): IgxColumnComponent[] {
-        return flatten(this.children.toArray());
+        return this.children.toArray().flat();
     }
     /**
      * Returns a boolean indicating if the column is a `ColumnGroup`.
