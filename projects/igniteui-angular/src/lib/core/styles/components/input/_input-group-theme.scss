@@ -1041,9 +1041,7 @@
 
     @if $variant == 'fluent' {
         %form-group-display--file-focused {
-            %form-group-input,
-            %form-group-file-input,
-            %upload-button {
+            %form-group-input {
                 margin-block-start: rem(-1px);
             }
         }
@@ -1833,12 +1831,17 @@
         }
     }
 
-    @if $variant == 'fluent' {
-        %form-group-file-input,
-        %upload-button {
-            max-height: calc(var-get($theme, 'size') - #{rem(2px)});
-        }
+
+    %fluent-file-input,
+    %fluent-upload-button {
+        max-height: calc(var-get($theme, 'size') - #{rem(2px)});
     }
+
+    %fluent-focused-file-input,
+    %fluent-focused-upload-button {
+        max-height: calc(var-get($theme, 'size') - #{rem(4px)});
+    }
+
 
     // This is a hack that removes the autofill background and it's essential,
     // otherwise the background is on top of the floating label in material theme.

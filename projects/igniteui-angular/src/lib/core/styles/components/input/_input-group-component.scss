@@ -631,24 +631,6 @@
             @include e(label) {
                 @extend %fluent-label !optional;
             }
-
-            @include e(upload-button) {
-                @extend %fluent-upload-button !optional;
-            }
-        }
-
-        @include mx(fluent, file) {
-            @include e(bundle) {
-                @extend %form-group-bundle-file--fluent !optional;
-            }
-
-            @include e(bundle-start) {
-                @extend %form-group-bundle-start-file--fluent !optional;
-            }
-
-            @include e(bundle-end) {
-                @extend %form-group-bundle-end-file--fluent !optional;
-            }
         }
 
         @include mx(fluent, placeholder) {
@@ -704,9 +686,32 @@
         }
 
         @include mx(fluent, file) {
+            @include e(file-input) {
+                @extend %fluent-file-input !optional;
+            }
+
+            @include e(upload-button) {
+                @extend %fluent-upload-button !optional;
+            }
+
+            @include e(bundle-end) {
+                @extend %form-group-bundle-end-file--fluent !optional;
+            }
+
             @include e(label) {
                 @extend %fluent-label-filled !optional;
             }
+        }
+
+        @include mx(fluent, file, focused) {
+            @include e(file-input) {
+                @extend %fluent-focused-file-input !optional;
+            }
+
+            @include e(upload-button) {
+                @extend %fluent-focused-upload-button !optional;
+            }
+
         }
 
         @include mx(fluent, textarea-group) {
