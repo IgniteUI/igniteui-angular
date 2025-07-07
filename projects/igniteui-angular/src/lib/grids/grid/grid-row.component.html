@@ -195,8 +195,6 @@
     [active]="isCellActive(col.visibleIndex)"
     [cellSelectionMode]="grid.cellSelection"
     [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"
-    [style.gridRow]="'1 / -1'"
-    [style.zIndex]="data.cellMergeMeta.get(col.field).rowSpan"
     [style.min-width]="col.resolvedWidth"
     [style.max-width]="col.resolvedWidth"
     [style.flex-basis]="col.resolvedWidth"
