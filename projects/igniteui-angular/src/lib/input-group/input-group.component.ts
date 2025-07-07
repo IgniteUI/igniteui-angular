@@ -10,7 +10,8 @@ import {
     HostListener, Inject, Input,
     Optional, QueryList, booleanAttribute,
     inject,
-    DOCUMENT, AfterContentChecked
+    DOCUMENT,
+    AfterContentChecked
 } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
 import { PlatformUtil, getComponentTheme } from '../core/utils';
