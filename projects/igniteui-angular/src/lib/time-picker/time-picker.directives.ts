@@ -34,7 +34,7 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
 
     public isActive: boolean;
 
-    private readonly SCROLL_THRESHOLD = 15;
+    private readonly SCROLL_THRESHOLD = 50;
     private readonly PAN_THRESHOLD = 10;
 
     /**
