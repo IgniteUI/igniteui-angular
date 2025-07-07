@@ -978,6 +978,10 @@
 
             %upload-button {
                 border-block: rem(1px) solid var-get($theme, 'border-color');
+
+                .igx-button {
+                    border: none;
+                }
             }
         }
 
