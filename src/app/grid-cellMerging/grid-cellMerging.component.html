@@ -1,6 +1,13 @@
 <h4 class="sample-title">Grid with cell merge</h4>
 <igx-grid [data]="data" width="800px" height="550px" [moving]="true" [cellMergeMode]="'always'" >
     <igx-column field="ProductID" header="Product ID" width="200px">
+        <ng-template igxCell let-cell="cell" let-val>
+        <div>
+            <button igxButton>Test</button>
+            <br/>
+            <button igxButton>Test 2</button>
+        </div>
+        </ng-template>
     </igx-column>
     <igx-column field="ReorderLevel" width="200px">
     </igx-column>

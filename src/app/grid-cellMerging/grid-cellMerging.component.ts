@@ -1,6 +1,8 @@
 import { Component, HostBinding, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
+    IgxButtonDirective,
+    IgxCellTemplateDirective,
     IgxColumnComponent,
     IgxGridComponent,
 } from 'igniteui-angular';
@@ -15,6 +17,8 @@ import { data, dataWithoutPK } from '../shared/data';
         FormsModule,
         IgxColumnComponent,
         IgxGridComponent,
+        IgxCellTemplateDirective,
+        IgxButtonDirective
     ]
 })
 export class GridCellMergingComponent {
