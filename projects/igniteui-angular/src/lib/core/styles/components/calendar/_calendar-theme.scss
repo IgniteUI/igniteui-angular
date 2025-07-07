@@ -330,6 +330,10 @@
     $theme: digest-schema($calendar-schema);
     $variant: map.get($schema, '_meta', 'theme');
 
+    @if not($date-range-border-radius) and $date-border-radius {
+        $date-range-border-radius: $date-border-radius;
+    }
+
     //base start
     @if not($header-foreground) and $header-background {
         $header-foreground: adaptive-contrast(var(--header-background));
@@ -1829,7 +1833,7 @@
             border: $border-size solid transparent;
 
             @if $variant == 'fluent' {
-                border-radius: 50%;
+                border-radius: var-get($theme, 'date-border-radius');
                 width: $date-inner-size;
                 height: $date-inner-size;
             } @else {
@@ -2041,7 +2045,7 @@
                     z-index: -1;
                     width: $date-inner-size;
                     height: $date-inner-size;
-                    border-radius: 50%;
+                    border-radius: var-get($theme, 'date-border-radius');
                     background: var-get($theme, 'date-current-background');
                 }
             }
@@ -2090,7 +2094,7 @@
                 border-color: var-get($theme, 'date-special-border-color');
 
                 @if $variant == 'bootstrap' {
-                    border-radius: $date-size;
+                    border-radius: var-get($theme, 'date-border-radius');
                 }
             }
 
