@@ -602,6 +602,13 @@
         'indigo': 0,
     ), $variant);
 
+    $hint-min-size: map.get((
+        'material': rem(18px),
+        'fluent': rem(18px),
+        'bootstrap': rem(20px),
+        'indigo': rem(15px),
+    ), $variant);
+
     // Base Start
     %form-group-prefix--upload {
         padding: 0;
@@ -2077,7 +2084,8 @@
     %form-group-helper {
         color: var-get($theme, 'helper-text-color');
         position: relative;
-        display: flex;
+        display: grid;
+        grid-auto-rows: minmax($hint-min-size, auto);
         padding-block-start: $hint-spacing-block;
         padding-inline: $hint-spacing-inline;
 
