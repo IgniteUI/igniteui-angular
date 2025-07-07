@@ -599,8 +599,12 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
 
     protected getMergeCellSpan(col: ColumnType){
         const rowCount = this.data.cellMergeMeta.get(col.field).rowSpan;
-        const rowH = this.grid.verticalScrollContainer.getSizeAt(this.index);
-        return `repeat(${rowCount},${rowH}px)`;
+        let sizeSpans = "";
+        for (let index = this.index; index < this.index + rowCount; index++) {
+            const size = this.grid.verticalScrollContainer.getSizeAt(index);
+            sizeSpans += size + 'px ';
+        }
+        return `${sizeSpans}`;
     }
 
     protected getRowHeight() {
