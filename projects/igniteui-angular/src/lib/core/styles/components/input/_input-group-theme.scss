@@ -1119,17 +1119,21 @@
     }
 
     %form-group-display--bootstrap-file {
-        %upload-button {
-            border: rem(1px) solid var-get($theme, 'border-color');
-            border-inline-end-width: 0;
-        }
-
         %form-group-bundle-start,
         %form-group-bundle-end {
             [igxPrefix],
             igx-prefix {
                 height: var-get($theme, 'size');
             }
+        }
+    }
+
+    %bootstrap-upload-button {
+        border: rem(1px) solid var-get($theme, 'border-color');
+        border-inline-end: 0;
+
+        igx-button {
+            border: 0;
         }
     }
 
@@ -2086,7 +2090,7 @@
         position: relative;
         display: grid;
         grid-auto-rows: minmax($hint-min-size, auto);
-        padding-block-start: $hint-spacing-block;
+        margin-block-start: $hint-spacing-block !important;
         padding-inline: $hint-spacing-inline;
 
         justify-content: space-between;

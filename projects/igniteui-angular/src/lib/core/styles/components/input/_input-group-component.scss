@@ -933,10 +933,6 @@
                 @extend %bootstrap-input !optional;
             }
 
-            @include e(upload-button) {
-                @extend %bootstrap-upload-button !optional;
-            }
-
             @include e(bundle-start) {
                 @extend %form-group-bundle-start--bootstrap !optional;
             }
@@ -955,6 +951,10 @@
 
             @include e(bundle-end) {
                 @extend %bootstrap-bundle-end !optional;
+            }
+
+            @include e(upload-button) {
+                @extend %bootstrap-upload-button !optional;
             }
         }
 
