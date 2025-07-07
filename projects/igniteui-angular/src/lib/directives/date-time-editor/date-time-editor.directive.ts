@@ -229,7 +229,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     @Output()
     public validationFailed = new EventEmitter<IgxDateTimeEditorEventArgs>();
 
+
+    private readonly SCROLL_THRESHOLD = 50;
     private _inputFormat: string;
+    private _scrollAccumulator = 0;
     private _displayFormat: string;
     private _oldValue: Date;
     private _dateValue: Date;
@@ -314,10 +317,14 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         }
         event.preventDefault();
         event.stopPropagation();
-        if (event.deltaY > 0) {
-            this.decrement();
-        } else {
-            this.increment();
+        this._scrollAccumulator += event.deltaY;
+        if (Math.abs(this._scrollAccumulator) > this.SCROLL_THRESHOLD) {
+            if (this._scrollAccumulator < 0) {
+                this.decrement();
+            } else {
+                this.increment();
+            }
+            this._scrollAccumulator = 0;
         }
     }
 
