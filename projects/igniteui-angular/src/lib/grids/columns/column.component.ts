@@ -107,6 +107,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this._field;
     }
 
+    /**
+     * Sets/gets whether to merge cells in this column.
+     * ```html
+     * <igx-column [merge]="true"></igx-column>
+     * ```
+     *
+     */
+    @Input()
+    public merge = false;
 
     /**
      * @hidden @internal

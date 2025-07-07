@@ -32,11 +32,11 @@
         }
         <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]="grid.unpinnedWidth" [igxForSizePropName]="'calcPixelWidth'" [igxForTrackBy]="grid.trackColumnChanges" #igxDirRef>
             @if (this.hasMergedCells) {
-                <div [style.height.px]=" this.data.cellMergeMeta.get(col.field).rowSpan > 1 ? getRowHeight() : null"
+                <div [style.height.px]=" this.data.cellMergeMeta.get(col.field)?.rowSpan > 1 ? getRowHeight() : null"
                      class="igx-grid__mrl-block"
-                     [style.visibility]="this.data.cellMergeMeta.get(col.field).root ? 'hidden' : 'visible'"
+                     [style.visibility]="this.data.cellMergeMeta.get(col.field)?.root ? 'hidden' : 'visible'"
                      [ngStyle]="{
-                    'grid-template-rows': this.data.cellMergeMeta.get(col.field).rowSpan > 1 ? this.getMergeCellSpan(col) : null
+                    'grid-template-rows': this.data.cellMergeMeta.get(col.field)?.rowSpan > 1 ? this.getMergeCellSpan(col) : null
                 }">
                 <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : mergedCellTemplate; context: getContext(col, this)"></ng-container>
             </div>
@@ -174,7 +174,7 @@
 <ng-template #mergedCellTemplate let-col>
     <igx-grid-cell
     class="igx-grid__td igx-grid__td--fw"
-    [class.igx-grid__td--merged]="data.cellMergeMeta.get(col.field).rowSpan > 1"
+    [class.igx-grid__td--merged]="data.cellMergeMeta.get(col.field)?.rowSpan > 1"
     [class.igx-grid__td--edited]="key | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
     [class.igx-grid__td--pinned]="col.pinned"
     [class.igx-grid__td--number]="col.dataType === 'number' || col.dataType === 'percent' || col.dataType === 'currency'"

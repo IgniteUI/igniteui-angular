@@ -81,7 +81,6 @@ export type GridSelectionMode = (typeof GridSelectionMode)[keyof typeof GridSele
  * - 'onSort': Only merge cells in column that are sorted.
  */
 export const GridCellMergeMode = {
-    never: 'never',
     always: 'always',
     onSort: 'onSort'
 } as const;

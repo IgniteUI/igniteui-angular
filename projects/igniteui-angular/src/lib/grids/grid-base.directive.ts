@@ -2918,7 +2918,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @WatchChanges()
     @Input()
-    public cellMergeMode: GridCellMergeMode = GridCellMergeMode.never;
+    public cellMergeMode: GridCellMergeMode = GridCellMergeMode.onSort;
 
     /**
      * Gets/Sets row selection mode

@@ -453,6 +453,7 @@ export interface ColumnType extends FieldType {
     pinned: boolean;
     /** Indicates if the column is currently expanded or collapsed. If the value is true, the column is expanded */
     expanded: boolean;
+    merge: boolean;
     /** Indicates if the column is currently selected. If the value is true, the column is selected */
     selected: boolean;
     /** Indicates if the column can be selected. If the value is true, the column can be selected */

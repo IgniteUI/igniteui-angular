@@ -86,28 +86,26 @@ export class IgxGridCellMergePipe implements PipeTransform {
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any, _pipeTrigger: number) {
-        if (this.grid.cellMergeMode === GridCellMergeMode.never) {
+        const mergeMode = this.grid.cellMergeMode;
+        const sortExpr = this.grid.sortingExpressions;
+        const columnToMerge = this.grid.visibleColumns.filter(
+            x => x.merge && (mergeMode ==='always' ||
+            (mergeMode === 'onSort' && !!sortExpr.find( x=> x.fieldName === x.fieldName)))
+        );
+        if (columnToMerge.length === 0) {
             return collection;
         }
-        const visibleColumns = this.grid.visibleColumns;
         let prev = null;
         let result = [];
         for (const rec of collection) {
             let recData = { recordRef: rec, cellMergeMeta: new Map<string, IMergeByResult>() };
-            for (const col of visibleColumns) {
+            for (const col of columnToMerge) {
                     recData.cellMergeMeta.set(col.field, { rowSpan: 1 });
                     //TODO condition can be a strategy or some callback that the user can set.
-                    //TODO can also be limited to only sorted columns
                     if ( prev && prev.recordRef[col.field] === rec[col.field]) {
                         const root = prev.cellMergeMeta.get(col.field)?.root ?? prev;
                         root.cellMergeMeta.get(col.field).rowSpan += 1;
                         recData.cellMergeMeta.get(col.field).root = root;
-                        // recData.cellMergeMeta.get(col.field).prev = prev;
-                        // let curr = prev;
-                        // while(curr) {
-                        //     curr.cellMergeMeta.get(col.field).rowSpan += 1;
-                        //     curr =  curr.cellMergeMeta.get(col.field).prev;
-                        // }
                     }
             }
             prev = recData;
