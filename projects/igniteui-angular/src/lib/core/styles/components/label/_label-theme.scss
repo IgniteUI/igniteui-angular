@@ -1,41 +1,6 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-////
-
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $color [null] - The text color.
-/// @param {Map} $disabled-color [null] - The disabled text color.
-@function label-theme(
-    $schema: $light-material-schema,
-    $color: null,
-    $disabled-color: null,
-) {
-    $name: 'igx-label';
-    $selector: '[igxLabel]';
-    $label-schema: ();
-
-    @if map.has-key($schema, 'label') {
-        $label-schema: map.get($schema, 'label');
-    } @else {
-        $label-schema: $schema;
-    }
-
-    $theme: digest-schema($label-schema);
-
-    @return extend($theme, (
-        name: $name,
-        selector: $selector,
-        color: $color,
-        disabled-color: $disabled-color
-    ));
-}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
@@ -44,10 +9,12 @@
     // The --variant CSS produced by css-vars is needed also
     // when dynamically switching between the input `type` attribute.
     @include css-vars($theme);
+
     $variant: map.get($theme, '_meta', 'theme');
 
     %label-base {
         @include ellipsis();
+
         position: relative;
         color: var-get($theme, 'color');
         max-width: 100%;

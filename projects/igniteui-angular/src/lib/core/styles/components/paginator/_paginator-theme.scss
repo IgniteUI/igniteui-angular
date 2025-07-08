@@ -1,55 +1,5 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-////
-
-/// Grid Paging Theme
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Color} $text-color [currentColor] - The text color.
-/// @param {Color} $background-color [rgba(0, 0, 0, .04)] - The background color of the paging panel.
-/// @param {Color} $border-color [rgba(0, 0, 0, .26)] - The border color of the paging panel.
-/// @requires $light-material-schema
-/// @example scss Change the stripes color
-///   $my-paginator-theme: paginator-theme(
-///     $stripes-color: orange
-///   );
-///   // Pass the theme to the css-vars() mixin
-///   @include css-vars($my-paginator-theme);
-@function paginator-theme(
-    $schema: $light-material-schema,
-
-    $text-color: null,
-    $background-color: null,
-    $border-color: null
-) {
-    $name: 'igx-paginator';
-    $grid-paginator-schema: ();
-
-    @if map.has-key($schema, 'paginator') {
-        $grid-paginator-schema: map.get($schema, 'paginator');
-    } @else {
-        $grid-paginator-schema: $schema;
-    }
-
-    $theme: digest-schema($grid-paginator-schema);
-
-    @if not($text-color) and $background-color {
-        $text-color: adaptive-contrast($background-color);
-    }
-
-    @return extend($theme, (
-        name: $name,
-        text-color: $text-color,
-        background-color: $background-color,
-        border-color: $border-color,
-    ));
-}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
