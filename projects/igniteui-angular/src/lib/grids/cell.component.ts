@@ -19,14 +19,14 @@
     AfterViewInit,
     booleanAttribute
 } from '@angular/core';
-import { formatPercent, NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe, getLocaleCurrencyCode, getCurrencySymbol } from '@angular/common';
+import { NgClass, NgTemplateOutlet, getLocaleCurrencyCode, getCurrencySymbol } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { first, takeUntil, takeWhile } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { formatCurrency, formatDate, PlatformUtil } from '../core/utils';
+import { formatCurrency, formatDate, formatPercent, PlatformUtil } from '../core/utils';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { HammerGesturesManager } from '../core/touch';
 import { GridSelectionMode } from './common/enums';
@@ -38,7 +38,7 @@ import { IgxGridCell } from './grid-public-cell';
 import { ISelectionNode } from './common/types';
 import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService } from '../services/public_api';
 import { IgxIconComponent } from '../icon/icon.component';
-import { IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe } from './common/pipes';
+import { IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe, IgxNumberFormatterPipe, IgxDateFormatterPipe, IgxCurrencyFormatterPipe, IgxPercentFormatterPipe } from './common/pipes';
 import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
 import { IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
@@ -74,10 +74,10 @@ import { IgxChipComponent } from '../chips/chip.component';
     imports: [
         NgClass,
         NgTemplateOutlet,
-        DecimalPipe,
-        PercentPipe,
-        CurrencyPipe,
-        DatePipe,
+        IgxNumberFormatterPipe,
+        IgxPercentFormatterPipe,
+        IgxCurrencyFormatterPipe,
+        IgxDateFormatterPipe,
         ReactiveFormsModule,
         IgxChipComponent,
         IgxTextHighlightDirective,
@@ -404,7 +404,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             case GridColumnDataType.Percent:
                 return formatPercent(this.value, locale, args.digitsInfo);
             case GridColumnDataType.Currency:
-                return formatCurrency(this.value, this.currencyCode, args.display, args.digitsInfo, locale);
+                return formatCurrency(this.value, locale, args.display, this.currencyCode, args.digitsInfo);
             case GridColumnDataType.Date:
             case GridColumnDataType.DateTime:
             case GridColumnDataType.Time:

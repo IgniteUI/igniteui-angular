@@ -1,7 +1,7 @@
 <div class="sample-column">
     <div class="grid-wrapper">
         <igx-grid #grid [data]="data" [autoGenerate]="false" height="520px" width="100%"
-            [allowFiltering]="true" [locale]="locale">
+            [allowFiltering]="true" [locale]="locale" [primaryKey]="'Type'">
             <igx-grid-toolbar>
                 <igx-grid-toolbar-title>Grid with Localization</igx-grid-toolbar-title>
                 <igx-select [(ngModel)]="locale" (ngModelChange)="updateLocale()">
@@ -12,17 +12,14 @@
                     }
                 </igx-select>
             </igx-grid-toolbar>
-            <igx-column field="Category" header="Category" [dataType]="'string'" [groupable]="true">
-            </igx-column>
-            <igx-column field="Type" header="Type" [sortable]="true" [hasSummary]="true" [editable]="true"
-                [dataType]="'string'" [groupable]="true">
-            </igx-column>
-            <igx-column field="Price" header="Price" [dataType]="'number'" [groupable]="true">
-            </igx-column>
-            <igx-column field="Sell" header="Sell" [dataType]="'number'" [groupable]="true">
-            </igx-column>
-            <igx-column field="Buy" header="Buy" [dataType]="'number'" [groupable]="true">
-            </igx-column>
+            <igx-column field="Category" header="Category" [dataType]="'string'" [groupable]="true" [editable]="true"></igx-column>
+            <igx-column field="Type" header="Type" [sortable]="true" [hasSummary]="true" [editable]="true" [dataType]="'string'" [groupable]="true"></igx-column>
+            <igx-column field="Price" header="Price" [dataType]="'currency'" [groupable]="true"  [editable]="true"></igx-column>
+            <igx-column field="Sell" header="Sell" [dataType]="'currency'" [groupable]="true"  [editable]="true"></igx-column>
+            <igx-column field="Buy" header="Buy" [dataType]="'currency'" [groupable]="true"  [editable]="true"></igx-column>
+            <igx-column field="Volume" header="Volume" [dataType]="'number'" [groupable]="true"  [editable]="true"></igx-column>
+            <igx-column field="LastOrderDate" header="Last Order" [dataType]="'date'" [groupable]="true"  [editable]="true"></igx-column>
+            <igx-paginator></igx-paginator>
         </igx-grid>
     </div>
 </div>

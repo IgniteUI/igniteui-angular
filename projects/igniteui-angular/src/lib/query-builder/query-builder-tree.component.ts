@@ -55,6 +55,7 @@ import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navig
 import { IgxQueryBuilderDragService } from './query-builder-drag.service';
 import { isTree } from '../data-operations/expressions-tree-util';
 import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, IgxFieldFormatterPipe } from './query-builder.common';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -172,9 +173,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @Input()
     public set fields(fields: FieldType[]) {
         this._fields = fields;
-        
+
         this._fields = this._fields?.map(f => ({...f, filters: this.getFilters(f), pipeArgs: this.getPipeArgs(f) }));
-        
+
         if (!this._fields && this.isAdvancedFiltering()) {
             this._fields = this.entities[0].fields;
         }
@@ -547,6 +548,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         @Inject(LOCALE_ID) protected _localeId: string) {
         this.locale = this.locale || this._localeId;
         this.dragService.register(this, elRef);
+        getI18nManager().onResourceChange(() => {
+            this._resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
+        });
     }
 
     /**
@@ -560,7 +564,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.returnFieldSelectOverlaySettings.outlet = this.overlayOutlet;
         this.addExpressionDropDownOverlaySettings.outlet = this.overlayOutlet;
         this.groupContextMenuDropDownOverlaySettings.outlet = this.overlayOutlet;
-        
+
         if (this.isAdvancedFiltering() && this.entities?.length === 1) {
             this.selectedEntity = this.entities[0].name;
             if (this._selectedEntity.fields.find(f => f.field === this.expectedReturnField)) {
@@ -967,7 +971,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 this.selectedField.filters.condition(this.selectedCondition)?.isUnary
             );
     }
-    
+
     /**
      * @hidden @internal
      */
@@ -1530,7 +1534,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 DEFAULT_PIPE_TIME_FORMAT : field.dataType === DataType.DateTime ?
                     DEFAULT_PIPE_DATE_TIME_FORMAT : DEFAULT_PIPE_DATE_FORMAT;
         }
-        
+
         return pipeArgs;
     }
 

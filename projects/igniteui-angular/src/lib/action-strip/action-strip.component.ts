@@ -29,6 +29,7 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IgxActionStripToken } from './token';
 import { trackByIdentity } from '../core/utils';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 @Directive({
     selector: '[igxActionStripMenuItem]',
@@ -197,7 +198,11 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
         protected el: ElementRef,
         /** @hidden @internal **/
         public cdr: ChangeDetectorRef,
-    ) { }
+    ) {
+        getI18nManager().onResourceChange(() => {
+            this._resourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN, false);
+        });
+    }
 
     /**
      * Menu Items list.

@@ -13,6 +13,7 @@ import { IgxIconService } from '../icon/icon.service';
 import { editor } from '@igniteui/material-icons-extended';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 import { recreateTree } from '../data-operations/expressions-tree-util';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 /**
  * A component used for operating with complex filters by creating or editing conditions
@@ -186,6 +187,9 @@ export class IgxQueryBuilderComponent implements OnDestroy {
 
     constructor(protected iconService: IgxIconService) {
         this.registerSVGIcons();
+        getI18nManager().onResourceChange(() => {
+            this._resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
+        });
     }
 
     /**

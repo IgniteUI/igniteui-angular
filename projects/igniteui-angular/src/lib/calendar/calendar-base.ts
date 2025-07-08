@@ -11,6 +11,7 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { KeyboardNavigationService } from './calendar.services';
 import { getYearRange, isDateInRanges } from './common/helpers';
 import { CalendarDay } from './common/model';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 /** @hidden @internal */
 @Directive({
@@ -659,6 +660,10 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         this.locale = _localeId;
         this.viewDate = this.viewDate ? this.viewDate : new Date();
         this.initFormatters();
+
+        getI18nManager().onResourceChange(() => {
+            this._resourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false);
+        });
     }
 
     /**

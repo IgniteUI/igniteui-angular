@@ -11,7 +11,7 @@ import {
     OnDestroy,
     Inject
 } from '@angular/core';
-import { NgTemplateOutlet, DecimalPipe, DatePipe, getLocaleCurrencyCode, PercentPipe, CurrencyPipe } from '@angular/common';
+import { NgTemplateOutlet,getLocaleCurrencyCode } from '@angular/common';
 
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -27,7 +27,7 @@ import { ISelectionNode } from '../common/types';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxBadgeComponent } from '../../badge/badge.component';
 import { IgxIconComponent } from '../../icon/icon.component';
-import { IgxColumnFormatterPipe } from '../common/pipes';
+import { IgxColumnFormatterPipe, IgxCurrencyFormatterPipe, IgxDateFormatterPipe, IgxNumberFormatterPipe, IgxPercentFormatterPipe } from '../common/pipes';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,10 +35,10 @@ import { IgxColumnFormatterPipe } from '../common/pipes';
     templateUrl: './groupby-row.component.html',
     imports: [
         NgTemplateOutlet,
-        DecimalPipe,
-        DatePipe,
-        PercentPipe,
-        CurrencyPipe,
+        IgxNumberFormatterPipe,
+        IgxDateFormatterPipe,
+        IgxPercentFormatterPipe,
+        IgxCurrencyFormatterPipe,
         IgxIconComponent,
         IgxBadgeComponent,
         IgxCheckboxComponent,

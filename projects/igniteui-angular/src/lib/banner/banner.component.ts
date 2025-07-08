@@ -20,6 +20,7 @@ import { IgxExpansionPanelBodyComponent } from '../expansion-panel/expansion-pan
 import { IgxExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
 import { BannerResourceStringsEN, IBannerResourceStrings } from '../core/i18n/banner-resources';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 export interface BannerEventArgs extends IBaseEventArgs {
     event?: Event;
@@ -237,7 +238,11 @@ export class IgxBannerComponent implements IToggleView {
     private _animationSettings: ToggleAnimationSettings;
     private _resourceStrings = getCurrentResourceStrings(BannerResourceStringsEN);
 
-    constructor(public elementRef: ElementRef<HTMLElement>) { }
+    constructor(public elementRef: ElementRef<HTMLElement>) {
+        getI18nManager().onResourceChange(() => {
+            this._resourceStrings = getCurrentResourceStrings(BannerResourceStringsEN, false);
+        });
+    }
 
     /**
      * Opens the banner

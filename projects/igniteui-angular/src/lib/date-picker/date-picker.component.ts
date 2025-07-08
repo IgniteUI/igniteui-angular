@@ -68,6 +68,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
 
@@ -517,6 +518,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
         super(element, _localeId, _inputGroupType);
         this.locale = this.locale || this._localeId;
+        getI18nManager().onResourceChange(() => {
+            this._resourceStrings = getCurrentResourceStrings(DatePickerResourceStringsEN, false);
+        });
     }
 
     /** @hidden @internal */

@@ -30,6 +30,7 @@ import {
 import { IBaseEventArgs } from '../core/utils';
 import { IListResourceStrings, ListResourceStringsEN } from '../core/i18n/list-resources';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
 
@@ -462,6 +463,9 @@ export class IgxListComponent extends IgxListBaseDirective {
 
     constructor(public element: ElementRef) {
         super(element);
+        getI18nManager().onResourceChange(() => {
+            this._resourceStrings = getCurrentResourceStrings(ListResourceStringsEN, false);
+        });
     }
 
     /**
