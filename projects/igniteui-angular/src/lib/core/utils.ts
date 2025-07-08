@@ -1,4 +1,4 @@
-import { CurrencyPipe, formatDate as _formatDate, isPlatformBrowser } from '@angular/common';
+import { formatDate as _formatDate, isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, InjectionToken, PLATFORM_ID, inject } from '@angular/core';
 import { mergeWith } from 'lodash-es';
 import { NEVER, Observable } from 'rxjs';
@@ -587,7 +587,20 @@ export function formatDate(value: Date | string | number | null | undefined, for
     if (typeof value === "string") {
         value = new Date(value);
     }
+    let dateStyle = undefined, timeStyle = undefined;
+    if (format === 'short' || format === 'medium' || format === 'long' || format === 'full') {
+        dateStyle = format;
+        timeStyle = format;
+    } else if (format.includes('Date')) {
+        dateStyle = format.replace('Date', '');
+    } else  if (format.includes('Time')) {
+        dateStyle = format.replace('Time', '');
+    } else {
+        // Match with Angular custom formatting?
+    }
     const options: Intl.DateTimeFormatOptions = {
+        dateStyle,
+        timeStyle,
         timeZone: timezone
     };
     return getI18nManager().formatDateTime(value, locale, options);

@@ -9,7 +9,7 @@ import {
     OnDestroy,
     OnInit,
 } from "@angular/core";
-import { NgTemplateOutlet, DatePipe } from "@angular/common";
+import { NgTemplateOutlet } from "@angular/common";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
 
 import { IgxMonthsViewComponent } from "../months-view/months-view.component";
@@ -21,6 +21,7 @@ import { CalendarDay } from "../common/model";
 import { IgxCalendarBaseDirective } from "../calendar-base";
 import { KeyboardNavigationService } from "../calendar.services";
 import { formatToParts } from "../common/helpers";
+import { IgxDateFormatterPipe } from '../../grids/common/pipes';
 
 let NEXT_ID = 0;
 @Component({
@@ -39,7 +40,7 @@ let NEXT_ID = 0;
     templateUrl: "month-picker.component.html",
     imports: [
         NgTemplateOutlet,
-        DatePipe,
+        IgxDateFormatterPipe,
         IgxIconComponent,
         IgxMonthsViewComponent,
         IgxYearsViewComponent,

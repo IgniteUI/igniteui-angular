@@ -13,12 +13,12 @@ import {
 } from '@angular/core';
 import { IgxGridCellComponent } from '../cell.component';
 import { PlatformUtil } from '../../core/utils';
-import { NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { IgxOverlayService } from '../../services/public_api';
-import { IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe } from '../common/pipes';
+import { IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe, IgxNumberFormatterPipe, IgxPercentFormatterPipe, IgxCurrencyFormatterPipe, IgxDateFormatterPipe } from '../common/pipes';
 import { IgxTooltipDirective } from '../../directives/tooltip/tooltip.directive';
 import { IgxTooltipTargetDirective } from '../../directives/tooltip/tooltip-target.directive';
 import { IgxSuffixDirective } from '../../directives/suffix/suffix.directive';
@@ -40,7 +40,11 @@ import { IgxChipComponent } from '../../chips/chip.component';
     selector: 'igx-expandable-grid-cell',
     templateUrl: 'expandable-cell.component.html',
     providers: [HammerGesturesManager],
-    imports: [IgxChipComponent, IgxTextHighlightDirective, IgxIconComponent, NgClass, FormsModule, ReactiveFormsModule, IgxInputGroupComponent, IgxInputDirective, IgxFocusDirective, IgxCheckboxComponent, IgxDatePickerComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, IgxPrefixDirective, IgxSuffixDirective, NgTemplateOutlet, IgxTooltipTargetDirective, IgxTooltipDirective, IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe]
+    imports: [IgxChipComponent, IgxTextHighlightDirective, IgxIconComponent, NgClass, FormsModule, ReactiveFormsModule,
+        IgxInputGroupComponent, IgxInputDirective, IgxFocusDirective, IgxCheckboxComponent, IgxDatePickerComponent,
+        IgxTimePickerComponent, IgxDateTimeEditorDirective, IgxPrefixDirective, IgxSuffixDirective, NgTemplateOutlet,
+        IgxTooltipTargetDirective, IgxTooltipDirective, IgxGridCellImageAltPipe, IgxStringReplacePipe,
+        IgxColumnFormatterPipe, IgxNumberFormatterPipe, IgxPercentFormatterPipe, IgxCurrencyFormatterPipe, IgxDateFormatterPipe]
 })
 export class IgxGridExpandableCellComponent extends IgxGridCellComponent implements OnInit {
     /**

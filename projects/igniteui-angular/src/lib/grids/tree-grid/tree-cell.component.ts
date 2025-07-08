@@ -3,13 +3,13 @@ import {
     Component,
     Input
 } from '@angular/core';
-import { NgClass, NgStyle, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe } from '@angular/common';
+import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 
 import { HammerGesturesManager } from '../../core/touch';
 import { IgxGridExpandableCellComponent } from '../grid/expandable-cell.component';
 import { IgxTreeGridRow } from '../grid-public-row';
 import { RowType } from '../common/grid.interface';
-import { IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe } from '../common/pipes';
+import { IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe, IgxNumberFormatterPipe, IgxPercentFormatterPipe, IgxCurrencyFormatterPipe, IgxDateFormatterPipe } from '../common/pipes';
 import { IgxTooltipDirective } from '../../directives/tooltip/tooltip.directive';
 import { IgxTooltipTargetDirective } from '../../directives/tooltip/tooltip-target.directive';
 import { IgxCircularProgressBarComponent } from '../../progressbar/progressbar.component';
@@ -37,10 +37,10 @@ import { IgxTextSelectionDirective } from '../../directives/text-selection/text-
         NgClass,
         NgStyle,
         NgTemplateOutlet,
-        DecimalPipe,
-        PercentPipe,
-        CurrencyPipe,
-        DatePipe,
+        IgxNumberFormatterPipe,
+        IgxPercentFormatterPipe,
+        IgxCurrencyFormatterPipe,
+        IgxDateFormatterPipe,
         IgxChipComponent,
         IgxTextHighlightDirective,
         IgxIconComponent,
