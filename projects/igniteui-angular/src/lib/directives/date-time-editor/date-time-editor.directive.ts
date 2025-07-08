@@ -318,7 +318,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         event.stopPropagation();
         this._scrollAccumulator += event.deltaY;
         if (Math.abs(this._scrollAccumulator) > this.SCROLL_THRESHOLD) {
-            if (this._scrollAccumulator < 0) {
+            if (this._scrollAccumulator > 0) {
                 this.decrement();
             } else {
                 this.increment();
