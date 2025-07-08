@@ -17,6 +17,7 @@ import { getCurrentResourceStrings } from '../../../core/i18n/resources';
 import { QueryBuilderResourceStringsEN } from '../../../core/i18n/query-builder-resources';
 import { IgxHierarchicalGridComponent } from '../../hierarchical-grid/hierarchical-grid.component';
 import { IgxRowIslandComponent } from '../../hierarchical-grid/row-island.component';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 /**
  * A component used for presenting advanced filtering UI for a Grid.
@@ -62,7 +63,11 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     private _overlayService: IgxOverlayService;
     private _grid: GridType;
 
-    constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil) { }
+    constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil) {
+        getI18nManager().onResourceChange(() => {
+            this.assignResourceStrings(false);
+        });
+    }
     /**
      * @hidden @internal
      */
@@ -222,13 +227,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
     }
 
-    private assignResourceStrings() {
+    private assignResourceStrings(init = true) {
         // If grid has custom resource strings set for the advanced filtering,
         // they are passed to the query builder resource strings.
         const gridRS = this.grid.resourceStrings;
 
         if (gridRS !== GridResourceStringsEN) {
-            const queryBuilderRS = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+            const queryBuilderRS = getCurrentResourceStrings(QueryBuilderResourceStringsEN, init);
             Object.keys(gridRS).forEach((prop) => {
                 const reg = /^igx_grid_(advanced_)?filter_(row_)?/;
                 if (!reg.test(prop)) {

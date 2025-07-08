@@ -29,7 +29,10 @@
         ],
         "igniteui-angular-i18n": [
           "projects/igniteui-angular-i18n/src/index.ts"
-        ]
+        ],
+        "igniteui-i18n-core": [
+          "../node_modules/igniteui-i18n-core/"
+        ],
       },
       "rootDir": ".",
       "useDefineForClassFields": false,

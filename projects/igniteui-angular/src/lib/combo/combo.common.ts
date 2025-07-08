@@ -47,6 +47,7 @@ import { IComboItemAdditionEvent, IComboSearchInputEventArgs } from './public_ap
 import { ComboResourceStringsEN, IComboResourceStrings } from '../core/i18n/combo-resources';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { isEqual } from 'lodash-es';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 export const IGX_COMBO_COMPONENT = /*@__PURE__*/new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
@@ -967,7 +968,11 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
         @Optional() protected _injector: Injector,
         @Optional() @Inject(IgxIconService) protected _iconService?: IgxIconService,
-    ) { }
+    ) {
+        getI18nManager().onResourceChange(() => {
+            this._resourceStrings = getCurrentResourceStrings(ComboResourceStringsEN, false);
+        });
+    }
 
     public ngAfterViewChecked() {
         const targetElement = this.inputGroup.element.nativeElement.querySelector('.igx-input-group__bundle') as HTMLElement;

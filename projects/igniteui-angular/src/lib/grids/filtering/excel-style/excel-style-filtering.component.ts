@@ -21,12 +21,12 @@ import {
     DOCUMENT
 } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
-import { PlatformUtil, formatDate, formatCurrency } from '../../../core/utils';
+import { PlatformUtil, formatDate, formatCurrency, formatNumber, formatPercent } from '../../../core/utils';
 import { GridColumnDataType } from '../../../data-operations/data-util';
 import { Subscription } from 'rxjs';
 import { GridSelectionMode } from '../../common/enums';
 import { IgxFilterItem } from '../../../data-operations/filtering-strategy';
-import { formatNumber, formatPercent, getLocaleCurrencyCode, NgClass } from '@angular/common';
+import { getLocaleCurrencyCode, NgClass } from '@angular/common';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem, generateExpressionsList } from './common';
 import { ColumnType, GridType, IGX_GRID_BASE } from '../../common/grid.interface';
@@ -737,7 +737,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
             case GridColumnDataType.Time:
                 return formatDate(value, format, locale, timezone);
             case GridColumnDataType.Currency:
-                return formatCurrency(value, currencyCode || getLocaleCurrencyCode(locale), display, digitsInfo, locale);
+                return formatCurrency(value, locale, display, currencyCode || getLocaleCurrencyCode(locale), digitsInfo);
             case GridColumnDataType.Number:
                 return formatNumber(value, locale, digitsInfo);
             case GridColumnDataType.Percent:

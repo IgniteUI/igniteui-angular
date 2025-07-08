@@ -28,6 +28,7 @@ import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxTheme, THEME_TOKEN, ThemeToken } from '../services/theme/theme.token';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 @Component({
     selector: 'igx-input-group',
@@ -226,6 +227,9 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
             }
         });
         this._destroyRef.onDestroy(() => themeChange.unsubscribe());
+        getI18nManager().onResourceChange(() => {
+            this._resourceStrings = getCurrentResourceStrings(InputResourceStringsEN, false);
+        });
     }
 
     /** @hidden */

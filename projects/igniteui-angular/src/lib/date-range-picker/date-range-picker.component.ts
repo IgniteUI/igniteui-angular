@@ -35,6 +35,7 @@ import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 const SingleInputDatesConcatenationString = ' - ';
 
@@ -476,6 +477,9 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
         super(element, _localeId, _inputGroupType);
         this.locale = this.locale || this._localeId;
+        getI18nManager().onResourceChange(() => {
+            this._resourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN, false);
+        });
     }
 
     /** @hidden @internal */

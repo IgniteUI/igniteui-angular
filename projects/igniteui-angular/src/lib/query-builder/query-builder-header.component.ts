@@ -1,6 +1,7 @@
 import { Component, HostBinding, Input } from '@angular/core';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 @Component({
     selector: 'igx-query-builder-header',
@@ -56,5 +57,11 @@ export class IgxQueryBuilderHeaderComponent {
      */
     public get resourceStrings(): IQueryBuilderResourceStrings {
         return this._resourceStrings;
+    }
+
+    constructor() {
+        getI18nManager().onResourceChange(() => {
+            this._resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
+        });
     }
 }

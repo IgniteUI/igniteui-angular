@@ -1,4 +1,4 @@
-import { formatNumber, getLocaleNumberFormat, NumberFormatStyle } from '@angular/common';
+import { getLocaleNumberFormat, NumberFormatStyle } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -33,7 +33,7 @@ import {
     ViewContainerRef,
     DOCUMENT
 } from '@angular/core';
-import { columnFieldPath, formatDate, resizeObservable } from '../core/utils';
+import { columnFieldPath, formatDate, formatNumber, resizeObservable } from '../core/utils';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
@@ -184,6 +184,7 @@ import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { isTree, recreateTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 import { getUUID } from './common/random';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 interface IMatchInfoCache {
     row: any;
@@ -3505,6 +3506,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.selectedRowsChange.emit(args);
         });
         IgcTrialWatermark.register();
+        getI18nManager().onResourceChange(() => {
+            this._resourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false);
+        });
     }
 
     /**

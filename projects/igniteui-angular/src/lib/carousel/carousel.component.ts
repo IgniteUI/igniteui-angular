@@ -40,6 +40,7 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { HammerGesturesManager } from '../core/touch';
 import { CarouselAnimationType, CarouselIndicatorsOrientation } from './enums';
 import { IgxDirectionality } from '../services/direction/directionality';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
 
@@ -576,6 +577,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     ) {
         super(animationService, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
+        getI18nManager().onResourceChange(() => {
+            this._resourceStrings = getCurrentResourceStrings(CarouselResourceStringsEN, false);
+        });
     }
 
     /** @hidden */

@@ -19,13 +19,13 @@ import {
     IgxResourceStringsBG, IgxResourceStringsDE, IgxResourceStringsES, IgxResourceStringsFR, IgxResourceStringsIT,
     IgxResourceStringsJA, IgxResourceStringsKO, IgxResourceStringsZHHANS, IgxResourceStringsZHHANT
 } from 'igniteui-angular-i18n';
-import { IResourceStrings, GridResourceStringsEN, IgxColumnComponent, IgxGridComponent, IgxSelectComponent, IgxSelectItemComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent } from 'igniteui-angular';
+import { IResourceStrings, GridResourceStringsEN, IgxColumnComponent, IgxGridComponent, IgxSelectComponent, IgxSelectItemComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxPaginatorComponent, changei18n } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-localization',
     styleUrls: ['./grid-localization.sample.scss'],
     templateUrl: 'grid-localization.sample.html',
-    imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxSelectComponent, FormsModule, IgxSelectItemComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxSelectComponent, FormsModule, IgxSelectItemComponent, IgxPaginatorComponent]
 })
 
 export class GridLocalizationSampleComponent implements OnInit {
@@ -82,6 +82,7 @@ export class GridLocalizationSampleComponent implements OnInit {
 
     public updateLocale() {
         const newLocale = this.locales.find(x => x.type === this.locale).resource;
-        this.grid.resourceStrings = newLocale;
+        //this.grid.resourceStrings = newLocale;
+        changei18n(newLocale);
     }
 }

@@ -60,6 +60,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxDividerDirective } from '../directives/divider/divider.directive';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
 export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
@@ -624,6 +625,9 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     ) {
         super(element, _localeId, _inputGroupType);
         this.locale = this.locale || this._localeId;
+        getI18nManager().onResourceChange(() => {
+            this._resourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN, false);
+        });
     }
 
     /** @hidden @internal */

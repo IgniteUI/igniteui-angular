@@ -24,6 +24,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { Size } from '../grids/common/enums';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 export const IgxChipTypeVariant = {
     PRIMARY: 'primary',
@@ -610,7 +611,11 @@ export class IgxChipComponent implements OnInit, OnDestroy {
         public cdr: ChangeDetectorRef,
         private ref: ElementRef<HTMLElement>,
         private renderer: Renderer2,
-        @Inject(DOCUMENT) public document: any) { }
+        @Inject(DOCUMENT) public document: any) {
+        getI18nManager().onResourceChange(() => {
+            this._resourceStrings = getCurrentResourceStrings(ChipResourceStringsEN, false);
+        });
+    }
 
     /**
      * @hidden

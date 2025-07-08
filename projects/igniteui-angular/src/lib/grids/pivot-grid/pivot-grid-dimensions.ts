@@ -1,3 +1,4 @@
+import { getI18nManager } from 'igniteui-i18n-core';
 import { GridResourceStringsEN, IGridResourceStrings } from '../../core/i18n/grid-resources';
 import { getCurrentResourceStrings } from '../../core/i18n/resources';
 import { GridColumnDataType } from '../../data-operations/data-util';
@@ -131,6 +132,9 @@ export class IgxPivotDateDimension implements IPivotDimension {
         if (this.baseDimension && this.options) {
             this.initialize(this.baseDimension, this.options);
         }
+        getI18nManager().onResourceChange(() => {
+            this._resourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false);
+        });
     }
 
     protected initialize(inBaseDimension, inOptions) {
