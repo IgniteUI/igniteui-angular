@@ -466,7 +466,7 @@
                 <ng-container>
                     <igx-query-builder-tree
                         [style.display]="expressionItem.inEditMode || expressionItem.expanded ? 'block' : 'none'"
-                        [entities]="(this.selectedEntity ? this.selectedEntity.childEntities : entities[0]?.childEntities) ?? entities"
+                        [entities]="(this.selectedEntity ? this.selectedEntity.childEntities : entities?.[0]?.childEntities) ?? (entities ?? [])"
                         [queryBuilder]="this.queryBuilder"
                         [parentExpression]="expressionItem"
                         [expectedReturnField]="this.selectedField?.field"
