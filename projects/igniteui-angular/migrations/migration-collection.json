@@ -238,9 +238,9 @@
             "factory": "./update-20_0_2"
         },
         "migration-48": {
-            "version": "20.0.5",
+            "version": "20.0.6",
             "description": "Updates Ignite UI for Angular from v20.0.2 to v20.0.5",
-            "factory": "./update-20_0_5"
+            "factory": "./update-20_0_6"
         }
     }
 }

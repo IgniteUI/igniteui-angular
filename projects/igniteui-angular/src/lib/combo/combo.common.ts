@@ -95,11 +95,6 @@ export const enum DataTypes {
 export interface IComboFilteringOptions {
     /** Defines filtering case-sensitivity */
     caseSensitive?: boolean;
-    /**
-     * Defines whether filtering is allowed
-     * @deprecated in version 18.2.0. Use the `disableFiltering` property instead.
-    */
-    filterable?: boolean;
     /** Defines optional key to filter against complex list items. Default to displayKey if provided.*/
     filteringKey?: string;
 }
