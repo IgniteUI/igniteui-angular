@@ -1256,7 +1256,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             ];
 
             entities[0].childEntities = this.childLayoutList.reduce((acc, rowIsland) => {
-                return acc.concat(this.generateChildEntity(rowIsland, this.data[0][rowIsland.key][0]));
+                const childFirstRowData = this.data?.length > 0 && this.data[0][rowIsland.key]?.length > 0 ?
+                    this.data[0][rowIsland.key][0] : null;
+                return acc.concat(this.generateChildEntity(rowIsland, childFirstRowData));
             }
             , []);
         }
@@ -1289,7 +1291,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             if (!firstRowData) {
                 return null;
             }
-            return acc.concat(this.generateChildEntity(childRowIsland, firstRowData[childRowIsland.key][0]));
+            const childFirstRowData = firstRowData.length > 0 && firstRowData[childRowIsland.key]?.length > 0 ?
+                firstRowData[childRowIsland.key][0] : null;
+            return acc.concat(this.generateChildEntity(childRowIsland, childFirstRowData));
         }, []);
 
         if (rowIslandChildEntities?.length > 0) {
