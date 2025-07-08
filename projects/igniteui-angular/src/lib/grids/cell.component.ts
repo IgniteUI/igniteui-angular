@@ -519,11 +519,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     /** @hidden @internal */
     @HostBinding('attr.aria-describedby')
     public get ariaDescribeBy() {
-        let describeBy = (this.gridID + '_' + this.column.field).replace('.', '_');
-        if (this.isInvalid) {
-            describeBy += ' ' + this.ariaErrorMessage;
-        }
-        return describeBy;
+        return this.isInvalid ? this.ariaErrorMessage : null;
     }
 
     /** @hidden @internal */

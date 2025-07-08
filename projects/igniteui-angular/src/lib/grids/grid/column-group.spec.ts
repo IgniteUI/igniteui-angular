@@ -145,6 +145,65 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
         }));
 
+        it('Should render a hidden row of the leaf column headers for accessibility purposes.', fakeAsync(() => {
+            fixture = TestBed.createComponent(BlueWhaleGridComponent) as ComponentFixture<BlueWhaleGridComponent>;
+            (fixture as ComponentFixture<BlueWhaleGridComponent>).componentInstance.firstGroupRepeats = 0;
+            (fixture as ComponentFixture<BlueWhaleGridComponent>).componentInstance.secondGroupRepeats = 0;
+            tick();
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            grid = fixture.componentInstance.grid;
+            const gridHeader = GridFunctions.getGridHeader(grid);
+
+            const groupHeaderEls = Array.from(gridHeader.nativeElement.querySelectorAll('.' + GRID_COL_GROUP_THEAD_TITLE_CLASS));
+            for (const header of groupHeaderEls) {
+                expect(header.getAttribute('aria-hidden')).toBe('true');
+            }
+
+            const columnHeaders = GridFunctions.getColumnHeaders(fixture);
+            for (const header of columnHeaders) {
+                expect(header.nativeNode.getAttribute('aria-hidden')).toBe('true');
+            }
+
+            const hiddenRow = gridHeader.nativeElement.querySelectorAll('[role="row"]')[1];
+            const horizontalVirtualization = grid.rowList.first.virtDirRow;
+            const chunkSize = horizontalVirtualization.state.chunkSize;
+
+            expect(hiddenRow.children.length).toBeLessThanOrEqual(chunkSize);
+            expect(grid.columns.length).toBeGreaterThan(chunkSize);
+
+            expect(hiddenRow.children[0].textContent).toBe('ID');
+            expect(hiddenRow.children[1].textContent).toBe('Company Name');
+            expect(hiddenRow.children[2].textContent).toBe('ContactName');
+            expect(hiddenRow.children[3].textContent).toBe('ContactTitle');
+            expect(hiddenRow.children[4].textContent).toBe('Country');
+            expect(hiddenRow.children[5].textContent).toBe('Region');
+            expect(hiddenRow.children[6].textContent).toBe('City');
+        }));
+
+        it('The hidden row of the leaf columns contains only headers of the rendered cells', fakeAsync(() => {
+            fixture = TestBed.createComponent(BlueWhaleGridComponent) as ComponentFixture<BlueWhaleGridComponent>;
+            tick();
+            fixture.detectChanges();
+
+            grid = fixture.componentInstance.grid;
+            const horizontalVirtualization = grid.rowList.first.virtDirRow;
+            const chunkSize = horizontalVirtualization.state.chunkSize;
+
+            tick();
+            fixture.detectChanges();
+
+            const gridHeader = GridFunctions.getGridHeader(grid);
+            const hiddenRow = gridHeader.nativeElement.querySelectorAll('[role="row"]')[1];
+
+            expect(hiddenRow.children.length).toBeLessThanOrEqual(chunkSize);
+            for (const ariaHeader of Array.from(hiddenRow.children)) {
+                expect(ariaHeader.textContent).toBe('ID');
+            }
+        }));
+
         it('Should render dynamic column group header correctly (#12165).', () => {
             fixture = TestBed.createComponent(BlueWhaleGridComponent) as ComponentFixture<BlueWhaleGridComponent>;
             (fixture as ComponentFixture<BlueWhaleGridComponent>).componentInstance.firstGroupRepeats = 1;
