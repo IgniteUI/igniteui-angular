@@ -190,7 +190,7 @@ export class GridCellMergingComponent {
         OrderDate2: new Date(1991, 2, 12, 15, 40, 50).toISOString()
     },
     {
-        ProductID: 1,
+        ProductID: 13,
         ProductName: 'Chai',
         SupplierID: 1,
         CategoryID: 1,
@@ -203,7 +203,7 @@ export class GridCellMergingComponent {
         OrderDate: null,
         OrderDate2: new Date(1991, 2, 12, 18, 40, 50).toISOString()
     }, {
-        ProductID: 2,
+        ProductID: 14,
         ProductName: 'Chai',
         SupplierID: 1,
         CategoryID: 1,
@@ -217,7 +217,7 @@ export class GridCellMergingComponent {
         OrderDate2: new Date('2003-03-17').toISOString()
     },
     {
-        ProductID: 3,
+        ProductID: 15,
         ProductName: 'Chai',
         SupplierID: 1,
         CategoryID: 1,
@@ -231,7 +231,7 @@ export class GridCellMergingComponent {
         OrderDate2: new Date('2003-03-17').toISOString()
     },
     {
-        ProductID: 4,
+        ProductID: 16,
         ProductName: 'Chai',
         SupplierID: 1,
         CategoryID: 1,
@@ -245,7 +245,7 @@ export class GridCellMergingComponent {
         OrderDate2: new Date('2003-03-17').toISOString()
     },
     {
-        ProductID: 5,
+        ProductID: 17,
         ProductName: 'Chai',
         SupplierID: 1,
         CategoryID: 1,
@@ -259,7 +259,7 @@ export class GridCellMergingComponent {
         OrderDate2: new Date('2003-03-17').toISOString()
     },
     {
-        ProductID: 6,
+        ProductID: 18,
         ProductName: 'Chang',
         SupplierID: 1,
         CategoryID: 1,
@@ -273,7 +273,7 @@ export class GridCellMergingComponent {
         OrderDate2: new Date('2003-03-17').toISOString()
     },
     {
-        ProductID: 7,
+        ProductID: 19,
         ProductName: 'Chang',
         SupplierID: 1,
         CategoryID: 1,
@@ -287,7 +287,7 @@ export class GridCellMergingComponent {
         OrderDate2: new Date('2003-03-17').toISOString()
     },
     {
-        ProductID: 8,
+        ProductID: 20,
         ProductName: 'Chang',
         SupplierID: 1,
         CategoryID: 1,
@@ -301,7 +301,7 @@ export class GridCellMergingComponent {
         OrderDate2: new Date('2003-03-17').toISOString()
     },
     {
-        ProductID: 9,
+        ProductID: 21,
         ProductName: 'Aniseed Syrup',
         SupplierID: 1,
         CategoryID: 2,
@@ -315,7 +315,7 @@ export class GridCellMergingComponent {
         OrderDate2: new Date(1991, 2, 12, 15, 40, 50).toISOString()
     },
     {
-        ProductID: 10,
+        ProductID: 22,
         ProductName: 'Chang',
         SupplierID: 1,
         CategoryID: 2,
@@ -329,7 +329,7 @@ export class GridCellMergingComponent {
         OrderDate2: new Date(1991, 2, 12, 15, 40, 50).toISOString()
     },
     {
-        ProductID: 11,
+        ProductID: 23,
         ProductName: 'Chai',
         SupplierID: 1,
         CategoryID: 2,
@@ -343,7 +343,7 @@ export class GridCellMergingComponent {
         OrderDate2: new Date(1991, 2, 12, 15, 40, 50).toISOString()
     },
     {
-        ProductID: 12,
+        ProductID: 24,
         ProductName: 'Chai',
         SupplierID: 1,
         CategoryID: 2,

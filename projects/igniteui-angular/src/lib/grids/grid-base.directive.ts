@@ -185,6 +185,7 @@ import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { isTree, recreateTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 import { getUUID } from './common/random';
+import { IGridMergeStrategy } from '../data-operations/merge-strategy';
 
 interface IMatchInfoCache {
     row: any;
@@ -2493,6 +2494,18 @@ export abstract class IgxGridBaseDirective implements GridType,
     public set sortStrategy(value: IGridSortingStrategy) {
         this._sortingStrategy = value;
     }
+
+
+    /**
+     * Gets/Sets the merge strategy of the grid.
+     *
+     * @example
+     * ```html
+     *  <igx-grid #grid [data]="localData" [mergeStrategy]="mergeStrategy"></igx-grid>
+     * ```
+     */
+    @Input()
+    public mergeStrategy: IGridMergeStrategy;
 
     /**
      * Gets/Sets the sorting options - single or multiple sorting.

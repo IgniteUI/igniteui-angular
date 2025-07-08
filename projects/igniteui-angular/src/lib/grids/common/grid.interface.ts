@@ -38,6 +38,7 @@ import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IP
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { FormControl, FormGroup, ValidationErrors } from '@angular/forms';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
+import { IGridMergeStrategy } from '../../data-operations/merge-strategy';
 
 export const IGX_GRID_BASE = /*@__PURE__*/new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = /*@__PURE__*/new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
@@ -335,6 +336,7 @@ export interface ColumnType extends FieldType {
     /** @hidden @internal */
     headerCell: any;
     validators: any[];
+    mergingComparer: (prevRecord: any, record: any, field: string) => boolean;
 
     /**
      * The template reference for the custom header of the column
@@ -692,6 +694,7 @@ export interface GridType extends IGridDataBindable {
     /** Represents the locale of the grid: `USD`, `EUR`, `GBP`, `CNY`, `JPY`, etc. */
     locale: string;
     cellMergeMode: GridCellMergeMode;
+    mergeStrategy: IGridMergeStrategy;
     resourceStrings: IGridResourceStrings;
     /* blazorSuppress */
     /** Represents the native HTML element itself */

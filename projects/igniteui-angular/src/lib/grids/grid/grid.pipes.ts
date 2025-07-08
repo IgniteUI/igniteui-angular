@@ -95,30 +95,9 @@ export class IgxGridCellMergePipe implements PipeTransform {
         if (columnToMerge.length === 0) {
             return collection;
         }
-        let prev = null;
-        let result = [];
-        for (const rec of collection) {
-            let recData = { recordRef: rec, cellMergeMeta: new Map<string, IMergeByResult>() };
-            for (const col of columnToMerge) {
-                    recData.cellMergeMeta.set(col.field, { rowSpan: 1 });
-                    //TODO condition can be a strategy or some callback that the user can set.
-                    if ( prev && prev.recordRef[col.field] === rec[col.field]) {
-                        const root = prev.cellMergeMeta.get(col.field)?.root ?? prev;
-                        root.cellMergeMeta.get(col.field).rowSpan += 1;
-                        recData.cellMergeMeta.get(col.field).root = root;
-                    }
-            }
-            prev = recData;
-            result.push(recData);
-        }
+        const result = DataUtil.merge(cloneArray(collection), columnToMerge, this.grid.mergeStrategy, this.grid);
         return result;
     }
-}
-
-export interface IMergeByResult {
-    rowSpan: number;
-    root?: any;
-    prev?: any;
 }
 
 /**

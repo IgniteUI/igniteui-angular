@@ -1211,6 +1211,30 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /* blazorSuppress */
     /**
+     * Gets the function that compares values for merging.
+     * ```typescript
+     * let mergingComparer = this.column.mergingComparer'
+     * ```
+     */
+    @Input()
+    public get mergingComparer(): (prevRecord: any, record: any, field: string) => boolean {
+        return this._mergingComparer;
+    }
+
+    /* blazorSuppress */
+    /**
+     * Sets a custom function to compare values for merging.
+     * ```typescript
+     * this.column.mergingComparer = (prevRecord: any, record: any, field: string) => { return prevRecord[field] === record[field]; }
+     * ```
+     */
+    public set mergingComparer(funcRef: (prevRecord: any, record: any, field: string) => boolean) {
+        this._mergingComparer = funcRef;
+    }
+
+
+    /* blazorSuppress */
+    /**
      * Gets the function that compares values for grouping.
      * ```typescript
      * let groupingComparer = this.column.groupingComparer'
@@ -1849,6 +1873,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      */
     protected _groupingComparer: (a: any, b: any, currRec?: any, groupRec?: any) => number;
+
+    protected _mergingComparer: (prevRecord: any, record: any, field: string) => boolean;
     /**
      * @hidden
      */

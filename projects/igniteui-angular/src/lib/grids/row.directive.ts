@@ -27,7 +27,6 @@ import { mergeWith } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { trackByIdentity } from '../core/utils';
-import { IMergeByResult } from './grid/grid.pipes';
 
 @Directive({
     selector: '[igxRowBaseComponent]',

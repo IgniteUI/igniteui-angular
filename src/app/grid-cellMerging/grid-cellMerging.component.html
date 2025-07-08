@@ -3,11 +3,11 @@
     <igx-column field="ProductID" header="Product ID" width="200px">
         <ng-template igxCell let-cell="cell" let-val>
         <div>
-            <button igxButton>Test</button>
-            @if (cell.row.index % 2 == 0) {
+            <button igxButton>Test {{val}}</button>
+            <!-- @if (cell.row.index % 2 == 0) {
                 <br/>
                 <button igxButton>Test 2</button>
-            }
+            } -->
 
         </div>
         </ng-template>
