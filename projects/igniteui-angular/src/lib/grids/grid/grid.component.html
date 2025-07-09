@@ -89,7 +89,7 @@
         | gridDetails:hasDetails:expansionStates:pipeTrigger
         | gridAddRow:false:pipeTrigger
         | gridRowPinning:id:false:pipeTrigger
-        | gridCellMerge:pipeTrigger"
+        | gridCellMerge:visibleColumns:cellMergeMode:sortingExpressions:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]="verticalScroll"
             [igxForContainerSize]="calcHeight"
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"

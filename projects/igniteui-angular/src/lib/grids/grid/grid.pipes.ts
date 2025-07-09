@@ -5,7 +5,7 @@ import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.
 import { IGroupByResult } from '../../data-operations/grouping-result.interface';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
-import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
+import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridSortingStrategy, IGridGroupingStrategy } from '../common/strategy';
@@ -85,10 +85,8 @@ export class IgxGridCellMergePipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
-    public transform(collection: any, _pipeTrigger: number) {
-        const mergeMode = this.grid.cellMergeMode;
-        const sortExpr = this.grid.sortingExpressions;
-        const columnToMerge = this.grid.visibleColumns.filter(
+    public transform(collection: any, visibleColumns: ColumnType[], mergeMode: GridCellMergeMode, sortExpr: ISortingExpression[], _pipeTrigger: number) {
+        const columnToMerge = visibleColumns.filter(
             x => x.merge && (mergeMode ==='always' ||
             (mergeMode === 'onSort' && !!sortExpr.find( x=> x.fieldName === x.fieldName)))
         );
