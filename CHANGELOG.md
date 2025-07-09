@@ -2,6 +2,92 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 20.1.0
+### General
+- `IgxTooltipTarget`
+    - **Behavioral Changes**
+        - The `showDelay` input property now defaults to `200`.
+        - The `hideDelay` input property now defaults to `300`.
+        - The `showTooltip` and `hideTooltip` methods do not take `showDelay`/`hideDelay` into account.
+
+### New Features
+
+- `IgxOverlay`
+    - Position Settings now accept a new optional `offset` input property of type `number`. Used to set the offset of the element from the target in pixels.
+
+- `IgxTooltip`
+    - The tooltip now remains open while interacting with it.
+- `IgxTooltipTarget`
+    - Introduced a new `positionSettings` input property. Controls the position and animation settings used by the tooltip.
+    - Introduced a new `sticky` input property. When set to `true`, the tooltip renders a default close icon `x`. The tooltip remains visible until the user closes it via the close icon `x` or `Esc` key. Defaults to `false`.
+    - Introduced a new `closeButtonTemplate` input property that allows templating the default close icon `x`.
+    ```html
+    <igx-icon [igxTooltipTarget]="tooltipRef" [closeButtonTemplate]="customClose">info</igx-icon>
+    <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+
+    <ng-template #customClose>
+        <button igxButton>Close</button>
+    </ng-template>
+    ```
+
+    - Introduced a new `hasArrow` input property. Controls whether to display an arrow indicator for the tooltip. Defaults to `false`.
+
+    _Note:_ The tooltip uses the `TooltipPositionStrategy` to position the tooltip and arrow element. If a custom position strategy is used (`overlaySettings.positionStrategy`) and `hasArrow` is set to `true`, the custom strategy should extend the `TooltipPositionStrategy`. Otherwise, the arrow will not be displayed.
+
+    _Note:_ The arrow element is positioned based on the provided position settings. If the directions and starting points do not correspond to any of the predefined position values, the arrow is positioned in the top middle side of the tooltip (default tooltip position `bottom`).
+
+
+    | Position     | Horizontal Direction          | Horizontal Start Point         | Vertical Direction            | Vertical Start Point           |
+    |--------------|-------------------------------|--------------------------------|-------------------------------|--------------------------------|
+    | top          | HorizontalAlignment.Center    | HorizontalAlignment.Center     | VerticalAlignment.Top         | VerticalAlignment.Top          |
+    | top-start    | HorizontalAlignment.Right     | HorizontalAlignment.Left       | VerticalAlignment.Top         | VerticalAlignment.Top          |
+    | top-end      | HorizontalAlignment.Left      | HorizontalAlignment.Right      | VerticalAlignment.Top         | VerticalAlignment.Top          |
+    | bottom       | HorizontalAlignment.Center    | HorizontalAlignment.Center     | VerticalAlignment.Bottom      | VerticalAlignment.Bottom       |
+    | bottom-start | HorizontalAlignment.Right     | HorizontalAlignment.Left       | VerticalAlignment.Bottom      | VerticalAlignment.Bottom       |
+    | bottom-end   | HorizontalAlignment.Left      | HorizontalAlignment.Right      | VerticalAlignment.Bottom      | VerticalAlignment.Bottom       |
+    | right        | HorizontalAlignment.Right     | HorizontalAlignment.Right      | VerticalAlignment.Middle      | VerticalAlignment.Middle       |
+    | right-start  | HorizontalAlignment.Right     | HorizontalAlignment.Right      | VerticalAlignment.Bottom      | VerticalAlignment.Top          |
+    | right-end    | HorizontalAlignment.Right     | HorizontalAlignment.Right      | VerticalAlignment.Top         | VerticalAlignment.Bottom       |
+    | left         | HorizontalAlignment.Left      | HorizontalAlignment.Left       | VerticalAlignment.Middle      | VerticalAlignment.Middle       |
+    | left-start   | HorizontalAlignment.Left      | HorizontalAlignment.Left       | VerticalAlignment.Bottom      | VerticalAlignment.Top          |
+    | left-end     | HorizontalAlignment.Left      | HorizontalAlignment.Left       | VerticalAlignment.Top         | VerticalAlignment.Bottom       |
+
+
+
+    The arrow's position can be customized by overriding the `positionArrow(arrow: HTMLElement, arrowFit: ArrowFit)` method.
+
+    For example:
+
+    ```ts
+    export class CustomStrategy extends TooltipPositioningStrategy {
+        constructor(settings?: PositionSettings) {
+            super(settings);
+        }
+
+        public override positionArrow(arrow: HTMLElement, arrowFit: ArrowFit): void {
+            Object.assign(arrow.style, {
+                left: '-0.25rem',
+                transform: 'rotate(-45deg)',
+                [arrowFit.direction]: '-0.25rem',
+            });
+        }
+    }
+
+    public overlaySettings: OverlaySettings = {
+        positionStrategy: new CustomStrategy({
+            horizontalDirection: HorizontalAlignment.Right,
+            horizontalStartPoint: HorizontalAlignment.Right,
+            verticalDirection: VerticalAlignment.Bottom,
+            verticalStartPoint: VerticalAlignment.Bottom,
+        })
+    };
+    ```
+
+    ```html
+    <igx-icon [igxTooltipTarget]="tooltipRef" [hasArrow]="true" [overlaySettings]="overlaySettings">info</igx-icon>
+    <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+    ```
+
 ## 20.0.2
 
 ### New Features

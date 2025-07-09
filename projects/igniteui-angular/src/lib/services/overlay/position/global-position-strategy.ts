@@ -84,4 +84,3 @@ export class GlobalPositionStrategy implements IPositionStrategy {
         }
     }
 }
-

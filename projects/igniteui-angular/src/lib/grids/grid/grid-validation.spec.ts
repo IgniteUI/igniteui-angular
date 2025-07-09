@@ -166,7 +166,7 @@ describe('IgxGrid - Validation #grid', () => {
             cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
             //min length should be 4
             GridFunctions.verifyCellValid(cell, false);
-            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[1].textContent;
             expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
         });
 
@@ -184,7 +184,7 @@ describe('IgxGrid - Validation #grid', () => {
             //min length should be 4
             GridFunctions.verifyCellValid(cell, false);
             GridSelectionFunctions.verifyCellActive(cell, true);
-            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[1].textContent;
             expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
 
             cell.errorTooltip.first.close();
@@ -358,7 +358,7 @@ describe('IgxGrid - Validation #grid', () => {
             cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
             //bob cannot be the name
             GridFunctions.verifyCellValid(cell, false);
-            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[1].textContent;
             expect(erorrMessage).toEqual(' This name is forbidden. ');
 
             cell.editMode = true;
@@ -393,7 +393,7 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, false);
-            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[1].textContent;
             expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
         });
 
@@ -412,7 +412,7 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, false);
-            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[1].textContent;
             expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
         });
 
@@ -440,7 +440,7 @@ describe('IgxGrid - Validation #grid', () => {
             grid.crudService.endEdit(true);
             fixture.detectChanges();
             GridFunctions.verifyCellValid(cell, false);
-            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[1].textContent;
             expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
         });
     });
