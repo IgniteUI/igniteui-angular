@@ -1,7 +1,6 @@
 import {
     Directive, ElementRef, Input, ChangeDetectorRef, Optional, HostBinding, Inject,
-    OnDestroy,
-    HostListener,
+    OnDestroy, inject, DOCUMENT, HostListener,
 } from '@angular/core';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { IgxNavigationService } from '../../core/navigation';
@@ -116,6 +115,7 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
     private _arrowEl: HTMLElement;
     private _role: 'tooltip' | 'status' = 'tooltip';
     private _destroy$ = new Subject<boolean>();
+    private _document = inject(DOCUMENT);
 
     /** @hidden */
     constructor(
@@ -128,10 +128,10 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
 
         this.onDocumentTouchStart = this.onDocumentTouchStart.bind(this);
         this.overlayService.opening.pipe(takeUntil(this._destroy$)).subscribe(() => {
-            document.addEventListener('touchstart', this.onDocumentTouchStart, { passive: true });
+            this._document.addEventListener('touchstart', this.onDocumentTouchStart, { passive: true });
         });
         this.overlayService.closed.pipe(takeUntil(this._destroy$)).subscribe(() => {
-            document.removeEventListener('touchstart', this.onDocumentTouchStart);
+            this._document.removeEventListener('touchstart', this.onDocumentTouchStart);
         });
 
         this._createArrow();
@@ -141,7 +141,7 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
     public override ngOnDestroy() {
         super.ngOnDestroy();
 
-        document.removeEventListener('touchstart', this.onDocumentTouchStart);
+        this._document.removeEventListener('touchstart', this.onDocumentTouchStart);
         this._destroy$.next(true);
         this._destroy$.complete();
         this._removeArrow();
