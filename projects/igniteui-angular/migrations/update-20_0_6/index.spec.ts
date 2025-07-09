@@ -76,134 +76,31 @@ describe('Migration 20.0.6 - Replace filteringOptions.filterable', () => {
 
     // TS file tests
 
-    it('should remove line when filteringOptions.filterable is set to true', async () => {
-        const input = `this.igxSimpleCombo.filteringOptions.filterable = true;`;
-        appTree.create(makeScript('tsRemoveTrue'), input);
-
-        const tree = await runner.runSchematic(migrationName, {}, appTree);
-        const output = tree.readContent(makeScript('tsRemoveTrue'));
-
-        expect(output).not.toContain('filteringOptions.filterable');
-    });
-
-    it('should replace filteringOptions.filterable = false with disableFiltering = true', async () => {
-        const input = `this.igxSimpleCombo.filteringOptions.filterable = false;`;
-        appTree.create(makeScript('tsReplaceFalse'), input);
-
-        const tree = await runner.runSchematic(migrationName, {}, appTree);
-        const output = tree.readContent(makeScript('tsReplaceFalse'));
-
-        expect(output).toContain('this.igxSimpleCombo.disableFiltering = true;');
-    });
-
-    it('should handle the use of negative flag correctly', async () => {
-        const input = `this.igxSimpleCombo.filteringOptions.filterable = !this.disableFilteringFlag;`;
-        appTree.create(makeScript('tsNegativeFlag'), input);
-
-        const tree = await runner.runSchematic(migrationName, {}, appTree);
-        const output = tree.readContent(makeScript('tsNegativeFlag'));
-
-        expect(output).toContain('this.igxSimpleCombo.disableFiltering = this.disableFilteringFlag;');
-    });
-
-    it('should handle the use of possitive flag correctly', async () => {
-        const input = `this.igxSimpleCombo.filteringOptions.filterable = this.disableFilteringFlag;`;
-        appTree.create(makeScript('tsNegativeFlag'), input);
-
-        const tree = await runner.runSchematic(migrationName, {}, appTree);
-        const output = tree.readContent(makeScript('tsNegativeFlag'));
-
-        expect(output).toContain('this.igxSimpleCombo.disableFiltering = !this.disableFilteringFlag;');
-    });
-
-    it('should split filteringOptions object and move filterable out', async () => {
-        const input = `this.igxSimpleCombo.filteringOptions = { filterable: false, caseSensitive: true };`;
-        appTree.create(makeScript('tsSplitObj'), input);
-
-        const tree = await runner.runSchematic(migrationName, {}, appTree);
-        const output = tree.readContent(makeScript('tsSplitObj'));
-
-        expect(output).toContain('this.igxSimpleCombo.disableFiltering = true;');
-        expect(output).toContain('this.igxSimpleCombo.filteringOptions = { caseSensitive: true };');
-        expect(output).not.toContain('filterable');
-    });
-
-    it('should not add disableFiltering again if already present when filterable is set to false', async () => {
-        const input = `
-            this.igxCombo.filteringOptions.filterable = false;
-            this.igxCombo.disableFiltering = true;
-        `;
-        appTree.create(makeScript('tsDirectFalseExistingDisable'), input);
-
-        const tree = await runner.runSchematic(migrationName, {}, appTree);
-        const output = tree.readContent(makeScript('tsDirectFalseExistingDisable'));
-
-        const occurrences = (output.match(/\.disableFiltering/g) || []).length;
-
-        expect(occurrences).toBe(1);
-        expect(output).not.toContain('filterable');
-    });
-
-    it('should not add disableFiltering again if already present when using negative flag assignment', async () => {
-        const input = `
-            this.igxSimpleCombo.filteringOptions.filterable = !this.flag;
-            this.igxSimpleCombo.disableFiltering = this.flag;
-        `;
-        appTree.create(makeScript('tsNegativeFlagExistingDisable'), input);
-
-        const tree = await runner.runSchematic(migrationName, {}, appTree);
-        const output = tree.readContent(makeScript('tsNegativeFlagExistingDisable'));
-
-        const occurrences = (output.match(/\.disableFiltering/g) || []).length;
-
-        expect(occurrences).toBe(1);
-        expect(output).not.toContain('filterable');
-    });
-
-    it('should not add disableFiltering again if already present when using positive flag assignment', async () => {
-        const input = `
-            this.igxSimpleCombo.filteringOptions.filterable = this.flag;
-            this.igxSimpleCombo.disableFiltering = !this.flag;
-        `;
-        appTree.create(makeScript('tsPositiveFlagExistingDisable'), input);
-
-        const tree = await runner.runSchematic(migrationName, {}, appTree);
-        const output = tree.readContent(makeScript('tsPositiveFlagExistingDisable'));
-
-        const occurrences = (output.match(/\.disableFiltering/g) || []).length;
-
-        expect(occurrences).toBe(1);
-        expect(output).not.toContain('filterable');
-    });
-
-    it('should split filteringOptions object and remove filterable if disableFiltering is already present', async () => {
-        const input = `
-            this.igxCombo.filteringOptions = { filterable: false, caseSensitive: true };
-            this.igxCombo.disableFiltering = true;
-        `;
-        appTree.create(makeScript('tsSplitObjAndDisabledFiltering'), input);
-
-        const tree = await runner.runSchematic(migrationName, {}, appTree);
-        const output = tree.readContent(makeScript('tsSplitObjAndDisabledFiltering'));
-
-        const occurrences = (output.match(/\.disableFiltering/g) || []).length;
-
-        expect(occurrences).toBe(1);
-        expect(output).toContain('this.igxCombo.filteringOptions = { caseSensitive: true };');
-        expect(output).not.toContain('filterable');
-    });
-
-    it('should insert warning comment when filteringOptions is assigned from a variable', async () => {
-        const input = `this.igxSimpleCombo.filteringOptions = filterOpts;`;
+    it('should insert warning comment before `.filteringOptions.filterable = ...` assignment', async () => {
+        const input = `this.igxCombo.filteringOptions.filterable = false;`;
         const expectedComment = "// Manual migration needed: please use 'disableFiltering' instead of filteringOptions.filterable." +
             "Since it has been deprecated.'";
 
-        appTree.create(makeScript('tsVariableAssign'), input);
+        appTree.create(makeScript('tsWarnOnDirectAssignment'), input);
 
         const tree = await runner.runSchematic(migrationName, {}, appTree);
-        const output = tree.readContent(makeScript('tsVariableAssign'));
+        const output = tree.readContent(makeScript('tsWarnOnDirectAssignment'));
 
-        expect(output).toContain(input);
         expect(output).toContain(expectedComment);
+        expect(output).toContain('this.igxCombo.filteringOptions.filterable = false;');
+    });
+
+    it('should insert warning comment before `.filteringOptions = { ... }` assignment', async () => {
+        const input = `this.igxCombo.filteringOptions = { filterable: false, caseSensitive: true };`;
+        const expectedComment = "// Manual migration needed: please use 'disableFiltering' instead of filteringOptions.filterable." +
+            "Since it has been deprecated.'";
+
+        appTree.create(makeScript('tsWarnOnObjectAssignment'), input);
+
+        const tree = await runner.runSchematic(migrationName, {}, appTree);
+        const output = tree.readContent(makeScript('tsWarnOnObjectAssignment'));
+
+        expect(output).toContain(expectedComment);
+        expect(output).toContain('this.igxCombo.filteringOptions = { filterable: false, caseSensitive: true };');
     });
 });
