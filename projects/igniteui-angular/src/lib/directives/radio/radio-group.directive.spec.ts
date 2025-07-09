@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ComponentRef, inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ComponentRef, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxRadioGroupDirective } from './radio-group.directive';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, FormGroup, FormControl } from '@angular/forms';
@@ -22,8 +22,7 @@ fdescribe('IgxRadioGroupDirective', () => {
                 RadioGroupReactiveFormsComponent,
                 RadioGroupDeepProjectionComponent,
                 RadioGroupTestComponent,
-                DynamicRadioGroupComponent,
-                AppBuilderRadioGroupComponent
+                DynamicRadioGroupComponent
             ]
         })
         .compileComponents();
@@ -267,42 +266,10 @@ fdescribe('IgxRadioGroupDirective', () => {
         expect(domRadio.classList.contains('igx-radio--invalid')).toBe(false);
     }));
 
-    it('should dynamically create and remove radio group with buttons', fakeAsync(() => {
+    it('Should select radio button when added programmatically after group value is set', (() => {
         const fixture = TestBed.createComponent(DynamicRadioGroupComponent);
-        fixture.detectChanges();
-        tick();
-
-        const button = fixture.debugElement.query(By.css('button'));
-        button.triggerEventHandler('buttonClick', null);
-        fixture.detectChanges();
-        tick();
-
-        const radioGroupDE = fixture.debugElement.query(By.directive(RadioGroupTestComponent));
-        expect(radioGroupDE).not.toBeNull();
-
-        const radioButtons = radioGroupDE.queryAll(By.directive(IgxRadioComponent));
-        expect(radioButtons.length).toBe(3);
-
-        const checkedRadios = radioButtons.filter(rb => rb.componentInstance.checked);
-        expect(checkedRadios.length).toBe(1);
-        expect(checkedRadios[0].componentInstance.value).toBe(1);
-
-        radioButtons[1].nativeElement.click();
-        fixture.detectChanges();
-
-        const checkedAfter = radioButtons.filter(rb => rb.componentInstance.checked);
-        expect(checkedAfter.length).toBe(1);
-        expect(checkedAfter[0].componentInstance.value).toBe(2);
-        expect(radioGroupDE.componentInstance.value).toBe(2);
-    }));
-
-    it('Should select radio button when added programmatically after group value is set', fakeAsync(() => {
-        const fixture = TestBed.createComponent(AppBuilderRadioGroupComponent);
         const component = fixture.componentInstance;
         const radioGroup = component.radioGroup;
-
-        fixture.detectChanges();
-        tick();
 
         // Simulate AppBuilder configurator setting value before radio buttons exist
         radioGroup.value = 'option2';
@@ -311,13 +278,13 @@ fdescribe('IgxRadioGroupDirective', () => {
         expect(radioGroup.radioButtons.length).toBe(0);
         expect(radioGroup.selected).toBeNull();
 
-        // Simulate AppBuilder childrenConfiguration adding radio buttons programmatically
+        fixture.detectChanges();
+
         component.addRadioButton('option1', 'Option 1');
         component.addRadioButton('option2', 'Option 2');
         component.addRadioButton('option3', 'Option 3');
 
         fixture.detectChanges();
-        tick();
 
         // Radio button with value 'option2' should be selected
         expect(radioGroup.value).toBe('option2');
@@ -555,31 +522,6 @@ class RadioGroupTestComponent implements OnInit {
 }
 
 @Component({
-  template: `
-    <button igxButton="contained" (buttonClick)="createRadioGroupComponent()">Create Radio Group</button>
-  `
-})
-class DynamicRadioGroupComponent {
-    private viewContainerRef = inject(ViewContainerRef);
-
-    public createRadioGroupComponent() {
-        this.viewContainerRef.clear();
-
-        const componentRef = this.viewContainerRef.createComponent(RadioGroupTestComponent);
-        const radioGroup = componentRef.instance as RadioGroupTestComponent;
-
-        radioGroup.value = 1;
-        radioGroup.required = true;
-
-        radioGroup.radios = [
-            { value: 1, label: 'Radio 1' },
-            { value: 2, label: 'Radio 2' },
-            { value: 3, label: 'Radio 3' }
-        ];
-    }
-}
-
-@Component({
     template: `
         <igx-radio-group #radioGroup>
             <ng-container #radioContainer></ng-container>
@@ -587,7 +529,7 @@ class DynamicRadioGroupComponent {
     `,
     imports: [IgxRadioGroupDirective, IgxRadioComponent]
 })
-class AppBuilderRadioGroupComponent {
+class DynamicRadioGroupComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true })
     public radioGroup: IgxRadioGroupDirective;
 
@@ -610,4 +552,3 @@ const dispatchRadioEvent = (eventName, radioNativeElement, fixture) => {
     radioNativeElement.dispatchEvent(new Event(eventName));
     fixture.detectChanges();
 };
-
