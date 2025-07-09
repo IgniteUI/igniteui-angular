@@ -102,92 +102,17 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     for (const path of update.tsFiles) {
         const content = host.read(path).toString();
         const lines = content.split('\n');
-        const hasDisableFiltering = lines.some(l => /\.disableFiltering\s*=/.test(l));
         const newLines: string[] = [];
+
 
         let modified = false;
 
-        for (let i = 0; i < lines.length; i++) {
-            let line = lines[i];
-
-            const directTrue = /\.filteringOptions\.filterable\s*=\s*true\s*;/.test(line);
-            const directFalse = /\.filteringOptions\.filterable\s*=\s*false\s*;/.test(line);
-            const negativeFlagBinding = /\.filteringOptions\.filterable\s*=\s*!\s*(.+);/.exec(line);
-            const positiveFlagBinding = /\.filteringOptions\.filterable\s*=\s*(this\.\w+);/.exec(line);
-            const inlineObjectAssign = /\.filteringOptions\s*=\s*{[^}]*}/.test(line);
-            const filterableInObject = /filterable\s*:\s*([^,}]+)/.exec(line);
-            const objectAssignment = /\.filteringOptions\s*=\s*[^;{]+;/.test(line);
-
-            if (directTrue) {
-                // Remove the line entirely
-                modified = true;
-                continue;
-            }
-
-            if (directFalse) {
-                if (hasDisableFiltering) {
-                    modified = true;
-                    continue;
-                }
-
-                line = line.replace(/\.filteringOptions\.filterable\s*=\s*false\s*;/, '.disableFiltering = true;');
-                modified = true;
-            } else if (negativeFlagBinding) {
-                 if (hasDisableFiltering) {
-                    modified = true;
-                    continue;
-                }
-
-                const variable = negativeFlagBinding[1].trim();
-                line = line.replace(/\.filteringOptions\.filterable\s*=\s*!\s*.+;/, `.disableFiltering = ${variable};`);
-                modified = true;
-            } else if (positiveFlagBinding) {
-                 if (hasDisableFiltering) {
-                    modified = true;
-                    continue;
-                }
-
-                const variable = positiveFlagBinding[1].trim();
-                line = line.replace(/\.filteringOptions\.filterable\s*=\s*(this\.\w+);/, `.disableFiltering = !${variable};`);
-                modified = true;
-            }else if (inlineObjectAssign && filterableInObject) {
-                if(hasDisableFiltering){
-                    // clear object literal without adding disableFiltering
-                    const cleanedLine = line
-                        .replace(/filterable\s*:\s*[^,}]+,?\s*/g, '')
-                        .replace(/,\s*}/, ' }')
-                        .replace(/{\s*}/, '{}');
-
-                    newLines.push(cleanedLine);
-                    modified = true;
-                    continue;
-                }
-
-                const filterVal = filterableInObject[1].trim();
-
-                let disableFilteringValue: string;
-                if (filterVal === 'true') {
-                    disableFilteringValue = 'false';
-                } else if (filterVal === 'false') {
-                    disableFilteringValue = 'true';
-                } else if (filterVal.startsWith('!')) {
-                    disableFilteringValue = filterVal.slice(1).trim();
-                } else {
-                    disableFilteringValue = `!${filterVal}`;
-                }
-
-                const cleanedLine = line
-                    .replace(/filterable\s*:\s*[^,}]+,?\s*/g, '')
-                    .replace(/,\s*}/, ' }')
-                    .replace(/{\s*}/, '{}');
-
-                // Output both lines
-                newLines.push(line.replace(/\.filteringOptions\s*=.*/, `.disableFiltering = ${disableFilteringValue};`));
-                newLines.push(cleanedLine);
-                modified = true;
-                continue;
-            } else if (objectAssignment) {
-                newLines.push('// '+ warnMsg);
+        for (const line of lines) {
+            if (
+                /\.filteringOptions\.filterable\s*=/.test(line) ||
+                /\.filteringOptions\s*=/.test(line)
+            ) {
+                newLines.push('// ' + warnMsg);
                 modified = true;
             }
             newLines.push(line);

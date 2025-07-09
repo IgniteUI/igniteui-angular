@@ -2,7 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 19.2.14
+## 19.2.15
 ### General
 - `IgxSimpleCombo`
     - Added `disableFiltering` to the `IgxSimpleCombo`, which enables/disables the filtering in the list. The default is `false`. With this introduction, `filteringOptions.filterable` is no longer usde.
