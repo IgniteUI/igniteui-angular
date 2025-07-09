@@ -490,10 +490,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
 
         effect(() => {
             this.initialize();
-
-            Promise.resolve().then(() => {
-                this.setRadioButtons();
-            });
+            this.setRadioButtons();
         });
     }
 
@@ -531,8 +528,10 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      */
     private setRadioButtons() {
         this._radioButtons().forEach((button) => {
-            button.name = this._name;
-            button.required = this._required;
+            Promise.resolve().then(() => {
+                button.name = this._name;
+                button.required = this._required;
+            });
 
             if (button.value === this._value) {
                 button.checked = true;
@@ -594,7 +593,9 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     private _setRadioButtonNames() {
         if (this._radioButtons) {
             this._radioButtons().forEach((button) => {
-                button.name = this._name;
+                Promise.resolve().then(() => {
+                    button.name = this._name;
+                });
             });
         }
     }
@@ -639,7 +640,9 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     private _setRadioButtonsRequired() {
         if (this._radioButtons) {
             this._radioButtons().forEach((button) => {
-                button.required = this._required;
+                Promise.resolve().then(() => {
+                    button.required = this._required;
+                });
             });
         }
     }
@@ -653,6 +656,8 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     public _addRadioButton(radioButton: IgxRadioComponent): void {
         this._radioButtons.update(buttons => {
             if (!buttons.includes(radioButton)) {
+                this._setRadioButtonEvents(radioButton);
+
                 return [...buttons, radioButton];
             }
             return buttons;

@@ -22,7 +22,8 @@ describe('IgxRadioGroupDirective', () => {
                 RadioGroupReactiveFormsComponent,
                 RadioGroupDeepProjectionComponent,
                 RadioGroupTestComponent,
-                DynamicRadioGroupComponent
+                DynamicRadioGroupComponent,
+                AppBuilderRadioGroupComponent
             ]
         })
         .compileComponents();
@@ -71,6 +72,7 @@ describe('IgxRadioGroupDirective', () => {
         // name
         radioInstance.name = 'newGroupName';
         fixture.detectChanges();
+        tick();
 
         const allButtonsWithNewName = radioInstance.radioButtons.filter((btn) => btn.name === 'newGroupName');
         expect(allButtonsWithNewName.length).toEqual(radioInstance.radioButtons.length);
@@ -78,6 +80,7 @@ describe('IgxRadioGroupDirective', () => {
         // required
         radioInstance.required = true;
         fixture.detectChanges();
+        tick();
 
         const allRequiredButtons = radioInstance.radioButtons.filter((btn) => btn.required);
         expect(allRequiredButtons.length).toEqual(radioInstance.radioButtons.length);
@@ -291,6 +294,41 @@ describe('IgxRadioGroupDirective', () => {
         expect(checkedAfter.length).toBe(1);
         expect(checkedAfter[0].componentInstance.value).toBe(2);
         expect(radioGroupDE.componentInstance.value).toBe(2);
+    }));
+
+    it('Should select radio button when added programmatically after group value is set', fakeAsync(() => {
+        const fixture = TestBed.createComponent(AppBuilderRadioGroupComponent);
+        const component = fixture.componentInstance;
+        const radioGroup = component.radioGroup;
+
+        fixture.detectChanges();
+        tick();
+
+        // Simulate AppBuilder configurator setting value before radio buttons exist
+        radioGroup.value = 'option2';
+
+        // Verify no radio buttons exist yet
+        expect(radioGroup.radioButtons.length).toBe(0);
+        expect(radioGroup.selected).toBeNull();
+
+        // Simulate AppBuilder childrenConfiguration adding radio buttons programmatically
+        component.addRadioButton('option1', 'Option 1');
+        component.addRadioButton('option2', 'Option 2');
+        component.addRadioButton('option3', 'Option 3');
+
+        fixture.detectChanges();
+        tick();
+
+        // Radio button with value 'option2' should be selected
+        expect(radioGroup.value).toBe('option2');
+        expect(radioGroup.selected).toBeDefined();
+        expect(radioGroup.selected.value).toBe('option2');
+        expect(radioGroup.selected.checked).toBe(true);
+
+        // Verify only one radio button is selected
+        const checkedButtons = radioGroup.radioButtons.filter(btn => btn.checked);
+        expect(checkedButtons.length).toBe(1);
+        expect(checkedButtons[0].value).toBe('option2');
     }));
 });
 
@@ -538,6 +576,33 @@ class DynamicRadioGroupComponent {
             { value: 2, label: 'Radio 2' },
             { value: 3, label: 'Radio 3' }
         ];
+    }
+}
+
+@Component({
+    template: `
+        <igx-radio-group #radioGroup>
+            <ng-container #radioContainer></ng-container>
+        </igx-radio-group>
+    `,
+    imports: [IgxRadioGroupDirective, IgxRadioComponent]
+})
+class AppBuilderRadioGroupComponent {
+    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true })
+    public radioGroup: IgxRadioGroupDirective;
+
+    @ViewChild('radioContainer', { read: ViewContainerRef, static: true })
+    public radioContainer: ViewContainerRef;
+
+    /**
+     * Simulates how AppBuilder adds radio buttons programmatically
+     * via ViewContainerRef.createComponent()
+     */
+    public addRadioButton(value: string, label: string): void {
+        const componentRef = this.radioContainer.createComponent(IgxRadioComponent);
+        componentRef.instance.value = value;
+        componentRef.instance.placeholderLabel.nativeElement.textContent = label;
+        componentRef.changeDetectorRef.detectChanges();
     }
 }
 
