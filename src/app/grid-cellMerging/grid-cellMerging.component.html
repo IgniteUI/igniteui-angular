@@ -1,5 +1,5 @@
 <h4 class="sample-title">Grid with cell merge</h4>
-<igx-grid [data]="data" width="800px" height="550px" [primaryKey]="'ProductID'" [moving]="true" [cellMergeMode]="'always'" >
+<igx-grid [data]="data" width="800px" height="550px" [primaryKey]="'ProductID'" [moving]="true" [cellMergeMode]="'always'" [rowSelection]="'single'" >
     <igx-column field="ProductID" header="Product ID" width="200px">
         <ng-template igxCell let-cell="cell" let-val>
         <div>

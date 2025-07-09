@@ -1825,6 +1825,20 @@
         color: var-get($theme, 'row-selected-text-color');
         background: var-get($theme, 'row-selected-background');
 
+        &%grid-row--mrl {
+            background: transparent;
+            %grid-mrl-block {
+                color: var-get($theme, 'row-selected-text-color');
+                background: var-get($theme, 'row-selected-background');
+                %igx-grid__td--merged {
+                    color: var-get($theme, 'row-selected-text-color');
+                    background: var-get($theme, 'row-selected-background');
+                }
+            }
+        }
+
+
+
         %grid-cell--selected,
         %grid-cell--pinned-selected {
             color: var-get($theme, 'cell-selected-within-text-color');
