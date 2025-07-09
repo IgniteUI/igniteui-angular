@@ -50,7 +50,7 @@
 
 
         @for (rowData of mergedData; track rowData; let rowIndex = $index) {
-            <igx-grid-row [style.position]="'absolute'" [gridID]="id" [index]="rowIndex" [data]="rowData.recordRef" [metaData]="rowData" [style.top.px]="getMergeCellOffset(rowData)"
+            <igx-grid-row [style.position]="'absolute'" [gridID]="id" [index]="this.verticalScrollContainer.igxForOf.indexOf(rowData)" [data]="rowData.recordRef" [metaData]="rowData" [style.top.px]="getMergeCellOffset(rowData)"
             [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:isRecordMerged(rowData):false:rowData:pipeTrigger"
             [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
             </igx-grid-row>
