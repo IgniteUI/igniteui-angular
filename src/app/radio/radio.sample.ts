@@ -1,7 +1,27 @@
-import { Component, ViewChild, AfterContentInit, ViewContainerRef, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import {
+    Component,
+    ViewChild,
+    AfterContentInit,
+    ViewContainerRef,
+    inject,
+    ChangeDetectorRef,
+    ChangeDetectionStrategy
+} from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { UntypedFormGroup, UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IgxRadioGroupDirective, IgxLayoutDirective, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxCardActionsComponent, IgxRippleDirective, IgxButtonDirective, IgxRadioComponent, RadioGroupAlignment } from 'igniteui-angular';
+import {
+    IgxRadioGroupDirective,
+    IgxLayoutDirective,
+    IgxCardComponent,
+    IgxCardHeaderComponent,
+    IgxCardHeaderTitleDirective,
+    IgxCardContentDirective,
+    IgxCardActionsComponent,
+    IgxRippleDirective,
+    IgxButtonDirective,
+    IgxRadioComponent,
+    RadioGroupAlignment
+} from 'igniteui-angular';
 import { RadioGroupComponent } from './radio-group.component';
 
 class Person {
@@ -18,7 +38,22 @@ class Person {
     selector: 'app-radio-sample',
     styleUrls: ['radio.sample.scss'],
     templateUrl: 'radio.sample.html',
-    imports: [IgxRadioGroupDirective, FormsModule, IgxLayoutDirective, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxCardActionsComponent, IgxRippleDirective, IgxButtonDirective, IgxRadioComponent, ReactiveFormsModule, JsonPipe]
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        IgxRadioGroupDirective,
+        FormsModule,
+        IgxLayoutDirective,
+        IgxCardComponent,
+        IgxCardHeaderComponent,
+        IgxCardHeaderTitleDirective,
+        IgxCardContentDirective,
+        IgxCardActionsComponent,
+        IgxRippleDirective,
+        IgxButtonDirective,
+        IgxRadioComponent,
+        ReactiveFormsModule,
+        JsonPipe
+    ]
 })
 export class RadioSampleComponent implements AfterContentInit {
     @ViewChild('radioGroupZZ', { read: IgxRadioGroupDirective, static: true })
@@ -62,8 +97,6 @@ export class RadioSampleComponent implements AfterContentInit {
           { value: 2, label: 'Radio 2' },
           { value: 3, label: 'Radio 3' },
         ];
-
-        this.cdr.detectChanges();
     }
 
     public removeRadioGroupComponent() {
