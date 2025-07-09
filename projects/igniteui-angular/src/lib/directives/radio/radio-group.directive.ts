@@ -594,9 +594,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     private _setRadioButtonNames() {
         if (this._radioButtons) {
             this._radioButtons().forEach((button) => {
-                Promise.resolve().then(() => {
-                    button.name = this._name;
-                });
+                button.name = this._name;
             });
         }
     }
@@ -641,9 +639,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     private _setRadioButtonsRequired() {
         if (this._radioButtons) {
             this._radioButtons().forEach((button) => {
-                Promise.resolve().then(() => {
-                    button.required = this._required;
-                });
+                button.required = this._required;
             });
         }
     }
