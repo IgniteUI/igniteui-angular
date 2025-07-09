@@ -3662,7 +3662,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @internal
      */
     public isRecordMerged(rec) {
-        return rec.cellMergeMeta;
+        return rec?.cellMergeMeta;
     }
 
     public getMergeCellOffset(rec) {

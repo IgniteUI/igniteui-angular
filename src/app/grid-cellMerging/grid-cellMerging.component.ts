@@ -5,6 +5,7 @@ import {
     IgxCellTemplateDirective,
     IgxColumnComponent,
     IgxGridComponent,
+    IgxPaginatorComponent,
 } from 'igniteui-angular';
 
 import { data, dataWithoutPK } from '../shared/data';
@@ -18,7 +19,8 @@ import { data, dataWithoutPK } from '../shared/data';
         IgxColumnComponent,
         IgxGridComponent,
         IgxCellTemplateDirective,
-        IgxButtonDirective
+        IgxButtonDirective,
+        IgxPaginatorComponent
     ]
 })
 export class GridCellMergingComponent {

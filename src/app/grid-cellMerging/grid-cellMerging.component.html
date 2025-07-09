@@ -1,5 +1,5 @@
 <h4 class="sample-title">Grid with cell merge</h4>
-<igx-grid [data]="data" width="800px" height="550px" [moving]="true" [cellMergeMode]="'always'" >
+<igx-grid [data]="data" width="800px" height="550px" [primaryKey]="'ProductID'" [moving]="true" [cellMergeMode]="'always'" >
     <igx-column field="ProductID" header="Product ID" width="200px">
         <ng-template igxCell let-cell="cell" let-val>
         <div>
@@ -12,7 +12,7 @@
         </div>
         </ng-template>
     </igx-column>
-    <igx-column field="ReorderLevel" width="200px" [merge]="true">
+    <igx-column field="ReorderLevel" width="200px" [merge]="true" editable="true">
     </igx-column>
     <igx-column required field="ProductName" width="200px" [merge]="true">
     </igx-column>
@@ -20,4 +20,6 @@
     </igx-column>
     <igx-column field="OrderDate" width="200px">
     </igx-column>
+    <igx-paginator [perPage]="20">
+    </igx-paginator>
 </igx-grid>

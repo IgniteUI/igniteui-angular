@@ -46,6 +46,12 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     public role = 'row';
 
     /**
+     * @hidden
+     */
+    @Input()
+    public metaData: any;
+
+    /**
      *  The data passed to the row component.
      *
      * ```typescript
@@ -118,7 +124,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     }
 
     public get hasMergedCells(): boolean {
-            return this.grid.isRecordMerged(this.data);
+            return this.grid.isRecordMerged(this.metaData);
     }
 
     /**
@@ -597,7 +603,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     }
 
     protected getMergeCellSpan(col: ColumnType){
-        const rowCount = this.data.cellMergeMeta.get(col.field).rowSpan;
+        const rowCount = this.metaData.cellMergeMeta.get(col.field).rowSpan;
         let sizeSpans = "";
         for (let index = this.index; index < this.index + rowCount; index++) {
             const size = this.grid.verticalScrollContainer.getSizeAt(index);

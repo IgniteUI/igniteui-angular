@@ -32,13 +32,13 @@
         }
         <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]="grid.unpinnedWidth" [igxForSizePropName]="'calcPixelWidth'" [igxForTrackBy]="grid.trackColumnChanges" #igxDirRef>
             @if (this.hasMergedCells) {
-                <div [style.height.px]=" this.data.cellMergeMeta.get(col.field)?.rowSpan > 1 ? getRowHeight() : null"
+                <div [style.height.px]=" this.metaData.cellMergeMeta.get(col.field)?.rowSpan > 1 ? getRowHeight() : null"
                      class="igx-grid__mrl-block"
-                     [style.visibility]="this.data.cellMergeMeta.get(col.field)?.root ? 'hidden' : 'visible'"
+                     [style.visibility]="this.metaData.cellMergeMeta.get(col.field)?.root ? 'hidden' : 'visible'"
                      [ngStyle]="{
-                    'grid-template-rows': this.data.cellMergeMeta.get(col.field)?.rowSpan > 1 ? this.getMergeCellSpan(col) : null
+                    'grid-template-rows': this.metaData.cellMergeMeta.get(col.field)?.rowSpan > 1 ? this.getMergeCellSpan(col) : null
                 }">
-                <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : mergedCellTemplate; context: getContext(col, this)"></ng-container>
+                <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
             </div>
             }
             @else {
@@ -108,6 +108,7 @@
 
 <ng-template #cellTemplate let-col>
     <igx-grid-cell
+        [class.igx-grid__td--merged]="metaData?.cellMergeMeta.get(col.field)?.rowSpan > 1"
         class="igx-grid__td igx-grid__td--fw"
         [class.igx-grid__td--edited]="key | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
         [class.igx-grid__td--pinned]="col.pinned"
@@ -142,6 +143,7 @@
 
 <ng-template #expandableCellTemplate let-col>
     <igx-expandable-grid-cell
+        [class.igx-grid__td--merged]="metaData?.cellMergeMeta.get(col.field)?.rowSpan > 1"
         [class.igx-grid__td--pinned]="col.pinned"
         class="igx-grid__td igx-grid__td--fw igx-grid__td--tree-cell"
         [class.igx-grid__td--edited]="key | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
@@ -169,38 +171,6 @@
         [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"
         #cell>
     </igx-expandable-grid-cell>
-</ng-template>
-
-<ng-template #mergedCellTemplate let-col>
-    <igx-grid-cell
-    class="igx-grid__td igx-grid__td--fw"
-    [class.igx-grid__td--merged]="data.cellMergeMeta.get(col.field)?.rowSpan > 1"
-    [class.igx-grid__td--edited]="key | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
-    [class.igx-grid__td--pinned]="col.pinned"
-    [class.igx-grid__td--number]="col.dataType === 'number' || col.dataType === 'percent' || col.dataType === 'currency'"
-    [ngClass]="col.cellClasses | igxCellStyleClasses:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
-    [ngStyle]="col.cellStyles | igxCellStyles:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
-    [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)"
-    [column]="col"
-    [lastPinned]="col.columnLayoutChild ? null : col.isLastPinned"
-    [firstPinned]="col.columnLayoutChild ? null : col.isFirstPinned"
-    [formatter]="col.formatter"
-    [intRow]="this"
-    [rowData]="data.recordRef"
-    [visibleColumnIndex]="col.visibleIndex"
-    [value]="data.recordRef | dataMapper:col.field:grid.pipeTrigger:data.recordRef[col.field]:col.hasNestedPath"
-    [cellTemplate]="col.bodyTemplate"
-    [cellValidationErrorTemplate]="col.errorTemplate"
-    [lastSearchInfo]="grid.lastSearchInfo"
-    [active]="isCellActive(col.visibleIndex)"
-    [cellSelectionMode]="grid.cellSelection"
-    [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"
-    [style.min-width]="col.resolvedWidth"
-    [style.max-width]="col.resolvedWidth"
-    [style.flex-basis]="col.resolvedWidth"
-    [width]="col.getCellWidth()"
-    #cell>
-</igx-grid-cell>
 </ng-template>
 
 <ng-template #mrlCellTemplate let-col>
