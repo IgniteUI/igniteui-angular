@@ -12,8 +12,6 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 
-import { mkenum } from '../core/utils';
-
 let NEXT_ID = 0;
 
 /**
@@ -272,10 +270,10 @@ export class IgxCardComponent {
     public horizontal = false;
 }
 
-export const IgxCardActionsLayout = /*@__PURE__*/mkenum({
+export const IgxCardActionsLayout = {
     START: 'start',
     JUSTIFY: 'justify'
-});
+} as const;
 export type IgxCardActionsLayout = (typeof IgxCardActionsLayout)[keyof typeof IgxCardActionsLayout];
 
 /**

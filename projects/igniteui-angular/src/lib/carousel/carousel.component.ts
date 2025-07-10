@@ -1,4 +1,4 @@
-import { NgClass, NgTemplateOutlet, DOCUMENT } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectorRef,
@@ -22,7 +22,8 @@ import {
     ViewChild,
     ViewChildren,
     ViewEncapsulation,
-    booleanAttribute
+    booleanAttribute,
+    DOCUMENT
 } from '@angular/core';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { merge, Subject } from 'rxjs';

@@ -1,7 +1,6 @@
 import { Component, ElementRef, HostBinding, Input, ViewChild, ViewContainerRef,
-     ChangeDetectorRef, OnDestroy, OnInit, Inject, NgZone } from '@angular/core';
+    ChangeDetectorRef, OnDestroy, OnInit, Inject, NgZone, DOCUMENT } from '@angular/core';
 import { VirtualHelperBaseDirective } from './base.helper.component';
-import { DOCUMENT } from '@angular/common';
 import { PlatformUtil } from '../../core/utils';
 
 @Component({
@@ -13,12 +12,10 @@ export class VirtualHelperComponent extends VirtualHelperBaseDirective implement
     @HostBinding('scrollTop')
     public scrollTop;
 
-    @HostBinding('style.width.px')
     public scrollWidth;
 
     @ViewChild('container', { read: ViewContainerRef, static: true }) public _vcr;
     @Input() public itemsLength: number;
-
 
     @HostBinding('class')
     public cssClasses = 'igx-vhelper--vertical';
@@ -29,6 +26,10 @@ export class VirtualHelperComponent extends VirtualHelperBaseDirective implement
 
     public ngOnInit() {
         this.scrollWidth = this.scrollNativeSize;
+        this.document.documentElement.style.setProperty(
+            '--vhelper-scrollbar-size',
+            `${this.scrollNativeSize}px`
+        );
     }
 
     protected override restoreScroll() {

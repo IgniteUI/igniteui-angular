@@ -78,82 +78,155 @@
     }
 
     $theme: digest-schema($tabs-schema);
-    $meta: map.get($theme, '_meta');
+    $variant: map.get($theme, '_meta', 'theme');
 
-    @if not($item-text-color) and $item-background {
-        @if meta.type-of($item-background) == 'color' {
-            $item-text-color: rgba(text-contrast($item-background), .54);
+    @if not($item-active-background) and $item-background {
+        $item-active-background: hsl(from var(--item-background) h s calc(l * 0.9));
+    }
+
+    @if not($item-background) {
+        @if not($item-text-color) and $item-icon-color {
+            $item-text-color: var(--item-icon-color);
+        }
+
+        @if not($item-icon-color) and $item-text-color {
+            $item-icon-color: var(--item-text-color);
+        }
+    } @else {
+        @if not($item-text-color) and $item-background {
+            $item-text-color: hsla(from adaptive-contrast(var(--item-background)) h s l / 0.8);
+         }
+
+         @if not($item-icon-color) and $item-background {
+             $item-icon-color: hsla(from adaptive-contrast(var(--item-background) h s l / 0.8));
+         }
+    }
+
+    @if not($item-active-background) {
+        @if $variant != 'bootstrap' {
+            @if not($item-active-icon-color) and $item-icon-color {
+                $item-active-icon-color: var(--item-icon-color);
+            }
+
+            @if not($item-active-color) and $item-text-color {
+                $item-active-color: var(--item-text-color);
+            }
+        }
+    } @else {
+        @if not($item-active-icon-color) and $item-active-color {
+            $item-active-icon-color: var(--item-active-color);
+        }
+
+        @if not($item-active-color) and $item-active-icon-color {
+            $item-active-color: var(--item-active-icon-color);
+        }
+
+        @if not($item-active-icon-color) and $item-active-background {
+            $item-active-icon-color: adaptive-contrast(var(--item-active-background));
+        }
+
+        @if not($item-active-color) and $item-active-background {
+            $item-active-color: adaptive-contrast(var(--item-active-background));
         }
     }
 
-    @if not($item-hover-color) and $item-background {
-        $item-hover-color: text-contrast($item-background);
+    @if not($item-hover-background) {
+        @if not($item-hover-color) and $item-text-color {
+            $item-hover-color: hsla(from var(--item-text-color) h s l / 1);
+        }
+
+        @if not($item-hover-icon-color) and $item-icon-color {
+            $item-hover-icon-color: hsla(from var(--item-icon-color) h s l / 1);
+        }
+    } @else {
+        @if not($item-hover-color) {
+            $item-hover-color: adaptive-contrast(var(--item-hover-background));
+        }
+
+        @if not($item-hover-icon-color) {
+            $item-hover-icon-color: adaptive-contrast(var(--item-hover-background));
+        }
     }
 
-    @if not($item-hover-color) and $item-hover-background {
-        $item-hover-color: text-contrast($item-hover-background);
+    @if not($item-hover-background) and $item-background {
+        $item-hover-background: hsl(from var(--item-background) h s calc(l * 0.9));
     }
 
-    @if not($item-active-icon-color) and $item-active-background {
-        $item-active-icon-color: text-contrast($item-active-background);
-    }
+    @if $variant == 'bootstrap' {
+        @if not($border-color) and $item-background {
+            $border-color: hsla(from adaptive-contrast(var(--item-background)) h s l / 0.5);
+        }
 
-    @if not($item-active-icon-color) and $item-background {
-        $item-active-icon-color: text-contrast($item-background);
-    }
+        @if not($border-color--hover) and $border-color {
+            $border-color--hover: var(--border-color);
+        }
+    } @else {
+        @if not($item-background) {
+            @if not($indicator-color) and $item-text-color {
+                $indicator-color: var(--item-text-color);
+            }
 
-    @if not($indicator-color) and $item-background {
-        $indicator-color: text-contrast($item-background);
-    }
+            @if not($indicator-color) and $item-icon-color {
+                $indicator-color: var(--item-icon-color);
+            }
+        } @else {
+            @if not($indicator-color) and $item-active-color {
+                $indicator-color: var(--item-active-color);
+            }
 
-    @if not($item-active-color) and $item-active-icon-color {
-        $item-active-color: $item-active-icon-color;
+            @if not($indicator-color) {
+                $indicator-color: adaptive-contrast(var(--item-background));
+            }
+        }
     }
 
     // Button
-    @if not($button-color) and $item-background {
-        $button-color: text-contrast($item-background);
+    @if $item-background {
+        @if not($button-background) and $item-background {
+            $button-background: var(--item-background);
+        }
+
+        @if not($button-hover-background) and $item-background {
+            $button-hover-background: hsl(from var(--item-background) h s calc(l * 0.9));
+        }
+    } @else if not($button-background) {
+        @if $variant != 'material' {
+            @if not($button-color) and $item-text-color {
+                $button-color: var(--item-text-color);
+            }
+
+            @if not($button-hover-color) and $button-color {
+                $button-hover-color: hsl(from var(--button-color) h s calc(l * 0.9));
+            }
+
+            @if not($button-disabled-color) and $button-color {
+                $button-disabled-color: hsla(from var(--button-color) h s l / 0.5);
+            }
+        }
+    }
+
+    @if $button-background {
+        @if not($button-hover-background) and $button-background {
+            $button-hover-background: hsl(from var(--button-background) h s calc(l * 0.9));
+        }
     }
 
     @if not($button-color) and $button-background {
-        $button-color: text-contrast($button-background);
-    }
-
-    @if not($button-color) and $item-background {
-        $button-background: transparent;
+        $button-color: adaptive-contrast(var(--button-background));
     }
 
     @if not($button-hover-color) and $button-hover-background {
-        $button-hover-color: text-contrast($button-hover-background);
+        $button-hover-color: adaptive-contrast(var(--button-hover-background));
     }
 
-    @if not($button-hover-background) and $item-background {
-        $button-hover-color: text-contrast($item-background);
+    @if not($button-ripple-color) and $button-color {
+        $button-ripple-color: var(--button-color);
     }
 
-    @if not($button-background) and $item-background {
-        @if meta.type-of($item-background) == 'color' and lightness($item-background) > 50 {
-            $button-background: transparent;
-        } @else {
-            $button-background: rgba(255, 255, 255 , .1);
-        }
+    @if not($button-disabled-color) and $button-color {
+        $button-disabled-color: hsla(from var(--button-color) h s l / 0.4);
     }
 
-    @if not($button-hover-background) and $item-background {
-        @if meta.type-of($item-background) == 'color' and lightness($item-background) > 50 {
-            $button-hover-background: rgba(0, 0, 0, .05);
-        } @else {
-            $button-hover-background: rgba(255, 255, 255 , .14);
-        }
-    }
-
-    @if not($button-ripple-color) and $button-background {
-        @if meta.type-of($item-background) == 'color' and lightness($item-background) > 50 {
-            $button-ripple-color: rgba(0, 0, 0, .4);
-        } @else {
-            $button-ripple-color: rgba(255, 255, 255, .4);
-        }
-    }
     // Button end
 
     @if not($tab-ripple-color) and $item-active-background {
@@ -186,12 +259,8 @@
         tab-ripple-color: $tab-ripple-color,
         button-ripple-color: $button-ripple-color,
         border-color: $border-color,
+        border-color--hover: $border-color--hover,
         border-radius: $border-radius,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme'),
-            theme-variant: map.get($schema, '_meta', 'variant')
-        )),
     ));
 }
 
@@ -203,11 +272,11 @@
 @mixin tabs($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $not-bootstrap-theme: $variant != 'bootstrap';
     $bootstrap-theme: $variant == 'bootstrap';
     $indigo-theme: $variant == 'indigo';
-    $theme-variant: map.get($theme, '_meta', 'theme-variant');
+    $theme-variant: map.get($theme, '_meta', 'variant');
 
     $item-min-width: rem(90px);
     $item-max-width: rem(360px);
@@ -253,6 +322,21 @@
         flex: 0 0 auto;
         background: var-get($theme, 'item-background');
         z-index: 1;
+	    
+	    @if $bootstrap-theme {
+		    position: relative;
+		    
+		    &::after {
+			    content: '';
+			    position: absolute;
+			    bottom: 0;
+			    inset-inline-start: 0;
+			    width: 100%;
+			    height: rem(1px);
+			    background: var-get($theme, 'border-color');
+			    z-index: 0;
+		    }
+	    }
     }
 
     %tabs-header-content {
@@ -264,19 +348,6 @@
     %tabs-header-wrapper {
         position: relative;
         flex-grow: 1;
-
-        @if $bootstrap-theme {
-            &::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                inset-inline-start: 0;
-                width: 100%;
-                height: rem(1px);
-                background: var-get($theme, 'border-color');
-                z-index: 0;
-            }
-        }
     }
 
     %tabs-header-scroll {
@@ -407,7 +478,7 @@
             &:focus {
                 border-top: rem(1px) solid transparent;
                 border-inline: none;
-                border-bottom: rem(1px) solid var-get($theme, 'border-color');
+                border-bottom: rem(1px) solid var-get($theme, 'border-color--hover');
             }
 
             igx-icon {
@@ -509,7 +580,7 @@
 
         @if $indigo-theme {
             &:hover,
-            &:focus-visible {
+            &:focus-within {
                 background: var-get($theme, 'item-hover-background');
             }
         }

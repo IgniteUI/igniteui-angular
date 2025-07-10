@@ -1,7 +1,7 @@
 <div class="combo-sample">
     <section class="combo-sample__section">
         <h1 class="combo-sample__title">Remote Binding (Combo & Simple-combo)</h1>
-        <igx-combo #remoteCombo class="input-container" [itemsMaxHeight]="250" [itemHeight]="48"
+        <igx-combo #remoteCombo class="input-container" [itemsMaxHeight]="250"
                    [data]="rData | async" [valueKey]="'ProductID'" [displayKey]="'ProductName'" placeholder="Product(s)"
                    (dataPreLoad)="dataLoading()" (searchInputUpdate)="searchInput($event)"
                    (selectionChanging)="handleSelectionChanging($event)" (closing)="onClosing()"
@@ -14,8 +14,6 @@
         <igx-simple-combo
             #remoteSimpleCombo
             class="input-container"
-            [itemsMaxHeight]="250"
-            [itemHeight]="48"
             [data]="rData | async"
             [valueKey]="'ProductID'"
             [displayKey]="'ProductName'"
@@ -41,7 +39,7 @@
                 Add Missouri
             </button>
             <button igxButton="outlined" (click)="values1 = []">
-                <span><igx-icon>clear</igx-icon></span>
+                <igx-icon>clear</igx-icon>
                 <span>Clear values</span>
             </button>
         </div>
@@ -63,6 +61,23 @@
                 <label igxLabel>States</label>
                 <igx-hint>Please select the states you've visited</igx-hint>
             </igx-combo>
+
+            <igx-simple-combo
+                class="input-container"
+                [placeholder]="'Locations'"
+                name="anyName"
+                #comboModel="ngModel"
+                [(ngModel)]="values1"
+                minlength="2"
+                required
+                [data]="items"
+                [displayKey]="valueKeyVar"
+                [valueKey]="valueKeyVar"
+                [groupKey]="valueKeyVar ? 'region' : ''"
+            >
+                <label igxLabel>Simple combo</label>
+                <igx-hint>Please select the states you've visited</igx-hint>
+            </igx-simple-combo>
         </form>
     </section>
 
@@ -107,22 +122,8 @@
             >
         </div>
 
-        <igx-buttongroup>
-            <button
-                igxButton
-                [disabled]="playgroundCombo.itemHeight === 56"
-                (click)="playgroundCombo.itemHeight = 56"
-            >
-                Set ItemHeight to 56
-            </button>
-            <button
-                igxButton
-                [disabled]="playgroundCombo.itemHeight === null"
-                (click)="playgroundCombo.itemHeight = null"
-            >
-                Reset ItemHeight
-            </button>
-        </igx-buttongroup>
+        <igx-switch [(ngModel)]="isChecked">Change item height to 46px</igx-switch>
+
         <small>Overlay Settings</small>
         <igx-buttongroup [alignment]="alignment">
             <button igxButton (click)="changeOverlaySettings(1)">

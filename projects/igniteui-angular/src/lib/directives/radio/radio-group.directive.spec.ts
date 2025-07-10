@@ -3,14 +3,12 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxRadioGroupDirective } from './radio-group.directive';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, FormGroup, FormControl } from '@angular/forms';
 
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { IgxRadioComponent } from '../../radio/radio.component';
 
 describe('IgxRadioGroupDirective', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 FormsModule,
@@ -450,3 +448,4 @@ const dispatchRadioEvent = (eventName, radioNativeElement, fixture) => {
     radioNativeElement.dispatchEvent(new Event(eventName));
     fixture.detectChanges();
 };
+

@@ -12,6 +12,7 @@
 @use 'igniteui-theming/sass/utils' as *;
 @use 'igniteui-theming/sass/themes' as *;
 @use 'igniteui-theming/sass/themes/charts' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/button' as *;
 
 ////
 /// @group themes
@@ -21,7 +22,9 @@
 
 /// Default noop handler for theme map transforms
 /// @access private
-@function theme-noop($arg) { @return $arg; }
+@function theme-noop($arg) {
+    @return $arg;
+}
 
 /// Generates an Ignite UI for Angular global theme.
 /// @param {Map} $palette - An palette to be used by the global theme.
@@ -39,7 +42,7 @@
     $exclude: (),
     $roundness: null,
     $elevation: true,
-    $elevations: elevations.$material-elevations,
+    $elevations: elevations.$material-elevations
 ) {
     @include theme-internal(
         $palette: $palette,
@@ -48,7 +51,7 @@
         $roundness: $roundness,
         $elevation: $elevation,
         $elevations: $elevations
-    )
+    );
 }
 
 /// Generates an Ignite UI for Angular global theme.
@@ -69,7 +72,7 @@
     $roundness: null,
     $elevation: true,
     $elevations: elevations.$material-elevations,
-    $theme-handler: meta.get-function('theme-noop'),
+    $theme-handler: meta.get-function('theme-noop')
 ) {
     // Stores all excluded component styles
     $excluded: ();
@@ -169,11 +172,28 @@
     // }
 
     @if is-used('igx-button', $exclude) {
-        $button-theme-map: button-theme(
+        $flat-theme-map: flat-button-theme(
             $schema: $schema,
         );
-        $button-theme-map: meta.call($theme-handler, $button-theme-map);
-        @include button($button-theme-map);
+
+        $contained-theme-map: contained-button-theme(
+            $schema: $schema,
+        );
+
+        $outlined-theme-map: outlined-button-theme(
+            $schema: $schema,
+        );
+
+        $fab-theme-map: fab-button-theme(
+            $schema: $schema,
+        );
+
+        @include button(
+            $flat: meta.call($theme-handler, $flat-theme-map),
+            $contained: meta.call($theme-handler, $contained-theme-map),
+            $outlined: meta.call($theme-handler, $outlined-theme-map),
+            $fab:meta.call($theme-handler, $fab-theme-map)
+        );
     }
 
     // @if is-used('igx-button-group', $exclude) {
@@ -229,55 +249,73 @@
             $schema: $schema,
         );
         $data-chart-theme-map: meta.call($theme-handler, $data-chart-theme-map);
-        @include  css-vars($data-chart-theme-map);
+        @include css-vars($data-chart-theme-map);
     }
 
     @if is-used('doughnut-chart', $exclude) {
         $doughnut-chart-theme-map: doughnut-chart-theme(
             $schema: $schema,
         );
-        $doughnut-chart-theme-map: meta.call($theme-handler, $doughnut-chart-theme-map);
-        @include  css-vars($doughnut-chart-theme-map);
+        $doughnut-chart-theme-map: meta.call(
+            $theme-handler,
+            $doughnut-chart-theme-map
+        );
+        @include css-vars($doughnut-chart-theme-map);
     }
 
     @if is-used('linear-gauge', $exclude) {
         $linear-gauge-theme-map: linear-gauge-theme(
             $schema: $schema,
         );
-        $linear-gauge-theme-map: meta.call($theme-handler, $linear-gauge-theme-map);
-        @include  css-vars($linear-gauge-theme-map);
+        $linear-gauge-theme-map: meta.call(
+            $theme-handler,
+            $linear-gauge-theme-map
+        );
+        @include css-vars($linear-gauge-theme-map);
     }
 
     @if is-used('radial-gauge', $exclude) {
         $radial-gauge-theme-map: radial-gauge-theme(
             $schema: $schema,
         );
-        $radial-gauge-theme-map: meta.call($theme-handler, $radial-gauge-theme-map);
-        @include  css-vars($radial-gauge-theme-map);
+        $radial-gauge-theme-map: meta.call(
+            $theme-handler,
+            $radial-gauge-theme-map
+        );
+        @include css-vars($radial-gauge-theme-map);
     }
 
     @if is-used('financial-chart', $exclude) {
         $financial-chart-theme-map: financial-chart-theme(
             $schema: $schema,
         );
-        $financial-chart-theme-map: meta.call($theme-handler, $financial-chart-theme-map);
-        @include  css-vars($financial-chart-theme-map);
+        $financial-chart-theme-map: meta.call(
+            $theme-handler,
+            $financial-chart-theme-map
+        );
+        @include css-vars($financial-chart-theme-map);
     }
 
     @if is-used('bullet-graph', $exclude) {
         $bullet-graph-theme-map: bullet-graph-theme(
             $schema: $schema,
         );
-        $bullet-graph-theme-map: meta.call($theme-handler, $bullet-graph-theme-map);
-        @include  css-vars($bullet-graph-theme-map);
+        $bullet-graph-theme-map: meta.call(
+            $theme-handler,
+            $bullet-graph-theme-map
+        );
+        @include css-vars($bullet-graph-theme-map);
     }
 
     @if is-used('category-chart', $exclude) {
         $category-chart-theme-map: category-chart-theme(
             $schema: $schema,
         );
-        $category-chart-theme-map: meta.call($theme-handler, $category-chart-theme-map);
-        @include  css-vars($category-chart-theme-map);
+        $category-chart-theme-map: meta.call(
+            $theme-handler,
+            $category-chart-theme-map
+        );
+        @include css-vars($category-chart-theme-map);
     }
 
     @if is-used('geo-map', $exclude) {
@@ -285,7 +323,7 @@
             $schema: $schema,
         );
         $geo-map-theme-map: meta.call($theme-handler, $geo-map-theme-map);
-        @include  css-vars($geo-map-theme-map);
+        @include css-vars($geo-map-theme-map);
     }
 
     @if is-used('pie-chart', $exclude) {
@@ -293,7 +331,7 @@
             $schema: $schema,
         );
         $pie-chart-theme-map: meta.call($theme-handler, $pie-chart-theme-map);
-        @include  css-vars($pie-chart-theme-map);
+        @include css-vars($pie-chart-theme-map);
     }
 
     @if is-used('sparkline', $exclude) {
@@ -301,23 +339,29 @@
             $schema: $schema,
         );
         $sparkline-theme-map: meta.call($theme-handler, $sparkline-theme-map);
-        @include  css-vars($sparkline-theme-map);
+        @include css-vars($sparkline-theme-map);
     }
 
     @if is-used('funnel-chart', $exclude) {
         $funnel-chart-theme-map: funnel-chart-theme(
             $schema: $schema,
         );
-        $funnel-chart-theme-map: meta.call($theme-handler, $funnel-chart-theme-map);
-        @include  css-vars($funnel-chart-theme-map);
+        $funnel-chart-theme-map: meta.call(
+            $theme-handler,
+            $funnel-chart-theme-map
+        );
+        @include css-vars($funnel-chart-theme-map);
     }
 
     @if is-used('shape-chart', $exclude) {
         $shape-chart-theme-map: shape-chart-theme(
             $schema: $schema,
         );
-        $shape-chart-theme-map: meta.call($theme-handler, $shape-chart-theme-map);
-        @include  css-vars($shape-chart-theme-map);
+        $shape-chart-theme-map: meta.call(
+            $theme-handler,
+            $shape-chart-theme-map
+        );
+        @include css-vars($shape-chart-theme-map);
     }
 
     // @if is-used('igx-checkbox', $exclude) {
@@ -344,21 +388,21 @@
     //     @include column-actions($column-actions-theme-map);
     // }
 
-    @if is-used('igx-combo', $exclude) {
-        $combo-theme-map: combo-theme(
-            $schema: $schema,
-        );
-        $combo-theme-map: meta.call($theme-handler, $combo-theme-map);
-        @include combo($combo-theme-map);
-    }
+    //@if is-used('igx-combo', $exclude) {
+    //    $combo-theme-map: combo-theme(
+    //        $schema: $schema,
+    //    );
+    //    $combo-theme-map: meta.call($theme-handler, $combo-theme-map);
+    //    @include combo($combo-theme-map);
+    //}
 
-    @if is-used('igx-select', $exclude) {
-        $select-theme-map: select-theme(
-            $schema: $schema,
-        );
-        $select-theme-map: meta.call($theme-handler, $select-theme-map);
-        @include select($select-theme-map);
-    }
+    //@if is-used('igx-select', $exclude) {
+    //    $select-theme-map: select-theme(
+    //        $schema: $schema,
+    //    );
+    //    $select-theme-map: meta.call($theme-handler, $select-theme-map);
+    //    @include select($select-theme-map);
+    //}
 
     //@if is-used('igx-date-picker', $exclude) {
     //    $calendar-theme-map: calendar-theme(
@@ -396,7 +440,10 @@
         $dock-manager-theme-map: dock-manager-theme(
             $schema: $schema,
         );
-        $dock-manager-theme-map: meta.call($theme-handler, $dock-manager-theme-map);
+        $dock-manager-theme-map: meta.call(
+            $theme-handler,
+            $dock-manager-theme-map
+        );
         @include dock-manager($dock-manager-theme-map);
     }
 
@@ -473,20 +520,32 @@
     // }
 
     @if is-used('igx-icon-button', $exclude) {
-        $icon-button-theme-map: icon-button-theme(
+        $flat-theme-map: flat-icon-button-theme(
             $schema: $schema,
         );
-        $icon-button-theme-map: meta.call($theme-handler, $icon-button-theme-map);
-        @include icon-button($icon-button-theme-map);
+
+        $contained-theme-map: contained-icon-button-theme(
+            $schema: $schema,
+        );
+
+        $outlined-theme-map: outlined-icon-button-theme(
+            $schema: $schema,
+        );
+
+        @include icon-button(
+            $flat: meta.call($theme-handler, $flat-theme-map),
+            $contained: meta.call($theme-handler, $contained-theme-map),
+            $outlined: meta.call($theme-handler, $outlined-theme-map),
+        );
     }
 
-    @if is-used('igx-input-group', $exclude) {
-        $input-group-theme-map: input-group-theme(
-            $schema: $schema,
-        );
-        $input-group-theme-map: meta.call($theme-handler, $input-group-theme-map);
-        @include input-group($input-group-theme-map);
-    }
+    //@if is-used('igx-input-group', $exclude) {
+    //    $input-group-theme-map: input-group-theme(
+    //        $schema: $schema,
+    //    );
+    //    $input-group-theme-map: meta.call($theme-handler, $input-group-theme-map);
+    //    @include input-group($input-group-theme-map);
+    //}
 
     // @if is-used('igx-list', $exclude) {
     //     $list-theme-map: list-theme(
@@ -564,7 +623,10 @@
         $query-builder-theme-map: query-builder-theme(
             $schema: $schema,
         );
-        $query-builder-theme-map: meta.call($theme-handler, $query-builder-theme-map);
+        $query-builder-theme-map: meta.call(
+            $theme-handler,
+            $query-builder-theme-map
+        );
         @include query-builder($query-builder-theme-map);
     }
 
@@ -636,7 +698,10 @@
         $time-picker-theme-map: time-picker-theme(
             $schema: $schema,
         );
-        $time-picker-theme-map: meta.call($theme-handler, $time-picker-theme-map);
+        $time-picker-theme-map: meta.call(
+            $theme-handler,
+            $time-picker-theme-map
+        );
         @include time-picker($time-picker-theme-map);
     }
 
@@ -666,12 +731,7 @@
 /// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
 /// @see {mixin} theme
 /// @deprecated - Use the theme mixin instead.
-@mixin light-theme(
-    $palette,
-    $exclude: (),
-    $roundness: null,
-    $elevation: true,
-) {
+@mixin light-theme($palette, $exclude: (), $roundness: null, $elevation: true) {
     $gray: color($palette, gray);
     $surface: color($palette, surface);
 
@@ -691,7 +751,7 @@
         $schema: $light-material-schema,
         $exclude: $exclude,
         $roundness: $roundness,
-        $elevation: $elevation,
+        $elevation: $elevation
     );
 }
 
@@ -700,12 +760,7 @@
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
 /// @see {mixin} theme
 /// @deprecated - Use the theme mixin instead.
-@mixin dark-theme(
-    $palette,
-    $exclude: (),
-    $roundness: null,
-    $elevation: true,
-) {
+@mixin dark-theme($palette, $exclude: (), $roundness: null, $elevation: true) {
     $gray: color($palette, gray);
     $surface: color($palette, surface);
 
@@ -725,6 +780,6 @@
         $schema: $dark-material-schema,
         $exclude: $exclude,
         $roundness: $roundness,
-        $elevation: $elevation,
+        $elevation: $elevation
     );
 }

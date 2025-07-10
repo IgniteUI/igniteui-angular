@@ -20,7 +20,13 @@ export * from './lib/directives/filter/filter.directive';
 export * from './lib/directives/focus/focus.directive';
 export * from './lib/directives/focus-trap/focus-trap.directive';
 export {
-    IgxForOfContext, IgxForOfDirective, IForOfState, IgxGridForOfContext, IgxGridForOfDirective
+    IForOfDataChangeEventArgs,
+    IForOfDataChangingEventArgs,
+    IForOfState,
+    IgxForOfContext,
+    IgxForOfDirective,
+    IgxGridForOfContext,
+    IgxGridForOfDirective,
 } from './lib/directives/for-of/for_of.directive';
 export * from './lib/directives/button/icon-button.directive';
 export * from './lib/directives/layout/layout.directive';

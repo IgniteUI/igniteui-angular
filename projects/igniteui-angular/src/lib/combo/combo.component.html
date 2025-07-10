@@ -3,7 +3,7 @@
         <ng-content select="[igxLabel]"></ng-content>
     </ng-container>
     <ng-container ngProjectAs="igx-prefix">
-        <ng-content select="igx-prefix"></ng-content>
+        <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
     </ng-container>
     <ng-container ngProjectAs="igx-hint, [igxHint]">
         <ng-content select="igx-hint, [igxHint]"></ng-content>
@@ -15,10 +15,10 @@
         [attr.aria-labelledby]="ariaLabelledBy || label?.id || placeholder"
         (blur)="onBlur()" />
     <ng-container ngProjectAs="igx-suffix">
-        <ng-content select="igx-suffix"></ng-content>
+        <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
     </ng-container>
     @if (displayValue) {
-        <igx-suffix [attr.aria-label]="resourceStrings.igx_combo_clearItems_placeholder" class="igx-combo__clear-button"
+        <igx-suffix [attr.aria-label]="resourceStrings.igx_combo_clearItems_placeholder" class="igx-combo__clear-button igx-input-group__clear-button"
             (click)="handleClearItems($event)">
             @if (clearIconTemplate) {
                 <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
@@ -28,7 +28,7 @@
             }
         </igx-suffix>
     }
-    <igx-suffix class="igx-combo__toggle-button">
+    <igx-suffix class="igx-combo__toggle-button igx-input-group__toggle-button">
         @if (toggleIconTemplate) {
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: collapsed}"></ng-container>
         }
@@ -41,72 +41,79 @@
     [labelledBy]="ariaLabelledBy || label?.id || placeholder || ''"
     [width]="itemsWidth || '100%'" (opening)="handleOpening($event)" (closing)="handleClosing($event)"
     (opened)="handleOpened()" (closed)="handleClosed()">
-    @if (displaySearchInput) {
-        <div class="igx-combo__search">
-            <igx-input-group type="line">
-                <input igxInput #searchInput name="searchInput" autocomplete="off" type="text"
-                    [(ngModel)]="searchValue" (ngModelChange)="handleInputChange($event)" (keyup)="handleKeyUp($event)"
-                    (keydown)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [attr.placeholder]="getSearchPlaceholderText()"
-                    aria-autocomplete="list" role="searchbox" aria-label="search"/>
-                @if (showSearchCaseIcon) {
-                    <igx-suffix (click)="toggleCaseSensitive()">
-                        <span [ngClass]="filteringOptions.caseSensitive? 'igx-combo__case-icon--active' : 'igx-combo__case-icon'">
+
+    <!-- The igx-combo class is needed here in order to scope the css variables -->
+    <div class="igx-combo">
+        @if (displaySearchInput) {
+            <div class="igx-combo__search">
+                <igx-input-group type="line">
+                    <input igxInput #searchInput name="searchInput" autocomplete="off" type="text"
+                           [(ngModel)]="searchValue" (ngModelChange)="handleInputChange($event)" (keyup)="handleKeyUp($event)"
+                           (keydown)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [attr.placeholder]="getSearchPlaceholderText()"
+                           aria-autocomplete="list" role="searchbox" aria-label="search"/>
+                    @if (showSearchCaseIcon) {
+                        <igx-suffix
+                            class="igx-input-group__case-icon igx-combo__case-icon"
+                            [ngClass]="{ 'igx-combo__case-icon--active': filteringOptions.caseSensitive }"
+                            (click)="toggleCaseSensitive()"
+                        >
                             <igx-icon
-                                family="default"
-                                name="case_sensitive"
-                                [active]="filteringOptions.caseSensitive">
+                                    family="default"
+                                    name="case_sensitive"
+                                    [active]="filteringOptions.caseSensitive">
                             </igx-icon>
-                        </span>
-                    </igx-suffix>
-                }
-            </igx-input-group>
-        </div>
-    }
-    <ng-container *ngTemplateOutlet="headerTemplate">
-    </ng-container>
-    <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'"
-        [style.maxHeight.rem]="itemsMaxHeightInRem" [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()"
-        [tabindex]="dropdown.collapsed ? -1 : 0" [attr.id]="dropdown.id" aria-multiselectable="true"
-        [attr.aria-activedescendant]="activeDescendant">
-        <igx-combo-item [itemHeight]="itemHeight" *igxFor="let item of data
+                        </igx-suffix>
+                    }
+                </igx-input-group>
+            </div>
+        }
+        <ng-container *ngTemplateOutlet="headerTemplate">
+        </ng-container>
+        <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'"
+             [style.maxHeight.rem]="itemsMaxHeightInRem" [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()"
+             [tabindex]="dropdown.collapsed ? -1 : 0" [attr.id]="dropdown.id" aria-multiselectable="true"
+             [attr.aria-activedescendant]="activeDescendant">
+            <igx-combo-item [itemHeight]="itemHeight" *igxFor="let item of data
             | comboFiltering:filterValue:displayKey:filteringOptions:filterFunction:disableFiltering
             | comboGrouping:groupKey:valueKey:groupSortingDirection:compareCollator;
             index as rowIndex; initialChunkSize: 10; containerSize: itemsMaxHeight || containerSize; itemSize: itemHeight || itemSize, scrollOrientation: 'vertical';"
-            [value]="item" [isHeader]="item?.isHeader" [index]="rowIndex" [role]="item?.isHeader? 'group' : 'option'">
-            @if (item?.isHeader) {
-                <ng-container
-                    *ngTemplateOutlet="headerItemTemplate ? headerItemTemplate : headerItemBase;
+                            [value]="item" [isHeader]="item?.isHeader" [index]="rowIndex" [role]="item?.isHeader? 'group' : 'option'">
+                @if (item?.isHeader) {
+                    <ng-container
+                            *ngTemplateOutlet="headerItemTemplate ? headerItemTemplate : headerItemBase;
                     context: {$implicit: item, data: data, valueKey: valueKey, groupKey: groupKey, displayKey: displayKey}">
-                </ng-container>
-            }
-            <!-- if item is 'null' it should be displayed and !!(item?.isHeader) would resolve it to 'false' and not display it -->
-            @if (!item?.isHeader) {
-                <ng-container #listItem
-                    *ngTemplateOutlet="template; context: {$implicit: item, data: data, valueKey: valueKey, displayKey: displayKey};">
-                </ng-container>
-            }
-        </igx-combo-item>
-    </div>
-    @if (filteredData.length === 0 || isAddButtonVisible()) {
-        <div class="igx-combo__add">
-            @if (filteredData.length === 0) {
-                <div class="igx-combo__empty">
-                    <ng-container *ngTemplateOutlet="emptyTemplate ? emptyTemplate : empty">
                     </ng-container>
-                </div>
-            }
-            @if (isAddButtonVisible()) {
-                <igx-combo-add-item [itemHeight]="itemHeight"
-                    [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1" class="igx-combo__add-item" role="button"
-                    [attr.aria-label]="resourceStrings.igx_combo_addCustomValues_placeholder" [index]="virtualScrollContainer.igxForOf.length">
-                    <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate : addItemDefault">
+                }
+                <!-- if item is 'null' it should be displayed and !!(item?.isHeader) would resolve it to 'false' and not display it -->
+                @if (!item?.isHeader) {
+                    <ng-container #listItem
+                                  *ngTemplateOutlet="template; context: {$implicit: item, data: data, valueKey: valueKey, displayKey: displayKey};">
                     </ng-container>
-                </igx-combo-add-item>
-            }
+                }
+            </igx-combo-item>
         </div>
-    }
-    <ng-container *ngTemplateOutlet="footerTemplate">
-    </ng-container>
+
+        @if (filteredData.length === 0 || isAddButtonVisible()) {
+            <div class="igx-combo__add">
+                @if (filteredData.length === 0) {
+                    <div class="igx-combo__empty">
+                        <ng-container *ngTemplateOutlet="emptyTemplate ? emptyTemplate : empty">
+                        </ng-container>
+                    </div>
+                }
+                @if (isAddButtonVisible()) {
+                    <igx-combo-add-item [itemHeight]="itemHeight"
+                                        [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1" class="igx-combo__add-item" role="button"
+                                        [attr.aria-label]="resourceStrings.igx_combo_addCustomValues_placeholder" [index]="virtualScrollContainer.igxForOf.length">
+                        <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate : addItemDefault">
+                        </ng-container>
+                    </igx-combo-add-item>
+                }
+            </div>
+        }
+        <ng-container *ngTemplateOutlet="footerTemplate">
+        </ng-container>
+    </div>
 </igx-combo-drop-down>
 <ng-template #complex let-display let-data="data" let-key="displayKey">
     {{display[key]}}

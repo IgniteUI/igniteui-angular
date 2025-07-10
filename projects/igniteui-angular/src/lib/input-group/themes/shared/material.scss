@@ -1,0 +1,944 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+@use 'igniteui-theming/sass/animations/easings' as *;
+@use '../light/tokens' as *;
+
+$_theme: $material;
+$transition-timing: .25s $out-cubic;
+$bundle-start-end-min-width: pad(rem(10px), rem(12px), rem(14px));
+$input-inline-padding: rem(4px);
+$input-top-spacing: rem(20px);
+$input-bottom-spacing: rem(6px);
+
+@layer ig.material {
+    @container style(--ig-theme: material) {
+        %box-floating-label {
+            @include type-style(caption);
+
+            translate: 0 rem(-12px);
+        }
+
+        %box-floating-text-area-label {
+            @include type-style(caption);
+
+            translate: 0;
+            inset-block-start: calc(var(--_input-top-spacing) / 4);
+        }
+
+        %border-textarea-floating-label {
+            @include type-style(caption);
+
+            display: inline-block;
+            position: relative;
+            inset-block: 0;
+        }
+    }
+
+    .igx-input-group--base:not(.igx-input-group--filled, .igx-input-group--focused) {
+        &:has(input:placeholder-shown) {
+            .igx-input-group__label {
+                @extend %box-floating-label;
+            }
+        }
+
+        &:has(textarea:placeholder-shown) {
+            .igx-input-group__label {
+                @extend %box-floating-text-area-label;
+            }
+        }
+    }
+
+    .igx-input-group--border:not(.igx-input-group--filled, .igx-input-group--focused) {
+        &:has(input:placeholder-shown) {
+            .igx-input-group__label {
+                @include type-style(caption);
+            }
+        }
+
+        &:has(textarea:placeholder-shown) {
+            .igx-input-group__label {
+                @extend %border-textarea-floating-label;
+            }
+        }
+
+        &:has(input:placeholder-shown, textarea:placeholder-shown) {
+            .igx-input-group__label {
+                align-self: start;
+                translate: 0 var(--_label-translate-top);
+            }
+
+            .igx-input-group__notch {
+                border-block-start-color: transparent;
+            }
+        }
+    }
+}
+
+@include themed-block(igx-input-group, material) {
+    --_prefix-suffix-spacing: #{pad-inline(rem(12px), rem(14px), rem(16px))};
+    --_bundle-template-rows: #{var-get($_theme, 'size')};
+
+    &:has([igxLabel], igx-label), {
+        --_input-top-spacing: #{$input-top-spacing};
+        --_input-bottom-spacing: #{$input-bottom-spacing};
+        --_label-row: 1;
+        --_bundle-row: 1;
+        --_hint-row: 2;
+    }
+
+    &:has(:not([igxLabel], igx-label)) {
+        --_hint-row: 2;
+    }
+
+    row-gap: rem(4px);
+
+    @include e(bundle) {
+        grid-row: var(--_bundle-row);
+
+        grid-template-columns: subgrid;
+    }
+
+    @include e(file-input) {
+        @extend %input-paddings;
+
+        padding-inline: $input-inline-padding;
+    }
+
+    @include e(bundle-start) {
+        overflow: clip;
+        min-width: $bundle-start-end-min-width;
+    }
+
+    @include e(bundle-end) {
+        overflow: clip;
+        min-width: $bundle-start-end-min-width;
+    }
+
+    @include e(bundle) {
+        > * {
+            grid-row: var(--_bundle-row);
+        }
+    }
+
+    @include e(hint) {
+        grid-row: var(--_hint-row);
+    }
+
+    @include m(base) {
+        %input-paddings {
+            padding-block-start: var(--_input-top-spacing);
+            padding-block-end: var(--_input-bottom-spacing);
+        }
+
+        @include e(bundle) {
+            transition: border-bottom-color $transition-timing;
+            align-items: center;
+            grid-column: 1 / -1;
+        }
+
+        @include e(bundle-main) {
+            padding-inline: $input-inline-padding;
+            grid-column: 2;
+        }
+
+        @include e(label) {
+            padding-inline: $input-inline-padding;
+            grid-column: 2;
+            z-index: 1;
+            align-self: center;
+        }
+
+        @include e(input) {
+            @extend %input-paddings;
+
+            padding-inline: 0;
+        }
+    }
+
+    @include m(base, $not: (search)) {
+        @include e(bundle) {
+            &::before,
+            &::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                inset-inline-end: 0;
+            }
+
+            &::before {
+                inset-block-end: 0;
+                height: rem(1px);
+                border-block-end: rem(1px) solid var-get($_theme, 'idle-bottom-line-color');
+                z-index: 1;
+            }
+
+            &::after {
+                inset-block-end: rem(0px);
+                height: rem(2px);
+                align-self: end;
+                scale: 0;
+                transform-origin: center;
+                background: var-get($_theme, 'focused-bottom-line-color');
+                z-index: 2;
+            }
+
+            &:hover {
+                &::before {
+                    border-block-end-color:  var-get($_theme, 'hover-bottom-line-color');
+                }
+            }
+        }
+    }
+
+    @include e(clear-icon) {
+        background: transparent;
+
+        &:focus {
+            color: color($color: 'secondary', $variant: 500);
+        }
+    }
+
+    @include mx(base, focused) {
+        @include e(bundle) {
+            &::after {
+                scale: 1;
+                transition: scale $transition-timing;
+            }
+        }
+
+        @include e(label) {
+            @extend %box-floating-label;
+
+            color: var-get($_theme, 'focused-secondary-color');
+        }
+    }
+
+    @include mx(base, valid) {
+        @include e(bundle) {
+            &::before {
+                border-block-end-color: rem(1px) solid var-get($_theme, 'success-secondary-color');
+            }
+
+            &::after {
+                background: var-get($_theme, 'success-secondary-color');
+            }
+        }
+    }
+
+    @include mx(base, warning) {
+        @include e(bundle) {
+            &::before {
+                border-block-end-color: var-get($_theme, 'warning-secondary-color');
+            }
+
+            &::after {
+                background: var-get($_theme, 'warning-secondary-color');
+            }
+
+            &:hover {
+                &::before {
+                    border-block-end-color: var-get($_theme, 'warning-secondary-color');
+                }
+            }
+        }
+    }
+
+    @include mx(base, invalid) {
+        @include e(bundle) {
+            &::before {
+                border-block-end-color: var-get($_theme, 'error-secondary-color');
+            }
+
+            &::after {
+                background: var-get($_theme, 'error-secondary-color');
+            }
+
+            &:hover {
+                &::before {
+                    border-block-end-color: var-get($_theme, 'error-secondary-color');
+                }
+            }
+        }
+    }
+
+    @include mx(base, filled) {
+        @include e(label) {
+            @extend %box-floating-label;
+        }
+    }
+
+    @include mx(box, disabled) {
+        @include e(bundle) {
+            background: var-get($_theme, 'box-disabled-background');
+
+            &:hover {
+                background: var-get($_theme, 'box-disabled-background');
+            }
+        }
+    }
+
+    @include mx(border, disabled) {
+        @include e(bundle) {
+            background: var-get($_theme, 'border-disabled-background');
+        }
+
+        @include e(bundle-start) {
+            border-color: var-get($_theme, 'disabled-border-color');
+        }
+
+        @include e(bundle-end) {
+            border-color: var-get($_theme, 'disabled-border-color');
+        }
+
+        @include e(notch) {
+            border-color: var-get($_theme, 'disabled-border-color');
+        }
+
+        @include e(filler) {
+            border-color: var-get($_theme, 'disabled-border-color');
+        }
+
+        @include e(upload) {
+            border-color: var-get($_theme, 'disabled-border-color');
+        }
+
+        &:hover {
+            @include e(bundle-start) {
+                border-color: var-get($_theme, 'disabled-border-color');
+            }
+
+            @include e(bundle-end) {
+                border-color: var-get($_theme, 'disabled-border-color');
+            }
+
+            @include e(notch) {
+                border-color: var-get($_theme, 'disabled-border-color');
+            }
+
+            @include e(filler) {
+                border-color: var-get($_theme, 'disabled-border-color');
+            }
+
+            @include e(upload) {
+                border-color: var-get($_theme, 'disabled-border-color');
+            }
+        }
+    }
+
+    @include m(textarea-group) {
+        --_bundle-template-rows: auto;
+
+        @include e(bundle-main) {
+            padding-block-start: $input-top-spacing;
+        }
+
+        @include e(textarea) {
+            // This gives the drag handle some room from the field bottom border
+            border-bottom: rem(2px) solid transparent;
+        }
+    }
+
+    @include mx(base, textarea-group) {
+        @include e(label) {
+            top: var(--_input-top-spacing);
+            align-self: start;
+        }
+    }
+
+    @include mx(base, textarea-group, filled) {
+        @include e(label) {
+            @extend %box-floating-text-area-label;
+        }
+    }
+
+    @include mx(base, textarea-group, focused) {
+        @include e(label) {
+            @extend %box-floating-text-area-label;
+        }
+    }
+
+    @include m(box) {
+        @include e(bundle) {
+            background: var-get($_theme, 'box-background');
+            border-start-start-radius: var-get($_theme, 'box-border-radius');
+            border-start-end-radius: var-get($_theme, 'box-border-radius');
+            overflow: clip;
+        }
+
+        @include e(bundle) {
+            &:hover {
+                background: var-get($_theme, 'box-background-hover');
+            }
+        }
+
+        @include e(bundle-start) {
+            border: {
+                start: {
+                    start-radius: calc(var-get($_theme, 'box-border-radius') - rem(1px));
+                };
+            }
+        }
+
+        @include e(bundle-end) {
+            border: {
+                start: {
+                    end-radius: calc(var-get($_theme, 'box-border-radius') - rem(1px));
+                }
+            }
+        }
+    }
+
+    @include mx(box, focused) {
+        @include e(bundle) {
+            background: var-get($_theme, 'box-background-focus');
+            border-bottom-color: transparent;
+        }
+    }
+
+    @include mx(base, disabled, ('not': (border, search))) {
+        @include e(bundle) {
+            &::before {
+                border-block-end-color: var-get($_theme, 'disabled-bottom-line-color');
+                border-block-end-style: dashed;
+            }
+        }
+
+        &:hover {
+            @include e(bundle) {
+                &::before {
+                    border-block-end-color: var-get($_theme, 'disabled-bottom-line-color');
+                }
+            }
+        }
+    }
+
+    @include m(search) {
+        @include e(bundle) {
+            background: var-get($_theme, 'search-background');
+            border-bottom: none;
+            border-radius: var-get($_theme, 'search-border-radius');
+            box-shadow: var-get($_theme, 'search-resting-elevation');
+
+            &:hover {
+                box-shadow: var-get($_theme, 'search-hover-elevation');
+            }
+        }
+
+        @include e(bundle-start) {
+            border-start-start-radius: var-get($_theme, 'search-border-radius');
+            border-end-start-radius: var-get($_theme, 'search-border-radius');
+        }
+
+        @include e(bundle-end) {
+            border-start-end-radius: var-get($_theme, 'search-border-radius');
+            border-end-end-radius: var-get($_theme, 'search-border-radius');
+        }
+    }
+
+    @include mx(search, focused) {
+        @include e(bundle) {
+            box-shadow: var-get($_theme, 'search-hover-elevation');
+        }
+    }
+
+    @include mx(search, disabled) {
+        @include e(bundle) {
+            background: var-get($_theme, 'search-disabled-background');
+            box-shadow: var-get($_theme, 'search-disabled-elevation');
+        }
+    }
+
+    @include m(file) {
+        @include e(file-input) {
+            background: var-get($_theme, 'file-names-background');
+            color: var-get($_theme, 'file-names-foreground');
+        }
+    }
+
+    @include mx(file, filled) {
+        @include e(file-input) {
+            background: var-get($_theme, 'file-names-background--filled');
+            color: var-get($_theme, 'file-names-foreground--filled');
+        }
+    }
+
+    @include mx(file, focused) {
+        @include e(file-input) {
+            background: var-get($_theme, 'file-names-background--focused');
+            color: var-get($_theme, 'file-names-foreground--focused');
+        }
+    }
+
+    @include mx(file, disabled) {
+        @include e(file-input) {
+            background: var-get($_theme, 'file-names-background--disabled');
+            color: var-get($_theme, 'file-names-foreground--disabled');
+        }
+    }
+
+    @include mx(border, textarea-group) {
+        @include e(label) {
+            top: var(--_input-top-spacing);
+            transition:
+                translate 150ms cubic-bezier(.4, 0, .2, 1),
+                color 150ms cubic-bezier(.4, 0, .2, 1),
+                font-size 150ms cubic-bezier(.4, 0, .2, 1);
+            will-change: translate;
+            align-self: start;
+        }
+
+        //@include e(textarea) {
+        //    margin-block-start: $input-top-spacing;
+        //    bottom: rem(2px);
+        //}
+    }
+
+    @include mx(border, textarea-group, filled) {
+        @include e(label) {
+            @extend %border-textarea-floating-label;
+        }
+    }
+
+    @include mx(border, textarea-group, focused) {
+        @include e(label) {
+            @extend %border-textarea-floating-label;
+        }
+    }
+
+    @include mx(base, file) {
+        @include e(label) {
+            grid-column: 3;
+        }
+
+        @include e(bundle-main) {
+            grid-column: 3;
+        }
+
+        @include e(bundle-end) {
+            grid-column: 4;
+        }
+    }
+
+    @include m(border) {
+        $label-position: calc((var-get($_theme, 'size') / 2) - (var(--_input-border-size) / 2));
+        --_bundle-template-columns: auto auto 1fr auto;
+        --_input-border-size: #{rem(1px)};
+        --_input-border-style: solid;
+        --_label-translate-top: -50%;
+
+        $border-size: rem(1px);
+
+        %idle-border-styles {
+            border-width: var(--_input-border-size-focus, var(--_input-border-size));
+            border-style: var(--_input-border-style);
+            border-color: var-get($_theme, 'border-color');
+        }
+
+        @include e(bundle) {
+            grid-column: 1 / -1;
+            background: var-get($_theme, 'border-background');
+            border-radius: var-get($_theme, 'border-border-radius');
+        }
+
+        @include e(input) {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            border: none;
+            outline-style: none;
+            z-index: 1;
+        }
+
+        @include e(bundle-start) {
+            @extend %idle-border-styles;
+
+            border-inline-end-width: 0;
+            border-start-start-radius: var-get($_theme, 'border-border-radius');
+            border-end-start-radius: var-get($_theme, 'border-border-radius');
+        }
+
+        @include e(bundle-main) {
+            grid-column: 2 / span 2;
+            padding-inline: $input-inline-padding;
+        }
+
+        @include e(notch)  {
+            @extend %idle-border-styles;
+
+            display: flex;
+            align-items: center;
+            border-inline: none;
+            padding-inline: $input-inline-padding;
+            grid-column: 2;
+            min-width: 0;
+        }
+
+        @include e(filler) {
+            @extend %idle-border-styles;
+
+            border-inline: none;
+            grid-column: 3;
+        }
+
+        @include e(upload) {
+            @extend %idle-border-styles;
+
+            border-inline: none;
+            grid-column: 2;
+            display: flex;
+            align-items: center;
+        }
+
+        @include e(bundle-end) {
+            @extend %idle-border-styles;
+
+            border-inline-start-width: 0;
+            grid-column: 4;
+            border-start-end-radius: var-get($_theme, 'border-border-radius');
+            border-end-end-radius: var-get($_theme, 'border-border-radius');
+        }
+
+        &:hover {
+            @include e(bundle-start) {
+                border-color: var-get($_theme, 'hover-border-color');
+            }
+
+            @include e(bundle-end) {
+                border-color: var-get($_theme, 'hover-border-color');
+            }
+
+            @include e(notch) {
+                border-color: var-get($_theme, 'hover-border-color');
+            }
+
+            @include e(filler) {
+                border-color: var-get($_theme, 'hover-border-color');
+            }
+
+            @include e(upload) {
+                border-color: var-get($_theme, 'hover-border-color');
+            }
+        }
+    }
+
+    @include mx(border, focused) {
+        --_input-border-size-focus: calc(var(--_input-border-size) + #{rem(1px)});
+
+        $negative-margin: calc((var(--_input-border-size-focus) / 2) * -1);
+
+        @include e(label) {
+            color: var-get($_theme, 'focused-secondary-color');
+        }
+
+        @include e(bundle-start) {
+            border-color: var-get($_theme, 'focused-border-color');
+
+            &:has(igx-prefix),
+            &:has([igxPrefix]) {
+                igx-prefix:first-child,
+                [igxPrefix]:first-child {
+                    margin-inline-start: $negative-margin;
+                }
+            }
+        }
+
+        @include e(bundle-end) {
+            border-color: var-get($_theme, 'focused-border-color');
+
+            &:has(igx-suffix),
+            &:has([igxSuffix]) {
+                igx-suffix:last-child,
+                [igxSuffix]:last-child {
+                    margin-inline-end: $negative-margin;
+                }
+            }
+        }
+
+        @include e(notch) {
+            border-color: var-get($_theme, 'focused-border-color');
+            border-block-start-color: transparent;
+            border-block-start-width: rem(1px);
+        }
+
+        @include e(filler) {
+            border-color: var-get($_theme, 'focused-border-color');
+        }
+
+        @include e(upload) {
+            border-color: var-get($_theme, 'focused-border-color');
+        }
+    }
+
+    @include mx(border, focused) {
+        @include e(label) {
+            translate: 0 var(--_label-translate-top);
+            align-self: start;
+        }
+    }
+
+    @include mx(border, filled, ('not': (focused))) {
+        @include e(label) {
+            translate: 0 var(--_label-translate-top);
+            align-self: start;
+        }
+    }
+
+    @include mx(border, filled) {
+        @include e(notch) {
+            border-block-start-color: transparent;
+        }
+    }
+
+    @include mx(border, valid) {
+        @include e(bundle-start) {
+            border-color: var-get($_theme, 'success-secondary-color');
+        }
+
+        @include e(notch) {
+            border-color: var-get($_theme, 'success-secondary-color');
+        }
+
+        @include e(filler) {
+            border-color: var-get($_theme, 'success-secondary-color');
+        }
+
+        @include e(bundle-end) {
+            border-color: var-get($_theme, 'success-secondary-color');
+        }
+
+        &:hover {
+            @include e(upload) {
+                border-color: var-get($_theme, 'success-secondary-color');
+            }
+        }
+    }
+
+    @include mx(border, valid, focused) {
+        @include e(notch) {
+            border-block-start-color: transparent;
+        }
+    }
+
+    @include mx(border, warning) {
+        @include e(bundle-start) {
+            border-color: var-get($_theme, 'warning-secondary-color');
+        }
+
+        @include e(notch) {
+            border-color: var-get($_theme, 'warning-secondary-color');
+        }
+
+        @include e(filler) {
+            border-color: var-get($_theme, 'warning-secondary-color');
+        }
+
+        @include e(bundle-end) {
+            border-color: var-get($_theme, 'warning-secondary-color');
+        }
+
+        &:hover {
+            @include e(upload) {
+                border-color: var-get($_theme, 'warning-secondary-color');
+            }
+        }
+    }
+
+    @include mx(border, warning, focused) {
+        @include e(notch) {
+            border-block-start-color: transparent;
+        }
+    }
+
+    @include mx(border, invalid) {
+        @include e(bundle-start) {
+            border-color: var-get($_theme, 'error-secondary-color');
+        }
+
+        @include e(notch) {
+            border-color: var-get($_theme, 'error-secondary-color');
+        }
+
+        @include e(filler) {
+            border-color: var-get($_theme, 'error-secondary-color');
+        }
+
+        @include e(bundle-end) {
+            border-color: var-get($_theme, 'error-secondary-color');
+        }
+
+        &:hover {
+            @include e(upload) {
+                border-color: var-get($_theme, 'error-secondary-color');
+            }
+        }
+    }
+
+    @include mx(border, invalid, focused) {
+        @include e(notch) {
+            border-block-start-color: transparent;
+        }
+    }
+
+    @include m(file, $not: (border)) {
+        @include e(label) {
+            @extend %box-floating-label;
+            grid-row: 1 / -1;
+        }
+    }
+
+    @include mx(border, file, ('not': (focused))) {
+        @include e(label) {
+            @include type-style(caption);
+
+            translate: 0 var(--_label-translate-top);
+            align-self: start;
+        }
+
+        @include e(notch)  {
+            border-block-start-color: transparent;
+        }
+    }
+
+    @include mx(border, file) {
+        --_bundle-template-columns: auto auto auto 1fr auto;
+
+        @include e(notch)  {
+            grid-column: 3
+        }
+
+        @include e(bundle-main) {
+            grid-column: 3 / span 2;
+        }
+
+        @include e(filler) {
+            grid-column: 4 / 5;
+        }
+
+        @include e(bundle-end) {
+            grid-area: 1 / 5;
+        }
+    }
+
+    @include e(hint) {
+        min-height: rem(18px);
+        padding-inline: sizable(rem(14px), rem(16px), rem(18px));
+    }
+
+    @include m(valid) {
+        @include e(label) {
+            color: #{var-get($_theme, 'success-secondary-color')};
+        }
+
+        @include e(hint) {
+            color: var-get($_theme, 'success-secondary-color');
+        }
+
+        @include e(upload) {
+            border-color: var-get($_theme, 'success-secondary-color');;
+        }
+    }
+
+    @include m(warning) {
+        @include e(label) {
+            color: #{var-get($_theme, 'warning-secondary-color')};
+        }
+
+        @include e(hint) {
+            color: var-get($_theme, 'warning-secondary-color');
+        }
+
+        @include e(upload) {
+            border-color: var-get($_theme, 'warning-secondary-color');;
+        }
+    }
+
+    @include m(invalid) {
+        @include e(label) {
+            color: #{var-get($_theme, 'error-secondary-color')};
+        }
+
+        @include e(hint) {
+            color: var-get($_theme, 'error-secondary-color');
+        }
+
+        @include e(upload) {
+            border-color: var-get($_theme, 'error-secondary-color');;
+        }
+    }
+
+    @include mx(valid, focused) {
+        @include e(label) {
+            color: #{var-get($_theme, 'success-secondary-color')};
+        }
+
+        @include e(upload) {
+            border-color: var-get($_theme, 'success-secondary-color');;
+        }
+    }
+
+    @include mx(warning, focused) {
+        @include e(label) {
+            color: #{var-get($_theme, 'warning-secondary-color')};
+        }
+
+        @include e(upload) {
+            border-color: var-get($_theme, 'warning-secondary-color');;
+        }
+    }
+
+    @include mx(invalid, focused) {
+        @include e(label) {
+            color: #{var-get($_theme, 'error-secondary-color')};
+        }
+
+        @include e(upload) {
+            border-color: var-get($_theme, 'error-secondary-color');;
+        }
+    }
+
+    @include e(notch) {
+        &:empty {
+            display: none;
+        }
+    }
+
+    @include e(label) {
+        @include type-style(subtitle-1);
+
+        will-change: font-size, color, translate;
+        transition: all $transition-timing;
+        pointer-events: none;
+    }
+
+    @include e(input) {
+        @include type-style(subtitle-1);
+    }
+
+    @include e(textarea) {
+        @include type-style(subtitle-1);
+    }
+
+    @include m(filled) {
+        @include e(label) {
+            @include type-style(caption);
+        }
+    }
+
+    @include m(focused) {
+        @include e(label) {
+            @include type-style(caption);
+        }
+    }
+
+    @include m(file, $not: (focused)) {
+        @include e(label) {
+            @include type-style(caption);
+        }
+    }
+
+    .igx-input-group__bundle-start:not(:empty) + .igx-input-group__upload {
+        padding-inline-start: rem(4px);
+    }
+}

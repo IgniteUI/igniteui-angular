@@ -3,12 +3,10 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { IgxTextHighlightDirective, IActiveHighlightInfo} from './text-highlight.directive';
 
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxTextHighlightService } from './text-highlight.service';
 
 describe('IgxHighlight', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 HighlightLoremIpsumComponent

@@ -11,7 +11,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { getResizeObserver, mkenum, PlatformUtil } from '../../core/utils';
+import { getResizeObserver, PlatformUtil } from '../../core/utils';
 import { IgxAngularAnimationService } from '../../services/animation/angular-animation-service';
 import { AnimationService } from '../../services/animation/animation';
 import { IgxDirectionality } from '../../services/direction/directionality';
@@ -22,12 +22,12 @@ import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 import { IgxIconButtonDirective } from '../../directives/button/icon-button.directive';
 
-export const IgxTabsAlignment = /*@__PURE__*/mkenum({
+export const IgxTabsAlignment = {
     start: 'start',
     end: 'end',
     center: 'center',
     justify: 'justify'
-});
+} as const;
 
 /** @hidden */
 const enum TabScrollButtonStyle {

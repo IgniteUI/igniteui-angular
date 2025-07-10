@@ -171,13 +171,23 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public dataPreLoad = new EventEmitter<IForOfState>();
 
     /**
-     * @hidden
+     * Emitted when grouping is performed.
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="localData" [autoGenerate]="true" (groupingExpressionsChange)="groupingExpressionsChange($event)"></igx-grid>
+     * ```
      */
     @Output()
     public groupingExpressionsChange = new EventEmitter<IGroupingExpression[]>();
 
     /**
-     * @hidden @internal
+     * Emitted when groups are expanded/collapsed.
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="localData" [autoGenerate]="true" (groupingExpansionStateChange)="groupingExpansionStateChange($event)"></igx-grid>
+     * ```
      */
     @Output()
     public groupingExpansionStateChange = new EventEmitter<IGroupByExpandState[]>();

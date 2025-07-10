@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,7 +12,6 @@ import {
     MultiColumnHeadersComponent
  } from '../../test-utils/grid-samples.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridComponent } from './grid.component';
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
@@ -25,8 +24,9 @@ describe('IgxGrid - Column Moving #grid', () => {
     const COLUMN_RESIZE_CLASS = '.igx-grid-th__resize-line';
 
     let fixture; let grid: IgxGridComponent;
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 FormsModule,
                 NoopAnimationsModule,
@@ -35,15 +35,14 @@ describe('IgxGrid - Column Moving #grid', () => {
                 MovableColumnsLargeComponent,
                 MultiColumnHeadersComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(MovableColumnsComponent);
-            fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-            grid.moving = true;
+            fixture.detectChanges();
         });
 
         it('Should be able to reorder columns.', fakeAsync(() => {
@@ -717,9 +716,8 @@ describe('IgxGrid - Column Moving #grid', () => {
     describe('', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(MovableTemplatedColumnsComponent);
-            fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-            grid.moving = true;
+            fixture.detectChanges();
         });
 
         it('Should reorder movable columns with templated headers.', (async () => {
@@ -753,9 +751,8 @@ describe('IgxGrid - Column Moving #grid', () => {
     describe('', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(MovableColumnsLargeComponent);
-            fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-            grid.moving = true;
+            fixture.detectChanges();
         });
 
         it('Should be able to scroll forwards to reorder columns that are out of view.', (async () => {
@@ -1349,7 +1346,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getColumnByName('ID').pinned).toBeFalsy();
         }));
 
-         
+
         it('Pinning - Should not be able to programmatically move unpinned column if disablePinning is enabled for all unpinned columns', (async () => {
             // step 1 - pin some columns
             grid.getColumnByName('Address').pinned = true;
@@ -1386,9 +1383,9 @@ describe('IgxGrid - Column Moving #grid', () => {
     describe('', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(MultiColumnHeadersComponent);
-            fixture.detectChanges();
             grid = fixture.componentInstance.grid;
             grid.moving = true;
+            fixture.detectChanges();
         });
 
         it('MCH - should reorder only columns on the same level (top level simple column).', (async () => {
@@ -1880,7 +1877,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[4].field).toEqual('Missing');
         }));
 
-        it('MCH - should not break selection and keyboard navigation when reordering columns.', (async () => {
+        it('MCH - should not break selection and keyboard navigation when reordering columns.', async () => {
 
             // step 1 - select a cell from 'ContactName' column
             const cell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
@@ -1913,7 +1910,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 3, 3);
             expect(grid.getSelectedData()).toEqual([{ContactName: 'Maria Anders' }]);
-        }));
+        });
 
         it('MCH - should pin only top level columns.', (async () => {
             fixture.componentInstance.isPinned = true;

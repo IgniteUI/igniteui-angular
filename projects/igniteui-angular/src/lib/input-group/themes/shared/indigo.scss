@@ -1,0 +1,173 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+@use 'igniteui-theming/sass/animations/easings' as *;
+@use '../light/tokens' as *;
+
+$_theme: $indigo;
+
+@include themed-block(igx-input-group, indigo) {
+    --_prefix-suffix-spacing: #{pad-inline(rem(2px), rem(4px), rem(6px))};
+    --_bundle-template-rows: revert;
+
+    igx-icon {
+        --size: var(--input-icon);
+    }
+
+    row-gap: rem(4px);
+
+    @include e(clear-icon) {
+        &:focus {
+            color: contrast-color($color: 'primary', $variant: 600);
+            background: color($color: 'primary', $variant: 500);
+        }
+    }
+
+    @include e(label) {
+        line-height: var(--ig-caption-line-height);
+    }
+
+    @include e(input) {
+        @include type-style(body-2);
+
+        caret-color: var-get($_theme, 'focused-bottom-line-color');
+        padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
+        padding-block: rem(6px);
+
+        &::placeholder {
+            font-style: italic;
+        }
+    }
+
+    @include m(suffixed) {
+        @include e(input) {
+            padding-inline-end: 0;
+        }
+    }
+
+    @include m(prefixed) {
+        @include e(input) {
+            padding-inline-start: 0;
+        }
+    }
+
+    @include e(textarea) {
+        @include type-style(body-2);
+
+        caret-color: var-get($_theme, 'focused-bottom-line-color');
+    }
+
+    @include e(file-input) {
+        @include type-style(body-2);
+    }
+
+    @include m(textarea-group) {
+        @include e(textarea) {
+            padding-block: rem(6px);
+        }
+
+        @include e(bundle) {
+            height: auto;
+        }
+    }
+
+    @include e(bundle) {
+        transition: all .25s $out-cubic;
+        border-block-end: rem(1px) solid var-get($_theme, 'idle-bottom-line-color');
+
+        &:hover {
+            background: var-get($_theme, 'box-background-hover');
+            border-block-end-color: var-get($_theme, 'hover-bottom-line-color');
+        }
+    }
+
+    @include m(file) {
+        @include e(input) {
+            padding-block: 0;
+        }
+
+        @include e(bundle) {
+            > * {
+                grid-row: 1;
+            }
+        }
+    }
+
+    @include m(focused) {
+        @include e(bundle) {
+            background: var-get($_theme, 'box-background-hover');
+            border-block-end-color: var-get($_theme, 'focused-bottom-line-color');
+        }
+    }
+
+    @include m(valid) {
+        @include e(bundle) {
+            border-block-end: rem(1px) solid var-get($_theme, 'success-secondary-color');
+
+            &:hover {
+                border-block-end-color: var-get($_theme, 'success-secondary-color');
+            }
+        }
+    }
+
+    @include m(warning) {
+        @include e(bundle) {
+            border-block-end: rem(1px) solid var-get($_theme, 'warning-secondary-color');
+
+            &:hover {
+                border-block-end-color: var-get($_theme, 'warning-secondary-color');
+            }
+        }
+    }
+
+    @include m(invalid) {
+        @include e(bundle) {
+            border-block-end: rem(1px) solid var-get($_theme, 'error-secondary-color');
+
+            &:hover {
+                border-block-end-color: var-get($_theme, 'error-secondary-color');
+            }
+        }
+    }
+
+    @include mx(valid, focused) {
+        @include e(bundle) {
+            border-block-end: rem(1px) solid var-get($_theme, 'success-secondary-color');
+        }
+    }
+
+    @include mx(warning, focused) {
+        @include e(bundle) {
+            border-block-end: rem(1px) solid var-get($_theme, 'warning-secondary-color');
+        }
+    }
+
+    @include mx(invalid, focused) {
+        @include e(bundle) {
+            border-block-end: rem(1px) solid var-get($_theme, 'error-secondary-color');
+        }
+    }
+
+    @include e(case-icon) {
+        igx-icon {
+            --size: #{rem(16px)};
+        }
+    }
+
+    @include m(disabled) {
+        @include e(bundle) {
+            border-block-end: rem(1px) solid var-get($_theme, 'disabled-bottom-line-color');
+
+            &:hover {
+                border-block-end-color: var-get($_theme, 'disabled-bottom-line-color');
+            }
+        }
+
+        &:hover {
+            @include e(bundle) {
+                background: var-get($_theme, 'box-disabled-background');
+            }
+        }
+    }
+}

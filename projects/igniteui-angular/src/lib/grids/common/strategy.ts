@@ -1,4 +1,4 @@
-import { cloneArray, parseDate, resolveNestedPath } from '../../core/utils';
+import { cloneArray, columnFieldPath, parseDate, resolveNestedPath } from '../../core/utils';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IGroupingState } from '../../data-operations/groupby-state.interface';
@@ -19,12 +19,12 @@ const STRING_TYPE = 'string';
  */
 export interface IGridSortingStrategy {
     /* blazorCSSuppress */
-   /**
-   * `data`: The array of data to be sorted. Could be of any type.
-   * `expressions`: An array of sorting expressions that define the sorting rules. The expression contains information like file name, whether the letter case should be taken into account, etc.
-   * `grid`: (Optional) The instance of the grid where the sorting is applied.
-   * Returns a new array with the data sorted according to the sorting expressions.
-   */
+    /**
+    * `data`: The array of data to be sorted. Could be of any type.
+    * `expressions`: An array of sorting expressions that define the sorting rules. The expression contains information like file name, whether the letter case should be taken into account, etc.
+    * `grid`: (Optional) The instance of the grid where the sorting is applied.
+    * Returns a new array with the data sorted according to the sorting expressions.
+    */
     sort(data: any[], expressions: ISortingExpression[], grid?: GridType): any[];
 }
 
@@ -33,15 +33,15 @@ export interface IGridSortingStrategy {
  */
 export interface IGridGroupingStrategy extends IGridSortingStrategy {
     /* blazorCSSuppress */
-  /**
-   * The method groups the provided data based on the given grouping state and returns the result.
-   * `data`: The array of data to be grouped. Could be of any type.
-   * `state`: The grouping state that defines the grouping settings and expressions.
-   * `grid`: (Optional) The instance of the grid where the grouping is applied.
-   * `groupsRecords`: (Optional) An array that holds the records for each group.
-   * `fullResult`: (Optional) The complete result of grouping including groups and summary data.
-   * Returns an object containing the result of the grouping operation.
-   */
+    /**
+     * The method groups the provided data based on the given grouping state and returns the result.
+     * `data`: The array of data to be grouped. Could be of any type.
+     * `state`: The grouping state that defines the grouping settings and expressions.
+     * `grid`: (Optional) The instance of the grid where the grouping is applied.
+     * `groupsRecords`: (Optional) An array that holds the records for each group.
+     * `fullResult`: (Optional) The complete result of grouping including groups and summary data.
+     * Returns an object containing the result of the grouping operation.
+     */
     groupBy(data: any[], state: IGroupingState, grid?: any, groupsRecords?: any[], fullResult?: IGroupByResult): IGroupByResult;
 }
 
@@ -76,7 +76,7 @@ export class IgxSorting implements IGridSortingStrategy {
         grid: GridType = null,
         groupsRecords: any[] = [],
         fullResult: IGroupByResult = { data: [], metadata: [] }
-    ): any[] {
+    ): IGroupByResult {
         const expressions = state.expressions;
         const expansion = state.expansion;
         let i = 0;
@@ -117,9 +117,10 @@ export class IgxSorting implements IGridSortingStrategy {
             fullResult.metadata.push(null);
             if (level < expressions.length - 1) {
                 recursiveResult = this.groupDataRecursive(group, state, level + 1, groupRow,
-                    expanded ? metadata : [], grid, groupsRecords, fullResult);
+                    [], grid, groupsRecords, fullResult);
                 if (expanded) {
-                    result = result.concat(recursiveResult);
+                    result = result.concat(recursiveResult.data);
+                    metadata = metadata.concat(recursiveResult.metadata);
                 }
             } else {
                 for (const groupItem of group) {
@@ -127,13 +128,13 @@ export class IgxSorting implements IGridSortingStrategy {
                     fullResult.data.push(groupItem);
                 }
                 if (expanded) {
-                    metadata.push(...fullResult.metadata.slice(fullResult.metadata.length - group.length));
-                    result.push(...fullResult.data.slice(fullResult.data.length - group.length));
+                    metadata = metadata.concat(fullResult.metadata.slice(fullResult.metadata.length - group.length));
+                    result = result.concat(fullResult.data.slice(fullResult.data.length - group.length));
                 }
             }
             i += group.length;
         }
-        return result;
+        return { data: result, metadata };
     }
 
     /**
@@ -145,7 +146,7 @@ export class IgxSorting implements IGridSortingStrategy {
    * @internal
    */
     protected getFieldValue<T>(obj: T, key: string, isDate = false, isTime = false) {
-        let resolvedValue = resolveNestedPath(obj, key);
+        let resolvedValue = resolveNestedPath(obj, columnFieldPath(key));
         const date = parseDate(resolvedValue);
         if (date && isDate && isTime) {
             resolvedValue = date;
@@ -254,18 +255,18 @@ export class IgxSorting implements IGridSortingStrategy {
  */
 export class IgxGrouping extends IgxSorting implements IGridGroupingStrategy {
     /* blazorSuppress */
-  /**
-   * Groups the provided data based on the given grouping state.
-   * Returns an object containing the result of the grouping operation.
-   */
+    /**
+     * Groups the provided data based on the given grouping state.
+     * Returns an object containing the result of the grouping operation.
+     */
     public groupBy(data: any[], state: IGroupingState, grid?: any,
         groupsRecords?: any[], fullResult: IGroupByResult = { data: [], metadata: [] }): IGroupByResult {
         const metadata: IGroupByRecord[] = [];
         const grouping = this.groupDataRecursive(data, state, 0, null, metadata, grid, groupsRecords, fullResult);
         grid?.groupingPerformedSubject.next();
         return {
-            data: grouping,
-            metadata
+            data: grouping.data,
+            metadata: grouping.metadata
         };
     }
 }
@@ -295,10 +296,10 @@ export class NoopSortingStrategy implements IGridSortingStrategy {
  * Provides custom data record sorting.
  */
 export class IgxDataRecordSorting extends IgxSorting {
-   /**
-   * Overrides the base method to retrieve the field value from the data object instead of the record object.
-   * Returns the value of the specified field in the data object.
-   */
+    /**
+    * Overrides the base method to retrieve the field value from the data object instead of the record object.
+    * Returns the value of the specified field in the data object.
+    */
     protected override getFieldValue(obj: any, key: string, isDate = false, isTime = false): any {
         return super.getFieldValue(obj.data, key, isDate, isTime);
     }

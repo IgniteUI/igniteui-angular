@@ -22,9 +22,11 @@ import {
     QueryList,
     TemplateRef,
     ViewChild,
+    DOCUMENT,
+    ViewChildren,
     ViewEncapsulation
 } from '@angular/core';
-import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -97,7 +99,7 @@ export class IgxSelectFooterDirective {
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSelectComponent, multi: true },
         { provide: IGX_DROPDOWN_BASE, useExisting: IgxSelectComponent }
     ],
-    styleUrl: '../drop-down/drop-down.component.css',
+    styleUrls: ['../drop-down/drop-down.component.css', 'select.component.css'],
     encapsulation: ViewEncapsulation.None,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxSelectItemNavigationDirective, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxToggleDirective]
 })
@@ -120,6 +122,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     @ContentChildren(IgxSuffixDirective, { descendants: true })
     protected suffixes: QueryList<IgxSuffixDirective>;
 
+    @ViewChildren(IgxSuffixDirective)
+    protected internalSuffixes: QueryList<IgxSuffixDirective>;
+
     /** @hidden @internal */
     @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label: IgxLabelDirective;
 
@@ -128,7 +133,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      *
      */
     @Input() public placeholder;
-
 
     /**
      * Disables the component.
@@ -146,6 +150,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      */
     @Input()
     public overlaySettings: OverlaySettings;
+
+    @HostBinding('class.igx-select')
+    public defaultClass = true;
 
     /** @hidden @internal */
     @HostBinding('style.maxHeight')
@@ -540,8 +547,15 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this.inputGroup.prefixes = this.prefixes;
         }
 
-        if (this.inputGroup && this.suffixes?.length > 0) {
-            this.inputGroup.suffixes = this.suffixes;
+        if (this.inputGroup) {
+            const suffixesArray = this.suffixes?.toArray() ?? [];
+            const internalSuffixesArray = this.internalSuffixes?.toArray() ?? [];
+            const mergedSuffixes = new QueryList<IgxSuffixDirective>();
+            mergedSuffixes.reset([
+                ...suffixesArray,
+                ...internalSuffixesArray
+            ]);
+            this.inputGroup.suffixes = mergedSuffixes;
         }
     }
 
