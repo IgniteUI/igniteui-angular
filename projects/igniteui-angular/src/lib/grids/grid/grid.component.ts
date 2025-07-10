@@ -1357,11 +1357,12 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this._gridAPI.sort_groupBy_multiple(this._groupingExpressions);
     }
 
-    private _setupNavigationService() {
+    protected override _setupNavigationService() {
         if (this.hasColumnLayouts) {
             this.navigation = new IgxGridMRLNavigationService(this.platform);
             this.navigation.grid = this;
         }
+        super._setupNavigationService();
     }
 
     private checkIfNoColumnField(expression: IGroupingExpression | Array<IGroupingExpression> | any): boolean {

@@ -522,6 +522,12 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
 
     public isCellActive(visibleColumnIndex) {
         const node = this.grid.navigation.activeNode;
+        const field = this.grid.visibleColumns[visibleColumnIndex].field;
+        const rowSpan = this.metaData?.cellMergeMeta?.get(field)?.rowSpan;
+        if (rowSpan > 1) {
+            return node ? (node.row >= this.index && node.row < this.index + rowSpan)
+             && node.column === visibleColumnIndex : false;
+        }
         return node ? node.row === this.index && node.column === visibleColumnIndex : false;
     }
 
