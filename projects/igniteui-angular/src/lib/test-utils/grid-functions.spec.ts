@@ -597,7 +597,7 @@ export class GridFunctions {
     }
 
     public static verifyFilteringDropDownIsOpened(fix, opened = true) {
-        const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down.igx-toggle'));
         expect(dropdownList !== null).toEqual(opened);
     }
 

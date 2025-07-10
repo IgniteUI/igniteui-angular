@@ -1,7 +1,23 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy, DOCUMENT,
-    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck, booleanAttribute,
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    OnInit,
+    OnDestroy,
+    Optional,
+    Inject,
+    Injector,
+    ViewChild,
+    Input,
+    Output,
+    EventEmitter,
+    HostListener,
+    DoCheck,
+    booleanAttribute,
+    ViewEncapsulation,
+    DOCUMENT
 } from '@angular/core';
 
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -95,6 +111,8 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
 @Component({
     selector: 'igx-combo',
     templateUrl: 'combo.component.html',
+    styleUrl: 'combo.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [
         IgxComboAPIService,
         { provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent },

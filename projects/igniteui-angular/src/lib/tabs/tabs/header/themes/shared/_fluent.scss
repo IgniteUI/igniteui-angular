@@ -1,0 +1,28 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+@use '../../../themes/light/tokens' as *;
+
+$_theme: $fluent;
+
+@include themed-block(igx-tabs, fluent) {
+    $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
+
+    @include b(igx-tab-header) {
+        --ig-button-font-weight: 500;
+
+        min-height: rem(44px);
+        transition: all .3s $tabs-animation-function;
+        border: rem(1px) solid var-get($_theme, 'border-color');
+
+        &:hover,
+        &:focus {
+            border: rem(1px) solid var-get($_theme, 'border-color--hover');
+        }
+
+        @include m(selected) {
+            --ig-button-font-weight: 600;
+        }
+    }
+}
+

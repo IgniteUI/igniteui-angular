@@ -13,7 +13,7 @@ import {
     OnDestroy,
     HostBinding,
     ElementRef,
-    booleanAttribute,
+    booleanAttribute, ViewEncapsulation,
 } from '@angular/core';
 
 import { Subject } from 'rxjs';
@@ -85,6 +85,8 @@ export class IgxTreeExpandIndicatorDirective {
 @Component({
     selector: 'igx-tree',
     templateUrl: 'tree.component.html',
+    styleUrl: 'tree.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [
         IgxTreeService,
         IgxTreeSelectionService,

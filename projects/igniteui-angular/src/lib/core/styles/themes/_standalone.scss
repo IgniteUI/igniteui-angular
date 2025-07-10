@@ -1,0 +1,98 @@
+@use 'sass:list';
+@use 'sass:map';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@forward 'igniteui-theming/sass/themes';
+@forward 'igniteui-theming/sass/bem';
+
+@mixin layer($name) {
+    @layer ig.#{$name} {
+        @content;
+    }
+}
+
+/// Includes a block element (@see block) for a specific component, theme, and variant.
+/// @access private
+/// @group bem
+/// @param {String} $component - The class selector of the component.
+/// @param {String} $theme - The target theme - material, bootstrap, fluent, indigo.
+/// @param {String} $variant - The target variant - light, dark.
+/// @requires {mixin} b
+/// @example scss
+@mixin themed-block($component, $theme, $variant: null) {
+    $_theme: '' + $theme;
+
+    @layer ig.#{$_theme} {
+        @if $variant {
+            @container style(--ig-theme: #{$_theme}) and style(--ig-theme-variant: #{$variant}) {
+                @include b($component) {
+                    @content;
+                }
+            }
+        } @else {
+            @container style(--ig-theme: #{$_theme}) {
+                @include b($component) {
+                    @content;
+                }
+            }
+        }
+    }
+}
+
+/// Includes CSS variables for all themes given a map of tokens.
+/// @access private
+/// @param {String} $component - The class selector of the component.
+/// @param {Map} $tokens - The resolved component schemas/tokens for each theme.
+/// @param {String} $variant - The target variant - light, dark.
+/// @requires {mixin} themed-block
+/// @example scss
+@mixin themes($component, $tokens, $variant) {
+    @each $theme in ('material', 'bootstrap', 'fluent', 'indigo') {
+        @include themed-block($component, $theme, $variant) {
+            $_t: map.get($tokens, $theme);
+            @include css-vars-from-theme($_t, $component);
+        }
+    }
+}
+
+/// Splits a map into two separate maps based on a list of keys
+///
+/// @author Your Name
+///
+/// @param {Map} $map - The original map to split
+/// @param {List} $pick-keys - List of keys to include in the first returned map
+///
+/// @return {List} A list containing two maps:
+///   - First map contains key-value pairs where keys are in $pick-keys
+///   - Second map contains all remaining key-value pairs
+///
+/// @example scss
+///   $colors: (
+///     primary: blue,
+///     secondary: green,
+///     tertiary: yellow,
+///     quaternary: purple
+///   );
+///
+///   $result: split-map($colors, (primary, secondary));
+///   // $result[1] = (primary: blue, secondary: green)
+///   // $result[2] = (tertiary: yellow, quaternary: purple)
+@function split-map($map, $pick-keys) {
+  $map-1: ();
+  $map-2: ();
+
+  @each $key, $value in $map {
+    $id: list.index($pick-keys, $key);
+
+    @if $id {
+      $map-1: map.merge($map-1, ($key: $value));
+    } @else {
+      $map-2: map.merge($map-2, ($key: $value));
+    }
+  }
+
+  @return (
+    $map-1,
+    $map-2
+  );
+}

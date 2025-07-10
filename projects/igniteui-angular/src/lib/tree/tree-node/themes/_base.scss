@@ -1,0 +1,174 @@
+@use 'sass:map';
+@use 'sass:math';
+@use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use './light/tokens' as *;
+
+$theme: $material;
+
+@include layer(base) {
+    $icon-size: rem(24px);
+
+    $circular-bar-size: (
+        comfortable: #{$icon-size},
+        cosy: calc(#{$icon-size} - 4px),
+        compact: calc(#{$icon-size} - 6px)
+    );
+
+    @include b(igx-tree-node) {
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+        --tree-size: var(--component-size);
+
+        display: flex;
+        flex-direction: column;
+
+        @include e(wrapper) {
+            display: flex;
+            align-items: center;
+            min-height: var-get($theme, 'size');
+            padding-block: 0;
+            position: relative;
+            background: var-get($theme, 'background');
+            color: var-get($theme, 'foreground');
+
+            &:dir(rtl),
+            [dir='rtl'] & {
+                igx-icon {
+                    transform: scaleX(-1);
+                }
+            }
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                inset-inline-start: 0;
+                width: 100%;
+                height: 100%;
+                background: transparent;
+                z-index: 0;
+            }
+
+            &:hover {
+                &::after {
+                    background: var-get($theme, 'hover-color');
+                }
+            }
+
+            &:focus {
+                outline-width: 0;
+            }
+
+            igx-circular-bar {
+                --diameter: #{sizable(#{map.get($circular-bar-size, 'compact')}, #{map.get($circular-bar-size, 'cosy')}, #{map.get($circular-bar-size, 'comfortable')})} !important;
+            }
+        }
+
+        // STATES START
+        @include e(wrapper, $m: selected) {
+            background: var-get($theme, 'background-selected');
+            color: var-get($theme, 'foreground-selected');
+
+            &:hover {
+                &::after {
+                    background: var-get($theme, 'hover-selected-color');
+                }
+            }
+        }
+
+        @include e(wrapper, $m: active) {
+            background: var-get($theme, 'background-active');
+            color: var-get($theme, 'foreground-active');
+        }
+
+        @include e(wrapper, $mods: (active, selected)) {
+            background: var-get($theme, 'background-active-selected');
+            color: var-get($theme, 'foreground-active-selected');
+        }
+
+        @include e(wrapper, $m: focused) {
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color');
+        }
+
+        @include e(wrapper, $m: disabled) {
+            background: var-get($theme, 'background-disabled') !important;
+            color: var-get($theme, 'foreground-disabled') !important;
+            box-shadow: none !important;
+
+            pointer-events: none;
+
+            &::after {
+                display: none;
+            }
+        }
+
+        @include m(disabled) {
+            @include e(toggle-button) {
+                color: var-get($theme, 'foreground-disabled') !important;
+            }
+        }
+        // STATES END
+
+        @include e(content) {
+            @include ellipsis();
+            @include type-style(body-2);
+
+            display: block;
+            align-items: center;
+            flex: 1;
+            z-index: 1;
+        }
+
+        @include e(spacer) {
+            --component-size: var(--tree-size);
+            --spacer: #{sizable(rem(12), rem(16px), rem(24))};
+
+            width: var(--spacer);
+            display: inline-block;
+        }
+
+        @include e(toggle-button) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            min-width: $icon-size;
+            z-index: 1;
+        }
+
+        @include e(toggle-button, $m: hidden) {
+            visibility: hidden;
+        }
+
+        @include e(drop-indicator) {
+            display: flex;
+            visibility: hidden;
+            position: absolute;
+            inset-inline-end: pad(rem(12px), rem(16px), rem(24px));
+            bottom: 0;
+
+            > div {
+                flex: 1;
+                height: rem(1px);
+                background: var-get($theme, 'drop-area-color');
+            }
+        }
+
+        @include e(select) {
+            display: flex;
+            align-items: center;
+            z-index: 1;
+        }
+
+        @include e(group) {
+            overflow: hidden;
+        }
+    }
+}

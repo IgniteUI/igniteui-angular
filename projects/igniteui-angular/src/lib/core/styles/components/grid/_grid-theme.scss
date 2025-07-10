@@ -791,6 +791,10 @@
             min-height: 100% !important;
             border: none !important;
 
+            @if $variant == 'fluent' {
+                box-shadow: none !important;
+            }
+
             &::before {
                 content: none !important;
             }

@@ -8,6 +8,7 @@ import {
     AfterViewInit,
     OnDestroy,
     OnInit,
+    ViewEncapsulation,
 } from "@angular/core";
 import { NgTemplateOutlet, DatePipe } from "@angular/common";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
@@ -37,6 +38,8 @@ let NEXT_ID = 0;
     ],
     selector: "igx-month-picker",
     templateUrl: "month-picker.component.html",
+    styleUrls: ['month-picker.component.css', '../shared-themes/calendar-picker/calendar-picker.component.css'],
+    encapsulation: ViewEncapsulation.None,
     imports: [
         NgTemplateOutlet,
         DatePipe,

@@ -1,0 +1,21 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+@use '../../../themes/light/tokens' as *;
+
+$_theme: $material;
+
+@include themed-block(igx-tabs, material) {
+    @include b(igx-tabs-header-button) {
+        &:focus {
+            background: var-get($_theme, 'button-hover-background');
+        }
+
+        igx-icon {
+            $icon-size: rem(24px);
+
+            --size: #{$icon-size};
+        }
+    }
+}
+

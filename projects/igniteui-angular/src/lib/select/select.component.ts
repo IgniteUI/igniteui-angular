@@ -23,7 +23,8 @@ import {
     TemplateRef,
     ViewChild,
     DOCUMENT,
-    ViewChildren
+    ViewChildren,
+    ViewEncapsulation
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -98,11 +99,8 @@ export class IgxSelectFooterDirective {
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSelectComponent, multi: true },
         { provide: IGX_DROPDOWN_BASE, useExisting: IgxSelectComponent }
     ],
-    styles: [`
-        :host {
-            display: block;
-        }
-    `],
+    styleUrls: ['../drop-down/drop-down.component.css', 'select.component.css'],
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxSelectItemNavigationDirective, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxToggleDirective]
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor,
@@ -136,7 +134,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      */
     @Input() public placeholder;
 
-
     /**
      * Disables the component.
      * ```html
@@ -153,6 +150,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      */
     @Input()
     public overlaySettings: OverlaySettings;
+
+    @HostBinding('class.igx-select')
+    public defaultClass = true;
 
     /** @hidden @internal */
     @HostBinding('style.maxHeight')
@@ -269,9 +269,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /** @hidden @internal */
     public override width: string;
-
-    /** @hidden @internal do not use the drop-down container class */
-    public override cssClass = false;
 
     /** @hidden @internal */
     public override allowItemsFocus = false;

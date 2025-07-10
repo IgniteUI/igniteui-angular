@@ -3,7 +3,7 @@
         <span
             igxCalendarYear
             #item="igxCalendarYear"
-            class="igx-calendar-view__item"
+            class="igx-calendar-view-item"
             role="gridcell"
             [attr.id]="year.getTime()"
             [attr.aria-label]="formattedYear(year).long"
@@ -15,7 +15,7 @@
             (itemSelection)="selectDate($event)"
             (mousedown)="onMouseDown()"
         >
-            <span class="igx-calendar-view__item-inner" aria-hidden="true">
+            <span class="igx-calendar-view-item__inner" aria-hidden="true">
                 {{ formattedYear(year).formatted }}
             </span>
         </span>
