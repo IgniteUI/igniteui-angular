@@ -48,8 +48,10 @@ export class IgxGridMergeNavigationService extends IgxGridNavigationService {
     }
 
     protected override getNextPosition(rowIndex: number, colIndex: number, key: string, shift: boolean, ctrl: boolean, event: KeyboardEvent) {
-
         const field = this.grid.visibleColumns[colIndex]?.field;
+        const currentRec = this.grid.verticalScrollContainer.igxForOf[this.activeNode.row];
+        const currentRootRec = currentRec?.cellMergeMeta?.get(field)?.root;
+        const currentIndex = currentRootRec ? this.grid.verticalScrollContainer.igxForOf.indexOf(currentRootRec) : this.activeNode.row;
         switch (key) {
             case 'tab':
             case ' ':
@@ -76,16 +78,15 @@ export class IgxGridMergeNavigationService extends IgxGridNavigationService {
                 break;
             case 'arrowup':
             case 'up':
-                const prevRec = this.grid.verticalScrollContainer.igxForOf[this.activeNode.row - 1];
-                const root = prevRec?.cellMergeMeta?.get(field)?.root;
-                const prev = this.activeNode.row - (root?.cellMergeMeta?.get(field).rowSpan || 1);
+                const prevRec = this.grid.verticalScrollContainer.igxForOf[currentIndex - 1];
+                const prevRoot = prevRec?.cellMergeMeta?.get(field)?.root;
+                const prev = currentIndex - (prevRoot?.cellMergeMeta?.get(field).rowSpan || 1);
                 colIndex = this.activeNode.column !== undefined ? this.activeNode.column : 0;
                 rowIndex = ctrl ? this.findFirstDataRowIndex() : prev;
                 break;
             case 'arrowdown':
             case 'down':
-                const rec = this.grid.verticalScrollContainer.igxForOf[this.activeNode.row];
-                const next = this.activeNode.row + (rec?.cellMergeMeta?.get(field)?.rowSpan || 1);
+                const next = currentIndex + ((currentRootRec || currentRec)?.cellMergeMeta?.get(field)?.rowSpan || 1);
                 colIndex = this.activeNode.column !== undefined ? this.activeNode.column : 0;
                 rowIndex = ctrl ? this.findLastDataRowIndex() : next;
                 break;
