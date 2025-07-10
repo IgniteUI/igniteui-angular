@@ -7,7 +7,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { IgxRadioComponent } from '../../radio/radio.component';
 
-fdescribe('IgxRadioGroupDirective', () => {
+describe('IgxRadioGroupDirective', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
