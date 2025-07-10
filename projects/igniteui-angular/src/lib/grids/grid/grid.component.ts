@@ -967,7 +967,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 id: null
             },
             disabled: this.isGhostRecord(rowData),
-            metaData: rowData
+            metaData: this.isRecordMerged(rowData) ? rowData : null
         };
     }
 

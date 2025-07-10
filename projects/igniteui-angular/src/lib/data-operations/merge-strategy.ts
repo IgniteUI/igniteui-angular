@@ -31,7 +31,17 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
         let prev = null;
         let index = 0;
         for (const rec of data) {
+
             const recData = result[index];
+            // if this is some special record type - add and skip merging
+            if (rec.ghostRecord) {
+                if(!recData) {
+                    result.push(rec);
+                }
+                prev = null;
+                index++;
+                continue;
+            }
             let recToUpdateData = recData ?? { recordRef: rec, cellMergeMeta: new Map<string, IMergeByResult>() };
             recToUpdateData.cellMergeMeta.set(field, { rowSpan: 1 });
             if (prev && comparer(prev.recordRef, recToUpdateData.recordRef, field)) {

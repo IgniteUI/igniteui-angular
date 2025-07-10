@@ -611,7 +611,8 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     protected getMergeCellSpan(col: ColumnType){
         const rowCount = this.metaData.cellMergeMeta.get(col.field).rowSpan;
         let sizeSpans = "";
-        for (let index = this.index; index < this.index + rowCount; index++) {
+        const indexInData = this.grid.verticalScrollContainer.igxForOf.indexOf(this.metaData);
+        for (let index = indexInData; index < indexInData + rowCount; index++) {
             const size = this.grid.verticalScrollContainer.getSizeAt(index);
             sizeSpans += size + 'px ';
         }
@@ -619,7 +620,8 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     }
 
     protected getRowHeight() {
-        const size = this.grid.verticalScrollContainer.getSizeAt(this.index) - 1;
+        const indexInData  = this.grid.verticalScrollContainer.igxForOf.indexOf(this.metaData);
+        const size = this.grid.verticalScrollContainer.getSizeAt(indexInData) - 1;
         return size || this.grid.rowHeight;
     }
 

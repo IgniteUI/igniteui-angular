@@ -3,7 +3,7 @@
     <igx-column field="ProductID" header="Product ID" width="200px">
         <ng-template igxCell let-cell="cell" let-val>
         <div>
-            <button igxButton>Test {{val}}</button>
+            <button igxButton>Test {{cell.row.index}}</button>
             <!-- @if (cell.row.index % 2 == 0) {
                 <br/>
                 <button igxButton>Test 2</button>
@@ -22,4 +22,7 @@
     </igx-column>
     <igx-paginator [perPage]="20">
     </igx-paginator>
+    <igx-action-strip>
+        <igx-grid-pinning-actions></igx-grid-pinning-actions>
+    </igx-action-strip>
 </igx-grid>
