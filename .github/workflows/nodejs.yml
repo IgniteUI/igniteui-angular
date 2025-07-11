@@ -42,8 +42,7 @@ jobs:
         run: npm run build:migrations
       - name: Build TypeDoc & SassDoc
         run: |
-            npm run build:typedoc:en:production
-            npm run build:sassdoc:en:production
+            npm run build:docs
       - name: Test
         run: |
             npm run test:lib

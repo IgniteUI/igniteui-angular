@@ -1,4 +1,5 @@
-﻿import {
+﻿import { useAnimation } from '@angular/animations';
+import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -52,6 +53,7 @@ import { IgxFocusDirective } from '../directives/focus/focus.directive';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxChipComponent } from '../chips/chip.component';
+import { fadeOut, scaleInCenter } from 'igniteui-angular/animations';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -883,7 +885,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 modal: false,
                 positionStrategy: new AutoPositionStrategy({
                     horizontalStartPoint: HorizontalAlignment.Center,
-                    horizontalDirection: HorizontalAlignment.Center
+                    horizontalDirection: HorizontalAlignment.Center,
+                    openAnimation: useAnimation(scaleInCenter, { params: { duration: '150ms' } }),
+                    closeAnimation: useAnimation(fadeOut, { params: { duration: '75ms' } })
                 })
             }
         );
@@ -925,6 +929,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 this.highlight.lastSearchInfo.searchText = this.grid.lastSearchInfo.searchText;
                 this.highlight.lastSearchInfo.caseSensitive = this.grid.lastSearchInfo.caseSensitive;
                 this.highlight.lastSearchInfo.exactMatch = this.grid.lastSearchInfo.exactMatch;
+            }
+            const isInEdit = this.grid.rowEditable ? this.row.inEditMode : this.editMode;
+            if (this.formControl && this.formControl.value !== changes.value.currentValue && !isInEdit) {
+                this.formControl.setValue(changes.value.currentValue);
             }
         }
     }

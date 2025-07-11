@@ -157,6 +157,8 @@
 /// @param {List} $border-radius [null] - The border radius used for the calendar.
 /// @param {List} $date-border-radius [null] - The border radius used for the date.
 /// @param {List} $date-range-border-radius [null] - The border radius used for the date range selection.
+/// @param {List} $date-current-border-radius [null] - The border radius used for the current date .
+/// @param {List} $date-special-border-radius [null] - The border radius used for the special date.
 /// @param {List} $ym-border-radius [null] - The border radius used for the month/year.
 ///
 /// @param {Color} $actions-divider-color [null] - The border color used for the date-picker actions divider.
@@ -310,6 +312,8 @@
     $date-border-radius: null,
     $week-number-border-radius: null,
     $date-range-border-radius: null,
+    $date-current-border-radius: null,
+    $date-special-border-radius: null,
     $ym-border-radius: null,
 
     $actions-divider-color: null,
@@ -329,6 +333,22 @@
 
     $theme: digest-schema($calendar-schema);
     $variant: map.get($schema, '_meta', 'theme');
+
+    @if not($date-range-border-radius) and $date-border-radius {
+        $date-range-border-radius: $date-border-radius;
+    }
+
+    @if not($date-border-radius) and $date-range-border-radius {
+        $date-border-radius: $date-range-border-radius;
+    }
+
+    @if not($date-current-border-radius) and $date-border-radius {
+        $date-current-border-radius: $date-border-radius;
+    }
+
+    @if not($date-special-border-radius) and $date-border-radius {
+        $date-special-border-radius: $date-border-radius;
+    }
 
     //base start
     @if not($header-foreground) and $header-background {
@@ -1031,6 +1051,8 @@
         border-radius: $border-radius,
         date-border-radius: $date-border-radius,
         date-range-border-radius: $date-range-border-radius,
+        date-current-border-radius: $date-current-border-radius,
+        date-special-border-radius: $date-special-border-radius,
         ym-border-radius: $ym-border-radius,
         week-number-border-radius: $week-number-border-radius,
         date-border-color: $date-border-color,
@@ -1827,13 +1849,12 @@
             position: absolute;
             z-index: 0;
             border: $border-size solid transparent;
+            border-radius: calc(var-get($theme, 'date-special-border-radius') - $border-size);
 
             @if $variant == 'fluent' {
-                border-radius: 50%;
                 width: $date-inner-size;
                 height: $date-inner-size;
             } @else {
-                border-radius: inherit;
                 // By default initial size of the inner element is the same as the date size
                 width: $date-size;
                 height: $date-size;
@@ -1964,6 +1985,7 @@
                 background: var-get($theme, 'date-special-range-hover-background');
 
                 @if $variant == 'indigo' {
+                    // stylelint-disable-next-line
                     &::after {
                         border-color: var-get($theme, 'date-special-hover-border-color');
                     }
@@ -2041,8 +2063,12 @@
                     z-index: -1;
                     width: $date-inner-size;
                     height: $date-inner-size;
-                    border-radius: 50%;
+                    border-radius: calc(var-get($theme, 'date-current-border-radius') - ($border-size * 2));
                     background: var-get($theme, 'date-current-background');
+                }
+
+                &::after {
+                    border-radius: calc(var-get($theme, 'date-current-border-radius') - $border-size);
                 }
             }
 
@@ -2089,8 +2115,8 @@
             &::after {
                 border-color: var-get($theme, 'date-special-border-color');
 
-                @if $variant == 'bootstrap' {
-                    border-radius: $date-size;
+                @if $variant == 'bootstrap' or $variant == 'fluent'  {
+                    border-radius: calc(var-get($theme, 'date-special-border-radius') - ($border-size * 2));
                 }
             }
 
@@ -2232,6 +2258,7 @@
                 }
 
                 &:hover {
+                    // stylelint-disable-next-line
                     &::after {
                         border-color: var-get($theme, 'date-selected-special-hover-border-color');
                     }
@@ -2343,6 +2370,7 @@
                 }
 
                 &:hover {
+                    // stylelint-disable-next-line
                     &::after {
                         border-color: var-get($theme, 'date-current-hover-border-color');
                     }

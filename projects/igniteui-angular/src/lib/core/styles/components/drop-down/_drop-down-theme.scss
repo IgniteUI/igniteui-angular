@@ -259,7 +259,7 @@
         -webkit-overflow-scrolling: touch;
         position: relative;
 
-        igx-display-container {
+        .igx-display-container--scrollbar {
             padding-inline-end: var(--vhelper-scrollbar-size);
         }
     }
