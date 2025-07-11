@@ -52,14 +52,36 @@
     }
 
     $theme: digest-schema($query-builder-schema);
-    $meta: map.get($theme, '_meta');
+    $variant: map.get($theme, '_meta', 'theme');
 
-    @if not($header-foreground) and $header-background {
-        $header-foreground: text-contrast($header-background);
+    @if not($label-foreground) and $background {
+        $label-foreground: hsla(from adaptive-contrast(var(--background)) h s l / 0.6);
     }
 
     @if not($header-background) and $background {
-        $header-background: $background;
+        $header-background: var(--background);
+    }
+
+    @if not($header-foreground) and $header-background {
+        $header-foreground: adaptive-contrast(var(--header-background));
+    }
+
+    @if not($subquery-header-background) and $header-background {
+        $subquery-header-background: hsl(from var(--header-background) h s calc(l * 0.9));
+    }
+
+    @if not($subquery-border-color) and $subquery-header-background {
+        $subquery-border-color: hsl(from var(--subquery-header-background) h s calc(l * 0.9));
+    }
+
+    @if not($separator-color) and $subquery-border-color {
+        $separator-color: hsl(from var(--subquery-border-color) h s calc(l * 0.9));
+    }
+
+    @if $variant == 'bootstrap' {
+        @if not($header-border) and $subquery-border-color {
+            $header-border: var(--subquery-border-color);
+        }
     }
 
     @return extend($theme, (
@@ -77,11 +99,6 @@
         separator-color: $separator-color,
         border-radius: $border-radius,
         label-foreground: $label-foreground,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme'),
-            theme-variant: map.get($schema, '_meta', 'variant')
-        )),
     ));
 }
 
@@ -98,8 +115,8 @@
 @mixin query-builder($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
-    $theme-variant: map.get($theme, '_meta', 'theme-variant');
+    $variant: map.get($theme, '_meta', 'theme');
+    $theme-variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: not($bootstrap-theme);
 
@@ -114,6 +131,14 @@
     %advanced-filter {
         @include sizable();
 
+        --_tree-scrollbar-gutter: #{rem(16px)};
+
+        @if $variant == 'bootstrap' {
+            --query-builder-outer-padding: #{rem(16px)};
+        } @else {
+            --query-builder-outer-padding: #{rem(24px)};
+        }
+
         width: auto;
         min-width: rem(660px);
         background-color: var-get($theme, 'background');
@@ -122,11 +147,19 @@
         overflow: hidden;
 
         &:has(:not(igx-query-builder-header)) {
-            padding-block-start: if($variant != 'bootstrap', rem(24px), rem(16px))
+            padding-block-start: var(--query-builder-outer-padding);
+
+            %query-level-0 {
+                padding-block: 0 var(--query-builder-outer-padding);
+            }
         }
 
         &:has(igx-query-builder-header) {
             padding-block-start: 0;
+
+            %query-level-0 {
+                padding-block: if($variant != 'bootstrap', 0, rem(16px)) var(--query-builder-outer-padding);
+            }
         }
 
 	    .igx-chip__ghost {
@@ -145,10 +178,8 @@
     %query-level-0 {
         display: block;
         width: 100%;
-        padding-inline: if($variant != 'bootstrap', rem(24px), rem(16px));
-        padding-block:
-            if($variant != 'bootstrap', 0, rem(16px))
-            if($variant != 'bootstrap', rem(24px), rem(16px));
+
+        padding-inline: var(--query-builder-outer-padding);
 
         > %advanced-filter__main {
             gap: rem(16px);
@@ -159,7 +190,7 @@
                 max-height: rem(570px);
                 overflow-y: auto;
                 overflow-x: hidden;
-                padding-inline-end: rem(16px);
+                padding-inline-end: var(--_tree-scrollbar-gutter);
             }
         }
     }
@@ -230,8 +261,8 @@
         margin-bottom: 0;
         border-block-end: rem(1px) solid var-get($theme, 'header-border');
 
-        padding-inline: if($variant != 'bootstrap', rem(24px), rem(16px));
-        padding-block: if($variant != 'bootstrap', rem(24px), rem(16px)) rem(16px);
+        padding-inline: var(--query-builder-outer-padding);
+        padding-block: var(--query-builder-outer-padding) rem(16px);
     }
 
     %advanced-filter__title {

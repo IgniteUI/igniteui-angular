@@ -1,4 +1,4 @@
-﻿import { DOCUMENT, NgForOfContext } from '@angular/common';
+﻿import { NgForOfContext } from '@angular/common';
 import {
     ChangeDetectorRef,
     ComponentRef,
@@ -21,7 +21,8 @@ import {
     ViewContainerRef,
     AfterViewInit,
     Inject,
-    booleanAttribute
+    booleanAttribute,
+    DOCUMENT
 } from '@angular/core';
 
 import { DisplayContainerComponent } from './display.container';
