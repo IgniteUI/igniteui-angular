@@ -396,19 +396,15 @@
 
     @if $variant == 'material' {
         %form-group-display--border {
+            --label-position: calc((#{var-get($theme, 'size')} / 2) - #{rem(1px)});
+
+
             &:has(input:-webkit-autofill, input:autofill) {
                 %igx-input-group__notch--border {
                     border-block-start-color: transparent;
                 }
 
-                %form-group-label {
-                    --label-position: #{sizable(18px, 22px, 26px)};
-
-                    transform: translateY(calc(var(--label-position) * -1));
-                    margin-top: 0;
-                    overflow: hidden;
-                    will-change: font-size, color, transform;
-                }
+                @extend %form-group-label--float-border;
             }
         }
     }
@@ -496,12 +492,23 @@
                     }
                 }
             }
+
+            &:not(%form-group-display--focused, %form-group-display--filled) {
+                &:has(input:not(:placeholder-shown, [type='file'])) {
+                    %form-group-label {
+                        @include type-style('subtitle-1');
+                        transform: translateY(0);
+                    }
+                }
+            }
         }
     }
 
     %form-group-placeholder {
-        %form-group-label {
-            transition: none !important;
+        &:has(input:placeholder-shown, textarea:placeholder-shown) { 
+            %form-group-label {
+                transition: none !important;
+            }
         }
     }
 
@@ -994,20 +1001,25 @@
 
     @if $variant == 'material' {
         %form-group-label--float {
-            --floating-label-position: -73%;
-
             @include type-style('caption');
 
-            transform: translateY(var(--floating-label-position));
+            translate: 0 -73%;
         }
     }
 
     %form-group-label--focused-border,
     %form-group-label--filled-border,
-    %form-group-label--placeholder-border,
     %form-group-label--file-border {
         %igx-input-group__notch {
             border-block-start-color: transparent !important;
+        }
+    }
+
+    %form-group-label--placeholder-border {
+        &:has(input:placeholder-shown, textarea:placeholder-shown) {
+            %igx-input-group__notch {
+                border-block-start-color: transparent !important;
+            }
         }
     }
 
@@ -1072,12 +1084,19 @@
     }
 
     %form-group-label--float-border {
-        --label-position: #{sizable(18px, 22px, 26px)};
-
-        transform: translateY(calc(var(--label-position) * -1));
+        translate: 0 calc(var(--label-position) * -1);
         margin-top: 0;
         overflow: hidden;
-        will-change: font-size, color, transform;
+        will-change: font-size, color, transform, translate;
+    }
+
+    %textarea-group {
+        // 3 lines * 22px + 8px bottom padding + 8px top padding
+        --textarea-size: #{sizable(
+            rem(82px, map.get($base-scale-size, 'compact')),
+            rem(82px, map.get($base-scale-size, 'cosy')),
+            rem(82px, map.get($base-scale-size, 'comfortable'))
+        )};
     }
 
     @if $variant == 'material' {
@@ -1098,15 +1117,29 @@
                 width: calc(100% - #{rem(2px)});
             }
         }
+
+        %textarea-group:not(%form-group-display--focused, %form-group-display--filled) {
+            &:has(textarea:not(:placeholder-shown)) {
+                %form-group-textarea-label:not(%textarea-group-label--focused) {
+                    @include type-style('subtitle-1');
+
+                    top: calc($input-top-padding - #{rem(3px)});
+                    transform: translateY(0);
+                    margin-bottom: auto;
+                }
+            }
+        }
+
+        %textarea-group:not(%form-group-display--focused, %form-group-display--filled) {
+            &:has(%form-group-display--border, textarea:not(:placeholder-shown)) {
+                %igx-input-group__notch {
+                    border-block-start-width: rem(1px);
+                }
+            }
+        }
     }
 
     %form-group-textarea-group-bundle {
-        // 3 lines * 22px + 8px bottom padding + 8px top padding
-        --textarea-size: #{sizable(
-            rem(82px, map.get($base-scale-size, 'compact')),
-            rem(82px, map.get($base-scale-size, 'cosy')),
-            rem(82px, map.get($base-scale-size, 'comfortable'))
-        )};
         min-height: var(--textarea-size) !important;
         height: auto !important;
 
@@ -1118,12 +1151,12 @@
     @if $material-theme {
         %form-group-textarea-label {
             top: calc($input-top-padding - #{rem(1px)});
-            margin-block-end: auto;
         }
 
         %textarea-group--outlined {
             %form-group-textarea-label {
                 top: calc($input-top-padding - #{rem(3px)});
+                margin-block-end: auto;
             }
         }
 
@@ -1133,16 +1166,10 @@
             }
         }
 
-        %textarea-group-label--focused {
-            transform: translateY(0);
-            top: calc(#{$input-top-padding} / 4);
-        }
-
         %textarea-group-label--filled--border,
         %textarea-group-label--focused--border {
             top: 0;
-            transform: translateY(-50%);
-            margin-block-end: auto !important;
+            translate: 0 -50%;
         }
 
         %textarea-group-notch--focused {
@@ -1323,12 +1350,6 @@
     }
 
     %form-group-textarea {
-        --textarea-size: #{sizable(
-            rem(82px, map.get($base-scale-size, 'compact')),
-            rem(82px, map.get($base-scale-size, 'cosy')),
-            rem(82px, map.get($base-scale-size, 'comfortable'))
-        )};
-
         min-height: var(--textarea-size);
         height: auto;
         resize: vertical;
@@ -1336,7 +1357,7 @@
 
         @if $material-theme {
             padding: 0;
-            inset-block-start: rem(-3px);
+            margin-block-start: rem(20px) !important;
         }
 
         // resets typography styles
@@ -1352,13 +1373,9 @@
     %form-group-textarea-group-bundle-main {
         overflow: hidden;
 
-        @if $material-theme or $indigo-theme {
+        @if $indigo-theme {
             height: calc(100% - #{rem(2px)});
             top: rem(1px);
-        }
-
-        @if $material-theme {
-            padding-block-start: $input-top-padding;
         }
     }
 
@@ -2172,12 +2189,38 @@
 
     %bootstrap-input--success {
         border: rem(1px) solid var-get($theme, 'success-secondary-color');
-        box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
+
+        &:focus {
+            box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
+
+            + %bootstrap-file-input {
+                box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
+            }
+        }
     }
 
     %bootstrap-input--error {
         border: rem(1px) solid var-get($theme, 'error-secondary-color');
-        box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+
+        &:focus {
+            box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+
+            + %bootstrap-file-input {
+                box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+            }
+        }
+    }
+
+    %bootstrap-input--warning {
+        border: rem(1px) solid var-get($theme, 'warning-secondary-color');
+
+        &:focus {
+            box-shadow: 0 0 0 rem(4px) color($color: 'warn', $variant: 500, $opacity: 0.38);
+
+            + %bootstrap-file-input {
+                box-shadow: 0 0 0 rem(4px) color($color: 'warn', $variant: 500, $opacity: 0.38);
+            }
+        }
     }
 
     %bootstrap-input--disabled {
