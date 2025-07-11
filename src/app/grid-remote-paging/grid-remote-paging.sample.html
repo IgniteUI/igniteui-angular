@@ -12,6 +12,7 @@
                 [(perPage)]="perPage" (pageChange)="paginate($event)" (perPageChange)="perPageChange($event)">
             </igx-paginator>
         }
+        <span *igxGridLoading> Loading 🔃 </span>
     </igx-grid>
 
     <igx-card style="width: 360px; margin-top: 12px">

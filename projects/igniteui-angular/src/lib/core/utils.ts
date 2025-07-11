@@ -20,8 +20,6 @@ export const showMessage = (message: string, isMessageShown: boolean): boolean =
     return true;
 };
 
-export const mkenum = <T extends { [index: string]: U }, U extends string>(x: T) => x;
-
 /**
  *
  * @hidden @internal
@@ -247,7 +245,7 @@ export class PlatformUtil {
     /** @hidden @internal */
     public isElements = inject(ELEMENTS_TOKEN, { optional: true });
 
-    public KEYMAP = mkenum({
+    public KEYMAP = {
         ENTER: 'Enter',
         SPACE: ' ',
         ESCAPE: 'Escape',
@@ -269,7 +267,7 @@ export class PlatformUtil {
         X: 'x',
         Y: 'y',
         Z: 'z'
-    });
+    } as const;
 
     constructor(@Inject(PLATFORM_ID) private platformId: any) { }
 
