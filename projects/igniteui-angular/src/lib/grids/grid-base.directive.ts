@@ -93,7 +93,8 @@ import {
     RowPinningPosition,
     GridPagingMode,
     GridValidationTrigger,
-    Size
+    Size,
+    GridCellMergeMode
 } from './common/enums';
 import {
     IGridCellEventArgs,
@@ -184,6 +185,7 @@ import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { isTree, recreateTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 import { getUUID } from './common/random';
+import { IGridMergeStrategy } from '../data-operations/merge-strategy';
 
 interface IMatchInfoCache {
     row: any;
@@ -2493,6 +2495,18 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._sortingStrategy = value;
     }
 
+
+    /**
+     * Gets/Sets the merge strategy of the grid.
+     *
+     * @example
+     * ```html
+     *  <igx-grid #grid [data]="localData" [mergeStrategy]="mergeStrategy"></igx-grid>
+     * ```
+     */
+    @Input()
+    public mergeStrategy: IGridMergeStrategy;
+
     /**
      * Gets/Sets the sorting options - single or multiple sorting.
      * Accepts an `ISortingOptions` object with any of the `mode` properties.
@@ -2910,6 +2924,14 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.notifyChanges();
         // }
     }
+
+    /**
+     * Gets/Sets cell merge mode.
+     *
+     */
+    @WatchChanges()
+    @Input()
+    public cellMergeMode: GridCellMergeMode = GridCellMergeMode.onSort;
 
     /**
      * Gets/Sets row selection mode
@@ -3638,6 +3660,23 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden
      * @internal
+     */
+    public isRecordMerged(rec) {
+        return rec?.cellMergeMeta;
+    }
+
+    public getMergeCellOffset(rec) {
+        const index = this.verticalScrollContainer.igxForOf.indexOf(rec);
+        let offset = this.verticalScrollContainer.scrollPosition - this.verticalScrollContainer.getScrollForIndex(index);
+        if (this.hasPinnedRecords && this.isRowPinningToTop) {
+            offset -= this.pinnedRowHeight;
+        }
+        return -offset;
+    }
+
+    /**
+     * @hidden
+     * @internal
      * Returns the record index in order of pinning by the user. Does not consider sorting/filtering.
      */
     public getInitialPinnedIndex(rec) {
@@ -3949,6 +3988,20 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this.actionStrip) {
             this.actionStrip.menuOverlaySettings.outlet = this.outlet;
         }
+    }
+
+
+    protected get activeRowIndex() {
+        return this.navigation.activeNode.row;
+    }
+
+    protected get hasCellsToMerge() {
+        const columnToMerge = this.visibleColumns.filter(
+            x => x.merge && (this.cellMergeMode ==='always' ||
+            (this.cellMergeMode === 'onSort' && !!this.sortingExpressions
+                .find( x=> x.fieldName === x.fieldName)))
+        );
+        return columnToMerge.length > 0;
     }
 
     /**

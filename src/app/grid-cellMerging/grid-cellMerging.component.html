@@ -1,0 +1,35 @@
+<h4 class="sample-title">Grid with cell merge</h4>
+<igx-grid [data]="data" width="800px" height="550px" [primaryKey]="'ProductID'" [moving]="true" [cellMergeMode]="'always'" [rowSelection]="'single'" >
+    <igx-column field="ProductID" header="Product ID" width="200px">
+        <ng-template igxCell let-cell="cell" let-val>
+        <div>
+            <button igxButton>Test {{cell.row.index}}</button>
+            <!-- @if (cell.row.index % 2 == 0) {
+                <br/>
+                <button igxButton>Test 2</button>
+            } -->
+
+        </div>
+        </ng-template>
+    </igx-column>
+    <igx-column field="ReorderLevel" width="200px" [merge]="true" editable="true">
+    </igx-column>
+    <igx-column required field="ProductName" width="200px" [merge]="true" groupable="true">
+    </igx-column>
+    <igx-column field="UnitsInStock" header="UnitsInStock" width="200px" [merge]="true">
+    </igx-column>
+    <igx-column field="OrderDate" width="200px">
+    </igx-column>
+    <igx-paginator [perPage]="20">
+    </igx-paginator>
+    <igx-action-strip>
+        <igx-grid-pinning-actions></igx-grid-pinning-actions>
+    </igx-action-strip>
+    <igx-grid-toolbar>
+        <igx-grid-toolbar-actions>
+            <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+            <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+            <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
+        </igx-grid-toolbar-actions>
+    </igx-grid-toolbar>
+</igx-grid>

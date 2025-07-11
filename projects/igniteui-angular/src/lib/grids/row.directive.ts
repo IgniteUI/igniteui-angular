@@ -46,6 +46,12 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     public role = 'row';
 
     /**
+     * @hidden
+     */
+    @Input()
+    public metaData: any;
+
+    /**
      *  The data passed to the row component.
      *
      * ```typescript
@@ -115,6 +121,10 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      */
     public get pinned(): boolean {
         return this.grid.isRecordPinned(this.data);
+    }
+
+    public get hasMergedCells(): boolean {
+            return this.grid.isRecordMerged(this.metaData);
     }
 
     /**
@@ -512,6 +522,12 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
 
     public isCellActive(visibleColumnIndex) {
         const node = this.grid.navigation.activeNode;
+        const field = this.grid.visibleColumns[visibleColumnIndex].field;
+        const rowSpan = this.metaData?.cellMergeMeta?.get(field)?.rowSpan;
+        if (rowSpan > 1) {
+            return node ? (node.row >= this.index && node.row < this.index + rowSpan)
+             && node.column === visibleColumnIndex : false;
+        }
         return node ? node.row === this.index && node.column === visibleColumnIndex : false;
     }
 
@@ -590,6 +606,24 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     public animationEndHandler() {
         this.triggerAddAnimationClass = false;
         this.addAnimationEnd.emit(this);
+    }
+
+    protected getMergeCellSpan(col: ColumnType) {
+        const rowCount = this.metaData.cellMergeMeta.get(col.field).rowSpan;
+        let sizeSpans = "";
+        const indexInData = this.pinned ? this.grid.getInitialPinnedIndex(this.data):
+        this.grid.verticalScrollContainer.igxForOf.indexOf(this.metaData);
+        for (let index = indexInData; index < indexInData + rowCount; index++) {
+            const size = this.grid.verticalScrollContainer.getSizeAt(index);
+            sizeSpans += size + 'px ';
+        }
+        return `${sizeSpans}`;
+    }
+
+    protected getRowHeight() {
+        const indexInData  = this.grid.verticalScrollContainer.igxForOf.indexOf(this.metaData);
+        const size = this.grid.verticalScrollContainer.getSizeAt(indexInData) - 1;
+        return size || this.grid.rowHeight;
     }
 
     /**

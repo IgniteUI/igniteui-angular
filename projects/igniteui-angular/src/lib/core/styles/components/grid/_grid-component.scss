@@ -296,6 +296,10 @@
             @extend %igx-grid__td--edited !optional;
         }
 
+        @include e(td, $m: merged) {
+            @extend %igx-grid__td--merged !optional;
+        }
+
         @include e(td, $m: editing) {
             @extend %igx-grid__td--editing !optional;
         }
