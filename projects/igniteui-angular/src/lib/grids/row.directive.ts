@@ -608,10 +608,11 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         this.addAnimationEnd.emit(this);
     }
 
-    protected getMergeCellSpan(col: ColumnType){
+    protected getMergeCellSpan(col: ColumnType) {
         const rowCount = this.metaData.cellMergeMeta.get(col.field).rowSpan;
         let sizeSpans = "";
-        const indexInData = this.grid.verticalScrollContainer.igxForOf.indexOf(this.metaData);
+        const indexInData = this.pinned ? this.grid.getInitialPinnedIndex(this.data):
+        this.grid.verticalScrollContainer.igxForOf.indexOf(this.metaData);
         for (let index = indexInData; index < indexInData + rowCount; index++) {
             const size = this.grid.verticalScrollContainer.getSizeAt(index);
             sizeSpans += size + 'px ';

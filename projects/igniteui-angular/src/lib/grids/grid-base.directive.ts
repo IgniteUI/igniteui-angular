@@ -3991,7 +3991,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
 
-    protected get activeRowIndex(){
+    protected get activeRowIndex() {
         return this.navigation.activeNode.row;
     }
 

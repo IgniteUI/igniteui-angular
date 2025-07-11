@@ -62,7 +62,8 @@
                 | gridAddRow:true:pipeTrigger
                 | gridRowPinning:id:true:pipeTrigger
                 | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
-                | gridSort:sortingExpressions:groupingExpressions:sortStrategy:id:pipeTrigger:true; as pinnedData) {
+                | gridSort:sortingExpressions:groupingExpressions:sortStrategy:id:pipeTrigger:true
+                | gridCellMerge:visibleColumns:cellMergeMode:sortingExpressions:activeRowIndex:pipeTrigger; as pinnedData) {
                 @if (pinnedData.length > 0) {
                     <div #pinContainer
                         [ngClass]="{
@@ -70,7 +71,7 @@
                             'igx-grid__tr--pinned-top': isRowPinningToTop
                         }"
                         class="igx-grid__tr--pinned" [style.width.px]="calcWidth">
-                        @for (rowData of pinnedData; track rowData; let rowIndex = $index) {
+                        @for (rowData of pinnedData; track (rowData.recordRef || rowData); let rowIndex = $index) {
                             <ng-container *ngTemplateOutlet="pinned_record_template; context: getContext(rowData, rowIndex, true)">
                             </ng-container>
                         }
@@ -89,7 +90,7 @@
         | gridDetails:hasDetails:expansionStates:pipeTrigger
         | gridAddRow:false:pipeTrigger
         | gridRowPinning:id:false:pipeTrigger
-        | gridCellMerge:visibleColumns:cellMergeMode:sortingExpressions:activeRowIndex:pipeTrigger"
+        | gridCellMerge:visibleColumns:cellMergeMode:sortingExpressions:((hasPinnedRecords && isRowPinningToTop) ? activeRowIndex - pinnedRecordsCount : activeRowIndex):pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]="verticalScroll"
             [igxForContainerSize]="calcHeight"
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
@@ -112,7 +113,7 @@
             </igx-grid-row>
         </ng-template>
         <ng-template #pinned_record_template let-rowIndex="index" let-rowData let-metaData="metaData">
-            <igx-grid-row [gridID]="id" [index]="rowIndex" [data]="rowData"
+            <igx-grid-row [gridID]="id" [index]="rowIndex" [data]="rowData" [metaData]="metaData"
                 [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:isRecordMerged(metaData):false:rowData:pipeTrigger"
                 [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger"#row #pinnedRow>
             </igx-grid-row>
