@@ -11,6 +11,7 @@ export interface IGridMergeStrategy {
         field: string,
         comparer: (prevRecord: any, currentRecord: any, field: string) => boolean,
         result: any[],
+        activeRowIndex? : number,
         grid?: GridType
     ) => any[];
 }
@@ -28,6 +29,7 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
         field: string,
         comparer: (prevRecord: any, record: any, field: string) => boolean = this.comparer,
         result: any[],
+        activeRowIndex?: number,
         grid?: GridType
     ) {
         let prev = null;
@@ -35,8 +37,8 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
         for (const rec of data) {
 
             const recData = result[index];
-            // if this is some special record type - add and skip merging
-            if (grid && grid.isDetailRecord(rec) || grid.isGhostRecord(rec) || grid.isGroupByRecord(rec)) {
+            // if this is active row or some special record type - add and skip merging
+            if (activeRowIndex === index || (grid && grid.isDetailRecord(rec) || grid.isGhostRecord(rec) || grid.isGroupByRecord(rec))) {
                 if(!recData) {
                     result.push(rec);
                 }

@@ -85,7 +85,7 @@ export class IgxGridCellMergePipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
-    public transform(collection: any, visibleColumns: ColumnType[], mergeMode: GridCellMergeMode, sortExpr: ISortingExpression[], _pipeTrigger: number) {
+    public transform(collection: any, visibleColumns: ColumnType[], mergeMode: GridCellMergeMode, sortExpr: ISortingExpression[], activeRowIndex: number, _pipeTrigger: number) {
         const columnToMerge = visibleColumns.filter(
             x => x.merge && (mergeMode ==='always' ||
             (mergeMode === 'onSort' && !!sortExpr.find( x=> x.fieldName === x.fieldName)))
@@ -93,7 +93,7 @@ export class IgxGridCellMergePipe implements PipeTransform {
         if (columnToMerge.length === 0) {
             return collection;
         }
-        const result = DataUtil.merge(cloneArray(collection), columnToMerge, this.grid.mergeStrategy, this.grid);
+        const result = DataUtil.merge(cloneArray(collection), columnToMerge, this.grid.mergeStrategy, activeRowIndex, this.grid);
         return result;
     }
 }

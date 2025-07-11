@@ -186,7 +186,6 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { isTree, recreateTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 import { getUUID } from './common/random';
 import { IGridMergeStrategy } from '../data-operations/merge-strategy';
-import { IgxGridMergeNavigationService } from './grid-merge-navigation.service';
 
 interface IMatchInfoCache {
     row: any;
@@ -3989,14 +3988,11 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this.actionStrip) {
             this.actionStrip.menuOverlaySettings.outlet = this.outlet;
         }
-        this._setupNavigationService();
     }
 
-    protected _setupNavigationService() {
-        if (this.hasCellsToMerge) {
-            this.navigation = new IgxGridMergeNavigationService(this.platform);
-            this.navigation.grid = this;
-        }
+
+    protected get activeRowIndex(){
+        return this.navigation.activeNode.row;
     }
 
     protected get hasCellsToMerge() {

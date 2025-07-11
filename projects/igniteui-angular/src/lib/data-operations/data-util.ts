@@ -98,11 +98,11 @@ export class DataUtil {
         return grouping.groupBy(data, state, grid, groupsRecords, fullResult);
     }
 
-    public static merge<T>(data: T[], columns: ColumnType[], strategy: IGridMergeStrategy = new DefaultMergeStrategy(), grid: GridType = null,
+    public static merge<T>(data: T[], columns: ColumnType[], strategy: IGridMergeStrategy = new DefaultMergeStrategy(), activeRowIndex = -1, grid: GridType = null,
     ): any[] {
         let result = [];
         for (const col of columns) {
-            strategy.merge(data, col.field, col.mergingComparer, result, grid);
+            strategy.merge(data, col.field, col.mergingComparer, result, activeRowIndex, grid);
         }
         return result;
 }
