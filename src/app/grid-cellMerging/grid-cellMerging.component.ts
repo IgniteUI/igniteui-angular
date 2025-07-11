@@ -7,6 +7,11 @@ import {
     IgxColumnComponent,
     IgxGridComponent,
     IgxGridPinningActionsComponent,
+    IgxGridToolbarActionsComponent,
+    IgxGridToolbarComponent,
+    IgxGridToolbarExporterComponent,
+    IgxGridToolbarHidingComponent,
+    IgxGridToolbarPinningComponent,
     IgxPaginatorComponent,
 } from 'igniteui-angular';
 
@@ -24,7 +29,12 @@ import { data, dataWithoutPK } from '../shared/data';
         IgxButtonDirective,
         IgxPaginatorComponent,
         IgxActionStripComponent,
-        IgxGridPinningActionsComponent
+        IgxGridPinningActionsComponent,
+        IgxGridToolbarComponent,
+        IgxGridToolbarActionsComponent,
+        IgxGridToolbarPinningComponent,
+        IgxGridToolbarHidingComponent,
+        IgxGridToolbarExporterComponent
     ]
 })
 export class GridCellMergingComponent {

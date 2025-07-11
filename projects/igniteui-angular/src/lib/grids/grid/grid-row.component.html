@@ -27,7 +27,19 @@
     @if (!grid.hasColumnLayouts) {
         @if (pinnedColumns.length > 0 && grid.isPinningToStart) {
             @for (col of pinnedColumns | igxNotGrouped; track trackPinnedColumn(col)) {
-                <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
+                @if (this.hasMergedCells) {
+                    <div [style.height.px]=" this.metaData.cellMergeMeta.get(col.field)?.rowSpan > 1 ? getRowHeight() : null"
+                         class="igx-grid__mrl-block"
+                         [style.visibility]="this.metaData.cellMergeMeta.get(col.field)?.root ? 'hidden' : 'visible'"
+                         [ngStyle]="{
+                        'grid-template-rows': this.metaData.cellMergeMeta.get(col.field)?.rowSpan > 1 ? this.getMergeCellSpan(col) : null
+                    }">
+                    <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
+                </div>
+                }
+                @else {
+                    <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
+                }
             }
         }
         <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]="grid.unpinnedWidth" [igxForSizePropName]="'calcPixelWidth'" [igxForTrackBy]="grid.trackColumnChanges" #igxDirRef>
@@ -48,7 +60,19 @@
         </ng-template>
         @if (pinnedColumns.length > 0 && !grid.isPinningToStart) {
             @for (col of pinnedColumns | igxNotGrouped; track trackPinnedColumn(col)) {
-                <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
+                @if (this.hasMergedCells) {
+                    <div [style.height.px]=" this.metaData.cellMergeMeta.get(col.field)?.rowSpan > 1 ? getRowHeight() : null"
+                         class="igx-grid__mrl-block"
+                         [style.visibility]="this.metaData.cellMergeMeta.get(col.field)?.root ? 'hidden' : 'visible'"
+                         [ngStyle]="{
+                        'grid-template-rows': this.metaData.cellMergeMeta.get(col.field)?.rowSpan > 1 ? this.getMergeCellSpan(col) : null
+                    }">
+                    <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
+                </div>
+                }
+                @else {
+                    <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
+                }
             }
         }
     }
