@@ -134,6 +134,16 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     @Input()
     public labelledBy: string;
 
+    /**
+     * Gets/sets the `role` attribute of the drop down. Default is 'listbox'.
+     *
+     * ```html
+     *  <igx-drop-down [role]="customRole"></igx-drop-down-item>
+     * ```
+     */
+    @Input()
+    public role = 'listbox';
+
     @ContentChild(IgxForOfToken)
     protected virtDir: IgxForOfToken<any>;
 
