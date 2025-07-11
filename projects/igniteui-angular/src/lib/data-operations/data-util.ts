@@ -102,7 +102,7 @@ export class DataUtil {
     ): any[] {
         let result = [];
         for (const col of columns) {
-            strategy.merge(data, col.field, col.mergingComparer, result);
+            strategy.merge(data, col.field, col.mergingComparer, result, grid);
         }
         return result;
 }

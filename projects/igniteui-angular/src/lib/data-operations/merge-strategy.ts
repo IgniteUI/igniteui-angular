@@ -10,7 +10,8 @@ export interface IGridMergeStrategy {
         data: any[],
         field: string,
         comparer: (prevRecord: any, currentRecord: any, field: string) => boolean,
-        result: any[]
+        result: any[],
+        grid?: GridType
     ) => any[];
 }
 
@@ -26,7 +27,8 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
         data: any[],
         field: string,
         comparer: (prevRecord: any, record: any, field: string) => boolean = this.comparer,
-        result: any[]
+        result: any[],
+        grid?: GridType
     ) {
         let prev = null;
         let index = 0;
@@ -34,7 +36,7 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
 
             const recData = result[index];
             // if this is some special record type - add and skip merging
-            if (rec.ghostRecord) {
+            if (grid && grid.isDetailRecord(rec) || grid.isGhostRecord(rec) || grid.isGroupByRecord(rec)) {
                 if(!recData) {
                     result.push(rec);
                 }
