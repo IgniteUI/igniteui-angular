@@ -7,7 +7,7 @@ import {
     waitForAsync,
     ComponentFixture,
 } from "@angular/core/testing";
-import { FormsModule } from "@angular/forms";
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
@@ -3018,6 +3018,34 @@ describe("IgxCalendar - ", () => {
             }));
         });
     });
+
+    describe("Forms - ", () => {
+        let fixture: ComponentFixture<IgxCalendarReactiveFormsComponent>;
+        let component: IgxCalendarReactiveFormsComponent;
+
+        beforeEach(() => {
+            TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    ReactiveFormsModule,
+                    FormsModule,
+                    IgxCalendarReactiveFormsComponent]
+            }).compileComponents();
+
+            fixture = TestBed.createComponent(IgxCalendarReactiveFormsComponent);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        it("Should not throw an error when form is recreated - issue #16033", () => {
+            expect(component.formContext).toBeTruthy();
+            expect(component.formContext.get("orderDate")).toBeTruthy();
+            expect(() => {
+                component.resetForm();
+                fixture.detectChanges();
+            }).not.toThrow();
+        });
+    });
 });
 
 @Component({
@@ -3084,6 +3112,32 @@ export class IgxCalendarValueComponent {
     @ViewChild(IgxCalendarComponent, { static: true })
     public calendar: IgxCalendarComponent;
     public value = new Date(2020, 7, 13);
+}
+
+@Component({
+    template: `<form [formGroup]="formContext">
+                    <igx-calendar formControlName="orderDate"></igx-calendar>
+                </form>`,
+    imports: [IgxCalendarComponent, ReactiveFormsModule, FormsModule]
+})
+export class IgxCalendarReactiveFormsComponent {
+    @ViewChild(IgxCalendarComponent, { static: true })
+    public calendar: IgxCalendarComponent;
+    public formContext: FormGroup;
+
+    constructor() {
+        this.createForm();
+    }
+
+    private createForm() {
+        this.formContext = new FormGroup({
+            orderDate: new FormControl(new Date()),
+        });
+    }
+
+    public resetForm() {
+        this.createForm();
+    }
 }
 
 class DateTester {
