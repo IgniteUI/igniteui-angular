@@ -441,6 +441,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         if (this.grid.actionStrip) {
             this.grid.actionStrip.show(this);
         }
+        this.grid.hoverIndex = this.index;
     }
 
     /**
@@ -452,6 +453,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         if (this.grid.actionStrip && this.grid.actionStrip.hideOnRowLeave) {
             this.grid.actionStrip.hide();
         }
+        this.grid.hoverIndex = null;
     }
 
     /**
@@ -631,14 +633,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         }
         return false;
     }
-
-    @HostListener('mouseenter') onMouseEnter() {
-        this.grid.hoverIndex = this.index;
-      }
-
-      @HostListener('mouseleave') onMouseLeave() {
-        this.grid.hoverIndex = null;
-      }
 
     protected isHoveredRoot(col: ColumnType) {
         const mergeMeta = this.metaData?.cellMergeMeta;
