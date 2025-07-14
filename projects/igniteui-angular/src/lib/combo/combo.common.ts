@@ -22,7 +22,8 @@ import {
     QueryList,
     TemplateRef,
     ViewChild,
-    DOCUMENT
+    DOCUMENT,
+    ViewChildren
 } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NgControl } from '@angular/forms';
 import { caseSensitive } from '@igniteui/material-icons-extended';
@@ -94,11 +95,6 @@ export const enum DataTypes {
 export interface IComboFilteringOptions {
     /** Defines filtering case-sensitivity */
     caseSensitive?: boolean;
-    /**
-     * Defines whether filtering is allowed
-     * @deprecated in version 18.2.0. Use the `disableFiltering` property instead.
-    */
-    filterable?: boolean;
     /** Defines optional key to filter against complex list items. Default to displayKey if provided.*/
     filteringKey?: string;
 }
@@ -121,6 +117,17 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      */
     @Input({ transform: booleanAttribute })
     public showSearchCaseIcon = false;
+
+     /**
+     * Enables/disables filtering in the list. The default is `false`.
+     */
+    @Input({ transform: booleanAttribute })
+    public get disableFiltering(): boolean {
+        return this._disableFiltering;
+    }
+    public set disableFiltering(value: boolean) {
+        this._disableFiltering = value;
+    }
 
     /**
      * Set custom overlay settings that control how the combo's list of items is displayed.
@@ -748,6 +755,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     @ContentChildren(IgxSuffixDirective, { descendants: true })
     protected suffixes: QueryList<IgxSuffixDirective>;
 
+    @ViewChildren(IgxSuffixDirective)
+    protected internalSuffixes: QueryList<IgxSuffixDirective>;
+
     /** @hidden @internal */
     public get searchValue(): string {
         return this._searchValue;
@@ -941,6 +951,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     protected computedStyles;
 
     private _id: string = `igx-combo-${NEXT_ID++}`;
+    private _disableFiltering = false;
     private _type = null;
     private _dataType = '';
     private _itemHeight = undefined;
@@ -984,8 +995,15 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             this.inputGroup.prefixes = this.prefixes;
         }
 
-        if (this.inputGroup && this.suffixes?.length > 0) {
-            this.inputGroup.suffixes = this.suffixes;
+        if (this.inputGroup) {
+            const suffixesArray = this.suffixes?.toArray() ?? [];
+            const internalSuffixesArray = this.internalSuffixes?.toArray() ?? [];
+            const mergedSuffixes = new QueryList<IgxSuffixDirective>();
+            mergedSuffixes.reset([
+                ...suffixesArray,
+                ...internalSuffixesArray
+            ]);
+            this.inputGroup.suffixes = mergedSuffixes;
         }
     }
 

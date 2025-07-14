@@ -189,8 +189,8 @@ export class IgxPivotRowComponent extends IgxRowDirective {
             keyValueMap.set(dim.memberName, path.shift());
         }
         let pivotValue;
-        if (this.grid.hasMultipleValues) {
-            pivotValue = this.grid.values.find(x => x.member === path.shift());
+        if (this.grid.hasMultipleValues && path.length) {
+            pivotValue = this.grid.values.find(x => x.member === path[0]);
         } else {
             pivotValue = this.grid.values ? this.grid.values[0] : undefined;
         }

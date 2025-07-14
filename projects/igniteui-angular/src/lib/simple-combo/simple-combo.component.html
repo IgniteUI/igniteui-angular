@@ -5,7 +5,7 @@
     </ng-container>
 
     <ng-container ngProjectAs="igx-prefix">
-        <ng-content select="igx-prefix"></ng-content>
+        <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
     </ng-container>
 
     <ng-container ngProjectAs="igx-hint, [igxHint]">
@@ -21,7 +21,7 @@
         (keyup)="handleKeyUp($event)" (keydown)="handleKeyDown($event)" (blur)="onBlur()" (paste)="handleInputChange($event)"/>
 
     <ng-container ngProjectAs="igx-suffix">
-        <ng-content select="igx-suffix"></ng-content>
+        <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
     </ng-container>
 
     @if (hasSelectedItem) {
@@ -68,7 +68,7 @@
         (focus)="dropdown.onFocus()" (keydown)="handleItemKeyDown($event)">
         <igx-combo-item [role]="item?.isHeader? 'group' : 'option'" [singleMode]="true"
             [itemHeight]="itemHeight" (click)="handleItemClick()" *igxFor="let item of data
-                | comboFiltering:filterValue:displayKey:filteringOptions:filterFunction
+                | comboFiltering:filterValue:displayKey:filteringOptions:filterFunction:disableFiltering
                 | comboGrouping:groupKey:valueKey:groupSortingDirection:compareCollator;
                 index as rowIndex; initialChunkSize: 10; containerSize: itemsMaxHeight || containerSize; itemSize: itemHeight || itemSize; scrollOrientation: 'vertical';"
                 [value]="item" [isHeader]="item?.isHeader" [index]="rowIndex">

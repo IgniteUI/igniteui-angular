@@ -2,6 +2,24 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 20.0.6
+### General
+- `IgxSimpleCombo`
+    - Added `disableFiltering` to the `IgxSimpleCombo`, which enables/disables the filtering in the list. The default is `false`.
+- `IgxCombo`, `IgxSimpleCombo`
+    -  Removed deprecated `filteringOptions.filterable` option.
+
+## 20.0.2
+
+### New Features
+- **Separating Button and Icon Button Themes** - The `button-theme` and `icon-button-theme` functions are still available, but for more targeted customization, you can now use the specific theme function for each button type.
+- **Component Themes Enchancements** - Component themes have been improved to automatically calculate all necessary states (e.g., hover, focus, active) based on just a few key values. For example, customizing a contained button requires only a background color:
+```scss
+    $custom-contained-button: contained-button-theme(
+        $background: #09f;
+    );
+```
+
 ## 20.0.0
 
 ### General
@@ -31,7 +49,6 @@ All notable changes for each version of this project will be documented in this 
     ```
 
 ## 19.2.0
-
 ### General
 - `IgxCarousel`
     - Removed deprecated property `keyboardSupport`.
