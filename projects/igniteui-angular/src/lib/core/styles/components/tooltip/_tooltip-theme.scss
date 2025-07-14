@@ -44,7 +44,6 @@
     }
 
     $theme: digest-schema($tooltip-schema);
-    $meta: map.get($theme, '_meta');
 
     @if not($shadow) {
         $elevation: map.get($tooltip-schema, 'elevation');
@@ -52,7 +51,7 @@
     }
 
     @if not($text-color) and $background {
-        $text-color: text-contrast($background);
+        $text-color: adaptive-contrast($background);
     }
 
     @return extend($theme, (
@@ -62,10 +61,6 @@
         text-color: $text-color,
         border-radius: $border-radius,
         shadow: $shadow,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -75,7 +70,7 @@
 @mixin tooltip($theme) {
     @include layer(base) {
         @include css-vars($theme);
-        $variant: map.get($theme, '_meta', 'variant');
+        $variant: map.get($theme, '_meta', 'theme');
 
         %tooltip-display {
             display: inline-flex;

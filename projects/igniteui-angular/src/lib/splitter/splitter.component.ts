@@ -1,7 +1,24 @@
-import { DOCUMENT } from '@angular/common';
-import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Inject, Input, Output, QueryList, ViewEncapsulation, booleanAttribute, forwardRef } from '@angular/core';
+import {
+    AfterContentInit,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Inject,
+    Input,
+    NgZone,
+    Output,
+    QueryList,
+    booleanAttribute,
+    ViewEncapsulation,
+    forwardRef,
+    DOCUMENT
+} from '@angular/core';
 import { DragDirection, IDragMoveEventArgs, IDragStartEventArgs, IgxDragDirective, IgxDragIgnoreDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
+import { take } from 'rxjs';
 
 /**
  * An enumeration that defines the `SplitterComponent` panes orientation.
@@ -157,7 +174,7 @@ export class IgxSplitterComponent implements AfterContentInit {
      */
     private sibling!: IgxSplitterPaneComponent;
 
-    constructor(@Inject(DOCUMENT) public document, private elementRef: ElementRef) { }
+    constructor(@Inject(DOCUMENT) public document, private elementRef: ElementRef, private zone: NgZone) { }
     /**
      * Gets/Sets the splitter orientation.
      *
@@ -200,7 +217,9 @@ export class IgxSplitterComponent implements AfterContentInit {
 
     /** @hidden @internal */
     public ngAfterContentInit(): void {
-        this.initPanes();
+        this.zone.onStable.pipe(take(1)).subscribe(() => {
+            this.initPanes();
+        });
         this.panes.changes.subscribe(() => {
             this.initPanes();
         });
@@ -475,7 +494,7 @@ export class IgxSplitBarComponent {
      * @hidden @internal
      */
     public get prevButtonHidden() {
-        return this.siblings[0].collapsed && !this.siblings[1].collapsed;
+        return this.siblings[0]?.collapsed && !this.siblings[1]?.collapsed;
     }
 
     /**
@@ -562,7 +581,7 @@ export class IgxSplitBarComponent {
      * @hidden @internal
      */
     public get nextButtonHidden() {
-        return this.siblings[1].collapsed && !this.siblings[0].collapsed;
+        return this.siblings[1]?.collapsed && !this.siblings[0]?.collapsed;
     }
 
     /**
@@ -602,7 +621,7 @@ export class IgxSplitBarComponent {
 
     protected get resizeDisallowed() {
         const relatedTabs = this.siblings;
-        return !!relatedTabs.find(x => x.resizable === false || x.collapsed === true);
+        return !!relatedTabs.find(x => x?.resizable === false || x?.collapsed === true);
     }
 
     /**

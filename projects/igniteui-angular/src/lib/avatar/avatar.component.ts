@@ -10,23 +10,23 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 
-import { mkenum, normalizeURI } from '../core/utils';
+import { normalizeURI } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 
 let NEXT_ID = 0;
-export const IgxAvatarSize = /*@__PURE__*/mkenum({
+export const IgxAvatarSize = {
     SMALL: 'small',
     MEDIUM: 'medium',
     LARGE: 'large'
-});
+} as const;
 export type IgxAvatarSize = (typeof IgxAvatarSize)[keyof typeof IgxAvatarSize];
 
-export const IgxAvatarType = /*@__PURE__*/mkenum({
+export const IgxAvatarType = {
     INITIALS: 'initials',
     IMAGE: 'image',
     ICON: 'icon',
     CUSTOM: 'custom'
-});
+} as const;
 export type IgxAvatarType = (typeof IgxAvatarType)[keyof typeof IgxAvatarType];
 
 /**

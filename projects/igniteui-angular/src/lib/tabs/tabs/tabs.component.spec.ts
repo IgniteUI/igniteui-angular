@@ -15,7 +15,6 @@ import {
     TabsTestHtmlAttributesComponent, TabsTestSelectedTabComponent, TabsWithPrefixSuffixTestComponent,
     TemplatedTabsTestComponent
 } from '../../test-utils/tabs-components.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxTabContentComponent } from './content/tab-content.component';
 import { RoutingTestGuard } from '../../test-utils/routing-test-guard.spec';
@@ -28,17 +27,17 @@ const KEY_END_EVENT = new KeyboardEvent('keydown', { key: 'End', bubbles: true }
 const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
 const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: ' ', bubbles: true });
 
-fdescribe('IgxTabs', () => {
-    configureTestSuite({ checkLeaks: true });
-
-    const tabItemNormalCssClass = 'igx-tab-header';
-    const tabItemSelectedCssClass = 'igx-tab-header--selected';
-    const headerScrollCssClass = 'igx-tabs-header-scroll';
-
-    // Helper function to get the total width of the headers
-    function calculateTotalHeadersWidth(headers: any[]) {
-        return headers.reduce((total: any, header: { offsetWidth: any; }) => total + header.offsetWidth, 0);
-    }
+describe('IgxTabs', () => {
+    const tabItemNormalCssClass = 'igx-tabs__header-item';
+    const tabItemSelectedCssClass = 'igx-tabs__header-item--selected';
+    const headerScrollCssClass = 'igx-tabs__header-scroll';
+    const testRoutes = [
+        { path: 'view1', component: RoutingView1Component, canActivate: [RoutingTestGuard] },
+        { path: 'view2', component: RoutingView2Component, canActivate: [RoutingTestGuard] },
+        { path: 'view3', component: RoutingView3Component, canActivate: [RoutingTestGuard] },
+        { path: 'view4', component: RoutingView4Component, canActivate: [RoutingTestGuard] },
+        { path: 'view5', component: RoutingView5Component, canActivate: [RoutingTestGuard] }
+    ];
 
     // Helper function to get the left and right spaces of the container
     function getLeftAndRightSpaces(headers: string | any[], container: { offsetWidth: number; }) {
@@ -47,14 +46,7 @@ fdescribe('IgxTabs', () => {
         return { leftSpace, rightSpace };
     }
 
-    beforeAll(waitForAsync(() => {
-        const testRoutes = [
-            { path: 'view1', component: RoutingView1Component, canActivate: [RoutingTestGuard] },
-            { path: 'view2', component: RoutingView2Component, canActivate: [RoutingTestGuard] },
-            { path: 'view3', component: RoutingView3Component, canActivate: [RoutingTestGuard] },
-            { path: 'view4', component: RoutingView4Component, canActivate: [RoutingTestGuard] },
-            { path: 'view5', component: RoutingView5Component, canActivate: [RoutingTestGuard] }
-        ];
+    beforeEach(waitForAsync(() => {
 
         TestBed.configureTestingModule({
             imports: [

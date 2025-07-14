@@ -133,7 +133,7 @@ export class InputGroupShowcaseSampleComponent {
             }
         },
         hideSuffix: {
-            label: 'Hide Suffix using( [hidden] )',
+            label: 'Hide Suffix',
             control: {
                 type: 'boolean',
                 defaultValue: false

@@ -21,7 +21,9 @@ import {
     Output,
     QueryList,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    DOCUMENT,
+    ViewChildren
 } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NgControl } from '@angular/forms';
 import { caseSensitive } from '@igniteui/material-icons-extended';
@@ -44,7 +46,6 @@ import {
 import { IComboItemAdditionEvent, IComboSearchInputEventArgs } from './public_api';
 import { ComboResourceStringsEN, IComboResourceStrings } from '../core/i18n/combo-resources';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
-import { DOCUMENT } from '@angular/common';
 import { isEqual } from 'lodash-es';
 
 export const IGX_COMBO_COMPONENT = /*@__PURE__*/new InjectionToken<IgxComboBase>('IgxComboComponentToken');
@@ -748,6 +749,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     @ContentChildren(IgxSuffixDirective, { descendants: true })
     protected suffixes: QueryList<IgxSuffixDirective>;
 
+    @ViewChildren(IgxSuffixDirective)
+    protected internalSuffixes: QueryList<IgxSuffixDirective>;
+
     /** @hidden @internal */
     public get searchValue(): string {
         return this._searchValue;
@@ -984,8 +988,15 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             this.inputGroup.prefixes = this.prefixes;
         }
 
-        if (this.inputGroup && this.suffixes?.length > 0) {
-            this.inputGroup.suffixes = this.suffixes;
+        if (this.inputGroup) {
+            const suffixesArray = this.suffixes?.toArray() ?? [];
+            const internalSuffixesArray = this.internalSuffixes?.toArray() ?? [];
+            const mergedSuffixes = new QueryList<IgxSuffixDirective>();
+            mergedSuffixes.reset([
+                ...suffixesArray,
+                ...internalSuffixesArray
+            ]);
+            this.inputGroup.suffixes = mergedSuffixes;
         }
     }
 

@@ -3,12 +3,11 @@
         <strong>Angular</strong>
         <igx-tabs
             [tabAlignment]="properties.alignment"
-            [disableAnimation]="properties.disableAnimation"
             [activation]="properties.activation">
 
             @for (contact of contacts; track contact.id) {
-                <igx-tab-item [selected]="contact.id === selectedTabId" [disabled]="properties.disabled">
-                    <igx-tab-header igxRipple>
+                <igx-tab-item [selected]="contact.id === selectedTabId">
+                    <igx-tab-header>
                         @if(!properties.hideIcon) {
                             <igx-icon igxTabHeaderIcon>folder</igx-icon>
                         }
@@ -31,15 +30,13 @@
             [activation]="properties.activation">
 
             @for (contact of contacts; track contact.id) {
-                <igc-tab [disabled]="properties.disabled" [selected]="contact.id === selectedTabId" [panel]="contact.i">
-                    @if (!properties.hideIcon) {
-                        <igc-icon name="folder" slot="label"></igc-icon>
+                <igc-tab [selected]="contact.id === selectedTabId">
+                    @if(!properties.hideIcon) {
+                        <igx-icon slot="label">folder</igx-icon>
                     }
-
-                    @if (!properties.hideText) {
-                        <span slot="label">{{ contact.text }}</span>
+                    @if(!properties.hideText) {
+                    <span slot="label">{{ contact.text }}</span>
                     }
-
                     Phone: {{ contact.phone }}
                 </igc-tab>
             }
@@ -48,14 +45,15 @@
 </div>
 
 <ng-template #customControlsTemplate>
-        <label class="properties-panel__property-label">Item actions</label>
-        <div class="panel-actions panel-actions--section panel-actions--col">
+        <p>Item actions</p>
+        <div class="panel-actions panel-actions--col">
             <section class="panel-actions">
                 <button igxButton="outlined" (click)="addTab()">Add item</button>
                 <button igxButton="contained" (click)="removeTab()">Remove item</button>
             </section>
+
             <section class="panel-actions panel-actions--col">
-                <label class="properties-panel__property-label">Move selection</label>
+                <p>Move selection</p>
 
                 <div class="panel-actions">
                     <button igxButton="outlined" (click)="previousTab()">
@@ -69,8 +67,9 @@
                     </button>
                 </div>
             </section>
+
             <section class="panel-actions panel-actions--col">
-                <label class="properties-panel__property-label">Select by index</label>
+                <p>Select by index</p>
 
                 <div class="panel-actions panel-actions--col">
                     <button class="select-index" igxButton="outlined" (click)="selectTabAtIndex(2)">Select by index</button>

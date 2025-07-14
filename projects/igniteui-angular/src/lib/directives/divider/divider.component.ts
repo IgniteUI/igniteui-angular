@@ -1,10 +1,9 @@
 import { Component, HostBinding, Input, ViewEncapsulation, booleanAttribute } from '@angular/core';
-import { mkenum } from '../../core/utils';
 
-export const IgxDividerType = /*@__PURE__*/mkenum({
+export const IgxDividerType = {
     SOLID: 'solid',
     DASHED: 'dashed'
-});
+} as const;
 export type IgxDividerType = (typeof IgxDividerType)[keyof typeof IgxDividerType];
 
 let NEXT_ID = 0;
@@ -119,7 +118,4 @@ export class IgxDividerComponent {
     public get isSolid() {
         return this.type === IgxDividerType.SOLID;
     }
-
 }
-
-

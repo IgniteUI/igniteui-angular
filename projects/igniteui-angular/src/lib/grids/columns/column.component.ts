@@ -83,6 +83,7 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-column',
     template: ``,
+    styles: `:host { display: none }`,
     standalone: true
 })
 export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnType {
@@ -405,23 +406,38 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
 
     /**
-     * @hidden
+     * Emitted when the column is hidden or shown.
+     *
+     * ```html
+     * <igx-column (hiddenChange)="hiddenChange($event)">
+     * </igx-column>
+     * ```
+     *
      */
     @Output()
     public hiddenChange = new EventEmitter<boolean>();
 
-    /** @hidden */
+    /**
+     * Emitted when the column expanded or collapsed.
+     *
+     * ```html
+     * <igx-column (expandedChange)="expandedChange($event)">
+     * </igx-column>
+     * ```
+     *
+     */
     @Output()
     public expandedChange = new EventEmitter<boolean>();
 
     /** @hidden */
     @Output()
     public collapsibleChange = new EventEmitter<boolean>();
+
     /** @hidden */
     @Output()
     public visibleWhenCollapsedChange = new EventEmitter<boolean>();
 
-    /** @hidden */
+    /** @hidden @internal */
     @Output()
     public columnChange = new EventEmitter<void>();
 
@@ -861,13 +877,25 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public additionalTemplateContext: any;
 
     /**
-     * @hidden
+     * Emitted when the column width changes.
+     *
+     * ```html
+     * <igx-column (widthChange)="widthChange($event)">
+     * </igx-column>
+     * ```
+     *
      */
     @Output()
     public widthChange = new EventEmitter<string>();
 
     /**
-     * @hidden
+     * Emitted when the column is pinned/unpinned.
+     *
+     * ```html
+     * <igx-column (pinnedChange)="pinnedChange($event)">
+     * </igx-column>
+     * ```
+     *
      */
     @Output()
     public pinnedChange = new EventEmitter<boolean>();
@@ -2282,7 +2310,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         // estimate the exact index at which column will be inserted
         // takes into account initial unpinned index of the column
         if (!hasIndex) {
-            const indices = grid.unpinnedColumns.map(col => col.index);
+            const indices = grid._unpinnedColumns.map(col => col.index);
             indices.push(this.index);
             indices.sort((a, b) => a - b);
             index = indices.indexOf(this.index);

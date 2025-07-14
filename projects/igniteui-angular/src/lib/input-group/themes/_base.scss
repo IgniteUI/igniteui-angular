@@ -217,9 +217,16 @@ $base-scale-size: (
             }
 
             &[type='file'] {
-                @include hide-default();
-            }
+                opacity: 0;
+                z-index: 2;
+                width: 100%;
+                height: 100%;
 
+                &::-webkit-file-upload-button {
+                    width: inherit;
+                    height: inherit;
+                }
+            }
 
             &[type='number'] {
                 -moz-appearance: textfield;
@@ -266,8 +273,9 @@ $base-scale-size: (
             width: 100%;
             max-width: 100%;
             overflow: hidden;
-            height: calc(var-get($theme, 'size') - 2px);
+            height: var-get($theme, 'size');
             color: var-get($theme, 'placeholder-color');
+            grid-column: 3 / -2;
 
             span {
                 @include ellipsis();
@@ -277,6 +285,16 @@ $base-scale-size: (
                 max-width: inherit;
                 top: 50%;
                 transform: translateY(-50%);
+            }
+        }
+
+        @include m(file, $not: (disabled)) {
+            @include e(input) {
+                &[type='file'] {
+                    &::-webkit-file-upload-button {
+                        cursor: pointer;
+                    }
+                }
             }
         }
 
@@ -298,13 +316,12 @@ $base-scale-size: (
         }
 
         @include m(file) {
-
-            @include e(bundle-main) {
-                cursor: pointer;
+            @include e(input) {
+                grid-column: 2 / -2;
             }
 
-            @include e(label) {
-                pointer-events: none;
+            @include e(bundle-main) {
+                display: contents;
             }
         }
 
@@ -315,13 +332,15 @@ $base-scale-size: (
         }
 
         @include e(upload-button) {
-            --igx-button-background: transparent;
-            --igx-button-hover-background: transparent;
-            --igx-button-focus-background: transparent;
-            --igx-button-focus-visible-background: transparent;
-            --igx-button-active-background: transparent;
-
-            //padding-inline: var(--_prefix-suffix-spacing);
+            --background: #{var-get($theme, 'file-selector-button-background')};
+            --foreground: #{var-get($theme, 'file-selector-button-foreground')};
+            --focus-background: #{var-get($theme, 'file-selector-button-background--focused')};
+            --focus-foreground: #{var-get($theme, 'file-selector-button-foreground--focused')};
+            --focus-visible-background: #{var-get($theme, 'file-selector-button-background--focused')};
+            --active-background: #{var-get($theme, 'file-selector-button-background')};
+            --active-foreground: #{var-get($theme, 'file-selector-button-foreground')};
+            --disabled-background: #{var-get($theme, 'file-selector-button-background--disabled')};
+            --disabled-foreground: #{var-get($theme, 'file-selector-button-foreground--disabled')};
         }
 
         @include m(textarea-group) {
@@ -456,10 +475,6 @@ $base-scale-size: (
                 grid-column: 1 / -1;
             }
 
-            @include e(file-input) {
-                color: var-get($theme, 'disabled-text-color');
-            }
-
             @include e(toggle-button) {
                 color: var(--toggle-button-foreground-disabled);
                 background: var(--toggle-button-background-disabled);
@@ -467,6 +482,11 @@ $base-scale-size: (
 
             @include e(clear-icon) {
                 display: none;
+            }
+
+            @include e(file-input) {
+                background: var-get($theme, 'file-names-background--disabled');
+                color: var-get($theme, 'file-names-foreground--disabled');
             }
 
             /* stylelint-disable max-nesting-depth */
@@ -481,5 +501,6 @@ $base-scale-size: (
             }
             /* stylelint-enable max-nesting-depth */
         }
+
     }
 }

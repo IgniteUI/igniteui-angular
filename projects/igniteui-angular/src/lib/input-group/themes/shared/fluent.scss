@@ -18,14 +18,6 @@ $_theme: $fluent;
         }
     }
 
-    @include e(upload-button) {
-        --igx-button-background: transparent;
-        --igx-button-hover-background: transparent;
-        --igx-button-focus-background: transparent;
-        --igx-button-focus-visible-background: transparent;
-        --igx-button-active-background: transparent;
-    }
-
     @include e(hint) {
         min-height: rem(18px);
     }

@@ -3,7 +3,7 @@
         <ng-content select="[igxLabel]"></ng-content>
     </ng-container>
     <ng-container ngProjectAs="igx-prefix">
-        <ng-content select="igx-prefix"></ng-content>
+        <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
     </ng-container>
     <ng-container ngProjectAs="igx-hint, [igxHint]">
         <ng-content select="igx-hint, [igxHint]"></ng-content>
@@ -15,7 +15,7 @@
         [attr.aria-labelledby]="ariaLabelledBy || label?.id || placeholder"
         (blur)="onBlur()" />
     <ng-container ngProjectAs="igx-suffix">
-        <ng-content select="igx-suffix"></ng-content>
+        <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
     </ng-container>
     @if (displayValue) {
         <igx-suffix [attr.aria-label]="resourceStrings.igx_combo_clearItems_placeholder" class="igx-combo__clear-button igx-input-group__clear-button"

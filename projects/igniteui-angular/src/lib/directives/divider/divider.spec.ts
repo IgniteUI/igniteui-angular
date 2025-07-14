@@ -2,11 +2,9 @@ import { Component } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxDividerComponent, IgxDividerType } from './divider.component';
 
 describe('Divider', () => {
-    configureTestSuite();
     const baseClass = 'igx-divider';
 
     const classes = {
@@ -17,7 +15,7 @@ describe('Divider', () => {
 
     let fixture: ComponentFixture<TestDividerComponent>;
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [TestDividerComponent]
         }).compileComponents();

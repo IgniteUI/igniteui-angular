@@ -1,4 +1,5 @@
 import { IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
+import { html } from 'lit';
 import { firstValueFrom, fromEvent, skip, timer } from 'rxjs';
 import { ComponentRefKey, IgcNgElement } from './custom-strategy';
 import hgridData from '../assets/data/projects-hgrid.js';
@@ -10,6 +11,7 @@ import {
     IgcColumnComponent,
     IgcPaginatorComponent,
     IgcGridStateComponent,
+    IgcColumnLayoutComponent,
 } from './components';
 import { defineComponents } from '../utils/register';
 
@@ -22,6 +24,7 @@ describe('Elements: ', () => {
             IgcHierarchicalGridComponent,
             IgcPivotGridComponent,
             IgcColumnComponent,
+            IgcColumnLayoutComponent,
             IgcPaginatorComponent,
             IgcGridStateComponent,
         );
@@ -51,6 +54,47 @@ describe('Elements: ', () => {
             const gridComponent = (await gridEl.ngElementStrategy[ComponentRefKey]).instance as IgxGridComponent;
             const columnComponent = (await columnEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
             expect(gridComponent.columnList.toArray()).toContain(columnComponent);
+
+            columnEl.remove();
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY: DESTROY + QUERY */ * 3));
+            expect(gridComponent.columnList.toArray()).toEqual([]);
+        });
+
+        it(`should keep IgcNgElement instance in template of another IgcNgElement #15678`, async () => {
+            const gridEl = document.createElement("igc-grid");
+            testContainer.appendChild(gridEl);
+            const columnEl = document.createElement("igc-column") as IgcNgElement;
+            gridEl.appendChild(columnEl);
+            gridEl.primaryKey = 'id';
+            gridEl.data = [{ id: '1' }];
+            (gridEl as any).detailTemplate = (ctx) => {
+                return html`<div>
+                    <igc-grid id="child${ctx.implicit.id}"></igc-grid>
+                </div>`;
+            }
+
+            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+
+            // sigh (。﹏。*)
+            (gridEl as any).toggleRow('1');
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+
+            let detailGrid = document.querySelector<IgcNgElement>('#child1');
+            expect(detailGrid).toBeDefined();
+            let detailGridComponent = (await detailGrid?.ngElementStrategy[ComponentRefKey])?.instance as IgxGridComponent;
+            expect(detailGridComponent).toBeDefined();
+
+            // close and re-expand row detail:
+            (gridEl as any).toggleRow('1');
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            (gridEl as any).toggleRow('1');
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+
+            detailGrid = document.querySelector<IgcNgElement>('#child1');
+            expect(detailGrid).toBeDefined();
+            detailGridComponent = (await detailGrid?.ngElementStrategy[ComponentRefKey])?.instance as IgxGridComponent;
+            expect(detailGridComponent).toBeDefined("Detail child grid was destroyed on re-expand");
         });
     });
 
@@ -103,6 +147,29 @@ describe('Elements: ', () => {
             expect(paginator.totalRecords).toEqual(gridEl.data.length);
         });
 
+        it(`should correctly apply column template when set through event`, async () => {
+            const gridEl = document.createElement("igc-grid");
+
+            const columnID = document.createElement("igc-column");
+            columnID.setAttribute("field", "ProductID");
+            gridEl.appendChild(columnID);
+            const columnName = document.createElement("igc-column");
+            columnName.setAttribute("field", "ProductName");
+            gridEl.appendChild(columnName);
+
+            gridEl.data = SampleTestData.foodProductData();
+            gridEl.addEventListener("columnInit", (args: CustomEvent<any>) => {
+                args.detail.headerTemplate = (ctx) => html`<span>Templated ${args.detail.field}</span>`;
+            });
+            testContainer.appendChild(gridEl);
+
+            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+
+            const header = document.getElementsByTagName("igx-grid-header").item(0) as HTMLElement;
+            expect(header.innerText).toEqual('Templated ProductID');
+        });
+
         it(`should initialize pivot grid with state persistence component`, async () => {
             const gridEl = document.createElement("igc-pivot-grid");
 
@@ -115,6 +182,53 @@ describe('Elements: ', () => {
             // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
             await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
             expect(() => stateComponent.getStateAsString()).not.toThrow();
+        });
+
+        it(`should allow manipulating projected columns through the DOM`, async () => {
+            const innerHtml = `
+            <igc-grid id="testGrid" primary-key="ProductID">
+                <igc-column-layout header="Product ID">
+                    <igc-column row-start="1" col-start="1" row-end="3" field="ProductID" header="Product ID" width="25%"></igc-column>
+                </igc-column-layout>
+                <igc-column-layout header="Product Details">
+                    <igc-column row-start="1" col-start="1" col-end="3" field="ProductName" header="Product Name"></igc-column>
+                    <igc-column row-start="2" col-start="1" col-end="2" field="CategoryName" header="Category Name" groupable="true"></igc-column>
+                    <igc-column row-start="2" col-start="2" col-end="3" field="ImageUrl"></igc-column>
+                </igc-column-layout>
+                <igc-column-layout header="Product Stock">
+                    <igc-column row-start="1" col-start="1" col-end="3" field="InStock" header="In Stock" width="25%"></igc-column>
+                </igc-column-layout>
+            </igc-grid>`;
+            testContainer.innerHTML = innerHtml;
+
+            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
+
+            const grid = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid');
+            const thirdGroup = document.querySelector<IgcNgElement>('igc-column-layout[header="Product Stock"]');
+            const secondGroup = document.querySelector<IgcNgElement>('igc-column-layout[header="Product Details"]');
+
+            expect(grid.columns.length).toEqual(8);
+            expect(grid.getColumnByName('ProductID')).toBeTruthy();
+            expect(grid.getColumnByVisibleIndex(1).field).toEqual('ProductName');
+
+            grid.removeChild(secondGroup);
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
+
+            expect(grid.columns.length).toEqual(4);
+            expect(grid.getColumnByName('ProductID')).toBeTruthy();
+            expect(grid.getColumnByVisibleIndex(1).field).toEqual('InStock');
+
+            // TODO: secondGroup can't be re-used
+            const newGroup = document.createElement('igc-column-layout');
+            const newColumn = document.createElement('igc-column');
+            newColumn.setAttribute('field', 'ProductName');
+            newGroup.appendChild(newColumn);
+            grid.insertBefore(newGroup, thirdGroup);
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
+
+            expect(grid.columns.length).toEqual(6);
+            expect(grid.getColumnByVisibleIndex(1).field).toEqual('ProductName');
         });
     });
 });

@@ -221,7 +221,6 @@
 </div>
 
 @if (platform.isElements) {
-    <div #sink style="display: none;">
-        <ng-content select="igx-grid-state,igc-grid-state"></ng-content>
-    </div>
+    <div #sink style="display: none;"></div>
+    <ng-content select="igx-grid-state,igc-grid-state"></ng-content>
 }

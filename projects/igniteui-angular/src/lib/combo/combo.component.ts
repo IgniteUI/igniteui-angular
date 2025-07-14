@@ -1,8 +1,23 @@
-import { DOCUMENT, NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy,
-    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck, booleanAttribute,
-    ViewEncapsulation
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    OnInit,
+    OnDestroy,
+    Optional,
+    Inject,
+    Injector,
+    ViewChild,
+    Input,
+    Output,
+    EventEmitter,
+    HostListener,
+    DoCheck,
+    booleanAttribute,
+    ViewEncapsulation,
+    DOCUMENT
 } from '@angular/core';
 
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
