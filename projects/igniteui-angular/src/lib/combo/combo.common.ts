@@ -1232,6 +1232,19 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     }
 
     /** @hidden @internal */
+    public handleToggleKeyDown(eventArgs: KeyboardEvent) {
+        if (eventArgs.key === 'Enter' || eventArgs.key === ' ') {
+            eventArgs.preventDefault();
+            this.toggle();
+        }
+    }
+
+    /** @hidden @internal */
+    public getAriaLabel(): string {
+        return this.displayValue ? this.resourceStrings.igx_combo_aria_label_options : this.resourceStrings.igx_combo_aria_label_no_options;
+    }
+
+    /** @hidden @internal */
     public registerOnChange(fn: any): void {
         this._onChangeCallback = fn;
     }
