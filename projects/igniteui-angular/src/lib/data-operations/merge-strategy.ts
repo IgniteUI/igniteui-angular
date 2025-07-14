@@ -38,7 +38,7 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
 
             const recData = result[index];
             // if this is active row or some special record type - add and skip merging
-            if (activeRowIndex === index || (grid && grid.isDetailRecord(rec) || grid.isGhostRecord(rec) || grid.isGroupByRecord(rec))) {
+            if (activeRowIndex === index || (grid && grid.isDetailRecord(rec) || grid.isGroupByRecord(rec))) {
                 if(!recData) {
                     result.push(rec);
                 }
@@ -46,9 +46,9 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
                 index++;
                 continue;
             }
-            let recToUpdateData = recData ?? { recordRef: rec, cellMergeMeta: new Map<string, IMergeByResult>() };
+            let recToUpdateData = recData ?? { recordRef: grid.isGhostRecord(rec) ? rec.recordRef : rec, cellMergeMeta: new Map<string, IMergeByResult>(), ghostRecord: rec.ghostRecord };
             recToUpdateData.cellMergeMeta.set(field, { rowSpan: 1 });
-            if (prev && comparer(prev.recordRef, recToUpdateData.recordRef, field)) {
+            if (prev && comparer(prev.recordRef, recToUpdateData.recordRef, field) && prev.ghostRecord === recToUpdateData.ghostRecord) {
                 const root = prev.cellMergeMeta.get(field)?.root ?? prev;
                 root.cellMergeMeta.get(field).rowSpan += 1;
                 recToUpdateData.cellMergeMeta.get(field).root = root;
