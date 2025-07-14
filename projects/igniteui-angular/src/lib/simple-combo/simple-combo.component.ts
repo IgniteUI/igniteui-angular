@@ -290,6 +290,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (this.collapsed && this.comboInput.focused) {
             this.open();
         }
+
         if (event !== undefined) {
             this.filterValue = this.searchValue = typeof event === 'string' ? event : event.target.value;
         }
