@@ -122,6 +122,8 @@
     }
 
     %upload-button {
+        border-inline: 0;
+
         // That button can't have :focus, :active, :hover states, that's why we dont need to override them here.
         --foreground: #{var-get($theme, 'file-selector-button-foreground')};
         --background: transparent;
