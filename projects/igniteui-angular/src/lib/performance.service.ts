@@ -1,121 +1,123 @@
 import { inject, Injectable, NgZone, isDevMode } from '@angular/core';
 
+
+interface igcPerformance {
+    startMeasure: typeof startMeasure;
+    getMeasures: typeof getMeasures;
+    clearMeasures: typeof clearMeasures,
+    clearAll: typeof clearAll
+}
+
+declare global {
+    var $$igcPerformance: igcPerformance;
+}
+
 function isInstrumented(): boolean {
-    return window.performance && performance.measure && isDevMode();
+    return globalThis.performance && performance.measure && isDevMode();
+}
+
+function instrumentGlobalHelpers(): void {
+    if (!isInstrumented() || Object.hasOwn(globalThis, '$$igcPerformance')) {
+        return;
+    }
+
+    globalThis.$$igcPerformance = {
+        startMeasure,
+        getMeasures,
+        clearMeasures,
+        clearAll,
+    };
+
+    console.debug('Performance helper functions attached @ `global.$$igcPerformance`');
+
+}
+
+export function startMeasure(name: string, withLogging = false) {
+    if (!isInstrumented()) return () => { };
+
+    const startMark = `${name}:start`;
+    const endMark = `${name}:end`;
+
+    performance.mark(startMark);
+
+    return () => {
+        performance.mark(endMark);
+        performance.measure(name, startMark, endMark);
+        if (withLogging) {
+            const entry = performance.getEntriesByName(name).at(-1);
+            console.debug(`Performance Measure : ${entry.name} - Duration: ${entry.duration.toFixed(2)}ms`);
+        }
+    };
+}
+
+export function getMeasures(name?: string): PerformanceEntryList {
+    return name ? performance.getEntriesByName(name) : performance.getEntriesByType('measure');
+}
+
+export function clearMeasures(name?: string, withLogging = false): void {
+    performance.clearMeasures(name);
+    if (withLogging) {
+        console.debug(name ? 'Cleared all measures of type `${name}`' : 'Cleared all custom measures');
+    }
+}
+
+export function clearAll(withLogging = false): void {
+    performance.clearMarks();
+    clearMeasures();
+    if (withLogging) {
+        console.debug('Cleared all marks and custom measures');
+    }
 }
 
 @Injectable({ providedIn: 'root' })
 export class PerformanceService {
-    private readonly ngZone = inject(NgZone);
-    private logEnabled = false;
+    private readonly _ngZone = inject(NgZone);
+    private _logEnabled = false;
 
     constructor() {
-        if (isInstrumented() && !('$$clearMeasures' in window)) {
-            (window as any).$$clearMeasures = () => this.clearAll();
-            console.debug('`$$clearMeasures` available on the `window` object.');
-        }
+        instrumentGlobalHelpers();
     }
 
     public setLogEnabled(state: boolean): void {
-        this.logEnabled = state;
+        this._logEnabled = state;
     }
 
     public start(name: string) {
-        if (!isInstrumented) {
-            return () => { };
-        }
-
-        const startMark = `${name}:start`;
-        const endMark = `${name}:end`;
-
-        this._mark(startMark);
-
-        return () => {
-            this._mark(endMark);
-            this._measure(name, startMark, endMark);
-        };
+        return startMeasure(name, this._logEnabled);
     }
 
-    public getCustomMeasures(): PerformanceMeasure[] {
-        return performance.getEntriesByType('measure') as PerformanceMeasure[];
+    public getMeasures(name?: string): PerformanceEntryList {
+        return getMeasures(name);
     }
 
-    public clearAllCustomMarks(): void {
-        if (isInstrumented()) {
-            performance.clearMarks();
-            if (this.logEnabled) {
-                console.debug('All custom performance marks cleared.');
-            }
-        }
-    }
-
-    public clearAllCustomMeasures(): void {
-        if (isInstrumented()) {
-            performance.clearMeasures();
-            if (this.logEnabled) {
-                console.debug('All custom performance measures cleared.');
-            }
-        }
+    public clearMeasures(name?: string): void {
+        clearMeasures(name, this._logEnabled);
     }
 
     public clearAll(): void {
-        this.clearAllCustomMarks();
-        this.clearAllCustomMeasures();
+        clearAll(this._logEnabled);
     }
 
+    public attachObserver(options?: PerformanceObserverInit) {
+        if (!isInstrumented()) return;
+        let observer: PerformanceObserver;
 
-    protected _mark(name: string): void {
-        if (isInstrumented()) {
-            performance.mark(name);
-        }
-    }
+        options = options ?? { entryTypes: ['event', 'long-animation-frame', 'longtask', 'taskattribution'] };
 
-    protected _measure(name: string, startMark: string, endMark: string): void {
-        if (isInstrumented()) {
-            performance.measure(name, startMark, endMark);
-            if (this.logEnabled) {
-                const entry = performance.getEntriesByName(name).at(-1);
-                console.log(`Performance Measure : ${entry.name} - Duration: ${entry.duration.toFixed(2)}ms`);
-            }
-        }
-    }
-
-    protected _startObservingPerformance(): void {
-        const logEnabled = this.logEnabled;
-
-        if (isInstrumented()) {
-            this.ngZone.runOutsideAngular(() => {
-                const observer = new PerformanceObserver((list) => {
-                    if (logEnabled) {
-                        for (const entry of list.getEntries()) {
-                            console.log(`Performance Entry: ${entry.name} (${entry.entryType}) - Duration: ${entry.duration.toFixed(2)}ms`);
-                        }
+        this._ngZone.runOutsideAngular(() => {
+            observer = new PerformanceObserver((list) => {
+                if (this._logEnabled) {
+                    for (const entry of list.getEntries()) {
+                        console.debug(`Performance Entry: ${entry.name} (${entry.entryType}) - Duration: ${entry.duration.toFixed(2)}ms`);
                     }
-                });
-
-                observer.observe({ entryTypes: ['navigation', 'resource', 'paint', 'longtask', 'element', 'event'] });
+                }
             });
-        }
+
+            observer.observe(options);
+        });
+
+        return () => {
+            observer.disconnect();
+        };
     }
-
-    // public mark(name: string): void {
-    //     performance.mark(name);
-    // }
-
-    // public measure(name: string, startMark: string, endMark: string): void {
-    //     performance.measure(name, {
-
-    //     })
-
-    //     performance.measure(name, startMark, endMark);
-
-    //     const entry = performance.getEntriesByName(name).pop();
-    //     if (entry) {
-    //         console.log(`Performance Measure: ${entry.name} - Duration: ${entry.duration.toFixed(3)}ms`);
-    //     }
-
-    //     performance.clearMarks(startMark);
-    //     performance.clearMarks(endMark);
-    //     performance.clearMeasures(name);
-    // }
 }
