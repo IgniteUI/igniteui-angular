@@ -1826,7 +1826,6 @@
         background: var-get($theme, 'row-selected-background');
 
         &%grid-row--mrl {
-            background: transparent;
             %grid-mrl-block {
                 color: var-get($theme, 'row-selected-text-color');
                 background: var-get($theme, 'row-selected-background');
@@ -1889,6 +1888,11 @@
     %igx-grid__td--merged {
         z-index: 1;
         grid-row: 1 / -1;
+    }
+
+    %igx-grid__td--merged-selected {
+        color: var-get($theme, 'row-selected-text-color');
+        background: var-get($theme, 'row-selected-background');
     }
 
     %igx-grid__tr--deleted {

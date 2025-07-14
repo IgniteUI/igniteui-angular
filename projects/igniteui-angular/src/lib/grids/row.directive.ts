@@ -620,6 +620,18 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         return `${sizeSpans}`;
     }
 
+    protected isSelectionRoot(col: ColumnType) {
+        const mergeMeta = this.metaData?.cellMergeMeta;
+        const rowCount = mergeMeta?.get(col.field)?.rowSpan;
+        if (mergeMeta && rowCount > 1) {
+            const indexInData = this.pinned && this.grid.isRowPinningToTop ? this.index - this.grid.pinnedRecordsCount : this.index;
+            const range = this.grid.verticalScrollContainer.igxForOf.slice(indexInData, indexInData + rowCount);
+            const inRange = range.filter(x => this.selectionService.isRowSelected(this.grid.primaryKey ? (x.recordRef || x)[this.grid.primaryKey] : (x.recordRef || x).recordRef)).length > 0;
+            return inRange;
+        }
+        return false;
+    }
+
     protected getRowHeight() {
         const indexInData  = this.grid.verticalScrollContainer.igxForOf.indexOf(this.metaData);
         const size = this.grid.verticalScrollContainer.getSizeAt(indexInData) - 1;

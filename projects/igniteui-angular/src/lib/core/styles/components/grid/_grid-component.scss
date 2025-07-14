@@ -300,6 +300,11 @@
             @extend %igx-grid__td--merged !optional;
         }
 
+
+        @include e(td, $m: merged-selected) {
+            @extend %igx-grid__td--merged-selected !optional;
+        }
+
         @include e(td, $m: editing) {
             @extend %igx-grid__td--editing !optional;
         }
