@@ -774,13 +774,12 @@
             position: absolute;
             z-index: 0;
             border: $border-size solid transparent;
+            border-radius: calc(var-get($theme, 'date-special-border-radius') - $border-size);
 
             @if $variant == 'fluent' {
-                border-radius: 50%;
                 width: $date-inner-size;
                 height: $date-inner-size;
             } @else {
-                border-radius: inherit;
                 // By default initial size of the inner element is the same as the date size
                 width: $date-size;
                 height: $date-size;
@@ -911,6 +910,7 @@
                 background: var-get($theme, 'date-special-range-hover-background');
 
                 @if $variant == 'indigo' {
+                    // stylelint-disable-next-line
                     &::after {
                         border-color: var-get($theme, 'date-special-hover-border-color');
                     }
@@ -988,8 +988,12 @@
                     z-index: -1;
                     width: $date-inner-size;
                     height: $date-inner-size;
-                    border-radius: 50%;
+                    border-radius: calc(var-get($theme, 'date-current-border-radius') - ($border-size * 2));
                     background: var-get($theme, 'date-current-background');
+                }
+
+                &::after {
+                    border-radius: calc(var-get($theme, 'date-current-border-radius') - $border-size);
                 }
             }
 
@@ -1036,8 +1040,8 @@
             &::after {
                 border-color: var-get($theme, 'date-special-border-color');
 
-                @if $variant == 'bootstrap' {
-                    border-radius: $date-size;
+                @if $variant == 'bootstrap' or $variant == 'fluent'  {
+                    border-radius: calc(var-get($theme, 'date-special-border-radius') - ($border-size * 2));
                 }
             }
 
@@ -1179,6 +1183,7 @@
                 }
 
                 &:hover {
+                    // stylelint-disable-next-line
                     &::after {
                         border-color: var-get($theme, 'date-selected-special-hover-border-color');
                     }
@@ -1290,6 +1295,7 @@
                 }
 
                 &:hover {
+                    // stylelint-disable-next-line
                     &::after {
                         border-color: var-get($theme, 'date-current-hover-border-color');
                     }
