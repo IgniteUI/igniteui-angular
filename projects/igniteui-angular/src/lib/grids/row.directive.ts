@@ -632,6 +632,25 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         return false;
     }
 
+    @HostListener('mouseenter') onMouseEnter() {
+        this.grid.hoverIndex = this.index;
+      }
+
+      @HostListener('mouseleave') onMouseLeave() {
+        this.grid.hoverIndex = null;
+      }
+
+    protected isHoveredRoot(col: ColumnType) {
+        const mergeMeta = this.metaData?.cellMergeMeta;
+        const rowCount = mergeMeta?.get(col.field)?.rowSpan;
+        if (mergeMeta && rowCount > 1 && this.grid.hoverIndex !== null && this.grid.hoverIndex !== undefined) {
+            const indexInData = this.index;
+            const hoveredIndex = this.grid.hoverIndex;
+            return indexInData <= hoveredIndex && indexInData + rowCount > hoveredIndex;
+        }
+        return false;
+    }
+
     protected getRowHeight() {
         const indexInData  = this.grid.verticalScrollContainer.igxForOf.indexOf(this.metaData);
         const size = this.grid.verticalScrollContainer.getSizeAt(indexInData) - 1;

@@ -728,6 +728,8 @@ export interface GridType extends IGridDataBindable {
     isColumnWidthSum: boolean;
     /** @hidden @internal */
     minColumnWidth: number;
+    /** @hidden @internal */
+    hoverIndex?: number;
     /** Strategy, used for cloning the provided data. The type has one method, that takes any type of data */
     dataCloneStrategy: IDataCloneStrategy;
 

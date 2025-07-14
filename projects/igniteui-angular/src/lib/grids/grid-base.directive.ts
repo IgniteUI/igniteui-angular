@@ -3100,6 +3100,11 @@ export abstract class IgxGridBaseDirective implements GridType,
     public groupablePipeTrigger = 0;
 
     /**
+     * @hidden @internal
+     */
+        public hoverIndex: number;
+
+    /**
     * @hidden @internal
     */
     public EMPTY_DATA = [];
