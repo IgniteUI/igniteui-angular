@@ -175,6 +175,11 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
+    private _invokeOnChange = true;
+
+    /**
+     * @hidden
+     */
     private initialSelection: Date | Date[];
 
     /**
@@ -690,7 +695,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     public writeValue(value: Date | Date[]) {
+        this._invokeOnChange = false;
         this.value = value;
+        this._invokeOnChange = true;
     }
 
     /**
@@ -760,7 +767,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     private selectSingle(value: Date) {
         if (!isEqual(this.selectedDates?.at(0), value)) {
             this.selectedDates = [this.getDateOnly(value)];
-            this._onChangeCallback(this.selectedDates.at(0));
+            if (this._invokeOnChange) {
+                this._onChangeCallback(this.selectedDates.at(0));
+            }
         }
     }
 
@@ -773,7 +782,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         if (this.selectedDates !== null &&
             this.getDateOnlyInMs(value as Date) === this.getDateOnlyInMs(this.selectedDates.at(0))) {
             this.selectedDates = null;
-            this._onChangeCallback(this.selectedDates);
+            if (this._invokeOnChange) {
+                this._onChangeCallback(this.selectedDates);
+            }
         }
     }
 
@@ -849,7 +860,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
         this.selectedDates = this.selectedDates.filter(d => !this.isDateDisabled(d));
         this.selectedDates.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
-        this._onChangeCallback(this.selectedDates);
+        if (this._invokeOnChange) {
+            this._onChangeCallback(this.selectedDates);
+        }
     }
 
     /**
