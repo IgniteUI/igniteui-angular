@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject } from '@angular/core';
 import {
     IgxButtonDirective,
     IgxOverlayOutletDirective,
@@ -26,6 +26,9 @@ defineComponents(IgcSnackbarComponent);
     ],
 })
 export class SnackbarShowcaseSampleComponent {
+    private propertyChangeService = inject(PropertyChangeService);
+    private destroyRef = inject(DestroyRef);
+
     public panelConfig: PropertyPanelConfig = {
         actionText: {
             label: 'Action Text',
@@ -51,10 +54,7 @@ export class SnackbarShowcaseSampleComponent {
 
     public properties: Properties;
 
-    constructor(
-        private propertyChangeService: PropertyChangeService,
-        private destroyRef: DestroyRef
-    ) {
+    constructor() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
         const propertyChange =

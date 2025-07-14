@@ -1,4 +1,4 @@
-import { Directive, HostBinding, Input, TemplateRef, booleanAttribute } from '@angular/core';
+import { Directive, HostBinding, Input, TemplateRef, booleanAttribute, inject } from '@angular/core';
 
 @Directive({
     selector: '[igxDrawerItem]',
@@ -88,9 +88,7 @@ export class IgxNavDrawerItemDirective {
     standalone: true
 })
 export class IgxNavDrawerTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) {
-    }
+    template = inject<TemplateRef<any>>(TemplateRef);
 }
 
 @Directive({
@@ -98,7 +96,5 @@ export class IgxNavDrawerTemplateDirective {
     standalone: true
 })
 export class IgxNavDrawerMiniTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) {
-    }
+    template = inject<TemplateRef<any>>(TemplateRef);
 }

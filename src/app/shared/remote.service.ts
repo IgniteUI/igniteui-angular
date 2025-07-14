@@ -1,10 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class RemoteService {
+    private http = inject(HttpClient);
+
     public remotePagingData: BehaviorSubject<any[]>;
     public urlPaging = 'https://www.igniteui.com/api/products';
     public totalCount: Observable<number>;
@@ -15,7 +17,7 @@ export class RemoteService {
     private _remoteData: BehaviorSubject<any[]>;
     private _totalCount: BehaviorSubject<number>;
 
-    constructor(private http: HttpClient) {
+    constructor() {
         this._remoteData = new BehaviorSubject([]);
         this.remoteData = this._remoteData.asObservable();
         this._totalCount = new BehaviorSubject(null);

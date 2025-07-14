@@ -47,6 +47,8 @@ defineComponents(
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class InputGroupShowcaseSampleComponent {
+    private destroyRef = inject(DestroyRef);
+
     public field = viewChild<IgxInputGroupComponent>('field');
     public fieldTextarea = viewChild<IgxInputGroupComponent>('fieldTextarea');
     public fieldFile = viewChild<IgxInputGroupComponent>('fieldFile');
@@ -151,7 +153,7 @@ export class InputGroupShowcaseSampleComponent {
         fieldFile: [this.properties()?.value || '']
     });
 
-    constructor(private destroyRef: DestroyRef) {
+    constructor() {
         this.pcs.setPanelConfig(this.panelConfig);
 
         const propertyChange = this.pcs.propertyChanges.subscribe((updatedProperties) => {

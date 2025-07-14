@@ -1,15 +1,4 @@
-import {
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    EventEmitter,
-    HostBinding,
-    Inject,
-    Input,
-    OnInit,
-    Optional,
-    Output
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, inject } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService } from '../core/navigation';
 import {
@@ -47,6 +36,8 @@ let NEXT_ID = 0;
     standalone: true
 })
 export class IgxToastComponent extends IgxNotificationsDirective implements OnInit {
+    private _element: ElementRef;
+
     /**
      * @hidden
      */
@@ -144,13 +135,15 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
         return this._element.nativeElement;
     }
 
-    constructor(
-        private _element: ElementRef,
-        cdr: ChangeDetectorRef,
-        @Optional() navService: IgxNavigationService,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService
-    ) {
+    constructor() {
+        const _element = inject(ElementRef);
+        const cdr = inject(ChangeDetectorRef);
+        const navService = inject(IgxNavigationService, { optional: true });
+        const overlayService = inject<IgxOverlayService>(IgxOverlayService);
+
         super(_element, cdr, overlayService, navService);
+    
+        this._element = _element;
     }
 
     /**

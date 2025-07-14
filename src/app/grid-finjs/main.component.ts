@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output, ViewChild, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 
 import { Subject } from 'rxjs';
@@ -16,6 +16,8 @@ import { GridFinJSComponent } from './grid-finjs.component';
     imports: [ControllerComponent, GridFinJSComponent, AsyncPipe]
 })
 export class MainComponent implements OnDestroy {
+    finService = inject(LocalService);
+
     @ViewChild('grid', { static: true }) public finGrid: GridFinJSComponent;
     @ViewChild('controllers', { static: true }) public controller: ControllerComponent;
 
@@ -31,7 +33,7 @@ export class MainComponent implements OnDestroy {
     private destroy$ = new Subject<any>();
     private _timer;
 
-    constructor(public finService: LocalService) {
+    constructor() {
         this.finService.getFinancialData(this.volume);
         this.data$ = this.finService.records.pipe(takeUntil(this.destroy$));
     }

@@ -1,8 +1,4 @@
-import {
-    Component,
-    ElementRef,
-    Input,
-} from '@angular/core';
+import { Component, ElementRef, Input, inject } from '@angular/core';
 import { IChipsAreaReorderEventArgs } from '../../chips/public_api';
 import { PlatformUtil } from '../../core/utils';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
@@ -36,7 +32,10 @@ export class IgxGridGroupByAreaComponent extends IgxGroupByAreaDirective {
     @Input()
     public override grid: FlatGridType;
 
-    constructor(ref: ElementRef<HTMLElement>, platform: PlatformUtil) {
+    constructor() {
+        const ref = inject<ElementRef<HTMLElement>>(ElementRef);
+        const platform = inject(PlatformUtil);
+
         super(ref, platform);
      }
 

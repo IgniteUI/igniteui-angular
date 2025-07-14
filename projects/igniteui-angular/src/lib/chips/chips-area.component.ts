@@ -1,19 +1,4 @@
-import {
-    Component,
-    ContentChildren,
-    ChangeDetectorRef,
-    EventEmitter,
-    HostBinding,
-    Input,
-    IterableDiffer,
-    IterableDiffers,
-    Output,
-    QueryList,
-    DoCheck,
-    AfterViewInit,
-    OnDestroy,
-    ElementRef
-} from '@angular/core';
+import { Component, ContentChildren, ChangeDetectorRef, EventEmitter, HostBinding, Input, IterableDiffer, IterableDiffers, Output, QueryList, DoCheck, AfterViewInit, OnDestroy, ElementRef, inject } from '@angular/core';
 import {
     IgxChipComponent,
     IChipSelectEventArgs,
@@ -66,6 +51,10 @@ export interface IChipsAreaSelectEventArgs extends IBaseChipsAreaEventArgs {
     standalone: true
 })
 export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy {
+     cdr = inject(ChangeDetectorRef);
+     element = inject(ElementRef);
+     private _iterableDiffers = inject(IterableDiffers);
+
 
     /**
      * Returns the `role` attribute of the chips area.
@@ -192,8 +181,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
     private modifiedChipsArray: IgxChipComponent[];
     private _differ: IterableDiffer<IgxChipComponent> | null = null;
 
-    constructor(public cdr: ChangeDetectorRef, public element: ElementRef,
-        private _iterableDiffers: IterableDiffers) {
+    constructor() {
         this._differ = this._iterableDiffers.find([]).create(null);
     }
 

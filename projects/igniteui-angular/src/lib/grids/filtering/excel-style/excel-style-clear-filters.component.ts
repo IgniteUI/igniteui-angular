@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { PlatformUtil } from '../../../core/utils';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { IgxIconComponent } from '../../../icon/icon.component';
@@ -13,10 +13,9 @@ import { NgClass } from '@angular/common';
     imports: [NgClass, IgxIconComponent]
 })
 export class IgxExcelStyleClearFiltersComponent {
-    constructor(
-        public esf: BaseFilteringComponent,
-        protected platform: PlatformUtil,
-    ) { }
+    esf = inject(BaseFilteringComponent);
+    protected platform = inject(PlatformUtil);
+
 
     /**
      * @hidden @internal

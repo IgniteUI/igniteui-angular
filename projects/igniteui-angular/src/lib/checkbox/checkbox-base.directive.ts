@@ -1,21 +1,4 @@
-import {
-    Directive,
-    EventEmitter,
-    HostListener,
-    HostBinding,
-    Input,
-    Output,
-    ViewChild,
-    ElementRef,
-    ChangeDetectorRef,
-    Optional,
-    Self,
-    booleanAttribute,
-    inject,
-    DestroyRef,
-    Inject,
-    AfterViewInit,
-} from '@angular/core';
+import { Directive, EventEmitter, HostListener, HostBinding, Input, Output, ViewChild, ElementRef, ChangeDetectorRef, booleanAttribute, inject, DestroyRef, AfterViewInit } from '@angular/core';
 import { NgControl, Validators } from '@angular/forms';
 import { IBaseEventArgs, getComponentTheme } from '../core/utils';
 import { noop, Subject } from 'rxjs';
@@ -41,6 +24,10 @@ let nextId = 0;
 
 @Directive()
 export class CheckboxBaseDirective implements AfterViewInit {
+    protected cdr = inject(ChangeDetectorRef);
+    protected themeToken = inject<ThemeToken>(THEME_TOKEN);
+    ngControl = inject(NgControl, { optional: true, self: true });
+
     /**
      * An event that is emitted after the checkbox state is changed.
      * Provides references to the `IgxCheckboxComponent` and the `checked` property as event arguments.
@@ -247,12 +234,7 @@ export class CheckboxBaseDirective implements AfterViewInit {
     @Input('aria-label')
     public ariaLabel: string | null = null;
 
-    constructor(
-        protected cdr: ChangeDetectorRef,
-        @Inject(THEME_TOKEN)
-        protected themeToken: ThemeToken,
-        @Optional() @Self() public ngControl: NgControl
-    ) {
+    constructor() {
         if (this.ngControl !== null) {
             this.ngControl.valueAccessor = this;
         }

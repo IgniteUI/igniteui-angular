@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Inject, Input, NgZone, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, NgZone, ViewChild, inject } from '@angular/core';
 import { PlatformUtil } from '../../core/utils';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -24,6 +24,12 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
     imports: [IgxIconComponent, IgxPivotRowDimensionHeaderComponent, NgClass, NgStyle, IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxPivotResizeHandleDirective, IgxHeaderGroupStylePipe]
 })
 export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent implements PivotRowHeaderGroupType {
+    private cdRef: ChangeDetectorRef;
+    override grid: PivotGridType;
+    private elementRef: ElementRef<HTMLElement>;
+    override colResizingService: IgxPivotColumnResizingService;
+    protected zone = inject(NgZone);
+
 
     /**
      * @hidden
@@ -31,14 +37,20 @@ export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent
     @HostBinding('style.user-select')
     public userSelect = 'none';
 
-    constructor(private cdRef: ChangeDetectorRef,
-        @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
-        private elementRef: ElementRef<HTMLElement>,
-        public override colResizingService: IgxPivotColumnResizingService,
-        filteringService: IgxFilteringService,
-        platform: PlatformUtil,
-        protected zone: NgZone) {
+    constructor() {
+        const cdRef = inject(ChangeDetectorRef);
+        const grid = inject<PivotGridType>(IGX_GRID_BASE);
+        const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+        const colResizingService = inject(IgxPivotColumnResizingService);
+        const filteringService = inject(IgxFilteringService);
+        const platform = inject(PlatformUtil);
+
         super(cdRef, grid, elementRef, colResizingService, filteringService, platform);
+    
+        this.cdRef = cdRef;
+        this.grid = grid;
+        this.elementRef = elementRef;
+        this.colResizingService = colResizingService;
     }
 
     /**

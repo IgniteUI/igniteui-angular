@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -29,6 +29,11 @@ import { CsvFileTypes, DefaultSortingStrategy, GridSelectionMode, IgxBaseExporte
     ]
 })
 export class GridSampleComponent implements OnInit, AfterViewInit {
+    private localService = inject(LocalService);
+    private remoteService = inject(RemoteService);
+    private excelExporterService = inject(IgxExcelExporterService);
+    private csvExporterService = inject(IgxCsvExporterService);
+
     @ViewChild('grid1', { static: true })
     private grid1: IgxGridComponent;
 
@@ -57,10 +62,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
     public gridPaging = true;
     public perPage = 10;
 
-    constructor(private localService: LocalService,
-                private remoteService: RemoteService,
-                private excelExporterService: IgxExcelExporterService,
-                private csvExporterService: IgxCsvExporterService) {
+    constructor() {
 
         this.localService.url = this.remoteService.url;
 

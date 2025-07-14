@@ -1,30 +1,4 @@
-import {
-    AfterViewChecked,
-    AfterViewInit,
-    AfterContentChecked,
-    ChangeDetectorRef,
-    Component,
-    ContentChild,
-    ContentChildren,
-    ElementRef,
-    EventEmitter,
-    HostBinding,
-    HostListener,
-    Inject,
-    Injector,
-    Input,
-    LOCALE_ID,
-    OnDestroy,
-    OnInit,
-    Optional,
-    Output,
-    PipeTransform,
-    QueryList,
-    Renderer2,
-    ViewChild,
-    ViewContainerRef,
-    booleanAttribute
-} from '@angular/core';
+import { AfterViewChecked, AfterViewInit, AfterContentChecked, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Injector, Input, LOCALE_ID, OnDestroy, OnInit, Output, PipeTransform, QueryList, Renderer2, ViewChild, ViewContainerRef, booleanAttribute, inject } from '@angular/core';
 import {
     AbstractControl,
     ControlValueAccessor,
@@ -103,6 +77,12 @@ let NEXT_ID = 0;
 })
 export class IgxDatePickerComponent extends PickerBaseDirective implements ControlValueAccessor, Validator,
     OnInit, AfterViewInit, OnDestroy, AfterViewChecked, AfterContentChecked {
+    private _overlayService = inject<IgxOverlayService>(IgxOverlayService);
+    private _injector = inject(Injector);
+    private _renderer = inject(Renderer2);
+    private platform = inject(PlatformUtil);
+    private cdr = inject(ChangeDetectorRef);
+
 
     /**
      * Gets/Sets whether the inactive dates will be hidden.
@@ -507,14 +487,11 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private _onTouchedCallback: () => void = noop;
     private _onValidatorChange: () => void = noop;
 
-    constructor(element: ElementRef<HTMLElement>,
-        @Inject(LOCALE_ID) _localeId: string,
-        @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
-        private _injector: Injector,
-        private _renderer: Renderer2,
-        private platform: PlatformUtil,
-        private cdr: ChangeDetectorRef,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
+    constructor() {
+        const element = inject<ElementRef<HTMLElement>>(ElementRef);
+        const _localeId = inject(LOCALE_ID);
+        const _inputGroupType = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE, { optional: true });
+
         super(element, _localeId, _inputGroupType);
         this.locale = this.locale || this._localeId;
     }

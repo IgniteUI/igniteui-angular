@@ -1,4 +1,4 @@
-import { DestroyRef, Inject, Injectable, Optional, SecurityContext, DOCUMENT } from "@angular/core";
+import { DestroyRef, Injectable, SecurityContext, DOCUMENT, inject } from "@angular/core";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { HttpClient } from "@angular/common/http";
 import { Observable, Subject } from "rxjs";
@@ -38,6 +38,13 @@ export interface IgxIconLoadedEvent {
     providedIn: "root",
 })
 export class IgxIconService {
+    private _sanitizer = inject(DomSanitizer, { optional: true });
+    private _httpClient = inject(HttpClient, { optional: true });
+    private _platformUtil = inject(PlatformUtil, { optional: true });
+    private _themeToken = inject<ThemeToken | undefined>(THEME_TOKEN, { optional: true });
+    private _destroyRef = inject<DestroyRef>(DestroyRef, { optional: true });
+    protected document = inject<Document>(DOCUMENT, { optional: true });
+
     /**
      * Observable that emits when an icon is successfully loaded
      * through a HTTP request.
@@ -59,14 +66,7 @@ export class IgxIconService {
     private _iconLoaded = new Subject<IgxIconLoadedEvent>();
     private _domParser: DOMParser;
 
-    constructor(
-        @Optional() private _sanitizer: DomSanitizer,
-        @Optional() private _httpClient: HttpClient,
-        @Optional() private _platformUtil: PlatformUtil,
-        @Optional() @Inject(THEME_TOKEN) private _themeToken: ThemeToken | undefined,
-        @Optional() @Inject(DestroyRef) private _destroyRef: DestroyRef,
-        @Optional() @Inject(DOCUMENT) protected document: Document,
-    ) {
+    constructor() {
 
         this.iconLoaded = this._iconLoaded.asObservable();
         this.setFamily(this._defaultFamily.name, this._defaultFamily.meta);

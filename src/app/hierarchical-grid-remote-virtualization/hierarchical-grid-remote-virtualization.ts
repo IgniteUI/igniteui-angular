@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, ChangeDetectorRef, inject } from '@angular/core';
 import {
     IGX_HIERARCHICAL_GRID_DIRECTIVES,
     IgxHierarchicalGridComponent
@@ -14,6 +14,9 @@ import { debounceTime } from 'rxjs/operators';
     imports: [IGX_HIERARCHICAL_GRID_DIRECTIVES]
 })
 export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewInit {
+    private remoteService = inject(HierarchicalRemoteService);
+    private cdr = inject(ChangeDetectorRef);
+
     @ViewChild('hGrid', { static: true })
     private hGrid: IgxHierarchicalGridComponent;
 
@@ -24,7 +27,9 @@ export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewI
 
     public isExpanding = false;
 
-    constructor(private remoteService: HierarchicalRemoteService, private cdr: ChangeDetectorRef) {
+    constructor() {
+        const remoteService = this.remoteService;
+
         remoteService.url = 'https://services.odata.org/V4/Northwind/Northwind.svc/Customers?$expand=Orders';
     }
 

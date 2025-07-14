@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject } from '@angular/core';
 import {
     IgxBadgeComponent,
     IgxAvatarComponent,
@@ -36,6 +36,9 @@ registerIconFromText('bluetooth', bluetooth);
 })
 
 export class BadgeSampleComponent {
+    private propertyChangeService = inject(PropertyChangeService);
+    private destroyRef = inject(DestroyRef);
+
     public panelConfig: PropertyPanelConfig = {
         shape: {
             control: {
@@ -61,10 +64,7 @@ export class BadgeSampleComponent {
 
     public properties: Properties;
 
-    constructor(
-        private propertyChangeService: PropertyChangeService,
-        private destroyRef: DestroyRef
-    ) {
+    constructor() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
         const propertyChange =

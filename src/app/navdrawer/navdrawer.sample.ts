@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IgxRadioComponent, IgxSwitchComponent } from 'igniteui-angular';
 import { AppComponent } from '../app.component';
@@ -12,7 +12,8 @@ import { AppComponent } from '../app.component';
     imports: [IgxSwitchComponent, FormsModule, IgxRadioComponent]
 })
 export class NavdrawerSampleComponent {
-    constructor(public app: AppComponent) {}
+    app = inject(AppComponent);
+
 
     public toggle() {
         // TODO: This needs to be refactored into a service.

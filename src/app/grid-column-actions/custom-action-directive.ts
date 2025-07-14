@@ -1,4 +1,4 @@
-import { Directive, Inject } from '@angular/core';
+import { Directive, inject } from '@angular/core';
 import { IgxColumnActionsBaseDirective, IgxColumnActionsComponent, IgxColumnComponent, SortingDirection } from 'igniteui-angular';
 
 
@@ -8,11 +8,13 @@ import { IgxColumnActionsBaseDirective, IgxColumnActionsComponent, IgxColumnComp
     standalone: true
 })
 export class IgxColumnGroupingDirective extends IgxColumnActionsBaseDirective {
+    protected columnActions = inject<IgxColumnActionsComponent>(IgxColumnActionsComponent);
 
-    constructor(
-        @Inject(IgxColumnActionsComponent) protected columnActions: IgxColumnActionsComponent
-    ) {
+
+    constructor() {
         super();
+        const columnActions = this.columnActions;
+
         columnActions.actionsDirective = this;
     }
 

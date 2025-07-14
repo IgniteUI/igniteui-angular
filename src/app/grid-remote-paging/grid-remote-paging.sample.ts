@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -13,6 +13,8 @@ import { GridPagingMode, IgxButtonDirective, IgxCardComponent, IgxCardContentDir
     imports: [IGX_GRID_DIRECTIVES, IgxPaginatorComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxButtonDirective, IgxSelectComponent, FormsModule, IgxSelectItemComponent, AsyncPipe]
 })
 export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, OnDestroy {
+    private remoteService = inject(RemoteService);
+
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     public mode: GridPagingMode = 'remote';
@@ -26,9 +28,6 @@ export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, O
 
     private _perPage = 15;
     private _dataLengthSubscriber;
-
-    constructor(private remoteService: RemoteService) {
-    }
 
     public get perPage(): number {
         return this._perPage;

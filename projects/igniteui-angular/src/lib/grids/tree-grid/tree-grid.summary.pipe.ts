@@ -1,4 +1,4 @@
-import { Inject, Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { ISummaryRecord } from '../summaries/grid-summary';
 import { GridSummaryCalculationMode, GridSummaryPosition } from '../common/enums';
@@ -10,8 +10,8 @@ import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
     standalone: true
 })
 export class IgxTreeGridSummaryPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) {}
 
     public transform(flatData: ITreeGridRecord[],
         hasSummary: boolean,

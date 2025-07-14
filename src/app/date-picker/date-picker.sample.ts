@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject } from '@angular/core';
 import {
     IGX_DATE_PICKER_DIRECTIVES,
     IgxButtonDirective,
@@ -42,6 +42,9 @@ registerIconFromText('alarm', alarm);
     ],
 })
 export class DatePickerSampleComponent {
+    private propertyChangeService = inject(PropertyChangeService);
+    private destroyRef = inject(DestroyRef);
+
     public date1 = new Date();
     public date2 = new Date(
         new Date(
@@ -146,10 +149,7 @@ export class DatePickerSampleComponent {
 
     public properties: Properties;
 
-    constructor(
-        private propertyChangeService: PropertyChangeService,
-        private destroyRef: DestroyRef
-    ) {
+    constructor() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
         const propertyChange =

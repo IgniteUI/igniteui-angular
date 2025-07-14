@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, HostBinding } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, HostBinding, inject } from '@angular/core';
 
 import {
     IgxGridComponent,
@@ -32,6 +32,9 @@ import { SAMPLE_DATA } from '../shared/sample-data';
 })
 
 export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
+    private iconService = inject(IgxIconService);
+    private excelExportService = inject(IgxExcelExporterService);
+
     @HostBinding('style.--ig-size')
     protected get sizeStyle() {
         return `var(--ig-size-${this.size})`;
@@ -64,11 +67,6 @@ export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
     public hColumns: any[];
     public treeColumns: any[];
     public treeData: any[];
-
-    constructor(
-                private iconService: IgxIconService,
-                private excelExportService: IgxExcelExporterService) {
-    }
 
     public onRowChange() {
         if (this.pinningConfig.rows === RowPinningPosition.Bottom) {

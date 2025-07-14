@@ -1,16 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    Inject,
-    Input,
-    NgZone,
-    OnInit,
-    TemplateRef,
-    ViewChild,
-    DOCUMENT
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, NgZone, OnInit, TemplateRef, ViewChild, DOCUMENT, inject } from '@angular/core';
 import { IgxGridCellComponent } from '../cell.component';
 import { PlatformUtil } from '../../core/utils';
 import { NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe } from '@angular/common';
@@ -43,6 +31,8 @@ import { IgxChipComponent } from '../../chips/chip.component';
     imports: [IgxChipComponent, IgxTextHighlightDirective, IgxIconComponent, NgClass, FormsModule, ReactiveFormsModule, IgxInputGroupComponent, IgxInputDirective, IgxFocusDirective, IgxCheckboxComponent, IgxDatePickerComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, IgxPrefixDirective, IgxSuffixDirective, NgTemplateOutlet, IgxTooltipTargetDirective, IgxTooltipDirective, IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe]
 })
 export class IgxGridExpandableCellComponent extends IgxGridCellComponent implements OnInit {
+    document = inject(DOCUMENT);
+
     /**
      * @hidden
      */
@@ -67,15 +57,16 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
     @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
     protected defaultCollapsedTemplate: TemplateRef<any>;
 
-    constructor(selectionService: IgxGridSelectionService,
-                @Inject(IGX_GRID_BASE) grid: GridType,
-                @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-                cdr: ChangeDetectorRef,
-                element: ElementRef,
-                zone: NgZone,
-                touchManager: HammerGesturesManager,
-                @Inject(DOCUMENT) public document,
-                platformUtil: PlatformUtil) {
+    constructor() {
+        const selectionService = inject(IgxGridSelectionService);
+        const grid = inject<GridType>(IGX_GRID_BASE);
+        const overlayService = inject<IgxOverlayService>(IgxOverlayService);
+        const cdr = inject(ChangeDetectorRef);
+        const element = inject(ElementRef);
+        const zone = inject(NgZone);
+        const touchManager = inject(HammerGesturesManager);
+        const platformUtil = inject(PlatformUtil);
+
         super(selectionService, grid, overlayService, cdr, element, zone, touchManager, platformUtil);
     }
 

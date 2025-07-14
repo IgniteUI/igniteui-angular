@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef, inject } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxChipComponent } from './chip.component';
@@ -43,6 +43,8 @@ import { getComponentSize } from '../core/utils';
     imports: [IgxChipComponent, IgxChipsAreaComponent, IgxIconComponent, IgxPrefixDirective]
 })
 class TestChipComponent {
+    cdr = inject(ChangeDetectorRef);
+
 
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
     public chipsArea: IgxChipsAreaComponent;
@@ -56,8 +58,6 @@ class TestChipComponent {
         { id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true, chipSize: '--ig-size-small' },
         { id: 'FirstName', text: 'First Name', removable: true, selectable: true, draggable: true, chipSize: '--ig-size-medium' }
     ];
-
-    constructor(public cdr: ChangeDetectorRef) { }
 
     public chipRemoved(event) {
         this.chipList = this.chipList.filter((item) => item.id !== event.owner.id);

@@ -1,14 +1,4 @@
-import {
-    Directive,
-    ElementRef,
-    Inject,
-    Input,
-    NgZone,
-    Output,
-    OnInit,
-    OnDestroy,
-    DOCUMENT
-} from '@angular/core';
+import { Directive, ElementRef, Input, NgZone, Output, OnInit, OnDestroy, DOCUMENT, inject } from '@angular/core';
 import { Subject, fromEvent, animationFrameScheduler, interval } from 'rxjs';
 import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
 
@@ -21,6 +11,10 @@ import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
     standalone: true
 })
 export class IgxColumnResizerDirective implements OnInit, OnDestroy {
+    element = inject<ElementRef<HTMLElement>>(ElementRef);
+    document = inject(DOCUMENT);
+    zone = inject(NgZone);
+
 
     @Input()
     public restrictHResizeMin: number = Number.MIN_SAFE_INTEGER;
@@ -48,11 +42,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
         return this._ratio;
     }
 
-    constructor(
-        public element: ElementRef<HTMLElement>,
-        @Inject(DOCUMENT) public document,
-        public zone: NgZone
-    ) {
+    constructor() {
 
         this.resizeStart.pipe(
             takeUntil<MouseEvent>(this._destroy),

@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, inject } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By, HammerModule } from '@angular/platform-browser';
@@ -2066,6 +2066,8 @@ describe('IgxSlider', () => {
     imports: [IgxSliderComponent]
 })
 export class SliderRtlComponent {
+    dir = inject(IgxDirectionality);
+
     @ViewChild(IgxSliderComponent)
     public slider: IgxSliderComponent;
 
@@ -2075,8 +2077,6 @@ export class SliderRtlComponent {
     };
 
     public type: IgxSliderType = IgxSliderType.RANGE;
-
-    constructor(public dir: IgxDirectionality) { }
 }
 
 @Component({

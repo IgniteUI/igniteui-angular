@@ -1,11 +1,11 @@
-import { Directive, TemplateRef } from '@angular/core';
+import { Directive, TemplateRef, inject } from '@angular/core';
 
 @Directive({
     selector: '[igxProgressBarText]',
     standalone: true
 })
 export class IgxProgressBarTextTemplateDirective {
-    constructor(public template: TemplateRef<any>) { }
+    template = inject<TemplateRef<any>>(TemplateRef);
 }
 
 @Directive({
@@ -13,6 +13,6 @@ export class IgxProgressBarTextTemplateDirective {
     standalone: true
 })
 export class IgxProgressBarGradientDirective {
-    constructor(public template: TemplateRef<any>) { }
+    template = inject<TemplateRef<any>>(TemplateRef);
 }
 

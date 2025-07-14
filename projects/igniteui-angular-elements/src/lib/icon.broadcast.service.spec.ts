@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActionType, BroadcastIconsChangeMessage, IgxIconBroadcastService, SvgIcon,  } from './icon.broadcast.service';
-import { Component, SecurityContext } from '@angular/core';
+import { Component, SecurityContext, inject } from '@angular/core';
 import { IconMeta, IgxIconService } from 'igniteui-angular';
 import { wait } from 'igniteui-angular/src/lib/test-utils/ui-interactions.spec';
 
@@ -111,5 +111,6 @@ describe('Icon broadcast service', () => {
     providers: [IgxIconBroadcastService, IgxIconService]
 })
 export class BroadcastServiceComponent {
-    constructor(public iconBroadcast: IgxIconBroadcastService, public iconService: IgxIconService) {}
+    iconBroadcast = inject(IgxIconBroadcastService);
+    iconService = inject(IgxIconService);
 }

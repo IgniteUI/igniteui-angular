@@ -1,5 +1,5 @@
 import { CurrencyPipe, formatDate as _formatDate, isPlatformBrowser } from '@angular/common';
-import { Inject, Injectable, InjectionToken, PLATFORM_ID, inject } from '@angular/core';
+import { Injectable, InjectionToken, PLATFORM_ID, inject } from '@angular/core';
 import { mergeWith } from 'lodash-es';
 import { NEVER, Observable } from 'rxjs';
 import { setImmediate } from './setImmediate';
@@ -233,6 +233,8 @@ export const isEqual = (obj1, obj2): boolean => {
  */
 @Injectable({ providedIn: 'root' })
 export class PlatformUtil {
+    private platformId = inject(PLATFORM_ID);
+
     public isBrowser: boolean = isPlatformBrowser(this.platformId);
     public isIOS = this.isBrowser && /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
     public isSafari = this.isBrowser && /Safari[\/\s](\d+\.\d+)/.test(navigator.userAgent);
@@ -268,8 +270,6 @@ export class PlatformUtil {
         Y: 'y',
         Z: 'z'
     } as const;
-
-    constructor(@Inject(PLATFORM_ID) private platformId: any) { }
 
     /**
      * @hidden @internal

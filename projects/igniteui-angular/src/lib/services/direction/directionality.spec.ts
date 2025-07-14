@@ -1,5 +1,5 @@
 import { TestBed, inject, waitForAsync } from '@angular/core/testing';
-import { Component, DOCUMENT } from '@angular/core';
+import { Component, DOCUMENT, inject as inject_1 } from '@angular/core';
 import { IgxDirectionality, DIR_DOCUMENT } from './directionality';
 
 interface FakeDoc {
@@ -84,5 +84,5 @@ describe('IgxDirectionality', () => {
     standalone: true
 })
 class InjectsIgxDirectionalityComponent {
-    constructor(public dir: IgxDirectionality) { }
+    dir = inject_1(IgxDirectionality);
 }

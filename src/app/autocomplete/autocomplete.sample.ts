@@ -1,4 +1,4 @@
-import { Component, PipeTransform, Pipe, ViewChild } from '@angular/core';
+import { Component, PipeTransform, Pipe, ViewChild, inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, Validators, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { worldInfo, attractions } from './data';
@@ -52,7 +52,9 @@ export class AutocompleteSampleComponent {
     public attractions;
     public attractionsWidth = '';
 
-    constructor(fb: UntypedFormBuilder) {
+    constructor() {
+        const fb = inject(UntypedFormBuilder);
+
         this.worldInfo = worldInfo;
         this.attractions = attractions;
 

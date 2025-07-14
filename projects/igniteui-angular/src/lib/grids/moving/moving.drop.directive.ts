@@ -1,4 +1,4 @@
-import { Directive, Input, OnDestroy, ElementRef, Renderer2, NgZone } from '@angular/core';
+import { Directive, Input, OnDestroy, ElementRef, Renderer2, NgZone, inject } from '@angular/core';
 import { DropPosition, IgxColumnMovingService } from './moving.service';
 import { Subject, interval, animationFrameScheduler } from 'rxjs';
 import { IgxColumnMovingDragDirective } from './moving.drag.directive';
@@ -14,6 +14,11 @@ import { ColumnType } from '../common/grid.interface';
     standalone: true
 })
 export class IgxColumnMovingDropDirective extends IgxDropDirective implements OnDestroy {
+    private ref: ElementRef<HTMLElement>;
+    private renderer: Renderer2;
+    private _: NgZone;
+    private cms = inject(IgxColumnMovingService);
+
 
     @Input('igxColumnMovingDrop')
     public override set data(val: ColumnType | IgxForOfDirective<ColumnType, ColumnType[]>) {
@@ -52,13 +57,16 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     private _dragLeave = new Subject<boolean>();
     private _dropIndicatorClass = 'igx-grid-th__drop-indicator--active';
 
-    constructor(
-        private ref: ElementRef<HTMLElement>,
-        private renderer: Renderer2,
-        private _: NgZone,
-        private cms: IgxColumnMovingService
-    ) {
+    constructor() {
+        const ref = inject<ElementRef<HTMLElement>>(ElementRef);
+        const renderer = inject(Renderer2);
+        const _ = inject(NgZone);
+
         super(ref, renderer, _);
+    
+        this.ref = ref;
+        this.renderer = renderer;
+        this._ = _;
     }
 
     public override ngOnDestroy() {

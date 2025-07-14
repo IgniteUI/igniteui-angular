@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, inject } from '@angular/core';
 
 import { GridType, IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 
@@ -22,15 +22,21 @@ import { PivotUtil } from './pivot-util';
     imports: [IgxIconComponent, NgTemplateOutlet, NgClass, SortingIndexPipe]
 })
 export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent implements AfterViewInit {
+    override colResizingService: IgxPivotColumnResizingService;
+    refInstance: ElementRef<HTMLElement>;
+
     private pivotGrid: PivotGridType;
 
-    constructor(
-        @Inject(IGX_GRID_BASE) grid: GridType,
-        public override colResizingService: IgxPivotColumnResizingService,
-        cdr: ChangeDetectorRef,
-        public refInstance: ElementRef<HTMLElement>
-    ) {
+    constructor() {
+        const grid = inject<GridType>(IGX_GRID_BASE);
+        const colResizingService = inject(IgxPivotColumnResizingService);
+        const cdr = inject(ChangeDetectorRef);
+        const refInstance = inject<ElementRef<HTMLElement>>(ElementRef);
+
         super(grid, colResizingService, cdr, refInstance);
+        this.colResizingService = colResizingService;
+        this.refInstance = refInstance;
+
 
         this.pivotGrid = this.grid as PivotGridType;
         this.pivotGrid.dimensionsSortingExpressionsChange

@@ -1,20 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import {
-    Component,
-    ContentChild,
-    ContentChildren,
-    ElementRef,
-    EventEmitter,
-    forwardRef,
-    HostBinding,
-    Input,
-    Output,
-    QueryList,
-    TemplateRef,
-    ViewChild,
-    Directive,
-    booleanAttribute
-} from '@angular/core';
+import { Component, ContentChild, ContentChildren, ElementRef, EventEmitter, forwardRef, HostBinding, Input, Output, QueryList, TemplateRef, ViewChild, Directive, booleanAttribute, inject } from '@angular/core';
 
 
 
@@ -149,6 +134,8 @@ export class IgxListLineSubTitleDirective {
     imports: [NgTemplateOutlet]
 })
 export class IgxListComponent extends IgxListBaseDirective {
+    element: ElementRef;
+
     /**
      * Returns a collection of all items and headers in the list.
      *
@@ -460,8 +447,12 @@ export class IgxListComponent extends IgxListBaseDirective {
         return this._resourceStrings;
     }
 
-    constructor(public element: ElementRef) {
+    constructor() {
+        const element = inject(ElementRef);
+
         super(element);
+    
+        this.element = element;
     }
 
     /**

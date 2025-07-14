@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, ElementRef, ViewChildren, QueryList, inject } from '@angular/core';
 import { NgClass, NgStyle } from '@angular/common';
 
 import { ShadowGridSampleComponent } from './shadow-dom-grid/shadow-grid-sample';
@@ -17,6 +17,8 @@ import { DragDirection, GlobalPositionStrategy, IDragBaseEventArgs, IDragStartEv
     ]
 })
 export class DragDropSampleComponent {
+    private cdr = inject(ChangeDetectorRef);
+
     @ViewChild('dragNoGhostAnim', { read: IgxDragDirective, static: true })
     public dragNoGhostAnim: IgxDragDirective;
 
@@ -139,9 +141,6 @@ export class DragDropSampleComponent {
         modal: false,
         closeOnOutsideClick: true
     };
-
-    constructor(private cdr: ChangeDetectorRef) {
-    }
 
     public onDragStart() {
         this.draggingElem = true;

@@ -33,6 +33,9 @@ import { PropertyChangeService } from './properties-panel/property-change.servic
     ]
 })
 export class AppComponent implements OnInit {
+    private router = inject(Router);
+    private iconService = inject(IgxIconService);
+
     @HostBinding('attr.id')
     public appId = 'igniteui-demo-app';
 
@@ -742,7 +745,10 @@ export class AppComponent implements OnInit {
         }
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
-    constructor(private router: Router, private iconService: IgxIconService) {
+    constructor() {
+        const router = this.router;
+        const iconService = this.iconService;
+
         iconService.setFamily('fa-solid', { className: 'fa', type: 'font', prefix: 'fa-'});
         iconService.setFamily('fa-brands', { className: 'fab', type: 'font' });
 

@@ -1,4 +1,4 @@
-import { Inject, Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { cloneArray, columnFieldPath, resolveNestedPath } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
@@ -27,8 +27,8 @@ import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
     standalone: true
 })
 export class IgxPivotRowPipe implements PipeTransform {
+    private grid = inject<PivotGridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid?: PivotGridType) { }
 
     public transform(
         collection: any,
@@ -131,8 +131,8 @@ export class IgxPivotAutoTransform implements PipeTransform {
     standalone: true
 })
 export class IgxPivotRowExpansionPipe implements PipeTransform {
+    private grid = inject<PivotGridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid?: PivotGridType) { }
 
     public transform(
         collection: IPivotGridRecord[],
@@ -188,7 +188,8 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
     standalone: true
 })
 export class IgxPivotCellMergingPipe implements PipeTransform {
-    constructor(@Inject(IGX_GRID_BASE) private grid: PivotGridType) { }
+    private grid = inject<PivotGridType>(IGX_GRID_BASE);
+
     public transform(
         collection: IPivotGridRecord[],
         config: IPivotConfiguration,
@@ -241,7 +242,8 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
     standalone: true
 })
 export class IgxPivotGridHorizontalRowGrouping implements PipeTransform {
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
+    private grid = inject<GridType>(IGX_GRID_BASE);
+
     public transform(
         collection: IPivotGridRecord[],
         config: IPivotConfiguration,
@@ -281,7 +283,8 @@ export class IgxPivotGridHorizontalRowGrouping implements PipeTransform {
     standalone: true
 })
 export class IgxPivotGridHorizontalRowCellMerging implements PipeTransform {
-    constructor(@Inject(IGX_GRID_BASE) private grid: PivotGridType) { }
+    private grid = inject<PivotGridType>(IGX_GRID_BASE);
+
     public transform(
         collection: IPivotGridRecord[],
         config: IPivotConfiguration,
@@ -395,7 +398,8 @@ export class IgxPivotColumnPipe implements PipeTransform {
     standalone: true
 })
 export class IgxPivotGridFilterPipe implements PipeTransform {
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
+    private gridAPI = inject<GridBaseAPIService<IgxGridBaseDirective & GridType>>(GridBaseAPIService);
+
     public transform(collection: any[],
         config: IPivotConfiguration,
         filterStrategy: IFilteringStrategy,
@@ -459,7 +463,8 @@ export class IgxPivotGridColumnSortingPipe implements PipeTransform {
     standalone: true
 })
 export class IgxPivotGridSortingPipe implements PipeTransform {
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
+    private gridAPI = inject<GridBaseAPIService<IgxGridBaseDirective & GridType>>(GridBaseAPIService);
+
     public transform(collection: any[], config: IPivotConfiguration, sorting: IGridSortingStrategy, _pipeTrigger: number): any[] {
         let result: any[];
         const allDimensions = config.rows || [];

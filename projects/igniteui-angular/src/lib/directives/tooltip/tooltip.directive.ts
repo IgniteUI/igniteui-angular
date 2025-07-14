@@ -1,6 +1,4 @@
-import {
-    Directive, ElementRef, Input, ChangeDetectorRef, Optional, HostBinding, Inject, OnDestroy, inject, DOCUMENT
-} from '@angular/core';
+import { Directive, ElementRef, Input, ChangeDetectorRef, HostBinding, OnDestroy, inject, DOCUMENT } from '@angular/core';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { OverlaySettings } from '../../services/public_api';
 import { IgxNavigationService } from '../../core/navigation';
@@ -113,11 +111,12 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
     private _document = inject(DOCUMENT);
 
     /** @hidden */
-    constructor(
-        elementRef: ElementRef,
-        cdr: ChangeDetectorRef,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        @Optional() navigationService: IgxNavigationService) {
+    constructor() {
+        const elementRef = inject(ElementRef);
+        const cdr = inject(ChangeDetectorRef);
+        const overlayService = inject<IgxOverlayService>(IgxOverlayService);
+        const navigationService = inject(IgxNavigationService, { optional: true });
+
         // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
         super(elementRef, cdr, overlayService, navigationService);
 

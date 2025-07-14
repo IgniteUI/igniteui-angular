@@ -1,8 +1,4 @@
-import {
-    Directive, Input, ElementRef, DOCUMENT,
-    Renderer2, Output, EventEmitter, Inject,
-    LOCALE_ID, OnChanges, SimpleChanges, HostListener, OnInit, booleanAttribute
-} from '@angular/core';
+import { Directive, Input, ElementRef, DOCUMENT, Renderer2, Output, EventEmitter, LOCALE_ID, OnChanges, SimpleChanges, HostListener, OnInit, booleanAttribute, inject } from '@angular/core';
 import {
     ControlValueAccessor,
     Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, NG_VALUE_ACCESSOR,
@@ -53,6 +49,9 @@ import { DateTimeUtil } from '../../date-common/util/date-time.util';
     standalone: true
 })
 export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnChanges, OnInit, Validator, ControlValueAccessor {
+    private _document = inject(DOCUMENT);
+    private _locale = inject(LOCALE_ID);
+
     /**
      * Locale settings used for value formatting.
      *
@@ -297,13 +296,12 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         return this._dateValue;
     }
 
-    constructor(
-        renderer: Renderer2,
-        elementRef: ElementRef,
-        maskParser: MaskParsingService,
-        platform: PlatformUtil,
-        @Inject(DOCUMENT) private _document: any,
-        @Inject(LOCALE_ID) private _locale: any) {
+    constructor() {
+        const renderer = inject(Renderer2);
+        const elementRef = inject(ElementRef);
+        const maskParser = inject(MaskParsingService);
+        const platform = inject(PlatformUtil);
+
         super(elementRef, maskParser, renderer, platform);
         this.document = this._document as Document;
         this.locale = this.locale || this._locale;

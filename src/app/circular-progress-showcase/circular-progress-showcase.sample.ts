@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject } from '@angular/core';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular';
 import {
     IgcCircularProgressComponent,
@@ -22,6 +22,9 @@ defineComponents(IgcCircularProgressComponent);
 })
 
 export class CircularProgressSampleComponent {
+    private propertyChangeService = inject(PropertyChangeService);
+    private destroyRef = inject(DestroyRef);
+
     public panelConfig: PropertyPanelConfig = {
         hasAnimation: {
             label: 'Enable none indeterminate animation (angular)',
@@ -86,10 +89,7 @@ export class CircularProgressSampleComponent {
 
     public properties: Properties;
 
-    constructor(
-        private propertyChangeService: PropertyChangeService,
-        private destroyRef: DestroyRef
-    ) {
+    constructor() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
         const propertyChange =

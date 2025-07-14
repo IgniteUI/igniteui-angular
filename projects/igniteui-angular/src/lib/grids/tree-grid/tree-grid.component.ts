@@ -1,29 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    HostBinding,
-    Input,
-    OnInit,
-    TemplateRef,
-    ContentChild,
-    AfterContentInit,
-    ViewChild,
-    DoCheck,
-    AfterViewInit,
-    ElementRef,
-    NgZone,
-    Inject,
-    ChangeDetectorRef,
-    IterableDiffers,
-    ViewContainerRef,
-    Optional,
-    LOCALE_ID,
-    Injector,
-    EnvironmentInjector,
-    CUSTOM_ELEMENTS_SCHEMA,
-    booleanAttribute,
-    DOCUMENT
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, Input, OnInit, TemplateRef, ContentChild, AfterContentInit, ViewChild, DoCheck, AfterViewInit, ElementRef, NgZone, ChangeDetectorRef, IterableDiffers, ViewContainerRef, LOCALE_ID, Injector, EnvironmentInjector, CUSTOM_ELEMENTS_SCHEMA, booleanAttribute, DOCUMENT, inject } from '@angular/core';
 import { NgClass, NgTemplateOutlet, NgStyle } from '@angular/common';
 
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
@@ -173,6 +148,8 @@ let NEXT_ID = 0;
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, AfterViewInit, DoCheck, AfterContentInit {
+    protected override _diTransactions?: HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>;
+
     /**
      * Sets the child data key of the `IgxTreeGridComponent`.
      * ```html
@@ -447,31 +424,29 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     //     return this.gridAPI as IgxTreeGridAPIService;
     // }
 
-    constructor(
-        validationService: IgxGridValidationService,
-        selectionService: IgxGridSelectionService,
-        colResizingService: IgxColumnResizingService,
-        @Inject(IGX_GRID_SERVICE_BASE) gridAPI: GridServiceType,
-        // public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        transactionFactory: IgxHierarchicalTransactionFactory,
-        _elementRef: ElementRef<HTMLElement>,
-        _zone: NgZone,
-        @Inject(DOCUMENT) document: any,
-        cdr: ChangeDetectorRef,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        injector: Injector,
-        envInjector: EnvironmentInjector,
-        navigation: IgxGridNavigationService,
-        filteringService: IgxFilteringService,
-        textHighlightService: IgxTextHighlightService,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        summaryService: IgxGridSummaryService,
-        @Inject(LOCALE_ID) localeId: string,
-        platform: PlatformUtil,
-        @Optional() @Inject(IgxGridTransaction) protected override _diTransactions?:
-            HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
-    ) {
+    constructor() {
+        const validationService = inject(IgxGridValidationService);
+        const selectionService = inject(IgxGridSelectionService);
+        const colResizingService = inject(IgxColumnResizingService);
+        const gridAPI = inject<GridServiceType>(IGX_GRID_SERVICE_BASE);
+        const transactionFactory = inject(IgxHierarchicalTransactionFactory);
+        const _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+        const _zone = inject(NgZone);
+        const document = inject(DOCUMENT);
+        const cdr = inject(ChangeDetectorRef);
+        const differs = inject(IterableDiffers);
+        const viewRef = inject(ViewContainerRef);
+        const injector = inject(Injector);
+        const envInjector = inject(EnvironmentInjector);
+        const navigation = inject(IgxGridNavigationService);
+        const filteringService = inject(IgxFilteringService);
+        const textHighlightService = inject(IgxTextHighlightService);
+        const overlayService = inject<IgxOverlayService>(IgxOverlayService);
+        const summaryService = inject(IgxGridSummaryService);
+        const localeId = inject(LOCALE_ID);
+        const platform = inject(PlatformUtil);
+        const _diTransactions = inject<HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>>(IgxGridTransaction, { optional: true });
+
         super(
             validationService,
             selectionService,
@@ -495,6 +470,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             platform,
             _diTransactions,
         );
+    
+        this._diTransactions = _diTransactions;
     }
 
     /**

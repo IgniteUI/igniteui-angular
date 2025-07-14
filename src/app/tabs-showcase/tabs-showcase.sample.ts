@@ -38,6 +38,8 @@ defineComponents(IgcTabsComponent, IgcTabComponent);
     imports: [IgxButtonDirective, IgxIconComponent, IGX_TABS_DIRECTIVES]
 })
 export class TabsShowcaseSampleComponent implements OnInit {
+    private destroyRef = inject(DestroyRef);
+
     @ViewChild('angularTabs', { static: false })
     public angularTabsRef!: ElementRef;
     @ViewChild('webComponentsTabs', { static: false })
@@ -60,7 +62,7 @@ export class TabsShowcaseSampleComponent implements OnInit {
     private pcs = inject(PropertyChangeService);
     private cdr = inject(ChangeDetectorRef);
 
-    constructor(private destroyRef: DestroyRef) {
+    constructor() {
         this.pcs.setPanelConfig({
             alignment: {
                 control: {

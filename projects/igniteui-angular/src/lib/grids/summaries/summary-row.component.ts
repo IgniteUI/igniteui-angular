@@ -1,16 +1,4 @@
-import {
-    Component,
-    Input,
-    ViewChildren,
-    QueryList,
-    HostBinding,
-    ViewChild,
-    ElementRef,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    DoCheck,
-    Inject
-} from '@angular/core';
+import { Component, Input, ViewChildren, QueryList, HostBinding, ViewChild, ElementRef, ChangeDetectionStrategy, ChangeDetectorRef, DoCheck, inject } from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
 import { IgxSummaryCellComponent } from './summary-cell.component';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
@@ -29,6 +17,10 @@ import { trackByIdentity } from '../../core/utils';
     imports: [NgTemplateOutlet, IgxGridForOfDirective, IgxSummaryCellComponent, IgxGridNotGroupedPipe]
 })
 export class IgxSummaryRowComponent implements DoCheck  {
+    grid = inject<GridType>(IGX_GRID_BASE);
+    element = inject<ElementRef<HTMLElement>>(ElementRef);
+    cdr = inject(ChangeDetectorRef);
+
 
     @Input()
     public summaries: Map<string, IgxSummaryResult[]>;
@@ -70,10 +62,6 @@ export class IgxSummaryRowComponent implements DoCheck  {
      */
     @ViewChild('igxDirRef', { read: IgxGridForOfDirective })
     public virtDirRow: IgxGridForOfDirective<ColumnType, ColumnType[]>;
-
-    constructor(@Inject(IGX_GRID_BASE) public grid: GridType,
-                public element: ElementRef<HTMLElement>,
-                public cdr: ChangeDetectorRef) {}
 
     public ngDoCheck() {
         this.cdr.markForCheck();

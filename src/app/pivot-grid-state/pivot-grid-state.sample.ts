@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxPivotNumericAggregate,
@@ -58,6 +58,8 @@ export class IgxTotalSaleAggregate {
         IgxPivotGridComponent, IgxGridStateDirective, IgxPivotDataSelectorComponent, IgxPivotRowDimensionHeaderTemplateDirective]
 })
 export class PivotGridStateSampleComponent {
+    private exportService = inject(IgxExcelExporterService);
+
     @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;
 
     public pivotConfigHierarchy: IPivotConfiguration = {
@@ -172,8 +174,6 @@ export class PivotGridStateSampleComponent {
     };
     @ViewChild(IgxGridStateDirective, { static: true })
     public state!: IgxGridStateDirective;
-
-    constructor(private exportService: IgxExcelExporterService) {}
 
     public saveState() {
         const state = this.state.getState() as string;

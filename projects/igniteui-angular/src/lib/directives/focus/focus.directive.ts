@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, Optional, Inject, Self, booleanAttribute } from '@angular/core';
+import { Directive, ElementRef, Input, booleanAttribute, inject } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorProvider, EDITOR_PROVIDER } from '../../core/edit-provider';
 
@@ -8,6 +8,10 @@ import { EditorProvider, EDITOR_PROVIDER } from '../../core/edit-provider';
     standalone: true
 })
 export class IgxFocusDirective {
+    private element = inject(ElementRef);
+    private comp = inject(NG_VALUE_ACCESSOR, { self: true, optional: true });
+    private control = inject(EDITOR_PROVIDER, { self: true, optional: true });
+
 
     private focusState = true;
 
@@ -62,12 +66,6 @@ export class IgxFocusDirective {
 
         return this.element.nativeElement;
     }
-
-    constructor(
-        private element: ElementRef,
-        @Inject(NG_VALUE_ACCESSOR) @Self() @Optional() private comp?: any[],
-        @Inject(EDITOR_PROVIDER) @Self() @Optional() private control?: any[],
-    ) { }
 
     /**
      * Triggers the igxFocus state.

@@ -1,7 +1,7 @@
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGridCreatedEventArgs } from './public_api';
-import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, QueryList } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, QueryList, inject } from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -2051,6 +2051,8 @@ export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGrid
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHGridRemoteOnDemandComponent {
+    cdr = inject(ChangeDetectorRef);
+
     @ViewChild(IgxHierarchicalGridComponent, { read: IgxHierarchicalGridComponent, static: true })
     public instance: IgxHierarchicalGridComponent;
 
@@ -2061,8 +2063,6 @@ export class IgxHGridRemoteOnDemandComponent {
     public rowIsland2: IgxRowIslandComponent;
 
     public data;
-
-    constructor(public cdr: ChangeDetectorRef) { }
 
     public generateDataUneven(count: number, level: number, parendID: string = null) {
         const prods = [];
@@ -2118,14 +2118,13 @@ export class IgxHGridRemoteOnDemandComponent {
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridColumnsUpdateComponent extends IgxHierarchicalGridTestBaseComponent implements AfterViewInit {
+    cdr = inject(ChangeDetectorRef);
+
     public cols1 = ['ID', 'ProductName', 'Col1', 'Col2', 'Col3'];
     public cols2 =  ['ID', 'ProductName', 'Col1'];
     public parentCols = [];
     public islandCols1 = [];
     public islandCols2 = [];
-    constructor(public cdr: ChangeDetectorRef) {
-        super();
-    }
 
     public ngAfterViewInit() {
         this.islandCols1 = this.cols1;
@@ -2328,9 +2327,8 @@ export class IgxHierarchicalGridCustomFilteringTemplateComponent extends IgxHier
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxIconComponent, IgxCellHeaderTemplateDirective]
 })
 export class IgxHierarchicalGridHidingPinningColumnsComponent extends IgxHierarchicalGridTestBaseComponent {
-    constructor(public cdr: ChangeDetectorRef) {
-        super();
-    }
+    cdr = inject(ChangeDetectorRef);
+
 
     public pinColumn(col: ColumnType) {
         col.pin();

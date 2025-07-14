@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, OnInit, Renderer2, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { HIERARCHICAL_SAMPLE_DATA, SAMPLE_DATA } from '../shared/sample-data';
@@ -12,6 +12,8 @@ import { GridSummaryCalculationMode, GridSummaryPosition, IPinningConfig, IgxBut
 })
 
 export class GridRowAPISampleComponent implements OnInit {
+    private renderer = inject(Renderer2);
+
     @ViewChild('grid', { static: true })
     private grid: IgxGridComponent;
 
@@ -46,8 +48,6 @@ export class GridRowAPISampleComponent implements OnInit {
     public hKey = '';
 
     public pinningConfig: IPinningConfig = { rows: RowPinningPosition.Top };
-
-    constructor(private renderer: Renderer2) { }
 
     public ngOnInit(): void {
         this.grid.summaryCalculationMode = GridSummaryCalculationMode.childLevelsOnly;

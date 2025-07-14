@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, HostBinding, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, HostBinding, ViewChild, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -23,6 +23,9 @@ enum DragIcon {
     imports: [IgxButtonGroupComponent, IgxSwitchComponent, FormsModule, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxIconComponent, IgxRowDragDirective, IgxRowDragGhostDirective, IgxDropDirective, IgxDragIndicatorIconDirective, IgxGridEmptyTemplateDirective, AsyncPipe]
 })
 export class GridRowDraggableComponent implements AfterViewInit {
+    private remoteService = inject(RemoteService);
+    private cdr = inject(ChangeDetectorRef);
+
     @HostBinding('style.--ig-size')
     protected get sizeStyle() {
         return `var(--ig-size-${this.size})`;
@@ -38,7 +41,7 @@ export class GridRowDraggableComponent implements AfterViewInit {
     public size = 'large';
     public sizes;
 
-    constructor(private remoteService: RemoteService, private cdr: ChangeDetectorRef) {
+    constructor() {
         this.remoteService.urlBuilder = () => this.remoteService.url;
 
         this.sizes = [

@@ -1,32 +1,4 @@
-import {
-    AfterContentInit,
-    AfterViewInit,
-    booleanAttribute,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ContentChild,
-    ContentChildren,
-    ElementRef,
-    EnvironmentInjector,
-    EventEmitter,
-    forwardRef,
-    Inject,
-    Injector,
-    Input,
-    IterableChangeRecord,
-    IterableDiffers,
-    LOCALE_ID,
-    NgZone,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Output,
-    QueryList,
-    TemplateRef,
-    ViewContainerRef,
-    DOCUMENT
-} from '@angular/core';
+import { AfterContentInit, AfterViewInit, booleanAttribute, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EnvironmentInjector, EventEmitter, forwardRef, Injector, Input, IterableChangeRecord, IterableDiffers, LOCALE_ID, NgZone, OnChanges, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewContainerRef, DOCUMENT, inject } from '@angular/core';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
@@ -84,6 +56,8 @@ import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy {
+    rowIslandAPI = inject(IgxRowIslandAPIService);
+
 
     /* blazorSuppress */
     /**
@@ -372,28 +346,28 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         return lvl + 1;
     }
 
-    constructor(
-        validationService: IgxGridValidationService,
-        selectionService: IgxGridSelectionService,
-        colResizingService: IgxColumnResizingService,
-        @Inject(IGX_GRID_SERVICE_BASE) gridAPI: IgxHierarchicalGridAPIService,
-        transactionFactory: IgxFlatTransactionFactory,
-        elementRef: ElementRef<HTMLElement>,
-        zone: NgZone,
-        @Inject(DOCUMENT) document,
-        cdr: ChangeDetectorRef,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        injector: Injector,
-        envInjector: EnvironmentInjector,
-        navigation: IgxHierarchicalGridNavigationService,
-        filteringService: IgxFilteringService,
-        textHighlightService: IgxTextHighlightService,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        summaryService: IgxGridSummaryService,
-        public rowIslandAPI: IgxRowIslandAPIService,
-        @Inject(LOCALE_ID) localeId: string,
-        platform: PlatformUtil) {
+    constructor() {
+        const validationService = inject(IgxGridValidationService);
+        const selectionService = inject(IgxGridSelectionService);
+        const colResizingService = inject(IgxColumnResizingService);
+        const gridAPI = inject<IgxHierarchicalGridAPIService>(IGX_GRID_SERVICE_BASE);
+        const transactionFactory = inject(IgxFlatTransactionFactory);
+        const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+        const zone = inject(NgZone);
+        const document = inject(DOCUMENT);
+        const cdr = inject(ChangeDetectorRef);
+        const differs = inject(IterableDiffers);
+        const viewRef = inject(ViewContainerRef);
+        const injector = inject(Injector);
+        const envInjector = inject(EnvironmentInjector);
+        const navigation = inject(IgxHierarchicalGridNavigationService);
+        const filteringService = inject(IgxFilteringService);
+        const textHighlightService = inject(IgxTextHighlightService);
+        const overlayService = inject<IgxOverlayService>(IgxOverlayService);
+        const summaryService = inject(IgxGridSummaryService);
+        const localeId = inject(LOCALE_ID);
+        const platform = inject(PlatformUtil);
+
         super(
             validationService,
             selectionService,

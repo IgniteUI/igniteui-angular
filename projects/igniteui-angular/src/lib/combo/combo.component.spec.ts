@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import {
     FormsModule, NgControl, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
@@ -3598,6 +3598,8 @@ describe('igxCombo', () => {
     imports: [IgxComboComponent, IgxComboItemDirective, IgxComboHeaderDirective, IgxComboFooterDirective]
 })
 class IgxComboSampleComponent {
+    elementRef = inject(ElementRef);
+
     /**
      * TODO
      * Test that use this component should properly call `selectItems` method
@@ -3611,7 +3613,7 @@ class IgxComboSampleComponent {
     public initData = [];
     public size = 'medium';
 
-    constructor(public elementRef: ElementRef) {
+    constructor() {
 
         const division = {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
@@ -3687,7 +3689,9 @@ class IgxComboFormComponent {
 
     public reactiveForm: UntypedFormGroup;
 
-    constructor(fb: UntypedFormBuilder) {
+    constructor() {
+        const fb = inject(UntypedFormBuilder);
+
 
         const division = {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
@@ -3814,12 +3818,14 @@ export class LocalService {
     imports: [IgxComboComponent]
 })
 export class IgxComboBindingTestComponent {
+    private localService = inject(LocalService);
+
 
     @ViewChild('combo', { read: IgxComboComponent, static: true })
     public combo: IgxComboComponent;
 
     public items = [];
-    constructor(private localService: LocalService) {
+    constructor() {
         this.localService.getData().subscribe(
             (data: any[]) => {
                 this.items = data;
@@ -3910,10 +3916,12 @@ export class RemoteDataService {
     imports: [IgxComboComponent, AsyncPipe]
 })
 export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDestroy {
+    private remoteDataService = inject(RemoteDataService);
+    cdr = inject(ChangeDetectorRef);
+
     @ViewChild('combo', { read: IgxComboComponent, static: true })
     public instance: IgxComboComponent;
     public data;
-    constructor(private remoteDataService: RemoteDataService, public cdr: ChangeDetectorRef) { }
     public ngOnInit(): void {
         this.data = this.remoteDataService.records;
     }
@@ -3958,10 +3966,10 @@ export class ComboModelBindingComponent implements OnInit {
     imports: [IgxComboComponent, FormsModule]
 })
 export class IgxComboBindingDataAfterInitComponent implements AfterViewInit {
+    private cdr = inject(ChangeDetectorRef);
+
     public items: any[] = [];
     public selectedItems: any[] = [0];
-
-    constructor(private cdr: ChangeDetectorRef) { }
 
     public ngAfterViewInit() {
         setTimeout(() => {

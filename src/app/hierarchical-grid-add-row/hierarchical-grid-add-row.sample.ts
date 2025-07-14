@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, ChangeDetectorRef, AfterViewInit, inject } from '@angular/core';
 import { IgxActionStripComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular';
 
 @Component({
@@ -7,11 +7,13 @@ import { IgxActionStripComponent, IgxGridEditingActionsComponent, IgxGridPinning
     imports: [IgxHierarchicalGridComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxRowIslandComponent]
 })
 export class HierarchicalGridAddRowSampleComponent implements AfterViewInit {
+    private cdr = inject(ChangeDetectorRef);
+
     public localData = [];
     public columns;
     public childColumns;
 
-    constructor(private cdr: ChangeDetectorRef) {
+    constructor() {
         this.localData = this.generateDataUneven(100, 3);
         this.localData[0].hasChild = false;
         this.localData[1].hasChild = false;

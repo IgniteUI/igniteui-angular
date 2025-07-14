@@ -1,6 +1,6 @@
 import { useAnimation } from '@angular/animations';
 import { NgTemplateOutlet, AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxTreeNodeComponent,
@@ -70,6 +70,8 @@ interface CompanyData {
     ]
 })
 export class TreeSampleComponent implements AfterViewInit {
+    private cdr = inject(ChangeDetectorRef);
+
     @ViewChild('tree1', { static: true })
     public tree: IgxTreeComponent;
 
@@ -93,7 +95,7 @@ export class TreeSampleComponent implements AfterViewInit {
 
     private initData: CompanyData[];
 
-    constructor(private cdr: ChangeDetectorRef) {
+    constructor() {
         this.selectionModes = [
             { label: 'None', selectMode: 'None', selected: this.selectionMode === 'None', togglable: true },
             { label: 'Multiple', selectMode: 'Multiple', selected: this.selectionMode === 'Multiple', togglable: true },

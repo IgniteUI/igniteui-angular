@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync, flush } from '@angular/core/testing';
-import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy, inject } from '@angular/core';
 import { IgxInputDirective, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../input-group/public_api';
 import { PickerInteractionMode } from '../date-common/types';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1789,6 +1789,8 @@ export class DateRangeTwoInputsDisabledComponent extends DateRangeDisabledCompon
     ]
 })
 export class DateRangeReactiveFormComponent {
+    private fb = inject(UntypedFormBuilder);
+
     @ViewChild('range', {read: IgxDateRangePickerComponent}) public dateRange: IgxDateRangePickerComponent;
     @ViewChild('twoInputs', {read: IgxDateRangePickerComponent}) public dateRangeWithTwoInputs: IgxDateRangePickerComponent;
 
@@ -1796,8 +1798,6 @@ export class DateRangeReactiveFormComponent {
         range: ['', Validators.required],
         twoInputs: ['', Validators.required]
     });
-
-    constructor(private fb: UntypedFormBuilder) { }
 
     public markAsTouched() {
         if (!this.form.valid) {

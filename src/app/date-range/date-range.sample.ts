@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidatorFn, AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DateRange, IgxButtonDirective, IgxDateRangeEndComponent, IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateTimeEditorDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxPickerToggleComponent, IgxPrefixDirective, IgxRadioComponent, IgxRippleDirective, IgxSuffixDirective, IGX_INPUT_GROUP_TYPE, IChangeCheckboxEventArgs } from 'igniteui-angular';
@@ -37,7 +37,9 @@ export class DateRangeSampleComponent {
     public updateOnOptions: string[] = ['change', 'blur', 'submit'];
     public updateOn = 'blur';
 
-    constructor(fb: UntypedFormBuilder) {
+    constructor() {
+        const fb = inject(UntypedFormBuilder);
+
         const today = new Date();
         const in5days = new Date();
         in5days.setDate(today.getDate() + 5);

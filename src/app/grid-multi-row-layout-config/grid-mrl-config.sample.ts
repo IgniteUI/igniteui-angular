@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
+import { Component, ViewChild, ElementRef, ChangeDetectorRef, ViewChildren, QueryList, inject } from '@angular/core';
 import { NgStyle } from '@angular/common';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
@@ -22,6 +22,8 @@ interface ColumnConfig {
     imports: [IgxDragDirective, NgStyle, IgxDropDirective, IgxButtonDirective, IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxDialogComponent]
 })
 export class GridMRLConfigSampleComponent {
+    cdr = inject(ChangeDetectorRef);
+
 
     @ViewChild('jsonDialog', { read: IgxDialogComponent, static: true })
     public jsonDialog: IgxDialogComponent;
@@ -78,7 +80,7 @@ export class GridMRLConfigSampleComponent {
 
     public data = SAMPLE_DATA;
 
-    constructor(public cdr: ChangeDetectorRef) {
+    constructor() {
         this.updateCollectionSize();
         this.selectionMode = GridSelectionMode.none;
     }

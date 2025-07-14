@@ -1,4 +1,4 @@
-import { Directive, Optional, Input, Host, ViewContainerRef, Inject, createComponent, EnvironmentInjector, Injector } from '@angular/core';
+import { Directive, Input, ViewContainerRef, createComponent, EnvironmentInjector, Injector, inject } from '@angular/core';
 import { IExpressionTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
@@ -121,6 +121,11 @@ interface Feature {
 /* blazorIndirectRender */
 @Directive()
 export class IgxGridStateBaseDirective {
+    grid = inject<GridType>(IGX_GRID_BASE, { host: true, optional: true });
+    protected viewRef = inject(ViewContainerRef);
+    protected envInjector = inject(EnvironmentInjector);
+    protected injector = inject(Injector);
+
 
     private featureKeys: GridFeatures[] = [];
     private state: IGridState;
@@ -498,13 +503,6 @@ export class IgxGridStateBaseDirective {
             delete this._options.rowIslands;
         }
     }
-
-    /**
-     * @hidden
-     */
-    constructor(
-        @Host() @Optional() @Inject(IGX_GRID_BASE) public grid: GridType,
-        protected viewRef: ViewContainerRef, protected envInjector: EnvironmentInjector,  protected injector: Injector) { }
 
     /**
      * Gets the state of a feature or states of all grid features, unless a certain feature is disabled through the `options` property.

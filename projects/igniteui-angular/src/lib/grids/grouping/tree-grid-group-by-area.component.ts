@@ -1,13 +1,4 @@
-import {
-    AfterContentInit,
-    Component,
-    ElementRef,
-    Input,
-    IterableDiffer,
-    IterableDiffers,
-    OnDestroy,
-    booleanAttribute,
-} from '@angular/core';
+import { AfterContentInit, Component, ElementRef, Input, IterableDiffer, IterableDiffers, OnDestroy, booleanAttribute, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IChipsAreaReorderEventArgs } from '../../chips/public_api';
@@ -35,6 +26,8 @@ import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
     imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxSuffixDirective, IgxGroupAreaDropDirective, IgxDropDirective, NgTemplateOutlet, IgxGroupByMetaPipe]
 })
 export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective implements AfterContentInit, OnDestroy {
+    private differs = inject(IterableDiffers);
+
     @Input({ transform: booleanAttribute })
     public get hideGroupedColumns() {
         return this._hideGroupedColumns;
@@ -52,7 +45,10 @@ export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective imp
     private groupingDiffer: IterableDiffer<IGroupingExpression>;
     private destroy$ = new Subject<any>();
 
-    constructor(private differs: IterableDiffers, ref: ElementRef<HTMLElement>, platform: PlatformUtil) {
+    constructor() {
+        const ref = inject<ElementRef<HTMLElement>>(ElementRef);
+        const platform = inject(PlatformUtil);
+
         super(ref, platform);
     }
 

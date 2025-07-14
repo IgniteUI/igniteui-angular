@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject } from '@angular/core';
 import {
     TicksOrientation,
     IgxSliderComponent,
@@ -25,6 +25,9 @@ defineComponents(IgcSliderComponent, IgcSliderLabelComponent);
     imports: [IgxSliderComponent]
 })
 export class SliderShowcaseSampleComponent {
+    private propertyChangeService = inject(PropertyChangeService);
+    private destroyRef = inject(DestroyRef);
+
     public panelConfig: PropertyPanelConfig = {
         value: {
             control: {
@@ -121,10 +124,7 @@ export class SliderShowcaseSampleComponent {
 
     public properties: Properties;
 
-    constructor(
-        private propertyChangeService: PropertyChangeService,
-        private destroyRef: DestroyRef
-    ) {
+    constructor() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
         const propertyChange =

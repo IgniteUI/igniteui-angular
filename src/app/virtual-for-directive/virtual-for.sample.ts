@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewChild, OnInit, ViewEncapsulation, inject } from '@angular/core';
 import { NgClass, AsyncPipe } from '@angular/common';
 import { RemoteService } from '../shared/remote.service';
 import { IgxForOfDirective, ButtonGroupAlignment, IgxListComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxInputDirective, IgxInputGroupComponent, IgxListItemComponent, IgxSuffixDirective } from 'igniteui-angular';
@@ -13,6 +13,8 @@ import { IgxForOfDirective, ButtonGroupAlignment, IgxListComponent, IgxButtonDir
     imports: [IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective, IgxButtonDirective, IgxButtonGroupComponent, NgClass, AsyncPipe]
 })
 export class VirtualForSampleComponent implements OnInit {
+    private remoteService = inject(RemoteService);
+
     @ViewChild('virtDirVertical', { read: IgxForOfDirective, static: true })
     private virtDirVertical: IgxForOfDirective<any>;
 
@@ -31,7 +33,7 @@ export class VirtualForSampleComponent implements OnInit {
     public prevRequest: any;
     public itemSize = '50px';
 
-    constructor(private remoteService: RemoteService) {
+    constructor() {
         this.remoteService.urlBuilder = (dataState) => {
             let qS = `?`;
             let requiredChunkSize;

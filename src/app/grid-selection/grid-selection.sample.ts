@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { Observable } from 'rxjs';
@@ -23,6 +23,9 @@ import { data } from '../shared/data';
     ]
 })
 export class GridSelectionComponent implements AfterViewInit {
+    private remoteService = inject(RemoteService);
+    private cdr = inject(ChangeDetectorRef);
+
     @ViewChild(IgxGridComponent, { static: true })
     protected grid1: IgxGridComponent;
 
@@ -30,7 +33,7 @@ export class GridSelectionComponent implements AfterViewInit {
     public selectionModes = ['none', 'single', 'multiple'];
     public data = [];
 
-    constructor(private remoteService: RemoteService, private cdr: ChangeDetectorRef) {
+    constructor() {
         this.remoteService.urlBuilder = () => this.remoteService.url;
      }
 

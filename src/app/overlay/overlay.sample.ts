@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, ChangeDetectorRef, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxDropDownComponent,
@@ -32,6 +32,8 @@ import { IAnimationParams } from 'igniteui-angular/animations';
     imports: [IgxRadioComponent, FormsModule, IgxSwitchComponent, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgxButtonDirective, IgxRippleDirective, IgxDragDirective, IgxDropDownComponent, IgxDropDownItemComponent]
 })
 export class OverlaySampleComponent implements OnInit {
+    private cdr = inject(ChangeDetectorRef);
+
     @ViewChild(IgxDropDownComponent, { static: true })
     private igxDropDown: IgxDropDownComponent;
     @ViewChild('button', { static: true })
@@ -71,9 +73,7 @@ export class OverlaySampleComponent implements OnInit {
         modal: true,
         closeOnOutsideClick: true
     };
-    constructor(
-        private cdr: ChangeDetectorRef
-    ) {
+    constructor() {
         for (let item = 0; item < this.itemsCount; item++) {
             this.items.push(`Item ${item}`);
         }

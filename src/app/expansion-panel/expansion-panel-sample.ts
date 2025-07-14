@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject } from '@angular/core';
 import { IGX_EXPANSION_PANEL_DIRECTIVES } from 'igniteui-angular';
 import {
     Properties,
@@ -21,6 +21,9 @@ defineComponents(IgcExpansionPanelComponent);
     imports: [IGX_EXPANSION_PANEL_DIRECTIVES]
 })
 export class ExpansionPanelSampleComponent {
+    private propertyChangeService = inject(PropertyChangeService);
+    private destroyRef = inject(DestroyRef);
+
     public panelConfig: PropertyPanelConfig = {
         iconPosition: {
             label: 'Indicator Position',
@@ -45,10 +48,7 @@ export class ExpansionPanelSampleComponent {
 
     public properties: Properties;
 
-    constructor(
-        private propertyChangeService: PropertyChangeService,
-        private destroyRef: DestroyRef
-    ) {
+    constructor() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
         const propertyChange =

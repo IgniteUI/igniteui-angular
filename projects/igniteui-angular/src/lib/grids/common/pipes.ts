@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform, Inject } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { DataUtil } from '../../data-operations/data-util';
 import { cloneArray, columnFieldPath, resolveNestedPath } from '../../core/utils';
 import { GridType, IGX_GRID_BASE, RowType } from './grid.interface';
@@ -99,9 +99,11 @@ export class IgxGridCellImageAltPipe implements PipeTransform {
     standalone: true
 })
 export class IgxGridRowClassesPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
+
     public row: RowType;
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) {
+    constructor() {
         this.row = new IgxGridRow(this.grid as any, -1, {});
     }
 
@@ -159,8 +161,8 @@ export class IgxGridRowClassesPipe implements PipeTransform {
     standalone: true
 })
 export class IgxGridRowStylesPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(styles: GridStyleCSSProperty, rowData: any, index: number, __: number): GridStyleCSSProperty {
         const css = {};
@@ -232,8 +234,8 @@ export class IgxGridFilterConditionPipe implements PipeTransform {
     standalone: true
 })
 export class IgxGridTransactionPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any[], _id: string, _pipeTrigger: number) {
 
@@ -302,8 +304,8 @@ function buildDataView(): MethodDecorator {
     standalone: true
 })
 export class IgxGridRowPinningPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     @buildDataView()
     public transform(collection: any[], id: string, isPinned = false, _pipeTrigger: number) {
@@ -396,8 +398,8 @@ export class IgxSummaryFormatterPipe implements PipeTransform {
     standalone: true
 })
 export class IgxGridAddRowPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any, isPinned = false, _pipeTrigger: number) {
         if (!this.grid.rowEditable || !this.grid.crudService.row || !this.grid.crudService.row.isAddRow ||

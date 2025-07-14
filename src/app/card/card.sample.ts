@@ -1,12 +1,4 @@
-import {
-    Component,
-    CUSTOM_ELEMENTS_SCHEMA,
-    DestroyRef,
-    OnInit,
-    TemplateRef,
-    ViewChild,
-    ViewEncapsulation,
-} from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, OnInit, TemplateRef, ViewChild, ViewEncapsulation, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxAvatarComponent,
@@ -113,6 +105,9 @@ const cardFactory = (params: any): ICard => ({
     ]
 })
 export class CardSampleComponent implements OnInit {
+    private propertyChangeService = inject(PropertyChangeService);
+    private destroyRef = inject(DestroyRef);
+
     @ViewChild('customControls', { static: true })
     public customControlsTemplate!: TemplateRef<any>;
 
@@ -163,10 +158,7 @@ export class CardSampleComponent implements OnInit {
 
     public properties: Properties;
 
-    constructor(
-        private propertyChangeService: PropertyChangeService,
-        private destroyRef: DestroyRef
-    ) {
+    constructor() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
         const propertyChange =

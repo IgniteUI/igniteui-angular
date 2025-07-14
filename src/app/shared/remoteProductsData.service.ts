@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { SortingDirection } from 'igniteui-angular';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -12,12 +12,14 @@ export enum SortOrder {
 }
 @Injectable()
 export class RemoteVirtService {
+    private _http = inject(HttpClient);
+
 
     public data: Observable<any[]>;
     private _data: BehaviorSubject<any[]>;
     private _cachedData: any[];
 
-    constructor(private _http: HttpClient) {
+    constructor() {
         this._data = new BehaviorSubject([]);
         this.data = this._data.asObservable();
     }

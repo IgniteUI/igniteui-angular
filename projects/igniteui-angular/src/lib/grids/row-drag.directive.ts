@@ -1,4 +1,4 @@
-import { Directive, Input, OnDestroy, TemplateRef } from '@angular/core';
+import { Directive, Input, OnDestroy, TemplateRef, inject } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from './common/events';
@@ -188,7 +188,8 @@ export class IgxDragIndicatorIconDirective {
     standalone: true
 })
 export class IgxRowDragGhostDirective {
-    constructor(public templateRef: TemplateRef<IgxGridRowDragGhostContext>) { }
+    templateRef = inject<TemplateRef<IgxGridRowDragGhostContext>>(TemplateRef);
+
     public static ngTemplateContextGuard(_directive: IgxRowDragGhostDirective,
         context: unknown): context is IgxGridRowDragGhostContext {
         return true;

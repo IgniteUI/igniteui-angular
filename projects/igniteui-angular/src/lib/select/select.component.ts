@@ -1,30 +1,4 @@
-import {
-    AfterContentChecked,
-    AfterContentInit,
-    AfterViewInit,
-    booleanAttribute,
-    ChangeDetectorRef,
-    Component,
-    ContentChild,
-    ContentChildren,
-    Directive,
-    ElementRef,
-    EventEmitter,
-    forwardRef,
-    HostBinding,
-    Inject,
-    Injector,
-    Input,
-    OnDestroy,
-    OnInit,
-    Optional,
-    Output,
-    QueryList,
-    TemplateRef,
-    ViewChild,
-    DOCUMENT,
-    ViewChildren
-} from '@angular/core';
+import { AfterContentChecked, AfterContentInit, AfterViewInit, booleanAttribute, ChangeDetectorRef, Component, ContentChild, ContentChildren, Directive, ElementRef, EventEmitter, forwardRef, HostBinding, Injector, Input, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild, DOCUMENT, ViewChildren, inject } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
@@ -107,6 +81,10 @@ export class IgxSelectFooterDirective {
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor,
     AfterContentInit, OnInit, AfterViewInit, OnDestroy, EditorProvider, AfterContentChecked {
+    protected overlayService = inject<IgxOverlayService>(IgxOverlayService);
+    private _inputGroupType = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE, { optional: true });
+    private _injector = inject(Injector);
+
 
     /** @hidden @internal */
     @ViewChild('inputGroup', { read: IgxInputGroupComponent, static: true }) public inputGroup: IgxInputGroupComponent;
@@ -342,15 +320,12 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
 
-    constructor(
-        elementRef: ElementRef,
-        cdr: ChangeDetectorRef,
-        @Inject(DOCUMENT) document: any,
-        selection: IgxSelectionAPIService,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
-        private _injector: Injector,
-    ) {
+    constructor() {
+        const elementRef = inject(ElementRef);
+        const cdr = inject(ChangeDetectorRef);
+        const document = inject(DOCUMENT);
+        const selection = inject(IgxSelectionAPIService);
+
         super(elementRef, cdr, document, selection);
     }
 

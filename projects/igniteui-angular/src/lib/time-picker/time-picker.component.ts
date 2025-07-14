@@ -1,22 +1,5 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import {
-    Component,
-    ElementRef,
-    EventEmitter,
-    HostBinding,
-    Input,
-    OnDestroy,
-    OnInit,
-    Output,
-    ViewChild,
-    ContentChild,
-    Inject,
-    AfterViewInit,
-    Injector,
-    PipeTransform,
-    ChangeDetectorRef,
-    LOCALE_ID, Optional, ContentChildren, QueryList, HostListener, booleanAttribute
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output, ViewChild, ContentChild, AfterViewInit, Injector, PipeTransform, ChangeDetectorRef, LOCALE_ID, ContentChildren, QueryList, HostListener, booleanAttribute, inject } from '@angular/core';
 import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
@@ -101,6 +84,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     OnDestroy,
     AfterViewInit,
     Validator {
+    private _injector = inject(Injector);
+    private platform = inject(PlatformUtil);
+    private cdr = inject(ChangeDetectorRef);
+
     /**
      * Sets the value of the `id` attribute.
      * ```html
@@ -614,14 +601,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         return this._itemsDelta;
     }
 
-    constructor(
-        element: ElementRef,
-        @Inject(LOCALE_ID) _localeId: string,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
-        private _injector: Injector,
-        private platform: PlatformUtil,
-        private cdr: ChangeDetectorRef,
-    ) {
+    constructor() {
+        const element = inject(ElementRef);
+        const _localeId = inject(LOCALE_ID);
+        const _inputGroupType = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE, { optional: true });
+
         super(element, _localeId, _inputGroupType);
         this.locale = this.locale || this._localeId;
     }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, inject } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { IgxButtonDirective, IgxIconComponent, IgxIconService } from 'igniteui-angular';
@@ -12,7 +12,9 @@ import { ThemedIconComponent } from './ThemedComponent/themed-icon.component';
     imports: [IgxIconComponent, IgxButtonDirective, ThemedIconComponent]
 })
 export class IconSampleComponent implements OnInit {
-    constructor(private _iconService: IgxIconService, public router: Router) {}
+    private _iconService = inject(IgxIconService);
+    router = inject(Router);
+
 
     public ngOnInit(): void {
         this._iconService.addIconRef('accessible', 'default', { family: 'material', name: 'rain', type: 'svg'});

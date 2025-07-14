@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, inject } from '@angular/core';
 import {
     IgxRowIslandComponent,
     IgxHierarchicalGridComponent,
@@ -17,6 +17,8 @@ import { RemoteService } from '../shared/remote.service';
     imports: [IgxButtonDirective, IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
+    private remoteService = inject(RemoteService);
+
     @ViewChild('rowIsland1', { static: true })
     private rowIsland1: IgxRowIslandComponent;
 
@@ -34,7 +36,9 @@ export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
         { name: 'ProductID', type: 'number', level: 2 }
     ];
 
-    constructor(private remoteService: RemoteService) {
+    constructor() {
+        const remoteService = this.remoteService;
+
         remoteService.url = 'https://services.odata.org/V4/Northwind/Northwind.svc/';
 
         this.remoteService.urlBuilder = (dataState) => this.buildUrl(dataState);

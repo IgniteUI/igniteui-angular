@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridType } from './common/grid.interface';
@@ -33,6 +33,8 @@ export interface IActiveNode {
 /** @hidden */
 @Injectable()
 export class IgxGridNavigationService {
+    protected platform = inject(PlatformUtil);
+
     public grid: GridType;
     public _activeNode: IActiveNode = {} as IActiveNode;
     public lastActiveNode: IActiveNode = {} as IActiveNode;
@@ -45,8 +47,6 @@ export class IgxGridNavigationService {
     public set activeNode(value: IActiveNode) {
         this._activeNode = value;
     }
-
-    constructor(protected platform: PlatformUtil) { }
 
     public handleNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();

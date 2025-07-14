@@ -1,9 +1,4 @@
-import {
-    Component,
-    CUSTOM_ELEMENTS_SCHEMA,
-    DestroyRef,
-    ViewEncapsulation,
-} from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ViewEncapsulation, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IGX_LIST_DIRECTIVES,
@@ -96,6 +91,9 @@ interface Employee {
     ]
 })
 export class ListSampleComponent {
+    private propertyChangeService = inject(PropertyChangeService);
+    private destroyRef = inject(DestroyRef);
+
     public panelConfig: PropertyPanelConfig = {
         size: {
             control: {
@@ -171,10 +169,7 @@ export class ListSampleComponent {
 
     public properties: Properties;
 
-    constructor(
-        private propertyChangeService: PropertyChangeService,
-        private destroyRef: DestroyRef
-    ) {
+    constructor() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
         const propertyChange =

@@ -1,4 +1,4 @@
-import { Inject, Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
@@ -18,8 +18,8 @@ import { IGridSortingStrategy, IGridGroupingStrategy } from '../common/strategy'
     standalone: true
 })
 export class IgxGridSortingPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any[], sortExpressions: ISortingExpression[], groupExpressions: IGroupingExpression[], sorting: IGridSortingStrategy,
         id: string, pipeTrigger: number, pinned?): any[] {
@@ -44,8 +44,8 @@ export class IgxGridSortingPipe implements PipeTransform {
     standalone: true
 })
 export class IgxGridGroupingPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any[], expression: IGroupingExpression | IGroupingExpression[],
         expansion: IGroupByExpandState | IGroupByExpandState[],
@@ -84,8 +84,8 @@ export class IgxGridGroupingPipe implements PipeTransform {
     standalone: true
 })
 export class IgxGridPagingPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: IGroupByResult, enabled: boolean, page = 0, perPage = 15, _: number): IGroupByResult {
         if (!enabled || this.grid.pagingMode !== 'local') {
@@ -118,8 +118,8 @@ export class IgxGridPagingPipe implements PipeTransform {
     standalone: true
 })
 export class IgxGridFilteringPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
         filterStrategy: IFilteringStrategy,

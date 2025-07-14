@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, Input, booleanAttribute } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, booleanAttribute, inject } from '@angular/core';
 
 @Directive({
     exportAs: 'igxTextSelection',
@@ -6,6 +6,8 @@ import { Directive, ElementRef, HostListener, Input, booleanAttribute } from '@a
     standalone: true
 })
 export class IgxTextSelectionDirective {
+    private element = inject(ElementRef);
+
     /**
      *  Determines whether the input element could be selected through the directive.
      *
@@ -52,8 +54,6 @@ export class IgxTextSelectionDirective {
     public get nativeElement() {
         return this.element.nativeElement;
     }
-
-    constructor(private element: ElementRef) { }
 
     /**
      * @hidden

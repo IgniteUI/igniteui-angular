@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IGX_COMBO_DIRECTIVES,
@@ -26,6 +26,9 @@ defineComponents(IgcComboComponent);
     ]
 })
 export class ComboShowcaseSampleComponent {
+    private propertyChangeService = inject(PropertyChangeService);
+    private destroyRef = inject(DestroyRef);
+
     protected items: any[] = [];
     public valueKeyVar = 'field';
 
@@ -91,9 +94,7 @@ export class ComboShowcaseSampleComponent {
 
     public properties: Properties;
 
-    constructor(
-        private propertyChangeService: PropertyChangeService,
-        private destroyRef: DestroyRef) {
+    constructor() {
         const division = {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
             'New England 02': ['New Hampshire', 'Rhode Island', 'Vermont'],

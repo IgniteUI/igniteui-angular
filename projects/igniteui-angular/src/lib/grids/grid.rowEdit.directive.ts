@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, Inject } from '@angular/core';
+import { Directive, ElementRef, HostListener, inject } from '@angular/core';
 import { GridType, IgxGridEmptyTemplateContext, IgxGridRowEditActionsTemplateContext, IgxGridRowEditTemplateContext, IgxGridRowEditTextTemplateContext, IGX_GRID_BASE } from './common/grid.interface';
 
 /** @hidden @internal */
@@ -57,9 +57,10 @@ export class IgxRowEditActionsDirective {
     standalone: true
 })
 export class IgxRowEditTabStopDirective {
-    private currentCellIndex: number;
+    grid = inject<GridType>(IGX_GRID_BASE);
+    element = inject<ElementRef<HTMLElement>>(ElementRef);
 
-    constructor(@Inject(IGX_GRID_BASE) public grid: GridType, public element: ElementRef<HTMLElement>) {}
+    private currentCellIndex: number;
 
     @HostListener('keydown.Tab', [`$event`])
     @HostListener('keydown.Shift.Tab', [`$event`])

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, IgxButtonGroupComponent, IgxIconComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent, ITabsSelectedItemChangeEventArgs } from 'igniteui-angular';
 
@@ -10,6 +10,8 @@ import { IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, IgxB
     imports: [IgxButtonGroupComponent, IgxTabsComponent, IgxTabItemComponent, RouterLinkActive, IgxTabHeaderComponent, RouterLink, IgxIconComponent, IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, RouterOutlet]
 })
 export class TabsRoutingSampleComponent {
+    private router = inject(Router);
+
     public contacts: any[] = [{
         avatar: 'assets/images/avatar/1.jpg',
         favorite: true,
@@ -39,9 +41,6 @@ export class TabsRoutingSampleComponent {
         phone: '901-747-3428',
         text: 'Lisa Landers'
     }];
-
-    constructor(private router: Router) {
-    }
 
     public clickHandler0() {
         this.router.navigateByUrl('/tabs-routing');

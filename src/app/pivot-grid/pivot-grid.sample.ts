@@ -1,4 +1,4 @@
-import { Component, HostBinding, ViewChild } from '@angular/core';
+import { Component, HostBinding, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxPivotNumericAggregate,
@@ -58,6 +58,8 @@ export class IgxTotalSaleAggregate {
     imports: [IgxComboComponent, FormsModule, IgxButtonGroupComponent, IgxButtonDirective, IgxPivotGridComponent, IgxPivotValueChipTemplateDirective, IgxPivotDataSelectorComponent]
 })
 export class PivotGridSampleComponent {
+    private excelExportService = inject(IgxExcelExporterService);
+
     @HostBinding('style.--ig-size')
     protected get sizeStyle() {
         return this.size === "superCompact" ? `var(--ig-size-small)` : `var(--ig-size-${this.size})`;
@@ -67,7 +69,7 @@ export class PivotGridSampleComponent {
 
     public filterExpTree = new FilteringExpressionsTree(FilteringLogic.And);
 
-    constructor(private excelExportService: IgxExcelExporterService) {
+    constructor() {
         this.filterExpTree.filteringOperands = [
             {
                 condition: IgxStringFilteringOperand.instance().condition('equals'),

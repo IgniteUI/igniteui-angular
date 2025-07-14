@@ -1,12 +1,4 @@
-import {
-    Component,
-    AfterViewInit,
-    Input,
-    Output,
-    EventEmitter,
-    ChangeDetectorRef,
-    ViewChild
-} from '@angular/core';
+import { Component, AfterViewInit, Input, Output, EventEmitter, ChangeDetectorRef, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { GridColumnDataType, DataUtil } from '../../../data-operations/data-util';
@@ -45,6 +37,9 @@ export interface ILogicOperatorChangedArgs extends IBaseEventArgs {
     imports: [FormsModule, IgxSelectComponent, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, IgxIconButtonDirective]
 })
 export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
+    cdr = inject(ChangeDetectorRef);
+    protected platform = inject(PlatformUtil);
+
     @Input()
     public column: ColumnType;
 
@@ -107,8 +102,6 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
                 return 'text';
         }
     }
-
-    constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil) { }
 
     public get conditions() {
         return this.column.filters.conditionList();

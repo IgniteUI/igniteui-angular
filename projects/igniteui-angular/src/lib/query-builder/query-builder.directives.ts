@@ -1,4 +1,4 @@
-import { Directive, TemplateRef } from '@angular/core';
+import { Directive, TemplateRef, inject } from '@angular/core';
 
 /**
  * Defines the custom template that will be used for the search value input of condition in edit mode
@@ -19,5 +19,5 @@ import { Directive, TemplateRef } from '@angular/core';
     standalone: true
 })
 export class IgxQueryBuilderSearchValueTemplateDirective {
-    constructor(public template: TemplateRef<any>) { }
+    template = inject<TemplateRef<any>>(TemplateRef);
 }

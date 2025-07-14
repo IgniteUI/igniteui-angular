@@ -1,14 +1,4 @@
-import {
-    Component,
-    ElementRef,
-    HostBinding,
-    Input,
-    OnInit,
-    OnDestroy,
-    OnChanges,
-    ChangeDetectorRef,
-    booleanAttribute,
-} from "@angular/core";
+import { Component, ElementRef, HostBinding, Input, OnInit, OnDestroy, OnChanges, ChangeDetectorRef, booleanAttribute, inject } from "@angular/core";
 import { IgxIconService } from "./icon.service";
 import type { IconReference } from "./types";
 import { filter, takeUntil } from "rxjs/operators";
@@ -42,6 +32,10 @@ import { SafeHtml } from "@angular/platform-browser";
     templateUrl: "icon.component.html",
 })
 export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
+    el = inject(ElementRef);
+    private iconService = inject(IgxIconService);
+    private ref = inject(ChangeDetectorRef);
+
     private _iconRef: IconReference;
     private _destroy$ = new Subject<void>();
     private _userClasses = new Set<string>();
@@ -113,11 +107,7 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
     @Input({ transform: booleanAttribute })
     public active = true;
 
-    constructor(
-        public el: ElementRef,
-        private iconService: IgxIconService,
-        private ref: ChangeDetectorRef,
-    ) {
+    constructor() {
         this.family = this.iconService.defaultFamily.name;
 
         this.iconService.iconLoaded

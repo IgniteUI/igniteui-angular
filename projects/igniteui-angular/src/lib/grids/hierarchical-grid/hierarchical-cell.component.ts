@@ -1,5 +1,5 @@
 import { IgxGridCellComponent } from '../cell.component';
-import { ChangeDetectorRef, ElementRef, ChangeDetectionStrategy, Component, OnInit, NgZone, Inject } from '@angular/core';
+import { ChangeDetectorRef, ElementRef, ChangeDetectionStrategy, Component, OnInit, NgZone, inject } from '@angular/core';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
 import { PlatformUtil } from '../../core/utils';
@@ -35,16 +35,16 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
     // protected hSelection;
     protected _rootGrid;
 
-    constructor(
-        selectionService: IgxGridSelectionService,
-        @Inject(IGX_GRID_BASE) grid: GridType,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        cdr: ChangeDetectorRef,
-        helement: ElementRef<HTMLElement>,
-        zone: NgZone,
-        touchManager: HammerGesturesManager,
-        platformUtil: PlatformUtil
-    ) {
+    constructor() {
+        const selectionService = inject(IgxGridSelectionService);
+        const grid = inject<GridType>(IGX_GRID_BASE);
+        const overlayService = inject<IgxOverlayService>(IgxOverlayService);
+        const cdr = inject(ChangeDetectorRef);
+        const helement = inject<ElementRef<HTMLElement>>(ElementRef);
+        const zone = inject(NgZone);
+        const touchManager = inject(HammerGesturesManager);
+        const platformUtil = inject(PlatformUtil);
+
         super(selectionService, grid, overlayService, cdr, helement, zone, touchManager, platformUtil);
     }
 

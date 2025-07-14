@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 
 import { Observable } from 'rxjs';
@@ -18,6 +18,9 @@ interface DataItem {
     imports: [IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxForOfDirective, IgxDropDownItemComponent, IgxToastComponent, AsyncPipe]
 })
 export class DropDownVirtualComponent implements OnInit, AfterViewInit {
+  protected remoteService = inject(RemoteService);
+  protected cdr = inject(ChangeDetectorRef);
+
   @ViewChild('loadingToast', { read: IgxToastComponent, static: true })
   public loadingToast: IgxToastComponent;
   @ViewChild('asyncFor', { read: IgxForOfDirective, static: true })
@@ -32,7 +35,7 @@ export class DropDownVirtualComponent implements OnInit, AfterViewInit {
   public itemHeight = 40;
   public itemsMaxHeight = 320;
 
-  constructor(protected remoteService: RemoteService, protected cdr: ChangeDetectorRef) {
+  constructor() {
     this.remoteService.urlBuilder = (state) => {
       const chunkSize = state.chunkSize || Math.floor(this.itemsMaxHeight / this.itemHeight) + 1;
       return `${this.remoteService.url}?$count=true&$skip=${state.startIndex}&$top=${chunkSize}`;

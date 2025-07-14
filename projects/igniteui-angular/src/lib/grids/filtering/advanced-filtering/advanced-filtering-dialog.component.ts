@@ -1,6 +1,4 @@
-import {
-    Component, Input, ViewChild, ChangeDetectorRef, AfterViewInit, OnDestroy, HostBinding
-} from '@angular/core';
+import { Component, Input, ViewChild, ChangeDetectorRef, AfterViewInit, OnDestroy, HostBinding, inject } from '@angular/core';
 import { IgxOverlayService } from '../../../services/overlay/overlay';
 import { IDragStartEventArgs, IgxDragDirective, IgxDragHandleDirective } from '../../../directives/drag-drop/drag-drop.directive';
 import { Subject } from 'rxjs';
@@ -35,6 +33,9 @@ import { IgxRowIslandComponent } from '../../hierarchical-grid/row-island.compon
     imports: [IgxDragDirective, NgClass, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxDragHandleDirective, IgxButtonDirective]
 })
 export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDestroy {
+    cdr = inject(ChangeDetectorRef);
+    protected platform = inject(PlatformUtil);
+
     /**
      * @hidden @internal
      */
@@ -61,8 +62,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     private _overlayComponentId: string;
     private _overlayService: IgxOverlayService;
     private _grid: GridType;
-
-    constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil) { }
     /**
      * @hidden @internal
      */

@@ -1,25 +1,5 @@
 ﻿import { useAnimation } from '@angular/animations';
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    HostBinding,
-    HostListener,
-    Input,
-    TemplateRef,
-    ViewChild,
-    NgZone,
-    OnInit,
-    OnDestroy,
-    OnChanges,
-    SimpleChanges,
-    Inject,
-    ViewChildren,
-    QueryList,
-    AfterViewInit,
-    booleanAttribute
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, HostListener, Input, TemplateRef, ViewChild, NgZone, OnInit, OnDestroy, OnChanges, SimpleChanges, ViewChildren, QueryList, AfterViewInit, booleanAttribute, inject } from '@angular/core';
 import { formatPercent, NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe, getLocaleCurrencyCode, getCurrencySymbol } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
@@ -102,6 +82,15 @@ import { fadeOut, scaleInCenter } from 'igniteui-angular/animations';
     ]
 })
 export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellType, AfterViewInit {
+    protected selectionService = inject(IgxGridSelectionService);
+    grid = inject<GridType>(IGX_GRID_BASE);
+    protected overlayService = inject<IgxOverlayService>(IgxOverlayService);
+    cdr = inject(ChangeDetectorRef);
+    private element = inject<ElementRef<HTMLElement>>(ElementRef);
+    protected zone = inject(NgZone);
+    private touchManager = inject(HammerGesturesManager);
+    protected platformUtil = inject(PlatformUtil);
+
     private _destroy$ = new Subject<void>();
     /**
      * @hidden
@@ -796,17 +785,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     private _highlight: IgxTextHighlightDirective;
     private _cellSelection: GridSelectionMode = GridSelectionMode.multiple;
     private _vIndex = -1;
-
-    constructor(
-        protected selectionService: IgxGridSelectionService,
-        @Inject(IGX_GRID_BASE) public grid: GridType,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        public cdr: ChangeDetectorRef,
-        private element: ElementRef<HTMLElement>,
-        protected zone: NgZone,
-        private touchManager: HammerGesturesManager,
-        protected platformUtil: PlatformUtil
-    ) { }
 
     /**
      * @hidden

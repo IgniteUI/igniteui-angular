@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
+import { Component, ViewChild, OnInit, HostBinding, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { TreeGridLoadOnDemandService } from './tree-grid-load-on-demand.service';
@@ -27,6 +27,9 @@ export class MySummaryOperand extends IgxSummaryOperand {
     imports: [IgxButtonGroupComponent, IgxTreeGridComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxSwitchComponent, FormsModule, IgxPaginatorComponent, IgxButtonDirective]
 })
 export class TreeGridLoadOnDemandSampleComponent implements OnInit {
+    private excelExporterService = inject(IgxExcelExporterService);
+    private csvExporterService = inject(IgxCsvExporterService);
+
     @HostBinding('style.--ig-size')
     protected get sizeStyle() {
         return `var(--ig-size-${this.size})`;
@@ -45,10 +48,6 @@ export class TreeGridLoadOnDemandSampleComponent implements OnInit {
     private dataService = new TreeGridLoadOnDemandService();
     private nextRow = 1;
     public paging = false;
-
-    constructor(private excelExporterService: IgxExcelExporterService,
-                private csvExporterService: IgxCsvExporterService) {
-    }
 
     public ngOnInit(): void {
         this.selectionMode = GridSelectionMode.multiple;

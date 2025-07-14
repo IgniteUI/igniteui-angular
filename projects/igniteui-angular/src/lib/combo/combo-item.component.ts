@@ -1,11 +1,4 @@
-import {
-    Component,
-    ElementRef,
-    HostBinding,
-    Inject,
-    Input,
-    booleanAttribute
-} from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, booleanAttribute, inject } from '@angular/core';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
 import { IGX_DROPDOWN_BASE, IDropDownBase, Navigate } from '../drop-down/drop-down.common';
 import { IgxComboAPIService } from './combo.api';
@@ -20,6 +13,8 @@ import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
     imports: [IgxCheckboxComponent]
 })
 export class IgxComboItemComponent extends IgxDropDownItemComponent {
+    protected comboAPI = inject(IgxComboAPIService);
+
 
     /**
      * Gets the height of a list item
@@ -71,12 +66,11 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
         return this.comboAPI.disableTransitions;
     }
 
-    constructor(
-        protected comboAPI: IgxComboAPIService,
-        @Inject(IGX_DROPDOWN_BASE) dropDown: IDropDownBase,
-        elementRef: ElementRef,
-        @Inject(IgxSelectionAPIService) selection: IgxSelectionAPIService
-    ) {
+    constructor() {
+        const dropDown = inject<IDropDownBase>(IGX_DROPDOWN_BASE);
+        const elementRef = inject(ElementRef);
+        const selection = inject<IgxSelectionAPIService>(IgxSelectionAPIService);
+
         super(dropDown, elementRef, null, selection);
     }
 

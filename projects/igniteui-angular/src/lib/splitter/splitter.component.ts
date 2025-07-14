@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Inject, Input, NgZone, Output, QueryList, booleanAttribute, forwardRef, DOCUMENT } from '@angular/core';
+import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Input, NgZone, Output, QueryList, booleanAttribute, forwardRef, DOCUMENT, inject } from '@angular/core';
 import { DragDirection, IDragMoveEventArgs, IDragStartEventArgs, IgxDragDirective, IgxDragIgnoreDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 import { take } from 'rxjs';
@@ -48,6 +48,10 @@ export declare interface ISplitterBarResizeEventArgs {
     imports: [forwardRef(() => IgxSplitBarComponent)]
 })
 export class IgxSplitterComponent implements AfterContentInit {
+    document = inject(DOCUMENT);
+    private elementRef = inject(ElementRef);
+    private zone = inject(NgZone);
+
     /**
      * Gets the list of splitter panes.
      *
@@ -154,8 +158,6 @@ export class IgxSplitterComponent implements AfterContentInit {
      * The sibling pane in each pair of panes divided by a splitter bar.
      */
     private sibling!: IgxSplitterPaneComponent;
-
-    constructor(@Inject(DOCUMENT) public document, private elementRef: ElementRef, private zone: NgZone) { }
     /**
      * Gets/Sets the splitter orientation.
      *

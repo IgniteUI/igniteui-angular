@@ -1,19 +1,4 @@
-import {
-    Component,
-    Output,
-    EventEmitter,
-    Input,
-    HostListener,
-    ViewChildren,
-    QueryList,
-    HostBinding,
-    Inject,
-    LOCALE_ID,
-    booleanAttribute,
-    ElementRef,
-    ChangeDetectorRef,
-    ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, Output, EventEmitter, Input, HostListener, ViewChildren, QueryList, HostBinding, LOCALE_ID, booleanAttribute, ElementRef, ChangeDetectorRef, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TitleCasePipe } from '@angular/common';
 import { CalendarSelection, ScrollDirection } from '../../calendar/calendar';
@@ -48,6 +33,9 @@ let NEXT_ID = 0;
     imports: [IgxDayItemComponent, TitleCasePipe]
 })
 export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
+    protected el = inject(ElementRef);
+    override cdr: ChangeDetectorRef;
+
     #standalone = true;
 
     /**
@@ -200,13 +188,14 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     /**
      * @hidden
      */
-    constructor(
-        platform: PlatformUtil,
-        @Inject(LOCALE_ID) _localeId: string,
-        protected el: ElementRef,
-        public override cdr: ChangeDetectorRef,
-    ) {
+    constructor() {
+        const platform = inject(PlatformUtil);
+        const _localeId = inject(LOCALE_ID);
+        const cdr = inject(ChangeDetectorRef);
+
         super(platform, _localeId, null, cdr);
+    
+        this.cdr = cdr;
     }
 
     /**

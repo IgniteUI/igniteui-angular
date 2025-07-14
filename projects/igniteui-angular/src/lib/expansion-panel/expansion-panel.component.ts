@@ -1,16 +1,4 @@
-import {
-    AfterContentInit,
-    ChangeDetectorRef,
-    Component,
-    ContentChild,
-    ElementRef,
-    EventEmitter,
-    HostBinding,
-    Inject,
-    Input,
-    Output,
-    booleanAttribute
-} from '@angular/core';
+import { AfterContentInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, Output, booleanAttribute, inject } from '@angular/core';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationService } from '../services/animation/animation';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
@@ -32,6 +20,9 @@ let NEXT_ID = 0;
     imports: []
 })
 export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements IgxExpansionPanelBase, AfterContentInit {
+    private cdr = inject(ChangeDetectorRef);
+    private elementRef = inject(ElementRef);
+
     /**
      * Sets/gets the animation settings of the expansion panel component
      * Open and Close animation should be passed
@@ -214,10 +205,9 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
     @ContentChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
     public header: IgxExpansionPanelHeaderComponent;
 
-    constructor(
-        @Inject(IgxAngularAnimationService) animationService: AnimationService,
-        private cdr: ChangeDetectorRef,
-        private elementRef?: ElementRef) {
+    constructor() {
+        const animationService = inject<AnimationService>(IgxAngularAnimationService);
+
         super(animationService);
     }
 

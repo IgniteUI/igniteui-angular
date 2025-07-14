@@ -159,6 +159,8 @@ export class IgxDragLocation {
     standalone: true
 })
 export class IgxDragHandleDirective {
+    element = inject<ElementRef<any>>(ElementRef);
+
 
     @HostBinding('class.igx-drag__handle')
     public baseClass = true;
@@ -167,8 +169,6 @@ export class IgxDragHandleDirective {
      * @hidden
      */
     public parentDragElement: HTMLElement = null;
-
-    constructor(public element: ElementRef<any>) { }
 }
 
 @Directive({
@@ -176,11 +176,11 @@ export class IgxDragHandleDirective {
     standalone: true
 })
 export class IgxDragIgnoreDirective {
+    element = inject<ElementRef<any>>(ElementRef);
+
 
     @HostBinding('class.igx-drag__ignore')
     public baseClass = true;
-
-    constructor(public element: ElementRef<any>) { }
 }
 
 @Directive({
@@ -189,6 +189,13 @@ export class IgxDragIgnoreDirective {
     standalone: true
 })
 export class IgxDragDirective implements AfterContentInit, OnDestroy {
+    cdr = inject(ChangeDetectorRef);
+    element = inject(ElementRef);
+    viewContainer = inject(ViewContainerRef);
+    zone = inject(NgZone);
+    renderer = inject(Renderer2);
+    protected platformUtil = inject(PlatformUtil);
+
     /**
      * - Save data inside the `igxDrag` directive. This can be set when instancing `igxDrag` on an element.
      * ```html
@@ -687,14 +694,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         return this._offsetY !== undefined ? this._offsetY : this._defaultOffsetY;
     }
 
-    constructor(
-        public cdr: ChangeDetectorRef,
-        public element: ElementRef,
-        public viewContainer: ViewContainerRef,
-        public zone: NgZone,
-        public renderer: Renderer2,
-        protected platformUtil: PlatformUtil
-    ) {
+    constructor() {
         this.onTransitionEnd = this.onTransitionEnd.bind(this);
         this.onPointerMove = this.onPointerMove.bind(this);
         this.onPointerUp = this.onPointerUp.bind(this);
@@ -1613,6 +1613,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     standalone: true
 })
 export class IgxDropDirective implements OnInit, OnDestroy {
+    element = inject(ElementRef);
+    private _renderer = inject(Renderer2);
+    private _zone = inject(NgZone);
+
     /**
      * - Save data inside the `igxDrop` directive. This can be set when instancing `igxDrop` on an element.
      * ```html
@@ -1772,7 +1776,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
 
     private _data: any;
 
-    constructor(public element: ElementRef, private _renderer: Renderer2, private _zone: NgZone) {
+    constructor() {
         this._dropStrategy = new IgxDefaultDropStrategy();
     }
 

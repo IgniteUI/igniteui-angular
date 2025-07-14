@@ -1,11 +1,4 @@
-import {
-    Component,
-    OnInit,
-    ViewChild,
-    ElementRef,
-    CUSTOM_ELEMENTS_SCHEMA,
-    DestroyRef,
-} from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject } from '@angular/core';
 import { foods } from './foods';
 import {
     BlockScrollStrategy,
@@ -85,6 +78,9 @@ icons.forEach((icon) => {
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DropDownSampleComponent implements OnInit {
+    private propertyChangeService = inject(PropertyChangeService);
+    private destroyRef = inject(DestroyRef);
+
     @ViewChild(IgxDropDownComponent, { static: true })
     private igxDropDown: IgxDropDownComponent;
     @ViewChild('dropdown3', { static: true })
@@ -156,10 +152,7 @@ export class DropDownSampleComponent implements OnInit {
 
     public properties: Properties;
 
-    constructor(
-        private propertyChangeService: PropertyChangeService,
-        private destroyRef: DestroyRef
-    ) {
+    constructor() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
         const propertyChange =

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, DestroyRef, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IGX_ACCORDION_DIRECTIVES } from 'igniteui-angular';
 import {
@@ -22,6 +22,9 @@ defineComponents(IgcAccordionComponent, IgcExpansionPanelComponent);
     imports: [FormsModule, IGX_ACCORDION_DIRECTIVES]
 })
 export class AccordionSampleComponent {
+    private propertyChangeService = inject(PropertyChangeService);
+    private destroyRef = inject(DestroyRef);
+
     public panelConfig: PropertyPanelConfig = {
         singleExpand: {
             label: 'Single Branch Expand',
@@ -34,10 +37,7 @@ export class AccordionSampleComponent {
 
     public properties: Properties;
 
-    constructor(
-        private propertyChangeService: PropertyChangeService,
-        private destroyRef: DestroyRef
-    ) {
+    constructor() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
         const propertyChange =

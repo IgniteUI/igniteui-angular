@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IChangeCheckboxEventArgs, IGX_INPUT_GROUP_DIRECTIVES, IGX_LIST_DIRECTIVES, IgxAvatarComponent, IgxButtonDirective, IgxCheckboxComponent, IgxIconComponent, IgxRadioComponent, IgxSwitchComponent } from 'igniteui-angular';
 
@@ -11,6 +11,8 @@ import { IChangeCheckboxEventArgs, IGX_INPUT_GROUP_DIRECTIVES, IGX_LIST_DIRECTIV
     imports: [FormsModule, ReactiveFormsModule, IGX_INPUT_GROUP_DIRECTIVES, IGX_LIST_DIRECTIVES, IgxSwitchComponent, IgxIconComponent, IgxCheckboxComponent, IgxAvatarComponent, IgxRadioComponent, IgxButtonDirective]
 })
 export class InputSampleComponent {
+    private fb = inject(UntypedFormBuilder);
+
     public placeholder = 'Please enter a value';
     public placeholderDate = new Date();
     public selected = 'option1';
@@ -58,8 +60,6 @@ export class InputSampleComponent {
         active: false,
         disabled: true
     }];
-
-    constructor(private fb: UntypedFormBuilder) {}
 
     public onClick(event: MouseEvent) {
         console.log(event);

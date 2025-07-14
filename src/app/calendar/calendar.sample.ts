@@ -1,11 +1,4 @@
-import {
-    Component,
-    CUSTOM_ELEMENTS_SCHEMA,
-    DestroyRef,
-    OnInit,
-    TemplateRef,
-    ViewChild,
-} from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, OnInit, TemplateRef, ViewChild, inject } from '@angular/core';
 import { DATE_PIPE_DEFAULT_OPTIONS } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -50,6 +43,9 @@ defineComponents(IgcCalendarComponent);
     ],
 })
 export class CalendarSampleComponent implements OnInit {
+    private propertyChangeService = inject(PropertyChangeService);
+    private destroyRef = inject(DestroyRef);
+
     @ViewChild('customControls', { static: true })
     public customControlsTemplate!: TemplateRef<any>;
 
@@ -168,10 +164,7 @@ export class CalendarSampleComponent implements OnInit {
 
     public properties: Properties;
 
-    constructor(
-        private propertyChangeService: PropertyChangeService,
-        private destroyRef: DestroyRef
-    ) {
+    constructor() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
         const propertyChange =

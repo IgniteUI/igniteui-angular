@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, Inject, booleanAttribute } from '@angular/core';
+import { Component, Input, Output, EventEmitter, booleanAttribute, inject } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { BaseToolbarDirective } from './grid-toolbar.base';
 import { IgxExcelTextDirective, IgxCSVTextDirective } from './common';
@@ -53,6 +53,9 @@ export interface IgxExporterEvent {
     imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent, IgxToggleDirective, IgxExcelTextDirective, IgxCSVTextDirective]
 })
 export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
+    private excelExporter = inject(IgxExcelExporterService);
+    private csvExporter = inject(IgxCsvExporterService);
+
 
     /**
      * Show entry for CSV export.
@@ -90,11 +93,9 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
      */
     protected isExporting = false;
 
-    constructor(
-        @Inject(IgxToolbarToken) toolbar: IgxToolbarToken,
-        private excelExporter: IgxExcelExporterService,
-        private csvExporter: IgxCsvExporterService,
-    ) {
+    constructor() {
+        const toolbar = inject<IgxToolbarToken>(IgxToolbarToken);
+
         super(toolbar);
     }
 

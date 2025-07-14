@@ -1,6 +1,4 @@
-import {
-    ChangeDetectorRef, Component, ElementRef, Inject, QueryList, OnDestroy, AfterViewInit, ContentChildren, Input, booleanAttribute, DOCUMENT
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, QueryList, OnDestroy, AfterViewInit, ContentChildren, Input, booleanAttribute, DOCUMENT, inject } from '@angular/core';
 import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down.common';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
@@ -20,6 +18,9 @@ import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
     imports: [IgxToggleDirective]
 })
 export class IgxComboDropDownComponent extends IgxDropDownComponent implements IDropDownBase, OnDestroy, AfterViewInit {
+    combo = inject<IgxComboBase>(IGX_COMBO_COMPONENT);
+    protected comboAPI = inject(IgxComboAPIService);
+
     /** @hidden @internal */
     @Input({ transform: booleanAttribute })
     public singleMode = false;
@@ -78,13 +79,12 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         return items;
     }
 
-    constructor(
-        elementRef: ElementRef,
-        cdr: ChangeDetectorRef,
-        @Inject(DOCUMENT) document: any,
-        selection: IgxSelectionAPIService,
-        @Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase,
-        protected comboAPI: IgxComboAPIService) {
+    constructor() {
+        const elementRef = inject(ElementRef);
+        const cdr = inject(ChangeDetectorRef);
+        const document = inject(DOCUMENT);
+        const selection = inject(IgxSelectionAPIService);
+
         super(elementRef, cdr, document, selection);
     }
 

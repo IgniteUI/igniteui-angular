@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef, HostBinding } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef, HostBinding, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FilterMode, FilteringExpressionsTree, FilteringLogic, GridSelectionMode, IChangeCheckboxEventArgs, IgxAdvancedFilteringDialogComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxCSVTextDirective, IgxCheckboxComponent, IgxColumnComponent, IgxExcelTextDirective, IgxFlexDirective, IgxGridComponent, IgxGridExcelStyleFilteringComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxLabelDirective, IgxLayoutDirective, IgxSelectComponent, IgxSelectItemComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 
@@ -11,6 +11,8 @@ import { FilterMode, FilteringExpressionsTree, FilteringLogic, GridSelectionMode
     imports: [IgxFlexDirective, IgxLayoutDirective, IgxButtonGroupComponent, IgxSelectComponent, IgxLabelDirective, IgxSelectItemComponent, IgxGridExcelStyleFilteringComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxAdvancedFilteringDialogComponent, IgxCheckboxComponent, FormsModule, IgxButtonDirective]
 })
 export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
+    private cdr = inject(ChangeDetectorRef);
+
     @HostBinding('style.--ig-size')
     protected get sizeStyle() {
         return `var(--ig-size-${this.size})`;
@@ -27,9 +29,6 @@ export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
     public filterModes;
     public size = 'large';
     public selectionMode;
-
-    constructor(private cdr: ChangeDetectorRef) {
-    }
 
     public ngAfterViewInit(): void {
         const tree = new FilteringExpressionsTree(FilteringLogic.And);

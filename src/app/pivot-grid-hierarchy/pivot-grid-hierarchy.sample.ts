@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IgxComboComponent, IgxExcelExporterOptions, IgxExcelExporterService, IgxPivotGridComponent, IgxPivotNumericAggregate, IPivotConfiguration, IPivotDimension, IPivotUISettings, PivotRowLayoutType } from 'igniteui-angular';
 import { DATA } from '../shared/pivot-data';
@@ -12,6 +12,8 @@ import { DATA } from '../shared/pivot-data';
 })
 
 export class PivotGridHierarchySampleComponent {
+    private excelExportService = inject(IgxExcelExporterService);
+
     @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;
 
     public dimensions: IPivotDimension[] = [
@@ -51,9 +53,6 @@ export class PivotGridHierarchySampleComponent {
     ];
     public pivotUI: IPivotUISettings = { showRowHeaders: true, rowLayout: PivotRowLayoutType.Horizontal };
     public selected: IPivotDimension[] = [ this.dimensions[1], this.dimensions[2]];
-
-    constructor(private excelExportService: IgxExcelExporterService) {
-    }
 
     public handleChange(event) {
         let isColumnChange = false

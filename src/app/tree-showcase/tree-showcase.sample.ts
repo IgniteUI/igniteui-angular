@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject } from '@angular/core';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 import {
     IGX_TREE_DIRECTIVES,
@@ -33,6 +33,9 @@ interface CompanyData {
     imports: [IGX_TREE_DIRECTIVES, IgSizeDirective],
 })
 export class TreeShowcaseSampleComponent {
+    private propertyChangeService = inject(PropertyChangeService);
+    private destroyRef = inject(DestroyRef);
+
     public data: CompanyData[];
     public panelConfig: PropertyPanelConfig = {
         size: {
@@ -66,10 +69,7 @@ export class TreeShowcaseSampleComponent {
 
     public properties: Properties;
 
-    constructor(
-        private propertyChangeService: PropertyChangeService,
-        private destroyRef: DestroyRef
-    ) {
+    constructor() {
         this.data = structuredClone(HIERARCHICAL_SAMPLE_DATA);
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 

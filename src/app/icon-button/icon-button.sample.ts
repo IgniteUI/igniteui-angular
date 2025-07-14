@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject } from '@angular/core';
 import {
     IgxIconButtonDirective,
     IgxIconComponent,
@@ -29,6 +29,9 @@ registerIconFromText('favorite', favorite);
     imports: [IgxIconComponent, IgxIconButtonDirective, IgSizeDirective]
 })
 export class IconButtonSampleComponent {
+    private propertyChangeService = inject(PropertyChangeService);
+    private destroyRef = inject(DestroyRef);
+
     public panelConfig: PropertyPanelConfig = {
         size: {
             control: {
@@ -53,10 +56,7 @@ export class IconButtonSampleComponent {
 
     public properties: Properties;
 
-    constructor(
-        private propertyChangeService: PropertyChangeService,
-        private destroyRef: DestroyRef
-    ) {
+    constructor() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
         const propertyChange =

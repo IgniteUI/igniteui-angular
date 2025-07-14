@@ -56,6 +56,8 @@ class Person {
     ]
 })
 export class RadioSampleComponent implements AfterContentInit {
+    private _formBuilder = inject(UntypedFormBuilder);
+
     @ViewChild('radioGroupZZ', { read: IgxRadioGroupDirective, static: true })
     public radioGroup: IgxRadioGroupDirective;
     public disabled = false;
@@ -79,7 +81,7 @@ export class RadioSampleComponent implements AfterContentInit {
 
     private cdr = inject(ChangeDetectorRef);
 
-    constructor(private _formBuilder: UntypedFormBuilder) {
+    constructor() {
         this._createPersonKirkForm();
     }
 

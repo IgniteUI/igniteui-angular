@@ -1,18 +1,4 @@
-import {
-    AfterViewInit,
-    ChangeDetectorRef,
-    Directive,
-    ElementRef,
-    HostBinding,
-    HostListener,
-    Inject,
-    Input,
-    OnDestroy,
-    Optional,
-    Renderer2,
-    Self,
-    booleanAttribute,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Directive, ElementRef, HostBinding, HostListener, Input, OnDestroy, Renderer2, booleanAttribute, inject } from '@angular/core';
 import {
     AbstractControl,
     NgControl,
@@ -64,6 +50,13 @@ export enum IgxInputState {
     standalone: true
 })
 export class IgxInputDirective implements AfterViewInit, OnDestroy {
+    inputGroup = inject(IgxInputGroupBase);
+    protected ngModel = inject<NgModel>(NgModel, { optional: true, self: true });
+    protected formControl = inject<NgControl>(NgControl, { optional: true, self: true });
+    protected element = inject<ElementRef<HTMLInputElement>>(ElementRef);
+    protected cdr = inject(ChangeDetectorRef);
+    protected renderer = inject(Renderer2);
+
     /**
      * Sets/gets whether the `"igx-input-group__input"` class is added to the host element.
      * Default value is `false`.
@@ -102,18 +95,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     private _valueChanges$: Subscription;
     private _fileNames: string;
     private _disabled = false;
-
-    constructor(
-        public inputGroup: IgxInputGroupBase,
-        @Optional() @Self() @Inject(NgModel) protected ngModel: NgModel,
-        @Optional()
-        @Self()
-        @Inject(NgControl)
-        protected formControl: NgControl,
-        protected element: ElementRef<HTMLInputElement>,
-        protected cdr: ChangeDetectorRef,
-        protected renderer: Renderer2
-    ) { }
 
     private get ngControl(): NgControl {
         return this.ngModel ? this.ngModel : this.formControl;

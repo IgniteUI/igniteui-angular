@@ -1,4 +1,4 @@
-import { Inject, Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { ISummaryRecord } from '../summaries/grid-summary';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IGroupByResult } from '../../data-operations/grouping-result.interface';
@@ -14,8 +14,8 @@ interface ISkipRecord { skip?: boolean }
     standalone: true
 })
 export class IgxGridSummaryPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: IGroupByResult,
         hasSummary: boolean,

@@ -123,6 +123,8 @@ export class FormControlSyncDirective implements OnInit {
     ]
 })
 export class IgxStepperSampleComponent {
+    private destroyRef = inject(DestroyRef);
+
     @ViewChild('stepper',{ static: true, read: IgxStepperComponent })
     public angularStepper!: IgxStepperComponent;
 
@@ -209,7 +211,7 @@ export class IgxStepperSampleComponent {
     private fb = inject(UntypedFormBuilder);
     private pcs = inject(PropertyChangeService);
 
-    constructor(private destroyRef: DestroyRef) {
+    constructor() {
         this.pcs.setPanelConfig(this.panelConfig);
 
         const propertyChange = this.pcs.propertyChanges.subscribe(

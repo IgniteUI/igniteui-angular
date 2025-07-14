@@ -1,4 +1,4 @@
-import { AfterViewInit, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output, Renderer2, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output, Renderer2, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation, inject } from '@angular/core';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy, DefaultSortingStrategy, GridColumnDataType, IGX_BUTTON_GROUP_DIRECTIVES, IGX_GRID_DIRECTIVES, IgxColumnComponent, IgxGridComponent, IgxIconModule, IgxOverlayOutletDirective, IgxSelectComponent, IgxSelectModule, IgxSwitchModule, OverlaySettings, SortingDirection } from 'igniteui-angular';
 import { IgcDockManagerLayout, IgcDockManagerPaneType, IgcSplitPane, IgcSplitPaneOrientation } from 'igniteui-dockmanager';
 import { defineCustomElements } from 'igniteui-dockmanager/loader';
@@ -61,6 +61,11 @@ export class DockSlotComponent implements AfterViewInit, OnDestroy {
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class GridDockManagerSampleComponent implements OnInit, OnDestroy, AfterViewInit, DoCheck {
+    dataService = inject(SignalRService);
+    private cdr = inject(ChangeDetectorRef);
+    private elementRef = inject(ElementRef);
+    private renderer = inject(Renderer2);
+
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     @ViewChild('grid2', { static: true }) public grid2: IgxGridComponent;
     @ViewChild('host', { read: ViewContainerRef }) public host: ViewContainerRef;
@@ -193,8 +198,6 @@ export class GridDockManagerSampleComponent implements OnInit, OnDestroy, AfterV
     ];
 
     private destroy$ = new Subject<any>();
-
-    constructor(public dataService: SignalRService, private cdr: ChangeDetectorRef, private elementRef: ElementRef, private renderer:Renderer2) {}
 
     public ngOnInit() {
         this.dataService.startConnection(this.frequency, this.dataVolume, true, false);

@@ -1,14 +1,16 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { IForOfState } from 'igniteui-angular';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class RemoteNWindService {
+    private http = inject(HttpClient);
+
     public remoteData: BehaviorSubject<any[]>;
     private url = 'https://services.odata.org/V4/Northwind/Northwind.svc/Products';
 
-    constructor(private http: HttpClient) {
+    constructor() {
         this.remoteData = new BehaviorSubject([]);
     }
 

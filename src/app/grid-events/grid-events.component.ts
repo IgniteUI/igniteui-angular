@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { Component, ViewChild, ElementRef, Renderer2, inject } from '@angular/core';
 import {
     IgxGridComponent,
     ISortingExpression, IPinColumnEventArgs,
@@ -30,6 +30,8 @@ import { data } from '../shared/data';
     imports: [IgxSwitchComponent, IgxInputGroupComponent, IgxInputDirective, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent, IgxPaginatorComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class GridEventsComponent {
+    private renderer = inject(Renderer2);
+
 
     @ViewChild('grid1', { read: IgxGridComponent, static: true }) public grid: IgxGridComponent;
     @ViewChild('logger') public logger: ElementRef;
@@ -44,7 +46,7 @@ export class GridEventsComponent {
     public $moving = false;
     public localData: any[];
 
-    constructor(private renderer: Renderer2) {
+    constructor() {
         this.localData = data;
     }
 

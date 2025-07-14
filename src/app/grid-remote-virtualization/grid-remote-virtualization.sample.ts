@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, OnInit, AfterViewInit, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 
 import { RemoteService } from '../shared/remote.service';
@@ -11,6 +11,9 @@ import { IgxButtonDirective, IgxGridComponent } from 'igniteui-angular';
     imports: [IgxGridComponent, IgxButtonDirective, AsyncPipe]
 })
 export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit {
+    private remoteService = inject(RemoteService);
+    cdr = inject(ChangeDetectorRef);
+
     @ViewChild('grid1', { static: true })
     public grid: IgxGridComponent;
 
@@ -19,7 +22,7 @@ export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit 
     public columns: any;
     public loading = true;
 
-    constructor(private remoteService: RemoteService, public cdr: ChangeDetectorRef) {
+    constructor() {
         this.remoteService.urlBuilder = (dataState) => {
             let qS = '?'; let requiredChunkSize: number;
             if (dataState) {

@@ -1,25 +1,4 @@
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ContentChild,
-    Directive,
-    ElementRef,
-    EventEmitter,
-    forwardRef,
-    Host,
-    HostBinding,
-    Inject,
-    Input,
-    OnDestroy,
-    Optional,
-    Output,
-    TemplateRef,
-    ViewChild,
-    ViewRef,
-    DOCUMENT
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Directive, ElementRef, EventEmitter, forwardRef, HostBinding, Input, OnDestroy, Output, TemplateRef, ViewChild, ViewRef, DOCUMENT, inject } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { PlatformUtil, formatDate, formatCurrency } from '../../../core/utils';
 import { GridColumnDataType } from '../../../data-operations/data-util';
@@ -74,6 +53,9 @@ export class IgxExcelStyleFilterOperationsTemplateDirective { }
     imports: [IgxExcelStyleHeaderComponent, IgxExcelStyleSortingComponent, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleHidingComponent, IgxExcelStyleSelectingComponent, IgxExcelStyleClearFiltersComponent, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleSearchComponent, NgClass]
 })
 export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent implements AfterViewInit, OnDestroy {
+    private document = inject(DOCUMENT);
+    protected gridAPI? = inject<GridType>(IGX_GRID_BASE, { host: true, optional: true });
+
 
     /**
      * @hidden @internal
@@ -292,14 +274,11 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         return this.column?.grid ?? this.gridAPI;
     }
 
-    constructor(
-        cdr: ChangeDetectorRef,
-        element: ElementRef<HTMLElement>,
-        platform: PlatformUtil,
-        @Inject(DOCUMENT)
-        private document: any,
-        @Host() @Optional() @Inject(IGX_GRID_BASE) protected gridAPI?: GridType,
-    ) {
+    constructor() {
+        const cdr = inject(ChangeDetectorRef);
+        const element = inject<ElementRef<HTMLElement>>(ElementRef);
+        const platform = inject(PlatformUtil);
+
         super(cdr, element, platform);
     }
 

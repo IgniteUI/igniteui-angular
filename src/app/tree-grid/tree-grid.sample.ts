@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
+import { Component, ViewChild, OnInit, HostBinding, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
@@ -15,6 +15,9 @@ import { IgxButtonGroupComponent, IgxTreeGridComponent, IgxGridToolbarComponent,
 })
 
 export class TreeGridSampleComponent implements OnInit {
+    private excelExporterService = inject(IgxExcelExporterService);
+    private csvExporterService = inject(IgxCsvExporterService);
+
     @HostBinding('style.--ig-size')
     protected get sizeStyle() {
         return `var(--ig-size-${this.size})`;
@@ -31,10 +34,6 @@ export class TreeGridSampleComponent implements OnInit {
     public paging = false;
 
     private nextRow = 1;
-
-    constructor(private excelExporterService: IgxExcelExporterService, private csvExporterService: IgxCsvExporterService) {
-
-    }
 
     public ngOnInit(): void {
         this.selectionMode = GridSelectionMode.multiple;

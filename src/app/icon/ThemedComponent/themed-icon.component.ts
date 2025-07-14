@@ -22,10 +22,12 @@ import {
     imports: [IgxIconComponent, IgxButtonDirective, IgxButtonGroupComponent]
 })
 export class ThemedIconComponent {
+    private iconService = inject(IgxIconService);
+
     protected themeToken = inject(THEME_TOKEN);
     protected themes: IgxTheme[] = ['material', 'bootstrap', 'indigo', 'fluent'];
 
-    constructor(private iconService: IgxIconService) {
+    constructor() {
         this.iconService.setIconRef('expand_more', 'default', { family: 'material', name: 'home' });
     }
 

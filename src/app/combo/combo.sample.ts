@@ -1,12 +1,4 @@
-import {
-    AfterViewInit,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    OnInit,
-    TemplateRef,
-    ViewChild,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, TemplateRef, ViewChild, inject } from '@angular/core';
 import {
     UntypedFormBuilder,
     UntypedFormControl,
@@ -75,6 +67,9 @@ import { scaleInCenter, scaleOutCenter } from 'igniteui-angular/animations';
     ]
 })
 export class ComboSampleComponent implements OnInit, AfterViewInit {
+    private remoteService = inject(RemoteNWindService);
+    cdr = inject(ChangeDetectorRef);
+
     @ViewChild('playgroundCombo', { static: true })
     public igxCombo: IgxComboComponent;
 
@@ -133,11 +128,9 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     private overlaySettings: OverlaySettings[] = [null, null, null, null];
     private initialItemTemplate: TemplateRef<any> = null;
 
-    constructor(
-        private remoteService: RemoteNWindService,
-        public cdr: ChangeDetectorRef,
-        fb: UntypedFormBuilder
-    ) {
+    constructor() {
+        const fb = inject(UntypedFormBuilder);
+
         this.user = fb.group({
             date: [''],
             dateTime: [''],

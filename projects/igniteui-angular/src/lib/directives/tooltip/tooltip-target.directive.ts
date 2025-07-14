@@ -1,5 +1,5 @@
 import { useAnimation } from '@angular/animations';
-import { Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener, Input, EventEmitter, booleanAttribute } from '@angular/core';
+import { Directive, OnInit, OnDestroy, Output, ElementRef, ViewContainerRef, HostListener, Input, EventEmitter, booleanAttribute, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService } from '../../core/navigation';
@@ -41,6 +41,10 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
     standalone: true
 })
 export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit, OnDestroy {
+    private _element: ElementRef;
+    private _navigationService: IgxNavigationService;
+    private _viewContainerRef = inject(ViewContainerRef);
+
     /**
      * Gets/sets the amount of milliseconds that should pass before showing the tooltip.
      *
@@ -187,9 +191,14 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     private destroy$ = new Subject<void>();
 
-    constructor(private _element: ElementRef,
-        @Optional() private _navigationService: IgxNavigationService, private _viewContainerRef: ViewContainerRef) {
+    constructor() {
+        const _element = inject(ElementRef);
+        const _navigationService = inject(IgxNavigationService, { optional: true });
+
         super(_element, _navigationService);
+    
+        this._element = _element;
+        this._navigationService = _navigationService;
     }
 
     /**

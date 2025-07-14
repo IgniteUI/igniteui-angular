@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -7,6 +7,8 @@ import { IgxHierarchicalGridComponent } from 'igniteui-angular';
 
 @Injectable()
 export class HierarchicalRemoteService {
+    private http = inject(HttpClient);
+
 
     public remotePagingData: BehaviorSubject<any[]>;
     public cachedData = [];
@@ -19,7 +21,7 @@ export class HierarchicalRemoteService {
 
     private hierarchyPipe: IgxGridHierarchicalPipe = null;
 
-    constructor(private http: HttpClient) {
+    constructor() {
         this._remoteData = new BehaviorSubject([]);
         this.remoteData = this._remoteData.asObservable();
     }

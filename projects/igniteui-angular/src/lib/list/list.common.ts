@@ -1,4 +1,4 @@
-import { Directive, TemplateRef, EventEmitter, QueryList, Optional, ElementRef } from '@angular/core';
+import { Directive, TemplateRef, EventEmitter, QueryList, ElementRef, inject } from '@angular/core';
 
 export interface IListChild {
     index: number;
@@ -10,6 +10,8 @@ export interface IListChild {
     standalone: true
 })
 export class IgxListBaseDirective {
+    protected el = inject(ElementRef, { optional: true });
+
     public itemClicked: EventEmitter<any>;
     public allowLeftPanning: boolean;
     public allowRightPanning: boolean;
@@ -23,8 +25,6 @@ export class IgxListBaseDirective {
     public children: QueryList<any>;
     public listItemLeftPanningTemplate: IgxListItemLeftPanningTemplateDirective;
     public listItemRightPanningTemplate: IgxListItemRightPanningTemplateDirective;
-
-    constructor(@Optional() protected el: ElementRef) {}
 }
 
 export enum IgxListPanState { NONE, LEFT, RIGHT }
@@ -34,7 +34,7 @@ export enum IgxListPanState { NONE, LEFT, RIGHT }
     standalone: true
 })
 export class IgxEmptyListTemplateDirective {
-    constructor(public template: TemplateRef<any>) { }
+    template = inject<TemplateRef<any>>(TemplateRef);
 }
 
 @Directive({
@@ -42,7 +42,7 @@ export class IgxEmptyListTemplateDirective {
     standalone: true
 })
 export class IgxDataLoadingTemplateDirective {
-    constructor(public template: TemplateRef<any>) { }
+    template = inject<TemplateRef<any>>(TemplateRef);
 }
 
 @Directive({
@@ -50,7 +50,7 @@ export class IgxDataLoadingTemplateDirective {
     standalone: true
 })
 export class IgxListItemLeftPanningTemplateDirective {
-    constructor(public template: TemplateRef<any>) { }
+    template = inject<TemplateRef<any>>(TemplateRef);
 }
 
 @Directive({
@@ -58,5 +58,5 @@ export class IgxListItemLeftPanningTemplateDirective {
     standalone: true
 })
 export class IgxListItemRightPanningTemplateDirective {
-    constructor(public template: TemplateRef<any>) { }
+    template = inject<TemplateRef<any>>(TemplateRef);
 }

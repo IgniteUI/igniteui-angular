@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, AfterViewInit, inject } from '@angular/core';
 import {
     IgxHierarchicalGridComponent,
     IGX_HIERARCHICAL_GRID_DIRECTIVES,
@@ -17,12 +17,14 @@ import { SINGERS } from './data';
     imports: [IGX_HIERARCHICAL_GRID_DIRECTIVES]
 })
 export class HierarchicalGridAdvancedFilteringSampleComponent implements AfterViewInit {
+    private cdr = inject(ChangeDetectorRef);
+
     @ViewChild('hierarchicalGrid', { static: true })
     private hierarchicalGrid: IgxHierarchicalGridComponent;
 
     public localData = [];
 
-    constructor(private cdr: ChangeDetectorRef) {
+    constructor() {
         this.localData = SINGERS;
     }
 

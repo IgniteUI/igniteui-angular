@@ -1,15 +1,4 @@
-import {
-    Component,
-    Directive,
-    HostBinding,
-    Optional,
-    Inject,
-    Input,
-    OnInit,
-    OnChanges,
-    SimpleChanges,
-    booleanAttribute
-} from '@angular/core';
+import { Component, Directive, HostBinding, Input, OnInit, OnChanges, SimpleChanges, booleanAttribute, inject } from '@angular/core';
 
 let NEXT_ID = 0;
 
@@ -283,6 +272,8 @@ export type IgxCardActionsLayout = (typeof IgxCardActionsLayout)[keyof typeof Ig
     standalone: true
 })
 export class IgxCardActionsComponent implements OnInit, OnChanges {
+    card = inject<IgxCardComponent>(IgxCardComponent, { optional: true });
+
     /**
      * Sets the layout style of the actions.
      * You can justify the elements slotted in the igx-card-action container
@@ -316,8 +307,6 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
     }
 
     private isVerticalSet = false;
-
-    constructor(@Optional() @Inject(IgxCardComponent) public card: IgxCardComponent) { }
 
     /**
      * @hidden

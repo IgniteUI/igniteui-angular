@@ -1,10 +1,4 @@
-import {
-    Component,
-    Input,
-    HostBinding,
-    ElementRef,
-    Inject,
-} from "@angular/core";
+import { Component, Input, HostBinding, ElementRef, inject } from "@angular/core";
 import { IgxCalendarYearDirective } from "../calendar.directives";
 import {
     IgxCalendarViewDirective,
@@ -32,6 +26,8 @@ import { calendarRange } from "../common/helpers";
     imports: [IgxCalendarYearDirective]
 })
 export class IgxYearsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
+    el = inject(ElementRef);
+
     #standalone = true;
 
     /**
@@ -110,10 +106,9 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements C
         );
     }
 
-    constructor(
-        public el: ElementRef,
-        @Inject(DAY_INTERVAL_TOKEN) dayInterval: DayInterval,
-    ) {
+    constructor() {
+        const dayInterval = inject<DayInterval>(DAY_INTERVAL_TOKEN);
+
         super(dayInterval);
     }
 

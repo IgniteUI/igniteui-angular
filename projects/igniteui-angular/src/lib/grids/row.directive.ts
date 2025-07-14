@@ -1,22 +1,4 @@
-import {
-    AfterViewInit,
-    booleanAttribute,
-    ChangeDetectorRef,
-    Directive,
-    DoCheck,
-    ElementRef,
-    EventEmitter,
-    forwardRef,
-    HostBinding,
-    HostListener,
-    Inject,
-    Input,
-    OnDestroy,
-    Output,
-    QueryList,
-    ViewChild,
-    ViewChildren
-} from '@angular/core';
+import { AfterViewInit, booleanAttribute, ChangeDetectorRef, Directive, DoCheck, ElementRef, EventEmitter, forwardRef, HostBinding, HostListener, Input, OnDestroy, Output, QueryList, ViewChild, ViewChildren, inject } from '@angular/core';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { TransactionType } from '../services/transaction/transaction';
@@ -33,6 +15,11 @@ import { trackByIdentity } from '../core/utils';
     standalone: true
 })
 export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
+    grid = inject<GridType>(IGX_GRID_BASE);
+    selectionService = inject(IgxGridSelectionService);
+    element = inject<ElementRef<HTMLElement>>(ElementRef);
+    cdr = inject(ChangeDetectorRef);
+
     /**
      * @hidden
      */
@@ -374,12 +361,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     protected destroy$ = new Subject<any>();
     protected _data: any;
     protected _addRow: boolean;
-
-    constructor(
-        @Inject(IGX_GRID_BASE) public grid: GridType,
-        public selectionService: IgxGridSelectionService,
-        public element: ElementRef<HTMLElement>,
-        public cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden

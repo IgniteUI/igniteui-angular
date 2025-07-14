@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { IgxIconComponent } from 'igniteui-angular';
 
 @Component({
@@ -9,7 +9,8 @@ import { IgxIconComponent } from 'igniteui-angular';
     imports: [IgxIconComponent]
 })
 export class LazyIconSampleComponent implements OnInit {
-    constructor(private httpClient: HttpClient) {}
+    private httpClient = inject(HttpClient);
+
 
     // Used for testing the provided HttpsInterceptor
     // with lazy loaded modules

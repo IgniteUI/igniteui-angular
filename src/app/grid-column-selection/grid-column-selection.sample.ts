@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, Pipe, PipeTransform, AfterViewInit, ChangeDetectorRef, HostBinding } from '@angular/core';
+import { Component, ViewChild, OnInit, Pipe, PipeTransform, AfterViewInit, ChangeDetectorRef, HostBinding, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
@@ -64,6 +64,8 @@ export class GridColumnSelectionFilterPipe implements PipeTransform {
     imports: [IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxPaginatorComponent, IgxRippleDirective, IgxCheckboxComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxSwitchComponent, GridColumnSelectionFilterPipe, IgxLabelDirective, IgxIconComponent, IgxSuffixDirective, IgxGridToolbarTitleComponent]
 })
 export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit {
+    private cdr = inject(ChangeDetectorRef);
+
     @HostBinding('style.--ig-size')
     protected get sizeStyle() {
         return `var(--ig-size-${this.size})`;
@@ -110,8 +112,6 @@ export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit
         modal: false,
         closeOnOutsideClick: true
     };
-
-    constructor(private cdr: ChangeDetectorRef) {}
 
     public log(event) {
         console.log(event);

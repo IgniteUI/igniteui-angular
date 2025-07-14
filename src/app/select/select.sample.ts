@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, QueryList, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, ViewChild, inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IgxButtonDirective, IgxSelectComponent, IgxLabelDirective, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, IgxSelectHeaderDirective, IgxSelectFooterDirective, IgxSuffixDirective, IgxHintDirective, IgxSelectGroupComponent, IgxSwitchComponent, ISelectionEventArgs, CancelableEventArgs, HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from 'igniteui-angular';
 import { scaleInTop, scaleOutBottom } from 'igniteui-angular/animations';
@@ -61,7 +61,9 @@ export class SelectSampleComponent implements OnInit {
         citiesSelect: [Validators.required]
     };
 
-    constructor(fb: UntypedFormBuilder) {
+    constructor() {
+        const fb = inject(UntypedFormBuilder);
+
         this.reactiveForm = fb.group({
             citiesSelect: ['', Validators.required]
         });

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
     IGX_INPUT_GROUP_DIRECTIVES,
@@ -22,9 +22,11 @@ import {
     styleUrls: ['./form.component.scss']
 })
 export class FormComponent {
+    private fb = inject(FormBuilder);
+
     public form: FormGroup;
 
-    constructor(private fb: FormBuilder) {
+    constructor() {
         this.form = this.fb.group({
             'radio': [2, Validators.required],
             'checkbox': [false, Validators.required],

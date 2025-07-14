@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, Renderer2, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxGridComponent,
@@ -26,6 +26,8 @@ import { HIERARCHICAL_SAMPLE_DATA, SAMPLE_DATA } from '../shared/sample-data';
 })
 
 export class GridCellAPISampleComponent implements OnInit {
+    private renderer = inject(Renderer2);
+
     public data2: any;
     public data: any[];
     public treeGridHierData: any[];
@@ -52,8 +54,6 @@ export class GridCellAPISampleComponent implements OnInit {
     public hcolumnField = 'ProductName';
 
     public selectedCell: CellType;
-
-    constructor(private renderer: Renderer2) { }
 
     public ngOnInit(): void {
         this.columns = [

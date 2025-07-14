@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, HostListener, Directive, TemplateRef } from '@angular/core';
+import { Component, Output, EventEmitter, HostListener, Directive, TemplateRef, inject } from '@angular/core';
 
 /**
  * Templates the default toggle icon in the picker.
@@ -63,6 +63,6 @@ export class IgxPickerClearComponent extends IgxPickerToggleComponent { }
     standalone: true
 })
 export class IgxPickerActionsDirective {
-    constructor(public template: TemplateRef<any>) { }
+    template = inject<TemplateRef<any>>(TemplateRef);
 }
 

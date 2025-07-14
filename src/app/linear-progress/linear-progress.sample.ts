@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject } from '@angular/core';
 import { IgxLinearProgressBarComponent, IgxTextAlign } from 'igniteui-angular';
 import {
     IgcLinearProgressComponent,
@@ -22,6 +22,9 @@ defineComponents(IgcLinearProgressComponent);
 })
 
 export class LinearProgressSampleComponent {
+    private propertyChangeService = inject(PropertyChangeService);
+    private destroyRef = inject(DestroyRef);
+
     public panelConfig: PropertyPanelConfig = {
         hasAnimation: {
             label: 'Enable none indeterminate animation (Angular)',
@@ -106,10 +109,7 @@ export class LinearProgressSampleComponent {
 
     public properties: Properties;
 
-    constructor(
-        private propertyChangeService: PropertyChangeService,
-        private destroyRef: DestroyRef
-    ) {
+    constructor() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
         const propertyChange =

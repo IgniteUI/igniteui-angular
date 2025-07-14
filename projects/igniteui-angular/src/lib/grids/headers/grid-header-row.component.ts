@@ -1,16 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    DoCheck,
-    ElementRef,
-    Input,
-    QueryList,
-    TemplateRef,
-    ViewChild,
-    ViewChildren,
-    booleanAttribute
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, Input, QueryList, TemplateRef, ViewChild, ViewChildren, booleanAttribute, inject } from '@angular/core';
 import { flatten, trackByIdentity } from '../../core/utils';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { ColumnType, GridType, IgxHeadSelectorTemplateContext } from '../common/grid.interface';
@@ -39,6 +27,9 @@ import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
     imports: [IgxColumnMovingDropDirective, NgTemplateOutlet, NgClass, IgxGridHeaderGroupComponent, NgStyle, IgxGridForOfDirective, IgxGridFilteringRowComponent, IgxCheckboxComponent, IgxGridTopLevelColumns, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
 })
 export class IgxGridHeaderRowComponent implements DoCheck {
+    protected ref = inject<ElementRef<HTMLElement>>(ElementRef);
+    protected cdr = inject(ChangeDetectorRef);
+
 
     /** The grid component containing this element. */
     @Input()
@@ -162,11 +153,6 @@ export class IgxGridHeaderRowComponent implements DoCheck {
 
         return ctx;
     }
-
-    constructor(
-        protected ref: ElementRef<HTMLElement>,
-        protected cdr: ChangeDetectorRef
-    ) { }
 
     /**
      * This hook exists as a workaround for the unfortunate fact

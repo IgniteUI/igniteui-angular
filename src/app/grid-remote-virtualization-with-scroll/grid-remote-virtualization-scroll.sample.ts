@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, OnInit, AfterViewInit, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 import { debounceTime } from 'rxjs/operators';
@@ -12,6 +12,9 @@ import { RemoteVirtService } from '../shared/remoteProductsData.service';
 })
 
 export class GridVirtualizationScrollSampleComponent implements OnInit, AfterViewInit {
+    private remoteService = inject(RemoteVirtService);
+    cdr = inject(ChangeDetectorRef);
+
     @ViewChild('grid1', { static: true })
     public grid: IgxGridComponent;
 
@@ -27,7 +30,6 @@ export class GridVirtualizationScrollSampleComponent implements OnInit, AfterVie
         copyFormatters: true,
         separator: '\t'
     };
-    constructor(private remoteService: RemoteVirtService, public cdr: ChangeDetectorRef) { }
 
     public ngOnInit(): void {
         this.remoteData = this.remoteService.data;

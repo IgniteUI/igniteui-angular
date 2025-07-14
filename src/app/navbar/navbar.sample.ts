@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, inject } from '@angular/core';
 import {Location} from '@angular/common';
 import {
     IGX_NAVBAR_DIRECTIVES,
@@ -22,11 +22,9 @@ const CURRENT_VIEW = 'Ignite UI for Angular Samples';
     imports: [IGX_NAVBAR_DIRECTIVES, IgxIconComponent, IgxButtonDirective, IgxIconButtonDirective, IgxAvatarComponent, IGX_PROGRESS_BAR_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, FormsModule]
 })
 export class NavbarSampleComponent implements OnInit {
+    private _location = inject(Location);
+
     public currentView: string;
-
-    constructor(private _location: Location) {
-
-    }
 
     public ngOnInit() {
         this.currentView = CURRENT_VIEW;

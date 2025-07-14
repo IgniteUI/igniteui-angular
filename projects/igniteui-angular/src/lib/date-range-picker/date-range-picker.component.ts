@@ -1,9 +1,4 @@
-import {
-    AfterViewInit, booleanAttribute, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef,
-    EventEmitter, HostBinding, HostListener, Inject, Injector, Input, LOCALE_ID,
-    OnChanges, OnDestroy, OnInit, Optional, Output, QueryList,
-    SimpleChanges, TemplateRef, ViewChild, ViewContainerRef
-} from '@angular/core';
+import { AfterViewInit, booleanAttribute, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Injector, Input, LOCALE_ID, OnChanges, OnDestroy, OnInit, Output, QueryList, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { NgTemplateOutlet, getLocaleFirstDayOfWeek } from '@angular/common';
 import {
     AbstractControl, ControlValueAccessor, NgControl,
@@ -78,6 +73,11 @@ const SingleInputDatesConcatenationString = ' - ';
 })
 export class IgxDateRangePickerComponent extends PickerBaseDirective
     implements OnChanges, OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
+    protected platform = inject(PlatformUtil);
+    private _injector = inject(Injector);
+    private _cdr = inject(ChangeDetectorRef);
+    private _overlayService = inject<IgxOverlayService>(IgxOverlayService);
+
 
     /**
      * The number of displayed month views.
@@ -467,13 +467,11 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private onTouchCallback: () => void = noop;
     private onValidatorChange: () => void = noop;
 
-    constructor(element: ElementRef,
-        @Inject(LOCALE_ID) _localeId: string,
-        protected platform: PlatformUtil,
-        private _injector: Injector,
-        private _cdr: ChangeDetectorRef,
-        @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
+    constructor() {
+        const element = inject(ElementRef);
+        const _localeId = inject(LOCALE_ID);
+        const _inputGroupType = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE, { optional: true });
+
         super(element, _localeId, _inputGroupType);
         this.locale = this.locale || this._localeId;
     }

@@ -1,16 +1,4 @@
-import {
-    HostListener,
-    ElementRef,
-    ChangeDetectorRef,
-    OnDestroy,
-    Directive,
-    AfterViewInit,
-    Inject,
-    NgZone,
-    Renderer2,
-    PLATFORM_ID,
-    inject
-} from '@angular/core';
+import { HostListener, ElementRef, ChangeDetectorRef, OnDestroy, Directive, AfterViewInit, NgZone, Renderer2, PLATFORM_ID, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
 import { resizeObservable, PlatformUtil } from '../../core/utils';
@@ -21,6 +9,12 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
     standalone: true
 })
 export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
+    elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    cdr = inject(ChangeDetectorRef);
+    protected _zone = inject(NgZone);
+    document = inject(DOCUMENT);
+    protected platformUtil = inject(PlatformUtil);
+
     public scrollAmount = 0;
     public _size = 0;
     public destroyed;
@@ -34,13 +28,7 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
     protected platformId = inject(PLATFORM_ID);
     protected ngZone = inject(NgZone);
 
-    constructor(
-        public elementRef: ElementRef<HTMLElement>,
-        public cdr: ChangeDetectorRef,
-        protected _zone: NgZone,
-        @Inject(DOCUMENT) public document: any,
-        protected platformUtil: PlatformUtil
-    ) {
+    constructor() {
         this._scrollNativeSize = this.calculateScrollNativeSize();
     }
 

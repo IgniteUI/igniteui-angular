@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -3109,10 +3109,12 @@ class IgxComboInContainerTestComponent {
     imports: [IgxSimpleComboComponent, AsyncPipe]
 })
 export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDestroy {
+    private remoteDataService = inject(RemoteDataService);
+    cdr = inject(ChangeDetectorRef);
+
     @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
     public instance: IgxSimpleComboComponent;
     public data;
-    constructor(private remoteDataService: RemoteDataService, public cdr: ChangeDetectorRef) { }
     public ngOnInit(): void {
         this.data = this.remoteDataService.records;
     }
@@ -3200,6 +3202,9 @@ class IgxSimpleComboInTemplatedFormComponent {
     imports: [IgxSimpleComboComponent, AsyncPipe, ReactiveFormsModule]
 })
 export class IgxComboRemoteDataInReactiveFormComponent implements OnInit, AfterViewInit, OnDestroy {
+    private remoteDataService = inject(RemoteDataService);
+    cdr = inject(ChangeDetectorRef);
+
     @ViewChild('reactiveCombo', { read: IgxSimpleComboComponent, static: true })
     public reactiveCombo: IgxSimpleComboComponent;
     @ViewChild('button', { read: HTMLButtonElement, static: true })
@@ -3208,7 +3213,9 @@ export class IgxComboRemoteDataInReactiveFormComponent implements OnInit, AfterV
     public reactiveForm: NgForm;
     public comboForm: UntypedFormGroup;
     public data;
-    constructor(private remoteDataService: RemoteDataService, public cdr: ChangeDetectorRef, fb: UntypedFormBuilder) {
+    constructor() {
+        const fb = inject(UntypedFormBuilder);
+
         this.comboForm = fb.group({
             comboValue: new UntypedFormControl('', Validators.required),
         });
@@ -3257,7 +3264,9 @@ export class IgxSimpleComboInReactiveFormComponent {
     public comboForm: UntypedFormGroup;
     public comboData: any;
 
-    constructor(fb: UntypedFormBuilder) {
+    constructor() {
+        const fb = inject(UntypedFormBuilder);
+
         this.comboForm = fb.group({
             comboValue: new UntypedFormControl('', Validators.required),
         });
@@ -3278,10 +3287,10 @@ export class IgxSimpleComboInReactiveFormComponent {
     imports: [IgxSimpleComboComponent, FormsModule]
 })
 export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewInit {
+    private cdr = inject(ChangeDetectorRef);
+
     public items: any[];
     public selectedItem = 1;
-
-    constructor(private cdr: ChangeDetectorRef) { }
 
     public ngAfterViewInit() {
         requestAnimationFrame(() => {

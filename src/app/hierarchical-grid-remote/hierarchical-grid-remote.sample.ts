@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectorRef, AfterViewInit, inject } from '@angular/core';
 import {
     IgxRowIslandComponent,
     IgxHierarchicalGridComponent,
@@ -20,6 +20,9 @@ const API_ENDPOINT = 'https://data-northwind.indigo.design';
     imports: [IGX_HIERARCHICAL_GRID_DIRECTIVES]
 })
 export class HierarchicalGridRemoteSampleComponent implements OnInit, AfterViewInit {
+    private http = inject(HttpClient);
+    private cdr = inject(ChangeDetectorRef);
+
     @ViewChild('hGrid', { static: true })
     private hGrid: IgxHierarchicalGridComponent;
 
@@ -65,8 +68,6 @@ export class HierarchicalGridRemoteSampleComponent implements OnInit, AfterViewI
             ]
         }
     ];
-
-    constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
     public ngOnInit() {
         const ordersTree = new FilteringExpressionsTree(0, undefined, 'Orders', ['customerId']);

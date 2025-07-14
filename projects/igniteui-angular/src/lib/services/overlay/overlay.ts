@@ -1,19 +1,5 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
-import {
-    ApplicationRef,
-    ComponentRef,
-    createComponent,
-    ElementRef,
-    EventEmitter,
-    Inject,
-    Injectable,
-    Injector,
-    NgZone,
-    OnDestroy,
-    Type,
-    ViewContainerRef,
-    DOCUMENT
-} from '@angular/core';
+import { ApplicationRef, ComponentRef, createComponent, ElementRef, EventEmitter, Injectable, Injector, NgZone, OnDestroy, Type, ViewContainerRef, DOCUMENT, inject } from '@angular/core';
 import { fromEvent, Subject, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
@@ -53,6 +39,12 @@ import {
  */
 @Injectable({ providedIn: 'root' })
 export class IgxOverlayService implements OnDestroy {
+    private _appRef = inject(ApplicationRef);
+    private document = inject(DOCUMENT);
+    private _zone = inject(NgZone);
+    protected platformUtil = inject(PlatformUtil);
+    private animationService = inject<AnimationService>(IgxAngularAnimationService);
+
     /**
      * Emitted just before the overlay content starts to open.
      * ```typescript
@@ -141,12 +133,7 @@ export class IgxOverlayService implements OnDestroy {
         closeOnEscape: false
     };
 
-    constructor(
-        private _appRef: ApplicationRef,
-        @Inject(DOCUMENT) private document: any,
-        private _zone: NgZone,
-        protected platformUtil: PlatformUtil,
-        @Inject(IgxAngularAnimationService) private animationService: AnimationService) {
+    constructor() {
         this._document = this.document;
     }
 

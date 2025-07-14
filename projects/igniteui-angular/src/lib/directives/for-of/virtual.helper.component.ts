@@ -1,5 +1,4 @@
-import { Component, ElementRef, HostBinding, Input, ViewChild, ViewContainerRef,
-    ChangeDetectorRef, OnDestroy, OnInit, Inject, NgZone} from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, ViewChild, ViewContainerRef, ChangeDetectorRef, OnDestroy, OnInit, NgZone, inject } from '@angular/core';
 import { VirtualHelperBaseDirective } from './base.helper.component';
 import { DOCUMENT } from '@angular/common';
 import { PlatformUtil } from '../../core/utils';
@@ -21,13 +20,13 @@ export class VirtualHelperComponent extends VirtualHelperBaseDirective implement
     @HostBinding('class')
     public cssClasses = 'igx-vhelper--vertical';
 
-    constructor(
-        elementRef: ElementRef,
-        cdr: ChangeDetectorRef,
-        zone: NgZone,
-        @Inject(DOCUMENT) document: any,
-        platformUtil: PlatformUtil,
-    ) {
+    constructor() {
+        const elementRef = inject(ElementRef);
+        const cdr = inject(ChangeDetectorRef);
+        const zone = inject(NgZone);
+        const document = inject(DOCUMENT);
+        const platformUtil = inject(PlatformUtil);
+
         super(elementRef, cdr, zone, document, platformUtil);
     }
 

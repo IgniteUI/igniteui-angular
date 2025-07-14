@@ -1,21 +1,4 @@
-import {
-    Component,
-    ChangeDetectorRef,
-    EventEmitter,
-    ElementRef,
-    HostBinding,
-    HostListener,
-    Input,
-    Output,
-    ViewChild,
-    Renderer2,
-    TemplateRef,
-    OnDestroy,
-    booleanAttribute,
-    OnInit,
-    Inject,
-    DOCUMENT
-} from '@angular/core';
+import { Component, ChangeDetectorRef, EventEmitter, ElementRef, HostBinding, HostListener, Input, Output, ViewChild, Renderer2, TemplateRef, OnDestroy, booleanAttribute, OnInit, DOCUMENT, inject } from '@angular/core';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IBaseEventArgs } from '../core/utils';
 import { ChipResourceStringsEN, IChipResourceStrings } from '../core/i18n/chip-resources';
@@ -88,6 +71,11 @@ let CHIP_ID = 0;
     imports: [IgxDropDirective, IgxDragDirective, NgClass, NgTemplateOutlet, IgxIconComponent]
 })
 export class IgxChipComponent implements OnInit, OnDestroy {
+    cdr = inject(ChangeDetectorRef);
+    private ref = inject<ElementRef<HTMLElement>>(ElementRef);
+    private renderer = inject(Renderer2);
+    document = inject(DOCUMENT);
+
 
     /**
      * Sets/gets the variant of the chip.
@@ -605,12 +593,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     protected _movedWhileRemoving = false;
     protected computedStyles;
     private _resourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
-
-    constructor(
-        public cdr: ChangeDetectorRef,
-        private ref: ElementRef<HTMLElement>,
-        private renderer: Renderer2,
-        @Inject(DOCUMENT) public document: any) { }
 
     /**
      * @hidden

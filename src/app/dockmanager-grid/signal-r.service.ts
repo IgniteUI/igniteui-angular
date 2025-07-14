@@ -1,4 +1,4 @@
-import { Injectable, NgZone, OnDestroy } from '@angular/core';
+import { Injectable, NgZone, OnDestroy, inject } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs';
 import { FinancialData, Stock } from '../shared/financialData2';
@@ -7,12 +7,14 @@ import { FinancialData, Stock } from '../shared/financialData2';
     providedIn: 'root'
 })
 export class SignalRService implements OnDestroy {
+    private zone = inject(NgZone);
+
     public data: BehaviorSubject<Stock[]>;
     public hasRemoteConnection: boolean;
     private hubConnection!: signalR.HubConnection;
     private _timer!: ReturnType<typeof setInterval>;
 
-    constructor(private zone: NgZone) {
+    constructor() {
         this.data = new BehaviorSubject([] as Stock[]);
     }
 

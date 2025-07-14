@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IgxSelectComponent, IgxSelectGroupComponent, IgxSelectItemComponent, IgxLabelDirective, IgxSelectToggleIconDirective, IgxIconComponent, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective, IgxPrefixDirective, IgxHintDirective, IgxComboComponent, IgxDatePickerComponent, IgxTimePickerComponent, IgxButtonDirective, IgxRippleDirective } from 'igniteui-angular';
 
@@ -12,7 +12,9 @@ export class ReactiveFormSampleComponent {
     public genres = [];
     public user: UntypedFormGroup;
 
-    constructor(fb: UntypedFormBuilder) {
+    constructor() {
+        const fb = inject(UntypedFormBuilder);
+
         this.user = fb.group({
             // date: ['', Validators.required],
             date: ['', { validators: Validators.required, updateOn: 'blur' }],

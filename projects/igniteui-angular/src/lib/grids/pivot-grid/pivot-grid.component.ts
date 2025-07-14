@@ -1,35 +1,4 @@
-import {
-    AfterContentInit,
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    ElementRef,
-    HostBinding,
-    Inject,
-    Input,
-    IterableDiffers,
-    LOCALE_ID,
-    NgZone,
-    OnInit,
-    Output,
-    Optional,
-    QueryList,
-    TemplateRef,
-    ViewChild,
-    ViewChildren,
-    ViewContainerRef,
-    Injector,
-    ContentChild,
-    createComponent,
-    EnvironmentInjector,
-    CUSTOM_ELEMENTS_SCHEMA,
-    booleanAttribute,
-    OnChanges,
-    SimpleChanges,
-    DOCUMENT
-} from '@angular/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, ElementRef, HostBinding, Input, IterableDiffers, LOCALE_ID, NgZone, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, Injector, ContentChild, createComponent, EnvironmentInjector, CUSTOM_ELEMENTS_SCHEMA, booleanAttribute, OnChanges, SimpleChanges, DOCUMENT, inject } from '@angular/core';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
 import { first, take, takeUntil } from 'rxjs/operators';
@@ -200,6 +169,8 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
 })
 export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnInit, AfterContentInit,
     PivotGridType, AfterViewInit, OnChanges {
+    override navigation: IgxPivotGridNavigationService;
+
 
     /**
      * Emitted when the dimension collection is changed via the grid chip area.
@@ -1010,29 +981,29 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return selectedRowIds;
     }
 
-    constructor(
-        validationService: IgxGridValidationService,
-        selectionService: IgxGridSelectionService,
-        colResizingService: IgxPivotColumnResizingService,
-        gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        transactionFactory: IgxFlatTransactionFactory,
-        elementRef: ElementRef<HTMLElement>,
-        zone: NgZone,
-        @Inject(DOCUMENT) document,
-        cdr: ChangeDetectorRef,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        injector: Injector,
-        envInjector: EnvironmentInjector,
-        public override navigation: IgxPivotGridNavigationService,
-        filteringService: IgxFilteringService,
-        textHighlightService: IgxTextHighlightService,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        summaryService: IgxGridSummaryService,
-        @Inject(LOCALE_ID) localeId: string,
-        platform: PlatformUtil,
-        @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>
-    ) {
+    constructor() {
+        const validationService = inject(IgxGridValidationService);
+        const selectionService = inject(IgxGridSelectionService);
+        const colResizingService = inject(IgxPivotColumnResizingService);
+        const gridAPI = inject<GridBaseAPIService<IgxGridBaseDirective & GridType>>(GridBaseAPIService);
+        const transactionFactory = inject(IgxFlatTransactionFactory);
+        const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+        const zone = inject(NgZone);
+        const document = inject(DOCUMENT);
+        const cdr = inject(ChangeDetectorRef);
+        const differs = inject(IterableDiffers);
+        const viewRef = inject(ViewContainerRef);
+        const injector = inject(Injector);
+        const envInjector = inject(EnvironmentInjector);
+        const navigation = inject(IgxPivotGridNavigationService);
+        const filteringService = inject(IgxFilteringService);
+        const textHighlightService = inject(IgxTextHighlightService);
+        const overlayService = inject<IgxOverlayService>(IgxOverlayService);
+        const summaryService = inject(IgxGridSummaryService);
+        const localeId = inject(LOCALE_ID);
+        const platform = inject(PlatformUtil);
+        const _diTransactions = inject<TransactionService<Transaction, State>>(IgxGridTransaction, { optional: true });
+
         super(
             validationService,
             selectionService,
@@ -1055,6 +1026,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             localeId,
             platform,
             _diTransactions);
+    
+        this.navigation = navigation;
     }
 
     /**

@@ -1,17 +1,19 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { FinancialData } from './financialData';
 
 @Injectable()
 export class LocalService {
+    private http = inject(HttpClient);
+
     public records: Observable<any[]>;
     public url: string;
     public dataStore: any[];
 
     private _records: BehaviorSubject<any[]>;
 
-    constructor(private http: HttpClient) {
+    constructor() {
         this.dataStore = [];
         this._records = new BehaviorSubject([]);
         this.records = this._records.asObservable();

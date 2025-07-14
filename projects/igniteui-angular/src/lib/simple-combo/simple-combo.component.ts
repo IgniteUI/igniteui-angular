@@ -1,8 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import {
-    AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostListener, Inject, Injector,
-    Optional, Output, ViewChild, DOCUMENT
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostListener, Injector, Output, ViewChild, DOCUMENT, inject } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 
@@ -70,6 +67,9 @@ export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventA
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxTextSelectionDirective, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxComboDropDownComponent, IgxDropDownItemNavigationDirective, IgxForOfDirective, IgxComboItemComponent, IgxComboAddItemComponent, IgxButtonDirective, IgxRippleDirective, IgxComboFilteringPipe, IgxComboGroupingPipe]
 })
 export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit, DoCheck {
+    private platformUtil = inject(PlatformUtil);
+    private formGroupDirective = inject(FormGroupDirective, { optional: true });
+
     /** @hidden @internal */
     @ViewChild(IgxComboDropDownComponent, { static: true })
     public dropdown: IgxComboDropDownComponent;
@@ -140,17 +140,16 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         return !!this.selectionService.get(this.id).size;
     }
 
-    constructor(elementRef: ElementRef,
-        cdr: ChangeDetectorRef,
-        selectionService: IgxSelectionAPIService,
-        comboAPI: IgxComboAPIService,
-        private platformUtil: PlatformUtil,
-        @Inject(DOCUMENT) document: any,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
-        @Optional() _injector: Injector,
-        @Optional() @Inject(IgxIconService) _iconService?: IgxIconService,
-        @Optional() private formGroupDirective?: FormGroupDirective
-    ) {
+    constructor() {
+        const elementRef = inject(ElementRef);
+        const cdr = inject(ChangeDetectorRef);
+        const selectionService = inject(IgxSelectionAPIService);
+        const comboAPI = inject(IgxComboAPIService);
+        const document = inject(DOCUMENT);
+        const _inputGroupType = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE, { optional: true });
+        const _injector = inject(Injector, { optional: true });
+        const _iconService = inject<IgxIconService>(IgxIconService, { optional: true });
+
         super(
             elementRef,
             cdr,

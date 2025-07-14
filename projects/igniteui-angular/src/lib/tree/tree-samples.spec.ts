@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, inject } from '@angular/core';
 import { IgxTreeComponent, IgxTreeExpandIndicatorDirective, IgxTreeNodeComponent, IgxTreeNodeLinkDirective } from './public_api';
 import { HIERARCHICAL_SAMPLE_DATA } from 'src/app/shared/sample-data';
 import { NgTemplateOutlet } from '@angular/common';
@@ -54,9 +54,11 @@ export class IgxTreeSimpleComponent {
     imports: [IgxTreeComponent, IgxTreeNodeComponent]
 })
 export class IgxTreeSelectionSampleComponent {
+    cdr = inject(ChangeDetectorRef);
+
     @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;
     public data;
-    constructor(public cdr: ChangeDetectorRef) {
+    constructor() {
         this.data = HIERARCHICAL_SAMPLE_DATA;
         this.mapData(this.data);
     }

@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit, inject } from '@angular/core';
 import { DatePipe, AsyncPipe } from '@angular/common';
 
 import { Observable } from 'rxjs';
@@ -18,6 +18,8 @@ const ORDERS_URl = 'https://services.odata.org/V4/Northwind/Northwind.svc/Orders
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxTreeGridComponent, AsyncPipe]
 })
 export class GridFormattingComponent implements OnInit, AfterViewInit {
+    private remoteService = inject(RemoteService);
+
 
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public gridLocal: IgxGridComponent;
@@ -44,7 +46,7 @@ export class GridFormattingComponent implements OnInit, AfterViewInit {
     public formatOptions = this.options2;
     public earliest = EarliestSummary;
 
-    constructor(private remoteService: RemoteService) {
+    constructor() {
         this.localData = data;
     }
 

@@ -1,11 +1,4 @@
-import {
-    AfterViewInit,
-    Component,
-    ElementRef,
-    QueryList,
-    Renderer2,
-    ViewChildren
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, QueryList, Renderer2, ViewChildren, inject } from '@angular/core';
 import { IgxAvatarComponent, IgxBottomNavComponent, IgxBottomNavContentComponent, IgxBottomNavHeaderComponent, IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, IgxBottomNavItemComponent, IgxIconComponent, IgxListActionDirective, IgxListComponent, IgxListItemComponent, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IgxRippleDirective } from 'igniteui-angular';
 
 @Component({
@@ -31,6 +24,8 @@ import { IgxAvatarComponent, IgxBottomNavComponent, IgxBottomNavContentComponent
     ]
 })
 export class BottomNavSampleComponent implements AfterViewInit {
+    private renderer = inject(Renderer2);
+
     @ViewChildren('tabbarEl')
     private tabbar: QueryList<ElementRef>;
 
@@ -86,8 +81,6 @@ export class BottomNavSampleComponent implements AfterViewInit {
         phone: '401-661-3742',
         text: 'Marianne Taylor'
     }];
-
-    constructor(private renderer: Renderer2) { }
 
     public ngAfterViewInit() {
         this.tabbar.map((e) => {

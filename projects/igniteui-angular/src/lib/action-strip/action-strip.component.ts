@@ -1,20 +1,4 @@
-import {
-    Component,
-    Directive,
-    HostBinding,
-    Input,
-    Renderer2,
-    ViewContainerRef,
-    ContentChildren,
-    QueryList,
-    ViewChild,
-    TemplateRef,
-    AfterContentInit,
-    ChangeDetectorRef,
-    AfterViewInit,
-    ElementRef,
-    booleanAttribute
-} from '@angular/core';
+import { Component, Directive, HostBinding, Input, Renderer2, ViewContainerRef, ContentChildren, QueryList, ViewChild, TemplateRef, AfterContentInit, ChangeDetectorRef, AfterViewInit, ElementRef, booleanAttribute, inject } from '@angular/core';
 import { ActionStripResourceStringsEN, IActionStripResourceStrings } from '../core/i18n/action-strip-resources';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { CloseScrollStrategy, OverlaySettings } from '../services/public_api';
@@ -35,7 +19,7 @@ import { trackByIdentity } from '../core/utils';
     standalone: true
 })
 export class IgxActionStripMenuItemDirective {
-    constructor(public templateRef: TemplateRef<any>) {}
+    templateRef = inject<TemplateRef<any>>(TemplateRef);
 }
 
 /* blazorElement */
@@ -86,6 +70,11 @@ export class IgxActionStripMenuItemDirective {
     providers: [{ provide: IgxActionStripToken, useExisting: IgxActionStripComponent }]
 })
 export class IgxActionStripComponent implements IgxActionStripToken, AfterContentInit, AfterViewInit {
+    private _viewContainer = inject(ViewContainerRef);
+    private renderer = inject(Renderer2);
+    protected el = inject(ElementRef);
+    cdr = inject(ChangeDetectorRef);
+
 
     /* blazorSuppress */
     /**
@@ -190,14 +179,6 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
     private _hidden = false;
     private _resourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN);
     private _originalParent!: HTMLElement;
-
-    constructor(
-        private _viewContainer: ViewContainerRef,
-        private renderer: Renderer2,
-        protected el: ElementRef,
-        /** @hidden @internal **/
-        public cdr: ChangeDetectorRef,
-    ) { }
 
     /**
      * Menu Items list.

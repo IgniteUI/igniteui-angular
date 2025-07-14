@@ -1,4 +1,4 @@
-import { Injectable, TemplateRef } from '@angular/core';
+import { Injectable, TemplateRef, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ActivationStart, Router } from '@angular/router';
 
@@ -39,11 +39,13 @@ export type Properties = {
     providedIn: 'root',
 })
 export class PropertyChangeService {
+    private router = inject(Router);
+
     public propertyChanges = new BehaviorSubject<PropertyPanelConfig>({});
     public panelConfig = new BehaviorSubject<PropertyPanelConfig>({});
     public customControlsSource = new BehaviorSubject<TemplateRef<any> | null>(null);
 
-    constructor(private router: Router) {
+    constructor() {
         this.router.events.subscribe(event => {
             if (event instanceof ActivationStart) {
                 this.clearPanelConfig();

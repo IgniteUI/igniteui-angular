@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef, AfterViewInit, HostBinding } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, AfterViewInit, HostBinding, inject } from '@angular/core';
 import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.component';
 import {
     IgxRowIslandComponent,
@@ -19,6 +19,8 @@ import {
     imports: [GridSearchBoxComponent, IGX_HIERARCHICAL_GRID_DIRECTIVES, IgxIconComponent, IGX_BUTTON_GROUP_DIRECTIVES]
 })
 export class HierarchicalGridSampleComponent implements AfterViewInit {
+    private cdr = inject(ChangeDetectorRef);
+
     @HostBinding('style.--ig-size')
     protected get sizeStyle() {
         return `var(--ig-size-${this.size})`;
@@ -50,7 +52,7 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
         activeRow: this.evenCondition,
     };
 
-    constructor(private cdr: ChangeDetectorRef) {
+    constructor() {
         this.sizes = [
             { label: 'small', selected: this.size === 'small', togglable: true },
             { label: 'medium', selected: this.size === 'medium', togglable: true },

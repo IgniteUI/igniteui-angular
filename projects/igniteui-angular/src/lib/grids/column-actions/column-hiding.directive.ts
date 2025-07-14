@@ -1,4 +1,4 @@
-import { Directive, Inject } from '@angular/core';
+import { Directive, inject } from '@angular/core';
 import { ColumnType } from '../common/grid.interface';
 import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
 import { IgxColumnActionsComponent } from './column-actions.component';
@@ -8,11 +8,13 @@ import { IgxColumnActionsComponent } from './column-actions.component';
     standalone: true
 })
 export class IgxColumnHidingDirective extends IgxColumnActionsBaseDirective {
+    protected columnActions = inject<IgxColumnActionsComponent>(IgxColumnActionsComponent);
 
-    constructor(
-        @Inject(IgxColumnActionsComponent) protected columnActions: IgxColumnActionsComponent
-    ) {
+
+    constructor() {
         super();
+        const columnActions = this.columnActions;
+
         columnActions.actionsDirective = this;
     }
 

@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, inject } from '@angular/core';
 import { FilterMode, IgxButtonGroupComponent, IgxColumnComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconService } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
 
@@ -10,6 +10,8 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent]
 })
 export class GridColumnTypesSampleComponent implements OnInit {
+    private _iconService = inject(IgxIconService);
+
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     public data: Array<any>;
@@ -54,9 +56,6 @@ export class GridColumnTypesSampleComponent implements OnInit {
         text: 'Marianne Taylor',
         available: true
     }];
-
-    constructor(private _iconService: IgxIconService) {
-    }
 
     public log(event) {
         console.log(event);
