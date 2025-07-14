@@ -1,4 +1,5 @@
 import { ElementRef, EmbeddedViewRef, Injector, TemplateRef } from '@angular/core';
+import { getUUID } from '../../../../igniteui-angular/src/lib/grids/common/random';
 
 const CONTEXT_PROP = 'context';
 const IMPLICIT_PROP = 'implicit';
@@ -70,7 +71,7 @@ export class TemplateRefWrapper<C extends object> extends TemplateRef<C> {
             root = viewRef.rootNodes[0];
 
             contentContext = new TemplateRefWrapperContentContext();
-            contentId = crypto.randomUUID();
+            contentId = getUUID();
             contentContext._id = contentId;
             root._id = contentId;
             contentContext.root = root;
