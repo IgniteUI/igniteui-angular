@@ -391,11 +391,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     public get mergedData() {
         const startIndex = this.verticalScrollContainer.state.startIndex;
-        const chunkSize = this.verticalScrollContainer.state.chunkSize;
         const mergeRecs = this.verticalScrollContainer.igxForOf?.filter((x, index) => {
             if (!x.cellMergeMeta) { return false;}
             const maxSpan = Math.max(...x.cellMergeMeta.values().toArray().map(x => x.rowSpan));
-           return startIndex > index && startIndex <= (index + maxSpan) && startIndex + chunkSize >= (index + maxSpan);
+           return startIndex > index && startIndex <= (index + maxSpan);
     });
         return mergeRecs;
     }
