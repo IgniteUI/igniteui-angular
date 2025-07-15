@@ -3671,8 +3671,8 @@ export abstract class IgxGridBaseDirective implements GridType,
         return rec?.cellMergeMeta;
     }
 
-    public getMergeCellOffset(rec) {
-        const index = this.verticalScrollContainer.igxForOf.indexOf(rec);
+    public getMergeCellOffset(rowData) {
+        const index = rowData.index;
         let offset = this.verticalScrollContainer.scrollPosition - this.verticalScrollContainer.getScrollForIndex(index);
         if (this.hasPinnedRecords && this.isRowPinningToTop) {
             offset -= this.pinnedRowHeight;
@@ -3861,11 +3861,16 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (this.columnsToMerge.length > 0) {
                 const startIndex = this.verticalScrollContainer.state.startIndex;
                 const prevDataView = this.verticalScrollContainer.igxForOf?.slice(0, startIndex);
-                this._mergedDataInView = prevDataView?.filter((x, index) => {
-                    if (!x.cellMergeMeta) { return false;}
-                    const maxSpan = Math.max(...x.cellMergeMeta.values().toArray().map(x => x.rowSpan));
-                   return startIndex <= (index + maxSpan);
-                });
+                const data = [];
+                for (let index = 0; index < startIndex; index++) {
+                    const rec = prevDataView[index];
+                    if (rec.cellMergeMeta &&
+                        // index + maxRowSpan is within view
+                        startIndex <= (index + Math.max(...rec.cellMergeMeta.values().toArray().map(x => x.rowSpan)))) {
+                            data.push({record: rec, index: index });
+                        }
+                }
+                this._mergedDataInView = data;
             }
         });
 
