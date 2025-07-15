@@ -31,6 +31,13 @@
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
                 class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         }
+
+        @for (rowData of mergedDataInView; track rowData.record;) {
+            <igx-hierarchical-grid-row [style.position]="'absolute'" [gridID]="id" [index]="rowData.index" [data]="rowData.record.recordRef" [metaData]="rowData.record" [style.top.px]="getMergeCellOffset(rowData)"
+            [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowData.index:hasColumnLayouts:isRecordMerged(rowData.record):false:rowData.record:pipeTrigger"
+            [ngStyle]="rowStyles | igxGridRowStyles:rowData.record:rowData.index:pipeTrigger" #row>
+            </igx-hierarchical-grid-row>
+        }
         <ng-template #pinnedRecordsTemplate>
             @if (data
                 | gridTransaction:id:pipeTrigger
@@ -38,13 +45,14 @@
                 | gridAddRow:true:pipeTrigger
                 | gridRowPinning:id:true:pipeTrigger
                 | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
-                | gridSort:sortingExpressions:[]:sortStrategy:id:pipeTrigger:true; as pinnedData
+                | gridSort:sortingExpressions:[]:sortStrategy:id:pipeTrigger:true
+                | gridCellMerge:visibleColumns:cellMergeMode:sortingExpressions:activeRowIndex:pipeTrigger; as pinnedData
             ) {
                 @if (pinnedData.length > 0) {
                     <div #pinContainer class="igx-grid__tr--pinned"
                         [ngClass]="{ 'igx-grid__tr--pinned-bottom':  !isRowPinningToTop, 'igx-grid__tr--pinned-top': isRowPinningToTop }"
                         [style.width.px]="calcWidth">
-                        @for (rowData of pinnedData; track rowData; let rowIndex = $index) {
+                        @for (rowData of pinnedData; track (rowData.recordRef || rowData); let rowIndex = $index) {
                             <ng-container *ngTemplateOutlet="pinned_hierarchical_record_template; context: getContext(rowData, rowIndex, true)">
                             </ng-container>
                         }
@@ -62,7 +70,8 @@
         | gridHierarchicalPaging:!!paginator:page:perPage:id:pipeTrigger
         | gridHierarchical:expansionStates:id:primaryKey:childLayoutKeys:pipeTrigger
         | gridAddRow:false:pipeTrigger
-        | gridRowPinning:id:false:pipeTrigger"
+        | gridRowPinning:id:false:pipeTrigger
+        | gridCellMerge:visibleColumns:cellMergeMode:sortingExpressions:((hasPinnedRecords && isRowPinningToTop) ? activeRowIndex - pinnedRecordsCount : activeRowIndex):pipeTrigger"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]="verticalScroll"
             [igxForContainerSize]="calcHeight" [igxForItemSize]="renderedRowHeight" [igxForTrackBy]="trackChanges"
             #verticalScrollContainer (chunkPreload)="dataLoading($event)" (dataChanging)="dataRebinding($event)" (dataChanged)="dataRebound($event)">
@@ -73,16 +82,16 @@
             </ng-template>
             <!-- <ng-container *igxTemplateOutlet="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template)); context: getContext(rowData)"></ng-container> -->
         </ng-template>
-        <ng-template #hierarchical_record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData>
-            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [disabled]="disabledRow" [data]="rowData"
-                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:isRecordMerged(rowData):false:rowData:pipeTrigger"
+        <ng-template #hierarchical_record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData let-metaData="metaData">
+            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [disabled]="disabledRow" [data]="rowData" [metaData]="metaData"
+                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:isRecordMerged(metaData):false:rowData:pipeTrigger"
                 [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
             </igx-hierarchical-grid-row>
         </ng-template>
 
-        <ng-template #pinned_hierarchical_record_template let-rowIndex="index" let-rowData>
-            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [data]="rowData"
-                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:isRecordMerged(rowData):false:rowData:pipeTrigger"
+        <ng-template #pinned_hierarchical_record_template let-rowIndex="index" let-rowData let-metaData="metaData">
+            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [data]="rowData" [metaData]="metaData"
+                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:isRecordMerged(metaData):false:rowData:pipeTrigger"
                 [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row #pinnedRow>
             </igx-hierarchical-grid-row>
         </ng-template>

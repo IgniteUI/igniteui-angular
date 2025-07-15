@@ -38,7 +38,7 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
 
             const recData = result[index];
             // if this is active row or some special record type - add and skip merging
-            if (activeRowIndex === index || (grid && grid.isDetailRecord(rec) || grid.isGroupByRecord(rec))) {
+            if (activeRowIndex === index || (grid && grid.isDetailRecord(rec) || grid.isGroupByRecord(rec) || grid.isChildGridRecord(rec))) {
                 if(!recData) {
                     result.push(rec);
                 }

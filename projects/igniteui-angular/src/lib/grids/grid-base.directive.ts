@@ -2931,7 +2931,13 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @WatchChanges()
     @Input()
-    public cellMergeMode: GridCellMergeMode = GridCellMergeMode.onSort;
+    public get cellMergeMode() {
+        return this._cellMergeMode;
+    }
+
+    public set cellMergeMode(value: GridCellMergeMode) {
+        this._cellMergeMode = value;
+    }
 
     /**
      * Gets/Sets row selection mode
@@ -3330,6 +3336,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _gridSize: Size = Size.Large;
     private _defaultRowHeight = 50;
+    private _cellMergeMode: GridCellMergeMode = GridCellMergeMode.onSort;
 
     /**
      * @hidden @internal
@@ -3565,6 +3572,14 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @internal
      */
     public isGroupByRecord(_rec) {
+        return false;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public isChildGridRecord(_rec) {
         return false;
     }
 

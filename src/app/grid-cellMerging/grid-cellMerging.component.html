@@ -1,15 +1,16 @@
 <h4 class="sample-title">Grid with cell merge</h4>
-<igx-grid [data]="data" width="800px" height="550px" [primaryKey]="'ProductID'" [moving]="true" [cellMergeMode]="'always'" [rowSelection]="'single'" >
+<igx-grid [data]="data" width="800px" height="550px" [primaryKey]="'ProductID'" [moving]="true"
+    [cellMergeMode]="'always'" [rowSelection]="'single'">
     <igx-column field="ProductID" header="Product ID" width="200px">
         <ng-template igxCell let-cell="cell" let-val>
-        <div>
-            <button igxButton>Test {{cell.row.index}}</button>
-            <!-- @if (cell.row.index % 2 == 0) {
+            <div>
+                <button igxButton>Test {{cell.row.index}}</button>
+                <!-- @if (cell.row.index % 2 == 0) {
                 <br/>
                 <button igxButton>Test 2</button>
             } -->
 
-        </div>
+            </div>
         </ng-template>
     </igx-column>
     <igx-column field="ReorderLevel" width="200px" [merge]="true" editable="true">
@@ -33,3 +34,31 @@
         </igx-grid-toolbar-actions>
     </igx-grid-toolbar>
 </igx-grid>
+
+<h4 class="sample-title">Hierarchical grid with cell merge</h4>
+
+<igx-hierarchical-grid #hierarchicalGrid [height]="'550px'" [data]="hierarchicalData" [autoGenerate]="false"
+    [allowAdvancedFiltering]="true" [cellMergeMode]="'always'">
+    <igx-grid-toolbar></igx-grid-toolbar>
+    <igx-column field="EmployeeID" width="200px">
+    </igx-column>
+    <igx-column field="FirstName" width="200px">
+    </igx-column>
+    <igx-column field="LastName" width="200px">
+    </igx-column>
+    <igx-column field="Title" width="200px" [merge]="true"  [hasSummary]="true">
+    </igx-column>
+    <igx-column field="City" width="200px" [merge]="true" editable="true" sortable="true">
+    </igx-column>
+    <igx-row-island [key]="'Orders'" [cellMergeMode]="'always'">
+        <igx-column field="CustomerID" width="200px">
+        </igx-column>
+        <igx-column field="ShipName" width="200px">
+        </igx-column>
+        <igx-column field="ShipCountry" width="200px" [merge]="true" sortable="true">
+        </igx-column>
+        <igx-column field="ShipCity" width="200px" [merge]="true" sortable="true">
+        </igx-column>
+
+    </igx-row-island>
+</igx-hierarchical-grid>

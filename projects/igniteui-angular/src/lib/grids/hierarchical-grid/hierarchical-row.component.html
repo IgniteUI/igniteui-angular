@@ -54,32 +54,19 @@
     }
 
     <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForSizePropName]='"calcPixelWidth"' [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
-        <igx-hierarchical-grid-cell
-            class="igx-grid__td igx-grid__td--fw"
-            [class.igx-grid__td--edited]="key | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
-
-            [class.igx-grid__td--number]="col.dataType === 'number' || col.dataType === 'percent' || col.dataType === 'currency'"
-            [class.igx-grid__td--bool]="col.dataType === 'boolean'"
-            [ngClass]="col.cellClasses | igxCellStyleClasses:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
-            [ngStyle]="col.cellStyles | igxCellStyles:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
-            [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)"
-            [column]="col"
-            [formatter]="col.formatter"
-            [intRow]="this"
-            [active]="isCellActive(col.visibleIndex)"
-            [rowData]="data"
-            [style.min-width]="col.resolvedWidth"
-            [style.max-width]="col.resolvedWidth"
-            [style.flex-basis]="col.resolvedWidth"
-            [width]="col.getCellWidth()"
-            [visibleColumnIndex]="col.visibleIndex"
-            [value]="data | dataMapper:col.field:grid.pipeTrigger:data[col.field]:col.hasNestedPath"
-            [cellTemplate]="col.bodyTemplate"
-            [cellValidationErrorTemplate]="col.errorTemplate"
-            [lastSearchInfo]="grid.lastSearchInfo"
-            [cellSelectionMode]="grid.cellSelection"
-            [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)">
-        </igx-hierarchical-grid-cell>
+        @if (this.hasMergedCells) {
+            <div [style.height.px]=" this.metaData.cellMergeMeta.get(col.field)?.rowSpan > 1 ? getRowHeight() : null"
+                 class="igx-grid__mrl-block"
+                 [style.visibility]="this.metaData.cellMergeMeta.get(col.field)?.root ? 'hidden' : 'visible'"
+                 [ngStyle]="{
+                'grid-template-rows': this.metaData.cellMergeMeta.get(col.field)?.rowSpan > 1 ? this.getMergeCellSpan(col) : null
+            }">
+                <ng-container *ngTemplateOutlet="cellTemplate; context: { $implicit: this, column: col }"></ng-container>
+            </div>
+        }
+        @else {
+            <ng-container *ngTemplateOutlet="cellTemplate; context: { $implicit: this, column: col }"></ng-container>
+        }
     </ng-template>
 
     @if (pinnedColumns.length > 0 && !grid.isPinningToStart) {
@@ -131,4 +118,36 @@
             </igx-hierarchical-grid-cell>
         }
     </ng-template>
+</ng-template>
+
+<ng-template #cellTemplate let-col="column">
+    <igx-hierarchical-grid-cell
+    [class.igx-grid__td--merged]="metaData?.cellMergeMeta.get(col.field)?.rowSpan > 1"
+    [class.igx-grid__td--merged-selected]="isSelectionRoot(col)"
+    [class.igx-grid__td--merged-hovered]="isHoveredRoot(col)"
+    class="igx-grid__td igx-grid__td--fw"
+    [class.igx-grid__td--edited]="key | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
+
+    [class.igx-grid__td--number]="col.dataType === 'number' || col.dataType === 'percent' || col.dataType === 'currency'"
+    [class.igx-grid__td--bool]="col.dataType === 'boolean'"
+    [ngClass]="col.cellClasses | igxCellStyleClasses:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
+    [ngStyle]="col.cellStyles | igxCellStyles:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
+    [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)"
+    [column]="col"
+    [formatter]="col.formatter"
+    [intRow]="this"
+    [active]="isCellActive(col.visibleIndex)"
+    [rowData]="data"
+    [style.min-width]="col.resolvedWidth"
+    [style.max-width]="col.resolvedWidth"
+    [style.flex-basis]="col.resolvedWidth"
+    [width]="col.getCellWidth()"
+    [visibleColumnIndex]="col.visibleIndex"
+    [value]="data | dataMapper:col.field:grid.pipeTrigger:data[col.field]:col.hasNestedPath"
+    [cellTemplate]="col.bodyTemplate"
+    [cellValidationErrorTemplate]="col.errorTemplate"
+    [lastSearchInfo]="grid.lastSearchInfo"
+    [cellSelectionMode]="grid.cellSelection"
+    [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)">
+</igx-hierarchical-grid-cell>
 </ng-template>

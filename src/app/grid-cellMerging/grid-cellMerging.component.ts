@@ -12,8 +12,11 @@ import {
     IgxGridToolbarExporterComponent,
     IgxGridToolbarHidingComponent,
     IgxGridToolbarPinningComponent,
+    IgxHierarchicalGridComponent,
     IgxPaginatorComponent,
+    IgxRowIslandComponent,
 } from 'igniteui-angular';
+import { HIERARCHICAL_DATA } from '../shared/hierarchicalData';
 
 import { data, dataWithoutPK } from '../shared/data';
 
@@ -34,10 +37,13 @@ import { data, dataWithoutPK } from '../shared/data';
         IgxGridToolbarActionsComponent,
         IgxGridToolbarPinningComponent,
         IgxGridToolbarHidingComponent,
-        IgxGridToolbarExporterComponent
+        IgxGridToolbarExporterComponent,
+        IgxHierarchicalGridComponent,
+        IgxRowIslandComponent
     ]
 })
 export class GridCellMergingComponent {
+    public hierarchicalData = HIERARCHICAL_DATA.concat(HIERARCHICAL_DATA).concat(HIERARCHICAL_DATA);
     public data = [{
         ProductID: 1,
         ProductName: 'Chai',
