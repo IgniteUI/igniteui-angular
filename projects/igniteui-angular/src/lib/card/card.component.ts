@@ -8,7 +8,8 @@ import {
     OnInit,
     OnChanges,
     SimpleChanges,
-    booleanAttribute
+    booleanAttribute,
+    ViewEncapsulation
 } from '@angular/core';
 
 let NEXT_ID = 0;
@@ -195,6 +196,8 @@ export class IgxCardFooterDirective {
 @Component({
     selector: 'igx-card',
     templateUrl: 'card.component.html',
+    encapsulation: ViewEncapsulation.None,
+    styleUrl: 'card.component.css',
     standalone: true
 })
 export class IgxCardComponent {

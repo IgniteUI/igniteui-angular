@@ -34,6 +34,7 @@ export class ComboShowcaseSampleComponent {
             control: {
                 type: 'button-group',
                 options: ['small', 'medium', 'large'],
+                defaultValue: 'medium'
             }
         },
         placeholderSearch: {

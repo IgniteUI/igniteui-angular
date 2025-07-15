@@ -5,12 +5,16 @@ import {
     HostBinding,
     HostListener,
     Input,
-    booleanAttribute
+    ViewEncapsulation,
+    booleanAttribute,
+    OnDestroy,
+    inject
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { CheckboxBaseDirective } from '../checkbox/checkbox-base.directive';
+import { IgxRadioGroupDirective } from '../directives/radio/radio-group.directive';
 
 /**
  * **Ignite UI for Angular Radio Button** -
@@ -33,13 +37,19 @@ import { CheckboxBaseDirective } from '../checkbox/checkbox-base.directive';
             multi: true
         }],
     templateUrl: 'radio.component.html',
+    styleUrl: 'radio.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxRippleDirective]
 })
+
 export class IgxRadioComponent
     extends CheckboxBaseDirective
-    implements AfterViewInit, ControlValueAccessor, EditorProvider {
+    implements AfterViewInit, OnDestroy, ControlValueAccessor, EditorProvider {
+
     /** @hidden @internal */
     public blurRadio = new EventEmitter();
+
+    private radioGroup = inject(IgxRadioGroupDirective, { optional: true, skipSelf: true });
 
     /**
      * Returns the class of the radio component.
@@ -199,5 +209,29 @@ export class IgxRadioComponent
     public override onBlur() {
         super.onBlur();
         this.blurRadio.emit();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public override ngAfterViewInit(): void {
+        super.ngAfterViewInit();
+
+        // Register with parent radio group if it exists
+        if (this.radioGroup) {
+            this.radioGroup._addRadioButton(this);
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public ngOnDestroy(): void {
+        // Unregister from parent radio group if it exists
+        if (this.radioGroup) {
+            this.radioGroup._removeRadioButton(this);
+        }
     }
 }

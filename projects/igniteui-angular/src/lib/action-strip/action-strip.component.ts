@@ -13,7 +13,8 @@ import {
     ChangeDetectorRef,
     AfterViewInit,
     ElementRef,
-    booleanAttribute
+    booleanAttribute,
+    ViewEncapsulation
 } from '@angular/core';
 import { ActionStripResourceStringsEN, IActionStripResourceStrings } from '../core/i18n/action-strip-resources';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
@@ -73,6 +74,8 @@ export class IgxActionStripMenuItemDirective {
 @Component({
     selector: 'igx-action-strip',
     templateUrl: 'action-strip.component.html',
+    styleUrl: 'action-strip.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [
         NgTemplateOutlet,
         IgxIconButtonDirective,

@@ -1,0 +1,10 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+
+@include layer(base) {
+    @include b(igx-tree) {
+        display: block;
+        z-index: 0;
+        overflow-y: auto;
+    }
+}
