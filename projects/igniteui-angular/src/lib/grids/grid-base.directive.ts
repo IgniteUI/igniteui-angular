@@ -3230,6 +3230,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _currentRowState: any;
     private _filteredSortedData = null;
     private _filteredData = null;
+    private _mergedDataInView = null;
 
     private _customDragIndicatorIconTemplate: TemplateRef<IgxGridEmptyTemplateContext>;
     private _excelStyleHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
@@ -3855,6 +3856,19 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.notifyChanges(true);
         });
 
+        this.verticalScrollContainer.chunkPreload.pipe(filter(() => !this._init), destructor).subscribe(() => {
+            // recalc merged data
+            if (this.columnsToMerge.length > 0) {
+                const startIndex = this.verticalScrollContainer.state.startIndex;
+                const prevDataView = this.verticalScrollContainer.igxForOf?.slice(0, startIndex);
+                this._mergedDataInView = prevDataView?.filter((x, index) => {
+                    if (!x.cellMergeMeta) { return false;}
+                    const maxSpan = Math.max(...x.cellMergeMeta.values().toArray().map(x => x.rowSpan));
+                   return startIndex <= (index + maxSpan);
+                });
+            }
+        });
+
         // notifier for column autosize requests
         this._autoSizeColumnsNotify.pipe(
             throttleTime(0, animationFrameScheduler, { leading: false, trailing: true }),
@@ -3926,6 +3940,17 @@ export abstract class IgxGridBaseDirective implements GridType,
         } else {
             this._filteredData = data;
         }
+    }
+
+    public get columnsToMerge() : ColumnType[] {
+        return this.visibleColumns.filter(
+            x => x.merge && (this.cellMergeMode ==='always' ||
+            (this.cellMergeMode === 'onSort' && !!this.sortingExpressions.find( x=> x.fieldName === x.fieldName)))
+        );
+    }
+
+    protected get mergedDataInView() {
+        return this._mergedDataInView;
     }
 
     /**

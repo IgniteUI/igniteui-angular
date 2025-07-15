@@ -715,6 +715,8 @@ export interface GridType extends IGridDataBindable {
     pipeTrigger: number;
     summaryPipeTrigger: number;
     /** @hidden @internal */
+    columnsToMerge: ColumnType[],
+    /** @hidden @internal */
     groupablePipeTrigger: number;
     filteringPipeTrigger: number;
     /** @hidden @internal */
