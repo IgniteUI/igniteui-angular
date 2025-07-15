@@ -1,7 +1,7 @@
 import { IgxDateTimeEditorDirective } from './date-time-editor.directive';
 import { DatePart } from './date-time-editor.common';
-import { DOCUMENT, formatDate, registerLocaleData } from '@angular/common';
-import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges } from '@angular/core';
+import { formatDate, registerLocaleData } from '@angular/common';
+import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges, DOCUMENT } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -1123,7 +1123,13 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('focus', {});
                 fixture.detectChanges();
                 dateTimeEditorDirective.nativeElement.setSelectionRange(1, 1);
-                inputElement.triggerEventHandler('wheel', new WheelEvent('wheel', { deltaY: 1 }));
+                // typical wheel scrolls are 120px and the date-editor employs touchpad-friendly implementation
+                // that accumulates to 50 before incrementing/decrementing
+                // we'll test the behavior by doing two scrolls with the first one not expected to trigger a change
+                inputElement.triggerEventHandler('wheel', new WheelEvent('wheel', { deltaY: 20 }));
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getDate()).toEqual(today.getDate());
+                inputElement.triggerEventHandler('wheel', new WheelEvent('wheel', { deltaY: 40 }));
                 fixture.detectChanges();
                 expect(dateTimeEditorDirective.value.getDate()).toEqual(today.getDate() - 1);
             }));

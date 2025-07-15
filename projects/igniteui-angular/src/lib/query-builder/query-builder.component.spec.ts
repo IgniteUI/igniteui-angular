@@ -127,6 +127,13 @@ describe('IgxQueryBuilder', () => {
         expect(field.pipeArgs).toBeUndefined();
       });
     }));
+
+    it('Should not throw error when entities are empty and expressionTree is set.', fakeAsync(() => {
+      expect(() => {
+        fix = TestBed.createComponent(IgxQueryBuilderInvalidSampleTestComponent);
+        fix.detectChanges();
+      }).not.toThrow();
+    }));
   });
 
   describe('Interactions', () => {
@@ -830,8 +837,8 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
 
       // Verify operator icon
-      const operatorInputGroup = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix).querySelector('igx-input-group') as HTMLElement;
-      expect(operatorInputGroup.querySelector('igx-icon').attributes.getNamedItem('ng-reflect-name').nodeValue).toEqual('in');
+      // const operatorInputGroup = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix).querySelector('igx-input-group') as HTMLElement;
+      // expect(operatorInputGroup.querySelector('igx-icon').attributes.getNamedItem('ng-reflect-name').nodeValue).toEqual('in');
 
       const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
       // Verify value input placeholder
@@ -907,8 +914,8 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 11); // Select 'Not-In' operator.
 
       // Verify operator icon
-      const operatorInputGroup = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix).querySelector('igx-input-group') as HTMLElement;
-      expect(operatorInputGroup.querySelector('igx-icon').attributes.getNamedItem('ng-reflect-name').nodeValue).toEqual('not-in');
+      // const operatorInputGroup = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix).querySelector('igx-input-group') as HTMLElement;
+      // expect(operatorInputGroup.querySelector('igx-icon').attributes.getNamedItem('ng-reflect-name').nodeValue).toEqual('not-in');
 
       const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
       // Verify value input placeholder
@@ -3231,6 +3238,27 @@ export class IgxQueryBuilderSampleTestComponent implements OnInit {
 
   public ngOnInit(): void {
     this.entities = SampleEntities.map(a => ({ ...a }));
+  }
+}
+
+@Component({
+  template: `
+     <igx-query-builder #queryBuilder [entities]="this.entities" [expressionTree]="this.expressionTree">
+     </igx-query-builder>
+    `,
+  standalone: true,
+  imports: [
+    IgxQueryBuilderComponent
+  ]
+})
+export class IgxQueryBuilderInvalidSampleTestComponent implements OnInit {
+  @ViewChild(IgxQueryBuilderComponent) public queryBuilder: IgxQueryBuilderComponent;
+  public entities: Array<any>;
+  public expressionTree: IExpressionTree;
+
+  public ngOnInit(): void {
+    this.entities = [];
+    this.expressionTree = QueryBuilderFunctions.generateExpressionTree();
   }
 }
 

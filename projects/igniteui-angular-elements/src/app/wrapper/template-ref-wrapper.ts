@@ -1,4 +1,5 @@
 import { ElementRef, EmbeddedViewRef, Injector, TemplateRef } from '@angular/core';
+import { getUUID } from '../../../../igniteui-angular/src/lib/grids/common/random';
 
 const CONTEXT_PROP = 'context';
 const IMPLICIT_PROP = 'implicit';
@@ -10,13 +11,17 @@ const PREFIX_IMPLICIT_PROP = '$implicit';
  */
 export class TemplateRefWrapper<C extends object> extends TemplateRef<C> {
 
-    public override get elementRef(): ElementRef<any> {
-        return this.innerTemplateRef.elementRef;
+    public override readonly elementRef: ElementRef<any>;
+
+    /** @internal Angular 20 This was abstract getter now it's not. */
+    public get ssrId(): string | null {
+        return (this.innerTemplateRef as any).ssrId;
     }
 
     /** Create a wrapper around TemplateRef with the context exposed */
     constructor(public innerTemplateRef: TemplateRef<C>, private _templateFunction: any, private embeddedViewDestroyCallback: (container: HTMLElement) => void) {
         super();
+        this.elementRef = innerTemplateRef.elementRef;
     }
 
     private _contentContext = new Map<string, TemplateRefWrapperContentContext>();
@@ -71,7 +76,7 @@ export class TemplateRefWrapper<C extends object> extends TemplateRef<C> {
             root = viewRef.rootNodes[0];
 
             contentContext = new TemplateRefWrapperContentContext();
-            contentId = crypto.randomUUID();
+            contentId = getUUID();
             contentContext._id = contentId;
             root._id = contentId;
             contentContext.root = root;

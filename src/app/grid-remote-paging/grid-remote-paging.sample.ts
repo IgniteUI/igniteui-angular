@@ -4,13 +4,13 @@ import { FormsModule } from '@angular/forms';
 
 import { Observable } from 'rxjs';
 import { RemoteService } from '../shared/remote.service';
-import { GridPagingMode, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxColumnComponent, IgxGridComponent, IgxPaginatorComponent, IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular';
+import { GridPagingMode, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IGX_GRID_DIRECTIVES, IgxGridComponent, IgxPaginatorComponent, IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-remote-paging-sample',
     templateUrl: 'grid-remote-paging.sample.html',
     providers: [RemoteService],
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxButtonDirective, IgxSelectComponent, FormsModule, IgxSelectItemComponent, AsyncPipe]
+    imports: [IGX_GRID_DIRECTIVES, IgxPaginatorComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxButtonDirective, IgxSelectComponent, FormsModule, IgxSelectItemComponent, AsyncPipe]
 })
 export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;

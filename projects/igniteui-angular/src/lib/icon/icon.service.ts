@@ -1,6 +1,5 @@
-import { DestroyRef, Inject, Injectable, Optional, SecurityContext } from "@angular/core";
+import { DestroyRef, Inject, Injectable, Optional, SecurityContext, DOCUMENT } from "@angular/core";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
-import { DOCUMENT } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Observable, Subject } from "rxjs";
 import { PlatformUtil } from "../core/utils";

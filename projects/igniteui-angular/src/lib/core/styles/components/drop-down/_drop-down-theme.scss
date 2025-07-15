@@ -91,68 +91,88 @@
     }
 
     $theme: digest-schema($drop-down-schema);
-    $meta: map.get($theme, '_meta');
+    $variant: map.get($theme, '_meta', 'theme');
 
     @if not($item-text-color) and $background-color {
-        $item-text-color: text-contrast($background-color);
+        $item-text-color: adaptive-contrast(var(--background-color));
+    }
+
+    @if not($item-icon-color) and $item-text-color {
+        $item-icon-color: hsla(from var(--item-text-color) h s l / 0.8);
     }
 
     @if not($hover-item-background) and $background-color {
-        $hover-item-text-color: text-contrast($background-color);
-
-        @if meta.type-of($background-color) == 'color' {
-            $hover-item-background: rgba(text-contrast($background-color), .12);
-        }
+        $hover-item-background: hsla(from adaptive-contrast(var(--background-color)) h s l / .12);
     }
 
-    @if not($hover-item-text-color) and $background-color {
-        $hover-item-text-color: text-contrast($background-color);
+    @if not($hover-item-text-color) and $item-text-color {
+        $hover-item-text-color: var(--item-text-color);
+    }
+
+    @if not($hover-item-icon-color) and $hover-item-text-color {
+        $hover-item-icon-color: hsla(from var(--hover-item-text-color) h s l / 0.8);
     }
 
     @if not($focused-item-background) and $background-color {
-        $focused-item-text-color: text-contrast($background-color);
-
-        @if meta.type-of($background-color) == 'color' {
-            $focused-item-background: rgba(text-contrast($background-color), .12);
-        }
+        $focused-item-background: hsl(from var(--background-color) h s calc(l * 0.8));
     }
 
     @if not($focused-item-text-color) and $focused-item-background {
-        $focused-item-text-color: text-contrast($focused-item-background);
+        $focused-item-text-color: adaptive-contrast(var(--focused-item-background));
+    }
+
+    @if not($selected-item-background) and $background-color {
+        $selected-item-background: hsl(from var(--background-color) h s calc(l * 1.2));
     }
 
     @if not($selected-item-text-color) and $selected-item-background {
-        $selected-item-text-color: text-contrast($selected-item-background);
+        $selected-item-text-color: adaptive-contrast(var(--selected-item-background));
+    }
+
+    @if not($selected-item-icon-color) and $selected-item-text-color {
+        $selected-item-icon-color: hsla(from var(--selected-item-text-color) h s l / 0.8);
+    }
+
+    @if not($selected-hover-item-background) and $selected-item-background {
+        $selected-hover-item-background: hsl(from var(--selected-item-background) h s calc(l * 0.7));
     }
 
     @if not($selected-hover-item-text-color) and $selected-hover-item-background {
-        $selected-hover-item-text-color: text-contrast($selected-hover-item-background);
+        $selected-hover-item-text-color: adaptive-contrast(var(--selected-hover-item-background));
+    }
+
+    @if not($selected-hover-item-icon-color) and $selected-hover-item-text-color {
+        $selected-hover-item-icon-color: hsla(from var(--selected-hover-item-text-color) h s l / 0.8);
+    }
+
+    @if not($selected-focus-item-background) and $selected-item-background {
+        $selected-focus-item-background: hsl(from var(--selected-item-background) h s calc(l * 0.7));
     }
 
     @if not($selected-focus-item-text-color) and $selected-focus-item-background {
-        $selected-focus-item-text-color: text-contrast($selected-focus-item-background);
+        $selected-focus-item-text-color: adaptive-contrast(var(--selected-focus-item-background));
     }
 
     @if not($selected-focus-item-text-color) and $selected-focus-item-background {
-        $selected-focus-item-text-color: text-contrast($selected-focus-item-background);
+        $selected-focus-item-text-color: adaptive-contrast(var(--selected-focus-item-background));
+    }
+
+    @if $variant == 'indigo' {
+        @if not($focused-item-border-color) and $selected-item-background {
+            $focused-item-border-color: var(--selected-item-background);
+        }
     }
 
     @if not($disabled-item-text-color) and $background-color {
-        @if meta.type-of($background-color) == 'color' {
-            $disabled-item-text-color: rgba(text-contrast($background-color), .36);
-        }
+            $disabled-item-text-color: hsla(from adaptive-contrast(var(--background-color)) h s l / .36);
     }
 
     @if not($disabled-item-text-color) and $disabled-item-background {
-        @if meta.type-of($disabled-item-background) == 'color' {
-            $disabled-item-text-color: rgba(text-contrast($disabled-item-background), .36);
-        }
+        $disabled-item-text-color: hsla(from adaptive-contrast(var(--disabled-item-background)) h s l / .36);
     }
 
     @if not($header-text-color) and $background-color {
-        @if meta.type-of($background-color) == 'color' {
-            $header-text-color: rgba(text-contrast($background-color), .7);
-        }
+        $header-text-color: hsla(from adaptive-contrast(var(--background-color)) h s l / .7);
     }
 
     @if not($shadow) {
@@ -189,10 +209,6 @@
         border-color: $border-color,
         border-width: $border-width,
         size: $size,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -201,7 +217,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin drop-down($theme) {
     @include css-vars($theme);
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     %igx-drop-down {
         position: absolute;
@@ -242,6 +258,10 @@
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
         position: relative;
+
+        .igx-display-container--scrollbar {
+            padding-inline-end: var(--vhelper-scrollbar-size);
+        }
     }
 
     %igx-drop-down__content {
@@ -279,20 +299,16 @@
             bottom: 0;
         }
 
-        igx-icon {
+        igx-icon,
+        igc-icon {
             justify-content: center;
-            --component-size: 1;
-
-            @if $variant == 'fluent' {
-                --component-size: 3;
-            }
 
             @if $variant == 'indigo' {
                 $icon-size: sizable(rem(14px), rem(16px), rem(16px));
 
-                width: var(--ig-icon-size, $icon-size);
-                height: var(--ig-icon-size, $icon-size);
-                font-size: var(--ig-icon-size, $icon-size);
+                --size: #{$icon-size};
+            } @else {
+                --component-size: 1;
             }
         }
     }

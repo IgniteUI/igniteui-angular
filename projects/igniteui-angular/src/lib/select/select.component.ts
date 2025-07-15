@@ -21,9 +21,11 @@ import {
     Output,
     QueryList,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    DOCUMENT,
+    ViewChildren
 } from '@angular/core';
-import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -121,6 +123,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     @ContentChildren(IgxSuffixDirective, { descendants: true })
     protected suffixes: QueryList<IgxSuffixDirective>;
+
+    @ViewChildren(IgxSuffixDirective)
+    protected internalSuffixes: QueryList<IgxSuffixDirective>;
 
     /** @hidden @internal */
     @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label: IgxLabelDirective;
@@ -545,8 +550,15 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this.inputGroup.prefixes = this.prefixes;
         }
 
-        if (this.inputGroup && this.suffixes?.length > 0) {
-            this.inputGroup.suffixes = this.suffixes;
+        if (this.inputGroup) {
+            const suffixesArray = this.suffixes?.toArray() ?? [];
+            const internalSuffixesArray = this.internalSuffixes?.toArray() ?? [];
+            const mergedSuffixes = new QueryList<IgxSuffixDirective>();
+            mergedSuffixes.reset([
+                ...suffixesArray,
+                ...internalSuffixesArray
+            ]);
+            this.inputGroup.suffixes = mergedSuffixes;
         }
     }
 
@@ -594,19 +606,25 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     protected manageRequiredAsterisk(): void {
         const hasRequiredHTMLAttribute = this.elementRef.nativeElement.hasAttribute('required');
-        if (this.ngControl && this.ngControl.control.validator) {
-            // Run the validation with empty object to check if required is enabled.
-            const error = this.ngControl.control.validator({} as AbstractControl);
-            this.inputGroup.isRequired = error && error.required;
-            this.cdr.markForCheck();
+        let isRequired = false;
 
-            // If validator is dynamically cleared and no required HTML attribute is set,
-            // reset label's required class(asterisk) and IgxInputState #6896
-        } else if (this.inputGroup.isRequired && this.ngControl && !this.ngControl.control.validator && !hasRequiredHTMLAttribute) {
-            this.input.valid = IgxInputState.INITIAL;
-            this.inputGroup.isRequired = false;
-            this.cdr.markForCheck();
+        if (this.ngControl && this.ngControl.control.validator) {
+            const error = this.ngControl.control.validator({} as AbstractControl);
+            isRequired = !!(error && error.required);
         }
+
+        this.inputGroup.isRequired = isRequired;
+
+        if (this.input?.nativeElement) {
+            this.input.nativeElement.setAttribute('aria-required', isRequired.toString());
+        }
+
+        // Handle validator removal case
+        if (!isRequired && !hasRequiredHTMLAttribute) {
+            this.input.valid = IgxInputState.INITIAL;
+        }
+
+        this.cdr.markForCheck();
     }
 
     private setSelection(item: IgxDropDownItemBaseDirective) {

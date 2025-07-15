@@ -1,7 +1,5 @@
-import { inject, InjectionToken } from "@angular/core";
-import { mkenum } from "../../core/utils";
+import { inject, InjectionToken, DOCUMENT } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { DOCUMENT } from "@angular/common";
 
 export class ThemeToken {
     private document = inject(DOCUMENT);
@@ -39,12 +37,12 @@ export const THEME_TOKEN = new InjectionToken<ThemeToken>('ThemeToken', {
     factory: () => new ThemeToken()
 });
 
-const Theme = /*@__PURE__*/ mkenum({
+const Theme = {
     Material: "material",
     Fluent: "fluent",
     Bootstrap: "bootstrap",
     IndigoDesign: "indigo",
-});
+} as const;
 
 /**
  * Determines the component theme.

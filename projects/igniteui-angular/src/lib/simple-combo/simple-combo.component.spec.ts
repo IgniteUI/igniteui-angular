@@ -618,8 +618,8 @@ describe('IgxSimpleCombo', () => {
             expect(input.nativeElement.getAttribute('aria-controls')).toEqual(combo.dropdown.listId);
             expect(input.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
 
-            const dropdown = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_DROPDOWN}`));
-            expect(dropdown.nativeElement.getAttribute('ng-reflect-labelled-by')).toEqual(combo.placeholder);
+            const dropdownListBox = fixture.debugElement.query(By.css(`[role='listbox']`));
+            expect(dropdownListBox.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
 
             combo.open();
             tick();
@@ -1241,6 +1241,30 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             expect(input.nativeElement.value.length).toEqual(0);
             expect(combo.selection).not.toBeDefined();
+        });
+
+        it('should not filter the data when disableFiltering is true', () => {
+            combo.disableFiltering = true;
+            fixture.detectChanges();
+            combo.focusSearchInput();
+
+            UIInteractions.simulateTyping('con', input);
+            expect(combo.comboInput.value).toEqual('con');
+            fixture.detectChanges();
+
+            expect(combo.filteredData.length).toEqual(combo.data.length);
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+
+            combo.disableFiltering = false;
+            fixture.detectChanges();
+            combo.focusSearchInput();
+            combo.comboInput.value = '';
+            fixture.detectChanges();
+            UIInteractions.simulateTyping('con', input);
+            expect(combo.comboInput.value).toEqual('con');
+            fixture.detectChanges();
+            expect(combo.filteredData.length).toEqual(2);
         });
 
         it('should display the AddItem button when allowCustomValues is true and there is a partial match', fakeAsync(() => {
