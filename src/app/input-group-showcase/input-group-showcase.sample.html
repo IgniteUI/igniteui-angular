@@ -25,11 +25,11 @@
             }
 
             <input
-                    formControlName="field"
-                    [type]="getNativeInputType()"
-                    [attr.placeholder]="getPlaceholder()"
-                    [readOnly]="isReadonly()"
-                    igxInput
+                formControlName="field"
+                [type]="getNativeInputType()"
+                [attr.placeholder]="getPlaceholder()"
+                [readOnly]="isReadonly()"
+                igxInput
             />
 
             @if (hideSuffix()) {
@@ -56,10 +56,10 @@
                 <igx-icon igxPrefix>face</igx-icon>
             }
             <textarea
-                    formControlName="fieldTextarea"
-                    [attr.placeholder]="getPlaceholder()"
-                    [readOnly]="isReadonly()"
-                    igxInput>
+                formControlName="fieldTextarea"
+                [attr.placeholder]="getPlaceholder()"
+                [readOnly]="isReadonly()"
+                igxInput>
             </textarea>
 
             @if (hideSuffix()) {
@@ -144,12 +144,12 @@
             }
 
             <input
-                    id="file-in"
-                    formControlName="fieldFile"
-                    [required]="isRequired()"
-                    [type]="'file'"
-                    [readOnly]="isReadonly()"
-                    igxInput
+                id="file-in"
+                formControlName="fieldFile"
+                [required]="isRequired()"
+                [type]="'file'"
+                [readOnly]="isReadonly()"
+                igxInput
             />
 
             @if (hideSuffix()) {
@@ -242,12 +242,12 @@
         </igc-textarea>
 
         <igc-select
-                [required]="isRequired()"
-                [attr.placeholder]="getPlaceholder()"
-                [label]="getLabel()"
-                [disabled]="isDisabled()"
-                [outlined]="isOutlined()"
-                [style.--ig-size]="getSize()">
+            [required]="isRequired()"
+            [attr.placeholder]="getPlaceholder()"
+            [label]="getLabel()"
+            [disabled]="isDisabled()"
+            [outlined]="isOutlined()"
+            [style.--ig-size]="getSize()">
 
             @if (hidePrefix()) {
                 <igc-icon slot="prefix" name="face"></igc-icon>
@@ -276,13 +276,13 @@
 
 
         <igc-file-input
-                [style.--ig-size]="getSize()"
-                [label]="getLabel()"
-                [required]="isRequired()"
-                [disabled]="isDisabled()"
-                [readOnly]="isReadonly()"
-                [attr.value]="getValue()"
-                [outlined]="isOutlined()">
+            [style.--ig-size]="getSize()"
+            [label]="getLabel()"
+            [required]="isRequired()"
+            [disabled]="isDisabled()"
+            [readOnly]="isReadonly()"
+            [attr.value]="getValue()"
+            [outlined]="isOutlined()">
             @if (hidePrefix()) {
                 <igc-icon slot="prefix" name="face"></igc-icon>
             }

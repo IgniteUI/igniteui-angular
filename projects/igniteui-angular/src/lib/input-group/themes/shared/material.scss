@@ -488,11 +488,6 @@ $input-bottom-spacing: rem(6px);
             will-change: translate;
             align-self: start;
         }
-
-        //@include e(textarea) {
-        //    margin-block-start: $input-top-spacing;
-        //    bottom: rem(2px);
-        //}
     }
 
     @include mx(border, textarea-group, filled) {
