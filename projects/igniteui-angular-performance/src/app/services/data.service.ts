@@ -76,7 +76,7 @@ export class DataService {
         date.setHours(this.generateRandomNumber(rnd, 0, 23));
         date.setMonth(this.generateRandomNumber(rnd, 0, date.getMonth()));
         date.setDate(this.generateRandomNumber(rnd, 0, 23));
-        return date.getMonth() + '/' + date.getDay() + '/' + date.getFullYear();
+        return (date.getMonth()+1) + '/' + date.getDate() + '/' + date.getFullYear();
     }
 
     private generateRandomNumber(rnd, min, max) {

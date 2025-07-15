@@ -500,14 +500,14 @@
             "tsConfig": "projects/igniteui-angular-performance/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "projects/igniteui-angular-performance/public"
-              }
+              "projects/igniteui-angular-performance/src/assets"
             ],
             "styles": [
               "projects/igniteui-angular-performance/src/styles.scss"
-            ]
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["node_modules"]
+            }
           },
           "configurations": {
             "production": {

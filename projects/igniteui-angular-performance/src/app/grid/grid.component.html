@@ -1,0 +1,29 @@
+<igx-grid
+  #grid
+  [data]="data"
+  [allowFiltering]="true"
+  [height]="'100%'"
+  [width]="'100%'"
+  [rowSelection]="'multiple'"
+>
+  <igx-column [field]="'Avatar'" [header]="'Avatar'" width="136px">
+    <ng-template igxCell let-cell>
+      <img class="img athl-data" [src]="cell" alt="Image" />
+    </ng-template>
+  </igx-column>
+  <igx-column [field]="'CountryFlag'" [header]="'Country Flag'">
+    <ng-template igxCell let-cell>
+      <img class="img athl-data flag" [src]="cell" alt="Image" />
+    </ng-template>
+  </igx-column>
+
+  @for (col of columns; track col) {
+    <igx-column
+      [field]="col.field"
+      [header]="col.header"
+      [sortable]="col.sortable"
+      [dataType]="col.dataType"
+    >
+    </igx-column>
+  }
+</igx-grid>

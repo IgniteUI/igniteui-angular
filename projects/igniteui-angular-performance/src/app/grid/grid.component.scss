@@ -1,0 +1,12 @@
+.img {
+    height: 50px;
+    margin: 0 auto;
+    &.flag {
+        height: 20px;
+    }
+}
+
+:host {
+    height: 100%;
+    display: block;
+}
