@@ -114,7 +114,7 @@
                 [cellValidationErrorTemplate]="col.errorTemplate"
                 [lastSearchInfo]="grid.lastSearchInfo"
                 [cellSelectionMode]="grid.cellSelection"
-                [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)">
+                [displayPinnedChip]="shouldDisplayPinnedChip(col)">
             </igx-hierarchical-grid-cell>
         }
     </ng-template>
@@ -148,6 +148,6 @@
     [cellValidationErrorTemplate]="col.errorTemplate"
     [lastSearchInfo]="grid.lastSearchInfo"
     [cellSelectionMode]="grid.cellSelection"
-    [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)">
+    [displayPinnedChip]="shouldDisplayPinnedChip(col)">
 </igx-hierarchical-grid-cell>
 </ng-template>

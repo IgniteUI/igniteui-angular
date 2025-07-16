@@ -578,8 +578,8 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-    public shouldDisplayPinnedChip(visibleColumnIndex: number): boolean {
-        return this.pinned && this.disabled && visibleColumnIndex === 0;
+    public shouldDisplayPinnedChip(col: ColumnType): boolean {
+        return this.pinned && this.disabled && col.visibleIndex === 0 && !this.metaData?.cellMergeMeta?.get(col.field)?.root;
     }
 
     /**

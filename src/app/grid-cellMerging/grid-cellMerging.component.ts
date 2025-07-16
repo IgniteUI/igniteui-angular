@@ -50,6 +50,8 @@ export class GridCellMergingComponent {
     public hierarchicalData = HIERARCHICAL_DATA.concat(HIERARCHICAL_DATA).concat(HIERARCHICAL_DATA);
     public treeData = HIERARCHICAL_SAMPLE_DATA;
     public treeGridMergeStrategy =  new ByLevelTreeGridMergeStrategy();
+    public alignBottom = { alignItems: "flex-end", paddingBottom: "12px"};
+    public alignTop= { alignItems: "flex-start", paddingTop: "12px" };
     public data = [{
         ProductID: 1,
         ProductName: 'Chai',

@@ -16,7 +16,7 @@
         [style.flex-basis]="col.resolvedWidth" [width]="col.getCellWidth()" [visibleColumnIndex]="col.visibleIndex"
         [value]="pivotAggregationData[col.field] | dataMapper:col.field:grid.pipeTrigger:pivotAggregationData[col.field]:col.hasNestedPath"
         [cellTemplate]="col.bodyTemplate" [lastSearchInfo]="grid.lastSearchInfo"
-        [cellSelectionMode]="grid.cellSelection" [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"
+        [cellSelectionMode]="grid.cellSelection" [displayPinnedChip]="shouldDisplayPinnedChip(col)"
         (pointerdown)="grid.navigation.focusOutRowHeader($event)">
     </igx-grid-cell>
 </ng-template>
