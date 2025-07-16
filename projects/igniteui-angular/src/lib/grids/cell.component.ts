@@ -538,7 +538,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @HostBinding('class.igx-grid__td--invalid')
     @HostBinding('attr.aria-invalid')
     public get isInvalid() {
-        const isInvalid = this.formGroup?.get(this.column?.field)?.invalid && this.formGroup?.get(this.column?.field)?.touched;
+        const fieldName = this.getTransformedFieldName(this.column?.field);
+        const isInvalid = this.formGroup?.get(fieldName)?.invalid && this.formGroup?.get(fieldName)?.touched;
         return !this.intRow.deleted && isInvalid;
     }
 
@@ -548,7 +549,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      */
     @HostBinding('class.igx-grid__td--valid')
     public get isValidAfterEdit() {
-        const formControl = this.formGroup?.get(this.column?.field);
+        const fieldName = this.getTransformedFieldName(this.column?.field);
+        const formControl = this.formGroup?.get(fieldName);
         return this.editMode && formControl && !formControl.invalid && formControl.dirty;
     }
 
@@ -1173,6 +1175,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         const meta = new Map<string, any>();
         meta.set('pinned', this.grid.isRecordPinnedByViewIndex(this.intRow.index));
         return meta;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public getTransformedFieldName(field: string): string {
+        return field?.replace(/\./g, '_');
     }
 
     /**
