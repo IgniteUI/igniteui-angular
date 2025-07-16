@@ -1182,7 +1182,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @internal
      */
     public getTransformedFieldName(field: string): string {
-        return field.replace(/\./g, '_');
+        return field?.replace(/\./g, '_');
     }
 
     /**
