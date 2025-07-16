@@ -536,6 +536,30 @@ export class TemplateDefinitions {
             <igx-icon>expand_more</igx-icon>
         </ng-template>
     `;
+
+    public static toolbarHidingDefinition = `
+        <igx-grid-toolbar>
+            <igx-grid-toolbar-actions>
+                <igx-grid-toolbar-hiding buttonText='Hidden'>
+                </igx-grid-toolbar-hiding>
+            </igx-grid-toolbar-actions>
+        </igx-grid-toolbar>`;
+    
+    public static toolbarPinningDefinition = `
+        <igx-grid-toolbar>
+            <igx-grid-toolbar-actions>
+                <igx-grid-toolbar-pinning>
+                </igx-grid-toolbar-pinning>
+            </igx-grid-toolbar-actions>
+        </igx-grid-toolbar>`;
+
+    public static propsSizeTemplate = '#grid [height]="height" [width]="width"';
+
+    public static propsSizeTemplateWithMoving =  ' #grid [height]="height" [width]="width" [moving]="true"';
+
+    public static propsFeaturesTemplate = '[height]="height" [moving]="true" [width]="width" [rowSelection]="rowSelection" [autoGenerate]="autoGenerate"';
+
+    public static ifPagingTemplate = '@if (paging) { <igx-paginator></igx-paginator> }';
 }
 
 export class ExternalTemplateDefinitions {

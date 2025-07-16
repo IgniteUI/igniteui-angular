@@ -82,6 +82,7 @@ export default [{
             format: ["PascalCase"],
         }],
 
+        "@angular-eslint/prefer-inject": "off",
         "@angular-eslint/no-input-rename": "off",
 
         "brace-style": ["error", "1tbs"],

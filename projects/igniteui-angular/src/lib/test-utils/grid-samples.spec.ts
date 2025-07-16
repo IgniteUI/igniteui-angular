@@ -398,7 +398,8 @@ export class GridHireDateComponent extends BasicGridComponent {
 
 @Component({
     template: `<div style="margin: 50px;">
-            ${GridTemplateStrings.declareGrid('[height]="height" [moving]="true" [width]="width" [rowSelection]="rowSelection" [autoGenerate]="autoGenerate"', EventSubscriptions.columnMovingStart + EventSubscriptions.columnMoving + EventSubscriptions.columnMovingEnd, ColumnDefinitions.movableColumns)}</div>`,
+        {{ gridTemplateString }}
+    </div>`,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class MovableColumnsComponent extends BasicGridComponent {
@@ -419,6 +420,12 @@ export class MovableColumnsComponent extends BasicGridComponent {
     public cancel = false;
     public source: IgxColumnComponent;
     public target: IgxColumnComponent;
+
+    public get gridTemplateString(): string {
+        return GridTemplateStrings.declareGrid(TemplateDefinitions.propsFeaturesTemplate,
+            EventSubscriptions.columnMovingStart + EventSubscriptions.columnMoving + EventSubscriptions.columnMovingEnd,
+            ColumnDefinitions.movableColumns);
+    }
 
     public columnMovingStarted(event) {
         this.countStart++;
