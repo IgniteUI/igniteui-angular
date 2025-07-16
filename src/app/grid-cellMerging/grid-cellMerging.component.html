@@ -65,7 +65,7 @@
 
 <h4 class="sample-title">Tree grid with cell merge</h4>
 
-<igx-tree-grid [autoGenerate]="false" [data]="treeData" [cellMergeMode]="'always'"
+<igx-tree-grid [autoGenerate]="false" [data]="treeData" [cellMergeMode]="'always'" [mergeStrategy]="treeGridMergeStrategy"
 childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1" width="800px" [height]="'550px'">
 <igx-column field="ContactName" width="200px">
 </igx-column>

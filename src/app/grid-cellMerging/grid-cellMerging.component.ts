@@ -21,6 +21,7 @@ import { HIERARCHICAL_DATA } from '../shared/hierarchicalData';
 
 import { data, dataWithoutPK } from '../shared/data';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
+import { ByLevelTreeGridMergeStrategy } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-cellMerging',
@@ -48,6 +49,7 @@ import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 export class GridCellMergingComponent {
     public hierarchicalData = HIERARCHICAL_DATA.concat(HIERARCHICAL_DATA).concat(HIERARCHICAL_DATA);
     public treeData = HIERARCHICAL_SAMPLE_DATA;
+    public treeGridMergeStrategy =  new ByLevelTreeGridMergeStrategy();
     public data = [{
         ProductID: 1,
         ProductName: 'Chai',
