@@ -82,6 +82,8 @@ import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
+import { IgxGridCellMergePipe } from '../grid/grid.pipes';
+import { DefaultTreeGridMergeStrategy, IGridMergeStrategy } from '../../data-operations/merge-strategy';
 
 let NEXT_ID = 0;
 
@@ -168,7 +170,8 @@ let NEXT_ID = 0;
         IgxTreeGridSummaryPipe,
         IgxTreeGridNormalizeRecordsPipe,
         IgxTreeGridAddRowPipe,
-        IgxStringReplacePipe
+        IgxStringReplacePipe,
+        IgxGridCellMergePipe
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -348,6 +351,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
     protected override _filterStrategy = new TreeGridFilteringStrategy();
     protected override _transactions: HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>;
+    protected override _mergeStrategy: IGridMergeStrategy = new DefaultTreeGridMergeStrategy();
     private _data;
     private _rowLoadingIndicatorTemplate: TemplateRef<void>;
     private _expansionDepth = Infinity;
@@ -699,13 +703,14 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public getContext(rowData: any, rowIndex: number, pinned?: boolean): any {
         return {
-            $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
+            $implicit: this.isGhostRecord(rowData) || this.isRecordMerged(rowData) ? rowData.recordRef : rowData,
             index: this.getDataViewIndex(rowIndex, pinned),
             templateID: {
                 type: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
                 id: null
             },
-            disabled: this.isGhostRecord(rowData) ? rowData.recordRef.isFilteredOutParent === undefined : false
+            disabled: this.isGhostRecord(rowData) ? rowData.recordRef.isFilteredOutParent === undefined : false,
+            metaData: this.isRecordMerged(rowData) ? rowData : null
         };
     }
 

@@ -79,3 +79,44 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
         return a === b;
     }
 }
+
+
+export class DefaultTreeGridMergeStrategy extends DefaultMergeStrategy {
+    /* blazorSuppress */
+    public override comparer(prevRecord: any, record: any, field: string): boolean {
+        const a = prevRecord.data[field];
+        const b = record.data[field];
+        const an = (a === null || a === undefined);
+        const bn = (b === null || b === undefined);
+        if (an) {
+            if (bn) {
+                return true;
+            }
+            return false;
+        } else if (bn) {
+            return false;
+        }
+        return a === b;
+    }
+}
+
+export class ByLevelTreeGridMergeStrategy extends DefaultMergeStrategy {
+    /* blazorSuppress */
+    public override comparer(prevRecord: any, record: any, field: string): boolean {
+        const a = prevRecord.data[field];
+        const b = record.data[field];
+        const levelA = prevRecord.level;
+        const levelB = record.level;
+        const an = (a === null || a === undefined);
+        const bn = (b === null || b === undefined);
+        if (an) {
+            if (bn) {
+                return true;
+            }
+            return false;
+        } else if (bn) {
+            return false;
+        }
+        return a === b && levelA === levelB;
+    }
+}

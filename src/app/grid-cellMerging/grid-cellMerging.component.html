@@ -37,7 +37,7 @@
 
 <h4 class="sample-title">Hierarchical grid with cell merge</h4>
 
-<igx-hierarchical-grid #hierarchicalGrid [height]="'550px'" [data]="hierarchicalData" [autoGenerate]="false"
+<igx-hierarchical-grid #hierarchicalGrid width="800px" [height]="'550px'" [data]="hierarchicalData" [autoGenerate]="false"
     [allowAdvancedFiltering]="true" [cellMergeMode]="'always'">
     <igx-grid-toolbar></igx-grid-toolbar>
     <igx-column field="EmployeeID" width="200px">
@@ -62,3 +62,14 @@
 
     </igx-row-island>
 </igx-hierarchical-grid>
+
+<h4 class="sample-title">Tree grid with cell merge</h4>
+
+<igx-tree-grid [autoGenerate]="false" [data]="treeData" [cellMergeMode]="'always'"
+childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1" width="800px" [height]="'550px'">
+<igx-column field="ContactName" width="200px">
+</igx-column>
+<igx-column field="ContactTitle" width="200px"></igx-column>
+<igx-column field="Country" width="200px" [merge]="true" sortable="true"></igx-column>
+<igx-column field="City" width="200px" [merge]="true" sortable="true"></igx-column>
+</igx-tree-grid>

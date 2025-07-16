@@ -185,7 +185,7 @@ import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { isTree, recreateTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 import { getUUID } from './common/random';
-import { IGridMergeStrategy } from '../data-operations/merge-strategy';
+import { DefaultMergeStrategy, IGridMergeStrategy } from '../data-operations/merge-strategy';
 
 interface IMatchInfoCache {
     row: any;
@@ -2505,7 +2505,12 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```
      */
     @Input()
-    public mergeStrategy: IGridMergeStrategy;
+    get mergeStrategy() {
+        return this._mergeStrategy;
+    }
+    set  mergeStrategy(value) {
+        this._mergeStrategy = value;
+    }
 
     /**
      * Gets/Sets the sorting options - single or multiple sorting.
@@ -3181,6 +3186,10 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected _columnPinning = false;
 
     protected _pinnedRecordIDs = [];
+    /**
+     * @hidden
+     */
+    protected _mergeStrategy: IGridMergeStrategy = new DefaultMergeStrategy();
 
     /**
      * @hidden
