@@ -115,7 +115,17 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *
      */
     @Input()
-    public merge = false;
+    public get merge() {
+        return this._merge;
+    }
+
+    public set merge(value) {
+        if (this.grid.hasColumnLayouts) {
+            console.warn('Merging is not supported with multi-row layouts.');
+            return;
+        }
+        this._merge = value;
+    }
 
     /**
      * @hidden @internal
@@ -1911,6 +1921,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      */
     protected _groupable = false;
+    /**
+     * @hidden
+     */
+    protected _merge = false;
     /**
      *  @hidden
      */

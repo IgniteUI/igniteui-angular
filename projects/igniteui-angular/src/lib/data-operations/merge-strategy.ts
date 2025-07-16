@@ -14,6 +14,7 @@ export interface IGridMergeStrategy {
         activeRowIndex? : number,
         grid?: GridType
     ) => any[];
+    comparer: (prevRecord: any, record: any, field: string) => boolean;
 }
 
 export class DefaultMergeStrategy implements IGridMergeStrategy {
