@@ -9,7 +9,7 @@ import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridSortingStrategy, IGridGroupingStrategy } from '../common/strategy';
-import { GridCellMergeMode } from 'igniteui-angular';
+import { GridCellMergeMode } from '../common/enums';
 
 /**
  * @hidden

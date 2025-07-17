@@ -38,13 +38,6 @@ import { DefaultMergeStrategy, IGridMergeStrategy } from './merge-strategy';
 } as const;
 export type DataType = (typeof DataType)[keyof typeof DataType];
 
-
-export interface IMergeByResult {
-    rowSpan: number;
-    root?: any;
-    prev?: any;
-}
-
 /**
  * @hidden
  */

@@ -1,8 +1,13 @@
-import { GridCellMergeMode, IMergeByResult } from 'igniteui-angular';
-import type { KeyOfOrString } from '../core/types';
-import { IBaseEventArgs } from '../core/utils';
-import { ColumnType, GridType } from '../grids/common/grid.interface';
+import { GridType } from '../grids/common/grid.interface';
 
+
+
+
+export interface IMergeByResult {
+    rowSpan: number;
+    root?: any;
+    prev?: any;
+}
 
 export interface IGridMergeStrategy {
     /* blazorSuppress */
