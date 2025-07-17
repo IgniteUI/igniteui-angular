@@ -2505,10 +2505,10 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```
      */
     @Input()
-    get mergeStrategy() {
+    public get mergeStrategy() {
         return this._mergeStrategy;
     }
-    set  mergeStrategy(value) {
+    public set  mergeStrategy(value) {
         this._mergeStrategy = value;
     }
 
@@ -3974,7 +3974,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     public get columnsToMerge() : ColumnType[] {
         return this.visibleColumns.filter(
             x => x.merge && (this.cellMergeMode ==='always' ||
-            (this.cellMergeMode === 'onSort' && !!this.sortingExpressions.find( x=> x.fieldName === x.fieldName)))
+            (this.cellMergeMode === 'onSort' && !!this.sortingExpressions.find( y => y.fieldName === x.field)))
         );
     }
 
@@ -4058,7 +4058,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const columnToMerge = this.visibleColumns.filter(
             x => x.merge && (this.cellMergeMode ==='always' ||
             (this.cellMergeMode === 'onSort' && !!this.sortingExpressions
-                .find( x=> x.fieldName === x.fieldName)))
+                .find(y => y.fieldName === x.field)))
         );
         return columnToMerge.length > 0;
     }
