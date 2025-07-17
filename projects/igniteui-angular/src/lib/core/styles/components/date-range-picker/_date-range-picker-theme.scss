@@ -1,35 +1,5 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
-
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {color} $label-color [null] - The color for date range separator label.
-@function date-range-picker-theme(
-    $schema: $light-material-schema,
-    $label-color: null
-) {
-    $name: 'igx-date-range-picker';
-    $date-range-schema: ();
-
-    @if map.has-key($schema, 'date-range') {
-        $date-range-schema: map.get($schema, 'date-range');
-    } @else {
-        $date-range-schema: $schema;
-    }
-
-    $theme: digest-schema($date-range-schema);
-
-    @return extend($theme, (
-        name: $name,
-        label-color: $label-color,
-    ));
-}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
