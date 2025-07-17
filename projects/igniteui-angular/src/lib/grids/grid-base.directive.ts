@@ -1839,6 +1839,16 @@ export abstract class IgxGridBaseDirective implements GridType,
     @HostBinding('class.igx-grid')
     protected baseClass = 'igx-grid';
 
+    @HostBinding('attr.aria-colcount')
+    protected get ariaColCount(): number {
+        return this.visibleColumns.length;
+    }
+
+    @HostBinding('attr.aria-rowcount')
+    protected get ariaRowCount(): number {
+        const totalRows = (this as any).totalItemCount ?? this.data?.length ?? 0;
+        return (this.paginator ? this._totalRecords : totalRows) + 1;
+    }
 
     /**
      * Gets/Sets the resource strings.
@@ -2765,13 +2775,10 @@ export abstract class IgxGridBaseDirective implements GridType,
     public get activeDescendant() {
         const activeElem = this.navigation.activeNode;
 
-        if (!activeElem || !Object.keys(activeElem).length) {
-            return this.id;
+        if (!activeElem || !Object.keys(activeElem).length || activeElem.row < 0) {
+            return null;
         }
-
-        return activeElem.row < 0 ?
-            `${this.id}_${activeElem.row}_${activeElem.mchCache.level}_${activeElem.column}` :
-            `${this.id}_${activeElem.row}_${activeElem.column}`;
+        return `${this.id}_${activeElem.row}_${activeElem.column}`;
     }
 
     /** @hidden @internal */

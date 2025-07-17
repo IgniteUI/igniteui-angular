@@ -604,7 +604,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
         it('should update aria-activeDescendants when navigating around', () => {
             hierarchicalGrid.cellSelection = 'single';
-            expect(hierarchicalGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(hierarchicalGrid.id);
+            // aria-activedescendant on the tbody should not be defined unless a cell among it is active
+            expect(hierarchicalGrid.tbody.nativeElement.attributes['aria-activedescendant']).not.toBeDefined();
 
             let cellElem = (hierarchicalGrid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulatePointerOverElementEvent('pointerdown', cellElem.nativeElement);
@@ -616,13 +617,11 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             fixture.detectChanges();
 
             const childGrid = hierarchicalGrid.getChildGrids()[0];
-            expect(childGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(childGrid.id);
 
             cellElem = (childGrid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulatePointerOverElementEvent('pointerdown', cellElem.nativeElement);
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(hierarchicalGrid.id);
             expect(childGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(`${childGrid.id}_0_1`);
         });
 
