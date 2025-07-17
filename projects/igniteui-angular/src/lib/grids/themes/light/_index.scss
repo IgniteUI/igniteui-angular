@@ -1,6 +1,7 @@
 @use 'sass:meta';
 @use 'tokens';
 @use '../../../../lib/core/styles/themes/standalone' as *;
+@use 'indigo';
 
 $tokens: meta.module-variables(tokens);
 @include themes(igx-grid, $tokens, light);

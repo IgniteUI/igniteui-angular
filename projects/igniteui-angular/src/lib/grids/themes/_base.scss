@@ -1,3 +1,4 @@
+/* stylelint-disable max-nesting-depth */
 @use 'igniteui-theming/sass/animations' as *;
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/themes' as *;
@@ -9,15 +10,53 @@ $theme: $material;
 
 @include layer(base) {
     @include b(igx-grid) {
+        %cell-base {
+            position: relative;
+            display: flex;
+            flex: 1 1 0%;
+            align-items: center;
+            outline-style: none;
+            color: inherit;
+            text-align: start;
+            background-clip: border-box !important;
+
+            // The min-height should be different in the indigo theme -> 32px, 40px, 48px
+            min-height: sizable(rem(32px), rem(40px), rem(50px));
+
+            // Font size for the cell is different in the ingigo theme -> it simply uses the detail-1 styles for all cells
+            font-size: rem(13px);
+            line-height: rem(16px);
+
+            padding-block: 0;
+            // The inline padding styles should be different in the indigo theme -> 8px, 12px, 16px
+            padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
+
+            // These should probably be added to the cell when it's a part of a multi-row layout header
+            border-inline-end: rem(1px) solid
+                var-get($theme, 'header-border-color');
+            border-bottom: rem(1px) solid var-get($theme, 'header-border-color');
+        }
+
+        %cell-header {
+            flex-flow: row nowrap;
+            justify-content: space-between;
+            align-items: flex-end;
+            min-width: 0;
+            min-height: var(--header-size);
+            border-inline-end: var-get($theme, 'header-border-width')
+                var-get($theme, 'header-border-style')
+                var-get($theme, 'header-border-color');
+            overflow: hidden;
+            transition: color 250ms ease-in-out;
+        }
+
         @include sizable();
 
         --component-size: var(--ig-size, var(--ig-size-large));
         --grid-size: var(--component-size);
 
         @include e(td) {
-            border-inline-end: rem(1px) solid
-                var-get($theme, 'header-border-color');
-            border-bottom: rem(1px) solid var-get($theme, 'header-border-color');
+            @extend %cell-base;
         }
 
         @include e(td, $m: active) {
@@ -35,6 +74,71 @@ $theme: $material;
             //         'cell-active-border-color'
             //     );
             // }
+        }
+    }
+
+    @include b(igx-grid-th) {
+        @extend %cell-base;
+        @extend %cell-header;
+
+        @include e(title) {
+            @include ellipsis();
+
+            // The font-weight depends on the theme, here's a list-style-type:
+            // material: 600,
+            // fluent: 800,
+            // bootstrap: 700,
+            // indigo: 600,
+            // Also, all other styles are from detail-2 (@include type-style('detail-2', false)) for the indigo theme
+            font-weight: 600;
+            min-width: 3ch;
+            user-select: none;
+            cursor: initial;
+            line-height: var(--header-size);
+            transition: color 250ms ease-in-out;
+        }
+
+        @include e(icons) {
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-end;
+            user-select: none;
+            min-width: rem(30px);
+            height: var(--header-size);
+            align-self: flex-end;
+
+            &:empty {
+                min-width: 0;
+            }
+
+            .sort-icon {
+                position: relative;
+                display: flex;
+
+                &::after {
+                    content: attr(data-sortIndex);
+                    position: absolute;
+                    top: rem(-5px);
+                    inset-inline-end: rem(-1px);
+                    font-size: rem(10px);
+                    text-align: end;
+                    font-family: sans-serif;
+                    line-height: rem(10px);
+                }
+            }
+        }
+
+        @include m(sortable) {
+            @include e(icons) {
+                .sort-icon {
+                    cursor: pointer;
+                    opacity: 0.7;
+
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+            }
         }
     }
 }

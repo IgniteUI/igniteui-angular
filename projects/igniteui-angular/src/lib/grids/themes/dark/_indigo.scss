@@ -1,0 +1,16 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use '../../../../lib/core/styles/themes/standalone' as *;
+
+@include themed-block(igx-grid-th, indigo, dark) {
+    @include m(sortable) {
+        @include e(icons) {
+            .sort-icon {
+                opacity: 0.85;
+
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}
