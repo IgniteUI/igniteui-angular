@@ -577,8 +577,6 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
                 GridSelectionFunctions.verifyRowHasCheckbox(row);
                 expect(GridFunctions.getRowDisplayContainer(fix, 0)).toBeDefined();
-                expect(row.children[2].getAttribute('aria-describedby')).toBe(grid.id + '_CompanyName');
-                expect(row.children[3].getAttribute('aria-describedby')).toBe(grid.id + '_ContactName');
 
                 // check scrollbar DOM
                 const scrBarStartSection = fix.debugElement.query(By.css(`${GRID_SCROLL_CLASS}-start`));
@@ -695,7 +693,6 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 for (let i = 0; i <= pinnedCols.length - 1; i++) {
                     const elem = row.children[i + 1];
                     expect(parseInt((elem as any).style.left, 10)).toBe(-330);
-                    expect(elem.getAttribute('aria-describedby')).toBe(grid.id + '_' + pinnedCols[i].field);
                 }
 
                 // check correct headers have left border

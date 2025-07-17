@@ -93,6 +93,26 @@ export class IgxGridHeaderRowComponent implements DoCheck {
         return this.groups.map(group => group.filter);
     }
 
+    /**
+     * Gets a list of all visible leaf columns in the grid.
+     *
+     * @hidden @internal
+     */
+    public get visibleLeafColumns(): ColumnType[] {
+        const row = this.grid.gridAPI.get_row_by_index(this.grid.rowList.first?.index || 0);
+        if (row && row.cells) {
+            return row.cells.map(cell => cell.column);
+        }
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public get isLeafHeaderAriaHidden(): boolean {
+        return this.grid.navigation.activeNode.row === -1;
+    }
+
     /** The virtualized part of the header row containing the unpinned header groups. */
     @ViewChild('headerVirtualContainer', { read: IgxGridForOfDirective, static: true })
     public headerContainer: IgxGridForOfDirective<ColumnType, ColumnType[]>;
