@@ -3695,7 +3695,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         return rec?.cellMergeMeta;
     }
 
-    public getMergeCellOffset(rowData) {
+    protected getMergeCellOffset(rowData) {
         const index = rowData.index;
         let offset = this.verticalScrollContainer.scrollPosition - this.verticalScrollContainer.getScrollForIndex(index);
         if (this.hasPinnedRecords && this.isRowPinningToTop) {
@@ -3971,6 +3971,10 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public get columnsToMerge() : ColumnType[] {
         return this.visibleColumns.filter(
             x => x.merge && (this.cellMergeMode ==='always' ||
