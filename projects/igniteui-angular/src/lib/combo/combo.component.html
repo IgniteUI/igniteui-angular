@@ -9,6 +9,7 @@
         <ng-content select="igx-hint, [igxHint]"></ng-content>
     </ng-container>
     <input igxInput #comboInput name="comboInput" type="text" [value]="displayValue" readonly
+        [attr.required]="required"
         [attr.placeholder]="placeholder" [disabled]="disabled"
         role="combobox" aria-haspopup="listbox"
         [attr.aria-expanded]="!dropdown.collapsed" [attr.aria-controls]="dropdown.listId"
