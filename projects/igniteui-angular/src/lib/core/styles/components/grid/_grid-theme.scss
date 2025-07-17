@@ -1830,10 +1830,12 @@
                 %igx-grid__td--merged {
                     color: var-get($theme, 'row-selected-text-color');
                     background: var-get($theme, 'row-selected-background');
+
                     &:hover {
                         background: var-get($theme, 'row-selected-hover-background');
                         color: var-get($theme, 'row-selected-hover-text-color');
                     }
+
                     &%igx-grid__td--merged-hovered {
                         background: var-get($theme, 'row-selected-hover-background');
                         color: var-get($theme, 'row-selected-hover-text-color');
