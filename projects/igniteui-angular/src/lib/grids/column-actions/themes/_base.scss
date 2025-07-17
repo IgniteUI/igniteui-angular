@@ -28,7 +28,7 @@ $_theme: $material;
 
         @include e(header-input) {
             font-size: rem(16px);
-            margin: rem(-16px) 0 0 !important;
+            margin: 0 !important;
             padding: rem(8px) rem(16px);
         }
 
