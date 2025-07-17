@@ -46,7 +46,7 @@
                 | gridRowPinning:id:true:pipeTrigger
                 | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
                 | gridSort:sortingExpressions:[]:sortStrategy:id:pipeTrigger:true
-                | gridCellMerge:visibleColumns:cellMergeMode:sortingExpressions:activeRowIndex:pipeTrigger; as pinnedData
+                | gridCellMerge:visibleColumns:cellMergeMode:sortingExpressions:activeRowIndexes:pipeTrigger; as pinnedData
             ) {
                 @if (pinnedData.length > 0) {
                     <div #pinContainer class="igx-grid__tr--pinned"
@@ -71,7 +71,7 @@
         | gridHierarchical:expansionStates:id:primaryKey:childLayoutKeys:pipeTrigger
         | gridAddRow:false:pipeTrigger
         | gridRowPinning:id:false:pipeTrigger
-        | gridCellMerge:visibleColumns:cellMergeMode:sortingExpressions:((hasPinnedRecords && isRowPinningToTop) ? activeRowIndex - pinnedRecordsCount : activeRowIndex):pipeTrigger"
+        | gridCellMerge:visibleColumns:cellMergeMode:sortingExpressions:activeRowIndexes:pipeTrigger"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]="verticalScroll"
             [igxForContainerSize]="calcHeight" [igxForItemSize]="renderedRowHeight" [igxForTrackBy]="trackChanges"
             #verticalScrollContainer (chunkPreload)="dataLoading($event)" (dataChanging)="dataRebinding($event)" (dataChanged)="dataRebound($event)">

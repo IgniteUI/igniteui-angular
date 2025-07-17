@@ -4054,8 +4054,10 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
 
-    protected get activeRowIndex() {
-        return this.navigation.activeNode?.row;
+    protected get activeRowIndexes(): number[] {
+        const activeRow = this.navigation.activeNode?.row;
+        const selectedCellIndexes = (this.selectionService.selection?.keys() as any)?.toArray();
+        return [activeRow, ...selectedCellIndexes];
     }
 
     protected get hasCellsToMerge() {
