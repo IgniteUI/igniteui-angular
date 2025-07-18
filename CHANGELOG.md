@@ -2,6 +2,10 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 20.1.0
+### General
+- `IgxDropDown` now exposes a `role` input property, allowing users to customize the role attribute based on the use case. The default is `listbox`.
+
 ## 20.0.6
 ### General
 - `IgxSimpleCombo`
