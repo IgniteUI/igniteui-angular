@@ -1043,14 +1043,6 @@
         }
     }
 
-    @if $variant == 'fluent' {
-        %form-group-display--file-focused {
-            %form-group-input {
-                margin-block-start: rem(-1px);
-            }
-        }
-    }
-
     %form-group-display--file {
         %form-group-bundle {
             grid-template-columns: auto auto auto 1fr auto;
@@ -1835,18 +1827,6 @@
         }
     }
 
-
-    %fluent-file-input,
-    %fluent-upload-button {
-        max-height: calc(var-get($theme, 'size') - #{rem(2px)});
-    }
-
-    %fluent-focused-file-input,
-    %fluent-focused-upload-button {
-        max-height: calc(var-get($theme, 'size') - #{rem(4px)});
-    }
-
-
     // This is a hack that removes the autofill background and it's essential,
     // otherwise the background is on top of the floating label in material theme.
     // The !important flag is because bootstrap theme(and potentially feature themes) is overriding the transition delay.
@@ -2093,11 +2073,13 @@
     }
 
     %form-group-helper {
+        --ig-caption-margin-top: #{$hint-spacing-block};
+        --ig-caption-margin-bottom: 0;
+
         color: var-get($theme, 'helper-text-color');
         position: relative;
         display: grid;
         grid-auto-rows: minmax($hint-min-size, auto);
-        margin-block-start: $hint-spacing-block !important;
         padding-inline: $hint-spacing-inline;
 
         justify-content: space-between;
@@ -2111,11 +2093,7 @@
         }
 
         &:empty {
-            @if $variant == 'fluent' {
-                padding: 0;
-            } @else {
-                display: none;
-            }
+            display: none;
         }
     }
 
@@ -2332,98 +2310,79 @@
 
     %form-group-bundle--fluent {
         --min-width: #{sizable(rem(4px), rem(6px), rem(8px))};
+        --_fluent-input-border-size: #{rem(1px)};
 
         min-height: var-get($theme, 'size');
         padding: 0;
-        border: rem(1px) solid var-get($theme, 'border-color');
         background: var-get($theme, 'border-background');
         align-items: stretch;
-        overflow: hidden;
+        overflow: visible;
+        border-radius: var-get($theme, 'border-border-radius');
+        position: relative;
+        border: rem(1px) solid transparent;
 
-        @if $variant == 'fluent' {
-            border-radius: var-get($theme, 'border-border-radius');
-        }
-
-        // Those focus styles are needed since when we focus the button inside
-        // the file type input the class .igx-input-group--focused is not added but the input is focused.
-        &:focus,
-        &:focus-within {
-            %form-group-bundle-start {
-                margin-block-start: rem(-1px);
-                margin-inline-start: rem(-1px);
-            }
-
-            %form-group-bundle-end {
-                margin-block-start: rem(-1px);
-                margin-inline-end: rem(-1px);
-            }
-
-            %form-group-bundle-start:empty + %form-group-bundle-main,
-            %form-group-bundle-end:empty + %form-group-bundle-main {
-                margin-inline-start: rem(-1px);
-            }
-
-            %form-group-bundle-main {
-                margin-block-start: rem(-1px);
-            }
+        &::before {
+            content: '';
+            position: absolute;
+            width: calc(100% + var(--_fluent-input-border-size) * 2);
+            height: calc(100% + var(--_fluent-input-border-size) * 2);
+            pointer-events: none;
+            user-select: none;
+            inset: calc(var(--_fluent-input-border-size) * -1);
+            z-index: 1;
+            box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'border-color');
+            border-radius: inherit;
         }
     }
 
     %form-group-bundle--fluent--hover {
-        border-color: var-get($theme, 'hover-border-color');
+        &::before {
+            box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'hover-border-color');
+        }
     }
 
     %form-group-bundle--fluent--focus {
-        border-color: var-get($theme, 'focused-border-color');
-        border-width: rem(2px);
+        --_fluent-input-border-size: #{rem(2px)};
+
+        &::before {
+            box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'focused-border-color');
+        }
 
         &:hover {
-            border-color: var-get($theme, 'focused-border-color');
+            &::before {
+                box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'focused-border-color');
+            }
         }
     }
 
     %form-group-bundle-error--fluent,
     %form-group-bundle-error--fluent--hover,
     %form-group-bundle-error--fluent--focus {
-        border-color: var-get($theme, 'error-secondary-color');
+        &::before {
+            box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'error-secondary-color');
+        }
     }
 
     %form-group-bundle-success--fluent,
     %form-group-bundle-success--fluent--hover,
     %form-group-bundle-success--fluent--focus {
-        border-color: var-get($theme, 'success-secondary-color');
+        &::before {
+            box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'success-secondary-color');
+        }
     }
 
     %form-group-bundle--fluent--hover-disabled,
     %form-group-bundle--fluent-disabled {
-        border-color: var-get($theme, 'disabled-border-color');
         background: var-get($theme, 'border-disabled-background');
+
+        &::before {
+            box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'disabled-border-color');
+        }
     }
 
     %form-group-bundle-main--fluent {
         align-self: center;
         cursor: default;
-    }
-
-    @if $fluent-theme {
-        %form-group-bundle-start--fluent--focused {
-            margin-block-start: rem(-1px);
-            margin-inline-start: rem(-1px);
-        }
-
-        %form-group-bundle-end--fluent--focused {
-            margin-block-start: rem(-1px);
-            margin-inline-end: rem(-1px);
-        }
-
-        %form-group-bundle-start--fluent--focused:empty + %form-group-bundle-main--fluent--focused,
-        %form-group-bundle-end--fluent--focused:empty + %form-group-bundle-main--fluent--focused {
-            margin-inline-start: rem(-1px);
-        }
-
-        %form-group-bundle-main--fluent--focused {
-            margin-block-start: rem(-1px);
-        }
     }
 
     %form-group-bundle-textarea-start--fluent,
@@ -2440,6 +2399,10 @@
         padding-inline: rem(8px);
         margin: 0;
         border: none;
+    }
+
+    %fluent-file-input {
+        padding-inline: 0;
     }
 
     %indigo-textarea {
@@ -2467,6 +2430,8 @@
         color: var-get($theme, 'idle-secondary-color');
 
         @if $variant == 'fluent' {
+            --ig-subtitle-2-line-height: rem(16px);
+
             margin-block-end: rem(5px);
         } @else {
             margin-block-end: rem(4px);
@@ -2501,10 +2466,6 @@
 
     %fluent-label-focused {
         transform: translateY(0) scale(1);
-    }
-
-    %form-group-helper--textarea--fluent--focused {
-        margin-block-start: rem(-1px);
     }
 
     %fluent-placeholder-label {
@@ -2872,9 +2833,7 @@
     }
 
     %form-group-helper {
-        @include type-style($helper-text) {
-            margin: 0;
-        }
+        @include type-style($helper-text);
     }
 
     %form-group-prefix,

@@ -52,7 +52,6 @@
         @include e(input) {
             @extend %form-group-input !optional;
             @extend %autofill-background-fix !optional;
-            @extend %edge-clear-icon-fix !optional;
 
             &:hover {
                 @extend %form-group-input--hover !optional;
@@ -73,10 +72,6 @@
             &:focus {
                 @extend %form-group-input--focus !optional;
             }
-        }
-
-        @include e(clear-icon) {
-            @extend %form-group-clear-icon !optional;
         }
 
         @include e(hint) {
@@ -220,7 +215,6 @@
 
             @include e(label) {
                 @extend %form-group-label--float !optional;
-                @extend %form-group-label--fixed !optional;
             }
         }
 
@@ -331,7 +325,6 @@
             }
 
             @include e(label) {
-                @extend %form-group-label--fixed !optional;
                 @extend %form-group-label--disabled !optional;
             }
 
@@ -357,10 +350,6 @@
 
             @include e(bundle) {
                 @extend %form-group-bundle--disabled !optional;
-            }
-
-            @include e(label) {
-                @extend %form-group-label--fixed !optional;
             }
 
             @include e(input) {
@@ -394,20 +383,8 @@
                 @extend %form-group-input--box !optional;
             }
 
-            @include e(bundle-start) {
-                @extend %form-group-bundle-start--box !optional;
-            }
-
-            @include e(bundle-end) {
-                @extend %form-group-bundle-end--box !optional;
-            }
-
             @include e(bundle-main) {
                 @extend %form-group-bundle-main--box !optional;
-            }
-
-            @include e(notch) {
-                @extend %form-group-notch--box !optional;
             }
         }
 
@@ -423,25 +400,10 @@
             }
         }
 
-        @include mx(box, textarea-group, filled) {
-            @include e(notch) {
-                @extend %form-group-notch--box-textarea !optional;
-            }
-        }
-
         @include mx(box, textarea-group, placeholder) {
             @extend %form-group-placeholder !optional;
-
-            @include e(notch) {
-                @extend %form-group-notch--box-textarea !optional;
-            }
         }
 
-        @include mx(box, textarea-group, focused) {
-            @include e(notch) {
-                @extend %form-group-notch--box-textarea !optional;
-            }
-        }
         // Type box END
 
         // Type border START
@@ -471,14 +433,6 @@
 
             @include e(label) {
                 @extend %form-group-label--border !optional;
-            }
-
-            @include e(bundle-start) {
-                @extend %form-group-bundle-start--border !optional;
-            }
-
-            @include e(bundle-end) {
-                @extend %form-group-bundle-end--border !optional;
             }
 
             @include e(notch) {
@@ -605,11 +559,6 @@
                 &:hover {
                     @extend %form-group-bundle--fluent--hover !optional;
                 }
-
-                &:focus-within,
-                &:focus {
-                    @extend %form-group-bundle--fluent--focus !optional;
-                }
             }
 
             @include e(bundle-main) {
@@ -686,32 +635,13 @@
         }
 
         @include mx(fluent, file) {
-            @include e(file-input) {
-                @extend %fluent-file-input !optional;
-            }
-
-            @include e(upload-button) {
-                @extend %fluent-upload-button !optional;
-            }
-
-            @include e(bundle-end) {
-                @extend %form-group-bundle-end-file--fluent !optional;
-            }
-
             @include e(label) {
                 @extend %fluent-label-filled !optional;
             }
-        }
 
-        @include mx(fluent, file, focused) {
             @include e(file-input) {
-                @extend %fluent-focused-file-input !optional;
+                @extend %fluent-file-input !optional;
             }
-
-            @include e(upload-button) {
-                @extend %fluent-focused-upload-button !optional;
-            }
-
         }
 
         @include mx(fluent, textarea-group) {
@@ -721,26 +651,12 @@
         }
 
         @include mx(fluent, focused) {
-            @include e(bundle-start) {
-                @extend %form-group-bundle-start--fluent--focused !optional;
-            }
-
-            @include e(bundle-main) {
-                @extend %form-group-bundle-main--fluent--focused !optional;
-            }
-
-            @include e(bundle-end) {
-                @extend %form-group-bundle-end--fluent--focused !optional;
+            @include e(bundle) {
+                @extend %form-group-bundle--fluent--focus !optional;
             }
 
             @include e(label) {
                 @extend %fluent-label-focused !optional;
-            }
-        }
-
-        @include mx(fluent, focused, textarea-group) {
-            @include e(hint) {
-                @extend %form-group-helper--textarea--fluent--focused !optional;
             }
         }
 
@@ -757,11 +673,8 @@
         }
 
         @include mx(fluent, required) {
-            @include e(bundle) {
-                @extend %form-group-bundle-required--fluent !optional;
-            }
-
             @include e(label) {
+                @extend %form-group-bundle-required--fluent !optional;
                 @extend %form-group-label-required--fluent !optional;
             }
         }
@@ -857,10 +770,6 @@
                 @extend %form-group-bundle--indigo !optional;
             }
 
-            @include e(bundle-start) {
-                @extend %form-group-bundle--indigo-start !optional;
-            }
-
             @include e(input) {
                 @extend %form-group-input--indigo !optional;
             }
@@ -875,10 +784,6 @@
 
             @include e(textarea) {
                 @extend %indigo-textarea !optional;
-            }
-
-            @include e(upload-button) {
-                @extend %indigo-upload-button !optional;
             }
         }
 
@@ -1011,10 +916,6 @@
 
         @include mx(bootstrap, suffixed, valid) {
             @extend %form-group-display--bootstrap-suffixed-valid !optional;
-        }
-
-        @include mx(bootstrap, suffixed, warning) {
-            @extend %form-group-display--bootstrap-suffixed-warning !optional;
         }
 
         @include mx(bootstrap, suffixed, invalid) {
