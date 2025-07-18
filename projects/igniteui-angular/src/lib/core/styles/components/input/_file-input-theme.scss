@@ -1,0 +1,203 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use '../../base' as *;
+@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/animations/easings' as *;
+
+////
+/// @group themes
+/// @access public
+////
+
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
+/// @param {Color} $file-names-background [null] - The file names container background color.
+/// @param {Color} $file-names-background--focused [null] - The file names container background color when the file input is focused.
+/// @param {Color} $file-names-background--filled [null] - The file names container background color when the file input is filled.
+/// @param {Color} $file-names-background--disabled [null] - The file names container background color when the file input is disabled.
+/// @param {Color} $file-names-foreground [null] - The file names color.
+/// @param {Color} $file-names-foreground--focused [null] - The file names color when the file input is focused.
+/// @param {Color} $file-names-foreground--filled [null] - The file names color when the file input is filled.
+/// @param {Color} $file-names-foreground--disabled [null] - The file names color when the file input is disabled.
+/// @param {Color} $file-selector-button-background [null] - The file input selector button background color.
+/// @param {Color} $file-selector-button-background--focused [null] - The selector button background color when the file input is focused.
+/// @param {Color} $file-selector-button-background--filled [null] - The selector button background color when the file input is filled.
+/// @param {Color} $file-selector-button-background--disabled [null] - The selector button background color when the file input is disabled.
+/// @param {Color} $file-selector-button-foreground [null] - The file input selector button foreground color.
+/// @param {Color} $file-selector-button-foreground--focused [null] - The selector button foreground color when the file input is focused.
+/// @param {Color} $file-selector-button-foreground--filled [null] - The selector button foreground color when the file input is filled.
+/// @param {Color} $file-selector-button-foreground--disabled [null] - The selector button foreground color when the file input is disabled.
+/// @example scss Change the focused border and label colors
+///   $my-file-input-theme: file-input-theme($file-names-foreground: #09f);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-file-input-theme);
+@function file-input-theme(
+    $schema: $light-material-schema,
+    $file-names-background: null,
+    $file-names-background--focused: null,
+    $file-names-background--filled: null,
+    $file-names-background--disabled: null,
+    $file-names-foreground: null,
+    $file-names-foreground--focused: null,
+    $file-names-foreground--filled: null,
+    $file-names-foreground--disabled: null,
+
+    $file-selector-button-background: null,
+    $file-selector-button-background--focused: null,
+    $file-selector-button-background--filled: null,
+    $file-selector-button-background--disabled: null,
+    $file-selector-button-foreground: null,
+    $file-selector-button-foreground--focused: null,
+    $file-selector-button-foreground--filled: null,
+    $file-selector-button-foreground--disabled: null,
+) {
+    $name: 'igx-file-input';
+
+    // the variable are scoped to the selector so no other input except the file type will have them.
+    $selector: '.igx-file-input';
+
+    $file-input-schema: ();
+    @if map.has-key($schema, 'file-input') {
+        $file-input-schema: map.get($schema, 'file-input');
+    } @else {
+        $file-input-schema: $schema;
+    }
+
+    $theme: digest-schema($file-input-schema);
+
+    @return extend(
+        $theme,
+        (
+            name: $name,
+            selector: $selector,
+            file-names-background: $file-names-background,
+            file-names-background--focused: $file-names-background--focused,
+            file-names-background--filled: $file-names-background--filled,
+            file-names-background--disabled: $file-names-background--disabled,
+            file-names-foreground: $file-names-foreground,
+            file-names-foreground--focused: $file-names-foreground--focused,
+            file-names-foreground--filled: $file-names-foreground--filled,
+            file-names-foreground--disabled: $file-names-foreground--disabled,
+
+            file-selector-button-background: $file-selector-button-background,
+            file-selector-button-background--focused: $file-selector-button-background--focused,
+            file-selector-button-background--filled: $file-selector-button-background--filled,
+            file-selector-button-background--disabled: $file-selector-button-background--disabled,
+            file-selector-button-foreground: $file-selector-button-foreground,
+            file-selector-button-foreground--focused: $file-selector-button-foreground--focused,
+            file-selector-button-foreground--filled: $file-selector-button-foreground--filled,
+            file-selector-button-foreground--disabled: $file-selector-button-foreground--disabled,
+        ),
+    );
+}
+
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
+/// @param {Map} $theme - The theme used to style the component.
+@mixin file-input($theme) {
+    @include css-vars($theme);
+    $variant: map.get($theme, '_meta', 'theme');
+
+    %file-names {
+        color: var-get($theme, 'file-names-foreground');
+        background-color: var-get($theme, 'file-names-background');
+    }
+
+    %file-names--filled {
+        color: var-get($theme, 'file-names-foreground--filled');
+        background-color: var-get($theme, 'file-names-background--filled');
+    }
+
+    %file-names--focused {
+        color: var-get($theme, 'file-names-foreground--focused');
+        background-color: var-get($theme, 'file-names-background--focused');
+    }
+
+    %file-names--disabled {
+        color: var-get($theme, 'file-names-foreground--disabled');
+        background-color: var-get($theme, 'file-names-background--disabled');
+    }
+
+    %upload-button-wrapper {
+        background: #{var-get($theme, 'file-selector-button-background')}
+    }
+
+    %upload-button {
+        border-inline: 0;
+
+        // That button can't have :focus, :active, :hover states, that's why we dont need to override them here.
+        --foreground: #{var-get($theme, 'file-selector-button-foreground')};
+        --background: transparent;
+        --resting-elevation: none;
+        --shadow-color: none;
+        --border-radius: 0;
+    }
+
+
+    %upload-button-wrapper--filled {
+        color: #{var-get($theme, 'file-selector-button-foreground--filled')};
+        background: #{var-get($theme, 'file-selector-button-background--filled')};
+    }
+
+    %upload-button--filled {
+        --foreground: #{var-get($theme, 'file-selector-button-foreground--filled')};
+        --background: transparent;
+    }
+
+    %upload-button-wrapper--focused {
+        color: #{var-get($theme, 'file-selector-button-foreground--focused')};
+        background: #{var-get($theme, 'file-selector-button-background--focused')};
+    }
+
+    %upload-button--focused {
+        --foreground: #{var-get($theme, 'file-selector-button-foreground--focused')};
+        --background: transparent;
+    }
+
+    %upload-button-wrapper--disabled {
+        color: #{var-get($theme, 'file-selector-button-foreground--disabled')};
+        background: #{var-get($theme, 'file-selector-button-background--disabled')};
+    }
+
+    %upload-button--disabled {
+        --disabled-foreground: #{var-get($theme, 'file-selector-button-foreground--disabled')};
+        --disabled-background: transparent;
+    }
+
+    %clear-icon {
+        &:focus {
+            @if $variant == 'indigo' or $variant == 'fluent' {
+                background-color: color($color: 'primary', $variant: 500);
+                color: contrast-color($color: 'primary', $variant: 600);
+            }
+
+            @if $variant == 'material' {
+                background-color: transparent;
+                color: color($color: 'secondary', $variant: 500);
+            }
+
+            @if $variant == 'bootstrap' {
+                color: contrast-color($color: 'primary', $variant: 600);
+                background-color: color($color: 'primary', $variant: 500);
+            }
+        }
+    }
+}
+
+/// Adds typography styles for the .igx-file-input.
+/// Uses the 'subtitle-1', 'caption'
+/// category from the typographic scale.
+/// @group typography
+/// @param {Map} $categories [(file-text: 'subtitle-1')] - The categories from the typographic scale used for type styles.
+@mixin file-input-typography(
+    $categories: (
+        file-text: 'subtitle-1'
+    )
+) {
+    $file-text: map.get($categories, 'file-text');
+
+    %file-names {
+        @include type-style($file-text) {
+            margin: 0;
+        }
+    }
+}
