@@ -36,6 +36,11 @@ export class IgxGridSelectionService {
     public selectedRowsChange = new Subject<any[]>();
 
     /**
+     * @hidden @internal
+     */
+    public selectedRangeChange = new Subject<Map<number, Set<number>>>();
+
+    /**
      * Toggled when a pointerdown event is triggered inside the grid body (cells).
      * When `false` the drag select behavior is disabled.
      */
@@ -355,6 +360,8 @@ export class IgxGridSelectionService {
                 }
             }
         }
+
+        this.selectedRangeChange.next(collection);
     }
 
     public dragSelect(node: ISelectionNode, state: SelectionState): void {
@@ -637,7 +644,7 @@ export class IgxGridSelectionService {
         if (this.areEqualCollections(currSelection, newSelection)) {
             return;
         }
-        
+
         const args: IRowSelectionEventArgs = {
             owner: this.grid,
             oldSelection: currSelection,

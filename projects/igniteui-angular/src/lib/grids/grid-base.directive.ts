@@ -3246,6 +3246,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _filteredSortedData = null;
     private _filteredData = null;
     private _mergedDataInView = null;
+    private _activeRowIndexes = null;
 
     private _customDragIndicatorIconTemplate: TemplateRef<IgxGridEmptyTemplateContext>;
     private _excelStyleHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
@@ -3907,6 +3908,14 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.autoSizeColumnsInView();
                 this._firstAutoResize = false;
             });
+
+        this.activeNodeChange.pipe(filter(() => !this._init), destructor).subscribe(() => {
+            this._activeRowIndexes = null;
+        });
+
+        this.selectionService.selectedRangeChange.pipe(filter(() => !this._init), destructor).subscribe(() => {
+            this._activeRowIndexes = null;
+        });
     }
 
     /**
@@ -4055,9 +4064,14 @@ export abstract class IgxGridBaseDirective implements GridType,
 
 
     protected get activeRowIndexes(): number[] {
-        const activeRow = this.navigation.activeNode?.row;
-        const selectedCellIndexes = (this.selectionService.selection?.keys() as any)?.toArray();
-        return [activeRow, ...selectedCellIndexes];
+        if (this._activeRowIndexes) {
+            return this._activeRowIndexes;
+        } else {
+            const activeRow = this.navigation.activeNode?.row;
+            const selectedCellIndexes = (this.selectionService.selection?.keys() as any)?.toArray();
+            this._activeRowIndexes = [activeRow, ...selectedCellIndexes];
+            return this._activeRowIndexes;
+        }
     }
 
     protected get hasCellsToMerge() {
