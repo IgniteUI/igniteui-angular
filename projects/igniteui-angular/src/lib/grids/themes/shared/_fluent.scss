@@ -3,6 +3,10 @@
 @use '../../../../lib/core/styles/themes/standalone' as *;
 
 @include themed-block(igx-grid-th, fluent) {
+    @include e(title) {
+      font-weight: 800;
+    }
+
     @include e(icons) {
         .sort-icon igx-icon {
             --size: var(--igx-icon-size, #{rem(15px)});

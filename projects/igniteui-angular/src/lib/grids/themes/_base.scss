@@ -84,13 +84,6 @@ $theme: $material;
         @include e(title) {
             @include ellipsis();
 
-            // The font-weight depends on the theme, here's a list-style-type:
-            // material: 600,
-            // fluent: 800,
-            // bootstrap: 700,
-            // indigo: 600,
-            // Also, all other styles are from detail-2 (@include type-style('detail-2', false)) for the indigo theme
-            font-weight: 600;
             min-width: 3ch;
             user-select: none;
             cursor: initial;
