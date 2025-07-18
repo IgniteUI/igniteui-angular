@@ -3911,12 +3911,16 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         this.activeNodeChange.pipe(filter(() => !this._init), destructor).subscribe(() => {
             this._activeRowIndexes = null;
-            this.refreshSearch();
+            if (this.hasCellsToMerge) {
+                this.refreshSearch();
+            }
         });
 
         this.selectionService.selectedRangeChange.pipe(filter(() => !this._init), destructor).subscribe(() => {
             this._activeRowIndexes = null;
-            this.refreshSearch();
+            if (this.hasCellsToMerge) {
+                this.refreshSearch();
+            }
         });
     }
 
