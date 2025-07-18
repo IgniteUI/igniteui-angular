@@ -1,103 +1,77 @@
 import { Injectable } from '@angular/core';
 import { Mulberry32 } from '../lib/mulberry';
 import { DATA as athletesData } from "../data/athletesData"
-import { CITIES, FIRSTNAMES, LASTNAMES, MOCKATHLETESDATA, ROADNAMES, ROADSFX } from '../data/mockData';
 
 
 @Injectable({
     providedIn: 'root'
 })
 export class DataService {
-    private rows = 10000;
-    private cols = 30;
     constructor() { }
-    public generateData(): any[] {
+    public generateData(rows: number): any[] {
         const rnd = new Mulberry32(1234);
-        return this.generateAthletesData(rnd);
+        const data = this.generateAthletesData(rnd, rows);
+        return data;
     }
 
-    private generateAthletesData(rnd: Mulberry32): any[] {
+    private generateAthletesData(rnd: Mulberry32, rows: number): any[] {
         const currData = [];
-        for (let i = 0; i < this.rows; i++) {
+        for (let i = 0; i < rows; i++) {
             const rand = Math.floor(rnd.random() * Math.floor(athletesData.length));
             const dataObj = Object.assign({}, athletesData[rand]);
-
-            dataObj["Registered"] = this.randomizeDate(rnd);
-            dataObj["FirstAppearance"] = this.randomizeDate(rnd);
-            dataObj["Relatives"] = this.randomizeName(rnd);
-
-            for (const mockData of MOCKATHLETESDATA) {
-                for (const prop in mockData) {
-                    if (mockData.hasOwnProperty(prop)) {
-                        const operation = Math.round(rnd.random());
-                        dataObj[prop] = operation ?
-                            mockData[prop] + (this.generateRandomNumber(rnd, 1, 22) / 100) * mockData[prop] :
-                            mockData[prop] - (this.generateRandomNumber(rnd, 1, 22) / 100) * mockData[prop];
-                    }
-                }
-            }
-
-            dataObj["Trainer"] = this.randomizeName(rnd);
-            dataObj["TrainerRegistration"] = this.randomizeDate(rnd);
-            dataObj["CareerStart"] = this.randomizeDate(rnd);
-            dataObj["CurrentAddress"] = this.getRandomStreet(rnd);
-            dataObj["DebutCity"] = this.getRandomCity(rnd);
-
-            for (const mockData of MOCKATHLETESDATA) {
-                for (const prop in mockData) {
-                    if (mockData.hasOwnProperty(prop)) {
-                        const operation = Math.round(rnd.random());
-                        dataObj["Trainer" + prop] = operation ?
-                            mockData[prop] + (this.generateRandomNumber(rnd, 1, 22) / 100) * mockData[prop] :
-                            mockData[prop] - (this.generateRandomNumber(rnd, 1, 22) / 100) * mockData[prop];
-                    }
-                }
-            }
-
-            dataObj.Id = i + 1;
-
-            const obj = {};
-            let k = 0;
-            for (const x in dataObj) {
-                if (k >= this.cols - 2) {
-                    break;
-                }
-                obj[x] = dataObj[x];
-                k += 1;
-            }
-
-            currData.push(obj);
+            dataObj["Registered"] = this.formatDateTime(this.randomizeDateTime(rnd));
+            dataObj["FirstAppearance"] = this.formatDateTime(this.randomizeDateTime(rnd));
+            dataObj["CareerStart"] = this.formatDateTime(this.randomizeDateTime(rnd));
+            dataObj["Active"] = this.randomizeBoolean(rnd);
+            dataObj["SuccessRate"] = this.randomizePercentage(rnd);
+            currData.push(dataObj);
         }
         return currData;
     }
 
-    private randomizeDate(rnd: Mulberry32) {
-        const date = new Date();
-        date.setHours(this.generateRandomNumber(rnd, 0, 23));
-        date.setMonth(this.generateRandomNumber(rnd, 0, date.getMonth()));
-        date.setDate(this.generateRandomNumber(rnd, 0, 23));
-        return (date.getMonth()+1) + '/' + date.getDate() + '/' + date.getFullYear();
+    private randomizeDateTime(rnd: Mulberry32): Date {
+        const now = new Date();
+
+        // Generate a random date in the current year up to the current month/day
+        const year = now.getFullYear();
+        const month = this.generateRandomNumber(rnd, 0, now.getMonth()); // 0 to current month
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const day = this.generateRandomNumber(rnd, 1, daysInMonth); // 1 to last day of month
+
+        // Generate random time
+        const hours = this.generateRandomNumber(rnd, 0, 23);
+        const minutes = this.generateRandomNumber(rnd, 0, 59);
+        const seconds = this.generateRandomNumber(rnd, 0, 59);
+
+        const date = new Date(year, month, day, hours, minutes, seconds);
+        return date;
+    }
+
+    private randomizeBoolean(rnd: Mulberry32): boolean {
+        const number = this.generateRandomNumber(rnd, 0, 10);
+        return number >= 5;
+    }
+
+    private randomizePercentage(rnd: Mulberry32): number {
+        const value = rnd.random(); // returns value in [0, 1)
+        return Math.floor(value * 1000) / 1000;
+    }
+
+    private formatDateTime(date: Date) {
+        // Format: MM/DD/YYYY HH:mm:ss
+        const formatted = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()} ` +
+            `${this.pad(date.getHours())}:${this.pad(date.getMinutes())}:${this.pad(date.getSeconds())}`;
+        return formatted;
+    }
+
+    // Helper for leading zeros
+    private pad(num: number): string {
+        return num.toString().padStart(2, '0');
     }
 
     private generateRandomNumber(rnd, min, max) {
         return Math.floor(rnd.random() * (max - min + 1)) + min;
     }
-    
-    private randomizeName(rnd: Mulberry32) {
-        const firstNum = this.generateRandomNumber(rnd, 0, FIRSTNAMES.length - 1);
-        const lastNum = this.generateRandomNumber(rnd, 0, LASTNAMES.length - 1);
-        return FIRSTNAMES[firstNum] + " " + LASTNAMES[lastNum];
-    }
 
-    private getRandomStreet(rnd: Mulberry32): string {
-        const roadNum = this.generateRandomNumber(rnd, 0, ROADNAMES.length - 1);
-        const sfxNum = this.generateRandomNumber(rnd, 0, ROADSFX.length - 1);
-        const num = Math.round(this.generateRandomNumber(rnd, 100, 300)).toString();
-        return num + " " + ROADNAMES[roadNum] + " " + ROADSFX[sfxNum];
-    }
 
-    private getRandomCity(rnd: Mulberry32): string {
-        const cityNum = this.generateRandomNumber(rnd, 0, CITIES.length - 1);
-        return CITIES[cityNum];
-    }
 }

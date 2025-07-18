@@ -1,66 +1,37 @@
-import { Component, inject, ViewChild } from '@angular/core';
-import { IGX_GRID_DIRECTIVES, IgxButtonDirective, IgxGridComponent, SortingDirection } from "igniteui-angular"
+import { Component, inject } from '@angular/core';
+import { GridColumnDataType, IGX_GRID_DIRECTIVES } from "igniteui-angular"
 import { DataService } from '../services/data.service';
-import { PerformanceService } from "../../../../igniteui-angular/src/lib/performance.service"
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-grid',
-  imports: [IGX_GRID_DIRECTIVES, IgxButtonDirective],
-  templateUrl: './grid.component.html',
-  styleUrl: './grid.component.scss'
+    selector: 'app-grid',
+    imports: [IGX_GRID_DIRECTIVES],
+    templateUrl: './grid.component.html',
+    styleUrl: './grid.component.scss'
 })
 export class GridComponent {
-  protected columns: any[] = []
-  protected data: any[] = [];
-  protected performanceDataList: PerformanceEntryList = [];
-  private dataService = inject(DataService);
-  private performanceService = inject(PerformanceService)
-  @ViewChild("grid")
-  private grid: IgxGridComponent;
+    protected columns: any[] = []
+    protected data: any[] = [];
+    protected performanceDataList: PerformanceEntryList = [];
+    private dataService = inject(DataService);
+    private activatedRoute = inject(ActivatedRoute);
 
-  constructor() {
-    this.data = this.dataService.generateData();
-    this.initializeColumns();
-    this.performanceService.setLogEnabled(true);
-  }
 
-  protected measureSorting() {
-    const end = this.performanceService.start("sorting");
-    this.grid.sort({ fieldName: 'Id', dir: SortingDirection.Desc });
-    end();
-    this.performanceDataList = this.performanceDataList.filter(item => item.name !== "sorting");
-    this.performanceDataList.push(...this.performanceService.getMeasures("sorting"));
-  }
-
-  private initializeColumns(): void {
-    this.generateColumns();
-    this.columns.forEach(c => {
-      if (this.isCurrencyColumn(c.field)) {
-        c.dataType = 'currency';
-      }
-      if (this.isDateColumn(c.field)) {
-        c.dataType = "date"
-      }
-    });
-  }
-
-  private generateColumns(): void {
-    if (this.data.length > 0) {
-      this.columns = [];
-      Object.keys(this.data[0]).forEach(x => {
-        if (x !== "Avatar" && x !== "CountryFlag") {
-          this.columns.push({ field: x, header: x, sortable: true });
-        }
-      });
+    constructor() {
+        this.data = this.dataService.generateData(this.activatedRoute.snapshot.data.rows)
+        this.columns = [
+            { field: "Id", dataType: GridColumnDataType.Number, sortable: true, width: 'auto' },
+            { field: "Name", dataType: GridColumnDataType.String, sortable: true, width: 'auto' },
+            { field: "AthleteNumber", dataType: GridColumnDataType.Number, sortable: true, width: 'auto' },
+            { field: "Registered", dataType: GridColumnDataType.DateTime, sortable: true, width: 'auto' },
+            { field: "CountryName", dataType: GridColumnDataType.String, sortable: true, width: 'auto' },
+            { field: "FirstAppearance", dataType: GridColumnDataType.Time, sortable: true, width: 'auto' },
+            { field: "CareerStart", dataType: GridColumnDataType.Date, sortable: true, width: 'auto' },
+            { field: "Active", dataType: GridColumnDataType.Boolean, sortable: true, width: 'auto' },
+            { field: "NetWorth", dataType: GridColumnDataType.Currency, sortable: true, width: 'auto' },
+            { field: "CountryFlag", dataType: GridColumnDataType.Image, sortable: true, width: 'auto' },
+            { field: "SuccessRate", dataType: GridColumnDataType.Percent, sortable: true, width: 'auto' },
+            { field: "Position", dataType: GridColumnDataType.String, sortable: true, width: 'auto' },
+        ];
     }
-  }
-
-  private isCurrencyColumn(field: string): boolean {
-    return field === 'openPrice' || field === 'price' || field === 'buy' || field === 'sell';
-  }
-
-  private isDateColumn(field: string): boolean {
-    return field === "Registered" || field === "FirstAppearance" || field === "TrainerRegistration" || field === "CareerStart"
-  }
-
 }

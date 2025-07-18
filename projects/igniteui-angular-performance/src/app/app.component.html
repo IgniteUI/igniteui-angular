@@ -1,4 +1,8 @@
 <main class="wrapper">
-  <app-grid></app-grid>
+  <div class="routes">
+    <button igxButton="contained" routerLink="/">1K records</button>
+    <button igxButton="contained" routerLink="/grid-100k">100K records</button>
+    <button igxButton="contained" routerLink="/grid-1m">1M records</button>
+  </div>
   <router-outlet />
 </main>

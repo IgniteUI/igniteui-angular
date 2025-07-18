@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { GridComponent } from './grid/grid.component';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { IgxButtonDirective } from 'igniteui-angular';
 
 @Component({
-  selector: 'app-root',
-  imports: [GridComponent, RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+    selector: 'app-root',
+    imports: [RouterOutlet, IgxButtonDirective, RouterLink],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss'
 })
 export class AppComponent {
 

@@ -7,4 +7,12 @@
 .wrapper {
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.routes {
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
 }

@@ -1,50 +1,20 @@
-<section class="sample-wrapper">
-  <div class="performance-actions">
-    <button igxButton="contained" (click)="measureSorting()">
-      Measure sorting
-    </button>
-  </div>
-  <div class="performance-wrapper">
-    <div class="grid-wrapper">
-      <igx-grid
-        #grid
-        [data]="data"
-        [allowFiltering]="true"
-        [height]="'100%'"
-        [width]="'100%'"
-        [rowSelection]="'multiple'"
+<div class="grid-wrapper">
+  <igx-grid
+    #grid
+    [data]="data"
+    [allowFiltering]="true"
+    [height]="'100%'"
+    [width]="'100%'"
+  >
+    @for (col of columns; track col) {
+      <igx-column
+        [field]="col.field"
+        [header]="col.header"
+        [sortable]="col.sortable"
+        [dataType]="col.dataType"
+        [width]="col.width"
       >
-        <igx-column [field]="'Avatar'" [header]="'Avatar'" width="136px">
-          <ng-template igxCell let-cell>
-            <img class="img athl-data" [src]="cell" alt="Image" />
-          </ng-template>
-        </igx-column>
-        <igx-column [field]="'CountryFlag'" [header]="'Country Flag'">
-          <ng-template igxCell let-cell>
-            <img class="img athl-data flag" [src]="cell" alt="Image" />
-          </ng-template>
-        </igx-column>
-
-        @for (col of columns; track col) {
-          <igx-column
-            [field]="col.field"
-            [header]="col.header"
-            [sortable]="col.sortable"
-            [dataType]="col.dataType"
-          >
-          </igx-column>
-        }
-      </igx-grid>
-    </div>
-    <aside class="performance-log">
-      <ul>
-        @for (item of performanceDataList; track $index) {
-          <li>
-              Performance Measure : {{ item.name }} - Duration:
-              {{ item.duration.toFixed(2) }}ms
-          </li>
-        }
-      </ul>
-    </aside>
-  </div>
-</section>
+      </igx-column>
+    }
+  </igx-grid>
+</div>

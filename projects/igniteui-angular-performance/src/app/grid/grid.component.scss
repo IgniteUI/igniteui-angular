@@ -3,58 +3,8 @@
     flex-direction: column;
     height: 100%;
 }
-.img {
-    height: 50px;
-    margin: 0 auto;
-    &.flag {
-        height: 20px;
-    }
-}
-
-.sample-wrapper {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    flex: 1;
-}
 
 .grid-wrapper {
     height: 100%;
-    width: 70%;
-}
-
-.performance-wrapper {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
     width: 100%;
-    overflow: hidden;
-    gap: 1rem;
-    padding: 1rem 0.5rem;
-}
-
-.performance-log {
-    height: 100%;
-    width: 30%;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    & ul {
-        flex: 1;
-        margin: 0;
-        padding: 0 1rem;
-        overflow-y: auto;
-        list-style: none;
-
-        & li {
-            padding: 0.25rem 0.5rem;
-        }
-    }
-}
-
-.performance-actions {
-    padding-top: 1rem;
 }
