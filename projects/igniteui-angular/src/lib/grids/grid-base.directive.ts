@@ -38,7 +38,7 @@ import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
 import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, PlatformUtil } from '../core/utils';
-import { GridColumnDataType } from '../data-operations/data-util';
+import { DataUtil, GridColumnDataType } from '../data-operations/data-util';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IForOfDataChangeEventArgs, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
@@ -93,7 +93,8 @@ import {
     RowPinningPosition,
     GridPagingMode,
     GridValidationTrigger,
-    Size
+    Size,
+    GridCellMergeMode
 } from './common/enums';
 import {
     IGridCellEventArgs,
@@ -184,6 +185,7 @@ import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { isTree, recreateTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 import { getUUID } from './common/random';
+import { DefaultMergeStrategy, IGridMergeStrategy } from '../data-operations/merge-strategy';
 
 interface IMatchInfoCache {
     row: any;
@@ -2493,6 +2495,23 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._sortingStrategy = value;
     }
 
+
+    /**
+     * Gets/Sets the merge strategy of the grid.
+     *
+     * @example
+     * ```html
+     *  <igx-grid #grid [data]="localData" [mergeStrategy]="mergeStrategy"></igx-grid>
+     * ```
+     */
+    @Input()
+    public get mergeStrategy() {
+        return this._mergeStrategy;
+    }
+    public set  mergeStrategy(value) {
+        this._mergeStrategy = value;
+    }
+
     /**
      * Gets/Sets the sorting options - single or multiple sorting.
      * Accepts an `ISortingOptions` object with any of the `mode` properties.
@@ -2912,6 +2931,20 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     /**
+     * Gets/Sets cell merge mode.
+     *
+     */
+    @WatchChanges()
+    @Input()
+    public get cellMergeMode() {
+        return this._cellMergeMode;
+    }
+
+    public set cellMergeMode(value: GridCellMergeMode) {
+        this._cellMergeMode = value;
+    }
+
+    /**
      * Gets/Sets row selection mode
      *
      * @remarks
@@ -3078,6 +3111,11 @@ export abstract class IgxGridBaseDirective implements GridType,
     public groupablePipeTrigger = 0;
 
     /**
+     * @hidden @internal
+     */
+        public hoverIndex: number;
+
+    /**
     * @hidden @internal
     */
     public EMPTY_DATA = [];
@@ -3148,6 +3186,10 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected _columnPinning = false;
 
     protected _pinnedRecordIDs = [];
+    /**
+     * @hidden
+     */
+    protected _mergeStrategy: IGridMergeStrategy = new DefaultMergeStrategy();
 
     /**
      * @hidden
@@ -3203,6 +3245,8 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _currentRowState: any;
     private _filteredSortedData = null;
     private _filteredData = null;
+    private _mergedDataInView = null;
+    private _activeRowIndexes = null;
 
     private _customDragIndicatorIconTemplate: TemplateRef<IgxGridEmptyTemplateContext>;
     private _excelStyleHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
@@ -3302,6 +3346,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _gridSize: Size = Size.Large;
     private _defaultRowHeight = 50;
+    private _cellMergeMode: GridCellMergeMode = GridCellMergeMode.onSort;
 
     /**
      * @hidden @internal
@@ -3541,6 +3586,14 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    public isChildGridRecord(_rec) {
+        return false;
+    }
+
+    /**
      * @hidden @internal
      */
     public isGhostRecord(record: any): boolean {
@@ -3633,6 +3686,23 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public isRecordPinned(rec) {
         return this.getInitialPinnedIndex(rec) !== -1;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public isRecordMerged(rec) {
+        return rec?.cellMergeMeta;
+    }
+
+    protected getMergeCellOffset(rowData) {
+        const index = rowData.index;
+        let offset = this.verticalScrollContainer.scrollPosition - this.verticalScrollContainer.getScrollForIndex(index);
+        if (this.hasPinnedRecords && this.isRowPinningToTop) {
+            offset -= this.pinnedRowHeight;
+        }
+        return -offset;
     }
 
     /**
@@ -3811,6 +3881,24 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.notifyChanges(true);
         });
 
+        this.verticalScrollContainer.chunkPreload.pipe(filter(() => !this._init), destructor).subscribe(() => {
+            // recalc merged data
+            if (this.columnsToMerge.length > 0) {
+                const startIndex = this.verticalScrollContainer.state.startIndex;
+                const prevDataView = this.verticalScrollContainer.igxForOf?.slice(0, startIndex);
+                const data = [];
+                for (let index = 0; index < startIndex; index++) {
+                    const rec = prevDataView[index];
+                    if (rec.cellMergeMeta &&
+                        // index + maxRowSpan is within view
+                        startIndex <= (index + Math.max(...rec.cellMergeMeta.values().toArray().map(x => x.rowSpan)))) {
+                            data.push({record: rec, index: index });
+                        }
+                }
+                this._mergedDataInView = data;
+            }
+        });
+
         // notifier for column autosize requests
         this._autoSizeColumnsNotify.pipe(
             throttleTime(0, this.platform.isBrowser ? animationFrameScheduler : undefined, { leading: false, trailing: true }),
@@ -3820,6 +3908,20 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.autoSizeColumnsInView();
                 this._firstAutoResize = false;
             });
+
+        this.activeNodeChange.pipe(filter(() => !this._init), destructor).subscribe(() => {
+            this._activeRowIndexes = null;
+            if (this.hasCellsToMerge) {
+                this.refreshSearch();
+            }
+        });
+
+        this.selectionService.selectedRangeChange.pipe(filter(() => !this._init), destructor).subscribe(() => {
+            this._activeRowIndexes = null;
+            if (this.hasCellsToMerge) {
+                this.refreshSearch();
+            }
+        });
     }
 
     /**
@@ -3888,6 +3990,21 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden
      * @internal
      */
+    public get columnsToMerge() : ColumnType[] {
+        return this.visibleColumns.filter(
+            x => x.merge && (this.cellMergeMode ==='always' ||
+            (this.cellMergeMode === 'onSort' && !!this.sortingExpressions.find( y => y.fieldName === x.field)))
+        );
+    }
+
+    protected get mergedDataInView() {
+        return this._mergedDataInView;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     public resetColumnCollections() {
         if (this.hasColumnLayouts) {
             this._columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
@@ -3949,6 +4066,27 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this.actionStrip) {
             this.actionStrip.menuOverlaySettings.outlet = this.outlet;
         }
+    }
+
+
+    protected get activeRowIndexes(): number[] {
+        if (this._activeRowIndexes) {
+            return this._activeRowIndexes;
+        } else {
+            const activeRow = this.navigation.activeNode?.row;
+            const selectedCellIndexes = (this.selectionService.selection?.keys() as any)?.toArray();
+            this._activeRowIndexes = [activeRow, ...selectedCellIndexes];
+            return this._activeRowIndexes;
+        }
+    }
+
+    protected get hasCellsToMerge() {
+        const columnToMerge = this.visibleColumns.filter(
+            x => x.merge && (this.cellMergeMode ==='always' ||
+            (this.cellMergeMode === 'onSort' && !!this.sortingExpressions
+                .find(y => y.fieldName === x.field)))
+        );
+        return columnToMerge.length > 0;
     }
 
     /**
@@ -7848,25 +7986,29 @@ export abstract class IgxGridBaseDirective implements GridType,
         const caseSensitive = this._lastSearchInfo.caseSensitive;
         const exactMatch = this._lastSearchInfo.exactMatch;
         const searchText = caseSensitive ? this._lastSearchInfo.searchText : this._lastSearchInfo.searchText.toLowerCase();
-        const data = this.filteredSortedData;
+        let data = this.filteredSortedData;
+        if (this.hasCellsToMerge) {
+            data =  DataUtil.merge(cloneArray(this.filteredSortedData), this.columnsToMerge, this.mergeStrategy, this.activeRowIndexes, this);
+        }
         const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
         const columnsPathParts = columnItems.map(col => columnFieldPath(col.field));
 
         data.forEach((dataRow, rowIndex) => {
+            const currentRowData = this.isRecordMerged(dataRow) ? dataRow.recordRef : dataRow;
             columnItems.forEach((c, cid) => {
                 const pipeArgs = this.getColumnByName(c.field).pipeArgs;
-                const value = c.formatter ? c.formatter(resolveNestedPath(dataRow, columnsPathParts[cid]), dataRow) :
-                    c.dataType === 'number' ? formatNumber(resolveNestedPath(dataRow, columnsPathParts[cid]) as number, this.locale, pipeArgs.digitsInfo) :
+                const value = c.formatter ? c.formatter(resolveNestedPath(currentRowData, columnsPathParts[cid]), currentRowData) :
+                    c.dataType === 'number' ? formatNumber(resolveNestedPath(currentRowData, columnsPathParts[cid]) as number, this.locale, pipeArgs.digitsInfo) :
                         c.dataType === 'date'
-                            ? formatDate(resolveNestedPath(dataRow, columnsPathParts[cid]) as string, pipeArgs.format, this.locale, pipeArgs.timezone)
-                            : resolveNestedPath(dataRow, columnsPathParts[cid]);
+                            ? formatDate(resolveNestedPath(currentRowData, columnsPathParts[cid]) as string, pipeArgs.format, this.locale, pipeArgs.timezone)
+                            : resolveNestedPath(currentRowData, columnsPathParts[cid]);
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
-
+                    const isMergePlaceHolder =  this.isRecordMerged(dataRow) ? !!dataRow?.cellMergeMeta.get(c.field)?.root : false;
                     if (exactMatch) {
-                        if (searchValue === searchText) {
+                        if (searchValue === searchText && !isMergePlaceHolder) {
                             const mic: IMatchInfoCache = {
-                                row: dataRow,
+                                row: currentRowData,
                                 column: c.field,
                                 index: 0,
                                 metadata: new Map<string, boolean>([['pinned', this.isRecordPinnedByIndex(rowIndex)]])
@@ -7878,9 +8020,9 @@ export abstract class IgxGridBaseDirective implements GridType,
                         let occurrenceIndex = 0;
                         let searchIndex = searchValue.indexOf(searchText);
 
-                        while (searchIndex !== -1) {
+                        while (searchIndex !== -1 && !isMergePlaceHolder) {
                             const mic: IMatchInfoCache = {
-                                row: dataRow,
+                                row: currentRowData,
                                 column: c.field,
                                 index: occurrenceIndex++,
                                 metadata: new Map<string, boolean>([['pinned', this.isRecordPinnedByIndex(rowIndex)]])

@@ -1,0 +1,118 @@
+<h4 class="sample-title">Grid with cell merge</h4>
+
+<div class="grid__wrapper">
+  <igx-input-group type="search" class="offset">
+    <igx-prefix>
+      @if (searchText.length === 0) {
+        <igx-icon>search</igx-icon>
+      }
+      @if (searchText.length > 0) {
+        <igx-icon (click)="clearSearch()">clear</igx-icon>
+      }
+    </igx-prefix>
+
+    <input #search1 id="search1" igxInput placeholder="Search" [(ngModel)]="searchText" (ngModelChange)="grid.findNext(searchText, false, false)"
+      (keydown)="searchKeyDown($event)" />
+
+      @if (searchText.length > 0) {
+        <igx-suffix>
+          @if (grid.lastSearchInfo) {
+            <div class="resultsText">
+              @if (grid.lastSearchInfo.matchInfoCache.length > 0) {
+                <span>
+                  {{ grid.lastSearchInfo.activeMatchIndex + 1 }} of {{ grid.lastSearchInfo.matchInfoCache.length }}
+                  results
+                </span>
+              }
+              @if (grid.lastSearchInfo.matchInfoCache.length === 0) {
+                <span>
+                  No results
+                </span>
+              }
+            </div>
+          }
+          <div class="searchButtons">
+            <button igxIconButton="flat" igxRipple (click)="grid.findPrev(searchText, false, false)">
+              <igx-icon family="material">navigate_before</igx-icon>
+            </button>
+            <button igxIconButton="flat" igxRipple (click)="grid.findNext(searchText, false, false)">
+              <igx-icon family="material">navigate_next</igx-icon>
+            </button>
+          </div>
+        </igx-suffix>
+      }
+    </igx-input-group>
+</div>
+<igx-grid [data]="data" width="800px" height="550px" [moving]="true" #grid1
+    [cellMergeMode]="'always'" [rowSelection]="'single'">
+    <igx-column field="ProductID" header="Product ID" width="200px">
+        <ng-template igxCell let-cell="cell" let-val>
+            <div>
+                <button igxButton>Test {{cell.row.index}}</button>
+                <!-- @if (cell.row.index % 2 == 0) {
+                <br/>
+                <button igxButton>Test 2</button>
+            } -->
+
+            </div>
+        </ng-template>
+    </igx-column>
+    <igx-column field="ReorderLevel" width="200px" [merge]="true" editable="true">
+    </igx-column>
+    <igx-column required field="ProductName" width="200px" [merge]="true" groupable="true">
+    </igx-column>
+    <igx-column field="UnitsInStock" header="UnitsInStock" width="200px" [merge]="true">
+    </igx-column>
+    <igx-column field="OrderDate" width="200px">
+    </igx-column>
+    <igx-paginator [perPage]="20">
+    </igx-paginator>
+    <igx-action-strip>
+        <igx-grid-pinning-actions></igx-grid-pinning-actions>
+    </igx-action-strip>
+    <igx-grid-toolbar>
+        <igx-grid-toolbar-actions>
+            <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+            <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+            <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
+        </igx-grid-toolbar-actions>
+    </igx-grid-toolbar>
+</igx-grid>
+
+<h4 class="sample-title">Hierarchical grid with cell merge</h4>
+
+<igx-hierarchical-grid #hierarchicalGrid width="800px" [height]="'550px'" [data]="hierarchicalData" [autoGenerate]="false"
+    [allowAdvancedFiltering]="true" [cellMergeMode]="'always'">
+    <igx-grid-toolbar></igx-grid-toolbar>
+    <igx-column field="EmployeeID" width="200px">
+    </igx-column>
+    <igx-column field="FirstName" width="200px">
+    </igx-column>
+    <igx-column field="LastName" width="200px">
+    </igx-column>
+    <igx-column field="Title" width="200px" [merge]="true"  [hasSummary]="true">
+    </igx-column>
+    <igx-column field="City" width="200px" [merge]="true" editable="true" sortable="true">
+    </igx-column>
+    <igx-row-island [key]="'Orders'" [cellMergeMode]="'always'">
+        <igx-column field="CustomerID" width="200px">
+        </igx-column>
+        <igx-column field="ShipName" width="200px">
+        </igx-column>
+        <igx-column field="ShipCountry" width="200px" [merge]="true" sortable="true">
+        </igx-column>
+        <igx-column field="ShipCity" width="200px" [merge]="true" sortable="true">
+        </igx-column>
+    </igx-row-island>
+</igx-hierarchical-grid>
+
+<h4 class="sample-title">Tree grid with cell merge</h4>
+
+<igx-tree-grid [autoGenerate]="false" [data]="treeData" [cellMergeMode]="'always'" [mergeStrategy]="treeGridMergeStrategy"
+childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1" width="800px" [height]="'550px'">
+<igx-column field="ContactName" width="200px">
+</igx-column>
+<igx-column field="ContactTitle" width="200px"></igx-column>
+<igx-column field="Country" width="200px" [merge]="true" sortable="true"></igx-column>
+<igx-column field="City" width="200px" [merge]="true" sortable="true"></igx-column>
+</igx-tree-grid>
