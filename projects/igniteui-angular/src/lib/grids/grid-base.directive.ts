@@ -38,7 +38,7 @@ import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
 import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, PlatformUtil } from '../core/utils';
-import { GridColumnDataType } from '../data-operations/data-util';
+import { DataUtil, GridColumnDataType } from '../data-operations/data-util';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IForOfDataChangeEventArgs, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
@@ -3911,10 +3911,12 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         this.activeNodeChange.pipe(filter(() => !this._init), destructor).subscribe(() => {
             this._activeRowIndexes = null;
+            this.refreshSearch();
         });
 
         this.selectionService.selectedRangeChange.pipe(filter(() => !this._init), destructor).subscribe(() => {
             this._activeRowIndexes = null;
+            this.refreshSearch();
         });
     }
 
@@ -7977,25 +7979,29 @@ export abstract class IgxGridBaseDirective implements GridType,
         const caseSensitive = this._lastSearchInfo.caseSensitive;
         const exactMatch = this._lastSearchInfo.exactMatch;
         const searchText = caseSensitive ? this._lastSearchInfo.searchText : this._lastSearchInfo.searchText.toLowerCase();
-        const data = this.filteredSortedData;
+        let data = this.filteredSortedData;
+        if (this.hasCellsToMerge) {
+            data =  DataUtil.merge(cloneArray(this.filteredSortedData), this.columnsToMerge, this.mergeStrategy, this.activeRowIndexes, this);
+        }
         const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
         const columnsPathParts = columnItems.map(col => columnFieldPath(col.field));
 
         data.forEach((dataRow, rowIndex) => {
+            const currentRowData = this.isRecordMerged(dataRow) ? dataRow.recordRef : dataRow;
             columnItems.forEach((c, cid) => {
                 const pipeArgs = this.getColumnByName(c.field).pipeArgs;
-                const value = c.formatter ? c.formatter(resolveNestedPath(dataRow, columnsPathParts[cid]), dataRow) :
-                    c.dataType === 'number' ? formatNumber(resolveNestedPath(dataRow, columnsPathParts[cid]) as number, this.locale, pipeArgs.digitsInfo) :
+                const value = c.formatter ? c.formatter(resolveNestedPath(currentRowData, columnsPathParts[cid]), currentRowData) :
+                    c.dataType === 'number' ? formatNumber(resolveNestedPath(currentRowData, columnsPathParts[cid]) as number, this.locale, pipeArgs.digitsInfo) :
                         c.dataType === 'date'
-                            ? formatDate(resolveNestedPath(dataRow, columnsPathParts[cid]) as string, pipeArgs.format, this.locale, pipeArgs.timezone)
-                            : resolveNestedPath(dataRow, columnsPathParts[cid]);
+                            ? formatDate(resolveNestedPath(currentRowData, columnsPathParts[cid]) as string, pipeArgs.format, this.locale, pipeArgs.timezone)
+                            : resolveNestedPath(currentRowData, columnsPathParts[cid]);
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
-
+                    const isMergePlaceHolder =  this.isRecordMerged(dataRow) ? !!dataRow?.cellMergeMeta.get(c.field)?.root : false;
                     if (exactMatch) {
-                        if (searchValue === searchText) {
+                        if (searchValue === searchText && !isMergePlaceHolder) {
                             const mic: IMatchInfoCache = {
-                                row: dataRow,
+                                row: currentRowData,
                                 column: c.field,
                                 index: 0,
                                 metadata: new Map<string, boolean>([['pinned', this.isRecordPinnedByIndex(rowIndex)]])
@@ -8007,9 +8013,9 @@ export abstract class IgxGridBaseDirective implements GridType,
                         let occurrenceIndex = 0;
                         let searchIndex = searchValue.indexOf(searchText);
 
-                        while (searchIndex !== -1) {
+                        while (searchIndex !== -1 && !isMergePlaceHolder) {
                             const mic: IMatchInfoCache = {
-                                row: dataRow,
+                                row: currentRowData,
                                 column: c.field,
                                 index: occurrenceIndex++,
                                 metadata: new Map<string, boolean>([['pinned', this.isRecordPinnedByIndex(rowIndex)]])

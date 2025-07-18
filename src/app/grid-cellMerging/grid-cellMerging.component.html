@@ -1,5 +1,49 @@
 <h4 class="sample-title">Grid with cell merge</h4>
-<igx-grid [data]="data" width="800px" height="550px" [moving]="true"
+
+<div class="grid__wrapper">
+  <igx-input-group type="search" class="offset">
+    <igx-prefix>
+      @if (searchText.length === 0) {
+        <igx-icon>search</igx-icon>
+      }
+      @if (searchText.length > 0) {
+        <igx-icon (click)="clearSearch()">clear</igx-icon>
+      }
+    </igx-prefix>
+
+    <input #search1 id="search1" igxInput placeholder="Search" [(ngModel)]="searchText" (ngModelChange)="grid.findNext(searchText, false, false)"
+      (keydown)="searchKeyDown($event)" />
+
+      @if (searchText.length > 0) {
+        <igx-suffix>
+          @if (grid.lastSearchInfo) {
+            <div class="resultsText">
+              @if (grid.lastSearchInfo.matchInfoCache.length > 0) {
+                <span>
+                  {{ grid.lastSearchInfo.activeMatchIndex + 1 }} of {{ grid.lastSearchInfo.matchInfoCache.length }}
+                  results
+                </span>
+              }
+              @if (grid.lastSearchInfo.matchInfoCache.length === 0) {
+                <span>
+                  No results
+                </span>
+              }
+            </div>
+          }
+          <div class="searchButtons">
+            <button igxIconButton="flat" igxRipple (click)="grid.findPrev(searchText, false, false)">
+              <igx-icon family="material">navigate_before</igx-icon>
+            </button>
+            <button igxIconButton="flat" igxRipple (click)="grid.findNext(searchText, false, false)">
+              <igx-icon family="material">navigate_next</igx-icon>
+            </button>
+          </div>
+        </igx-suffix>
+      }
+    </igx-input-group>
+</div>
+<igx-grid [data]="data" width="800px" height="550px" [moving]="true" #grid1
     [cellMergeMode]="'always'" [rowSelection]="'single'">
     <igx-column field="ProductID" header="Product ID" width="200px">
         <ng-template igxCell let-cell="cell" let-val>

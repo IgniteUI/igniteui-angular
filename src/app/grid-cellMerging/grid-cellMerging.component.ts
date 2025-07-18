@@ -13,8 +13,13 @@ import {
     IgxGridToolbarHidingComponent,
     IgxGridToolbarPinningComponent,
     IgxHierarchicalGridComponent,
+    IgxIconComponent,
+    IgxInputDirective,
+    IgxInputGroupComponent,
     IgxPaginatorComponent,
+    IgxPrefixDirective,
     IgxRowIslandComponent,
+    IgxSuffixDirective,
     IgxTreeGridComponent
 } from 'igniteui-angular';
 import { HIERARCHICAL_DATA } from '../shared/hierarchicalData';
@@ -43,7 +48,12 @@ import { ByLevelTreeGridMergeStrategy } from 'igniteui-angular';
         IgxGridToolbarExporterComponent,
         IgxHierarchicalGridComponent,
         IgxRowIslandComponent,
-        IgxTreeGridComponent
+        IgxTreeGridComponent,
+        IgxInputGroupComponent,
+        IgxPrefixDirective,
+        IgxSuffixDirective,
+        IgxIconComponent,
+        IgxInputDirective
     ]
 })
 export class GridCellMergingComponent {
@@ -52,6 +62,8 @@ export class GridCellMergingComponent {
     public treeGridMergeStrategy =  new ByLevelTreeGridMergeStrategy();
     public alignBottom = { alignItems: "flex-end", paddingBottom: "12px"};
     public alignTop= { alignItems: "flex-start", paddingTop: "12px" };
+    public searchText: string ='';
+    @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
     public data = [{
         ProductID: 1,
         ProductName: 'Chai',
@@ -387,5 +399,19 @@ export class GridCellMergingComponent {
         OrderDate2: new Date(1991, 2, 12, 15, 40, 50).toISOString()
     }];
 
+    public searchKeyDown(ev) {
+        if (ev.key === 'Enter' || ev.key === 'ArrowDown' || ev.key === 'ArrowRight') {
+            ev.preventDefault();
+            this.grid.findNext(this.searchText, true, false);
+        } else if (ev.key === 'ArrowUp' || ev.key === 'ArrowLeft') {
+            ev.preventDefault();
+            this.grid.findPrev(this.searchText, true, false);
+        }
+    }
+
+    public clearSearch() {
+        this.searchText = '';
+        this.grid.clearSearch();
+    }
 }
 
