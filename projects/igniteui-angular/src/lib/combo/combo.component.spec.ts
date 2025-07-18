@@ -2269,6 +2269,21 @@ describe('igxCombo', () => {
                         cancel: false
                     });
             });
+            it('should clear the selection on Enter of the focused clear icon', () => {
+                const selectedItem_1 = combo.dropdown.items[1];
+                combo.toggle();
+                fixture.detectChanges();
+                simulateComboItemClick(1);
+                expect(combo.selection[0]).toEqual(selectedItem_1.value);
+                expect(combo.value[0]).toEqual(selectedItem_1.value[combo.valueKey]);
+
+                const clearBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+                UIInteractions.triggerEventHandlerKeyDown('Enter', clearBtn);
+                fixture.detectChanges();
+                expect(input.nativeElement.value).toEqual('');
+                expect(combo.selection.length).toEqual(0);
+                expect(combo.value.length).toEqual(0);
+            });
             it('should not be able to select group header', () => {
                 spyOn(combo.selectionChanging, 'emit').and.callThrough();
                 combo.toggle();
