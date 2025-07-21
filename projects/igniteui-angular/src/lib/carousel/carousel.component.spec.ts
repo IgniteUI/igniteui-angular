@@ -757,6 +757,17 @@ describe('Carousel', () => {
             expect(carousel.get(1).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
             expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.PREVIOUS_SLIDE_CLASS)).toBeFalsy();
         });
+
+        it('should not throw an error when playing an animation and destroying the component - #15976', () => {
+            expect(() => {
+                carousel.next();
+                carousel.ngOnDestroy();
+                fixture.detectChanges();
+            }).not.toThrow();
+
+            expect(carousel['enterAnimationPlayer']).toBe(null);
+            expect(carousel['leaveAnimationPlayer']).toBe(null);
+        });
     });
 
     describe('Dynamic Slides: ', () => {

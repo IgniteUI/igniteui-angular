@@ -10,6 +10,13 @@ All notable changes for each version of this project will be documented in this 
     this.carousel.select(2, Direction.NEXT);
     ```
 
+## 20.0.6
+### General
+- `IgxSimpleCombo`
+    - Added `disableFiltering` to the `IgxSimpleCombo`, which enables/disables the filtering in the list. The default is `false`.
+- `IgxCombo`, `IgxSimpleCombo`
+    -  Removed deprecated `filteringOptions.filterable` option.
+
 ## 20.0.2
 
 ### New Features
@@ -50,7 +57,6 @@ All notable changes for each version of this project will be documented in this 
     ```
 
 ## 19.2.0
-
 ### General
 - `IgxCarousel`
     - Removed deprecated property `keyboardSupport`.
