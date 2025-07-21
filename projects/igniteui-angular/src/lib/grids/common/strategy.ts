@@ -147,13 +147,15 @@ export class IgxSorting implements IGridSortingStrategy {
    */
     protected getFieldValue<T>(obj: T, key: string, isDate = false, isTime = false) {
         let resolvedValue = resolveNestedPath(obj, columnFieldPath(key));
-        const date = parseDate(resolvedValue);
-        if (date && isDate && isTime) {
-            resolvedValue = date;
-        } else if (date && isDate && !isTime) {
-            resolvedValue = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
-        } else if (date && isTime && !isDate) {
-            resolvedValue = new Date(new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()));
+        if (isDate || isTime) {
+            const date = parseDate(resolvedValue);
+            if (date && isDate && isTime) {
+                resolvedValue = date;
+            } else if (date && isDate && !isTime) {
+                resolvedValue = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
+            } else if (date && isTime && !isDate) {
+                resolvedValue = new Date(new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()));
+            }
         }
         return resolvedValue;
     }
