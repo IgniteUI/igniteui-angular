@@ -1846,8 +1846,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     @HostBinding('attr.aria-rowcount')
     protected get ariaRowCount(): number {
-        const totalRows = (this as any).totalItemCount ?? this.data?.length ?? 0;
-        return (this.paginator ? this._totalRecords : totalRows) + 1;
+        return this._rendered ? this._rowCount : null;
     }
 
     /**
@@ -3309,6 +3308,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _gridSize: Size = Size.Large;
     private _defaultRowHeight = 50;
+    private _rowCount: number;
 
     /**
      * @hidden @internal
@@ -4130,6 +4130,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (this.hasColumnsToAutosize) {
                 this.autoSizeColumnsInView();
             }
+            this._calculateRowCount();
             this._rendered = true;
         });
         Promise.resolve().then(() => this.rendered.next(true));
@@ -6772,6 +6773,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
+        this._calculateRowCount();
 
         this.columnList.changes
             .pipe(takeUntil(this.destroy$))
@@ -7994,5 +7996,16 @@ export abstract class IgxGridBaseDirective implements GridType,
         } else {
             return recreateTreeFromFields(value, this._columns) as IFilteringExpressionsTree;
         }
+    }
+
+    private _calculateRowCount(): void {
+        if (this.verticalScrollContainer?.isRemote) {
+            this._rowCount = this.verticalScrollContainer.totalItemCount ?? 0;
+        } else if (this.paginator) {
+            this._rowCount = this.totalRecords ?? 0;
+        } else {
+            this._rowCount = this.verticalScrollContainer?.igxForOf?.length ?? 0;
+        }
+        this._rowCount += 1; // include header row
     }
 }
