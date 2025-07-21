@@ -517,8 +517,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     /** @hidden @internal */
     @HostBinding('attr.aria-describedby')
     public get ariaDescribeBy() {
-        let describeBy = this.grid.headerGroupsList
-                        .find(hg => hg.column.field === this.column.field)?.headerID || '';
+        let describeBy = this.column.headerCell?.id || '';
         if (this.isInvalid) {
             describeBy += ' ' + this.ariaErrorMessage;
         }
