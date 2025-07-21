@@ -1,13 +1,19 @@
-import { Component, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DefaultMergeStrategy, GridCellMergeMode, GridColumnDataType, GridType, IgxColumnComponent, IgxGridComponent, SortingDirection } from 'igniteui-angular';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { By } from '@angular/platform-browser';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { hasClass } from '../../test-utils/helper-utils.spec';
 
 describe('IgxGrid - Cell merging #grid', () => {
     let fix;
     let grid: IgxGridComponent;
+    const MERGE_CELL_CSS_CLASS = '.igx-grid__td--merged';
+    const CELL_CSS_CLASS = '.igx-grid__td';
+    const CSS_CLASS_GRID_ROW = '.igx-grid__tr';
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -121,6 +127,38 @@ describe('IgxGrid - Cell merging #grid', () => {
             ]);
         });
     });
+
+
+    describe('UI', () => {
+        it ('should properly align merged cells with their spanned rows.', () => {
+            const mergedCell = fix.debugElement.queryAll(By.css(MERGE_CELL_CSS_CLASS))[0].nativeNode;
+            const endRow = fix.debugElement.queryAll(By.css(CSS_CLASS_GRID_ROW))[2].nativeNode;
+            expect(mergedCell.getBoundingClientRect().bottom).toBe(endRow.getBoundingClientRect().bottom);
+        });
+
+        it('should mark merged cell as hovered when hovering any row that intersects that cell.', () => {
+            const secondRow = fix.debugElement.queryAll(By.css(CSS_CLASS_GRID_ROW))[2];
+            UIInteractions.hoverElement(secondRow.nativeNode);
+            fix.detectChanges();
+            // hover 2nd row that intersects the merged cell in row 1
+            const mergedCell = fix.debugElement.queryAll(By.css(MERGE_CELL_CSS_CLASS))[0].nativeNode;
+            // merged cell should be marked as hovered
+            hasClass(mergedCell, 'igx-grid__td--merged-hovered', true);
+        });
+
+        it('should set correct size to merged cell that spans multiple rows that have different sizes.', () => {
+            const col = grid.getColumnByName('ID');
+            col.bodyTemplate = fix.componentInstance.customTemplate;
+            fix.detectChanges();
+            grid.verticalScrollContainer.recalcUpdateSizes();
+            grid.dataRowList.toArray().forEach(x => x.cdr.detectChanges());
+            const mergedCell = fix.debugElement.queryAll(By.css(MERGE_CELL_CSS_CLASS))[0].nativeNode;
+            // one row is 100px, other is 200, 4px border
+            expect(mergedCell.getBoundingClientRect().height).toBe(100 + 200 + 4);
+
+
+        });
+    });
 });
 
 @Component({
@@ -130,6 +168,9 @@ describe('IgxGrid - Cell merging #grid', () => {
             <igx-column width="100px" [field]="col.field" [dataType]="col.dataType" [merge]="col.merge"></igx-column>
         }
         </igx-grid>
+        <ng-template #customTemplate let-value let-cell="cell">
+            <button [style.height.px]="cell.row.index % 2 === 0 ? 100 : 200" type="button">{{value}}</button>
+        </ng-template>
     `,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
@@ -137,6 +178,10 @@ export class DefaultCellMergeGridComponent extends DataParent {
     public mergeMode: GridCellMergeMode = GridCellMergeMode.always;
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
+
+    @ViewChild('customTemplate', { read: TemplateRef, static: true })
+    public customTemplate: TemplateRef<any>;
+
     public cols = [
         { field:'ID', merge: false },
         { field:'ProductName', dataType: GridColumnDataType.String, merge: true },
