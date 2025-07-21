@@ -2509,3 +2509,31 @@ export class IgxHierarchicalGridEmptyTemplateComponent extends IgxHierarchicalGr
         this.childGridRef = grid;
     }
 }
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #hGrid [data]="data" [autoGenerate]="false"
+        [height]="'400px'" [width]="'500px'">
+        <igx-column field="root1" [dataType]="'number'"></igx-column>
+        <igx-column field="root2" [dataType]="'number'"></igx-column>
+        <igx-row-island [key]="'level1data'" [autoGenerate]="false">
+            <igx-column field="level1child1" [dataType]="'number'"></igx-column>
+            <igx-column field="level1child2" [dataType]="'number'"></igx-column>
+            <igx-row-island [key]="'level2data'" [autoGenerate]="false">
+                <igx-column field="level2child1" [dataType]="'number'"></igx-column>
+                <igx-column field="level2child2" [dataType]="'number'"></igx-column>
+            </igx-row-island>
+        </igx-row-island>
+    </igx-hierarchical-grid>`,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+})
+export class IgxHierarchicalGridMissingChildDataComponent {
+    @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hGrid: IgxHierarchicalGridComponent;
+
+    public data = [
+        { root1: 1, root2: 1, level1data: [{ level1child1: 11, level1child2: 12 }] }, // missing level2data
+        { root1: 2, root2: 2, level1data: [{ level1child1: 21, level1child2: 22, level2data: [{ level2child1: 31, level2child2: 32 }] }] },
+        { root1: 3, root2: 3, level1data: [] }
+    ];
+}
