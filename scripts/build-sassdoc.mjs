@@ -129,7 +129,7 @@ function createConfig(options = {}) {
         name: 'sassdoc-plugin-localization',
         path: './node_modules/sassdoc-plugin-localization/dist/index.js',
         options: {
-          dir: options.localizationDir || 'extras/sassdoc',
+          dir: options.localizationDir || 'i18nRepo/sassdoc',
           mode: options.localizationMode || 'both',
           languages: ['en', 'ja'],
         },
