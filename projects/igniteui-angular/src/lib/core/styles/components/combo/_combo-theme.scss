@@ -285,6 +285,10 @@
         %igx-combo__clear-button {
             color: var-get($theme, 'clear-button-foreground-focus');
             background: var-get($theme, 'clear-button-background-focus');
+
+            &:focus {
+                color: color($color: 'secondary');
+            }
         }
     }
 
