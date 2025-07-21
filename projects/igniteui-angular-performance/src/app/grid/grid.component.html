@@ -1,0 +1,20 @@
+<div class="grid-wrapper">
+  <igx-grid
+    #grid
+    [data]="data"
+    [allowFiltering]="true"
+    [height]="'100%'"
+    [width]="'100%'"
+  >
+    @for (col of columns; track col) {
+      <igx-column
+        [field]="col.field"
+        [header]="col.header"
+        [sortable]="col.sortable"
+        [dataType]="col.dataType"
+        [width]="col.width"
+      >
+      </igx-column>
+    }
+  </igx-grid>
+</div>
