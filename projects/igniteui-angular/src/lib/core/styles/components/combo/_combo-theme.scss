@@ -276,6 +276,10 @@
         %igx-combo__toggle-button {
             color: var-get($theme, 'toggle-button-foreground-focus');
             background: var-get($theme, 'toggle-button-background-focus');
+
+            &:focus {
+                color: color($color: 'secondary');
+            }
         }
 
         %igx-combo__clear-button {
