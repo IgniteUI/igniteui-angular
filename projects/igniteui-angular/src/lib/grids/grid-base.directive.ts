@@ -3891,7 +3891,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                     const rec = prevDataView[index];
                     if (rec.cellMergeMeta &&
                         // index + maxRowSpan is within view
-                        startIndex <= (index + Math.max(...rec.cellMergeMeta.values().toArray().map(x => x.rowSpan)))) {
+                        startIndex < (index + Math.max(...rec.cellMergeMeta.values().toArray().map(x => x.rowSpan)))) {
                             data.push({record: rec, index: index });
                         }
                 }

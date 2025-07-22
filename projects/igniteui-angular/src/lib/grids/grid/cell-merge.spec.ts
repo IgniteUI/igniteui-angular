@@ -1,7 +1,7 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { DefaultMergeStrategy, GridCellMergeMode, GridColumnDataType, GridType, IgxColumnComponent, IgxGridComponent, SortingDirection } from 'igniteui-angular';
+import { DefaultMergeStrategy, DefaultSortingStrategy, GridCellMergeMode, GridColumnDataType, GridType, IgxColumnComponent, IgxGridComponent, IgxPaginatorComponent, SortingDirection } from 'igniteui-angular';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { By } from '@angular/platform-browser';
@@ -22,142 +22,337 @@ describe('IgxGrid - Cell merging #grid', () => {
         }).compileComponents();
     }));
 
-    beforeEach(() => {
-        fix = TestBed.createComponent(DefaultCellMergeGridComponent);
-        fix.detectChanges();
-        grid = fix.componentInstance.grid;
-    });
+
 
     describe('Basic', () => {
-        it('should allow enabling/disabling merging per column.', () => {
 
-            const col = grid.getColumnByName('ProductName');
-            GridFunctions.verifyColumnMergedState(grid, col, [
-                { value: 'Ignite UI for JavaScript', span: 2 },
-                { value: 'Ignite UI for Angular', span: 1 },
-                { value: 'Ignite UI for JavaScript', span: 1 },
-                { value: 'Ignite UI for Angular', span: 2 },
-                { value: null , span: 1 },
-                { value: 'NetAdvantage' , span: 2 }
-            ]);
-
-            // disable merge
-            col.merge = false;
+        beforeEach(() => {
+            fix = TestBed.createComponent(DefaultCellMergeGridComponent);
             fix.detectChanges();
-
-            GridFunctions.verifyColumnMergedState(grid, col, [
-                { value: 'Ignite UI for JavaScript', span: 1 },
-                { value: 'Ignite UI for JavaScript', span: 1 },
-                { value: 'Ignite UI for Angular', span: 1 },
-                { value: 'Ignite UI for JavaScript', span: 1 },
-                { value: 'Ignite UI for Angular', span: 1 },
-                { value: 'Ignite UI for Angular', span: 1 },
-                { value: null , span: 1 },
-                { value: 'NetAdvantage' , span: 1 },
-                { value: 'NetAdvantage' , span: 1 }
-            ]);
+            grid = fix.componentInstance.grid;
         });
 
-        it('should always merge columns if mergeMode is always.', () => {
-            const col = grid.getColumnByName('Released');
-            col.merge = true;
-            fix.detectChanges();
-            GridFunctions.verifyColumnMergedState(grid, col, [
-                { value: true, span: 9 }
-            ]);
+        describe('Configuration', () => {
+
+            it('should allow enabling/disabling merging per column.', () => {
+
+                const col = grid.getColumnByName('ProductName');
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'Ignite UI for JavaScript', span: 2 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 2 },
+                    { value: null, span: 1 },
+                    { value: 'NetAdvantage', span: 2 }
+                ]);
+
+                // disable merge
+                col.merge = false;
+                fix.detectChanges();
+
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: null, span: 1 },
+                    { value: 'NetAdvantage', span: 1 },
+                    { value: 'NetAdvantage', span: 1 }
+                ]);
+            });
+
+            it('should always merge columns if mergeMode is always.', () => {
+                const col = grid.getColumnByName('Released');
+                col.merge = true;
+                fix.detectChanges();
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: true, span: 9 }
+                ]);
+            });
+
+            it('should merge only sorted columns if mergeMode is onSort.', () => {
+                grid.cellMergeMode = 'onSort';
+                fix.detectChanges();
+                const col = grid.getColumnByName('ProductName');
+                //nothing is merged initially
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: null, span: 1 },
+                    { value: 'NetAdvantage', span: 1 },
+                    { value: 'NetAdvantage', span: 1 }
+                ]);
+
+                grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
+                fix.detectChanges();
+
+                // merge only after sorted
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'NetAdvantage', span: 2 },
+                    { value: 'Ignite UI for JavaScript', span: 3 },
+                    { value: 'Ignite UI for Angular', span: 3 },
+                    { value: null, span: 1 }
+                ]);
+            });
+
+            it('should allow setting a custom merge strategy via mergeStrategy on grid.', () => {
+                grid.mergeStrategy = new NoopMergeStrategy();
+                fix.detectChanges();
+                const col = grid.getColumnByName('ProductName');
+                // this strategy does no merging
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: null, span: 1 },
+                    { value: 'NetAdvantage', span: 1 },
+                    { value: 'NetAdvantage', span: 1 }
+                ]);
+            });
+
+            it('should allow setting a custom comparer for merging on particular column via mergingComparer.', () => {
+                const col = grid.getColumnByName('ProductName');
+                // all are same and should merge
+                col.mergingComparer = (prev: any, rec: any, field: string) => {
+                    return true;
+                };
+                grid.pipeTrigger += 1;
+                fix.detectChanges();
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'Ignite UI for JavaScript', span: 9 }
+                ]);
+            });
         });
 
-        it('should merge only sorted columns if mergeMode is onSort.', () => {
-            grid.cellMergeMode = 'onSort';
-            fix.detectChanges();
-            const col = grid.getColumnByName('ProductName');
-            //nothing is merged initially
-            GridFunctions.verifyColumnMergedState(grid, col, [
-                { value: 'Ignite UI for JavaScript', span: 1 },
-                { value: 'Ignite UI for JavaScript', span: 1 },
-                { value: 'Ignite UI for Angular', span: 1 },
-                { value: 'Ignite UI for JavaScript', span: 1 },
-                { value: 'Ignite UI for Angular', span: 1 },
-                { value: 'Ignite UI for Angular', span: 1 },
-                { value: null , span: 1 },
-                { value: 'NetAdvantage' , span: 1 },
-                { value: 'NetAdvantage' , span: 1 }
-            ]);
+        describe('UI', () => {
+            it('should properly align merged cells with their spanned rows.', () => {
+                const mergedCell = fix.debugElement.queryAll(By.css(MERGE_CELL_CSS_CLASS))[0].nativeNode;
+                const endRow = fix.debugElement.queryAll(By.css(CSS_CLASS_GRID_ROW))[2].nativeNode;
+                expect(mergedCell.getBoundingClientRect().bottom).toBe(endRow.getBoundingClientRect().bottom);
+            });
 
-            grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
-            fix.detectChanges();
+            it('should mark merged cell as hovered when hovering any row that intersects that cell.', () => {
+                const secondRow = fix.debugElement.queryAll(By.css(CSS_CLASS_GRID_ROW))[2];
+                UIInteractions.hoverElement(secondRow.nativeNode);
+                fix.detectChanges();
+                // hover 2nd row that intersects the merged cell in row 1
+                const mergedCell = fix.debugElement.queryAll(By.css(MERGE_CELL_CSS_CLASS))[0].nativeNode;
+                // merged cell should be marked as hovered
+                hasClass(mergedCell, 'igx-grid__td--merged-hovered', true);
+            });
 
-            // merge only after sorted
-            GridFunctions.verifyColumnMergedState(grid, col, [
-                { value: 'NetAdvantage' , span: 2 },
-                { value: 'Ignite UI for JavaScript', span: 3 },
-                { value: 'Ignite UI for Angular', span: 3 },
-                { value: null , span: 1 }
-            ]);
-        });
-
-        it('should allow setting a custom merge strategy via mergeStrategy on grid.', () => {
-            grid.mergeStrategy = new NoopMergeStrategy();
-            fix.detectChanges();
-            const col = grid.getColumnByName('ProductName');
-            // this strategy does no merging
-            GridFunctions.verifyColumnMergedState(grid, col, [
-                { value: 'Ignite UI for JavaScript', span: 1 },
-                { value: 'Ignite UI for JavaScript', span: 1 },
-                { value: 'Ignite UI for Angular', span: 1 },
-                { value: 'Ignite UI for JavaScript', span: 1 },
-                { value: 'Ignite UI for Angular', span: 1 },
-                { value: 'Ignite UI for Angular', span: 1 },
-                { value: null , span: 1 },
-                { value: 'NetAdvantage' , span: 1 },
-                { value: 'NetAdvantage' , span: 1 }
-            ]);
-        });
-
-        it('should allow setting a custom comparer for merging on particular column via mergingComparer.', () => {
-            const col = grid.getColumnByName('ProductName');
-            // all are same and should merge
-            col.mergingComparer = (prev:any, rec: any, field: string) => {
-                return true;
-            };
-            grid.pipeTrigger += 1;
-            fix.detectChanges();
-            GridFunctions.verifyColumnMergedState(grid, col, [
-                { value: 'Ignite UI for JavaScript', span: 9 }
-            ]);
+            it('should set correct size to merged cell that spans multiple rows that have different sizes.', () => {
+                const col = grid.getColumnByName('ID');
+                col.bodyTemplate = fix.componentInstance.customTemplate;
+                fix.detectChanges();
+                grid.verticalScrollContainer.recalcUpdateSizes();
+                grid.dataRowList.toArray().forEach(x => x.cdr.detectChanges());
+                const mergedCell = fix.debugElement.queryAll(By.css(MERGE_CELL_CSS_CLASS))[0].nativeNode;
+                // one row is 100px, other is 200, 4px border
+                expect(mergedCell.getBoundingClientRect().height).toBe(100 + 200 + 4);
+            });
         });
     });
 
-
-    describe('UI', () => {
-        it ('should properly align merged cells with their spanned rows.', () => {
-            const mergedCell = fix.debugElement.queryAll(By.css(MERGE_CELL_CSS_CLASS))[0].nativeNode;
-            const endRow = fix.debugElement.queryAll(By.css(CSS_CLASS_GRID_ROW))[2].nativeNode;
-            expect(mergedCell.getBoundingClientRect().bottom).toBe(endRow.getBoundingClientRect().bottom);
-        });
-
-        it('should mark merged cell as hovered when hovering any row that intersects that cell.', () => {
-            const secondRow = fix.debugElement.queryAll(By.css(CSS_CLASS_GRID_ROW))[2];
-            UIInteractions.hoverElement(secondRow.nativeNode);
+    describe('Integration', () => {
+        beforeEach(() => {
+            fix = TestBed.createComponent(IntegrationCellMergeGridComponent);
             fix.detectChanges();
-            // hover 2nd row that intersects the merged cell in row 1
-            const mergedCell = fix.debugElement.queryAll(By.css(MERGE_CELL_CSS_CLASS))[0].nativeNode;
-            // merged cell should be marked as hovered
-            hasClass(mergedCell, 'igx-grid__td--merged-hovered', true);
+            grid = fix.componentInstance.grid;
         });
 
-        it('should set correct size to merged cell that spans multiple rows that have different sizes.', () => {
-            const col = grid.getColumnByName('ID');
-            col.bodyTemplate = fix.componentInstance.customTemplate;
-            fix.detectChanges();
-            grid.verticalScrollContainer.recalcUpdateSizes();
-            grid.dataRowList.toArray().forEach(x => x.cdr.detectChanges());
-            const mergedCell = fix.debugElement.queryAll(By.css(MERGE_CELL_CSS_CLASS))[0].nativeNode;
-            // one row is 100px, other is 200, 4px border
-            expect(mergedCell.getBoundingClientRect().height).toBe(100 + 200 + 4);
+        describe('Virtualization', () => {
+            beforeEach(() => {
+                fix.componentInstance.width = '400px';
+                fix.componentInstance.height = '300px';
+                fix.detectChanges();
+            });
+            it('should retain rows with merged cells that span multiple rows in DOM as long as merged cell is still in view.',  async() => {
+                // initial row list is same as the virtualization chunk
+                expect(grid.rowList.length).toBe(grid.virtualizationState.chunkSize);
+
+                grid.navigateTo(grid.virtualizationState.chunkSize - 1, 0);
+                await wait(100);
+                fix.detectChanges();
+
+                //virtualization starts from 1
+                expect(grid.virtualizationState.startIndex).toBe(1);
+
+                // check row is chunkSize + 1 extra row at the top
+                expect(grid.rowList.length).toBe(grid.virtualizationState.chunkSize + 1);
+                // first row at top is index 0
+                expect(grid.rowList.first.index).toBe(0);
+                // and has offset to position correctly the merged cell
+                expect(grid.rowList.first.nativeElement.offsetTop).toBeLessThan(-50);
+            });
+
+            it('should remove row from DOM when merged cell is no longer in view.', async() => {
+                // scroll so that first row with merged cell is not in view
+                grid.navigateTo(grid.virtualizationState.chunkSize, 0);
+                await wait(100);
+                fix.detectChanges();
+
+                 //virtualization starts from 2
+                 expect(grid.virtualizationState.startIndex).toBe(2);
+
+                 // no merge cells from previous chunks
+                 expect(grid.rowList.length).toBe(grid.virtualizationState.chunkSize);
+                 // first row is from the virtualization
+                 expect(grid.rowList.first.index).toBe(grid.virtualizationState.startIndex);
+            });
+
+            it('horizontal virtualization should not be affected by vertically merged cells.', async() => {
+                let mergedCell = grid.rowList.first.cells.find(x => x.column.field === 'ProductName');
+                expect(mergedCell.value).toBe('Ignite UI for JavaScript');
+                expect(mergedCell.nativeElement.parentElement.style.gridTemplateRows).toBe("51px 51px");
+
+                // scroll horizontally
+                grid.navigateTo(0, 4);
+                await wait(100);
+                fix.detectChanges();
+
+                // not in DOM
+                mergedCell = grid.rowList.first.cells.find(x => x.column.field === 'ProductName');
+                expect(mergedCell).toBeUndefined();
+
+                // scroll back
+                grid.navigateTo(0, 0);
+                await wait(100);
+                fix.detectChanges();
+
+                mergedCell = grid.rowList.first.cells.find(x => x.column.field === 'ProductName');
+                expect(mergedCell.value).toBe('Ignite UI for JavaScript');
+                expect(mergedCell.nativeElement.parentElement.style.gridTemplateRows).toBe("51px 51px");
+            });
+        });
+
+        describe('Group By', () => {
+            it('cells should merge only within their respective groups.', () => {
+                grid.groupBy({
+                    fieldName: 'ProductName', dir: SortingDirection.Desc,
+                    ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+                });
+                fix.detectChanges();
+
+                const col = grid.getColumnByName('ProductName');
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'NetAdvantage', span: 2 },
+                    { value: 'Ignite UI for JavaScript', span: 3 },
+                    { value: 'Ignite UI for Angular', span: 3 },
+                    { value: null, span: 1 }
+                ]);
+
+                grid.groupBy({
+                    fieldName: 'ReleaseDate', dir: SortingDirection.Desc,
+                    ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+                });
+                fix.detectChanges();
+
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'NetAdvantage', span: 1 },
+                    { value: 'NetAdvantage', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 2 },
+                    { value: null, span: 1 }
+                ]);
+
+            });
+
+        });
+
+        describe('Master-Detail', () => {
+
+            it('should interrupt merge sequence if a master-detail row is expanded.', () => {
+                grid.detailTemplate = fix.componentInstance.detailTemplate;
+                fix.detectChanges();
+
+                const col = grid.getColumnByName('ProductName');
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'Ignite UI for JavaScript', span: 2 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 2 },
+                    { value: null, span: 1 },
+                    { value: 'NetAdvantage', span: 2 }
+                ]);
+
+                GridFunctions.toggleMasterRow(fix, grid.rowList.first);
+                fix.detectChanges();
+
+                // should slit first merge group in 2
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 2 },
+                    { value: null, span: 1 },
+                    { value: 'NetAdvantage', span: 2 }
+                ]);
+            });
 
 
         });
+
+        describe('Paging', () => {
+            it('should merge cells only on current page of data.', () => {
+                fix.componentInstance.paging = true;
+                fix.detectChanges();
+                grid.triggerPipes();
+                fix.detectChanges();
+
+                const col = grid.getColumnByName('ProductName');
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'Ignite UI for JavaScript', span: 2 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 }
+                ]);
+
+                grid.page = 2;
+                fix.detectChanges();
+
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: null, span: 1 },
+                    { value: 'NetAdvantage', span: 2 }
+                ]);
+            });
+        });
+
+        describe('Column Pinning', () => {
+            it('should merge cells in pinned columns.', () => {
+                const col = grid.getColumnByName('ProductName');
+                col.pinned = true;
+                fix.detectChanges();
+
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'Ignite UI for JavaScript', span: 2 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 2 },
+                    { value: null, span: 1 },
+                    { value: 'NetAdvantage', span: 2 }
+                ]);
+
+                const mergedCell = grid.rowList.first.cells.find(x => x.column.field === 'ProductName');
+                expect(mergedCell.value).toBe('Ignite UI for JavaScript');
+                expect(mergedCell.nativeElement.parentElement.style.gridTemplateRows).toBe("51px 51px");
+            });
+        });
+
     });
 });
 
@@ -183,11 +378,11 @@ export class DefaultCellMergeGridComponent extends DataParent {
     public customTemplate: TemplateRef<any>;
 
     public cols = [
-        { field:'ID', merge: false },
-        { field:'ProductName', dataType: GridColumnDataType.String, merge: true },
-        { field:'Downloads', dataType: GridColumnDataType.Number, merge: false },
-        { field:'Released', dataType: GridColumnDataType.Boolean, merge: false },
-        { field:'ReleaseDate', dataType: GridColumnDataType.Date, merge: false }
+        { field: 'ID', merge: false },
+        { field: 'ProductName', dataType: GridColumnDataType.String, merge: true },
+        { field: 'Downloads', dataType: GridColumnDataType.Number, merge: false },
+        { field: 'Released', dataType: GridColumnDataType.Boolean, merge: false },
+        { field: 'ReleaseDate', dataType: GridColumnDataType.Date, merge: false }
     ];
 
     public override data = [
@@ -258,13 +453,38 @@ export class DefaultCellMergeGridComponent extends DataParent {
 
 }
 
+@Component({
+    template: `
+        <igx-grid [data]="data" [cellMergeMode]="mergeMode" #grid [height]="height" [width]="width">
+        @for(col of cols; track col) {
+            <igx-column width="200px" [field]="col.field" [dataType]="col.dataType" [merge]="col.merge"></igx-column>
+        }
+        @if (paging) {
+            <igx-paginator [perPage]="5"></igx-paginator>
+        }
+        </igx-grid>
+        <ng-template #detailTemplate>
+            <button>Detail</button>
+        </ng-template>
+    `,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
+})
+export class IntegrationCellMergeGridComponent extends DefaultCellMergeGridComponent {
+    public height = '100%';
+    public width = '100%';
+    public paging = false;
+
+    @ViewChild('detailTemplate', { read: TemplateRef, static: true })
+    public detailTemplate: TemplateRef<any>;
+}
+
 class NoopMergeStrategy extends DefaultMergeStrategy {
     public override merge(
         data: any[],
         field: string,
         comparer: (prevRecord: any, record: any, field: string) => boolean = this.comparer,
         result: any[],
-        activeRowIndexes : number[],
+        activeRowIndexes: number[],
         grid?: GridType
     ) {
         return data;
