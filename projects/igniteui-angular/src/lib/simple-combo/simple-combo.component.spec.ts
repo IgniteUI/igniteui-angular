@@ -617,6 +617,7 @@ describe('IgxSimpleCombo', () => {
             expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
             expect(input.nativeElement.getAttribute('aria-controls')).toEqual(combo.dropdown.listId);
             expect(input.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
+            expect(input.nativeElement.getAttribute('aria-label')).toEqual('No options selected');
 
             const dropdownListBox = fixture.debugElement.query(By.css(`[role='listbox']`));
             expect(dropdownListBox.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
@@ -632,6 +633,10 @@ describe('IgxSimpleCombo', () => {
             tick();
             fixture.detectChanges();
             expect(list.nativeElement.getAttribute('aria-activedescendant')).toEqual(combo.dropdown.focusedItem.id);
+
+            combo.select('Illinois');
+            fixture.detectChanges();
+            expect(input.nativeElement.getAttribute('aria-label')).toEqual('Selected options');
         }));
         it('should render aria-expanded attribute properly', fakeAsync(() => {
             expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
@@ -1191,6 +1196,17 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection).toBeDefined()
         });
 
+        it('should close the dropdown list on pressing Tab key', fakeAsync(() => {
+            combo.open();
+            fixture.detectChanges();
+
+            const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+            UIInteractions.triggerEventHandlerKeyDown('Tab', dropdownContent);
+            tick();
+            fixture.detectChanges();
+            expect(combo.collapsed).toBeTruthy();
+        }));
+
         it('should clear the selection on tab/blur if the search text does not match any value', () => {
             // allowCustomValues does not matter
             combo.select(combo.data[2][combo.valueKey]);
@@ -1228,6 +1244,60 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             expect(combo.selection).toBeDefined()
             expect(combo.displayValue).toEqual('Wisconsin');
+        });
+
+        it('should toggle combo dropdown on Enter of the focused toggle icon', fakeAsync(() => {
+            spyOn(combo, 'toggle').and.callThrough();
+            const toggleBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_TOGGLEBUTTON}`));
+
+            UIInteractions.triggerEventHandlerKeyDown('Enter', toggleBtn);
+            tick();
+            fixture.detectChanges();
+            expect(combo.toggle).toHaveBeenCalledTimes(1);
+            expect(combo.collapsed).toEqual(false);
+
+            UIInteractions.triggerEventHandlerKeyDown('Enter', toggleBtn);
+            tick();
+            fixture.detectChanges();
+            expect(combo.toggle).toHaveBeenCalledTimes(2);
+            expect(combo.collapsed).toEqual(true);
+        }));
+
+        it('should clear the selection on Enter of the focused clear icon', () => {
+            combo.select(combo.data[2][combo.valueKey]);
+            fixture.detectChanges();
+            expect(combo.selection).toBeDefined()
+            expect(input.nativeElement.value).toEqual('Massachusetts');
+
+            const clearBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            UIInteractions.triggerEventHandlerKeyDown('Enter', clearBtn);
+            fixture.detectChanges();
+            expect(input.nativeElement.value.length).toEqual(0);
+            expect(combo.selection).not.toBeDefined();
+        });
+
+        it('should not filter the data when disableFiltering is true', () => {
+            combo.disableFiltering = true;
+            fixture.detectChanges();
+            combo.focusSearchInput();
+
+            UIInteractions.simulateTyping('con', input);
+            expect(combo.comboInput.value).toEqual('con');
+            fixture.detectChanges();
+
+            expect(combo.filteredData.length).toEqual(combo.data.length);
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+
+            combo.disableFiltering = false;
+            fixture.detectChanges();
+            combo.focusSearchInput();
+            combo.comboInput.value = '';
+            fixture.detectChanges();
+            UIInteractions.simulateTyping('con', input);
+            expect(combo.comboInput.value).toEqual('con');
+            fixture.detectChanges();
+            expect(combo.filteredData.length).toEqual(2);
         });
 
         it('should display the AddItem button when allowCustomValues is true and there is a partial match', fakeAsync(() => {
