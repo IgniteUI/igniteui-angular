@@ -8,6 +8,7 @@ on:
     branches: [ master, '[0-9]+.[0-9]+.x' ]
   pull_request:
     branches: [ master, '[0-9]+.[0-9]+.x' ]
+  workflow_dispatch:
 
 jobs:
   run-tests:
