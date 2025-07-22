@@ -13,7 +13,8 @@ export enum Navigate {
 export const DropDownActionKey = /*@__PURE__*/mkenum({
     ESCAPE: 'escape',
     ENTER: 'enter',
-    SPACE: 'space'
+    SPACE: 'space',
+    TAB: 'tab',
 });
 export type DropDownActionKey = (typeof DropDownActionKey)[keyof typeof DropDownActionKey];
 

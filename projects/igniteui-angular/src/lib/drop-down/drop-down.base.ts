@@ -196,6 +196,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
                 this.selectItem(this.focusedItem, event);
                 break;
             case DropDownActionKey.ESCAPE:
+            case DropDownActionKey.TAB:
         }
     }
 
