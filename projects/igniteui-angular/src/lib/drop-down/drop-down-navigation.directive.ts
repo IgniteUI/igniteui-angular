@@ -67,7 +67,7 @@ export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDi
             const key = event.key.toLowerCase();
             if (!this.target.collapsed) { // If dropdown is opened
                 const navKeys = ['esc', 'escape', 'enter', 'space', 'spacebar', ' ',
-            'arrowup', 'up', 'arrowdown', 'down', 'home', 'end'];
+            'arrowup', 'up', 'arrowdown', 'down', 'home', 'end', 'tab'];
                 if (navKeys.indexOf(key) === -1) { // If key has appropriate function in DD
                     return;
                 }
@@ -102,6 +102,9 @@ export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDi
                     break;
                 case 'end':
                     this.onEndKeyDown();
+                    break;
+                case 'tab':
+                    this.target.onItemActionKey(DropDownActionKey.TAB, event);
                     break;
                 default:
                     return;
