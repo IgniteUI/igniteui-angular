@@ -278,11 +278,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             expect(span).not.toBeNull();
 
-
-            const pointerDown = new PointerEvent('pointerdown', { bubbles: true });
-            const pointerUp = new PointerEvent('pointerup', { bubbles: true });
-            span.dispatchEvent(pointerDown);
-            span.dispatchEvent(pointerUp);
+            UIInteractions.simulateClickAndSelectEvent(span);
             fix.detectChanges();
             expect(selectionChangeSpy).not.toHaveBeenCalled();
         });
