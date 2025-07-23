@@ -47,6 +47,7 @@ import { IgxIconComponent } from "../../icon/icon.component";
 import { IgxInputGroupComponent } from "../../input-group/input-group.component";
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { Size } from '../common/enums';
+import { GridColumnDataType } from '../../data-operations/data-util';
 
 interface IDataSelectorPanel {
     name: string;
@@ -541,8 +542,13 @@ export class IgxPivotDataSelectorComponent {
      * @internal
      */
     public onAggregationChange(event: ISelectionEventArgs) {
+
         if (!this.isSelected(event.newSelection.value)) {
             this.value.aggregate = event.newSelection.value;
+            const isSingleValue = this.grid.values.length === 1;
+
+            PivotUtil.updateColumnTypeByAggregator(this.grid.columns, this.value, isSingleValue);
+
             this.grid.pipeTrigger++;
             this.grid.cdr.markForCheck();
         }

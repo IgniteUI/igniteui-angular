@@ -3,7 +3,7 @@
         <ng-content select="[igxLabel]"></ng-content>
     </ng-container>
     <ng-container ngProjectAs="igx-prefix">
-        <ng-content select="igx-prefix"></ng-content>
+        <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
     </ng-container>
     <ng-container ngProjectAs="igx-hint, [igxHint]">
         <ng-content select="igx-hint, [igxHint]"></ng-content>
@@ -13,13 +13,14 @@
         role="combobox" aria-haspopup="listbox"
         [attr.aria-expanded]="!dropdown.collapsed" [attr.aria-controls]="dropdown.listId"
         [attr.aria-labelledby]="ariaLabelledBy || label?.id || placeholder"
+        [attr.aria-label]="getAriaLabel()"
         (blur)="onBlur()" />
     <ng-container ngProjectAs="igx-suffix">
-        <ng-content select="igx-suffix"></ng-content>
+        <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
     </ng-container>
     @if (displayValue) {
         <igx-suffix [attr.aria-label]="resourceStrings.igx_combo_clearItems_placeholder" class="igx-combo__clear-button"
-            (click)="handleClearItems($event)">
+            (click)="handleClearItems($event)" (keydown)="handleClearKeyDown($event)" [tabindex]="disabled ? -1 : 0" role="button">
             @if (clearIconTemplate) {
                 <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
             }
@@ -28,7 +29,7 @@
             }
         </igx-suffix>
     }
-    <igx-suffix class="igx-combo__toggle-button">
+    <igx-suffix class="igx-combo__toggle-button" (keydown)="handleToggleKeyDown($event)" [tabindex]="disabled ? -1 : 0" role="button">
         @if (toggleIconTemplate) {
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: collapsed}"></ng-container>
         }
