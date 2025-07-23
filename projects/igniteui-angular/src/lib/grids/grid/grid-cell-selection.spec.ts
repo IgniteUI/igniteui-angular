@@ -6,7 +6,7 @@ import {
     SelectionWithTransactionsComponent,
     CellSelectionNoneComponent,
     CellSelectionSingleComponent,
-    IgxGridCellTemplateForRangeSelectionComponent
+    IgxGridRowEditingWithoutEditableColumnsComponent
 } from '../../test-utils/grid-samples.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
@@ -28,7 +28,7 @@ describe('IgxGrid - Cell selection #grid', () => {
                 SelectionWithTransactionsComponent,
                 CellSelectionNoneComponent,
                 CellSelectionSingleComponent,
-                IgxGridCellTemplateForRangeSelectionComponent
+                IgxGridRowEditingWithoutEditableColumnsComponent
             ]
         }).compileComponents();
     }));
@@ -258,11 +258,18 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(1);
         });
 
-        it('Should not trigger range selection when CellTemplate is used and the user clicks on element inside it',()=>{
-            fix = TestBed.createComponent(IgxGridCellTemplateForRangeSelectionComponent);
+        it('Should not trigger range selection when CellTemplate is used and the user clicks on element inside it', () => {
+            fix = TestBed.createComponent(IgxGridRowEditingWithoutEditableColumnsComponent);
             fix.detectChanges();
+
+            const component = fix.componentInstance;
             grid = fix.componentInstance.grid;
-            detect = () => grid.cdr.detectChanges();
+
+            expect(component.customCell).toBeDefined();
+
+            const column = grid.getColumnByName('ProductID');
+            column.bodyTemplate = component.customCell;
+            fix.detectChanges();
 
             const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
             const cell = grid.gridAPI.get_cell_by_index(1, 'ProductID');
@@ -270,7 +277,12 @@ describe('IgxGrid - Cell selection #grid', () => {
             const span = cellElement.querySelector('span');
 
             expect(span).not.toBeNull();
-            span.click();
+
+
+            const pointerDown = new PointerEvent('pointerdown', { bubbles: true });
+            const pointerUp = new PointerEvent('pointerup', { bubbles: true });
+            span.dispatchEvent(pointerDown);
+            span.dispatchEvent(pointerUp);
             fix.detectChanges();
             expect(selectionChangeSpy).not.toHaveBeenCalled();
         });

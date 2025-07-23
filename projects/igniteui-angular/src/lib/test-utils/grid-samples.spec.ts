@@ -1407,31 +1407,18 @@ export class IgxGridRowEditingComponent extends BasicGridComponent {
         <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" [editable]="true" width="100px"></igx-column>
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="150px"></igx-column>
         <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="150px" [editable]="false"></igx-column>
+        <ng-template #customCell igxCell let-cell="cell" let-val>
+            <span style="background-color: red;">val</span>
+            <br>
+            {{val}}
+        </ng-template>
     </igx-grid>`,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class IgxGridRowEditingWithoutEditableColumnsComponent extends BasicGridComponent {
     public override data = SampleTestData.foodProductData();
-}
-
-@Component({
-    template: `
-    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px"  [cellSelection]="'multiple'">
-        <igx-column field="ProductID" header="Product ID">
-            <ng-template igxCell let-cell="cell" let-val>
-               <span style="background-color: red;">{{val}}</span>
-                <br>
-                {{val}}
-            </ng-template>
-        </igx-column>
-        <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" [editable]="true" width="100px"></igx-column>
-        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="150px"></igx-column>
-        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="150px" [editable]="false"></igx-column>
-    </igx-grid>`,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
-})
-export class IgxGridCellTemplateForRangeSelectionComponent extends BasicGridComponent {
-    public override data = SampleTestData.foodProductData();
+    @ViewChild('customCell', { static: true })
+    public customCell!: TemplateRef<any>;
 }
 
 @Component({
