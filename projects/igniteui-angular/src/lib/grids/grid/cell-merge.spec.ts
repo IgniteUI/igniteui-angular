@@ -1,12 +1,13 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { DefaultMergeStrategy, DefaultSortingStrategy, GridCellMergeMode, GridColumnDataType, GridType, IgxColumnComponent, IgxGridComponent, IgxPaginatorComponent, SortingDirection } from 'igniteui-angular';
+import { DefaultMergeStrategy, DefaultSortingStrategy, GridCellMergeMode, GridColumnDataType, GridType, IgxColumnComponent, IgxGridComponent, IgxPaginatorComponent, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { hasClass } from '../../test-utils/helper-utils.spec';
+import { ColumnLayoutTestComponent } from './grid.multi-row-layout.spec';
 
 describe('IgxGrid - Cell merging #grid', () => {
     let fix;
@@ -14,10 +15,12 @@ describe('IgxGrid - Cell merging #grid', () => {
     const MERGE_CELL_CSS_CLASS = '.igx-grid__td--merged';
     const CELL_CSS_CLASS = '.igx-grid__td';
     const CSS_CLASS_GRID_ROW = '.igx-grid__tr';
+    const HIGHLIGHT_ACTIVE_CSS_CLASS = '.igx-highlight__active';
+
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule, DefaultCellMergeGridComponent
+                NoopAnimationsModule, DefaultCellMergeGridComponent, ColumnLayoutTestComponent
             ]
         }).compileComponents();
     }));
@@ -517,6 +520,7 @@ describe('IgxGrid - Cell merging #grid', () => {
                 ]);
             });
         });
+
         describe('Row Selection', () => {
 
             it('should mark all merged cells that intersect with a selected row as selected.', () => {
@@ -528,11 +532,147 @@ describe('IgxGrid - Cell merging #grid', () => {
                 fix.detectChanges();
 
                 expect(secondRow.selected).toBe(true);
-                grid.markForCheck();
 
                 const mergedIntersectedCell = grid.gridAPI.get_cell_by_index(0, 'ProductName');
                 // check cell has selected style
                 hasClass(mergedIntersectedCell.nativeElement,'igx-grid__td--merged-selected', true);
+            });
+
+        });
+
+        describe('Cell Selection', () => {
+            it('should interrupt merge sequence so that selected cell has no merging.', () => {
+                const col = grid.getColumnByName('ProductName');
+                grid.cellSelection = 'multiple';
+                fix.detectChanges();
+
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'Ignite UI for JavaScript', span: 2 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 2 },
+                    { value: null, span: 1 },
+                    { value: 'NetAdvantage', span: 2 }
+                ]);
+
+                const startCell = grid.gridAPI.get_cell_by_index(4, 'ProductName');
+                const endCell = grid.gridAPI.get_cell_by_index(0, 'ID');
+
+                GridSelectionFunctions.selectCellsRangeNoWait(fix, startCell, endCell);
+                fix.detectChanges();
+
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: null, span: 1 },
+                    { value: 'NetAdvantage', span: 2 }
+                ]);
+
+                // check api
+                expect(grid.getSelectedData().length).toBe(5);
+                expect(grid.getSelectedData()).toEqual(grid.data.slice(0, 5).map(x => { return { 'ID': x.ID, 'ProductName': x. ProductName}}));
+            });
+        });
+
+        describe('Column selection', () => {
+            it('should mark merged cells in selected column as selected.', () => {
+                grid.columnSelection = 'multiple';
+                fix.detectChanges();
+                const col = grid.getColumnByName('ProductName');
+                col.selected = true;
+                fix.detectChanges();
+
+                const mergedCells = fix.debugElement.queryAll(By.css(MERGE_CELL_CSS_CLASS));
+                mergedCells.forEach(element => {
+                    hasClass(element.nativeNode, 'igx-grid__td--column-selected', true);
+                });
+            });
+
+            it('selected data API should return all associated data fields as selected.', () => {
+                grid.columnSelection = 'multiple';
+                fix.detectChanges();
+                const col = grid.getColumnByName('ProductName');
+                col.selected = true;
+                fix.detectChanges();
+
+                expect(grid.getSelectedColumnsData()).toEqual(grid.data.map(x => { return {'ProductName': x. ProductName}}));
+            });
+        });
+
+        describe('Filtering', () => {
+
+            it('should merge cells in filtered data.', () => {
+                grid.filter('ProductName', 'Net', IgxStringFilteringOperand.instance().condition('startsWith'), true);
+                fix.detectChanges();
+                const col = grid.getColumnByName('ProductName');
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'NetAdvantage', span: 2 }
+                ]);
+            });
+
+        });
+
+        describe('Searching', () => {
+
+            it('findNext \ findPrev should count merged cells as 1 result and navigate once through them.', () => {
+                const cell0 = grid.gridAPI.get_cell_by_index(0, 'ProductName').nativeElement;
+                const cell3 = grid.gridAPI.get_cell_by_index(3, 'ProductName').nativeElement;
+                const fixNativeElem = fix.debugElement.nativeElement;
+
+                let matches = grid.findNext('JavaScript');
+                fix.detectChanges();
+
+                expect(matches).toBe(2);
+
+                let activeHighlight = fixNativeElem.querySelectorAll(HIGHLIGHT_ACTIVE_CSS_CLASS);
+                expect(activeHighlight[0].closest("igx-grid-cell")).toBe(cell0);
+
+                matches = grid.findNext('JavaScript');
+                fix.detectChanges();
+
+                activeHighlight = fixNativeElem.querySelectorAll(HIGHLIGHT_ACTIVE_CSS_CLASS);
+                expect(activeHighlight[0].closest("igx-grid-cell")).toBe(cell3);
+
+                matches = grid.findPrev('JavaScript');
+                fix.detectChanges();
+
+                activeHighlight = fixNativeElem.querySelectorAll(HIGHLIGHT_ACTIVE_CSS_CLASS);
+                expect(activeHighlight[0].closest("igx-grid-cell")).toBe(cell0);
+            });
+
+            it('should update matches if a cell becomes unmerged.', () => {
+                let matches = grid.findNext('JavaScript');
+                fix.detectChanges();
+
+                expect(matches).toBe(2);
+
+                UIInteractions.simulateClickAndSelectEvent(grid.gridAPI.get_cell_by_index(0, 'ProductName').nativeElement);
+                fix.detectChanges();
+
+                matches = grid.findNext('JavaScript');
+                fix.detectChanges();
+                expect(matches).toBe(3);
+            });
+
+        });
+
+        describe('Multi-row layout', () => {
+            it('should throw warning and disallow merging with mrl.', () => {
+                jasmine.getEnv().allowRespy(true);
+                fix = TestBed.createComponent(ColumnLayoutTestComponent);
+                fix.detectChanges();
+                grid = fix.componentInstance.grid;
+                spyOn(console, 'warn');
+                grid.columns[1].merge = true;
+                fix.detectChanges();
+
+                expect(console.warn).toHaveBeenCalledWith('Merging is not supported with multi-row layouts.');
+                expect(console.warn).toHaveBeenCalledTimes(1);
+                jasmine.getEnv().allowRespy(false);
             });
 
         });
