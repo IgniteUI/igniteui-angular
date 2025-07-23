@@ -258,7 +258,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(1);
         });
 
-        it('Should not trigger range selection when CellTemplate is used and the user clicks on element inside it',()=>{
+        it('Should not trigger range selection when CellTemplate is used and the user clicks on element inside it', () => {
             fix = TestBed.createComponent(IgxGridRowEditingWithoutEditableColumnsComponent);
             fix.detectChanges();
 
