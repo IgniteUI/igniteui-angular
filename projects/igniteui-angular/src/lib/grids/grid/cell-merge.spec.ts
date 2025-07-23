@@ -3,7 +3,7 @@ import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DefaultMergeStrategy, DefaultSortingStrategy, GridCellMergeMode, GridColumnDataType, GridType, IgxColumnComponent, IgxGridComponent, IgxPaginatorComponent, SortingDirection } from 'igniteui-angular';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { hasClass } from '../../test-utils/helper-utils.spec';
@@ -351,6 +351,190 @@ describe('IgxGrid - Cell merging #grid', () => {
                 expect(mergedCell.value).toBe('Ignite UI for JavaScript');
                 expect(mergedCell.nativeElement.parentElement.style.gridTemplateRows).toBe("51px 51px");
             });
+        });
+
+        describe('Row Pinning', () => {
+            it('should merge adjacent pinned rows in pinned row area.', () => {
+                const row1 = grid.rowList.toArray()[0];
+                const row2 = grid.rowList.toArray()[1];
+                const col = grid.getColumnByName('ProductName');
+                row1.pin();
+                row2.pin();
+                fix.detectChanges();
+
+                expect(grid.pinnedRows.length).toBe(2);
+                const pinnedRow =  grid.pinnedRows[0];
+                expect(pinnedRow.metaData.cellMergeMeta.get(col.field)?.rowSpan).toBe(2);
+                const mergedPinnedCell = pinnedRow.cells.find(x => x.column.field === 'ProductName');
+                expect(mergedPinnedCell.value).toBe('Ignite UI for JavaScript');
+                expect(mergedPinnedCell.nativeElement.parentElement.style.gridTemplateRows).toBe("51px 51px");
+            });
+
+            it('should merge adjacent ghost rows in unpinned area.', () => {
+                const row1 = grid.rowList.toArray()[0];
+                const row2 = grid.rowList.toArray()[1];
+                const col = grid.getColumnByName('ProductName');
+                row1.pin();
+                row2.pin();
+                fix.detectChanges();
+
+                const ghostRows = grid.rowList.filter(x => x.disabled);
+                expect(ghostRows.length).toBe(2);
+                const ghostRow = ghostRows[0];
+                expect(ghostRow.metaData.cellMergeMeta.get(col.field)?.rowSpan).toBe(2);
+                const mergedPinnedCell = ghostRow.cells.find(x => x.column.field === 'ProductName');
+                expect(mergedPinnedCell.value).toBe('Ignite UI for JavaScript');
+                expect(mergedPinnedCell.nativeElement.parentElement.style.gridTemplateRows).toBe("51px 51px");
+            });
+
+            it('should not merge ghost and data rows together.', () => {
+                const col = grid.getColumnByName('ProductName');
+                const row1 = grid.rowList.toArray()[0];
+                row1.pin();
+                fix.detectChanges();
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 2 },
+                    { value: null, span: 1 },
+                    { value: 'NetAdvantage', span: 2 }
+                ]);
+            });
+        });
+
+        describe('Activation', () => {
+
+            it('should interrupt merge sequence so that active row has no merging.', () => {
+                const col = grid.getColumnByName('ProductName');
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'Ignite UI for JavaScript', span: 2 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 2 },
+                    { value: null, span: 1 },
+                    { value: 'NetAdvantage', span: 2 }
+                ]);
+
+                const row1 = grid.rowList.toArray()[0];
+
+                UIInteractions.simulateClickAndSelectEvent(row1.cells.toArray()[1].nativeElement);
+                fix.detectChanges();
+
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 2 },
+                    { value: null, span: 1 },
+                    { value: 'NetAdvantage', span: 2 }
+                ]);
+            });
+
+        });
+
+        describe('Updating', () => {
+
+            beforeEach(() => {
+                grid.primaryKey = 'ID';
+                grid.columns.forEach(x => x.editable = true);
+                fix.detectChanges();
+            });
+
+            it('should edit the individual row values for the active row.', () => {
+                const col = grid.getColumnByName('ProductName');
+                grid.rowEditable = true;
+                fix.detectChanges();
+
+                const row = grid.gridAPI.get_row_by_index(0);
+                const cell = grid.gridAPI.get_cell_by_index(0, 'ProductName');
+                UIInteractions.simulateDoubleClickAndSelectEvent(cell.nativeElement);
+                fix.detectChanges();
+                expect(row.inEditMode).toBe(true);
+
+                // row in edit is not merged anymore
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 2 },
+                    { value: null, span: 1 },
+                    { value: 'NetAdvantage', span: 2 }
+                ]);
+
+                // enter new val
+                const cellInput =  grid.gridAPI.get_cell_by_index(0, 'ProductName').nativeElement.querySelector('[igxinput]');
+                UIInteractions.setInputElementValue(cellInput, "NewValue");
+                fix.detectChanges();
+
+                // Done button click
+                const doneButtonElement = GridFunctions.getRowEditingDoneButton(fix);
+                doneButtonElement.click();
+                fix.detectChanges();
+
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'NewValue', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 2 },
+                    { value: null, span: 1 },
+                    { value: 'NetAdvantage', span: 2 }
+                ]);
+            });
+
+            it('should edit the individual cell value for the active row.', () => {
+                const col = grid.getColumnByName('ProductName');
+                let cell = grid.gridAPI.get_cell_by_index(0, 'ProductName');
+
+                UIInteractions.simulateDoubleClickAndSelectEvent(cell.nativeElement);
+                fix.detectChanges();
+
+                cell = grid.gridAPI.get_cell_by_index(0, 'ProductName');
+                expect(cell.editMode).toBe(true);
+
+                // enter new val
+                const cellInput =  grid.gridAPI.get_cell_by_index(0, 'ProductName').nativeElement.querySelector('[igxinput]');
+                UIInteractions.setInputElementValue(cellInput, "NewValue");
+                fix.detectChanges();
+
+                UIInteractions.triggerEventHandlerKeyDown('enter', GridFunctions.getGridContent(fix));
+                fix.detectChanges();
+
+                 // row with edit cell is not merged anymore
+                 GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'NewValue', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 2 },
+                    { value: null, span: 1 },
+                    { value: 'NetAdvantage', span: 2 }
+                ]);
+            });
+        });
+        describe('Row Selection', () => {
+
+            it('should mark all merged cells that intersect with a selected row as selected.', () => {
+                grid.rowSelection = 'multiple';
+                fix.detectChanges();
+
+                const secondRow = grid.rowList.toArray()[1];
+                GridSelectionFunctions.clickRowCheckbox(secondRow);
+                fix.detectChanges();
+
+                expect(secondRow.selected).toBe(true);
+                grid.markForCheck();
+
+                const mergedIntersectedCell = grid.gridAPI.get_cell_by_index(0, 'ProductName');
+                // check cell has selected style
+                hasClass(mergedIntersectedCell.nativeElement,'igx-grid__td--merged-selected', true);
+            });
+
         });
 
     });
