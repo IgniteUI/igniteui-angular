@@ -46,7 +46,6 @@
     }
 
     $theme: digest-schema($circular-bar-schema);
-    $meta: map.get($theme, '_meta');
 
     $fill-color-default-start: map.get($theme, 'fill-color-default');
     $fill-color-default-end: map.get($theme, 'fill-color-default');
@@ -73,10 +72,6 @@
         fill-color-success: $fill-color-success,
         text-color: $text-color,
         diameter: $diameter,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -94,7 +89,7 @@
     $diameter: calc(var(--circular-size) + var(--stroke-thickness));
     $radius: calc(var(--circular-size) / 2 - var(--stroke-thickness) * .5);
     $circumference: calc(#{$radius} * 2 * 3.1416);
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     %display-circular {
         --circular-size: calc(#{var-get($theme, 'diameter')} - var(--stroke-thickness));
@@ -136,7 +131,7 @@
 
             %outer {
 	            stroke: var-get($theme, 'fill-color-default');
-	            
+
                 @if $variant != 'bootstrap' {
                     animation: igx-initial-dashoffset var(--_transition-duration) linear;
                 } @else {
@@ -313,7 +308,7 @@
     %text--hidden {
         visibility: hidden;
     }
-	
+
 	%gradient-start {
 		stop-color: var-get($theme, 'fill-color-default-end');
 	}

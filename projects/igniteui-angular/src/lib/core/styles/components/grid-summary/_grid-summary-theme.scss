@@ -50,22 +50,25 @@
     }
 
     $theme: digest-schema($grid-summary-schema);
-    $meta: map.get($theme, '_meta');
+
+    @if not($label-color) and $background-color {
+        $label-color: adaptive-contrast(var(--background-color));
+    }
+
+    @if not($label-hover-color) and $label-color {
+        $label-hover-color: var(--label-color);
+    }
 
     @if not($result-color) and $background-color {
-        $result-color: text-contrast($background-color);
+        $result-color: adaptive-contrast(var(--background-color));
     }
 
     @if not($border-color) and $background-color {
-        @if type-of($background-color) == 'color' {
-            $border-color: rgba(text-contrast($background-color), .26);
-        }
+        $border-color: hsla(from adaptive-contrast(var(--background-color)) h s l / .26);
     }
 
     @if not($pinned-border-color) and $background-color {
-        @if type-of($background-color) == 'color' {
-            $pinned-border-color: rgba(text-contrast($background-color), .26);
-        }
+        $pinned-border-color: hsla(from adaptive-contrast(var(--background-color)) h s l / .26);
     }
 
     @return extend($theme, (
@@ -79,10 +82,6 @@
         pinned-border-style: $pinned-border-style,
         pinned-border-color: $pinned-border-color,
         label-hover-color: $label-hover-color,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -92,7 +91,7 @@
 @mixin grid-summary($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     $cell-pin: (
         style: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style'),

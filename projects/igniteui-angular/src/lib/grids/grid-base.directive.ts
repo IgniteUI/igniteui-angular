@@ -3901,7 +3901,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         // notifier for column autosize requests
         this._autoSizeColumnsNotify.pipe(
-            throttleTime(0, animationFrameScheduler, { leading: false, trailing: true }),
+            throttleTime(0, this.platform.isBrowser ? animationFrameScheduler : undefined, { leading: false, trailing: true }),
             destructor
         )
             .subscribe(() => {
@@ -5695,7 +5695,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         let sum = 0;
         for (const col of fc) {
             if (col.level === 0) {
-                sum += parseInt(col.calcWidth, 10);
+                sum += parseFloat(col.calcWidth);
             }
         }
         if (this.isPinningToStart) {
@@ -6307,7 +6307,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public trackColumnChanges(_index, col) {
-        return col.field + col._calcWidth;
+        return col.field + col._calcWidth.toString();
     }
 
     /**
@@ -6436,7 +6436,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public hasHorizontalScroll() {
-        return this.totalWidth - this.unpinnedWidth > 0 && this.width !== null;
+        return Math.round(this.totalWidth - this.unpinnedWidth) > 0 && this.width !== null;
     }
 
     /**
@@ -6487,6 +6487,9 @@ export abstract class IgxGridBaseDirective implements GridType,
     // TODO: do not remove this, as it is used in rowEditTemplate, but mark is as internal and hidden
     /* blazorCSSuppress */
     public endEdit(commit = true, event?: Event): boolean {
+        if (!this.crudService.cellInEditMode && !this.crudService.rowInEditMode) {
+            return;
+        }
         const document = this.nativeElement?.getRootNode() as Document | ShadowRoot;
         const focusWithin = this.nativeElement?.contains(document.activeElement);
 

@@ -2359,7 +2359,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         // estimate the exact index at which column will be inserted
         // takes into account initial unpinned index of the column
         if (!hasIndex) {
-            const indices = grid.unpinnedColumns.map(col => col.index);
+            const indices = grid._unpinnedColumns.map(col => col.index);
             indices.push(this.index);
             indices.sort((a, b) => a - b);
             index = indices.indexOf(this.index);
