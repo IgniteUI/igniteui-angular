@@ -24,6 +24,7 @@ export class DataService {
             dataObj["CareerStart"] = this.formatDateTime(this.randomizeDateTime(rnd));
             dataObj["Active"] = this.randomizeBoolean(rnd);
             dataObj["SuccessRate"] = this.randomizePercentage(rnd);
+            dataObj["AthleteNumber"] = this.randomizeAthleteNumber(dataObj["AthleteNumber"], rnd);
             currData.push(dataObj);
         }
         return currData;
@@ -50,6 +51,11 @@ export class DataService {
     private randomizeBoolean(rnd: Mulberry32): boolean {
         const number = this.generateRandomNumber(rnd, 0, 10);
         return number >= 5;
+    }
+
+    private randomizeAthleteNumber(value: number, rnd: Mulberry32): number {
+        const number = this.generateRandomNumber(rnd, 0, 100);
+        return number % 2 ? value + number : value - number;
     }
 
     private randomizePercentage(rnd: Mulberry32): number {
