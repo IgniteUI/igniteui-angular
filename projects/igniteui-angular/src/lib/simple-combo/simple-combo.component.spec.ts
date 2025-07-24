@@ -532,6 +532,7 @@ describe('IgxSimpleCombo', () => {
         });
 
         it('should delete the selection on destroy', () => {
+            jasmine.getEnv().allowRespy(true);
             const selectionService = new IgxSelectionAPIService();
             const comboClearSpy = spyOn(mockComboService, 'clear');
             const selectionDeleteSpy = spyOn(selectionService, 'delete');
@@ -548,6 +549,7 @@ describe('IgxSimpleCombo', () => {
             combo.ngOnDestroy();
             expect(comboClearSpy).toHaveBeenCalled();
             expect(selectionDeleteSpy).toHaveBeenCalled();
+            jasmine.getEnv().allowRespy(false);
         });
     });
 
