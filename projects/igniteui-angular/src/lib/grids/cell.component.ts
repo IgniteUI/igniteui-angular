@@ -542,6 +542,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             const isInvalid = this.grid.validation?.isFieldInvalid(this.formGroup, this.column?.field);
             return !this.intRow.deleted && isInvalid;
         }
+        return false;
     }
 
     /**
@@ -554,6 +555,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             const isValidAfterEdit = this.grid.validation?.isFieldValidAfterEdit(this.formGroup, this.column?.field);
             return this.editMode && isValidAfterEdit;
         }
+        return false;
     }
 
     /**
