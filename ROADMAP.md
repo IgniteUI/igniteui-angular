@@ -3,15 +3,16 @@
 # Current Milestone
 
 ## Milestone 38, version 20.0 (Due by Jun, 2025)
-1. Support of Angular 20.0
+1. Grid cell merging feature [#3514](https://github.com/IgniteUI/igniteui-angular/issues/3514)
 
 ## Going down the road
 
-1. Provide an option to modify the default enter edit mode conditions, to e.g. allow edit mode start on a single click [#14658](https://github.com/IgniteUI/igniteui-angular/issues/14658)
-2. Provide an excel-like navigation mode for editing where all arrow keys navigate the cell in edit mode. [#14659](https://github.com/IgniteUI/igniteui-angular/issues/14659)
-3. Extend the 18.2 editorOptions property to allow modifying numeric editors to not change the value on up/down arrow press [#14660](https://github.com/IgniteUI/igniteui-angular/issues/14660)
+1. AI Chat UI component
 
 # Previous Milestone
+
+## Milestone 38, version 20.0 (Released Jun 09th, 2025)
+1. Support of Angular 20.0
 
 ## Milestone 37,  version 19.2 (Released Apr 16th, 2025), [Release Blog 19.2](https://www.infragistics.com/blogs/ignite-ui-for-angular-19-2/)
 
