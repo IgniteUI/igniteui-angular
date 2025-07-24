@@ -578,7 +578,9 @@ describe('IgxGrid - Cell merging #grid', () => {
 
                 // check api
                 expect(grid.getSelectedData().length).toBe(5);
-                expect(grid.getSelectedData()).toEqual(grid.data.slice(0, 5).map(x => { return { 'ID': x.ID, 'ProductName': x. ProductName}}));
+                expect(grid.getSelectedData()).toEqual(grid.data.slice(0, 5).map(x => {
+                    return { 'ID': x.ID, 'ProductName': x. ProductName};
+                }));
             });
         });
 
@@ -603,7 +605,9 @@ describe('IgxGrid - Cell merging #grid', () => {
                 col.selected = true;
                 fix.detectChanges();
 
-                expect(grid.getSelectedColumnsData()).toEqual(grid.data.map(x => { return {'ProductName': x. ProductName}}));
+                expect(grid.getSelectedColumnsData()).toEqual(grid.data.map(x => {
+                    return {'ProductName': x. ProductName};
+                }));
             });
         });
 
