@@ -226,37 +226,38 @@
 }
 
 <ng-template #defaultError>
-    @if (formGroup?.get(getTransformedFieldName(column?.field)).errors?.['required']) {
+    @let errors = formControl.errors;
+    @if (errors?.['required']) {
         <div>
             {{grid.resourceStrings.igx_grid_required_validation_error}}
         </div>
     }
-    @if (formGroup?.get(getTransformedFieldName(column?.field)).errors?.['minlength']) {
+    @if (errors?.['minlength']) {
         <div>
-            {{grid.resourceStrings.igx_grid_min_length_validation_error | igxStringReplace:'{0}':formGroup.get(getTransformedFieldName(column.field)).errors.minlength.requiredLength }}
+            {{grid.resourceStrings.igx_grid_min_length_validation_error | igxStringReplace:'{0}':errors.minlength.requiredLength }}
         </div>
     }
-    @if (formGroup?.get(getTransformedFieldName(column?.field)).errors?.['maxlength']) {
+    @if (errors?.['maxlength']) {
         <div>
-            {{grid.resourceStrings.igx_grid_max_length_validation_error | igxStringReplace:'{0}':formGroup.get(getTransformedFieldName(column.field)).errors.maxlength.requiredLength }}
+            {{grid.resourceStrings.igx_grid_max_length_validation_error | igxStringReplace:'{0}':errors.maxlength.requiredLength }}
         </div>
     }
-    @if (formGroup?.get(getTransformedFieldName(column?.field)).errors?.['min']) {
+    @if (errors?.['min']) {
         <div>
-            {{grid.resourceStrings.igx_grid_min_validation_error | igxStringReplace:'{0}':formGroup.get(getTransformedFieldName(column.field)).errors.min.min }}
+            {{grid.resourceStrings.igx_grid_min_validation_error | igxStringReplace:'{0}':errors.min.min }}
         </div>
     }
-    @if (formGroup?.get(getTransformedFieldName(column?.field)).errors?.['max']) {
+    @if (errors?.['max']) {
         <div>
-            {{grid.resourceStrings.igx_grid_max_validation_error | igxStringReplace:'{0}':formGroup.get(getTransformedFieldName(column.field)).errors.max.max }}
+            {{grid.resourceStrings.igx_grid_max_validation_error | igxStringReplace:'{0}':errors.max.max }}
         </div>
     }
-    @if (formGroup?.get(getTransformedFieldName(column?.field)).errors?.['email']) {
+    @if (errors?.['email']) {
         <div>
             {{grid.resourceStrings.igx_grid_email_validation_error }}
         </div>
     }
-    @if (formGroup?.get(getTransformedFieldName(column?.field)).errors?.['pattern']) {
+    @if (errors?.['pattern']) {
         <div>
             {{grid.resourceStrings.igx_grid_pattern_validation_error}}
         </div>
