@@ -1300,6 +1300,10 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         this.manageRequiredAsterisk();
     };
 
+    protected externalValidate(): IgxInputState {
+        return this._valid;
+    }
+
     private updateValidity() {
         if (this.ngControl && this.ngControl.invalid) {
             this.valid = IgxInputState.INVALID;
