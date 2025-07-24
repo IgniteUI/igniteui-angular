@@ -1,6 +1,5 @@
-import { Component, ElementRef, HostBinding, Input, ViewChild, ViewContainerRef, ChangeDetectorRef, Inject, NgZone, DOCUMENT } from '@angular/core';
+import { Component, HostBinding, Input, ViewChild, ViewContainerRef } from '@angular/core';
 import { VirtualHelperBaseDirective } from './base.helper.component';
-import { PlatformUtil } from '../../core/utils';
 
 /**
  * @hidden
@@ -17,10 +16,6 @@ export class HVirtualHelperComponent extends VirtualHelperBaseDirective {
 
     @HostBinding('class')
     public cssClasses = 'igx-vhelper--horizontal';
-
-    constructor(elementRef: ElementRef, cdr: ChangeDetectorRef, zone: NgZone, @Inject(DOCUMENT) document, platformUtil: PlatformUtil) {
-        super(elementRef, cdr, zone, document, platformUtil);
-    }
 
     protected override restoreScroll() {
         this.nativeElement.scrollLeft = this.scrollAmount;

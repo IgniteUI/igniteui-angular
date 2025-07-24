@@ -1,7 +1,4 @@
-import {
-    Injectable,
-    OnDestroy,
-} from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { Subject } from 'rxjs';
@@ -27,6 +24,9 @@ import { ExpressionsTreeUtil, isTree } from '../../data-operations/expressions-t
  */
 @Injectable()
 export class IgxFilteringService implements OnDestroy {
+    private iconService = inject(IgxIconService);
+    protected _overlayService = inject(IgxOverlayService);
+
     public isFilterRowVisible = false;
     public filteredColumn: ColumnType = null;
     public selectedExpression: IFilteringExpression = null;
@@ -52,11 +52,6 @@ export class IgxFilteringService implements OnDestroy {
         scrollStrategy: new AbsoluteScrollStrategy()
     };
     protected lastActiveNode;
-
-    constructor(
-        private iconService: IgxIconService,
-        protected _overlayService: IgxOverlayService,
-    ) { }
 
     public ngOnDestroy(): void {
         this.destroy$.next(true);

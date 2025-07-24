@@ -1,4 +1,4 @@
-import { Directive, TemplateRef } from '@angular/core';
+import { Directive, TemplateRef, inject } from '@angular/core';
 import { IgxCellTemplateContext, IgxColumnTemplateContext, IgxSummaryTemplateContext } from '../common/grid.interface';
 
 @Directive({
@@ -6,7 +6,8 @@ import { IgxCellTemplateContext, IgxColumnTemplateContext, IgxSummaryTemplateCon
     standalone: true
 })
 export class IgxFilterCellTemplateDirective {
-    constructor(public template: TemplateRef<IgxColumnTemplateContext>) { }
+    public template = inject<TemplateRef<IgxColumnTemplateContext>>(TemplateRef);
+
 
     public static ngTemplateContextGuard(_directive: IgxFilterCellTemplateDirective,
         context: unknown): context is IgxColumnTemplateContext {
@@ -19,7 +20,8 @@ export class IgxFilterCellTemplateDirective {
     standalone: true
 })
 export class IgxCellTemplateDirective {
-    constructor(public template: TemplateRef<IgxCellTemplateContext>) { }
+    public template = inject<TemplateRef<IgxCellTemplateContext>>(TemplateRef);
+
 
     public static ngTemplateContextGuard(_directive: IgxCellTemplateDirective,
         context: unknown): context is IgxCellTemplateContext {
@@ -32,7 +34,8 @@ export class IgxCellTemplateDirective {
     standalone: true
 })
 export class IgxCellValidationErrorDirective {
-    constructor(public template: TemplateRef<IgxCellTemplateContext>) { }
+    public template = inject<TemplateRef<IgxCellTemplateContext>>(TemplateRef);
+
 
     public static ngTemplateContextGuard(_directive: IgxCellValidationErrorDirective,
         context: unknown): context is IgxCellTemplateContext {
@@ -45,7 +48,8 @@ export class IgxCellValidationErrorDirective {
     standalone: true
 })
 export class IgxCellHeaderTemplateDirective {
-    constructor(public template: TemplateRef<IgxColumnTemplateContext>) { }
+    public template = inject<TemplateRef<IgxColumnTemplateContext>>(TemplateRef);
+
 
     public static ngTemplateContextGuard(_directive: IgxCellHeaderTemplateDirective,
         context: unknown): context is IgxColumnTemplateContext {
@@ -61,7 +65,7 @@ export class IgxCellHeaderTemplateDirective {
     standalone: true
 })
 export class IgxCellFooterTemplateDirective {
-    constructor(public template: TemplateRef<any>) { }
+    public template = inject<TemplateRef<any>>(TemplateRef);
 }
 
 @Directive({
@@ -69,7 +73,8 @@ export class IgxCellFooterTemplateDirective {
     standalone: true
 })
 export class IgxCellEditorTemplateDirective {
-    constructor(public template: TemplateRef<IgxCellTemplateContext>) { }
+    public template = inject<TemplateRef<IgxCellTemplateContext>>(TemplateRef);
+
 
     public static ngTemplateContextGuard(_directive: IgxCellEditorTemplateDirective,
         context: unknown): context is IgxCellTemplateContext {
@@ -82,7 +87,8 @@ export class IgxCellEditorTemplateDirective {
     standalone: true
 })
 export class IgxCollapsibleIndicatorTemplateDirective {
-    constructor(public template: TemplateRef<IgxColumnTemplateContext>) { }
+    public template = inject<TemplateRef<IgxColumnTemplateContext>>(TemplateRef);
+
 
     public static ngTemplateContextGuard(_directive: IgxCollapsibleIndicatorTemplateDirective,
         context: unknown): context is IgxColumnTemplateContext {
@@ -95,7 +101,8 @@ export class IgxCollapsibleIndicatorTemplateDirective {
     standalone: true
 })
 export class IgxSummaryTemplateDirective {
-    constructor(public template: TemplateRef<IgxSummaryTemplateContext>) { }
+    public template = inject<TemplateRef<IgxSummaryTemplateContext>>(TemplateRef);
+
 
     public static ngTemplateContextGuard(_directive: IgxSummaryTemplateDirective,
         context: unknown): context is IgxSummaryTemplateContext {

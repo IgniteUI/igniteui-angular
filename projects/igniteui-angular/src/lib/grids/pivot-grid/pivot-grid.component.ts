@@ -1,35 +1,4 @@
-import {
-    AfterContentInit,
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    ElementRef,
-    HostBinding,
-    Inject,
-    Input,
-    IterableDiffers,
-    LOCALE_ID,
-    NgZone,
-    OnInit,
-    Output,
-    Optional,
-    QueryList,
-    TemplateRef,
-    ViewChild,
-    ViewChildren,
-    ViewContainerRef,
-    Injector,
-    ContentChild,
-    createComponent,
-    EnvironmentInjector,
-    CUSTOM_ELEMENTS_SCHEMA,
-    booleanAttribute,
-    OnChanges,
-    SimpleChanges,
-    DOCUMENT
-} from '@angular/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, ElementRef, HostBinding, Input, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren, ContentChild, createComponent, CUSTOM_ELEMENTS_SCHEMA, booleanAttribute, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
 import { first, take, takeUntil } from 'rxjs/operators';
@@ -69,12 +38,11 @@ import { DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from '.
 import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective } from '../filtering/excel-style/excel-style-filtering.component';
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
 import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
-import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from '../../services/public_api';
-import { cloneArray, PlatformUtil, resizeObservable } from '../../core/utils';
+import { State, Transaction, TransactionService } from '../../services/public_api';
+import { cloneArray, resizeObservable } from '../../core/utils';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
 import { DataUtil, GridColumnDataType } from '../../data-operations/data-util';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IgxGridTransaction } from '../common/types';
 import { GridBaseAPIService } from '../api.service';
 import { IForOfDataChangingEventArgs, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
@@ -99,7 +67,6 @@ import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
-import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
 import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
@@ -200,6 +167,7 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
 })
 export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnInit, AfterContentInit,
     PivotGridType, AfterViewInit, OnChanges {
+    public override navigation = inject(IgxPivotGridNavigationService);
 
     /**
      * Emitted when the dimension collection is changed via the grid chip area.
@@ -1008,53 +976,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         });
 
         return selectedRowIds;
-    }
-
-    constructor(
-        validationService: IgxGridValidationService,
-        selectionService: IgxGridSelectionService,
-        colResizingService: IgxPivotColumnResizingService,
-        gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        transactionFactory: IgxFlatTransactionFactory,
-        elementRef: ElementRef<HTMLElement>,
-        zone: NgZone,
-        @Inject(DOCUMENT) document,
-        cdr: ChangeDetectorRef,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        injector: Injector,
-        envInjector: EnvironmentInjector,
-        public override navigation: IgxPivotGridNavigationService,
-        filteringService: IgxFilteringService,
-        textHighlightService: IgxTextHighlightService,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        summaryService: IgxGridSummaryService,
-        @Inject(LOCALE_ID) localeId: string,
-        platform: PlatformUtil,
-        @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>
-    ) {
-        super(
-            validationService,
-            selectionService,
-            colResizingService,
-            gridAPI,
-            transactionFactory,
-            elementRef,
-            zone,
-            document,
-            cdr,
-            differs,
-            viewRef,
-            injector,
-            envInjector,
-            navigation,
-            filteringService,
-            textHighlightService,
-            overlayService,
-            summaryService,
-            localeId,
-            platform,
-            _diTransactions);
     }
 
     /**

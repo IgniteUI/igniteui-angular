@@ -1,17 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    EnvironmentInjector,
-    HostBinding,
-    Inject,
-    Injector,
-    Input,
-    QueryList,
-    ViewChildren,
-    ViewContainerRef
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EnvironmentInjector, HostBinding, Injector, Input, QueryList, ViewChildren, ViewContainerRef, inject } from '@angular/core';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IPivotDimension, IPivotDimensionData, IPivotGridHorizontalGroup, IPivotGridRecord } from './pivot-grid.interface';
@@ -34,6 +21,11 @@ import { PivotUtil } from './pivot-util';
     imports: [IgxPivotRowDimensionContentComponent, IgxPivotGridHorizontalRowCellMerging]
 })
 export class IgxPivotRowDimensionMrlRowComponent extends IgxGridHeaderRowComponent {
+    public override grid = inject<PivotGridType>(IGX_GRID_BASE);
+    protected injector = inject(Injector);
+    protected envInjector = inject(EnvironmentInjector);
+    protected viewRef = inject(ViewContainerRef);
+
 
     @HostBinding('class.igx-grid__tbody-pivot-dimension')
     public pivotDim = true;
@@ -74,17 +66,6 @@ export class IgxPivotRowDimensionMrlRowComponent extends IgxGridHeaderRowCompone
      */
     @ViewChildren(IgxPivotRowDimensionContentComponent)
     public contentCells: QueryList<IgxPivotRowDimensionContentComponent>
-
-    constructor(
-        @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
-        ref: ElementRef<HTMLElement>,
-        protected injector: Injector,
-        protected envInjector: EnvironmentInjector,
-        cdr: ChangeDetectorRef,
-        protected viewRef: ViewContainerRef
-    ) {
-        super(ref, cdr);
-    }
 
     /**
      * @hidden @internal

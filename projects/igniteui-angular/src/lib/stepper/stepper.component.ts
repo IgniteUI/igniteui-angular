@@ -1,17 +1,11 @@
 import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
 import { NgTemplateOutlet } from '@angular/common';
-import {
-    AfterContentInit, ChangeDetectorRef, Component, ContentChild, ContentChildren,
-    ElementRef, EventEmitter, HostBinding, Inject, Input, OnChanges, OnDestroy,
-    OnInit, Output, QueryList, SimpleChanges, TemplateRef, booleanAttribute
-} from '@angular/core';
+import { AfterContentInit, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, QueryList, SimpleChanges, TemplateRef, booleanAttribute, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxCarouselComponentBase } from '../carousel/carousel-base';
 
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
-import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
-import { AnimationService } from '../services/animation/animation';
 import { IgxStepComponent } from './step/step.component';
 import {
     IgxStepper, IgxStepperOrientation, IgxStepperTitlePosition, IgxStepType,
@@ -76,6 +70,9 @@ import { fadeIn, growVerIn, growVerOut } from 'igniteui-angular/animations';
     imports: [NgTemplateOutlet]
 })
 export class IgxStepperComponent extends IgxCarouselComponentBase implements IgxStepper, OnChanges, OnInit, AfterContentInit, OnDestroy {
+    private stepperService = inject(IgxStepperService);
+    private element = inject<ElementRef<HTMLElement>>(ElementRef);
+
 
     /**
      * Get/Set the animation type of the stepper when the orientation direction is vertical.
@@ -331,12 +328,8 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
     private _linear = false;
     private readonly _defaultAnimationDuration = 350;
 
-    constructor(
-        cdr: ChangeDetectorRef,
-        @Inject(IgxAngularAnimationService) animationService: AnimationService,
-        private stepperService: IgxStepperService,
-        private element: ElementRef<HTMLElement>) {
-        super(animationService, cdr);
+    constructor() {
+        super();
         this.stepperService.stepper = this;
     }
 

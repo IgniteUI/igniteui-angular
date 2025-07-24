@@ -1,7 +1,8 @@
 import {
     AfterContentChecked,
     AfterViewInit, booleanAttribute, ContentChildren, Directive, ElementRef, EventEmitter,
-    Inject, Input, LOCALE_ID, OnDestroy, Optional, Output, QueryList, ViewChild
+    inject,
+    Input, LOCALE_ID, OnDestroy, Output, QueryList, ViewChild
 } from '@angular/core';
 import { getLocaleFirstDayOfWeek } from "@angular/common";
 
@@ -24,6 +25,10 @@ import { IgxInputGroupComponent } from '../input-group/input-group.component';
 
 @Directive()
 export abstract class PickerBaseDirective implements IToggleView, EditorProvider, AfterViewInit, AfterContentChecked, OnDestroy {
+    public element = inject(ElementRef);
+    protected _localeId = inject<string>(LOCALE_ID);
+    protected _inputGroupType = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE, { optional: true });
+    
     /**
      * The editor's input mask.
      *
@@ -291,9 +296,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     // w/ TS2416 Type 'string | Date ...' not assignable to type 'DateRange' due to observer method check
     public abstract valueChange: EventEmitter<any>;
 
-    constructor(public element: ElementRef,
-        @Inject(LOCALE_ID) protected _localeId: string,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
+    constructor() {
         this.locale = this.locale || this._localeId;
     }
 

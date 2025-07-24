@@ -1,13 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import {
-    Component,
-    ElementRef,
-    HostBinding,
-    Input,
-    OnInit,
-    TemplateRef,
-    ViewChild
-} from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild, inject } from '@angular/core';
 
 import { normalizeURI } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
@@ -56,6 +48,8 @@ export type IgxAvatarType = (typeof IgxAvatarType)[keyof typeof IgxAvatarType];
     imports: [IgxIconComponent, NgTemplateOutlet]
 })
 export class IgxAvatarComponent implements OnInit {
+    public elementRef = inject(ElementRef);
+
     /**
      * Returns the `aria-label` attribute of the avatar.
      *
@@ -331,8 +325,6 @@ export class IgxAvatarComponent implements OnInit {
                 return this.defaultTemplate;
         }
     }
-
-    constructor(public elementRef: ElementRef) { }
 
     /**
      * Returns the css url of the image.

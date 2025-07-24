@@ -1,8 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import {
-    AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostListener, Inject, Injector,
-    Optional, Output, ViewChild, DOCUMENT
-} from '@angular/core';
+import { AfterViewInit, Component, DoCheck, EventEmitter, HostListener, Output, ViewChild, inject } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 
@@ -11,14 +8,11 @@ import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
 import { IgxComboItemComponent } from '../combo/combo-item.component';
 import { IgxComboAPIService } from '../combo/combo.api';
 import { IgxComboBaseDirective, IGX_COMBO_COMPONENT } from '../combo/combo.common';
-import { IgxSelectionAPIService } from '../core/selection';
 import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from '../core/utils';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
-import { IgxIconService } from '../icon/icon.service';
-import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
 import { IgxComboFilteringPipe, IgxComboGroupingPipe } from '../combo/combo.pipes';
 import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
 import { IgxIconComponent } from '../icon/icon.component';
@@ -70,6 +64,9 @@ export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventA
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxTextSelectionDirective, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxComboDropDownComponent, IgxDropDownItemNavigationDirective, IgxForOfDirective, IgxComboItemComponent, IgxComboAddItemComponent, IgxButtonDirective, IgxRippleDirective, IgxComboFilteringPipe, IgxComboGroupingPipe]
 })
 export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit, DoCheck {
+    private platformUtil = inject(PlatformUtil);
+    private formGroupDirective = inject(FormGroupDirective, { optional: true });
+
     /** @hidden @internal */
     @ViewChild(IgxComboDropDownComponent, { static: true })
     public dropdown: IgxComboDropDownComponent;
@@ -140,27 +137,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         return !!this.selectionService.get(this.id).size;
     }
 
-    constructor(elementRef: ElementRef,
-        cdr: ChangeDetectorRef,
-        selectionService: IgxSelectionAPIService,
-        comboAPI: IgxComboAPIService,
-        private platformUtil: PlatformUtil,
-        @Inject(DOCUMENT) document: any,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
-        @Optional() _injector: Injector,
-        @Optional() @Inject(IgxIconService) _iconService?: IgxIconService,
-        @Optional() private formGroupDirective?: FormGroupDirective
-    ) {
-        super(
-            elementRef,
-            cdr,
-            selectionService,
-            comboAPI,
-            document,
-            _inputGroupType,
-            _injector,
-            _iconService
-        );
+    constructor() {
+        super();
         this.comboAPI.register(this);
     }
 
@@ -224,7 +202,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.virtDir.contentSizeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (super.selection.length > 0) {
                 const index = this.virtDir.igxForOf.findIndex(e => {
-                    let current = e? e[this.valueKey] : undefined;
+                    let current = e ? e[this.valueKey] : undefined;
                     if (this.valueKey === null || this.valueKey === undefined) {
                         current = e;
                     }
@@ -432,7 +410,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         const oldSelection = this.selection;
         this.clearSelection(true);
 
-        if(!this.collapsed){
+        if (!this.collapsed) {
             this.focusSearchInput(true);
         }
         event.stopPropagation();

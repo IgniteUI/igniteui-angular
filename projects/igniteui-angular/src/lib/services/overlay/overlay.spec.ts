@@ -1,14 +1,4 @@
-import {
-    Component,
-    ComponentRef,
-    ElementRef,
-    HostBinding,
-    Inject,
-    Injector,
-    ViewChild,
-    ViewContainerRef,
-    ViewEncapsulation
-} from '@angular/core';
+import { Component, ComponentRef, ElementRef, HostBinding, Injector, ViewChild, ViewContainerRef, ViewEncapsulation, inject } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first } from 'rxjs/operators';
@@ -4519,10 +4509,10 @@ export class SimpleDynamicComponent {
     standalone: true
 })
 export class SimpleRefComponent {
+    public overlay = inject<IgxOverlayService>(IgxOverlayService);
+
     @ViewChild('item', { static: true })
     public item: ElementRef;
-
-    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 }
 
 @Component({
@@ -4597,13 +4587,12 @@ export class SimpleDynamicWithDirectiveComponent {
     standalone: true
 })
 export class EmptyPageComponent {
+    public overlay = inject<IgxOverlayService>(IgxOverlayService);
+    public viewContainerRef = inject(ViewContainerRef);
+    public injector = inject(Injector);
+
     @ViewChild('button', { static: true }) public buttonElement: ElementRef;
     @ViewChild('div', { static: true }) public divElement: ElementRef;
-
-    constructor(
-        @Inject(IgxOverlayService) public overlay: IgxOverlayService,
-        public viewContainerRef: ViewContainerRef,
-        public injector: Injector) { }
 
     public click() {
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent));
@@ -4619,10 +4608,10 @@ export class EmptyPageComponent {
     standalone: true
 })
 export class EmptyPageInShadowDomComponent {
+    public overlay = inject<IgxOverlayService>(IgxOverlayService);
+
     @ViewChild('button', { static: true }) public buttonElement: ElementRef;
     @ViewChild('outlet', { static: true }) public outletElement: ElementRef;
-
-    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 }
 
 @Component({
@@ -4640,6 +4629,8 @@ export class EmptyPageInShadowDomComponent {
     standalone: true
 })
 export class DownRightButtonComponent {
+    public overlay = inject<IgxOverlayService>(IgxOverlayService);
+
     @ViewChild('button', { static: true }) public buttonElement: ElementRef;
 
     public positionStrategy: IPositionStrategy;
@@ -4652,8 +4643,6 @@ export class DownRightButtonComponent {
     };
 
     public target: Point | HTMLElement = null;
-
-    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
     public click() {
         this.positionStrategy.settings = this.ButtonPositioningSettings;
@@ -4680,10 +4669,10 @@ export class DownRightButtonComponent {
     standalone: true
 })
 export class TopLeftOffsetComponent {
+    public overlay = inject<IgxOverlayService>(IgxOverlayService);
+
 
     @ViewChild('button', { static: true }) public buttonElement: ElementRef;
-
-    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
     public click() {
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent));
@@ -4701,9 +4690,9 @@ export class TopLeftOffsetComponent {
     standalone: true
 })
 export class TwoButtonsComponent {
-    public settings: OverlaySettings = { modal: false };
+    public overlay = inject<IgxOverlayService>(IgxOverlayService);
 
-    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
+    public settings: OverlaySettings = { modal: false };
 
     public clickOne() {
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent), this.settings);
@@ -4737,15 +4726,13 @@ export class TwoButtonsComponent {
     standalone: true
 })
 export class WidthTestOverlayComponent {
+    public overlay = inject<IgxOverlayService>(IgxOverlayService);
+    public elementRef = inject<ElementRef>(ElementRef);
+
 
     @ViewChild('button', { static: true }) public buttonElement: ElementRef;
     @ViewChild('myCustomComponent', { static: true }) public customComponent: ElementRef;
     public overlaySettings: OverlaySettings = {};
-
-    constructor(
-        @Inject(IgxOverlayService) public overlay: IgxOverlayService,
-        @Inject(ElementRef) public elementRef: ElementRef
-    ) { }
 
     public click(_event: any) {
         this.overlaySettings.positionStrategy = new ConnectedPositioningStrategy();
@@ -4810,10 +4797,10 @@ export class ScrollableComponent {
     standalone: true
 })
 export class FlexContainerComponent {
+    public overlay = inject<IgxOverlayService>(IgxOverlayService);
+
     @ViewChild('button', { static: true }) public buttonElement: ElementRef;
     public overlaySettings: OverlaySettings = {};
-
-    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
     public click() {
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent), this.overlaySettings);

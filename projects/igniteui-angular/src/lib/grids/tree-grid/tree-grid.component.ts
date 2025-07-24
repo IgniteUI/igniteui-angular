@@ -1,29 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    HostBinding,
-    Input,
-    OnInit,
-    TemplateRef,
-    ContentChild,
-    AfterContentInit,
-    ViewChild,
-    DoCheck,
-    AfterViewInit,
-    ElementRef,
-    NgZone,
-    Inject,
-    ChangeDetectorRef,
-    IterableDiffers,
-    ViewContainerRef,
-    Optional,
-    LOCALE_ID,
-    Injector,
-    EnvironmentInjector,
-    CUSTOM_ELEMENTS_SCHEMA,
-    booleanAttribute,
-    DOCUMENT
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, Input, OnInit, TemplateRef, ContentChild, AfterContentInit, ViewChild, DoCheck, AfterViewInit, CUSTOM_ELEMENTS_SCHEMA, booleanAttribute, inject } from '@angular/core';
 import { NgClass, NgTemplateOutlet, NgStyle } from '@angular/common';
 
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
@@ -40,12 +15,12 @@ import {
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { mergeObjects, PlatformUtil } from '../../core/utils';
+import { mergeObjects } from '../../core/utils';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxGridNavigationService } from '../grid-navigation.service';
-import { CellType, GridServiceType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
+import { CellType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
 import { GridSelectionMode } from '../common/enums';
@@ -53,10 +28,8 @@ import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
 import { IgxGridCell } from '../grid-public-cell';
-import { IgxHierarchicalTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { HierarchicalTransactionService } from '../../services/transaction/hierarchical-transaction';
-import { IgxOverlayService } from '../../services/overlay/overlay';
 import { IgxGridTransaction } from '../common/types';
 import { TreeGridFilteringStrategy } from './tree-grid.filtering.strategy';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
@@ -81,7 +54,6 @@ import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
 import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
-import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
 
 let NEXT_ID = 0;
 
@@ -173,6 +145,8 @@ let NEXT_ID = 0;
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, AfterViewInit, DoCheck, AfterContentInit {
+    protected override _diTransactions = inject<HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>>(IgxGridTransaction, { optional: true, });
+
     /**
      * Sets the child data key of the `IgxTreeGridComponent`.
      * ```html
@@ -352,7 +326,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     private _rowLoadingIndicatorTemplate: TemplateRef<void>;
     private _expansionDepth = Infinity;
 
-     /* treatAsRef */
+    /* treatAsRef */
     /**
      * Gets/Sets the array of data that populates the component.
      * ```html
@@ -366,7 +340,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return this._data;
     }
 
-     /* treatAsRef */
+    /* treatAsRef */
     public set data(value: any[] | null) {
         const oldData = this._data;
         this._data = value || [];
@@ -446,56 +420,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     // private get _gridAPI(): IgxTreeGridAPIService {
     //     return this.gridAPI as IgxTreeGridAPIService;
     // }
-
-    constructor(
-        validationService: IgxGridValidationService,
-        selectionService: IgxGridSelectionService,
-        colResizingService: IgxColumnResizingService,
-        @Inject(IGX_GRID_SERVICE_BASE) gridAPI: GridServiceType,
-        // public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        transactionFactory: IgxHierarchicalTransactionFactory,
-        _elementRef: ElementRef<HTMLElement>,
-        _zone: NgZone,
-        @Inject(DOCUMENT) document: any,
-        cdr: ChangeDetectorRef,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        injector: Injector,
-        envInjector: EnvironmentInjector,
-        navigation: IgxGridNavigationService,
-        filteringService: IgxFilteringService,
-        textHighlightService: IgxTextHighlightService,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        summaryService: IgxGridSummaryService,
-        @Inject(LOCALE_ID) localeId: string,
-        platform: PlatformUtil,
-        @Optional() @Inject(IgxGridTransaction) protected override _diTransactions?:
-            HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
-    ) {
-        super(
-            validationService,
-            selectionService,
-            colResizingService,
-            gridAPI,
-            transactionFactory,
-            _elementRef,
-            _zone,
-            document,
-            cdr,
-            differs,
-            viewRef,
-            injector,
-            envInjector,
-            navigation,
-            filteringService,
-            textHighlightService,
-            overlayService,
-            summaryService,
-            localeId,
-            platform,
-            _diTransactions,
-        );
-    }
 
     /**
      * @hidden

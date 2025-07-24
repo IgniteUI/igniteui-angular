@@ -1,7 +1,5 @@
-import { Component, ElementRef, HostBinding, Input, ViewChild, ViewContainerRef,
-    ChangeDetectorRef, OnDestroy, OnInit, Inject, NgZone, DOCUMENT } from '@angular/core';
+import { Component, HostBinding, Input, ViewChild, ViewContainerRef, OnDestroy, OnInit } from '@angular/core';
 import { VirtualHelperBaseDirective } from './base.helper.component';
-import { PlatformUtil } from '../../core/utils';
 
 @Component({
     selector: 'igx-virtual-helper',
@@ -19,10 +17,6 @@ export class VirtualHelperComponent extends VirtualHelperBaseDirective implement
 
     @HostBinding('class')
     public cssClasses = 'igx-vhelper--vertical';
-
-    constructor(elementRef: ElementRef, cdr: ChangeDetectorRef, zone: NgZone, @Inject(DOCUMENT) document, platformUtil: PlatformUtil) {
-        super(elementRef, cdr, zone, document, platformUtil);
-    }
 
     public ngOnInit() {
         this.scrollWidth = this.scrollNativeSize;

@@ -1,4 +1,4 @@
-import { Injectable, Optional } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { PlatformUtil } from '../../../igniteui-angular/src/lib/core/utils';
 import { IgxIconService } from '../../../igniteui-angular/src/lib/icon/icon.service';
 import { IconMeta } from '../../../igniteui-angular/src/lib/icon/public_api';
@@ -26,12 +26,12 @@ export interface BroadcastIconsChangeMessage {
 /** @hidden @internal **/
 @Injectable()
 export class IgxIconBroadcastService {
+    protected _iconService = inject(IgxIconService);
+    private _platformUtil = inject(PlatformUtil, { optional: true });
+
     private iconBroadcastChannel: BroadcastChannel | null;
 
-    constructor(
-        protected _iconService: IgxIconService,
-        @Optional() private _platformUtil: PlatformUtil
-    ) {
+    constructor() {
         if (this._platformUtil?.isBrowser) {
             this.create();
 

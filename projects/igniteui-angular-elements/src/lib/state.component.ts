@@ -1,4 +1,4 @@
-import { Component, EnvironmentInjector, EventEmitter, Inject, Injector, Output, ViewContainerRef } from '@angular/core';
+import { Component, EnvironmentInjector, EventEmitter, Injector, Output, ViewContainerRef, inject } from '@angular/core';
 import { IPinningConfig, GridType, IGX_GRID_BASE}  from '../../../igniteui-angular/src/lib/grids/common/grid.interface';
 import { IFilteringExpressionsTree } from '../../../igniteui-angular/src/lib/data-operations/filtering-expressions-tree';
 import { IPagingState } from '../../../igniteui-angular/src/lib/data-operations/paging-state.interface';
@@ -50,14 +50,23 @@ export interface IGridStateInfo {
     standalone: true
 })
 export class IgxGridStateComponent extends IgxGridStateBaseDirective {
+    protected override viewRef: ViewContainerRef;
+    protected override envInjector: EnvironmentInjector;
+    protected override injector: Injector;
 
-    constructor(
-        @Inject(IGX_GRID_BASE) grid: GridType,
-        protected override viewRef: ViewContainerRef, protected  override envInjector: EnvironmentInjector,
-        protected override injector: Injector,
-        ) {
+
+    constructor() {
+            const grid = inject<GridType>(IGX_GRID_BASE);
+            const viewRef = inject(ViewContainerRef);
+            const envInjector = inject(EnvironmentInjector);
+            const injector = inject(Injector);
+
             super(grid, viewRef, envInjector, injector);
-        }
+        
+            this.viewRef = viewRef;
+            this.envInjector = envInjector;
+            this.injector = injector;
+    }
 
     /**
      * Restores grid features' state based on the IGridStateInfo object passed as an argument.

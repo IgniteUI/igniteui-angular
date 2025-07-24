@@ -1,4 +1,4 @@
-import { Directive, Optional, Self, Input, HostListener, Inject } from '@angular/core';
+import { Directive, Input, HostListener, inject } from '@angular/core';
 import { IGX_DROPDOWN_BASE } from './drop-down.common';
 import { IDropDownNavigationDirective } from './drop-down.common';
 import { IgxDropDownBaseDirective } from './drop-down.base';
@@ -12,10 +12,10 @@ import { DropDownActionKey } from './drop-down.common';
     standalone: true
 })
 export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDirective {
+    public dropdown = inject<IgxDropDownBaseDirective>(IGX_DROPDOWN_BASE, { self: true, optional: true });
+
 
     protected _target: IgxDropDownBaseDirective = null;
-
-    constructor(@Self() @Optional() @Inject(IGX_DROPDOWN_BASE) public dropdown: IgxDropDownBaseDirective) { }
 
     /**
      * Gets the target of the navigation directive;

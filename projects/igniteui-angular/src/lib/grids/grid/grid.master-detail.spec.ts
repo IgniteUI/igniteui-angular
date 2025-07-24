@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, DebugElement, QueryList, TemplateRef, ContentChild, ViewChildren } from '@angular/core';
+import { Component, ViewChild, OnInit, DebugElement, QueryList, TemplateRef, ViewChildren } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';

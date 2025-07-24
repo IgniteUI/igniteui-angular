@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, Inject } from '@angular/core';
+import { Component, ViewChild, ElementRef, inject } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent } from './input-group.component';
@@ -252,13 +252,13 @@ describe('IgxInputGroup', () => {
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective]
 })
 class InputGroupComponent {
+    public IGTOKEN = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE);
+
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
     @ViewChild('igxInput', { read: IgxInputDirective, static: true }) public igxInput: IgxInputDirective;
     @ViewChild(IgxPrefixDirective, { read: ElementRef }) public prefix: ElementRef;
     @ViewChild(IgxSuffixDirective, { read: ElementRef }) public suffix: ElementRef;
     public suppressInputAutofocus = false;
-
-    constructor(@Inject(IGX_INPUT_GROUP_TYPE) public IGTOKEN: IgxInputGroupType) {}
 }
 
 @Component({

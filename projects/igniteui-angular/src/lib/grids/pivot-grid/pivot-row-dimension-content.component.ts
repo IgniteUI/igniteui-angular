@@ -1,22 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    createComponent,
-    ElementRef,
-    EnvironmentInjector,
-    HostBinding,
-    Inject,
-    Injector,
-    Input,
-    OnChanges,
-    QueryList,
-    SimpleChanges,
-    TemplateRef,
-    ViewChild,
-    ViewChildren,
-    ViewContainerRef
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, createComponent, EnvironmentInjector, HostBinding, Injector, Input, OnChanges, QueryList, SimpleChanges, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, inject } from '@angular/core';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
@@ -43,6 +25,11 @@ import { IMultiRowLayoutNode } from '../common/types';
     imports: [IgxPivotRowDimensionHeaderGroupComponent, NgClass, NgStyle, IgxIconComponent, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
 })
 export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowComponent implements OnChanges {
+    public override grid = inject<PivotGridType>(IGX_GRID_BASE);
+    protected injector = inject(Injector);
+    protected envInjector = inject(EnvironmentInjector);
+    protected viewRef = inject(ViewContainerRef);
+
     @HostBinding('style.grid-row-start')
     public get rowStart(): string {
         return this.layout ? `${this.layout.rowStart}` : "";
@@ -103,17 +90,6 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
 
     @ViewChildren(IgxPivotRowDimensionHeaderGroupComponent)
     public headerGroups: QueryList<IgxPivotRowDimensionHeaderGroupComponent>
-
-    constructor(
-        @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
-        ref: ElementRef<HTMLElement>,
-        protected injector: Injector,
-        protected envInjector: EnvironmentInjector,
-        cdr: ChangeDetectorRef,
-        protected viewRef: ViewContainerRef
-    ) {
-        super(ref, cdr);
-    }
 
     /**
      * @hidden @internal

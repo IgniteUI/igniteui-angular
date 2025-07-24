@@ -1,10 +1,6 @@
 import { IgxGridCellComponent } from '../cell.component';
-import { ChangeDetectorRef, ElementRef, ChangeDetectionStrategy, Component, OnInit, NgZone, Inject } from '@angular/core';
-import { IgxGridSelectionService } from '../selection/selection.service';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { HammerGesturesManager } from '../../core/touch';
-import { PlatformUtil } from '../../core/utils';
-import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
-import { IgxOverlayService } from '../../services/public_api';
 import { IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe } from '../common/pipes';
 import { IgxTooltipDirective } from '../../directives/tooltip/tooltip.directive';
 import { IgxTooltipTargetDirective } from '../../directives/tooltip/tooltip-target.directive';
@@ -34,19 +30,6 @@ import { NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, Date
 export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent implements OnInit {
     // protected hSelection;
     protected _rootGrid;
-
-    constructor(
-        selectionService: IgxGridSelectionService,
-        @Inject(IGX_GRID_BASE) grid: GridType,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        cdr: ChangeDetectorRef,
-        helement: ElementRef<HTMLElement>,
-        zone: NgZone,
-        touchManager: HammerGesturesManager,
-        platformUtil: PlatformUtil
-    ) {
-        super(selectionService, grid, overlayService, cdr, helement, zone, touchManager, platformUtil);
-    }
 
     public override ngOnInit() {
         super.ngOnInit();

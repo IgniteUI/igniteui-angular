@@ -1,23 +1,7 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    Inject,
-    Input,
-    NgZone,
-    OnInit,
-    TemplateRef,
-    ViewChild,
-    DOCUMENT
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, TemplateRef, ViewChild, DOCUMENT, inject } from '@angular/core';
 import { IgxGridCellComponent } from '../cell.component';
-import { PlatformUtil } from '../../core/utils';
 import { NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe } from '@angular/common';
-import { IgxGridSelectionService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
-import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
-import { IgxOverlayService } from '../../services/public_api';
 import { IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe } from '../common/pipes';
 import { IgxTooltipDirective } from '../../directives/tooltip/tooltip.directive';
 import { IgxTooltipTargetDirective } from '../../directives/tooltip/tooltip-target.directive';
@@ -43,6 +27,8 @@ import { IgxChipComponent } from '../../chips/chip.component';
     imports: [IgxChipComponent, IgxTextHighlightDirective, IgxIconComponent, NgClass, FormsModule, ReactiveFormsModule, IgxInputGroupComponent, IgxInputDirective, IgxFocusDirective, IgxCheckboxComponent, IgxDatePickerComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, IgxPrefixDirective, IgxSuffixDirective, NgTemplateOutlet, IgxTooltipTargetDirective, IgxTooltipDirective, IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe]
 })
 export class IgxGridExpandableCellComponent extends IgxGridCellComponent implements OnInit {
+    public document = inject(DOCUMENT);
+
     /**
      * @hidden
      */
@@ -66,18 +52,6 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
      */
     @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
     protected defaultCollapsedTemplate: TemplateRef<any>;
-
-    constructor(selectionService: IgxGridSelectionService,
-                @Inject(IGX_GRID_BASE) grid: GridType,
-                @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-                cdr: ChangeDetectorRef,
-                element: ElementRef,
-                zone: NgZone,
-                touchManager: HammerGesturesManager,
-                @Inject(DOCUMENT) public document,
-                platformUtil: PlatformUtil) {
-        super(selectionService, grid, overlayService, cdr, element, zone, touchManager, platformUtil);
-    }
 
     /**
      * @hidden

@@ -1,4 +1,4 @@
-import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID, HostListener, booleanAttribute, ViewChildren, QueryList, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Input, Output, EventEmitter, Directive, LOCALE_ID, HostListener, booleanAttribute, ViewChildren, QueryList, ElementRef, ChangeDetectorRef, inject } from '@angular/core';
 import { WEEKDAYS, IFormattingOptions, IFormattingViews, IViewDateChangeEventArgs, ScrollDirection, IgxCalendarView, CalendarSelection } from './calendar';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
@@ -19,6 +19,11 @@ import { CalendarDay } from './common/model';
     providers: [KeyboardNavigationService]
 })
 export class IgxCalendarBaseDirective implements ControlValueAccessor {
+    protected platform = inject(PlatformUtil);
+    protected _localeId = inject(LOCALE_ID);
+    protected keyboardNavigation? = inject(KeyboardNavigationService);
+    protected cdr? = inject(ChangeDetectorRef);
+
     /**
      * Holds month view index we are operating on.
      */
@@ -649,13 +654,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    constructor(
-        protected platform: PlatformUtil,
-        @Inject(LOCALE_ID)
-        protected _localeId: string,
-        protected keyboardNavigation?: KeyboardNavigationService,
-        protected cdr?: ChangeDetectorRef,
-    ) {
+    constructor() {
+        const _localeId = this._localeId;
+
         this.locale = _localeId;
         this.viewDate = this.viewDate ? this.viewDate : new Date();
         this.initFormatters();

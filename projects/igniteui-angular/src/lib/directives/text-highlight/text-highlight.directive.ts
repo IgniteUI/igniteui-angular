@@ -1,14 +1,4 @@
-import {
-    AfterViewInit,
-    Directive,
-    ElementRef,
-    Input,
-    OnChanges,
-    OnDestroy,
-    Renderer2,
-    SimpleChanges,
-    AfterViewChecked,
-} from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, OnChanges, OnDestroy, Renderer2, SimpleChanges, AfterViewChecked, inject } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { compareMaps } from '../../core/utils';
@@ -49,6 +39,10 @@ export interface IActiveHighlightInfo {
     standalone: true
 })
 export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecked, OnDestroy, OnChanges {
+    private element = inject(ElementRef);
+    private service = inject(IgxTextHighlightService);
+    private renderer = inject(Renderer2);
+
     /**
      * Determines the `CSS` class of the highlight elements.
      * This allows the developer to provide custom `CSS` to customize the highlight.
@@ -199,7 +193,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     private _defaultCssClass = 'igx-highlight';
     private _defaultActiveCssClass = 'igx-highlight--active';
 
-    constructor(private element: ElementRef, private service: IgxTextHighlightService, private renderer: Renderer2) {
+    constructor() {
         this.service.onActiveElementChanged.pipe(takeUntil(this.destroy$)).subscribe((groupName) => {
             if (this.groupName === groupName) {
                 if (this._activeElementIndex !== -1) {

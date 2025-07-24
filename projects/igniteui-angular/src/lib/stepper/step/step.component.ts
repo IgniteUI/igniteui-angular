@@ -1,28 +1,8 @@
-import {
-    AfterViewInit,
-    booleanAttribute,
-    ChangeDetectorRef,
-    Component,
-    ContentChild,
-    ElementRef,
-    EventEmitter,
-    forwardRef,
-    HostBinding,
-    HostListener,
-    Inject,
-    Input,
-    OnDestroy,
-    Output,
-    Renderer2,
-    TemplateRef,
-    ViewChild
-} from '@angular/core';
+import { AfterViewInit, booleanAttribute, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostBinding, HostListener, Input, OnDestroy, Output, Renderer2, TemplateRef, ViewChild, inject } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Direction, IgxSlideComponentBase } from '../../carousel/carousel-base';
 import { PlatformUtil } from '../../core/utils';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
-import { IgxAngularAnimationService } from '../../services/animation/angular-animation-service';
-import { AnimationService } from '../../services/animation/animation';
 import { IgxDirectionality } from '../../services/direction/directionality';
 import { IgxStep, IgxStepper, IgxStepperOrientation, IgxStepType, IGX_STEPPER_COMPONENT, IGX_STEP_COMPONENT, HorizontalAnimationType } from '../stepper.common';
 import { IgxStepContentDirective, IgxStepIndicatorDirective } from '../stepper.directive';
@@ -60,6 +40,14 @@ let NEXT_ID = 0;
     imports: [NgClass, IgxRippleDirective, NgTemplateOutlet]
 })
 export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, AfterViewInit, OnDestroy, IgxSlideComponentBase {
+    public stepper = inject<IgxStepper>(IGX_STEPPER_COMPONENT);
+    public cdr = inject(ChangeDetectorRef);
+    public renderer = inject(Renderer2);
+    protected platform = inject(PlatformUtil);
+    protected stepperService = inject(IgxStepperService);
+    private element = inject<ElementRef<HTMLElement>>(ElementRef);
+    private dir = inject(IgxDirectionality);
+
 
     /**
      * Get/Set the `id` of the step component.
@@ -382,19 +370,6 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
     private _valid = true;
     private _focused = false;
     private _disabled = false;
-
-    constructor(
-        @Inject(IGX_STEPPER_COMPONENT) public stepper: IgxStepper,
-        public cdr: ChangeDetectorRef,
-        public renderer: Renderer2,
-        protected platform: PlatformUtil,
-        protected stepperService: IgxStepperService,
-        @Inject(IgxAngularAnimationService) animationService: AnimationService,
-        private element: ElementRef<HTMLElement>,
-        private dir: IgxDirectionality
-    ) {
-        super(animationService);
-    }
 
     /** @hidden @internal */
     @HostListener('focus')

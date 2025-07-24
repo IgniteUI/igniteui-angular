@@ -1,4 +1,4 @@
-import { Directive, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output, booleanAttribute } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output, booleanAttribute, inject } from '@angular/core';
 
 export const IgxBaseButtonType = {
     Flat: 'flat',
@@ -8,6 +8,8 @@ export const IgxBaseButtonType = {
 
 @Directive()
 export abstract class IgxButtonBaseDirective {
+    public element = inject(ElementRef);
+    
     /**
      * Emitted when the button is clicked.
      */
@@ -78,8 +80,6 @@ export abstract class IgxButtonBaseDirective {
     public get disabledAttribute() {
         return this.disabled || null;
     }
-
-    constructor(public element: ElementRef) { }
 
     /**
      * @hidden

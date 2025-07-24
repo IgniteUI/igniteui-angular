@@ -1,11 +1,4 @@
-import {
-    Component,
-    Input,
-    HostBinding,
-    ElementRef,
-    booleanAttribute,
-    Inject,
-} from "@angular/core";
+import { Component, Input, HostBinding, ElementRef, booleanAttribute, inject } from "@angular/core";
 import { IgxCalendarMonthDirective } from "../calendar.directives";
 import { TitleCasePipe } from "@angular/common";
 import {
@@ -14,7 +7,6 @@ import {
 } from "../common/calendar-view.directive";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { CalendarDay } from "../common/model";
-import type { DayInterval } from "../common/model";
 import { calendarRange } from "../common/helpers";
 
 let NEXT_ID = 0;
@@ -36,6 +28,8 @@ let NEXT_ID = 0;
     imports: [IgxCalendarMonthDirective, TitleCasePipe]
 })
 export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
+    public el = inject(ElementRef);
+
     #standalone = true;
 
     /**
@@ -127,13 +121,6 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      * @hidden
      */
     private _monthFormat = "short";
-
-    constructor(
-        public el: ElementRef,
-        @Inject(DAY_INTERVAL_TOKEN) dayInterval: DayInterval,
-    ) {
-        super(dayInterval);
-    }
 
     /**
      * @hidden

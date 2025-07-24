@@ -1,7 +1,7 @@
 import { IgxDateTimeEditorDirective } from './date-time-editor.directive';
 import { DatePart } from './date-time-editor.common';
 import { formatDate, registerLocaleData } from '@angular/common';
-import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges, DOCUMENT } from '@angular/core';
+import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges, DOCUMENT, inject } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -1430,7 +1430,9 @@ class IgxDateTimeEditorFormComponent {
     public minDate: Date;
     public maxDate: Date;
 
-    constructor(fb: UntypedFormBuilder) {
+    constructor() {
+        const fb = inject(UntypedFormBuilder);
+
         this.reactiveForm = fb.group({
             dateEditor: ['', Validators.required]
         });

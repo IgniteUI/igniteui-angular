@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridType } from './common/grid.interface';
@@ -46,7 +46,7 @@ export class IgxGridNavigationService {
         this._activeNode = value;
     }
 
-    constructor(protected platform: PlatformUtil) { }
+    protected platform = inject(PlatformUtil)
 
     public handleNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();

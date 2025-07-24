@@ -1,8 +1,4 @@
-import {
-    Directive, ElementRef, EventEmitter, HostListener,
-    Output, PipeTransform, Renderer2,
-    Input, OnInit, AfterViewChecked, booleanAttribute,
-} from '@angular/core';
+import { Directive, ElementRef, EventEmitter, HostListener, Output, PipeTransform, Renderer2, Input, OnInit, AfterViewChecked, booleanAttribute, inject } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MaskParsingService, MaskOptions, parseMask } from './mask-parsing.service';
 import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
@@ -15,6 +11,11 @@ import { noop } from 'rxjs';
     standalone: true
 })
 export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueAccessor {
+    protected elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
+    protected maskParser = inject(MaskParsingService);
+    protected renderer = inject(Renderer2);
+    protected platform = inject(PlatformUtil);
+
     /**
      * Sets the input mask.
      * ```html
@@ -145,12 +146,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 
     protected _onTouchedCallback: () => void = noop;
     protected _onChangeCallback: (_: any) => void = noop;
-
-    constructor(
-        protected elementRef: ElementRef<HTMLInputElement>,
-        protected maskParser: MaskParsingService,
-        protected renderer: Renderer2,
-        protected platform: PlatformUtil) { }
 
     /** @hidden */
     @HostListener('keydown', ['$event'])

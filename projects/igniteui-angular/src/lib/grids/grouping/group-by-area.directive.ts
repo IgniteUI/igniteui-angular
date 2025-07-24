@@ -3,6 +3,7 @@ import {
     ElementRef,
     EventEmitter,
     HostBinding,
+    inject,
     Input,
     Output,
     Pipe,
@@ -25,6 +26,9 @@ import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
  */
 @Directive()
 export abstract class IgxGroupByAreaDirective {
+    private ref = inject(ElementRef<HTMLElement>);
+    protected platform = inject(PlatformUtil);
+
     /**
      * The drop area template if provided by the parent grid.
      * Otherwise, uses the default internal one.
@@ -82,9 +86,6 @@ export abstract class IgxGroupByAreaDirective {
 
     private _expressions: IGroupingExpression[] = [];
     private _dropAreaMessage: string;
-
-    constructor(private ref: ElementRef<HTMLElement>, protected platform: PlatformUtil) { }
-
 
     public get dropAreaVisible(): boolean {
         return (this.grid.columnInDrag && this.grid.columnInDrag.groupable) ||

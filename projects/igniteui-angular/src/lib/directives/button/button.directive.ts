@@ -1,14 +1,4 @@
-import {
-    Directive,
-    ElementRef,
-    EventEmitter,
-    HostBinding,
-    HostListener,
-    Input,
-    Output,
-    Renderer2,
-    booleanAttribute,
-} from '@angular/core';
+import { Directive, EventEmitter, HostBinding, HostListener, Input, Output, Renderer2, booleanAttribute, inject } from '@angular/core';
 import { IBaseEventArgs } from '../../core/utils';
 import { IgxBaseButtonType, IgxButtonBaseDirective } from './button-base';
 
@@ -46,6 +36,8 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
     standalone: true
 })
 export class IgxButtonDirective extends IgxButtonBaseDirective {
+    private _renderer = inject(Renderer2);
+
     private static ngAcceptInputType_type: IgxButtonType | '';
 
     /**
@@ -117,13 +109,6 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
 
     public get selected(): boolean {
         return this._selected;
-    }
-
-    constructor(
-        public override element: ElementRef,
-        private _renderer: Renderer2,
-    ) {
-        super(element);
     }
 
     /**

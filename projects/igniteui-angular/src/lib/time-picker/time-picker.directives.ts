@@ -4,16 +4,7 @@
  *
  * @preferred
  */
-import {
-    Directive,
-    ElementRef,
-    HostBinding,
-    HostListener,
-    Inject,
-    Input,
-    OnDestroy,
-    OnInit
-} from '@angular/core';
+import { Directive, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { HammerGesturesManager } from '../core/touch';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
@@ -26,6 +17,10 @@ import { HammerInput, HammerOptions } from '../core/touch-annotations';
     standalone: true
 })
 export class IgxItemListDirective implements OnInit, OnDestroy {
+    public timePicker = inject<IgxTimePickerBase>(IGX_TIME_PICKER_COMPONENT);
+    private elementRef = inject(ElementRef);
+    private touchManager = inject(HammerGesturesManager);
+
     @HostBinding('attr.tabindex')
     public tabindex = 0;
 
@@ -33,12 +28,6 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
     public type: string;
 
     public isActive: boolean;
-
-    constructor(
-        @Inject(IGX_TIME_PICKER_COMPONENT) public timePicker: IgxTimePickerBase,
-        private elementRef: ElementRef,
-        private touchManager: HammerGesturesManager
-    ) { }
 
     @HostBinding('class.igx-time-picker__column')
     public get defaultCSS(): boolean {
@@ -229,6 +218,9 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
     standalone: true
 })
 export class IgxTimeItemDirective {
+    public timePicker = inject<IgxTimePickerBase>(IGX_TIME_PICKER_COMPONENT);
+    private itemList = inject(IgxItemListDirective);
+
     @Input('igxTimeItem')
     public value: string;
 
@@ -339,10 +331,6 @@ export class IgxTimeItemDirective {
     public get hourValue(): string {
         return this.getHourPart(this.timePicker.selectedDate);
     }
-
-    constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
-    public timePicker: IgxTimePickerBase,
-        private itemList: IgxItemListDirective) { }
 
     @HostListener('click', ['value'])
     public onClick(item) {

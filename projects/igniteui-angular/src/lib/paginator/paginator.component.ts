@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ContentChild, Directive, ElementRef, EventEmitter, Host, HostBinding, Input, Output, forwardRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ContentChild, Directive, ElementRef, EventEmitter, HostBinding, Input, Output, forwardRef, inject } from '@angular/core';
 import { IPageCancellableEventArgs, IPageEventArgs } from './paginator-interfaces';
 import { IPaginatorResourceStrings, PaginatorResourceStringsEN } from '../core/i18n/paginator-resources';
 import { OverlaySettings } from '../services/overlay/utilities';
@@ -47,6 +47,9 @@ export class IgxPaginatorContentDirective {
 })
 // switch IgxPaginatorToken to extends once density is dropped
 export class IgxPaginatorComponent implements IgxPaginatorToken {
+    private elementRef = inject(ElementRef);
+    private cdr = inject(ChangeDetectorRef);
+
 
     /**
      * @hidden
@@ -260,8 +263,6 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
         return this._resourceStrings;
     }
 
-    constructor(private elementRef: ElementRef, private cdr: ChangeDetectorRef) { }
-
     /**
      * Returns if the current page is the last page.
      * ```typescript
@@ -359,14 +360,14 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     imports: [IgxSelectComponent, FormsModule, IgxSelectItemComponent]
 })
 export class IgxPageSizeSelectorComponent {
+    public paginator = inject(IgxPaginatorComponent, { host: true });
+
     /**
      * @internal
      * @hidden
      */
     @HostBinding('class.igx-page-size')
     public cssClass = 'igx-page-size';
-
-    constructor(@Host() public paginator: IgxPaginatorComponent) { }
 }
 
 
@@ -376,6 +377,8 @@ export class IgxPageSizeSelectorComponent {
     imports: [IgxRippleDirective, IgxIconComponent, IgxIconButtonDirective]
 })
 export class IgxPageNavigationComponent {
+    public paginator = inject(IgxPaginatorComponent, { host: true });
+
     /**
      * @internal
      * @hidden
@@ -389,8 +392,4 @@ export class IgxPageNavigationComponent {
     @HostBinding('attr.role')
     @Input()
     public role = 'navigation';
-
-    constructor(
-        @Host()
-        public paginator: IgxPaginatorComponent) { }
 }

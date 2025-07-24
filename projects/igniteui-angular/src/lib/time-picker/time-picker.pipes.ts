@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform, Inject } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase } from './time-picker.common';
 import { DatePart } from '../directives/date-time-editor/public_api';
@@ -11,7 +11,8 @@ const ITEMS_COUNT = 7;
     standalone: true
 })
 export class TimeFormatPipe implements PipeTransform {
-    constructor(@Inject(IGX_TIME_PICKER_COMPONENT) private timePicker: IgxTimePickerBase) { }
+    private timePicker = inject<IgxTimePickerBase>(IGX_TIME_PICKER_COMPONENT);
+
 
     public transform(value: Date): string {
         const format = this.timePicker.appliedFormat.replace('tt', 'aa');
@@ -25,7 +26,8 @@ export class TimeFormatPipe implements PipeTransform {
     standalone: true
 })
 export class TimeItemPipe implements PipeTransform {
-    constructor(@Inject(IGX_TIME_PICKER_COMPONENT) private timePicker: IgxTimePickerBase) { }
+    private timePicker = inject<IgxTimePickerBase>(IGX_TIME_PICKER_COMPONENT);
+
 
     public transform(_collection: any[], timePart: string, selectedDate: Date, min: Date, max: Date) {
         let list;

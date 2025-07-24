@@ -1,12 +1,4 @@
-import {
-    AfterViewInit,
-    Directive,
-    ElementRef,
-    Input,
-    NgZone,
-    HostListener,
-    OnDestroy
-} from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, NgZone, HostListener, OnDestroy, inject } from '@angular/core';
 import { Subject, fromEvent } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 import { ColumnType } from '../common/grid.interface';
@@ -22,6 +14,10 @@ import { IgxColumnResizingService } from './resizing.service';
     standalone: true
 })
 export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
+    protected zone = inject(NgZone);
+    protected element = inject(ElementRef);
+    public colResizingService = inject(IgxColumnResizingService);
+
 
     /**
      * @hidden
@@ -40,10 +36,6 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
     private destroy$ = new Subject<boolean>();
 
     private readonly DEBOUNCE_TIME = 200;
-
-    constructor(protected zone: NgZone,
-        protected element: ElementRef,
-        public colResizingService: IgxColumnResizingService) { }
 
     /**
      * @hidden

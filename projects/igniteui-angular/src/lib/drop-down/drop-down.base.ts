@@ -1,8 +1,8 @@
 import {
     Input, HostBinding, ElementRef, QueryList, Output, EventEmitter, ChangeDetectorRef, Directive,
     OnInit,
-    Inject,
-    DOCUMENT
+    DOCUMENT,
+    inject
 } from '@angular/core';
 
 import { Navigate, ISelectionEventArgs } from './drop-down.common';
@@ -21,6 +21,10 @@ let NEXT_ID = 0;
  */
 @Directive()
 export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit {
+    protected elementRef = inject(ElementRef);
+    protected cdr = inject(ChangeDetectorRef);
+    public document = inject(DOCUMENT);
+    
     /**
      * Emitted when item selection is changing, before the selection completes
      *
@@ -178,11 +182,6 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      * Gets if the dropdown is collapsed
      */
     public abstract readonly collapsed: boolean;
-
-    constructor(
-        protected elementRef: ElementRef,
-        protected cdr: ChangeDetectorRef,
-        @Inject(DOCUMENT) public document: any) {}
 
     public ngOnInit(): void {
         this.computedStyles = this.document.defaultView.getComputedStyle(this.elementRef.nativeElement);

@@ -1,16 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    Inject,
-    OnChanges,
-    QueryList,
-    Renderer2,
-    ViewChild,
-    SimpleChanges,
-    ViewChildren
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnChanges, QueryList, Renderer2, ViewChild, SimpleChanges, ViewChildren, inject } from '@angular/core';
 import { IBaseChipEventArgs, IgxChipComponent } from '../../chips/chip.component';
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
@@ -38,7 +26,6 @@ import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
 import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
-import { GridColumnDataType } from '../../data-operations/data-util';
 
 /**
  *
@@ -61,6 +48,9 @@ import { GridColumnDataType } from '../../data-operations/data-util';
         IgxPivotRowHeaderGroupComponent]
 })
 export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implements OnChanges {
+    public override grid = inject<PivotGridType>(IGX_GRID_BASE);
+    protected renderer = inject(Renderer2);
+
     public aggregateList: IPivotAggregator[] = [];
 
     public value: IPivotValue;
@@ -132,15 +122,6 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
 
     public override get headerForOf() {
         return this.headerContainers?.last;
-    }
-
-    constructor(
-        @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
-        ref: ElementRef<HTMLElement>,
-        cdr: ChangeDetectorRef,
-        protected renderer: Renderer2
-    ) {
-        super(ref, cdr);
     }
 
     /**

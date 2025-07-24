@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, HostBinding, ElementRef, booleanAttribute, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostBinding, ElementRef, booleanAttribute, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CalendarSelection } from '../calendar';
 import { DateRangeDescriptor } from '../../core/dates';
 import { CalendarDay } from '../common/model'
@@ -14,6 +14,8 @@ import { areSameMonth, isNextMonth, isPreviousMonth, isDateInRanges } from '../c
     standalone: true
 })
 export class IgxDayItemComponent {
+    private elementRef = inject(ElementRef);
+
     @Input()
     public date: CalendarDay;
 
@@ -191,6 +193,4 @@ export class IgxDayItemComponent {
     }
 
     private _selected = false;
-
-    constructor(private elementRef: ElementRef) { }
 }

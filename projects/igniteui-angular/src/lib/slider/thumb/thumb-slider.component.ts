@@ -1,16 +1,4 @@
-import {
-    Component,
-    Input,
-    HostListener,
-    ElementRef,
-    HostBinding,
-    Output,
-    EventEmitter,
-    OnInit,
-    OnDestroy,
-    TemplateRef,
-    booleanAttribute
-} from '@angular/core';
+import { Component, Input, HostListener, ElementRef, HostBinding, Output, EventEmitter, OnInit, OnDestroy, TemplateRef, booleanAttribute, inject } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { SliderHandle } from '../slider.common';
 import { Subject } from 'rxjs';
@@ -26,6 +14,9 @@ import { NgClass } from '@angular/common';
     imports: [NgClass]
 })
 export class IgxSliderThumbComponent implements OnInit, OnDestroy {
+    private _elementRef = inject(ElementRef);
+    private _dir = inject(IgxDirectionality);
+
     @Input()
     public value: any;
 
@@ -194,8 +185,6 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         const thumbCenter = (thumbBounderies.right - thumbBounderies.left) / 2;
         return thumbBounderies.left + thumbCenter;
     }
-
-    constructor(private _elementRef: ElementRef, private _dir: IgxDirectionality) { }
 
     @HostListener('pointerenter')
     public onPointerEnter() {

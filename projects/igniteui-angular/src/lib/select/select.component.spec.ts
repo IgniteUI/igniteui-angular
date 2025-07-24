@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement, OnInit, ElementRef } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { TestBed, tick, fakeAsync, waitForAsync, discardPeriodicTasks } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
@@ -2956,7 +2956,9 @@ class IgxSelectReactiveFormComponent {
         optionsSelect: [Validators.required]
     };
 
-    constructor(fb: UntypedFormBuilder) {
+    constructor() {
+        const fb = inject(UntypedFormBuilder);
+
         this.reactiveForm = fb.group({
             firstName: new UntypedFormControl('', Validators.required),
             password: ['', Validators.required],

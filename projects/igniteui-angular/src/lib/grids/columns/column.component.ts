@@ -1,23 +1,6 @@
 import { Subject } from 'rxjs';
 import { isEqual } from 'lodash-es';
-import {
-    AfterContentInit,
-    ChangeDetectorRef,
-    ChangeDetectionStrategy,
-    Component,
-    ContentChild,
-    ContentChildren,
-    Input,
-    QueryList,
-    TemplateRef,
-    Output,
-    EventEmitter,
-    OnDestroy,
-    Inject,
-    Optional,
-    Self,
-    booleanAttribute,
-} from '@angular/core';
+import { AfterContentInit, ChangeDetectorRef, ChangeDetectionStrategy, Component, ContentChild, ContentChildren, Input, QueryList, TemplateRef, Output, EventEmitter, OnDestroy, booleanAttribute, inject } from '@angular/core';
 import { notifyChanges } from '../watch-changes';
 import { WatchColumnChanges } from '../watch-changes';
 import { GridColumnDataType } from '../../data-operations/data-util';
@@ -87,6 +70,13 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
     standalone: true
 })
 export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnType {
+    public grid = inject<GridType>(IGX_GRID_BASE);
+    private _validators = inject<Validator[]>(NG_VALIDATORS, { optional: true, self: true });
+
+    /** @hidden @internal **/
+    public cdr = inject(ChangeDetectorRef);
+    protected platform = inject(PlatformUtil);
+
     /**
      * Sets/gets the `field` value.
      * ```typescript
@@ -111,7 +101,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden @internal
      */
-    public validators: Validator[] = [];
+    public validators: Validator[] = this._validators;
 
     /**
      * Sets/gets the `header` value.
@@ -1903,16 +1893,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     private _calcWidth = null;
     private _columnPipeArgs: IColumnPipeArgs = { digitsInfo: DEFAULT_DIGITS_INFO };
     private _editorOptions: IColumnEditorOptions = { };
-
-    constructor(
-        @Inject(IGX_GRID_BASE) public grid: GridType,
-        @Optional() @Self() @Inject(NG_VALIDATORS) private _validators: Validator[],
-        /** @hidden @internal **/
-        public cdr: ChangeDetectorRef,
-        protected platform: PlatformUtil,
-    ) {
-        this.validators = _validators;
-    }
 
     /**
      * @hidden

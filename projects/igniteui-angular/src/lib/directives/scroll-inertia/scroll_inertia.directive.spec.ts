@@ -1,11 +1,4 @@
-import {
-    Component,
-    Directive,
-    NgZone,
-    OnInit,
-    ViewChild,
-    ElementRef,
-} from '@angular/core';
+import { Component, Directive, NgZone, OnInit, ViewChild, ElementRef, inject } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxScrollInertiaDirective } from './scroll_inertia.directive';
 
@@ -317,7 +310,10 @@ describe('Scroll Inertia Directive - Scrolling', () => {
 })
 export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
 
-    constructor(element: ElementRef, _zone: NgZone) {
+    constructor() {
+        const element = inject(ElementRef);
+        const _zone = inject(NgZone);
+
         super(element, _zone);
     }
     public override onWheel(evt) {

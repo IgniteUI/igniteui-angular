@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { IgxTextHighlightDirective, IActiveHighlightInfo} from './text-highlight.directive';
@@ -319,6 +319,8 @@ describe('IgxHighlight', () => {
     imports: [IgxTextHighlightDirective]
 })
 class HighlightLoremIpsumComponent {
+    private highlightService = inject(IgxTextHighlightService);
+
     @ViewChild(IgxTextHighlightDirective, { read: IgxTextHighlightDirective, static: true })
     public highlight: IgxTextHighlightDirective;
 
@@ -327,8 +329,6 @@ class HighlightLoremIpsumComponent {
     public groupName = 'test';
 
     public html = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vulputate luctus dui ut maximus. Quisque sed suscipit lorem. Vestibulum sit.';
-
-    constructor(private highlightService: IgxTextHighlightService) { }
 
     public highlightText(text: string, caseSensitive?: boolean, exactMatch?: boolean) {
         return this.highlight.highlight(text, caseSensitive, exactMatch);

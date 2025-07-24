@@ -11,19 +11,18 @@ import {
     EventEmitter,
     forwardRef,
     HostBinding,
-    Inject,
     InjectionToken,
     Injector,
     Input,
     OnDestroy,
     OnInit,
-    Optional,
     Output,
     QueryList,
     TemplateRef,
     ViewChild,
     DOCUMENT,
-    ViewChildren
+    ViewChildren,
+    inject
 } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NgControl } from '@angular/forms';
 import { caseSensitive } from '@igniteui/material-icons-extended';
@@ -107,6 +106,15 @@ export interface IComboFilteringOptions {
 @Directive()
 export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewChecked, OnInit,
     AfterViewInit, AfterContentChecked, OnDestroy, ControlValueAccessor {
+    protected elementRef = inject(ElementRef);
+    protected cdr = inject(ChangeDetectorRef);
+    protected selectionService = inject(IgxSelectionAPIService);
+    protected comboAPI = inject(IgxComboAPIService);
+    public document = inject<Document>(DOCUMENT);
+    protected _inputGroupType = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE, { optional: true });
+    protected _injector = inject(Injector, { optional: true });
+    protected _iconService = inject(IgxIconService, { optional: true });
+
     /**
      * Defines whether the caseSensitive icon should be shown in the search input
      *
@@ -957,17 +965,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     public abstract dropdown: IgxComboDropDownComponent;
     public abstract selectionChanging: EventEmitter<any>;
-
-    constructor(
-        protected elementRef: ElementRef,
-        protected cdr: ChangeDetectorRef,
-        protected selectionService: IgxSelectionAPIService,
-        protected comboAPI: IgxComboAPIService,
-        @Inject(DOCUMENT) public document: Document,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
-        @Optional() protected _injector: Injector,
-        @Optional() @Inject(IgxIconService) protected _iconService?: IgxIconService,
-    ) { }
 
     public ngAfterViewChecked() {
         const targetElement = this.inputGroup.element.nativeElement.querySelector('.igx-input-group__bundle') as HTMLElement;

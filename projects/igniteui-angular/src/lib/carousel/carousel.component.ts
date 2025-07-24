@@ -1,36 +1,10 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import {
-    AfterContentInit,
-    ChangeDetectorRef,
-    Component,
-    ContentChild,
-    ContentChildren,
-    ElementRef,
-    EventEmitter,
-    HostBinding,
-    HostListener,
-    Inject,
-    Injectable,
-    Input,
-    IterableChangeRecord,
-    IterableDiffer,
-    IterableDiffers,
-    OnDestroy,
-    Output,
-    QueryList,
-    TemplateRef,
-    ViewChild,
-    ViewChildren,
-    booleanAttribute,
-    DOCUMENT
-} from '@angular/core';
+import { AfterContentInit, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Injectable, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy, Output, QueryList, TemplateRef, ViewChild, ViewChildren, booleanAttribute, DOCUMENT, inject } from '@angular/core';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CarouselResourceStringsEN, ICarouselResourceStrings } from '../core/i18n/carousel-resources';
 import { first, IBaseEventArgs, last, PlatformUtil } from '../core/utils';
-import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
-import { AnimationService } from '../services/animation/animation';
 import { Direction, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
@@ -88,6 +62,12 @@ export class CarouselHammerConfig extends HammerGestureConfig {
     imports: [IgxButtonDirective, IgxIconComponent, NgClass, NgTemplateOutlet]
 })
 export class IgxCarouselComponent extends IgxCarouselComponentBase implements OnDestroy, AfterContentInit {
+    private element = inject(ElementRef);
+    private iterableDiffers = inject(IterableDiffers);
+    private platformUtil = inject(PlatformUtil);
+    private dir = inject(IgxDirectionality);
+    private document = inject(DOCUMENT);
+
 
     /**
      * Sets the `id` of the carousel.
@@ -565,16 +545,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         this.restartInterval();
     }
 
-    constructor(
-        cdr: ChangeDetectorRef,
-        private element: ElementRef,
-        private iterableDiffers: IterableDiffers,
-        @Inject(IgxAngularAnimationService) animationService: AnimationService,
-        private platformUtil: PlatformUtil,
-        private dir: IgxDirectionality,
-        @Inject(DOCUMENT) private document: any
-    ) {
-        super(animationService, cdr);
+    constructor() {
+        super();
         this.differ = this.iterableDiffers.find([]).create(null);
     }
 

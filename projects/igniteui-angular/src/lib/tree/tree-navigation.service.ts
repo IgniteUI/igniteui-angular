@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { IgxTree, IgxTreeNode, IgxTreeSelectionType } from './common';
 import { NAVIGATION_KEYS } from '../core/utils';
 import { IgxTreeService } from './tree.service';
@@ -8,6 +8,9 @@ import { Subject } from 'rxjs';
 /** @hidden @internal */
 @Injectable()
 export class IgxTreeNavigationService implements OnDestroy {
+    private treeService = inject(IgxTreeService);
+    private selectionService = inject(IgxTreeSelectionService);
+
     private tree: IgxTree;
 
     private _focusedNode: IgxTreeNode<any> = null;
@@ -20,7 +23,7 @@ export class IgxTreeNavigationService implements OnDestroy {
 
     private _cacheChange = new Subject<void>();
 
-    constructor(private treeService: IgxTreeService, private selectionService: IgxTreeSelectionService) {
+    constructor() {
         this._cacheChange.subscribe(() => {
             this._visibleChildren =
                 this.tree?.nodes ?

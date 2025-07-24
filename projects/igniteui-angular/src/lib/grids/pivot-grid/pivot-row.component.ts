@@ -1,15 +1,7 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    forwardRef,
-    HostBinding, Inject, Input, ViewContainerRef
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef, HostBinding, Input, ViewContainerRef, inject } from '@angular/core';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxRowDirective } from '../row.directive';
-import { IgxGridSelectionService } from '../selection/selection.service';
 import { IPivotGridColumn, IPivotGridRecord } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
 import { IgxPivotGridCellStyleClassesPipe } from './pivot-grid.pipes';
@@ -27,6 +19,9 @@ import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive'
     imports: [IgxGridForOfDirective, IgxGridCellComponent, NgClass, NgStyle, IgxCheckboxComponent, IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe, IgxPivotGridCellStyleClassesPipe]
 })
 export class IgxPivotRowComponent extends IgxRowDirective {
+    public override grid = inject<PivotGridType>(IGX_GRID_BASE);
+    protected viewRef = inject(ViewContainerRef);
+
     /**
      * @hidden
      */
@@ -41,16 +36,6 @@ export class IgxPivotRowComponent extends IgxRowDirective {
             }
         }
         return isSelected;
-    }
-
-    constructor(
-        @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
-        selectionService: IgxGridSelectionService,
-        element: ElementRef<HTMLElement>,
-        cdr: ChangeDetectorRef,
-        protected viewRef: ViewContainerRef
-    ) {
-        super(grid, selectionService, element, cdr);
     }
 
     /**

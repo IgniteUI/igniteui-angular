@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostBinding, Inject, Input } from '@angular/core';
+import { Directive, ElementRef, HostBinding, Input, inject } from '@angular/core';
 import { IgxStep, IGX_STEP_COMPONENT } from './stepper.common';
 import { IgxStepperService } from './stepper.service';
 
@@ -154,6 +154,10 @@ export class IgxStepSubtitleDirective {
     standalone: true
 })
 export class IgxStepContentDirective {
+    private step = inject<IgxStep>(IGX_STEP_COMPONENT);
+    private stepperService = inject(IgxStepperService);
+    public elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
     private get target(): IgxStep {
         return this.step;
     }
@@ -188,10 +192,4 @@ export class IgxStepContentDirective {
     }
 
     private _tabIndex = null;
-
-    constructor(
-        @Inject(IGX_STEP_COMPONENT) private step: IgxStep,
-        private stepperService: IgxStepperService,
-        public elementRef: ElementRef<HTMLElement>
-    ) { }
 }

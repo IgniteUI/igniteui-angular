@@ -184,7 +184,7 @@ describe('Carousel', () => {
             expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(3);
 
             spyOn(carousel.slideAdded, 'emit');
-            const newSlide = new IgxSlideComponent(null);
+            const newSlide = new IgxSlideComponent();
             carousel.add(newSlide);
             fixture.detectChanges();
             args = {

@@ -1,18 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    DoCheck,
-    ElementRef,
-    forwardRef,
-    HostBinding,
-    HostListener,
-    Inject,
-    Input,
-    QueryList,
-    ViewChild,
-    ViewChildren
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, forwardRef, HostBinding, HostListener, Input, QueryList, ViewChild, ViewChildren, inject } from '@angular/core';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxGridHeaderComponent } from './grid-header.component';
@@ -39,6 +25,13 @@ const Z_INDEX = 9999;
     imports: [NgClass, NgStyle, IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxIconComponent, NgTemplateOutlet, IgxGridHeaderComponent, IgxGridFilteringCellComponent, IgxResizeHandleDirective, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
 })
 export class IgxGridHeaderGroupComponent implements DoCheck {
+    private cdr = inject(ChangeDetectorRef);
+    public grid = inject<GridType>(IGX_GRID_BASE);
+    private ref = inject<ElementRef<HTMLElement>>(ElementRef);
+    public colResizingService = inject(IgxColumnResizingService);
+    public filteringService = inject(IgxFilteringService);
+    protected platform = inject(PlatformUtil);
+
 
     @HostBinding('style.grid-row-end')
     public get rowEnd(): number {
@@ -114,13 +107,6 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     @HostBinding('class.igx-grid-thead__item')
     public defaultCss = true;
-
-    constructor(private cdr: ChangeDetectorRef,
-        @Inject(IGX_GRID_BASE) public grid: GridType,
-        private ref: ElementRef<HTMLElement>,
-        public colResizingService: IgxColumnResizingService,
-        public filteringService: IgxFilteringService,
-        protected platform: PlatformUtil) { }
 
     @HostBinding('class.igx-grid-th--pinned')
     public get pinnedCss() {

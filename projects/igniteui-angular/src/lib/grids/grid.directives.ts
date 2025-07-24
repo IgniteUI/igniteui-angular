@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Renderer2, NgZone, HostBinding, TemplateRef } from '@angular/core';
+import { Directive, HostBinding, TemplateRef, inject } from '@angular/core';
 import { IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IgxColumnMovingDragDirective } from './moving/moving.drag.directive';
 import { IgxGroupByAreaDirective } from './grouping/group-by-area.directive';
@@ -19,13 +19,11 @@ import {
     standalone: true
 })
 export class IgxGroupByRowTemplateDirective {
+    public template = inject(TemplateRef<IgxGroupByRowTemplateContext>)
     public static ngTemplateContextGuard(_dir: IgxGroupByRowTemplateDirective,
         ctx: unknown): ctx is IgxGroupByRowTemplateContext {
         return true
-    }
-
-    constructor(public template: TemplateRef<IgxGroupByRowTemplateContext>) { }
-
+    }    
 }
 
 /**
@@ -187,17 +185,10 @@ export class IgxGridEmptyTemplateDirective {
     standalone: true
 })
 export class IgxGroupAreaDropDirective extends IgxDropDirective {
+    private groupArea = inject(IgxGroupByAreaDirective);
 
     @HostBinding('class.igx-drop-area--hover')
     public hovered = false;
-
-    constructor(
-        private groupArea: IgxGroupByAreaDirective,
-        private elementRef: ElementRef<HTMLElement>,
-        renderer: Renderer2,
-        zone: NgZone) {
-        super(elementRef, renderer, zone);
-    }
 
     public override onDragEnter(event) {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;
@@ -235,7 +226,7 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
     }
 
     private columnBelongsToGrid(column: ColumnType) {
-        const elem = this.elementRef.nativeElement;
+        const elem = this.element.nativeElement;
         const closestGridID = this.closestParentByAttr(elem, 'igxGroupAreaDrop').getAttribute('gridId');
         if (!column) {
             return false;

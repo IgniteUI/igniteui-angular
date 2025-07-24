@@ -1,9 +1,5 @@
-import {
-    Directive, ElementRef, Input, ChangeDetectorRef, Optional, HostBinding, Inject, OnDestroy, inject, DOCUMENT
-} from '@angular/core';
-import { IgxOverlayService } from '../../services/overlay/overlay';
+import { Directive, Input, HostBinding, OnDestroy, inject, DOCUMENT } from '@angular/core';
 import { OverlaySettings } from '../../services/public_api';
-import { IgxNavigationService } from '../../core/navigation';
 import { IgxToggleDirective } from '../toggle/toggle.directive';
 import { IgxTooltipTargetDirective } from './tooltip-target.directive';
 import { Subject, takeUntil } from 'rxjs';
@@ -113,13 +109,8 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
     private _document = inject(DOCUMENT);
 
     /** @hidden */
-    constructor(
-        elementRef: ElementRef,
-        cdr: ChangeDetectorRef,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        @Optional() navigationService: IgxNavigationService) {
-        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
-        super(elementRef, cdr, overlayService, navigationService);
+    constructor() {
+        super();
 
         this.onDocumentTouchStart = this.onDocumentTouchStart.bind(this);
         this.overlayService.opening.pipe(takeUntil(this._destroy$)).subscribe(() => {

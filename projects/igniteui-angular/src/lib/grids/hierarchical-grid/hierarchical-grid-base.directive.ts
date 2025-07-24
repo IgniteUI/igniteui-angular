@@ -1,45 +1,25 @@
 import {
     booleanAttribute,
-    ChangeDetectorRef,
     createComponent,
     Directive,
-    ElementRef,
-    EnvironmentInjector,
     EventEmitter,
-    Inject,
-    Injector,
     Input,
-    IterableDiffers,
-    LOCALE_ID,
-    NgZone,
-    Optional,
     Output,
     reflectComponentType,
-    ViewContainerRef,
-    DOCUMENT
+    inject
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
-import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxSummaryOperand } from '../summaries/grid-summary';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
-import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxGridSelectionService } from '../selection/selection.service';
-import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { GridType, IGX_GRID_SERVICE_BASE, IPathSegment } from '../common/grid.interface';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { takeUntil } from 'rxjs/operators';
-import { PlatformUtil } from '../../core/utils';
-import { IgxFlatTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IgxTransactionService } from '../../services/transaction/igx-transaction';
-import { IgxOverlayService } from '../../services/overlay/overlay';
-import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
 import { IgxGridTransaction } from '../common/types';
-import { IgxGridValidationService } from '../grid/grid-validation.service';
-import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
 
 export const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();
 
@@ -54,6 +34,8 @@ export const IgxHierarchicalTransactionServiceFactory = {
    wcSkipComponentSuffix */
 @Directive()
 export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective implements GridType {
+    public override gridAPI = inject<IgxHierarchicalGridAPIService>(IGX_GRID_SERVICE_BASE);
+    public override navigation = inject(IgxHierarchicalGridNavigationService);
     /**
      * Gets/Sets the key indicating whether a row has children. If row has no children it does not render an expand indicator.
      *
@@ -151,54 +133,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     /* blazorSuppress */
     public abstract expandChildren: boolean;
-
-    constructor(
-        validationService: IgxGridValidationService,
-        selectionService: IgxGridSelectionService,
-        colResizingService: IgxColumnResizingService,
-        @Inject(IGX_GRID_SERVICE_BASE) public override gridAPI: IgxHierarchicalGridAPIService,
-        transactionFactory: IgxFlatTransactionFactory,
-        elementRef: ElementRef<HTMLElement>,
-        zone: NgZone,
-        @Inject(DOCUMENT) document,
-        cdr: ChangeDetectorRef,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        injector: Injector,
-        envInjector: EnvironmentInjector,
-        public override navigation: IgxHierarchicalGridNavigationService,
-        filteringService: IgxFilteringService,
-        textHighlightService: IgxTextHighlightService,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        summaryService: IgxGridSummaryService,
-        @Inject(LOCALE_ID) localeId: string,
-        platform: PlatformUtil,
-        @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>,
-    ) {
-        super(
-            validationService,
-            selectionService,
-            colResizingService,
-            gridAPI,
-            transactionFactory,
-            elementRef,
-            zone,
-            document,
-            cdr,
-            differs,
-            viewRef,
-            injector,
-            envInjector,
-            navigation,
-            filteringService,
-            textHighlightService,
-            overlayService,
-            summaryService,
-            localeId,
-            platform,
-            _diTransactions,
-        );
-    }
 
     /**
      * @hidden

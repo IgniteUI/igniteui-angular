@@ -1,8 +1,7 @@
 import { useAnimation } from '@angular/animations';
-import { Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener, Input, EventEmitter, booleanAttribute } from '@angular/core';
+import { Directive, OnInit, OnDestroy, Output, ViewContainerRef, HostListener, Input, EventEmitter, booleanAttribute, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IgxNavigationService } from '../../core/navigation';
 import { IBaseEventArgs } from '../../core/utils';
 import { AutoPositionStrategy, HorizontalAlignment, PositionSettings } from '../../services/public_api';
 import { IgxToggleActionDirective } from '../toggle/toggle.directive';
@@ -41,6 +40,8 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
     standalone: true
 })
 export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit, OnDestroy {
+    private _viewContainerRef = inject(ViewContainerRef);
+    
     /**
      * Gets/sets the amount of milliseconds that should pass before showing the tooltip.
      *
@@ -109,7 +110,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     public override get target(): any {
         if (typeof this._target === 'string') {
-            return this._navigationService.get(this._target);
+            return this.navigationService.get(this._target);
         }
         return this._target;
     }
@@ -135,7 +136,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * ```
      */
     public get nativeElement() {
-        return this._element.nativeElement;
+        return this.element.nativeElement;
     }
 
     /**
@@ -186,11 +187,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     public tooltipHide = new EventEmitter<ITooltipHideEventArgs>();
 
     private destroy$ = new Subject<void>();
-
-    constructor(private _element: ElementRef,
-        @Optional() private _navigationService: IgxNavigationService, private _viewContainerRef: ViewContainerRef) {
-        super(_element, _navigationService);
-    }
 
     /**
      * @hidden

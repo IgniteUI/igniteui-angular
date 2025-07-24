@@ -1,16 +1,17 @@
 import { AnimationBuilder } from '@angular/animations';
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxInputDirective, IgxInputGroupComponent } from '../input-group/public_api';
-import { Direction } from '../services/direction/directionality';
+import { Direction, IgxDirectionality } from '../services/direction/directionality';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxStepComponent } from './step/step.component';
 import {
     HorizontalAnimationType,
+    IGX_STEPPER_COMPONENT,
     IgxStepperOrientation,
     IgxStepperTitlePosition,
     IgxStepType,
@@ -21,6 +22,8 @@ import {
 import { IgxStepperComponent } from './stepper.component';
 import { IgxStepActiveIndicatorDirective, IgxStepCompletedIndicatorDirective, IgxStepContentDirective, IgxStepIndicatorDirective, IgxStepInvalidIndicatorDirective, IgxStepSubtitleDirective, IgxStepTitleDirective } from './stepper.directive';
 import { IgxStepperService } from './stepper.service';
+import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
+import { PlatformUtil } from '../core/utils';
 
 const STEPPER_CLASS = 'igx-stepper';
 const STEPPER_HEADER = 'igx-stepper__header';
@@ -146,7 +149,7 @@ describe('Rendering Tests', () => {
             expect(serviceCollapseSpy).toHaveBeenCalledOnceWith(stepper.steps[0]);
         }));
 
-        it('should calculate disabled steps properly when the stepper is initially in linear mode', fakeAsync(()=>{
+        it('should calculate disabled steps properly when the stepper is initially in linear mode', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxStepperLinearComponent);
             fixture.detectChanges();
             const linearStepper = fixture.componentInstance.stepper;
@@ -1010,11 +1013,29 @@ describe('Stepper service unit tests', () => {
         };
 
         stepperService = new IgxStepperService();
-        stepper = new IgxStepperComponent(mockCdr, mockAnimationService, stepperService, mockElementRef);
+
+        TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, IgxStepComponent],
+            providers: [
+                { provide: ChangeDetectorRef, useValue: mockCdr },
+                { provide: IgxAngularAnimationService, useValue: mockAnimationService },
+                { provide: ElementRef, useValue: mockElementRef },
+                { provide: IgxStepperService, useValue: stepperService },
+                { provide: IgxDirectionality, useValue: mockDir },
+                { provide: PlatformUtil, useValue: mockPlatform },
+                IgxStepperComponent,
+                { provide: IGX_STEPPER_COMPONENT, useExisting: IgxStepperComponent },
+                IgxStepComponent,
+                Renderer2
+            ]
+        });
+
+        stepper = TestBed.inject(IgxStepperComponent);
         steps = [];
         for (let index = 0; index < 4; index++) {
-            const newStep = new IgxStepComponent(stepper, mockCdr, null,
-                mockPlatform, stepperService, mockAnimationService, mockElementRef, mockDir);
+            const fixture = TestBed.createComponent(IgxStepComponent);
+            fixture.detectChanges()
+            const newStep = fixture.componentInstance;
             newStep._index = index;
             steps.push(newStep);
         }

@@ -1,8 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, HostListener, Inject, Input, NgZone, ViewChild } from '@angular/core';
-import { PlatformUtil } from '../../core/utils';
+import { ChangeDetectionStrategy, Component, HostBinding, HostListener, Input, NgZone, ViewChild, inject } from '@angular/core';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
-import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
 import { IPivotDimension, PivotRowHeaderGroupType } from './pivot-grid.interface';
@@ -25,22 +23,15 @@ import { IMultiRowLayoutNode } from '../common/types';
     imports: [IgxIconComponent, IgxPivotRowDimensionHeaderComponent, NgClass, NgStyle, IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxPivotResizeHandleDirective, IgxHeaderGroupStylePipe]
 })
 export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroupComponent implements PivotRowHeaderGroupType {
+    public override grid = inject<PivotGridType>(IGX_GRID_BASE);
+    public override colResizingService = inject(IgxPivotColumnResizingService);
+    protected zone = inject(NgZone);
 
     /**
      * @hidden
      */
     @HostBinding('style.user-select')
     public userSelect = 'none';
-
-    constructor(private cdRef: ChangeDetectorRef,
-        @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
-        private elementRef: ElementRef<HTMLElement>,
-        public override colResizingService: IgxPivotColumnResizingService,
-        filteringService: IgxFilteringService,
-        platform: PlatformUtil,
-        protected zone: NgZone) {
-        super(cdRef, grid, elementRef, colResizingService, filteringService, platform);
-    }
 
     /**
      * @hidden

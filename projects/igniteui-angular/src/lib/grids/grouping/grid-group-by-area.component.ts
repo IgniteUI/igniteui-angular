@@ -1,10 +1,5 @@
-import {
-    Component,
-    ElementRef,
-    Input,
-} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { IChipsAreaReorderEventArgs } from '../../chips/public_api';
-import { PlatformUtil } from '../../core/utils';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { FlatGridType } from '../common/grid.interface';
@@ -35,10 +30,6 @@ export class IgxGridGroupByAreaComponent extends IgxGroupByAreaDirective {
     /** The parent grid containing the component. */
     @Input()
     public override grid: FlatGridType;
-
-    constructor(ref: ElementRef<HTMLElement>, platform: PlatformUtil) {
-        super(ref, platform);
-     }
 
     public handleReorder(event: IChipsAreaReorderEventArgs) {
         const { chipsArray, originalEvent } = event;

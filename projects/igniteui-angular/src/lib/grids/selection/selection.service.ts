@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable, NgZone } from '@angular/core';
+import { EventEmitter, Injectable, NgZone, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { PlatformUtil } from '../../core/utils';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
@@ -18,6 +18,9 @@ import { PivotUtil } from '../pivot-grid/pivot-util';
 
 @Injectable()
 export class IgxGridSelectionService {
+    private zone = inject(NgZone);
+    protected platform = inject(PlatformUtil);
+
     public grid: GridType;
     public dragMode = false;
     public activeElement: ISelectionNode | null;
@@ -73,7 +76,7 @@ export class IgxGridSelectionService {
         this.pointerState.primaryButton = value;
     }
 
-    constructor(private zone: NgZone, protected platform: PlatformUtil) {
+    constructor() {
         this.initPointerState();
         this.initKeyboardState();
         this.initColumnsState();
