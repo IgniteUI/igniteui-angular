@@ -602,6 +602,13 @@
         'indigo': 0,
     ), $variant);
 
+    $hint-min-size: map.get((
+        'material': rem(18px),
+        'fluent': rem(18px),
+        'bootstrap': rem(20px),
+        'indigo': rem(15px),
+    ), $variant);
+
     // Base Start
     %form-group-prefix--upload {
         padding: 0;
@@ -702,10 +709,6 @@
             font-family: inherit;
         }
 
-        input[type='file'] {
-            @include hide-default();
-        }
-
         textarea {
             overflow: auto;
         }
@@ -760,7 +763,7 @@
     }
 
     %form-group-placeholder {
-        &:has(input:placeholder-shown, textarea:placeholder-shown) { 
+        &:has(input:placeholder-shown, textarea:placeholder-shown) {
             %form-group-label {
                 transition: none !important;
             }
@@ -884,7 +887,7 @@
     }
 
     %form-group-bundle--hover {
-        cursor: pointer;
+        //cursor: pointer;
 
         &::after {
             border-block-end-width: rem(1px);
@@ -944,6 +947,288 @@
         flex-grow: 1;
         position: relative;
         max-width: inherit;
+    }
+
+    @if $material-theme {
+        %form-group-display--file {
+            %form-group-file-input {
+                padding-inline: rem(4px);
+            }
+        }
+
+        %form-group-display--file-border {
+            %form-group-input {
+                z-index: 2;
+            }
+
+            // We need this otherwise we have to use !important
+            %form-group-bundle {
+                grid-template-columns: auto auto auto 1fr auto;
+
+                %form-group-bundle-end {
+                    grid-area: 1 / 5;
+                }
+
+                &:hover {
+                    %upload-button {
+                        border-color: var-get($theme, 'hover-border-color');
+                    }
+                }
+            }
+
+            %upload-button {
+                border-block: rem(1px) solid var-get($theme, 'border-color');
+
+                .igx-button {
+                    border: none;
+                }
+            }
+        }
+
+        %form-group-display--file-border-focused {
+            %upload-button {
+                border-width: rem(2px);
+                border-color: var-get($theme, 'focused-border-color');
+            }
+
+            %form-group-bundle {
+                &:hover {
+                    %upload-button {
+                        border-color: var-get($theme, 'focused-border-color');
+                    }
+                }
+            }
+        }
+
+        %form-group-display--file-border-success {
+            %upload-button {
+                border-color: var-get($theme, 'success-secondary-color');
+            }
+
+            %form-group-bundle {
+                &:hover {
+                    %upload-button {
+                        border-color: var-get($theme, 'success-secondary-color');
+                    }
+                }
+            }
+        }
+
+        %form-group-display--file-border-warning {
+            %upload-button {
+                border-color: var-get($theme, 'warning-secondary-color');
+            }
+
+            %form-group-bundle {
+                &:hover {
+                    %upload-button {
+                        border-color: var-get($theme, 'warning-secondary-color');
+                    }
+                }
+            }
+        }
+
+        %form-group-display--file-border-error {
+            %upload-button {
+                border-color: var-get($theme, 'error-secondary-color');
+            }
+
+            %form-group-bundle {
+                &:hover {
+                    %upload-button {
+                        border-color: var-get($theme, 'error-secondary-color');
+                    }
+                }
+            }
+        }
+    }
+
+    %form-group-display--file {
+        %form-group-bundle {
+            grid-template-columns: auto auto auto 1fr auto;
+        }
+
+        %form-group-file-input {
+            grid-area: 1/3 / span 1 / span 2;
+            flex-grow: 1;
+            padding-inline: rem(4px);
+            cursor: pointer;
+
+            @if $variant != 'material' {
+                display: flex;
+                align-items: center;
+
+                span {
+                    transform: revert;
+                    inset: revert;
+                }
+            }
+        }
+
+        %igx-input-group__notch {
+            grid-area: 1 / 3;
+        }
+
+        %form-group-bundle-end {
+            grid-area: 1 / 5;
+        }
+
+        %igx-input-group__filler {
+            grid-area: 1 / 4;
+        }
+
+        %form-group-bundle-end {
+            grid-area: 1 / 5;
+        }
+
+        %form-group-bundle-main {
+            display: contents;
+        }
+
+        %form-group-input {
+            grid-column: 2 / -2;
+            grid-row: 1 / -1;
+            border: none;
+            inset: 0;
+            width: 100%;
+            appearance: none;
+            opacity: 0;
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        ::file-selector-button {
+            cursor: pointer;
+        }
+    }
+
+    %upload-button {
+        display: flex;
+        align-items: center;
+        grid-area: 1 / 2;
+        pointer-events: none;
+        height: var-get($theme, 'size');
+        cursor: pointer;
+        overflow: hidden;
+    }
+
+    %form-group-display--bootstrap-file {
+        %form-group-bundle-start,
+        %form-group-bundle-end {
+            [igxPrefix],
+            igx-prefix {
+                height: var-get($theme, 'size');
+            }
+        }
+    }
+
+    %bootstrap-upload-button {
+        border: rem(1px) solid var-get($theme, 'border-color');
+        border-inline-end: 0;
+
+        igx-button {
+            border: 0;
+        }
+    }
+
+    %bootstrap-file-disabled-upload-button {
+        border-color: var-get($theme, 'disabled-border-color');
+    }
+
+    %bootstrap-file-focused,
+    %bootstrap-file-valid,
+    %bootstrap-file-warning,
+    %bootstrap-file-invalid,
+    {
+        %form-group-bundle {
+            border-radius: var-get($theme, 'box-border-radius');
+            transition: box-shadow .15s ease-out, border .15s ease-out;
+
+            &:hover {
+                %form-group-file-input {
+                    box-shadow: none;
+                }
+            }
+        }
+
+        %form-group-file-input {
+            box-shadow: none;
+        }
+    }
+
+    %bootstrap-file-focused {
+        %form-group-bundle-start,
+        %form-group-bundle-end,
+        %upload-button {
+            border-color: var-get($theme, 'focused-border-color');
+        }
+
+        %form-group-bundle {
+            box-shadow: 0 0 0 rem(4px) var-get($theme, 'focused-secondary-color');
+        }
+    }
+
+    %bootstrap-file-valid {
+        %form-group-bundle-start,
+        %form-group-bundle-end,
+        %upload-button {
+            border-color: var-get($theme, 'success-secondary-color');
+        }
+    }
+
+    %bootstrap-file-warning {
+        %form-group-bundle-start,
+        %form-group-bundle-end,
+        %upload-button {
+            border-color: var-get($theme, 'warning-secondary-color');
+        }
+    }
+
+    %bootstrap-file-invalid {
+        %form-group-bundle-start,
+        %form-group-bundle-end,
+        %upload-button {
+            border-color: var-get($theme, 'error-secondary-color');
+        }
+    }
+
+    %bootstrap-file-valid-focused {
+        %form-group-bundle {
+            box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
+        }
+    }
+
+    %bootstrap-file-warning-focused {
+        %form-group-bundle {
+            box-shadow: 0 0 0 rem(4px) color($color: 'warn', $variant: '500', $opacity: .38);
+        }
+    }
+
+    %bootstrap-file-invalid-focused {
+        %form-group-bundle {
+            box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+        }
+    }
+
+    @if $variant == 'bootstrap' {
+        %form-group-display--file-focused {
+            %form-group-bundle-start,
+            %form-group-bundle-end,
+            %upload-button {
+                border-color: var-get($theme, 'focused-border-color');
+            }
+        }
+    }
+
+    .igx-input-group--bootstrap:not(.igx-input-group--prefixed) {
+        .igx-input-group__upload-button {
+            border-radius: var-get($theme, 'box-border-radius') 0 0 var-get($theme, 'box-border-radius');
+        }
+
+        .igx-input-group__file-input {
+            border-start-start-radius: 0;
+            border-end-start-radius: 0;
+        }
     }
 
     %form-group-bundle--box {
@@ -1521,11 +1806,13 @@
         overflow: hidden;
         padding-block-start: $input-top-padding;
         padding-block-end: $input-bottom-padding;
-        height: calc(var-get($theme, 'size') - 2px);
+        height: var-get($theme, 'size');
+        max-height: 100%;
         color: var-get($theme, 'filled-text-color');
 
         span {
             @include ellipsis();
+
             position: relative;
             display: inline-block;
             width: inherit;
@@ -1537,22 +1824,6 @@
         @if $variant == 'indigo' {
             font-size: rem(12px);
             line-height: rem(16px);
-        }
-    }
-
-    %form-group-clear-icon {
-        &:focus {
-            background-color: color($color: 'primary', $variant: 500);
-            color: contrast-color($color: 'primary', $variant: 600);
-
-            @if $variant == 'material' {
-                background-color: transparent;
-                color: color($color: 'secondary', $variant: 500);
-            }
-
-            @if $variant == 'bootstrap' {
-                color: contrast-color($color: 'primary', $variant: 600);
-            }
         }
     }
 
@@ -1570,12 +1841,6 @@
         &:autofill:active, {
             -webkit-transition-delay: 99999s !important;
             transition-delay: 99999s !important;
-        }
-    }
-
-    %edge-clear-icon-fix {
-        &::-ms-clear {
-            display: none;
         }
     }
 
@@ -1605,6 +1870,14 @@
         cursor: default;
 
         color: var-get($theme, 'disabled-text-color') !important;
+
+        &::placeholder {
+            color: var-get($theme, 'disabled-placeholder-color');
+        }
+    }
+
+    %form-group-file-input--disabled {
+        cursor: default;
 
         &::placeholder {
             color: var-get($theme, 'disabled-placeholder-color');
@@ -1800,10 +2073,13 @@
     }
 
     %form-group-helper {
+        --ig-caption-margin-top: #{$hint-spacing-block};
+        --ig-caption-margin-bottom: 0;
+
         color: var-get($theme, 'helper-text-color');
         position: relative;
-        display: flex;
-        padding-block-start: $hint-spacing-block;
+        display: grid;
+        grid-auto-rows: minmax($hint-min-size, auto);
         padding-inline: $hint-spacing-inline;
 
         justify-content: space-between;
@@ -1817,11 +2093,7 @@
         }
 
         &:empty {
-            @if $variant == 'fluent' {
-                padding: 0;
-            } @else {
-                display: none;
-            }
+            display: none;
         }
     }
 
@@ -1943,13 +2215,6 @@
             border-bottom-style: solid;
         }
     }
-
-    %indigo-upload-button {
-        [igxButton] {
-            min-height: 0;
-            height: calc(100% - #{rem(8px)});
-        }
-    }
     // INDIGO END
 
     // ==============================================
@@ -2045,98 +2310,79 @@
 
     %form-group-bundle--fluent {
         --min-width: #{sizable(rem(4px), rem(6px), rem(8px))};
+        --_fluent-input-border-size: #{rem(1px)};
 
         min-height: var-get($theme, 'size');
         padding: 0;
-        border: rem(1px) solid var-get($theme, 'border-color');
         background: var-get($theme, 'border-background');
         align-items: stretch;
-        overflow: hidden;
+        overflow: visible;
+        border-radius: var-get($theme, 'border-border-radius');
+        position: relative;
+        border: rem(1px) solid transparent;
 
-        @if $variant == 'fluent' {
-            border-radius: var-get($theme, 'border-border-radius');
-        }
-
-        // Those focus styles are needed since when we focus the button inside
-        // the file type input the class .igx-input-group--focused is not added but the input is focused.
-        &:focus,
-        &:focus-within {
-            %form-group-bundle-start {
-                margin-block-start: rem(-1px);
-                margin-inline-start: rem(-1px);
-            }
-
-            %form-group-bundle-end {
-                margin-block-start: rem(-1px);
-                margin-inline-end: rem(-1px);
-            }
-
-            %form-group-bundle-start:empty + %form-group-bundle-main,
-            %form-group-bundle-end:empty + %form-group-bundle-main {
-                margin-inline-start: rem(-1px);
-            }
-
-            %form-group-bundle-main {
-                margin-block-start: rem(-1px);
-            }
+        &::before {
+            content: '';
+            position: absolute;
+            width: calc(100% + var(--_fluent-input-border-size) * 2);
+            height: calc(100% + var(--_fluent-input-border-size) * 2);
+            pointer-events: none;
+            user-select: none;
+            inset: calc(var(--_fluent-input-border-size) * -1);
+            z-index: 1;
+            box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'border-color');
+            border-radius: inherit;
         }
     }
 
     %form-group-bundle--fluent--hover {
-        border-color: var-get($theme, 'hover-border-color');
+        &::before {
+            box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'hover-border-color');
+        }
     }
 
     %form-group-bundle--fluent--focus {
-        border-color: var-get($theme, 'focused-border-color');
-        border-width: rem(2px);
+        --_fluent-input-border-size: #{rem(2px)};
+
+        &::before {
+            box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'focused-border-color');
+        }
 
         &:hover {
-            border-color: var-get($theme, 'focused-border-color');
+            &::before {
+                box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'focused-border-color');
+            }
         }
     }
 
     %form-group-bundle-error--fluent,
     %form-group-bundle-error--fluent--hover,
     %form-group-bundle-error--fluent--focus {
-        border-color: var-get($theme, 'error-secondary-color');
+        &::before {
+            box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'error-secondary-color');
+        }
     }
 
     %form-group-bundle-success--fluent,
     %form-group-bundle-success--fluent--hover,
     %form-group-bundle-success--fluent--focus {
-        border-color: var-get($theme, 'success-secondary-color');
+        &::before {
+            box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'success-secondary-color');
+        }
     }
 
     %form-group-bundle--fluent--hover-disabled,
     %form-group-bundle--fluent-disabled {
-        border-color: var-get($theme, 'disabled-border-color');
         background: var-get($theme, 'border-disabled-background');
+
+        &::before {
+            box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'disabled-border-color');
+        }
     }
 
     %form-group-bundle-main--fluent {
         align-self: center;
         cursor: default;
-    }
-
-    @if $fluent-theme {
-        %form-group-bundle-start--fluent--focused {
-            margin-block-start: rem(-1px);
-            margin-inline-start: rem(-1px);
-        }
-
-        %form-group-bundle-end--fluent--focused {
-            margin-block-start: rem(-1px);
-            margin-inline-end: rem(-1px);
-        }
-
-        %form-group-bundle-start--fluent--focused:empty + %form-group-bundle-main--fluent--focused,
-        %form-group-bundle-end--fluent--focused:empty + %form-group-bundle-main--fluent--focused {
-            margin-inline-start: rem(-1px);
-        }
-
-        %form-group-bundle-main--fluent--focused {
-            margin-block-start: rem(-1px);
-        }
     }
 
     %form-group-bundle-textarea-start--fluent,
@@ -2153,6 +2399,10 @@
         padding-inline: rem(8px);
         margin: 0;
         border: none;
+    }
+
+    %fluent-file-input {
+        padding-inline: 0;
     }
 
     %indigo-textarea {
@@ -2180,6 +2430,8 @@
         color: var-get($theme, 'idle-secondary-color');
 
         @if $variant == 'fluent' {
+            --ig-subtitle-2-line-height: rem(16px);
+
             margin-block-end: rem(5px);
         } @else {
             margin-block-end: rem(4px);
@@ -2214,10 +2466,6 @@
 
     %fluent-label-focused {
         transform: translateY(0) scale(1);
-    }
-
-    %form-group-helper--textarea--fluent--focused {
-        margin-block-start: rem(-1px);
     }
 
     %fluent-placeholder-label {
@@ -2261,9 +2509,6 @@
         }
     }
 
-    %fluent-upload-button {
-        padding: 0;
-    }
     // FLUENT END
 
     // ==============================================
@@ -2295,6 +2540,39 @@
                     end-radius: 0;
                 };
             }
+        }
+
+        .igx-input-group__clear-icon + igx-suffix,
+        .igx-input-group__clear-icon + [igxPrefix] {
+            border-inline-start: rem(1px) solid var-get($theme, 'border-color');
+        }
+    }
+
+    %form-group-display--bootstrap-suffixed-focused {
+        .igx-input-group__clear-icon + igx-suffix,
+        .igx-input-group__clear-icon + [igxPrefix] {
+            border-color: var-get($theme, 'focused-border-color');
+        }
+    }
+
+    %form-group-display--bootstrap-suffixed-valid {
+        .igx-input-group__clear-icon + igx-suffix,
+        .igx-input-group__clear-icon + [igxPrefix] {
+            border-color: var-get($theme, 'success-secondary-color');
+        }
+    }
+
+    %form-group-display--bootstrap-suffixed-form-group-display--bootstrap-suffixed-warning {
+        .igx-input-group__clear-icon + igx-suffix,
+        .igx-input-group__clear-icon + [igxPrefix] {
+            border-color: var-get($theme, 'warning-secondary-color');
+        }
+    }
+
+    %form-group-display--bootstrap-suffixed-invalid {
+        .igx-input-group__clear-icon + igx-suffix,
+        .igx-input-group__clear-icon + [igxPrefix] {
+            border-color: var-get($theme, 'error-secondary-color');
         }
     }
 
@@ -2405,7 +2683,9 @@
     %bootstrap-input {
         height: auto;
         line-height: 1.5;
+        grid-area: 1 / 2;
         margin: 0;
+        z-index: 2;
         font-size: pad(
             map.get($bootstrap-font-size, 'compact'),
             map.get($bootstrap-font-size, 'cosy'),
@@ -2445,13 +2725,22 @@
             map.get($bootstrap-inline-padding, 'cosy'),
             map.get($bootstrap-inline-padding, 'comfortable')
         );
-        grid-area: 1 / 2 / auto / auto;
         border-radius: var-get($theme, 'box-border-radius');
-        z-index: 1;
+
     }
 
     %bootstrap-file-input {
         height: inherit;
+    }
+
+    %bootstrap-input-file {
+        grid-column: 2 / -2;
+        grid-row: 1 / -1;
+        height: var-get($theme, 'size');
+    }
+
+    %bootstrap-bundle-end {
+        grid-area: 1 / 5;
     }
 
     %bootstrap-input--focus {
@@ -2469,6 +2758,11 @@
                 box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
             }
         }
+    }
+
+    %bootstrap-input--warning {
+        border: rem(1px) solid var-get($theme, 'warning-secondary-color');
+        box-shadow: 0 0 0 rem(4px) color($color: 'warn', $variant: '500', $opacity: .38);
     }
 
     %bootstrap-input--error {
@@ -2501,6 +2795,11 @@
         box-shadow: none;
     }
 
+    %bootstrap-file-input--disabled {
+        border: rem(1px) solid var-get($theme, 'disabled-border-color');
+        box-shadow: none;
+    }
+
     %bootstrap-input--search {
         transform: translateY(0);
     }
@@ -2510,16 +2809,6 @@
         background: var-get($theme, 'border-disabled-background');
         border-color: var-get($theme, 'disabled-border-color');
         color: var-get($theme, 'disabled-text-color');
-    }
-
-    // Upload button for file type input
-    %bootstrap-upload-button {
-        padding: 0;
-
-        [igxButton] {
-            min-height: 0;
-            height: calc(100% - #{rem(8px)});
-        }
     }
 }
 
@@ -2544,9 +2833,7 @@
     }
 
     %form-group-helper {
-        @include type-style($helper-text) {
-            margin: 0;
-        }
+        @include type-style($helper-text);
     }
 
     %form-group-prefix,
