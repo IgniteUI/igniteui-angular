@@ -57,8 +57,9 @@ export class DefaultSortingStrategy implements ISortingStrategy {
 
         /**
          * Use Schwartizian transform on the data before sorting it so that the sorting value
-         * is not recomputed on every object compare which improves the number of comparisons from O(nlogn) to O(n).
-         * This on a very large dataset of 1 million records gives a significant performance boost.
+         * is not recomputed on every object compare which improves the number of comparisons from O(nlogn) to O(n)
+         * where n is the length of the datasource.
+         * This, on a very large dataset of 1 million records, gives a significant performance boost.
          */
         const resolver = valueResolver.bind(this);
         const preparedData = data.map(item => {
