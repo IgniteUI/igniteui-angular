@@ -82,11 +82,6 @@ export class IgxGridValidationService {
      and will look for control with a name of 'address' which returns undefined.
      */
     private getFormControlPath(path: string): (string)[] {
-        // // If the path contains dots, treat it as a literal key, not a nested path
-        // if (path.includes('.')) {
-        //     return [path];
-        // }
-
         return [path];
     }
 
