@@ -2,6 +2,34 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 20.1.0
+
+### New Features
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Introduced a new cell merging feature that allows you to configure and merge cells in a column based on same data or other custom condition, into a single cell.
+    
+     It can be enabled on the individual columns:
+
+    ```html
+            <igx-column field="field" [merge]="true"></igx-column>
+    ```
+    The merging can be configured on the grid level to apply either:
+    - `onSort` - only when the column is sorted.
+    - `always` - always, regardless of data operations.
+
+    ```html
+        <igx-grid [cellMergeMode]="'always'">
+        </igx-grid>
+    ```
+
+    The default `cellMergeMode` is `onSort`.
+
+    The functionality can be modified by setting a custom `mergeStrategy` on the grid, in case some other merge conditions or logic is needed for a custom scenario.
+
+    It's possible also to set a `mergeComparer` on the individual columns, in case some custom handling is needed for a particular data field.
+
+
 ## 20.0.0
 
 ### General
