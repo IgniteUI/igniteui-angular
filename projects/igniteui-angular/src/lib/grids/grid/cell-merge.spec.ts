@@ -1,13 +1,16 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { DefaultMergeStrategy, DefaultSortingStrategy, GridCellMergeMode, GridColumnDataType, GridType, IgxColumnComponent, IgxGridComponent, IgxPaginatorComponent, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular';
+import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrategy, GridCellMergeMode, GridColumnDataType, GridType, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent, IgxPaginatorComponent, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { hasClass } from '../../test-utils/helper-utils.spec';
 import { ColumnLayoutTestComponent } from './grid.multi-row-layout.spec';
+import { IgxHierarchicalGridTestBaseComponent } from '../hierarchical-grid/hierarchical-grid.spec';
+import { IgxHierarchicalRowComponent } from '../hierarchical-grid/hierarchical-row.component';
+import { IgxTreeGridSelectionComponent } from '../../test-utils/tree-grid-components.spec';
 
 describe('IgxGrid - Cell merging #grid', () => {
     let fix;
@@ -20,7 +23,8 @@ describe('IgxGrid - Cell merging #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule, DefaultCellMergeGridComponent, ColumnLayoutTestComponent
+                NoopAnimationsModule, DefaultCellMergeGridComponent, ColumnLayoutTestComponent,
+                IgxHierarchicalGridTestBaseComponent, IgxTreeGridSelectionComponent
             ]
         }).compileComponents();
     }));
@@ -677,6 +681,207 @@ describe('IgxGrid - Cell merging #grid', () => {
 
         });
 
+        describe('HierarchicalGrid', () => {
+
+            beforeEach(() => {
+                fix = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
+                fix.componentInstance.data = [
+                    {
+                        ID: 1, ChildLevels: 1,  ProductName: 'Product A' , Col1: 1,
+                        childData: [
+                            {
+                                ID: 1, ChildLevels: 2,  ProductName: 'Product A' , Col1: 1,
+                            },
+                            {
+                                ID: 2, ChildLevels: 2,  ProductName: 'Product A' , Col1: 1,
+                            },
+                            {
+                                ID: 3, ChildLevels: 2,  ProductName: 'Product B' , Col1: 1,
+                            },
+                            {
+                                ID: 4, ChildLevels: 2,  ProductName: 'Product A' , Col1: 1,
+                            }
+                        ]
+                    },
+                    {
+                        ID: 2, ChildLevels: 1,  ProductName: 'Product A' , Col1: 1, childData: [
+                            {
+                                ID: 1, ChildLevels: 2,  ProductName: 'Product A' , Col1: 1,
+                            },
+                            {
+                                ID: 2, ChildLevels: 2,  ProductName: 'Product A' , Col1: 1,
+                            },
+                            {
+                                ID: 3, ChildLevels: 2,  ProductName: 'Product A' , Col1: 1,
+                            },
+                            {
+                                ID: 4, ChildLevels: 2,  ProductName: 'Product A' , Col1: 1,
+                            }
+                        ]
+                    },
+                    {
+                        ID: 3, ChildLevels: 1,  ProductName: 'Product B' , Col1: 1
+                    },
+                    {
+                        ID: 4, ChildLevels: 1,  ProductName: 'Product B' , Col1: 1
+                    },
+                    {
+                        ID: 5, ChildLevels: 1,  ProductName: 'Product C' , Col1: 1
+                    },
+                    {
+                        ID: 6, ChildLevels: 1,  ProductName: 'Product B' , Col1: 1
+                    }
+                ];
+                fix.detectChanges();
+                grid = fix.componentInstance.hgrid;
+                // enable merging
+                grid.cellMergeMode = 'always';
+                const col = grid.getColumnByName('ProductName');
+                col.merge = true;
+                fix.detectChanges();
+            });
+
+            it('should allow configuring and merging cells on each level of hierarchy.', () => {
+
+                const col = grid.getColumnByName('ProductName');
+                // root grid should be merged
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'Product A', span: 2 },
+                    { value: 'Product B', span: 2 },
+                    { value: 'Product C', span: 1 },
+                    { value: 'Product B', span: 1 }
+                ]);
+
+                const ri = fix.componentInstance.rowIsland;
+                ri.cellMergeMode = 'always';
+                ri.getColumnByName('ProductName').merge = true;
+                fix.detectChanges();
+
+                // toggle row
+                const firstRow = grid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+                firstRow.toggle();
+                fix.detectChanges();
+
+                const childGrid = grid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
+                expect(childGrid).toBeDefined();
+
+                // merging enabled
+                GridFunctions.verifyColumnMergedState(childGrid, childGrid.getColumnByName('ProductName'), [
+                    { value: 'Product A', span: 2 },
+                    { value: 'Product B', span: 1 },
+                    { value: 'Product A', span: 1 }
+                ]);
+            });
+
+            it('should merge cells within their respective grids only.', () => {
+                const ri = fix.componentInstance.rowIsland;
+                ri.cellMergeMode = 'always';
+                ri.getColumnByName('ProductName').merge = true;
+                fix.detectChanges();
+
+                // toggle row 1
+                const firstRow = grid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+                firstRow.toggle();
+                fix.detectChanges();
+
+                // toggle row 2
+                const secondRow = grid.gridAPI.get_row_by_index(2) as IgxHierarchicalRowComponent;
+                secondRow.toggle();
+                fix.detectChanges();
+
+                const childGrid1 = grid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
+                expect(childGrid1).toBeDefined();
+
+                GridFunctions.verifyColumnMergedState(childGrid1, childGrid1.getColumnByName('ProductName'), [
+                    { value: 'Product A', span: 2 },
+                    { value: 'Product B', span: 1 },
+                    { value: 'Product A', span: 1 }
+                ]);
+
+                const childGrid2 = grid.gridAPI.getChildGrids(false)[1] as IgxHierarchicalGridComponent;
+                expect(childGrid2).toBeDefined();
+
+                GridFunctions.verifyColumnMergedState(childGrid2, childGrid2.getColumnByName('ProductName'), [
+                    { value: 'Product A', span: 4 }
+                ]);
+            });
+
+            it('should interrupt merge sequence if row is expanded and a child grid is shown between same value cells.', () => {
+                const col = grid.getColumnByName('ProductName');
+                // root grid should be merged
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'Product A', span: 2 },
+                    { value: 'Product B', span: 2 },
+                    { value: 'Product C', span: 1 },
+                    { value: 'Product B', span: 1 }
+                ]);
+
+                // toggle row 1
+                const firstRow = grid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+                firstRow.toggle();
+                fix.detectChanges();
+
+                // first merge sequence interrupted due to expanded row
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'Product A', span: 1 },
+                    { value: 'Product A', span: 1 },
+                    { value: 'Product B', span: 2 },
+                    { value: 'Product C', span: 1 },
+                    { value: 'Product B', span: 1 }
+                ]);
+            });
+
+        });
+
+        describe('TreeGrid', () => {
+
+            beforeEach(() => {
+                fix = TestBed.createComponent(IgxTreeGridSelectionComponent);
+                fix.detectChanges();
+                grid = fix.componentInstance.treeGrid;
+                // enable merging
+                grid.cellMergeMode = 'always';
+                const col = grid.getColumnByName('OnPTO');
+                col.merge = true;
+                fix.detectChanges();
+            });
+
+            it('should merge all cells with same values, even if on different levels by default.', () => {
+                const col = grid.getColumnByName('OnPTO');
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: false, span: 2 },
+                    { value: true, span: 1 },
+                    { value: false, span: 1 },
+                    { value: true, span: 1 },
+                    { value: false, span: 2 },
+                    { value: true, span: 1 },
+                    { value: false, span: 3 },
+                    { value: true, span: 1 }
+                ]);
+            });
+
+            it('should allow setting the ByLevelTreeGridMergeStrategy as the mergeStrategy to merge only data on the same hierarchy level.', () => {
+                grid.mergeStrategy = new ByLevelTreeGridMergeStrategy();
+                fix.detectChanges();
+                grid.triggerPipes();
+                fix.detectChanges();
+                const col = grid.getColumnByName('OnPTO');
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: false, span: 1 },
+                    { value: false, span: 1 },
+                    { value: true, span: 1 },
+                    { value: false, span: 1 },
+                    { value: true, span: 1 },
+                    { value: false, span: 1 },
+                    { value: false, span: 1 },
+                    { value: true, span: 1 },
+                    { value: false, span: 1 },
+                    { value: false, span: 1 },
+                    { value: false, span: 1 },
+                    { value: true, span: 1 }
+                ]);
+            });
+        });
     });
 });
 
