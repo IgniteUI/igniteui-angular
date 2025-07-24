@@ -880,7 +880,10 @@
                 width: 100%;
                 max-width: rem(200px);
                 min-width: rem(140px);
-                border: rem(1px) solid color($color: 'gray', $variant: 300);
+
+                @if $variant != 'fluent' {
+                    border: rem(1px) solid color($color: 'gray', $variant: 300);
+                }
 
                 --size: calc(#{$filtering-row-height} - #{rem(8px)});
 
@@ -892,9 +895,8 @@
                     background: transparent;
                     border-radius: 0;
 
-                    &:hover,
-                    &:focus,
-                    &:focus-within {
+                    /* stylelint-disable-next-line */
+                    &:hover {
                         background: transparent;
                     }
                 }
@@ -918,9 +920,8 @@
                 .igx-input-group__input {
                     border: 0;
 
-                    &:hover,
-                    &:focus,
-                    &:focus-within {
+                    /* stylelint-disable-next-line */
+                    &:hover {
                         border: 0;
                         box-shadow: none;
                     }
@@ -930,28 +931,50 @@
                     display: none;
                 }
 
-                .igx-input-group__bundle:focus,
-                .igx-input-group__bundle:focus-within {
-                    .igx-input-group__bundle-main,
-                    .igx-input-group__bundle-start,
-                    .igx-input-group__bundle-end {
-                        margin: 0 !important;
-                    }
-
-                    border-width: rem(1px);
-                }
-
                 .igx-input-group__bundle-main {
                     padding-inline-start: 0;
                 }
 
                 color: var-get($theme, 'filtering-row-text-color');
 
-                &:hover,
-                &:focus,
-                &:focus-within {
+                &:hover{
                     color: var-get($theme, 'filtering-row-text-color');
                     border-color: color($color: 'primary', $variant: 500);
+                }
+            }
+
+            .igx-input-group--focused {
+                @if $variant != 'fluent' {
+                    border-color: color($color: 'primary', $variant: 500);
+                    border-width: rem(1px);
+                }
+
+                color: var-get($theme, 'filtering-row-text-color');
+
+                .igx-input-group__bundle,
+                .igx-input-group__bundle-start,
+                .igx-input-group__bundle-end,
+                .igx-input-group__input {
+                    border: 0 !important;
+
+                    @if $variant != 'fluent' {
+                        box-shadow: none !important;
+                    }
+                }
+
+                .igx-input-group__bundle-main,
+                .igx-input-group__bundle-start,
+                .igx-input-group__bundle-end {
+                    margin: 0 !important;
+                }
+
+                .igx-input-group__bundle,
+                .igx-input-group__bundle-start,
+                .igx-input-group__bundle-end,
+                igx-prefix,
+                igx-suffix {
+                    background: transparent !important;
+                    border-radius: 0;
                 }
             }
 
