@@ -184,7 +184,7 @@ import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { isTree, recreateTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 import { getUUID } from './common/random';
-import { getI18nManager } from 'igniteui-i18n-core';
+import { getCurrentI18n, getI18nManager, ResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 interface IMatchInfoCache {
     row: any;
@@ -3498,7 +3498,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         protected platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>,
     ) {
-        this.locale = this.locale || this.localeId;
+        this.locale = this.locale || getCurrentI18n() || this.localeId;
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
         this.cdr.detach();
@@ -3506,7 +3506,8 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.selectedRowsChange.emit(args);
         });
         IgcTrialWatermark.register();
-        getI18nManager().onResourceChange(() => {
+        getI18nManager().onResourceChange((args: ResourceChangeEventArgs) => {
+            this.locale = args.newLocale;
             this._resourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false);
         });
     }
