@@ -9,7 +9,8 @@ import {
     IgxHierarchicalGridRowSelectionComponent,
     IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent,
     IgxHierarchicalGridCustomSelectorsComponent,
-    IgxHierarchicalGridRowSelectionNoTransactionsComponent
+    IgxHierarchicalGridRowSelectionNoTransactionsComponent,
+    IgxHierGridExternalAdvancedFilteringComponent
 } from '../../test-utils/hierarchical-grid-components.spec';
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode, Size } from '../common/enums';
@@ -33,7 +34,8 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 IgxHierarchicalGridRowSelectionComponent,
                 IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent,
                 IgxHierarchicalGridCustomSelectorsComponent,
-                IgxHierarchicalGridRowSelectionNoTransactionsComponent
+                IgxHierarchicalGridRowSelectionNoTransactionsComponent,
+                IgxHierGridExternalAdvancedFilteringComponent
             ]
         }).compileComponents();
     }))
@@ -474,6 +476,30 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 0, 0, 2, 2);
         }));
 
+        it('Should not trigger range selection when CellTemplate is used and the user clicks on element inside it', () => {
+            fix = TestBed.createComponent(IgxHierGridExternalAdvancedFilteringComponent);
+            fix.detectChanges();
+
+            const component = fix.componentInstance;
+            hierarchicalGrid = fix.componentInstance.hgrid;
+
+            expect(component.customCell).toBeDefined();
+
+            const column = hierarchicalGrid.getColumnByName('ID');
+            column.bodyTemplate = component.customCell;
+            fix.detectChanges();
+
+            const selectionChangeSpy = spyOn<any>(hierarchicalGrid.rangeSelected, 'emit').and.callThrough();
+            const cell = hierarchicalGrid.gridAPI.get_cell_by_index(0, 'ID');
+            const cellElement = cell.nativeElement;
+            const span = cellElement.querySelector('span');
+
+            expect(span).not.toBeNull();
+
+            UIInteractions.simulateClickAndSelectEvent(span);
+            fix.detectChanges();
+            expect(selectionChangeSpy).not.toHaveBeenCalled();
+        });
     });
 
     describe('Row Selection', () => {
