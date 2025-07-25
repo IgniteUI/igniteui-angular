@@ -1185,14 +1185,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @hidden
      * @internal
      */
-    public getTransformedFieldName(field: string): string {
-        return field?.replace(/\./g, '_');
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
     private _updateCRUDStatus(event?: Event) {
         if (this.editMode) {
             return;
