@@ -1,4 +1,4 @@
-import { formatDate as _formatDate, getLocaleCurrencyCode, isPlatformBrowser } from '@angular/common';
+import { formatDate as _formatDate, getLocaleCurrencyCode, getLocaleFirstDayOfWeek as ngGetLocaleFirstDayOfWeek, isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, InjectionToken, PLATFORM_ID, inject } from '@angular/core';
 import { mergeWith } from 'lodash-es';
 import { NEVER, Observable } from 'rxjs';
@@ -679,6 +679,13 @@ export function getCurrencyCode(locale: string, overrideCode?: string) {
 
 export function getCurrencySymbol(currencyCode: string, currencyDisplay?: keyof Intl.NumberFormatOptionsCurrencyDisplayRegistry,locale?: string) {
     return getI18nManager().getCurrencySymbol(currencyCode, currencyDisplay, locale);
+}
+
+export function getLocaleFirstDayOfWeek(locale?: string) {
+    try {
+        return ngGetLocaleFirstDayOfWeek(locale);
+    } catch {}
+    return getI18nManager().getFirstDayOfWeek(locale);
 }
 
 /** Converts pixel values to their rem counterparts for a base value */

@@ -3,15 +3,14 @@ import { WEEKDAYS, IFormattingOptions, IFormattingViews, IViewDateChangeEventArg
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
 import { noop, Subject } from 'rxjs';
-import { isDate, isEqual, PlatformUtil } from '../core/utils';
+import { getLocaleFirstDayOfWeek, isDate, isEqual, PlatformUtil } from '../core/utils';
 import { CalendarResourceStringsEN, ICalendarResourceStrings } from '../core/i18n/calendar-resources';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { getLocaleFirstDayOfWeek } from "@angular/common";
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { KeyboardNavigationService } from './calendar.services';
 import { getYearRange, isDateInRanges } from './common/helpers';
 import { CalendarDay } from './common/model';
-import { getI18nManager } from 'igniteui-i18n-core';
+import { getCurrentI18n, getI18nManager, ResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 /** @hidden @internal */
 @Directive({
@@ -289,13 +288,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     public set locale(value: string) {
         this._locale = value;
-
-        // if value is not a valid BCP 47 tag, set it back to _localeId
-        try {
-            getLocaleFirstDayOfWeek(this._locale);
-        } catch (e) {
-            this._locale = this._localeId;
-        }
 
         // changing locale runtime needs to update the `weekStart` too, if `weekStart` is not explicitly set
         if (!this.weekStart) {
@@ -657,11 +649,12 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         protected keyboardNavigation?: KeyboardNavigationService,
         protected cdr?: ChangeDetectorRef,
     ) {
-        this.locale = _localeId;
+        this.locale = getCurrentI18n() || _localeId;
         this.viewDate = this.viewDate ? this.viewDate : new Date();
         this.initFormatters();
 
-        getI18nManager().onResourceChange(() => {
+        getI18nManager().onResourceChange((args: ResourceChangeEventArgs) => {
+            this.locale = args.newLocale;
             this._resourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false);
         });
     }
