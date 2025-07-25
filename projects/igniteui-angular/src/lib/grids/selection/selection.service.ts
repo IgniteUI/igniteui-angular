@@ -857,7 +857,10 @@ export class IgxGridSelectionService {
         this.pointerEventInGridBody = false;
         this.grid.document.body.removeEventListener('pointerup', this.pointerOriginHandler);
 
-        if (!event.target.closest('igx-grid-cell') && !event.target.closest('igx-hierarchical-grid-cell') && !event.target.closest('igx-tree-grid-cell')) {
+        const gridCellSelectors = ['igx-grid-cell', 'igx-hierarchical-grid-cell', 'igx-tree-grid-cell'];
+        const isInsideGridCell = gridCellSelectors.some(selector => event.target.closest(selector));
+
+        if (!isInsideGridCell) {
             this.pointerUp(this._lastSelectedNode, this.grid.rangeSelected, true);
         }
     };
