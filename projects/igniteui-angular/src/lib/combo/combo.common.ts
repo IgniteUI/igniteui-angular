@@ -1300,6 +1300,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         this.manageRequiredAsterisk();
     };
 
+    /** @hidden @internal */
     protected externalValidate(): IgxInputState {
         return this._valid;
     }
