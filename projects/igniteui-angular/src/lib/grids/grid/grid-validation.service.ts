@@ -59,10 +59,9 @@ export class IgxGridValidationService {
     */
     private addFormControl(formGroup: FormGroup, data: any, column: ColumnType) {
         const value = resolveNestedPath(data || {}, columnFieldPath(column.field));
-        const field = this.getFieldKey(column.field);
         const control = new FormControl(value, { updateOn: this.grid.validationTrigger });
         control.addValidators(column.validators);
-        formGroup.addControl(field, control);
+        formGroup.addControl(column.field, control);
         control.setValue(value);
     }
 
@@ -73,6 +72,17 @@ export class IgxGridValidationService {
     private getFieldKey(path: string) {
         const parts = path?.split('.') ?? [];
         return parts.join('_');
+    }
+    
+    /**
+     * @hidden
+     * @internal
+     Wraps the provided path into an array. This way FormGroup.get will return proper result.
+     Otherwise, if the path is a string (e.g. 'address.street'), FormGroup.get will treat it as there is a nested structure
+     and will look for control with a name of 'address' which returns undefined.
+     */
+    private getFormControlPath(path: string): (string)[] {
+        return [path];
     }
 
     /**
@@ -89,8 +99,8 @@ export class IgxGridValidationService {
      */
     public getFormControl(rowId: any, columnKey: string) {
         const formControl = this.getFormGroup(rowId);
-        const field = this.getFieldKey(columnKey);
-        return formControl?.get(field);
+        const path = this.getFormControlPath(columnKey);
+        return formControl?.get(path);
     }
 
     /**
@@ -102,6 +112,22 @@ export class IgxGridValidationService {
     }
 
     /**
+     * Checks the validity of the native ngControl
+     */
+    public isFieldInvalid(formGroup: FormGroup, fieldName: string): boolean {
+        const path = this.getFormControlPath(fieldName);
+        return formGroup.get(path)?.invalid && formGroup.get(path)?.touched;
+    }
+
+    /**
+     * Checks the validity of the native ngControl after edit
+     */
+    public isFieldValidAfterEdit(formGroup: FormGroup, fieldName: string): boolean {
+        const path = this.getFormControlPath(fieldName);
+        return !formGroup.get(path)?.invalid && formGroup.get(path)?.dirty;
+    }
+
+    /**
      * @hidden
      * @internal
      */
@@ -110,10 +136,10 @@ export class IgxGridValidationService {
         this._validityStates.forEach((formGroup, key) => {
             const state: IFieldValidationState[] = [];
             for (const col of this.grid.columns) {
-                const colKey = this.getFieldKey(col.field);
-                const control = formGroup.get(colKey);
+                const path = this.getFormControlPath(col.field);
+                const control = formGroup.get(path);
                 if (control) {
-                    state.push({ field: colKey, status: control.status as ValidationStatus, errors: control.errors })
+                    state.push({ field: col.field, status: control.status as ValidationStatus, errors: control.errors })
                 }
             }
             states.push({ key: key, status: formGroup.status as ValidationStatus, fields: state, errors: formGroup.errors });
@@ -138,8 +164,8 @@ export class IgxGridValidationService {
         const keys = Object.keys(rowData);
         const rowGroup = this.getFormGroup(rowId);
         for (const key of keys) {
-            const colKey = this.getFieldKey(key);
-            const control = rowGroup?.get(colKey);
+            const path = this.getFormControlPath(key);
+            const control = rowGroup?.get(path);
             if (control && control.value !== rowData[key]) {
                 control.setValue(rowData[key], { emitEvent: false });
             }
@@ -174,8 +200,8 @@ export class IgxGridValidationService {
         rowGroup.markAsTouched();
         const fields = field ? [field] : this.grid.columns.map(x => x.field);
         for (const currField of fields) {
-            const colKey = this.getFieldKey(currField);
-            rowGroup?.get(colKey)?.markAsTouched();
+            const path = this.getFormControlPath(currField);
+            rowGroup?.get(path)?.markAsTouched();
         }
     }
 
