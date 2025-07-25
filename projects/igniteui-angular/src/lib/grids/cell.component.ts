@@ -19,14 +19,14 @@
     AfterViewInit,
     booleanAttribute
 } from '@angular/core';
-import { NgClass, NgTemplateOutlet, getLocaleCurrencyCode, getCurrencySymbol } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { first, takeUntil, takeWhile } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { formatCurrency, formatDate, formatPercent, PlatformUtil } from '../core/utils';
+import { formatCurrency, formatDate, formatPercent, getCurrencyCode, getCurrencySymbol, PlatformUtil } from '../core/utils';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { HammerGesturesManager } from '../core/touch';
 import { GridSelectionMode } from './common/enums';
@@ -781,13 +781,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /** @hidden @internal */
     public get currencyCode(): string {
-        return this.column.pipeArgs.currencyCode ?
-            this.column.pipeArgs.currencyCode : getLocaleCurrencyCode(this.grid.locale);
+        return getCurrencyCode(this.grid.locale, this.column.pipeArgs.currencyCode);
     }
 
     /** @hidden @internal */
     public get currencyCodeSymbol(): string {
-        return getCurrencySymbol(this.currencyCode, 'wide', this.grid.locale);
+        return getCurrencySymbol(this.currencyCode, 'symbol', this.grid.locale);
     }
 
     protected _lastSearchInfo: ISearchInfo;

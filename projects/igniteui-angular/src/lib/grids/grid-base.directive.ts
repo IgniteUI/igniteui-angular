@@ -1,4 +1,3 @@
-import { getLocaleNumberFormat, NumberFormatStyle } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -2885,9 +2884,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this._currencyPositionLeft !== undefined) {
             return this._currencyPositionLeft;
         }
-        const format = getLocaleNumberFormat(this.locale, NumberFormatStyle.Currency);
-        const formatParts = format.split(',');
-        const i = formatParts.indexOf(formatParts.find(c => c.includes('¤')));
+        const i = getI18nManager().getCurrencyPosition(this.locale);
         return this._currencyPositionLeft = i < 1;
     }
 

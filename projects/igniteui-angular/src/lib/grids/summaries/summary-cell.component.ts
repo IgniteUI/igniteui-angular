@@ -4,10 +4,10 @@ import {
     IgxSummaryResult
 } from './grid-summary';
 import { GridColumnDataType } from '../../data-operations/data-util';
-import { getLocaleCurrencyCode, getLocaleCurrencySymbol, NgTemplateOutlet } from '@angular/common';
+import { getLocaleCurrencySymbol, NgTemplateOutlet } from '@angular/common';
 import { ISelectionNode } from '../common/types';
 import { ColumnType } from '../common/grid.interface';
-import { formatCurrency, formatDate, formatNumber, formatPercent, trackByIdentity } from '../../core/utils';
+import { formatCurrency, formatDate, formatNumber, formatPercent, getCurrencyCode, trackByIdentity } from '../../core/utils';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -103,8 +103,7 @@ export class IgxSummaryCellComponent {
      * @hidden @internal
      */
     public get currencyCode(): string {
-        return this.column.pipeArgs.currencyCode ?
-            this.column.pipeArgs.currencyCode : getLocaleCurrencyCode(this.grid.locale);
+        return getCurrencyCode(this.grid.locale, this.column.pipeArgs.currencyCode);
     }
 
     /**

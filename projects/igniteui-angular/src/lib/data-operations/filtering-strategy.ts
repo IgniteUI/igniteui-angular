@@ -1,10 +1,9 @@
 import { FilteringLogic, type IFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, type IFilteringExpressionsTree } from './filtering-expressions-tree';
-import { resolveNestedPath, parseDate, formatDate, formatCurrency, columnFieldPath, formatNumber, formatPercent } from '../core/utils';
+import { resolveNestedPath, parseDate, formatDate, formatCurrency, columnFieldPath, formatNumber, formatPercent, getCurrencyCode } from '../core/utils';
 import type { ColumnType, EntityType, GridType } from '../grids/common/grid.interface';
 import { GridColumnDataType } from './data-util';
 import { SortingDirection } from './sorting-strategy';
-import { getLocaleCurrencyCode } from '@angular/common';
 import type { IFilteringState } from './filtering-state.interface';
 import { isTree } from './expressions-tree-util';
 import type { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarchical-grid.component';
@@ -169,8 +168,9 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy {
             case GridColumnDataType.DateTime:
             case GridColumnDataType.Time:
                 return formatDate(value, format, locale, timezone);
-            case GridColumnDataType.Currency:
-                return formatCurrency(value, locale, display, currencyCode || getLocaleCurrencyCode(locale), digitsInfo);
+            case GridColumnDataType.Currency: {
+                const currencyCodeFinal = getCurrencyCode(locale, currencyCode);
+                return formatCurrency(value, locale, display, currencyCodeFinal, digitsInfo); }
             case GridColumnDataType.Number:
                 return formatNumber(value, locale, digitsInfo);
             case GridColumnDataType.Percent:

@@ -11,7 +11,7 @@ import {
     OnDestroy,
     Inject
 } from '@angular/core';
-import { NgTemplateOutlet,getLocaleCurrencyCode } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -28,6 +28,7 @@ import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxBadgeComponent } from '../../badge/badge.component';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxColumnFormatterPipe, IgxCurrencyFormatterPipe, IgxDateFormatterPipe, IgxNumberFormatterPipe, IgxPercentFormatterPipe } from '../common/pipes';
+import { getCurrencyCode } from '../../core/utils';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -139,8 +140,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
 
     /** @hidden @internal */
     public get currencyCode(): string {
-        return this.groupRow.column.pipeArgs.currencyCode ?
-            this.groupRow.column.pipeArgs.currencyCode : getLocaleCurrencyCode(this.grid.locale);
+        return getCurrencyCode(this.grid.locale, this.groupRow.column.pipeArgs.currencyCode);
     }
 
     constructor(

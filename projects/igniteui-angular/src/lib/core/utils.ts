@@ -1,4 +1,4 @@
-import { formatDate as _formatDate, isPlatformBrowser } from '@angular/common';
+import { formatDate as _formatDate, getLocaleCurrencyCode, isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, InjectionToken, PLATFORM_ID, inject } from '@angular/core';
 import { mergeWith } from 'lodash-es';
 import { NEVER, Observable } from 'rxjs';
@@ -584,7 +584,7 @@ export function formatDate(value: Date | string | number | null | undefined, for
     if (value === null || value === undefined || value === '') {
         return '';
     }
-    if (typeof value === "string") {
+    if (typeof value === "string" || typeof value === "number") {
         value = new Date(value);
     }
     let dateStyle = undefined, timeStyle = undefined;
@@ -593,10 +593,10 @@ export function formatDate(value: Date | string | number | null | undefined, for
         timeStyle = format;
     } else if (format.includes('Date')) {
         dateStyle = format.replace('Date', '');
-    } else  if (format.includes('Time')) {
+    } else if (format.includes('Time')) {
         dateStyle = format.replace('Time', '');
     } else {
-        // Match with Angular custom formatting?
+        return getI18nManager().formatDateCustomFormat(value, locale, format);
     }
     const options: Intl.DateTimeFormatOptions = {
         dateStyle,
@@ -661,6 +661,24 @@ export function formatPercent(value: number | string | null | undefined, locale?
 
 export function formatCurrency(value: number | string | null | undefined, locale?: string, display?: 'code' | 'symbol' | 'symbol-narrow' | string, currencyCode?: string, digitsInfo?: string): string | null {
     return formatNumberGeneric(value, "currency", locale, digitsInfo, currencyCode, display);
+}
+
+export function getCurrencyCode(locale: string, overrideCode?: string) {
+    let currencyCode = 'USD';
+    if (overrideCode) {
+        return overrideCode;
+    } else {
+        try {
+            currencyCode = getLocaleCurrencyCode(locale)
+        } catch {
+            // If not available the user needs to define it.
+        }
+    }
+    return currencyCode;
+}
+
+export function getCurrencySymbol(currencyCode: string, currencyDisplay?: keyof Intl.NumberFormatOptionsCurrencyDisplayRegistry,locale?: string) {
+    return getI18nManager().getCurrencySymbol(currencyCode, currencyDisplay, locale);
 }
 
 /** Converts pixel values to their rem counterparts for a base value */
