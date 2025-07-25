@@ -64,15 +64,6 @@ export class IgxGridValidationService {
         formGroup.addControl(column.field, control);
         control.setValue(value);
     }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    private getFieldKey(path: string) {
-        const parts = path?.split('.') ?? [];
-        return parts.join('_');
-    }
     
     /**
      * @hidden
