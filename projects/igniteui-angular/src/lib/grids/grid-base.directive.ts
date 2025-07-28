@@ -8145,6 +8145,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                     }
             }
             this._mergedDataInView = data;
+            this.notifyChanges();
         }
     }
 }
