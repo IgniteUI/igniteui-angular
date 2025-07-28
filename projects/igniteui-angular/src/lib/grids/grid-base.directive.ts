@@ -3861,7 +3861,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
             this.evaluateLoadingState();
             this.updateMergedData();
-            this.cdr.detectChanges();
         });
 
         this.verticalScrollContainer.scrollbarVisibilityChanged.pipe(filter(() => !this._init), destructor).subscribe(() => {
