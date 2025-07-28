@@ -1,0 +1,72 @@
+@use '../../base' as *;
+@use 'sass:string';
+
+/// @access private
+@mixin component {
+    @include b(igx-file-input) {
+        $this: bem--selector-to-string(&);
+
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: (igx-input-group)
+        );
+
+        @include e(file-names) {
+            @extend %file-names !optional;
+        }
+
+        @include e(upload-button-wrapper) {
+            @extend %upload-button-wrapper !optional;
+        }
+
+        @include e(upload-button) {
+            @extend %upload-button !optional;
+        }
+
+        @include e(clear-icon) {
+            @extend %clear-icon !optional;
+        }
+
+        @include m(filled) {
+            @include e(file-names) {
+                @extend %file-names--filled !optional;
+            }
+
+            @include e(upload-button-wrapper) {
+                @extend %upload-button-wrapper--filled !optional;
+            }
+
+            @include e(upload-button) {
+                @extend %upload-button--filled !optional;
+            }
+        }
+
+        @include m(focused) {
+            @include e(file-names) {
+                @extend %file-names--focused !optional;
+            }
+
+            @include e(upload-button-wrapper) {
+                @extend %upload-button-wrapper--focused !optional;
+            }
+
+            @include e(upload-button) {
+                @extend %upload-button--focused !optional;
+            }
+        }
+
+        @include m(disabled) {
+            @include e(file-names) {
+                @extend %file-names--disabled !optional;
+            }
+
+            @include e(upload-button-wrapper) {
+                @extend %upload-button-wrapper--disabled !optional;
+            }
+
+            @include e(upload-button) {
+                @extend %upload-button--disabled !optional;
+            }
+        }
+    }
+}
