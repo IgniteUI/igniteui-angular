@@ -628,7 +628,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         if (mergeMeta && rowCount > 1) {
             const isPinned = this.pinned && !this.disabled;
             const indexInData = this.grid.isRowPinningToTop && !isPinned ? this.index - this.grid.pinnedRecordsCount : this.index;
-            const range = this.grid.verticalScrollContainer.igxForOf.slice(indexInData, indexInData + rowCount);
+            const range = isPinned ? this.grid.pinnedDataView.slice(indexInData, indexInData + rowCount) : this.grid.verticalScrollContainer.igxForOf.slice(indexInData, indexInData + rowCount);
             const inRange = range.filter(x => this.selectionService.isRowSelected(this.grid.primaryKey ? (x.recordRef || x)[this.grid.primaryKey] : (x.recordRef || x))).length > 0;
             return inRange;
         }
