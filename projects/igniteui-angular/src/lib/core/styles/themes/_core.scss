@@ -80,6 +80,7 @@
 @use '../components/time-picker/time-picker-component' as time-picker;
 @use '../components/tree/tree-component' as tree;
 @use '../components/watermark/watermark-component' as watermark;
+@use '../components/input/file-input-component' as file-input;
 @use '../print';
 
 /// @param {boolean} $print-layout [true] - Activates the printing styles of the components.
@@ -121,6 +122,12 @@
     @property --_progress-fraction {
         syntax: '<integer>';
         initial-value: 0;
+        inherits: true;
+    }
+
+    @property --vhelper-scollbar-size {
+        syntax: '<length>';
+        initial-value: 16px;
         inherits: true;
     }
 
@@ -190,6 +197,7 @@
     @include time-picker.component();
     @include tree.component();
     @include watermark.component();
+    @include file-input.component();
 
     // Build the component dependency-tree
     @include base.dependecy-tree(base.$components);

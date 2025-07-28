@@ -1,91 +1,5 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-////
-
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Color} $search-separator-border-color [null] - The combo search box separator color.
-/// @param {Color} $empty-list-placeholder-color [null] - The combo placeholder text color.
-/// @param {Color} $empty-list-background [null] - The combo list background color.
-/// @param {Color} $toggle-button-background [null] - The combo toggle button background color.
-/// @param {Color} $toggle-button-background-focus [null] - The combo toggle button background color when the combo is focused in material box variant.
-/// @param {Color} $toggle-button-background-focus--border [null] - The combo toggle button background color when the combo is focused in material border variant.
-/// @param {Color} $toggle-button-background-disabled [null] - The combo toggle button background color when the combo is disabled.
-/// @param {Color} $toggle-button-foreground [null] - The combo toggle button foreground color.
-/// @param {Color} $toggle-button-foreground-focus [null] - The combo toggle button foreground color when the combo is focused.
-/// @param {Color} $toggle-button-foreground-disabled [null] - The combo toggle button foreground color when the combo is disabled.
-/// @param {Color} $toggle-button-foreground-filled [null] - The combo toggle button foreground color when the combo is filled.
-/// @param {Color} $clear-button-background [null] - The combo clear button background color.
-/// @param {Color} $clear-button-background-focus [null] - The combo clear button background color when the combo is focused.
-/// @param {Color} $clear-button-foreground [null] - The combo clear button foreground color.
-/// @param {Color} $clear-button-foreground-focus [null] - The combo clear button foreground color when the combo is focused.
-/// @requires $light-material-schema
-/// @example scss Change the combo empty list background
-///   $my-combo-theme: igx-checkbox-theme($empty-list-background);
-///   // Pass the theme to the css-vars mixin
-///   @include css-vars($my-combo-theme);
-@function combo-theme(
-    $schema: $light-material-schema,
-    $search-separator-border-color: null,
-    $empty-list-placeholder-color: null,
-    $empty-list-background: null,
-    $toggle-button-background: null,
-    $toggle-button-background-focus: null,
-    $toggle-button-background-disabled: null,
-    $toggle-button-foreground: null,
-    $toggle-button-foreground-focus: null,
-    $toggle-button-foreground-disabled: null,
-    $toggle-button-background-focus--border: null,
-    $clear-button-background: null,
-    $clear-button-background-focus: null,
-    $clear-button-foreground: null,
-    $clear-button-foreground-focus: null,
-    $toggle-button-foreground-filled: null,
-) {
-    $name: 'igx-combo';
-    $selector: 'igx-combo, igx-simple-combo';
-
-    $combo-schema: ();
-
-    @if map.has-key($schema, 'combo') {
-        $combo-schema: map.get($schema, 'combo');
-    } @else {
-        $combo-schema: $schema;
-    }
-
-    $theme: digest-schema($combo-schema);
-    $meta: map.get($theme, '_meta');
-
-    @return extend($theme, (
-        name: $name,
-        selector: $selector,
-        search-separator-border-color: $search-separator-border-color,
-        empty-list-placeholder-color: $empty-list-placeholder-color,
-        empty-list-background: $empty-list-background,
-        toggle-button-background: $toggle-button-background,
-        toggle-button-background-focus: $toggle-button-background-focus,
-        toggle-button-background-disabled: $toggle-button-background-disabled,
-        toggle-button-foreground: $toggle-button-foreground,
-        toggle-button-foreground-focus: $toggle-button-foreground-focus,
-        toggle-button-foreground-disabled: $toggle-button-foreground-disabled,
-        toggle-button-foreground-filled: $toggle-button-foreground-filled,
-        toggle-button-background-focus--border: $toggle-button-background-focus--border,
-        clear-button-background: $clear-button-background,
-        clear-button-background-focus: $clear-button-background-focus,
-        clear-button-foreground: $clear-button-foreground,
-        clear-button-foreground-focus: $clear-button-foreground-focus,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
-    ));
-}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
@@ -93,7 +7,7 @@
 @mixin combo($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     $search-input-inline-padding: map.get((
         'material': pad-inline(rem(4px), rem(8px), rem(16px)),
@@ -165,18 +79,15 @@
     %igx-combo__case-icon,
     %igx-combo__case-icon--active {
         line-height: 0;
-
-        igx-icon {
-            --size: rem(18px);
-        }
     }
 
     // The wrapping element here is needed
     // in order to override the !important rule of .igx-icon--inactive.
     %igx-combo__case-icon {
         igx-icon {
-            // Important is needed since the .igx-icon--inactive has !important
-            color: color($color: 'gray', $variant: 600) !important;
+            --igx-icon-disabled-color: var(--ig-gray-600);
+
+            opacity: 1;
         }
     }
 
@@ -244,6 +155,13 @@
         }
     }
 
+    @if $variant == 'fluent' or $variant == 'bootstrap' {
+        %igx-combo__search {
+            --igx-input-group-input-suffix-background: transparent;
+            --igx-input-group-input-suffix-background--focused: transparent;
+        }
+    }
+
     .igx-input-group {
         %igx-combo__toggle-button {
             background: var-get($theme, 'toggle-button-background');
@@ -259,17 +177,32 @@
                 padding: 0;
             }
         }
+
+        &:not(.igx-input-group--disabled){
+          %igx-combo__clear-button {
+                color: var-get($theme, 'clear-button-foreground');
+                background: var-get($theme, 'clear-button-background');
+            }
+        }
     }
 
     %form-group-bundle:not(%form-group-bundle--disabled):focus-within {
         %igx-combo__toggle-button {
             color: var-get($theme, 'toggle-button-foreground-focus');
             background: var-get($theme, 'toggle-button-background-focus');
+
+            &:focus {
+                color: color($color: 'secondary');
+            }
         }
 
         %igx-combo__clear-button {
             color: var-get($theme, 'clear-button-foreground-focus');
             background: var-get($theme, 'clear-button-background-focus');
+
+            &:focus {
+                color: color($color: 'secondary');
+            }
         }
     }
 

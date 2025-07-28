@@ -1,75 +1,12 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
-
-/// If only background color is specified, text/icon color
-/// will be assigned automatically to a contrasting color.
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-///
-/// @param {Color} $banner-background [null] - The color used for the banner background.
-/// @param {Color} $banner-message-color [null] - The color used for the banner label.
-/// @param {Color} $banner-border-color [null] - The color used for the banner border.
-/// @param {Color} $banner-illustration-color [null] - The color used for the banner illustration.
-/// @param {Number} $border-radius [null] - The border-radius for the banner.
-///
-/// @requires $light-material-schema
-///
-/// @example scss Change the background in banner
-///   $my-banner-theme: banner-theme($banner-background: #000);
-///   // Pass the theme to the css-vars() mixin
-///   @include css-vars($my-banner-theme);
-@function banner-theme(
-    $schema: $light-material-schema,
-    $banner-background: null,
-    $banner-message-color: null,
-    $banner-border-color: null,
-    $banner-illustration-color: null,
-    $border-radius: null,
-) {
-    $name: 'igx-banner';
-    $selector: 'igx-banner, .igx-banner';
-    $banner-schema: ();
-
-    @if map.has-key($schema, 'banner') {
-        $banner-schema: map.get($schema, 'banner');
-    } @else {
-        $banner-schema: $schema;
-    }
-
-    $theme: digest-schema($banner-schema);
-    $meta: map.get($theme, '_meta');
-
-    @if not($banner-message-color) and $banner-background {
-        $banner-message-color: text-contrast($banner-background);
-    }
-
-    @return extend($theme, (
-        name: $name,
-        selector: $selector,
-        banner-background: $banner-background,
-        banner-message-color: $banner-message-color,
-        banner-border-color: $banner-border-color,
-        banner-illustration-color: $banner-illustration-color,
-        border-radius: $border-radius,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
-    ));
-}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin banner($theme) {
     @include css-vars($theme);
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     %igx-banner-host {
         igx-expansion-panel-body {

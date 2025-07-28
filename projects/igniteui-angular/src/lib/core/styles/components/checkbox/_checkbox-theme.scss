@@ -2,112 +2,14 @@
 @use 'sass:math';
 @use '../../base' as *;
 @use 'igniteui-theming/sass/animations' as *;
-@use '../../themes/schemas' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
-
-/// Checkbox Theme
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Color} $label-color [null]- The text color used for the label text.
-/// @param {Color} $label-color-hover [null]- The text color used for the label text on hover.
-/// @param {Color} $empty-color [null] - The unchecked border color.
-/// @param {Color} $empty-color-hover [null] - The unchecked border color on hover.
-/// @param {Color} $empty-fill-color [null] - The unchecked fill color.
-/// @param {Color} $fill-color [null] - The checked border and fill colors.
-/// @param {Color} $fill-color-hover [null] - The checked border and fill colors on hover.
-/// @param {Color} $tick-color [null] - The checked mark color.
-/// @param {Color} $tick-color-hover [null] - The checked mark color on hover.
-/// @param {Color} $disabled-color [null] - The disabled border and fill colors.
-/// @param {Color} $disabled-tick-color [null] - The checked mark color in disabled state.
-/// @param {Color} $disabled-indeterminate-color [null] - The disabled border and fill colors in indeterminate state.
-/// @param {Color} $disabled-color-label [null] - The disabled label color.
-/// @param {List} $border-radius [null] - The border radius used for checkbox component.
-/// @param {List} $border-radius-ripple [null] - The border radius used for checkbox ripple.
-/// @param {Color} $focus-outline-color [null] - The focus outlined color.
-/// @param {Color} $error-color [null] - The border and fill colors in invalid state.
-/// @param {Color} $error-color-hover [null] - The border and fill colors in invalid state on hover.
-/// Set to light when the surrounding area is dark.
-///
-/// @requires $light-material-schema
-///
-/// @example scss Change the checked fill color
-///   $my-checkbox-theme: igx-checkbox-theme($fill-color: magenta);
-///   // Pass the theme to the css-vars mixin
-///   @include css-vars($my-checkbox-theme);
-@function checkbox-theme(
-    $schema: $light-material-schema,
-
-    $border-radius: null,
-    $label-color: null,
-    $label-color-hover: null,
-    $empty-color: null,
-    $empty-color-hover: null,
-    $empty-fill-color: null,
-    $fill-color: null,
-    $fill-color-hover: null,
-    $tick-color: null,
-    $tick-color-hover: null,
-    $disabled-color: null,
-    $disabled-tick-color: null,
-    $disabled-indeterminate-color: null,
-    $disabled-color-label: null,
-    $border-radius-ripple: null,
-    $focus-outline-color: null,
-    $error-color: null,
-    $error-color-hover: null,
-) {
-    $name: 'igx-checkbox';
-    $checkbox-schema: ();
-
-    @if map.has-key($schema, 'checkbox') {
-        $checkbox-schema: map.get($schema, 'checkbox');
-    } @else {
-        $checkbox-schema: $schema;
-    }
-
-    $theme: digest-schema($checkbox-schema);
-    $meta: map.get($theme, '_meta');
-
-    @return extend($theme, (
-        name: $name,
-        label-color: $label-color,
-        label-color-hover: $label-color-hover,
-        empty-color: $empty-color,
-        empty-color-hover: $empty-color-hover,
-        empty-fill-color: $empty-fill-color,
-        fill-color: $fill-color,
-        fill-color-hover: $fill-color-hover,
-        tick-color: $tick-color,
-        tick-color-hover: $tick-color-hover,
-        disabled-color: $disabled-color,
-        disabled-tick-color: $disabled-tick-color,
-        disabled-indeterminate-color: $disabled-indeterminate-color,
-        disabled-color-label: $disabled-color-label,
-        border-radius: $border-radius,
-        border-radius-ripple: $border-radius-ripple,
-        focus-outline-color: $focus-outline-color,
-        error-color: $error-color,
-        error-color-hover: $error-color-hover,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme'),
-            theme-variant: map.get($schema, '_meta', 'variant')
-        )),
-    ));
-}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin checkbox($theme) {
     @include css-vars($theme);
-    $theme-variant: map.get($theme, '_meta', 'theme-variant');
-    $variant: map.get($theme, '_meta', 'variant');
+    $theme-variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $material-theme: $variant == 'material';
     $bootstrap-theme: $variant == 'bootstrap';
 
@@ -591,14 +493,14 @@
     %igx-checkbox--focused-bootstrap {
         %cbx-composite {
             border-radius: var-get($theme, 'border-radius');
-            border-color: color($color: 'primary', $variant: 200);
+            border-color: var-get($theme, 'focus-border-color');
             box-shadow: 0 0 0 rem(4px) var-get($theme, 'focus-outline-color');
         }
     }
 
-    %igx-checkbox--focused-hovered {
+    %igx-checkbox--focused-hovered-bootstrap {
         %cbx-composite {
-            border-color: color($color: 'primary', $variant: 300);
+            border-color: hsl(from var-get($theme, 'focus-border-color') h calc(s * 1.12) calc(l * 0.82));
         }
     }
 

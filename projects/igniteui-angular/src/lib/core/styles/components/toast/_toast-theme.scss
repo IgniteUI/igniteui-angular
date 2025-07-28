@@ -1,75 +1,5 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
-
-/// If only background color is specified,
-/// the text-color will be assigned automatically to a contrasting color.
-///
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-///
-/// @param {Color} $background [null] - The background color used for the toast.
-/// @param {Color} $text-color [null] - The text-color used for the toast.
-/// @param {Color} $border-color [null] - The border-color used for the toast.
-///
-/// @param {List} $border-radius [null] - The border radius used for the toast component.
-/// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the toast.
-///
-/// @requires $light-material-schema
-///
-/// @example scss Set a custom background color
-///   $my-toast-theme: toast-theme($background: green);
-///   // Pass the theme to the css-vars() mixin
-///   @include css-vars($my-toast-theme);
-@function toast-theme(
-    $schema: $light-material-schema,
-
-    $border-radius: null,
-    $border-color: null,
-    $background: null,
-    $text-color: null,
-    $shadow: null,
-) {
-    $name: 'igx-toast';
-    $toast-schema: ();
-
-    @if map.has-key($schema, 'toast') {
-        $toast-schema: map.get($schema, 'toast');
-    } @else {
-        $toast-schema: $schema;
-    }
-
-    $theme: digest-schema($toast-schema);
-    $meta: map.get($theme, '_meta');
-
-    @if not($shadow) {
-        $elevation: map.get($toast-schema, 'elevation');
-        $shadow: elevation($elevation);
-    }
-
-    @if not($text-color) and $background {
-        $text-color: text-contrast($background);
-    }
-
-    @return extend($theme, (
-        name: $name,
-        background: $background,
-        border-radius: $border-radius,
-        text-color: $text-color,
-        border-color: $border-color,
-        shadow: $shadow,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
-    ));
-}
 
 /// Toast Component
 /// @deprecated Use the `css-vars` mixin instead.
@@ -77,8 +7,8 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin toast($theme) {
     @include css-vars($theme);
-    $variant: map.get($theme, '_meta', 'variant');
 
+    $variant: map.get($theme, '_meta', 'theme');
     $width: rem(52px);
     $margin: rem(42px) auto;
 

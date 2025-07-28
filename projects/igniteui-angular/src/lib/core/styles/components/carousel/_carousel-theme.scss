@@ -1,132 +1,6 @@
 @use 'sass:map';
-@use 'sass:meta';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
 @use 'igniteui-theming/sass/animations' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
-
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Color} $slide-background [null] - The slide background color.
-/// @param {Color} $button-background [null] - The previous/next buttons idle background color.
-/// @param {Color} $button-hover-background [null] - The previous/next buttons hover background color.
-/// @param {Color} $button-disabled-background [null] - The previous/next buttons disabled background color.
-/// @param {Color} $button-arrow-color [null] - The previous/next buttons idle arrow color.
-/// @param {Color} $button-hover-arrow-color [null] - The previous/next buttons hover arrow color.
-/// @param {Color} $button-disabled-arrow-color [null] - The previous/next buttons disabled arrow color.
-/// @param {Color} $button-border-color [null] - The previous/next buttons idle border color.
-/// @param {Color} $button-hover-border-color [null] - The previous/next buttons hover border color.
-/// @param {Color} $button-disabled-border-color [null] - The previous/next buttons disabled border color.
-/// @param {Color} $indicator-dot-color [null] - The idle indicator dot color.
-/// @param {Color} $indicator-hover-dot-color [null] - The hover indicator dot color.
-/// @param {Color} $indicator-border-color [null] - The idle indicator border color.
-/// @param {Color} $indicator-active-dot-color [null] - The active indicator dot color.
-/// @param {Color} $indicator-active-border-color [null] - The active indicator border color.
-/// @param {Color} $indicator-active-hover-dot-color [null] - The active indicator dot color on hover.
-/// @param {box-shadow} $button-shadow [null] - Shadow underneath the previous/next buttons.
-///
-/// @param {List} $border-radius [null] - The border radius used for carousel component.
-///
-/// @requires $light-material-schema
-///
-/// @example scss Change the previous/next button colors
-///   $my-carousel-theme: carousel-theme(
-///     $button-background: black,
-///     $button-hover-background: white
-///   );
-///   // Pass the carousel theme to the css-vars() mixin
-///   @include css-vars($my-carousel-theme);
-@function carousel-theme(
-    $schema: $light-material-schema,
-
-    $border-radius: null,
-    $button-shadow: null,
-
-    $slide-background: null,
-
-    $button-background: null,
-    $button-hover-background: null,
-    $button-disabled-background: null,
-    $button-arrow-color: null,
-    $button-hover-arrow-color: null,
-    $button-disabled-arrow-color: null,
-    $button-border-color: null,
-    $button-hover-border-color: null,
-    $button-disabled-border-color: null,
-
-    $indicator-dot-color: null,
-    $indicator-hover-dot-color: null,
-    $indicator-border-color: null,
-    $indicator-active-dot-color: null,
-    $indicator-active-border-color: null,
-    $indicator-active-hover-dot-color: null,
-){
-    $name: 'igx-carousel';
-    $carousel-schema: ();
-
-    @if map.has-key($schema, 'carousel') {
-        $carousel-schema: map.get($schema, 'carousel');
-    } @else {
-        $carousel-schema: $schema;
-    }
-
-    $theme: digest-schema($carousel-schema);
-    $meta: map.get($theme, '_meta');
-
-    @if not($button-shadow) {
-        $button-elevation: map.get($carousel-schema, 'button-elevation');
-        $button-shadow: elevation($button-elevation);
-    }
-
-    @if not($button-arrow-color) and $button-background {
-        $button-arrow-color: text-contrast($button-background);
-    }
-
-    @if not($button-hover-arrow-color) and $button-hover-background {
-        $button-hover-arrow-color: text-contrast($button-hover-background);
-    }
-
-    @if not($button-disabled-arrow-color) and $button-disabled-background {
-        @if meta.type-of($button-disabled-background) == 'color' {
-            $button-disabled-arrow-color: rgba(text-contrast($button-disabled-background), .3);
-        }
-    }
-
-    @return extend($theme, (
-        name: $name,
-
-        slide-background: $slide-background,
-
-        border-radius: $border-radius,
-        button-shadow: $button-shadow,
-
-        button-background: $button-background,
-        button-disabled-background: $button-disabled-background,
-        button-hover-background: $button-hover-background,
-        button-arrow-color: $button-arrow-color,
-        button-hover-arrow-color: $button-hover-arrow-color,
-        button-disabled-arrow-color: $button-disabled-arrow-color,
-        button-border-color: $button-border-color,
-        button-hover-border-color: $button-hover-border-color,
-        button-disabled-border-color: $button-disabled-border-color,
-
-        indicator-dot-color: $indicator-dot-color,
-        indicator-hover-dot-color: $indicator-hover-dot-color,
-        indicator-border-color: $indicator-border-color,
-        indicator-active-dot-color: $indicator-active-dot-color,
-        indicator-active-border-color: $indicator-active-border-color,
-        indicator-active-hover-dot-color: $indicator-active-hover-dot-color,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
-    ));
-}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
@@ -139,7 +13,7 @@
     $indicator-border-style: rem(2px) solid;
     $btn-indent: rem(3px);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $not-bootstrap-theme: $variant != 'bootstrap';
 
     %igx-carousel-display {
@@ -206,24 +80,16 @@
             border: rem(2px) solid var-get($theme, 'button-focus-border-color');
 
             igx-icon {
-                color: var-get($theme, 'button-focus-border-color');
+                color: var-get($theme, 'button-focus-arrow-color');
             }
 
             @if $variant == 'bootstrap' {
                 box-shadow: 0 0 0 rem(4px) var-get($theme, 'button-focus-border-color');
                 border-color: var-get($theme, 'button-border-color');
-
-                igx-icon {
-                    color: var-get($theme, 'button-arrow-color');
-                }
             }
 
             @if $variant == 'fluent' {
                 border: none;
-
-                igx-icon {
-                    color: var-get($theme, 'indicator-focus-color');
-                }
 
                 &::after {
                     position: absolute;
@@ -239,10 +105,6 @@
 
             @if $variant == 'indigo' {
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'indicator-focus-color');
-
-                igx-icon {
-                    color: var-get($theme, 'button-arrow-color');
-                }
             }
         }
 

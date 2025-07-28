@@ -1,92 +1,13 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
-
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Color} $background [null] - The navbar background color.
-/// @param {Color} $text-color [null] - The navbar text color.
-/// @param {Color} $border-color [null] - The navbar border color.
-/// @param {box-shadow} $shadow [null] - The shadow of the navbar.
-/// @param {Color} $idle-icon-color [null] - The navbar idle icon color.
-/// @param {Color} $hover-icon-color [null] - The navbar hover icon color.
-/// @param {Bool} $disable-shadow [true] - Sets the navbar shadow visibility.
-/// @requires $light-material-schema
-/// @example scss Change the background color
-///   $my-navbar-theme: navbar-theme($background: green);
-///   // Pass the theme to the css-vars() mixin
-///   @include css-vars($my-navbar-theme);
-@function navbar-theme(
-    $schema: $light-material-schema,
-    $background: null,
-    $border-color: null,
-    $text-color: null,
-    $shadow: null,
-    $idle-icon-color: null,
-    $hover-icon-color: null,
-    $disable-shadow: false
-) {
-    $name: 'igx-navbar';
-    $navbar-schema: ();
-
-    @if map.has-key($schema, 'navbar') {
-        $navbar-schema: map.get($schema, 'navbar');
-    } @else {
-        $navbar-schema: $schema;
-    }
-
-    $theme: digest-schema($navbar-schema);
-    $meta: map.get($theme, '_meta');
-
-    @if not($text-color) and $background {
-        $text-color: text-contrast($background);
-    }
-
-    @if not($idle-icon-color) and $background {
-        $idle-icon-color: text-contrast($background);
-    }
-
-    @if not($hover-icon-color) and $background {
-        $hover-icon-color: text-contrast($background);
-    }
-
-    @if not($shadow) {
-        $elevation: map.get($navbar-schema, 'elevation');
-        $shadow: elevation($elevation);
-    }
-
-    @if $disable-shadow {
-        $shadow: none;
-    }
-
-    @return extend($theme, (
-        name: $name,
-        background: $background,
-        border-color: $border-color,
-        text-color: $text-color,
-        idle-icon-color: $idle-icon-color,
-        hover-icon-color: $hover-icon-color,
-        shadow: $shadow,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
-    ));
-}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin navbar($theme) {
     @include css-vars($theme);
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     $navbar-padding: rem(16px);
     $navbar-title-fz: rem(18px, 16px);
@@ -194,19 +115,19 @@
         igx-icon,
         igc-icon {
             --component-size: 3;
+
             cursor: pointer;
+            user-select: none;
+            transition: color .15s $out-quad;
         }
 
-        > igx-icon,
-        > igc-icon {
-            transition: color .15s $out-quad;
+        >igx-icon,
+        >igc-icon {
             color: var-get($theme, 'idle-icon-color');
 
             &:hover {
                 color: var-get($theme, 'hover-icon-color');
             }
-
-            user-select: none;
         }
 
         @if $variant == 'indigo' {

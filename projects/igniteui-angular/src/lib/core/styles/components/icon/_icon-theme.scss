@@ -1,49 +1,5 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
-
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Color} $color [null] - The icon color.
-/// @param {String} $size [null] - The icon size.
-/// @param {Color} $disabled-color [null] - The disabled icon color.
-/// @requires $light-material-schema
-/// @example scss Change the icon color
-///   $my-icon-theme: icon-theme($color: orange);
-///   // Pass the theme to the css-vars() mixin
-///   @include css-vars($my-icon-theme);
-@function icon-theme(
-    $schema: $light-material-schema,
-
-    $color: null,
-    $size: null,
-    $disabled-color: null
-) {
-    $name: 'igx-icon';
-    $icon-schema: ();
-
-    @if map.has-key($schema, 'icon') {
-        $icon-schema: map.get($schema, 'icon');
-    } @else {
-        $icon-schema: $schema;
-    }
-
-    $theme: digest-schema($icon-schema);
-
-    @return extend($theme, (
-        name: $name,
-        color: $color,
-        size: $size,
-        disabled-color: $disabled-color,
-        theme: map.get($schema, '_meta', 'theme'),
-    ));
-}
 
 // stylelint-disable font-family-no-missing-generic-family-keyword
 /// @deprecated Use the `css-vars` mixin instead.

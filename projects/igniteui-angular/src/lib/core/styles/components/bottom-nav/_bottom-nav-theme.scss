@@ -1,117 +1,6 @@
 @use 'sass:map';
-@use 'sass:meta';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
-
-/// If only background color is specified,
-/// the label and icon colors will be assigned automatically to a contrasting color.
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Color} $background [null] - The background color used for the toast.
-/// @param {Color} $label-color [null] - The label color used in idle state.
-/// @param {Color} $icon-color [null] - The icon color used in idle state.
-/// @param {Color} $label-selected-color [null] - The label color used in selected state.
-/// @param {Color} $icon-selected-color [null] - The icon color used in selected state.
-/// @param {Color} $icon-disabled-color [null] - The disabled color of the icon.
-/// @param {Color} $label-disabled-color [null] - The disabled color of the label.
-/// @param {Color} $border-color [null] - The border color of the bottom navigation.
-/// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the bar.
-/// @requires $light-material-schema
-/// @example scss Set a custom background color
-///   $my-bottom-nav-theme: bottom-nav-theme($background: black);
-///   // Pass the theme to the css-vars() mixin
-///   @include css-vars($my-bottom-nav-theme);
-@function bottom-nav-theme(
-    $schema: $light-material-schema,
-    $background: null,
-    $icon-color: null,
-    $icon-selected-color: null,
-    $label-color: null,
-    $label-selected-color: null,
-    $icon-disabled-color: null,
-    $label-disabled-color: null,
-    $border-color: null,
-    $shadow: null,
-) {
-    $name: 'igx-bottom-nav';
-    $bottom-nav-schema: ();
-
-    @if map.has-key($schema, 'bottom-nav') {
-        $bottom-nav-schema: map.get($schema, 'bottom-nav');
-    } @else {
-        $bottom-nav-schema: $schema;
-    }
-
-    $theme: digest-schema($bottom-nav-schema);
-
-    $meta: map.get($theme, '_meta');
-
-    @if not($label-color) and $background {
-        @if meta.type-of($background) == 'color' {
-            $label-color: text-contrast($background);
-        }
-    }
-
-    @if not($icon-color) and $label-color {
-        @if meta.type-of($label-color) == 'color' {
-            $icon-color: $label-color;
-        }
-    }
-
-    @if not($icon-disabled-color) and $label-disabled-color {
-        @if meta.type-of($label-disabled-color) == 'color' {
-            $icon-disabled-color: $label-disabled-color;
-        }
-    }
-
-    @if not($label-disabled-color) and $icon-disabled-color {
-        @if meta.type-of($icon-disabled-color) == 'color' {
-            $label-disabled-color: $icon-disabled-color;
-        }
-    }
-
-    @if not($icon-selected-color) and $label-selected-color {
-        @if meta.type-of($background) == 'color' {
-            $icon-selected-color: $label-selected-color;
-        }
-    }
-
-    @if not($icon-color) and $background {
-        @if meta.type-of($background) == 'color' {
-            $icon-color: text-contrast($background);
-        }
-    }
-
-    @if not($shadow) {
-        $elevation: map.get($bottom-nav-schema, 'elevation');
-        $shadow: elevation($elevation);
-    }
-
-    @return extend($theme, (
-        name: $name,
-        background: $background,
-        icon-color: $icon-color,
-        icon-selected-color: $icon-selected-color,
-        label-color: $label-color,
-        label-selected-color: $label-selected-color,
-        icon-disabled-color: $icon-disabled-color,
-        label-disabled-color: $label-disabled-color,
-        border-color: $border-color,
-        shadow: $shadow,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme'),
-            theme-variant: map.get($schema, '_meta', 'variant')
-        )),
-    ));
-}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
@@ -119,7 +8,7 @@
 @mixin bottom-nav($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $menu-height: rem(56px);
     $item-min-width: rem(80px);
     $item-max-width: rem(168px);

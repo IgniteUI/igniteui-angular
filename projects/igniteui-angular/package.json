@@ -73,7 +73,7 @@
         "tslib": "^2.3.0",
         "igniteui-trial-watermark": "^3.1.0",
         "lodash-es": "^4.17.21",
-        "igniteui-theming": "^18.0.1",
+        "igniteui-theming": "^19.2.0",
         "@igniteui/material-icons-extended": "^3.1.0"
     },
     "peerDependencies": {

@@ -1,102 +1,5 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-////
-
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Color} $background-color [null] - The toolbar background color.
-/// @param {Color} $title-text-color [null] - The toolbar title text color.
-/// @param {Color} $dropdown-background [null] - The toolbar drop-down background color.
-/// @param {Color} $item-text-color [null] - The toolbar drop-down item text color.
-/// @param {Color} $item-hover-background [null] - The toolbar drop-down item hover background color.
-/// @param {Color} $item-hover-text-color [null] - The toolbar drop-down item hover text color.
-/// @param {Color} $item-focus-background [null] - The toolbar drop-down item focus background color.
-/// @param {Color} $item-focus-text-color [null] - The toolbar drop-down item focus text color.
-/// @param {Color} $border-color [null] - The toolbar border-bottom color.
-/// @requires $light-material-schema
-/// @example scss Change the toolbar background color
-///   $my-toolbar-theme: grid-toolbar-theme(
-///     $background-color: black
-///   );
-///   // Pass the theme to the css-vars mixin
-///   @include css-vars($my-toolbar-theme);
-@function grid-toolbar-theme(
-    $schema: $light-material-schema,
-
-    $background-color: null,
-    $title-text-color: null,
-
-    $dropdown-background: null,
-    $item-text-color: null,
-    $item-hover-background: null,
-    $item-hover-text-color: null,
-    $item-focus-background: null,
-    $item-focus-text-color: null,
-    $size: null,
-    $border-color: null,
-) {
-    $name: 'igx-grid-toolbar';
-    $selector: 'igx-grid-toolbar, .igx-grid-toolbar__dd-list';
-    $grid-toolbar-schema: ();
-
-    @if map.has-key($schema, 'grid-toolbar') {
-        $grid-toolbar-schema: map.get($schema, 'grid-toolbar');
-    } @else {
-        $grid-toolbar-schema: $schema;
-    }
-
-    $theme: digest-schema($grid-toolbar-schema);
-    $meta: map.get($theme, '_meta');
-
-    @if not($title-text-color) and $background-color {
-        $title-text-color: text-contrast($background-color);
-    }
-
-    @if not($item-text-color) and $dropdown-background {
-        $item-text-color: text-contrast($dropdown-background);
-    }
-
-    @if not($item-hover-text-color) and $dropdown-background {
-        $item-hover-text-color: text-contrast($dropdown-background);
-    }
-
-    @if not($item-focus-text-color) and $dropdown-background {
-        $item-focus-text-color: text-contrast($dropdown-background);
-    }
-
-    @if not($item-hover-text-color) and $item-hover-background {
-        $item-hover-text-color: text-contrast($item-hover-background);
-    }
-
-    @if not($item-focus-text-color) and $item-focus-background {
-        $item-focus-text-color: text-contrast($item-focus-background);
-    }
-
-    @return extend($theme, (
-        name: $name,
-        selector: $selector,
-        background-color: $background-color,
-        title-text-color: $title-text-color,
-        item-text-color: $item-text-color,
-        dropdown-background: $dropdown-background,
-        item-hover-background: $item-hover-background,
-        item-hover-text-color: $item-hover-text-color,
-        item-focus-background: $item-focus-background,
-        item-focus-text-color: $item-focus-text-color,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
-        size: $size,
-        border-color: $border-color
-    ));
-}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
@@ -104,7 +7,7 @@
 @mixin grid-toolbar($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $bootstrap-theme: $variant == 'bootstrap';
 
     // Caption

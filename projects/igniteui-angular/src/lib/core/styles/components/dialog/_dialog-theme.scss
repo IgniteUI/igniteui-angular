@@ -1,83 +1,5 @@
 @use 'sass:map';
-@use 'sass:meta';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
-
-/// Dialog Theme
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Color} $background [null] - The dialog background color.
-/// @param {Color} $title-color [null] - The dialog title text color.
-/// @param {Color} $message-color [null] - The dialog message text color.
-/// @param {box-shadow} $shadow [null] - The shadow used for the dialog.
-/// @param {List} $border-radius [null] - The border radius used for dialog component.
-/// @param {Color} $border-color [null] - The border color used for dialog component.
-/// @requires $light-material-schema
-/// @example scss Change the background color
-///   $my-dialog-theme: dialog-theme($background: black);
-///   // Pass the theme to the css-vars() mixin
-///   @include css-vars($my-dialog-theme);
-@function dialog-theme(
-    $schema: $light-material-schema,
-
-    $border-radius: null,
-    $border-color: null,
-
-    $background: null,
-    $title-color: null,
-    $message-color: null,
-    $shadow: null,
-) {
-    $name: 'igx-dialog';
-    $selector: '.igx-dialog';
-
-    $dialog-schema: ();
-
-    @if map.has-key($schema, 'dialog') {
-        $dialog-schema: map.get($schema, 'dialog');
-    } @else {
-        $dialog-schema: $schema;
-    }
-
-    $theme: digest-schema($dialog-schema);
-    $meta: map.get($theme, '_meta');
-
-    @if not($title-color) and $background{
-        $title-color: text-contrast($background);
-    }
-
-    @if not($message-color) and $background{
-        @if meta.type-of($background) == 'color' {
-            $message-color: rgba(text-contrast($background), .8);
-        }
-    }
-
-    @if not($shadow) {
-        $elevation: map.get($dialog-schema, 'elevation');
-        $shadow: elevation($elevation);
-    }
-
-    @return extend($theme, (
-        name: $name,
-        selector: $selector,
-        border-radius: $border-radius,
-        background: $background,
-        title-color: $title-color,
-        message-color: $message-color,
-        shadow: $shadow,
-        border-color: $border-color,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
-    ));
-}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
@@ -85,8 +7,8 @@
 @mixin dialog($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
-    $bootstrap-theme: map.get($theme, '_meta', 'variant') == 'bootstrap';
+    $variant: map.get($theme, '_meta', 'theme');
+    $bootstrap-theme: map.get($theme, '_meta', 'theme') == 'bootstrap';
 
     $dialog-min-width: map.get((
         'material': rem(280px),

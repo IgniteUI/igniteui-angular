@@ -1,281 +1,6 @@
 @use 'sass:map';
-@use 'sass:meta';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-////
-
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Color} $idle-text-color [null] - The input text color in the idle state.
-/// @param {Color} $filled-text-color [null] - The input text color in the filled state.
-/// @param {Color} $filled-text-hover-color [null] - The input text color in the filled state on hover.
-/// @param {Color} $focused-text-color [null] - The input text color in the focused state.
-/// @param {Color} $disabled-text-color [null] - The input text color in the disabled state.
-/// @param {Color} $helper-text-color [null] - The helper text color.
-/// @param {Color} $input-prefix-color [null] - The input prefix color in the idle state.
-/// @param {Color} $input-prefix-background [null] - The background color of an input prefix in the idle state.
-/// @param {Color} $input-prefix-color--filled [null] - The input prefix color in the filled state.
-/// @param {Color} $input-prefix-background--filled] - The background color of an input prefix in the filled state.
-/// @param {Color} $input-prefix-color--focused [null] - The input prefix color in the focused state.
-/// @param {Color} $input-prefix-background--focused [null] - The background color of an input prefix in the focused state.
-/// @param {Color} $input-suffix-color [null] - The input suffix color in the idle state.
-/// @param {Color} $input-suffix-background [null] - The background color of an input suffix in the idle state.
-/// @param {Color} $input-suffix-color--filled [null] - The input suffix color in the filled state.
-/// @param {Color} $input-suffix-background-filled [null] - The background color of an input suffix in the filled state.
-/// @param {Color} $input-suffix-color--focused [null] - The input suffix color in the focused state.
-/// @param {Color} $input-suffix-background--focused [null] - The background color of an input suffix in the focused state.
-/// @param {Color} $idle-secondary-color [null] - The label color in the idle state.
-/// @param {Color} $focused-secondary-color [null] - The label color in the focused state.
-/// @param {Color} $idle-bottom-line-color [null] - The bottom line and border colors in the idle state.
-/// @param {Color} $hover-bottom-line-color [null] - The bottom line and border colors in the hover state.
-/// @param {Color} $focused-bottom-line-color [null] - The bottom line and border colors in the focused state.
-/// @param {Color} $interim-bottom-line-color [null] - The bottom line and border colors during the to-focused transition.
-/// @param {Color} $disabled-bottom-line-color [null] - The bottom line and border colors in the disabled state.
-/// @param {Color} $border-color [null] - The border color for input groups of type border and fluent.
-/// @param {Color} $hover-border-color [null] - The hover input border for input groups of type border and fluent.
-/// @param {Color} $focused-border-color [null] - The focused input border color for input groups of type border and fluent.
-/// @param {Color} $disabled-border-color [null] - The disabled border color for input groups of type border and fluent.
-/// @param {Color} $box-background [null] - The background color of an input group of type box.
-/// @param {Color} $box-background-hover [null] - The background color on hover of an input group of type box.
-/// @param {Color} $box-background-focus [null] - The background color on focus of an input group of type box.
-/// @param {Color} $box-disabled-background [null] - The background color of an input group of type box in the disabled state.
-/// @param {Color} $border-background [null] - The background color of an input group of type border.
-/// @param {Color} $border-disabled-background [null] - The background color of an input group of type border in the disabled state.
-/// @param {Color} $search-background [null] - The background color of an input group of type search.
-/// @param {Color} $search-disabled-background [null] - The background color of an input group of type search in the disabled state.
-/// @param {box-shadow} $search-resting-shadow [null] - The shadow color of an input group of type search in its resting state.
-/// @param {box-shadow} $search-hover-shadow [null] - The shadow color of an input group of type search in its hover state.
-/// @param {box-shadow} $search-disabled-shadow [null] - The shadow color of an input group of type search in its disabled state.
-/// @param {Color} $success-secondary-color [null] - The success color used in the valid state.
-/// @param {Color} $warning-secondary-color [null] - The warning color used in the warning state.
-/// @param {Color} $error-secondary-color [null] - The error color used in the error state.
-/// @param {List} $box-border-radius [null] - The border radius used for box input.
-/// @param {List} $border-border-radius [null] - The border radius used for border input.
-/// @param {List} $search-border-radius [null] - The border radius used for search input.
-/// @param {Color} placeholder-color [null] - The placeholder color of an input group.
-/// @param {Color} hover-placeholder-color [null] - The placeholder color of an input group on hover.
-/// @param {Color} disabled-placeholder-color [null] - The disabled placeholder color of an input group.
-/// @example scss Change the focused border and label colors
-///   $my-input-group-theme: input-group-theme($focused-secondary-color: pink, $focused-bottom-line-color: pink);
-///   // Pass the theme to the css-vars() mixin
-///   @include css-vars($my-input-group-theme);
-@function input-group-theme(
-    $schema: $light-material-schema,
-
-    $box-background: null,
-    $box-background-hover: null,
-    $box-background-focus: null,
-    $box-disabled-background: null,
-    $box-border-radius: null,
-
-    $idle-text-color: null,
-    $filled-text-color: null,
-    $filled-text-hover-color: null,
-    $focused-text-color: null,
-    $helper-text-color: null,
-    $disabled-text-color: null,
-
-    $idle-secondary-color: null,
-    $focused-secondary-color: null,
-
-    $idle-bottom-line-color: null,
-    $hover-bottom-line-color: null,
-    $focused-bottom-line-color: null,
-    $interim-bottom-line-color: null,
-    $disabled-bottom-line-color: null,
-
-    $border-color: null,
-    $hover-border-color: null,
-    $focused-border-color: null,
-    $disabled-border-color: null,
-
-    $border-border-radius: null,
-    $border-background: null,
-    $border-disabled-background: null,
-
-    $search-background: null,
-    $search-disabled-background: null,
-    $search-border-radius: null,
-    $search-resting-shadow: null,
-    $search-hover-shadow: null,
-    $search-disabled-shadow: null,
-
-    $success-secondary-color: null,
-    $warning-secondary-color: null,
-    $error-secondary-color: null,
-    $success-shadow-color: null,
-    $error-shadow-color: null,
-
-    $placeholder-color: null,
-    $hover-placeholder-color: null,
-    $disabled-placeholder-color: null,
-
-    $input-prefix-color: null,
-    $input-prefix-background: null,
-    $input-prefix-color--filled: null,
-    $input-prefix-background--filled: null,
-    $input-prefix-color--focused: null,
-    $input-prefix-background--focused: null,
-
-    $input-suffix-color: null,
-    $input-suffix-background: null,
-    $input-suffix-color--filled: null,
-    $input-suffix-background--filled: null,
-    $input-suffix-color--focused: null,
-    $input-suffix-background--focused: null,
-    $size: null,
-) {
-    $name: 'igx-input-group';
-    $selector: 'igx-input-group, igx-date-range-start, igx-date-range-end';
-    $input-group-schema: ();
-
-    @if map.has-key($schema, 'input-group') {
-        $input-group-schema: map.get($schema, 'input-group');
-    } @else {
-        $input-group-schema: $schema;
-    }
-
-    $theme: digest-schema($input-group-schema);
-    $search-resting-elevation: map.get($input-group-schema, 'search-resting-elevation');
-    $search-hover-elevation: map.get($input-group-schema, 'search-hover-elevation');
-    $search-disabled-elevation: map.get($input-group-schema, 'search-disabled-elevation');
-
-    @if not($placeholder-color) and $box-background {
-        $placeholder-color: text-contrast($box-background);
-    }
-
-    @if not($placeholder-color) and $box-background-hover {
-        $placeholder-color: text-contrast($box-background-hover);
-    }
-
-    @if not($placeholder-color) and $box-background-focus {
-        $placeholder-color: text-contrast($box-background-focus);
-    }
-
-    @if not($placeholder-color) and $search-background {
-        $placeholder-color: text-contrast($search-background);
-    }
-
-    @if not($search-resting-shadow) {
-        $search-resting-shadow: elevation($search-resting-elevation);
-    }
-
-    @if not($search-hover-shadow) {
-        $search-hover-shadow: elevation($search-hover-elevation);
-    }
-
-    @if not($search-disabled-shadow) {
-        $search-disabled-shadow: elevation($search-disabled-elevation);
-    }
-
-    @if not($input-prefix-background--filled) and $input-prefix-background {
-        $input-prefix-background--filled: $input-prefix-background;
-    }
-
-    @if not($input-prefix-background--focused) and $input-prefix-background {
-        $input-prefix-background--focused: $input-prefix-background;
-    }
-
-    @if not($input-prefix-color) and $input-prefix-background {
-        $input-prefix-color: text-contrast($input-prefix-background);
-    }
-
-    @if not($input-prefix-color--filled) and $input-prefix-background--filled {
-        $input-prefix-color--filled: text-contrast($input-prefix-background--filled);
-    }
-
-    @if not($input-prefix-color--focused) and $input-prefix-background--focused {
-        $input-prefix-color--focused: text-contrast($input-prefix-background--focused);
-    }
-
-    @if not($input-suffix-color) and $input-suffix-background {
-        $input-suffix-color: text-contrast($input-suffix-background);
-    }
-
-    @if not($input-suffix-color--filled) and $input-suffix-background--filled {
-        $input-suffix-color--filled: text-contrast($input-suffix-background--filled);
-    }
-
-    @if not($input-suffix-color--focused) and $input-suffix-background--focused {
-        $input-suffix-color--focused: text-contrast($input-suffix-background--focused);
-    }
-
-    @if not($box-border-radius) {
-        $box-border-radius: map.get($theme, 'box-border-radius');
-    }
-
-    @if not($border-border-radius) {
-        $border-border-radius: map.get($theme, 'border-border-radius');
-    }
-
-    @if not($search-border-radius) {
-        $search-border-radius: map.get($theme, 'search-border-radius');
-    }
-
-    @return extend($theme, (
-        name: $name,
-        selector: $selector,
-        idle-text-color: $idle-text-color,
-        filled-text-color: $filled-text-color,
-        filled-text-hover-color: $filled-text-hover-color,
-        focused-text-color: $focused-text-color,
-        disabled-text-color: $disabled-text-color,
-        helper-text-color: $helper-text-color,
-        box-border-radius: $box-border-radius,
-        border-border-radius: $border-border-radius,
-        search-border-radius: $search-border-radius,
-        idle-secondary-color: $idle-secondary-color,
-        focused-secondary-color: $focused-secondary-color,
-        idle-bottom-line-color: $idle-bottom-line-color,
-        hover-bottom-line-color: $hover-bottom-line-color,
-        focused-bottom-line-color: $focused-bottom-line-color,
-        interim-bottom-line-color: $interim-bottom-line-color,
-        disabled-bottom-line-color: $disabled-bottom-line-color,
-        border-color: $border-color,
-        hover-border-color: $hover-border-color,
-        focused-border-color: $focused-border-color,
-        disabled-border-color: $disabled-border-color,
-        box-background: $box-background,
-        box-background-hover: $box-background-hover,
-        box-background-focus: $box-background-focus,
-        box-disabled-background: $box-disabled-background,
-        border-background: $border-background,
-        border-disabled-background: $border-disabled-background,
-        search-background: $search-background,
-        search-disabled-background: $search-disabled-background,
-        search-resting-shadow: $search-resting-shadow,
-        search-hover-shadow: $search-hover-shadow,
-        search-disabled-shadow: $search-disabled-shadow,
-        success-secondary-color: $success-secondary-color,
-        warning-secondary-color: $warning-secondary-color,
-        error-secondary-color: $error-secondary-color,
-        success-shadow-color: $success-shadow-color,
-        error-shadow-color: $error-shadow-color,
-        placeholder-color: $placeholder-color,
-        hover-placeholder-color: $hover-placeholder-color,
-        disabled-placeholder-color: $disabled-placeholder-color,
-        input-prefix-color: $input-prefix-color,
-        input-prefix-background: $input-prefix-background,
-        input-prefix-color--filled: $input-prefix-color--filled,
-        input-prefix-background--filled: $input-prefix-background--filled,
-        input-prefix-color--focused: $input-prefix-color--focused,
-        input-prefix-background--focused: $input-prefix-background--focused,
-        input-suffix-color: $input-suffix-color,
-        input-suffix-background: $input-suffix-background,
-        input-suffix-color--filled: $input-suffix-color--filled,
-        input-suffix-background--filled: $input-suffix-background--filled,
-        input-suffix-color--focused: $input-suffix-color--focused,
-        input-suffix-background--focused: $input-suffix-background--focused,
-        theme: map.get($schema, '_meta', 'theme'),
-        variant: map.get($schema, '_meta', 'theme'),
-        size: $size,
-    ));
-}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
@@ -285,7 +10,7 @@
     // when dynamically switching between the input `type` attribute.
     @include css-vars($theme);
 
-    $variant: map.get($theme, 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $transition-timing: .25s $out-cubic;
     $material-theme: $variant == 'material';
     $indigo-theme: $variant == 'indigo';
@@ -349,6 +74,13 @@
         'fluent': 0,
         'bootstrap': 0,
         'indigo': 0,
+    ), $variant);
+
+    $hint-min-size: map.get((
+        'material': rem(18px),
+        'fluent': rem(18px),
+        'bootstrap': rem(20px),
+        'indigo': rem(15px),
     ), $variant);
 
     // Base Start
@@ -451,10 +183,6 @@
             font-family: inherit;
         }
 
-        input[type='file'] {
-            @include hide-default();
-        }
-
         textarea {
             overflow: auto;
         }
@@ -496,12 +224,23 @@
                     }
                 }
             }
+
+            &:not(%form-group-display--focused, %form-group-display--filled) {
+                &:has(input:not(:placeholder-shown, [type='file'])) {
+                    %form-group-label {
+                        @include type-style('subtitle-1');
+                        transform: translateY(0);
+                    }
+                }
+            }
         }
     }
 
     %form-group-placeholder {
-        %form-group-label {
-            transition: none !important;
+        &:has(input:placeholder-shown, textarea:placeholder-shown) {
+            %form-group-label {
+                transition: none !important;
+            }
         }
     }
 
@@ -622,7 +361,7 @@
     }
 
     %form-group-bundle--hover {
-        cursor: pointer;
+        //cursor: pointer;
 
         &::after {
             border-block-end-width: rem(1px);
@@ -682,6 +421,288 @@
         flex-grow: 1;
         position: relative;
         max-width: inherit;
+    }
+
+    @if $material-theme {
+        %form-group-display--file {
+            %form-group-file-input {
+                padding-inline: rem(4px);
+            }
+        }
+
+        %form-group-display--file-border {
+            %form-group-input {
+                z-index: 2;
+            }
+
+            // We need this otherwise we have to use !important
+            %form-group-bundle {
+                grid-template-columns: auto auto auto 1fr auto;
+
+                %form-group-bundle-end {
+                    grid-area: 1 / 5;
+                }
+
+                &:hover {
+                    %upload-button {
+                        border-color: var-get($theme, 'hover-border-color');
+                    }
+                }
+            }
+
+            %upload-button {
+                border-block: rem(1px) solid var-get($theme, 'border-color');
+
+                .igx-button {
+                    border: none;
+                }
+            }
+        }
+
+        %form-group-display--file-border-focused {
+            %upload-button {
+                border-width: rem(2px);
+                border-color: var-get($theme, 'focused-border-color');
+            }
+
+            %form-group-bundle {
+                &:hover {
+                    %upload-button {
+                        border-color: var-get($theme, 'focused-border-color');
+                    }
+                }
+            }
+        }
+
+        %form-group-display--file-border-success {
+            %upload-button {
+                border-color: var-get($theme, 'success-secondary-color');
+            }
+
+            %form-group-bundle {
+                &:hover {
+                    %upload-button {
+                        border-color: var-get($theme, 'success-secondary-color');
+                    }
+                }
+            }
+        }
+
+        %form-group-display--file-border-warning {
+            %upload-button {
+                border-color: var-get($theme, 'warning-secondary-color');
+            }
+
+            %form-group-bundle {
+                &:hover {
+                    %upload-button {
+                        border-color: var-get($theme, 'warning-secondary-color');
+                    }
+                }
+            }
+        }
+
+        %form-group-display--file-border-error {
+            %upload-button {
+                border-color: var-get($theme, 'error-secondary-color');
+            }
+
+            %form-group-bundle {
+                &:hover {
+                    %upload-button {
+                        border-color: var-get($theme, 'error-secondary-color');
+                    }
+                }
+            }
+        }
+    }
+
+    %form-group-display--file {
+        %form-group-bundle {
+            grid-template-columns: auto auto auto 1fr auto;
+        }
+
+        %form-group-file-input {
+            grid-area: 1/3 / span 1 / span 2;
+            flex-grow: 1;
+            padding-inline: rem(4px);
+            cursor: pointer;
+
+            @if $variant != 'material' {
+                display: flex;
+                align-items: center;
+
+                span {
+                    transform: revert;
+                    inset: revert;
+                }
+            }
+        }
+
+        %igx-input-group__notch {
+            grid-area: 1 / 3;
+        }
+
+        %form-group-bundle-end {
+            grid-area: 1 / 5;
+        }
+
+        %igx-input-group__filler {
+            grid-area: 1 / 4;
+        }
+
+        %form-group-bundle-end {
+            grid-area: 1 / 5;
+        }
+
+        %form-group-bundle-main {
+            display: contents;
+        }
+
+        %form-group-input {
+            grid-column: 2 / -2;
+            grid-row: 1 / -1;
+            border: none;
+            inset: 0;
+            width: 100%;
+            appearance: none;
+            opacity: 0;
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        ::file-selector-button {
+            cursor: pointer;
+        }
+    }
+
+    %upload-button {
+        display: flex;
+        align-items: center;
+        grid-area: 1 / 2;
+        pointer-events: none;
+        height: var-get($theme, 'size');
+        cursor: pointer;
+        overflow: hidden;
+    }
+
+    %form-group-display--bootstrap-file {
+        %form-group-bundle-start,
+        %form-group-bundle-end {
+            [igxPrefix],
+            igx-prefix {
+                height: var-get($theme, 'size');
+            }
+        }
+    }
+
+    %bootstrap-upload-button {
+        border: rem(1px) solid var-get($theme, 'border-color');
+        border-inline-end: 0;
+
+        igx-button {
+            border: 0;
+        }
+    }
+
+    %bootstrap-file-disabled-upload-button {
+        border-color: var-get($theme, 'disabled-border-color');
+    }
+
+    %bootstrap-file-focused,
+    %bootstrap-file-valid,
+    %bootstrap-file-warning,
+    %bootstrap-file-invalid,
+    {
+        %form-group-bundle {
+            border-radius: var-get($theme, 'box-border-radius');
+            transition: box-shadow .15s ease-out, border .15s ease-out;
+
+            &:hover {
+                %form-group-file-input {
+                    box-shadow: none;
+                }
+            }
+        }
+
+        %form-group-file-input {
+            box-shadow: none;
+        }
+    }
+
+    %bootstrap-file-focused {
+        %form-group-bundle-start,
+        %form-group-bundle-end,
+        %upload-button {
+            border-color: var-get($theme, 'focused-border-color');
+        }
+
+        %form-group-bundle {
+            box-shadow: 0 0 0 rem(4px) var-get($theme, 'focused-secondary-color');
+        }
+    }
+
+    %bootstrap-file-valid {
+        %form-group-bundle-start,
+        %form-group-bundle-end,
+        %upload-button {
+            border-color: var-get($theme, 'success-secondary-color');
+        }
+    }
+
+    %bootstrap-file-warning {
+        %form-group-bundle-start,
+        %form-group-bundle-end,
+        %upload-button {
+            border-color: var-get($theme, 'warning-secondary-color');
+        }
+    }
+
+    %bootstrap-file-invalid {
+        %form-group-bundle-start,
+        %form-group-bundle-end,
+        %upload-button {
+            border-color: var-get($theme, 'error-secondary-color');
+        }
+    }
+
+    %bootstrap-file-valid-focused {
+        %form-group-bundle {
+            box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
+        }
+    }
+
+    %bootstrap-file-warning-focused {
+        %form-group-bundle {
+            box-shadow: 0 0 0 rem(4px) color($color: 'warn', $variant: '500', $opacity: .38);
+        }
+    }
+
+    %bootstrap-file-invalid-focused {
+        %form-group-bundle {
+            box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+        }
+    }
+
+    @if $variant == 'bootstrap' {
+        %form-group-display--file-focused {
+            %form-group-bundle-start,
+            %form-group-bundle-end,
+            %upload-button {
+                border-color: var-get($theme, 'focused-border-color');
+            }
+        }
+    }
+
+    .igx-input-group--bootstrap:not(.igx-input-group--prefixed) {
+        .igx-input-group__upload-button {
+            border-radius: var-get($theme, 'box-border-radius') 0 0 var-get($theme, 'box-border-radius');
+        }
+
+        .igx-input-group__file-input {
+            border-start-start-radius: 0;
+            border-end-start-radius: 0;
+        }
     }
 
     %form-group-bundle--box {
@@ -1004,10 +1025,17 @@
 
     %form-group-label--focused-border,
     %form-group-label--filled-border,
-    %form-group-label--placeholder-border,
     %form-group-label--file-border {
         %igx-input-group__notch {
             border-block-start-color: transparent !important;
+        }
+    }
+
+    %form-group-label--placeholder-border {
+        &:has(input:placeholder-shown, textarea:placeholder-shown) {
+            %igx-input-group__notch {
+                border-block-start-color: transparent !important;
+            }
         }
     }
 
@@ -1096,6 +1124,26 @@
         %textarea-group--outlined:not(%suffixed) {
             textarea {
                 width: calc(100% - #{rem(2px)});
+            }
+        }
+
+        %textarea-group:not(%form-group-display--focused, %form-group-display--filled) {
+            &:has(textarea:not(:placeholder-shown)) {
+                %form-group-textarea-label:not(%textarea-group-label--focused) {
+                    @include type-style('subtitle-1');
+
+                    top: calc($input-top-padding - #{rem(3px)});
+                    transform: translateY(0);
+                    margin-bottom: auto;
+                }
+            }
+        }
+
+        %textarea-group:not(%form-group-display--focused, %form-group-display--filled) {
+            &:has(%form-group-display--border, textarea:not(:placeholder-shown)) {
+                %igx-input-group__notch {
+                    border-block-start-width: rem(1px);
+                }
             }
         }
     }
@@ -1232,11 +1280,13 @@
         overflow: hidden;
         padding-block-start: $input-top-padding;
         padding-block-end: $input-bottom-padding;
-        height: calc(var-get($theme, 'size') - 2px);
+        height: var-get($theme, 'size');
+        max-height: 100%;
         color: var-get($theme, 'filled-text-color');
 
         span {
             @include ellipsis();
+
             position: relative;
             display: inline-block;
             width: inherit;
@@ -1251,22 +1301,6 @@
         }
     }
 
-    %form-group-clear-icon {
-        &:focus {
-            background-color: color($color: 'primary', $variant: 500);
-            color: contrast-color($color: 'primary', $variant: 600);
-
-            @if $variant == 'material' {
-                background-color: transparent;
-                color: color($color: 'secondary', $variant: 500);
-            }
-
-            @if $variant == 'bootstrap' {
-                color: contrast-color($color: 'primary', $variant: 600);
-            }
-        }
-    }
-
     // This is a hack that removes the autofill background and it's essential,
     // otherwise the background is on top of the floating label in material theme.
     // The !important flag is because bootstrap theme(and potentially feature themes) is overriding the transition delay.
@@ -1278,15 +1312,9 @@
         &:autofill,
         &:autofill:hover,
         &:autofill:focus,
-        &:autofill:active, {
+        &:autofill:active {
             -webkit-transition-delay: 99999s !important;
             transition-delay: 99999s !important;
-        }
-    }
-
-    %edge-clear-icon-fix {
-        &::-ms-clear {
-            display: none;
         }
     }
 
@@ -1316,6 +1344,14 @@
         cursor: default;
 
         color: var-get($theme, 'disabled-text-color') !important;
+
+        &::placeholder {
+            color: var-get($theme, 'disabled-placeholder-color');
+        }
+    }
+
+    %form-group-file-input--disabled {
+        cursor: default;
 
         &::placeholder {
             color: var-get($theme, 'disabled-placeholder-color');
@@ -1511,10 +1547,13 @@
     }
 
     %form-group-helper {
+        --ig-caption-margin-top: #{$hint-spacing-block};
+        --ig-caption-margin-bottom: 0;
+
         color: var-get($theme, 'helper-text-color');
         position: relative;
-        display: flex;
-        padding-block-start: $hint-spacing-block;
+        display: grid;
+        grid-auto-rows: minmax($hint-min-size, auto);
         padding-inline: $hint-spacing-inline;
 
         justify-content: space-between;
@@ -1528,11 +1567,7 @@
         }
 
         &:empty {
-            @if $variant == 'fluent' {
-                padding: 0;
-            } @else {
-                display: none;
-            }
+            display: none;
         }
     }
 
@@ -1639,7 +1674,7 @@
     }
 
     %indigo--box-focused {
-        background: var-get($theme, 'box-background-hover');
+        background: var-get($theme, 'box-background-focus');
     }
 
     %form-group-bundle--indigo--disabled {
@@ -1652,13 +1687,6 @@
 
         &::after {
             border-bottom-style: solid;
-        }
-    }
-
-    %indigo-upload-button {
-        [igxButton] {
-            min-height: 0;
-            height: calc(100% - #{rem(8px)});
         }
     }
     // INDIGO END
@@ -1756,98 +1784,79 @@
 
     %form-group-bundle--fluent {
         --min-width: #{sizable(rem(4px), rem(6px), rem(8px))};
+        --_fluent-input-border-size: #{rem(1px)};
 
         min-height: var-get($theme, 'size');
         padding: 0;
-        border: rem(1px) solid var-get($theme, 'border-color');
         background: var-get($theme, 'border-background');
         align-items: stretch;
-        overflow: hidden;
+        overflow: visible;
+        border-radius: var-get($theme, 'border-border-radius');
+        position: relative;
+        border: rem(1px) solid transparent;
 
-        @if $variant == 'fluent' {
-            border-radius: var-get($theme, 'border-border-radius');
-        }
-
-        // Those focus styles are needed since when we focus the button inside
-        // the file type input the class .igx-input-group--focused is not added but the input is focused.
-        &:focus,
-        &:focus-within {
-            %form-group-bundle-start {
-                margin-block-start: rem(-1px);
-                margin-inline-start: rem(-1px);
-            }
-
-            %form-group-bundle-end {
-                margin-block-start: rem(-1px);
-                margin-inline-end: rem(-1px);
-            }
-
-            %form-group-bundle-start:empty + %form-group-bundle-main,
-            %form-group-bundle-end:empty + %form-group-bundle-main {
-                margin-inline-start: rem(-1px);
-            }
-
-            %form-group-bundle-main {
-                margin-block-start: rem(-1px);
-            }
+        &::before {
+            content: '';
+            position: absolute;
+            width: calc(100% + var(--_fluent-input-border-size) * 2);
+            height: calc(100% + var(--_fluent-input-border-size) * 2);
+            pointer-events: none;
+            user-select: none;
+            inset: calc(var(--_fluent-input-border-size) * -1);
+            z-index: 1;
+            box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'border-color');
+            border-radius: inherit;
         }
     }
 
     %form-group-bundle--fluent--hover {
-        border-color: var-get($theme, 'hover-border-color');
+        &::before {
+            box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'hover-border-color');
+        }
     }
 
     %form-group-bundle--fluent--focus {
-        border-color: var-get($theme, 'focused-border-color');
-        border-width: rem(2px);
+        --_fluent-input-border-size: #{rem(2px)};
+
+        &::before {
+            box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'focused-border-color');
+        }
 
         &:hover {
-            border-color: var-get($theme, 'focused-border-color');
+            &::before {
+                box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'focused-border-color');
+            }
         }
     }
 
     %form-group-bundle-error--fluent,
     %form-group-bundle-error--fluent--hover,
     %form-group-bundle-error--fluent--focus {
-        border-color: var-get($theme, 'error-secondary-color');
+        &::before {
+            box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'error-secondary-color');
+        }
     }
 
     %form-group-bundle-success--fluent,
     %form-group-bundle-success--fluent--hover,
     %form-group-bundle-success--fluent--focus {
-        border-color: var-get($theme, 'success-secondary-color');
+        &::before {
+            box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'success-secondary-color');
+        }
     }
 
     %form-group-bundle--fluent--hover-disabled,
     %form-group-bundle--fluent-disabled {
-        border-color: var-get($theme, 'disabled-border-color');
         background: var-get($theme, 'border-disabled-background');
+
+        &::before {
+            box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'disabled-border-color');
+        }
     }
 
     %form-group-bundle-main--fluent {
         align-self: center;
         cursor: default;
-    }
-
-    @if $fluent-theme {
-        %form-group-bundle-start--fluent--focused {
-            margin-block-start: rem(-1px);
-            margin-inline-start: rem(-1px);
-        }
-
-        %form-group-bundle-end--fluent--focused {
-            margin-block-start: rem(-1px);
-            margin-inline-end: rem(-1px);
-        }
-
-        %form-group-bundle-start--fluent--focused:empty + %form-group-bundle-main--fluent--focused,
-        %form-group-bundle-end--fluent--focused:empty + %form-group-bundle-main--fluent--focused {
-            margin-inline-start: rem(-1px);
-        }
-
-        %form-group-bundle-main--fluent--focused {
-            margin-block-start: rem(-1px);
-        }
     }
 
     %form-group-bundle-textarea-start--fluent,
@@ -1864,6 +1873,10 @@
         padding-inline: rem(8px);
         margin: 0;
         border: none;
+    }
+
+    %fluent-file-input {
+        padding-inline: 0;
     }
 
     %indigo-textarea {
@@ -1891,6 +1904,8 @@
         color: var-get($theme, 'idle-secondary-color');
 
         @if $variant == 'fluent' {
+            --ig-subtitle-2-line-height: rem(16px);
+
             margin-block-end: rem(5px);
         } @else {
             margin-block-end: rem(4px);
@@ -1925,10 +1940,6 @@
 
     %fluent-label-focused {
         transform: translateY(0) scale(1);
-    }
-
-    %form-group-helper--textarea--fluent--focused {
-        margin-block-start: rem(-1px);
     }
 
     %fluent-placeholder-label {
@@ -1972,9 +1983,6 @@
         }
     }
 
-    %fluent-upload-button {
-        padding: 0;
-    }
     // FLUENT END
 
     // ==============================================
@@ -2006,6 +2014,39 @@
                     end-radius: 0;
                 };
             }
+        }
+
+        .igx-input-group__clear-icon + igx-suffix,
+        .igx-input-group__clear-icon + [igxPrefix] {
+            border-inline-start: rem(1px) solid var-get($theme, 'border-color');
+        }
+    }
+
+    %form-group-display--bootstrap-suffixed-focused {
+        .igx-input-group__clear-icon + igx-suffix,
+        .igx-input-group__clear-icon + [igxPrefix] {
+            border-color: var-get($theme, 'focused-border-color');
+        }
+    }
+
+    %form-group-display--bootstrap-suffixed-valid {
+        .igx-input-group__clear-icon + igx-suffix,
+        .igx-input-group__clear-icon + [igxPrefix] {
+            border-color: var-get($theme, 'success-secondary-color');
+        }
+    }
+
+    %form-group-display--bootstrap-suffixed-form-group-display--bootstrap-suffixed-warning {
+        .igx-input-group__clear-icon + igx-suffix,
+        .igx-input-group__clear-icon + [igxPrefix] {
+            border-color: var-get($theme, 'warning-secondary-color');
+        }
+    }
+
+    %form-group-display--bootstrap-suffixed-invalid {
+        .igx-input-group__clear-icon + igx-suffix,
+        .igx-input-group__clear-icon + [igxPrefix] {
+            border-color: var-get($theme, 'error-secondary-color');
         }
     }
 
@@ -2116,7 +2157,9 @@
     %bootstrap-input {
         height: auto;
         line-height: 1.5;
+        grid-area: 1 / 2;
         margin: 0;
+        z-index: 2;
         font-size: pad(
             map.get($bootstrap-font-size, 'compact'),
             map.get($bootstrap-font-size, 'cosy'),
@@ -2156,13 +2199,22 @@
             map.get($bootstrap-inline-padding, 'cosy'),
             map.get($bootstrap-inline-padding, 'comfortable')
         );
-        grid-area: 1 / 2 / auto / auto;
         border-radius: var-get($theme, 'box-border-radius');
-        z-index: 1;
+
     }
 
     %bootstrap-file-input {
         height: inherit;
+    }
+
+    %bootstrap-input-file {
+        grid-column: 2 / -2;
+        grid-row: 1 / -1;
+        height: var-get($theme, 'size');
+    }
+
+    %bootstrap-bundle-end {
+        grid-area: 1 / 5;
     }
 
     %bootstrap-input--focus {
@@ -2172,16 +2224,52 @@
 
     %bootstrap-input--success {
         border: rem(1px) solid var-get($theme, 'success-secondary-color');
-        box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
+
+        &:focus {
+            box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
+
+            + %bootstrap-file-input {
+                box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
+            }
+        }
+    }
+
+    %bootstrap-input--warning {
+        border: rem(1px) solid var-get($theme, 'warning-secondary-color');
+        box-shadow: 0 0 0 rem(4px) color($color: 'warn', $variant: '500', $opacity: .38);
     }
 
     %bootstrap-input--error {
         border: rem(1px) solid var-get($theme, 'error-secondary-color');
-        box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+
+        &:focus {
+            box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+
+            + %bootstrap-file-input {
+                box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+            }
+        }
+    }
+
+    %bootstrap-input--warning {
+        border: rem(1px) solid var-get($theme, 'warning-secondary-color');
+
+        &:focus {
+            box-shadow: 0 0 0 rem(4px) color($color: 'warn', $variant: 500, $opacity: 0.38);
+
+            + %bootstrap-file-input {
+                box-shadow: 0 0 0 rem(4px) color($color: 'warn', $variant: 500, $opacity: 0.38);
+            }
+        }
     }
 
     %bootstrap-input--disabled {
         background: var-get($theme, 'border-disabled-background');
+        border: rem(1px) solid var-get($theme, 'disabled-border-color');
+        box-shadow: none;
+    }
+
+    %bootstrap-file-input--disabled {
         border: rem(1px) solid var-get($theme, 'disabled-border-color');
         box-shadow: none;
     }
@@ -2195,16 +2283,6 @@
         background: var-get($theme, 'border-disabled-background');
         border-color: var-get($theme, 'disabled-border-color');
         color: var-get($theme, 'disabled-text-color');
-    }
-
-    // Upload button for file type input
-    %bootstrap-upload-button {
-        padding: 0;
-
-        [igxButton] {
-            min-height: 0;
-            height: calc(100% - #{rem(8px)});
-        }
     }
 }
 
@@ -2229,9 +2307,7 @@
     }
 
     %form-group-helper {
-        @include type-style($helper-text) {
-            margin: 0;
-        }
+        @include type-style($helper-text);
     }
 
     %form-group-prefix,
