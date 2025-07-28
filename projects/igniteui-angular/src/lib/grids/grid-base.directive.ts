@@ -3859,6 +3859,8 @@ export abstract class IgxGridBaseDirective implements GridType,
                 $event.containerSize = this.calcHeight;
             }
             this.evaluateLoadingState();
+            this.updateMergedData();
+            this.cdr.detectChanges();
         });
 
         this.verticalScrollContainer.scrollbarVisibilityChanged.pipe(filter(() => !this._init), destructor).subscribe(() => {
@@ -3882,22 +3884,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         });
 
         this.verticalScrollContainer.chunkPreload.pipe(filter(() => !this._init), destructor).subscribe(() => {
-            // recalc merged data
-            if (this.columnsToMerge.length > 0) {
-                const startIndex = this.verticalScrollContainer.state.startIndex;
-                const prevDataView = this.verticalScrollContainer.igxForOf?.slice(0, startIndex);
-                const data = [];
-                for (let index = 0; index < startIndex; index++) {
-                    const rec = prevDataView[index];
-                    if (rec.cellMergeMeta &&
-                        // index + maxRowSpan is within view
-                        startIndex < (index + Math.max(...rec.cellMergeMeta.values().toArray().map(x => x.rowSpan)))) {
-                            const visibleIndex = this.isRowPinningToTop ? index + this.pinnedRecordsCount : index;
-                            data.push({record: rec, index: visibleIndex, dataIndex: index });
-                        }
-                }
-                this._mergedDataInView = data;
-            }
+            this.updateMergedData();
         });
 
         // notifier for column autosize requests
@@ -8135,6 +8122,27 @@ export abstract class IgxGridBaseDirective implements GridType,
             return recreateTree(value, this._hGridSchema, true) as IFilteringExpressionsTree;
         } else {
             return recreateTreeFromFields(value, this._columns) as IFilteringExpressionsTree;
+        }
+    }
+
+    private updateMergedData(){
+        // recalc merged data
+        if (this.columnsToMerge.length > 0) {
+            const startIndex = this.verticalScrollContainer.state.startIndex;
+            const prevDataView = this.verticalScrollContainer.igxForOf?.slice(0, startIndex);
+            const data = [];
+            for (let index = 0; index < startIndex; index++) {
+                const rec = prevDataView[index];
+                if (rec.cellMergeMeta &&
+                    // index + maxRowSpan is within view
+                    startIndex < (index + Math.max(...rec.cellMergeMeta.values().toArray().map(x => x.rowSpan)))) {
+                        const visibleIndex = this.isRowPinningToTop ? index + this.pinnedRecordsCount : index;
+                        data.push({record: rec, index: visibleIndex, dataIndex: index });
+                    }
+            }
+            this._mergedDataInView = data;
+            console.log(data);
+            //this._activeRowIndexes = null;
         }
     }
 }
