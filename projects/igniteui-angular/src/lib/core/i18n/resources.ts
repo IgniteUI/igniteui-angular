@@ -16,7 +16,8 @@ import { IBannerResourceStrings } from './banner-resources';
 import {
     registerI18n,
     getCurrentResourceStrings as getCurrentResourceStringsCore,
-    IResourceStrings as IResourceStringsCore
+    IResourceStrings as IResourceStringsCore,
+    setCurrentI18n
 } from 'igniteui-i18n-core';
 
 export interface IResourceStrings extends IGridResourceStrings, ITimePickerResourceStrings, ICalendarResourceStrings,
@@ -63,4 +64,11 @@ export function getCurrentResourceStrings<T>(defaultEN: T, init = true) {
 
 export function changei18n(resourceStrings: IResourceStrings) {
     igxRegisterI18n(resourceStrings);
+}
+
+export function initi18n(locale: string) {
+    if (locale !== 'en-US') {
+        //Default
+        setCurrentI18n(locale);
+    }
 }

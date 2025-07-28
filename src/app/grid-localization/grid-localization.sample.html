@@ -1,7 +1,13 @@
-<div class="sample-column">
+<div class="sample-row">
+    <label for="format"></label>
+    <input igxInput name="format" [(ngModel)]="inputValue">
+    <button (click)="onButtonClick()">Log custom format</button>
+</div>
+<div class="sample-row">
     <div class="grid-wrapper">
-        <igx-grid #grid [data]="data" [autoGenerate]="false" height="520px" width="100%"
-            [allowFiltering]="true" [locale]="locale" [primaryKey]="'Type'">
+        <igx-grid #grid [data]="data" [autoGenerate]="false" height="600px" width="100%"
+            [allowFiltering]="true"
+            [primaryKey]="'Type'">
             <igx-grid-toolbar>
                 <igx-grid-toolbar-title>Grid with Localization</igx-grid-toolbar-title>
                 <igx-select [(ngModel)]="locale" (ngModelChange)="updateLocale()">
@@ -19,6 +25,10 @@
             <igx-column field="Buy" header="Buy" [dataType]="'currency'" [groupable]="true"  [editable]="true"></igx-column>
             <igx-column field="Volume" header="Volume" [dataType]="'number'" [groupable]="true"  [editable]="true"></igx-column>
             <igx-column field="LastOrderDate" header="Last Order" [dataType]="'date'" [groupable]="true"  [editable]="true"></igx-column>
+            <igx-action-strip #actionstrip>
+                <igx-grid-pinning-actions></igx-grid-pinning-actions>
+                <igx-grid-editing-actions [addRow]="true" [editRow]="true" [deleteRow]="true"></igx-grid-editing-actions>
+            </igx-action-strip>
             <igx-paginator></igx-paginator>
         </igx-grid>
     </div>
