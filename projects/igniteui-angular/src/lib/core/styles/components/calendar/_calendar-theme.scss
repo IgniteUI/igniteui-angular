@@ -1889,11 +1889,9 @@
         %date-inner {
             color: var-get($theme, 'weekend-color');
 
-            @if $variant == 'indigo' {
-                &:hover {
-                    color: var-get($theme, 'date-hover-foreground');
-                }
-            }
+           &:hover {
+               color: var-get($theme, 'date-hover-foreground');
+           }
         }
     }
 
