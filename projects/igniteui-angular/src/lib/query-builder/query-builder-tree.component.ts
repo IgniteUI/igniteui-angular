@@ -5,7 +5,7 @@ import {
     Output,
     TemplateRef
 } from '@angular/core';
-import { getLocaleFirstDayOfWeek, NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
+import { NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
 import { Inject } from '@angular/core';
 import {
     Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding
@@ -36,7 +36,7 @@ import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxSelectItemComponent } from '../select/select-item.component';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IComboSelectionChangingEventArgs, IgxComboComponent } from "../combo/combo.component";
 import { IgxComboHeaderDirective } from '../combo/public_api';
@@ -55,7 +55,7 @@ import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navig
 import { IgxQueryBuilderDragService } from './query-builder-drag.service';
 import { isTree } from '../data-operations/expressions-tree-util';
 import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, IgxFieldFormatterPipe } from './query-builder.common';
-import { getI18nManager } from 'igniteui-i18n-core';
+import { getCurrentI18n, getI18nManager } from 'igniteui-i18n-core';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -219,12 +219,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public set locale(value: string) {
         this._locale = value;
-        // if value is invalid, set it back to _localeId
-        try {
-            getLocaleFirstDayOfWeek(this._locale);
-        } catch {
-            this._locale = this._localeId;
-        }
     }
 
     /**
@@ -546,7 +540,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         protected platform: PlatformUtil,
         private elRef: ElementRef,
         @Inject(LOCALE_ID) protected _localeId: string) {
-        this.locale = this.locale || this._localeId;
+        initi18n(_localeId);
+        this.locale = this.locale || getCurrentI18n();
         this.dragService.register(this, elRef);
         getI18nManager().onResourceChange(() => {
             this._resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
