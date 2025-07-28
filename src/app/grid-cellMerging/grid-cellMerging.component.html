@@ -45,7 +45,10 @@
 </div>
 <igx-grid [data]="data" width="800px" height="550px" [moving]="true" #grid1
     [cellMergeMode]="'always'" [rowSelection]="'single'">
-    <igx-column field="OrderID" header="Order ID" [hidden]="true" >
+    <igx-column field="OrderID" header="Order ID">
+        <ng-template igxCell let-cell="cell" let-val>
+            Value: {{val}},Index: {{cell.row.index}}
+          </ng-template>
     </igx-column>
     <igx-column field="ShipCountry" header="Ship Country" width="200px" [merge]="true" sortable="true">
     </igx-column>
@@ -69,9 +72,9 @@
     </igx-column>
     <igx-paginator [perPage]="20">
     </igx-paginator>
-    <!-- <igx-action-strip>
+    <igx-action-strip>
         <igx-grid-pinning-actions></igx-grid-pinning-actions>
-    </igx-action-strip> -->
+    </igx-action-strip>
     <igx-grid-toolbar>
         <igx-grid-toolbar-actions>
             <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>

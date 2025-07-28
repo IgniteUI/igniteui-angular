@@ -63,7 +63,7 @@
                 | gridRowPinning:id:true:pipeTrigger
                 | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
                 | gridSort:sortingExpressions:groupingExpressions:sortStrategy:id:pipeTrigger:true
-                | gridCellMerge:visibleColumns:cellMergeMode:sortingExpressions:activeRowIndexes:pipeTrigger; as pinnedData) {
+                | gridCellMerge:visibleColumns:cellMergeMode:sortingExpressions:activeRowIndexes:true:pipeTrigger; as pinnedData) {
                 @if (pinnedData.length > 0) {
                     <div #pinContainer
                         [ngClass]="{
@@ -90,7 +90,7 @@
         | gridDetails:hasDetails:expansionStates:pipeTrigger
         | gridAddRow:false:pipeTrigger
         | gridRowPinning:id:false:pipeTrigger
-        | gridCellMerge:visibleColumns:cellMergeMode:sortingExpressions:activeRowIndexes:pipeTrigger"
+        | gridCellMerge:visibleColumns:cellMergeMode:sortingExpressions:activeRowIndexes:false:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]="verticalScroll"
             [igxForContainerSize]="calcHeight"
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"

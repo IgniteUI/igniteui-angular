@@ -38,8 +38,8 @@ import { INVOICE_DATA } from '../shared/invoiceData';
         IgxColumnComponent,
         IgxGridComponent,
         IgxPaginatorComponent,
-        // IgxActionStripComponent,
-        // IgxGridPinningActionsComponent,
+        IgxActionStripComponent,
+        IgxGridPinningActionsComponent,
         IgxGridToolbarComponent,
         IgxGridToolbarActionsComponent,
         IgxGridToolbarPinningComponent,
@@ -51,7 +51,8 @@ import { INVOICE_DATA } from '../shared/invoiceData';
         IgxPrefixDirective,
         IgxSuffixDirective,
         IgxIconComponent,
-        IgxInputDirective
+        IgxInputDirective,
+        IgxCellTemplateDirective
     ]
 })
 export class GridCellMergingComponent {

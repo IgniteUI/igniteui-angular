@@ -3697,7 +3697,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     protected getMergeCellOffset(rowData) {
-        const index = rowData.index;
+        const index = rowData.dataIndex;
         let offset = this.verticalScrollContainer.scrollPosition - this.verticalScrollContainer.getScrollForIndex(index);
         if (this.hasPinnedRecords && this.isRowPinningToTop) {
             offset -= this.pinnedRowHeight;
@@ -3892,7 +3892,8 @@ export abstract class IgxGridBaseDirective implements GridType,
                     if (rec.cellMergeMeta &&
                         // index + maxRowSpan is within view
                         startIndex < (index + Math.max(...rec.cellMergeMeta.values().toArray().map(x => x.rowSpan)))) {
-                            data.push({record: rec, index: index });
+                            const visibleIndex = this.isRowPinningToTop ? index + this.pinnedRecordsCount : index;
+                            data.push({record: rec, index: visibleIndex, dataIndex: index });
                         }
                 }
                 this._mergedDataInView = data;
