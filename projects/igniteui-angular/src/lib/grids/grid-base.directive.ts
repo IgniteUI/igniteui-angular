@@ -2926,6 +2926,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._cellSelectionMode = selectionMode;
         // if (this.gridAPI.grid) {
         this.selectionService.clear(true);
+        this._activeRowIndexes = null;
         this.notifyChanges();
         // }
     }
@@ -4120,6 +4121,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 .pipe(takeUntil(this.destroy$))
                 .subscribe(() => {
                     this.selectionService.clear(true);
+                    this._activeRowIndexes = null;
                     this.crudService.endEdit(false);
                     this.pipeTrigger++;
                     this.navigateTo(0);
@@ -4130,6 +4132,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 .pipe(takeUntil(this.destroy$))
                 .subscribe(() => {
                     this.selectionService.clear(true);
+                    this._activeRowIndexes = null;
                     this.page = 0;
                     this.crudService.endEdit(false);
                     this.notifyChanges();
@@ -5855,6 +5858,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public clearCellSelection(): void {
         this.selectionService.clear(true);
+        this._activeRowIndexes = null;
         this.notifyChanges();
     }
 
@@ -8114,6 +8118,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private clearActiveNode() {
         this.navigation.lastActiveNode = this.navigation.activeNode;
         this.navigation.activeNode = {} as IActiveNode;
+        this._activeRowIndexes = null;
         this.notifyChanges();
     }
 
