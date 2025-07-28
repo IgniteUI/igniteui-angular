@@ -144,6 +144,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @Input()
     public column: ColumnType;
 
+    /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    public isPlaceholder: boolean;
+
 
     /**
      * @hidden
@@ -286,6 +293,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @memberof IgxGridCellComponent
      */
     public get template(): TemplateRef<any> {
+        if (this.isPlaceholder) {
+            return this.emptyCellTemplate;
+        }
         if (this.editMode && this.formGroup) {
             const inlineEditorTemplate = this.column.inlineEditorTemplate;
             return inlineEditorTemplate ? inlineEditorTemplate : this.inlineEditorTemplate;
@@ -703,6 +713,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     @ViewChild('defaultCell', { read: TemplateRef, static: true })
     protected defaultCellTemplate: TemplateRef<any>;
+
+    @ViewChild('emptyCell', { read: TemplateRef, static: true })
+    protected emptyCellTemplate: TemplateRef<any>;
 
     @ViewChild('defaultPinnedIndicator', { read: TemplateRef, static: true })
     protected defaultPinnedIndicator: TemplateRef<any>;

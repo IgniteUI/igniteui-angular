@@ -124,7 +124,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     }
 
     public get hasMergedCells(): boolean {
-            return this.grid.isRecordMerged(this.metaData);
+            return this.grid.columnsToMerge.length > 0;
     }
 
     /**
