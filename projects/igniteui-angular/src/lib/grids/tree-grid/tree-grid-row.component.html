@@ -24,11 +24,11 @@
     }
     <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]="'calcPixelWidth'" [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
         @if (this.hasMergedCells) {
-            <div [style.height.px]=" this.metaData.cellMergeMeta?.get(col.field)?.rowSpan > 1 ? getRowHeight() : null"
+            <div [style.height.px]=" this.metaData?.cellMergeMeta.get(col.field)?.rowSpan > 1 ? getRowHeight() : null"
                  class="igx-grid__mrl-block"
-                 [style.visibility]="this.metaData.cellMergeMeta?.get(col.field)?.root ? 'hidden' : 'visible'"
+                 [style.visibility]="this.metaData?.cellMergeMeta.get(col.field)?.root ? 'hidden' : 'visible'"
                  [ngStyle]="{
-                'grid-template-rows': this.metaData.cellMergeMeta?.get(col.field)?.rowSpan > 1 ? this.getMergeCellSpan(col) : null
+                'grid-template-rows': this.metaData?.cellMergeMeta.get(col.field)?.rowSpan > 1 ? this.getMergeCellSpan(col) : null
             }">
                 <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? treeCellTemplate : cellTemplate; context: { $implicit: this, column: col }"></ng-container>
             </div>
@@ -60,11 +60,11 @@
 <ng-template #pinnedCellsTemplate let-col>
     @for (col of pinnedColumns | igxNotGrouped; track trackPinnedColumn(col)) {
         @if (this.hasMergedCells) {
-            <div [style.height.px]=" this.metaData.cellMergeMeta?.get(col.field)?.rowSpan > 1 ? getRowHeight() : null"
+            <div [style.height.px]=" this.metaData?.cellMergeMeta.get(col.field)?.rowSpan > 1 ? getRowHeight() : null"
                  class="igx-grid__mrl-block"
-                 [style.visibility]="this.metaData.cellMergeMeta?.get(col.field)?.root ? 'hidden' : 'visible'"
+                 [style.visibility]="this.metaData?.cellMergeMeta.get(col.field)?.root ? 'hidden' : 'visible'"
                  [ngStyle]="{
-                'grid-template-rows': this.metaData.cellMergeMeta?.get(col.field)?.rowSpan > 1 ? this.getMergeCellSpan(col) : null
+                'grid-template-rows': this.metaData?.cellMergeMeta.get(col.field)?.rowSpan > 1 ? this.getMergeCellSpan(col) : null
             }">
                 <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? treeCellTemplate : cellTemplate; context: { $implicit: this, column: col }"></ng-container>
             </div>
