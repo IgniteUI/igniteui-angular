@@ -58,9 +58,9 @@ import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
 import { IgxDividerDirective } from '../directives/divider/divider.directive';
-import { getI18nManager } from 'igniteui-i18n-core';
+import { getCurrentI18n, getI18nManager } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
 export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
@@ -624,7 +624,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         private cdr: ChangeDetectorRef,
     ) {
         super(element, _localeId, _inputGroupType);
-        this.locale = this.locale || this._localeId;
+        initi18n(_localeId);
+        this.locale = this.locale || getCurrentI18n();
         getI18nManager().onResourceChange(() => {
             this._resourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN, false);
         });

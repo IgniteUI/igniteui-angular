@@ -66,9 +66,9 @@ import {
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
-import { getI18nManager } from 'igniteui-i18n-core';
+import { getCurrentI18n, getI18nManager } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
 
@@ -517,7 +517,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         private cdr: ChangeDetectorRef,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
         super(element, _localeId, _inputGroupType);
-        this.locale = this.locale || this._localeId;
+        initi18n(_localeId);
+        this.locale = this.locale || getCurrentI18n();
         getI18nManager().onResourceChange(() => {
             this._resourceStrings = getCurrentResourceStrings(DatePickerResourceStringsEN, false);
         });
@@ -763,8 +764,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     /** @hidden @internal */
     public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
-
-        this.locale = this.locale || this._localeId;
+        initi18n(this._localeId);
+        this.locale = this.locale || getCurrentI18n();
     }
 
     /** @hidden @internal */

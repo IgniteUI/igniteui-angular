@@ -3,14 +3,12 @@ import {
     AfterViewInit, booleanAttribute, ContentChildren, Directive, ElementRef, EventEmitter,
     Inject, Input, LOCALE_ID, OnDestroy, Optional, Output, QueryList, ViewChild
 } from '@angular/core';
-import { getLocaleFirstDayOfWeek } from "@angular/common";
-
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { EditorProvider } from '../core/edit-provider';
 import { IToggleView } from '../core/navigation';
-import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
+import { getLocaleFirstDayOfWeek, IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { OverlaySettings } from '../services/overlay/utilities';
 import { IgxPickerToggleComponent } from './picker-icons.common';
@@ -21,6 +19,8 @@ import { IGX_INPUT_GROUP_TYPE, IgxInputGroupType } from '../input-group/inputGro
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
+import { getCurrentI18n } from 'igniteui-i18n-core';
+import { initi18n } from '../core/i18n/resources';
 
 @Directive()
 export abstract class PickerBaseDirective implements IToggleView, EditorProvider, AfterViewInit, AfterContentChecked, OnDestroy {
@@ -121,12 +121,6 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      */
     public set locale(value: string) {
         this._locale = value;
-        // if value is invalid, set it back to _localeId
-        try {
-            getLocaleFirstDayOfWeek(this._locale);
-        } catch (e) {
-            this._locale = this._localeId;
-        }
     }
 
     /**
@@ -294,7 +288,8 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     constructor(public element: ElementRef,
         @Inject(LOCALE_ID) protected _localeId: string,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
-        this.locale = this.locale || this._localeId;
+        initi18n(_localeId);
+        this.locale = this.locale || getCurrentI18n();
     }
 
     /** @hidden @internal */

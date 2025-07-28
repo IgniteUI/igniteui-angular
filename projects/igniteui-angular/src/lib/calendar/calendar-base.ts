@@ -6,7 +6,7 @@ import { noop, Subject } from 'rxjs';
 import { getLocaleFirstDayOfWeek, isDate, isEqual, PlatformUtil } from '../core/utils';
 import { CalendarResourceStringsEN, ICalendarResourceStrings } from '../core/i18n/calendar-resources';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
 import { KeyboardNavigationService } from './calendar.services';
 import { getYearRange, isDateInRanges } from './common/helpers';
 import { CalendarDay } from './common/model';
@@ -649,7 +649,8 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         protected keyboardNavigation?: KeyboardNavigationService,
         protected cdr?: ChangeDetectorRef,
     ) {
-        this.locale = getCurrentI18n() || _localeId;
+        initi18n(_localeId);
+        this.locale = getCurrentI18n();
         this.viewDate = this.viewDate ? this.viewDate : new Date();
         this.initFormatters();
 
