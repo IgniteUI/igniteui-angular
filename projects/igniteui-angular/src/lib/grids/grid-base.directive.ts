@@ -7985,7 +7985,12 @@ export abstract class IgxGridBaseDirective implements GridType,
         const searchText = caseSensitive ? this._lastSearchInfo.searchText : this._lastSearchInfo.searchText.toLowerCase();
         let data = this.filteredSortedData;
         if (this.hasCellsToMerge) {
-            data =  DataUtil.merge(cloneArray(this.filteredSortedData), this.columnsToMerge, this.mergeStrategy, this.activeRowIndexes, this);
+            let indexes = this.activeRowIndexes;
+            if (this.page > 0) {
+                indexes = indexes.map(x => this.perPage * this.page + x );
+            }
+
+            data =  DataUtil.merge(cloneArray(this.filteredSortedData), this.columnsToMerge, this.mergeStrategy, indexes, this);
         }
         const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
         const columnsPathParts = columnItems.map(col => columnFieldPath(col.field));
