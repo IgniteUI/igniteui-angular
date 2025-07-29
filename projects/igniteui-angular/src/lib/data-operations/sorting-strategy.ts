@@ -75,14 +75,12 @@ export class DefaultSortingStrategy implements ISortingStrategy {
     }
 
     public compareValues(a: any, b: any): number {
-        const aIsNull = (a === null || a === undefined);
-        const bIsNull = (b === null || b === undefined);
-        if (aIsNull) {
-            return bIsNull ? 0 : -1;
-        }
-        if (bIsNull) {
-            return 1;
-        }
+        const aIsNullish = a == null;
+        const bIsNullish = b == null;
+
+        if (aIsNullish && bIsNullish) return 0;
+        if (aIsNullish) return -1
+        if (bIsNullish) return 1;
 
         return a > b ? 1 : a < b ? -1 : 0;
     }
