@@ -1,5 +1,6 @@
 @use 'sass:meta';
 @use 'tokens';
+@use 'indigo';
 @use 'styles/themes/standalone' as *;
 
 $tokens: meta.module-variables(tokens);

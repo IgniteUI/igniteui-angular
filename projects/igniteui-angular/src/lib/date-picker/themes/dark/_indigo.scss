@@ -1,22 +1,16 @@
 @use 'igniteui-theming/sass/bem/index' as *;
 @use 'igniteui-theming/sass/typography/index' as *;
-@use 'igniteui-theming/sass/themes/functions' as *;
 @use 'igniteui-theming/sass/elevations' as *;
 @use 'styles/themes/standalone' as *;
 @use '../light/tokens' as *;
 
 $_theme: $indigo;
 
-@include themed-block(igx-date-picker, indigo) {
+@include themed-block(igx-date-picker, indigo, dark) {
     $border-shadow: 0 0 0 rem(1px) var-get($_theme, 'border-color');
-    box-shadow: $border-shadow, elevation(5);
-
-    @include e(actions) {
-        min-height: sizable(rem(40px), rem(44px), rem(48px));
-        padding: rem(8px) rem(16px);
-    }
+    box-shadow: $border-shadow, elevation(7);
 
     @include m(dropdown) {
-        box-shadow: $border-shadow, elevation(3);
+        box-shadow: $border-shadow, elevation(2);
     }
 }

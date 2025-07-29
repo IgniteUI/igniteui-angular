@@ -14,7 +14,7 @@ $theme: $material;
 
         display: block;
         // TODO move the shadow in the schemas
-        box-shadow: $border-shadow, elevation(24),;
+        box-shadow: $border-shadow, elevation(24);
         border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'content-background');
         overflow: hidden;
@@ -38,7 +38,6 @@ $theme: $material;
 
             display: flex;
             justify-content: flex-end;
-
             gap: rem(8px);
 
             // TODO remove this line after the override (--component-size: var(--ig-size, var(--ig-size-large)) is removed
