@@ -1849,27 +1849,6 @@
         color: var-get($theme, 'row-selected-text-color');
         background: var-get($theme, 'row-selected-background');
 
-        &%grid-row--mrl {
-            %grid-mrl-block {
-                %igx-grid__td--merged {
-                    color: var-get($theme, 'row-selected-text-color');
-                    background: var-get($theme, 'row-selected-background');
-
-                    &:hover {
-                        background: var-get($theme, 'row-selected-hover-background');
-                        color: var-get($theme, 'row-selected-hover-text-color');
-                    }
-
-                    &%igx-grid__td--merged-hovered {
-                        background: var-get($theme, 'row-selected-hover-background');
-                        color: var-get($theme, 'row-selected-hover-text-color');
-                    }
-                }
-            }
-        }
-
-
-
         %grid-cell--selected,
         %grid-cell--pinned-selected {
             color: var-get($theme, 'cell-selected-within-text-color');
@@ -1925,21 +1904,16 @@
     %igx-grid__td--merged-selected {
         color: var-get($theme, 'row-selected-text-color');
         background: var-get($theme, 'row-selected-background');
-
-        &%igx-grid__td--merged-hovered {
-            background: var-get($theme, 'row-selected-hover-background');
-            color: var-get($theme, 'row-selected-hover-text-color');
-        }
     }
 
     %igx-grid__td--merged-hovered {
         background: var-get($theme, 'row-hover-background');
         color: var-get($theme, 'row-hover-text-color');
+    }
 
-        &%igx-grid__td--merged-selected {
-            background: var-get($theme, 'row-selected-hover-background');
-            color: var-get($theme, 'row-selected-hover-text-color');
-        }
+    %igx-grid__td--merged-selected-hovered {
+        background: var-get($theme, 'row-selected-hover-background');
+        color: var-get($theme, 'row-selected-hover-text-color');
     }
 
     %igx-grid__tr--deleted {

@@ -300,6 +300,9 @@
             @extend %igx-grid__td--merged !optional;
         }
 
+        @include e(td, $mods: (merged-selected, merged-hovered)) {
+            @extend %igx-grid__td--merged-selected-hovered !optional;
+        }
 
         @include e(td, $m: merged-selected) {
             @extend %igx-grid__td--merged-selected !optional;
