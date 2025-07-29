@@ -56,11 +56,43 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     protected sortIconContainer: ElementRef;
 
     /**
+     * @hidden
+     */
+    @Input()
+    @HostBinding('attr.id')
+    public id: string;
+
+    /**
      * Returns the `aria-selected` of the header.
      */
     @HostBinding('attr.aria-selected')
     public get ariaSelected(): boolean {
         return this.column.selected;
+    }
+
+    /**
+     * Returns the `aria-sort` of the header.
+     */
+    @HostBinding('attr.aria-sort')
+    public get ariaSort() {
+        return this.sortDirection === SortingDirection.Asc ? 'ascending'
+                : this.sortDirection === SortingDirection.Desc ? 'descending' : null;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-colindex')
+    public get ariaColIndx() {
+        return this.column.index + 1;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-rowindex')
+    public get ariaRowIndx() {
+        return 1;
     }
 
     @HostBinding('class.igx-grid-th')
