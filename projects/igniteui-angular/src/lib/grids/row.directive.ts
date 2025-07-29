@@ -629,7 +629,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
             const isPinned = this.pinned && !this.disabled;
             const indexInData = this.grid.isRowPinningToTop && !isPinned ? this.index - this.grid.pinnedRecordsCount : this.index;
             const range = isPinned ? this.grid.pinnedDataView.slice(indexInData, indexInData + rowCount) : this.grid.verticalScrollContainer.igxForOf.slice(indexInData, indexInData + rowCount);
-            const inRange = range.filter(x => this.selectionService.isRowSelected(this.grid.primaryKey ? (x.recordRef || x)[this.grid.primaryKey] : (x.recordRef || x))).length > 0;
+            const inRange = range.filter(x => this.selectionService.isRowSelected(this.extractRecordKey(x))).length > 0;
             return inRange;
         }
         return false;
@@ -644,6 +644,18 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
             return indexInData <= hoveredIndex && indexInData + rowCount > hoveredIndex;
         }
         return false;
+    }
+
+    protected extractRecordKey(rec: any) {
+        let recData = rec;
+        if (this.grid.isRecordMerged(recData)) {
+            recData = rec.recordRef;
+        }
+
+        if(this.grid.isTreeRow && this.grid.isTreeRow(recData)){
+            recData = recData.data;
+        }
+        return this.grid.primaryKey ? recData[this.grid.primaryKey] : recData;
     }
 
     protected getRowHeight() {
