@@ -3897,7 +3897,10 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this._firstAutoResize = false;
             });
 
-        this.activeNodeChange.pipe(filter(() => !this._init), destructor).subscribe(() => {
+        this.activeNodeChange.pipe(
+            throttleTime(0, this.platform.isBrowser ? animationFrameScheduler : undefined, { leading: false, trailing: true }),
+            destructor
+        ).subscribe(() => {
             this._activeRowIndexes = null;
             if (this.hasCellsToMerge) {
                 this.refreshSearch();
