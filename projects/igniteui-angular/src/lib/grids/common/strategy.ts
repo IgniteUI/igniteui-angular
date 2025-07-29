@@ -46,6 +46,16 @@ export interface IGridGroupingStrategy extends IGridSortingStrategy {
 }
 
 /**
+ * Represents internal sorting expression that extends the public one.
+ * Contains boolean properties that represent the type of the column that is being sorted.
+ */
+interface IGridInternalSortingExpression extends ISortingExpression {
+    isDate: boolean;
+    isTime: boolean;
+    isString: boolean;
+}
+
+/**
  * Represents a class implementing the IGridSortingStrategy interface.
  * It provides sorting functionality for grid data based on sorting expressions.
  */
@@ -59,7 +69,7 @@ export class IgxSorting implements IGridSortingStrategy {
    * Returns a new array with the data sorted according to the sorting expressions.
    */
     public sort(data: any[], expressions: ISortingExpression[], grid?: GridType): any[] {
-        return this.sortDataRecursive(data, expressions, 0, grid);
+        return this.sortData(data, expressions, grid);
     }
 
     /**
@@ -147,13 +157,15 @@ export class IgxSorting implements IGridSortingStrategy {
    */
     protected getFieldValue<T>(obj: T, key: string, isDate = false, isTime = false) {
         let resolvedValue = resolveNestedPath(obj, columnFieldPath(key));
-        const date = parseDate(resolvedValue);
-        if (date && isDate && isTime) {
-            resolvedValue = date;
-        } else if (date && isDate && !isTime) {
-            resolvedValue = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
-        } else if (date && isTime && !isDate) {
-            resolvedValue = new Date(new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()));
+        if (isDate || isTime) {
+            const date = parseDate(resolvedValue);
+            if (date && isDate && isTime) {
+                resolvedValue = date;
+            } else if (date && isDate && !isTime) {
+                resolvedValue = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
+            } else if (date && isTime && !isDate) {
+                resolvedValue = new Date(new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()));
+            }
         }
         return resolvedValue;
     }
@@ -204,48 +216,37 @@ export class IgxSorting implements IGridSortingStrategy {
    * Returns a new array with the data sorted according to the sorting expressions.
    * @internal
    */
-    private sortDataRecursive<T>(
+    private sortData<T>(
         data: T[],
         expressions: ISortingExpression[],
-        expressionIndex = 0,
         grid: GridType
     ): T[] {
-        let i: number;
-        let j: number;
-        let gbData: T[];
-        let gbDataLen: number;
-        const exprsLen = expressions.length;
-        const dataLen = data.length;
+        const sortingExpressions = this.prepareExpressions(expressions, grid);
 
-        expressionIndex = expressionIndex || 0;
-        if (expressionIndex >= exprsLen || dataLen <= 1) {
+        if (data.length <= 1) {
             return data;
         }
-        const expr = expressions[expressionIndex];
-        if (!expr.strategy) {
-            expr.strategy = DefaultSortingStrategy.instance() as any;
+
+        for (let i = sortingExpressions.length - 1; i >= 0; i--) {
+            data = sortingExpressions[i].strategy.sort(data, sortingExpressions[i].fieldName, sortingExpressions[i].dir, sortingExpressions[i].ignoreCase, this.getFieldValue, sortingExpressions[i].isDate, sortingExpressions[i].isTime, grid)
         }
-        const column = grid?.getColumnByName(expr.fieldName);
-        const isDate = column?.dataType === DATE_TYPE || column?.dataType === DATE_TIME_TYPE;
-        const isTime = column?.dataType === TIME_TYPE || column?.dataType === DATE_TIME_TYPE;
-        const isString = column?.dataType === STRING_TYPE;
-        data = expr.strategy.sort(data, expr.fieldName, expr.dir, expr.ignoreCase, this.getFieldValue, isDate, isTime, grid);
-        if (expressionIndex === exprsLen - 1) {
-            return data;
-        }
-        // in case of multiple sorting
-        for (i = 0; i < dataLen; i++) {
-            gbData = this.groupedRecordsByExpression(data, i, expr, isDate, isTime, isString, column?.groupingComparer);
-            gbDataLen = gbData.length;
-            if (gbDataLen > 1) {
-                gbData = this.sortDataRecursive(gbData, expressions, expressionIndex + 1, grid);
-            }
-            for (j = 0; j < gbDataLen; j++) {
-                data[i + j] = gbData[j];
-            }
-            i += gbDataLen - 1;
-        }
+
         return data;
+    }
+
+    private prepareExpressions(expressions: ISortingExpression[], grid: GridType): IGridInternalSortingExpression[] {
+        const multipleSortingExpressions: IGridInternalSortingExpression[] = [];
+        for (const expr of expressions) {
+            if (!expr.strategy) {
+                expr.strategy = DefaultSortingStrategy.instance();
+            }
+            const column = grid?.getColumnByName(expr.fieldName);
+            const isDate = column?.dataType === DATE_TYPE || column?.dataType === DATE_TIME_TYPE;
+            const isTime = column?.dataType === TIME_TYPE || column?.dataType === DATE_TIME_TYPE;
+            const isString = column?.dataType === STRING_TYPE;
+            multipleSortingExpressions.push({ ...expr, isDate, isTime, isString })
+        }
+        return multipleSortingExpressions;
     }
 }
 

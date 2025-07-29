@@ -54,21 +54,36 @@ export class DefaultSortingStrategy implements ISortingStrategy {
     ) {
         const key = fieldName;
         const reverse = (dir === SortingDirection.Desc ? -1 : 1);
-        const cmpFunc = (obj1: any, obj2: any) => this.compareObjects(obj1, obj2, key, reverse, ignoreCase, valueResolver, isDate, isTime);
-        return this.arraySort(data, cmpFunc);
+
+        /**
+         * Use Schwartizian transform on the data before sorting it so that the sorting value
+         * is not recomputed on every object compare which improves the number of comparisons from O(nlogn) to O(n)
+         * where n is the length of the datasource.
+         * This, on a very large dataset of 1 million records, gives a significant performance boost.
+         */
+        const resolver = valueResolver.bind(this);
+        const preparedData = data.map(item => {
+            return {
+                original: item,
+                sortValue: this.prepareSortValue(resolver(item, key, isDate, isTime), ignoreCase)
+            }
+        });
+        const compareFn = (a, b) => reverse * this.compareValues(a.sortValue, b.sortValue);
+        preparedData.sort(compareFn);
+
+        return preparedData.map(item => item.original);
     }
 
     public compareValues(a: any, b: any): number {
-        const an = (a === null || a === undefined);
-        const bn = (b === null || b === undefined);
-        if (an) {
-            if (bn) {
-                return 0;
-            }
-            return -1;
-        } else if (bn) {
+        const aIsNull = (a === null || a === undefined);
+        const bIsNull = (b === null || b === undefined);
+        if (aIsNull) {
+            return bIsNull ? 0 : -1;
+        }
+        if (bIsNull) {
             return 1;
         }
+
         return a > b ? 1 : a < b ? -1 : 0;
     }
 
@@ -93,6 +108,10 @@ export class DefaultSortingStrategy implements ISortingStrategy {
 
     protected arraySort(data: any[], compareFn?: (arg0: any, arg1: any) => number): any[] {
         return data.sort(compareFn);
+    }
+
+    protected prepareSortValue(value: any, ignoreCase: boolean) {
+        return ignoreCase && typeof value === 'string' ? value.toLocaleLowerCase() : value;
     }
 }
 
