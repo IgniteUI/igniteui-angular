@@ -74,10 +74,6 @@ interface StackFrame {
     isExpandingChildren: boolean;
 }
 
-// interface IGridInternalGroupingExpression extends IGridInternalSortingExpression, IGroupingExpression { }
-
-// type IGroupedData<T> = Array<{ key: any, items: T[], groupRec: T }>;
-
 /**
  * Represents a class implementing the IGridSortingStrategy interface.
  * It provides sorting functionality for grid data based on sorting expressions.
