@@ -613,8 +613,8 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     protected getMergeCellSpan(col: ColumnType) {
         const rowCount = this.metaData.cellMergeMeta.get(col.field).rowSpan;
         let sizeSpans = "";
-        const indexInData = this.pinned ? this.grid.getInitialPinnedIndex(this.data):
-        this.grid.verticalScrollContainer.igxForOf.indexOf(this.metaData);
+        const isPinned = this.pinned && !this.disabled;
+        const indexInData = this.grid.isRowPinningToTop && !isPinned ? this.index - this.grid.pinnedRecordsCount : this.index;
         for (let index = indexInData; index < indexInData + rowCount; index++) {
             const size = this.grid.verticalScrollContainer.getSizeAt(index);
             sizeSpans += size + 'px ';
@@ -659,7 +659,12 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     }
 
     protected getRowHeight() {
-        const indexInData  = this.grid.verticalScrollContainer.igxForOf.indexOf(this.metaData);
+        const isPinned = this.pinned && !this.disabled;
+        const indexInData = this.grid.isRowPinningToTop && !isPinned ? this.index - this.grid.pinnedRecordsCount : this.index;
+        if ((this.grid as any)._cdrRequests) {
+            // recalc size if repaint is requested.
+            this.grid.verticalScrollContainer.recalcUpdateSizes();
+        }
         const size = this.grid.verticalScrollContainer.getSizeAt(indexInData) - 1;
         return size || this.grid.rowHeight;
     }
