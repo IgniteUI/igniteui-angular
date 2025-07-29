@@ -414,7 +414,7 @@ describe('IgxGrid - Cell merging #grid', () => {
 
         describe('Activation', () => {
 
-            it('should interrupt merge sequence so that active row has no merging.', () => {
+            it('should interrupt merge sequence so that active row has no merging.', async() => {
                 const col = grid.getColumnByName('ProductName');
                 GridFunctions.verifyColumnMergedState(grid, col, [
                     { value: 'Ignite UI for JavaScript', span: 2 },
@@ -428,6 +428,7 @@ describe('IgxGrid - Cell merging #grid', () => {
                 const row1 = grid.rowList.toArray()[0];
 
                 UIInteractions.simulateClickAndSelectEvent(row1.cells.toArray()[1].nativeElement);
+                await wait(1);
                 fix.detectChanges();
 
                 GridFunctions.verifyColumnMergedState(grid, col, [
@@ -451,7 +452,7 @@ describe('IgxGrid - Cell merging #grid', () => {
                 fix.detectChanges();
             });
 
-            it('should edit the individual row values for the active row.', () => {
+            it('should edit the individual row values for the active row.', async() => {
                 const col = grid.getColumnByName('ProductName');
                 grid.rowEditable = true;
                 fix.detectChanges();
@@ -459,6 +460,7 @@ describe('IgxGrid - Cell merging #grid', () => {
                 const row = grid.gridAPI.get_row_by_index(0);
                 const cell = grid.gridAPI.get_cell_by_index(0, 'ProductName');
                 UIInteractions.simulateDoubleClickAndSelectEvent(cell.nativeElement);
+                await wait(1);
                 fix.detectChanges();
                 expect(row.inEditMode).toBe(true);
 
@@ -652,13 +654,14 @@ describe('IgxGrid - Cell merging #grid', () => {
                 expect(activeHighlight[0].closest("igx-grid-cell")).toBe(cell0);
             });
 
-            it('should update matches if a cell becomes unmerged.', () => {
+            it('should update matches if a cell becomes unmerged.', async() => {
                 let matches = grid.findNext('JavaScript');
                 fix.detectChanges();
 
                 expect(matches).toBe(2);
 
                 UIInteractions.simulateClickAndSelectEvent(grid.gridAPI.get_cell_by_index(0, 'ProductName').nativeElement);
+                await wait(1);
                 fix.detectChanges();
 
                 matches = grid.findNext('JavaScript');
