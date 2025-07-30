@@ -10,6 +10,10 @@ All notable changes for each version of this project will be documented in this 
     this.carousel.select(2, Direction.NEXT);
     ```
 
+### General
+- `IgxDropDown` now exposes a `role` input property, allowing users to customize the role attribute based on the use case. The default is `listbox`.
+
+
 ## 20.0.6
 ### General
 - `IgxSimpleCombo`
