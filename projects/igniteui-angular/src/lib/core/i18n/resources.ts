@@ -79,7 +79,7 @@ export function changei18n(resourceStrings: IResourceStrings) {
 
 export function initi18n(locale: string) {
     if (locale !== 'en-US') {
-        //Default
+        //Default for angular is en-US, so don't set it on the i18n manager, because can override any other locale set by the new API.
         setCurrentI18n(locale);
     }
 }
