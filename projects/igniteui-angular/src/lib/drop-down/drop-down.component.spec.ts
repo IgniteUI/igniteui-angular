@@ -1260,6 +1260,14 @@ describe('IgxDropDown ', () => {
                 expect(parseInt(ddList.style.maxHeight, 10)).toBeGreaterThan(ddList.offsetHeight);
                 expect(ddList.style.maxHeight).toBe('700px');
             });
+            it('should properly set role option', () => {
+                const ddList = fixture.debugElement.query(By.css(`.${CSS_CLASS_SCROLL}`)).nativeElement;
+                expect(ddList.getAttribute('role')).toBe('listbox');
+                dropdown.role = 'menu';
+                fixture.detectChanges();
+                expect(ddList.getAttribute('role')).toBe('menu');
+
+            });
             it('should set custom id, width/height properties runtime', () => {
                 fixture.componentInstance.dropdown.width = '80%';
                 fixture.componentInstance.dropdown.height = '400px';
