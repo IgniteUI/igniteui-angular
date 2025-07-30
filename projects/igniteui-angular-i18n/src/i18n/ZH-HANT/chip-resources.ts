@@ -1,10 +1,8 @@
 import { IChipResourceStrings } from 'igniteui-angular';
+import { ChipResourceStringsZHHANT as AChipResourceStrings } from 'igniteui-i18n-resources';
+import { convertToIgxResource } from 'igniteui-angular/src/lib/core/i18n/resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Traditional Chinese (zh-Hant) resource strings for IgxChip
  */
-export const ChipResourceStringsZHHANT = {
-    igx_chip_remove: '移除晶片',
-    igx_chip_select: '選取晶片'
-} satisfies MakeRequired<IChipResourceStrings>;
+export const ChipResourceStringsZHHANT: IChipResourceStrings = convertToIgxResource(AChipResourceStrings);

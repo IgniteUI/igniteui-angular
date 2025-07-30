@@ -1,10 +1,8 @@
 import { IInputResourceStrings } from 'igniteui-angular';
+import { InputResourceStringsSV as AInputResourceStrings } from 'igniteui-i18n-resources';
+import { convertToIgxResource } from 'igniteui-angular/src/lib/core/i18n/resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Swedish resource strings for IgxInput
  */
-export const InputResourceStringsSV = {
-    igx_input_upload_button: 'Ladda upp fil',
-    igx_input_file_placeholder: 'Ingen fil har valts'
-} satisfies MakeRequired<IInputResourceStrings>;
+export const InputResourceStringsSV: IInputResourceStrings = convertToIgxResource(AInputResourceStrings);

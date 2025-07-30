@@ -2,7 +2,6 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
-import { getLocaleFirstDayOfWeek } from "@angular/common";
 import { IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.directive';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { IgxButtonDirective } from '../../../directives/button/button.directive';
@@ -16,6 +15,7 @@ import { IgxIconComponent } from '../../../icon/icon.component';
 import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive';
 import { IgxSelectComponent } from '../../../select/select.component';
 import { IgxIconButtonDirective } from '../../../directives/button/icon-button.directive';
+import { getLocaleFirstDayOfWeek } from '../../../core/utils';
 
 /**
  * @hidden

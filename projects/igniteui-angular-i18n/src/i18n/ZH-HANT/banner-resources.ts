@@ -1,9 +1,8 @@
 import { IBannerResourceStrings } from 'igniteui-angular';
+import { BannerResourceStringsZHHANT as ABannerResourceStrings } from 'igniteui-i18n-resources';
+import { convertToIgxResource } from 'igniteui-angular/src/lib/core/i18n/resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Traditional Chinese (zh-Hant) resource strings for IgxBanner
  */
-export const BannerResourceStringsZHHANT = {
-    igx_banner_button_dismiss: '關閉'
-} satisfies MakeRequired<IBannerResourceStrings>;
+export const BannerResourceStringsZHHANT: IBannerResourceStrings = convertToIgxResource(ABannerResourceStrings);

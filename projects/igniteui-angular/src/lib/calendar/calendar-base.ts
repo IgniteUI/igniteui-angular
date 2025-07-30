@@ -3,14 +3,14 @@ import { WEEKDAYS, IFormattingOptions, IFormattingViews, IViewDateChangeEventArg
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
 import { noop, Subject } from 'rxjs';
-import { isDate, isEqual, PlatformUtil } from '../core/utils';
+import { getLocaleFirstDayOfWeek, isDate, isEqual, PlatformUtil } from '../core/utils';
 import { CalendarResourceStringsEN, ICalendarResourceStrings } from '../core/i18n/calendar-resources';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { getLocaleFirstDayOfWeek } from "@angular/common";
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
 import { KeyboardNavigationService } from './calendar.services';
 import { getYearRange, isDateInRanges } from './common/helpers';
 import { CalendarDay } from './common/model';
+import { getCurrentI18n, getI18nManager, ResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 /** @hidden @internal */
 @Directive({
@@ -185,6 +185,11 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
+    private _defaultLocale: string;
+
+    /**
+     * @hidden
+     */
     private _weekStart: WEEKDAYS | number;
 
     /**
@@ -217,8 +222,8 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     private _selection: CalendarSelection | string = CalendarSelection.SINGLE;
 
-    /** @hidden @internal */
-    private _resourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN);
+    private _resourceStrings: ICalendarResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN);
 
     /**
      * @hidden
@@ -252,7 +257,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ICalendarResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -279,7 +284,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     @Input()
     public get locale(): string {
-        return this._locale;
+        return this._locale || this._defaultLocale;
     }
 
     /**
@@ -288,13 +293,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     public set locale(value: string) {
         this._locale = value;
-
-        // if value is not a valid BCP 47 tag, set it back to _localeId
-        try {
-            getLocaleFirstDayOfWeek(this._locale);
-        } catch (e) {
-            this._locale = this._localeId;
-        }
 
         // changing locale runtime needs to update the `weekStart` too, if `weekStart` is not explicitly set
         if (!this.weekStart) {
@@ -656,9 +654,15 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         protected keyboardNavigation?: KeyboardNavigationService,
         protected cdr?: ChangeDetectorRef,
     ) {
-        this.locale = _localeId;
+        initi18n(_localeId);
+        this._defaultLocale = getCurrentI18n();
         this.viewDate = this.viewDate ? this.viewDate : new Date();
         this.initFormatters();
+
+        getI18nManager().onResourceChange((args: ResourceChangeEventArgs) => {
+            this._defaultLocale = args.newLocale;
+            this._defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false);
+        });
     }
 
     /**

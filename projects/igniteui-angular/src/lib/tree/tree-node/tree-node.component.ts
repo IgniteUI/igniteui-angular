@@ -40,6 +40,7 @@ import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { NgTemplateOutlet, NgClass } from '@angular/common';
 import { getCurrentResourceStrings } from '../../core/i18n/resources';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 // TODO: Implement aria functionality
 /**
@@ -226,7 +227,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ITreeResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -378,9 +379,8 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     /** @hidden @internal */
     public registeredChildren: IgxTreeNodeLinkDirective[] = [];
 
-    /** @hidden @internal */
-    private _resourceStrings = getCurrentResourceStrings(TreeResourceStringsEN);
-
+    private _resourceStrings: ITreeResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(TreeResourceStringsEN);
     private _tabIndex = null;
     private _disabled = false;
 
@@ -395,6 +395,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         @Optional() @SkipSelf() @Inject(IGX_TREE_NODE_COMPONENT) public parentNode: IgxTreeNode<any>
     ) {
         super(animationService);
+        getI18nManager().onResourceChange(() => {
+            this._defaultResourceStrings = getCurrentResourceStrings(TreeResourceStringsEN, false);
+        });
     }
 
     /**

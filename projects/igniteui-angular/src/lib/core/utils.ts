@@ -1,10 +1,11 @@
-import { CurrencyPipe, formatDate as _formatDate, isPlatformBrowser } from '@angular/common';
+import { formatDate as _formatDate, getLocaleCurrencyCode, getLocaleFirstDayOfWeek as ngGetLocaleFirstDayOfWeek, isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, InjectionToken, PLATFORM_ID, inject } from '@angular/core';
 import { mergeWith } from 'lodash-es';
 import { NEVER, Observable } from 'rxjs';
 import { setImmediate } from './setImmediate';
 import { isDevMode } from '@angular/core';
 import type { IgxTheme } from '../services/theme/theme.token';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 /** @hidden @internal */
 export const ELEMENTS_TOKEN = /*@__PURE__*/new InjectionToken<boolean>('elements environment');
@@ -579,14 +580,113 @@ export const isConstructor = (ref: any) => typeof ref === 'function' && Boolean(
  * Similar to Angular's formatDate. However it will not throw on `undefined | null | ''` instead
  * coalescing to an empty string.
  */
-export const formatDate = (value: string | number | Date, format: string, locale: string, timezone?: string): string => {
+export function formatDate(value: Date | string | number | null | undefined, format: string, locale: string, timezone?: string): string {
     if (value === null || value === undefined || value === '') {
         return '';
     }
-    return _formatDate(value, format, locale, timezone);
-};
+    if (typeof value === "string" || typeof value === "number") {
+        value = new Date(value);
+    }
+    let dateStyle = undefined, timeStyle = undefined;
+    if (format === 'short' || format === 'medium' || format === 'long' || format === 'full') {
+        dateStyle = format;
+        timeStyle = format;
+    } else if (format.includes('Date')) {
+        dateStyle = format.replace('Date', '');
+    } else if (format.includes('Time')) {
+        dateStyle = format.replace('Time', '');
+    } else {
+        return getI18nManager().formatDateCustomFormat(value, locale, format);
+    }
+    const options: Intl.DateTimeFormatOptions = {
+        dateStyle,
+        timeStyle,
+        timeZone: timezone
+    };
+    return getI18nManager().formatDateTime(value, locale, options);
+}
 
-export const formatCurrency = new CurrencyPipe(undefined).transform;
+function parseDigitsInfo(value: string) {
+    let minIntegerDigits = undefined, minFractionDigits = undefined, maxFractionDigits = undefined;
+    if (value) {
+        const parts = value.split("-");
+        const innerParts = parts[0].split(".");
+        if (innerParts[0] !== "1") {
+            minIntegerDigits = parseInt(innerParts[0]);
+        }
+        if (innerParts.length == 2 && innerParts[1] !== "0") {
+            minFractionDigits = parseInt(innerParts[1]);
+        }
+        if (parts.length == 2 && parts[1] !== "3") {
+            maxFractionDigits = parseInt(parts[1]);
+        }
+    }
+    return { minIntegerDigits, minFractionDigits, maxFractionDigits };
+}
+
+function formatNumberGeneric(value: number | string | null | undefined, style?: 'decimal' | 'percent' | 'currency', locale?: string, digitsInfo?: string, currencyCode?: string, display?: 'code' | 'symbol' | 'symbol-narrow' | string) {
+    if (value === null || value === undefined || value === '') {
+        return '';
+    }
+    if (typeof value === "string") {
+        value = parseFloat(value);
+    }
+    const parsedDigitsInfo = parseDigitsInfo(digitsInfo);
+    let currencyDisplay: keyof Intl.NumberFormatOptionsCurrencyDisplayRegistry;
+    if (display !== 'code' && display !== 'symbol' && display !== 'symbol-narrow' && display !== 'narrowSymbol' && display !== "name") {
+        currencyDisplay = 'symbol';
+    } else if (display === 'symbol-narrow') {
+        currencyDisplay = 'narrowSymbol';
+    } else {
+        currencyCode = display || undefined;
+    }
+    const options: Intl.NumberFormatOptions = {
+        style: style,
+        currency: currencyCode,
+        currencyDisplay: currencyDisplay,
+        minimumIntegerDigits: parsedDigitsInfo.minIntegerDigits,
+        minimumFractionDigits: parsedDigitsInfo.minFractionDigits,
+        maximumFractionDigits: parsedDigitsInfo.maxFractionDigits
+    };
+    return getI18nManager().formatNumber(value, locale, options);
+}
+
+export function formatNumber(value: number | string | null | undefined, locale?: string, digitsInfo?: string): string {
+    return formatNumberGeneric(value, "decimal", locale, digitsInfo);
+}
+
+export function formatPercent(value: number | string | null | undefined, locale?: string, digitsInfo?: string) {
+    return formatNumberGeneric(value, "percent", locale, digitsInfo);
+}
+
+export function formatCurrency(value: number | string | null | undefined, locale?: string, display?: 'code' | 'symbol' | 'symbol-narrow' | string, currencyCode?: string, digitsInfo?: string): string | null {
+    return formatNumberGeneric(value, "currency", locale, digitsInfo, currencyCode, display);
+}
+
+export function getCurrencyCode(locale: string, overrideCode?: string) {
+    let currencyCode = 'USD';
+    if (overrideCode) {
+        return overrideCode;
+    } else {
+        try {
+            currencyCode = getLocaleCurrencyCode(locale)
+        } catch {
+            // If not available the user needs to define it.
+        }
+    }
+    return currencyCode;
+}
+
+export function getCurrencySymbol(currencyCode: string, currencyDisplay?: keyof Intl.NumberFormatOptionsCurrencyDisplayRegistry,locale?: string) {
+    return getI18nManager().getCurrencySymbol(currencyCode, currencyDisplay, locale);
+}
+
+export function getLocaleFirstDayOfWeek(locale?: string) {
+    try {
+        return ngGetLocaleFirstDayOfWeek(locale);
+    } catch {}
+    return getI18nManager().getFirstDayOfWeek(locale);
+}
 
 /** Converts pixel values to their rem counterparts for a base value */
 export const rem = (value: number | string) => {

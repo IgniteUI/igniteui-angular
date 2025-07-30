@@ -10,6 +10,7 @@ import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IgxPaginatorToken } from './token';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 @Directive({
     selector: '[igxPaginatorContent],igx-paginator-content',
@@ -122,7 +123,8 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     protected _selectOptions = [5, 10, 15, 25, 50, 100, 500];
     protected _perPage = 15;
 
-    private _resourceStrings = getCurrentResourceStrings(PaginatorResourceStringsEN);
+    private _resourceStrings: IPaginatorResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(PaginatorResourceStringsEN, true);
     private _overlaySettings: OverlaySettings = {};
     private defaultSelectValues = [5, 10, 15, 25, 50, 100, 500];
 
@@ -257,10 +259,14 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): IPaginatorResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
-    constructor(private elementRef: ElementRef, private cdr: ChangeDetectorRef) { }
+    constructor(private elementRef: ElementRef, private cdr: ChangeDetectorRef) {
+        getI18nManager().onResourceChange(() => {
+            this._defaultResourceStrings = getCurrentResourceStrings(PaginatorResourceStringsEN, false);
+        });
+    }
 
     /**
      * Returns if the current page is the last page.

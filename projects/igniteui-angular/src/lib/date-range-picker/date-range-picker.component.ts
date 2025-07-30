@@ -4,7 +4,7 @@ import {
     OnChanges, OnDestroy, OnInit, Optional, Output, QueryList,
     SimpleChanges, TemplateRef, ViewChild, ViewContainerRef
 } from '@angular/core';
-import { NgTemplateOutlet, getLocaleFirstDayOfWeek } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     AbstractControl, ControlValueAccessor, NgControl,
     NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
@@ -33,8 +33,9 @@ import {
 import { DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, DateRangePickerFormatPipe } from './date-range-picker-inputs.common';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
+import { getCurrentI18n, getI18nManager } from 'igniteui-i18n-core';
 
 const SingleInputDatesConcatenationString = ' - ';
 
@@ -231,7 +232,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): IDateRangePickerResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -346,12 +347,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      */
     public override set locale(value: string) {
         this._locale = value;
-        // if value is invalid, set it back to _localeId
-        try {
-            getLocaleFirstDayOfWeek(this._locale);
-        } catch (e) {
-            this._locale = this._localeId;
-        }
         if (this.hasProjectedInputs) {
             this.updateInputLocale();
             this.updateDisplayFormat();
@@ -437,7 +432,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         return Object.assign({}, this._dialogOverlaySettings, this.overlaySettings);
     }
 
-    private _resourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN);
+    private _resourceStrings: IDateRangePickerResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN);
     private _doneButtonText = null;
     private _dateSeparator = null;
     private _value: DateRange | null;
@@ -475,7 +471,11 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
         super(element, _localeId, _inputGroupType);
-        this.locale = this.locale || this._localeId;
+        initi18n(_localeId);
+        this.locale = this.locale || getCurrentI18n();
+        getI18nManager().onResourceChange(() => {
+            this._resourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN, false);
+        });
     }
 
     /** @hidden @internal */

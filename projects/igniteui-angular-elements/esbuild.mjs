@@ -8,7 +8,7 @@ const config = {
     minify: false, // temporary disabled due to Webpack issues https://github.com/webpack/webpack/issues/16262
     outfile: `${ROOT}/elements.js`,
     format: 'esm',
-    external: ['lit'],
+    external: ['lit', 'igniteui-i18n-core'],
     target: 'es2022',
     metafile: true,
     treeShaking: true

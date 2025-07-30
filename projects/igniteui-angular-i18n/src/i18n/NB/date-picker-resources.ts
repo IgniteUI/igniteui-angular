@@ -1,10 +1,8 @@
 import { IDatePickerResourceStrings } from 'igniteui-angular';
+import { DatePickerResourceStringsNB as ADatePickerResourceStrings } from 'igniteui-i18n-resources';
+import { convertToIgxResource } from 'igniteui-angular/src/lib/core/i18n/resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Portuguese resource strings for IgxDatePicker
  */
-export const DatePickerResourceStringsNB = {
-    igx_date_picker_change_date: 'Endre dato',
-    igx_date_picker_choose_date: 'Velg dato'
-} satisfies MakeRequired<IDatePickerResourceStrings>;
+export const DatePickerResourceStringsNB: IDatePickerResourceStrings = convertToIgxResource(ADatePickerResourceStrings);

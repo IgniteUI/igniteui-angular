@@ -1,10 +1,8 @@
 import { IDateRangePickerResourceStrings } from 'igniteui-angular';
+import { DateRangePickerResourceStringsFR as ADateRangePickerResourceStrings } from 'igniteui-i18n-resources';
+import { convertToIgxResource } from 'igniteui-angular/src/lib/core/i18n/resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * French resource strings for IgxDateRangePicker
  */
-export const DateRangePickerResourceStringsFR = {
-    igx_date_range_picker_date_separator: 'à',
-    igx_date_range_picker_done_button: 'Terminée'
-} satisfies MakeRequired<IDateRangePickerResourceStrings>;
+export const DateRangePickerResourceStringsFR: IDateRangePickerResourceStrings = convertToIgxResource(ADateRangePickerResourceStrings);
