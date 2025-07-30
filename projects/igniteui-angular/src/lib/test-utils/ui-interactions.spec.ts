@@ -345,6 +345,7 @@ export class UIInteractions {
             cancelable: true,
             pointerId: 1,
             buttons: 1,
+            clientY: element.getBoundingClientRect().y,
             button: eventName === 'pointerenter' ? -1 : 0,
             shiftKey,
             ctrlKey
