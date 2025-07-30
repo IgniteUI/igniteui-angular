@@ -1,3 +1,6 @@
+import { TimePickerResourceStringsEN as ATimePickerResourceStrings } from 'igniteui-i18n-core';
+import { convertToIgxResource } from './resources';
+
 export interface ITimePickerResourceStrings {
     igx_time_picker_ok?: string;
     igx_time_picker_cancel?: string;
@@ -5,9 +8,4 @@ export interface ITimePickerResourceStrings {
     igx_time_picker_choose_time?: string;
 }
 
-export const TimePickerResourceStringsEN: ITimePickerResourceStrings = {
-    igx_time_picker_ok: 'OK',
-    igx_time_picker_cancel: 'Cancel',
-    igx_time_picker_change_time: 'Change Time',
-    igx_time_picker_choose_time: 'Choose Time'
-};
+export const TimePickerResourceStringsEN: ITimePickerResourceStrings = convertToIgxResource(ATimePickerResourceStrings);

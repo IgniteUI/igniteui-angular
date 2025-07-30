@@ -1,12 +1,8 @@
 import { ITimePickerResourceStrings } from 'igniteui-angular';
+import { TimePickerResourceStringsZHHANT as ATimePickerResourceStrings } from 'igniteui-i18n-resources';
+import { convertToIgxResource } from 'igniteui-angular/src/lib/core/i18n/resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Traditional Chinese (zh-Hant) resource strings for IgxTimePicker
  */
-export const TimePickerResourceStringsZHHANT = {
-    igx_time_picker_ok: '確定',
-    igx_time_picker_cancel: '取消',
-    igx_time_picker_change_time: '變更時間',
-    igx_time_picker_choose_time: '選擇時間'
-} satisfies MakeRequired<ITimePickerResourceStrings>;
+export const TimePickerResourceStringsZHHANT: ITimePickerResourceStrings = convertToIgxResource(ATimePickerResourceStrings);

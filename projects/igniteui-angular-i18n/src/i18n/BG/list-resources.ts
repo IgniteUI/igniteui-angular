@@ -1,10 +1,8 @@
 import { IListResourceStrings } from 'igniteui-angular';
+import { ListResourceStringsBG as AListResourceStrings } from 'igniteui-i18n-resources';
+import { convertToIgxResource } from 'igniteui-angular/src/lib/core/i18n/resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Bulgarian resource strings for IgxList
  */
-export const ListResourceStringsBG = {
-    igx_list_no_items: 'Няма елементи в списъка.',
-    igx_list_loading: 'Зарежда информация от сървъра...'
-} satisfies MakeRequired<IListResourceStrings>;
+export const ListResourceStringsBG: IListResourceStrings = convertToIgxResource(AListResourceStrings);

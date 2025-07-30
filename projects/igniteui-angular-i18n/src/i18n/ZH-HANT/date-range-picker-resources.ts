@@ -1,10 +1,8 @@
 import { IDateRangePickerResourceStrings } from 'igniteui-angular';
+import { DateRangePickerResourceStringsZHHANT as ADateRangePickerResourceStrings } from 'igniteui-i18n-resources';
+import { convertToIgxResource } from 'igniteui-angular/src/lib/core/i18n/resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Traditional Chinese (zh-Hant) resource strings for IgxDateRangePicker
  */
-export const DateRangePickerResourceStringsZHHANT = {
-    igx_date_range_picker_date_separator: '到',
-    igx_date_range_picker_done_button: '完成'
-} satisfies MakeRequired<IDateRangePickerResourceStrings>;
+export const DateRangePickerResourceStringsZHHANT: IDateRangePickerResourceStrings = convertToIgxResource(ADateRangePickerResourceStrings);

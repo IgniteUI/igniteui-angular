@@ -25,6 +25,7 @@ export interface IResourceStrings extends IGridResourceStrings, ITimePickerResou
     IDateRangePickerResourceStrings, IListResourceStrings, IPaginatorResourceStrings, ITreeResourceStrings,
     IActionStripResourceStrings, IQueryBuilderResourceStrings, IBannerResourceStrings { }
 
+
 function igxRegisterI18n(resourceStrings: IResourceStrings)  {
     // Remove `igx_` prefix for compatibility with older versions.
     const genericResourceStrings: IResourceStringsCore = {};
@@ -36,6 +37,15 @@ function igxRegisterI18n(resourceStrings: IResourceStrings)  {
         genericResourceStrings[stringKey] = resourceStrings[key];
     }
     registerI18n(genericResourceStrings);
+}
+
+export function convertToIgxResource<T>(inObject: T) {
+    const result: any = {};
+    const memberNames = Object.getOwnPropertyNames(inObject);
+    for (const memberName of memberNames) {
+        result['igx_' + memberName] = inObject[memberName];
+    }
+    return result;
 }
 
 /** Get current resource strings based on default. Result is truncated result, containing only relevant locale strings. */

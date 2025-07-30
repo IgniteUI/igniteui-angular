@@ -1,12 +1,8 @@
 import { IComboResourceStrings } from 'igniteui-angular';
+import { ComboResourceStringsPT as AComboResourceStrings } from 'igniteui-i18n-resources';
+import { convertToIgxResource } from 'igniteui-angular/src/lib/core/i18n/resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Portuguese resource strings for IgxCombo
  */
-export const ComboResourceStringsPT = {
-    igx_combo_empty_message: 'A lista está vazia',
-    igx_combo_filter_search_placeholder: 'Digite um termo de pesquisa',
-    igx_combo_addCustomValues_placeholder: 'Adicionar item',
-    igx_combo_clearItems_placeholder: 'Limpar seleção'
-} satisfies MakeRequired<IComboResourceStrings>;
+export const ComboResourceStringsPT: IComboResourceStrings = convertToIgxResource(AComboResourceStrings);
