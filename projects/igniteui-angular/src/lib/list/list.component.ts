@@ -443,7 +443,8 @@ export class IgxListComponent extends IgxListBaseDirective {
     @ViewChild('defaultDataLoading', { read: TemplateRef, static: true })
     protected defaultDataLoadingTemplate: TemplateRef<any>;
 
-    private _resourceStrings = getCurrentResourceStrings(ListResourceStringsEN);
+    private _resourceStrings: IListResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(ListResourceStringsEN);
 
     /**
      * Sets the resource strings.
@@ -458,7 +459,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * Returns the resource strings.
      */
     public get resourceStrings(): IListResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     constructor(public element: ElementRef) {

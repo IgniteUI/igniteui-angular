@@ -227,7 +227,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ITreeResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -379,9 +379,8 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     /** @hidden @internal */
     public registeredChildren: IgxTreeNodeLinkDirective[] = [];
 
-    /** @hidden @internal */
-    private _resourceStrings = getCurrentResourceStrings(TreeResourceStringsEN);
-
+    private _resourceStrings: ITreeResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(TreeResourceStringsEN);
     private _tabIndex = null;
     private _disabled = false;
 
@@ -397,7 +396,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     ) {
         super(animationService);
         getI18nManager().onResourceChange(() => {
-            this._resourceStrings = getCurrentResourceStrings(TreeResourceStringsEN, false);
+            this._defaultResourceStrings = getCurrentResourceStrings(TreeResourceStringsEN, false);
         });
     }
 

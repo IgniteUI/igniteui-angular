@@ -462,7 +462,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private _dateMinValue: Date;
     private _dateMaxValue: Date;
     private _selectedDate: Date;
-    private _resourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN);
+    private _resourceStrings: ITimePickerResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN);
     private _okButtonLabel = null;
     private _cancelButtonLabel = null;
     private _itemsDelta: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds' | 'fractionalSeconds'> =
@@ -547,7 +548,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ITimePickerResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -624,10 +625,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         private cdr: ChangeDetectorRef,
     ) {
         super(element, _localeId, _inputGroupType);
-        initi18n(_localeId);
-        this.locale = this.locale || getCurrentI18n();
         getI18nManager().onResourceChange(() => {
-            this._resourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN, false);
+            this._defaultResourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN, false);
         });
     }
 

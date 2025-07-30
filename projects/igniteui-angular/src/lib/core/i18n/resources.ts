@@ -14,10 +14,11 @@ import { IQueryBuilderResourceStrings } from './query-builder-resources';
 import { IComboResourceStrings } from './combo-resources';
 import { IBannerResourceStrings } from './banner-resources';
 import {
-    registerI18n,
     getCurrentResourceStrings as getCurrentResourceStringsCore,
     IResourceStrings as IResourceStringsCore,
-    setCurrentI18n
+    setCurrentI18n,
+    getI18nManager,
+    getCurrentI18n
 } from 'igniteui-i18n-core';
 
 export interface IResourceStrings extends IGridResourceStrings, ITimePickerResourceStrings, ICalendarResourceStrings,
@@ -26,7 +27,7 @@ export interface IResourceStrings extends IGridResourceStrings, ITimePickerResou
     IActionStripResourceStrings, IQueryBuilderResourceStrings, IBannerResourceStrings { }
 
 
-function igxRegisterI18n(resourceStrings: IResourceStrings)  {
+function igxRegisterI18n(resourceStrings: IResourceStrings, locale: string)  {
     // Remove `igx_` prefix for compatibility with older versions.
     const genericResourceStrings: IResourceStringsCore = {};
     for (const key of Object.keys(resourceStrings)) {
@@ -36,7 +37,7 @@ function igxRegisterI18n(resourceStrings: IResourceStrings)  {
         }
         genericResourceStrings[stringKey] = resourceStrings[key];
     }
-    registerI18n(genericResourceStrings);
+    getI18nManager().registerI18n(genericResourceStrings, locale);
 }
 
 export function convertToIgxResource<T>(inObject: T) {
@@ -52,7 +53,7 @@ export function convertToIgxResource<T>(inObject: T) {
 export function getCurrentResourceStrings<T>(defaultEN: T, init = true) {
     const igxResourceStringKeys = Object.keys(defaultEN);
     if (init) {
-        igxRegisterI18n(defaultEN);
+        igxRegisterI18n(defaultEN, getI18nManager().defaultLocale);
     }
 
     // Append back `igx_` prefix for compatibility with older versions.
@@ -73,7 +74,7 @@ export function getCurrentResourceStrings<T>(defaultEN: T, init = true) {
 }
 
 export function changei18n(resourceStrings: IResourceStrings) {
-    igxRegisterI18n(resourceStrings);
+    igxRegisterI18n(resourceStrings, getI18nManager().defaultLocale);
 }
 
 export function initi18n(locale: string) {

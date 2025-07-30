@@ -180,7 +180,7 @@ import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-ro
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
-import { getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
+import { changei18n, getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
 import { isTree, recreateTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 import { getUUID } from './common/random';
 import { getCurrentI18n, getI18nManager, ResourceChangeEventArgs } from 'igniteui-i18n-core';
@@ -1852,7 +1852,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     public get resourceStrings(): IGridResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -1985,7 +1985,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @Input()
     public get locale(): string {
-        return this._locale;
+        return this._locale || this._defaultLocale;
     }
 
     public set locale(value: string) {
@@ -3218,11 +3218,13 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _loadingGridTemplate: TemplateRef<IgxGridTemplateContext>;
 
     private _cdrRequests = false;
-    private _resourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
+    private _resourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
     private _emptyGridMessage = null;
     private _emptyFilteredGridMessage = null;
     private _isLoading = false;
     private _locale: string;
+    private _defaultLocale: string;
     private overlayIDs = [];
     private _sortingStrategy: IGridSortingStrategy;
     private _pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
@@ -3496,7 +3498,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>,
     ) {
         initi18n(localeId);
-        this.locale = this.locale || getCurrentI18n();
+        this._defaultLocale = getCurrentI18n();
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
         this.cdr.detach();
@@ -3505,8 +3507,11 @@ export abstract class IgxGridBaseDirective implements GridType,
         });
         IgcTrialWatermark.register();
         getI18nManager().onResourceChange((args: ResourceChangeEventArgs) => {
-            this.locale = args.newLocale;
-            this._resourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false);
+            this._defaultLocale = args.newLocale;
+            this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false);
+            if (!this._init) {
+                this.markForCheck();
+            }
         });
     }
 

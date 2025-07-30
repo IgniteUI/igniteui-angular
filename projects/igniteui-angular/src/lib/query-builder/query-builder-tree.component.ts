@@ -55,7 +55,7 @@ import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navig
 import { IgxQueryBuilderDragService } from './query-builder-drag.service';
 import { isTree } from '../data-operations/expressions-tree-util';
 import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, IgxFieldFormatterPipe } from './query-builder.common';
-import { getCurrentI18n, getI18nManager } from 'igniteui-i18n-core';
+import { getCurrentI18n, getI18nManager, ResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -210,7 +210,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     @Input()
     public get locale(): string {
-        return this._locale;
+        return this._locale || this._defaultLocale;
     }
 
     /**
@@ -234,7 +234,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * Returns the resource strings.
      */
     public get resourceStrings(): IQueryBuilderResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -468,8 +468,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _expandedExpressions: IFilteringExpression[] = [];
     private _fields: FieldType[];
     private _locale;
+    private _defaultLocale;
     private _entityNewValue: EntityType;
-    private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+    private _resourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 
     /**
      * Returns if the select entity dropdown at the root level is disabled after the initial selection.
@@ -541,10 +543,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         private elRef: ElementRef,
         @Inject(LOCALE_ID) protected _localeId: string) {
         initi18n(_localeId);
-        this.locale = this.locale || getCurrentI18n();
+        this._defaultLocale = getCurrentI18n();
         this.dragService.register(this, elRef);
-        getI18nManager().onResourceChange(() => {
-            this._resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
+        getI18nManager().onResourceChange((args: ResourceChangeEventArgs) => {
+            this._defaultLocale = args.newLocale;
+            this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
         });
     }
 

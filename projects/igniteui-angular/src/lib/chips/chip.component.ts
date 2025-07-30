@@ -349,7 +349,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): IChipResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -605,7 +605,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     protected _selectedItemClass = 'igx-chip__item--selected';
     protected _movedWhileRemoving = false;
     protected computedStyles;
-    private _resourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
+    private _resourceStrings: IChipResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
 
     constructor(
         public cdr: ChangeDetectorRef,
@@ -613,7 +614,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
         private renderer: Renderer2,
         @Inject(DOCUMENT) public document: any) {
         getI18nManager().onResourceChange(() => {
-            this._resourceStrings = getCurrentResourceStrings(ChipResourceStringsEN, false);
+            this._defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN, false);
         });
     }
 

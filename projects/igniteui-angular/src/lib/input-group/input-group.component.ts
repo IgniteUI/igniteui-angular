@@ -50,7 +50,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
      * Returns the resource strings.
      */
     public get resourceStrings(): IInputResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -125,7 +125,8 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     private _type: IgxInputGroupType = null;
     private _filled = false;
     private _theme: IgxTheme;
-    private _resourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
+    private _resourceStrings: IInputResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
 
     /** @hidden */
     @HostBinding('class.igx-input-group--valid')
@@ -228,7 +229,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
         });
         this._destroyRef.onDestroy(() => themeChange.unsubscribe());
         getI18nManager().onResourceChange(() => {
-            this._resourceStrings = getCurrentResourceStrings(InputResourceStringsEN, false);
+            this._defaultResourceStrings = getCurrentResourceStrings(InputResourceStringsEN, false);
         });
     }
 

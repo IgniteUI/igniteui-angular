@@ -154,7 +154,7 @@ export class IgxBannerComponent implements IToggleView {
     }
 
     public get resourceStrings(): IBannerResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -236,11 +236,12 @@ export class IgxBannerComponent implements IToggleView {
     private _shouldFireEvent: boolean = false;
     private _bannerEvent: BannerEventArgs;
     private _animationSettings: ToggleAnimationSettings;
-    private _resourceStrings = getCurrentResourceStrings(BannerResourceStringsEN);
+    private _resourceStrings: IBannerResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(BannerResourceStringsEN);
 
     constructor(public elementRef: ElementRef<HTMLElement>) {
         getI18nManager().onResourceChange(() => {
-            this._resourceStrings = getCurrentResourceStrings(BannerResourceStringsEN, false);
+            this._defaultResourceStrings = getCurrentResourceStrings(BannerResourceStringsEN, false);
         });
     }
 

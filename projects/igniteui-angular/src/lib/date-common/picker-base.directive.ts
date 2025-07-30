@@ -19,7 +19,7 @@ import { IGX_INPUT_GROUP_TYPE, IgxInputGroupType } from '../input-group/inputGro
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
-import { getCurrentI18n } from 'igniteui-i18n-core';
+import { getCurrentI18n, getI18nManager, ResourceChangeEventArgs } from 'igniteui-i18n-core';
 import { initi18n } from '../core/i18n/resources';
 
 @Directive()
@@ -112,7 +112,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      */
     @Input()
     public get locale(): string {
-        return this._locale;
+        return this._locale || this._defaultLocale;
     }
 
     /**
@@ -130,7 +130,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      */
     @Input()
     public get weekStart(): WEEKDAYS | number {
-        return this._weekStart ?? getLocaleFirstDayOfWeek(this._locale);
+        return this._weekStart ?? getLocaleFirstDayOfWeek(this.locale);
     }
 
     /**
@@ -243,6 +243,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     protected inputGroup: IgxInputGroupComponent;
 
     protected _locale: string;
+    protected _defaultLocale: string;
     protected _collapsed = true;
     protected _type: IgxInputGroupType;
     protected _minValue: Date | string;
@@ -289,7 +290,10 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
         @Inject(LOCALE_ID) protected _localeId: string,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
         initi18n(_localeId);
-        this.locale = this.locale || getCurrentI18n();
+        this._defaultLocale = getCurrentI18n();
+        getI18nManager().onResourceChange((args: ResourceChangeEventArgs) => {
+            this._defaultLocale = args.newLocale;
+        });
     }
 
     /** @hidden @internal */

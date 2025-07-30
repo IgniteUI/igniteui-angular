@@ -458,7 +458,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      */
     @Input()
     public get resourceStrings(): IComboResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
     public set resourceStrings(value: IComboResourceStrings) {
         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
@@ -936,7 +936,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     protected _filteredData = [];
     protected _displayKey: string;
     protected _remoteSelection = {};
-    protected _resourceStrings = getCurrentResourceStrings(ComboResourceStringsEN);
+    protected _resourceStrings: IComboResourceStrings = null;
+    protected _defaultResourceStrings = getCurrentResourceStrings(ComboResourceStringsEN);
     protected _valid = IgxInputState.INITIAL;
     protected ngControl: NgControl = null;
     protected destroy$ = new Subject<void>();
@@ -970,7 +971,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         @Optional() @Inject(IgxIconService) protected _iconService?: IgxIconService,
     ) {
         getI18nManager().onResourceChange(() => {
-            this._resourceStrings = getCurrentResourceStrings(ComboResourceStringsEN, false);
+            this._defaultResourceStrings = getCurrentResourceStrings(ComboResourceStringsEN, false);
         });
     }
 

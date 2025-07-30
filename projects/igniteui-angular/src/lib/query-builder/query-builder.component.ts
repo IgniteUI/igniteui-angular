@@ -141,7 +141,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      * Returns the resource strings.
      */
     public get resourceStrings(): IQueryBuilderResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -179,7 +179,8 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     public queryTree: IgxQueryBuilderTreeComponent;
 
     private destroy$ = new Subject<any>();
-    private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+    private _resourceStrings: IQueryBuilderResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
     private _expressionTree: IExpressionTree;
     private _fields: FieldType[];
     private _entities: EntityType[];
@@ -188,7 +189,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     constructor(protected iconService: IgxIconService) {
         this.registerSVGIcons();
         getI18nManager().onResourceChange(() => {
-            this._resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
+            this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
         });
     }
 

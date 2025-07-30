@@ -185,6 +185,11 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
+    private _defaultLocale: string;
+
+    /**
+     * @hidden
+     */
     private _weekStart: WEEKDAYS | number;
 
     /**
@@ -217,8 +222,8 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     private _selection: CalendarSelection | string = CalendarSelection.SINGLE;
 
-    /** @hidden @internal */
-    private _resourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN);
+    private _resourceStrings: ICalendarResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN);
 
     /**
      * @hidden
@@ -252,7 +257,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ICalendarResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -279,7 +284,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     @Input()
     public get locale(): string {
-        return this._locale;
+        return this._locale || this._defaultLocale;
     }
 
     /**
@@ -650,13 +655,13 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         protected cdr?: ChangeDetectorRef,
     ) {
         initi18n(_localeId);
-        this.locale = getCurrentI18n();
+        this._defaultLocale = getCurrentI18n();
         this.viewDate = this.viewDate ? this.viewDate : new Date();
         this.initFormatters();
 
         getI18nManager().onResourceChange((args: ResourceChangeEventArgs) => {
-            this.locale = args.newLocale;
-            this._resourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false);
+            this._defaultLocale = args.newLocale;
+            this._defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false);
         });
     }
 

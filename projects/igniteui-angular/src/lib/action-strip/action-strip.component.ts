@@ -150,7 +150,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
     }
 
     public get resourceStrings(): IActionStripResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -189,7 +189,8 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
     public menuOverlaySettings: OverlaySettings = { scrollStrategy: new CloseScrollStrategy() };
 
     private _hidden = false;
-    private _resourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN);
+    private _resourceStrings: IActionStripResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN);
     private _originalParent!: HTMLElement;
 
     constructor(
@@ -200,7 +201,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
         public cdr: ChangeDetectorRef,
     ) {
         getI18nManager().onResourceChange(() => {
-            this._resourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN, false);
+            this._defaultResourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN, false);
         });
     }
 
