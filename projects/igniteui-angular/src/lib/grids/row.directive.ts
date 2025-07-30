@@ -397,6 +397,14 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      */
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
+        if (this.hasMergedCells && this.metaData?.cellMergeMeta) {
+            const targetRowIndex = this.grid.navigation.activeNode.row;
+            if (targetRowIndex != this.index) {
+                const row = this.grid.rowList.toArray().find(x => x.index === targetRowIndex);
+                row.onClick(event);
+                return;
+            }
+        }
         this.grid.rowClick.emit({
             row: this,
             event

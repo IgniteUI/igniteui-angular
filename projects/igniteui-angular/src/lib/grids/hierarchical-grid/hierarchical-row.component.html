@@ -123,6 +123,8 @@
 <ng-template #cellTemplate let-col="column">
     <igx-hierarchical-grid-cell
     [class.igx-grid__td--merged]="metaData?.cellMergeMeta.get(col.field)?.rowSpan > 1"
+    [isMerged]="metaData?.cellMergeMeta.get(col.field)?.rowSpan > 1"
+    [isPlaceholder]="!!this.metaData?.cellMergeMeta.get(col.field)?.root"
     [class.igx-grid__td--merged-selected]="isSelectionRoot(col)"
     [class.igx-grid__td--merged-hovered]="isHoveredRoot(col)"
     class="igx-grid__td igx-grid__td--fw"

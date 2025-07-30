@@ -151,6 +151,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @Input()
     public isPlaceholder: boolean;
 
+    /**
+        Gets whether this cell is a merged cell.
+     */
+    @Input()
+    public isMerged: boolean;
 
     /**
      * @hidden
@@ -1016,6 +1021,19 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @internal
      */
     public pointerdown = (event: PointerEvent) => {
+
+        if (this.isMerged) {
+            // need an approximation of where in the cell the user clicked to get actual index to be activated.
+            const scrollOffset = this.grid.verticalScrollContainer.scrollPosition + (event.y - this.grid.tbody.nativeElement.getBoundingClientRect().y);
+            const targetRowIndex = this.grid.verticalScrollContainer.getIndexAtScroll(scrollOffset);
+            if (targetRowIndex != this.rowIndex) {
+                const row = this.grid.rowList.toArray().find(x => x.index === targetRowIndex);
+                const actualTarget = row.cells.find(x => x.column === this.column);
+                actualTarget.pointerdown(event);
+                return;
+            }
+        }
+
         if (this.cellSelectionMode !== GridSelectionMode.multiple) {
             this.activate(event);
             return;
