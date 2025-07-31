@@ -665,6 +665,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public override ngAfterViewInit(): void {
         super.ngAfterViewInit();
         this.subscribeToDateEditorEvents();
+        this.subscribeToClick();
         this.configPositionStrategy();
         this.configOverlaySettings();
         this.cacheFocusedInput();
@@ -719,8 +720,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     /** @hidden @internal */
-    public getEditElement() {
-        return this.inputDirective.nativeElement;
+    public getEditElement(): HTMLInputElement | undefined {
+        return this.inputDirective?.nativeElement;
     }
 
     protected onStatusChanged = () => {
@@ -977,6 +978,20 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         }
 
         return { start: range.start as Date, end: range.end as Date };
+    }
+
+    private subscribeToClick() {
+        const editElement = this.getEditElement();
+        if (!editElement) {
+            return;
+        }
+        fromEvent(editElement, 'click')
+            .pipe(takeUntil(this._destroy$))
+            .subscribe(() => {
+                if (!this.isDropdown) {
+                    this.toggle();
+                }
+            });
     }
 
     private subscribeToDateEditorEvents(): void {

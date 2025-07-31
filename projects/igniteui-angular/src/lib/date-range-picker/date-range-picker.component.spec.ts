@@ -774,9 +774,9 @@ describe('IgxDateRangePicker', () => {
                 }));
             });
 
-            it('should expand the calendar if the default icon is clicked', fakeAsync(() => {
-                const input = fixture.debugElement.query(By.css('igx-input-group'));
-                input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            it('should expand the calendar if the default icon (prefix) is clicked', fakeAsync(() => {
+                const prefix = fixture.debugElement.query(By.directive(IgxPrefixDirective));
+                prefix.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
                 expect(fixture.componentInstance.dateRange.collapsed).toBeFalsy();
