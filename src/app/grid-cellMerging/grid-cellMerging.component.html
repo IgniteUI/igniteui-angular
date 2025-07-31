@@ -111,7 +111,7 @@
 </igx-hierarchical-grid>
 
 <h4 class="sample-title">Tree grid with cell merge</h4>
-
+<button (click)="toggleStrategy()">Toggle strategy</button>
 <igx-tree-grid [autoGenerate]="false" [rowSelection]="'single'" [data]="treeData" [cellMergeMode]="'always'" [mergeStrategy]="treeGridMergeStrategy"
 childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1" width="800px" [height]="'550px'">
 <igx-column field="ContactName" width="200px">

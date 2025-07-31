@@ -2510,6 +2510,9 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
     public set  mergeStrategy(value) {
         this._mergeStrategy = value;
+        if (!this._init) {
+            this.cdr.detectChanges();
+        }
     }
 
     /**

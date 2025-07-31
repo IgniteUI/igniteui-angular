@@ -1,6 +1,7 @@
 import { Component, HostBinding, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
+    DefaultTreeGridMergeStrategy,
     IgxActionStripComponent,
     IgxButtonDirective,
     IgxCellTemplateDirective,
@@ -64,6 +65,14 @@ export class GridCellMergingComponent {
     public searchText: string ='';
     @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
     public data = INVOICE_DATA;
+
+    public toggleStrategy() {
+        if (this.treeGridMergeStrategy instanceof ByLevelTreeGridMergeStrategy) {
+            this.treeGridMergeStrategy = new DefaultTreeGridMergeStrategy();
+        } else {
+            this.treeGridMergeStrategy = new ByLevelTreeGridMergeStrategy();
+        }
+    }
 
     public searchKeyDown(ev) {
         if (ev.key === 'Enter' || ev.key === 'ArrowDown' || ev.key === 'ArrowRight') {
