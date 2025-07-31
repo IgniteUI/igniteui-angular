@@ -8,5 +8,7 @@ export const ComboResourceStringsHU = {
     igx_combo_empty_message: 'Üres a lista',
     igx_combo_filter_search_placeholder: 'Írjon be egy keresési kifejezést',
     igx_combo_addCustomValues_placeholder: 'Elem hozzáadása',
-    igx_combo_clearItems_placeholder: 'Kiválasztás törlése'
+    igx_combo_clearItems_placeholder: 'Kiválasztás törlése',
+    igx_combo_aria_label_options: 'Kiválasztott lehetőségek',
+    igx_combo_aria_label_no_options: 'Nincsenek kiválasztott lehetőségek'
 } satisfies MakeRequired<IComboResourceStrings>;

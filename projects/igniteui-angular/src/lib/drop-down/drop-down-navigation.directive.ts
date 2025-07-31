@@ -1,4 +1,4 @@
-import { Directive, Optional, Self, Input, HostListener, Inject } from '@angular/core';
+import { Directive, Optional, Self, Input, HostListener, Inject, HostBinding } from '@angular/core';
 import { IGX_DROPDOWN_BASE } from './drop-down.common';
 import { IDropDownNavigationDirective } from './drop-down.common';
 import { IgxDropDownBaseDirective } from './drop-down.base';
@@ -53,6 +53,11 @@ export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDi
         this._target = target ? target : this.dropdown;
     }
 
+    @HostBinding('attr.aria-activedescendant')
+    public get activeDescendant(): string {
+        return this._target?.activeDescendant;
+    }
+
     /**
      * Captures keydown events and calls the appropriate handlers on the target component
      */
@@ -62,7 +67,7 @@ export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDi
             const key = event.key.toLowerCase();
             if (!this.target.collapsed) { // If dropdown is opened
                 const navKeys = ['esc', 'escape', 'enter', 'space', 'spacebar', ' ',
-            'arrowup', 'up', 'arrowdown', 'down', 'home', 'end'];
+            'arrowup', 'up', 'arrowdown', 'down', 'home', 'end', 'tab'];
                 if (navKeys.indexOf(key) === -1) { // If key has appropriate function in DD
                     return;
                 }
@@ -97,6 +102,9 @@ export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDi
                     break;
                 case 'end':
                     this.onEndKeyDown();
+                    break;
+                case 'tab':
+                    this.target.onItemActionKey(DropDownActionKey.TAB, event);
                     break;
                 default:
                     return;
