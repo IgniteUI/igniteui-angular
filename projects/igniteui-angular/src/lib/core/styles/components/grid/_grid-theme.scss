@@ -1903,11 +1903,11 @@
 
     %igx-grid__td--merged-selected {
         color: var-get($theme, 'row-selected-text-color');
-        background: var-get($theme, 'row-selected-background');
+        background: var-get($theme, 'row-selected-background') !important;
     }
 
     %igx-grid__td--merged-hovered {
-        background: var-get($theme, 'row-hover-background');
+        background: var-get($theme, 'row-hover-background') !important;
         color: var-get($theme, 'row-hover-text-color');
     }
 
@@ -1948,6 +1948,7 @@
 
     %grid-cell--pinned {
         position: relative;
+        background: inherit;
         z-index: 9999;
     }
 
