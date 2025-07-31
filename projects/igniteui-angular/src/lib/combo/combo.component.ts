@@ -265,10 +265,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     /**
      * @hidden @internal
      */
-    public handleClearItems(event: Event): void {
-        if (this.disabled) {
-            return;
-        }
+    public clearInput(event: Event): void {
         this.deselectAllItems(true, event);
         if (this.collapsed) {
             this.getEditElement().focus();
@@ -276,6 +273,26 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             this.focusSearchInput(true);
         }
         event.stopPropagation();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public handleClearItems(event: Event): void {
+        if (this.disabled) {
+            return;
+        }
+        this.clearInput(event);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public handleClearKeyDown(eventArgs: KeyboardEvent) {
+        if (eventArgs.key === 'Enter' || eventArgs.key === ' ') {
+            eventArgs.preventDefault();
+            this.clearInput(eventArgs);
+        }
     }
 
     /**

@@ -1,64 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
-
-/// If only background color is specified, text/icon color will be assigned automatically to a contrasting color.
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Color} $color [null] - The text color used of the avatar.
-/// @param {Color} $icon-color [null] - The icon color used of the avatar.
-/// @param {Color} $background [null] - The background color used of the avatar.
-/// @param {Number} $border-radius [null] - The border-radius used of the avatar.
-/// @param {Number} $size [null] - The size of the avatar.
-/// @requires $light-material-schema
-///
-/// @example scss Change the background and icon colors in icon avatars
-///   $my-avatar-theme: avatar-theme($icon-background: black, $icon-color: white);
-///   // Pass the theme to the css-vars() mixin
-///   @include css-vars($my-avatar-theme);
-@function avatar-theme(
-    $schema: $light-material-schema,
-    $background: null,
-    $color: null,
-    $icon-color: null,
-    $border-radius: null,
-    $size: null,
-) {
-    $name: 'igx-avatar';
-    $avatar-schema: ();
-
-    @if map.has-key($schema, 'avatar') {
-        $avatar-schema: map.get($schema, 'avatar');
-    } @else {
-        $avatar-schema: $schema;
-    }
-
-    $theme: digest-schema($avatar-schema);
-
-    @if not($color) and $background {
-        $color: adaptive-contrast(var(--background));
-    }
-
-    @if not($icon-color) and $background {
-        $icon-color: adaptive-contrast(var(--background));
-    }
-
-    @return extend($theme, (
-        name: $name,
-        background: $background,
-        color: $color,
-        icon-color: $icon-color,
-        border-radius: $border-radius,
-        size: $size,
-    ));
-}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
