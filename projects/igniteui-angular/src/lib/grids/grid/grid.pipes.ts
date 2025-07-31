@@ -10,6 +10,7 @@ import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridSortingStrategy, IGridGroupingStrategy } from '../common/strategy';
 import { GridCellMergeMode } from '../common/enums';
+import { IGridMergeStrategy } from '../../data-operations/merge-strategy';
 
 /**
  * @hidden
@@ -85,7 +86,7 @@ export class IgxGridCellMergePipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
-    public transform(collection: any, visibleColumns: ColumnType[], mergeMode: GridCellMergeMode, sortExpr: ISortingExpression[], activeRowIndexes: number[], pinned: boolean, _pipeTrigger: number) {
+    public transform(collection: any, visibleColumns: ColumnType[], mergeMode: GridCellMergeMode, mergeStrategy: IGridMergeStrategy, sortExpr: ISortingExpression[], activeRowIndexes: number[], pinned: boolean, _pipeTrigger: number) {
         const colsToMerge = this.grid.columnsToMerge;
         if (colsToMerge.length === 0) {
             return collection;
@@ -93,7 +94,7 @@ export class IgxGridCellMergePipe implements PipeTransform {
         if (!pinned && this.grid.isPinningToStart) {
             activeRowIndexes = activeRowIndexes.map(x => x - this.grid.pinnedRecordsCount);
         }
-        const result = DataUtil.merge(cloneArray(collection), colsToMerge, this.grid.mergeStrategy, activeRowIndexes, this.grid);
+        const result = DataUtil.merge(cloneArray(collection), colsToMerge, mergeStrategy, activeRowIndexes, this.grid);
         return result;
     }
 }
