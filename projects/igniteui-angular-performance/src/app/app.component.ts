@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet, Routes } from '@angular/router';
 import { IgxButtonDirective } from 'igniteui-angular';
+import { routes } from './app.routes';
 
 @Component({
     selector: 'app-root',
@@ -9,5 +10,5 @@ import { IgxButtonDirective } from 'igniteui-angular';
     styleUrl: './app.component.scss'
 })
 export class AppComponent {
-
+    protected routes: Routes = routes;
 }

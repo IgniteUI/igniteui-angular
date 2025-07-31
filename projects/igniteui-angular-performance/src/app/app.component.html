@@ -1,8 +1,10 @@
 <main class="wrapper">
   <div class="routes">
-    <button igxButton="contained" routerLink="/">1K records</button>
-    <button igxButton="contained" routerLink="/grid-100k">100K records</button>
-    <button igxButton="contained" routerLink="/grid-1m">1M records</button>
+    @for (route of routes; track $index) {
+      <button igxButton="contained" routerLink="/{{ route.path }}">
+        {{ route.title }}
+      </button>
+    }
   </div>
   <router-outlet />
 </main>

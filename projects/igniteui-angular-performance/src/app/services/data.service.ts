@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Mulberry32 } from '../lib/mulberry';
 import { DATA as athletesData } from "../data/athletesData"
+import { EMPLOYEES_DATA } from '../data/employeesData';
 
 
 @Injectable({
@@ -12,6 +13,38 @@ export class DataService {
         const rnd = new Mulberry32(1234);
         const data = this.generateAthletesData(rnd, rows);
         return data;
+    }
+
+    public generateTreeData(rows: number): any[] {
+        const rnd = new Mulberry32(1234);
+        const data = this.generateEmployeesData(rnd, rows);
+        return data;
+    }
+
+    private generateEmployeesData(rnd: Mulberry32, rows: number): any[] {
+        const currData = [];
+        let uniqueId = 1;
+        const parentCandidates: number[] = [];
+        for (let i = 0; i < rows; i++) {
+            const rand = Math.floor(rnd.random() * Math.floor(EMPLOYEES_DATA.length));
+            const dataObj = Object.assign({}, EMPLOYEES_DATA[rand]);
+            dataObj.ID = uniqueId++;
+            if (currData.length > 0 && rnd.random() > 0.2) {
+                const parentIndex = Math.floor(rnd.random() * parentCandidates.length);
+                dataObj.ParentID = parentCandidates[parentIndex];
+            } else {
+                dataObj.ParentID = -1; // Root node
+            }
+            dataObj["CheckedIn"] = this.formatDateTime(this.randomizeDateTime(rnd));
+            dataObj["CareerStart"] = this.formatDateTime(this.randomizeDateTime(rnd));
+            dataObj["GrossSalary"] = this.randomizeSalary(rnd);
+            dataObj["PTO"] = this.randomizeBoolean(rnd);
+            dataObj["SuccessRate"] = this.randomizePercentage(rnd);
+            parentCandidates.push(dataObj.ID);
+
+            currData.push(dataObj);
+        }
+        return currData;
     }
 
     private generateAthletesData(rnd: Mulberry32, rows: number): any[] {
@@ -61,6 +94,10 @@ export class DataService {
     private randomizePercentage(rnd: Mulberry32): number {
         const value = rnd.random(); // returns value in [0, 1)
         return Math.floor(value * 1000) / 1000;
+    }
+
+    private randomizeSalary(rnd: Mulberry32): number {
+        return this.generateRandomNumber(rnd, 80_000, 100_000);
     }
 
     private formatDateTime(date: Date) {
