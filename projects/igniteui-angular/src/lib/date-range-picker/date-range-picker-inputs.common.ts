@@ -1,4 +1,4 @@
-import { Component, ContentChild, Pipe, PipeTransform, Directive } from '@angular/core';
+import { Component, ContentChild, Pipe, PipeTransform, Directive, ViewChild, ViewContainerRef } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { IgxInputDirective, IgxInputState } from '../input-group/public_api';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
@@ -10,7 +10,8 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
-import { NgTemplateOutlet, NgClass } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
+import { IgxPickerToggleComponent } from 'igniteui-angular';
 
 /** Represents a range between two dates. */
 export interface DateRange {
@@ -66,6 +67,9 @@ export class IgxDateRangeInputsBaseComponent extends IgxInputGroupComponent {
 
     @ContentChild(IgxInputDirective)
     public inputDirective: IgxInputDirective;
+
+    @ViewChild('toggleSlot', { read: ViewContainerRef, static: false })
+    public toggleSlot: ViewContainerRef;
 
     @ContentChild(NgControl)
     protected ngControl: NgControl;
@@ -128,7 +132,10 @@ export class IgxDateRangeInputsBaseComponent extends IgxInputGroupComponent {
     ],
     imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
 })
-export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent { }
+export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent {
+    @ContentChild(IgxPickerToggleComponent)
+    public projectedToggle?: IgxPickerToggleComponent;
+}
 
 /**
  * Defines the end input for a date range picker
@@ -163,7 +170,10 @@ export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent 
     ],
     imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
 })
-export class IgxDateRangeEndComponent extends IgxDateRangeInputsBaseComponent { }
+export class IgxDateRangeEndComponent extends IgxDateRangeInputsBaseComponent {
+    @ContentChild(IgxPickerToggleComponent)
+    public projectedToggle?: IgxPickerToggleComponent;
+}
 
 /**
  * Replaces the default separator `to` with the provided value
