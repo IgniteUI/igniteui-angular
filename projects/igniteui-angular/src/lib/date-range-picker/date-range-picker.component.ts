@@ -19,12 +19,12 @@ import { DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } fro
 import { IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
-import { IgxPickerActionsDirective } from '../date-common/picker-icons.common';
+import { IgxPickerActionsDirective, IgxPickerClearComponent } from '../date-common/picker-icons.common';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
     IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState,
-    IgxLabelDirective, IGX_INPUT_GROUP_TYPE
+    IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxSuffixDirective
 } from '../input-group/public_api';
 import {
     AutoPositionStrategy, IgxOverlayService, OverlayCancelableEventArgs, OverlayEventArgs,
@@ -73,6 +73,7 @@ const SingleInputDatesConcatenationString = ' - ';
         IgxInputGroupComponent,
         IgxInputDirective,
         IgxPrefixDirective,
+        IgxSuffixDirective,
         DateRangePickerFormatPipe
     ]
 })
@@ -300,6 +301,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     /** @hidden @internal */
     @ContentChildren(IgxDateRangeInputsBaseComponent)
     public projectedInputs: QueryList<IgxDateRangeInputsBaseComponent>;
+
+    /** @hidden @internal */
+    @ContentChildren(IgxPickerClearComponent)
+    public clearComponents: QueryList<IgxPickerClearComponent>;
 
     @ContentChild(IgxLabelDirective)
     public label: IgxLabelDirective;
@@ -572,6 +577,23 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         endDate = endDate ?? startDate;
         const dateRange = [startDate, endDate];
         this.handleSelection(dateRange);
+    }
+
+    /**
+     * Clears the input field(s) and the picker's value.
+     *
+     * @example
+     * ```typescript
+     * this.dateRangePicker.clear();
+     * ```
+     */
+    public clear(): void {
+        // TODO clear the projected inputs
+        if (!this.disabled) {
+            this.value = null;
+            this._calendar?.deselectDate();
+            this.inputDirective.clear();
+        }
     }
 
     /** @hidden @internal */
