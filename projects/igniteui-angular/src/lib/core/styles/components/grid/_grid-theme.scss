@@ -1356,7 +1356,7 @@
     }
 
     %igx-grid__td--merged-selected-hovered {
-        background: var-get($theme, 'row-selected-hover-background');
+        background: var-get($theme, 'row-selected-hover-background') !important;
         color: var-get($theme, 'row-selected-hover-text-color');
     }
 
