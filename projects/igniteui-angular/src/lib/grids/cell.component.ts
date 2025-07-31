@@ -538,8 +538,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @HostBinding('class.igx-grid__td--invalid')
     @HostBinding('attr.aria-invalid')
     public get isInvalid() {
-        const isInvalid = this.formGroup?.get(this.column?.field)?.invalid && this.formGroup?.get(this.column?.field)?.touched;
-        return !this.intRow.deleted && isInvalid;
+        if (this.formGroup) {
+            const isInvalid = this.grid.validation?.isFieldInvalid(this.formGroup, this.column?.field);
+            return !this.intRow.deleted && isInvalid;
+        }
+        return false;
     }
 
     /**
@@ -548,8 +551,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      */
     @HostBinding('class.igx-grid__td--valid')
     public get isValidAfterEdit() {
-        const formControl = this.formGroup?.get(this.column?.field);
-        return this.editMode && formControl && !formControl.invalid && formControl.dirty;
+        if (this.formGroup) {
+            const isValidAfterEdit = this.grid.validation?.isFieldValidAfterEdit(this.formGroup, this.column?.field);
+            return this.editMode && isValidAfterEdit;
+        }
+        return false;
     }
 
     /**
