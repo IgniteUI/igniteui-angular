@@ -519,7 +519,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     /** @hidden @internal */
     @HostBinding('attr.aria-describedby')
     public get ariaDescribeBy() {
-        let describeBy = (this.gridID + '_' + this.column.field).replace('.', '_');
+        let describeBy = this.column.headerCell?.id || '';
         if (this.isInvalid) {
             describeBy += ' ' + this.ariaErrorMessage;
         }
@@ -705,6 +705,17 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         if ((this.grid as any).isCustomSetRowHeight) {
             return this.grid.renderedRowHeight;
         }
+    }
+
+    @HostBinding('attr.aria-rowindex')
+    protected get ariaRowIndex(): number {
+        // +2 because aria-rowindex is 1-based and the first row is the header
+        return this.rowIndex + 2;
+    }
+
+    @HostBinding('attr.aria-colindex')
+    protected get ariaColIndex(): number {
+        return this.column.index + 1;
     }
 
     @ViewChild('defaultCell', { read: TemplateRef, static: true })

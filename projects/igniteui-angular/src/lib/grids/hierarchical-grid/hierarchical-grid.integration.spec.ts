@@ -342,6 +342,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             const icon = GridFunctions.getHeaderSortIcon(childHeader);
             expect(icon).not.toBeNull();
             expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('arrow_downward');
+            expect(childHeader.attributes['aria-sort']).toEqual('descending');
         }));
     });
 

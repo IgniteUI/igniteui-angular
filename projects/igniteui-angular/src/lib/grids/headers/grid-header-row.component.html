@@ -2,7 +2,7 @@
     [class.igx-grid__tr--mrl]="hasMRL">
 
     <!-- Column headers area -->
-    <div class="igx-grid__tr" role="row" [style.width.px]="width">
+    <div class="igx-grid__tr" role="row" [attr.aria-rowindex]="1" [style.width.px]="width">
 
         <!-- Left column moving area -->
         @if (grid.moving && grid.columnInDrag && pinnedColumnCollection.length <= 0) {
