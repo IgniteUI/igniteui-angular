@@ -24,7 +24,7 @@ import { IGroupingExpression } from './grouping-expression.interface';
 /**
  * @hidden
  */
- export const DataType = {
+export const DataType = {
     String: 'string',
     Number: 'number',
     Boolean: 'boolean',
@@ -55,19 +55,44 @@ export class DataUtil {
     public static treeGridSort(hierarchicalData: ITreeGridRecord[],
         expressions: ISortingExpression[],
         sorting: IGridSortingStrategy = new IgxDataRecordSorting(),
-        parent?: ITreeGridRecord,
         grid?: GridType): ITreeGridRecord[] {
-        let res: ITreeGridRecord[] = [];
-        hierarchicalData.forEach((hr: ITreeGridRecord) => {
-            const rec: ITreeGridRecord = DataUtil.cloneTreeGridRecord(hr);
-            rec.parent = parent;
-            if (rec.children) {
-                rec.children = DataUtil.treeGridSort(rec.children, expressions, sorting, rec, grid);
-            }
-            res.push(rec);
-        });
+        const res: ITreeGridRecord[] = [];
+        const stack: {
+            original: ITreeGridRecord[];
+            parent?: ITreeGridRecord;
+            result: ITreeGridRecord[];
+        }[] = [];
 
-        res = DataUtil.sort(res, expressions, sorting, grid);
+        stack.push({ original: hierarchicalData, parent: null, result: res });
+
+        while (stack.length > 0) {
+            const { original, parent, result } = stack.pop()!;
+
+            const clonedRecords: ITreeGridRecord[] = [];
+
+            for (const hr of original) {
+                const rec: ITreeGridRecord = DataUtil.cloneTreeGridRecord(hr);
+                rec.parent = parent;
+                clonedRecords.push(rec);
+
+                // If it has children, process them later
+                if (rec.children && rec.children.length > 0) {
+                    const childClones: ITreeGridRecord[] = [];
+                    rec.children = childClones;
+                    stack.push({
+                        original: hr.children,
+                        parent: rec,
+                        result: childClones
+                    });
+                }
+            }
+
+            // Sort the clonedRecords before assigning to the result
+            const sorted = DataUtil.sort(clonedRecords, expressions, sorting, grid);
+            for (const item of sorted) {
+                result.push(item);
+            }
+        }
 
         return res;
     }
