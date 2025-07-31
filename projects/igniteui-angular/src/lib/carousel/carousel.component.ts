@@ -816,14 +816,29 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     /**
-     * Kicks in a transition for a given slide with a given `direction`.
+     * Switches to the passed-in slide with a given `direction`.
      * ```typescript
-     * this.carousel.select(this.carousel.get(2), Direction.NEXT);
+     * const slide = this.carousel.get(2);
+     * this.carousel.select(slide, Direction.NEXT);
      * ```
      *
      * @memberOf IgxCarouselComponent
      */
-    public select(slide: IgxSlideComponent, direction: Direction = Direction.NONE) {
+    public select(slide: IgxSlideComponent, direction?: Direction): void;
+    /**
+     * Switches to slide by index with a given `direction`.
+     * ```typescript
+     * this.carousel.select(2, Direction.NEXT);
+     * ```
+     *
+     * @memberOf IgxCarouselComponent
+     */
+    public select(index: number, direction?: Direction): void;
+    public select(slideOrIndex: IgxSlideComponent | number, direction: Direction = Direction.NONE): void {
+        const slide = typeof slideOrIndex === 'number'
+            ? this.get(slideOrIndex)
+            : slideOrIndex;
+
         if (slide && slide !== this.currentItem) {
             slide.direction = direction;
             slide.active = true;

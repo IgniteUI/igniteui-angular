@@ -3,14 +3,12 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 20.1.0
-### General
-- `IgxTooltipTarget`
-    - **Behavioral Changes**
-        - The `showDelay` input property now defaults to `200`.
-        - The `hideDelay` input property now defaults to `300`.
-        - The `showTooltip` and `hideTooltip` methods do not take `showDelay`/`hideDelay` into account.
-
 ### New Features
+- `IgxCarousel`
+    - Added `select` method overload accepting index.
+    ```ts
+    this.carousel.select(2, Direction.NEXT);
+    ```
 
 - `IgxOverlay`
     - Position Settings now accept a new optional `offset` input property of type `number`. Used to set the offset of the element from the target in pixels.
@@ -53,7 +51,6 @@ All notable changes for each version of this project will be documented in this 
     | left-end     | HorizontalAlignment.Left      | HorizontalAlignment.Left       | VerticalAlignment.Top         | VerticalAlignment.Bottom       |
 
 
-
     The arrow's position can be customized by overriding the `positionArrow(arrow: HTMLElement, arrowFit: ArrowFit)` method.
 
     For example:
@@ -87,6 +84,15 @@ All notable changes for each version of this project will be documented in this 
     <igx-icon [igxTooltipTarget]="tooltipRef" [hasArrow]="true" [overlaySettings]="overlaySettings">info</igx-icon>
     <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
     ```
+
+### General
+- `IgxDropDown` now exposes a `role` input property, allowing users to customize the role attribute based on the use case. The default is `listbox`.
+
+- `IgxTooltipTarget`
+    - **Behavioral Changes**
+        - The `showDelay` input property now defaults to `200`.
+        - The `hideDelay` input property now defaults to `300`.
+        - The `showTooltip` and `hideTooltip` methods do not take `showDelay`/`hideDelay` into account.
 
 ## 20.0.6
 ### General

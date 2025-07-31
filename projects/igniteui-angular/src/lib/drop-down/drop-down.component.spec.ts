@@ -1034,6 +1034,81 @@ describe('IgxDropDown ', () => {
         });
     });
     describe('Rendering', () => {
+        describe('Accessibility', () => {
+            beforeEach(waitForAsync(() => {
+                TestBed.configureTestingModule({
+                    imports: [
+                        NoopAnimationsModule,
+                        IgxDropDownTestComponent,
+                    ]
+                }).compileComponents();
+            }));
+            beforeEach(() => {
+                fixture = TestBed.createComponent(IgxDropDownTestComponent);
+                fixture.detectChanges();
+                dropdown = fixture.componentInstance.dropdown;
+            });
+            it('should set the aria-label property correctly', () => {
+                // Initially aria-label should be null
+                dropdown.toggle();
+                fixture.detectChanges();
+                let items = document.querySelectorAll(`.${CSS_CLASS_ITEM}`);
+                items.forEach(item => {
+                    expect(item.getAttribute('aria-label')).toBeNull();
+                });
+
+                // Set value and check if aria-label reflects it
+                dropdown.toggle();
+                fixture.detectChanges();
+                dropdown.items.forEach((item, index) => item.value = `value ${index}`);
+                dropdown.toggle();
+                fixture.detectChanges();
+                items = document.querySelectorAll(`.${CSS_CLASS_ITEM}`);
+                items.forEach((item, index) => {
+                    expect(item.getAttribute('aria-label')).toBe(`value ${index}`);
+                });
+
+                // Phase 3: Set explicit ariaLabel and verify it overrides value
+                dropdown.toggle();
+                fixture.detectChanges();
+                dropdown.items.forEach((item, index) => item.ariaLabel = `label ${index}`);
+                dropdown.toggle();
+                fixture.detectChanges();
+                items = document.querySelectorAll(`.${CSS_CLASS_ITEM}`);
+                items.forEach((item, index) => {
+                    expect(item.getAttribute('aria-label')).toBe(`label ${index}`);
+                });
+            });
+            it('should update aria-activedescendant to the id of the focused item', fakeAsync(() => {
+                dropdown.toggle();
+                tick();
+                fixture.detectChanges();
+
+                const dropdownElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROP_DOWN_BASE}`)).nativeElement;
+                let focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`)).nativeElement;
+
+                expect(focusedItem).toBeTruthy();
+                let focusedItemId = focusedItem.getAttribute('id');
+                expect(focusedItemId).toBeTruthy();
+                expect(dropdownElement.getAttribute('aria-activedescendant')).toBe(focusedItemId);
+
+                dropdown.toggle();
+                tick();
+                fixture.detectChanges();
+                dropdown.toggle();
+                tick();
+                fixture.detectChanges();
+
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', fixture.debugElement.query(By.css(`.${CSS_CLASS_DROP_DOWN_BASE}`)));
+                tick();
+                fixture.detectChanges();
+
+                focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`)).nativeElement;
+                focusedItemId = focusedItem.getAttribute('id');
+
+                expect(dropdownElement.getAttribute('aria-activedescendant')).toBe(focusedItemId);
+            }));
+        });
         describe('Grouped items', () => {
             beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
@@ -1184,6 +1259,14 @@ describe('IgxDropDown ', () => {
                 const ddList = fixture.debugElement.query(By.css(`.${CSS_CLASS_SCROLL}`)).nativeElement;
                 expect(parseInt(ddList.style.maxHeight, 10)).toBeGreaterThan(ddList.offsetHeight);
                 expect(ddList.style.maxHeight).toBe('700px');
+            });
+            it('should properly set role option', () => {
+                const ddList = fixture.debugElement.query(By.css(`.${CSS_CLASS_SCROLL}`)).nativeElement;
+                expect(ddList.getAttribute('role')).toBe('listbox');
+                dropdown.role = 'menu';
+                fixture.detectChanges();
+                expect(ddList.getAttribute('role')).toBe('menu');
+
             });
             it('should set custom id, width/height properties runtime', () => {
                 fixture.componentInstance.dropdown.width = '80%';
