@@ -11,7 +11,7 @@ import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { NgTemplateOutlet } from '@angular/common';
-import { IgxPickerToggleComponent } from 'igniteui-angular';
+import { IgxPickerToggleComponent } from '../date-common/public_api';
 
 /** Represents a range between two dates. */
 export interface DateRange {
