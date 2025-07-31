@@ -1348,24 +1348,7 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
 
     public scrStepArray = [];
     public scrTopArray = [];
-    constructor() {
-        const viewContainer = inject(ViewContainerRef);
-        const template = inject<TemplateRef<NgForOfContext<T>>>(TemplateRef);
-        const differs = inject(IterableDiffers);
-        const changeDet = inject(ChangeDetectorRef);
-        const zone = inject(NgZone);
-        const syncService = inject(IgxForOfScrollSyncService);
-        const platformUtil = inject(PlatformUtil);
-
-        super(viewContainer, template, differs, changeDet, zone, syncService, platformUtil, document);
     
-        this.viewContainer = viewContainer;
-        this.template = template;
-        this.differs = differs;
-        this.changeDet = changeDet;
-        this.zone = zone;
-        this.syncService = syncService;
-    }
     public override onScroll(evt) {
         const ind = this.scrTopArray.length - 1;
         const prevScrTop = ind < 0 ? 0 : this.scrTopArray[ind];

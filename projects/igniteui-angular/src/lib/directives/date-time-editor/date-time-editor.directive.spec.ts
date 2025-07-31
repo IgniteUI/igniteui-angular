@@ -1,7 +1,7 @@
 import { IgxDateTimeEditorDirective } from './date-time-editor.directive';
 import { DatePart } from './date-time-editor.common';
 import { formatDate, registerLocaleData } from '@angular/common';
-import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges, DOCUMENT, inject } from '@angular/core';
+import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges, DOCUMENT, inject, Renderer2, ElementRef } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -12,21 +12,21 @@ import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { ViewEncapsulation } from '@angular/core';
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
+import { MaskParsingService } from '../mask/mask-parsing.service';
 
 describe('IgxDateTimeEditor', () => {
     let dateTimeEditor: IgxDateTimeEditorDirective;
     describe('Unit tests', () => {
-        const maskParsingService = jasmine.createSpyObj('MaskParsingService',
-            ['parseMask', 'restoreValueFromMask', 'parseMaskValue', 'applyMask', 'parseValueFromMask']);
-        const renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute']);
+        let maskParsingService: jasmine.SpyObj<MaskParsingService>;
+        let renderer2: jasmine.SpyObj<Renderer2>; 
         let locale = 'en';
-        let elementRef = { nativeElement: null };
+        let elementRef: ElementRef;
         let inputFormat: string;
         let displayFormat: string;
         let inputDate: string;
         const initializeDateTimeEditor = (_control?: NgControl) => {
             // const injector = { get: () => control };
-            dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, null, DOCUMENT, locale);
+            dateTimeEditor = TestBed.inject(IgxDateTimeEditorDirective);
             dateTimeEditor.inputFormat = inputFormat;
             dateTimeEditor.ngOnInit();
 
@@ -34,6 +34,26 @@ describe('IgxDateTimeEditor', () => {
             const changes: SimpleChanges = { inputFormat: change };
             dateTimeEditor.ngOnChanges(changes);
         };
+
+        beforeEach(() => {
+            const mockNativeEl = document.createElement("div");
+            (mockNativeEl as any).setSelectionRange = () => {};
+            maskParsingService = jasmine.createSpyObj('MaskParsingService',
+            ['parseMask', 'restoreValueFromMask', 'parseMaskValue', 'applyMask', 'parseValueFromMask']);
+            renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute']);
+            elementRef = { nativeElement: mockNativeEl };
+
+            TestBed.configureTestingModule({
+                providers: [
+                    { provide: MaskParsingService, useValue: maskParsingService },
+                    { provide: Renderer2, useValue: renderer2 },
+                    { provide: ElementRef, useValue: elementRef },
+                    { provide: DOCUMENT, useValue: document },
+                    { provide: NgControl, useValue: null },
+                    IgxDateTimeEditorDirective,
+                ]
+            });
+        })
         describe('Properties & Events', () => {
             it('should emit valueChange event on clear()', () => {
                 inputFormat = 'dd/M/yy';
@@ -446,15 +466,11 @@ describe('IgxDateTimeEditor', () => {
                 expect(dateTimeEditor.value).toEqual(new Date(2020, 5, 12, 23, 15, 14));
 
                 inputFormat = 'dd aa yyyy-MM mm-ss-hh';
-                inputDate = '12 AM 2020-06 14-15-11';
-                elementRef = { nativeElement: { value: inputDate } };
-                initializeDateTimeEditor();
 
                 dateTimeEditor.inputFormat = inputFormat;
                 expect(dateTimeEditor.mask).toEqual('00 LL 0000-00 00-00-00');
 
                 dateTimeEditor.value = new Date(2020, 5, 12, 11, 15, 14);
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
 
                 dateTimeEditor.increment(DatePart.AmPm);
                 expect(dateTimeEditor.value).toEqual(new Date(2020, 5, 12, 23, 15, 14));

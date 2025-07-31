@@ -12,7 +12,7 @@ import {
     IgxOverlayService,
     OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings
 } from '../services/public_api';
-import { Component, DebugElement, ElementRef, EventEmitter, QueryList, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, Injector, QueryList, Renderer2, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { PickerHeaderOrientation, PickerInteractionMode } from '../date-common/types';
 import { DatePart } from '../directives/date-time-editor/date-time-editor.common';
@@ -849,7 +849,19 @@ describe('IgxDatePicker', () => {
                 },
                 focus: () => { }
             };
-            datePicker = new IgxDatePickerComponent(elementRef, 'en-US', overlay, mockInjector, renderer2, null, mockCdr);
+
+            TestBed.configureTestingModule({
+                providers: [
+                    { provide: ElementRef, useValue: elementRef },
+                    { provide: IgxOverlayService, useValue: overlay },
+                    { provide: Injector, useValue: mockInjector },
+                    { provide: Renderer2, useValue: renderer2 },
+                    { provide: ChangeDetectorRef, useValue: mockCdr },
+                    IgxDatePickerComponent
+                ]
+            });
+
+            datePicker = TestBed.inject(IgxDatePickerComponent);
             (datePicker as any).inputGroup = mockInputGroup;
             (datePicker as any).inputDirective = mockInputDirective;
             (datePicker as any).dateTimeEditor = mockDateEditor;

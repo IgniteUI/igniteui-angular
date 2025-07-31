@@ -37,17 +37,25 @@ describe('IgxDirectionality', () => {
 
     describe('RLT, LTR', () => {
         let fakeDoc: FakeDoc;
-        beforeEach(() => {
-            fakeDoc = {body: {}, documentElement: {}};
-        });
 
         let expectedRes: string;
         let dirInstance: IgxDirectionality;
+
+        beforeEach(() => {
+            fakeDoc = { body: {}, documentElement: {} };
+
+            TestBed.configureTestingModule({
+                providers: [
+                    { provide: DOCUMENT, useValue: fakeDoc },
+                    IgxDirectionality
+                ]
+            });
+        });
         it('should read dir from html if not specified on the body', () => {
             expectedRes = 'rtl';
             fakeDoc.documentElement.dir = expectedRes;
 
-            dirInstance = new IgxDirectionality(fakeDoc);
+            dirInstance = TestBed.inject(IgxDirectionality);
             expect(dirInstance.value).toEqual(expectedRes);
         });
         it('should read dir from body even it is also specified on the html element', () => {
@@ -55,14 +63,14 @@ describe('IgxDirectionality', () => {
             expectedRes = 'rtl';
             fakeDoc.body.dir = expectedRes;
 
-            dirInstance = new IgxDirectionality(fakeDoc);
+            dirInstance = TestBed.inject(IgxDirectionality);
             expect(dirInstance.value).toEqual(expectedRes);
         });
 
         it('should default to ltr if nothing specified', () => {
             expectedRes = 'ltr';
 
-            dirInstance = new IgxDirectionality(fakeDoc);
+            dirInstance = TestBed.inject(IgxDirectionality);
             expect(dirInstance.value).toEqual(expectedRes);
         });
 
@@ -70,7 +78,7 @@ describe('IgxDirectionality', () => {
             fakeDoc.documentElement.dir = 'none';
             fakeDoc.body.dir = 'irrelevant';
 
-            dirInstance = new IgxDirectionality(fakeDoc);
+            dirInstance = TestBed.inject(IgxDirectionality);
             expect(dirInstance.value).toEqual('ltr');
         });
     });

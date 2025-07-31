@@ -1,16 +1,11 @@
-import { Inject } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { noop } from 'rxjs';
-import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
-import { AnimationService } from '../services/animation/animation';
 import { ANIMATION_TYPE, ToggleAnimationPlayer } from './toggle-animation-component';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
+import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 
 class MockTogglePlayer extends ToggleAnimationPlayer {
-    constructor(@Inject(IgxAngularAnimationService) animationService: AnimationService) {
-        super(animationService);
-    }
 }
 
 describe('Toggle animation component', () => {
@@ -19,12 +14,16 @@ describe('Toggle animation component', () => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule
+            ],
+            providers: [
+                { provide: IgxAngularAnimationService, useValue: mockBuilder },
+                MockTogglePlayer
             ]
         }).compileComponents();
     });
     describe('Unit tests', () => {
         it('Should initialize player with give settings', () => {
-            const player = new MockTogglePlayer(mockBuilder);
+            const player = TestBed.inject(MockTogglePlayer);
             const startPlayerSpy = spyOn<any>(player, 'startPlayer');
             const mockEl = jasmine.createSpyObj('mockRef', ['focus'], {});
             player.playOpenAnimation(mockEl);
@@ -43,7 +42,7 @@ describe('Toggle animation component', () => {
         });
 
         it('Should allow overwriting animation setting with falsy value', () => {
-            const player = new MockTogglePlayer(mockBuilder);
+            const player = TestBed.inject(MockTogglePlayer);
             expect(player.animationSettings).toEqual({
                 openAnimation: growVerIn,
                 closeAnimation: growVerOut
@@ -53,7 +52,7 @@ describe('Toggle animation component', () => {
         });
 
         it('Should not throw if called with a falsy animationSettings value', () => {
-            const player = new MockTogglePlayer(mockBuilder);
+            const player = TestBed.inject(MockTogglePlayer);
             player.animationSettings = null;
             const mockCb = jasmine.createSpy('mockCb');
             const mockElement = jasmine.createSpy('element');
