@@ -35,6 +35,7 @@ import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
+import { IgxInputGroupBase } from '../input-group/input-group.common';
 
 const SingleInputDatesConcatenationString = ' - ';
 
@@ -294,12 +295,16 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private viewContainerRef: ViewContainerRef;
 
     /** @hidden @internal */
+    @ViewChild('defIcon', { read: TemplateRef })
+    private defIcon: TemplateRef<any>;
+
+    /** @hidden @internal */
     @ViewChild(IgxInputDirective)
     public inputDirective: IgxInputDirective;
 
     /** @hidden @internal */
-    @ContentChildren(IgxDateRangeInputsBaseComponent)
-    public projectedInputs: QueryList<IgxDateRangeInputsBaseComponent>;
+    @ContentChildren(IgxInputGroupBase as any, { descendants: true, read: IgxDateRangeInputsBaseComponent })
+    public projectedInputs!: QueryList<IgxDateRangeInputsBaseComponent>;
 
     @ContentChild(IgxLabelDirective)
     public label: IgxLabelDirective;
@@ -649,6 +654,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         this.attachOnTouched();
 
         this.setRequiredToInputs();
+        this.renderDefaultToggleIcons();
 
         if (this._ngControl) {
             this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
@@ -853,6 +859,33 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
                 this.projectedInputs.forEach(i => i.isRequired = isRequired);
             }
         });
+    }
+
+    private renderDefaultToggleIcons(): void {
+        if (!this.projectedInputs || this.projectedInputs.length === 0) {
+            return;
+        }
+
+        const start = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent;
+        const end = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent) as IgxDateRangeEndComponent;
+
+        if (start && !this.hasStartToggle) {
+            start.toggleSlot.createEmbeddedView(this.defIcon);
+        }
+
+        if (end && !this.hasEndToggle) {
+            end.toggleSlot.createEmbeddedView(this.defIcon);
+        }
+    }
+
+    private get hasStartToggle(): boolean {
+        const start = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent;
+        return !!start?.projectedToggle;
+    }
+
+    private get hasEndToggle(): boolean {
+        const end = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent) as IgxDateRangeEndComponent;
+        return !!end?.projectedToggle;
     }
 
     private parseMinValue(value: string | Date): Date | null {

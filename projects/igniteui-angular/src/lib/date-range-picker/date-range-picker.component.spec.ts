@@ -1414,6 +1414,20 @@ describe('IgxDateRangePicker', () => {
                 expect(inputGroupsStart.children[0].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
             });
 
+            it('should render default toggle icon and templated icon via igx-picker-toggle - two inputs', () => {
+                fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
+                fixture.detectChanges();
+
+                const inputGroupsStartCollection = fixture.debugElement.queryAll(By.css(CSS_CLASS_INPUT_START));
+
+                expect(inputGroupsStartCollection[0].children[0].nativeElement.innerText).toBe('calendar_view_day');
+                // has igx-picker-toggle so +1 child level
+                expect(inputGroupsStartCollection[0].children[0].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
+
+                expect(inputGroupsStartCollection[1].children[0].nativeElement.innerText).toBe(DEFAULT_ICON_TEXT);
+                expect(inputGroupsStartCollection[1].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
+            });
+
             it('should be able to set toggle icon', () => {
                 const prefixIconText = 'flight_takeoff';
                 const suffixIconText = 'flight_land';
