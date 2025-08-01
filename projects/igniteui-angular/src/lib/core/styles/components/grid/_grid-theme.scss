@@ -1340,6 +1340,11 @@
         }
     }
 
+    %igx-grid__tr--merged {
+        position: absolute;
+        width: 100%;
+    }
+
     %igx-grid__td--merged {
         z-index: 1;
         grid-row: 1 / -1;
