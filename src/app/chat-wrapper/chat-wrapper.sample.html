@@ -1,0 +1,61 @@
+<div class="chat-wrapper">
+    <div class="button-wrapper">
+        <button
+            igxButton="contained"
+            #selectDate
+            igxRipple
+            (click)="switchMessageTemplate()"
+        >
+            Switch Message Template
+        </button>
+    </div>
+
+    <div>
+        <igx-chat-wrapper #chatWrapper
+            [messages]="messages"
+            [options]="options"
+            (igcMessageCreated)="onMessageCreated($event)"
+        >
+        </igx-chat-wrapper>
+
+        <ng-template #attachmentsTemplate let-attachments>
+            <div>
+                @for (attachment of attachments; track attachment) {
+                    <span style="margin: 2px;">{{ attachment.name }} - <strong>{{ attachment.file.size }} KB</strong></span>
+                }
+            </div>
+        </ng-template>
+
+        <ng-template #messageTemplate1 let-message>
+            @if (message.attachments && message.attachments.length > 0) {
+                <div>
+                    <span>Attachments: </span>
+                    <ng-container *ngTemplateOutlet="attachmentsTemplate; context: { $implicit: message.attachments }"></ng-container>
+                </div>
+            }
+
+            @if (message.text && message.text.includes('red')) {
+                <button style="color: red" (click)="onClick(message.text)">{{message.text}}</button>
+            }
+            @else if (message.text && message.text.includes('blue')) {
+                <button style="color: blue" (click)="onClick(message.text)">{{message.text}}</button>
+            }
+            @else {
+                <button style="color: black" (click)="onClick(message.text)">{{message.text}}</button>
+            }
+        </ng-template>
+
+        <ng-template #messageTemplate2 let-message>
+            @if (message.attachments && message.attachments.length > 0) {
+                <div>
+                    <span>Attachments: </span>
+                    <ng-container *ngTemplateOutlet="attachmentsTemplate; context: { $implicit: message.attachments }"></ng-container>
+                </div>
+            }
+
+            <div (click)="onClick('Other template: ' + message.text)">
+                <span>Other template: {{message.text}}</span>
+            </div>
+        </ng-template>
+    </div>
+</div>
