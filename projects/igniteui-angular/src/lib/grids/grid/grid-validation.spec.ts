@@ -186,7 +186,7 @@ describe('IgxGrid - Validation #grid', () => {
             cell = grid.gridAPI.get_cell_by_visible_index(1, 4);
             //min length should be 4
             GridFunctions.verifyCellValid(cell, false);
-            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[1].textContent;
             expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
         });
 
