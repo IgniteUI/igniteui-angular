@@ -272,6 +272,14 @@
             @extend %igx-grid__tr--pinned !optional;
         }
 
+        @include e(tr, $m: merged) {
+            @extend %igx-grid__tr--merged !optional;
+        }
+
+        @include e(tr, $m: merged-top) {
+            @extend %igx-grid__tr--merged-top !optional;
+        }
+
         @include e(tr, $m: pinned-top) {
             @extend %igx-grid__tr--pinned-top !optional;
         }
