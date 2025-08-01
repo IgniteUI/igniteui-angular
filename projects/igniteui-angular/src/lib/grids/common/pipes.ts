@@ -128,6 +128,7 @@ export class IgxGridRowClassesPipe implements PipeTransform {
             [deleted, 'igx-grid__tr--deleted'],
             [dragging, 'igx-grid__tr--drag'],
             [mrl || merged, 'igx-grid__tr--mrl'],
+            [merged, 'igx-grid__tr--merged'],
             // Tree grid only
             [filteredOut, 'igx-grid__tr--filtered']
         ];
