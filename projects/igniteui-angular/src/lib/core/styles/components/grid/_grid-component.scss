@@ -296,6 +296,22 @@
             @extend %igx-grid__td--edited !optional;
         }
 
+        @include e(td, $m: merged) {
+            @extend %igx-grid__td--merged !optional;
+        }
+
+        @include e(td, $mods: (merged-selected, merged-hovered)) {
+            @extend %igx-grid__td--merged-selected-hovered !optional;
+        }
+
+        @include e(td, $m: merged-selected) {
+            @extend %igx-grid__td--merged-selected !optional;
+        }
+
+        @include e(td, $m: merged-hovered) {
+            @extend %igx-grid__td--merged-hovered !optional;
+        }
+
         @include e(td, $m: editing) {
             @extend %igx-grid__td--editing !optional;
         }
