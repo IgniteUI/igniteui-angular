@@ -147,6 +147,7 @@ import { HoundComponent } from './hound/hound.component';
 import { LabelSampleComponent } from "./label/label.sample";
 import { GridRecreateSampleComponent } from './grid-re-create/grid-re-create.sample';
 import { HierarchicalGridAdvancedFilteringSampleComponent } from './hierarchical-grid-advanced-filtering/hierarchical-grid-advanced-filtering.sample';
+import { ChatWrapperSampleComponent } from './chat-wrapper/chat-wrapper.sample';
 
 export const appRoutes: Routes = [
     {
@@ -197,6 +198,10 @@ export const appRoutes: Routes = [
     {
         path: 'carousel',
         component: CarouselSampleComponent
+    },
+    {
+        path: 'chat-wrapper',
+        component: ChatWrapperSampleComponent
     },
     {
         path: 'input-controls',

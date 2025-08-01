@@ -108,6 +108,7 @@ export * from './lib/date-range-picker/public_api';
 export * from './lib/date-common/public_api';
 export * from './lib/tree/public_api';
 export * from './lib/query-builder/public_api';
+export * from './lib/wrappers/public_api';
 
 /**
  * Exporter services, classes, interfaces and enums
