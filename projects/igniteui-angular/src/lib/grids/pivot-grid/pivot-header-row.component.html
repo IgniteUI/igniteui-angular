@@ -310,6 +310,13 @@
                 }
             }
         </div>
+
+        <!-- Render a hidden row of the leaf column headers for accessibility purposes -->
+        <div role="row" style="width: 0; height: 0; position: absolute; top: -10000px;">
+            @for (column of visibleLeafColumns; track column.index) {
+                <div role="columnheader" [attr.aria-hidden]="isLeafHeaderAriaHidden">{{ column.header || column.field }}</div>
+            }
+        </div>
     </div>
 </div>
 <!-- Header thumb area -->
