@@ -35,6 +35,9 @@ export class IgxCalendarContainerComponent {
     public calendarClose = new EventEmitter<IBaseEventArgs>();
 
     @Output()
+    public calendarCancel = new EventEmitter<IBaseEventArgs>();
+
+    @Output()
     public todaySelection = new EventEmitter<IBaseEventArgs>();
 
     @HostBinding('class.igx-date-picker')
@@ -47,6 +50,7 @@ export class IgxCalendarContainerComponent {
 
     public vertical = false;
     public closeButtonLabel: string;
+    public cancelButtonLabel: string;
     public todayButtonLabel: string;
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
     public pickerActions: IgxPickerActionsDirective;

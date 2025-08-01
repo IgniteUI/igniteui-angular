@@ -6,5 +6,6 @@ import { IDateRangePickerResourceStrings } from 'igniteui-angular';
  */
 export const DateRangePickerResourceStringsPL = {
     igx_date_range_picker_date_separator: 'do',
-    igx_date_range_picker_done_button: 'Gotowe'
+    igx_date_range_picker_done_button: 'Gotowe',
+    igx_date_range_picker_cancel_button: 'Anuluj'
 } satisfies MakeRequired<IDateRangePickerResourceStrings>;

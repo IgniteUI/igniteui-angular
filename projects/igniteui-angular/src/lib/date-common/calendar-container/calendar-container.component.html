@@ -1,5 +1,5 @@
 <ng-template #defaultPickerActions>
-    @if (closeButtonLabel || todayButtonLabel) {
+    @if (closeButtonLabel || cancelButtonLabel || todayButtonLabel) {
         <div class="igx-date-picker__buttons">
             @if (closeButtonLabel) {
                 <button
@@ -7,10 +7,19 @@
                     type="button"
                     igxButton="flat"
                     igxRipple
-                    (click)="calendarClose.emit({ owner: this })"
+                    (click)="calendarClose.emit({ owner: this})"
                 >
                     {{ closeButtonLabel }}
                 </button>
+            }
+            @if (cancelButtonLabel) {
+            <button
+            #cancelButton type="button"
+            igxButton="flat" igxRipple
+            (click)="calendarCancel.emit({ owner: this})"
+            >
+                {{ cancelButtonLabel }}
+            </button>
             }
             @if (todayButtonLabel) {
                 <button
@@ -28,10 +37,10 @@
 </ng-template>
 
 <igx-calendar></igx-calendar>
-@if (pickerActions?.template || (closeButtonLabel || todayButtonLabel)) {
+@if (pickerActions?.template || (closeButtonLabel || cancelButtonLabel || todayButtonLabel)) {
     <igx-divider></igx-divider>
 }
-@if (pickerActions?.template || (closeButtonLabel || todayButtonLabel)) {
+@if (pickerActions?.template || (closeButtonLabel || cancelButtonLabel || todayButtonLabel)) {
     <div class="igx-date-picker__actions">
         <ng-container
             *ngTemplateOutlet="

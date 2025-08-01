@@ -150,6 +150,29 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         return this._doneButtonText;
     }
     /**
+     * Overrides the default text of the calendar dialog **Cancel** button.
+     *
+     * @remarks
+     * Defaults to the value from resource strings, `"Cancel"` for the built-in EN.
+     * The button will only show up in `dialog` mode.
+     *
+     * @example
+     * ```html
+     * <igx-date-range-picker cancelButtonText="取消"></igx-date-range-picker>
+     * ```
+     */
+    @Input()
+    public set cancelButtonText(value: string) {
+        this._cancelButtonText = value;
+    }
+
+    public get cancelButtonText(): string {
+        if (this._cancelButtonText === null) {
+            return this.resourceStrings.igx_date_range_picker_cancel_button;
+        }
+        return this._cancelButtonText;
+    }
+    /**
      * Custom overlay settings that should be used to display the calendar.
      *
      * @example
@@ -439,8 +462,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     private _resourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN);
     private _doneButtonText = null;
+    private _cancelButtonText = null;
     private _dateSeparator = null;
     private _value: DateRange | null;
+    private _originalValue: DateRange | null;
     private _overlayId: string;
     private _ngControl: NgControl;
     private _statusChanges$: Subscription;
@@ -510,6 +535,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         if (!this.collapsed || this.disabled) {
             return;
         }
+
+        this._originalValue = this._value
+            ? { start: new Date(this._value.start), end: new Date(this._value.end) }
+            : null;
 
         const settings = Object.assign({}, this.isDropdown
             ? this.dropdownOverlaySettings
@@ -1091,7 +1120,12 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
         componentInstance.mode = this.mode;
         componentInstance.closeButtonLabel = !this.isDropdown ? this.doneButtonText : null;
+        componentInstance.cancelButtonLabel = !this.isDropdown ? this.cancelButtonText : null;
         componentInstance.pickerActions = this.pickerActions;
         componentInstance.calendarClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.close());
+        componentInstance.calendarCancel.pipe(takeUntil(this._destroy$)).subscribe(() => {
+            this._value = this._originalValue;
+            this.close()
+        });
     }
 }
