@@ -70,8 +70,8 @@ export class DataUtil {
 
             const clonedRecords: ITreeGridRecord[] = [];
 
-            for (const hr of original) {
-                const rec: ITreeGridRecord = DataUtil.cloneTreeGridRecord(hr);
+            for (const treeRecord of original) {
+                const rec: ITreeGridRecord = DataUtil.cloneTreeGridRecord(treeRecord);
                 rec.parent = parent;
                 clonedRecords.push(rec);
 
@@ -80,7 +80,7 @@ export class DataUtil {
                     const childClones: ITreeGridRecord[] = [];
                     rec.children = childClones;
                     stack.push({
-                        original: hr.children,
+                        original: treeRecord.children,
                         parent: rec,
                         result: childClones
                     });
