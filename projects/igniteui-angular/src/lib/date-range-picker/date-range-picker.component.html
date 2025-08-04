@@ -19,6 +19,10 @@
     <igx-icon family="default" name="date_range" [attr.aria-hidden]="true"></igx-icon>
 </ng-template>
 
+<ng-template #clearIcon>
+    <igx-icon family="default" name="input_clear" [attr.aria-hidden]="true"></igx-icon>
+</ng-template>
+
 <ng-template #defDateSeparatorTemplate>{{ dateSeparator }}</ng-template>
 
 <ng-template #defTemplate>
@@ -36,7 +40,7 @@
 
         @if (!clearComponents.length && value) {
             <igx-suffix (click)="clear()">
-                <igx-icon family="default" name="input_clear"></igx-icon>
+                <ng-container *ngTemplateOutlet="clearIcon"></ng-container>
             </igx-suffix>
         }
 

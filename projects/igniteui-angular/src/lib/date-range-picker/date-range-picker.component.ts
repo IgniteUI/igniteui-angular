@@ -584,10 +584,17 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```
      */
     public clear(): void {
-        // TODO clear the projected inputs
-        if (!this.disabled) {
-            this.value = null;
-            this._calendar?.deselectDate();
+        if (this.disabled) {
+            return;
+        }
+
+        this.value = null;
+        this._calendar?.deselectDate();
+        if (this.hasProjectedInputs) {
+            this.projectedInputs.forEach((i) => {
+                i.inputDirective.clear();
+            });
+        } else {
             this.inputDirective.clear();
         }
     }
