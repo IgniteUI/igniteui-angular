@@ -401,10 +401,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     public validationFailed = new EventEmitter<IDatePickerValidationFailedEventArgs>();
 
     /** @hidden @internal */
-    @ContentChildren(IgxPickerClearComponent)
-    public clearComponents: QueryList<IgxPickerClearComponent>;
-
-    /** @hidden @internal */
     @ContentChild(IgxLabelDirective)
     public label: IgxLabelDirective;
 
@@ -769,10 +765,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this.subscribeToClick();
         this.subscribeToOverlayEvents();
         this.subscribeToDateEditorEvents();
-
-        this.subToIconsClicked(this.clearComponents, () => this.clear());
-        this.clearComponents.changes.pipe(takeUntil(this._destroy$))
-            .subscribe(() => this.subToIconsClicked(this.clearComponents, () => this.clear()));
 
         this._dropDownOverlaySettings.excludeFromOutsideClick = [this.inputGroup.element.nativeElement];
 
