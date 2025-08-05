@@ -810,11 +810,27 @@ describe('IgxDateRangePicker', () => {
                 expect(fixture.componentInstance.dateRange.collapsed).toBeFalsy();
             }));
 
-            it('should not expand the calendar if the default icon is clicked when disabled is set to true', fakeAsync(() => {
+            it('should not expand the calendar if the input is clicked in dropdown mode', fakeAsync(() => {
+                UIInteractions.simulateClickAndSelectEvent(dateRange.getEditElement());
+                tick();
+                fixture.detectChanges();
+                expect(fixture.componentInstance.dateRange.collapsed).toBeTruthy();
+            }));
+
+            it('should expand the calendar if the input is clicked in dialog mode', fakeAsync(() => {
+                dateRange.mode = PickerInteractionMode.Dialog;
+                fixture.detectChanges();
+                UIInteractions.simulateClickAndSelectEvent(dateRange.getEditElement());
+                fixture.detectChanges();
+                tick();
+                expect(fixture.componentInstance.dateRange.collapsed).toBeFalsy();
+            }));
+
+            it('should not expand the calendar if the default icon (in prefix) is clicked when disabled is set to true', fakeAsync(() => {
                 fixture.componentInstance.disabled = true;
                 fixture.detectChanges();
-                const input = fixture.debugElement.query(By.css('igx-input-group'));
-                input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                const prefix = fixture.debugElement.query(By.directive(IgxPrefixDirective));
+                prefix.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
                 expect(fixture.componentInstance.dateRange.collapsed).toBeTruthy();
