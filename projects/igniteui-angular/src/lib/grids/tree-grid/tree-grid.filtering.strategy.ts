@@ -81,7 +81,6 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
             data,
             [{ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase }],
             column.grid.sortStrategy,
-            null,
             column.grid);
 
         const items = this.getHierarchicalFilterItems(data, column);
