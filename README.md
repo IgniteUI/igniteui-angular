@@ -337,7 +337,7 @@ In order for us to verify your eligibility for free usage, please [register for 
 
 To acquire a license for commercial usage, please [register for trial](https://Infragistics.com/Angular) and refer to the purchasing options in the pricing section on the product page.
 
-© Copyright 2020 INFRAGISTICS. All Rights Reserved.
+© Copyright 2025 INFRAGISTICS. All Rights Reserved.
 The Infragistics Ultimate license & copyright applies to this distribution.
 For information on that license, please go to our website [https://www.infragistics.com/legal/license](https://www.infragistics.com/legal/license).
 
