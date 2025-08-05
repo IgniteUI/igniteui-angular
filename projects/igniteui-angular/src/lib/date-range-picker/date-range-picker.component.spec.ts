@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync, flush } from '@angular/core/testing';
-import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy, inject, ApplicationRef, NgZone, DOCUMENT, ChangeDetectorRef, ElementRef } from '@angular/core';
 import { IgxInputDirective, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../input-group/public_api';
 import { PickerInteractionMode } from '../date-common/types';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -8,13 +8,13 @@ import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { HelperTestFunctions } from '../test-utils/calendar-helper-utils';
-import { CancelableEventArgs } from '../core/utils';
+import { CancelableEventArgs, PlatformUtil } from '../core/utils';
 import { DateRange, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent } from './date-range-picker-inputs.common';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 import { DateRangeType } from '../core/dates';
 import { IgxDateRangePickerComponent, IgxDateRangeEndComponent } from './public_api';
 import { AutoPositionStrategy, IgxOverlayService } from '../services/public_api';
-import { AnimationMetadata, AnimationOptions } from '@angular/animations';
+import { AnimationBuilder, AnimationMetadata, AnimationOptions } from '@angular/animations';
 import { IgxCalendarComponent, WEEKDAYS } from '../calendar/public_api';
 import { Subject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
@@ -25,6 +25,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { registerLocaleData } from "@angular/common";
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
+import { KeyboardNavigationService } from '../calendar/calendar.services';
 
 // The number of milliseconds in one day
 const DEBOUNCE_TIME = 16;
@@ -48,18 +49,9 @@ const CSS_CLASS_INACTIVE_DATE = 'igx-days-view__date--inactive';
 describe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
         let mockElement: any;
-        let mockApplicationRef: any;
-        let mockAnimationBuilder: any;
-        let mockDocument: any;
-        let mockNgZone: any;
-        let mockPlatformUtil: any;
-        let overlay: IgxOverlayService;
-        let mockInjector;
         let mockCalendar: IgxCalendarComponent;
         let mockDaysView: any;
-        let mockAnimationService: AnimationService;
         const elementRef = { nativeElement: null };
-        const platform = {} as any;
         const mockNgControl = jasmine.createSpyObj('NgControl',
             ['registerOnChangeCb',
                 'registerOnTouchedCb',
@@ -79,54 +71,21 @@ describe('IgxDateRangePicker', () => {
             };
             mockElement.parent = mockElement;
             mockElement.parentElement = mockElement;
-            mockApplicationRef = { attachView: (h: any) => { }, detachView: (h: any) => { } };
-            mockInjector = jasmine.createSpyObj('Injector', {
-                get: mockNgControl
+
+            TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule],
+                providers: [
+                    { provide: ElementRef, useValue: elementRef },
+                    IgxAngularAnimationService,
+                    IgxOverlayService,
+                    IgxCalendarComponent,
+                    KeyboardNavigationService,
+                    ChangeDetectorRef,
+                    IgxDateRangePickerComponent
+                ]
             });
-            mockAnimationBuilder = {
-                build: (a: AnimationMetadata | AnimationMetadata[]) => ({
-                    create: (e: any, opt?: AnimationOptions) => ({
-                        onDone: (fn: any) => { },
-                        onStart: (fn: any) => { },
-                        onDestroy: (fn: any) => { },
-                        init: () => { },
-                        hasStarted: () => true,
-                        play: () => { },
-                        pause: () => { },
-                        restart: () => { },
-                        finish: () => { },
-                        destroy: () => { },
-                        rest: () => { },
-                        setPosition: (p: any) => { },
-                        getPosition: () => 0,
-                        parentPlayer: {},
-                        totalTime: 0,
-                        beforeDestroy: () => { },
-                        _renderer: {
-                            engine: {
-                                players: [
-                                    {}
-                                ]
-                            }
-                        }
-                    })
-                })
-            };
-            mockDocument = {
-                body: mockElement,
-                defaultView: mockElement,
-                documentElement: document.documentElement,
-                createElement: () => mockElement,
-                appendChild: () => { },
-                addEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
-                removeEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { }
-            };
-            mockNgZone = {};
-            mockPlatformUtil = { isIOS: false };
-            mockAnimationService = new IgxAngularAnimationService(mockAnimationBuilder);
-            overlay = new IgxOverlayService(
-                mockApplicationRef, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
-            mockCalendar = new IgxCalendarComponent(platform, 'en');
+
+            mockCalendar = TestBed.inject(IgxCalendarComponent);
 
             mockDaysView = {
                 focusActiveDate: jasmine.createSpy()
@@ -135,7 +94,7 @@ describe('IgxDateRangePicker', () => {
         });
         /* eslint-enable @typescript-eslint/no-unused-vars */
         it('should set range dates correctly through selectRange method', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, null, null, null, null);
+            const dateRange = TestBed.inject(IgxDateRangePickerComponent);
             // dateRange.calendar = calendar;
             let startDate = new Date(2020, 3, 7);
             const endDate = new Date(2020, 6, 27);
@@ -153,7 +112,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should emit valueChange on selection', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, null, null, null, null);
+            const dateRange = TestBed.inject(IgxDateRangePickerComponent);
             // dateRange.calendar = calendar;
             spyOn(dateRange.valueChange, 'emit');
             let startDate = new Date(2017, 4, 5);
@@ -180,7 +139,7 @@ describe('IgxDateRangePicker', () => {
             const rangeUpdate = { start: new Date(2020, 2, 22), end: new Date(2020, 2, 25) };
 
             // init
-            const dateRangePicker = new IgxDateRangePickerComponent(null, 'en', platform, null, null, null, null);
+            const dateRangePicker = TestBed.inject(IgxDateRangePickerComponent);
             dateRangePicker.registerOnChange(mockNgControl.registerOnChangeCb);
             dateRangePicker.registerOnTouched(mockNgControl.registerOnTouchedCb);
             spyOn(dateRangePicker as any, 'handleSelection').and.callThrough();
@@ -214,7 +173,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should validate correctly minValue and maxValue', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, null, null, null);
+            const dateRange = TestBed.inject(IgxDateRangePickerComponent);
             dateRange.ngOnInit();
 
             // dateRange.calendar = calendar;
@@ -239,7 +198,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should disable calendar dates when min and/or max values as dates are provided', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, null, overlay);
+            const dateRange = TestBed.inject(IgxDateRangePickerComponent);
             dateRange.ngOnInit();
 
             spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
@@ -255,7 +214,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en', platform, mockInjector, null, null, null);
+            const dateRange = TestBed.inject(IgxDateRangePickerComponent);
             dateRange.ngOnInit();
 
             spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
@@ -687,7 +646,7 @@ describe('IgxDateRangePicker', () => {
                         .withContext('focus should return to the picker input')
                         .toBeTrue();
                     expect(dateRange.isFocused).toBeTrue();
-                    }));
+                }));
 
                 it('should not open calendar with ALT + DOWN ARROW key if disabled is set to true', fakeAsync(() => {
                     fixture.componentInstance.mode = PickerInteractionMode.DropDown;
@@ -1791,8 +1750,8 @@ export class DateRangeTwoInputsDisabledComponent extends DateRangeDisabledCompon
 export class DateRangeReactiveFormComponent {
     private fb = inject(UntypedFormBuilder);
 
-    @ViewChild('range', {read: IgxDateRangePickerComponent}) public dateRange: IgxDateRangePickerComponent;
-    @ViewChild('twoInputs', {read: IgxDateRangePickerComponent}) public dateRangeWithTwoInputs: IgxDateRangePickerComponent;
+    @ViewChild('range', { read: IgxDateRangePickerComponent }) public dateRange: IgxDateRangePickerComponent;
+    @ViewChild('twoInputs', { read: IgxDateRangePickerComponent }) public dateRangeWithTwoInputs: IgxDateRangePickerComponent;
 
     public form = this.fb.group({
         range: ['', Validators.required],

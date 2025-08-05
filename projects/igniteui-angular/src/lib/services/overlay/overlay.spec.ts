@@ -1,4 +1,4 @@
-import { Component, ComponentRef, ElementRef, HostBinding, Injector, ViewChild, ViewContainerRef, ViewEncapsulation, inject } from '@angular/core';
+import { ApplicationRef, Component, ComponentRef, DOCUMENT, ElementRef, HostBinding, Injector, NgZone, ViewChild, ViewContainerRef, ViewEncapsulation, inject } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first } from 'rxjs/operators';
@@ -32,6 +32,8 @@ import {
     VerticalAlignment
 } from './utilities';
 import { scaleInVerTop, scaleOutVerTop } from 'igniteui-angular/animations';
+import { PlatformUtil } from '../../core/utils';
+import { AnimationBuilder } from '@angular/animations';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
@@ -205,93 +207,47 @@ describe('igxOverlay', () => {
 
     describe('Pure Unit Test', () => {
         let mockElement: any;
-        let mockElementRef: any;
-        let mockApplicationRef: any;
-        let mockAnimationBuilder: any;
-        let mockDocument: any;
-        let mockNgZone: any;
+        let mockElementRef: ElementRef;
+        let outlet: any;
         let mockPlatformUtil: any;
         let overlay: IgxOverlayService;
-        let mockAnimationService: AnimationService;
         beforeEach(() => {
-            mockElement = {
-                style: { visibility: '', cursor: '', transitionDuration: '' },
-                children: [],
-                classList: { add: () => { }, remove: () => { } },
-                appendChild(element: any) {
-                    this.children.push(element);
-                },
-                removeChild(element: any) {
-                    const index = this.children.indexOf(element);
-                    if (index !== -1) {
-                        this.children.splice(index, 1);
-                    }
-                },
-                addEventListener: () => { },
-                removeEventListener: () => { },
-                getBoundingClientRect: () => ({ width: 10, height: 10 }),
-                insertBefore(newChild: HTMLDivElement, refChild: Node) {
-                    let refIndex = this.children.indexOf(refChild);
-                    if (refIndex === -1) {
-                        refIndex = 0;
-                    }
-                    this.children.splice(refIndex, 0, newChild);
-                },
-                contains(element: any) {
-                    return this.children.indexOf(element) !== -1;
-                }
-            };
-            mockElement.parent = mockElement;
-            mockElement.parentElement = mockElement;
-            mockElement.parentNode = mockElement;
-            mockElementRef = new ElementRef(mockElement);
-            mockApplicationRef = { attachView: () => { }, detachView: () => { } };
-            mockAnimationBuilder = {};
-            mockDocument = {
-                body: mockElement,
-                listeners: {},
-                defaultView: mockElement,
-                // this is used be able to properly invoke rxjs `fromEvent` operator, which, turns out
-                // just adds an event listener to the element and emits accordingly
-                dispatchEvent(event: KeyboardEvent) {
-                    const type = event.type;
-                    if (this.listeners[type]) {
-                        this.listeners[type].forEach(listener => {
-                            listener(event);
-                        });
-                    }
-                },
-                createElement: () => mockElement,
-                appendChild: () => { },
-                addEventListener(type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) {
-                    if (!this.listeners[type]) {
-                        this.listeners[type] = [];
-                    }
-                    this.listeners[type].push(listener);
-                },
-                removeEventListener(type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) {
-                    if (this.listeners[type]) {
-                        const index = this.listeners[type].indexOf(listener);
-                        if (index !== -1) {
-                            this.listeners[type].splice(index, 1);
-                        }
-                    }
-                }
-            };
-            mockNgZone = {};
-            mockPlatformUtil = { isIOS: false };
-            mockAnimationService = new IgxAngularAnimationService(mockAnimationBuilder);
+            outlet = document.createElement("div");
+            document.body.appendChild(outlet);
 
-            overlay = new IgxOverlayService(
-                mockApplicationRef, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
+            mockElement = document.createElement("div");
+            mockElementRef = new ElementRef(mockElement);
+
+            mockPlatformUtil = { isIOS: false };
+
+            TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule],
+                providers: [
+                    { provide: PlatformUtil, useValue: mockPlatformUtil },
+                    IgxAngularAnimationService,
+                    IgxOverlayService,
+                ]
+            });
+
+            overlay = TestBed.inject(IgxOverlayService);
         });
         afterEach(() => {
+            outlet.remove();
             overlay.ngOnDestroy();
         });
 
         it('Should set cursor to pointer on iOS', () => {
             mockPlatformUtil.isIOS = true;
-            mockDocument.body.style.cursor = 'initialCursorValue';
+
+            const mockCursorStyle = { value: 'initialCursorValue' };
+
+            Object.defineProperty(document.body.style, 'cursor', {
+                get: () => mockCursorStyle.value,
+                set: (val: string) => {
+                    mockCursorStyle.value = val;
+                },
+                configurable: true
+            });
 
             const mockOverlaySettings: OverlaySettings = {
                 modal: false,
@@ -300,28 +256,32 @@ describe('igxOverlay', () => {
             let id = overlay.attach(mockElementRef, mockOverlaySettings);
 
             overlay.show(id);
-            expect(mockDocument.body.style.cursor).toEqual('pointer');
+            expect(document.body.style.cursor).toEqual('pointer');
 
             overlay.hide(id);
             overlay.detach(id);
-            expect(mockDocument.body.style.cursor).toEqual('initialCursorValue');
+            expect(document.body.style.cursor).toEqual('initialCursorValue');
 
             mockPlatformUtil.isIOS = false;
             id = overlay.attach(mockElementRef, mockOverlaySettings);
 
             overlay.show(id);
-            expect(mockDocument.body.style.cursor).toEqual('initialCursorValue');
+            expect(document.body.style.cursor).toEqual('initialCursorValue');
 
             overlay.hide(id);
             overlay.detach(id);
-            expect(mockDocument.body.style.cursor).toEqual('initialCursorValue');
+            expect(document.body.style.cursor).toEqual('initialCursorValue');
         });
 
         it('Should clear listener for escape key when overlay settings have outlet specified', () => {
+            const addEventSpy = spyOn(document, 'addEventListener').and.callThrough();
+            const removeEventSpy = spyOn(document, 'removeEventListener').and.callThrough();
+            const hideSpy = spyOn(overlay, 'hide').and.callThrough();
+
             const mockOverlaySettings: OverlaySettings = {
                 modal: false,
                 closeOnEscape: true,
-                outlet: mockElement,
+                outlet,
                 positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
             };
             const id = overlay.attach(mockElementRef, mockOverlaySettings);
@@ -330,35 +290,43 @@ describe('igxOverlay', () => {
             overlay.show(id);
 
             // expect escape listener to be added to document
-            expect(mockDocument.listeners['keydown'].length > 0).toBeTruthy();
-            const keydownListener = mockDocument.listeners['keydown'][0];
+            expect(addEventSpy).toHaveBeenCalledWith('keydown', jasmine.any(Function), undefined);
 
-            spyOn(overlay, 'hide').and.callThrough();
-            spyOn(mockDocument, 'removeEventListener').and.callThrough();
+            const listener = addEventSpy.calls.all()
+                .find(call => call.args[0] === 'keydown')?.args[1] as EventListener;
 
-            mockDocument.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+            expect(listener).toBeDefined();
+
+            listener!(new KeyboardEvent('keydown', { key: 'Escape' }));
 
             // expect hide to have been called
-            expect(overlay.hide).toHaveBeenCalledTimes(1);
-            expect(mockDocument.removeEventListener).not.toHaveBeenCalled();
+            expect(hideSpy).toHaveBeenCalledTimes(1);
+            expect(removeEventSpy).not.toHaveBeenCalled();
 
             overlay.detach(id);
-            expect(mockDocument.removeEventListener).toHaveBeenCalled();
+            expect(removeEventSpy).toHaveBeenCalled();
 
             // the keydown listener is now removed
-            expect(mockDocument.removeEventListener).toHaveBeenCalledWith('keydown', keydownListener, undefined);
+            expect(removeEventSpy).toHaveBeenCalledWith('keydown', listener, undefined);
 
             // fire event again, expecting hide NOT to be fired again
-            mockDocument.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
-            expect(overlay.hide).toHaveBeenCalledTimes(1);
-            expect(mockDocument.listeners['keydown'].length).toBe(0);
+            listener!(new KeyboardEvent('keydown', { key: 'Escape' }));
+            expect(hideSpy).toHaveBeenCalledTimes(1);
         });
     });
 
     describe('Unit Tests: ', () => {
+        let outlet: any;
+        let outletRef: ElementRef;
         beforeEach(waitForAsync(() => {
+            outlet = document.createElement('div');
+            outletRef = new ElementRef(outlet);
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
+                imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent],
+                providers: [
+                    { provide: ElementRef, useValue: outletRef },
+                    IgxOverlayOutletDirective
+                ]
             }).compileComponents();
         }));
 
@@ -404,9 +372,8 @@ describe('igxOverlay', () => {
             overlay.detach(id);
             tick();
 
-            const outlet = document.createElement('div');
             fixture.debugElement.nativeElement.appendChild(outlet);
-            id = overlay.attach(SimpleDynamicComponent, { modal: false, outlet: new IgxOverlayOutletDirective(new ElementRef(outlet)) });
+            id = overlay.attach(SimpleDynamicComponent, { modal: false, outlet: TestBed.inject(IgxOverlayOutletDirective) });
             overlay.show(id);
             tick();
             wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -1307,8 +1274,9 @@ describe('igxOverlay', () => {
         it('should correctly handle close on outside click in shadow DOM', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageInShadowDomComponent);
             const button = fixture.componentInstance.buttonElement;
-            const outlet = fixture.componentInstance.outletElement;
             const overlay = fixture.componentInstance.overlay;
+            outlet = fixture.componentInstance.outletElement;
+
             fixture.detectChanges();
 
             const overlaySettings: OverlaySettings = {

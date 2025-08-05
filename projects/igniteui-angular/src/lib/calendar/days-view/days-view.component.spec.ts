@@ -6,6 +6,7 @@ import { UIInteractions } from "../../test-utils/ui-interactions.spec";
 import { CalendarDay } from "../common/model";
 import { DateRangeDescriptor, DateRangeType } from 'igniteui-webcomponents';
 import { ScrollDirection } from "../calendar";
+import { KeyboardNavigationService } from '../calendar.services';
 
 const TODAY = new Date(2024, 6, 12);
 
@@ -15,6 +16,9 @@ describe("Days View Component", () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [InitDaysViewComponent],
+            providers: [
+                KeyboardNavigationService
+            ]
         }).compileComponents();
     }));
 

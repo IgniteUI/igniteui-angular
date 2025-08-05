@@ -33,6 +33,7 @@ export interface IActiveNode {
 /** @hidden */
 @Injectable()
 export class IgxGridNavigationService {
+    protected platform = inject(PlatformUtil);
     public grid: GridType;
     public _activeNode: IActiveNode = {} as IActiveNode;
     public lastActiveNode: IActiveNode = {} as IActiveNode;
@@ -44,9 +45,7 @@ export class IgxGridNavigationService {
 
     public set activeNode(value: IActiveNode) {
         this._activeNode = value;
-    }
-
-    protected platform = inject(PlatformUtil)
+    }    
 
     public handleNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
