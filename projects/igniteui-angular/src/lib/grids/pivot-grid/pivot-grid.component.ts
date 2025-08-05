@@ -70,7 +70,7 @@ import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../../data-operati
 import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
-import { IgxPivotGridRow } from  '../grid-public-row';
+import { IgxPivotGridRow } from '../grid-public-row';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -167,6 +167,7 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
 })
 export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnInit, AfterContentInit,
     PivotGridType, AfterViewInit, OnChanges {
+    public override readonly gridAPI = inject<GridBaseAPIService<IgxGridBaseDirective & GridType>>(GridBaseAPIService);
     public override navigation = inject(IgxPivotGridNavigationService);
 
     /**

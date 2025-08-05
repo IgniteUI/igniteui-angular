@@ -24,6 +24,7 @@ import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxPivotGridComponent } from '../../grids/pivot-grid/pivot-grid.component';
 import { IgxPivotGridTestBaseComponent } from '../../test-utils/pivot-grid-samples.spec';
 import { IgxPivotNumericAggregate } from '../../grids/pivot-grid/pivot-grid-aggregate';
+import { IgxGridNavigationService } from '../../grids/grid-navigation.service';
 
 describe('CSV Grid Exporter', () => {
     let exporter: IgxCsvExporterService;
@@ -523,6 +524,12 @@ describe('CSV Grid Exporter', () => {
         let fix;
         let pivotGrid: IgxPivotGridComponent;
         beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [
+                    IgxGridNavigationService
+                ]
+            });
+
             fix = TestBed.createComponent(IgxPivotGridTestBaseComponent);
             fix.detectChanges();
             pivotGrid = fix.componentInstance.pivotGrid;

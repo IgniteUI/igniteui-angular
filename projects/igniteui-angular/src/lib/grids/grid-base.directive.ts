@@ -148,7 +148,8 @@ import {
     RowType,
     IPinningConfig,
     IClipboardOptions,
-    EntityType
+    EntityType,
+    GridServiceType
 } from './common/grid.interface';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
@@ -212,7 +213,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /** @hidden @internal */
     public readonly selectionService = inject(IgxGridSelectionService);
     protected colResizingService = inject(IgxColumnResizingService);
-    public readonly gridAPI = inject(IGX_GRID_SERVICE_BASE);
+    public readonly gridAPI = inject<GridServiceType>(IGX_GRID_SERVICE_BASE);
     protected transactionFactory = inject(IgxFlatTransactionFactory);
     private elementRef = inject(ElementRef<HTMLElement>);
     protected zone = inject(NgZone);

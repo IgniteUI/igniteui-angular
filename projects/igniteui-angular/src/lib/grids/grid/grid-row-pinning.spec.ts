@@ -17,6 +17,7 @@ import { GridRowConditionalStylingComponent } from '../../test-utils/grid-base-c
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { CellType, IPinRowEventArgs, IPinningConfig, IgxColumnComponent } from '../public_api';
+import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
@@ -35,6 +36,9 @@ describe('Row Pinning #grid', () => {
                 GridRowPinningWithMDVComponent,
                 GridRowPinningWithTransactionsComponent,
                 GridRowPinningWithInitialPinningComponent
+            ],
+            providers: [
+                IgxGridMRLNavigationService
             ]
         }).compileComponents();
     }));

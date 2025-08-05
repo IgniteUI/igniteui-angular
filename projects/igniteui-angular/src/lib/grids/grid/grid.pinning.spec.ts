@@ -26,6 +26,7 @@ import { DropPosition } from '../moving/moving.service';
 import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IPinningConfig } from '../public_api';
+import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 
 describe('IgxGrid - Column Pinning #grid', () => {
 
@@ -40,6 +41,9 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 GridFeaturesComponent,
                 MultiColumnHeadersWithGroupingComponent,
                 GridPinningMRLComponent
+            ],
+            providers: [
+                IgxGridMRLNavigationService
             ]
         }).compileComponents();
     }))

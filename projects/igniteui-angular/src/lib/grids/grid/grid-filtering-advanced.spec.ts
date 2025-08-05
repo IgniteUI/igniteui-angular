@@ -29,6 +29,7 @@ import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/da
 import { QueryBuilderSelectors } from '../../query-builder/query-builder.common';
 import { IgxHGridRemoteOnDemandComponent } from '../hierarchical-grid/hierarchical-grid.spec';
 import { IGridResourceStrings } from '../../core/i18n/grid-resources';
+import { IgxGridNavigationService } from '../grid-navigation.service';
 
 describe('IgxGrid - Advanced Filtering #grid - ', () => {
     beforeEach(waitForAsync(() => {
@@ -45,6 +46,9 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridExportComponent,
                 IgxHGridRemoteOnDemandComponent
+            ],
+            providers: [
+                IgxGridNavigationService
             ]
         }).compileComponents();
     }));

@@ -18,6 +18,7 @@ import { TransactionType } from '../../services/public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 
 const DEBOUNCETIME = 30;
 
@@ -47,6 +48,9 @@ describe('IgxGrid - Row Adding #grid', () => {
                 IgxGridRowEditingDefinedColumnsComponent,
                 ColumnLayoutTestComponent,
                 DefaultGridMasterDetailComponent
+            ],
+            providers: [
+                IgxGridMRLNavigationService
             ]
         }).compileComponents();
     }));

@@ -15,6 +15,7 @@ import { IgxGridPinningActionsComponent } from './grid-pinning-actions.component
 import { IgxActionStripComponent } from '../action-strip.component';
 import { IRowDataCancelableEventArgs, IgxColumnComponent } from '../../grids/public_api';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { IgxGridNavigationService } from '../../grids/grid-navigation.service';
 
 describe('igxGridEditingActions #grid ', () => {
     let fixture;
@@ -31,6 +32,9 @@ describe('igxGridEditingActions #grid ', () => {
                 IgxActionStripEditMenuComponent,
                 IgxActionStripOneRowComponent,
                 IgxActionStripMenuOneRowComponent
+            ],
+            providers: [
+                IgxGridNavigationService
             ]
         }).compileComponents();
     }));

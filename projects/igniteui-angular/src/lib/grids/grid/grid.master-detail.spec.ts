@@ -17,6 +17,7 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { CellType, IgxColumnComponent, IgxGridDetailTemplateDirective } from '../public_api';
+import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 
 const DEBOUNCE_TIME = 30;
 const ROW_TAG = 'igx-grid-row';
@@ -38,6 +39,9 @@ describe('IgxGrid Master Detail #grid', () => {
                 DefaultGridMasterDetailComponent,
                 AllExpandedGridMasterDetailComponent,
                 MRLMasterDetailComponent
+            ],
+            providers: [
+                IgxGridMRLNavigationService
             ]
         }).compileComponents();
     }));

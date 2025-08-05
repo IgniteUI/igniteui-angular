@@ -6,6 +6,7 @@ import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestBaseComponent } from 
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
+import { IgxGridNavigationService } from '../grid-navigation.service';
 
 const DEBOUNCE_TIME = 250;
 const PIVOT_TBODY_CSS_CLASS = '.igx-grid__tbody';
@@ -24,6 +25,9 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
                 imports: [
                     NoopAnimationsModule,
                     IgxPivotGridMultipleRowComponent
+                ],
+                providers: [
+                    IgxGridNavigationService
                 ]
             }).compileComponents();
         }));
@@ -271,6 +275,9 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
                 imports: [
                     NoopAnimationsModule,
                     IgxPivotGridTestBaseComponent
+                ],
+                providers: [
+                    IgxGridNavigationService
                 ]
             }).compileComponents();
         }));

@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, TemplateRef, ChangeDetectionStrategy, ElementRef } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
@@ -14,8 +14,12 @@ import { CarouselIndicatorsOrientation, CarouselAnimationType } from './enums';
 describe('Carousel', () => {
     let fixture;
     let carousel: IgxCarouselComponent;
+    let mockElement: any;
+    let mockElementRef: ElementRef;
 
     beforeEach(waitForAsync(() => {
+        mockElement = document.createElement("div");
+        mockElementRef = new ElementRef(mockElement);
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -24,6 +28,10 @@ describe('Carousel', () => {
                 CarouselTemplateSetInTypescriptTestComponent,
                 CarouselAnimationsComponent,
                 CarouselDynamicSlidesComponent
+            ],
+            providers: [
+                { provide: ElementRef, useValue: mockElementRef },
+                IgxSlideComponent
             ]
         }).compileComponents();
     }));
@@ -184,7 +192,7 @@ describe('Carousel', () => {
             expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(3);
 
             spyOn(carousel.slideAdded, 'emit');
-            const newSlide = new IgxSlideComponent();
+            const newSlide = TestBed.inject(IgxSlideComponent);
             carousel.add(newSlide);
             fixture.detectChanges();
             args = {

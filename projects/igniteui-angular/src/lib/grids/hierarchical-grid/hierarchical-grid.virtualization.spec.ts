@@ -15,6 +15,7 @@ import { HierarchicalGridFunctions } from '../../test-utils/hierarchical-grid-fu
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxHierarchicalGridDefaultComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import { firstValueFrom } from 'rxjs';
+import { IgxGridNavigationService } from '../grid-navigation.service';
 
 describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     let fixture;
@@ -26,6 +27,9 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
                 NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridDefaultComponent
+            ],
+            providers: [
+                IgxGridNavigationService
             ]
         }).compileComponents();
     }));

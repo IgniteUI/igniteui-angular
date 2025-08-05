@@ -15,6 +15,7 @@ import { IActiveNodeChangeEventArgs } from '../common/events';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { ISortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
+import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 
 const DEBOUNCETIME = 30;
 
@@ -27,6 +28,9 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             TestBed.configureTestingModule({
                 imports: [
                     SelectionWithScrollsComponent, NoopAnimationsModule
+                ],
+                providers: [
+                    IgxGridMRLNavigationService
                 ]
             }).compileComponents();
         }));
@@ -732,6 +736,9 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             TestBed.configureTestingModule({
                 imports: [
                     MRLTestComponent, NoopAnimationsModule
+                ],
+                providers: [
+                    IgxGridMRLNavigationService
                 ]
             }).compileComponents();
         }));

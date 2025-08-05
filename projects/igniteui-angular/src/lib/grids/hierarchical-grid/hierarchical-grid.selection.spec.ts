@@ -17,6 +17,7 @@ import { QueryList } from '@angular/core';
 import { CellType } from '../public_api';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
+import { IgxGridNavigationService } from '../grid-navigation.service';
 
 describe('IgxHierarchicalGrid selection #hGrid', () => {
     let fix;
@@ -34,6 +35,9 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent,
                 IgxHierarchicalGridCustomSelectorsComponent,
                 IgxHierarchicalGridRowSelectionNoTransactionsComponent
+            ],
+            providers: [
+                IgxGridNavigationService
             ]
         }).compileComponents();
     }))
