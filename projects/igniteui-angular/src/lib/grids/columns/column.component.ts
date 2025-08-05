@@ -56,7 +56,7 @@ import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPi
 import { isConstructor, PlatformUtil } from '../../core/utils';
 import { IgxGridCell } from '../grid-public-cell';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
-import { Size } from '../common/enums';
+import { ColumnPinningPosition, Size } from '../common/enums';
 import { ExpressionsTreeUtil } from '../../data-operations/expressions-tree-util';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
@@ -1040,6 +1040,27 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
 
     /**
+     * Gets the pinning direction of the column.
+     * ```typescript
+     * let pinningPosition = this.column.pinningPosition;
+     */
+    @WatchColumnChanges()
+    @Input()
+    public get pinningPosition(): ColumnPinningPosition {
+        return this._pinningPosition || this.grid.pinning.columns;
+    }
+
+    /**
+     * Sets the pinning direction of the column.
+     *```html
+     * <igx-column [pinningPosition]="ColumnPinningPosition.End"></igx-column>
+     * ```
+     */
+    public set pinningPosition(value: ColumnPinningPosition) {
+        this._pinningPosition = value;
+    }
+
+    /**
      * Gets whether the column is `pinned`.
      * ```typescript
      * let isPinned = this.column.pinned;
@@ -1792,6 +1813,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     protected _applySelectableClass = false;
 
     protected _vIndex = NaN;
+    protected _pinningPosition = null;
     /**
      * @hidden
      */
@@ -2198,7 +2220,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *
      * @memberof IgxColumnComponent
      */
-    public pin(index?: number): boolean {
+    public pin(index?: number, pinningPosition?: ColumnPinningPosition): boolean {
         // TODO: Probably should the return type of the old functions
         // should be moved as a event parameter.
         const grid = (this.grid as any);
@@ -2207,11 +2229,14 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
 
         if (this.parent && !this.parent.pinned) {
-            return this.topLevelParent.pin(index);
+            return this.topLevelParent.pin(index, pinningPosition);
         }
-
+        const pinningVisibleCollection = (pinningPosition || this.pinningPosition) === ColumnPinningPosition.Start ?
+        grid.pinnedLeftColumns : grid.pinnedRightColumns;
+        const pinningCollection = (pinningPosition || this.pinningPosition) === ColumnPinningPosition.Start ?
+        grid._pinnedLeftColumns : grid._pinnedRightColumns;
         const hasIndex = index !== undefined;
-        if (hasIndex && (index < 0 || index > grid.pinnedColumns.length)) {
+        if (hasIndex && (index < 0 || index > pinningVisibleCollection.length)) {
             return false;
         }
 
@@ -2219,7 +2244,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             return false;
         }
 
-        const rootPinnedCols = grid._pinnedColumns.filter((c) => c.level === 0);
+        const rootPinnedCols = pinningCollection.filter((c) => c.level === 0);
         index = hasIndex ? index : rootPinnedCols.length;
         const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: false, cancel: false };
         this.grid.columnPin.emit(args);
@@ -2231,14 +2256,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         this.grid.crudService.endEdit(false);
 
         this._pinned = true;
+        this._pinningPosition = pinningPosition;
         this.pinnedChange.emit(this._pinned);
         // it is possible that index is the last position, so will need to find target column by [index-1]
-        const targetColumn = args.insertAtIndex === grid._pinnedColumns.length ?
-            grid._pinnedColumns[args.insertAtIndex - 1] : grid._pinnedColumns[args.insertAtIndex];
+        const targetColumn = args.insertAtIndex === pinningCollection.length ?
+        pinningCollection[args.insertAtIndex - 1] : pinningCollection[args.insertAtIndex];
 
-        if (grid._pinnedColumns.indexOf(this) === -1) {
+        if (pinningCollection.indexOf(this) === -1) {
             if (!grid.hasColumnGroups) {
-                grid._pinnedColumns.splice(args.insertAtIndex, 0, this);
+                pinningCollection.splice(args.insertAtIndex, 0, this);
             } else {
                 // insert based only on root collection
                 if (this.level === 0) {
@@ -2252,6 +2278,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                     allPinned = allPinned.concat(group.allChildren);
                 });
                 grid._pinnedColumns = allPinned;
+                if (this.pinningPosition === ColumnPinningPosition.Start) {
+                    grid._pinnedLeftColumns = allPinned;
+                } else {
+                    grid._pinnedRightColumns = allPinned;
+                }
             }
 
             if (grid._unpinnedColumns.indexOf(this) !== -1) {
@@ -2261,12 +2292,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
 
         if (hasIndex) {
-            index === grid._pinnedColumns.length - 1 ?
+            index === pinningCollection.length - 1 ?
                 grid._moveColumns(this, targetColumn, DropPosition.AfterDropTarget) : grid._moveColumns(this, targetColumn, DropPosition.BeforeDropTarget);
         }
 
         if (this.columnGroup) {
-            this.allChildren.forEach(child => child.pin());
+            this.allChildren.forEach(child => child.pin(null, pinningPosition));
             grid.reinitPinStates();
         }
 
@@ -2336,6 +2367,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             grid._unpinnedColumns.splice(index, 0, this);
             if (grid._pinnedColumns.indexOf(this) !== -1) {
                 grid._pinnedColumns.splice(grid._pinnedColumns.indexOf(this), 1);
+            }
+            if (this.pinningPosition === ColumnPinningPosition.Start && grid._pinnedLeftColumns.indexOf(this) !== -1) {
+                grid._pinnedLeftColumns.splice(grid._pinnedLeftColumns.indexOf(this), 1);
+            }
+            if (this.pinningPosition === ColumnPinningPosition.End && grid._pinnedRightColumns.indexOf(this) !== -1) {
+                grid._pinnedRightColumns.splice(grid._pinnedRightColumns.indexOf(this), 1);
             }
         }
 

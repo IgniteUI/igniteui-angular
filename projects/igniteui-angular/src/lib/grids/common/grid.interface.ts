@@ -520,7 +520,7 @@ export interface ColumnType extends FieldType {
     toggleVisibility(value?: boolean): void;
     populateVisibleIndexes?(): void;
     /** Pins the column at the specified index (if not already pinned). */
-    pin(index?: number): boolean;
+    pin(index?: number, pinningPosition?: ColumnPinningPosition): boolean;
     /** Unpins the column at the specified index (if not already unpinned). */
     unpin(index?: number): boolean;
 }
