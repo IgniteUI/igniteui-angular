@@ -2,6 +2,25 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 20.1.0
+### New Features
+- `IgxCarousel`
+    - Added `select` method overload accepting index.
+    ```ts
+    this.carousel.select(2, Direction.NEXT);
+    ```
+
+### General
+- `IgxDropDown` now exposes a `role` input property, allowing users to customize the role attribute based on the use case. The default is `listbox`.
+
+
+## 20.0.6
+### General
+- `IgxSimpleCombo`
+    - Added `disableFiltering` to the `IgxSimpleCombo`, which enables/disables the filtering in the list. The default is `false`.
+- `IgxCombo`, `IgxSimpleCombo`
+    -  Removed deprecated `filteringOptions.filterable` option.
+
 ## 20.0.2
 
 ### New Features
@@ -42,7 +61,6 @@ All notable changes for each version of this project will be documented in this 
     ```
 
 ## 19.2.0
-
 ### General
 - `IgxCarousel`
     - Removed deprecated property `keyboardSupport`.

@@ -96,11 +96,6 @@ export const enum DataTypes {
 export interface IComboFilteringOptions {
     /** Defines filtering case-sensitivity */
     caseSensitive?: boolean;
-    /**
-     * Defines whether filtering is allowed
-     * @deprecated in version 18.2.0. Use the `disableFiltering` property instead.
-    */
-    filterable?: boolean;
     /** Defines optional key to filter against complex list items. Default to displayKey if provided.*/
     filteringKey?: string;
 }
@@ -123,6 +118,17 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      */
     @Input({ transform: booleanAttribute })
     public showSearchCaseIcon = false;
+
+     /**
+     * Enables/disables filtering in the list. The default is `false`.
+     */
+    @Input({ transform: booleanAttribute })
+    public get disableFiltering(): boolean {
+        return this._disableFiltering;
+    }
+    public set disableFiltering(value: boolean) {
+        this._disableFiltering = value;
+    }
 
     /**
      * Set custom overlay settings that control how the combo's list of items is displayed.
@@ -947,6 +953,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     protected computedStyles;
 
     private _id: string = `igx-combo-${NEXT_ID++}`;
+    private _disableFiltering = false;
     private _type = null;
     private _dataType = '';
     private _itemHeight = undefined;
@@ -1228,6 +1235,20 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             this.close();
         }
     }
+
+    /** @hidden @internal */
+    public handleToggleKeyDown(eventArgs: KeyboardEvent) {
+        if (eventArgs.key === 'Enter' || eventArgs.key === ' ') {
+            eventArgs.preventDefault();
+            this.toggle();
+        }
+    }
+
+    /** @hidden @internal */
+    public getAriaLabel(): string {
+        return this.displayValue ? this.resourceStrings.igx_combo_aria_label_options : this.resourceStrings.igx_combo_aria_label_no_options;
+    }
+
 
     /** @hidden @internal */
     public registerOnChange(fn: any): void {

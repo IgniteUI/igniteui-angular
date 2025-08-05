@@ -97,6 +97,15 @@
         </form>
         <p>Form value: {{ personKirkForm.value | json }}</p>
         <p>Model value: {{ personKirk | json }}</p>
-        <p>Updated model: {{ newPerson | json }}</p>
+        <p>Updated model:r{{ newPerson | json }}</p>
+    </article>
+</section>
+<section class="sample-content">
+    <article class="sample-column">
+        <h4 class="sample-title">Dynamically Create Radio Group</h4>
+        <button igxButton="contained" (buttonClick)="createRadioGroupComponent()" style="width: 200px">
+            Create Radio Group
+        </button>
+        <ng-template #container></ng-template>
     </article>
 </section>
