@@ -33,7 +33,7 @@
         }
 
         @for (rowData of mergedDataInView; track rowData.record;) {
-            <igx-hierarchical-grid-row [style.position]="'absolute'" [gridID]="id" [index]="rowData.index" [data]="rowData.record.recordRef" [metaData]="rowData.record" [style.top.px]="getMergeCellOffset(rowData)"
+            <igx-hierarchical-grid-row class="igx-grid__tr--merged-top" [gridID]="id" [index]="rowData.index" [data]="rowData.record.recordRef" [metaData]="rowData.record" [style.top.px]="getMergeCellOffset(rowData)"
             [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowData.index:hasColumnLayouts:isRecordMerged(rowData.record):false:rowData.record:pipeTrigger"
             [ngStyle]="rowStyles | igxGridRowStyles:rowData.record:rowData.index:pipeTrigger" #row>
             </igx-hierarchical-grid-row>
