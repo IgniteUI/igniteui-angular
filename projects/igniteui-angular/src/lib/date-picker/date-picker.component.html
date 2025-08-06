@@ -15,8 +15,7 @@
     }
 
     <input class="igx-date-picker__input-date" [displayValuePipe]="formatter ? displayValue : null" igxInput
-        [required]="required" [attr.aria-required]="required"
-        [igxDateTimeEditor]="inputFormat" [displayFormat]="displayFormat"
+        [required]="required" [igxDateTimeEditor]="inputFormat" [displayFormat]="displayFormat"
         [minValue]="minValue" [maxValue]="maxValue" [spinDelta]="spinDelta" [spinLoop]="spinLoop"
         [disabled]="disabled" [placeholder]="placeholder" [readonly]="!isDropdown || readOnly"
         [igxTextSelection]="isDropdown && !readOnly" [locale]="locale" [attr.aria-expanded]="!collapsed"

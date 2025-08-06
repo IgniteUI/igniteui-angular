@@ -308,8 +308,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             this.inputGroup.isRequired = this.required;
         }
 
-        this.renderer.setAttribute(this.nativeElement, 'aria-required', this.required.toString());
-
         const elTag = this.nativeElement.tagName.toLowerCase();
         if (elTag === 'textarea') {
             this.isTextArea = true;
@@ -403,7 +401,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             } else {
                 this._valid = IgxInputState.INITIAL;
             }
-            this.renderer.setAttribute(this.nativeElement, 'aria-required', this.required.toString());
             const ariaInvalid = this.valid === IgxInputState.INVALID;
             this.renderer.setAttribute(this.nativeElement, 'aria-invalid', ariaInvalid.toString());
         } else {

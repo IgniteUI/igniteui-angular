@@ -13,7 +13,7 @@
     </ng-container>
 
     <input #comboInput igxInput [value]="displayValue" role="combobox"
-        [required]="required" [attr.aria-required]="required" [externalValidate]="externalValidate"
+        [required]="required" [externalValidate]="externalValidate"
         aria-haspopup="listbox" aria-autocomplete="list" aria-readonly="false"
         [attr.aria-expanded]="!this.dropdown.collapsed" [attr.aria-controls]="this.dropdown.listId"
         [attr.aria-labelledby]="this.ariaLabelledBy || this.label?.id || this.placeholder"
