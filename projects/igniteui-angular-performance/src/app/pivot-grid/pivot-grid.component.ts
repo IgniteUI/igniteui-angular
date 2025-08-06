@@ -1,7 +1,7 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
-import { FilteringExpressionsTree, FilteringLogic, IgxPivotDateDimension, IgxPivotGridComponent, IPivotConfiguration, IPivotValue } from 'igniteui-angular';
-import DATA from "../data/pivot-data.json";
+import { Component, inject, ViewChild } from '@angular/core';
+import { FilteringExpressionsTree, FilteringLogic, IgxPivotDateDimension, IgxPivotGridComponent, IPivotConfiguration, IPivotValue, SortingDirection } from 'igniteui-angular';
+import { DataService } from '../services/data.service';
 
 // Custom aggregator to calculate profit value
 export class IgxSaleProfitAggregate {
@@ -54,8 +54,9 @@ export class PivotGridComponent {
 
     private currencyPipe = new CurrencyPipe('en-US');
     private brandFilter = new FilteringExpressionsTree(FilteringLogic.Or, 'Brand');
+    private dataService = inject(DataService);
 
-    protected data: any = DATA;
+    protected data: any;
     protected saleValue: IPivotValue = {
         enabled: true,
         member: 'Sale',
@@ -150,18 +151,20 @@ export class PivotGridComponent {
                 displayName: 'Brand',
                 filter: this.brandFilter
             },
+
+        ],
+        rows: [
             {
-                enabled: false,
+                enabled: true,
+                sortDirection: SortingDirection.Asc,
                 memberName: 'Store',
                 displayName: 'Store'
             },
-        ],
-        rows: [
-
             new IgxPivotDateDimension({
                 memberName: 'Date',
                 displayName: 'All Periods',
-                enabled: true
+                enabled: false,
+                sortDirection: SortingDirection.None
             },
                 {
                     fullDate: true,
@@ -174,6 +177,10 @@ export class PivotGridComponent {
             this.profitValue
         ]
     };
+
+    constructor() {
+        this.data = this.dataService.generatePivotData(1_000_000);
+    }
 
     private currencyFormatter(value: any, field: string) {
         var valueConfig = this.pivotGrid.values.find(value => value.member === field);

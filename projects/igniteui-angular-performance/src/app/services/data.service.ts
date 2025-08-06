@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Mulberry32 } from '../lib/mulberry';
 import { DATA as athletesData } from "../data/athletesData"
 import { EMPLOYEES_DATA } from '../data/employeesData';
+import { brandNames, flags, monthsMaxDays, storeNames } from '../data/pivotData';
 
 
 @Injectable({
@@ -19,6 +20,72 @@ export class DataService {
         const rnd = new Mulberry32(1234);
         const data = this.generateEmployeesData(rnd, rows);
         return data;
+    }
+
+    public generatePivotData(rows: number) {
+        const rnd = new Mulberry32(1234);
+        const data = this.generateSalesData(rnd, rows);
+        return data;
+    }
+
+    private generateSalesData(rnd: Mulberry32, rows: number): any[] {
+        const numCountries = 6;
+        const numRecsPerCountry = rows/1.2;
+        const countryStoreKeys = Object.keys(storeNames);
+        const newStoreNames = this.generateStoreNames(countryStoreKeys, 100);
+
+        const newCountryStoreKeys = Object.keys(newStoreNames);
+        let maxNumMalls = newStoreNames[newCountryStoreKeys[0]].length * 3;
+        for (let s = 1; s < newCountryStoreKeys.length; s++) {
+            const curCountryMalls = newStoreNames[newCountryStoreKeys[s]].length;
+            if (curCountryMalls > maxNumMalls) {
+                maxNumMalls = curCountryMalls;
+            }
+        }
+
+        const numBrandsPerMall = 3;
+        const numDatesPerMall = numRecsPerCountry / maxNumMalls;
+        const numDatesPerBrand = numDatesPerMall / numBrandsPerMall;
+        const dates = [];
+        for (let d = 0; d < numDatesPerBrand; d++) {
+            const month = this.generateRandomNumber(rnd, 1, 12);
+            const day = this.generateRandomNumber(rnd, 1, monthsMaxDays[month - 1]);
+            const year = 2018 + this.generateRandomNumber(rnd, 0, 6);
+            dates.push(month + "/" + day + "/" + year);
+        }
+
+        const data = [];
+        for (let c = 0; c < numCountries; c++) {
+            const countryName = flags[c];
+            const numMallsForCountry = newStoreNames[countryName].length;
+            for (let m = 0; m < numMallsForCountry; m++) {
+                const brandNamesPerMall = [];
+                for (let t = 0; t < numBrandsPerMall; t++) {
+                    brandNamesPerMall.push(Math.round(this.generateRandomNumber(rnd, 0, brandNames.length - 1)));
+                }
+                for (let b = 0; b < numBrandsPerMall; b++) {
+                    for (let k = 0; k < numDatesPerBrand; k++) {
+                        const brandName = brandNames[brandNamesPerMall[b]];
+                        const saleValue = this.generateRandomNumber(rnd, 1, 1000);
+                        const costValue = this.generateRandomNumber(rnd, saleValue / 2, saleValue * 0.95);
+                        const storeInfo = newStoreNames[countryName][m];
+                        const storeName = storeInfo["mall"].indexOf(storeInfo["city"]) !== -1 ? storeInfo["mall"] : storeInfo["mall"] + ", " + storeInfo["city"];
+
+                        data.push({
+                            "Store": storeName,
+                            "Brand": brandName,
+                            "Country": countryName,
+                            "Sale": saleValue,
+                            "Cost": costValue,
+                            "Date": dates[k]
+                        });
+                    }
+                }
+            }
+
+        }
+        return data;
+
     }
 
     private generateEmployeesData(rnd: Mulberry32, rows: number): any[] {
@@ -100,6 +167,28 @@ export class DataService {
         return this.generateRandomNumber(rnd, 80_000, 100_000);
     }
 
+    private generateStoreNames(countryStoreKeys: string[], storesCount: number) {
+        const newStoreNames = {}
+        for (let s = 0; s < countryStoreKeys.length; s++) {
+            const curCountryMalls = storeNames[countryStoreKeys[s]].length;
+            const newStores = [];
+            for (let m = 0; m < curCountryMalls; m++) {
+                const newStoreName = storeNames[countryStoreKeys[s]][m]["mall"];
+                for (let k = 0; k < storesCount; k++) {
+                    newStores.push({ "city": storeNames[countryStoreKeys[s]][m]["city"], "mall": newStoreName + k });
+                    newStores.push({ "city": storeNames[countryStoreKeys[s]][m]["city"], "mall": newStoreName + 'A' + k });
+                    newStores.push({ "city": storeNames[countryStoreKeys[s]][m]["city"], "mall": newStoreName + 'B' + k });
+                    newStores.push({ "city": storeNames[countryStoreKeys[s]][m]["city"], "mall": newStoreName + 'C' + k });
+                    newStores.push({ "city": storeNames[countryStoreKeys[s]][m]["city"], "mall": newStoreName + 'D' + k });
+                }
+
+            }
+
+            newStoreNames[countryStoreKeys[s]] = newStores;
+        }
+        return newStoreNames;
+    }
+
     private formatDateTime(date: Date) {
         // Format: MM/DD/YYYY HH:mm:ss
         const formatted = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()} ` +
@@ -115,6 +204,5 @@ export class DataService {
     private generateRandomNumber(rnd, min, max) {
         return Math.floor(rnd.random() * (max - min + 1)) + min;
     }
-
 
 }
