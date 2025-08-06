@@ -468,7 +468,7 @@ export class IgxPivotGridSortingPipe implements PipeTransform {
         if (!expressions.length) {
             result = collection;
         } else {
-            result = DataUtil.sort(cloneArray(collection, true), expressions, sorting, this.gridAPI.grid);
+            result = DataUtil.sort(cloneArray(collection), expressions, sorting, this.gridAPI.grid);
         }
 
         return result;
