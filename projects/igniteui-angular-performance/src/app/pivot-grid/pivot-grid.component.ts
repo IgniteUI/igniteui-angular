@@ -140,36 +140,51 @@ export class PivotGridComponent {
 
     protected pivotConfigBrands: IPivotConfiguration = {
         columns: [
-            {
-                enabled: true,
-                memberName: 'Country',
-                displayName: 'Country'
-            },
+
             {
                 enabled: true,
                 memberName: 'Brand',
                 displayName: 'Brand',
                 filter: this.brandFilter
             },
+            {
+                enabled: true,
+                memberName: 'Country',
+                displayName: 'Country',
+            }
 
         ],
         rows: [
             {
-                enabled: true,
+                enabled: false,
                 sortDirection: SortingDirection.Asc,
                 memberName: 'Store',
-                displayName: 'Store'
+                displayName: 'Store',
+
             },
+            {
+                enabled: false,
+                memberName: 'Country',
+                displayName: 'Country',
+                childLevel: {
+                    enabled: true,
+                    memberName: 'Store',
+                    displayName: 'Store',
+
+                }
+            },
+
+
             new IgxPivotDateDimension({
                 memberName: 'Date',
                 displayName: 'All Periods',
-                enabled: false,
+                enabled: true,
                 sortDirection: SortingDirection.None
             },
                 {
-                    fullDate: true,
+                    fullDate: false,
                     quarters: true,
-                    months: true,
+                    months: false,
                 }),
         ],
         values: [

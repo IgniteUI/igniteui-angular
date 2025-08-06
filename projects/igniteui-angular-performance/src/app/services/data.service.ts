@@ -30,7 +30,7 @@ export class DataService {
 
     private generateSalesData(rnd: Mulberry32, rows: number): any[] {
         const numCountries = 6;
-        const numRecsPerCountry = rows/1.2;
+        const numRecsPerCountry = rows / numCountries;
         const countryStoreKeys = Object.keys(storeNames);
         const newStoreNames = this.generateStoreNames(countryStoreKeys, 100);
 
@@ -174,14 +174,7 @@ export class DataService {
             const newStores = [];
             for (let m = 0; m < curCountryMalls; m++) {
                 const newStoreName = storeNames[countryStoreKeys[s]][m]["mall"];
-                for (let k = 0; k < storesCount; k++) {
-                    newStores.push({ "city": storeNames[countryStoreKeys[s]][m]["city"], "mall": newStoreName + k });
-                    newStores.push({ "city": storeNames[countryStoreKeys[s]][m]["city"], "mall": newStoreName + 'A' + k });
-                    newStores.push({ "city": storeNames[countryStoreKeys[s]][m]["city"], "mall": newStoreName + 'B' + k });
-                    newStores.push({ "city": storeNames[countryStoreKeys[s]][m]["city"], "mall": newStoreName + 'C' + k });
-                    newStores.push({ "city": storeNames[countryStoreKeys[s]][m]["city"], "mall": newStoreName + 'D' + k });
-                }
-
+                newStores.push({ "city": storeNames[countryStoreKeys[s]][m]["city"], "mall": newStoreName });
             }
 
             newStoreNames[countryStoreKeys[s]] = newStores;
