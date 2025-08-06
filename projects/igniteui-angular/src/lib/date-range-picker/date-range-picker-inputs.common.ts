@@ -17,6 +17,11 @@ export interface DateRange {
     start: Date | string;
     end: Date | string;
 }
+/** Represents a range between two dates and a label used for predefined and custom date ranges. */
+export interface CustomDateRange {
+    label: string;
+    dateRange: DateRange;
+}
 
 /** @hidden @internal */
 @Pipe({

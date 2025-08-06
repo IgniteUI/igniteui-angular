@@ -1,0 +1,7 @@
+<div class="igx-predefined-ranges" role="group" aria-label="Predefined ranges">
+  @for (r of ranges; track r.label) {
+    <igx-chip (click)="onSelect(r.dateRange)">
+      {{ r.label }}
+    </igx-chip>
+  }
+</div>

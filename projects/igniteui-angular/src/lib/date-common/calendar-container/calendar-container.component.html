@@ -28,6 +28,15 @@
 </ng-template>
 
 <igx-calendar></igx-calendar>
+
+ @if( usePredefinedRanges || (customRanges?.length || 0) > 0 ){
+        <igx-predefined-ranges-area
+            [usePredefinedRanges]="usePredefinedRanges"
+            [customRanges]="customRanges"
+            [resourceStrings]="resourceStrings"
+            (rangeSelect)="rangeSelected.emit($event)">
+        </igx-predefined-ranges-area>
+    }
 @if (pickerActions?.template || (closeButtonLabel || todayButtonLabel)) {
     <igx-divider></igx-divider>
 }

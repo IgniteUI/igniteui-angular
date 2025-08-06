@@ -3,14 +3,15 @@
         <div class="range-holder">
             <div class="range-sample-column">
                 <h5>Without forms</h5>
-                <p>Default range picker</p>
                 <div class="date-picker-sample-buttons">
                     <button igxButton="contained" igxRipple (click)="changeLocale('fr')">Change locale to France</button>
                     <button igxButton="contained" igxRipple (click)="changeLocale('en')">Change locale to English</button>
                     <button igxButton="contained" igxRipple (click)="changeWeekStart(5)">Change weekStart to Friday</button>
                     <button igxButton="contained" igxRipple (click)="changeWeekStart(0)">Change weekStart to Sunday</button>
                 </div>
-                <igx-date-range-picker  #dr1 mode="dialog"></igx-date-range-picker>
+
+                <p>Default range picker with predefined and custom ranges</p>
+                <igx-date-range-picker  #dr1 mode="dialog" [usePredefinedRanges]="true" [customRanges]="customRanges"></igx-date-range-picker>
 
                 <p>Drop down single input with custom suffix</p>
                 <igx-date-range-picker>
