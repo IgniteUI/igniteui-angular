@@ -19,7 +19,7 @@ import { IgxGridCellComponent } from '../grids/cell.component';
 import { IgxPivotRowComponent } from '../grids/pivot-grid/pivot-row.component';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IgxRowDirective } from '../grids/row.directive';
-import { CellType, GridType, RowType } from '../grids/common/grid.interface';
+import { CellType, ColumnType, GridType, RowType } from '../grids/common/grid.interface';
 import { IgxTreeNodeComponent } from '../tree/tree-node/tree-node.component';
 import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxPivotGridComponent } from '../grids/pivot-grid/pivot-grid.component';
@@ -103,6 +103,21 @@ export const PAGER_CLASS = '.igx-page-nav';
 export const SAFE_DISPOSE_COMP_ID = 'root';
 
 export class GridFunctions {
+
+    public static verifyColumnMergedState(grid: GridType, col: ColumnType, state: any[]) {
+        const dataRows = grid.dataRowList.toArray();
+        let totalSpan = 0;
+        for (let index = 0; index < dataRows.length - 1; index++) {
+            const row = dataRows[index];
+            const cellValue = row.cells.toArray().find(x => x.column === col).value;
+            const rowSpan = row.metaData?.cellMergeMeta.get(col.field)?.rowSpan || 1;
+            const currState = state[index - totalSpan];
+            expect(cellValue).toBe(currState.value);
+            expect(rowSpan).toBe(currState.span);
+            totalSpan += (rowSpan - 1);
+            index += (rowSpan - 1);
+        }
+    }
 
     public static getRows(fix): DebugElement[] {
         const rows: DebugElement[] = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
