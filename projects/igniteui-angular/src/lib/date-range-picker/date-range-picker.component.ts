@@ -19,7 +19,7 @@ import { DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } fro
 import { IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
-import { IgxPickerActionsDirective, IgxPickerClearComponent } from '../date-common/picker-icons.common';
+import { IgxPickerActionsDirective } from '../date-common/picker-icons.common';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
