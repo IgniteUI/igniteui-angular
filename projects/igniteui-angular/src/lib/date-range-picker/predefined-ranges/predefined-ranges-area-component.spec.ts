@@ -47,11 +47,11 @@ describe('IgxPredefinedRangesAreaComponent', () => {
     fixture.detectChanges();
   });
 
-   it('renders no chips by default', () => {
+  it('should render no chips by default', () => {
     expect(getChips().length).toBe(0);
   });
 
-  it('renders predefined ranges when usePredefinedRanges = true', () => {
+  it('should render predefined ranges when usePredefinedRanges = true', () => {
     component.usePredefinedRanges = true;
     fixture.detectChanges();
 
@@ -63,7 +63,7 @@ describe('IgxPredefinedRangesAreaComponent', () => {
     });
   });
 
-  it('renders predefined + custom ranges together', () => {
+  it('should render predefined + custom ranges together', () => {
     component.usePredefinedRanges = true;
     component.customRanges = customRanges;
     fixture.detectChanges();
@@ -76,9 +76,9 @@ describe('IgxPredefinedRangesAreaComponent', () => {
         const text = (de.nativeElement as HTMLElement).innerText.trim();
         expect(text).toBe(ranges[i].label);
     });
-    });
+  });
 
-    it('renders only custom ranges when usePredefinedRanges = false', () => {
+  it('should render only custom ranges when usePredefinedRanges = false', () => {
     component.usePredefinedRanges = false;
     component.customRanges = customRanges;
     fixture.detectChanges();
@@ -91,9 +91,9 @@ describe('IgxPredefinedRangesAreaComponent', () => {
         const text = (de.nativeElement as HTMLElement).innerText.trim();
         expect(text).toBe(ranges[i].label);
     });
-    });
+  });
 
-    it('emits selected range on chip click', () => {
+  it('should emit selected range on chip click', () => {
     component.usePredefinedRanges = true;
     component.customRanges = customRanges;
     fixture.detectChanges();
@@ -109,9 +109,9 @@ describe('IgxPredefinedRangesAreaComponent', () => {
         fixture.detectChanges();
         expect(emitSpy).toHaveBeenCalledWith(ranges[i].dateRange);
     });
-    });
+  });
 
-    it('uses provided resourceStrings for labels when available', () => {
+  it('should use provided resourceStrings for labels when available', () => {
     const strings: any = {
         last7Days: 'Last 7 - localized',
         currentMonth: 'Current Month - localized',
@@ -135,7 +135,7 @@ describe('IgxPredefinedRangesAreaComponent', () => {
     expect(labels).toContain('YTD - localized');
 
     expect(labels).toContain('Last 30 Days');
-    });
+  });
 });
 
 @Component({
@@ -155,5 +155,4 @@ class PredefinedRangesDefaultComponent {
 
   @ViewChild(IgxPredefinedRangesAreaComponent, { static: true })
   public predefinedRanges!: IgxPredefinedRangesAreaComponent;
-
 }
