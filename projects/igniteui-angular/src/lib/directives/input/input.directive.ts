@@ -217,7 +217,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         if (this.ngControl && (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
             validation = this.ngControl.control.validator({} as AbstractControl);
         }
-        return validation && validation.required || !!this._defaultRequired;
+        return validation && validation.required || (this._externalValidate ? 
+            this.inputGroup.isRequired : !!this._defaultRequired);
     }
     public set required(value: boolean) {
         if (this._defaultRequired === null) {
