@@ -444,7 +444,7 @@ export class IgxPivotGridColumnSortingPipe implements PipeTransform {
             for (const expr of expressions) {
                 expr.strategy = DefaultPivotGridRecordSortingStrategy.instance();
             }
-            result = PivotUtil.sort(cloneArray(collection, true), expressions, sorting);
+            result = PivotUtil.sort(cloneArray(collection), expressions, sorting);
         }
         return result;
     }
