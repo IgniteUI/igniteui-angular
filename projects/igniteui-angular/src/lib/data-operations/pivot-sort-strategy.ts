@@ -18,9 +18,7 @@ export class DefaultPivotGridRecordSortingStrategy extends DefaultSortingStrateg
         isDate?: boolean,
         isTime?: boolean,
         _grid?: PivotGridType) {
-        const reverse = (dir === SortingDirection.Desc ? -1 : 1);
-        const cmpFunc = (obj1, obj2) => this.compareObjects(obj1, obj2, fieldName, reverse, ignoreCase, this.getFieldValue, isDate, isTime);
-        return this.arraySort(data, cmpFunc);
+        return super.sort(data, fieldName, dir, ignoreCase, this.getFieldValue, isDate, isTime);
     }
 
     protected getFieldValue(obj: IPivotGridRecord, key: string, _isDate = false, _isTime = false): any {

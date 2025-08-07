@@ -212,8 +212,13 @@ export class PivotUtil {
         data.forEach(rec => {
             const children = rec.children;
             if (children) {
-                children.forEach(x => {
-                    this.sort(x, expressions, sorting);
+                children.forEach((value, key, map) => {
+                    /**
+                     * DataUtil.sort is returning new reference of the sorted array
+                     * because of the Schwartizian transform
+                     */
+                    const sorted = this.sort(value, expressions, sorting);
+                    map.set(key, sorted);
                 });
             }
         });
