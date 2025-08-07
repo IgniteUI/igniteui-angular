@@ -2,7 +2,7 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick, flush, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent } from '../../test-utils/tooltip-components.spec';
+import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent, IgxTooltipMultipleTooltipsComponent } from '../../test-utils/tooltip-components.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../services/public_api';
 import { IgxTooltipDirective } from './tooltip.directive';
@@ -618,6 +618,36 @@ describe('IgxTooltip', () => {
             touchElement(fix.debugElement);
             flush();
             verifyTooltipVisibility(tooltipNativeElement, targetTwo, false);
+        }));
+    });
+
+    describe('Multiple tooltips', () => {
+        let targetOne: IgxTooltipTargetDirective;
+
+        let tooltipOne: IgxTooltipDirective;
+        let tooltipTwo: IgxTooltipDirective;
+
+        beforeEach(waitForAsync(() => {
+            fix = TestBed.createComponent(IgxTooltipMultipleTooltipsComponent);
+            fix.detectChanges();
+            targetOne = fix.componentInstance.targetOne;
+            tooltipOne = fix.componentInstance.tooltipOne;
+            tooltipTwo = fix.componentInstance.tooltipTwo;
+        }));
+
+        it('should not add multiple document:touchstart event listeners when having multiple igxTooltip instances - #16100', fakeAsync(() => {
+            spyOn<any>(tooltipOne, 'onDocumentTouchStart').and.callThrough();
+            spyOn<any>(tooltipTwo, 'onDocumentTouchStart').and.callThrough();
+
+            touchElement(targetOne);
+            tick(500);
+
+            const dummyDiv = fix.debugElement.query(By.css('.dummyDiv'));
+            touchElement(dummyDiv);
+            flush();
+
+            expect(tooltipOne['onDocumentTouchStart']).toHaveBeenCalledTimes(1);
+            expect(tooltipTwo['onDocumentTouchStart']).not.toHaveBeenCalled();
         }));
     });
 
