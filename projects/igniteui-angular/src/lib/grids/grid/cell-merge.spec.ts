@@ -164,8 +164,8 @@ describe('IgxGrid - Cell merging #grid', () => {
                 grid.verticalScrollContainer.recalcUpdateSizes();
                 grid.dataRowList.toArray().forEach(x => x.cdr.detectChanges());
                 const mergedCell = fix.debugElement.queryAll(By.css(MERGE_CELL_CSS_CLASS))[0].nativeNode;
-                // one row is 100px, other is 200, 4px border
-                expect(mergedCell.getBoundingClientRect().height).toBe(100 + 200 + 4);
+                // one row is 100px, other is 200, 2px border
+                expect(mergedCell.getBoundingClientRect().height).toBe(100 + 200 + 2);
             });
         });
     });
@@ -220,7 +220,7 @@ describe('IgxGrid - Cell merging #grid', () => {
             it('horizontal virtualization should not be affected by vertically merged cells.', async() => {
                 let mergedCell = grid.rowList.first.cells.find(x => x.column.field === 'ProductName');
                 expect(mergedCell.value).toBe('Ignite UI for JavaScript');
-                expect(mergedCell.nativeElement.parentElement.style.gridTemplateRows).toBe("51px 51px");
+                expect(mergedCell.nativeElement.parentElement.style.gridTemplateRows).toBe("50px 50px");
 
                 // scroll horizontally
                 grid.navigateTo(0, 4);
@@ -238,7 +238,7 @@ describe('IgxGrid - Cell merging #grid', () => {
 
                 mergedCell = grid.rowList.first.cells.find(x => x.column.field === 'ProductName');
                 expect(mergedCell.value).toBe('Ignite UI for JavaScript');
-                expect(mergedCell.nativeElement.parentElement.style.gridTemplateRows).toBe("51px 51px");
+                expect(mergedCell.nativeElement.parentElement.style.gridTemplateRows).toBe("50px 50px");
             });
         });
 
@@ -356,7 +356,7 @@ describe('IgxGrid - Cell merging #grid', () => {
 
                 const mergedCell = grid.rowList.first.cells.find(x => x.column.field === 'ProductName');
                 expect(mergedCell.value).toBe('Ignite UI for JavaScript');
-                expect(mergedCell.nativeElement.parentElement.style.gridTemplateRows).toBe("51px 51px");
+                expect(mergedCell.nativeElement.parentElement.style.gridTemplateRows).toBe("50px 50px");
             });
         });
 
@@ -374,7 +374,7 @@ describe('IgxGrid - Cell merging #grid', () => {
                 expect(pinnedRow.metaData.cellMergeMeta.get(col.field)?.rowSpan).toBe(2);
                 const mergedPinnedCell = pinnedRow.cells.find(x => x.column.field === 'ProductName');
                 expect(mergedPinnedCell.value).toBe('Ignite UI for JavaScript');
-                expect(mergedPinnedCell.nativeElement.parentElement.style.gridTemplateRows).toBe("51px 51px");
+                expect(mergedPinnedCell.nativeElement.parentElement.style.gridTemplateRows).toBe("50px 50px");
             });
 
             it('should merge adjacent ghost rows in unpinned area.', () => {
@@ -391,7 +391,7 @@ describe('IgxGrid - Cell merging #grid', () => {
                 expect(ghostRow.metaData.cellMergeMeta.get(col.field)?.rowSpan).toBe(2);
                 const mergedPinnedCell = ghostRow.cells.find(x => x.column.field === 'ProductName');
                 expect(mergedPinnedCell.value).toBe('Ignite UI for JavaScript');
-                expect(mergedPinnedCell.nativeElement.parentElement.style.gridTemplateRows).toBe("51px 51px");
+                expect(mergedPinnedCell.nativeElement.parentElement.style.gridTemplateRows).toBe("50px 50px");
             });
 
             it('should not merge ghost and data rows together.', () => {
