@@ -17,6 +17,7 @@ import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IGridFormGroupCreatedEventArgs } from '../common/grid.interface';
 import { IgxTreeGridComponent } from '../tree-grid/tree-grid.component';
 import { IgxGridComponent } from './grid.component';
+import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService, VerticalAlignment } from '../../services/public_api';
 
 describe('IgxGrid - Validation #grid', () => {
 
@@ -170,6 +171,25 @@ describe('IgxGrid - Validation #grid', () => {
             expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
         });
 
+        it('should mark invalid cell with igx-grid__td--invalid class and show the related error cell template when the field contains "."', () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            // add new column
+            fixture.componentInstance.columns.push({ field: 'New.Column', dataType: 'string' });
+            fixture.detectChanges();
+            expect(grid.columns.length).toBe(5);
+
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 4);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            cell.update('asd');
+            fixture.detectChanges();
+
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 4);
+            //min length should be 4
+            GridFunctions.verifyCellValid(cell, false);
+            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
+        });
+
         it('should show the error message on error icon hover and when the invalid cell becomes active.', fakeAsync(() => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
 
@@ -186,6 +206,18 @@ describe('IgxGrid - Validation #grid', () => {
             GridSelectionFunctions.verifyCellActive(cell, true);
             const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
             expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
+
+            const overlayService = TestBed.inject(IgxOverlayService);
+            const info = overlayService.getOverlayById(cell.errorTooltip.first.overlayId);
+            const positionSettings = info.settings.positionStrategy.settings;
+
+            expect(info.settings.positionStrategy instanceof AutoPositionStrategy).toBe(true);
+            expect(positionSettings.horizontalStartPoint).toEqual(HorizontalAlignment.Center);
+            expect(positionSettings.horizontalDirection).toEqual(HorizontalAlignment.Center);
+            expect(positionSettings.verticalStartPoint).toEqual(VerticalAlignment.Bottom);
+            expect(positionSettings.verticalDirection).toEqual(VerticalAlignment.Bottom);
+            expect(positionSettings.openAnimation.options.params).toEqual({ duration: '150ms' });
+            expect(positionSettings.closeAnimation.options.params).toEqual({ duration: '75ms' });
 
             cell.errorTooltip.first.close();
             tick();

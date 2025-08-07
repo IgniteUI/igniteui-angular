@@ -16,6 +16,7 @@
         >
             @for(item of items; track item) {
             <igx-drop-down-item
+                [ariaLabel]="item.field"
                 [disabled]="item.disabled"
                 [isHeader]="item.header"
             >

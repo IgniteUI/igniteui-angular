@@ -30,8 +30,8 @@
         [placeholder]="inputValuePlaceholder"
         [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"
         autocomplete="off"
-        [value]="expressionUI.expression.searchVal"
-        (input)="onValuesInput($event)"
+        [(ngModel)]="expressionUI.expression.searchVal"
+        (blur)="updateSearchValueOnBlur($event)"
     />
 </igx-input-group>
 
