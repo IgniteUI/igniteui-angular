@@ -209,19 +209,18 @@ export class PivotUtil {
     }
 
     public static sort(data: IPivotGridRecord[], expressions: ISortingExpression[], sorting: IGridSortingStrategy = new IgxSorting()): any[] {
-        data.forEach(rec => {
+        for (const rec of data) {
             const children = rec.children;
-            if (children) {
-                children.forEach((value, key, map) => {
-                    /**
-                     * DataUtil.sort is returning new reference of the sorted array
-                     * because of the Schwartizian transform
-                     */
-                    const sorted = this.sort(value, expressions, sorting);
-                    map.set(key, sorted);
-                });
+            for (const [key, child] of children) {
+                /**
+                * DataUtil.sort is returning new reference of the sorted array
+                * because of the Schwartizian transform
+                */
+                const sorted = this.sort(child, expressions, sorting);
+                children.set(key, sorted);
             }
-        });
+
+        }
         return DataUtil.sort(data, expressions, sorting);
     }
 
