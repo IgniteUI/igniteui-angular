@@ -97,11 +97,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @HostBinding('class.igx-input-group__textarea')
     public isTextArea = false;
 
-    @HostBinding('attr.required')
-    public get requiredAttribute() {
-        return this.required ? '' : null;
-    }
-
     private _valid = IgxInputState.INITIAL;
     private _statusChanges$: Subscription;
     private _valueChanges$: Subscription;
@@ -217,14 +212,21 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         if (this.ngControl && (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
             validation = this.ngControl.control.validator({} as AbstractControl);
         }
-        return validation && validation.required || (this._externalValidate ? 
-            this.inputGroup.isRequired : !!this._defaultRequired);
+        let required;
+        if (validation && validation.required !== undefined) {
+            required = validation.required;
+        } else {
+            required = this.nativeElement.required;
+        }
+        return required;
     }
     public set required(value: boolean) {
-        if (this._defaultRequired === null) {
-            this._defaultRequired = value;
-        }
-        this.inputGroup.isRequired = value;
+        this.nativeElement.required = this.inputGroup.isRequired = value;
+    }
+
+    @HostBinding('attr.required')
+    public get hostBindingRequired(): string {
+        return this.required ? '' : null;
     }
 
     /**
