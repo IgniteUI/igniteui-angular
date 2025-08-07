@@ -231,7 +231,7 @@ describe('IgxDatePicker', () => {
 
                 expect(datePicker).toBeDefined();
                 expect(inputGroup.isRequired).toBeTruthy();
-                expect((datePicker as any).inputDirective.nativeElement.getAttribute('aria-required')).toEqual('true');
+                expect((datePicker as any).inputDirective.nativeElement.getAttribute('required')).not.toBeNull();
             });
 
             it('should update inputGroup isRequired correctly', () => {
@@ -240,13 +240,13 @@ describe('IgxDatePicker', () => {
 
                 expect(datePicker).toBeDefined();
                 expect(inputGroup.isRequired).toBeTruthy();
-                expect(inputEl.getAttribute('aria-required')).toEqual('true');
+                expect(inputEl.getAttribute('required')).not.toBeNull();
 
                 (fixture.componentInstance as IgxDatePickerNgModelComponent).isRequired = false;
                 fixture.detectChanges();
 
                 expect(inputGroup.isRequired).toBeFalsy();
-                expect(inputEl.getAttribute('aria-required')).toEqual(null);
+                expect(inputEl.getAttribute('required')).toBeNull();
             });
 
             it('should set validity to initial when the form is reset', fakeAsync(() => {

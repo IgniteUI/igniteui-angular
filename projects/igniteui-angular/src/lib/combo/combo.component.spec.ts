@@ -3439,7 +3439,7 @@ describe('igxCombo', () => {
                     input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
                     expect(asterisk).toBe('"*"');
                     expect(inputGroupIsRequiredClass).toBeDefined();
-                    expect(input.nativeElement.getAttribute('aria-required')).toMatch('true');
+                    expect(input.nativeElement.getAttribute('required')).not.toBeNull();
 
                     fixture.componentInstance.reactiveForm.controls.townCombo.clearValidators();
                     fixture.componentInstance.reactiveForm.controls.townCombo.updateValueAndValidity();
@@ -3448,7 +3448,7 @@ describe('igxCombo', () => {
                     asterisk = window.getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_LABEL)).nativeElement, ':after').content;
                     expect(asterisk).toBe('none');
                     expect(inputGroupIsRequiredClass).toBeNull();
-                    expect(input.nativeElement.getAttribute('aria-required')).toMatch('false');
+                    expect(input.nativeElement.getAttribute('required')).toBeNull();
 
                     fixture.componentInstance.reactiveForm.controls.townCombo.setValidators(Validators.required);
                     fixture.componentInstance.reactiveForm.controls.townCombo.updateValueAndValidity();
@@ -3457,7 +3457,7 @@ describe('igxCombo', () => {
                     asterisk = window.getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_LABEL)).nativeElement, ':after').content;
                     expect(asterisk).toBe('"*"');
                     expect(inputGroupIsRequiredClass).toBeDefined();
-                    expect(input.nativeElement.getAttribute('aria-required')).toMatch('true');
+                    expect(input.nativeElement.getAttribute('required')).not.toBeNull();
                 });
 
                 it('Should update validity state when programmatically setting errors on reactive form controls', fakeAsync(() => {

@@ -2276,7 +2276,7 @@ describe('IgxSimpleCombo', () => {
 
                 expect(combo.valid).toEqual(IgxInputState.INITIAL);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
-                expect(combo.comboInput.nativeElement.attributes['aria-required']).toBeDefined();
+                expect(combo.comboInput.nativeElement.attributes['required']).toBeDefined();
 
                 // empty string
                 combo.open();

@@ -97,11 +97,17 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @HostBinding('class.igx-input-group__textarea')
     public isTextArea = false;
 
+    @HostBinding('attr.required')
+    public get requiredAttribute() {
+        return this.required ? '' : null;
+    }
+
     private _valid = IgxInputState.INITIAL;
     private _statusChanges$: Subscription;
     private _valueChanges$: Subscription;
     private _fileNames: string;
     private _disabled = false;
+    private _defaultRequired: boolean = null;
     private _externalValidate: () => IgxInputState = null;
 
     constructor(
@@ -182,21 +188,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
 
     /**
-     * Sets the `required` property.
-     *
-     * @example
-     * ```html
-     * <input-group>
-     *  <input igxInput #igxInput required>
-     * </input-group>
-     * ```
-     */
-    @Input({ transform: booleanAttribute })
-    public set required(value: boolean) {
-        this.nativeElement.required = this.inputGroup.isRequired = value;
-    }
-
-    /**
      * @hidden @internal
      * Sets a function to validate the input externally.
      * This function should return an `IgxInputState` value.
@@ -211,20 +202,30 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
 
     /**
-     * Gets whether the igxInput is required.
+     * Gets/Sets whether the igxInput is required.
      *
      * @example
      * ```typescript
-     * let isRequired = this.igxInput.required;
+     * <input-group>
+     *  <input igxInput #igxInput required>
+     * </input-group>
      * ```
      */
+    @Input({ transform: booleanAttribute })
     public get required() {
         let validation;
         if (this.ngControl && (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
             validation = this.ngControl.control.validator({} as AbstractControl);
         }
-        return validation && validation.required || this.nativeElement.hasAttribute('required');
+        return validation && validation.required || !!this._defaultRequired;
     }
+    public set required(value: boolean) {
+        if (this._defaultRequired === null) {
+            this._defaultRequired = value;
+        }
+        this.inputGroup.isRequired = value;
+    }
+
     /**
      * @hidden
      * @internal

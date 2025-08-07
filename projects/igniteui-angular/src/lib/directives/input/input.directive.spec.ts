@@ -702,7 +702,7 @@ describe('IgxInput', () => {
         let asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
         expect(asterisk).toBe('"*"');
         expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(true);
-        expect(input.nativeElement.attributes.getNamedItem('aria-required').nodeValue).toEqual('true');
+        expect(input.nativeElement.getAttribute('required')).not.toBeNull();
 
         // 2) check that input group's --invalid class is NOT applied
         expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
@@ -718,7 +718,7 @@ describe('IgxInput', () => {
 
         expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
         expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(true);
-        expect(input.nativeElement.attributes.getNamedItem('aria-required').nodeValue).toEqual('true');
+        expect(input.nativeElement.getAttribute('required')).not.toBeNull();
 
         // 3) Check if the input group's --invalid and --required classes are removed when validator is dynamically cleared
         fix.componentInstance.removeValidators(formGroup);
@@ -731,7 +731,7 @@ describe('IgxInput', () => {
         expect(formReference).toBeDefined();
         expect(input).toBeDefined();
         expect(input.nativeElement.value).toEqual('');
-        expect(input.nativeElement.attributes.getNamedItem('aria-required').nodeValue).toEqual('false');
+        expect(input.nativeElement.getAttribute('required')).toBeNull();
         expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toEqual(false);
         expect(asterisk).toBe('none');
         expect(input.valid).toEqual(IgxInputState.INITIAL);
@@ -751,7 +751,7 @@ describe('IgxInput', () => {
         // interaction test - expect actual asterisk
         asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
         expect(asterisk).toBe('"*"');
-        expect(input.nativeElement.attributes.getNamedItem('aria-required').nodeValue).toEqual('true');
+        expect(input.nativeElement.getAttribute('required')).not.toBeNull();
     }));
 
     it('should not hold old file input value in form after clearing the input', () => {
