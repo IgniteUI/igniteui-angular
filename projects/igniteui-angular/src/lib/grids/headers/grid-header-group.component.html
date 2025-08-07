@@ -42,6 +42,7 @@
     }
     <div class="igx-grid-thead__title"
         role="columnheader"
+        [attr.aria-hidden]="ariaHidden"
         [id]="headerID"
         [attr.aria-label]="column.header || column.field"
         [attr.aria-expanded]="column.expanded"
@@ -101,6 +102,7 @@
     }
     <igx-grid-header
         role="columnheader"
+        [attr.aria-hidden]="ariaHidden"
         class="igx-grid-th--fw"
         [id]="headerID"
         [ngClass]="column.headerClasses"

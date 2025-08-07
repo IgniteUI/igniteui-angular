@@ -225,6 +225,14 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @hidden
     * @internal
     */
+    public override get isLeafHeaderAriaHidden(): boolean {
+        return super.isLeafHeaderAriaHidden || this.grid.navigation.isRowHeaderActive || this.grid.navigation.isRowDimensionHeaderActive;
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
     public calcHeight(col: ColumnType, index: number) {
         return !col.columnGroup && col.level < this.totalDepth && col.level === index ? (this.totalDepth - col.level) * this.grid.rowHeight : this.grid.rowHeight;
     }

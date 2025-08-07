@@ -158,6 +158,13 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     }
 
     /**
+     * @hidden
+     */
+    public get ariaHidden(): boolean {
+        return this.grid.hasColumnGroups && (this.column.hidden || this.grid.navigation.activeNode.row !== -1);
+    }
+
+    /**
      * Gets whether the header group belongs to a column that is filtered.
      *
      * @memberof IgxGridHeaderGroupComponent
