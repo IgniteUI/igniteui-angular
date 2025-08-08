@@ -4,10 +4,10 @@ import {
     IgxSummaryResult
 } from './grid-summary';
 import { GridColumnDataType } from '../../data-operations/data-util';
-import { getLocaleCurrencySymbol, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { ISelectionNode } from '../common/types';
 import { ColumnType } from '../common/grid.interface';
-import { formatCurrency, formatDate, formatNumber, formatPercent, getCurrencyCode, trackByIdentity } from '../../core/utils';
+import { formatCurrency, formatDate, formatNumber, formatPercent, getCurrencyCode, getCurrencySymbol, trackByIdentity } from '../../core/utils';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,6 +34,12 @@ export class IgxSummaryCellComponent {
 
     @Input()
     public summaryTemplate: TemplateRef<any>;
+
+    @Input()
+    public locale;
+
+    @Input()
+    public gridResourceStrings;
 
     /** @hidden */
     @Input()
@@ -103,7 +109,7 @@ export class IgxSummaryCellComponent {
      * @hidden @internal
      */
     public get currencyCode(): string {
-        return getCurrencyCode(this.grid.locale, this.column.pipeArgs.currencyCode);
+        return getCurrencyCode(this.locale, this.column.pipeArgs.currencyCode);
     }
 
     /**
@@ -111,14 +117,14 @@ export class IgxSummaryCellComponent {
      */
     public get currencySymbol(): string {
         return this.column.pipeArgs.display ?
-            this.column.pipeArgs.display : getLocaleCurrencySymbol(this.grid.locale);
+            this.column.pipeArgs.display : getCurrencySymbol(getCurrencyCode(this.locale), this.locale);
     }
 
     /** cached single summary res after filter resets collection */
     protected trackSummaryResult = trackByIdentity;
 
     public translateSummary(summary: IgxSummaryResult): string {
-        return this.grid.resourceStrings[`igx_grid_summary_${summary.key}`] || summary.label;
+        return this.gridResourceStrings[`igx_grid_summary_${summary.key}`] || summary.label;
     }
 
     /**
@@ -134,7 +140,7 @@ export class IgxSummaryCellComponent {
         }
 
         const args = this.column.pipeArgs;
-        const locale = this.grid.locale;
+        const locale = this.locale;
 
         if (summary.key === 'count') {
             return formatNumber(summary.summaryResult, locale)

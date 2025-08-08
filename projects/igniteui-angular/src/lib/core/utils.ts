@@ -677,8 +677,8 @@ export function getCurrencyCode(locale: string, overrideCode?: string) {
     return currencyCode;
 }
 
-export function getCurrencySymbol(currencyCode: string, currencyDisplay?: keyof Intl.NumberFormatOptionsCurrencyDisplayRegistry,locale?: string) {
-    return getI18nManager().getCurrencySymbol(currencyCode, currencyDisplay, locale);
+export function getCurrencySymbol(currencyCode: string, locale?: string,  currencyDisplay: keyof Intl.NumberFormatOptionsCurrencyDisplayRegistry = "symbol") {
+    return getI18nManager().getCurrencySymbol(currencyCode, locale, currencyDisplay);
 }
 
 export function getLocaleFirstDayOfWeek(locale?: string) {

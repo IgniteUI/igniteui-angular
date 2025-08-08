@@ -790,7 +790,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /** @hidden @internal */
     public get currencyCodeSymbol(): string {
-        return getCurrencySymbol(this.currencyCode, 'symbol', this.grid.locale);
+        return getCurrencySymbol(this.currencyCode, this.grid.locale);
     }
 
     protected _lastSearchInfo: ISearchInfo;

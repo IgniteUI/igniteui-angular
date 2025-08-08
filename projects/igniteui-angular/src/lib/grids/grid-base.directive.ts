@@ -1848,7 +1848,8 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @Input()
     public set resourceStrings(value: IGridResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = Object.assign({}, this.resourceStrings, value);
+        this.notifyChanges();
     }
 
     public get resourceStrings(): IGridResourceStrings {
@@ -3512,7 +3513,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             // Reset currency position because of new locale.
             this._currencyPositionLeft = undefined;
             if (!this._init) {
-                this.markForCheck();
+                this.notifyChanges();
             }
         });
     }
