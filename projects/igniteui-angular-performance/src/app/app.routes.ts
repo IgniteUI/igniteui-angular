@@ -1,8 +1,14 @@
 import { Routes } from '@angular/router';
 import { GridComponent } from './grid/grid.component';
 import { TreeGridComponent } from './tree-grid/tree-grid.component';
+import { PivotGridComponent } from './pivot-grid/pivot-grid.component';
 
 export const routes: Routes = [
+    {
+        path: "pivot-grid",
+        title: "Pivot Grid",
+        component: PivotGridComponent
+    },
     {
         path: "tree-grid-1m",
         title: "Tree Grid 1M records",
