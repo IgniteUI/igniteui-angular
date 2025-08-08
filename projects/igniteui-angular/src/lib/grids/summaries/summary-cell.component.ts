@@ -7,7 +7,7 @@ import { GridColumnDataType } from '../../data-operations/data-util';
 import { NgTemplateOutlet } from '@angular/common';
 import { ISelectionNode } from '../common/types';
 import { ColumnType } from '../common/grid.interface';
-import { formatCurrency, formatDate, formatNumber, formatPercent, getCurrencyCode, getCurrencySymbol, trackByIdentity } from '../../core/utils';
+import { formatCurrency, formatDate, formatNumber, formatPercent, getCurrencyCode, trackByIdentity } from '../../core/utils';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -112,14 +112,6 @@ export class IgxSummaryCellComponent {
         return getCurrencyCode(this.locale, this.column.pipeArgs.currencyCode);
     }
 
-    /**
-     * @hidden @internal
-     */
-    public get currencySymbol(): string {
-        return this.column.pipeArgs.display ?
-            this.column.pipeArgs.display : getCurrencySymbol(getCurrencyCode(this.locale), this.locale);
-    }
-
     /** cached single summary res after filter resets collection */
     protected trackSummaryResult = trackByIdentity;
 
@@ -155,7 +147,7 @@ export class IgxSummaryCellComponent {
                 case GridColumnDataType.Time:
                     return formatDate(summary.summaryResult, args.format, locale, args.timezone);
                 case GridColumnDataType.Currency:
-                    return formatCurrency(summary.summaryResult, locale, this.currencySymbol, this.currencyCode, args.digitsInfo);
+                    return formatCurrency(summary.summaryResult, locale, args.display, this.currencyCode, args.digitsInfo);
                 case GridColumnDataType.Percent:
                     return formatPercent(summary.summaryResult, locale, args.digitsInfo);
             }

@@ -3513,7 +3513,8 @@ export abstract class IgxGridBaseDirective implements GridType,
             // Reset currency position because of new locale.
             this._currencyPositionLeft = undefined;
             if (!this._init) {
-                this.notifyChanges();
+                this.pipeTrigger++;
+                this.notifyChanges(true);
             }
         });
     }
