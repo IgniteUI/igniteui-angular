@@ -40,9 +40,7 @@ export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
     /** @hidden */
     @HostListener('click')
     public onClick() {
-        if (this.tab.panelComponent) {
-            this.tabs.selectTab(this.tab, true);
-        }
+        this.tabs.selectTab(this.tab, true);
     }
 
     /** @hidden */
