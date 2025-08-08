@@ -31,6 +31,13 @@ export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent
     @HostBinding('style.user-select')
     public userSelect = 'none';
 
+    /**
+     * @hidden
+     */
+    public get role(): string {
+        return 'columnheader';
+    }
+
     constructor(private cdRef: ChangeDetectorRef,
         @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
         private elementRef: ElementRef<HTMLElement>,
