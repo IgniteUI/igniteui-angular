@@ -131,32 +131,44 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    protected formatterWeekday: Intl.DateTimeFormat;
+    protected get formatterWeekday(): Intl.DateTimeFormat {
+        return getI18nManager().getDateFormatter(this.locale, { weekday: this._formatOptions.weekday });
+    }
 
     /**
      * @hidden
      */
-    protected formatterDay: Intl.DateTimeFormat;
+    protected get formatterDay(): Intl.DateTimeFormat {
+        return getI18nManager().getDateFormatter(this.locale, { day: this._formatOptions.day });
+    }
 
     /**
      * @hidden
      */
-    protected formatterMonth: Intl.DateTimeFormat;
+    protected get formatterMonth(): Intl.DateTimeFormat {
+        return getI18nManager().getDateFormatter(this.locale, { month: this._formatOptions.month });
+    }
 
     /**
      * @hidden
      */
-    protected formatterYear: Intl.DateTimeFormat;
+    protected get formatterYear(): Intl.DateTimeFormat {
+        return getI18nManager().getDateFormatter(this.locale, { year: this._formatOptions.year });
+    }
 
     /**
      * @hidden
      */
-    protected formatterMonthday: Intl.DateTimeFormat;
+    protected get formatterMonthDay(): Intl.DateTimeFormat {
+        return getI18nManager().getDateFormatter(this.locale, { month: this._formatOptions.month, day: this._formatOptions.day });
+    }
 
     /**
      * @hidden
      */
-    protected formatterRangeday: Intl.DateTimeFormat;
+    protected get formatterRangeDay(): Intl.DateTimeFormat {
+        return getI18nManager().getDateFormatter(this.locale, { day: this._formatOptions.day, month: 'short' });
+    }
 
     /**
      * @hidden
@@ -316,7 +328,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     public set formatOptions(formatOptions: IFormattingOptions) {
         this._formatOptions = {...this._formatOptions, ...formatOptions};
-        this.initFormatters();
     }
 
     /**
@@ -658,7 +669,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         this._defaultLocale = getCurrentI18n();
         this._localeWeekStart = getLocaleFirstDayOfWeek(this.locale);
         this.viewDate = this.viewDate ? this.viewDate : new Date();
-        this.initFormatters();
 
         getI18nManager().onResourceChange((args: ResourceChangeEventArgs) => {
             this._defaultLocale = args.newLocale;
@@ -979,18 +989,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             this.rangeStarted = false;
             this._onChangeCallback(this.selectedDates);
         }
-    }
-
-    /**
-     * @hidden
-     */
-    protected initFormatters() {
-        this.formatterDay = new Intl.DateTimeFormat(this._locale, { day: this._formatOptions.day });
-        this.formatterWeekday = new Intl.DateTimeFormat(this._locale, { weekday: this._formatOptions.weekday });
-        this.formatterMonth = new Intl.DateTimeFormat(this._locale, { month: this._formatOptions.month });
-        this.formatterYear = new Intl.DateTimeFormat(this._locale, { year: this._formatOptions.year });
-        this.formatterMonthday = new Intl.DateTimeFormat(this._locale, { month: this._formatOptions.month, day: this._formatOptions.day });
-		this.formatterRangeday = new Intl.DateTimeFormat(this._locale, { day: this._formatOptions.day, month: 'short' });
     }
 
     /**

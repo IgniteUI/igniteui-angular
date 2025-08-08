@@ -22,6 +22,7 @@ import { CalendarDay, DayInterval } from "../common/model";
 import { getNextActiveDate, isDateInRanges } from "./helpers";
 import { DateRangeType } from "../../core/dates";
 import { isDate } from "../../core/utils";
+import { getCurrentI18n, getI18nManager, ResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 export enum Direction {
     NEXT = 1,
@@ -108,7 +109,9 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    protected _formatter: Intl.DateTimeFormat;
+    protected get formatter(): Intl.DateTimeFormat {
+        return getI18nManager().getDateFormatter(this.locale);
+    }
 
     /**
      * @hidden
@@ -327,11 +330,6 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
         this.date = date.native;
         this.activeDateChanged.emit(this.date);
     }
-
-    /**
-     * @hidden
-     */
-    protected abstract initFormatter(): void;
 
     /**
      * @hidden

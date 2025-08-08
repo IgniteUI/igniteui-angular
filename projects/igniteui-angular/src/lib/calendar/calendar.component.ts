@@ -893,8 +893,8 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 		const dates = this.selectedDates as Date[];
 
 		return {
-			start: this.formatterRangeday.format(dates.at(0)),
-			end: this.formatterRangeday.format(dates.at(-1))
+			start: this.formatterRangeDay.format(dates.at(0)),
+			end: this.formatterRangeDay.format(dates.at(-1))
 		};
 	}
 
