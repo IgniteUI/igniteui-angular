@@ -585,7 +585,7 @@ export function formatDate(value: Date | string | number | null | undefined, for
         return '';
     }
     if (typeof value === "string" || typeof value === "number") {
-        value = new Date(value);
+        value = getI18nManager().createDateFromValue(value);
     }
     let dateStyle = undefined, timeStyle = undefined;
     if (format === 'short' || format === 'medium' || format === 'long' || format === 'full') {
@@ -596,7 +596,7 @@ export function formatDate(value: Date | string | number | null | undefined, for
     } else if (format.includes('Time')) {
         dateStyle = format.replace('Time', '');
     } else {
-        return getI18nManager().formatDateCustomFormat(value, locale, format);
+        return getI18nManager().formatDateCustomFormat(value, locale, format, timezone);
     }
     const options: Intl.DateTimeFormatOptions = {
         dateStyle,
