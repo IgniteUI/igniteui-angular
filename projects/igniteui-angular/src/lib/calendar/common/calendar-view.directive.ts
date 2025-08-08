@@ -116,12 +116,12 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    protected _locale = "en";
+    protected _locale;
 
     /**
      * @hidden
      */
-    protected _defaultLocale = "en";
+    protected _defaultLocale;
 
     /**
      * @hidden
