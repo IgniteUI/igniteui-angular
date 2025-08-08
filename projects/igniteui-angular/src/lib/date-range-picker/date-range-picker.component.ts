@@ -30,7 +30,7 @@ import {
     AutoPositionStrategy, IgxOverlayService, OverlayCancelableEventArgs, OverlayEventArgs,
     OverlaySettings, PositionSettings
 } from '../services/public_api';
-import { DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, DateRangePickerFormatPipe } from './date-range-picker-inputs.common';
+import { DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, DateRangePickerFormatPipe, CustomDateRange } from './date-range-picker-inputs.common';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
@@ -283,6 +283,27 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * <igx-date-range-picker [(value)]="date"></igx-date-range-picker>
      * ```
      */
+
+     /**
+      * Whether to render built-in predefined ranges.
+      *
+      * @example
+      * ```html
+      * <igx-date-range-picker [(usePredefinedRanges)]="true"></igx-date-range-picker>
+      * ``
+      *  */
+    @Input() public usePredefinedRanges = false;
+
+    /**
+     *  Custom ranges rendered as chips.
+     *
+     * @example
+     * ```html
+     * <igx-date-range-picker [(usePredefinedRanges)]="true"></igx-date-range-picker>
+     * ``
+    */
+    @Input() public customRanges: CustomDateRange[] = [];
+
     @Output()
     public valueChange = new EventEmitter<DateRange>();
 
@@ -1092,6 +1113,20 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         componentInstance.mode = this.mode;
         componentInstance.closeButtonLabel = !this.isDropdown ? this.doneButtonText : null;
         componentInstance.pickerActions = this.pickerActions;
+        componentInstance.usePredefinedRanges = this.usePredefinedRanges;
+        componentInstance.customRanges = this.customRanges;
+        componentInstance.resourceStrings = this.resourceStrings;
         componentInstance.calendarClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.close());
+        componentInstance.rangeSelected
+        .pipe(takeUntil(this._destroy$))
+        .subscribe((r: DateRange) => {
+            if (r?.start && r?.end) {
+            this.select(new Date(r.start), new Date(r.end));
+            }
+
+            if (this.isDropdown) {
+            this.close();
+            }
+        });
     }
 }

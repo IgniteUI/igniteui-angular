@@ -6,5 +6,9 @@ import { IDateRangePickerResourceStrings } from 'igniteui-angular';
  */
 export const DateRangePickerResourceStringsJA = {
     igx_date_range_picker_date_separator: '～',
-    igx_date_range_picker_done_button: '完了'
+    igx_date_range_picker_done_button: '完了',
+    igx_date_range_picker_last7Days: '過去7日間',
+    igx_date_range_picker_currentMonth: '今月',
+    igx_date_range_picker_last30Days: '過去30日間',
+    igx_date_range_picker_yearToDate: '年初来',
 } satisfies MakeRequired<IDateRangePickerResourceStrings>;
