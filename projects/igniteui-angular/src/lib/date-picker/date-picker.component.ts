@@ -518,7 +518,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
         super(element, _localeId, _inputGroupType);
         initi18n(_localeId);
-        this.locale = this.locale || getCurrentI18n();
         getI18nManager().onResourceChange(() => {
             this._resourceStrings = getCurrentResourceStrings(DatePickerResourceStringsEN, false);
         });
@@ -764,8 +763,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     /** @hidden @internal */
     public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
-        initi18n(this._localeId);
-        this.locale = this.locale || getCurrentI18n();
     }
 
     /** @hidden @internal */
