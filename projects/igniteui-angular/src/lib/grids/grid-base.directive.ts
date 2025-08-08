@@ -3509,6 +3509,8 @@ export abstract class IgxGridBaseDirective implements GridType,
         getI18nManager().onResourceChange((args: ResourceChangeEventArgs) => {
             this._defaultLocale = args.newLocale;
             this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false);
+            // Reset currency position because of new locale.
+            this._currencyPositionLeft = undefined;
             if (!this._init) {
                 this.markForCheck();
             }
