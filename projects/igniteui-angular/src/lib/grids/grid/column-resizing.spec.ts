@@ -11,7 +11,7 @@ import { MultiColumnHeadersComponent } from '../../test-utils/grid-samples.spec'
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective } from '../columns/templates.directive';
 import { IgxAvatarComponent } from '../../avatar/avatar.component';
-import { IColumnResizeEventArgs, IgxColumnComponent } from '../public_api';
+import { IColumnResizeEventArgs, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent } from '../public_api';
 import { Size } from "../common/enums";
 import { setElementSize } from '../../test-utils/helper-utils.spec';
 import { IgxColumnResizerDirective } from '../resizing/resizer.directive';
@@ -899,6 +899,65 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(firstRowCells.length).toEqual(11);
         }));
     });
+
+    describe('Resizer tests: ', () => {
+        let fixture: ComponentFixture<any>;
+        let grid: IgxGridComponent;
+
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(ResizableColumnsWithToolbarComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+        }));
+
+        it('should align the resizer top with the grid header top', fakeAsync(() => {
+            grid.nativeElement.style.marginTop = '40px';
+            fixture.detectChanges();
+            const headers = GridFunctions.getColumnHeaders(fixture);
+            const headerResArea = GridFunctions.getHeaderResizeArea(headers[0]).nativeElement;
+
+            const headerRectTop = headerResArea.getBoundingClientRect().top;
+
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 15);
+            tick(200);
+            fixture.detectChanges();
+
+            const resizer = GridFunctions.getResizer(fixture).nativeElement;
+            expect(resizer).toBeDefined();
+
+            const resizerRectTop = resizer.getBoundingClientRect().top;
+            UIInteractions.simulateMouseEvent('mousemove', resizer, 250, 15);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, 250, 15);
+            fixture.detectChanges();
+
+
+            expect(Math.abs(resizerRectTop - headerRectTop)).toBeLessThanOrEqual(1);
+        }));
+
+        it('should align the resizer top with the grid header top when grid is scaled', fakeAsync(() => {
+            grid.nativeElement.style.transform = 'scale(0.6)';
+            fixture.detectChanges();
+
+            const headers = GridFunctions.getColumnHeaders(fixture);
+            const headerResArea = GridFunctions.getHeaderResizeArea(headers[1]).nativeElement;
+            const headerRectTop = headerResArea.getBoundingClientRect().top;
+
+            // Trigger resize to show resizer
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 153, 0);
+            tick(200);
+            fixture.detectChanges();
+
+            const resizer = GridFunctions.getResizer(fixture).nativeElement;
+            expect(resizer).toBeDefined();
+
+            const resizerRectTop = resizer.getBoundingClientRect().top;
+
+            UIInteractions.simulateMouseEvent('mouseup', resizer, 200, 5);
+            fixture.detectChanges();
+
+            expect(Math.abs(resizerRectTop - headerRectTop)).toBeLessThanOrEqual(1);
+        }));
+    });
 });
 
 @Component({
@@ -906,6 +965,18 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ResizableColumnsComponent {
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+
+    public data = SampleTestData.personIDNameRegionData();
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(`width="500px" height="300px"`, ``,
+        '<igx-grid-toolbar><igx-grid-toolbar-title>Grid Toolbar</igx-grid-toolbar-title></igx-grid-toolbar>' +
+        ColumnDefinitions.resizableThreeOfFour),
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent]
+})
+export class ResizableColumnsWithToolbarComponent {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 
     public data = SampleTestData.personIDNameRegionData();
