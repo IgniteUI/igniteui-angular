@@ -195,6 +195,11 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
+    private _localeWeekStart: WEEKDAYS | number;
+
+    /**
+     * @hidden
+     */
     private _viewDate: Date;
 
     /**
@@ -267,7 +272,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     @Input()
     public get weekStart(): WEEKDAYS | number {
-        return this._weekStart;
+        return this._weekStart || this._localeWeekStart;
     }
 
     /**
@@ -293,13 +298,8 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     public set locale(value: string) {
         this._locale = value;
-
-        // changing locale runtime needs to update the `weekStart` too, if `weekStart` is not explicitly set
-        if (!this.weekStart) {
-            this.weekStart = getLocaleFirstDayOfWeek(this._locale);
-        }
-
-        this.initFormatters();
+        // changing locale runtime needs to update the `weekStart` too
+        this._localeWeekStart = getLocaleFirstDayOfWeek(this._locale);
     }
 
     /**
@@ -656,12 +656,14 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     ) {
         initi18n(_localeId);
         this._defaultLocale = getCurrentI18n();
+        this._localeWeekStart = getLocaleFirstDayOfWeek(this.locale);
         this.viewDate = this.viewDate ? this.viewDate : new Date();
         this.initFormatters();
 
         getI18nManager().onResourceChange((args: ResourceChangeEventArgs) => {
             this._defaultLocale = args.newLocale;
             this._defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false);
+            this._localeWeekStart = getLocaleFirstDayOfWeek(this.locale);
         });
     }
 
