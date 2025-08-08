@@ -1,12 +1,8 @@
 import { ITimePickerResourceStrings } from 'igniteui-angular';
+import { TimePickerResourceStringsCS as ATimePickerResourceStrings } from 'igniteui-i18n-resources';
+import { convertToIgxResource } from 'igniteui-angular/src/lib/core/i18n/resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Czech resource strings for IgxTimePicker
  */
-export const TimePickerResourceStringsCS = {
-    igx_time_picker_ok: 'OK',
-    igx_time_picker_cancel: 'Zrušení',
-    igx_time_picker_change_time: 'Změnit čas',
-    igx_time_picker_choose_time: 'Zvolte čas'
-} satisfies MakeRequired<ITimePickerResourceStrings>;
+export const TimePickerResourceStringsCS: ITimePickerResourceStrings = convertToIgxResource(ATimePickerResourceStrings);

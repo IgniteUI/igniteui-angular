@@ -47,6 +47,7 @@ import { IComboItemAdditionEvent, IComboSearchInputEventArgs } from './public_ap
 import { ComboResourceStringsEN, IComboResourceStrings } from '../core/i18n/combo-resources';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { isEqual } from 'lodash-es';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 export const IGX_COMBO_COMPONENT = /*@__PURE__*/new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
@@ -463,7 +464,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      */
     @Input()
     public get resourceStrings(): IComboResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
     public set resourceStrings(value: IComboResourceStrings) {
         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
@@ -941,7 +942,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     protected _filteredData = [];
     protected _displayKey: string;
     protected _remoteSelection = {};
-    protected _resourceStrings = getCurrentResourceStrings(ComboResourceStringsEN);
+    protected _resourceStrings: IComboResourceStrings = null;
+    protected _defaultResourceStrings = getCurrentResourceStrings(ComboResourceStringsEN);
     protected _valid = IgxInputState.INITIAL;
     protected ngControl: NgControl = null;
     protected destroy$ = new Subject<void>();
@@ -974,7 +976,11 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
         @Optional() protected _injector: Injector,
         @Optional() @Inject(IgxIconService) protected _iconService?: IgxIconService,
-    ) { }
+    ) {
+        getI18nManager().onResourceChange(() => {
+            this._defaultResourceStrings = getCurrentResourceStrings(ComboResourceStringsEN, false);
+        });
+    }
 
     public ngAfterViewChecked() {
         const targetElement = this.inputGroup.element.nativeElement.querySelector('.igx-input-group__bundle') as HTMLElement;

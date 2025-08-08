@@ -323,7 +323,7 @@
               ],
               "outputHashing": "none",
               "optimization": true,
-              "externalDependencies": ["lit"]
+              "externalDependencies": ["lit", "igniteui-i18n-core"]
             },
             "development": {
               "optimization": false,

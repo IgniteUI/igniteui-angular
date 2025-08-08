@@ -40,6 +40,7 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { HammerGesturesManager } from '../core/touch';
 import { CarouselAnimationType, CarouselIndicatorsOrientation } from './enums';
 import { IgxDirectionality } from '../services/direction/directionality';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
 
@@ -405,7 +406,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     protected override currentItem: IgxSlideComponent;
     protected override previousItem: IgxSlideComponent;
     private _interval: number;
-    private _resourceStrings = getCurrentResourceStrings(CarouselResourceStringsEN);
+    private _resourceStrings: ICarouselResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(CarouselResourceStringsEN);
     private lastInterval: any;
     private playing: boolean;
     private destroyed: boolean;
@@ -427,7 +429,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ICarouselResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /** @hidden */
@@ -576,6 +578,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     ) {
         super(animationService, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
+        getI18nManager().onResourceChange(() => {
+            this._defaultResourceStrings = getCurrentResourceStrings(CarouselResourceStringsEN, false);
+        });
     }
 
     /** @hidden */

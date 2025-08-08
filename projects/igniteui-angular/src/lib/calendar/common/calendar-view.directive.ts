@@ -22,6 +22,7 @@ import { CalendarDay, DayInterval } from "../common/model";
 import { getNextActiveDate, isDateInRanges } from "./helpers";
 import { DateRangeType } from "../../core/dates";
 import { isDate } from "../../core/utils";
+import { getCurrentI18n, getI18nManager, ResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 export enum Direction {
     NEXT = 1,
@@ -108,12 +109,19 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    protected _formatter: Intl.DateTimeFormat;
+    protected get formatter(): Intl.DateTimeFormat {
+        return getI18nManager().getDateFormatter(this.locale);
+    }
 
     /**
      * @hidden
      */
-    protected _locale = "en";
+    protected _locale;
+
+    /**
+     * @hidden
+     */
+    protected _defaultLocale;
 
     /**
      * @hidden
@@ -162,7 +170,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      */
     @Input()
     public get locale(): string {
-        return this._locale;
+        return this._locale || this._defaultLocale;
     }
 
     /**
@@ -174,11 +182,13 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      */
     public set locale(value: string) {
         this._locale = value;
-        this.initFormatter();
     }
 
     constructor(@Inject(DAY_INTERVAL_TOKEN) protected dayInterval?: DayInterval) {
-        this.initFormatter();
+        this._defaultLocale = getCurrentI18n();
+        getI18nManager().onResourceChange((args: ResourceChangeEventArgs) => {
+            this._defaultLocale = args.newLocale;
+        });
     }
 
     /**
@@ -327,11 +337,6 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
         this.date = date.native;
         this.activeDateChanged.emit(this.date);
     }
-
-    /**
-     * @hidden
-     */
-    protected abstract initFormatter(): void;
 
     /**
      * @hidden

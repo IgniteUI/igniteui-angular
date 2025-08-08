@@ -29,6 +29,7 @@ import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxTheme, THEME_TOKEN, ThemeToken } from '../services/theme/theme.token';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 @Component({
     selector: 'igx-input-group',
@@ -50,7 +51,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      * Returns the resource strings.
      */
     public get resourceStrings(): IInputResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -125,7 +126,8 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     private _type: IgxInputGroupType = null;
     private _filled = false;
     private _theme: IgxTheme;
-    private _resourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
+    private _resourceStrings: IInputResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
 
     /** @hidden */
     @HostBinding('class.igx-input-group--valid')
@@ -227,6 +229,9 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
             }
         });
         this._destroyRef.onDestroy(() => themeChange.unsubscribe());
+        getI18nManager().onResourceChange(() => {
+            this._defaultResourceStrings = getCurrentResourceStrings(InputResourceStringsEN, false);
+        });
     }
 
     /** @hidden */

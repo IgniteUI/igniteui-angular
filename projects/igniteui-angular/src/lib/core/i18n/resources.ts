@@ -13,48 +13,73 @@ import { IActionStripResourceStrings } from './action-strip-resources';
 import { IQueryBuilderResourceStrings } from './query-builder-resources';
 import { IComboResourceStrings } from './combo-resources';
 import { IBannerResourceStrings } from './banner-resources';
+import {
+    getCurrentResourceStrings as getCurrentResourceStringsCore,
+    IResourceStrings as IResourceStringsCore,
+    setCurrentI18n,
+    getI18nManager,
+    getCurrentI18n
+} from 'igniteui-i18n-core';
 
 export interface IResourceStrings extends IGridResourceStrings, ITimePickerResourceStrings, ICalendarResourceStrings,
     ICarouselResourceStrings, IChipResourceStrings, IComboResourceStrings, IInputResourceStrings, IDatePickerResourceStrings,
     IDateRangePickerResourceStrings, IListResourceStrings, IPaginatorResourceStrings, ITreeResourceStrings,
     IActionStripResourceStrings, IQueryBuilderResourceStrings, IBannerResourceStrings { }
 
-export class igxI18N {
-    private static _instance: igxI18N;
 
-    private _currentResourceStrings: IResourceStrings = { };
-
-    private constructor() { }
-
-    public static instance() {
-        return this._instance || (this._instance = new this());
-    }
-
-    /**
-     * Changes the resource strings for all components in the application
-     * ```
-     * @param resourceStrings to be applied
-     */
-    public changei18n(resourceStrings: IResourceStrings) {
-        for (const key of Object.keys(resourceStrings)) {
-            this._currentResourceStrings[key] = resourceStrings[key];
+function igxRegisterI18n(resourceStrings: IResourceStrings, locale: string)  {
+    // Remove `igx_` prefix for compatibility with older versions.
+    const genericResourceStrings: IResourceStringsCore = {};
+    for (const key of Object.keys(resourceStrings)) {
+        let stringKey = key;
+        if (stringKey.startsWith("igx_")) {
+            stringKey = stringKey.replace("igx_", "");
         }
+        genericResourceStrings[stringKey] = resourceStrings[key];
     }
-
-    public getCurrentResourceStrings(en: IResourceStrings): IResourceStrings {
-        for (const key of Object.keys(en)) {
-            if (!this._currentResourceStrings[key]) {
-                this._currentResourceStrings[key] = en[key];
-            }
-        }
-        return this._currentResourceStrings;
-    }
+    getI18nManager().registerI18n(genericResourceStrings, locale);
 }
 
-export function getCurrentResourceStrings(en: IResourceStrings) {
-    return igxI18N.instance().getCurrentResourceStrings(en);
+export function convertToIgxResource<T>(inObject: T) {
+    const result: any = {};
+    const memberNames = Object.getOwnPropertyNames(inObject);
+    for (const memberName of memberNames) {
+        result['igx_' + memberName] = inObject[memberName];
+    }
+    return result;
+}
+
+/** Get current resource strings based on default. Result is truncated result, containing only relevant locale strings. */
+export function getCurrentResourceStrings<T>(defaultEN: T, init = true) {
+    const igxResourceStringKeys = Object.keys(defaultEN);
+    if (init) {
+        igxRegisterI18n(defaultEN, getI18nManager().defaultLocale);
+    }
+
+    // Append back `igx_` prefix for compatibility with older versions.
+    const resourceStrings = getCurrentResourceStringsCore();
+    const normalizedResourceStrings: T = {} as T;
+    const resourceStringsKeys = Object.keys(resourceStrings);
+    for (const key of resourceStringsKeys) {
+        let stringKey = key;
+        if (!stringKey.startsWith("igx_")) {
+            stringKey = "igx_" + stringKey;
+        }
+        if (igxResourceStringKeys.includes(stringKey)) {
+            normalizedResourceStrings[stringKey] = resourceStrings[key];
+        }
+    }
+
+    return normalizedResourceStrings;
 }
 
 export function changei18n(resourceStrings: IResourceStrings) {
-    igxI18N.instance().changei18n(resourceStrings);
+    igxRegisterI18n(resourceStrings, getI18nManager().defaultLocale);
+}
+
+export function initi18n(locale: string) {
+    if (locale !== 'en-US') {
+        //Default for angular is en-US, so don't set it on the i18n manager, because can override any other locale set by the new API.
+        setCurrentI18n(locale);
+    }
 }

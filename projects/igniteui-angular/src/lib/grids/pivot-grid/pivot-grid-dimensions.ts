@@ -1,3 +1,4 @@
+import { getI18nManager } from 'igniteui-i18n-core';
 import { GridResourceStringsEN, IGridResourceStrings } from '../../core/i18n/grid-resources';
 import { getCurrentResourceStrings } from '../../core/i18n/resources';
 import { GridColumnDataType } from '../../data-operations/data-util';
@@ -75,7 +76,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
     }
 
     public get resourceStrings(): IGridResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -108,7 +109,8 @@ export class IgxPivotDateDimension implements IPivotDimension {
     /** @hidden @internal */
     public memberName = 'AllPeriods';
     public displayName: string;
-    private _resourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
+    private _resourceStrings: IGridResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
     private _baseDimension: IPivotDimension;
     private _options: IPivotDateDimensionOptions = {};
     private _monthIntl = new Intl.DateTimeFormat('default', { month: 'long' });
@@ -131,6 +133,9 @@ export class IgxPivotDateDimension implements IPivotDimension {
         if (this.baseDimension && this.options) {
             this.initialize(this.baseDimension, this.options);
         }
+        getI18nManager().onResourceChange(() => {
+            this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false);
+        });
     }
 
     protected initialize(inBaseDimension, inOptions) {

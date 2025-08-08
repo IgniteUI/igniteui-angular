@@ -13,7 +13,7 @@ import {
 	booleanAttribute,
     HostListener,
 } from '@angular/core';
-import { NgTemplateOutlet, DatePipe } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import {
@@ -34,6 +34,7 @@ import { areSameMonth, formatToParts, getClosestActiveDate, isDateInRanges } fro
 import { CalendarDay } from './common/model';
 import { IgxCalendarBaseDirective } from './calendar-base';
 import { KeyboardNavigationService } from './calendar.services';
+import { IgxDateFormatterPipe } from '../grids/common/pipes';
 
 let NEXT_ID = 0;
 
@@ -71,7 +72,7 @@ let NEXT_ID = 0;
     ],
     selector: 'igx-calendar',
     templateUrl: 'calendar.component.html',
-    imports: [NgTemplateOutlet, IgxCalendarScrollPageDirective, IgxIconComponent, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, DatePipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar]
+    imports: [NgTemplateOutlet, IgxCalendarScrollPageDirective, IgxIconComponent, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, IgxDateFormatterPipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar]
 })
 export class IgxCalendarComponent extends IgxCalendarBaseDirective implements AfterViewInit, OnDestroy {
     /**
@@ -892,8 +893,8 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 		const dates = this.selectedDates as Date[];
 
 		return {
-			start: this.formatterRangeday.format(dates.at(0)),
-			end: this.formatterRangeday.format(dates.at(-1))
+			start: this.formatterRangeDay.format(dates.at(0)),
+			end: this.formatterRangeDay.format(dates.at(-1))
 		};
 	}
 
