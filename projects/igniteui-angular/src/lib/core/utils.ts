@@ -594,7 +594,7 @@ export function formatDate(value: Date | string | number | null | undefined, for
     } else if (format.includes('Date')) {
         dateStyle = format.replace('Date', '');
     } else if (format.includes('Time')) {
-        dateStyle = format.replace('Time', '');
+        timeStyle = format.replace('Time', '');
     } else {
         return getI18nManager().formatDateCustomFormat(value, locale, format, timezone);
     }
