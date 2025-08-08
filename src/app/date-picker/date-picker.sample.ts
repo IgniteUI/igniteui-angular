@@ -93,6 +93,13 @@ export class DatePickerSampleComponent {
     );
 
     public panelConfig: PropertyPanelConfig = {
+        locale: {
+            control: {
+                type: 'locale',
+                options: ['HI', 'BG', 'EN', 'DE', 'ES', 'FR', 'IT', 'JA', 'KO', 'zh-Hans', 'zh-Hant'],
+                defaultValue: 'EN',
+            }
+        },
         size: {
             control: {
                 type: 'button-group',
