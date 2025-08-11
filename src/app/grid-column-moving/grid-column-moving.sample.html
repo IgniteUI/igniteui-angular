@@ -33,7 +33,7 @@
                     <igx-column [field]="c.field" [header]="c.field" [groupable]="c.groupable"
                         [resizable]="c.resizable" width="auto" [sortable]="c.sortable" [filterable]="c.filterable"
                         [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary" [minWidth]="'150px'" [maxWidth]="'400px'"
-                        [dataType]="c.type" [pinned]='c.pinned' [hidden]='c.hidden'>
+                        [dataType]="c.type" [pinned]='c.pinned' [hidden]='c.hidden' [pinningPosition]="c.pinningPosition">
                         <ng-template igxCell let-cell="cell">
                             @if (show) {
                                 <div>{{ cell.value}}</div>

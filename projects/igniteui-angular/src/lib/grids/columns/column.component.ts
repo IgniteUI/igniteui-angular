@@ -2256,7 +2256,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         this.grid.crudService.endEdit(false);
 
         this._pinned = true;
-        this._pinningPosition = pinningPosition;
+        if (pinningPosition !== null && pinningPosition !== undefined) {
+            // if user has set some position in the params, overwrite the column's position.
+            this._pinningPosition = pinningPosition;
+        }
+
         this.pinnedChange.emit(this._pinned);
         // it is possible that index is the last position, so will need to find target column by [index-1]
         const targetColumn = args.insertAtIndex === pinningCollection.length ?
@@ -2265,6 +2269,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         if (pinningCollection.indexOf(this) === -1) {
             if (!grid.hasColumnGroups) {
                 pinningCollection.splice(args.insertAtIndex, 0, this);
+                grid._pinnedColumns = this.grid.pinnedStartColumns.concat(this.grid.pinnedEndColumns);
             } else {
                 // insert based only on root collection
                 if (this.level === 0) {
