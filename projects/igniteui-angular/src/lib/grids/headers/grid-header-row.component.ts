@@ -44,9 +44,14 @@ export class IgxGridHeaderRowComponent implements DoCheck {
     @Input()
     public grid: GridType;
 
-    /** Pinned columns of the grid. */
+    /** Pinned columns of the grid at start. */
     @Input()
-    public pinnedColumnCollection: ColumnType[] = [];
+    public pinnedStartColumnCollection: ColumnType[] = [];
+
+    /** Pinned columns of the grid at end. */
+    @Input()
+    public pinnedEndColumnCollection: ColumnType[] = [];
+
 
     /** Unpinned columns of the grid. */
     @Input()

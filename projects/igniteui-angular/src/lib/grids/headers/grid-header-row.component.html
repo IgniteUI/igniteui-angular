@@ -5,11 +5,11 @@
     <div class="igx-grid__tr" role="row" [style.width.px]="width">
 
         <!-- Left column moving area -->
-        @if (grid.moving && grid.columnInDrag && pinnedColumnCollection.length <= 0) {
+        @if (grid.moving && grid.columnInDrag && pinnedStartColumnCollection.length <= 0) {
             <span id="left" class="igx-grid__scroll-on-drag-left" droppable="true" [style.left.px]="grid.pinnedStartWidth"
                 [igxColumnMovingDrop]="headerContainer"></span>
         }
-        @if (grid.moving && grid.columnInDrag && pinnedColumnCollection.length > 0) {
+        @if (grid.moving && grid.columnInDrag && pinnedStartColumnCollection.length > 0) {
             <span id="left" class="igx-grid__scroll-on-drag-pinned" droppable="true" [style.left.px]="grid.pinnedStartWidth"
                 [igxColumnMovingDrop]="headerContainer"></span>
         }
@@ -61,8 +61,8 @@
         }
 
         <!-- Pinned columns collection from the start -->
-        @if (pinnedColumnCollection.length && grid.isPinningToStart) {
-            @for (column of pinnedColumnCollection | igxTopLevel; track trackPinnedColumn(column)) {
+        @if (pinnedStartColumnCollection.length) {
+            @for (column of pinnedStartColumnCollection | igxTopLevel; track trackPinnedColumn(column)) {
                 <igx-grid-header-group
                     [ngClass]="column.headerGroupClasses"
                     [ngStyle]="column.headerGroupStyles | igxHeaderGroupStyle:column:grid.pipeTrigger"
@@ -92,8 +92,8 @@
         </ng-template>
 
         <!-- Pinned columns collection at the end -->
-        @if (pinnedColumnCollection.length && !grid.isPinningToStart) {
-            @for (column of pinnedColumnCollection | igxTopLevel; track trackPinnedColumn(column)) {
+        @if (pinnedEndColumnCollection.length) {
+            @for (column of pinnedEndColumnCollection | igxTopLevel; track trackPinnedColumn(column)) {
                 <igx-grid-header-group
                     [ngClass]="column.headerGroupClasses"
                     [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger"
