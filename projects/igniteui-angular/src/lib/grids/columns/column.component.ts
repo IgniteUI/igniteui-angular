@@ -1608,14 +1608,14 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /** @hidden @internal **/
     public get isLastPinned(): boolean {
-        return this.grid.isPinningToStart &&
-            this.grid.pinnedColumns[this.grid.pinnedColumns.length - 1] === this;
+        return this.pinningPosition === ColumnPinningPosition.Start &&
+            this.grid.pinnedStartColumns[this.grid.pinnedStartColumns.length - 1] === this;
     }
 
     /** @hidden @internal **/
     public get isFirstPinned(): boolean {
-        const pinnedCols = this.grid.pinnedColumns.filter(x => !x.columnGroup);
-        return !this.grid.isPinningToStart && pinnedCols[0] === this;
+        const pinnedCols = this.grid.pinnedEndColumns.filter(x => !x.columnGroup);
+        return this.pinningPosition === ColumnPinningPosition.End && pinnedCols[0] === this;
     }
 
     /** @hidden @internal **/
