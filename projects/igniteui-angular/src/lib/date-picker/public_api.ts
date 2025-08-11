@@ -1,3 +1,4 @@
+import { IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from '../calendar/calendar.directives';
 import { IgxPickerActionsDirective, IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-common/picker-icons.common';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
@@ -16,5 +17,8 @@ export const IGX_DATE_PICKER_DIRECTIVES = [
     IgxLabelDirective,
     IgxPrefixDirective,
     IgxSuffixDirective,
-    IgxHintDirective
+    IgxHintDirective,
+    IgxCalendarHeaderTemplateDirective,
+    IgxCalendarSubheaderTemplateDirective,
+    IgxCalendarHeaderTitleTemplateDirective
 ] as const;
