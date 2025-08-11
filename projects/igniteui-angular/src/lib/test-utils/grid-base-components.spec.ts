@@ -230,7 +230,7 @@ export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
     constructor() {
         const cdr = inject(ChangeDetectorRef);
 
-        super(cdr);
+        super();
     }
 }
 
@@ -303,6 +303,6 @@ export class ColumnGroupsPinningTestComponent extends ColumnPinningTestComponent
     constructor() {
         const cdr = inject(ChangeDetectorRef);
 
-        super(cdr);
+        super();
     }
 }

@@ -15,6 +15,7 @@ import { GridSelectionRange } from './common/types';
 import { IgxColumnComponent } from './public_api';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IColumnState, IGridState } from './state-base.directive';
+import { IgxGridNavigationService } from './grid-navigation.service';
 
 describe('IgxHierarchicalGridState - input properties #hGrid', () => {
     let fix;
@@ -22,7 +23,10 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, IgxHierarchicalGridTestExpandedBaseComponent]
+            imports: [NoopAnimationsModule, IgxHierarchicalGridTestExpandedBaseComponent],
+            providers: [
+                IgxGridNavigationService
+            ]
         }).compileComponents();
     }))
 

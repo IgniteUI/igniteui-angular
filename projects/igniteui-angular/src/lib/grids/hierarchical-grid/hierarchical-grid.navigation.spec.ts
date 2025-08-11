@@ -10,6 +10,7 @@ import { clearGridSubs, setupHierarchicalGridScrollDetection } from '../../test-
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from '../cell.component';
 import { IGridCellEventArgs, IgxColumnComponent, IPathSegment } from '../public_api';
+import { IgxGridNavigationService } from '../grid-navigation.service';
 
 const DEBOUNCE_TIME = 50;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
@@ -29,6 +30,9 @@ describe('IgxHierarchicalGrid Navigation', () => {
                 IgxHierarchicalGridTestComplexComponent,
                 IgxHierarchicalGridMultiLayoutComponent,
                 IgxHierarchicalGridSmallerChildComponent
+            ],
+            providers: [
+                IgxGridNavigationService
             ]
         }).compileComponents();
         jasmine.DEFAULT_TIMEOUT_INTERVAL = defaultTimeout * 2;

@@ -29,7 +29,7 @@ const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
 const ACTIVE_CELL_CSS_CLASS = '.igx-grid-th--active';
 
-fdescribe('IgxPivotGrid #pivotGrid', () => {
+describe('IgxPivotGrid #pivotGrid', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
