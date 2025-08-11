@@ -130,9 +130,10 @@ export class IgxSummaryRowComponent implements DoCheck  {
         return this.grid.unpinnedColumns;
     }
 
-    public getContext(row) {
+    public getContext(row, cols) {
         return {
-            $implicit: row
+            $implicit: row,
+            columns: cols
         };
     }
 
