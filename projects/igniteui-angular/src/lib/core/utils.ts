@@ -226,6 +226,19 @@ export const isEqual = (obj1, obj2): boolean => {
 };
 
 /**
+ * Limits a number to a range between a minimum and a maximum value.
+ *
+ * @param number
+ * @param min
+ * @param max
+ * @returns: `number`
+ * @hidden
+ */
+export const clamp = (number: number, min: number, max: number) =>
+    Math.max(min, Math.min(number, max));
+
+
+/**
  * Utility service taking care of various utility functions such as
  * detecting browser features, general cross browser DOM manipulation, etc.
  *

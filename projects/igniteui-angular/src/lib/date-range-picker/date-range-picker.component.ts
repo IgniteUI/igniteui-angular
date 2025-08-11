@@ -16,7 +16,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { CalendarSelection, IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from '../calendar/public_api';
 import { DateRangeType } from '../core/dates';
 import { DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } from '../core/i18n/date-range-picker-resources';
-import { IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from '../core/utils';
+import { clamp, IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { IgxPickerActionsDirective } from '../date-common/picker-icons.common';
@@ -92,7 +92,13 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public displayMonthsCount = 2;
+    public get displayMonthsCount(): number {
+        return this._displayMonthsCount;
+    }
+
+    public set displayMonthsCount(value: number) {
+        this._displayMonthsCount = clamp(value, 1, 2);
+    }
 
     /**
      * Gets/Sets the orientation of the multiple months displayed in the picker's calendar's days view.
@@ -468,6 +474,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private _calendarContainer?: HTMLElement;
     private _positionSettings: PositionSettings;
     private _focusedInput: IgxDateRangeInputsBaseComponent;
+    private _displayMonthsCount = 2;
     private _overlaySubFilter:
         [MonoTypeOperatorFunction<OverlayEventArgs>, MonoTypeOperatorFunction<OverlayEventArgs | OverlayCancelableEventArgs>] = [
             filter(x => x.id === this._overlayId),
@@ -1105,7 +1112,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         this.calendar.selection = CalendarSelection.RANGE;
         this.calendar.weekStart = this.weekStart;
         this.calendar.hideOutsideDays = this.hideOutsideDays;
-        this.calendar.monthsViewNumber = this.displayMonthsCount;
+        this.calendar.monthsViewNumber = this._displayMonthsCount;
         this.calendar.showWeekNumbers = this.showWeekNumbers;
         this._calendar.headerTitleTemplate = this.headerTitleTemplate;
         this._calendar.headerTemplate = this.headerTemplate;

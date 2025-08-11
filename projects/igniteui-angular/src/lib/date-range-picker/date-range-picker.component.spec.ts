@@ -1645,6 +1645,24 @@ describe('IgxDateRangePicker', () => {
                 expect(dateRange['_calendar'].wrapper.nativeElement).toHaveClass(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL);
             }));
 
+            it('should limit the displayMonthsCount property between 1 and 2', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+                dateRange.open();
+                tick();
+
+                dateRange.displayMonthsCount = 3;
+                fixture.detectChanges();
+
+                expect(dateRange.displayMonthsCount).toBe(2);
+
+                dateRange.displayMonthsCount = -1;
+                fixture.detectChanges();
+
+                expect(dateRange.displayMonthsCount).toBe(1);
+            }));
+
             describe('Templated Calendar Header', () => {
                 let dateRangeDebugEl: DebugElement;
                 beforeEach(fakeAsync(() => {
