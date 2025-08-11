@@ -46,7 +46,7 @@ let NEXT_ID = 0;
         IgxYearsViewComponent,
     ]
 })
-export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements OnInit, AfterViewInit, OnDestroy {
+export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements OnInit, AfterViewInit {
     /**
      * Sets/gets the `id` of the month picker.
      * If not set, the `id` will have value `"igx-month-picker-0"`.
@@ -340,6 +340,10 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
                 currentValue: this.viewDate
             });
         });
+
+        this._destroyRef.onDestroy(() => {
+            this.keyboardNavigation.detachKeyboardHandlers();
+        });
     }
 
     protected onWrapperFocus(event: FocusEvent) {
@@ -447,14 +451,6 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
             this.dacadeView.onKeydownEnd(event);
         }
     }
-
-	/**
-	 * @hidden
-	 * @internal
-	 */
-	public ngOnDestroy(): void {
-        this.keyboardNavigation.detachKeyboardHandlers();
-	}
 
 	/**
 	 * @hidden

@@ -74,7 +74,7 @@ let NEXT_ID = 0;
     templateUrl: 'calendar.component.html',
     imports: [NgTemplateOutlet, IgxCalendarScrollPageDirective, IgxIconComponent, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, IgxDateFormatterPipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar]
 })
-export class IgxCalendarComponent extends IgxCalendarBaseDirective implements AfterViewInit, OnDestroy {
+export class IgxCalendarComponent extends IgxCalendarBaseDirective implements AfterViewInit {
     /**
      * @hidden
      * @internal
@@ -511,6 +511,10 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
                 previousValue: this.previousViewDate,
                 currentValue: this.viewDate
             });
+        });
+
+        this._destroyRef.onDestroy(() => {
+            this.keyboardNavigation.detachKeyboardHandlers();
         });
     }
 
@@ -1049,14 +1053,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
             isDateInRanges(target, this.disabledDates);
 
         this.activeDate = outOfRange ? date : target.native;
-	}
-
-	/**
-	 * @hidden
-	 * @internal
-	 */
-	public ngOnDestroy(): void {
-        this.keyboardNavigation.detachKeyboardHandlers();
 	}
 
 	/**

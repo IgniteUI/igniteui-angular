@@ -13,7 +13,9 @@ import {
     TemplateRef,
     ViewChild,
     Directive,
-    booleanAttribute
+    booleanAttribute,
+    inject,
+    DestroyRef
 } from '@angular/core';
 
 
@@ -27,10 +29,9 @@ import {
     IgxListItemLeftPanningTemplateDirective,
     IgxListItemRightPanningTemplateDirective
 } from './list.common';
-import { IBaseEventArgs } from '../core/utils';
+import { IBaseEventArgs, onResourceChangeHandle } from '../core/utils';
 import { IListResourceStrings, ListResourceStringsEN } from '../core/i18n/list-resources';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
-import { getI18nManager } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
 
@@ -443,6 +444,7 @@ export class IgxListComponent extends IgxListBaseDirective {
     @ViewChild('defaultDataLoading', { read: TemplateRef, static: true })
     protected defaultDataLoadingTemplate: TemplateRef<any>;
 
+    private _destroyRef = inject(DestroyRef);
     private _resourceStrings: IListResourceStrings = null;
     private _defaultResourceStrings = getCurrentResourceStrings(ListResourceStringsEN);
 
@@ -464,9 +466,9 @@ export class IgxListComponent extends IgxListBaseDirective {
 
     constructor(public element: ElementRef) {
         super(element);
-        getI18nManager().onResourceChange(() => {
+        onResourceChangeHandle(this._destroyRef, () => {
             this._resourceStrings = getCurrentResourceStrings(ListResourceStringsEN, false);
-        });
+        }, this);
     }
 
     /**

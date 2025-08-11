@@ -1,11 +1,11 @@
 import { formatDate as _formatDate, getLocaleCurrencyCode, getLocaleFirstDayOfWeek as ngGetLocaleFirstDayOfWeek, isPlatformBrowser } from '@angular/common';
-import { Inject, Injectable, InjectionToken, PLATFORM_ID, inject } from '@angular/core';
+import { DestroyRef, Inject, Injectable, InjectionToken, PLATFORM_ID, inject } from '@angular/core';
 import { mergeWith } from 'lodash-es';
-import { NEVER, Observable } from 'rxjs';
+import { finalize, NEVER, Observable, Subject } from 'rxjs';
 import { setImmediate } from './setImmediate';
 import { isDevMode } from '@angular/core';
 import type { IgxTheme } from '../services/theme/theme.token';
-import { getI18nManager } from 'igniteui-i18n-core';
+import { getI18nManager, IResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 /** @hidden @internal */
 export const ELEMENTS_TOKEN = /*@__PURE__*/new InjectionToken<boolean>('elements environment');
@@ -575,6 +575,26 @@ export const yieldingLoop = (count: number, chunkSize: number, callback: (index:
 };
 
 export const isConstructor = (ref: any) => typeof ref === 'function' && Boolean(ref.prototype) && Boolean(ref.prototype.constructor);
+
+/**
+ * Bind to the i18n manager's onResourceChange event
+ * @param destroyObj Object responsible for signaling destruction of the handling object
+ * @param context Reference to the object's this context
+ */
+export function onResourceChangeHandle(destroyObj: Subject<any> | DestroyRef, callback: (event?: CustomEvent<IResourceChangeEventArgs>) => void, context: any) {
+    const onResourceChangeHandler = callback.bind(context);
+    getI18nManager().addEventListener("onResourceChange", onResourceChangeHandler);
+
+    // Handle removal of listener on context destroy
+    const removeHandler = () => {
+        getI18nManager().removeEventListener("onResourceChange", onResourceChangeHandler);
+    }
+    if (destroyObj instanceof DestroyRef) {
+        destroyObj.onDestroy(() => removeHandler());
+    } else {
+        destroyObj.pipe(finalize(() => removeHandler()));
+    }
+}
 
 /**
  * Similar to Angular's formatDate. However it will not throw on `undefined | null | ''` instead

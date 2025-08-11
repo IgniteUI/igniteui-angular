@@ -14,7 +14,7 @@ import {
     AfterContentChecked
 } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
-import { PlatformUtil, getComponentTheme } from '../core/utils';
+import { PlatformUtil, getComponentTheme, onResourceChangeHandle } from '../core/utils';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import {
@@ -29,7 +29,6 @@ import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxTheme, THEME_TOKEN, ThemeToken } from '../services/theme/theme.token';
-import { getI18nManager } from 'igniteui-i18n-core';
 
 @Component({
     selector: 'igx-input-group',
@@ -229,9 +228,9 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
             }
         });
         this._destroyRef.onDestroy(() => themeChange.unsubscribe());
-        getI18nManager().onResourceChange(() => {
+        onResourceChangeHandle(this._destroyRef, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(InputResourceStringsEN, false);
-        });
+        }, this);
     }
 
     /** @hidden */

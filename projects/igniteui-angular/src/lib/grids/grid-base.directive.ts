@@ -32,7 +32,7 @@ import {
     ViewContainerRef,
     DOCUMENT
 } from '@angular/core';
-import { columnFieldPath, formatDate, formatNumber, resizeObservable } from '../core/utils';
+import { columnFieldPath, formatDate, formatNumber, onResourceChangeHandle, resizeObservable } from '../core/utils';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
@@ -180,10 +180,10 @@ import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-ro
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
-import { changei18n, getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
+import { getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
 import { isTree, recreateTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 import { getUUID } from './common/random';
-import { getCurrentI18n, getI18nManager, ResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { getCurrentI18n, getI18nManager, IResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 interface IMatchInfoCache {
     row: any;
@@ -3498,8 +3498,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         protected platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>,
     ) {
-        initi18n(localeId);
-        this._defaultLocale = getCurrentI18n();
+        this.initLocale();
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
         this.cdr.detach();
@@ -3507,16 +3506,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.selectedRowsChange.emit(args);
         });
         IgcTrialWatermark.register();
-        getI18nManager().onResourceChange((args: ResourceChangeEventArgs) => {
-            this._defaultLocale = args.newLocale;
-            this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false);
-            // Reset currency position because of new locale.
-            this._currencyPositionLeft = undefined;
-            if (!this._init) {
-                this.pipeTrigger++;
-                this.notifyChanges(true);
-            }
-        });
     }
 
     /**
@@ -7998,6 +7987,23 @@ export abstract class IgxGridBaseDirective implements GridType,
             return recreateTree(value, this._hGridSchema, true) as IFilteringExpressionsTree;
         } else {
             return recreateTreeFromFields(value, this._columns) as IFilteringExpressionsTree;
+        }
+    }
+
+    private initLocale() {
+        initi18n(this.localeId);
+        this._defaultLocale = getCurrentI18n();
+        onResourceChangeHandle(this.destroy$, this.onResourceChange, this);
+    }
+
+    private onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
+        this._defaultLocale = args.detail.newLocale;
+        this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false);
+        // Reset currency position because of new locale.
+        this._currencyPositionLeft = undefined;
+        if (!this._init) {
+            this.pipeTrigger++;
+            this.notifyChanges(true);
         }
     }
 }

@@ -5,7 +5,7 @@ import { IgxOverlayService } from '../../../services/overlay/overlay';
 import { IDragStartEventArgs, IgxDragDirective, IgxDragHandleDirective } from '../../../directives/drag-drop/drag-drop.directive';
 import { Subject } from 'rxjs';
 import { IActiveNode } from '../../grid-navigation.service';
-import { PlatformUtil } from '../../../core/utils';
+import { onResourceChangeHandle, PlatformUtil } from '../../../core/utils';
 import { EntityType, FieldType, GridType } from '../../common/grid.interface';
 import { IgxQueryBuilderComponent } from '../../../query-builder/query-builder.component';
 import { GridResourceStringsEN } from '../../../core/i18n/grid-resources';
@@ -16,8 +16,6 @@ import { NgClass } from '@angular/common';
 import { getCurrentResourceStrings } from '../../../core/i18n/resources';
 import { QueryBuilderResourceStringsEN } from '../../../core/i18n/query-builder-resources';
 import { IgxHierarchicalGridComponent } from '../../hierarchical-grid/hierarchical-grid.component';
-import { IgxRowIslandComponent } from '../../hierarchical-grid/row-island.component';
-import { getI18nManager } from 'igniteui-i18n-core';
 
 /**
  * A component used for presenting advanced filtering UI for a Grid.
@@ -64,9 +62,9 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     private _grid: GridType;
 
     constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil) {
-        getI18nManager().onResourceChange(() => {
+        onResourceChangeHandle(this.destroy$, () => {
             this.assignResourceStrings(false);
-        });
+        }, this);
     }
     /**
      * @hidden @internal

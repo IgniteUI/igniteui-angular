@@ -19,7 +19,7 @@ import { IGX_INPUT_GROUP_TYPE, IgxInputGroupType } from '../input-group/inputGro
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
-import { getCurrentI18n, getI18nManager, ResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { getCurrentI18n, IResourceChangeEventArgs } from 'igniteui-i18n-core';
 import { initi18n } from '../core/i18n/resources';
 
 @Directive()
@@ -289,11 +289,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     constructor(public element: ElementRef,
         @Inject(LOCALE_ID) protected _localeId: string,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
-        initi18n(_localeId);
-        this._defaultLocale = getCurrentI18n();
-        getI18nManager().onResourceChange((args: ResourceChangeEventArgs) => {
-            this._defaultLocale = args.newLocale;
-        });
+        this.initLocale();
     }
 
     /** @hidden @internal */
@@ -327,6 +323,15 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
                 .pipe(takeUntil(merge(components.changes, this._destroy$)))
                 .subscribe(next);
         });
+    }
+
+    protected initLocale() {
+        initi18n(this._localeId);
+        this._defaultLocale = getCurrentI18n();
+    }
+
+    protected onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
+        this._defaultLocale = args.detail.newLocale;
     }
 
     public abstract select(value: Date | DateRange | string): void;

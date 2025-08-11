@@ -28,7 +28,7 @@ import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-br
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CarouselResourceStringsEN, ICarouselResourceStrings } from '../core/i18n/carousel-resources';
-import { first, IBaseEventArgs, last, PlatformUtil } from '../core/utils';
+import { first, IBaseEventArgs, last, onResourceChangeHandle, PlatformUtil } from '../core/utils';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationService } from '../services/animation/animation';
 import { Direction, IgxCarouselComponentBase } from './carousel-base';
@@ -40,7 +40,6 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { HammerGesturesManager } from '../core/touch';
 import { CarouselAnimationType, CarouselIndicatorsOrientation } from './enums';
 import { IgxDirectionality } from '../services/direction/directionality';
-import { getI18nManager } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
 
@@ -578,9 +577,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     ) {
         super(animationService, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
-        getI18nManager().onResourceChange(() => {
+        onResourceChangeHandle(this.destroy$, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(CarouselResourceStringsEN, false);
-        });
+        }, this);
     }
 
     /** @hidden */

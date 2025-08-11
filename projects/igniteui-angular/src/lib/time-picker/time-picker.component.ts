@@ -45,7 +45,7 @@ import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-time-editor.directive';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from '../core/i18n/time-picker-resources';
-import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs } from '../core/utils';
+import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs, onResourceChangeHandle } from '../core/utils';
 import { PickerInteractionMode } from '../date-common/types';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
@@ -58,9 +58,8 @@ import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
-import { getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxDividerDirective } from '../directives/divider/divider.directive';
-import { getCurrentI18n, getI18nManager } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
 export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
@@ -625,9 +624,9 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         private cdr: ChangeDetectorRef,
     ) {
         super(element, _localeId, _inputGroupType);
-        getI18nManager().onResourceChange(() => {
+        onResourceChangeHandle(this._destroy$, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN, false);
-        });
+        }, this);
     }
 
     /** @hidden @internal */

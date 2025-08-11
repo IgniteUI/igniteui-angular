@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { IgxChipComponent } from '../chips/chip.component';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
-import { PlatformUtil, trackByIdentity } from '../core/utils';
+import { onResourceChangeHandle, PlatformUtil, trackByIdentity } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
@@ -55,7 +55,7 @@ import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navig
 import { IgxQueryBuilderDragService } from './query-builder-drag.service';
 import { isTree } from '../data-operations/expressions-tree-util';
 import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, IgxFieldFormatterPipe } from './query-builder.common';
-import { getCurrentI18n, getI18nManager, ResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { getCurrentI18n, IResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -542,13 +542,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         protected platform: PlatformUtil,
         private elRef: ElementRef,
         @Inject(LOCALE_ID) protected _localeId: string) {
-        initi18n(_localeId);
-        this._defaultLocale = getCurrentI18n();
+        this.initLocale();
         this.dragService.register(this, elRef);
-        getI18nManager().onResourceChange((args: ResourceChangeEventArgs) => {
-            this._defaultLocale = args.newLocale;
-            this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
-        });
     }
 
     /**
@@ -1723,6 +1718,17 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.rootGroup = null;
             this.currentGroup = null;
         }
+    }
+
+    private initLocale() {
+        initi18n(this._localeId);
+        this._defaultLocale = getCurrentI18n();
+        onResourceChangeHandle(this.destroy$, this.onResourceChange, this);
+    }
+
+    private onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
+        this._defaultLocale = args.detail.newLocale;
+        this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
     }
 
     /** rootGroup is recreated after clicking Apply, which sets new expressionTree and calls init()*/

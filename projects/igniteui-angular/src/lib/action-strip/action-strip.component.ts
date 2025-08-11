@@ -13,7 +13,9 @@ import {
     ChangeDetectorRef,
     AfterViewInit,
     ElementRef,
-    booleanAttribute
+    booleanAttribute,
+    inject,
+    DestroyRef
 } from '@angular/core';
 import { ActionStripResourceStringsEN, IActionStripResourceStrings } from '../core/i18n/action-strip-resources';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
@@ -28,8 +30,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IgxActionStripToken } from './token';
-import { trackByIdentity } from '../core/utils';
-import { getI18nManager } from 'igniteui-i18n-core';
+import { onResourceChangeHandle, trackByIdentity } from '../core/utils';
 
 @Directive({
     selector: '[igxActionStripMenuItem]',
@@ -188,6 +189,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
      */
     public menuOverlaySettings: OverlaySettings = { scrollStrategy: new CloseScrollStrategy() };
 
+    private _destroyRef = inject(DestroyRef);
     private _hidden = false;
     private _resourceStrings: IActionStripResourceStrings = null;
     private _defaultResourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN);
@@ -200,9 +202,9 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
         /** @hidden @internal **/
         public cdr: ChangeDetectorRef,
     ) {
-        getI18nManager().onResourceChange(() => {
+        onResourceChangeHandle(this._destroyRef, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN, false);
-        });
+        }, this);
     }
 
     /**

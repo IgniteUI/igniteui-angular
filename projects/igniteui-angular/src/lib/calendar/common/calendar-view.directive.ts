@@ -10,6 +10,8 @@ import {
     HostBinding,
     InjectionToken,
     Inject,
+    inject,
+    DestroyRef,
 } from "@angular/core";
 import { noop } from "rxjs";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
@@ -21,8 +23,8 @@ import {
 import { CalendarDay, DayInterval } from "../common/model";
 import { getNextActiveDate, isDateInRanges } from "./helpers";
 import { DateRangeType } from "../../core/dates";
-import { isDate } from "../../core/utils";
-import { getCurrentI18n, getI18nManager, ResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { isDate, onResourceChangeHandle } from "../../core/utils";
+import { getCurrentI18n, getI18nManager, IResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 export enum Direction {
     NEXT = 1,
@@ -123,11 +125,8 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      */
     protected _defaultLocale;
 
-    /**
-     * @hidden
-     * @internal
-     */
-    private _date = new Date();
+   private _date = new Date();
+   private _destroyRef = inject(DestroyRef);
 
     /**
      * @hidden
@@ -185,10 +184,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     }
 
     constructor(@Inject(DAY_INTERVAL_TOKEN) protected dayInterval?: DayInterval) {
-        this._defaultLocale = getCurrentI18n();
-        getI18nManager().onResourceChange((args: ResourceChangeEventArgs) => {
-            this._defaultLocale = args.newLocale;
-        });
+        this.initLocale();
     }
 
     /**
@@ -342,4 +338,11 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      * @hidden
      */
     protected abstract get range(): Date[];
+
+    private initLocale() {
+        this._defaultLocale = getCurrentI18n();
+        onResourceChangeHandle(this._destroyRef, (args: CustomEvent<IResourceChangeEventArgs>) => {
+            this._defaultLocale = args.detail.newLocale;
+        }, this);
+    }
 }

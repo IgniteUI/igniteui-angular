@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ContentChild, Directive, ElementRef, EventEmitter, Host, HostBinding, Input, Output, forwardRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ContentChild, DestroyRef, Directive, ElementRef, EventEmitter, Host, HostBinding, Input, Output, forwardRef, inject } from '@angular/core';
 import { IPageCancellableEventArgs, IPageEventArgs } from './paginator-interfaces';
 import { IPaginatorResourceStrings, PaginatorResourceStringsEN } from '../core/i18n/paginator-resources';
 import { OverlaySettings } from '../services/overlay/utilities';
@@ -10,7 +10,7 @@ import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IgxPaginatorToken } from './token';
-import { getI18nManager } from 'igniteui-i18n-core';
+import { onResourceChangeHandle } from '../core/utils';
 
 @Directive({
     selector: '[igxPaginatorContent],igx-paginator-content',
@@ -123,6 +123,7 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     protected _selectOptions = [5, 10, 15, 25, 50, 100, 500];
     protected _perPage = 15;
 
+    private _destroyRef = inject(DestroyRef);
     private _resourceStrings: IPaginatorResourceStrings = null;
     private _defaultResourceStrings = getCurrentResourceStrings(PaginatorResourceStringsEN, true);
     private _overlaySettings: OverlaySettings = {};
@@ -263,9 +264,9 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     }
 
     constructor(private elementRef: ElementRef, private cdr: ChangeDetectorRef) {
-        getI18nManager().onResourceChange(() => {
+        onResourceChangeHandle(this._destroyRef, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(PaginatorResourceStringsEN, false);
-        });
+        }, this);
     }
 
     /**

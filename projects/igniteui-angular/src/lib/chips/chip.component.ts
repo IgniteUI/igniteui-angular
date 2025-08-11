@@ -17,14 +17,13 @@ import {
     DOCUMENT
 } from '@angular/core';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
-import { IBaseEventArgs } from '../core/utils';
+import { IBaseEventArgs, onResourceChangeHandle } from '../core/utils';
 import { ChipResourceStringsEN, IChipResourceStrings } from '../core/i18n/chip-resources';
 import { Subject } from 'rxjs';
 import { IgxIconComponent } from '../icon/icon.component';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { Size } from '../grids/common/enums';
-import { getI18nManager } from 'igniteui-i18n-core';
 
 export const IgxChipTypeVariant = {
     PRIMARY: 'primary',
@@ -613,9 +612,9 @@ export class IgxChipComponent implements OnInit, OnDestroy {
         private ref: ElementRef<HTMLElement>,
         private renderer: Renderer2,
         @Inject(DOCUMENT) public document: any) {
-        getI18nManager().onResourceChange(() => {
+        onResourceChangeHandle(this.destroy$, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN, false);
-        });
+        }, this);
     }
 
     /**

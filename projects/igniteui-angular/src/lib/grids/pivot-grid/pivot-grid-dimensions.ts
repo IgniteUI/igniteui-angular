@@ -1,9 +1,10 @@
-import { getI18nManager } from 'igniteui-i18n-core';
+import { DestroyRef, inject } from '@angular/core';
 import { GridResourceStringsEN, IGridResourceStrings } from '../../core/i18n/grid-resources';
 import { getCurrentResourceStrings } from '../../core/i18n/resources';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { IPivotDimension } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
+import { onResourceChangeHandle } from '../../core/utils';
 
 export interface IPivotDateDimensionOptions {
     /** Enables/Disables total value of all periods. */
@@ -114,6 +115,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
     private _baseDimension: IPivotDimension;
     private _options: IPivotDateDimensionOptions = {};
     private _monthIntl = new Intl.DateTimeFormat('default', { month: 'long' });
+    private _destroyRef = inject(DestroyRef);
 
 
     /**
@@ -133,9 +135,9 @@ export class IgxPivotDateDimension implements IPivotDimension {
         if (this.baseDimension && this.options) {
             this.initialize(this.baseDimension, this.options);
         }
-        getI18nManager().onResourceChange(() => {
+        onResourceChangeHandle(this._destroyRef, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false);
-        });
+        }, this);
     }
 
     protected initialize(inBaseDimension, inOptions) {

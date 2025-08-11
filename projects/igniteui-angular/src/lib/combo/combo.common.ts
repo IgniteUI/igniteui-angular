@@ -30,7 +30,7 @@ import { caseSensitive } from '@igniteui/material-icons-extended';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs, IBaseEventArgs, rem } from '../core/utils';
+import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs, IBaseEventArgs, onResourceChangeHandle, rem } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxIconService } from '../icon/icon.service';
@@ -47,7 +47,6 @@ import { IComboItemAdditionEvent, IComboSearchInputEventArgs } from './public_ap
 import { ComboResourceStringsEN, IComboResourceStrings } from '../core/i18n/combo-resources';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { isEqual } from 'lodash-es';
-import { getI18nManager } from 'igniteui-i18n-core';
 
 export const IGX_COMBO_COMPONENT = /*@__PURE__*/new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
@@ -977,9 +976,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         @Optional() protected _injector: Injector,
         @Optional() @Inject(IgxIconService) protected _iconService?: IgxIconService,
     ) {
-        getI18nManager().onResourceChange(() => {
+        onResourceChangeHandle(this.destroy$, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(ComboResourceStringsEN, false);
-        });
+        }, this);
     }
 
     public ngAfterViewChecked() {

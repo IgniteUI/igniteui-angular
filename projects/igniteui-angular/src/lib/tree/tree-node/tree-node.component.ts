@@ -40,7 +40,7 @@ import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { NgTemplateOutlet, NgClass } from '@angular/common';
 import { getCurrentResourceStrings } from '../../core/i18n/resources';
-import { getI18nManager } from 'igniteui-i18n-core';
+import { onResourceChangeHandle } from '../../core/utils';
 
 // TODO: Implement aria functionality
 /**
@@ -395,9 +395,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         @Optional() @SkipSelf() @Inject(IGX_TREE_NODE_COMPONENT) public parentNode: IgxTreeNode<any>
     ) {
         super(animationService);
-        getI18nManager().onResourceChange(() => {
+        onResourceChangeHandle(this.destroy$, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(TreeResourceStringsEN, false);
-        });
+        }, this);
     }
 
     /**

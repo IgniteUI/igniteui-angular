@@ -47,7 +47,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 import { DatePickerResourceStringsEN, IDatePickerResourceStrings } from '../core/i18n/date-picker-resources';
-import { IBaseCancelableBrowserEventArgs, isDate, PlatformUtil } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, isDate, onResourceChangeHandle, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { IgxPickerActionsDirective, IgxPickerClearComponent } from '../date-common/public_api';
@@ -68,7 +68,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
 import { getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
-import { getCurrentI18n, getI18nManager } from 'igniteui-i18n-core';
+import { IResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
 
@@ -517,10 +517,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         private cdr: ChangeDetectorRef,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
         super(element, _localeId, _inputGroupType);
-        initi18n(_localeId);
-        getI18nManager().onResourceChange(() => {
-            this._resourceStrings = getCurrentResourceStrings(DatePickerResourceStringsEN, false);
-        });
+        this.initLocale();
     }
 
     /** @hidden @internal */
@@ -1012,5 +1009,16 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             return;
         }
         this._calendar.viewDate = this._targetViewDate = dateValue;
+    }
+
+    protected override initLocale() {
+        super.initLocale();
+        initi18n(this._localeId);
+        onResourceChangeHandle(this._destroy$, this.onResourceChange, this);
+    }
+
+    protected override onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
+        super.onResourceChange(args);
+        this._resourceStrings = getCurrentResourceStrings(DatePickerResourceStringsEN, false);
     }
 }
