@@ -2232,9 +2232,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             return this.topLevelParent.pin(index, pinningPosition);
         }
         const pinningVisibleCollection = (pinningPosition || this.pinningPosition) === ColumnPinningPosition.Start ?
-        grid.pinnedLeftColumns : grid.pinnedRightColumns;
+        grid.pinnedStartColumns : grid.pinnedEndColumns;
         const pinningCollection = (pinningPosition || this.pinningPosition) === ColumnPinningPosition.Start ?
-        grid._pinnedLeftColumns : grid._pinnedRightColumns;
+        grid._pinnedStartColumns : grid._pinnedEndColumns;
         const hasIndex = index !== undefined;
         if (hasIndex && (index < 0 || index > pinningVisibleCollection.length)) {
             return false;
@@ -2279,9 +2279,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 });
                 grid._pinnedColumns = allPinned;
                 if (this.pinningPosition === ColumnPinningPosition.Start) {
-                    grid._pinnedLeftColumns = allPinned;
+                    grid._pinnedStartColumns = allPinned;
                 } else {
-                    grid._pinnedRightColumns = allPinned;
+                    grid._pinnedEndColumns = allPinned;
                 }
             }
 
@@ -2368,11 +2368,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             if (grid._pinnedColumns.indexOf(this) !== -1) {
                 grid._pinnedColumns.splice(grid._pinnedColumns.indexOf(this), 1);
             }
-            if (this.pinningPosition === ColumnPinningPosition.Start && grid._pinnedLeftColumns.indexOf(this) !== -1) {
-                grid._pinnedLeftColumns.splice(grid._pinnedLeftColumns.indexOf(this), 1);
+            if (this.pinningPosition === ColumnPinningPosition.Start && grid._pinnedStartColumns.indexOf(this) !== -1) {
+                grid._pinnedStartColumns.splice(grid._pinnedStartColumns.indexOf(this), 1);
             }
-            if (this.pinningPosition === ColumnPinningPosition.End && grid._pinnedRightColumns.indexOf(this) !== -1) {
-                grid._pinnedRightColumns.splice(grid._pinnedRightColumns.indexOf(this), 1);
+            if (this.pinningPosition === ColumnPinningPosition.End && grid._pinnedEndColumns.indexOf(this) !== -1) {
+                grid._pinnedEndColumns.splice(grid._pinnedEndColumns.indexOf(this), 1);
             }
         }
 

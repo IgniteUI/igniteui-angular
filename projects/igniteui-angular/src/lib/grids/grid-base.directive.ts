@@ -3122,12 +3122,12 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden
      */
-    protected _pinnedLeftColumns: IgxColumnComponent[] = [];
+    protected _pinnedStartColumns: IgxColumnComponent[] = [];
 
     /**
      * @hidden
      */
-    protected _pinnedRightColumns: IgxColumnComponent[] = [];
+    protected _pinnedEndColumns: IgxColumnComponent[] = [];
 
     /**
      * @hidden
@@ -4523,11 +4523,11 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @example
      * ```typescript
-     * const pinnedColumns = this.grid.pinnedLeftColumns.
+     * const pinnedColumns = this.grid.pinnedStartColumns.
      * ```
      */
-        public get pinnedLeftColumns(): IgxColumnComponent[] {
-            return this._pinnedLeftColumns.filter(col => !col.hidden);
+        public get pinnedStartColumns(): IgxColumnComponent[] {
+            return this._pinnedStartColumns.filter(col => !col.hidden);
         }
 
     /**
@@ -4535,11 +4535,11 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @example
      * ```typescript
-     * const pinnedColumns = this.grid.pinnedRightColumns.
+     * const pinnedColumns = this.grid.pinnedEndColumns.
      * ```
      */
-        public get pinnedRightColumns(): IgxColumnComponent[] {
-            return this._pinnedRightColumns.filter(col => !col.hidden);
+        public get pinnedEndColumns(): IgxColumnComponent[] {
+            return this._pinnedEndColumns.filter(col => !col.hidden);
         }
 
     /* csSuppress */
@@ -4757,7 +4757,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         // pinning and unpinning will work correctly even without passing index
         // but is easier to calclulate the index here, and later use it in the pinning event args
         if (target.pinned && !column.pinned) {
-            const pinnedIndex = target.pinningPosition === ColumnPinningPosition.Start ? this._pinnedLeftColumns.indexOf(target) : this._pinnedRightColumns.indexOf(target);
+            const pinnedIndex = target.pinningPosition === ColumnPinningPosition.Start ? this._pinnedStartColumns.indexOf(target) : this._pinnedEndColumns.indexOf(target);
             const index = pos === DropPosition.AfterDropTarget ? pinnedIndex + 1 : pinnedIndex;
             column.pin(index);
         }
@@ -5166,9 +5166,9 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @param columnName
      * @param index
      */
-    public pinColumn(columnName: string | IgxColumnComponent, index?: number): boolean {
+    public pinColumn(columnName: string | IgxColumnComponent, index?: number, pinningPosition?: ColumnPinningPosition): boolean {
         const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
-        return col.pin(index);
+        return col.pin(index, pinningPosition);
     }
 
     /**
@@ -5612,7 +5612,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @param takeHidden If we should take into account the hidden columns in the pinned area.
      */
     public getPinnedLeftWidth(takeHidden = false) {
-        const fc = takeHidden ? this._pinnedLeftColumns : this.pinnedLeftColumns;
+        const fc = takeHidden ? this._pinnedStartColumns : this.pinnedStartColumns;
         let sum = 0;
         for (const col of fc) {
             if (col.level === 0) {
@@ -5634,7 +5634,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @param takeHidden If we should take into account the hidden columns in the pinned area.
      */
         public getPinnedRightWidth(takeHidden = false) {
-            const fc = takeHidden ? this._pinnedRightColumns : this.pinnedRightColumns;
+            const fc = takeHidden ? this._pinnedEndColumns : this.pinnedEndColumns;
             let sum = 0;
             for (const col of fc) {
                 if (col.level === 0) {
@@ -6747,7 +6747,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden
      */
     protected _moveColumns(from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
-        const orderedList = this._pinnedLeftColumns.concat(this._unpinnedColumns).concat(this._pinnedRightColumns);
+        const orderedList = this._pinnedStartColumns.concat(this._unpinnedColumns).concat(this._pinnedEndColumns);
         const list = orderedList;
         this._reorderColumns(from, to, pos, list);
         const newList = this._resetColumnList(list);
@@ -6763,8 +6763,8 @@ export abstract class IgxGridBaseDirective implements GridType,
         // update internal collections to retain order.
         this._pinnedColumns = newColumns
             .filter((c) => c.pinned);
-        this._pinnedLeftColumns = newColumns.filter((c) => c.pinned && c.pinningPosition === ColumnPinningPosition.Start);
-        this._pinnedRightColumns = newColumns.filter((c) => c.pinned && c.pinningPosition === ColumnPinningPosition.End);
+        this._pinnedStartColumns = newColumns.filter((c) => c.pinned && c.pinningPosition === ColumnPinningPosition.Start);
+        this._pinnedEndColumns = newColumns.filter((c) => c.pinned && c.pinningPosition === ColumnPinningPosition.End);
         this._unpinnedColumns = newColumns.filter((c) => !c.pinned);
         this._columns = newColumns;
         if (this._columns && this._columns.length && this._filteringExpressionsTree) {
@@ -6918,9 +6918,9 @@ export abstract class IgxGridBaseDirective implements GridType,
                 if (record.item.pinned) {
                     this._pinnedColumns.push(record.item);
                     if (record.item.pinningPosition === ColumnPinningPosition.Start) {
-                        this._pinnedLeftColumns.push(record.item);
+                        this._pinnedStartColumns.push(record.item);
                     } else {
-                        this._pinnedRightColumns.push(record.item);
+                        this._pinnedEndColumns.push(record.item);
                     }
                     pinning = true;
                 } else {
@@ -7336,10 +7336,10 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected reinitPinStates() {
         this._pinnedColumns = this._columns
             .filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
-            this._pinnedLeftColumns = this._columns.filter((c) => c.pinned && c.pinningPosition === ColumnPinningPosition.Start)
-            .sort((a, b) => this._pinnedLeftColumns.indexOf(a) - this._pinnedLeftColumns.indexOf(b));
-            this._pinnedRightColumns = this._columns.filter((c) => c.pinned && c.pinningPosition === ColumnPinningPosition.End)
-            .sort((a, b) => this._pinnedRightColumns.indexOf(a) - this._pinnedRightColumns.indexOf(b));
+            this._pinnedStartColumns = this._columns.filter((c) => c.pinned && c.pinningPosition === ColumnPinningPosition.Start)
+            .sort((a, b) => this._pinnedStartColumns.indexOf(a) - this._pinnedStartColumns.indexOf(b));
+            this._pinnedEndColumns = this._columns.filter((c) => c.pinned && c.pinningPosition === ColumnPinningPosition.End)
+            .sort((a, b) => this._pinnedEndColumns.indexOf(a) - this._pinnedEndColumns.indexOf(b));
             this._unpinnedColumns = this.hasColumnGroups ? this._columns.filter((c) => !c.pinned) :
             this._columns.filter((c) => !c.pinned)
                 .sort((a, b) => this._unpinnedColumns.indexOf(a) - this._unpinnedColumns.indexOf(b));
@@ -8051,8 +8051,8 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
         // Assign the applicable collections.
         this._pinnedColumns = pinnedColumns;
-        this._pinnedLeftColumns = pinnedColumns.filter((c) => c.pinned && c.pinningPosition === ColumnPinningPosition.Start);
-        this._pinnedRightColumns = pinnedColumns.filter((c) => c.pinned && c.pinningPosition === ColumnPinningPosition.End);
+        this._pinnedStartColumns = pinnedColumns.filter((c) => c.pinned && c.pinningPosition === ColumnPinningPosition.Start);
+        this._pinnedEndColumns = pinnedColumns.filter((c) => c.pinned && c.pinningPosition === ColumnPinningPosition.End);
         this._unpinnedColumns = unpinnedColumns;
     }
 
