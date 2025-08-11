@@ -13,7 +13,7 @@ import {
 import { fromEvent, merge, MonoTypeOperatorFunction, noop, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
-import { CalendarSelection, IgxCalendarComponent } from '../calendar/public_api';
+import { CalendarSelection, IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from '../calendar/public_api';
 import { DateRangeType } from '../core/dates';
 import { DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } from '../core/i18n/date-range-picker-resources';
 import { IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from '../core/utils';
@@ -310,6 +310,16 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     /** @hidden @internal */
     @ContentChild(IgxDateRangeSeparatorDirective, { read: TemplateRef })
     public dateSeparatorTemplate: TemplateRef<any>;
+
+
+    @ContentChild(IgxCalendarHeaderTitleTemplateDirective)
+    private headerTitleTemplate: IgxCalendarHeaderTitleTemplateDirective;
+
+    @ContentChild(IgxCalendarHeaderTemplateDirective)
+    private headerTemplate: IgxCalendarHeaderTemplateDirective;
+
+    @ContentChild(IgxCalendarSubheaderTemplateDirective)
+    private subheaderTemplate: IgxCalendarSubheaderTemplateDirective;
 
     /** @hidden @internal */
     public get dateSeparator(): string {
@@ -1080,13 +1090,16 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {
         this._calendar = componentInstance.calendar;
-        this.calendar.hasHeader = false;
+        this.calendar.hasHeader = !this.isDropdown;
         this.calendar.locale = this.locale;
         this.calendar.selection = CalendarSelection.RANGE;
         this.calendar.weekStart = this.weekStart;
         this.calendar.hideOutsideDays = this.hideOutsideDays;
         this.calendar.monthsViewNumber = this.displayMonthsCount;
         this.calendar.showWeekNumbers = this.showWeekNumbers;
+        this._calendar.headerTitleTemplate = this.headerTitleTemplate;
+        this._calendar.headerTemplate = this.headerTemplate;
+        this._calendar.subheaderTemplate = this.subheaderTemplate;
         this.calendar.selected.pipe(takeUntil(this._destroy$)).subscribe((ev: Date[]) => this.handleSelection(ev));
 
         componentInstance.mode = this.mode;
