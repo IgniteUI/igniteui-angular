@@ -44,9 +44,10 @@ const CSS_CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CSS_CLASS_DATE_RANGE = 'igx-date-range-picker';
 const CSS_CLASS_CALENDAR_DATE = 'igx-days-view__date';
 const CSS_CLASS_INACTIVE_DATE = 'igx-days-view__date--inactive';
-const CSS_CLASS_CALENDAR_HEADER = '.igx-calendar__header-date';
+const CSS_CLASS_CALENDAR_HEADER_TEMPLATE = '.igx-calendar__header-date';
 const CSS_CLASS_CALENDAR_HEADER_TITLE = '.igx-calendar__header-year';
 const CSS_CLASS_CALENDAR_SUBHEADER = '.igx-calendar-picker__dates';
+const CSS_CLASS_CALENDAR_HEADER = '.igx-calendar__header';
 
 describe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
@@ -1576,7 +1577,7 @@ describe('IgxDateRangePicker', () => {
                 fixture.detectChanges();
 
                 expect(dateRange['_calendar'].hasHeader).toBeTrue();
-                const calendarHeader = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR_HEADER));
+                const calendarHeader = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR_HEADER_TEMPLATE));
                 expect(calendarHeader).toBeTruthy('Calendar header should be present');
             }));
 
@@ -1602,6 +1603,22 @@ describe('IgxDateRangePicker', () => {
                 fixture.detectChanges();
 
                 expect(dateRange['_calendar'].headerOrientation).toBe(PickerHeaderOrientation.Vertical);
+            }));
+
+            it('should hide the calendar header if hideHeader is true in dialog mode', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+
+                dateRange.mode = 'dialog';
+                dateRange.hideHeader = true;
+                dateRange.open();
+                tick();
+                fixture.detectChanges();
+
+                expect(dateRange['_calendar'].hasHeader).toBeFalse();
+                const calendarHeader = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR_HEADER));
+                expect(calendarHeader).toBeFalsy('Calendar header should not be present');
             }));
 
             describe('Templated Calendar Header', () => {
@@ -1630,7 +1647,7 @@ describe('IgxDateRangePicker', () => {
                 }));
 
                 it('Should use the custom template for header', fakeAsync(() => {
-                    const headerElement = dateRangeDebugEl.query(By.css(CSS_CLASS_CALENDAR_HEADER));
+                    const headerElement = dateRangeDebugEl.query(By.css(CSS_CLASS_CALENDAR_HEADER_TEMPLATE));
                     expect(headerElement).toBeTruthy('Header element should be present');
                     if (headerElement) {
                         expect(headerElement.nativeElement.textContent.trim()).toBe('Test header');

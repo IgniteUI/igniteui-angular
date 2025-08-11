@@ -32,6 +32,7 @@ const DATE_PICKER_CLEAR_ICON = 'clear';
 
 const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
+const CSS_CLASS_CALENDAR_HEADER = '.igx-calendar__header';
 
 describe('IgxDatePicker', () => {
     describe('Integration tests', () => {
@@ -66,6 +67,19 @@ describe('IgxDatePicker', () => {
                 expect(suffix).toHaveSize(1);
                 expect(suffix[0].nativeElement.innerText).toEqual(DATE_PICKER_CLEAR_ICON);
             });
+
+            it('should hide the calendar header if hideHeader is true in dialog mode', fakeAsync(() => {
+                const datePicker = fixture.componentInstance.datePicker;
+                datePicker.mode = 'dialog';
+                datePicker.hideHeader = true;
+                datePicker.open();
+                tick();
+                fixture.detectChanges();
+
+                expect(datePicker['_calendar'].hasHeader).toBeFalse();
+                const calendarHeader = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR_HEADER));
+                expect(calendarHeader).toBeFalsy('Calendar header should not be present');
+            }));
         });
 
         describe('Events', () => {

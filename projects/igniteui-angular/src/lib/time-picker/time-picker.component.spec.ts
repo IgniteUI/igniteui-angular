@@ -34,6 +34,7 @@ const CSS_CLASS_SECONDSLIST = '.igx-time-picker__secondsList';
 const CSS_CLASS_AMPMLIST = 'igx-time-picker__ampmList';
 const CSS_CLASS_SELECTED_ITEM = '.igx-time-picker__item--selected';
 const CSS_CLASS_HEADER_HOUR = '.igx-time-picker__header-hour';
+const CSS_CLASS_HEADER = '.igx-time-picker__header';
 const CSS_CLASS_OVERLAY_WRAPPER = 'igx-overlay__wrapper';
 const TIME_PICKER_TOGGLE_ICON = 'access_time';
 const TIME_PICKER_CLEAR_ICON = 'clear';
@@ -1596,6 +1597,19 @@ describe('IgxTimePicker', () => {
 
                 dialogDivVertical = timePickerDebElement.query(By.css(CSS_CLASS_TIME_PICKER_VERTICAL));
                 expect(dialogDivVertical).not.toBeNull();
+            }));
+
+            it('should hide the calendar header if hideHeader is true in dialog mode', fakeAsync(() => {
+                timePicker.mode = PickerInteractionMode.Dialog;
+                timePicker.hideHeader = true;
+                fixture.detectChanges();
+
+                timePicker.open();
+                tick();
+                fixture.detectChanges();
+
+                const header = fixture.debugElement.query(By.css(CSS_CLASS_HEADER));
+                expect(header).toBeNull();
             }));
         });
 

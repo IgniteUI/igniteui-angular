@@ -90,6 +90,17 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     public headerOrientation: PickerHeaderOrientation = PickerHeaderOrientation.Horizontal;
 
     /**
+     * Gets/Sets whether the header is hidden in dialog mode.
+     *
+     *  @example
+     * ```html
+     * <igx-date-picker mode="dialog" [hideHeader]="true"></igx-date-picker>
+     * ```
+     */
+    @Input({ transform: booleanAttribute })
+    public hideHeader = false;
+
+    /**
      * Overlay settings used to display the pop-up element.
      *
      * @example

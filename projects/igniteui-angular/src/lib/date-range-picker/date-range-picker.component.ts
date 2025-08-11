@@ -1090,7 +1090,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {
         this._calendar = componentInstance.calendar;
-        this.calendar.hasHeader = !this.isDropdown;
+        this._calendar.hasHeader = !this.isDropdown && !this.hideHeader;
         this.calendar.locale = this.locale;
         this.calendar.selection = CalendarSelection.RANGE;
         this.calendar.weekStart = this.weekStart;

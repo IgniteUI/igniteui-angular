@@ -954,7 +954,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {
         this._calendar = componentInstance.calendar;
-        this._calendar.hasHeader = !this.isDropdown;
+        this._calendar.hasHeader = !this.isDropdown && !this.hideHeader;
         this._calendar.formatOptions = this.pickerCalendarFormat;
         this._calendar.formatViews = this.pickerFormatViews;
         this._calendar.locale = this.locale;
