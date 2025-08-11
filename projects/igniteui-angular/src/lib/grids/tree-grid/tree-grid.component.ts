@@ -54,6 +54,7 @@ import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
 import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
+import { IgxHierarchicalTransactionFactory } from '../../services/transaction/transaction-factory.service';
 
 let NEXT_ID = 0;
 
@@ -146,6 +147,7 @@ let NEXT_ID = 0;
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, AfterViewInit, DoCheck, AfterContentInit {
     protected override _diTransactions = inject<HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>>(IgxGridTransaction, { optional: true, });
+    protected override transactionFactory = inject(IgxHierarchicalTransactionFactory);
 
     /**
      * Sets the child data key of the `IgxTreeGridComponent`.

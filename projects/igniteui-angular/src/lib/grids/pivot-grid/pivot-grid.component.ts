@@ -169,6 +169,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     PivotGridType, AfterViewInit, OnChanges {
     public override readonly gridAPI = inject<GridBaseAPIService<IgxGridBaseDirective & GridType>>(GridBaseAPIService);
     public override navigation = inject(IgxPivotGridNavigationService);
+    protected override colResizingService = inject(IgxPivotColumnResizingService);
 
     /**
      * Emitted when the dimension collection is changed via the grid chip area.
