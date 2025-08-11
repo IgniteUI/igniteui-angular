@@ -59,16 +59,17 @@ export class IgxExcelStyleMovingComponent {
             } else {
                 targetColumn = this.findColumn(moveDirection, this.esf.grid.pinnedColumns);
             }
-        } else if (this.esf.grid.unpinnedColumns.indexOf(this.esf.column) === 0 && moveDirection === 0 &&
-        this.esf.column.pinningPosition === ColumnPinningPosition.Start) {
-            targetColumn = this.esf.grid.pinnedColumns[this.esf.grid.pinnedColumns.length - 1];
+        } else if (this.esf.grid.unpinnedColumns.indexOf(this.esf.column) === 0 && moveDirection === 0) {
+            // moving first unpinned, left (into pin start area)
+            targetColumn = this.esf.grid.pinnedStartColumns[this.esf.grid.pinnedStartColumns.length - 1];
             if (targetColumn.parent) {
                 targetColumn = targetColumn.topLevelParent;
             }
             moveDirection = 1;
         } else if (this.esf.grid.unpinnedColumns.indexOf(this.esf.column) === this.esf.grid.unpinnedColumns.length - 1 &&
-            moveDirection === 1 && this.esf.column.pinningPosition === ColumnPinningPosition.End) {
-            targetColumn = this.esf.grid.pinnedColumns[0];
+            moveDirection === 1) {
+                // moving last unpinned, right (into pin end area)
+            targetColumn = this.esf.grid.pinnedEndColumns[0];
             moveDirection = 0;
         } else {
             targetColumn = this.findColumn(moveDirection, this.esf.grid.unpinnedColumns);

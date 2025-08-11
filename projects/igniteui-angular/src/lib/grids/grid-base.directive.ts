@@ -4760,9 +4760,9 @@ export abstract class IgxGridBaseDirective implements GridType,
         // pinning and unpinning will work correctly even without passing index
         // but is easier to calclulate the index here, and later use it in the pinning event args
         if (target.pinned && !column.pinned) {
-            const pinnedIndex = target.pinningPosition === ColumnPinningPosition.Start ? this._pinnedStartColumns.indexOf(target) : this._pinnedEndColumns.indexOf(target);
+            const pinnedIndex = target.pinningPosition === ColumnPinningPosition.Start ? this.pinnedStartColumns.indexOf(target) : this.pinnedEndColumns.indexOf(target);
             const index = pos === DropPosition.AfterDropTarget ? pinnedIndex + 1 : pinnedIndex;
-            column.pin(index);
+            column.pin(index, target.pinningPosition);
         }
 
         if (!target.pinned && column.pinned) {
