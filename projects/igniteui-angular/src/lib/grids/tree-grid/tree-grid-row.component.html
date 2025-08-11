@@ -19,7 +19,7 @@
             </ng-template>
         </div>
     }
-    @if (pinnedColumns.length > 0 && grid.isPinningToStart) {
+    @if (pinnedStartColumns.length > 0) {
         <ng-container *ngTemplateOutlet="pinnedCellsTemplate; context: this"></ng-container>
     }
     <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]="'calcPixelWidth'" [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
@@ -84,7 +84,7 @@
         </ng-template>
         <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? treeCellTemplate : cellTemplate"></ng-container>
     </ng-template>
-    @if (pinnedColumns.length > 0 && !grid.isPinningToStart) {
+    @if (pinnedEndColumns.length > 0) {
         <ng-container *ngTemplateOutlet="pinnedCellsTemplate; context: this"></ng-container>
     }
 </ng-template>

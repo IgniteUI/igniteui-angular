@@ -107,6 +107,22 @@ export class IgxSummaryRowComponent implements DoCheck  {
         return this.grid.pinnedColumns;
     }
 
+
+    /**
+     * @hidden
+     */
+    public get pinnedStartColumns(): ColumnType[] {
+        return this.grid.pinnedStartColumns;
+    }
+
+
+    /**
+     * @hidden
+     */
+    public get pinnedEndColumns(): ColumnType[] {
+        return this.grid.pinnedEndColumns;
+    }
+
     /**
      * @hidden
      */

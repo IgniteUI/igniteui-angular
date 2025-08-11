@@ -7,7 +7,7 @@
             (pointerdown)="$event.preventDefault()"
         ></div>
     }
-    @if (pinnedColumns.length > 0 && grid.isPinningToStart) {
+    @if (pinnedStartColumns.length > 0) {
         <ng-container *ngTemplateOutlet="summaryCellTemplate; context: getContext(this)"></ng-container>
     }
     <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]="grid.unpinnedWidth" [igxForTrackBy]="grid.trackColumnChanges" [igxForSizePropName]='"calcPixelWidth"' #igxDirRef>
@@ -31,7 +31,7 @@
             [style.flex-basis]="col.resolvedWidth">
         </igx-grid-summary-cell>
     </ng-template>
-    @if (pinnedColumns.length > 0 && !grid.isPinningToStart) {
+    @if (pinnedEndColumns.length > 0) {
         <ng-container *ngTemplateOutlet="summaryCellTemplate; context: getContext(this)"></ng-container>
     }
 }

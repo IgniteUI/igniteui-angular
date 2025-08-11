@@ -2640,14 +2640,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden
      * @internal
      */
-    public get isPinningToStart() {
-        return this.pinning.columns !== ColumnPinningPosition.End;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
     public get isRowPinningToTop() {
         return this.pinning.rows !== RowPinningPosition.Bottom;
     }
@@ -7614,9 +7606,9 @@ export abstract class IgxGridBaseDirective implements GridType,
         let columnIndex = typeof column === 'number' ? column : this.getColumnByName(column).visibleIndex;
         const scrollRow = this.rowList.find(r => !!r.virtDirRow);
         const virtDir = scrollRow ? scrollRow.virtDirRow : null;
-        if (this.isPinningToStart && this.pinnedColumns.length) {
-            if (columnIndex >= this.pinnedColumns.length) {
-                columnIndex -= this.pinnedColumns.length;
+        if (this.pinnedStartColumns.length) {
+            if (columnIndex >= this.pinnedStartColumns.length) {
+                columnIndex -= this.pinnedStartColumns.length;
                 this.scrollDirective(virtDir, columnIndex);
             }
         } else {

@@ -49,7 +49,7 @@
         </div>
     }
 
-    @if (pinnedColumns.length > 0 && grid.isPinningToStart) {
+    @if (pinnedStartColumns.length > 0) {
         <ng-template *ngTemplateOutlet="pinnedCellsTemplate; context: this"></ng-template>
     }
 
@@ -82,7 +82,7 @@
         </igx-hierarchical-grid-cell>
     </ng-template>
 
-    @if (pinnedColumns.length > 0 && !grid.isPinningToStart) {
+    @if (pinnedEndColumns.length > 0) {
         <ng-template *ngTemplateOutlet="pinnedCellsTemplate; context: this"></ng-template>
     }
 

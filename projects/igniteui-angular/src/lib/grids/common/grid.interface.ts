@@ -776,8 +776,6 @@ export interface GridType extends IGridDataBindable {
     isRowSelectable: boolean;
     /** Indicates whether the selectors of the rows are visible */
     showRowSelectors: boolean;
-    /** Indicates whether the grid's element is pinned to the start of the grid */
-    isPinningToStart: boolean;
     /** Indicates if the column of the grid is in drag mode */
     columnInDrag: any;
     /** @hidden @internal */

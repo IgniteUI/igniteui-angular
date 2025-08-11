@@ -1507,7 +1507,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             return this._vIndex;
         }
         const unpinnedColumns = this.grid.unpinnedColumns.filter(c => !c.columnGroup);
-        const pinnedColumns = this.grid.pinnedColumns.filter(c => !c.columnGroup);
+        const pinnedStartColumns = this.grid.pinnedStartColumns.filter(c => !c.columnGroup);
+        const pinnedEndColumns = this.grid.pinnedEndColumns.filter(c => !c.columnGroup);
 
         let col = this;
         let vIndex = -1;
@@ -1522,15 +1523,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         if (!this.pinned) {
             const indexInCollection = unpinnedColumns.indexOf(col);
             vIndex = indexInCollection === -1 ?
-                -1 :
-                (this.grid.isPinningToStart ?
-                    pinnedColumns.length + indexInCollection :
-                    indexInCollection);
+                -1 : pinnedStartColumns.length + indexInCollection;
         } else {
-            const indexInCollection = pinnedColumns.indexOf(col);
-            vIndex = this.grid.isPinningToStart ?
+            const indexInCollection = this.pinningPosition === ColumnPinningPosition.Start ?
+            pinnedStartColumns.indexOf(col) : pinnedEndColumns.indexOf(col);
+            vIndex = this.pinningPosition === ColumnPinningPosition.Start ?
                 indexInCollection :
-                unpinnedColumns.length + indexInCollection;
+                pinnedStartColumns.length + unpinnedColumns.length + indexInCollection;
         }
         this._vIndex = vIndex;
         return vIndex;
