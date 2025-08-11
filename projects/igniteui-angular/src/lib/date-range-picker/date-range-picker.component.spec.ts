@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync, flush } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy } from '@angular/core';
 import { IgxInputDirective, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../input-group/public_api';
-import { PickerInteractionMode } from '../date-common/types';
+import { PickerHeaderOrientation, PickerInteractionMode } from '../date-common/types';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -1578,6 +1578,30 @@ describe('IgxDateRangePicker', () => {
                 expect(dateRange['_calendar'].hasHeader).toBeTrue();
                 const calendarHeader = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR_HEADER));
                 expect(calendarHeader).toBeTruthy('Calendar header should be present');
+            }));
+
+            it('should set calendar headerOrientation prop in dialog mode', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+
+                dateRange.mode = 'dialog';
+                dateRange.open();
+                tick();
+                fixture.detectChanges();
+
+                expect(dateRange['_calendar'].headerOrientation).toBe(PickerHeaderOrientation.Horizontal);
+
+                dateRange.close();
+                tick();
+                fixture.detectChanges();
+
+                dateRange.headerOrientation = PickerHeaderOrientation.Vertical;
+                dateRange.open();
+                tick();
+                fixture.detectChanges();
+
+                expect(dateRange['_calendar'].headerOrientation).toBe(PickerHeaderOrientation.Vertical);
             }));
 
             describe('Templated Calendar Header', () => {

@@ -14,7 +14,7 @@ import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { OverlaySettings } from '../services/overlay/utilities';
 import { IgxPickerToggleComponent } from './picker-icons.common';
-import { PickerInteractionMode } from './types';
+import { PickerHeaderOrientation, PickerInteractionMode } from './types';
 import { WEEKDAYS } from '../calendar/calendar';
 import { DateRange } from '../date-range-picker/date-range-picker-inputs.common';
 import { IGX_INPUT_GROUP_TYPE, IgxInputGroupType } from '../input-group/inputGroupType';
@@ -77,6 +77,17 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      */
     @Input()
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
+
+    /**
+     * Gets/Sets the orientation of the `IgxDatePickerComponent` header.
+     *
+     *  @example
+     * ```html
+     * <igx-date-picker headerOrientation="vertical"></igx-date-picker>
+     * ```
+     */
+    @Input()
+    public headerOrientation: PickerHeaderOrientation = PickerHeaderOrientation.Horizontal;
 
     /**
      * Overlay settings used to display the pop-up element.

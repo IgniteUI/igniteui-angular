@@ -51,7 +51,6 @@ import { IBaseCancelableBrowserEventArgs, isDate, PlatformUtil } from '../core/u
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { IgxPickerActionsDirective, IgxPickerClearComponent } from '../date-common/public_api';
-import { PickerHeaderOrientation } from '../date-common/types';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { DatePart, DatePartDeltas, IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
@@ -161,17 +160,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      */
     @Input()
     public formatter: (val: Date) => string;
-
-    /**
-     * Gets/Sets the orientation of the `IgxDatePickerComponent` header.
-     *
-     *  @example
-     * ```html
-     * <igx-date-picker headerOrientation="vertical"></igx-date-picker>
-     * ```
-     */
-    @Input()
-    public headerOrientation: PickerHeaderOrientation = PickerHeaderOrientation.Horizontal;
 
     /**
      * Gets/Sets the today button's label.
@@ -989,7 +977,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this.setCalendarViewDate();
 
         componentInstance.mode = this.mode;
-        // componentInstance.headerOrientation = this.headerOrientation;
         componentInstance.closeButtonLabel = this.cancelButtonLabel;
         componentInstance.todayButtonLabel = this.todayButtonLabel;
         componentInstance.pickerActions = this.pickerActions;

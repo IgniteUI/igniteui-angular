@@ -1100,6 +1100,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         this._calendar.headerTitleTemplate = this.headerTitleTemplate;
         this._calendar.headerTemplate = this.headerTemplate;
         this._calendar.subheaderTemplate = this.subheaderTemplate;
+        this._calendar.headerOrientation = this.headerOrientation;
         this.calendar.selected.pipe(takeUntil(this._destroy$)).subscribe((ev: Date[]) => this.handleSelection(ev));
 
         componentInstance.mode = this.mode;
