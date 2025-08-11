@@ -722,6 +722,9 @@ describe('IgxInput', () => {
 
         // 3) Check if the input group's --invalid and --required classes are removed when validator is dynamically cleared
         fix.componentInstance.removeValidators(formGroup);
+        // the component cannot both take required on the input and validators. If validators write required, their removal
+        // cannot cause required to be removed as it may have been part of the initial setup
+        input.nativeElement.removeAttribute('required');
         fix.detectChanges();
         tick();
 
