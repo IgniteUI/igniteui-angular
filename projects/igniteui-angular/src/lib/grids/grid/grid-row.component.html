@@ -25,23 +25,23 @@
 
 
     @if (!grid.hasColumnLayouts) {
-        @if (pinnedColumns.length > 0 && grid.isPinningToStart) {
-            @for (col of pinnedColumns | igxNotGrouped; track trackPinnedColumn(col)) {
+        @if (pinnedStartColumns.length > 0) {
+            @for (col of pinnedStartColumns | igxNotGrouped; track trackPinnedColumn(col)) {
                 <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
             }
         }
         <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]="grid.unpinnedWidth" [igxForSizePropName]="'calcPixelWidth'" [igxForTrackBy]="grid.trackColumnChanges" #igxDirRef>
             <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
         </ng-template>
-        @if (pinnedColumns.length > 0 && !grid.isPinningToStart) {
-            @for (col of pinnedColumns | igxNotGrouped; track trackPinnedColumn(col)) {
+        @if (pinnedEndColumns.length > 0) {
+            @for (col of pinnedEndColumns | igxNotGrouped; track trackPinnedColumn(col)) {
                 <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
             }
         }
     }
 
     @if (grid.hasColumnLayouts) {
-        @if (pinnedColumns.length > 0 && grid.isPinningToStart) {
+        @if (pinnedStartColumns.length > 0) {
             <ng-container *ngTemplateOutlet="mrlPinnedTemplate; context: getContextMRL(pinnedColumns, this)"></ng-container>
         }
         <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxTopLevel" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]="grid.unpinnedWidth" [igxForSizePropName]="'calcPixelWidth'" [igxForTrackBy]="grid.trackColumnChanges" #igxDirRef>
@@ -54,7 +54,7 @@
                 }
             </div>
         </ng-template>
-        @if (pinnedColumns.length > 0 && !grid.isPinningToStart) {
+        @if (pinnedEndColumns.length > 0) {
             <ng-container *ngTemplateOutlet="mrlPinnedTemplate; context: getContextMRL(pinnedColumns, this)"></ng-container>
         }
     }

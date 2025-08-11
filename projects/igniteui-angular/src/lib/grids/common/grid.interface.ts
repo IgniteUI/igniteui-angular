@@ -781,8 +781,10 @@ export interface GridType extends IGridDataBindable {
     /** Indicates if the column of the grid is in drag mode */
     columnInDrag: any;
     /** @hidden @internal */
-    /** The width of pinned element */
-    pinnedWidth: number;
+    /** The width of pinned element for pinning at start. */
+    pinnedStartWidth: number;
+    /** The width of pinned element for pinning at end. */
+    pinnedEndWidth: number;
     /** @hidden @internal */
     /** The width of unpinned element */
     unpinnedWidth: number;
@@ -917,6 +919,10 @@ export interface GridType extends IGridDataBindable {
     unpinnedColumns: ColumnType[];
     /** An array of columns, but it counts only the ones that are pinned */
     pinnedColumns: ColumnType[];
+    /** An array of columns, but it counts only the ones that are pinned to the start. */
+    pinnedStartColumns: ColumnType[];
+    /** An array of columns, but it counts only the ones that are pinned to the end. */
+    pinnedEndColumns: ColumnType[];
     /** represents an array of the headers of the columns */
     /** @hidden @internal */
     headerCellList: any[];

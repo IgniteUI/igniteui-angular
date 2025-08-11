@@ -28,7 +28,7 @@ export class IgxGridRowComponent extends IgxRowDirective {
 
     public get mrlRightPinnedOffset(): string {
         return !this.grid.isPinningToStart ?
-            - this.grid.pinnedWidth - this.grid.headerFeaturesWidth + 'px' :
+            - this.grid.pinnedStartWidth - this.grid.headerFeaturesWidth + 'px' :
             null;
     }
 

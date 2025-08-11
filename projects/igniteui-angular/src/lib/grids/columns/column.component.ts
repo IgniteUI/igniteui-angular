@@ -1047,7 +1047,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @WatchColumnChanges()
     @Input()
     public get pinningPosition(): ColumnPinningPosition {
-        return this._pinningPosition || this.grid.pinning.columns;
+        const userSet = this._pinningPosition !== null && this._pinningPosition !== undefined;
+        return userSet ? this._pinningPosition : this.grid.pinning.columns;
     }
 
     /**
@@ -1619,8 +1620,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /** @hidden @internal **/
     public get rightPinnedOffset(): string {
-        return this.pinned && !this.grid.isPinningToStart ?
-            - this.grid.pinnedWidth - this.grid.headerFeaturesWidth + 'px' :
+        return this.pinned && this.pinningPosition === ColumnPinningPosition.End ?
+            - this.grid.pinnedEndWidth - this.grid.pinnedStartWidth - this.grid.headerFeaturesWidth + 'px' :
             null;
     }
 

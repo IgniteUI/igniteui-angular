@@ -865,8 +865,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public override get pinnedWidth() {
-        return super.pinnedWidth;
+    public override get pinnedStartWidth() {
+        return super.pinnedStartWidth;
     }
 
     /**
@@ -1307,7 +1307,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /** @hidden @internal */
     public get pivotPinnedWidth() {
-        return !this._init ? (this.isPinningToStart ? this.pinnedWidth : this.headerFeaturesWidth) : 0;
+        return !this._init ? (this.isPinningToStart ? this.pinnedStartWidth : this.headerFeaturesWidth) : 0;
     }
 
     /** @hidden @internal */
@@ -1589,8 +1589,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
     * @hidden @internal
     */
-    public override getPinnedWidth(takeHidden = false) {
-        return super.getPinnedWidth(takeHidden);
+    public override getPinnedStartWidth(takeHidden = false) {
+        return super.getPinnedStartWidth(takeHidden);
     }
 
     /**

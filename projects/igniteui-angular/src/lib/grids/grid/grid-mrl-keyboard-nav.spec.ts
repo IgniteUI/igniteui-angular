@@ -2180,7 +2180,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const firstUnpinnedCell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
                 expect(firstUnpinnedCell.active).toBe(true);
                 const diff = firstUnpinnedCell.nativeElement.getBoundingClientRect().left -
-                    grid.pinnedWidth - grid.tbody.nativeElement.getBoundingClientRect().left;
+                    grid.pinnedStartWidth - grid.tbody.nativeElement.getBoundingClientRect().left;
                 expect(diff).toBe(0);
 
                 // TODO: Rest of the test needs to be finished

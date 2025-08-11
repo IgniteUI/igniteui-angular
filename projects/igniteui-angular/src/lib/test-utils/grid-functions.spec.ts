@@ -316,7 +316,7 @@ export class GridFunctions {
     }
 
     public static verifyPinnedAreaWidth(grid: GridType, expectedWidth: number) {
-        const tolerance = Math.abs(expectedWidth - grid.pinnedWidth);
+        const tolerance = Math.abs(expectedWidth - grid.pinnedStartWidth);
         expect(tolerance).toBeLessThanOrEqual(1);
     }
 

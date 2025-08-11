@@ -43,7 +43,7 @@
         @if (moving && columnInDrag && pinnedColumns.length > 0) {
             <span
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
-                class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
+                class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedStartWidth"></span>
         }
         <ng-container *ngTemplateOutlet="hasPinnedRecords && isRowPinningToTop ? pinnedRecordsTemplate : null">
         </ng-container>
@@ -181,12 +181,12 @@
 </div>
 
 <div class="igx-grid__scroll" [style.height.px]="scrollSize" #scr [hidden]="isHorizontalScrollHidden" (pointerdown)="$event.preventDefault()">
-    <div class="igx-grid__scroll-start" [style.width.px]="isPinningToStart ? pinnedWidth : headerFeaturesWidth" [style.min-width.px]="isPinningToStart ? pinnedWidth : headerFeaturesWidth"></div>
+    <div class="igx-grid__scroll-start" [style.width.px]="pinnedStartWidth" [style.min-width.px]="pinnedStartWidth"></div>
     <div class="igx-grid__scroll-main" [style.width.px]="unpinnedWidth">
         <ng-template igxGridFor [igxGridForOf]="EMPTY_DATA" #scrollContainer>
         </ng-template>
     </div>
-    <div class="igx-grid__scroll-end" [style.float]="'right'" [style.width.px]="pinnedWidth" [style.min-width.px]="pinnedWidth" [hidden]="pinnedWidth === 0 || isPinningToStart"></div>
+    <div class="igx-grid__scroll-end" [style.float]="'right'" [style.width.px]="pinnedEndWidth" [style.min-width.px]="pinnedEndWidth" [hidden]="pinnedEndWidth === 0"></div>
 </div>
 
 <div class="igx-grid__footer" #footer>

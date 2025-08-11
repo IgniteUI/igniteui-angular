@@ -6,11 +6,11 @@
 
         <!-- Left column moving area -->
         @if (grid.moving && grid.columnInDrag && pinnedColumnCollection.length <= 0) {
-            <span id="left" class="igx-grid__scroll-on-drag-left" droppable="true" [style.left.px]="grid.pinnedWidth"
+            <span id="left" class="igx-grid__scroll-on-drag-left" droppable="true" [style.left.px]="grid.pinnedStartWidth"
                 [igxColumnMovingDrop]="headerContainer"></span>
         }
         @if (grid.moving && grid.columnInDrag && pinnedColumnCollection.length > 0) {
-            <span id="left" class="igx-grid__scroll-on-drag-pinned" droppable="true" [style.left.px]="grid.pinnedWidth"
+            <span id="left" class="igx-grid__scroll-on-drag-pinned" droppable="true" [style.left.px]="grid.pinnedStartWidth"
                 [igxColumnMovingDrop]="headerContainer"></span>
         }
 

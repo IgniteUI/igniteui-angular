@@ -29,7 +29,7 @@
         }
         @if (hasMovableColumns && columnInDrag && pinnedColumns.length > 0) {
             <span [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
-            class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
+            class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedStartWidth"></span>
         }
         <ng-template igxGridFor let-rowData [igxGridForOf]="renderData
         | pivotGridFilter:pivotConfiguration:filterStrategy:advancedFilteringExpressionsTree:filteringPipeTrigger:pipeTrigger
