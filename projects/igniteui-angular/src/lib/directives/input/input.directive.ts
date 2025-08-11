@@ -102,6 +102,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     private _valueChanges$: Subscription;
     private _fileNames: string;
     private _disabled = false;
+    private _defaultRequired: boolean = null;
+    private _externalValidate: () => IgxInputState = null;
 
     constructor(
         public inputGroup: IgxInputGroupBase,
@@ -181,35 +183,52 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
 
     /**
-     * Sets the `required` property.
+     * @hidden @internal
+     * Sets a function to validate the input externally.
+     * This function should return an `IgxInputState` value.
+    */
+    @Input()
+    public set externalValidate(fn: () => IgxInputState) {
+        this._externalValidate = fn;
+    }
+
+    public get externalValidate(): () => IgxInputState {
+        return this._externalValidate;
+    }
+
+    /**
+     * Gets/Sets whether the igxInput is required.
      *
      * @example
-     * ```html
+     * ```typescript
      * <input-group>
      *  <input igxInput #igxInput required>
      * </input-group>
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public set required(value: boolean) {
-        this.nativeElement.required = this.inputGroup.isRequired = value;
-    }
-
-    /**
-     * Gets whether the igxInput is required.
-     *
-     * @example
-     * ```typescript
-     * let isRequired = this.igxInput.required;
-     * ```
-     */
     public get required() {
         let validation;
         if (this.ngControl && (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
             validation = this.ngControl.control.validator({} as AbstractControl);
         }
-        return validation && validation.required || this.nativeElement.hasAttribute('required');
+        let required;
+        if (validation && validation.required !== undefined) {
+            required = validation.required;
+        } else {
+            required = this.nativeElement.required;
+        }
+        return required;
     }
+    public set required(value: boolean) {
+        this.nativeElement.required = this.inputGroup.isRequired = value;
+    }
+
+    @HostBinding('attr.required')
+    public get hostBindingRequired(): string {
+        return this.required ? '' : null;
+    }
+
     /**
      * @hidden
      * @internal
@@ -293,8 +312,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             this.inputGroup.isRequired = this.required;
         }
 
-        this.renderer.setAttribute(this.nativeElement, 'aria-required', this.required.toString());
-
         const elTag = this.nativeElement.tagName.toLowerCase();
         if (elTag === 'textarea') {
             this.isTextArea = true;
@@ -367,7 +384,9 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * @internal
      */
     protected updateValidityState() {
-        if (this.ngControl) {
+        if (this._externalValidate) {
+            this._valid = this._externalValidate();
+        } else if (this.ngControl) {
             if (!this.disabled && this.isTouchedOrDirty) {
                 if (this.hasValidators) {
                     // Run the validation with empty object to check if required is enabled.
@@ -386,7 +405,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             } else {
                 this._valid = IgxInputState.INITIAL;
             }
-            this.renderer.setAttribute(this.nativeElement, 'aria-required', this.required.toString());
             const ariaInvalid = this.valid === IgxInputState.INVALID;
             this.renderer.setAttribute(this.nativeElement, 'aria-invalid', ariaInvalid.toString());
         } else {
