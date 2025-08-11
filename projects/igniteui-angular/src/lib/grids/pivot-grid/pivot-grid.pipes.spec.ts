@@ -9,7 +9,7 @@ import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../../data-operati
 import { TestBed } from '@angular/core/testing';
 import { IGX_GRID_BASE } from '../common/grid.interface';
 
-fdescribe('Pivot pipes #pivotGrid', () => {
+describe('Pivot pipes #pivotGrid', () => {
     let rowPipe: IgxPivotRowPipe;
     let rowStatePipe: IgxPivotRowExpansionPipe;
     let columnPipe: IgxPivotColumnPipe;
