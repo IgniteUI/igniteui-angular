@@ -67,6 +67,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
+import { PickerCalendarOrientation } from '../date-common/types';
 
 let NEXT_ID = 0;
 
@@ -138,6 +139,15 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      */
     @Input()
     public displayMonthsCount = 1;
+
+    /**
+    * Gets/Sets the orientation of the multiple months displayed in the picker's calendar's days view.
+    *
+    * @example
+    * <igx-date-picker orientation="vertical"></igx-date-picker>
+    */
+    @Input()
+    public orientation: PickerCalendarOrientation = PickerCalendarOrientation.Horizontal;
 
     /**
      * Show/hide week numbers
@@ -967,6 +977,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this._calendar.hideOutsideDays = this.hideOutsideDays;
         this._calendar.monthsViewNumber = this.displayMonthsCount;
         this._calendar.showWeekNumbers = this.showWeekNumbers;
+        this._calendar.orientation = this.orientation;
         this._calendar.selected.pipe(takeUntil(this._destroy$)).subscribe((ev: Date) => this.handleSelection(ev));
         this.setDisabledDates();
 

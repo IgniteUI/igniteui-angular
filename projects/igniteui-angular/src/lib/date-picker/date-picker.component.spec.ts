@@ -14,7 +14,7 @@ import {
 } from '../services/public_api';
 import { Component, DebugElement, ElementRef, EventEmitter, QueryList, Renderer2, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { PickerHeaderOrientation, PickerInteractionMode } from '../date-common/types';
+import { PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../date-common/types';
 import { DatePart } from '../directives/date-time-editor/date-time-editor.common';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
@@ -33,6 +33,7 @@ const DATE_PICKER_CLEAR_ICON = 'clear';
 const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const CSS_CLASS_CALENDAR_HEADER = '.igx-calendar__header';
+const CSS_CLASS_CALENDAR_WRAPPER_VERTICAL = 'igx-calendar__wrapper--vertical';
 
 describe('IgxDatePicker', () => {
     describe('Integration tests', () => {
@@ -79,6 +80,28 @@ describe('IgxDatePicker', () => {
                 expect(datePicker['_calendar'].hasHeader).toBeFalse();
                 const calendarHeader = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR_HEADER));
                 expect(calendarHeader).toBeFalsy('Calendar header should not be present');
+            }));
+
+            it('should set calendar orientation property', fakeAsync(() => {
+                const datePicker = fixture.componentInstance.datePicker;
+                datePicker.orientation = PickerCalendarOrientation.Horizontal;
+                datePicker.open();
+                tick();
+                fixture.detectChanges();
+
+                expect(datePicker['_calendar'].orientation).toEqual(PickerCalendarOrientation.Horizontal.toString());
+                expect(datePicker['_calendar'].wrapper.nativeElement).not.toHaveClass(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL);
+                datePicker.close();
+                tick();
+                fixture.detectChanges();
+
+                datePicker.orientation = PickerCalendarOrientation.Vertical;
+                datePicker.open();
+                tick();
+                fixture.detectChanges();
+
+                expect(datePicker['_calendar'].orientation).toEqual(PickerCalendarOrientation.Vertical.toString());
+                expect(datePicker['_calendar'].wrapper.nativeElement).toHaveClass(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL);
             }));
         });
 

@@ -35,6 +35,7 @@ import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
+import { PickerCalendarOrientation } from '../date-common/types';
 
 const SingleInputDatesConcatenationString = ' - ';
 
@@ -92,6 +93,15 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      */
     @Input()
     public displayMonthsCount = 2;
+
+    /**
+     * Gets/Sets the orientation of the multiple months displayed in the picker's calendar's days view.
+     *
+     * @example
+     * <igx-date-range-picker orientation="vertical"></igx-date-range-picker>
+     */
+    @Input()
+    public orientation: PickerCalendarOrientation = PickerCalendarOrientation.Horizontal;
 
     /**
      * Gets/Sets whether dates that are not part of the current month will be displayed.
@@ -1101,6 +1111,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         this._calendar.headerTemplate = this.headerTemplate;
         this._calendar.subheaderTemplate = this.subheaderTemplate;
         this._calendar.headerOrientation = this.headerOrientation;
+        this._calendar.orientation = this.orientation;
         this.calendar.selected.pipe(takeUntil(this._destroy$)).subscribe((ev: Date[]) => this.handleSelection(ev));
 
         componentInstance.mode = this.mode;
