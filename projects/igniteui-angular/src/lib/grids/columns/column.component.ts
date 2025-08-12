@@ -2231,11 +2231,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         if (this.parent && !this.parent.pinned) {
             return this.topLevelParent.pin(index, pinningPosition);
         }
-        const pinningVisibleCollection = (pinningPosition || this.pinningPosition) === ColumnPinningPosition.Start ?
+        const targetPinPosition = pinningPosition !== null && pinningPosition !== undefined ?  pinningPosition : this.pinningPosition;
+        const pinningVisibleCollection = targetPinPosition === ColumnPinningPosition.Start ?
         grid.pinnedStartColumns : grid.pinnedEndColumns;
-        const pinningCollection = (pinningPosition || this.pinningPosition) === ColumnPinningPosition.Start ?
+        const pinningCollection = targetPinPosition === ColumnPinningPosition.Start ?
         grid._pinnedStartColumns : grid._pinnedEndColumns;
-        const hasIndex = index !== undefined;
+        const hasIndex = index !== undefined && index !== null;
         if (hasIndex && (index < 0 || index > pinningVisibleCollection.length)) {
             return false;
         }
@@ -2302,7 +2303,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
 
         if (this.columnGroup) {
-            this.allChildren.forEach(child => child.pin(null, pinningPosition));
+            this.allChildren.forEach(child => child.pin(null, targetPinPosition));
             grid.reinitPinStates();
         }
 
@@ -2338,7 +2339,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         if (this.parent && this.parent.pinned) {
             return this.topLevelParent.unpin(index);
         }
-        const hasIndex = index !== undefined;
+        const hasIndex = index !== undefined && index !== null;
         if (hasIndex && (index < 0 || index > grid._unpinnedColumns.length)) {
             return false;
         }

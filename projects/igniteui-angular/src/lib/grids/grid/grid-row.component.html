@@ -42,7 +42,7 @@
 
     @if (grid.hasColumnLayouts) {
         @if (pinnedStartColumns.length > 0) {
-            <ng-container *ngTemplateOutlet="mrlPinnedTemplate; context: getContextMRL(pinnedColumns, this)"></ng-container>
+            <ng-container *ngTemplateOutlet="mrlPinnedTemplate; context: getContextMRL(pinnedStartColumns, this)"></ng-container>
         }
         <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxTopLevel" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]="grid.unpinnedWidth" [igxForSizePropName]="'calcPixelWidth'" [igxForTrackBy]="grid.trackColumnChanges" #igxDirRef>
             <div class="igx-grid__mrl-block" [ngStyle]="{
@@ -55,7 +55,7 @@
             </div>
         </ng-template>
         @if (pinnedEndColumns.length > 0) {
-            <ng-container *ngTemplateOutlet="mrlPinnedTemplate; context: getContextMRL(pinnedColumns, this)"></ng-container>
+            <ng-container *ngTemplateOutlet="mrlPinnedTemplate; context: getContextMRL(pinnedEndColumns, this)"></ng-container>
         }
     }
 </ng-template>
@@ -65,7 +65,7 @@
         <div class="igx-grid__mrl-block"
             [class.igx-grid__td--pinned-last]="col.hasLastPinnedChildColumn"
             [class.igx-grid__td--pinned-first]="col.hasFirstPinnedChildColumn"
-            [style.left]="mrlRightPinnedOffset"
+            [style.left]="col.rightPinnedOffset"
             [ngStyle]="{
                 'grid-template-rows':col.getGridTemplate(true),
                 'grid-template-columns':col.getGridTemplate(false),

@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { IgxColumnComponent } from './column.component';
 import { IgxColumnGroupComponent } from './column-group.component';
+import { ColumnPinningPosition } from 'igniteui-angular';
 
 /* blazorIndirectRender */
 /* blazorElement */
@@ -82,15 +83,10 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         }
 
         const unpinnedColumns = this.grid.unpinnedColumns.filter(c => c.columnLayout && !c.hidden);
-        const pinnedColumns = this.grid.pinnedColumns.filter(c => c.columnLayout && !c.hidden);
-        let vIndex = -1;
-
-        if (!this.pinned) {
-            const indexInCollection = unpinnedColumns.indexOf(this);
-            vIndex = indexInCollection === -1 ? -1 : pinnedColumns.length + indexInCollection;
-        } else {
-            vIndex = pinnedColumns.indexOf(this);
-        }
+        const pinnedStart = this.grid.pinnedStartColumns.filter(c => c.columnLayout && !c.hidden);
+        const pinnedEndColumns = this.grid.pinnedEndColumns.filter(c => c.columnLayout && !c.hidden);
+        const ordered = pinnedStart.concat(unpinnedColumns).concat(pinnedEndColumns);
+        let vIndex = ordered.indexOf(this);
         this._vIndex = vIndex;
         return vIndex;
     }
@@ -158,18 +154,14 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     public override populateVisibleIndexes() {
         this.childrenVisibleIndexes = [];
         const columns = this.grid?.pinnedColumns && this.grid?.unpinnedColumns
-            ? this.grid.pinnedColumns.concat(this.grid.unpinnedColumns)
+            ? this.grid.pinnedStartColumns.concat(this.grid.unpinnedColumns).concat(this.grid.pinnedEndColumns)
             : [];
         const orderedCols = columns
             .filter(x => !x.columnGroup && !x.hidden)
-            .sort((a, b) => a.rowStart - b.rowStart || columns.indexOf(a.parent) - columns.indexOf(b.parent) || a.colStart - b.colStart);
+            .sort((a, b) =>  columns.indexOf(a.parent) - columns.indexOf(b.parent) || a.rowStart - b.rowStart || a.colStart - b.colStart);
         this.children.forEach(child => {
-            const rs = child.rowStart || 1;
             let vIndex = 0;
-            // filter out all cols with larger rowStart
-            const cols = orderedCols.filter(c =>
-                !c.columnGroup && (c.rowStart || 1) <= rs);
-            vIndex = cols.indexOf(child);
+            vIndex = orderedCols.indexOf(child);
             this.childrenVisibleIndexes.push({ column: child, index: vIndex });
         });
     }
