@@ -1663,6 +1663,27 @@ describe('IgxDateRangePicker', () => {
                 expect(dateRange.displayMonthsCount).toBe(1);
             }));
 
+            it('should set the specialDates of the calendar', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+
+                const specialDates = [{
+                    type: DateRangeType.Between, dateRange: [
+                        new Date(new Date().getFullYear(), new Date().getMonth(), 3),
+                        new Date(new Date().getFullYear(), new Date().getMonth(), 8)
+                    ]
+                }];
+                dateRange.specialDates = specialDates;
+                fixture.detectChanges();
+
+                dateRange.open();
+                tick();
+                fixture.detectChanges();
+
+                expect(dateRange['_calendar'].specialDates).toEqual(specialDates);
+            }));
+
             describe('Templated Calendar Header', () => {
                 let dateRangeDebugEl: DebugElement;
                 beforeEach(fakeAsync(() => {

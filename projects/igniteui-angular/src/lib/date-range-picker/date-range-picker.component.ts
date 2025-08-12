@@ -14,7 +14,7 @@ import { fromEvent, merge, MonoTypeOperatorFunction, noop, Subscription } from '
 import { filter, takeUntil } from 'rxjs/operators';
 
 import { CalendarSelection, IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from '../calendar/public_api';
-import { DateRangeType } from '../core/dates';
+import { DateRangeDescriptor, DateRangeType } from '../core/dates';
 import { DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } from '../core/i18n/date-range-picker-resources';
 import { clamp, IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
@@ -232,6 +232,23 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     public get maxValue(): Date | string {
         return this._maxValue;
+    }
+
+    /**
+     * Gets/Sets the special dates descriptors.
+     *
+     * @example
+     * ```typescript
+     * let specialDates = this.dateRangePicker.specialDates;
+     * this.dateRangePicker.specialDates = [ {type: DateRangeType.Weekends}, ... ];
+     * ```
+     */
+    @Input()
+    public get specialDates(): DateRangeDescriptor[] {
+        return this._specialDates;
+    }
+    public set specialDates(value: DateRangeDescriptor[]) {
+        this._specialDates = value;
     }
 
     /**
@@ -475,6 +492,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private _positionSettings: PositionSettings;
     private _focusedInput: IgxDateRangeInputsBaseComponent;
     private _displayMonthsCount = 2;
+    private _specialDates: DateRangeDescriptor[] = null;
     private _overlaySubFilter:
         [MonoTypeOperatorFunction<OverlayEventArgs>, MonoTypeOperatorFunction<OverlayEventArgs | OverlayCancelableEventArgs>] = [
             filter(x => x.id === this._overlayId),
@@ -1108,18 +1126,19 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {
         this._calendar = componentInstance.calendar;
         this._calendar.hasHeader = !this.isDropdown && !this.hideHeader;
-        this.calendar.locale = this.locale;
-        this.calendar.selection = CalendarSelection.RANGE;
-        this.calendar.weekStart = this.weekStart;
-        this.calendar.hideOutsideDays = this.hideOutsideDays;
-        this.calendar.monthsViewNumber = this._displayMonthsCount;
-        this.calendar.showWeekNumbers = this.showWeekNumbers;
+        this._calendar.locale = this.locale;
+        this._calendar.selection = CalendarSelection.RANGE;
+        this._calendar.weekStart = this.weekStart;
+        this._calendar.hideOutsideDays = this.hideOutsideDays;
+        this._calendar.monthsViewNumber = this._displayMonthsCount;
+        this._calendar.showWeekNumbers = this.showWeekNumbers;
         this._calendar.headerTitleTemplate = this.headerTitleTemplate;
         this._calendar.headerTemplate = this.headerTemplate;
         this._calendar.subheaderTemplate = this.subheaderTemplate;
         this._calendar.headerOrientation = this.headerOrientation;
         this._calendar.orientation = this.orientation;
-        this.calendar.selected.pipe(takeUntil(this._destroy$)).subscribe((ev: Date[]) => this.handleSelection(ev));
+        this._calendar.specialDates = this.specialDates;
+        this._calendar.selected.pipe(takeUntil(this._destroy$)).subscribe((ev: Date[]) => this.handleSelection(ev));
 
         componentInstance.mode = this.mode;
         componentInstance.closeButtonLabel = !this.isDropdown ? this.doneButtonText : null;
