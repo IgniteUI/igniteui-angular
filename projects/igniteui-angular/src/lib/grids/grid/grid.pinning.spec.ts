@@ -19,6 +19,7 @@ import {
     GridPinningMRLComponent,
     MultiColumnHeadersWithGroupingComponent,
     PinningComponent,
+    PinOnBothSidesInitComponent,
     PinOnInitAndSelectionComponent
 } from '../../test-utils/grid-samples.spec';
 import { IgxGridComponent } from './grid.component';
@@ -39,7 +40,8 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 PinOnInitAndSelectionComponent,
                 GridFeaturesComponent,
                 MultiColumnHeadersWithGroupingComponent,
-                GridPinningMRLComponent
+                GridPinningMRLComponent,
+                PinOnBothSidesInitComponent
             ]
         }).compileComponents();
     }))
@@ -78,7 +80,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(GridFunctions.isHeaderPinned(headers[1].parent)).toBe(true);
 
                 // verify container widths
-                GridFunctions.verifyPinnedAreaWidth(grid, 400);
+                GridFunctions.verifyPinnedStartAreaWidth(grid, 400);
                 GridFunctions.verifyUnpinnedAreaWidth(grid, 400);
             });
 
@@ -107,7 +109,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(GridFunctions.isHeaderPinned(thirdHeader)).toBe(false);
 
                 // verify container widths
-                GridFunctions.verifyPinnedAreaWidth(grid, 200);
+                GridFunctions.verifyPinnedStartAreaWidth(grid, 200);
                 GridFunctions.verifyUnpinnedAreaWidth(grid, 600);
 
                 // pin back the column.
@@ -119,7 +121,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(grid.unpinnedColumns.length).toEqual(9);
 
                 // verify container widths
-                GridFunctions.verifyPinnedAreaWidth(grid, 400);
+                GridFunctions.verifyPinnedStartAreaWidth(grid, 400);
                 GridFunctions.verifyUnpinnedAreaWidth(grid, 400);
 
                 expect(col.pinned).toBe(true);
@@ -130,7 +132,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(GridFunctions.isCellPinned(cell)).toBe(true);
             });
 
-           it('should allow pinning/unpinning via the column API', () => {
+            it('should allow pinning/unpinning via the column API', () => {
                 const col = grid.getColumnByName('ID');
 
                 col.pinned = true;
@@ -144,7 +146,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(grid.unpinnedColumns.length).toEqual(8);
 
                 // verify container widths
-                GridFunctions.verifyPinnedAreaWidth(grid, 600);
+                GridFunctions.verifyPinnedStartAreaWidth(grid, 600);
                 GridFunctions.verifyUnpinnedAreaWidth(grid, 200);
 
                 col.pinned = false;
@@ -158,7 +160,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(grid.unpinnedColumns.length).toEqual(9);
 
                 // verify container widths
-                GridFunctions.verifyPinnedAreaWidth(grid, 400);
+                GridFunctions.verifyPinnedStartAreaWidth(grid, 400);
                 GridFunctions.verifyUnpinnedAreaWidth(grid, 400);
             });
 
@@ -516,7 +518,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(lastColumnHeader.column.field).toEqual('ContactName');
 
                 // verify container widths
-                GridFunctions.verifyPinnedAreaWidth(grid, 400);
+                GridFunctions.verifyPinnedEndAreaWidth(grid, 400);
                 GridFunctions.verifyUnpinnedAreaWidth(grid, 400);
             });
 
@@ -545,7 +547,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(GridFunctions.isHeaderPinned(secondHeader)).toBe(false);
 
                 // verify container widths
-                GridFunctions.verifyPinnedAreaWidth(grid, 200);
+                GridFunctions.verifyPinnedEndAreaWidth(grid, 200);
                 GridFunctions.verifyUnpinnedAreaWidth(grid, 600);
 
                 // pin back the column.
@@ -557,7 +559,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(grid.unpinnedColumns.length).toEqual(9);
 
                 // verify container widths
-                GridFunctions.verifyPinnedAreaWidth(grid, 400);
+                GridFunctions.verifyPinnedEndAreaWidth(grid, 400);
                 GridFunctions.verifyUnpinnedAreaWidth(grid, 400);
 
                 expect(col.pinned).toBe(true);
@@ -569,7 +571,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
             });
 
             it('should correctly pin column to right when row selectors are enabled.', () => {
-                grid.rowSelection =  GridSelectionMode.multiple;
+                grid.rowSelection = GridSelectionMode.multiple;
                 fix.detectChanges();
 
                 // check row DOM
@@ -586,7 +588,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 // The default pinned-border-width in px
                 expect(scrBarStartSection.nativeElement.offsetWidth).toEqual(grid.featureColumnsWidth());
 
-                GridFunctions.verifyPinnedAreaWidth(grid, scrBarEndSection.nativeElement.offsetWidth);
+                GridFunctions.verifyPinnedEndAreaWidth(grid, scrBarEndSection.nativeElement.offsetWidth);
                 GridFunctions.verifyUnpinnedAreaWidth(grid, scrBarMainSection.nativeElement.offsetWidth, false);
             });
 
@@ -738,5 +740,170 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(grid.pinnedColumns[6].field).toBe('ID');
             });
         });
+    });
+
+    describe('Both', () => {
+        let fix;
+        let grid: IgxGridComponent;
+        beforeEach(fakeAsync(() => {
+            // ContactName pinned to start, CompanyName pinned to end
+            fix = TestBed.createComponent(PinOnBothSidesInitComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+        }));
+
+        it('should correctly initialize when there are initially pinned columns.', () => {
+
+            // verify pinned/unpinned collections
+            expect(grid.pinnedColumns.length).toEqual(2);
+            expect(grid.pinnedStartColumns.length).toEqual(1);
+            expect(grid.pinnedEndColumns.length).toEqual(1);
+            expect(grid.unpinnedColumns.length).toEqual(9);
+
+            // verify DOM
+            // ContactName first, CompanyName last
+            const companyNameCell = grid.gridAPI.get_cell_by_index(0, 'CompanyName');
+            expect(companyNameCell.visibleColumnIndex)
+                .toEqual(grid.pinnedStartColumns.length + grid.unpinnedColumns.length);
+            expect(GridFunctions.isCellPinned(companyNameCell)).toBe(true);
+
+            const contactNameCell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
+            expect(contactNameCell.visibleColumnIndex).toEqual(0);
+            expect(GridFunctions.isCellPinned(contactNameCell)).toBe(true);
+
+            const headers = grid.headerCellList;
+            const lastColumnHeader = headers[headers.length - 1];
+            const firstColumnHeader = headers[0];
+            expect(lastColumnHeader.column.field).toEqual('CompanyName');
+            expect(firstColumnHeader.column.field).toEqual('ContactName');
+
+            // verify container widths
+            GridFunctions.verifyPinnedStartAreaWidth(grid, 200);
+            GridFunctions.verifyPinnedEndAreaWidth(grid, 200);
+            GridFunctions.verifyUnpinnedAreaWidth(grid, 400);
+        });
+
+        it('should allow pinning/unpinning via the grid API', () => {
+            const col = grid.getColumnByName('ID');
+            expect(col.pinned).toBe(false);
+            expect(col.visibleIndex).toEqual(1);
+
+            // pin ID to end, after CompanyName
+            grid.pinColumn('ID', null, ColumnPinningPosition.End);
+            fix.detectChanges();
+
+            // verify column is pinned to end
+            expect(grid.pinnedColumns.length).toEqual(3);
+            expect(grid.pinnedStartColumns.length).toEqual(1);
+            expect(grid.pinnedEndColumns.length).toEqual(2);
+            expect(grid.unpinnedColumns.length).toEqual(8);
+
+            // verify container widths
+            GridFunctions.verifyPinnedStartAreaWidth(grid, 200);
+            GridFunctions.verifyPinnedEndAreaWidth(grid, 400);
+            GridFunctions.verifyUnpinnedAreaWidth(grid, 200);
+
+            expect(col.pinned).toBe(true);
+            expect(col.visibleIndex)
+                .toEqual(grid.pinnedStartColumns.length + grid.unpinnedColumns.length + 1);
+            expect(col.pinningPosition).toBe(ColumnPinningPosition.End);
+
+            let cell = grid.gridAPI.get_cell_by_index(0, 'ID');
+            expect(cell.visibleColumnIndex)
+                .toEqual(grid.pinnedStartColumns.length + grid.unpinnedColumns.length + 1);
+            expect(GridFunctions.isCellPinned(cell)).toBe(true);
+
+            // unpin ID
+            grid.unpinColumn('ID');
+            fix.detectChanges();
+
+            // verify column is unpinned
+            expect(grid.pinnedColumns.length).toEqual(2);
+            expect(grid.pinnedStartColumns.length).toEqual(1);
+            expect(grid.pinnedEndColumns.length).toEqual(1);
+            expect(grid.unpinnedColumns.length).toEqual(9);
+
+            expect(col.pinned).toBe(false);
+            expect(col.visibleIndex).toEqual(1);
+
+            // verify container widths
+            GridFunctions.verifyPinnedStartAreaWidth(grid, 200);
+            GridFunctions.verifyPinnedEndAreaWidth(grid, 200);
+            GridFunctions.verifyUnpinnedAreaWidth(grid, 400);
+        });
+
+        it('should pin an unpinned column when drag/drop it among pinned columns.', fakeAsync(() => {
+            // move 'ID' column to the right pinned area, before CompanyName
+            grid.moveColumn(grid.getColumnByName('ID'), grid.getColumnByName('CompanyName'), DropPosition.BeforeDropTarget);
+            tick();
+            fix.detectChanges();
+
+            // verify column is pinned at the correct place
+            expect(grid.pinnedEndColumns[0].field).toEqual('ID');
+            expect(grid.pinnedEndColumns[1].field).toEqual('CompanyName');
+            expect(grid.getColumnByName('ID').pinned).toBeTruthy();
+            // move ID to unpinned area
+            grid.moveColumn(grid.getColumnByName('ID'), grid.getColumnByName('ContactTitle'), DropPosition.AfterDropTarget);
+            tick();
+            fix.detectChanges();
+
+            // verify column is unpinned at the correct place
+            expect(grid.unpinnedColumns[0].field).toEqual('ContactTitle');
+            expect(grid.unpinnedColumns[1].field).toEqual('ID');
+            expect(grid.getColumnByName('ID').pinned).toBeFalsy();
+
+             // move 'ID' column to the left pinned area, before ContractName
+             grid.moveColumn(grid.getColumnByName('ID'), grid.getColumnByName('ContactName'), DropPosition.BeforeDropTarget);
+             tick();
+             fix.detectChanges();
+
+            // verify column is pinned at the correct place
+            expect(grid.pinnedStartColumns[0].field).toEqual('ID');
+            expect(grid.pinnedStartColumns[1].field).toEqual('ContactName');
+            expect(grid.getColumnByName('ID').pinned).toBeTruthy();
+        }));
+
+        it('should allow navigating to/from pinned areas', (async () => {
+            setupGridScrollDetection(fix, grid);
+
+            // navigate from right pinned area into unpinned and back
+            const cellCompanyName = grid.gridAPI.get_cell_by_index(0, 'CompanyName');
+            grid.navigation.activeNode = { row: 0, column: 10 };
+            fix.detectChanges();
+            expect(cellCompanyName.active).toBe(true);
+
+            grid.navigation.dispatchEvent(UIInteractions.getKeyboardEvent('keydown', 'ArrowLeft'));
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const cellFax = grid.gridAPI.get_cell_by_index(0, 'Fax');
+            expect(cellFax.active).toBe(true);
+            expect(cellCompanyName.active).toBe(false);
+
+            grid.navigation.dispatchEvent(UIInteractions.getKeyboardEvent('keydown', 'ArrowRight'));
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            expect(cellFax.active).toBe(false);
+            expect(cellCompanyName.active).toBe(true);
+
+             // navigate from left pinned area into unpinned and back
+            grid.navigation.activeNode = { row: 0, column: 0 };
+            fix.detectChanges();
+            expect(grid.getCellByColumn(0, "ContactName").active).toBe(true);
+
+            grid.navigation.dispatchEvent(UIInteractions.getKeyboardEvent('keydown', 'ArrowRight'));
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const cellID = grid.gridAPI.get_cell_by_index(0, 'ID');
+            expect(grid.getCellByColumn(0, "ContactName").active).toBe(false);
+            expect(cellID.active).toBe(true);
+
+            grid.navigation.dispatchEvent(UIInteractions.getKeyboardEvent('keydown', 'ArrowLeft'));
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            expect(grid.getCellByColumn(0, "ContactName").active).toBe(true);
+            expect(cellID.active).toBe(false);
+
+            clearGridSubs();
+        }));
     });
 });

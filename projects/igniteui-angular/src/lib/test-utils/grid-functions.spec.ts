@@ -315,8 +315,13 @@ export class GridFunctions {
         expect(tolerance).toBeLessThanOrEqual(1);
     }
 
-    public static verifyPinnedAreaWidth(grid: GridType, expectedWidth: number) {
+    public static verifyPinnedStartAreaWidth(grid: GridType, expectedWidth: number) {
         const tolerance = Math.abs(expectedWidth - grid.pinnedStartWidth);
+        expect(tolerance).toBeLessThanOrEqual(1);
+    }
+
+    public static verifyPinnedEndAreaWidth(grid: GridType, expectedWidth: number) {
+        const tolerance = Math.abs(expectedWidth - grid.pinnedEndWidth);
         expect(tolerance).toBeLessThanOrEqual(1);
     }
 
