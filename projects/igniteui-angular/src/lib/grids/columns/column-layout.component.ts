@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { IgxColumnComponent } from './column.component';
 import { IgxColumnGroupComponent } from './column-group.component';
-import { ColumnPinningPosition } from 'igniteui-angular';
 
 /* blazorIndirectRender */
 /* blazorElement */
