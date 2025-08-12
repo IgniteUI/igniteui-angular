@@ -910,10 +910,10 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             const grid = fixture.componentInstance.grid;
 
-            expect(grid.columnList.get(0).width).toEqual('80px');
-            expect(grid.columnList.get(1).width).toEqual('101px');
-            expect(grid.columnList.get(2).width).toEqual('101px');
-            expect(grid.columnList.get(3).width).toEqual('101px');
+            expect(grid.columnList.get(0).width).toEqual('130px');
+            expect(grid.columnList.get(1).width).toEqual('90px');
+            expect(grid.columnList.get(2).width).toEqual('90px');
+            expect(grid.columnList.get(3).width).toEqual('90px');
         }));
     });
 });
@@ -1003,7 +1003,7 @@ export class NullColumnsComponent implements OnInit {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`width="400px" height="200px"`, ``, `<igx-column [field]="'ID'" [width]="'80px'" [resizable]="true"></igx-column>
+    template: GridTemplateStrings.declareGrid(`width="400px" height="200px"`, ``, `<igx-column [field]="'ID'" [width]="'130px'" [resizable]="true"></igx-column>
         <igx-column [field]="'CompanyName'" [minWidth]="'50px'" [resizable]="true"></igx-column>
         <igx-column [field]="'ContactName'" [minWidth]="'50px'" [resizable]="true"></igx-column>
         <igx-column [field]="'ContactTitle'" [minWidth]="'50px'" [resizable]="true"></igx-column>`),
