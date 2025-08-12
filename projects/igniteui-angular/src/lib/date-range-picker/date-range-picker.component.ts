@@ -36,6 +36,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { PickerCalendarOrientation } from '../date-common/types';
+import { calendarRange, isDateInRanges } from '../calendar/common/helpers';
 
 const SingleInputDatesConcatenationString = ' - ';
 
@@ -232,6 +233,24 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     public get maxValue(): Date | string {
         return this._maxValue;
+    }
+
+    /**
+     * Gets/Sets the disabled dates descriptors.
+     *
+     * @example
+     * ```typescript
+     * let disabledDates = this.dateRangePicker.disabledDates;
+     * this.dateRangePicker.disabledDates = [ {type: DateRangeType.Weekends}, ...];
+     * ```
+     */
+    @Input()
+    public get disabledDates(): DateRangeDescriptor[] {
+        return this._disabledDates;
+    }
+    public set disabledDates(value: DateRangeDescriptor[]) {
+        this._disabledDates = value;
+        this.onValidatorChange();
     }
 
     /**
@@ -493,6 +512,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private _focusedInput: IgxDateRangeInputsBaseComponent;
     private _displayMonthsCount = 2;
     private _specialDates: DateRangeDescriptor[] = null;
+    private _disabledDates: DateRangeDescriptor[] = null;
     private _overlaySubFilter:
         [MonoTypeOperatorFunction<OverlayEventArgs>, MonoTypeOperatorFunction<OverlayEventArgs | OverlayCancelableEventArgs>] = [
             filter(x => x.id === this._overlayId),
@@ -650,16 +670,19 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
                 }
             }
 
-            const min = parseDate(this.minValue);
-            const max = parseDate(this.maxValue);
+            if (this._isValueInDisabledRange(value)) {
+                Object.assign(errors, { dateIsDisabled: true });
+            }
+
+            const { minValue, maxValue } = this._getMinMaxDates();
             const start = parseDate(value.start);
             const end = parseDate(value.end);
-            if ((min && start && DateTimeUtil.lessThanMinValue(start, min, false))
-                || (min && end && DateTimeUtil.lessThanMinValue(end, min, false))) {
+            if ((minValue && start && DateTimeUtil.lessThanMinValue(start, minValue, false))
+                || (minValue && end && DateTimeUtil.lessThanMinValue(end, minValue, false))) {
                 Object.assign(errors, { minValue: true });
             }
-            if ((max && start && DateTimeUtil.greaterThanMaxValue(start, max, false))
-                || (max && end && DateTimeUtil.greaterThanMaxValue(end, max, false))) {
+            if ((maxValue && start && DateTimeUtil.greaterThanMaxValue(start, maxValue, false))
+                || (maxValue && end && DateTimeUtil.greaterThanMaxValue(end, maxValue, false))) {
                 Object.assign(errors, { maxValue: true });
             }
         }
@@ -928,15 +951,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         if (!this.calendar) {
             return;
         }
-        this.calendar.disabledDates = [];
-        const minValue = this.parseMinValue(this.minValue);
-        if (minValue) {
-            this.calendar.disabledDates.push({ type: DateRangeType.Before, dateRange: [minValue] });
-        }
-        const maxValue = this.parseMaxValue(this.maxValue);
-        if (maxValue) {
-            this.calendar.disabledDates.push({ type: DateRangeType.After, dateRange: [maxValue] });
-        }
+        this._setDisabledDates();
+        const { minValue, maxValue } = this._getMinMaxDates();
 
         const range: Date[] = [];
         if (this.value?.start && this.value?.end) {
@@ -1140,9 +1156,44 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         this._calendar.specialDates = this.specialDates;
         this._calendar.selected.pipe(takeUntil(this._destroy$)).subscribe((ev: Date[]) => this.handleSelection(ev));
 
+        this._setDisabledDates();
+
         componentInstance.mode = this.mode;
         componentInstance.closeButtonLabel = !this.isDropdown ? this.doneButtonText : null;
         componentInstance.pickerActions = this.pickerActions;
         componentInstance.calendarClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.close());
+    }
+
+    private _setDisabledDates(): void {
+        if (!this.calendar) {
+            return;
+        }
+        this.calendar.disabledDates = this.disabledDates ? [...this.disabledDates] : [];
+        const { minValue, maxValue } = this._getMinMaxDates();
+        if (minValue) {
+            this.calendar.disabledDates.push({ type: DateRangeType.Before, dateRange: [minValue] });
+        }
+        if (maxValue) {
+            this.calendar.disabledDates.push({ type: DateRangeType.After, dateRange: [maxValue] });
+        }
+    }
+
+    private _getMinMaxDates() {
+        const minValue = this.parseMinValue(this.minValue);
+        const maxValue = this.parseMaxValue(this.maxValue);
+        return { minValue, maxValue };
+    }
+
+    private _isValueInDisabledRange(value: DateRange) {
+        if (value && this.disabledDates) {
+            const isOutsideDisabledRange = Array.from(
+                calendarRange({
+                    start: parseDate(this.value.start),
+                    end: parseDate(this.value.end),
+                    inclusive: true
+                })).every((date) => !isDateInRanges(date, this.disabledDates));
+            return !isOutsideDisabledRange;
+        }
+        return false;
     }
 }

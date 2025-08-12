@@ -7,6 +7,7 @@ export type CalendarRangeParams = {
     start: DayParameter;
     end: DayParameter | number;
     unit?: DayInterval;
+    inclusive?: boolean;
 };
 
 type CalendarDayParams = {
@@ -237,9 +238,16 @@ export class CalendarDay {
     public greaterThan(value: DayParameter) {
         return this.timestamp > toCalendarDay(value).timestamp;
     }
+    public greaterThanOrEqual(value: DayParameter) {
+        return this.timestamp >= toCalendarDay(value).timestamp;
+    }
 
     public lessThan(value: DayParameter) {
         return this.timestamp < toCalendarDay(value).timestamp;
+    }
+
+    public lessThanOrEqual(value: DayParameter) {
+        return this.timestamp <= toCalendarDay(value).timestamp;
     }
 
     public toString() {

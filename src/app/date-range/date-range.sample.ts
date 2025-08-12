@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidatorFn, AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DateRange, IgxButtonDirective, IgxDateRangeEndComponent, IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateTimeEditorDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxPickerToggleComponent, IgxPrefixDirective, IgxRadioComponent, IgxRippleDirective, IgxSuffixDirective, IGX_INPUT_GROUP_TYPE, IChangeCheckboxEventArgs } from 'igniteui-angular';
+import { DateRangeType } from 'igniteui-angular/src/lib/calendar/common/types';
 
 
 @Component({
@@ -36,6 +36,13 @@ export class DateRangeSampleComponent {
 
     public updateOnOptions: string[] = ['change', 'blur', 'submit'];
     public updateOn = 'blur';
+
+    public disabledDates = [{
+        type: DateRangeType.Between, dateRange: [
+            new Date(new Date().getFullYear(), new Date().getMonth(), 20),
+            new Date(new Date().getFullYear(), new Date().getMonth(), 25)
+        ]
+    }];
 
     constructor(fb: UntypedFormBuilder) {
         const today = new Date();

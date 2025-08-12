@@ -275,6 +275,42 @@ describe('IgxDateRangePicker', () => {
             expect((dateRange as any).calendar.disabledDates[1].type).toEqual(DateRangeType.After);
             expect((dateRange as any).calendar.disabledDates[1].dateRange[0]).toEqual(new Date(dateRange.maxValue));
         }));
+
+        it('should validate correctly when disabledDates are set', () => {
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, null, null, null);
+            dateRange.ngOnInit();
+
+            dateRange.registerOnChange(mockNgControl.registerOnChangeCb);
+            dateRange.registerOnValidatorChange(mockNgControl.registerOnValidatorChangeCb);
+            mockNgControl.registerOnValidatorChangeCb.calls.reset();
+            spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
+
+            const start = new Date(new Date().getFullYear(), new Date().getMonth(), 10);
+            const end = new Date(new Date().getFullYear(), new Date().getMonth(), 18);
+
+            const disabledDates = [{
+                type: DateRangeType.Between, dateRange: [ start, end ]
+            }];
+            dateRange.disabledDates = disabledDates;
+            expect(mockNgControl.registerOnValidatorChangeCb).toHaveBeenCalledTimes(1);
+
+
+            const validRange = {
+                start: new Date(new Date().getFullYear(), new Date().getMonth(), 2),
+                end: new Date(new Date().getFullYear(), new Date().getMonth(), 5),
+            };
+            dateRange.writeValue(validRange);
+            const mockFormControl = new UntypedFormControl(dateRange.value);
+            expect(dateRange.validate(mockFormControl)).toBeNull();
+
+            (dateRange as any).updateCalendar();
+            expect((dateRange as any).calendar.disabledDates.length).toEqual(1);
+            expect((dateRange as any).calendar.disabledDates[0].type).toEqual(DateRangeType.Between);
+
+            start.setDate(start.getDate() - 2);
+            dateRange.writeValue({ start, end });
+            expect(dateRange.validate(mockFormControl)).toEqual({ dateIsDisabled: true });
+        });
     });
 
     describe('Integration tests', () => {
@@ -1682,6 +1718,34 @@ describe('IgxDateRangePicker', () => {
                 fixture.detectChanges();
 
                 expect(dateRange['_calendar'].specialDates).toEqual(specialDates);
+            }));
+
+            it('should set the disabledDates of the calendar', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+
+                const disabledDates = [{
+                    type: DateRangeType.Between, dateRange: [
+                        new Date(new Date().getFullYear(), new Date().getMonth(), 3),
+                        new Date(new Date().getFullYear(), new Date().getMonth(), 8)
+                    ]
+                }];
+                dateRange.disabledDates = disabledDates;
+                fixture.detectChanges();
+
+                dateRange.open();
+                tick();
+                fixture.detectChanges();
+
+                expect(dateRange['_calendar'].disabledDates).toEqual(disabledDates);
+
+                // should not allow to select a date from the disabled dates
+                startDate = new Date(new Date().getFullYear(), new Date().getMonth(), 4);
+                endDate = new Date(new Date().getFullYear(), new Date().getMonth(), 6);
+
+                selectDateRangeFromCalendar(startDate, endDate);
+                expect(dateRange.value).toBeNull();
             }));
 
             describe('Templated Calendar Header', () => {

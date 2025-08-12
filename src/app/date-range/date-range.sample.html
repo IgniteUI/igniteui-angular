@@ -10,7 +10,7 @@
                     <button igxButton="contained" igxRipple (click)="changeWeekStart(5)">Change weekStart to Friday</button>
                     <button igxButton="contained" igxRipple (click)="changeWeekStart(0)">Change weekStart to Sunday</button>
                 </div>
-                <igx-date-range-picker  #dr1 mode="dialog"></igx-date-range-picker>
+                <igx-date-range-picker #dr1 mode="dialog" [disabledDates]="disabledDates"></igx-date-range-picker>
 
                 <p>Drop down single input with custom suffix</p>
                 <igx-date-range-picker>
