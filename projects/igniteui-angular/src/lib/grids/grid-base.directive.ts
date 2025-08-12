@@ -4771,6 +4771,11 @@ export abstract class IgxGridBaseDirective implements GridType,
             column.unpin(index);
         }
 
+        // both are pinned but are in different sides
+        if (target.pinned && column.pinned && target.pinningPosition !== column.pinningPosition) {
+            column.pinningPosition = target.pinningPosition;
+        }
+
         // if (target.pinned && column.pinned && !columnPinStateChanged) {
         //     this._reorderColumns(column, target, pos, this._pinnedColumns);
         // }
