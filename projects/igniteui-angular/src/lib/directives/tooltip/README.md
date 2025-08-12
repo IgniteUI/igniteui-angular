@@ -100,15 +100,99 @@ Since the **IgxTooltip** directive extends the **IgxToggle** directive and there
 | tooltipDisabled | boolean | Specifies if the tooltip should not show when hovering its target with the mouse. (defaults to false) |
 | tooltipHidden | boolean | Indicates if the tooltip is currently hidden. |
 | nativeElement | any | Reference to the native element of the directive. |
+| positionSettings | PositionSettings | Controls the position and animation settings used by the tooltip. |
+| hasArrow | boolean | Controls whether to display an arrow indicator for the tooltip. Defaults to `false`. |
+| sticky | boolean | When set to `true`, the tooltip renders a default close icon `x`. The tooltip remains visible until the user closes it via the close icon `x` or `Esc` key. Defaults to `false`. |
+| closeButtonTemplate | TemplateRef<any> | Allows templating the default close icon `x`. |
+
+#### Templating the close button
+
+```html
+<igx-icon [igxTooltipTarget]="tooltipRef" [closeButtonTemplate]="customClose">
+    info
+</igx-icon>
+
+<span #tooltipRef="tooltip" igxTooltip>
+    Hello there, I am a tooltip!
+</span>
+
+<ng-template #customClose>
+    <button igxButton>Close</button>
+</ng-template>
+```
 
 ### Methods
 | Name | Type | Arguments | Description |
 | :--- |:--- | :--- | :--- |
-| showTooltip | void | N/A | Shows the tooltip after the amount of ms specified by the `showDelay` property. |
-| hideTooltip | void | N/A | Hides the tooltip after the amount of ms specified by the `hideDelay` property. |
+| showTooltip | void | N/A | Shows the tooltip. |
+| hideTooltip | void | N/A | Hides the tooltip. |
 
 ### Events
 |Name|Description|Cancelable|Event arguments|
 |--|--|--|--|
 | tooltipShow | Emitted when the tooltip starts showing. (This event is fired before the start of the countdown to showing the tooltip.) | True | ITooltipShowEventArgs |
 | tooltipHide | Emitted when the tooltip starts hiding. (This event is fired before the start of the countdown to hiding the tooltip.) | True | ITooltipHideEventArgs |
+
+### Notes
+
+The `IgxTooltipTarget` uses the `TooltipPositionStrategy` to position the tooltip and arrow element. If a custom position strategy is used (`overlaySettings.positionStrategy`) and `hasArrow` is set to `true`, the custom strategy should extend the `TooltipPositionStrategy`. Otherwise, the arrow will not be displayed.
+
+The arrow element is positioned based on the provided position settings. If the directions and starting points do not correspond to any of the predefined position values, the arrow is positioned in the top middle side of the tooltip (default tooltip position `bottom`).
+
+
+| Position     | Horizontal Direction          | Horizontal Start Point         | Vertical Direction            | Vertical Start Point           |
+|--------------|-------------------------------|--------------------------------|-------------------------------|--------------------------------|
+| top          | HorizontalAlignment.Center    | HorizontalAlignment.Center     | VerticalAlignment.Top         | VerticalAlignment.Top          |
+| top-start    | HorizontalAlignment.Right     | HorizontalAlignment.Left       | VerticalAlignment.Top         | VerticalAlignment.Top          |
+| top-end      | HorizontalAlignment.Left      | HorizontalAlignment.Right      | VerticalAlignment.Top         | VerticalAlignment.Top          |
+| bottom       | HorizontalAlignment.Center    | HorizontalAlignment.Center     | VerticalAlignment.Bottom      | VerticalAlignment.Bottom       |
+| bottom-start | HorizontalAlignment.Right     | HorizontalAlignment.Left       | VerticalAlignment.Bottom      | VerticalAlignment.Bottom       |
+| bottom-end   | HorizontalAlignment.Left      | HorizontalAlignment.Right      | VerticalAlignment.Bottom      | VerticalAlignment.Bottom       |
+| right        | HorizontalAlignment.Right     | HorizontalAlignment.Right      | VerticalAlignment.Middle      | VerticalAlignment.Middle       |
+| right-start  | HorizontalAlignment.Right     | HorizontalAlignment.Right      | VerticalAlignment.Bottom      | VerticalAlignment.Top          |
+| right-end    | HorizontalAlignment.Right     | HorizontalAlignment.Right      | VerticalAlignment.Top         | VerticalAlignment.Bottom       |
+| left         | HorizontalAlignment.Left      | HorizontalAlignment.Left       | VerticalAlignment.Middle      | VerticalAlignment.Middle       |
+| left-start   | HorizontalAlignment.Left      | HorizontalAlignment.Left       | VerticalAlignment.Bottom      | VerticalAlignment.Top          |
+| left-end     | HorizontalAlignment.Left      | HorizontalAlignment.Left       | VerticalAlignment.Top         | VerticalAlignment.Bottom       |
+
+
+#### Customizing the arrow's position
+
+The arrow's position can be customized by overriding the `positionArrow(arrow: HTMLElement, arrowFit: ArrowFit)` method.
+
+For example:
+
+```ts
+export class CustomStrategy extends TooltipPositioningStrategy {
+    constructor(settings?: PositionSettings) {
+        super(settings);
+    }
+
+    public override positionArrow(arrow: HTMLElement, arrowFit: ArrowFit): void {
+        Object.assign(arrow.style, {
+            left: '-0.25rem',
+            transform: 'rotate(-45deg)',
+            [arrowFit.direction]: '-0.25rem',
+        });
+    }
+}
+
+public overlaySettings: OverlaySettings = {
+    positionStrategy: new CustomStrategy({
+        horizontalDirection: HorizontalAlignment.Right,
+        horizontalStartPoint: HorizontalAlignment.Right,
+        verticalDirection: VerticalAlignment.Bottom,
+        verticalStartPoint: VerticalAlignment.Bottom,
+    })
+};
+```
+
+```html
+<igx-icon [igxTooltipTarget]="tooltipRef" [hasArrow]="true" [overlaySettings]="overlaySettings">
+    info
+</igx-icon>
+
+<span #tooltipRef="tooltip" igxTooltip>
+    Hello there, I am a tooltip!
+</span>
+```
