@@ -17,6 +17,8 @@ import {
 import {
     GridFeaturesComponent,
     GridPinningMRLComponent,
+    MRLTestComponent,
+    MultiColumnHeadersComponent,
     MultiColumnHeadersWithGroupingComponent,
     PinningComponent,
     PinOnBothSidesInitComponent,
@@ -904,6 +906,92 @@ describe('IgxGrid - Column Pinning #grid', () => {
             expect(cellID.active).toBe(false);
 
             clearGridSubs();
+        }));
+
+        it('should correctly pin column groups to both sides.', () => {
+            fix = TestBed.createComponent(MultiColumnHeadersComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+
+            // 'General Information' & 'Address Information'
+            const rootGroups = grid.columns.filter(x => x.columnGroup && x.level === 0);
+
+            //'General Information' to start
+            rootGroups[0].pin(null, ColumnPinningPosition.Start);
+            fix.detectChanges();
+            //'Address Information' to end
+            rootGroups[1].pin(null, ColumnPinningPosition.End);
+            fix.detectChanges();
+
+            const pinnedCols = grid.pinnedColumns.filter(x => !x.columnGroup);
+            expect(pinnedCols.length).toBe(7);
+
+            const pinnedStart = grid.pinnedStartColumns.filter(x => !x.columnGroup);
+            expect(pinnedStart.length).toBe(3);
+
+            const pinnedEnd = grid.pinnedEndColumns.filter(x => !x.columnGroup);
+            expect(pinnedEnd.length).toBe(4);
+
+            const unpinned = grid.unpinnedColumns.filter(x => !x.columnGroup);
+            expect(unpinned.length).toBe(2);
+
+            expect(grid.getColumnByName('Country').isFirstPinned).toBeTruthy();
+            expect(grid.getColumnByName('ContactTitle').isLastPinned).toBeTruthy();
+            const row = grid.gridAPI.get_row_by_index(0).nativeElement;
+            // check pinnedEnd cells are rendered after main display container and have left offset
+            for (let i = pinnedStart.length ; i <= pinnedStart.length + pinnedEnd.length - 1; i++) {
+                const elem = row.children[i + 1];
+                expect(parseFloat((elem as any).style.left)).toBe(- (grid.pinnedEndWidth + grid.pinnedStartWidth));
+            }
+
+            // check pinnedStart cells are rendered before main display container and have no left offset
+            for (let i = 0; i <= pinnedStart.length - 1; i++) {
+                const elem = row.children[i];
+                expect((elem as any).style.left).toBe('');
+            }
+
+            // check correct headers are pinned and in correct order.
+            const pinnedHeaders = grid.headerGroupsList.filter(group => group.isPinned);
+            expect(pinnedHeaders.length).toBe(10);
+            expect(pinnedHeaders.map(x => x.column.header || x.column.field))
+            .toEqual(['General Information', 'CompanyName', 'Person Details',
+                 'ContactName', 'ContactTitle', 'Address Information',
+                  'Country', 'Region', 'City', 'Address']);
+
+        });
+
+        it('should correctly pin multi-row-layouts to both sides.', fakeAsync(() => {
+            fix = TestBed.createComponent(MRLTestComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+            grid.width = "1500px";
+            fix.detectChanges();
+
+            debugger;
+            // ['group1', 'group2', 'group3']
+            const rootMRLGroups = grid.columns.filter(x => x.columnLayout && x.level === 0);
+
+            // pin group1 -> left, group2 -> end
+            rootMRLGroups[0].pin(null, ColumnPinningPosition.Start);
+            fix.detectChanges();
+            rootMRLGroups[1].pin(null, ColumnPinningPosition.End);
+            fix.detectChanges();
+
+            // check collections
+            const pinnedCols = grid.pinnedColumns.filter(x => !x.columnGroup);
+            expect(pinnedCols.length).toBe(7);
+
+            const pinnedStart = grid.pinnedStartColumns.filter(x => !x.columnGroup);
+            expect(pinnedStart.length).toBe(4);
+
+            const pinnedEnd = grid.pinnedEndColumns.filter(x => !x.columnGroup);
+            expect(pinnedEnd.length).toBe(3);
+
+            const unpinned = grid.unpinnedColumns.filter(x => !x.columnGroup);
+            expect(unpinned.length).toBe(3);
+
+            // check visible indexes
+            expect(rootMRLGroups.map(x => x.visibleIndex)).toEqual([0, 2, 1])
         }));
     });
 });
