@@ -29,6 +29,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
                 GridFeaturesComponent,
                 LargePinnedColGridComponent,
                 NullColumnsComponent,
+                MinWidthColumnsComponent,
                 ColGridComponent,
                 ColPercentageGridComponent
             ]
@@ -902,6 +903,18 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(headers[headers.length - 1].nativeElement.innerText).toEqual("ReleaseDate");
             expect(firstRowCells.length).toEqual(11);
         }));
+
+        it('should use user-provided `minWidth` as default min column width to size columns - #16057.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(MinWidthColumnsComponent);
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid;
+
+            expect(grid.columnList.get(0).width).toEqual('130px');
+            expect(grid.columnList.get(1).width).toEqual('90px');
+            expect(grid.columnList.get(2).width).toEqual('90px');
+            expect(grid.columnList.get(3).width).toEqual('90px');
+        }));
     });
 });
 
@@ -985,6 +998,23 @@ export class NullColumnsComponent implements OnInit {
             { field: 'Fax', resizable: true }
         ];
 
+        this.data = SampleTestData.contactInfoData();
+    }
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(`width="400px" height="200px"`, ``, `<igx-column [field]="'ID'" [width]="'130px'" [resizable]="true"></igx-column>
+        <igx-column [field]="'CompanyName'" [minWidth]="'50px'" [resizable]="true"></igx-column>
+        <igx-column [field]="'ContactName'" [minWidth]="'50px'" [resizable]="true"></igx-column>
+        <igx-column [field]="'ContactTitle'" [minWidth]="'50px'" [resizable]="true"></igx-column>`),
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class MinWidthColumnsComponent implements OnInit {
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+
+    public data = [];
+
+    public ngOnInit(): void {
         this.data = SampleTestData.contactInfoData();
     }
 }
