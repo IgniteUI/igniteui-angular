@@ -1306,8 +1306,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /** @hidden @internal */
-    public get pivotPinnedWidth() {
+    public get pivotPinnedStartWidth() {
         return !this._init ? this.pinnedStartWidth : 0;
+    }
+
+    /** @hidden @internal */
+    public get pivotPinnedEndWidth() {
+        return !this._init ? this.pinnedEndWidth : 0;
     }
 
     /** @hidden @internal */
