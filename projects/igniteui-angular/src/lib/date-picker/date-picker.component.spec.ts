@@ -156,6 +156,29 @@ describe('IgxDatePicker', () => {
                 const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
                 expect(wrapper.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
             }));
+
+            it('should set activeDate of the calendar to value of picker even when it is outside the enabled range, i.e. > maxValue', fakeAsync(() => {
+                const datePicker = fixture.componentInstance.datePicker;
+                const maxDate = new Date(2025, 7, 1);
+                datePicker.maxValue = maxDate;
+                fixture.detectChanges();
+
+                const valueGreaterThanMax = new Date(2025, 10, 1);
+                datePicker.value = valueGreaterThanMax;
+                fixture.detectChanges();
+
+                expect(datePicker.activeDate).toEqual(valueGreaterThanMax);
+
+                datePicker.open();
+                fixture.detectChanges();
+
+                const activeDescendantDate = new Date(valueGreaterThanMax.setHours(0, 0, 0, 0)).getTime().toString();
+                expect(datePicker['_calendar'].activeDate).toEqual(valueGreaterThanMax);
+                expect(datePicker['_calendar'].viewDate.getMonth()).toEqual(valueGreaterThanMax.getMonth());
+                expect(datePicker['_calendar'].value).toEqual(valueGreaterThanMax);
+                const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(wrapper.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
+            }));
         });
 
         describe('Events', () => {

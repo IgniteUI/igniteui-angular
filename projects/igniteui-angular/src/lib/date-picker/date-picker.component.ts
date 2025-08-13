@@ -472,7 +472,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private _dateValue: Date;
     private _overlayId: string;
     private _value: Date | string;
-    private _targetViewDate: Date;
     private _ngControl: NgControl = null;
     private _statusChanges$: Subscription;
     private _calendar: IgxCalendarComponent;
@@ -926,13 +925,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             this.opened.emit({ owner: this });
 
             this._calendar.wrapper?.nativeElement?.focus();
-
-            if (this._targetViewDate) {
-                this._targetViewDate.setHours(0, 0, 0, 0);
-                // INFO: We need to set the active date to the target view date so there's something to
-                // navigate when the calendar is opened.
-                this._calendar.activeDate = this._targetViewDate;
-            }
         });
 
         this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((e: OverlayCancelableEventArgs) => {
@@ -1002,7 +994,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             // calendar will throw if the picker's value is InvalidDate #9208
             this._calendar.value = this.dateValue;
         }
-        this.setCalendarViewDate();
+        this._calendar.activeDate = this.activeDate;
+        this._calendar.viewDate = this.activeDate;
 
         componentInstance.mode = this.mode;
         componentInstance.closeButtonLabel = this.cancelButtonLabel;
@@ -1011,19 +1004,5 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
         componentInstance.calendarClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.close());
         componentInstance.todaySelection.pipe(takeUntil(this._destroy$)).subscribe(() => this.selectToday());
-    }
-
-    private setCalendarViewDate() {
-        const { minValue, maxValue } = this.getMinMaxDates();
-        const dateValue = DateTimeUtil.isValidDate(this.dateValue) ? this.dateValue : new Date();
-        if (minValue && DateTimeUtil.lessThanMinValue(dateValue, minValue)) {
-            this._calendar.viewDate = this._targetViewDate = minValue;
-            return;
-        }
-        if (maxValue && DateTimeUtil.greaterThanMaxValue(dateValue, maxValue)) {
-            this._calendar.viewDate = this._targetViewDate = maxValue;
-            return;
-        }
-        this._calendar.viewDate = this._targetViewDate = dateValue;
     }
 }
