@@ -73,8 +73,10 @@
         -webkit-tap-highlight-color: transparent;
         overflow: hidden;
         white-space: nowrap;
-        transition: box-shadow .2s ease-in, background .15s ease-out;
-        transition-delay: .05s;
+        transition:
+            box-shadow var(--_ig-init-transition, .2s) ease-in,
+            background var(--_ig-init-transition, .15s) ease-out;
+        transition-delay: var(--_ig-init-transition, .05s);
         min-width: unset;
         min-height: unset;
         font-size: rem(24px, 24px);
@@ -95,7 +97,9 @@
         }
 
         @if $variant == 'fluent' {
-            transition: color .15s ease-out, background .15s ease-out;
+            transition:
+                color var(--_ig-init-transition, .15s) ease-out,
+                background var(--_ig-init-transition, .15s) ease-out;
 
             &::after {
                 position: absolute;
@@ -109,11 +113,18 @@
         }
 
         @if $variant == 'bootstrap' {
-            transition: box-shadow .15s ease-out, color .15s ease-out, background .15s ease-out;
+            transition:
+                box-shadow var(--_ig-init-transition, .15s) ease-out,
+                color var(--_ig-init-transition, .15s) ease-out,
+                background var(--_ig-init-transition, .15s) ease-out;
         }
 
         @if $variant == 'indigo' {
-            transition: color .15s ease-in-out, box-shadow .15s ease-in-out, background .15s ease-in-out, border-color .15s ease-in-out;
+            transition:
+                color var(--_ig-init-transition, .15s) ease-in-out,
+                box-shadow var(--_ig-init-transition, .15s) ease-in-out,
+                background var(--_ig-init-transition, .15s) ease-in-out,
+                border-color var(--_ig-init-transition, .15s) ease-in-out;
         }
     }
 

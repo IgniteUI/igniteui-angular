@@ -1,4 +1,4 @@
-import { Directive, HostBinding, Input } from '@angular/core';
+import {Directive, ElementRef, HostBinding, Input} from '@angular/core';
 import { IgxBaseButtonType, IgxButtonBaseDirective } from './button-base';
 
 /**
@@ -77,5 +77,11 @@ export class IgxIconButtonDirective extends IgxButtonBaseDirective {
     @HostBinding('class.igx-icon-button--outlined')
     public get outlined(): boolean {
         return this._type === IgxBaseButtonType.Outlined;
+    }
+
+    constructor(
+        public override element: ElementRef,
+    ) {
+        super(element);
     }
 }
