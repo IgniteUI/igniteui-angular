@@ -707,7 +707,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
         switch (this.selection) {
             case CalendarSelection.SINGLE:
-                if (isDate(value) && !this.isDateDisabled(value as Date)) {
+                if (isDate(value)) {
                     this.selectSingle(value as Date);
                 }
                 break;
@@ -807,9 +807,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
                     : [value, this.lastSelectedDate];
 
                 const unselectedDates = [this._startDate, ...this.generateDateRange(this._startDate, this._endDate)]
-                    .filter(date => !this.isDateDisabled(date)
-                        && this.selectedDates.every((d: Date) => d.getTime() !== date.getTime())
-                    );
+                    .filter(date => this.selectedDates.every((d: Date) => d.getTime() !== date.getTime()));
 
                 // select all dates from last selected to shift clicked date
                 if (this.selectedDates.some((date: Date) => date.getTime() === this.lastSelectedDate.getTime())
