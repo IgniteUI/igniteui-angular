@@ -157,10 +157,14 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
             : [];
         const orderedCols = columns
             .filter(x => !x.columnGroup && !x.hidden)
-            .sort((a, b) =>  columns.indexOf(a.parent) - columns.indexOf(b.parent) || a.rowStart - b.rowStart || a.colStart - b.colStart);
+            .sort((a, b) => a.rowStart - b.rowStart || columns.indexOf(a.parent) - columns.indexOf(b.parent) || a.colStart - b.colStart);
         this.children.forEach(child => {
+            const rs = child.rowStart || 1;
             let vIndex = 0;
-            vIndex = orderedCols.indexOf(child);
+            // filter out all cols with larger rowStart
+            const cols = orderedCols.filter(c =>
+                !c.columnGroup && (c.rowStart || 1) <= rs);
+            vIndex = cols.indexOf(child);
             this.childrenVisibleIndexes.push({ column: child, index: vIndex });
         });
     }
