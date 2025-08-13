@@ -2270,7 +2270,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         if (pinningCollection.indexOf(this) === -1) {
             if (!grid.hasColumnGroups) {
                 pinningCollection.splice(args.insertAtIndex, 0, this);
-                grid._pinnedColumns = this.grid.pinnedStartColumns.concat(this.grid.pinnedEndColumns);
+                grid._pinnedColumns = grid._pinnedStartColumns.concat(grid._pinnedEndColumns);
             } else {
                 // insert based only on root collection
                 if (this.level === 0) {
