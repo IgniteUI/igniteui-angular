@@ -1012,6 +1012,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             return;
         }
         this._defaultMinWidth = value;
+        this.minWidthSetByUser = true;
         this.grid.notifyChanges(true);
     }
     public get minWidth(): string {
@@ -1867,6 +1868,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
+    protected _minWidthSetByUser = false;
+    /**
+     * @hidden
+     */
     protected _hasSummary = false;
     /**
      * @hidden
@@ -2149,7 +2154,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             if (size && !!size.width) {
                 result.push(size.width + 'px');
             } else {
-                const currentWidth = parseFloat(this.grid.getPossibleColumnWidth());
+                const possibleWidth = this.getPossibeWidth();
+                const currentWidth = parseFloat(possibleWidth);
                 result.push((this.getConstrainedSizePx(currentWidth)) + 'px');
             }
         }
@@ -2644,7 +2650,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             this._calcWidth = this.grid.calcWidth ? this.getConstrainedSizePx(currentCalcWidth) : 0;
         } else if (!colWidth || isAutoWidth && !this.autoSize) {
             // no width
-            const currentCalcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
+            const possibleWidth = this.getPossibeWidth();
+            const currentCalcWidth = this.defaultWidth || possibleWidth;
             this._calcWidth = this.getConstrainedSizePx(currentCalcWidth);
         } else {
             const currentCalcWidth =  parseFloat(this.width);
@@ -2698,5 +2705,27 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         if (this.selectable) {
             this._applySelectableClass = value;
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public set minWidthSetByUser(value: boolean) {
+        this._minWidthSetByUser = value;
+    }
+
+    /**
+     * @hidden
+     */
+    public get minWidthSetByUser(): boolean {
+        return this._minWidthSetByUser;
+    }
+
+    private getPossibeWidth(): string {
+        const possibleWidth = this.grid.getPossibleColumnWidth();
+        if (!this.minWidthSetByUser && parseFloat(possibleWidth) < this.grid.minColumnWidth) {
+            return this.grid.minColumnWidth + 'px';
+        }
+        return possibleWidth;
     }
 }
