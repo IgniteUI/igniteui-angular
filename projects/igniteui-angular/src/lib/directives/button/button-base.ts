@@ -1,4 +1,6 @@
-import { Directive, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output, booleanAttribute } from '@angular/core';
+import {
+    Directive, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output, booleanAttribute, AfterViewInit,
+} from '@angular/core';
 
 export const IgxBaseButtonType = {
     Flat: 'flat',
@@ -7,7 +9,7 @@ export const IgxBaseButtonType = {
 } as const;
 
 @Directive()
-export abstract class IgxButtonBaseDirective {
+export abstract class IgxButtonBaseDirective implements AfterViewInit {
     /**
      * Emitted when the button is clicked.
      */
@@ -79,7 +81,14 @@ export abstract class IgxButtonBaseDirective {
         return this.disabled || null;
     }
 
-    constructor(public element: ElementRef) { }
+    protected constructor(
+        public element: ElementRef,
+    ) {
+        // In browser, set via native API for immediate effect (no-op on server).
+        // In SSR there is no paint, so there’s no visual rendering or transitions to suppress.
+        // Fix style flickering https://github.com/IgniteUI/igniteui-angular/issues/14759
+        this.element.nativeElement.style.setProperty('--_ig-init-transition', '0s');
+    }
 
     /**
      * @hidden
@@ -97,5 +106,12 @@ export abstract class IgxButtonBaseDirective {
      */
     public get nativeElement() {
         return this.element.nativeElement;
+    }
+
+    public ngAfterViewInit() {
+        // Remove after the first frame to re-enable transitions
+        requestAnimationFrame(() => {
+            this.element.nativeElement.style.removeProperty('--_ig-init-transition');
+        });
     }
 }
