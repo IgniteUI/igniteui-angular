@@ -1307,7 +1307,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /** @hidden @internal */
     public get pivotPinnedWidth() {
-        return !this._init ? (this.pinnedStartColumns.length > 0 ? this.pinnedStartWidth : this.headerFeaturesWidth) : 0;
+        return !this._init ? this.pinnedStartWidth : 0;
     }
 
     /** @hidden @internal */
