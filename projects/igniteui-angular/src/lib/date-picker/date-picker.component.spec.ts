@@ -343,6 +343,23 @@ describe('IgxDatePicker', () => {
                 const expectedDate = new Date(2025, 0, 2);
                 expect(datePicker.value).toEqual(expectedDate);
                 expect(datePicker.activeDate).toEqual(expectedDate);
+            it('should update the calendar view and active date on typing a date that is not in the current view', fakeAsync(() => {
+                const date = new Date(2025, 0, 1);
+                datePicker.value = date;
+                datePicker.open();
+                fixture.detectChanges();
+
+                const input = fixture.debugElement.query(By.css('.igx-input-group__input'));
+                input.nativeElement.focus();
+                tick();
+                fixture.detectChanges();
+
+                fixture.detectChanges();
+                UIInteractions.simulateTyping('02/11/2025', input);
+
+                const expectedDate = new Date(2025, 10, 2);
+                expect(datePicker.value).toEqual(expectedDate);
+                expect(datePicker.activeDate).toEqual(expectedDate);
 
                 const activeDescendantDate = new Date(expectedDate.setHours(0, 0, 0, 0)).getTime().toString();
                 expect(datePicker['_calendar'].activeDate).toEqual(expectedDate);

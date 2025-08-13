@@ -160,6 +160,11 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     @Input({ transform: booleanAttribute })
     public showWeekNumbers: boolean;
 
+
+    /**
+     * Gets/Sets the date which is shown in the calendar picker and is highlighted.
+     * By default it is the current date, or the value of the picker, if set.
+     */
     @Input()
     public get activeDate(): Date {
         const today = new Date(new Date().setHours(0, 0, 0, 0));
@@ -846,6 +851,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this._dateValue = DateTimeUtil.isValidDate(value) ? value : DateTimeUtil.parseIsoDate(value);
         if (this._calendar) {
             this._calendar.selectDate(this._dateValue);
+            this._calendar.activeDate = this.activeDate;
+            this._calendar.viewDate = this.activeDate;
+            this.cdr.detectChanges();
         }
     }
 
