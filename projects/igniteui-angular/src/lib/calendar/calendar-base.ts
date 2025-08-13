@@ -715,7 +715,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
                 this.selectMultiple(value);
                 break;
             case CalendarSelection.RANGE:
-                this.selectRange(value, true);
+                this.selectRange(value);
                 break;
         }
     }

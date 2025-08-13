@@ -343,6 +343,15 @@ describe('IgxDatePicker', () => {
                 const expectedDate = new Date(2025, 0, 2);
                 expect(datePicker.value).toEqual(expectedDate);
                 expect(datePicker.activeDate).toEqual(expectedDate);
+
+                const activeDescendantDate = new Date(expectedDate.setHours(0, 0, 0, 0)).getTime().toString();
+                expect(datePicker['_calendar'].activeDate).toEqual(expectedDate);
+                expect(datePicker['_calendar'].viewDate.getMonth()).toEqual(expectedDate.getMonth());
+                expect(datePicker['_calendar'].value).toEqual(expectedDate);
+                const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(wrapper.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
+            }));
+
             it('should update the calendar view and active date on typing a date that is not in the current view', fakeAsync(() => {
                 const date = new Date(2025, 0, 1);
                 datePicker.value = date;

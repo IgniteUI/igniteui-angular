@@ -388,6 +388,21 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     /**
+     * Gets/Sets the date which is shown in the calendar picker and is highlighted.
+     * By default it is the current date, or the value of the picker, if set.
+    */
+    @Input()
+    public get activeDate(): Date {
+        const today = new Date(new Date().setHours(0, 0, 0, 0));
+        const dateValue = DateTimeUtil.isValidDate(this._firstDefinedInRange) ? new Date(this._firstDefinedInRange.setHours(0, 0, 0, 0)) : null;
+        return this._activeDate ?? dateValue ?? this._calendar?.activeDate ?? today;
+    }
+
+    public set activeDate(value: Date) {
+        this._activeDate = value;
+    }
+
+    /**
      * @example
      * ```html
      * <igx-date-range-picker locale="jp"></igx-date-range-picker>
@@ -499,6 +514,14 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         return Object.assign({}, this._dialogOverlaySettings, this.overlaySettings);
     }
 
+    private get _firstDefinedInRange(): Date | null {
+        if (!this.value) {
+            return null;
+        }
+        const range = this.toRangeOfDates(this.value);
+        return range?.start ?? range?.end ?? null;
+    }
+
     private _resourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN);
     private _doneButtonText = null;
     private _dateSeparator = null;
@@ -513,6 +536,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private _displayMonthsCount = 2;
     private _specialDates: DateRangeDescriptor[] = null;
     private _disabledDates: DateRangeDescriptor[] = null;
+    private _activeDate: Date | null = null;
     private _overlaySubFilter:
         [MonoTypeOperatorFunction<OverlayEventArgs>, MonoTypeOperatorFunction<OverlayEventArgs | OverlayCancelableEventArgs>] = [
             filter(x => x.id === this._overlayId),
@@ -810,6 +834,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         if (this.isDropdown && selectionData?.length > 1) {
             this.close();
         }
+        this._setCalendarActiveDate();
     }
 
     private handleClosing(e: IBaseCancelableBrowserEventArgs): void {
@@ -970,7 +995,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         } else if (range.length === 0 && this.calendar.monthViews) {
             this.calendar.deselectDate();
         }
-        this.calendar.viewDate = range[0] || new Date();
+        this._setCalendarActiveDate();
+        this._cdr.detectChanges();
     }
 
     private swapEditorDates(): void {
@@ -1031,6 +1057,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
                         } else {
                             this.value = { start: value, end: null };
                         }
+                        if (this.calendar) {
+                            this._setCalendarActiveDate(parseDate(value));
+                            this._cdr.detectChanges();
+                        }
                     });
                 end.dateTimeEditor.valueChange
                     .pipe(takeUntil(this._destroy$))
@@ -1039,6 +1069,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
                             this.value = { start: this.value.start, end: value as Date };
                         } else {
                             this.value = { start: null, end: value as Date };
+                        }
+                        if (this.calendar) {
+                            this._setCalendarActiveDate(parseDate(value));
+                            this._cdr.detectChanges();
                         }
                     });
             }
@@ -1157,6 +1191,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         this._calendar.selected.pipe(takeUntil(this._destroy$)).subscribe((ev: Date[]) => this.handleSelection(ev));
 
         this._setDisabledDates();
+        this._setCalendarActiveDate();
 
         componentInstance.mode = this.mode;
         componentInstance.closeButtonLabel = !this.isDropdown ? this.doneButtonText : null;
@@ -1195,5 +1230,12 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             return !isOutsideDisabledRange;
         }
         return false;
+    }
+
+    private _setCalendarActiveDate(value = null): void {
+        if (this._calendar) {
+            this._calendar.activeDate = value ?? this.activeDate;
+            this._calendar.viewDate = value ?? this.activeDate;
+        }
     }
 }

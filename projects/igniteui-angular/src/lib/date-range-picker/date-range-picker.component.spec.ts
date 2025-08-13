@@ -63,6 +63,7 @@ describe('IgxDateRangePicker', () => {
         let mockCalendar: IgxCalendarComponent;
         let mockDaysView: any;
         let mockAnimationService: AnimationService;
+        let mockCdr: any;
         const elementRef = { nativeElement: null };
         const platform = {} as any;
         const mockNgControl = jasmine.createSpyObj('NgControl',
@@ -87,6 +88,9 @@ describe('IgxDateRangePicker', () => {
             mockApplicationRef = { attachView: (h: any) => { }, detachView: (h: any) => { } };
             mockInjector = jasmine.createSpyObj('Injector', {
                 get: mockNgControl
+            });
+            mockCdr = jasmine.createSpyObj('ChangeDetectorRef', {
+                detectChanges: () => { }
             });
             mockAnimationBuilder = {
                 build: (a: AnimationMetadata | AnimationMetadata[]) => ({
@@ -244,7 +248,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should disable calendar dates when min and/or max values as dates are provided', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, null, overlay);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, mockCdr, overlay);
             dateRange.ngOnInit();
 
             spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
@@ -260,7 +264,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en', platform, mockInjector, null, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en', platform, mockInjector, mockCdr, null, null);
             dateRange.ngOnInit();
 
             spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
@@ -277,7 +281,7 @@ describe('IgxDateRangePicker', () => {
         }));
 
         it('should validate correctly when disabledDates are set', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, null, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, mockCdr, null, null);
             dateRange.ngOnInit();
 
             dateRange.registerOnChange(mockNgControl.registerOnChangeCb);
@@ -1317,6 +1321,60 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.opening.emit).toHaveBeenCalledTimes(0);
                     expect(dateRange.opened.emit).toHaveBeenCalledTimes(0);
                 }));
+
+                it('should update the calendar selection on typing', fakeAsync(() => {
+                    const range = { start: new Date(2025, 0, 16), end: new Date(2025, 0, 20) };
+                    dateRange.value = range;
+                    fixture.detectChanges();
+                    dateRange.open();
+                    fixture.detectChanges();
+
+                    expect((dateRange['_calendar'].value as Date[]).length).toBe(5);
+
+                    startInput.triggerEventHandler('focus', {});
+                    fixture.detectChanges();
+                    UIInteractions.simulateTyping('01/18/2025', startInput);
+
+                    tick(DEBOUNCE_TIME);
+                    fixture.detectChanges();
+
+                    expect((dateRange['_calendar'].value as Date[]).length).toBe(3);
+
+                    startDate = new Date(2025, 0, 18);
+                    const expectedRange = { start: startDate, end: new Date(2025, 0, 20) };
+                    expect(dateRange.value).toEqual(expectedRange);
+                    expect(dateRange.activeDate).toEqual(expectedRange.start);
+
+                    const activeDescendantDate = new Date(startDate.setHours(0, 0, 0, 0)).getTime().toString();
+                    expect(dateRange['_calendar'].activeDate).toEqual(startDate);
+                    expect(dateRange['_calendar'].viewDate.getMonth()).toEqual(startDate.getMonth());
+                    expect(dateRange['_calendar'].value[0]).toEqual(startDate);
+                    expect(dateRange['_calendar'].wrapper.nativeElement.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
+                }));
+
+                it('should update the calendar view and active date on typing a date that is not in the current view', fakeAsync(() => {
+                    const range = { start: new Date(2025, 0, 16), end: new Date(2025, 0, 20) };
+                    dateRange.value = range;
+                    fixture.detectChanges();
+                    dateRange.open();
+                    fixture.detectChanges();
+
+                    expect((dateRange['_calendar'].value as Date[]).length).toBe(5);
+
+                    startInput.triggerEventHandler('focus', {});
+                    fixture.detectChanges();
+                    UIInteractions.simulateTyping('11/18/2025', startInput);
+
+                    tick(DEBOUNCE_TIME);
+                    fixture.detectChanges();
+
+                    startDate = new Date(2025, 10, 18);
+
+                    const activeDescendantDate = new Date(startDate.setHours(0, 0, 0, 0)).getTime().toString();
+                    expect(dateRange['_calendar'].activeDate).toEqual(startDate);
+                    expect(dateRange['_calendar'].viewDate.getMonth()).toEqual(startDate.getMonth());
+                    expect(dateRange['_calendar'].wrapper.nativeElement.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
+                }));
             });
 
             it('should focus the last focused input after the calendar closes - dropdown', fakeAsync(() => {
@@ -1739,13 +1797,70 @@ describe('IgxDateRangePicker', () => {
                 fixture.detectChanges();
 
                 expect(dateRange['_calendar'].disabledDates).toEqual(disabledDates);
+            }));
 
-                // should not allow to select a date from the disabled dates
-                startDate = new Date(new Date().getFullYear(), new Date().getMonth(), 4);
-                endDate = new Date(new Date().getFullYear(), new Date().getMonth(), 6);
+             it('should initialize activeDate with current date, when not set', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+                const todayDate = new Date();
+                const today = new Date(todayDate.setHours(0, 0, 0, 0)).getTime().toString();
 
-                selectDateRangeFromCalendar(startDate, endDate);
-                expect(dateRange.value).toBeNull();
+                expect(dateRange.activeDate).toEqual(todayDate);
+
+                dateRange.open();
+                fixture.detectChanges();
+
+                expect(dateRange['_calendar'].activeDate).toEqual(todayDate);
+                expect(dateRange['_calendar'].value).toEqual([]);
+                const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(wrapper.getAttribute('aria-activedescendant')).toEqual(today);
+            }));
+
+            it('should initialize activeDate = first defined in value (start/end) when it is not set, but value is', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+                let range = { start: new Date(2025, 0, 1), end: new Date(2025, 0, 5) };
+                dateRange.value = range;
+                fixture.detectChanges();
+
+                expect(dateRange.activeDate).toEqual(range.start);
+                dateRange.open();
+                fixture.detectChanges();
+
+                const activeDescendantDate = new Date(range.start.setHours(0, 0, 0, 0)).getTime().toString();
+                expect(dateRange['_calendar'].activeDate).toEqual(range.start);
+                expect(dateRange['_calendar'].value[0]).toEqual(range.start);
+                const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(wrapper.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
+
+                range = { ...range, start: null};
+                dateRange.value = range;
+                fixture.detectChanges();
+
+                expect(dateRange.activeDate).toEqual(range.end);
+            }));
+
+            it('should set activeDate correctly', fakeAsync(() => {
+                const targetDate = new Date(2025, 11, 1);
+                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+                const range = { start: new Date(2025, 0, 1), end: new Date(2025, 0, 5) };
+                dateRange.value = range;
+                dateRange.activeDate = targetDate;
+                fixture.detectChanges();
+
+                expect(dateRange.activeDate).toEqual(targetDate);
+                dateRange.open();
+                fixture.detectChanges();
+
+                const activeDescendantDate = new Date(targetDate.setHours(0, 0, 0, 0)).getTime().toString();
+                expect(dateRange['_calendar'].activeDate).toEqual(targetDate);
+                expect(dateRange['_calendar'].value[0]).toEqual(range.start);
+                const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(wrapper.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
             }));
 
             describe('Templated Calendar Header', () => {
