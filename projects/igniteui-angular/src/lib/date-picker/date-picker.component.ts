@@ -833,6 +833,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             return;
         }
         this._dateValue = DateTimeUtil.isValidDate(value) ? value : DateTimeUtil.parseIsoDate(value);
+        if (this._calendar) {
+            this._calendar.selectDate(this._dateValue);
+        }
     }
 
     private updateValidity() {

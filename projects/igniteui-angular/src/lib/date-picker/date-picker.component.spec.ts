@@ -249,6 +249,32 @@ describe('IgxDatePicker', () => {
                     .toBeTrue();
                 expect(datePicker.isFocused).toBeTrue();
             }));
+
+            it('should update the calendar selection on typing', fakeAsync(() => {
+                const date = new Date(2025, 0, 1);
+                datePicker.value = date;
+                datePicker.open();
+                fixture.detectChanges();
+
+                const input = fixture.debugElement.query(By.css('.igx-input-group__input'));
+                input.nativeElement.focus();
+                tick();
+                fixture.detectChanges();
+
+                fixture.detectChanges();
+                UIInteractions.simulateTyping('02/01/2025', input);
+
+                const expectedDate = new Date(2025, 0, 2);
+                expect(datePicker.value).toEqual(expectedDate);
+                expect(datePicker.activeDate).toEqual(expectedDate);
+
+                const activeDescendantDate = new Date(expectedDate.setHours(0, 0, 0, 0)).getTime().toString();
+                expect(datePicker['_calendar'].activeDate).toEqual(expectedDate);
+                expect(datePicker['_calendar'].viewDate.getMonth()).toEqual(expectedDate.getMonth());
+                expect(datePicker['_calendar'].value).toEqual(expectedDate);
+                const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(wrapper.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
+            }));
         });
 
         describe('NgControl integration', () => {
@@ -776,7 +802,7 @@ describe('IgxDatePicker', () => {
 
             mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
 
-            mockCalendar = { selected: new EventEmitter<any>() };
+            mockCalendar = { selected: new EventEmitter<any>(), selectDate: () => {} };
             const mockComponentInstance = {
                 calendar: mockCalendar,
                 todaySelection: new EventEmitter<any>(),
