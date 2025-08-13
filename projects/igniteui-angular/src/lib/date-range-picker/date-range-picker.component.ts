@@ -1185,7 +1185,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     private _isValueInDisabledRange(value: DateRange) {
-        if (value && this.disabledDates) {
+        if (value && value.start && value.end && this.disabledDates) {
             const isOutsideDisabledRange = Array.from(
                 calendarRange({
                     start: parseDate(this.value.start),
