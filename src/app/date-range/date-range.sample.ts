@@ -1,20 +1,38 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ViewChild } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidatorFn, AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DateRange, IgxButtonDirective, IgxDateRangePickerComponent, IgxDateTimeEditorDirective, IgxInputDirective, IgxLabelDirective, IgxRadioComponent, IgxRippleDirective, IGX_INPUT_GROUP_TYPE, IChangeCheckboxEventArgs, IGX_DATE_RANGE_PICKER_DIRECTIVES, IgxIconComponent, IgSizeDirective } from 'igniteui-angular';
 import { DateRangeType } from 'igniteui-angular/src/lib/calendar/common/types';
+import { defineComponents, IgcButtonComponent, IgcDateRangePickerComponent, IgcDateTimeInputComponent, IgcIconComponent } from 'igniteui-webcomponents';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
+defineComponents(IgcDateRangePickerComponent, IgcButtonComponent, IgcIconComponent, IgcDateTimeInputComponent);
 
 @Component({
     selector: 'app-date-range',
     templateUrl: './date-range.sample.html',
     styleUrls: ['./date-range.sample.scss'],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [
         {
             provide: IGX_INPUT_GROUP_TYPE,
             useValue: 'border'
         }
     ],
-    imports: [IgxButtonDirective, IgxRippleDirective, IgxDateRangePickerComponent, IgxPickerToggleComponent, IgxSuffixDirective, IgxIconComponent, IgxDateRangeStartComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxPrefixDirective, IgxDateRangeEndComponent, FormsModule, IgxLabelDirective, IgxRadioComponent, ReactiveFormsModule, JsonPipe]
+    imports: [
+        IgxButtonDirective,
+        IgxRippleDirective,
+        FormsModule,
+        IgxLabelDirective,
+        IgxRadioComponent,
+        ReactiveFormsModule,
+        JsonPipe,
+        IGX_DATE_RANGE_PICKER_DIRECTIVES,
+        IgxInputDirective,
+        IgxDateTimeEditorDirective,
+        IgxIconComponent,
+        IgSizeDirective
+    ]
 })
 export class DateRangeSampleComponent {
     @ViewChild('dr1', { static: true })
@@ -29,13 +47,22 @@ export class DateRangeSampleComponent {
     public range6Start = null;
     public range6End = null;
     public range6: DateRange = { start: this.range6Start, end: this.range6End };
-    public minDate: Date = new Date();
+    public minDate: Date = new Date(new Date().setDate(new Date().getDate() - 20));
     public maxDate: Date = new Date(new Date().setDate(new Date().getDate() + 25));
 
     public reactiveForm: UntypedFormGroup;
+    public DateRangeType = DateRangeType;
 
     public updateOnOptions: string[] = ['change', 'blur', 'submit'];
     public updateOn = 'blur';
+
+
+    public specialDates = [{
+        type: DateRangeType.Between, dateRange: [
+            new Date(new Date().getFullYear(), new Date().getMonth(), 3),
+            new Date(new Date().getFullYear(), new Date().getMonth(), 8)
+        ]
+    }];
 
     public disabledDates = [{
         type: DateRangeType.Between, dateRange: [
@@ -44,7 +71,131 @@ export class DateRangeSampleComponent {
         ]
     }];
 
-    constructor(fb: UntypedFormBuilder) {
+    public panelConfig: PropertyPanelConfig = {
+        size: {
+            control: {
+                type: 'button-group',
+                options: ['small', 'medium', 'large'],
+                defaultValue: 'medium',
+            }
+        },
+        mode: {
+            control: {
+                type: 'button-group',
+                options: ['dropdown', 'dialog'],
+                defaultValue: 'dropdown'
+            }
+        },
+        value: {
+            control: {
+                type: 'date-range',
+                defaultValue: this.range3
+            }
+        },
+        minValue: {
+            label: 'Min Value',
+            control: {
+                type: 'date',
+                defaultValue: this.minDate
+            }
+        },
+        maxValue: {
+            label: 'Max Value',
+            control: {
+                type: 'date',
+                defaultValue: this.maxDate
+            }
+        },
+        required: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        disabled: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        placeholder: {
+            control: {
+                type: 'text',
+                defaultValue: 'MM/dd/yyyy'
+            }
+        },
+        displayFormat: {
+            label: 'Display Format',
+            control: {
+                type: 'text'
+            }
+        },
+        inputFormat: {
+            label: 'Input Format',
+            control: {
+                type: 'text'
+            }
+        },
+        hasHeader: {
+            label: 'Has Header (for dialog mode)',
+            control: {
+                type: 'boolean',
+                defaultValue: true
+            }
+        },
+        orientation: {
+            label: 'Orientation',
+            control: {
+                type: 'button-group',
+                options: ['horizontal', 'vertical'],
+                defaultValue: 'horizontal'
+            }
+        },
+        headerOrientation: {
+            label: 'Header Orientation (dialog mode)',
+            control: {
+                type: 'button-group',
+                options: ['horizontal', 'vertical'],
+                defaultValue: 'horizontal'
+            }
+        },
+        headerTemplate: {
+            label: 'Show Header Template (dialog)',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        calendarTitle: {
+            label: 'Show Calendar Title (dialog)',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        separator: {
+            label: 'Separator text',
+            control: {
+                type: 'text',
+                defaultValue: 'to'
+            }
+        },
+        visibleMonths: {
+            label: 'Visible Months',
+            control: {
+                type: 'number',
+                defaultValue: 2,
+            }
+        },
+    };
+
+    public properties: Properties;
+
+    constructor(
+        fb: UntypedFormBuilder,
+        private propertyChangeService: PropertyChangeService,
+        private destroyRef: DestroyRef
+    ) {
         const today = new Date();
         const in5days = new Date();
         in5days.setDate(today.getDate() + 5);
@@ -60,6 +211,17 @@ export class DateRangeSampleComponent {
             start6: ['', { validators: Validators.required, updateOn: this.updateOn }],
             end6: ['', { validators: Validators.required, updateOn: this.updateOn }],
         });
+
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
+
+        const propertyChange =
+            this.propertyChangeService.propertyChanges.subscribe(
+                (properties) => {
+                    this.properties = properties;
+                }
+            );
+
+        this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
     }
 
     public updateOnChange(e: IChangeCheckboxEventArgs) {

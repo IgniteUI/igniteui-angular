@@ -1,3 +1,107 @@
+<div class="angular-wc" [igSize]="properties.size">
+  <div class="angular-wc">
+    <h6>Angular Date Range Picker, two inputs, template-driven form</h6>
+    <igx-date-range-picker
+      name="dp3"
+      [(ngModel)]="properties.value"
+      [mode]="properties.mode"
+      [disabled]="properties.disabled"
+      [required]="properties.required"
+      [displayFormat]="properties.displayFormat"
+      [minValue]="properties.minValue"
+      [maxValue]="properties.maxValue"
+      [disabledDates]="disabledDates"
+      [specialDates]="specialDates"
+      [hasHeader]="properties.hasHeader"
+      [orientation]="properties.orientation"
+      [headerOrientation]="properties.headerOrientation"
+      [displayMonthsCount]="properties.visibleMonths"
+    >
+      <igx-date-range-start>
+        @if (properties.headerTemplate) {
+            <ng-template igxCalendarHeader let-formatCalendar>
+                Custom header content
+            </ng-template>
+        }
+        @if (properties.calendarTitle) {
+            <ng-template igxCalendarHeaderTitle let-formatCalendar>
+                Custom calendar title
+            </ng-template>
+        }
+        @if (properties.separator) {
+            <ng-template igxDateRangeSeparator>
+                <span>{{ properties.separator }}</span>
+            </ng-template>
+        }
+        <igx-picker-toggle igxPrefix>
+          <igx-icon>date_range</igx-icon>
+        </igx-picker-toggle>
+        <igx-picker-clear igxSuffix>
+          <igx-icon>clear</igx-icon>
+        </igx-picker-clear>
+        <label igxLabel>Start date</label>
+        <input
+          igxInput
+          [igxDateTimeEditor]="properties.inputFormat"
+          type="text"
+          [placeholder]="properties.placeholder"
+        />
+      </igx-date-range-start>
+      <igx-date-range-end>
+        <igx-picker-toggle igxPrefix>
+          <igx-icon>date_range</igx-icon>
+        </igx-picker-toggle>
+        <igx-picker-clear igxSuffix>
+          <igx-icon>clear</igx-icon>
+        </igx-picker-clear>
+        <label igxLabel>End date</label>
+        <input
+          igxInput
+          [igxDateTimeEditor]="properties.inputFormat"
+          type="text"
+          [placeholder]="properties.placeholder"
+        />
+      </igx-date-range-end>
+    </igx-date-range-picker>
+  </div>
+
+  <div class="angular-wc">
+    <h6>WC Date Range Picker, two inputs</h6>
+    <igc-date-range-picker
+      use-two-inputs
+      outlined
+      [value]="properties.value"
+      [mode]="properties.mode"
+      [required]="properties.required"
+      [disabled]="properties.disabled"
+      [placeholderStart]="properties.placeholder"
+      [placeholderEnd]="properties.placeholder"
+      [inputFormat]="properties.inputFormat"
+      [displayFormat]="properties.displayFormat"
+      [min]="properties.minValue"
+      [max]="properties.maxValue"
+      [disabledDates]="disabledDates"
+      [specialDates]="specialDates"
+      [hasHeader]="properties.hasHeader"
+      [orientation]="properties.orientation"
+      [headerOrientation]="properties.headerOrientation"
+      [visibleMonths]="properties.visibleMonths"
+      label-start="Start date"
+      label-end="End date"
+    >
+      @if (properties.headerTemplate) {
+        <span slot="header-date"> Custom header content </span>
+      }
+      @if (properties.calendarTitle) {
+        <span slot="title"> Custom calendar title </span>
+      }
+      @if (properties.separator) {
+        <span slot="separator">{{ properties.separator }}</span>
+      }
+    </igc-date-range-picker>
+  </div>
+</div>
+
 <section class="sample-content">
     <div class="sample-row">
         <div class="range-holder">

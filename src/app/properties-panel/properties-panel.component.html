@@ -46,6 +46,11 @@
             <igx-date-picker [formControlName]="key" mode="dialog"></igx-date-picker>
             }
 
+            <!-- Date Range Picker -->
+            @if (getControlType(key) === 'date-range') {
+            <igx-date-range-picker [formControlName]="key" mode="dialog" type="border"></igx-date-range-picker>
+            }
+
             <!-- Time Picker -->
             @if (getControlType(key) === 'time') {
             <igx-time-picker [formControlName]="key"></igx-time-picker>

@@ -25,7 +25,8 @@ import {
     IgxSelectItemComponent,
     IgxDatePickerComponent,
     IgxTimePickerComponent,
-    IgxDateTimeEditorModule
+    IgxDateTimeEditorModule,
+    IgxDateRangePickerComponent
 } from 'igniteui-angular';
 
 @Component({
@@ -48,7 +49,8 @@ import {
         IgxSelectItemComponent,
         IgxDatePickerComponent,
         IgxTimePickerComponent,
-        IgxDateTimeEditorModule
+        IgxDateTimeEditorModule,
+        IgxDateRangePickerComponent
     ]
 })
 
