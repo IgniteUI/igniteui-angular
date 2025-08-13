@@ -3204,6 +3204,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _shouldRecalcRowHeight = false;
 
     private _hostWidth;
+    private _possibleColumnWidth: string;
     private _advancedFilteringOverlayId: string;
     private _advancedFilteringPositionSettings: PositionSettings = {
         verticalDirection: VerticalAlignment.Middle,
@@ -5501,8 +5502,8 @@ export abstract class IgxGridBaseDirective implements GridType,
         computedWidth -= this.featureColumnsWidth();
 
         const columnWidth = !Number.isFinite(sumExistingWidths) ?
-            Math.max(computedWidth / columnsToSize, this.minColumnWidth) :
-            Math.max((computedWidth - sumExistingWidths) / columnsToSize, this.minColumnWidth);
+            Math.max(computedWidth / columnsToSize, this.defaultHeaderGroupMinWidth) :
+            Math.max((computedWidth - sumExistingWidths) / columnsToSize, this.defaultHeaderGroupMinWidth);
 
         return columnWidth + 'px';
     }
@@ -6586,9 +6587,10 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     protected _derivePossibleWidth() {
         if (!this.columnWidthSetByUser) {
-            this._columnWidth = this.width !== null ? this.getPossibleColumnWidth() : this.minColumnWidth + 'px';
+            this._possibleColumnWidth = this._columnWidth = this.width !== null ? this.getPossibleColumnWidth() : this.minColumnWidth + 'px';
         }
         this._columns.forEach((column: IgxColumnComponent) => {
+            this.setPossibleMinColumnWidth(column);
             if (this.hasColumnLayouts && parseFloat(this._columnWidth)) {
                 const columnWidthCombined = parseFloat(this._columnWidth) * (column.colEnd ? column.colEnd - column.colStart : 1);
                 column.defaultWidth = columnWidthCombined + 'px';
@@ -7974,5 +7976,17 @@ export abstract class IgxGridBaseDirective implements GridType,
             this._rowCount = this.verticalScrollContainer?.igxForOf?.length ?? 0;
         }
         this._rowCount += 1; // include header row
+    }
+
+    private setPossibleMinColumnWidth(column: IgxColumnComponent): void {
+        if (this.columnWidthSetByUser || this.width == null) {
+            return;
+        }
+
+        if (column.minWidthSetByUser || column.hidden) {
+            this._columnWidth = this._possibleColumnWidth;
+        } else if (!column.minWidthSetByUser && parseFloat(this._possibleColumnWidth) < this.minColumnWidth) {
+            this._columnWidth = this.minColumnWidth + 'px';
+        }
     }
 }
