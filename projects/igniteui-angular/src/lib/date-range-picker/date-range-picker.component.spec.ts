@@ -1129,7 +1129,8 @@ describe('IgxDateRangePicker', () => {
                     expect(endInput.nativeElement.value).toEqual(inputEndDate);
                 });
 
-                it('should select a range from the calendar only when the two inputs are filled in', fakeAsync(() => {
+                it('should select a range from the calendar only when any of the two inputs are filled in', fakeAsync(() => {
+                    // refactored to any of the two inputs, instead of both, to match the behavior in WC - #16131
                     startInput.triggerEventHandler('focus', {});
                     fixture.detectChanges();
                     UIInteractions.simulateTyping('11/10/2015', startInput);
@@ -1138,7 +1139,7 @@ describe('IgxDateRangePicker', () => {
                     tick(DEBOUNCE_TIME);
                     fixture.detectChanges();
                     const rangePicker = fixture.componentInstance.dateRange;
-                    expect((rangePicker as any).calendar.selectedDates.length).toBe(0);
+                    expect((rangePicker as any).calendar.selectedDates.length).toBe(1);
 
                     calendar = document.getElementsByClassName(CSS_CLASS_CALENDAR)[0];
                     UIInteractions.triggerKeyDownEvtUponElem('Escape', calendar);

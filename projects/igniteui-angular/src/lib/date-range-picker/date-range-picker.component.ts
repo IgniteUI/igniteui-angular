@@ -977,16 +977,20 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             return;
         }
         this._setDisabledDates();
-        const { minValue, maxValue } = this._getMinMaxDates();
 
         const range: Date[] = [];
-        if (this.value?.start && this.value?.end) {
+        if (this.value) {
             const _value = this.toRangeOfDates(this.value);
-            if (DateTimeUtil.greaterThanMaxValue(_value.start, _value.end)) {
-                this.swapEditorDates();
+            if (_value.start && _value.end) {
+                if (DateTimeUtil.greaterThanMaxValue(_value.start, _value.end)) {
+                    this.swapEditorDates();
+                }
             }
-            if (this.valueInRange(this.value, minValue, maxValue)) {
-                range.push(_value.start, _value.end);
+            if (_value.start) {
+                range.push(_value.start);
+            }
+            if (_value.end) {
+                range.push(_value.end);
             }
         }
 
@@ -1006,18 +1010,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             [start.dateTimeEditor.value, end.dateTimeEditor.value] = [end.dateTimeEditor.value, start.dateTimeEditor.value];
             [this.value.start, this.value.end] = [this.value.end, this.value.start];
         }
-    }
-
-    private valueInRange(value: DateRange, minValue?: Date, maxValue?: Date): boolean {
-        const _value = this.toRangeOfDates(value);
-        if (minValue && DateTimeUtil.lessThanMinValue(_value.start, minValue, false)) {
-            return false;
-        }
-        if (maxValue && DateTimeUtil.greaterThanMaxValue(_value.end, maxValue, false)) {
-            return false;
-        }
-
-        return true;
     }
 
     private extractRange(selection: Date[]): DateRange {
