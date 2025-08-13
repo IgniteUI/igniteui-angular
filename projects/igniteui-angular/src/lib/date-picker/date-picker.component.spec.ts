@@ -103,6 +103,59 @@ describe('IgxDatePicker', () => {
                 expect(datePicker['_calendar'].orientation).toEqual(PickerCalendarOrientation.Vertical.toString());
                 expect(datePicker['_calendar'].wrapper.nativeElement).toHaveClass(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL);
             }));
+
+            it('should initialize activeDate with current date, when not set', fakeAsync(() => {
+                const datePicker = fixture.componentInstance.datePicker;
+                datePicker.value = null;
+                fixture.detectChanges();
+                const todayDate = new Date();
+                const today = new Date(todayDate.setHours(0, 0, 0, 0)).getTime().toString();
+
+                expect(datePicker.activeDate).toEqual(todayDate);
+
+                datePicker.open();
+                fixture.detectChanges();
+
+                expect(datePicker['_calendar'].activeDate).toEqual(todayDate);
+                expect(datePicker['_calendar'].value).toBeUndefined();
+                const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(wrapper.getAttribute('aria-activedescendant')).toEqual(today);
+            }));
+
+            it('should initialize activeDate = value when it is not set, but value is', fakeAsync(() => {
+                const datePicker = fixture.componentInstance.datePicker;
+                const date = fixture.componentInstance.date;
+
+                expect(datePicker.activeDate).toEqual(date);
+                datePicker.open();
+                fixture.detectChanges();
+
+                const activeDescendantDate = new Date(date.setHours(0, 0, 0, 0)).getTime().toString();
+                expect(datePicker['_calendar'].activeDate).toEqual(date);
+                expect(datePicker['_calendar'].value).toEqual(date);
+                const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(wrapper.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
+            }));
+
+            it('should set activeDate correctly', fakeAsync(() => {
+                const datePicker = fixture.componentInstance.datePicker;
+                const targetDate = new Date(2025, 0, 1);
+                datePicker.activeDate = new Date(targetDate);
+                fixture.detectChanges();
+
+                expect(datePicker.activeDate).toEqual(targetDate);
+                expect(datePicker.value).toEqual(fixture.componentInstance.date);
+
+                datePicker.open();
+                fixture.detectChanges();
+
+                const activeDescendantDate = new Date(targetDate.setHours(0, 0, 0, 0)).getTime().toString();
+                expect(datePicker['_calendar'].activeDate).toEqual(targetDate);
+                expect(datePicker['_calendar'].viewDate.getMonth()).toEqual(targetDate.getMonth());
+                expect(datePicker['_calendar'].value).toEqual(fixture.componentInstance.date);
+                const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(wrapper.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
+            }));
         });
 
         describe('Events', () => {

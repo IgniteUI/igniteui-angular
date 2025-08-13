@@ -160,6 +160,17 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     @Input({ transform: booleanAttribute })
     public showWeekNumbers: boolean;
 
+    @Input()
+    public get activeDate(): Date {
+        const today = new Date(new Date().setHours(0, 0, 0, 0));
+        const dateValue = DateTimeUtil.isValidDate(this._dateValue) ? new Date(this._dateValue.setHours(0, 0, 0, 0)) : null;
+        return this._activeDate ?? dateValue ?? this._calendar?.activeDate ?? today;
+    }
+
+    public set activeDate(value: Date) {
+        this._activeDate = value;
+    }
+
     /**
      * Gets/Sets a custom formatter function on the selected or passed date.
      *
@@ -468,6 +479,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private _calendarContainer?: HTMLElement;
     private _specialDates: DateRangeDescriptor[] = null;
     private _disabledDates: DateRangeDescriptor[] = null;
+    private _activeDate: Date = null;
     private _overlaySubFilter:
         [MonoTypeOperatorFunction<OverlayEventArgs>,
             MonoTypeOperatorFunction<OverlayEventArgs | OverlayCancelableEventArgs>] = [
@@ -873,7 +885,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             date.setMilliseconds(this.dateValue.getMilliseconds());
         }
         this.value = date;
-        this._calendar.viewDate = date;
+        if (this._calendar) {
+            this._calendar.activeDate = this.activeDate;
+            this._calendar.viewDate = this.activeDate;
+        }
         this.close();
     }
 
@@ -963,7 +978,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             this._calendar.disabledDates.push({ type: DateRangeType.After, dateRange: [maxValue] });
         }
     }
-
 
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {
         this._calendar = componentInstance.calendar;
