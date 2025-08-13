@@ -47,7 +47,6 @@ import { IgxIconComponent } from "../../icon/icon.component";
 import { IgxInputGroupComponent } from "../../input-group/input-group.component";
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { Size } from '../common/enums';
-import { GridColumnDataType } from '../../data-operations/data-util';
 
 interface IDataSelectorPanel {
     name: string;

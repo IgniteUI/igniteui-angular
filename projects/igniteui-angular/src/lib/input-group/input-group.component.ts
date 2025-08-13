@@ -1,4 +1,4 @@
-import { NgTemplateOutlet, NgClass } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectorRef,
     Component,
@@ -377,7 +377,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
 
     /** @hidden @internal */
     public get fileNames() {
-        return this.input.fileNames || this._resourceStrings.igx_input_file_placeholder;
+        return this.input.fileNames || this.resourceStrings.igx_input_file_placeholder;
     }
 
     /**

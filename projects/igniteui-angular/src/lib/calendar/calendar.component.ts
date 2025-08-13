@@ -9,7 +9,6 @@ import {
 	AfterViewInit,
 	ViewChildren,
 	QueryList,
-	OnDestroy,
 	booleanAttribute,
     HostListener,
 } from '@angular/core';

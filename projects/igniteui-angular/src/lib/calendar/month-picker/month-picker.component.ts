@@ -6,7 +6,6 @@ import {
     Input,
     ElementRef,
     AfterViewInit,
-    OnDestroy,
     OnInit,
 } from "@angular/core";
 import { NgTemplateOutlet } from "@angular/common";
