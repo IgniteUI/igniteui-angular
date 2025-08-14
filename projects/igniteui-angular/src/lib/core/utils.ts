@@ -1,11 +1,18 @@
-import { formatDate as _formatDate, getLocaleCurrencyCode, getLocaleFirstDayOfWeek as ngGetLocaleFirstDayOfWeek, isPlatformBrowser } from '@angular/common';
+import {
+    getLocaleCurrencyCode,
+    getLocaleDateFormat as ngGetLocaleDateFormat,
+    getLocaleDateTimeFormat as ngGetLocaleDateTimeFormat,
+    getLocaleFirstDayOfWeek as ngGetLocaleFirstDayOfWeek,
+    isPlatformBrowser,
+    FormatWidth
+} from '@angular/common';
 import { DestroyRef, Inject, Injectable, InjectionToken, PLATFORM_ID, inject } from '@angular/core';
 import { mergeWith } from 'lodash-es';
-import { finalize, NEVER, Observable, Subject } from 'rxjs';
+import { NEVER, Observable, Subject } from 'rxjs';
 import { setImmediate } from './setImmediate';
 import { isDevMode } from '@angular/core';
 import type { IgxTheme } from '../services/theme/theme.token';
-import { getI18nManager, IResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { DateTimeFormat, getI18nManager, IntlDateTimeStyleValues, IResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 /** @hidden @internal */
 export const ELEMENTS_TOKEN = /*@__PURE__*/new InjectionToken<boolean>('elements environment');
@@ -592,8 +599,56 @@ export function onResourceChangeHandle(destroyObj: Subject<any> | DestroyRef, ca
     if (destroyObj instanceof DestroyRef) {
         destroyObj.onDestroy(() => removeHandler());
     } else {
-        destroyObj.pipe(finalize(() => removeHandler()));
+        destroyObj.subscribe({
+            complete: () =>  removeHandler()
+        });
     }
+}
+
+/**
+ * Returns the date format based on a provided locale.
+ * Supports Angular's DatePipe format options: `short`, `medium`, `long`, `full`, `shortDate`, `mediumDate`, `longDate` and `fullDate`.
+ */
+export function getLocaleDateFormat(locale: string, displayFormat?: string): string {
+    const formatKeys = Object.keys(IntlDateTimeStyleValues) as (keyof typeof IntlDateTimeStyleValues)[];
+    const targetKey = formatKeys.find(k => k === displayFormat?.toLowerCase().replace('date', ''));
+    if (!targetKey) {
+        // if displayFormat is not shortDate, longDate, etc.
+        // or if it is not set by the user
+        return displayFormat;
+    }
+    let format: string;
+    try {
+        format = ngGetLocaleDateFormat(locale, FormatWidth[IntlDateTimeStyleValues[targetKey]]);
+    } catch {
+        // No longer throw warnings. Back up is to use Intl now, which should return the format without registering locales.
+        format = getI18nManager().getLocaleDateTimeFormat(locale, { dateStyle: targetKey });
+    }
+
+    return format;
+}
+
+/**
+ * Returns the date and time format based on a provided locale.
+ * Supports Angular's DatePipe format options: `short`, `medium`, `long`, `full`, `shortDate`, `mediumDate`, `longDate` and `fullDate`.
+ */
+export function getLocaleDateTimeFormat(locale: string, displayFormat?: string) {
+    const formatKeys = Object.keys(IntlDateTimeStyleValues) as (keyof typeof IntlDateTimeStyleValues)[];
+    const targetKey = formatKeys.find(k => k === displayFormat?.toLowerCase().replace('date', ''));
+    if (!targetKey) {
+        // if displayFormat is not shortDate, longDate, etc.
+        // or if it is not set by the user
+        return displayFormat;
+    }
+    let format: string;
+    try {
+        format = ngGetLocaleDateTimeFormat(locale, FormatWidth[IntlDateTimeStyleValues[targetKey]]);
+    } catch {
+        // No longer throw warnings. Back up is to use Intl now, which should return the format without registering locales.
+        format = getI18nManager().getLocaleDateTimeFormat(locale, { dateStyle: targetKey, timeStyle: targetKey });
+    }
+
+    return format;
 }
 
 /**
