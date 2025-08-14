@@ -12,7 +12,7 @@ import { NEVER, Observable, Subject } from 'rxjs';
 import { setImmediate } from './setImmediate';
 import { isDevMode } from '@angular/core';
 import type { IgxTheme } from '../services/theme/theme.token';
-import { DateTimeFormat, getI18nManager, IntlDateTimeStyleValues, IResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { getI18nManager, IntlDateTimeStyleValues, IResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 /** @hidden @internal */
 export const ELEMENTS_TOKEN = /*@__PURE__*/new InjectionToken<boolean>('elements environment');

@@ -1080,7 +1080,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     protected override onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
         super.onResourceChange(args);
-        this._resourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN, false);
+        this._defaultResourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN, false);
         if (this.hasProjectedInputs) {
             this.updateInputLocale();
             this.updateDisplayFormat();

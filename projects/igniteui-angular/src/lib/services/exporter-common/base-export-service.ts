@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { cloneArray, cloneValue, columnFieldPath, getCurrencyCode, IBaseEventArgs, resolveNestedPath, yieldingLoop } from '../../core/utils';
+import { cloneArray, cloneValue, columnFieldPath, formatDate, getCurrencyCode, IBaseEventArgs, resolveNestedPath, yieldingLoop } from '../../core/utils';
 import { GridColumnDataType, DataUtil } from '../../data-operations/data-util';
 import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
@@ -9,7 +9,7 @@ import { IGroupingState } from '../../data-operations/groupby-state.interface';
 import { getHierarchy, isHierarchyMatch } from '../../data-operations/operations';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IFilteringState } from '../../data-operations/filtering-state.interface';
-import { DatePipe, FormatWidth, getLocaleDateFormat, getLocaleDateTimeFormat } from '@angular/common';
+import { FormatWidth, getLocaleDateFormat, getLocaleDateTimeFormat } from '@angular/common';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { ColumnType, GridType, IPathSegment } from '../../grids/common/grid.interface';
 import { FilterUtil } from '../../data-operations/filtering-strategy';
@@ -1057,8 +1057,7 @@ export abstract class IgxBaseExporter {
             if (isDate) {
                 const timeZoneOffset = recordVal.getTimezoneOffset() * 60000;
                 const isoString = (new Date(recordVal - timeZoneOffset)).toISOString();
-                const pipe = new DatePipe(grid.locale);
-                recordVal = pipe.transform(isoString);
+                recordVal = formatDate(isoString, 'mediumDate', grid.locale);
             }
 
             const groupExpressionName = record.column && record.column.header ?

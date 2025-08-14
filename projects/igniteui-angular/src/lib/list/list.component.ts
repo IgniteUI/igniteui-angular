@@ -467,7 +467,7 @@ export class IgxListComponent extends IgxListBaseDirective {
     constructor(public element: ElementRef) {
         super(element);
         onResourceChangeHandle(this._destroyRef, () => {
-            this._resourceStrings = getCurrentResourceStrings(ListResourceStringsEN, false);
+            this._defaultResourceStrings = getCurrentResourceStrings(ListResourceStringsEN, false);
         }, this);
     }
 
