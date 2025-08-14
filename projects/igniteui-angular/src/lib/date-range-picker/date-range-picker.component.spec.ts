@@ -9,7 +9,7 @@ import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { HelperTestFunctions } from '../test-utils/calendar-helper-utils';
 import { CancelableEventArgs } from '../core/utils';
-import { DateRange, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent } from './date-range-picker-inputs.common';
+import { CustomDateRange, DateRange, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent } from './date-range-picker-inputs.common';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 import { DateRangeType } from '../core/dates';
 import { IgxDateRangePickerComponent, IgxDateRangeEndComponent } from './public_api';
@@ -25,6 +25,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { registerLocaleData } from "@angular/common";
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
+import { CalendarDay } from '../calendar/common/model';
 
 // The number of milliseconds in one day
 const DEBOUNCE_TIME = 16;
@@ -1382,6 +1383,173 @@ describe('IgxDateRangePicker', () => {
                     expect((fixture.componentInstance.dateRange.value.end as Date).getTime()).toEqual(range.end.getTime());
                 }));
             });
+
+            describe('Predefined ranges', ()=> {
+                const predefinedRangesLength = 4;
+                const today = CalendarDay.today.native;
+                const last7DaysEnd = CalendarDay.today.add('day', -7).native;
+                const last30DaysEnd = CalendarDay.today.add('day', -29).native;
+                const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+                const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                const startOfYear = new Date(today.getFullYear(), 0, 1);
+                const previousThreeDaysStart = CalendarDay.today.add('day', -3).native;
+                const nextThreeDaysEnd = CalendarDay.today.add('day', 3).native;
+
+                const customRanges: CustomDateRange[] = [
+                    {
+                        label: 'Previous Three Days',
+                        dateRange: {
+                            start: previousThreeDaysStart,
+                            end: today,
+                        },
+                    },
+                    {
+                        label: 'Next Three Days',
+                        dateRange: {
+                            start: today,
+                            end: nextThreeDaysEnd,
+                        },
+                    },
+                ];
+
+                const dateRanges: DateRange[] = [
+                    {start: last7DaysEnd, end: today},
+                    {start: startOfMonth, end: endOfMonth},
+                    {start: last30DaysEnd, end: today},
+                    {start: startOfYear, end: today},
+                    {start: previousThreeDaysStart, end: today},
+                    {start: today, end: nextThreeDaysEnd},
+                ];
+
+                beforeEach(() => {
+                    fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
+                    fixture.detectChanges();
+                    dateRange = fixture.componentInstance.dateRange;
+
+
+                });
+
+                it('should not render predefined area when usePredefinedRanges is false and no custom ranges are provided', () => {
+                    dateRange.open();
+                    fixture.detectChanges();
+
+                    const predefinedArea = document.querySelector('igx-predefined-ranges-area');
+                    const chips = document.querySelectorAll('igx-chip');
+
+                    console.log(predefinedArea);
+
+                    expect(predefinedArea).toBeNull();
+                    expect(chips.length).toEqual(0);
+
+                });
+
+                it('should render predefined area when usePredefinedRanges is true and no custom ranges are provided', () => {
+                    dateRange.usePredefinedRanges = true;
+                    fixture.detectChanges();
+
+                    dateRange.open();
+                    fixture.detectChanges();
+
+                    const predefinedArea = document.querySelector('igx-predefined-ranges-area');
+                    const chips = document.querySelectorAll('igx-chip');
+
+                    expect(predefinedArea).toBeDefined();
+                    expect(chips.length).toEqual(predefinedRangesLength);
+                });
+
+                it('should render predefined area when only custom ranges are provided', () => {
+                    dateRange.customRanges = customRanges;
+                    fixture.detectChanges();
+
+                    dateRange.open();
+                    fixture.detectChanges();
+
+                    const predefinedArea = document.querySelector('igx-predefined-ranges-area');
+                    const chips = document.querySelectorAll('igx-chip');
+
+                    expect(predefinedArea).toBeDefined();
+                    expect(chips.length).toEqual(customRanges.length);
+                });
+
+                it('should render predefined area when usePredefinedRanges is true and custom ranges are provided', () => {
+                    dateRange.usePredefinedRanges = true;
+                    dateRange.customRanges = customRanges;
+                    fixture.detectChanges();
+
+                    dateRange.open();
+                    fixture.detectChanges();
+
+                    const predefinedArea = document.querySelector('igx-predefined-ranges-area');
+                    const chips = document.querySelectorAll('igx-chip');
+
+                    expect(predefinedArea).toBeDefined();
+                    expect(chips.length).toEqual(predefinedRangesLength + customRanges.length);
+                });
+
+                it('should render predefined area and emit selection event when the user performs selection via chips', () => {
+                    const selectionSpy = spyOn(dateRange as any, 'handleSelection').and.callThrough();
+
+                    dateRange.usePredefinedRanges = true;
+                    dateRange.customRanges = customRanges;
+                    fixture.detectChanges();
+
+                    dateRange.open();
+                    fixture.detectChanges();
+
+                    const predefinedArea = document.querySelector('igx-predefined-ranges-area');
+                    const chips = document.querySelectorAll('igx-chip');
+
+                    expect(predefinedArea).toBeDefined();
+                    expect(chips.length).toEqual(predefinedRangesLength + customRanges.length);
+
+
+                    chips.forEach((chip, i) => {
+                        chip.dispatchEvent(UIInteractions.getMouseEvent('click'));
+                        fixture.detectChanges();
+                        expect(dateRange.value).toEqual(dateRanges[i]);
+
+                    });
+
+                    expect(selectionSpy).toHaveBeenCalledTimes(predefinedRangesLength + customRanges.length);
+                });
+
+                it('should use provided resourceStrings for labels when available', () => {
+                    const strings: any = {
+                        last7Days: 'Last 7 - localized',
+                        currentMonth: 'Current Month - localized',
+                        yearToDate: 'YTD - localized',
+                        igx_date_range_picker_last7Days: 'Last 7 - localized',
+                        igx_date_range_picker_currentMonth: 'Current Month - localized',
+                        igx_date_range_picker_yearToDate: 'YTD - localized',
+                        // last30Days omitted to test fallback
+                    };
+
+                    dateRange.resourceStrings = strings;
+                    dateRange.usePredefinedRanges = true;
+                    dateRange.customRanges = [];
+                    fixture.detectChanges();
+
+                    dateRange.open();
+                    fixture.detectChanges();
+
+                    const predefinedArea = document.querySelector('igx-predefined-ranges-area');
+                    const chips = document.querySelectorAll('igx-chip');
+
+                    expect(predefinedArea).toBeDefined();
+                    expect(chips.length).toEqual(predefinedRangesLength);
+                    const labels: string[] = [];
+
+                    chips.forEach((chip) => {
+                        labels.push(chip.textContent.trim());
+                    });
+
+                    expect(labels).toContain('Last 7 - localized');
+                    expect(labels).toContain('Current Month - localized');
+                    expect(labels).toContain('YTD - localized');
+
+                    expect(labels).toContain('Last 30 Days');
+                });
+            });
         });
 
         describe('Rendering', () => {
@@ -1606,7 +1774,10 @@ export class DateRangeDefaultComponent extends DateRangeTestComponent {
                            [disabled]="disabled"
                            [(ngModel)]="range"
                            [inputFormat]="inputFormat"
-                           [displayFormat]="displayFormat" required>
+                           [displayFormat]="displayFormat"
+                           required
+                           [usePredefinedRanges]="usePredefinedRanges"
+                           [customRanges]="customRanges">
         <igx-date-range-start>
             <igx-picker-toggle igxPrefix>
                 <igx-icon>calendar_view_day</igx-icon>
@@ -1637,6 +1808,8 @@ export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
     public inputFormat: string;
     public displayFormat: string;
     public override disabled = false;
+    public usePredefinedRanges = false;
+    public customRanges: CustomDateRange[] = [];
 }
 @Component({
     selector: 'igx-date-range-two-inputs-ng-model',
