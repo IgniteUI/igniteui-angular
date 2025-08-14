@@ -6,19 +6,34 @@ import { GridType } from '../grids/common/grid.interface';
 export interface IMergeByResult {
     rowSpan: number;
     root?: any;
-    prev?: any;
 }
 
+/**
+ * Merge strategy interface.
+ */
 export interface IGridMergeStrategy {
     /* blazorSuppress */
+    /**
+     * Function that processes merging of the whole data per merged field.
+     * Returns collection where object has reference to the original record and map of the cell merge metadata per field.
+     */
     merge: (
+        /* The original data to merge. */
         data: any[],
+        /* The field in the data to merge. */
         field: string,
+        /* Custom comparer function to use for field. */
         comparer: (prevRecord: any, currentRecord: any, field: string) => boolean,
+        /* Existing merge result to which to add the field specific metadata for merging. */
         result: any[],
-        activeRowIndexes : number[],
+        /* The active row indexes, where merging should break the sequence. */
+        activeRowIndexes: number[],
+        /* Optional reference to the grid */
         grid?: GridType
     ) => any[];
+    /**
+     * Function that compares values for merging. Returns true if same, false if different.
+     */
     comparer: (prevRecord: any, record: any, field: string) => boolean;
 }
 
@@ -35,7 +50,7 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
         field: string,
         comparer: (prevRecord: any, record: any, field: string) => boolean = this.comparer,
         result: any[],
-        activeRowIndexes : number[],
+        activeRowIndexes: number[],
         grid?: GridType
     ) {
         let prev = null;
@@ -45,7 +60,7 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
             const recData = result[index];
             // if this is active row or some special record type - add and skip merging
             if (activeRowIndexes.indexOf(index) != -1 || (grid && grid.isDetailRecord(rec) || grid.isGroupByRecord(rec) || grid.isChildGridRecord(rec))) {
-                if(!recData) {
+                if (!recData) {
                     result.push(rec);
                 }
                 prev = null;
