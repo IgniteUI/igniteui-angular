@@ -4083,12 +4083,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     protected get hasCellsToMerge() {
-        const columnToMerge = this.visibleColumns.filter(
-            x => x.merge && (this.cellMergeMode ==='always' ||
-            (this.cellMergeMode === 'onSort' && !!this.sortingExpressions
-                .find(y => y.fieldName === x.field)))
-        );
-        return columnToMerge.length > 0;
+        return this.columnsToMerge.length > 0;
     }
 
     /**

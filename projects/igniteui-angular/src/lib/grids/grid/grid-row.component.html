@@ -172,7 +172,6 @@
 <ng-template #expandableCellTemplate let-col>
     <igx-expandable-grid-cell
         [class.igx-grid__td--merged]="metaData?.cellMergeMeta.get(col.field)?.rowSpan > 1"
-        [class.igx-grid__td--merged]="metaData?.cellMergeMeta.get(col.field)?.rowSpan > 1"
         [class.igx-grid__td--merged-selected]="isSelectionRoot(col)"
         [class.igx-grid__td--merged-hovered]="isHoveredRoot(col)"
         [isMerged]="metaData?.cellMergeMeta.get(col.field)?.rowSpan > 1"
