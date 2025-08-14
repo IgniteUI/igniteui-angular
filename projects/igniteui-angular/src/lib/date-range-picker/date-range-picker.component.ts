@@ -984,17 +984,18 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     private subscribeToClick() {
-        const editElement = this.getEditElement();
-        if (!editElement) {
-            return;
-        }
-        fromEvent(editElement, 'click')
-            .pipe(takeUntil(this._destroy$))
-            .subscribe(() => {
-                if (!this.isDropdown) {
-                    this.toggle();
-                }
-            });
+        const inputs = this.hasProjectedInputs
+            ? this.projectedInputs.map(i => i.inputDirective.nativeElement)
+            : [this.getEditElement()];
+        inputs.forEach(input => {
+            fromEvent(input, 'click')
+                .pipe(takeUntil(this._destroy$))
+                .subscribe(() => {
+                    if (!this.isDropdown) {
+                        this.toggle();
+                    }
+                });
+        });
     }
 
     private subscribeToDateEditorEvents(): void {

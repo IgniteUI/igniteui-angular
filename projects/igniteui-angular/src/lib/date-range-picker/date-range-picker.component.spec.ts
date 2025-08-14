@@ -1434,6 +1434,16 @@ describe('IgxDateRangePicker', () => {
                 expect(fixture.componentInstance.dateRange.collapsed).toBeFalsy();
             }));
 
+            it('should expand the calendar if any of the inputs is clicked in dialog mode', fakeAsync(() => {
+                fixture.componentInstance.mode = PickerInteractionMode.Dialog;
+                fixture.detectChanges();
+                endInput = fixture.debugElement.queryAll(By.css(CSS_CLASS_INPUT))[1];
+                endInput.nativeElement.dispatchEvent(new Event('click'));
+                fixture.detectChanges();
+                tick();
+                expect(fixture.componentInstance.dateRange.collapsed).toBeFalsy();
+            }));
+
             it('should not expand the calendar if the default icon is clicked when disabled is set to true', fakeAsync(() => {
                 fixture.componentInstance.disabled = true;
                 fixture.detectChanges();
