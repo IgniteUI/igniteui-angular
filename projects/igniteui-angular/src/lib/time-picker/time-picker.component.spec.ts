@@ -34,9 +34,11 @@ const CSS_CLASS_SECONDSLIST = '.igx-time-picker__secondsList';
 const CSS_CLASS_AMPMLIST = 'igx-time-picker__ampmList';
 const CSS_CLASS_SELECTED_ITEM = '.igx-time-picker__item--selected';
 const CSS_CLASS_HEADER_HOUR = '.igx-time-picker__header-hour';
+const CSS_CLASS_HEADER = '.igx-time-picker__header';
 const CSS_CLASS_OVERLAY_WRAPPER = 'igx-overlay__wrapper';
 const TIME_PICKER_TOGGLE_ICON = 'access_time';
 const TIME_PICKER_CLEAR_ICON = 'clear';
+const CSS_CLASS_TIME_PICKER_VERTICAL = '.igx-time-picker--vertical';
 
 describe('IgxTimePicker', () => {
     let timePicker: IgxTimePickerComponent;
@@ -465,7 +467,7 @@ describe('IgxTimePicker', () => {
     });
 
     describe('Interaction tests', () => {
-        let timePickerElement: DebugElement;
+        let timePickerElement: HTMLElement;
         let timePickerDebElement: DebugElement;
         let inputGroup: DebugElement;
         let hourColumn: DebugElement;
@@ -1140,6 +1142,7 @@ describe('IgxTimePicker', () => {
                 fixture = TestBed.createComponent(IgxTimePickerTestComponent);
                 fixture.detectChanges();
                 timePicker = fixture.componentInstance.timePicker;
+                timePickerDebElement = fixture.debugElement.query(By.css(CSS_CLASS_TIMEPICKER));
                 timePickerElement = fixture.debugElement.query(By.css(CSS_CLASS_TIMEPICKER)).nativeElement;
                 inputGroup = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP}`));
                 hourColumn = fixture.debugElement.query(By.css(`.${CSS_CLASS_HOURLIST}`));
@@ -1569,6 +1572,44 @@ describe('IgxTimePicker', () => {
 
                 inputEl = fixture.nativeElement.querySelector(CSS_CLASS_INPUT);
                 expect(inputEl.placeholder).toEqual('sample placeholder');
+            }));
+
+            it('should set headerOrientation prop in dialog mode', fakeAsync(() => {
+                timePicker.mode = PickerInteractionMode.Dialog;
+                timePicker.open();
+                tick();
+                fixture.detectChanges();
+                expect(timePicker.headerOrientation).toEqual('horizontal');
+                let dialogDivVertical = timePickerDebElement.query(By.css(CSS_CLASS_TIME_PICKER_VERTICAL));
+                expect(dialogDivVertical).toBeNull();
+
+                timePicker.close();
+                tick();
+                fixture.detectChanges();
+
+                timePicker.mode = PickerInteractionMode.Dialog;
+                timePicker.headerOrientation = 'vertical';
+                fixture.detectChanges();
+
+                timePicker.open();
+                tick();
+                fixture.detectChanges();
+
+                dialogDivVertical = timePickerDebElement.query(By.css(CSS_CLASS_TIME_PICKER_VERTICAL));
+                expect(dialogDivVertical).not.toBeNull();
+            }));
+
+            it('should hide the calendar header if hideHeader is true in dialog mode', fakeAsync(() => {
+                timePicker.mode = PickerInteractionMode.Dialog;
+                timePicker.hideHeader = true;
+                fixture.detectChanges();
+
+                timePicker.open();
+                tick();
+                fixture.detectChanges();
+
+                const header = fixture.debugElement.query(By.css(CSS_CLASS_HEADER));
+                expect(header).toBeNull();
             }));
         });
 
