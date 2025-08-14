@@ -308,9 +308,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     @ViewChild('ampmList')
     public ampmList: ElementRef;
 
-    /** @hidden @internal */
-    @ContentChildren(IgxPickerClearComponent)
-    public clearComponents: QueryList<IgxPickerClearComponent>;
 
     /** @hidden @internal */
     @ContentChild(IgxLabelDirective)
@@ -745,10 +742,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                     this.updateValidityOnBlur();
                 }
             });
-
-        this.subToIconsClicked(this.clearComponents, () => this.clear());
-        this.clearComponents.changes.pipe(takeUntil(this._destroy$))
-            .subscribe(() => this.subToIconsClicked(this.clearComponents, () => this.clear()));
 
         if (this._ngControl) {
             this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));

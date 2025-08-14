@@ -13,7 +13,7 @@ import { IToggleView } from '../core/navigation';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { OverlaySettings } from '../services/overlay/utilities';
-import { IgxPickerToggleComponent } from './picker-icons.common';
+import { IgxPickerClearComponent, IgxPickerToggleComponent } from './picker-icons.common';
 import { PickerInteractionMode } from './types';
 import { WEEKDAYS } from '../calendar/calendar';
 import { DateRange } from '../date-range-picker/date-range-picker-inputs.common';
@@ -239,6 +239,10 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     @ContentChildren(IgxPickerToggleComponent, { descendants: true })
     public toggleComponents: QueryList<IgxPickerToggleComponent>;
 
+    /** @hidden @internal */
+    @ContentChildren(IgxPickerClearComponent, { descendants: true })
+    public clearComponents: QueryList<IgxPickerClearComponent>;
+
     @ContentChildren(IgxPrefixDirective, { descendants: true })
     protected prefixes: QueryList<IgxPrefixDirective>;
 
@@ -299,9 +303,8 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
 
     /** @hidden @internal */
     public ngAfterViewInit(): void {
-        this.subToIconsClicked(this.toggleComponents, () => this.open());
-        this.toggleComponents.changes.pipe(takeUntil(this._destroy$))
-            .subscribe(() => this.subToIconsClicked(this.toggleComponents, () => this.open()));
+        this.subToIconsClicked(this.toggleComponents, () => this.toggle());
+        this.subToIconsClicked(this.clearComponents, () => this.clear());
     }
 
     /** @hidden @internal */
@@ -322,17 +325,28 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     }
 
     /** Subscribes to the click events of toggle/clear icons in a query */
-    protected subToIconsClicked(components: QueryList<IgxPickerToggleComponent>, next: () => any): void {
-        components.forEach(toggle => {
-            toggle.clicked
-                .pipe(takeUntil(merge(components.changes, this._destroy$)))
-                .subscribe(next);
-        });
+    private subToIconsClicked(
+        components: QueryList<IgxPickerToggleComponent | IgxPickerClearComponent>,
+        handler: () => void
+    ): void {
+        const subscribeToClick = componentList => {
+            componentList.forEach(component => {
+                component.clicked
+                    .pipe(takeUntil(merge(componentList.changes, this._destroy$)))
+                    .subscribe(handler);
+            });
+        };
+
+        subscribeToClick(components);
+
+        components.changes.pipe(takeUntil(this._destroy$))
+            .subscribe(() => subscribeToClick(components));
     }
 
     public abstract select(value: Date | DateRange | string): void;
     public abstract open(settings?: OverlaySettings): void;
     public abstract toggle(settings?: OverlaySettings): void;
     public abstract close(): void;
+    public abstract clear(): void;
     public abstract getEditElement(): HTMLInputElement;
 }
