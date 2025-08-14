@@ -9,6 +9,26 @@ All notable changes for each version of this project will be documented in this 
     ```ts
     this.carousel.select(2, Direction.NEXT);
     ```
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Added ability to pin individual columns to a specific side (start or end of the grid), so that you can now have pinning from both sides. This can be done either declaratively by setting the `pinningPosition` property on the column:
+
+    ```html
+    <igx-column [field]="'Col1'" [pinned]='true' [pinningPosition]='pinningPosition'>
+    </igx-column>
+    ```
+
+    ```ts
+      public pinningPosition = ColumnPinningPosition.End;
+    ```
+
+    Or with the API, via optional parameter:
+
+    ```ts
+        grid.pinColumn('Col1', 0, ColumnPinningPosition.End);
+        grid.pinColumn('Col2', 0, ColumnPinningPosition.Start);
+    ```
+
+    If property `pinningPosition` is not set on a column, the column will default to the position specified on the grid's `pinning` options for `columns`.
 
 ### General
 - `IgxDropDown` now exposes a `role` input property, allowing users to customize the role attribute based on the use case. The default is `listbox`.
