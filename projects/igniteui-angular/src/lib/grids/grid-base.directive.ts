@@ -5181,6 +5181,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```
      * @param columnName
      * @param index
+     * @param pinningPosition
      */
     public pinColumn(columnName: string | IgxColumnComponent, index?: number, pinningPosition?: ColumnPinningPosition): boolean {
         const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);

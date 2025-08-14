@@ -1040,7 +1040,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
 
     /**
-     * Gets the pinning direction of the column.
+     * Gets the pinning position of the column.
      * ```typescript
      * let pinningPosition = this.column.pinningPosition;
      */
@@ -1052,9 +1052,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
 
     /**
-     * Sets the pinning direction of the column.
+     * Sets the pinning position of the column.
      *```html
-     * <igx-column [pinningPosition]="ColumnPinningPosition.End"></igx-column>
+     * <igx-column [pinningPosition]="1"></igx-column>
      * ```
      */
     public set pinningPosition(value: ColumnPinningPosition) {
@@ -2207,13 +2207,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
 
     /**
-     * Pins the column at the provided index in the pinned area.
+     * Pins the column in the specified position at the provided index in that pinned area.
      * Defaults to index `0` if not provided, or to the initial index in the pinned area.
      * Returns `true` if the column is successfully pinned. Returns `false` if the column cannot be pinned.
      * Column cannot be pinned if:
      * - Is already pinned
      * - index argument is out of range
-     * - The pinned area exceeds 80% of the grid width
      * ```typescript
      * let success = this.column.pin();
      * ```
