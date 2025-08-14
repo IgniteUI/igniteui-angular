@@ -288,6 +288,25 @@ export class GridFunctions {
         expect(header.nativeElement.classList.contains(ACTIVE_HEADER_CLASS)).toBe(focused);
     }
 
+    public static verifyPivotElementActiveDescendant(elem: DebugElement, id: string): void {
+        const activeDescendant = elem.nativeElement.getAttribute('aria-activedescendant');
+        expect(activeDescendant).toBe(id);
+    }
+
+    public static verifyHeaderActiveDescendant(headerRow: IgxGridHeaderRowComponent, id: string): void {
+        const headerRowElem = headerRow.nativeElement;
+        expect(headerRow.activeDescendant).toBe(id);
+        const activeDescendant = headerRowElem.getAttribute('aria-activedescendant');
+        expect(activeDescendant).toBe(id);
+    }
+
+    public static verifyGridContentActiveDescendant(gridContent: DebugElement, id: string): void {
+        const gridContentElem = gridContent.nativeElement;
+        expect(gridContent.componentInstance.activeDescendant).toBe(id);
+        const activeDescendant = gridContentElem.getAttribute('aria-activedescendant');
+        expect(activeDescendant).toBe(id);
+    }
+
     public static getCurrentCellFromGrid(grid, row, cell) {
         const gridRow = grid.rowList.toArray()[row];
         const gridCell = gridRow.cells.toArray()[cell];
@@ -1823,7 +1842,7 @@ export class GridSummaryFunctions {
 }
 export class GridSelectionFunctions {
     public static selectCellsRange =
-        async (fix, startCell, endCell, ctrl = false, shift = false)  => {
+        async (fix, startCell, endCell, ctrl = false, shift = false) => {
             UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement, shift, ctrl);
             fix.detectChanges();
             await wait();
@@ -1909,6 +1928,10 @@ export class GridSelectionFunctions {
         expect(selectedCellFromGrid.value).toEqual(cell.value);
         expect(selectedCellFromGrid.column.field).toMatch(cell.column.field);
         expect(selectedCellFromGrid.row.index).toEqual(cell.row.index);
+        // Check if the cell id is assigned as the active descendant of the grid content
+        const cellElement = cell.grid.gridAPI.get_cell_by_index(cell.row.index, cell.column.field).nativeElement;
+        const gridContent = GridFunctions.getGridContent(fix);
+        GridFunctions.verifyGridContentActiveDescendant(gridContent, cellElement.id);
     }
 
     public static verifyRowSelected(row, selected = true, hasCheckbox = true) {
