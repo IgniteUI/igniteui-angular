@@ -33,7 +33,7 @@ import {
     ViewContainerRef,
     DOCUMENT
 } from '@angular/core';
-import { columnFieldPath, formatDate, resizeObservable } from '../core/utils';
+import { areEqualArrays, columnFieldPath, formatDate, resizeObservable } from '../core/utils';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
@@ -3358,6 +3358,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _defaultRowHeight = 50;
     private _rowCount: number;
     private _cellMergeMode: GridCellMergeMode = GridCellMergeMode.onSort;
+    private _prevVisibleColumns: IgxColumnComponent[] = [];
 
     /**
      * @hidden @internal
@@ -4733,7 +4734,12 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this._visibleColumns.length) {
             return this._visibleColumns;
         }
-        this._visibleColumns = this._columns.filter(c => !c.hidden);
+        const newCollection = this._columns.filter(c => !c.hidden);
+        if (areEqualArrays(newCollection, this._prevVisibleColumns)) {
+            return this._prevVisibleColumns;
+        }
+        this._visibleColumns = newCollection;
+        this._prevVisibleColumns = [...this._visibleColumns];
         return this._visibleColumns;
     }
 
