@@ -2,6 +2,40 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## Unreleased
+### New Features
+
+- `IgxDateRangePicker`
+    - Now has a complete set of properties to customize the calendar:
+        - `headerOrientation`
+        - `orientation`
+        - `hideHeader`
+        - `activeDate`
+        - `disabledDates`
+        - `specialDates`
+
+    - As well as the following templates, available to customize the contents of the calendar header in `dialog` mode:
+
+        - `igxCalendarHeader`
+        - `igxCalendarHeaderTitle`
+        - `igxCalendarSubheader`
+    - **Behavioral Changes**
+        - The calendar would be displayed with header in `dialog` mode by default.
+        - The picker would remain open when typing (in two-inputs and `dropdown` mode).
+        - The calendar selection would get updated with the typed value.
+        - The calendar view would be updated as per the typed value.
+        - The picker would display a clear icon by default in single input mode.
+- `IgxDatePicker`
+    - Similar to the `IgxDateRangePicker`, also completes the ability to customize the calendar by introducing the following
+    properties in addition to the existing ones:
+        - `hideHeader`
+        - `orientation`
+        - `activeDate`
+    - **Behavioral Changes**
+        - The calendar selection would get updated with the typed value.
+        - The calendar view would be updated as per the typed date value.
+
+
 ## 20.1.0
 ### New Features
 - `IgxCarousel`
