@@ -20,7 +20,7 @@
         </div>
     }
     @if (pinnedStartColumns.length > 0) {
-        <ng-container *ngTemplateOutlet="pinnedCellsTemplate; context: this"></ng-container>
+        <ng-container *ngTemplateOutlet="pinnedCellsTemplate; context: { $implicit: this, columns: pinnedStartColumns }"></ng-container>
     }
     <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]="'calcPixelWidth'" [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
         <ng-template #cellTemplate>
@@ -85,7 +85,7 @@
         <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? treeCellTemplate : cellTemplate"></ng-container>
     </ng-template>
     @if (pinnedEndColumns.length > 0) {
-        <ng-container *ngTemplateOutlet="pinnedCellsTemplate; context: this"></ng-container>
+        <ng-container *ngTemplateOutlet="pinnedCellsTemplate; context: { $implicit: this, columns: pinnedEndColumns }"></ng-container>
     }
 </ng-template>
 
@@ -104,8 +104,8 @@
     </div>
 </ng-template>
 
-<ng-template #pinnedCellsTemplate let-col>
-    @for (col of pinnedColumns | igxNotGrouped; track trackPinnedColumn(col)) {
+<ng-template #pinnedCellsTemplate let-col let-columns="columns">
+    @for (col of columns | igxNotGrouped; track trackPinnedColumn(col)) {
         <ng-template #cellTemplate>
             <igx-grid-cell
                 class="igx-grid__td igx-grid__td--fw igx-grid__td--pinned"
