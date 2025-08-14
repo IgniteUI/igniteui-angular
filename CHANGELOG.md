@@ -2,16 +2,6 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## Unreleased
-### New Features
-- `IgxDateRangePicker`
- - Added new properties:
-  - `usePredefinedRanges` - Whether to render built-in predefined ranges 
-  - `customRanges` - Allows the user to provide custom ranges rendered as chips
-  - `resourceStrings` - Allows the user to provide set of resource strings 
-        
-- `IgxPredefinedRangesAreaComponent`
-  - Added new component for rendering the predefined or custom ranges inside the calendar of the `IgxDateRangePicker`
 
 ## 20.1.0
 ### New Features
@@ -20,6 +10,15 @@ All notable changes for each version of this project will be documented in this 
     ```ts
     this.carousel.select(2, Direction.NEXT);
     ```
+
+- `IgxDateRangePicker`
+  - Added new properties:
+      - `usePredefinedRanges` - Whether to render built-in predefined ranges 
+      - `customRanges` - Allows the user to provide custom ranges rendered as chips
+      - `resourceStrings` - Allows the user to provide set of resource strings 
+        
+- `IgxPredefinedRangesAreaComponent`
+  - Added new component for rendering the predefined or custom ranges inside the calendar of the `IgxDateRangePicker`
 
 ### General
 - `IgxDropDown` now exposes a `role` input property, allowing users to customize the role attribute based on the use case. The default is `listbox`.
