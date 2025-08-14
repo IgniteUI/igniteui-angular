@@ -3914,6 +3914,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             this._activeRowIndexes = null;
             if (this.hasCellsToMerge) {
                 this.refreshSearch();
+                this.notifyChanges();
             }
         });
 
