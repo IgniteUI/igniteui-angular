@@ -967,7 +967,6 @@ describe('IgxGrid - Column Pinning #grid', () => {
             grid.width = "1500px";
             fix.detectChanges();
 
-            debugger;
             // ['group1', 'group2', 'group3']
             const rootMRLGroups = grid.columns.filter(x => x.columnLayout && x.level === 0);
 
