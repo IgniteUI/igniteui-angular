@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
 
-import { IgxButtonDirective, IgxButtonGroupComponent, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPaginatorComponent } from 'igniteui-angular';
+import { ColumnPinningPosition, IgxButtonDirective, IgxButtonGroupComponent, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPaginatorComponent } from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -76,11 +76,11 @@ export class GridColumnMovingSampleComponent implements OnInit {
             { field: 'ID', width: 150, resizable: true, sortable: false, filterable: true, groupable: true,
                 summary: true, type: 'string', pinned: false, hidden: true },
             { field: 'CompanyName', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
-                summary: true, type: 'string'},
+                summary: true, type: 'string', pinned: true , pinningPosition: ColumnPinningPosition.End},
             { field: 'ContactName', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'string' },
             { field: 'ContactTitle', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
-                summary: true, type: 'string' },
+                summary: true, type: 'string', pinningPosition: ColumnPinningPosition.End },
             { field: 'Address', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'string' },
             { field: 'City', width: 150, resizable: true, sortable: false, filterable: false, groupable: true,

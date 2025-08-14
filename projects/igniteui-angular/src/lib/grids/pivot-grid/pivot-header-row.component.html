@@ -267,8 +267,8 @@
             }
 
             <!-- Pinned columns collection from the start -->
-            @if (pinnedColumnCollection.length && grid.isPinningToStart) {
-                @for (column of pinnedColumnCollection | igxTopLevel; track column) {
+            @if (pinnedStartColumnCollection.length) {
+                @for (column of pinnedStartColumnCollection | igxTopLevel; track column) {
                     <igx-grid-header-group [ngClass]="column.headerGroupClasses"
                         [ngStyle]="column.headerGroupStyles | igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
                         [style.min-width]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
@@ -299,8 +299,8 @@
             </div>
 
             <!-- Pinned columns collection at the end -->
-            @if (pinnedColumnCollection.length && !grid.isPinningToStart) {
-                @for (column of pinnedColumnCollection | igxTopLevel; track column) {
+            @if (pinnedEndColumnCollection.length) {
+                @for (column of pinnedEndColumnCollection | igxTopLevel; track column) {
                     <igx-grid-header-group [ngClass]="column.headerGroupClasses"
                         [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
                         [style.min-width]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"

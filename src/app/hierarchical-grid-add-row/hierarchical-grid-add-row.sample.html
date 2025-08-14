@@ -1,15 +1,22 @@
 <igx-hierarchical-grid [showExpandAll]="true" [data]="localData" [autoGenerate]="true" height="800px"
     width="100%" #hGrid cellSelection="none"
     primaryKey="ID"
-    [rowEditable]="true">
+    [rowEditable]="true"
+    (columnInit)="columnInit($event)">
+    <igx-grid-toolbar class="size">
+        <igx-grid-toolbar-actions>
+            <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+            <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+        </igx-grid-toolbar-actions>
+        </igx-grid-toolbar>
     <igx-action-strip #actionstrip>
         <igx-grid-pinning-actions></igx-grid-pinning-actions>
         <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
     </igx-action-strip>
-    <igx-row-island #island key="childData" [autoGenerate]="true"
+    <igx-row-island #island key="childData" [autoGenerate]="true" (columnInit)="columnInit($event)"
         [allowFiltering]="true" [rowEditable]="true" primaryKey="ID">
 
-        <igx-row-island key="childData" [autoGenerate]="true"
+        <igx-row-island key="childData" [autoGenerate]="true" (columnInit)="columnInit($event)"
             [allowFiltering]="true" rowSelection="multiple" [rowEditable]="true" primaryKey="ID">
             <igx-action-strip #actionstrip2>
                 <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>

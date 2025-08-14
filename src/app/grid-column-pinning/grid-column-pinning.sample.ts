@@ -54,8 +54,8 @@ export class GridColumnPinningSampleComponent implements OnInit {
         this.columns = [
             { field: 'ID', width: '200px', hidden: false },
             { field: 'CompanyName', width: '200px' },
-            { field: 'ContactName', width: '200px', pinned: true },
-            { field: 'ContactTitle', width: '300px', pinned: true },
+            { field: 'ContactName', width: '200px', pinned: true, pinningPosition: ColumnPinningPosition.Start },
+            { field: 'ContactTitle', width: '300px', pinned: true, pinningPosition: ColumnPinningPosition.End },
             { field: 'Address', width: '250px' },
             { field: 'City', width: '200px' },
             { field: 'Region', width: '300px' },

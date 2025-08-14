@@ -3,7 +3,7 @@
         <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
     </div>
 
-    <igx-tree-grid #grid1 selectionType="multi" [autoGenerate]="true" [batchEditing]="true" [data]="data"
+    <igx-tree-grid #grid1 selectionType="multi" (columnInit)="columnInit($event)" [autoGenerate]="true" [batchEditing]="true" [data]="data"
         childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1"
         [rowSelection]="selectionMode" [height]="'500px'"
         [allowFiltering]="true" [moving]="true" [filterMode]="'excelStyleFilter'" [filterStrategy]="filterStrategy">

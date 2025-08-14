@@ -250,6 +250,20 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
+    public get pinnedStartColumns(): ColumnType[] {
+        return this.grid.pinnedStartColumns;
+    }
+
+    /**
+    * @hidden
+    */
+    public get pinnedEndColumns(): ColumnType[] {
+        return this.grid.pinnedEndColumns;
+    }
+
+    /**
+     * @hidden
+     */
     public get isRoot(): boolean {
         return true;
     }
