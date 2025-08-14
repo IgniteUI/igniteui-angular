@@ -340,6 +340,29 @@ $input-bottom-spacing: rem(6px);
         }
     }
 
+    @include m(textarea-group, $not: (suffixed)) {
+        @include e(bundle-main) {
+            grid-area: 1 / 2 / span 1 / span 3;
+            padding-inline-end: 0;
+        }
+        
+        @include e(textarea) {
+            padding-inline-end: rem(4px);
+        }
+    }
+
+    @include mx(box, textarea-group, ('not': (suffixed))) {
+        @include e(textarea) {
+            max-width: calc(100% - #{rem(1px)});
+        }
+    }
+
+    @include mx(border, textarea-group, ('not': (suffixed))) {
+        @include e(textarea) {
+            max-width: calc(100% - #{rem(2px)});
+        }
+    }
+
     @include mx(base, textarea-group) {
         @include e(label) {
             top: var(--_input-top-spacing);
