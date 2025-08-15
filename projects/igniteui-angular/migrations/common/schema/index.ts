@@ -6,12 +6,14 @@ export interface ThemeChanges {
     changes: ThemeChange[];
 }
 
-export enum ThemeType {
-    Variable = 'variable',
-    Property = 'property',
-    Function = 'function',
-    Mixin = 'mixin'
-}
+export const ThemeType = {
+    Variable: 'variable',
+    Property: 'property',
+    Function: 'function',
+    Mixin: 'mixin'
+} as const;
+export type ThemeType = typeof ThemeType[keyof typeof ThemeType];
+
 export interface ThemeChange extends ChangeAction {
     /** Name of the theme property */
     name: string;
@@ -92,7 +94,8 @@ export interface ImportsChanges {
     changes: ImportsChange[];
 }
 
-export enum ElementType {
-    Directive = 'directive',
-    Component = 'component'
-}
+export const ElementType = {
+    Directive: 'directive',
+    Component: 'component'
+} as const;
+export type ElementType = typeof ElementType[keyof typeof ElementType];

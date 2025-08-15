@@ -159,12 +159,22 @@ export interface SourceOffset {
 
 export class FileChange {
 
+    public position: number;
+    public text: string;
+    public replaceText = '';
+    public type: 'insert' | 'replace' = 'insert';
+
     constructor(
-        public position = 0,
-        public text = '',
-        public replaceText = '',
-        public type: 'insert' | 'replace' = 'insert'
-    ) { }
+        position = 0,
+        text = '',
+        replaceText = '',
+        type: 'insert' | 'replace' = 'insert'
+    ) {
+        this.position = position;
+        this.text = text;
+        this.replaceText = replaceText;
+        this.type = type;
+    }
 
     public apply(content: string) {
         if (this.type === 'insert') {
@@ -250,7 +260,10 @@ class SerializerVisitor implements Visitor {
     /**
      *
      */
-    constructor(private getHtmlTagDefinition: (tagName: string) => HtmlTagDefinition) { }
+    private getHtmlTagDefinition: (tagName: string) => HtmlTagDefinition;
+    constructor(getHtmlTagDefinition: (tagName: string) => HtmlTagDefinition) {
+        this.getHtmlTagDefinition = getHtmlTagDefinition;
+    }
 
     public visitElement(element: Element, _context: any): any {
         if (this.getHtmlTagDefinition(element.name).isVoid) {

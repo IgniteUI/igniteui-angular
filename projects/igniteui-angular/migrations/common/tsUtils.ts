@@ -1,22 +1,23 @@
 import * as ts from 'typescript';
-import * as tss from 'typescript/lib/tsserverlibrary';
-import type { Tree } from '@angular-devkit/schematics';
-import type { MemberChange } from './schema';
-import { escapeRegExp } from './util';
-import { Logger } from './tsLogger';
-import { TSLanguageService } from './tsPlugin/TSLanguageService';
+import * as tss from 'typescript/lib/tsserverlibrary.js';
+import type { Tree } from '@angular-devkit/schematics.js';
+import type { MemberChange } from './schema.ts';
+import { escapeRegExp } from './util.ts';
+import { Logger } from './tsLogger.ts';
+import { TSLanguageService } from './tsPlugin/TSLanguageService.ts';
 
 export const IG_PACKAGE_NAME = 'igniteui-angular';
 export const NG_LANG_SERVICE_PACKAGE_NAME = '@angular/language-service';
 export const NG_CORE_PACKAGE_NAME = '@angular/core';
-export const CUSTOM_TS_PLUGIN_PATH = './tsPlugin';
+export const CUSTOM_TS_PLUGIN_PATH = './tsPlugin.ts';
 export const CUSTOM_TS_PLUGIN_NAME = 'igx-ts-plugin';
 
-enum SyntaxTokens {
-    ClosingParenthesis = ')',
-    MemberAccess = '.',
-    Question = '?'
-}
+export const SyntaxTokens = {
+    ClosingParenthesis: ')',
+    MemberAccess: '.',
+    Question: '?'
+} as const;
+export type SyntaxTokens = typeof SyntaxTokens[keyof typeof SyntaxTokens];
 
 export class MemberInfo implements Pick<tss.DefinitionInfo, 'name' | 'fileName'> {
     public name: string;
@@ -101,7 +102,7 @@ export const getRenamePositions = (sourcePath: string, name: string, service: ts
     const positions = [];
 
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const imports = source.statements.filter(<(a: ts.Statement) => a is ts.ImportDeclaration>namedImportFilter);
+    const imports = source.statements.filter(namedImportFilter) as ts.ImportDeclaration[];
     if (!imports.length) {
         return positions;
     }

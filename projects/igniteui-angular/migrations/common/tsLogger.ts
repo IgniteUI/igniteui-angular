@@ -1,28 +1,30 @@
-import * as ts from 'typescript/lib/tsserverlibrary';
+import * as ts from 'typescript/lib/tsserverlibrary.js';
 
 export class Logger implements ts.server.Logger {
-    constructor(
-        private readonly traceToConsole: boolean,
-        private readonly level: ts.server.LogLevel
-    ) { }
+    private readonly traceToConsole: boolean;
+    private readonly level: ts.server.LogLevel;
+    constructor(traceToConsole: boolean, level: ts.server.LogLevel) {
+        this.traceToConsole = traceToConsole;
+        this.level = level;
+    }
 
     public hasLevel(level: ts.server.LogLevel) {
         return this.loggingEnabled() && this.level >= level;
     }
 
-    public loggingEnabled() {
+    loggingEnabled() {
         return this.traceToConsole;
     }
 
-    public perftrc(s: string) {
+    perftrc(s: string) {
         this.msg(s, ts.server.Msg.Perf);
     }
 
-    public info(s: string) {
+    info(s: string) {
         this.msg(s, ts.server.Msg.Info);
     }
 
-    public msg(s: string, type: ts.server.Msg = ts.server.Msg.Err) {
+    msg(s: string, type: ts.server.Msg = ts.server.Msg.Err) {
         if (!this.traceToConsole) {
             return;
         }
@@ -41,13 +43,13 @@ export class Logger implements ts.server.Logger {
     /* These methods are used to log to a file,
        we will only use the logger to log on the console.
     */
-    public close() { }
+    close() { }
 
-    public startGroup() { }
+    startGroup() { }
 
-    public endGroup() { }
+    endGroup() { }
 
-    public getLogFileName() {
+    getLogFileName() {
         return null;
     }
     //#endregion

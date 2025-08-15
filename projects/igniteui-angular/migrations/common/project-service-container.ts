@@ -1,6 +1,6 @@
-import * as tss from 'typescript/lib/tsserverlibrary';
-import { createProjectService } from './tsUtils';
-import { ServerHost } from './ServerHost';
+import * as tss from 'typescript/lib/tsserverlibrary.js';
+import { createProjectService } from './tsUtils.ts';
+import { ServerHost } from './ServerHost.ts';
 
 export class ProjectServiceContainer {
     private _serverHost: ServerHost;

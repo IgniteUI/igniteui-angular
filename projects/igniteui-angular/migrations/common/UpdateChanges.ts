@@ -1,30 +1,31 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
-import * as tss from 'typescript/lib/tsserverlibrary';
+import * as tss from 'typescript/lib/tsserverlibrary.js';
 import type { SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
 import type { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 import {
     ClassChanges, BindingChanges, SelectorChange,
     SelectorChanges, ThemeChanges, ImportsChanges, MemberChanges, ThemeChange, ThemeType
-} from './schema';
+} from './schema/index.ts';
 import {
     getLanguageService, getRenamePositions, getIdentifierPositions,
     isMemberIgniteUI, NG_LANG_SERVICE_PACKAGE_NAME, NG_CORE_PACKAGE_NAME, findMatches
-} from './tsUtils';
+} from './tsUtils.ts';
 import {
     getProjectPaths, getWorkspace, getProjects, escapeRegExp, replaceMatch,
     getPackageManager, canResolvePackage, tryInstallPackage, tryUninstallPackage, getPackageVersion
-} from './util';
-import { ServerHost } from './ServerHost';
-import { serviceContainer } from './project-service-container';
+} from './util.ts';
+import { ServerHost } from './ServerHost.ts';
+import { serviceContainer } from './project-service-container.ts';
 
 const TSCONFIG_PATH = 'tsconfig.json';
 
-export enum InputPropertyType {
-    EVAL = 'eval',
-    STRING = 'string'
-}
+export const InputPropertyType = {
+    EVAL: 'eval',
+    STRING: 'string'
+} as const;
+export type InputPropertyType = typeof InputPropertyType[keyof typeof InputPropertyType];
 declare type TransformFunction = (args: BoundPropertyObject) => void;
 export interface BoundPropertyObject {
     value: string;
@@ -143,7 +144,14 @@ export class UpdateChanges {
      *
      * @param rootPath Root folder for the schematic to read configs, pass __dirname
      */
-    constructor(private rootPath: string, private host: Tree, private context?: SchematicContext) {
+    private rootPath: string;
+    private host: Tree;
+    private context?: SchematicContext;
+
+    constructor(rootPath: string, host: Tree, context?: SchematicContext) {
+        this.rootPath = rootPath;
+        this.host = host;
+        this.context = context;
         this.workspace = getWorkspace(host);
         this.sourcePaths = getProjectPaths(this.workspace);
 
@@ -867,7 +875,8 @@ export class UpdateChanges {
     }
 }
 
-export enum BindingType {
-    Output,
-    Input
-}
+export const BindingType = {
+    Output: 'Output',
+    Input: 'Input'
+} as const;
+export type BindingType = typeof BindingType[keyof typeof BindingType];

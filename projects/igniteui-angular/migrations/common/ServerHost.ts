@@ -1,7 +1,7 @@
-import type { Tree } from '@angular-devkit/schematics';
+import type { Tree } from '@angular-devkit/schematics/index.js';
 import * as pathFs from 'path';
-import * as ts from 'typescript/lib/tsserverlibrary';
-import { CUSTOM_TS_PLUGIN_NAME, CUSTOM_TS_PLUGIN_PATH } from './tsUtils';
+import * as ts from 'typescript/lib/tsserverlibrary.js';
+import { CUSTOM_TS_PLUGIN_NAME, CUSTOM_TS_PLUGIN_PATH } from './tsUtils.ts';
 import { createRequire } from 'module';
 
 /**
@@ -15,7 +15,9 @@ export class ServerHost implements ts.server.ServerHost {
     /** Cached because Angular schematics encapsulation's customRequire doesn't provide `resolve` */
     private nativeRequire = createRequire(__filename);
 
-    constructor(public host: Tree) {
+    public host: Tree;
+    constructor(host: Tree) {
+        this.host = host;
         this.args = ts.sys.args;
         this.newLine = ts.sys.newLine;
         this.useCaseSensitiveFileNames = ts.sys.useCaseSensitiveFileNames;

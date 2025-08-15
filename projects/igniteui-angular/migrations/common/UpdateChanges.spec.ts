@@ -1,10 +1,10 @@
-import { UnitTestTree } from '@angular-devkit/schematics/testing';
+import { UnitTestTree } from '@angular-devkit/schematics/testing/index.js';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ClassChanges, BindingChanges, SelectorChanges, ThemeChanges, ImportsChanges, ElementType, ThemeType, MemberChanges } from './schema';
-import { UpdateChanges, InputPropertyType, BoundPropertyObject } from './UpdateChanges';
-import * as tsUtils from './tsUtils';
-import { setupTestTree } from './setup.spec';
+import { ClassChanges, BindingChanges, SelectorChanges, ThemeChanges, ImportsChanges, ElementType, ThemeType, MemberChanges } from './schema/index.ts';
+import { UpdateChanges, InputPropertyType, BoundPropertyObject } from './UpdateChanges.ts';
+import * as tsUtils from './tsUtils.ts';
+import { setupTestTree } from './setup.spec.ts';
 
 describe('UpdateChanges', () => {
     let appTree: UnitTestTree;
