@@ -2828,6 +2828,9 @@ export abstract class IgxGridBaseDirective implements GridType,
     public set sortingExpressions(value: ISortingExpression[]) {
         this._sortingExpressions = cloneArray(value);
         this.sortingExpressionsChange.emit(this._sortingExpressions);
+        if (this.cellMergeMode === GridCellMergeMode.onSort) {
+            this.resetColumnCollections();
+        }
         this.notifyChanges();
     }
 
@@ -2951,7 +2954,11 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     public set cellMergeMode(value: GridCellMergeMode) {
-        this._cellMergeMode = value;
+        if (value !== this._cellMergeMode) {
+            this._cellMergeMode = value;
+            this.resetColumnCollections();
+            this.notifyChanges();
+        }
     }
 
     /**
@@ -3358,7 +3365,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _defaultRowHeight = 50;
     private _rowCount: number;
     private _cellMergeMode: GridCellMergeMode = GridCellMergeMode.onSort;
-    private _prevColsToMerge: IgxColumnComponent[] = [];
     private _columnsToMerge: IgxColumnComponent[] = [];
 
     /**
@@ -4002,12 +4008,20 @@ export abstract class IgxGridBaseDirective implements GridType,
             x => x.merge && (this.cellMergeMode ==='always' ||
             (this.cellMergeMode === 'onSort' && !!this.sortingExpressions.find( y => y.fieldName === x.field)))
         );
-        if (areEqualArrays(cols, this._prevColsToMerge)) {
-            return this._prevColsToMerge;
-        }
         this._columnsToMerge = cols;
-        this._prevColsToMerge = [...cols];
         return this._columnsToMerge;
+    }
+
+    protected allowResetOfColumnsToMerge() {
+        const cols = this.visibleColumns.filter(
+            x => x.merge && (this.cellMergeMode ==='always' ||
+            (this.cellMergeMode === 'onSort' && !!this.sortingExpressions.find( y => y.fieldName === x.field)))
+        );
+        if (areEqualArrays(cols, this._columnsToMerge)) {
+            return false;
+        } else {
+            return true
+        }
     }
 
     protected get mergedDataInView() {
@@ -4025,7 +4039,9 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._visibleColumns.length = 0;
         this._pinnedVisible.length = 0;
         this._unpinnedVisible.length = 0;
-        this._columnsToMerge.length = 0;
+        if (this.allowResetOfColumnsToMerge()) {
+            this._columnsToMerge.length = 0;
+        }
     }
 
     /**

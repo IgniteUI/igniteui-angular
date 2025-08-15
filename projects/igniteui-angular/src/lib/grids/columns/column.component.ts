@@ -124,7 +124,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             console.warn('Merging is not supported with multi-row layouts.');
             return;
         }
-        this._merge = value;
+        if (value !== this._merge) {
+            this._merge = value;
+            if (this.grid) {
+                this.grid.resetColumnCollections();
+                this.grid.notifyChanges();
+            }
+        }
     }
 
     /**

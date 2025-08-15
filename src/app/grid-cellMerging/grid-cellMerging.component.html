@@ -44,7 +44,7 @@
     </igx-input-group>
 </div>
 <igx-grid [data]="data" width="800px" height="550px" [moving]="true" #grid1
-    [cellMergeMode]="'onSort'" [rowSelection]="'single'">
+    [cellMergeMode]="'always'" [rowSelection]="'single'">
     <igx-column field="OrderID" header="Order ID">
         <ng-template igxCell let-cell="cell" let-val>
             Value: {{val}},Index: {{cell.row.index}}
