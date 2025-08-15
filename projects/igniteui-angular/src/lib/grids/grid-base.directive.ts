@@ -3358,7 +3358,8 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _defaultRowHeight = 50;
     private _rowCount: number;
     private _cellMergeMode: GridCellMergeMode = GridCellMergeMode.onSort;
-    private _prevVisibleColumns: IgxColumnComponent[] = [];
+    private _prevColsToMerge: IgxColumnComponent[] = [];
+    private _columnsToMerge: IgxColumnComponent[] = [];
 
     /**
      * @hidden @internal
@@ -3994,10 +3995,19 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @internal
      */
     public get columnsToMerge() : ColumnType[] {
-        return this.visibleColumns.filter(
+        if (this._columnsToMerge.length) {
+            return this._columnsToMerge;
+        }
+        const cols = this.visibleColumns.filter(
             x => x.merge && (this.cellMergeMode ==='always' ||
             (this.cellMergeMode === 'onSort' && !!this.sortingExpressions.find( y => y.fieldName === x.field)))
         );
+        if (areEqualArrays(cols, this._prevColsToMerge)) {
+            return this._prevColsToMerge;
+        }
+        this._columnsToMerge = cols;
+        this._prevColsToMerge = [...cols];
+        return this._columnsToMerge;
     }
 
     protected get mergedDataInView() {
@@ -4015,6 +4025,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._visibleColumns.length = 0;
         this._pinnedVisible.length = 0;
         this._unpinnedVisible.length = 0;
+        this._columnsToMerge.length = 0;
     }
 
     /**
@@ -4734,12 +4745,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this._visibleColumns.length) {
             return this._visibleColumns;
         }
-        const newCollection = this._columns.filter(c => !c.hidden);
-        if (areEqualArrays(newCollection, this._prevVisibleColumns)) {
-            return this._prevVisibleColumns;
-        }
-        this._visibleColumns = newCollection;
-        this._prevVisibleColumns = [...this._visibleColumns];
+        this._visibleColumns = this._columns.filter(c => !c.hidden);
         return this._visibleColumns;
     }
 
