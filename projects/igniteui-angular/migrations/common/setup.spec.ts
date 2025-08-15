@@ -1,10 +1,10 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-import { EmptyTree } from '@angular-devkit/schematics';
-import { UnitTestTree } from '@angular-devkit/schematics/testing';
-import * as tss from 'typescript/lib/tsserverlibrary';
-import { serviceContainer } from './project-service-container';
+import { EmptyTree } from '@angular-devkit/schematics/index.js';
+import { UnitTestTree } from '@angular-devkit/schematics/testing/index.js';
+import * as tss from 'typescript/lib/tsserverlibrary.js';
+import { serviceContainer } from './project-service-container.ts';
 
 const configJson = {
     version: 1,

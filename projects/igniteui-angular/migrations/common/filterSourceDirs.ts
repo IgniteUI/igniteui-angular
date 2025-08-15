@@ -1,6 +1,6 @@
-import { filter } from '@angular-devkit/schematics';
-import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import { getWorkspace, getWorkspacePath, getProjectPaths } from './util';
+import { filter } from '@angular-devkit/schematics/index.js';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics/index.js';
+import { getWorkspace, getWorkspacePath, getProjectPaths } from './util.ts';
 
 /**
  * @deprecated Temporary
