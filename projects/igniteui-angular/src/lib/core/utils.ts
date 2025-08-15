@@ -34,6 +34,17 @@ export function cloneArray<T>(array: T[], deep = false): T[] {
 }
 
 /**
+ * @hidden
+ */
+export function areEqualArrays<T>(arr1: T[], arr2: T[]): boolean {
+    if (arr1.length !== arr2.length) return false;
+        for (let i = 0; i < arr1.length; i++) {
+          if (arr1[i] !== arr2[i]) return false;
+        }
+        return true;
+}
+
+/**
  * Doesn't clone leaf items
  *
  * @hidden
