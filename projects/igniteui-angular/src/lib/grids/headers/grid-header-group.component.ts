@@ -60,7 +60,6 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         return this.column.colStart;
     }
 
-    @HostBinding('attr.id')
     public get headerID() {
         return `${this.grid.id}_-1_${this.column.level}_${this.column.visibleIndex}`;
     }
