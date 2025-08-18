@@ -1021,6 +1021,8 @@ class NoopMergeStrategy extends DefaultMergeStrategy {
         comparer: (prevRecord: any, record: any, field: string) => boolean = this.comparer,
         result: any[],
         activeRowIndexes: number[],
+        isDate?: boolean,
+        isTime?: boolean,
         grid?: GridType
     ) {
         return data;

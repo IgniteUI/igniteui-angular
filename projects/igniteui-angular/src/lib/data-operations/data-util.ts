@@ -25,7 +25,7 @@ import { DefaultMergeStrategy, IGridMergeStrategy } from './merge-strategy';
 /**
  * @hidden
  */
- export const DataType = {
+export const DataType = {
     String: 'string',
     Number: 'number',
     Boolean: 'boolean',
@@ -95,10 +95,20 @@ export class DataUtil {
     ): any[] {
         let result = [];
         for (const col of columns) {
-            strategy.merge(data, col.field, col.mergingComparer, result, activeRowIndexes, grid);
+            const isDate = col?.dataType === 'date' || col?.dataType === 'dateTime';
+            const isTime = col?.dataType === 'time' || col?.dataType === 'dateTime';
+            strategy.merge(
+                data,
+                col.field,
+                col.mergingComparer,
+                result,
+                activeRowIndexes,
+                isDate,
+                isTime,
+                grid);
         }
         return result;
-}
+    }
 
     public static page<T>(data: T[], state: IPagingState, dataLength?: number): T[] {
         if (!state) {

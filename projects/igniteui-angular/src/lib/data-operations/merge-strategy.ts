@@ -1,3 +1,4 @@
+import { columnFieldPath, parseDate, resolveNestedPath } from '../core/utils';
 import { GridType } from '../grids/common/grid.interface';
 
 
@@ -28,7 +29,11 @@ export interface IGridMergeStrategy {
         result: any[],
         /* The active row indexes, where merging should break the sequence. */
         activeRowIndexes: number[],
-        /* Optional reference to the grid */
+        /* (Optional) Indicates if the field is of type Date. */
+        isDate?: boolean,
+        /* (Optional) Indicates if the field is of type Time. */
+        isTime?: boolean,
+        /* (Optional) Reference to the grid */
         grid?: GridType
     ) => any[];
     /**
@@ -48,9 +53,11 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
     public merge(
         data: any[],
         field: string,
-        comparer: (prevRecord: any, record: any, field: string) => boolean = this.comparer,
+        comparer: (prevRecord: any, record: any, field: string, isDate?: boolean, isTime?: boolean) => boolean = this.comparer,
         result: any[],
         activeRowIndexes: number[],
+        isDate = false,
+        isTime = false,
         grid?: GridType
     ) {
         let prev = null;
@@ -69,7 +76,7 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
             }
             let recToUpdateData = recData ?? { recordRef: grid.isGhostRecord(rec) ? rec.recordRef : rec, cellMergeMeta: new Map<string, IMergeByResult>(), ghostRecord: rec.ghostRecord };
             recToUpdateData.cellMergeMeta.set(field, { rowSpan: 1 });
-            if (prev && comparer(prev.recordRef, recToUpdateData.recordRef, field) && prev.ghostRecord === recToUpdateData.ghostRecord) {
+            if (prev && comparer.call(this, prev.recordRef, recToUpdateData.recordRef, field, isDate, isTime) && prev.ghostRecord === recToUpdateData.ghostRecord) {
                 const root = prev.cellMergeMeta.get(field)?.root ?? prev;
                 root.cellMergeMeta.get(field).rowSpan += 1;
                 recToUpdateData.cellMergeMeta.get(field).root = root;
@@ -84,9 +91,9 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
     }
 
     /* blazorSuppress */
-    public comparer(prevRecord: any, record: any, field: string): boolean {
-        const a = prevRecord[field];
-        const b = record[field];
+    public comparer(prevRecord: any, record: any, field: string, isDate = false, isTime = false): boolean {
+        const a = this.getFieldValue(prevRecord,field, isDate, isTime);
+        const b = this.getFieldValue(record,field, isDate, isTime);
         const an = (a === null || a === undefined);
         const bn = (b === null || b === undefined);
         if (an) {
@@ -99,14 +106,49 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
         }
         return a === b;
     }
+
+    /**
+     * Retrieves the value of the specified field from the given object, considering date and time data types.
+     * `key`: The key of the field to retrieve.
+     * `isDate`: (Optional) Indicates if the field is of type Date.
+     * `isTime`: (Optional) Indicates if the field is of type Time.
+     * Returns the value of the specified field in the data object.
+     * @internal
+     */
+    protected getFieldValue<T>(obj: T, key: string, isDate = false, isTime = false) {
+        let resolvedValue = resolveNestedPath(obj, columnFieldPath(key));
+        if (isDate || isTime) {
+            resolvedValue = this.getDateValue(resolvedValue, isDate, isTime);
+        }
+        return resolvedValue;
+    }
+
+    /**
+   * @internal
+   */
+    protected getDateValue<T>(obj: T, isDate = false, isTime = false) {
+        let date = obj instanceof Date ? obj : parseDate(obj);
+        let resolvedValue;
+        if (isDate && isTime) {
+            // date + time
+            resolvedValue = date.getTime();
+        } else if (date && isDate && !isTime) {
+            // date, but no time
+            resolvedValue = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0).getTime();
+        } else if (date && isTime && !isDate) {
+            // just time
+            resolvedValue = new Date(new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())).getTime();
+        }
+        return resolvedValue;
+    }
 }
 
 
 export class DefaultTreeGridMergeStrategy extends DefaultMergeStrategy {
     /* blazorSuppress */
-    public override comparer(prevRecord: any, record: any, field: string): boolean {
-        const a = prevRecord.data[field];
-        const b = record.data[field];
+    public override comparer(prevRecord: any, record: any, field: string, isDate = false, isTime = false): boolean {
+        const a = this.getFieldValue( prevRecord.data, field, isDate, isTime);
+        const b = this.getFieldValue(record.data,field, isDate, isTime);
         const an = (a === null || a === undefined);
         const bn = (b === null || b === undefined);
         if (an) {
@@ -123,9 +165,9 @@ export class DefaultTreeGridMergeStrategy extends DefaultMergeStrategy {
 
 export class ByLevelTreeGridMergeStrategy extends DefaultMergeStrategy {
     /* blazorSuppress */
-    public override comparer(prevRecord: any, record: any, field: string): boolean {
-        const a = prevRecord.data[field];
-        const b = record.data[field];
+    public override comparer(prevRecord: any, record: any, field: string, isDate = false, isTime = false): boolean {
+        const a = this.getFieldValue( prevRecord.data, field, isDate, isTime);
+        const b = this.getFieldValue(record.data,field, isDate, isTime);
         const levelA = prevRecord.level;
         const levelB = record.level;
         const an = (a === null || a === undefined);
