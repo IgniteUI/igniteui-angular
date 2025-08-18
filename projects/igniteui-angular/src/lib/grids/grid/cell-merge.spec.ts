@@ -138,6 +138,28 @@ describe('IgxGrid - Cell merging #grid', () => {
                     { value: 'Ignite UI for JavaScript', span: 9 }
                 ]);
             });
+
+            it('should merge date column correctly.', () => {
+                const col = grid.getColumnByName('ReleaseDate');
+
+                grid.sort({ fieldName: 'ReleaseDate', dir: SortingDirection.Desc, ignoreCase: false });
+                fix.detectChanges();
+
+                // merge date column
+                col.merge = true;
+                fix.detectChanges();
+
+                const today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+                const nextDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1, 0, 0, 0);
+                const prevDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 1, 0, 0, 0);
+
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: nextDay, span: 2 },
+                    { value: today, span: 2 },
+                    { value: prevDay, span: 3 },
+                    { value: null, span: 2 }
+                ]);
+            });
         });
 
         describe('UI', () => {

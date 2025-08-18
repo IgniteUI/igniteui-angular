@@ -112,8 +112,8 @@ export class GridFunctions {
             const cellValue = row.cells.toArray().find(x => x.column === col).value;
             const rowSpan = row.metaData?.cellMergeMeta.get(col.field)?.rowSpan || 1;
             const currState = state[index - totalSpan];
-            expect(cellValue).toBe(currState.value);
-            expect(rowSpan).toBe(currState.span);
+            expect(cellValue).toEqual(currState.value);
+            expect(rowSpan).toEqual(currState.span);
             totalSpan += (rowSpan - 1);
             index += (rowSpan - 1);
         }
