@@ -5,7 +5,7 @@ import {
     Output,
     TemplateRef
 } from '@angular/core';
-import { NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
+import { NgTemplateOutlet, NgClass } from '@angular/common';
 import { Inject } from '@angular/core';
 import {
     Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding
@@ -56,6 +56,7 @@ import { IgxQueryBuilderDragService } from './query-builder-drag.service';
 import { isTree } from '../data-operations/expressions-tree-util';
 import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, IgxFieldFormatterPipe } from './query-builder.common';
 import { getCurrentI18n, IResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { IgxDateFormatterPipe } from '../grids/common/pipes';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -69,7 +70,7 @@ const DEFAULT_CHIP_FOCUS_DELAY = 50;
     templateUrl: './query-builder-tree.component.html',
     host: { 'class': 'igx-query-builder-tree' },
     imports: [
-        DatePipe,
+        IgxDateFormatterPipe,
         FormsModule,
         IgxButtonDirective,
         IgxCheckboxComponent,
