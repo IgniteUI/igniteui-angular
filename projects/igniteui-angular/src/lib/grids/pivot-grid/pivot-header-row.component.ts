@@ -9,7 +9,8 @@ import {
     Renderer2,
     ViewChild,
     SimpleChanges,
-    ViewChildren
+    ViewChildren,
+    HostBinding
 } from '@angular/core';
 import { IBaseChipEventArgs, IgxChipComponent } from '../../chips/chip.component';
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
@@ -127,10 +128,29 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @internal
     */
     @ViewChildren('rowDimensionHeaders')
-    public rowDimensionHeaders: QueryList<IgxPivotRowDimensionHeaderGroupComponent>;
+    public rowDimensionHeaders: QueryList<IgxPivotRowHeaderGroupComponent>;
 
     public override get headerForOf() {
         return this.headerContainers?.last;
+    }
+
+    @HostBinding('attr.aria-activedescendant')
+    public override get activeDescendant(): string {
+        const activeElem = this.navigation.activeNode;
+        if (!activeElem || !Object.keys(activeElem).length || this.grid.navigation.headerRowActiveDescendant) {
+            return null;
+        }
+
+        if (this.navigation.isRowDimensionHeaderActive) {
+            const activeHeader = this.grid.theadRow.rowDimensionHeaders.find(h => h.active);
+            if (activeHeader) {
+                const key = activeHeader.title ?? activeHeader.rootDimension?.memberName;
+                return key ? `${this.grid.id}_${key}` : null;
+            }
+            return null;
+        }
+
+        return super.activeDescendant;
     }
 
     constructor(
