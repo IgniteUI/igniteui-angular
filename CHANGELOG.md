@@ -4,6 +4,9 @@ All notable changes for each version of this project will be documented in this 
 
 ## 20.1.0
 ### New Features
+`IgxDateRangePicker`
+  - Added cancel button to the dialog, allowing the user to cancel the selection. 
+
 - `IgxCarousel`
     - Added `select` method overload accepting index.
     ```ts
