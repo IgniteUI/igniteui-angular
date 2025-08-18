@@ -713,7 +713,7 @@ function formatNumberGeneric(value: number | string | null | undefined, style?: 
     } else if (display === 'symbol-narrow') {
         currencyDisplay = 'narrowSymbol';
     } else {
-        currencyCode = display || undefined;
+        currencyDisplay = display || undefined;
     }
     const options: Intl.NumberFormatOptions = {
         style: style,
