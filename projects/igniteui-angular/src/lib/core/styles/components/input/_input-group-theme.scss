@@ -612,7 +612,7 @@
     %bootstrap-file-focused,
     %bootstrap-file-valid,
     %bootstrap-file-warning,
-    %bootstrap-file-invalid,
+    %bootstrap-file-invalid
     {
         %form-group-bundle {
             border-radius: var-get($theme, 'box-border-radius');
@@ -670,17 +670,41 @@
         %form-group-bundle {
             box-shadow: 0 0 0 rem(4px) var-get($theme, 'success-shadow-color');
         }
+
+        %form-group-prefix:not(:first-child) {
+            border-inline-start-color: var-get($theme, 'success-secondary-color');
+        }
+
+        %form-group-suffix:not(:last-child) {
+            border-inline-end-color: var-get($theme, 'success-secondary-color');
+        }
     }
 
     %bootstrap-file-warning-focused {
         %form-group-bundle {
             box-shadow: 0 0 0 rem(4px) color($color: 'warn', $variant: '500', $opacity: .38);
+
+            %form-group-prefix:not(:first-child) {
+                border-inline-start-color: var-get($theme, 'warning-secondary-color');
+            }
+    
+            %form-group-suffix:not(:last-child) {
+                border-inline-end-color: var-get($theme, 'warning-secondary-color');
+            }
         }
     }
 
     %bootstrap-file-invalid-focused {
         %form-group-bundle {
             box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+        }
+
+        %form-group-prefix:not(:first-child) {
+            border-inline-start-color: var-get($theme, 'error-secondary-color');
+        }
+
+        %form-group-suffix:not(:last-child) {
+            border-inline-end-color: var-get($theme, 'error-secondary-color');
         }
     }
 
@@ -690,6 +714,14 @@
             %form-group-bundle-end,
             %upload-button {
                 border-color: var-get($theme, 'focused-border-color');
+            }
+
+            %form-group-prefix:not(:first-child) {
+                border-inline-start-color: var-get($theme, 'focused-border-color');
+            }
+
+            %form-group-suffix:not(:last-child) {
+                border-inline-end-color: var-get($theme, 'focused-border-color');
             }
         }
     }
@@ -2015,11 +2047,6 @@
                 };
             }
         }
-
-        .igx-input-group__clear-icon + igx-suffix,
-        .igx-input-group__clear-icon + [igxPrefix] {
-            border-inline-start: rem(1px) solid var-get($theme, 'border-color');
-        }
     }
 
     %form-group-display--bootstrap-suffixed-focused {
@@ -2283,6 +2310,24 @@
         background: var-get($theme, 'border-disabled-background');
         border-color: var-get($theme, 'disabled-border-color');
         color: var-get($theme, 'disabled-text-color');
+    }
+
+    %form-group-prefix--disabled-bootstrap:not(:first-child) {
+        border-inline-start-color: var-get($theme, 'disabled-border-color');
+    }
+
+    %form-group-suffix--disabled-bootstrap:not(:last-child) {
+        border-inline-end-color: var-get($theme, 'disabled-border-color');
+    }
+
+    @if $variant == 'bootstrap' {
+        %form-group-prefix:not(:first-child) {
+            border-inline-start: rem(1px) solid var-get($theme, 'border-color');
+        }
+
+        %form-group-suffix:not(:last-child) {
+            border-inline-end: rem(1px) solid var-get($theme, 'border-color');
+        }
     }
 }
 
