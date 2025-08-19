@@ -239,19 +239,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     @Input()
     public formatter: (val: Date) => string;
 
-    /**
-     * Sets the orientation of the picker's header.
-     *
-     * @remarks
-     * Available in dialog mode only. Default value is `horizontal`.
-     *
-     * ```html
-     * <igx-time-picker [headerOrientation]="'vertical'"></igx-time-picker>
-     * ```
-     */
-    @Input()
-    public headerOrientation: PickerHeaderOrientation = PickerHeaderOrientation.Horizontal;
-
     /** @hidden @internal */
     @Input({ transform: booleanAttribute })
     public readOnly = false;
