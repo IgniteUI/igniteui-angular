@@ -1786,6 +1786,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      */
     public widthConstrained = false;
+    /**
+     * @hidden
+     */
+    public minWidthSetByUser = false;
 
     /**
      * @hidden
@@ -1865,10 +1869,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      */
     protected _maxWidth;
-    /**
-     * @hidden
-     */
-    protected _minWidthSetByUser = false;
     /**
      * @hidden
      */
@@ -2710,19 +2710,5 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         if (this.selectable) {
             this._applySelectableClass = value;
         }
-    }
-
-    /**
-     * @hidden
-     */
-    public set minWidthSetByUser(value: boolean) {
-        this._minWidthSetByUser = value;
-    }
-
-    /**
-     * @hidden
-     */
-    public get minWidthSetByUser(): boolean {
-        return this._minWidthSetByUser;
     }
 }
