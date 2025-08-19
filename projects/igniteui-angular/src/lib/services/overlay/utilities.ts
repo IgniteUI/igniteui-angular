@@ -87,6 +87,8 @@ export interface PositionSettings {
     closeAnimation?: AnimationReferenceMetadata;
     /** The size up to which element may shrink when shown in elastic position strategy */
     minSize?: Size;
+    /** The offset of the element from the target in pixels */
+    offset?: number;
 }
 
 export interface OverlaySettings {
@@ -261,4 +263,51 @@ export class Util {
         clonedObj.settings = cloneValue(clonedObj.settings);
         return clonedObj;
     }
+
+    /**
+     * Gets horizontal offset by position settings `offset`.
+     */
+    public static getHorizontalOffset(settings: PositionSettings): number {
+        if (settings.offset == null) {
+            return 0;
+        }
+
+        if (
+            settings.horizontalDirection === HorizontalAlignment.Left &&
+            settings.horizontalStartPoint === HorizontalAlignment.Left
+        ) {
+            return -settings.offset;
+        } else if (
+            settings.horizontalDirection === HorizontalAlignment.Right &&
+            settings.horizontalStartPoint === HorizontalAlignment.Right
+        ) {
+            return settings.offset;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Gets vertical offset by position settings `offset`.
+     */
+    public static getVerticalOffset(settings: PositionSettings): number {
+        if (settings.offset == null) {
+            return 0;
+        }
+
+        if (
+            settings.verticalDirection === VerticalAlignment.Top &&
+            settings.verticalStartPoint === VerticalAlignment.Top
+        ) {
+            return -settings.offset;
+        } else if (
+            settings.verticalDirection === VerticalAlignment.Bottom &&
+            settings.verticalStartPoint === VerticalAlignment.Bottom
+        ) {
+            return settings.offset;
+        }
+
+        return 0;
+    }
 }
+

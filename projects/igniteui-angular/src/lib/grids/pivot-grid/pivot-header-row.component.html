@@ -194,7 +194,7 @@
         </div>
     </div>
     <div role="rowgroup" class="igx-grid-thead__wrapper" [style.width.px]="width"
-         [attr.aria-activedescendant]="activeDescendant" [class.igx-grid__tr--mrl]="hasMRL">
+        [class.igx-grid__tr--mrl]="hasMRL">
 
         <!-- Column headers area -->
         <div class="igx-grid__tr" role="row" [style.width.px]="width">
@@ -248,7 +248,7 @@
             }
 
             @if (grid.pivotUI.showRowHeaders && grid.rowDimensions.length > 0) {
-                <div class="igx-grid__tr igx-grid__tr-header-row" role="row" [style.width.px]="grid.pivotRowWidths - 1">
+                <div class="igx-grid__tr igx-grid__tr-header-row" [style.width.px]="grid.pivotRowWidths - 1">
                     @for (dim of grid.visibleRowDimensions; track dim; let colIndex = $index; let isLast = $last) {
                         @if (getRowDimensionColumn(dim); as dimCol) {
                             <igx-pivot-row-header-group #rowDimensionHeaders
@@ -308,6 +308,13 @@
                         [style.left]="column.rightPinnedOffset" (pointerdown)="grid.navigation.focusOutRowHeader($event)">
                     </igx-grid-header-group>
                 }
+            }
+        </div>
+
+        <!-- Render a hidden row of the leaf column headers for accessibility purposes -->
+        <div role="row" style="width: 0; height: 0; position: absolute; top: -10000px;">
+            @for (column of visibleLeafColumns; track column.index) {
+                <div role="columnheader" [attr.aria-hidden]="isLeafHeaderAriaHidden">{{ column.header || column.field }}</div>
             }
         </div>
     </div>
