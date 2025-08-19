@@ -101,8 +101,8 @@ export class IgxGridToolbarComponent implements OnDestroy {
         private iconService: IgxIconService,
         private element: ElementRef<HTMLElement>
     ) {
-        this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
-        this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
+        this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons', true);
+        this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons', true);
     }
 
     /** @hidden @internal */
