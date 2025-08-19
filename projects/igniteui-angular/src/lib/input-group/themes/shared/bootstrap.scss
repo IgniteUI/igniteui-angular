@@ -27,7 +27,6 @@ $border-radius: var-get($_theme, 'border-border-radius');
             .igx-input-group__bundle-main {
                 border-start-start-radius: $border-radius;
                 border-end-start-radius: $border-radius;
-
             }
         }
 
@@ -42,20 +41,6 @@ $border-radius: var-get($_theme, 'border-border-radius');
         igx-input-group:not(.igx-input-group--textarea-group) {
             .igx-input-group__bundle {
                 border-radius: $border-radius;
-            }
-        }
-
-        igx-suffix + .igx-input-group__toggle-button,
-        [igxSuffix] + .igx-input-group__toggle-button {
-            // Add border between the toggle button and the rest of the suffixes
-            border-inline-start: $border-size solid $border-color;
-        }
-
-        igx-input-group:not(.igx-input-group--disabled) {
-            .igx-input-group__clear-icon + igx-suffix,
-            .igx-input-group__clear-icon + [igxSuffix] {
-                // Add border between the clear button and the rest of the suffixes
-                border-inline-start: $border-size solid $border-color;
             }
         }
     }
@@ -183,6 +168,24 @@ $border-radius: var-get($_theme, 'border-border-radius');
             border-start-start-radius: $border-radius;
             border-end-start-radius: $border-radius;
             overflow: hidden;
+        }
+    }
+
+    @include m(prefixed, $not: (disabled)) {
+        @include e(bundle-start) { 
+            igx-prefix:not(:first-child),
+            [igxPrefix]:not(:first-child) {
+                border-inline-start: rem(1px) solid var-get($_theme, 'border-color');
+            }
+        }
+    }
+
+    @include m(suffixed, $not: (disabled)) {
+        @include e(bundle-end) {
+            igx-suffix:not(:last-child),
+            [igxSuffix]:not(:last-child) {
+                border-inline-end: rem(1px) solid var-get($_theme, 'border-color');
+            }
         }
     }
 
@@ -344,16 +347,20 @@ $border-radius: var-get($_theme, 'border-border-radius');
 
         @include e(bundle-start) {
             border-color: var-get($_theme, 'focused-border-color');
+
+            igx-prefix:not(:first-child),
+            [igxPrefix]:not(:first-child) {
+                border-inline-start: rem(1px) solid var-get($_theme, 'focused-border-color');
+            }
         }
 
         @include e(bundle-end) {
             border-color: var-get($_theme, 'focused-border-color');
-        }
 
-        .igx-input-group__clear-icon + igx-suffix,
-        .igx-input-group__clear-icon + [igxSuffix] {
-            // Add border between the clear button and the rest of the suffixes
-            border-color: var-get($_theme, 'focused-border-color');
+            igx-suffix:not(:last-child),
+            [igxSuffix]:not(:last-child) {
+                border-inline-end: rem(1px) solid var-get($_theme, 'focused-border-color');
+            }
         }
     }
 
@@ -364,16 +371,20 @@ $border-radius: var-get($_theme, 'border-border-radius');
 
         @include e(bundle-start) {
             border-color: var-get($_theme, 'success-secondary-color');
+
+            igx-prefix:not(:first-child),
+            [igxPrefix]:not(:first-child) {
+                border-inline-start: rem(1px) solid var-get($_theme, 'success-secondary-color');
+            }
         }
 
         @include e(bundle-end) {
             border-color: var-get($_theme, 'success-secondary-color');
-        }
 
-        .igx-input-group__clear-icon + igx-suffix,
-        .igx-input-group__clear-icon + [igxSuffix] {
-            // Add border between the clear button and the rest of the suffixes
-            border-color: var-get($_theme, 'success-secondary-color');
+            igx-suffix:not(:last-child),
+            [igxSuffix]:not(:last-child) {
+                border-inline-end: rem(1px) solid var-get($_theme, 'success-secondary-color');
+            }
         }
     }
 
@@ -384,10 +395,20 @@ $border-radius: var-get($_theme, 'border-border-radius');
 
         @include e(bundle-start) {
             border-color: var-get($_theme, 'error-secondary-color');
+
+            igx-prefix:not(:first-child),
+            [igxPrefix]:not(:first-child) {
+                border-inline-start: rem(1px) solid var-get($_theme, 'error-secondary-color');
+            }
         }
 
         @include e(bundle-end) {
             border-color: var-get($_theme, 'error-secondary-color');
+
+            igx-suffix:not(:last-child),
+            [igxSuffix]:not(:last-child) {
+                border-inline-end: rem(1px) solid var-get($_theme, 'error-secondary-color');
+            }
         }
     }
 
@@ -398,16 +419,20 @@ $border-radius: var-get($_theme, 'border-border-radius');
 
         @include e(bundle-start) {
             border-color: var-get($_theme, 'warning-secondary-color');
+
+            igx-prefix:not(:first-child),
+            [igxPrefix]:not(:first-child) {
+                border-inline-start: rem(1px) solid var-get($_theme, 'warning-secondary-color');
+            }
         }
 
         @include e(bundle-end) {
             border-color: var-get($_theme, 'warning-secondary-color');
-        }
 
-        .igx-input-group__clear-icon + igx-suffix,
-        .igx-input-group__clear-icon + [igxSuffix] {
-            // Add border between the clear button and the rest of the suffixes
-            border-color: var-get($_theme, 'warning-secondary-color');
+            igx-suffix:not(:last-child),
+            [igxSuffix]:not(:last-child) {
+                border-inline-end: rem(1px) solid var-get($_theme, 'warning-secondary-color');
+            }
         }
     }
 
@@ -441,10 +466,20 @@ $border-radius: var-get($_theme, 'border-border-radius');
 
         @include e(bundle-start) {
             @extend %disabled-styles;
+
+            igx-prefix:not(:first-child),
+            [igxPrefix]:not(:first-child) {
+                border-inline-start: rem(1px) solid var-get($_theme, 'disabled-border-color');
+            }
         }
 
         @include e(bundle-end) {
             @extend %disabled-styles;
+
+            igx-suffix:not(:last-child),
+            [igxSuffix]:not(:last-child) {
+                border-inline-end: rem(1px) solid var-get($_theme, 'disabled-border-color');
+            }
         }
 
         @include e(upload) {
