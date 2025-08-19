@@ -38,7 +38,7 @@ import { INVOICE_DATA } from '../shared/invoiceData';
         FormsModule,
         IgxColumnComponent,
         IgxGridComponent,
-        IgxPaginatorComponent,
+        // IgxPaginatorComponent,
         IgxActionStripComponent,
         IgxGridPinningActionsComponent,
         IgxGridToolbarComponent,
@@ -65,6 +65,17 @@ export class GridCellMergingComponent {
     public searchText: string ='';
     @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
     public data = INVOICE_DATA;
+
+    constructor(){
+        const allData = INVOICE_DATA
+        const length = INVOICE_DATA.length;
+        for (let i = 1; i <= 600_000; i++) {
+            const rnd = Math.floor(Math.random() * length);
+            allData.push(INVOICE_DATA[rnd]);
+        }
+
+        this.data = allData;
+    }
 
     public toggleStrategy() {
         if (this.treeGridMergeStrategy instanceof ByLevelTreeGridMergeStrategy) {

@@ -50,7 +50,7 @@ import { IgxGridValidationService } from '../grid/grid-validation.service';
 import { IgxGridHierarchicalPipe, IgxGridHierarchicalPagingPipe } from './hierarchical-grid.pipes';
 import { IgxSummaryDataPipe } from '../summaries/grid-root-summary.pipe';
 import { IgxGridTransactionPipe, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridAddRowPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe, IgxStringReplacePipe } from '../common/pipes';
-import { IgxGridSortingPipe, IgxGridFilteringPipe, IgxGridCellMergePipe } from '../grid/grid.pipes';
+import { IgxGridSortingPipe, IgxGridFilteringPipe, IgxGridCellMergePipe, IgxGridUnmergeActivePipe } from '../grid/grid.pipes';
 import { IgxGridColumnResizerComponent } from '../resizing/resizer.component';
 import { IgxRowEditTabStopDirective } from '../grid.rowEdit.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
@@ -351,7 +351,8 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         IgxGridHierarchicalPipe,
         IgxGridHierarchicalPagingPipe,
         IgxStringReplacePipe,
-        IgxGridCellMergePipe
+        IgxGridCellMergePipe,
+        IgxGridUnmergeActivePipe
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

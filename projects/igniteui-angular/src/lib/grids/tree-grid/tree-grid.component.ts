@@ -82,7 +82,7 @@ import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
-import { IgxGridCellMergePipe } from '../grid/grid.pipes';
+import { IgxGridCellMergePipe, IgxGridUnmergeActivePipe } from '../grid/grid.pipes';
 import { DefaultTreeGridMergeStrategy, IGridMergeStrategy } from '../../data-operations/merge-strategy';
 
 let NEXT_ID = 0;
@@ -171,7 +171,8 @@ let NEXT_ID = 0;
         IgxTreeGridNormalizeRecordsPipe,
         IgxTreeGridAddRowPipe,
         IgxStringReplacePipe,
-        IgxGridCellMergePipe
+        IgxGridCellMergePipe,
+        IgxGridUnmergeActivePipe
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

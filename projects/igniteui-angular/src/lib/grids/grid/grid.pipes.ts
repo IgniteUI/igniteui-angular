@@ -86,14 +86,67 @@ export class IgxGridCellMergePipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
-    public transform(collection: any, colsToMerge: ColumnType[], mergeMode: GridCellMergeMode, mergeStrategy: IGridMergeStrategy, activeRowIndexes: number[], pinned: boolean, _pipeTrigger: number) {
+    public transform(collection: any, colsToMerge: ColumnType[], mergeMode: GridCellMergeMode, mergeStrategy: IGridMergeStrategy, _pipeTrigger: number) {
+        if (colsToMerge.length === 0) {
+            return collection;
+        }
+        const result = DataUtil.merge(collection, colsToMerge, mergeStrategy, [], this.grid);
+        return result;
+    }
+}
+
+@Pipe({
+    name: 'gridUnmergeActive',
+    standalone: true
+})
+export class IgxGridUnmergeActivePipe implements PipeTransform {
+
+    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
+
+    public transform(collection: any, colsToMerge: ColumnType[], activeRowIndexes: number[], pinned: boolean, _pipeTrigger: number) {
         if (colsToMerge.length === 0) {
             return collection;
         }
         if (!pinned && this.grid.isPinningToStart) {
             activeRowIndexes = activeRowIndexes.map(x => x - this.grid.pinnedRecordsCount);
         }
-        const result = DataUtil.merge(cloneArray(collection), colsToMerge, mergeStrategy, activeRowIndexes, this.grid);
+        const result = cloneArray(collection) as any;
+        activeRowIndexes = activeRowIndexes.filter((val, idx, arr) => arr.indexOf(val) === idx).filter(x => !isNaN(x));
+        const rootsToUpdate = [];
+        activeRowIndexes.forEach(index => {
+            const target = collection[index];
+            colsToMerge.forEach(col => {
+                const colMeta = target.cellMergeMeta.get(col.field);
+                const root = colMeta.root || target;
+                rootsToUpdate.push(root);
+            });
+        });
+
+        rootsToUpdate.forEach(x => {
+            const index = result.indexOf(x);
+            const colKeys = [...x.cellMergeMeta.keys()];
+            const cols = colsToMerge.filter(x => colKeys.indexOf(x.field) !== -1);
+            for (const col of cols) {
+                const rs = x.cellMergeMeta.get(col.field).rowSpan;
+                let childData = x.cellMergeMeta.get(col.field).childRecords;
+                const childRecs = childData.map(x => x.recordRef);
+                const isDate = col?.dataType === 'date' || col?.dataType === 'dateTime';
+                const isTime = col?.dataType === 'time' || col?.dataType === 'dateTime';
+                const res = this.grid.mergeStrategy.merge(
+                    [x.recordRef, ...childRecs],
+                    col.field,
+                    col.mergingComparer,
+                    [],
+                    activeRowIndexes,
+                    isDate,
+                    isTime,
+                    this.grid);
+                result.splice(index, index + rs, ...res);
+            }
+
+        });
+
+
         return result;
     }
 }

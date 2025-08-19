@@ -47,7 +47,8 @@
                 | gridRowPinning:id:true:pipeTrigger
                 | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:pipeTrigger:filteringPipeTrigger:true
                 | treeGridSorting:sortingExpressions:treeGroupArea?.expressions:sortStrategy:pipeTrigger:true
-                | gridCellMerge:columnsToMerge:cellMergeMode:mergeStrategy:activeRowIndexes:true:pipeTrigger; as pinnedData
+                | gridCellMerge:columnsToMerge:cellMergeMode:mergeStrategy:pipeTrigger
+                | gridUnmergeActive:columnsToMerge:activeRowIndexes:true:pipeTrigger; as pinnedData
             ) {
                 @if (pinnedData.length > 0) {
                     <div #pinContainer
@@ -76,7 +77,8 @@
         | treeGridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:showSummaryOnCollapse:pipeTrigger:summaryPipeTrigger
         | treeGridAddRow:false:pipeTrigger
         | gridRowPinning:id:false:pipeTrigger
-        | gridCellMerge:columnsToMerge:cellMergeMode:mergeStrategy:activeRowIndexes:false:pipeTrigger"
+        | gridCellMerge:columnsToMerge:cellMergeMode:mergeStrategy:pipeTrigger
+        | gridUnmergeActive:columnsToMerge:activeRowIndexes:false:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" #verticalScrollContainer
             (dataChanging)="dataRebinding($event)" (dataChanged)="dataRebound($event)">
