@@ -10,6 +10,22 @@
 
         @extend %tooltip-display !optional;
 
+        @include m(top) {
+            @extend %arrow--top !optional;
+        }
+
+        @include m(bottom) {
+            @extend %arrow--bottom !optional;
+        }
+
+        @include m(left) {
+            @extend %arrow--left !optional;
+        }
+
+        @include m(right) {
+            @extend %arrow--right !optional;
+        }
+
         @include m(hidden) {
             @extend %tooltip--hidden !optional;
         }

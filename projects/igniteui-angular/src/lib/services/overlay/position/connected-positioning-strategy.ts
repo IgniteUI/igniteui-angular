@@ -73,6 +73,20 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
   }
 
   /**
+   * Get element horizontal and vertical offsets by connectedFit
+   * or `this.settings` if connectedFit offset is not defined.
+   *
+   * @param connectedFit
+   * @returns horizontalOffset and verticalOffset
+   */
+  protected getElementOffsets(connectedFit: ConnectedFit): { horizontalOffset: number; verticalOffset: number } {
+    return {
+        horizontalOffset: connectedFit.horizontalOffset ?? Util.getHorizontalOffset(this.settings),
+        verticalOffset: connectedFit.verticalOffset ?? Util.getVerticalOffset(this.settings)
+    }
+  }
+
+  /**
    * Sets element's style which effectively positions provided element according
    * to provided position settings
    *
@@ -81,8 +95,8 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
    * @param elementRect Bounding rectangle of the element
    */
   protected setStyle(element: HTMLElement, targetRect: Partial<DOMRect>, elementRect: Partial<DOMRect>, connectedFit: ConnectedFit) {
-    const horizontalOffset = connectedFit.horizontalOffset ? connectedFit.horizontalOffset : 0;
-    const verticalOffset = connectedFit.verticalOffset ? connectedFit.verticalOffset : 0;
+    const { horizontalOffset, verticalOffset } = this.getElementOffsets(connectedFit);
+
     const startPoint: Point = {
       x: targetRect.right + targetRect.width * this.settings.horizontalStartPoint + horizontalOffset,
       y: targetRect.bottom + targetRect.height * this.settings.verticalStartPoint + verticalOffset
