@@ -8,7 +8,7 @@ import {
     OnDestroy
 } from '@angular/core';
 import { Subject, fromEvent } from 'rxjs';
-import { debounceTime, takeUntil } from 'rxjs/operators';
+import { debounceTime, map, takeUntil } from 'rxjs/operators';
 import { ColumnType } from '../common/grid.interface';
 import { IgxColumnResizingService } from './resizing.service';
 
@@ -69,11 +69,15 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
     public ngAfterViewInit() {
         if (!this.column.columnGroup && this.column.resizable) {
             this.zone.runOutsideAngular(() => {
-                fromEvent(this.element.nativeElement, 'mousedown').pipe(
+                fromEvent<MouseEvent>(this.element.nativeElement, 'mousedown').pipe(
+                    map((event) => ({
+                        event,
+                        // Preserves the original 'event.target' in a shadow DOM context.
+                        target: event.target as HTMLElement
+                    })),
                     debounceTime(this.DEBOUNCE_TIME),
                     takeUntil(this.destroy$)
-                ).subscribe((event: MouseEvent) => {
-
+                ).subscribe(({ event, target }: { event: MouseEvent; target: HTMLElement }) => {
                     if (this._dblClick) {
                         this._dblClick = false;
                         return;
@@ -81,7 +85,7 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
 
                     if (event.button === 0) {
                         this._onResizeAreaMouseDown(event);
-                        this.column.grid.resizeLine.resizer.onMousedown(event);
+                        this.column.grid.resizeLine.resizer.onMousedown(event, target);
                     }
                 });
             });
