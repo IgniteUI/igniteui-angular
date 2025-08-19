@@ -222,20 +222,6 @@
     }
 
     @if $variant == 'bootstrap' {
-        .igx-input-group--disabled {
-            %igx-combo__toggle-button {
-                border-inline-start-width: rem(1px);
-                border-inline-start-style: solid;
-                border-inline-start-color: inherit;
-            }
-        }
-
-        igx-suffix:not(.igx-combo__clear-button) + %igx-combo__toggle-button {
-            border-inline-start-width: rem(1px);
-            border-inline-start-style: solid;
-            border-inline-start-color: inherit;
-        }
-
         .igx-input-group__bundle::after {
             height: rem(1px) !important;
         }

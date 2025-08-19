@@ -2249,6 +2249,24 @@
             height: calc(100% - #{rem(8px)});
         }
     }
+
+		%form-group-prefix--disabled-bootstrap:not(:first-child) {
+        border-inline-start-color: var-get($theme, 'disabled-border-color');
+    }
+
+    %form-group-suffix--disabled-bootstrap:not(:last-child) {
+        border-inline-end-color: var-get($theme, 'disabled-border-color');
+    }
+
+    @if $variant == 'bootstrap' {
+        %form-group-prefix:not(:first-child) {
+            border-inline-start: rem(1px) solid var-get($theme, 'border-color');
+        }
+
+        %form-group-suffix:not(:last-child) {
+            border-inline-end: rem(1px) solid var-get($theme, 'border-color');
+        }
+    }
 }
 
 /// Adds typography styles for the igx-input-group component.
