@@ -31,6 +31,7 @@ import {
     isDateInRanges,
 } from "../common/helpers";
 import { CalendarDay } from '../common/model';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
 
@@ -399,7 +400,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      */
     public get weekHeaderLabels(): {long: string, formatted: string}[] {
         const weekdays = [];
-        const rawFormatter = new Intl.DateTimeFormat(this.locale, { weekday: 'long' });
+        const rawFormatter = getI18nManager().getDateFormatter(this.locale, { weekday: 'long' });
 
         for (const day of this.monthWeeks.at(0)) {
             weekdays.push({

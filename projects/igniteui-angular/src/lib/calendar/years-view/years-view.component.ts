@@ -130,7 +130,7 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements C
      * @hidden
      */
     public formattedYear(value: Date): {long: string, formatted: string} {
-        const rawFormatter = new Intl.DateTimeFormat(this.locale, { year: 'numeric' });
+        const rawFormatter = getI18nManager().getDateFormatter(this.locale, { year: 'numeric' });
 
         if (this.formatView) {
             return {

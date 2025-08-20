@@ -157,7 +157,7 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      * @hidden
      */
     public formattedMonth(value: Date): { long: string; formatted: string } {
-        const rawFormatter = new Intl.DateTimeFormat(this.locale, {
+        const rawFormatter = getI18nManager().getDateFormatter(this.locale, {
             month: "long",
             year: "numeric",
         });
