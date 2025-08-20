@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x, 22.17.1]
+        node-version: [20.x, 22.x]
 
     steps:
       - name: Checkout
@@ -50,7 +50,7 @@ jobs:
             npm run test:schematics
             npm run test:i18n
         env:
-            NODE_OPTIONS: --max_old_space_size=4096
+            NODE_OPTIONS: --max_old_space_size=4096 --no-experimental-strip-types
             TZ: America/New_York
       - name: Build i18n & validate output
         run: |
