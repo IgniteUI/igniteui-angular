@@ -1277,6 +1277,26 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.opening.emit).toHaveBeenCalledTimes(0);
                     expect(dateRange.opened.emit).toHaveBeenCalledTimes(0);
                 }));
+
+                it('should keep the calendar open when input is focused by click and while typing', fakeAsync(() => {
+                    fixture.componentInstance.dateRange.open();
+                    fixture.detectChanges();
+                    tick(DEBOUNCE_TIME);
+
+                    startInput.triggerEventHandler('focus', {});
+                    fixture.detectChanges();
+                    UIInteractions.simulateClickAndSelectEvent(startInput.nativeElement);
+                    fixture.detectChanges();
+                    tick(DEBOUNCE_TIME);
+
+                    expect(dateRange.collapsed).toBeFalsy();
+
+                    UIInteractions.simulateTyping('01/10/202', startInput);
+                    fixture.detectChanges();
+                    tick(DEBOUNCE_TIME);
+
+                    expect(dateRange.collapsed).toBeFalsy();
+                }));
             });
 
             it('should focus the last focused input after the calendar closes - dropdown', fakeAsync(() => {

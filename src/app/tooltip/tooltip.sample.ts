@@ -15,7 +15,8 @@ import {
     IgxSliderComponent,
     IgxSwitchComponent,
     IgxTooltipDirective,
-    IgxTooltipTargetDirective, OverlaySettings
+    IgxTooltipTargetDirective,
+    OverlaySettings,
 } from 'igniteui-angular';
 
 @Component({
@@ -108,11 +109,5 @@ export class TooltipSampleComponent implements OnInit {
 
     public hideTooltip() {
         this.tooltipTarget.hideTooltip();
-    }
-
-    public showing() {
-    }
-
-    public hiding() {
     }
 }

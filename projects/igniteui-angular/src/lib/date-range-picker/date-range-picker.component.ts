@@ -810,7 +810,11 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             this.opened.emit({ owner: this });
         });
 
-        this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((e) => {
+        this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((e: OverlayCancelableEventArgs) => {
+            const isEscape = e.event && (e.event as KeyboardEvent).key === this.platform.KEYMAP.ESCAPE;
+            if (this.isProjectedInputTarget(e.event) && !isEscape) {
+                e.cancel = true;
+            }
             this.handleClosing(e as OverlayCancelableEventArgs);
         });
 
@@ -822,6 +826,16 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             this._calendarContainer = undefined;
             this.closed.emit({ owner: this });
         });
+    }
+
+    private isProjectedInputTarget(event: Event): boolean {
+        if (!this.hasProjectedInputs || !event) {
+            return false;
+        }
+        const path = event.composed ? event.composedPath() : [event.target];
+        return this.projectedInputs.some(i =>
+            path.includes(i.dateTimeEditor.nativeElement)
+        );
     }
 
     private updateValue(value: DateRange) {
