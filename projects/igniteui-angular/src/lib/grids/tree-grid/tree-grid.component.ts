@@ -84,6 +84,7 @@ import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component'
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
 import { IgxGridCellMergePipe } from '../grid/grid.pipes';
 import { DefaultTreeGridMergeStrategy, IGridMergeStrategy } from '../../data-operations/merge-strategy';
+import { IgxScrollInertiaDirective } from '../../directives/scroll-inertia/scroll_inertia.directive';
 
 let NEXT_ID = 0;
 
@@ -171,7 +172,8 @@ let NEXT_ID = 0;
         IgxTreeGridNormalizeRecordsPipe,
         IgxTreeGridAddRowPipe,
         IgxStringReplacePipe,
-        IgxGridCellMergePipe
+        IgxGridCellMergePipe,
+        IgxScrollInertiaDirective
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

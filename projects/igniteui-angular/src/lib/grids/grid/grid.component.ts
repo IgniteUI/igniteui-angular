@@ -54,6 +54,7 @@ import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
 import { Observable, Subject } from 'rxjs';
+import { IgxScrollInertiaDirective } from '../../directives/scroll-inertia/scroll_inertia.directive';
 
 let NEXT_ID = 0;
 
@@ -152,7 +153,8 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxGridSummaryPipe,
         IgxGridDetailsPipe,
         IgxStringReplacePipe,
-        IgxGridCellMergePipe
+        IgxGridCellMergePipe,
+        IgxScrollInertiaDirective
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
