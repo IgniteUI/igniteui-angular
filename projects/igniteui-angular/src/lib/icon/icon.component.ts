@@ -81,6 +81,14 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
+     *  The `aria-hidden` attribute of the icon.
+     *  By default is set to 'true'.
+     */
+    @HostBinding("attr.aria-hidden")
+    @Input()
+    public ariaHidden = true;
+
+    /**
      * An @Input property that sets the value of the `family`. By default it's "material".
      *
      * @example
