@@ -47,10 +47,10 @@ jobs:
         run: |
             npm run test:lib
             npm run test:styles
-            npm run test:schematics
+            NODE_OPTIONS="--no-experimental-strip-types" npm run test:schematics
             npm run test:i18n
         env:
-            NODE_OPTIONS: --max_old_space_size=4096 --no-experimental-strip-types
+            NODE_OPTIONS: --max_old_space_size=4096
             TZ: America/New_York
       - name: Build i18n & validate output
         run: |
