@@ -131,12 +131,12 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
         uniqueRoots.forEach(x => {
             const index = result.indexOf(x);
             const colKeys = [...x.cellMergeMeta.keys()];
-            const cols = colsToMerge.filter(x => colKeys.indexOf(x.field) !== -1);
+            const cols = colsToMerge.filter(col => colKeys.indexOf(col.field) !== -1);
             let res = [];
             for (const col of cols) {
 
                 let childData = x.cellMergeMeta.get(col.field).childRecords;
-                const childRecs = childData.map(x => x.recordRef);
+                const childRecs = childData.map(rec => rec.recordRef);
                 const isDate = col?.dataType === 'date' || col?.dataType === 'dateTime';
                 const isTime = col?.dataType === 'time' || col?.dataType === 'dateTime';
                 res = this.grid.mergeStrategy.merge(
@@ -144,7 +144,7 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
                     col.field,
                     col.mergingComparer,
                     res,
-                    activeRowIndexes.map(x => x - index),
+                    activeRowIndexes.map(ri => ri - index),
                     isDate,
                     isTime,
                     this.grid);
