@@ -110,18 +110,24 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
         if (!pinned && this.grid.isPinningToStart) {
             activeRowIndexes = activeRowIndexes.map(x => x - this.grid.pinnedRecordsCount);
         }
-        const result = cloneArray(collection) as any;
         activeRowIndexes = activeRowIndexes.filter((val, idx, arr) => arr.indexOf(val) === idx).filter(x => !isNaN(x));
         const rootsToUpdate = [];
         activeRowIndexes.forEach(index => {
             const target = collection[index];
             colsToMerge.forEach(col => {
                 const colMeta = target.cellMergeMeta.get(col.field);
-                const root = colMeta.root || target;
-                rootsToUpdate.push(root);
+                const root = colMeta.root ||  (colMeta.rowSpan > 1 ? target : null);
+                if (root) {
+                    rootsToUpdate.push(root);
+                }
             });
         });
         const uniqueRoots = rootsToUpdate.filter((val, idx, arr) => arr.indexOf(val) === idx);
+        if (uniqueRoots.length === 0) {
+            // if nothing to update, return
+            return collection;
+        }
+        const result = cloneArray(collection) as any;
         uniqueRoots.forEach(x => {
             const index = result.indexOf(x);
             const colKeys = [...x.cellMergeMeta.keys()];
