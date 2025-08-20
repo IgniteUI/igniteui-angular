@@ -121,8 +121,8 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
                 rootsToUpdate.push(root);
             });
         });
-
-        rootsToUpdate.forEach(x => {
+        const uniqueRoots = rootsToUpdate.filter((val, idx, arr) => arr.indexOf(val) === idx);
+        uniqueRoots.forEach(x => {
             const index = result.indexOf(x);
             const colKeys = [...x.cellMergeMeta.keys()];
             const cols = colsToMerge.filter(x => colKeys.indexOf(x.field) !== -1);
@@ -138,13 +138,13 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
                     col.field,
                     col.mergingComparer,
                     res,
-                    activeRowIndexes,
+                    activeRowIndexes.map(x => x - index),
                     isDate,
                     isTime,
                     this.grid);
 
             }
-            result.splice(index, (index + res.length - 1), ...res);
+            result.splice(index, res.length, ...res);
         });
 
 
