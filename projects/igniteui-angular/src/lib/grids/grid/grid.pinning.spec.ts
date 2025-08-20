@@ -134,7 +134,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(GridFunctions.isCellPinned(cell)).toBe(true);
             });
 
-            it('should allow pinning/unpinning via the column API', () => {
+           it('should allow pinning/unpinning via the column API', () => {
                 const col = grid.getColumnByName('ID');
 
                 col.pinned = true;

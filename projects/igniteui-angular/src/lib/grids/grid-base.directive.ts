@@ -5600,7 +5600,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @example
      * ```typescript
-     * const pinnedWidth = this.grid.getPinnedWidth();
+     * const pinnedWidth = this.grid.getPinnedStartWidth();
      * ```
      * @param takeHidden If we should take into account the hidden columns in the pinned area.
      */
@@ -5623,7 +5623,7 @@ export abstract class IgxGridBaseDirective implements GridType,
  *
  * @example
  * ```typescript
- * const pinnedWidth = this.grid.getPinnedWidth();
+ * const pinnedWidth = this.grid.getPinnedEndWidth();
  * ```
  * @param takeHidden If we should take into account the hidden columns in the pinned area.
  */
@@ -6763,7 +6763,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden
      */
     protected _moveColumns(from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
-        const orderedList = this._pinnedStartColumns.concat(this._unpinnedColumns).concat(this._pinnedEndColumns);
+        const orderedList = this._pinnedStartColumns.concat(this._unpinnedColumns, this._pinnedEndColumns);
         const list = orderedList;
         this._reorderColumns(from, to, pos, list);
         const newList = this._resetColumnList(list);
