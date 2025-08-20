@@ -37,8 +37,6 @@
 </ng-template>
 
 <igx-calendar></igx-calendar>
-@if (pickerActions?.template || (closeButtonLabel || cancelButtonLabel || todayButtonLabel)) {
-
  @if( usePredefinedRanges || (customRanges?.length || 0) > 0 ){
         <igx-predefined-ranges-area
             [usePredefinedRanges]="usePredefinedRanges"

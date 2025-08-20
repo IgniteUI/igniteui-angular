@@ -1164,6 +1164,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         componentInstance.calendarCancel.pipe(takeUntil(this._destroy$)).subscribe(() => {
             this._value = this._originalValue;
             this.close()
+        });
         componentInstance.rangeSelected
         .pipe(takeUntil(this._destroy$))
         .subscribe((r: DateRange) => {

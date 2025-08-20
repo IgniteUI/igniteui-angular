@@ -7,7 +7,7 @@ import { IDateRangePickerResourceStrings } from 'igniteui-angular';
 export const DateRangePickerResourceStringsZHHANT = {
     igx_date_range_picker_date_separator: '到',
     igx_date_range_picker_done_button: '完成',
-    igx_date_range_picker_cancel_button: '取消'
+    igx_date_range_picker_cancel_button: '取消',
     igx_date_range_picker_last7Days: '最近7天',
     igx_date_range_picker_currentMonth: '本月',
     igx_date_range_picker_last30Days: '最近30天',

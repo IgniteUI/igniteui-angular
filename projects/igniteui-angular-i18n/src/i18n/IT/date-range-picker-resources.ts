@@ -7,7 +7,7 @@ import { IDateRangePickerResourceStrings } from 'igniteui-angular';
 export const DateRangePickerResourceStringsIT = {
     igx_date_range_picker_date_separator: 'a',
     igx_date_range_picker_done_button: 'Fine',
-    igx_date_range_picker_cancel_button: 'Annulla'
+    igx_date_range_picker_cancel_button: 'Annulla',
     igx_date_range_picker_last7Days: 'Ultimi 7 giorni',
     igx_date_range_picker_currentMonth: 'Mese corrente',
     igx_date_range_picker_last30Days: 'Ultimi 30 giorni',
