@@ -968,8 +968,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     public get minWidthPx() {
         const gridAvailableSize = this.grid.calcWidth;
-        const isPercentageWidth = this.minWidth && typeof this.minWidth === 'string' && this.minWidth.indexOf('%') !== -1;
-        return isPercentageWidth ? parseFloat(this.minWidth) / 100 * gridAvailableSize : parseFloat(this.minWidth);
+        const minWidth = this.minWidth || this.defaultMinWidth;
+        const isPercentageWidth = minWidth && typeof minWidth === 'string' && minWidth.indexOf('%') !== -1;
+        return isPercentageWidth ? parseFloat(minWidth) / 100 * gridAvailableSize : parseFloat(minWidth);
     }
 
     /**
@@ -986,8 +987,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     public get minWidthPercent() {
         const gridAvailableSize = this.grid.calcWidth;
-        const isPercentageWidth = this.minWidth && typeof this.minWidth === 'string' && this.minWidth.indexOf('%') !== -1;
-        return isPercentageWidth ? parseFloat(this.minWidth) : parseFloat(this.minWidth) / gridAvailableSize * 100;
+        const minWidth = this.minWidth || this.defaultMinWidth;
+        const isPercentageWidth = minWidth && typeof minWidth === 'string' && minWidth.indexOf('%') !== -1;
+        return isPercentageWidth ? parseFloat(minWidth) : parseFloat(minWidth) / gridAvailableSize * 100;
     }
 
 
@@ -1012,11 +1014,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             return;
         }
         this._defaultMinWidth = value;
-        this.minWidthSetByUser = true;
         this.grid.notifyChanges(true);
     }
     public get minWidth(): string {
-        return !this._defaultMinWidth ? this.defaultMinWidth : this._defaultMinWidth;
+        return this._defaultMinWidth;
     }
 
     /** @hidden @internal **/
@@ -1868,10 +1869,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
-    protected _minWidthSetByUser = false;
-    /**
-     * @hidden
-     */
     protected _hasSummary = false;
     /**
      * @hidden
@@ -2154,8 +2151,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             if (size && !!size.width) {
                 result.push(size.width + 'px');
             } else {
-                const possibleWidth = this.getPossibeWidth();
-                const currentWidth = parseFloat(possibleWidth);
+                const currentWidth = parseFloat(this.grid.getPossibleColumnWidth());
                 result.push((this.getConstrainedSizePx(currentWidth)) + 'px');
             }
         }
@@ -2650,12 +2646,18 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             this._calcWidth = this.grid.calcWidth ? this.getConstrainedSizePx(currentCalcWidth) : 0;
         } else if (!colWidth || isAutoWidth && !this.autoSize) {
             // no width
-            const possibleWidth = this.getPossibeWidth();
-            const currentCalcWidth = this.defaultWidth || possibleWidth;
+            const currentCalcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
             this._calcWidth = this.getConstrainedSizePx(currentCalcWidth);
         } else {
-            const currentCalcWidth =  parseFloat(this.width);
-            this._calcWidth =this.getConstrainedSizePx(currentCalcWidth);
+            let possibleColumnWidth = '';
+            if (!this.widthSetByUser && this.userSetMinWidthPx && this.userSetMinWidthPx < this.grid.minColumnWidth) {
+                possibleColumnWidth = this.defaultWidth = this.grid.getPossibleColumnWidth(null, this.userSetMinWidthPx);
+            } else {
+                possibleColumnWidth = this.width;
+            }
+
+            const currentCalcWidth = parseFloat(possibleColumnWidth);
+            this._calcWidth = this.getConstrainedSizePx(currentCalcWidth);
         }
         this.calcPixelWidth = parseFloat(this._calcWidth);
     }
@@ -2705,27 +2707,5 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         if (this.selectable) {
             this._applySelectableClass = value;
         }
-    }
-
-    /**
-     * @hidden
-     */
-    public set minWidthSetByUser(value: boolean) {
-        this._minWidthSetByUser = value;
-    }
-
-    /**
-     * @hidden
-     */
-    public get minWidthSetByUser(): boolean {
-        return this._minWidthSetByUser;
-    }
-
-    private getPossibeWidth(): string {
-        const possibleWidth = this.grid.getPossibleColumnWidth();
-        if (!this.minWidthSetByUser && parseFloat(possibleWidth) < this.grid.minColumnWidth) {
-            return this.grid.minColumnWidth + 'px';
-        }
-        return possibleWidth;
     }
 }

@@ -273,13 +273,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         mirror.inputs.forEach((input) => {
             const propName = input.propName;
             if (!(col[propName] instanceof IgxSummaryOperand)) {
-                if (propName === 'minWidth') {
-                    const minWidthSetByUser = col.minWidthSetByUser;
-                    ref.instance[propName] = col[propName];
-                    ref.instance.minWidthSetByUser = minWidthSetByUser;
-                } else {
-                    ref.instance[propName] = col[propName];
-                }
+                ref.instance[propName] = col[propName];
             } else {
                 ref.instance[propName] = col[propName].constructor;
             }
