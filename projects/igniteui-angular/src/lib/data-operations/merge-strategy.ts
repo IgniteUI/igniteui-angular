@@ -137,7 +137,7 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
             resolvedValue = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0).getTime();
         } else if (date && isTime && !isDate) {
             // just time
-            resolvedValue = new Date(new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())).getTime();
+            resolvedValue = new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
         }
         return resolvedValue;
     }
