@@ -5639,28 +5639,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     /**
-     * Gets calculated width of the pinned left area.
-     *
-     * @example
-     * ```typescript
-     * const pinnedWidth = this.grid.getPinnedWidth();
-     * ```
-     * @param takeHidden If we should take into account the hidden columns in the pinned area.
-     */
-    public getPinnedLeftWidth(takeHidden = false) {
-        const fc = takeHidden ? this._pinnedStartColumns : this.pinnedStartColumns;
-        let sum = 0;
-        for (const col of fc) {
-            if (col.level === 0) {
-                sum += parseFloat(col.calcWidth);
-            }
-        }
-        sum += this.featureColumnsWidth();
-
-        return sum;
-    }
-
-    /**
      * @hidden @internal
      */
     public isColumnGrouped(_fieldName: string): boolean {
