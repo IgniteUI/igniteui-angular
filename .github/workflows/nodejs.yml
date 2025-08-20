@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x, 22.x]
+        node-version: [20.x, 22.17.1]
 
     steps:
       - name: Checkout
@@ -47,7 +47,7 @@ jobs:
         run: |
             npm run test:lib
             npm run test:styles
-            NODE_OPTIONS="--no-experimental-strip-types" npm run test:schematics
+            npm run test:schematics
             npm run test:i18n
         env:
             NODE_OPTIONS: --max_old_space_size=4096
