@@ -153,7 +153,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     public override populateVisibleIndexes() {
         this.childrenVisibleIndexes = [];
         const columns = this.grid?.pinnedColumns && this.grid?.unpinnedColumns
-            ? this.grid.pinnedStartColumns.concat(this.grid.unpinnedColumns).concat(this.grid.pinnedEndColumns)
+            ? this.grid.pinnedStartColumns.concat(this.grid.unpinnedColumns, this.grid.pinnedEndColumns)
             : [];
         const orderedCols = columns
             .filter(x => !x.columnGroup && !x.hidden)
