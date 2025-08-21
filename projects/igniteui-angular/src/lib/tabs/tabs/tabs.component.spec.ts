@@ -1089,7 +1089,7 @@ describe('IgxTabs', () => {
                 indexChangingSpy = spyOn(tabs.selectedIndexChanging, 'emit');
             }));
 
-            it('Validate the events are not fired on clicking tab headers before pressing enter/space key.', fakeAsync(() => {
+            it('Validate the events are fired on clicking tab headers for routing tabs.', fakeAsync(() => {
                 fixture.ngZone.run(() => router.initialNavigation());
                 tick();
                 expect(location.path()).toBe('/');
@@ -1099,15 +1099,7 @@ describe('IgxTabs', () => {
                 });
                 tick();
                 expect(location.path()).toBe('/view2');
-                expect(tabs.selectedIndex).toBe(-1);
-
-                expect(indexChangingSpy).not.toHaveBeenCalled();
-                expect(indexChangeSpy).not.toHaveBeenCalled();
-                expect(itemChangeSpy).not.toHaveBeenCalled();
-
-                headers[1].dispatchEvent(KEY_ENTER_EVENT);
-                tick(200);
-                fixture.detectChanges();
+                expect(tabs.selectedIndex).toBe(1);
 
                 expect(indexChangingSpy).toHaveBeenCalledWith({
                     owner: tabs,
