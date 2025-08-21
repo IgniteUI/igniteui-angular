@@ -15,42 +15,6 @@ import {
 } from './components';
 import { defineComponents } from '../utils/register';
 
-/**
- * Wait for all elements to be fully initialized and their query updates to complete
- * @param elements Array of IgcNgElement instances to wait for
- * @param timeoutMs Optional timeout in milliseconds (default: 5000)
- */
-async function waitForElementsReady(elements: IgcNgElement[], timeoutMs: number = 5000): Promise<void> {
-    const timeout = timer(timeoutMs).toPromise();
-    const initPromises = elements.map(async (element) => {
-        try {
-            // Wait for component ref to be ready
-            await element.ngElementStrategy[ComponentRefKey];
-            // Wait for any pending query updates
-            if (typeof (element.ngElementStrategy as any).waitForQueryUpdates === 'function') {
-                await (element.ngElementStrategy as any).waitForQueryUpdates();
-            }
-        } catch (error) {
-            // Element might not have the strategy or methods, just continue
-            console.warn('Element initialization warning:', error);
-        }
-    });
-    
-    await Promise.race([
-        Promise.all(initPromises),
-        timeout.then(() => { throw new Error(`Elements initialization timed out after ${timeoutMs}ms`); })
-    ]);
-}
-
-/**
- * Wait for a single element to be fully initialized and its query updates to complete
- * @param element IgcNgElement instance to wait for
- * @param timeoutMs Optional timeout in milliseconds (default: 5000)
- */
-async function waitForElementReady(element: IgcNgElement, timeoutMs: number = 5000): Promise<void> {
-    await waitForElementsReady([element], timeoutMs);
-}
-
 describe('Elements: ', () => {
     let testContainer: HTMLDivElement;
 
@@ -84,16 +48,15 @@ describe('Elements: ', () => {
             const columnEl = document.createElement("igc-column") as IgcNgElement;
             gridEl.appendChild(columnEl);
 
-            // Wait for both elements to be fully initialized and query updates to complete
-            await waitForElementsReady([gridEl, columnEl]);
+            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
 
             const gridComponent = (await gridEl.ngElementStrategy[ComponentRefKey]).instance as IgxGridComponent;
             const columnComponent = (await columnEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
             expect(gridComponent.columnList.toArray()).toContain(columnComponent);
 
             columnEl.remove();
-            // Wait for the query update after removal
-            await (gridEl.ngElementStrategy as any).waitForQueryUpdates();
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY: DESTROY + QUERY */ * 3));
             expect(gridComponent.columnList.toArray()).toEqual([]);
         });
 
@@ -110,12 +73,12 @@ describe('Elements: ', () => {
                 </div>`;
             }
 
-            // Wait for grid and column to be fully initialized
-            await waitForElementsReady([gridEl as unknown as IgcNgElement, columnEl]);
+            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
 
             // sigh (。﹏。*)
             (gridEl as any).toggleRow('1');
-            await waitForElementReady(gridEl as unknown as IgcNgElement);
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
 
             let detailGrid = document.querySelector<IgcNgElement>('#child1');
             expect(detailGrid).toBeDefined();
@@ -124,9 +87,9 @@ describe('Elements: ', () => {
 
             // close and re-expand row detail:
             (gridEl as any).toggleRow('1');
-            await waitForElementReady(gridEl as unknown as IgcNgElement);
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
             (gridEl as any).toggleRow('1');
-            await waitForElementReady(gridEl as unknown as IgcNgElement);
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
 
             detailGrid = document.querySelector<IgcNgElement>('#child1');
             expect(detailGrid).toBeDefined();
@@ -153,8 +116,8 @@ describe('Elements: ', () => {
             const hgridComponent = (await hgridEl.ngElementStrategy[ComponentRefKey]).instance as IgxHierarchicalGridComponent;
             hgridComponent.data = hgridData;
 
-            // Wait for all elements to be fully initialized and query updates to complete
-            await waitForElementsReady([hgridEl, columnProjectId, columnName, columnStartDate]);
+            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
 
             expect(hgridComponent.dataView.length).toBeGreaterThan(0);
         });
@@ -200,8 +163,8 @@ describe('Elements: ', () => {
             });
             testContainer.appendChild(gridEl);
 
-            // Wait for all elements to be fully initialized and query updates to complete
-            await waitForElementsReady([gridEl as unknown as IgcNgElement, columnID as unknown as IgcNgElement, columnName as unknown as IgcNgElement]);
+            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
 
             const header = document.getElementsByTagName("igx-grid-header").item(0) as HTMLElement;
             expect(header.innerText).toEqual('Templated ProductID');
@@ -216,8 +179,8 @@ describe('Elements: ', () => {
 
             testContainer.appendChild(gridEl);
 
-            // Wait for all elements to be fully initialized and query updates to complete
-            await waitForElementsReady([gridEl as unknown as IgcNgElement, stateComponent as unknown as IgcNgElement]);
+            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
             expect(() => stateComponent.getStateAsString()).not.toThrow();
         });
 
@@ -238,21 +201,19 @@ describe('Elements: ', () => {
             </igc-grid>`;
             testContainer.innerHTML = innerHtml;
 
+            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
+
             const grid = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid');
             const thirdGroup = document.querySelector<IgcNgElement>('igc-column-layout[header="Product Stock"]');
             const secondGroup = document.querySelector<IgcNgElement>('igc-column-layout[header="Product Details"]');
-            
-            // Wait for all elements to be fully initialized
-            const allElements = [grid, thirdGroup, secondGroup, ...Array.from(document.querySelectorAll<IgcNgElement>('igc-column'))];
-            await waitForElementsReady(allElements.filter(el => el) as IgcNgElement[]);
 
             expect(grid.columns.length).toEqual(8);
             expect(grid.getColumnByName('ProductID')).toBeTruthy();
             expect(grid.getColumnByVisibleIndex(1).field).toEqual('ProductName');
 
             grid.removeChild(secondGroup);
-            // Wait for query updates after removal
-            await (grid.ngElementStrategy as any).waitForQueryUpdates();
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
 
             expect(grid.columns.length).toEqual(4);
             expect(grid.getColumnByName('ProductID')).toBeTruthy();
@@ -264,8 +225,7 @@ describe('Elements: ', () => {
             newColumn.setAttribute('field', 'ProductName');
             newGroup.appendChild(newColumn);
             grid.insertBefore(newGroup, thirdGroup);
-            // Wait for new elements to be initialized and query updates to complete
-            await waitForElementsReady([newGroup as unknown as IgcNgElement, newColumn as unknown as IgcNgElement]);
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
 
             expect(grid.columns.length).toEqual(6);
             expect(grid.getColumnByVisibleIndex(1).field).toEqual('ProductName');

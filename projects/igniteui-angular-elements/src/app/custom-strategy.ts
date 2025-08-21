@@ -288,7 +288,6 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
     //#region schedule query update
     private schedule = new Map<string, () => void>();
-    private queryUpdatePromises = new Map<string, Promise<void>>();
 
     /**
      * Schedule an update for a content query for the component
@@ -299,47 +298,12 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             this.schedule.get(queryName)();
         }
 
-        // Create a promise that resolves when the query update completes
-        const updatePromise = new Promise<void>((resolve) => {
-            const id = setTimeout(() => {
-                this.updateQuery(queryName);
-                resolve();
-            }, SCHEDULE_DELAY);
-            this.schedule.set(queryName, () => {
-                clearTimeout(id);
-                resolve();
-            });
-        });
-
-        this.queryUpdatePromises.set(queryName, updatePromise);
-    }
-
-    /**
-     * Wait for all pending query updates to complete
-     * @returns Promise that resolves when all scheduled query updates are finished
-     */
-    public async waitForQueryUpdates(): Promise<void> {
-        const pendingPromises = Array.from(this.queryUpdatePromises.values());
-        if (pendingPromises.length > 0) {
-            await Promise.all(pendingPromises);
-        }
-    }
-
-    /**
-     * Wait for a specific query update to complete
-     * @param queryName The name of the query to wait for
-     * @returns Promise that resolves when the query update is finished
-     */
-    public async waitForQueryUpdate(queryName: string): Promise<void> {
-        const promise = this.queryUpdatePromises.get(queryName);
-        if (promise) {
-            await promise;
-        }
+        const id = setTimeout(() => this.updateQuery(queryName), SCHEDULE_DELAY);
+        this.schedule.set(queryName, () => clearTimeout(id));
     }
 
     private updateQuery(queryName: string) {
         this.schedule.delete(queryName);
-        this.queryUpdatePromises.delete(queryName);
         const componentRef = (this as any).componentRef as ComponentRef<any>;
         if (componentRef) {
             const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
