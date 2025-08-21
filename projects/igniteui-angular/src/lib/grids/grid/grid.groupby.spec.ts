@@ -3267,7 +3267,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         // verify width is recalculated
         const indentation = fix.debugElement.query(By.css('.igx-grid__header-indentation'));
 
-        expect(grid.pinnedWidth).toEqual(parseInt(window.getComputedStyle(indentation.nativeElement).width, 10));
+        expect(grid.pinnedStartWidth).toEqual(parseInt(window.getComputedStyle(indentation.nativeElement).width, 10));
         expect(grid.unpinnedWidth).toEqual(400 - parseInt(window.getComputedStyle(indentation.nativeElement).width, 10) - grid.scrollSize);
 
         grid.clearGrouping();
@@ -3281,7 +3281,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
 
         expect(grid.calcHeight).toEqual(expectedHeight);
-        expect(grid.pinnedWidth).toEqual(0);
+        expect(grid.pinnedStartWidth).toEqual(0);
         const expectedWidth = parseInt(grid.width, 10) - grid.scrollSize;
         expect(grid.unpinnedWidth).toEqual(expectedWidth);
     }));

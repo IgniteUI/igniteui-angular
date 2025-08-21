@@ -564,7 +564,7 @@ export interface ColumnType extends FieldType {
     toggleVisibility(value?: boolean): void;
     populateVisibleIndexes?(): void;
     /** Pins the column at the specified index (if not already pinned). */
-    pin(index?: number): boolean;
+    pin(index?: number, pinningPosition?: ColumnPinningPosition): boolean;
     /** Unpins the column at the specified index (if not already unpinned). */
     unpin(index?: number): boolean;
 }
@@ -820,13 +820,13 @@ export interface GridType extends IGridDataBindable {
     isRowSelectable: boolean;
     /** Indicates whether the selectors of the rows are visible */
     showRowSelectors: boolean;
-    /** Indicates whether the grid's element is pinned to the start of the grid */
-    isPinningToStart: boolean;
     /** Indicates if the column of the grid is in drag mode */
     columnInDrag: any;
     /** @hidden @internal */
-    /** The width of pinned element */
-    pinnedWidth: number;
+    /** The width of pinned element for pinning at start. */
+    pinnedStartWidth: number;
+    /** The width of pinned element for pinning at end. */
+    pinnedEndWidth: number;
     /** @hidden @internal */
     /** The width of unpinned element */
     unpinnedWidth: number;
@@ -961,6 +961,10 @@ export interface GridType extends IGridDataBindable {
     unpinnedColumns: ColumnType[];
     /** An array of columns, but it counts only the ones that are pinned */
     pinnedColumns: ColumnType[];
+    /** An array of columns, but it counts only the ones that are pinned to the start. */
+    pinnedStartColumns: ColumnType[];
+    /** An array of columns, but it counts only the ones that are pinned to the end. */
+    pinnedEndColumns: ColumnType[];
     /** represents an array of the headers of the columns */
     /** @hidden @internal */
     headerCellList: any[];

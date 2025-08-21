@@ -82,15 +82,10 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         }
 
         const unpinnedColumns = this.grid.unpinnedColumns.filter(c => c.columnLayout && !c.hidden);
-        const pinnedColumns = this.grid.pinnedColumns.filter(c => c.columnLayout && !c.hidden);
-        let vIndex = -1;
-
-        if (!this.pinned) {
-            const indexInCollection = unpinnedColumns.indexOf(this);
-            vIndex = indexInCollection === -1 ? -1 : pinnedColumns.length + indexInCollection;
-        } else {
-            vIndex = pinnedColumns.indexOf(this);
-        }
+        const pinnedStart = this.grid.pinnedStartColumns.filter(c => c.columnLayout && !c.hidden);
+        const pinnedEndColumns = this.grid.pinnedEndColumns.filter(c => c.columnLayout && !c.hidden);
+        const ordered = pinnedStart.concat(unpinnedColumns, pinnedEndColumns);
+        let vIndex = ordered.indexOf(this);
         this._vIndex = vIndex;
         return vIndex;
     }
@@ -158,7 +153,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     public override populateVisibleIndexes() {
         this.childrenVisibleIndexes = [];
         const columns = this.grid?.pinnedColumns && this.grid?.unpinnedColumns
-            ? this.grid.pinnedColumns.concat(this.grid.unpinnedColumns)
+            ? this.grid.pinnedStartColumns.concat(this.grid.unpinnedColumns, this.grid.pinnedEndColumns)
             : [];
         const orderedCols = columns
             .filter(x => !x.columnGroup && !x.hidden)
