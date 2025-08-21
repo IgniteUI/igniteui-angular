@@ -2,6 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+
 ## 20.1.0
 ### New Features
 - `IgxCarousel`
@@ -30,9 +31,32 @@ All notable changes for each version of this project will be documented in this 
 
     If property `pinningPosition` is not set on a column, the column will default to the position specified on the grid's `pinning` options for `columns`.
 
+- `IgxDateRangePicker`
+  - Added new properties:
+      - `usePredefinedRanges` - Whether to render built-in predefined ranges 
+      - `customRanges` - Allows the user to provide custom ranges rendered as chips
+      - `resourceStrings` - Allows the user to provide set of resource strings 
+        
+- `IgxPredefinedRangesAreaComponent`
+  - Added new component for rendering the predefined or custom ranges inside the calendar of the `IgxDateRangePicker`
+
+- `IgxOverlay`
+    - Position Settings now accept a new optional `offset` input property of type `number`. Used to set the offset of the element from the target in pixels.
+
+- `IgxTooltip`
+    - The tooltip now remains open while interacting with it.
+- `IgxTooltipTarget`
+    - Introduced several new properties to enhance customization of tooltip content and behavior. Those include `positionSettings`, `hasArrow`, `sticky`, `closeButtonTemplate`. For detailed usage and examples, please refer to the Tooltip [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/tooltip/README.md).
+
+
 ### General
 - `IgxDropDown` now exposes a `role` input property, allowing users to customize the role attribute based on the use case. The default is `listbox`.
 
+- `IgxTooltipTarget`
+    - **Behavioral Changes**
+        - The `showDelay` input property now defaults to `200`.
+        - The `hideDelay` input property now defaults to `300`.
+        - The `showTooltip` and `hideTooltip` methods do not take `showDelay`/`hideDelay` into account.
 
 ## 20.0.6
 ### General
