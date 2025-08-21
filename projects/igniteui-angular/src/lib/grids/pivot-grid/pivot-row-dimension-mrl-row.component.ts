@@ -34,6 +34,8 @@ import { PivotUtil } from './pivot-util';
     imports: [IgxPivotRowDimensionContentComponent, IgxPivotGridHorizontalRowCellMerging]
 })
 export class IgxPivotRowDimensionMrlRowComponent extends IgxGridHeaderRowComponent {
+    @ViewChildren(IgxPivotRowDimensionContentComponent)
+    public rowDimensionContentCollection: QueryList<IgxPivotRowDimensionContentComponent>;
 
     @HostBinding('class.igx-grid__tbody-pivot-dimension')
     public pivotDim = true;

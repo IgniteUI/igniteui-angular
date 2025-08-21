@@ -132,7 +132,7 @@
 
         @if $variant != 'material' {
             %switch-thumb {
-                background: var-get($theme, 'border-hover-color');
+                background: var-get($theme, 'thumb-off-hover-color');
             }
 
             %switch-thumb--x {

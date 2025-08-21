@@ -122,10 +122,10 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
         super(elementRef, cdr, overlayService, navigationService);
 
         this.onDocumentTouchStart = this.onDocumentTouchStart.bind(this);
-        this.overlayService.opening.pipe(takeUntil(this._destroy$)).subscribe(() => {
+        this.opening.pipe(takeUntil(this._destroy$)).subscribe(() => {
             this._document.addEventListener('touchstart', this.onDocumentTouchStart, { passive: true });
         });
-        this.overlayService.closed.pipe(takeUntil(this._destroy$)).subscribe(() => {
+        this.closed.pipe(takeUntil(this._destroy$)).subscribe(() => {
             this._document.removeEventListener('touchstart', this.onDocumentTouchStart);
         });
     }

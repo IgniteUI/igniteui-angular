@@ -78,12 +78,19 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(fCell.selected).toBeFalsy();
 
             // select parent cell
+            const parentSpy = spyOn<any>(hierarchicalGrid.selected, 'emit').and.callThrough();
             firstRow = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             fCell = firstRow.cells.toArray()[0];
             GridFunctions.focusCell(fix, fCell);
             fix.detectChanges();
             expect(fChildCell.selected).toBeFalsy();
             expect(fCell.selected).toBeTruthy();
+            expect(parentSpy).toHaveBeenCalledTimes(1);
+
+            GridFunctions.focusCell(fix, fCell);
+            fix.detectChanges();
+            expect(fCell.selected).toBeTruthy();
+            expect(parentSpy).toHaveBeenCalledTimes(1);
         });
 
         it('should be able to set cellSelection mode per grid', () => {
