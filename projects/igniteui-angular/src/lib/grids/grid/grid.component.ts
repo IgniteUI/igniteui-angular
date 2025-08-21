@@ -34,7 +34,7 @@ import { IGridGroupingStrategy } from '../common/strategy';
 import { IgxGridValidationService } from './grid-validation.service';
 import { IgxGridDetailsPipe } from './grid.details.pipe';
 import { IgxGridSummaryPipe } from './grid.summary.pipe';
-import { IgxGridGroupingPipe, IgxGridPagingPipe, IgxGridSortingPipe, IgxGridFilteringPipe } from './grid.pipes';
+import { IgxGridGroupingPipe, IgxGridPagingPipe, IgxGridSortingPipe, IgxGridFilteringPipe, IgxGridCellMergePipe } from './grid.pipes';
 import { IgxSummaryDataPipe } from '../summaries/grid-root-summary.pipe';
 import { IgxGridTransactionPipe, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridAddRowPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe, IgxStringReplacePipe } from '../common/pipes';
 import { IgxGridColumnResizerComponent } from '../resizing/resizer.component';
@@ -54,6 +54,7 @@ import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
 import { Observable, Subject } from 'rxjs';
+import { IgxScrollInertiaDirective } from '../../directives/scroll-inertia/scroll_inertia.directive';
 
 let NEXT_ID = 0;
 
@@ -151,7 +152,9 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxGridFilteringPipe,
         IgxGridSummaryPipe,
         IgxGridDetailsPipe,
-        IgxStringReplacePipe
+        IgxStringReplacePipe,
+        IgxGridCellMergePipe,
+        IgxScrollInertiaDirective
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -387,7 +390,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     private _groupByRowSelectorTemplate: TemplateRef<IgxGroupByRowSelectorTemplateContext>;
     private _detailTemplate;
-
 
     /**
      * Gets/Sets the array of data that populates the component.
@@ -948,13 +950,14 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             }
         }
         return {
-            $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
+            $implicit: this.isGhostRecord(rowData) || this.isRecordMerged(rowData) ? rowData.recordRef : rowData,
             index: this.getDataViewIndex(rowIndex, pinned),
             templateID: {
                 type: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
                 id: null
             },
-            disabled: this.isGhostRecord(rowData)
+            disabled: this.isGhostRecord(rowData),
+            metaData: this.isRecordMerged(rowData) ? rowData : null
         };
     }
 
@@ -1344,7 +1347,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this._gridAPI.sort_groupBy_multiple(this._groupingExpressions);
     }
 
-    private _setupNavigationService() {
+    protected _setupNavigationService() {
         if (this.hasColumnLayouts) {
             this.navigation = new IgxGridMRLNavigationService(this.platform);
             this.navigation.grid = this;
