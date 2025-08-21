@@ -865,6 +865,36 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             expect(tabsComp.selectedIndicator.nativeElement.style.visibility).toBe('hidden');
         });
+
+        it('should allow tab selection by clicking on tabs without content', fakeAsync(() => {
+            // Initially tab 1 (index 1) is selected
+            expect(tabsComp.selectedIndex).toBe(1);
+            expect(tabItems[1].selected).toBe(true);
+            expect(tabItems[0].selected).toBe(false);
+            expect(tabItems[2].selected).toBe(false);
+
+            // Click on tab 0 (no content)
+            headerElements[0].dispatchEvent(new Event('click', { bubbles: true }));
+            tick(200);
+            fixture.detectChanges();
+
+            // Should now be selected
+            expect(tabsComp.selectedIndex).toBe(0);
+            expect(tabItems[0].selected).toBe(true);
+            expect(tabItems[1].selected).toBe(false);
+            expect(tabItems[2].selected).toBe(false);
+
+            // Click on tab 2 (no content)
+            headerElements[2].dispatchEvent(new Event('click', { bubbles: true }));
+            tick(200);
+            fixture.detectChanges();
+
+            // Should now be selected
+            expect(tabsComp.selectedIndex).toBe(2);
+            expect(tabItems[2].selected).toBe(true);
+            expect(tabItems[0].selected).toBe(false);
+            expect(tabItems[1].selected).toBe(false);
+        }));
     });
 
     describe('Tabs-only Mode With Initial Selection Set on Tabs Component Tests', () => {
