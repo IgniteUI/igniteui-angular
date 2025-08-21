@@ -249,7 +249,7 @@ describe('IgxBottomNav', () => {
         });
 
         describe('', () => {
-            it('should not navigate to an URL blocked by activate guard', fakeAsync(() => {
+            it('should allow tab selection for routing tabs regardless of router guard', fakeAsync(() => {
                 fixture = TestBed.createComponent(BottomNavRoutingGuardTestComponent);
                 fixture.detectChanges();
 
@@ -269,15 +269,18 @@ describe('IgxBottomNav', () => {
                 expect(tabItems[0].selected).toBe(true);
                 expect(tabItems[1].selected).toBe(false);
 
+                // Even when router guard blocks navigation, tab should still be selected
                 fixture.ngZone.run(() => {
                     UIInteractions.simulateClickAndSelectEvent(headers[1]);
                 });
                 tick();
+                // Navigation blocked by guard, so URL stays the same
                 expect(location.path()).toBe('/view1');
                 fixture.detectChanges();
-                expect(bottomNav.selectedIndex).toBe(0);
-                expect(tabItems[0].selected).toBe(true);
-                expect(tabItems[1].selected).toBe(false);
+                // But tab selection should still work
+                expect(bottomNav.selectedIndex).toBe(1);
+                expect(tabItems[0].selected).toBe(false);
+                expect(tabItems[1].selected).toBe(true);
             }));
         });
     });

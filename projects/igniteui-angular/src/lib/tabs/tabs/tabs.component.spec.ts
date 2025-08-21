@@ -706,7 +706,7 @@ describe('IgxTabs', () => {
             expect(document.activeElement).toBe(headerElements[3]);
         }));
 
-        it('should not navigate to an URL blocked by activate guard', fakeAsync(() => {
+        it('should allow tab selection for routing tabs regardless of router guard', fakeAsync(() => {
             fixture = TestBed.createComponent(TabsRoutingGuardTestComponent);
             tabsComp = fixture.componentInstance.tabs;
             fixture.detectChanges();
@@ -729,15 +729,18 @@ describe('IgxTabs', () => {
             expect(tabItems[0].selected).toBe(true);
             expect(tabItems[1].selected).toBe(false);
 
+            // Even when router guard blocks navigation, tab should still be selected
             fixture.ngZone.run(() => {
                 UIInteractions.simulateClickAndSelectEvent(headerElements[1]);
             });
             tick();
+            // Navigation blocked by guard, so URL stays the same
             expect(location.path()).toBe('/view1');
             fixture.detectChanges();
-            expect(tabsComp.selectedIndex).toBe(0);
-            expect(tabItems[0].selected).toBe(true);
-            expect(tabItems[1].selected).toBe(false);
+            // But tab selection should still work
+            expect(tabsComp.selectedIndex).toBe(1);
+            expect(tabItems[0].selected).toBe(false);
+            expect(tabItems[1].selected).toBe(true);
         }));
 
         it('should set auto activation mode by default and change selectedIndex on arrow keys', fakeAsync(() => {
