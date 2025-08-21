@@ -865,35 +865,6 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             expect(tabsComp.selectedIndicator.nativeElement.style.visibility).toBe('hidden');
         });
-
-        it('should allow clicking on tabs without content to select them', fakeAsync(() => {
-            tick(100);
-            fixture.detectChanges();
-            
-            // Initially Tab 2 should be selected (based on the test component)
-            expect(tabItems[1].selected).toBe(true);
-            expect(tabsComp.selectedIndex).toBe(1);
-            
-            // Click on Tab 1 (which has no content)
-            headerElements[0].dispatchEvent(new Event('click', { bubbles: true }));
-            tick(200);
-            fixture.detectChanges();
-            
-            // Tab 1 should now be selected
-            expect(tabsComp.selectedIndex).toBe(0);
-            expect(tabItems[0].selected).toBe(true);
-            expect(tabItems[1].selected).toBe(false);
-            
-            // Click on Tab 3 (which also has no content)
-            headerElements[2].dispatchEvent(new Event('click', { bubbles: true }));
-            tick(200);
-            fixture.detectChanges();
-            
-            // Tab 3 should now be selected
-            expect(tabsComp.selectedIndex).toBe(2);
-            expect(tabItems[2].selected).toBe(true);
-            expect(tabItems[0].selected).toBe(false);
-        }));
     });
 
     describe('Tabs-only Mode With Initial Selection Set on Tabs Component Tests', () => {
@@ -923,67 +894,6 @@ describe('IgxTabs', () => {
             expect(tabItems[2].selected).toBe(true);
             expect(headerElements[2].classList.contains(tabItemSelectedCssClass)).toBe(true);
         });
-
-        it('should allow keyboard navigation for tabs without content', fakeAsync(() => {
-            fixture.detectChanges();
-            tick(100);
-            
-            // Initially Tab 3 should be selected (selectedIndex = 2)
-            expect(tabsComp.selectedIndex).toBe(2);
-            expect(tabItems[2].selected).toBe(true);
-            
-            // Focus on Tab 3 and navigate left
-            headerElements[2].focus();
-            headerElements[2].dispatchEvent(KEY_LEFT_EVENT);
-            tick(200);
-            fixture.detectChanges();
-            
-            // Should move to Tab 2
-            expect(tabsComp.selectedIndex).toBe(1);
-            expect(tabItems[1].selected).toBe(true);
-            expect(tabItems[2].selected).toBe(false);
-        }));
-
-        it('should fire events when clicking on tabs without content', fakeAsync(() => {
-            // Set up a clean test with the first test group (tab 2 initially selected)
-            fixture = TestBed.createComponent(TabsTabsOnlyModeTest1Component);
-            tabsComp = fixture.componentInstance.tabs;
-            fixture.detectChanges();
-            tabItems = tabsComp.items.toArray();
-            headerElements = tabItems.map(item => item.headerComponent.nativeElement);
-            
-            const indexChangingSpy = spyOn(tabsComp.selectedIndexChanging, 'emit');
-            const indexChangeSpy = spyOn(tabsComp.selectedIndexChange, 'emit');
-            const itemChangeSpy = spyOn(tabsComp.selectedItemChange, 'emit');
-            
-            tick(100);
-            fixture.detectChanges();
-            
-            // Initially Tab 2 should be selected (index 1)
-            expect(tabsComp.selectedIndex).toBe(1);
-            
-            // Click on Tab 1 (which has no content)
-            headerElements[0].dispatchEvent(new Event('click', { bubbles: true }));
-            tick(200);
-            fixture.detectChanges();
-            
-            // Tab should be selected
-            expect(tabsComp.selectedIndex).toBe(0);
-            
-            // Events should have fired
-            expect(indexChangingSpy).toHaveBeenCalledWith({
-                owner: tabsComp,
-                cancel: false,
-                oldIndex: 1,
-                newIndex: 0
-            });
-            expect(indexChangeSpy).toHaveBeenCalledWith(0);
-            expect(itemChangeSpy).toHaveBeenCalledWith({
-                owner: tabsComp,
-                oldItem: tabItems[1],
-                newItem: tabItems[0]
-            });
-        }));
 
     });
 

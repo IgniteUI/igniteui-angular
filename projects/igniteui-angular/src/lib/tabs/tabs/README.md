@@ -3,11 +3,11 @@
 ## Description
 _igx-tabs component allows you to add a tabs component with tab items, positioned at the top, and item content in your application. The tabs in Ignite UI for Angular can be composed with the following components and directives:_
 
--  *igx-tab-item* - single content area that holds header and optionally content components
+-  *igx-tab-item* - single content area that holds header and content components
 -  *igx-tab-header* - holds the title and/or icon of the item and you can add them with `igxTabHeaderIcon` and `igxTabHeaderLabel`
--  *igx-tab-content* - represents the wrapper of the content that needs to be displayed (optional)
+-  *igx-tab-content* - represents the wrapper of the content that needs to be displayed
 
-Each item (`igx-tab-item`) contains a header (`igx-tab-header`) and optionally content (`igx-tab-content`). When a tab is clicked, the associated content is selected and visualized into a single container. If a tab has no content, it can still be selected and used for navigation purposes. There should always be a selected tab. Only one tab can be selected at a time.
+Each item (`igx-tab-item`) contains header (`igx-tab-header`) and content (`igx-tab-content`). When a tab is clicked, the associated content is selected and visualized into a single container. There should always be a selected tab. Only one tab can be selected at a time.
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabs).
 
 ----------
@@ -56,33 +56,6 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
                 Content 4
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
             </igx-tab-content>
-        </igx-tab-item>
-    </igx-tabs>
-
-## Tabs without content (Navigation-only)
-
-For navigation purposes, you can create tabs without content:
-
-    <igx-tabs>
-        <igx-tab-item>
-            <igx-tab-header igxRipple>
-                <igx-icon igxTabHeaderIcon>home</igx-icon>
-                <span igxTabHeaderLabel>Home</span>
-            </igx-tab-header>
-        </igx-tab-item>
-        
-        <igx-tab-item [selected]="true">
-            <igx-tab-header igxRipple>
-                <igx-icon igxTabHeaderIcon>info</igx-icon>
-                <span igxTabHeaderLabel>About</span>
-            </igx-tab-header>
-        </igx-tab-item>
-        
-        <igx-tab-item>
-            <igx-tab-header igxRipple>
-                <igx-icon igxTabHeaderIcon>contact_page</igx-icon>
-                <span igxTabHeaderLabel>Contact</span>
-            </igx-tab-header>
         </igx-tab-item>
     </igx-tabs>
 
