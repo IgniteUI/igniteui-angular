@@ -42,6 +42,35 @@
             }
         </igc-tabs>
     </div>
+
+    <div class="sample-wrapper">
+        <strong>Tabs without content (test for fix)</strong>
+        <p>These tabs have headers but no content - clicking should still allow selection</p>
+        <igx-tabs>
+            <igx-tab-item>
+                <igx-tab-header>
+                    <igx-icon igxTabHeaderIcon>info</igx-icon>
+                    <span igxTabHeaderLabel>View 1</span>
+                </igx-tab-header>
+                <!-- No igx-tab-content -->
+            </igx-tab-item>
+            <igx-tab-item [selected]="true">
+                <igx-tab-header>
+                    <igx-icon igxTabHeaderIcon>settings</igx-icon>
+                    <span igxTabHeaderLabel>View 2</span>
+                </igx-tab-header>
+                <!-- No igx-tab-content -->
+            </igx-tab-item>
+            <igx-tab-item>
+                <igx-tab-header>
+                    <igx-icon igxTabHeaderIcon>help</igx-icon>
+                    <span igxTabHeaderLabel>View 3</span>
+                </igx-tab-header>
+                <!-- No igx-tab-content -->
+            </igx-tab-item>
+        </igx-tabs>
+        <p><small>✅ After the fix, clicking any tab header should select it even without content</small></p>
+    </div>
 </div>
 
 <ng-template #customControlsTemplate>
