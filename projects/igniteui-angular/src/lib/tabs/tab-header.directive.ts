@@ -1,5 +1,6 @@
 
-import { Directive, ElementRef, HostBinding, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostBinding, HostListener, Optional, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { PlatformUtil } from '../core/utils';
 import { IgxTabItemDirective } from './tab-item.directive';
 import { IgxTabHeaderBase, IgxTabsBase } from './tabs.base';
@@ -17,7 +18,13 @@ export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
         public tab: IgxTabItemDirective,
         private elementRef: ElementRef<HTMLElement>,
         protected platform: PlatformUtil
-    ) { }
+    ) { 
+        // Inject RouterLink directive if present
+        this.routerLink = inject(RouterLink, { optional: true });
+    }
+
+    /** @hidden */
+    private routerLink?: RouterLink;
 
     /** @hidden */
     @HostBinding('attr.tabindex')
@@ -40,7 +47,11 @@ export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
     /** @hidden */
     @HostListener('click')
     public onClick() {
-        this.tabs.selectTab(this.tab, true);
+        // For routing tabs, let the RouterLink handle navigation and don't select the tab immediately
+        // For other tabs (content tabs or action tabs), allow immediate selection
+        if (!this.routerLink) {
+            this.tabs.selectTab(this.tab, true);
+        }
     }
 
     /** @hidden */
