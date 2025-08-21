@@ -1,4 +1,4 @@
-import { Directive, Optional, Self, Input, HostListener, Inject } from '@angular/core';
+import { Directive, Optional, Self, Input, HostListener, Inject, HostBinding } from '@angular/core';
 import { IGX_DROPDOWN_BASE } from './drop-down.common';
 import { IDropDownNavigationDirective } from './drop-down.common';
 import { IgxDropDownBaseDirective } from './drop-down.base';
@@ -51,6 +51,11 @@ export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDi
     @Input('igxDropDownItemNavigation')
     public set target(target: IgxDropDownBaseDirective) {
         this._target = target ? target : this.dropdown;
+    }
+
+    @HostBinding('attr.aria-activedescendant')
+    public get activeDescendant(): string {
+        return this._target?.activeDescendant;
     }
 
     /**

@@ -22,6 +22,7 @@ export const TREE_CELL_LOADING_CSS_CLASS = '.igx-grid__tree-loading-indicator';
 export const NUMBER_CELL_CSS_CLASS = 'igx-grid__td--number';
 export const CELL_VALUE_DIV_CSS_CLASS = '.igx-grid__td-text';
 export const ROW_EDITING_BANNER_OVERLAY_CLASS = 'igx-overlay__content';
+export const TREE_GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
 
 export class TreeGridFunctions {
     public static getHeaderRow(fix) {
@@ -415,6 +416,16 @@ export class TreeGridFunctions {
                     expect(selectedCell.column.field).toEqual(cell.column.field);
                     expect(selectedCell.row.index).toEqual(cell.row.index);
                     expect(selectedCell.value).toEqual(cell.value);
+
+                    // Verify the selected cell is the active descendant of the content element.
+                    let cellElement = cell.nativeElement;
+                    if (cell instanceof IgxGridCellComponent) {
+                        cellElement = treeGrid.gridAPI.get_cell_by_index(cell.row.index, cell.column.field).nativeElement;
+                    }
+                    expect(treeGrid.activeDescendant).toEqual(cellElement.id);
+                    const gridContentEl = treeGrid.nativeElement.querySelector(TREE_GRID_CONTENT_CLASS);
+                    const activeDescendant = gridContentEl.getAttribute('aria-activedescendant');
+                    expect(activeDescendant).toBe(cellElement.id);
                 }
             }
         }

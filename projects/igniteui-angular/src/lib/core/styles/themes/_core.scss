@@ -7,6 +7,7 @@
 
 // Used to configure color accessibility for charts
 @use 'igniteui-theming/sass/color/functions' as color;
+@use 'igniteui-theming/sass/themes/mixins' as theming;
 
 // Common components
 @use '../components/_common/igx-control';
@@ -112,6 +113,8 @@
             box-sizing: border-box;
         }
     }
+
+    @include theming.spacing();
 
     @property --_progress-integer {
         syntax: '<integer>';
