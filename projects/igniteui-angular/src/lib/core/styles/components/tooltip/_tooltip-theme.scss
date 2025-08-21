@@ -8,21 +8,56 @@
     @include css-vars($theme);
     $variant: map.get($theme, '_meta', 'theme');
 
+    $transparent-border: rem(4px) solid transparent;
+    $color-border: rem(4px) solid var-get($theme, 'background');
+
     %tooltip-display {
-        display: inline-flex;
-        justify-content: center;
-        flex-flow: column wrap;
+        display: flex;
+        align-items: flex-start;
+        text-align: start;
         background: var-get($theme, 'background');
         color: var-get($theme, 'text-color');
         border-radius: var-get($theme, 'border-radius');
         box-shadow: map.get($theme, 'shadow');
-        margin: 0 auto;
-        padding: 0 rem(8px);
+        padding: rem(4px) rem(8px);
+        gap: rem(8px);
         min-height: rem(24px);
+        min-width: rem(24px);
+        max-width: 200px;
+        width: fit-content;
 
-        @if $variant == 'indigo' {
-            padding: rem(4px) rem(8px);
+        igx-icon {
+            --component-size: 1;
         }
+
+        igx-tooltip-close-button {
+            display: flex;
+            cursor: default;
+        }
+    }
+
+    %arrow--top {
+        border-left: $transparent-border;
+        border-right: $transparent-border;
+        border-top: $color-border;
+    }
+
+    %arrow--bottom {
+        border-left: $transparent-border;
+        border-right: $transparent-border;
+        border-bottom: $color-border;
+    }
+
+    %arrow--left {
+        border-top: $transparent-border;
+        border-bottom: $transparent-border;
+        border-left: $color-border;
+    }
+
+    %arrow--right {
+        border-top: $transparent-border;
+        border-bottom: $transparent-border;
+        border-right: $color-border;
     }
 
     %tooltip--hidden {
@@ -45,6 +80,7 @@
         }
     } @else {
         %tooltip-display {
+            line-height: rem(16px);
             font-size: rem(10px);
             font-weight: 600;
         }
