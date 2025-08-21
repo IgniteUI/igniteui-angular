@@ -517,7 +517,7 @@ describe('IgxDateRangePicker', () => {
 
                     selectDateRangeFromCalendar(new Date(2020, 0, 8), new Date(2020, 0, 12), false);
 
-                    const cancelBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[1];
+                    const cancelBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[0];
                     UIInteractions.simulateClickAndSelectEvent(cancelBtn);
                     tick();
                     fixture.detectChanges();
@@ -563,8 +563,8 @@ describe('IgxDateRangePicker', () => {
 
                     dateRange.toggle();
                     fixture.detectChanges();
-                    let doneBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[0];
-                    let cancelBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[1];
+                    let doneBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[1];
+                    let cancelBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[0];
                     expect(doneBtn.textContent.trim()).toEqual('Done');
                     expect(cancelBtn.textContent.trim()).toEqual('Cancel');
                     dateRange.toggle();
@@ -577,8 +577,8 @@ describe('IgxDateRangePicker', () => {
                     dateRange.toggle();
                     tick();
                     fixture.detectChanges();
-                    doneBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[0];
-                    cancelBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[1];
+                    doneBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[1];
+                    cancelBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[0];
                     expect(doneBtn.textContent.trim()).toEqual('Close');
                     console.log(cancelBtn.textContent.trim());
                 }));
