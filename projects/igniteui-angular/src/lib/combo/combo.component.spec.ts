@@ -56,7 +56,7 @@ const CSS_CLASS_EMPTY = 'igx-combo__empty';
 const CSS_CLASS_ITEM_CHECKBOX = 'igx-combo__checkbox';
 const CSS_CLASS_ITME_CHECKBOX_CHECKED = 'igx-checkbox--checked';
 const defaultDropdownItemHeight = 40;
-const defaultDropdownItemMaxHeight = 400;
+const defaultDropdownItemMaxHeight = 240;
 
 describe('igxCombo', () => {
     let fixture: ComponentFixture<any>;
@@ -1772,7 +1772,7 @@ describe('igxCombo', () => {
                     dropdown.toggle();
                     fixture.detectChanges();
                     expect(dropdown.items).toBeDefined();
-                    expect(dropdown.items.length).toEqual(9);
+                    expect(dropdown.items.length).toEqual(5);
                     dropdown.onFocus();
                     expect(dropdown.focusedItem).toEqual(dropdown.items[0]);
                     expect(dropdown.focusedItem.focused).toEqual(true);
@@ -2691,19 +2691,19 @@ describe('igxCombo', () => {
                 combo.toggle();
                 fixture.detectChanges();
                 let headers = combo.dropdown.headers.map(header => header.element.nativeElement.innerText);
-                expect(headers).toEqual(['Ángel', 'Boris', 'México', 'Méxícó']);
+                expect(headers).toEqual(['Ángel', 'Boris', 'México']);
 
                 combo.groupSortingDirection = SortingDirection.Desc;
                 combo.toggle();
                 fixture.detectChanges();
                 headers = combo.dropdown.headers.map(header => header.element.nativeElement.innerText);
-                expect(headers).toEqual(['Méxícó', 'México', 'Boris', 'Ángel']);
+                expect(headers).toEqual(['Méxícó', 'México', 'Boris']);
 
                 combo.groupSortingDirection = SortingDirection.None;
                 combo.toggle();
                 fixture.detectChanges();
                 headers = combo.dropdown.headers.map(header => header.element.nativeElement.innerText);
-                expect(headers).toEqual(['Méxícó', 'Ángel', 'México', 'Boris']);
+                expect(headers).toEqual(['Méxícó', 'Ángel', 'México']);
             });
         });
         describe('Filtering tests: ', () => {
@@ -2862,8 +2862,8 @@ describe('igxCombo', () => {
 
                 verifyFilteredItems('jose', 1);
                 verifyFilteredItems('mexico', 3);
-                verifyFilteredItems('o', 7);
-                verifyFilteredItems('é', 7);
+                verifyFilteredItems('o', 6);
+                verifyFilteredItems('é', 6);
             }));
 
             it('should filter the dropdown items when typing in the search input', fakeAsync(() => {
@@ -2888,9 +2888,9 @@ describe('igxCombo', () => {
                     dropdownItems = dropdownList.querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`);
                     expect(dropdownItems.length).toEqual(expectedItemsNumber);
                 };
-                verifyFilteredItems('M', 7);
+                verifyFilteredItems('M', 4);
 
-                verifyFilteredItems('Mi', 5);
+                verifyFilteredItems('Mi', 3);
                 expectedValues = expectedValues.filter(data => data.field.toLowerCase().includes('mi'));
                 checkFilteredItems(dropdownItems);
 
@@ -2960,9 +2960,9 @@ describe('igxCombo', () => {
                     expect(combo.filteredData.length).toEqual(expectedFilteredItemsNumber);
                 };
 
-                verifyFilteredItems('M', 7, 15);
-                verifyFilteredItems('Mi', 5, 5);
-                verifyFilteredItems('M', 7, 15);
+                verifyFilteredItems('M', 4, 15);
+                verifyFilteredItems('Mi', 3, 5);
+                verifyFilteredItems('M', 4, 15);
                 combo.filteredData.forEach((item) => expect(combo.data).toContain(item));
             });
             it('should clear the search input and close the dropdown list on pressing ESC key', fakeAsync(() => {
