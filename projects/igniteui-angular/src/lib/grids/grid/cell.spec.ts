@@ -151,7 +151,7 @@ describe('IgxGrid - Cell component #grid', () => {
         });
     });
 
-    xdescribe('Cells in virtualized grid ', () => {
+    describe('Cells in virtualized grid ', () => {
         let fix;
         let grid: IgxGridComponent;
 
@@ -260,8 +260,8 @@ describe('IgxGrid - Cell component #grid', () => {
 
             const gridContent = GridFunctions.getGridContent(fix);
             UIInteractions.triggerEventHandlerKeyDown('arrowup', gridContent);
+            await wait(16);
             fix.detectChanges();
-            await wait(30);
 
             expect(grid.getCellByColumn(2, 'value').selected).toBeTruthy();
         }));
