@@ -944,6 +944,47 @@ describe('IgxTabs', () => {
             expect(tabItems[2].selected).toBe(false);
         }));
 
+        it('should fire events when clicking on tabs without content', fakeAsync(() => {
+            // Set up a clean test with the first test group (tab 2 initially selected)
+            fixture = TestBed.createComponent(TabsTabsOnlyModeTest1Component);
+            tabsComp = fixture.componentInstance.tabs;
+            fixture.detectChanges();
+            tabItems = tabsComp.items.toArray();
+            headerElements = tabItems.map(item => item.headerComponent.nativeElement);
+            
+            const indexChangingSpy = spyOn(tabsComp.selectedIndexChanging, 'emit');
+            const indexChangeSpy = spyOn(tabsComp.selectedIndexChange, 'emit');
+            const itemChangeSpy = spyOn(tabsComp.selectedItemChange, 'emit');
+            
+            tick(100);
+            fixture.detectChanges();
+            
+            // Initially Tab 2 should be selected (index 1)
+            expect(tabsComp.selectedIndex).toBe(1);
+            
+            // Click on Tab 1 (which has no content)
+            headerElements[0].dispatchEvent(new Event('click', { bubbles: true }));
+            tick(200);
+            fixture.detectChanges();
+            
+            // Tab should be selected
+            expect(tabsComp.selectedIndex).toBe(0);
+            
+            // Events should have fired
+            expect(indexChangingSpy).toHaveBeenCalledWith({
+                owner: tabsComp,
+                cancel: false,
+                oldIndex: 1,
+                newIndex: 0
+            });
+            expect(indexChangeSpy).toHaveBeenCalledWith(0);
+            expect(itemChangeSpy).toHaveBeenCalledWith({
+                owner: tabsComp,
+                oldItem: tabItems[1],
+                newItem: tabItems[0]
+            });
+        }));
+
     });
 
     describe('Events', () => {
