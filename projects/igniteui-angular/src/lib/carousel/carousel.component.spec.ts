@@ -143,15 +143,27 @@ describe('Carousel', () => {
 
             carousel.next();
             let currentSlide = carousel.get(carousel.current);
-
             fixture.detectChanges();
             expect(carousel.get(1)).toBe(currentSlide);
 
             currentSlide = carousel.get(0);
             carousel.prev();
-
             fixture.detectChanges();
             expect(carousel.get(0)).toBe(currentSlide);
+
+            carousel.select(1);
+            fixture.detectChanges();
+            expect(carousel.get(1)).toBe(carousel.get(carousel.current));
+
+            // select a negative index -> active slide remains the same
+            carousel.select(-1);
+            fixture.detectChanges();
+            expect(carousel.get(1)).toBe(carousel.get(carousel.current));
+
+            // select a non-existent index -> active slide remains the same
+            carousel.select(carousel.slides.length);
+            fixture.detectChanges();
+            expect(carousel.get(1)).toBe(carousel.get(carousel.current));
         });
 
         it('emit events', () => {

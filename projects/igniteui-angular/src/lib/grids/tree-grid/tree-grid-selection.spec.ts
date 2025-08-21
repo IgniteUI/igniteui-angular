@@ -964,6 +964,27 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expect(treeGrid.selectedCells[0] instanceof IgxGridCell).toBe(true);
             expect(treeGrid.selectedCells[0].value).toBe(19);
         });
+
+        it('Should not trigger range selection when CellTemplate is used and the user clicks on element inside it', () => {
+            const component = fix.componentInstance;
+
+            expect(component.customCell).toBeDefined();
+
+            const column = treeGrid.getColumnByName('ID');
+            column.bodyTemplate = component.customCell;
+            fix.detectChanges();
+
+            const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
+            const cell = treeGrid.gridAPI.get_cell_by_index(0, 'ID');
+            const cellElement = cell.nativeElement;
+            const span = cellElement.querySelector('span');
+
+            expect(span).not.toBeNull();
+
+            UIInteractions.simulateClickAndSelectEvent(span);
+            fix.detectChanges();
+            expect(selectionChangeSpy).not.toHaveBeenCalled();
+        });
     });
 
     describe('Cell/Row Selection With Row Editing', () => {

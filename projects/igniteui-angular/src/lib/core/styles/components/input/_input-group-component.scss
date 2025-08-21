@@ -52,7 +52,6 @@
         @include e(input) {
             @extend %form-group-input !optional;
             @extend %autofill-background-fix !optional;
-            @extend %edge-clear-icon-fix !optional;
 
             &:hover {
                 @extend %form-group-input--hover !optional;
@@ -73,10 +72,6 @@
             &:focus {
                 @extend %form-group-input--focus !optional;
             }
-        }
-
-        @include e(clear-icon) {
-            @extend %form-group-clear-icon !optional;
         }
 
         @include e(hint) {
@@ -220,7 +215,6 @@
 
             @include e(label) {
                 @extend %form-group-label--float !optional;
-                @extend %form-group-label--fixed !optional;
             }
         }
 
@@ -233,9 +227,34 @@
         }
 
         @include m(file) {
+            @extend %form-group-display--file !optional;
+
             @include e(label) {
                 @extend %form-group-label--float !optional;
             }
+        }
+        @include mx(file, focused) {
+            @extend %form-group-display--file-focused !optional;
+        }
+
+        @include mx(file, border) {
+            @extend %form-group-display--file-border !optional;
+        }
+
+        @include mx(file, border, focused) {
+            @extend %form-group-display--file-border-focused !optional;
+        }
+
+        @include mx(file, border, valid) {
+            @extend %form-group-display--file-border-success !optional;
+        }
+
+        @include mx(file, border, warning) {
+            @extend %form-group-display--file-border-warning !optional;
+        }
+
+        @include mx(file, border, invalid) {
+            @extend %form-group-display--file-border-error !optional;
         }
 
         @include m(required) {
@@ -306,7 +325,6 @@
             }
 
             @include e(label) {
-                @extend %form-group-label--fixed !optional;
                 @extend %form-group-label--disabled !optional;
             }
 
@@ -319,7 +337,7 @@
             }
 
             @include e(file-input) {
-                @extend %form-group-input--disabled !optional;
+                @extend %form-group-file-input--disabled !optional;
             }
 
             @include e(hint) {
@@ -332,10 +350,6 @@
 
             @include e(bundle) {
                 @extend %form-group-bundle--disabled !optional;
-            }
-
-            @include e(label) {
-                @extend %form-group-label--fixed !optional;
             }
 
             @include e(input) {
@@ -369,20 +383,8 @@
                 @extend %form-group-input--box !optional;
             }
 
-            @include e(bundle-start) {
-                @extend %form-group-bundle-start--box !optional;
-            }
-
-            @include e(bundle-end) {
-                @extend %form-group-bundle-end--box !optional;
-            }
-
             @include e(bundle-main) {
                 @extend %form-group-bundle-main--box !optional;
-            }
-
-            @include e(notch) {
-                @extend %form-group-notch--box !optional;
             }
         }
 
@@ -398,25 +400,10 @@
             }
         }
 
-        @include mx(box, textarea-group, filled) {
-            @include e(notch) {
-                @extend %form-group-notch--box-textarea !optional;
-            }
-        }
-
         @include mx(box, textarea-group, placeholder) {
             @extend %form-group-placeholder !optional;
-
-            @include e(notch) {
-                @extend %form-group-notch--box-textarea !optional;
-            }
         }
 
-        @include mx(box, textarea-group, focused) {
-            @include e(notch) {
-                @extend %form-group-notch--box-textarea !optional;
-            }
-        }
         // Type box END
 
         // Type border START
@@ -446,14 +433,6 @@
 
             @include e(label) {
                 @extend %form-group-label--border !optional;
-            }
-
-            @include e(bundle-start) {
-                @extend %form-group-bundle-start--border !optional;
-            }
-
-            @include e(bundle-end) {
-                @extend %form-group-bundle-end--border !optional;
             }
 
             @include e(notch) {
@@ -561,6 +540,11 @@
                 @extend %form-group-bundle-search--disabled !optional;
             }
         }
+
+        @include e(upload-button) {
+            @extend %upload-button !optional;
+        }
+
         // BASE END
 
         // ============================== //
@@ -574,11 +558,6 @@
 
                 &:hover {
                     @extend %form-group-bundle--fluent--hover !optional;
-                }
-
-                &:focus-within,
-                &:focus {
-                    @extend %form-group-bundle--fluent--focus !optional;
                 }
             }
 
@@ -600,10 +579,6 @@
 
             @include e(label) {
                 @extend %fluent-label !optional;
-            }
-
-            @include e(upload-button) {
-                @extend %fluent-upload-button !optional;
             }
         }
 
@@ -663,6 +638,10 @@
             @include e(label) {
                 @extend %fluent-label-filled !optional;
             }
+
+            @include e(file-input) {
+                @extend %fluent-file-input !optional;
+            }
         }
 
         @include mx(fluent, textarea-group) {
@@ -672,26 +651,12 @@
         }
 
         @include mx(fluent, focused) {
-            @include e(bundle-start) {
-                @extend %form-group-bundle-start--fluent--focused !optional;
-            }
-
-            @include e(bundle-main) {
-                @extend %form-group-bundle-main--fluent--focused !optional;
-            }
-
-            @include e(bundle-end) {
-                @extend %form-group-bundle-end--fluent--focused !optional;
+            @include e(bundle) {
+                @extend %form-group-bundle--fluent--focus !optional;
             }
 
             @include e(label) {
                 @extend %fluent-label-focused !optional;
-            }
-        }
-
-        @include mx(fluent, focused, textarea-group) {
-            @include e(hint) {
-                @extend %form-group-helper--textarea--fluent--focused !optional;
             }
         }
 
@@ -708,11 +673,8 @@
         }
 
         @include mx(fluent, required) {
-            @include e(bundle) {
-                @extend %form-group-bundle-required--fluent !optional;
-            }
-
             @include e(label) {
+                @extend %form-group-bundle-required--fluent !optional;
                 @extend %form-group-label-required--fluent !optional;
             }
         }
@@ -808,10 +770,6 @@
                 @extend %form-group-bundle--indigo !optional;
             }
 
-            @include e(bundle-start) {
-                @extend %form-group-bundle--indigo-start !optional;
-            }
-
             @include e(input) {
                 @extend %form-group-input--indigo !optional;
             }
@@ -826,10 +784,6 @@
 
             @include e(textarea) {
                 @extend %indigo-textarea !optional;
-            }
-
-            @include e(upload-button) {
-                @extend %indigo-upload-button !optional;
             }
         }
 
@@ -889,10 +843,6 @@
                 @extend %bootstrap-input !optional;
             }
 
-            @include e(upload-button) {
-                @extend %bootstrap-upload-button !optional;
-            }
-
             @include e(bundle-start) {
                 @extend %form-group-bundle-start--bootstrap !optional;
             }
@@ -902,12 +852,74 @@
             }
         }
 
+        @include mx(bootstrap, file) {
+            @extend %form-group-display--bootstrap-file !optional;
+
+            @include e(input) {
+                @extend %bootstrap-input-file !optional;
+            }
+
+            @include e(bundle-end) {
+                @extend %bootstrap-bundle-end !optional;
+            }
+
+            @include e(upload-button) {
+                @extend %bootstrap-upload-button !optional;
+            }
+        }
+
+        @include mx(bootstrap, file, disabled) {
+            @include e(upload-button) {
+                @extend %bootstrap-file-disabled-upload-button !optional;
+            }
+        }
+
+        @include mx(bootstrap, file, focused) {
+            @extend %bootstrap-file-focused !optional;
+        }
+
+        @include mx(bootstrap, file, valid, focused) {
+            @extend %bootstrap-file-valid !optional;
+        }
+
+        @include mx(bootstrap, file, warning, focused) {
+            @extend %bootstrap-file-warning !optional;
+        }
+
+        @include mx(bootstrap, file, invalid, focused) {
+            @extend %bootstrap-file-invalid !optional;
+        }
+
+        @include mx(bootstrap, file, valid, focused) {
+            @extend %bootstrap-file-valid-focused !optional;
+        }
+
+        @include mx(bootstrap, file, warning, focused) {
+            @extend %bootstrap-file-warning-focused !optional;
+        }
+
+        @include mx(bootstrap, file, invalid, focused) {
+            @extend %bootstrap-file-invalid-focused !optional;
+        }
+
         @include mx(bootstrap, prefixed) {
             @extend %form-group-display--bootstrap-prefixed !optional;
         }
 
         @include mx(bootstrap, suffixed) {
             @extend %form-group-display--bootstrap-suffixed !optional;
+        }
+
+        @include mx(bootstrap, suffixed, focused) {
+            @extend %form-group-display--bootstrap-suffixed-focused !optional;
+        }
+
+        @include mx(bootstrap, suffixed, valid) {
+            @extend %form-group-display--bootstrap-suffixed-valid !optional;
+        }
+
+        @include mx(bootstrap, suffixed, invalid) {
+            @extend %form-group-display--bootstrap-suffixed-invalid !optional;
         }
 
         @include mx(bootstrap, search) {
@@ -1001,34 +1013,34 @@
         }
 
         @include mx(bootstrap, warning) {
-          @include e(input) {
+            @include e(input) {
               @extend %bootstrap-input--warning !optional;
 
               &:hover {
                   @extend %bootstrap-input--warning !optional;
               }
-          }
+            }
 
-          @include e(file-input) {
+            @include e(file-input) {
               @extend %bootstrap-input--warning !optional;
 
               &:hover {
                   @extend %bootstrap-input--warning !optional;
               }
-          }
+            }
 
-          @include e(label) {
+            @include e(label) {
               @extend %bootstrap-label !optional;
-          }
+            }
 
-          @include e(textarea) {
+            @include e(textarea) {
               @extend %bootstrap-input--warning !optional;
 
               &:hover {
                   @extend %bootstrap-input--warning !optional;
               }
-          }
-      }
+            }
+        }
 
         @include mx(bootstrap, textarea-group) {
             @include e(bundle) {
@@ -1046,39 +1058,11 @@
             }
 
             @include e(file-input) {
-                @extend %bootstrap-input--disabled !optional;
+                @extend %bootstrap-file-input--disabled !optional;
             }
 
             @include e(textarea) {
                 @extend %bootstrap-input--disabled !optional;
-            }
-        }
-
-        @include mx(bootstrap, disabled, prefixed) {
-            @include e(input) {
-                @extend %bootstrap-input--disabled--prefixed !optional;
-            }
-
-            @include e(file-input) {
-                @extend %bootstrap-input--disabled--prefixed !optional;
-            }
-
-            @include e(textarea) {
-                @extend %bootstrap-input--disabled--prefixed !optional;
-            }
-        }
-
-        @include mx(bootstrap, disabled, suffixed) {
-            @include e(input) {
-                @extend %bootstrap-input--disabled--suffixed !optional;
-            }
-
-            @include e(file-input) {
-                @extend %bootstrap-input--disabled--suffixed !optional;
-            }
-
-            @include e(textarea) {
-                @extend %bootstrap-input--disabled--suffixed !optional;
             }
         }
         // BOOTSTRAP END
