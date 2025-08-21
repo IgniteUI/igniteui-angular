@@ -31,11 +31,17 @@
                 class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         }
 
-        @for (rowData of mergedDataInView; track rowData.record;) {
-            <igx-tree-grid-row class="igx-grid__tr--merged-top" [gridID]="id" [index]="rowData.index" [treeRow]="rowData.record.recordRef" [metaData]="rowData.record" [style.top.px]="getMergeCellOffset(rowData)"
-            [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowData.index:hasColumnLayouts:isRecordMerged(rowData):row.treeRow.isFilteredOutParent:rowData:pipeTrigger"
-            [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowData.index:pipeTrigger" #row>
-        </igx-tree-grid-row>
+        @if (mergedDataInView && mergedDataInView.length > 0) {
+            <div igxScrollInertia
+            [IgxScrollInertiaScrollContainer]="this.verticalScrollContainer.dc.instance.scrollContainer"
+            [IgxScrollInertiaDirection]="this.verticalScrollContainer.dc.instance.scrollDirection">
+                @for (rowData of mergedDataInView; track rowData.record;) {
+                    <igx-tree-grid-row class="igx-grid__tr--merged-top" [gridID]="id" [index]="rowData.index" [treeRow]="rowData.record.recordRef" [metaData]="rowData.record" [style.top.px]="getMergeCellOffset(rowData)"
+                    [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowData.index:hasColumnLayouts:isRecordMerged(rowData):row.treeRow.isFilteredOutParent:rowData:pipeTrigger"
+                    [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowData.index:pipeTrigger" #row>
+                </igx-tree-grid-row>
+                }
+            </div>
         }
 
         <ng-template #pinnedRecordsTemplate>

@@ -68,6 +68,7 @@ import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component'
 import { IgxActionStripToken } from '../../action-strip/token';
 import { flatten } from '../../core/utils';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { IgxScrollInertiaDirective } from '../../directives/scroll-inertia/scroll_inertia.directive';
 
 let NEXT_ID = 0;
 
@@ -352,6 +353,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         IgxGridHierarchicalPagingPipe,
         IgxStringReplacePipe,
         IgxGridCellMergePipe,
+        IgxScrollInertiaDirective,
         IgxGridUnmergeActivePipe
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
