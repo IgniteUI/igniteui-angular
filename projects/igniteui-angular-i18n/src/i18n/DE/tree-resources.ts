@@ -1,6 +1,5 @@
-import { ITreeResourceStrings } from 'igniteui-angular';
+import { ITreeResourceStrings, convertToIgxResource } from 'igniteui-angular';
 import { TreeResourceStringsDE as ATreeResourceStrings } from 'igniteui-i18n-resources';
-import { convertToIgxResource } from 'igniteui-angular/src/lib/core/i18n/resources';
 
 /**
  * German resource strings for IgxTree

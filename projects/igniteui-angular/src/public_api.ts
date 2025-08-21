@@ -121,7 +121,7 @@ export { CancelableEventArgs, CancelableBrowserEventArgs } from './lib/core/util
 /**
  * i18n
  */
-export { IResourceStrings, changei18n } from './lib/core/i18n/resources';
+export { IResourceStrings, changei18n, convertToIgxResource } from './lib/core/i18n/resources';
 export { ICarouselResourceStrings, CarouselResourceStringsEN } from './lib/core/i18n/carousel-resources';
 export { IGridResourceStrings, GridResourceStringsEN } from './lib/core/i18n/grid-resources';
 export { IComboResourceStrings, ComboResourceStringsEN } from './lib/core/i18n/combo-resources';

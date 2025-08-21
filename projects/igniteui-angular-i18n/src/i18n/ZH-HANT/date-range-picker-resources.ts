@@ -1,6 +1,5 @@
-import { IDateRangePickerResourceStrings } from 'igniteui-angular';
+import { IDateRangePickerResourceStrings, convertToIgxResource } from 'igniteui-angular';
 import { DateRangePickerResourceStringsZHHANT as ADateRangePickerResourceStrings } from 'igniteui-i18n-resources';
-import { convertToIgxResource } from 'igniteui-angular/src/lib/core/i18n/resources';
 
 /**
  * Traditional Chinese (zh-Hant) resource strings for IgxDateRangePicker
