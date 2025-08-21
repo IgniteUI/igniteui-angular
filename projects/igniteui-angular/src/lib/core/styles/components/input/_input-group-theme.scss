@@ -202,6 +202,28 @@
             -webkit-appearance: none;
         }
 
+        &:has(input:read-only:not(:disabled, [role="combobox"], [type="file"])),
+        &:has(textarea:read-only:not(:disabled)) {
+            igx-prefix,
+            [igxPrefix],
+            igx-suffix,
+            [igxSuffix] {
+                color: var-get($theme, 'disabled-text-color');
+            }
+
+            %form-group-label {
+                color: var-get($theme, 'idle-secondary-color');
+            }
+
+            %form-group-line {
+                background: var-get($theme, 'focused-secondary-color');
+            }
+
+            %form-group-helper {
+                color: var-get($theme, 'helper-text-color');
+            }
+        }
+
         igx-icon,
         igx-icon[igxPrefix],
         igx-icon[igxSuffix] {
@@ -363,9 +385,14 @@
     %form-group-bundle--hover {
         //cursor: pointer;
 
-        &::after {
-            border-block-end-width: rem(1px);
-            border-block-end-color: var-get($theme, 'hover-bottom-line-color');
+        &:has(input:not([readonly])),
+        &:has(textarea:not([readonly])),
+        &:has(input[readonly][role="combobox"]),
+        &:has(input[readonly][type="file"]) {
+            &::after {
+                border-block-end-width: rem(1px);
+                border-block-end-color: var-get($theme, 'hover-bottom-line-color');
+            }
         }
     }
 
@@ -397,10 +424,16 @@
     }
 
     %form-group-bundle--error {
-        &::after {
-            border-block-end-color: var-get($theme, 'error-secondary-color');
+        &:has(input:not([readonly])),
+        &:has(textarea:not([readonly])),
+        &:has(input[readonly][role="combobox"]),
+        &:has(input[readonly][type="file"]) {
+            &::after {
+                border-block-end-color: var-get($theme, 'error-secondary-color');
+            }
+
+            caret-color: initial;
         }
-        caret-color: initial;
     }
 
     %form-group-bundle--disabled {
@@ -612,8 +645,7 @@
     %bootstrap-file-focused,
     %bootstrap-file-valid,
     %bootstrap-file-warning,
-    %bootstrap-file-invalid,
-    {
+    %bootstrap-file-invalid {
         %form-group-bundle {
             border-radius: var-get($theme, 'box-border-radius');
             transition: box-shadow .15s ease-out, border .15s ease-out;
@@ -713,6 +745,11 @@
 
         &:hover {
             background: var-get($theme, 'box-background-hover');
+        }
+
+        &:has(input:read-only:not(:disabled, [role="combobox"], [type="file"])),
+        &:has(textarea:read-only:not(:disabled)) {
+            background: var-get($theme, 'box-background-focus');
         }
     }
 
@@ -873,22 +910,27 @@
             display: none;
         }
 
-        &:hover {
-            %form-group-bundle-start {
-                border-color: var-get($theme, 'hover-border-color');
-            }
+        &:has(input:not([readonly])),
+        &:has(textarea:not([readonly])),
+        &:has(input[readonly][role="combobox"]),
+        &:has(input[readonly][type="file"]) {
+            &:hover {
+                %form-group-bundle-start {
+                    border-color: var-get($theme, 'hover-border-color');
+                }
 
-            %igx-input-group__filler {
-                border-color: var-get($theme, 'hover-border-color');
-            }
+                %igx-input-group__filler {
+                    border-color: var-get($theme, 'hover-border-color');
+                }
 
-            %igx-input-group__notch {
-                border-block-start-color: var-get($theme, 'hover-border-color');
-                border-block-end-color: var-get($theme, 'hover-border-color');
-            }
+                %igx-input-group__notch {
+                    border-block-start-color: var-get($theme, 'hover-border-color');
+                    border-block-end-color: var-get($theme, 'hover-border-color');
+                }
 
-            %form-group-bundle-end {
-                border-color: var-get($theme, 'hover-border-color');
+                %form-group-bundle-end {
+                    border-color: var-get($theme, 'hover-border-color');
+                }
             }
         }
     }
@@ -948,8 +990,10 @@
     }
 
     %form-group-bundle-search--hover {
-        box-shadow: var-get($theme, 'search-hover-shadow');
-        border-color: var-get($theme, 'hover-border-color');
+        &:has(input:not([readonly])) {
+            box-shadow: var-get($theme, 'search-hover-shadow');
+            border-color: var-get($theme, 'hover-border-color');
+        }
     }
 
     %form-group-bundle-search--focus {
@@ -1323,11 +1367,14 @@
     }
 
     %form-group-input--hover {
-        cursor: pointer;
-        color: var-get($theme, 'filled-text-hover-color');
+        &:not([readonly]),
+        &[role="combobox"] {
+            cursor: pointer;
+            color: var-get($theme, 'filled-text-hover-color');
 
-        &::placeholder {
-            color: var-get($theme, 'hover-placeholder-color');
+            &::placeholder {
+                color: var-get($theme, 'hover-placeholder-color');
+            }
         }
     }
 
@@ -1490,29 +1537,34 @@
     }
 
     %form-group-border--error {
-        %form-group-bundle-start {
-            border-inline-start-color: var-get($theme, 'error-secondary-color');
-            border-block-start-color: var-get($theme, 'error-secondary-color');
-            border-block-end-color: var-get($theme, 'error-secondary-color');
-        }
+        &:has(input:not([readonly])),
+        &:has(textarea:not([readonly])),
+        &:has(input[readonly][role="combobox"]),
+        &:has(input[readonly][type="file"]) {
+            %form-group-bundle-start {
+                border-inline-start-color: var-get($theme, 'error-secondary-color');
+                border-block-start-color: var-get($theme, 'error-secondary-color');
+                border-block-end-color: var-get($theme, 'error-secondary-color');
+            }
 
-        %form-group-bundle-end {
-            border-inline-end-color: var-get($theme, 'error-secondary-color');
-            border-block-start-color: var-get($theme, 'error-secondary-color');
-            border-block-end-color: var-get($theme, 'error-secondary-color');
-        }
+            %form-group-bundle-end {
+                border-inline-end-color: var-get($theme, 'error-secondary-color');
+                border-block-start-color: var-get($theme, 'error-secondary-color');
+                border-block-end-color: var-get($theme, 'error-secondary-color');
+            }
 
-        %igx-input-group__notch,
-        %igx-input-group__filler {
-            border-block-color: var-get($theme, 'error-secondary-color');
-        }
+            %igx-input-group__notch,
+            %igx-input-group__filler {
+                border-block-color: var-get($theme, 'error-secondary-color');
+            }
 
-        %form-group-bundle--border:hover {
-            %form-group-bundle-start,
-            %form-group-bundle-end,
-            %igx-input-group__filler,
-            %igx-input-group__notch {
-                border-color: var-get($theme, 'error-secondary-color');
+            %form-group-bundle--border:hover {
+                %form-group-bundle-start,
+                %form-group-bundle-end,
+                %igx-input-group__filler,
+                %igx-input-group__notch {
+                    border-color: var-get($theme, 'error-secondary-color');
+                }
             }
         }
     }
@@ -1655,6 +1707,19 @@
         &:hover,
         &:focus {
             background: var-get($theme, 'box-background-hover');
+        }
+
+        &:has(input:read-only:not(:disabled, [role="combobox"], [type="file"])),
+        &:has(textarea:read-only:not(:disabled)) {
+            &:not(:focus-within) {
+                &::after {
+                    border-block-end: rem(1px) solid var-get($theme, 'disabled-text-color');
+                }
+
+                &:hover {
+                    background: unset;
+                }
+            }
         }
     }
 
@@ -1807,11 +1872,26 @@
             box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'border-color');
             border-radius: inherit;
         }
+
+        &:has(input:read-only:not(:disabled, [role="combobox"], [type="file"])),
+        &:has(textarea:read-only:not(:disabled)) {
+            igx-prefix,
+            [igxPrefix],
+            igx-suffix,
+            [igxSuffix] {
+                background: transparent;
+            }
+        }
     }
 
-    %form-group-bundle--fluent--hover {
-        &::before {
-            box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'hover-border-color');
+    %form-group-bundle--fluent--hover:not(:focus-within) {
+        &:has(input:not([readonly])),
+        &:has(textarea:not([readonly])),
+        &:has(input[readonly][role="combobox"]),
+        &:has(input[readonly][type="file"]) {
+            &::before {
+                box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'hover-border-color');
+            }
         }
     }
 
@@ -1832,8 +1912,14 @@
     %form-group-bundle-error--fluent,
     %form-group-bundle-error--fluent--hover,
     %form-group-bundle-error--fluent--focus {
-        &::before {
-            box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'error-secondary-color');
+        // should be fixed
+        &:has(input:not([readonly])),
+        &:has(textarea:not([readonly])),
+        &:has(input[readonly][role="combobox"]),
+        &:has(input[readonly][type="file"]) {
+            &::before {
+                box-shadow: inset 0 0 0 var(--_fluent-input-border-size) var-get($theme, 'error-secondary-color');
+            }
         }
     }
 
@@ -2184,6 +2270,20 @@
                 transition: box-shadow .15s ease-out, border .15s ease-out;
             }
         }
+
+        &:has(input:read-only:not(:disabled, [role="combobox"], [type="file"])),
+        &:has(textarea:read-only:not(:disabled)) {
+            %bootstrap-input {
+                background: var-get($theme, 'border-disabled-background');
+            }
+
+            igx-prefix,
+            [igxPrefix],
+            igx-suffix,
+            [igxSuffix] {
+                background: var-get($theme, 'border-disabled-background');
+            }
+        }
     }
 
     %bootstrap-input,
@@ -2240,13 +2340,16 @@
     }
 
     %bootstrap-input--error {
-        border: rem(1px) solid var-get($theme, 'error-secondary-color');
+        &:not([readonly]),
+        &[role="combobox"] {
+            border: rem(1px) solid var-get($theme, 'error-secondary-color');
 
-        &:focus {
-            box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
-
-            + %bootstrap-file-input {
+            &:focus {
                 box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+
+                + %bootstrap-file-input {
+                    box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-shadow-color');
+                }
             }
         }
     }
