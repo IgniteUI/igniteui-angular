@@ -48,31 +48,15 @@ describe('Elements: ', () => {
             const columnEl = document.createElement("igc-column") as IgcNgElement;
             gridEl.appendChild(columnEl);
 
-            // Wait for both components to be fully initialized
+            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+
             const gridComponent = (await gridEl.ngElementStrategy[ComponentRefKey]).instance as IgxGridComponent;
             const columnComponent = (await columnEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
-
-            // Wait for the grid's columnList to contain the column component with retry logic
-            let retries = 0;
-            const maxRetries = 10;
-            const retryDelay = 10;
-            
-            while (retries < maxRetries && !gridComponent.columnList.toArray().includes(columnComponent)) {
-                await firstValueFrom(timer(retryDelay));
-                retries++;
-            }
-            
             expect(gridComponent.columnList.toArray()).toContain(columnComponent);
 
             columnEl.remove();
-            
-            // Wait for the column to be removed from the columnList with retry logic
-            retries = 0;
-            while (retries < maxRetries && gridComponent.columnList.toArray().includes(columnComponent)) {
-                await firstValueFrom(timer(retryDelay));
-                retries++;
-            }
-            
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY: DESTROY + QUERY */ * 3));
             expect(gridComponent.columnList.toArray()).toEqual([]);
         });
 
