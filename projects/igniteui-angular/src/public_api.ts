@@ -121,6 +121,7 @@ export { CancelableEventArgs, CancelableBrowserEventArgs } from './lib/core/util
 /**
  * i18n
  */
+export { registerI18n, setCurrentI18n, getCurrentI18n, getCurrentResourceStrings } from 'igniteui-i18n-core';
 export { IResourceStrings, changei18n, convertToIgxResource } from './lib/core/i18n/resources';
 export { ICarouselResourceStrings, CarouselResourceStringsEN } from './lib/core/i18n/carousel-resources';
 export { IGridResourceStrings, GridResourceStringsEN } from './lib/core/i18n/grid-resources';
