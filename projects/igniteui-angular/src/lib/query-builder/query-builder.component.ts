@@ -51,16 +51,40 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     public showEntityChangeDialog = true;
 
     /**
-     * Returns the entities.
-     * @hidden
+     * Gets the list of entities available for the IgxQueryBuilderComponent.
+     *
+     * Each entity describes a logical group of fields that can be used in queries.
+     * An entity can optionally have child entities, allowing nested sub-queries.
+     *
+     * @returns An array of {@link EntityType} objects.
      */
     public get entities(): EntityType[] {
         return this._entities;
     }
 
     /**
-     * Sets the entities.
-     * @hidden
+     * Sets the list of entities for the IgxQueryBuilderComponent.
+     * If the `expressionTree` is defined, it will be recreated with the new entities.
+     *
+     * Each entity should be an {@link EntityType} object describing the fields and optionally child entities.
+     *
+     * Example:
+     * ```ts
+     * [
+     *   {
+     *     name: 'Orders',
+     *     fields: [{ field: 'OrderID', dataType: 'number' }],
+     *     childEntities: [
+     *       {
+     *         name: 'OrderDetails',
+     *         fields: [{ field: 'ProductID', dataType: 'number' }]
+     *       }
+     *     ]
+     *   }
+     * ]
+     * ```
+     *
+     * @param entities - The array of entities to set.
      */
     @Input()
     public set entities(entities: EntityType[]) {
@@ -73,18 +97,22 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     }
 
     /**
-     * Returns the fields.
+     * Gets the list of fields for the QueryBuilder.
+     *
+     * @deprecated since version 19.1.0. Use the `entities` property instead.
      * @hidden
-     * @deprecated in version 19.1.0. Use the `entities` property instead.
      */
     public get fields(): FieldType[] {
         return this._fields;
     }
 
     /**
-     * Sets the fields.
+     * Sets the list of fields for the QueryBuilder.
+     * Automatically wraps them into a single entity to maintain backward compatibility.
+     *
+     * @param fields - The array of fields to set.
+     * @deprecated since version 19.1.0. Use the `entities` property instead.
      * @hidden
-     * @deprecated in version 19.1.0. Use the `entities` property instead.
      */
     @Input()
     public set fields(fields: FieldType[]) {
