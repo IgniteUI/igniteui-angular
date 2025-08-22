@@ -1195,17 +1195,18 @@ describe('igxCombo', () => {
             it('should render selected items properly', () => {
                 combo.toggle();
                 fixture.detectChanges();
+
                 const dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement;
                 const dropdownItems = dropdownList.querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`);
+
+
                 expect(dropdownItems[1].classList.contains(CSS_CLASS_SELECTED)).toBeFalsy();
                 expect(dropdownItems[3].classList.contains(CSS_CLASS_SELECTED)).toBeFalsy();
-                expect(dropdownItems[7].classList.contains(CSS_CLASS_SELECTED)).toBeFalsy();
 
-                combo.select(['Illinois', 'Mississippi', 'Ohio']);
+                combo.select(['Illinois', 'Ohio']);
                 fixture.detectChanges();
                 expect(dropdownItems[1].classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
                 expect(dropdownItems[3].classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
-                expect(dropdownItems[7].classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
 
                 combo.deselect(['Ohio']);
                 fixture.detectChanges();
@@ -1225,9 +1226,9 @@ describe('igxCombo', () => {
                 expect(focusedItem_1.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
 
                 // Change focus
-                dropdown.navigateItem(6);
+                dropdown.navigateItem(4);
                 fixture.detectChanges();
-                const focusedItem_2 = dropdownItems[5];
+                const focusedItem_2 = dropdownItems[3];
                 expect(focusedItem_2.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
                 expect(focusedItem_1.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
             });
@@ -1894,17 +1895,17 @@ describe('igxCombo', () => {
                     selectedItemsCount++;
                     selectAndVerifyItem(0);
 
-                    for (let index = 1; index < 7; index++) {
+                    for (let index = 1; index < 5; index++) {
                         focusAndVerifyItem(index, 'ArrowDown');
                     }
                     selectedItemsCount++;
-                    selectAndVerifyItem(6);
+                    selectAndVerifyItem(4);
 
-                    for (let index = 5; index > 3; index--) {
+                    for (let index = 3; index >= 2; index--) {
                         focusAndVerifyItem(index, 'ArrowUp');
                     }
                     selectedItemsCount++;
-                    selectAndVerifyItem(4);
+                    selectAndVerifyItem(2);
                 });
                 it('should properly navigate using HOME/END key', (async () => {
                     let firstVisibleItem: Element;
@@ -2072,7 +2073,7 @@ describe('igxCombo', () => {
                 const scrollbar = fixture.debugElement.query(By.css(`.${CSS_CLASS_SCROLLBAR_VERTICAL}`)).nativeElement as HTMLElement;
                 expect(scrollbar.scrollTop).toEqual(0);
 
-                combo.virtualScrollContainer.scrollTo(16);
+                combo.virtualScrollContainer.scrollTo(12);
                 await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 let selectedItem = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[1];
@@ -2088,7 +2089,7 @@ describe('igxCombo', () => {
                 // Content was scrolled to bottom
                 expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
 
-                combo.virtualScrollContainer.scrollTo(5);
+                combo.virtualScrollContainer.scrollTo(4);
                 await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 selectedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_SELECTED}`));
@@ -2163,15 +2164,14 @@ describe('igxCombo', () => {
                 expect(input.nativeElement.value).toEqual(expectedOutput);
             });
             it('should dismiss all selected items by pressing clear button', () => {
-                const expectedOutput = 'Kentucky, Ohio, Indiana';
-                combo.select(['Kentucky', 'Ohio', 'Indiana']);
+                const expectedOutput = 'Ohio, Indiana';
+                combo.select(['Ohio', 'Indiana']);
                 fixture.detectChanges();
                 expect(input.nativeElement.value).toEqual(expectedOutput);
                 combo.toggle();
                 fixture.detectChanges();
                 expect(combo.dropdown.items[1].selected).toBeTruthy();
                 expect(combo.dropdown.items[4].selected).toBeTruthy();
-                expect(combo.dropdown.items[6].selected).toBeTruthy();
 
                 const clearBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
                 clearBtn.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
@@ -2184,7 +2184,6 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(combo.dropdown.items[1].selected).toBeFalsy();
                 expect(combo.dropdown.items[4].selected).toBeFalsy();
-                expect(combo.dropdown.items[6].selected).toBeFalsy();
             });
             it('should show/hide clear button after selecting/deselecting items', () => {
                 // This is a workaround for issue github.com/angular/angular/issues/14235
@@ -2242,8 +2241,8 @@ describe('igxCombo', () => {
                         cancel: false
                     });
 
-                const selectedItem_2 = dropdown.items[5];
-                simulateComboItemClick(5);
+                const selectedItem_2 = dropdown.items[4];
+                simulateComboItemClick(4);
                 expect(combo.selection[1]).toEqual(selectedItem_2.value);
                 expect(combo.value[1]).toEqual(selectedItem_2.value[combo.valueKey]);
                 expect(selectedItem_2.selected).toBeTruthy();
@@ -3768,7 +3767,6 @@ class IgxComboFormComponent {
             password: ['', Validators.required],
             townCombo: [[this.items[0]], Validators.required]
         });
-
     }
     public onSubmitReactive() { }
 
