@@ -1,3 +1,4 @@
+import { getCurrentI18n, getCurrentResourceStrings, registerI18n, setCurrentI18n } from 'igniteui-i18n-core';
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from 'projects/igniteui-angular/src/lib/data-operations/filtering-condition';
 import { FilteringLogic } from 'projects/igniteui-angular/src/lib/data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree, FilteringExpressionsTreeType } from 'projects/igniteui-angular/src/lib/data-operations/filtering-expressions-tree';
@@ -54,4 +55,10 @@ export {
     // overlay position settings (used in grids, paginator, toolbar)
     HorizontalAlignment,
     VerticalAlignment,
+
+    // i18n
+    registerI18n,
+    setCurrentI18n,
+    getCurrentI18n,
+    getCurrentResourceStrings
 }
