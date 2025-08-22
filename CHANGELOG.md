@@ -2,13 +2,46 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+
 ## 20.1.0
 ### New Features
+`IgxDateRangePicker`
+  - Added cancel button to the dialog, allowing the user to cancel the selection. 
+
 - `IgxCarousel`
     - Added `select` method overload accepting index.
     ```ts
     this.carousel.select(2, Direction.NEXT);
     ```
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Added ability to pin individual columns to a specific side (start or end of the grid), so that you can now have pinning from both sides. This can be done either declaratively by setting the `pinningPosition` property on the column:
+
+    ```html
+    <igx-column [field]="'Col1'" [pinned]='true' [pinningPosition]='pinningPosition'>
+    </igx-column>
+    ```
+
+    ```ts
+      public pinningPosition = ColumnPinningPosition.End;
+    ```
+
+    Or with the API, via optional parameter:
+
+    ```ts
+        grid.pinColumn('Col1', 0, ColumnPinningPosition.End);
+        grid.pinColumn('Col2', 0, ColumnPinningPosition.Start);
+    ```
+
+    If property `pinningPosition` is not set on a column, the column will default to the position specified on the grid's `pinning` options for `columns`.
+
+- `IgxDateRangePicker`
+  - Added new properties:
+      - `usePredefinedRanges` - Whether to render built-in predefined ranges 
+      - `customRanges` - Allows the user to provide custom ranges rendered as chips
+      - `resourceStrings` - Allows the user to provide set of resource strings 
+        
+- `IgxPredefinedRangesAreaComponent`
+  - Added new component for rendering the predefined or custom ranges inside the calendar of the `IgxDateRangePicker`
 
 - `IgxOverlay`
     - Position Settings now accept a new optional `offset` input property of type `number`. Used to set the offset of the element from the target in pixels.
@@ -17,6 +50,7 @@ All notable changes for each version of this project will be documented in this 
     - The tooltip now remains open while interacting with it.
 - `IgxTooltipTarget`
     - Introduced several new properties to enhance customization of tooltip content and behavior. Those include `positionSettings`, `hasArrow`, `sticky`, `closeButtonTemplate`. For detailed usage and examples, please refer to the Tooltip [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/tooltip/README.md).
+
 
 ### General
 - `IgxDropDown` now exposes a `role` input property, allowing users to customize the role attribute based on the use case. The default is `listbox`.
