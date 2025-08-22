@@ -41,7 +41,7 @@ const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const defaultDropdownItemHeight = 40;
 const defaultDropdownItemMaxHeight = 240;
 
-fdescribe('IgxSimpleCombo', () => {
+describe('IgxSimpleCombo', () => {
     let fixture: ComponentFixture<any>;
     let combo: IgxSimpleComboComponent;
     let input: DebugElement;
