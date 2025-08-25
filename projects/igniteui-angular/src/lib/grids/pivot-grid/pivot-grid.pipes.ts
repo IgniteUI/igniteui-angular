@@ -444,7 +444,7 @@ export class IgxPivotGridColumnSortingPipe implements PipeTransform {
             for (const expr of expressions) {
                 expr.strategy = DefaultPivotGridRecordSortingStrategy.instance();
             }
-            result = PivotUtil.sort(cloneArray(collection, true), expressions, sorting);
+            result = PivotUtil.sort(cloneArray(collection), expressions, sorting);
         }
         return result;
     }
@@ -468,7 +468,7 @@ export class IgxPivotGridSortingPipe implements PipeTransform {
         if (!expressions.length) {
             result = collection;
         } else {
-            result = DataUtil.sort(cloneArray(collection, true), expressions, sorting, this.gridAPI.grid);
+            result = DataUtil.sort(cloneArray(collection), expressions, sorting, this.gridAPI.grid);
         }
 
         return result;

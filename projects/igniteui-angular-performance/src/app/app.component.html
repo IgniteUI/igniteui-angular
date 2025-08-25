@@ -1,0 +1,10 @@
+<main class="wrapper">
+  <div class="routes">
+    @for (route of routes; track $index) {
+      <button igxButton="contained" routerLink="/{{ route.path }}">
+        {{ route.title }}
+      </button>
+    }
+  </div>
+  <router-outlet />
+</main>

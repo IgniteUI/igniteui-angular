@@ -202,7 +202,7 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
         if (!expressions.length) {
             result = hierarchicalData;
         } else {
-            result = DataUtil.treeGridSort(hierarchicalData, expressions, sorting, null, this.grid);
+            result = DataUtil.treeGridSort(hierarchicalData, expressions, sorting, this.grid);
         }
 
         const filteredSortedData = [];

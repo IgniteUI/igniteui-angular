@@ -1,0 +1,23 @@
+@use '../../igniteui-angular/src/lib/core/styles/themes' as *;
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@include core();
+@include typography(
+    $font-family: $material-typeface,
+    $type-scale: $material-type-scale
+);
+@include theme($default-palette);
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
