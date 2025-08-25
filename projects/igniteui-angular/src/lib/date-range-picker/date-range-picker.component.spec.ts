@@ -39,7 +39,7 @@ const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const CSS_CLASS_CALENDAR = 'igx-calendar';
 const CSS_CLASS_ICON = 'igx-icon';
-const CSS_CLASS_DONE_BUTTON = 'igx-button--flat';
+const CSS_CLASS_DIALOG_BUTTON = 'igx-button--flat';
 const CSS_CLASS_LABEL = 'igx-input-group__label';
 const CSS_CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CSS_CLASS_DATE_RANGE = 'igx-date-range-picker';
@@ -283,7 +283,7 @@ describe('IgxDateRangePicker', () => {
         let calendar: DebugElement | Element;
         let calendarDays: DebugElement[] | HTMLCollectionOf<Element>;
 
-        const selectDateRangeFromCalendar = (sDate: Date, eDate: Date) => {
+        const selectDateRangeFromCalendar = (sDate: Date, eDate: Date, autoClose:boolean = true) => {
             dateRange.open();
             fixture.detectChanges();
             calendarDays = document.getElementsByClassName(CSS_CLASS_CALENDAR_DATE);
@@ -303,9 +303,13 @@ describe('IgxDateRangePicker', () => {
             if (endIndex !== -1 && endIndex !== startIndex) { // do not click same date twice
                 UIInteractions.simulateClickAndSelectEvent(calendarDays[endIndex].firstChild as HTMLElement);
             }
+
             fixture.detectChanges();
-            dateRange.close();
-            fixture.detectChanges();
+
+            if (autoClose){
+                dateRange.close();
+                fixture.detectChanges();
+            }
         };
 
         describe('Single Input', () => {
@@ -487,7 +491,7 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
 
-                    const doneBtn = document.getElementsByClassName(CSS_CLASS_DONE_BUTTON)[0];
+                    const doneBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[0];
                     UIInteractions.simulateClickAndSelectEvent(doneBtn);
                     tick();
                     fixture.detectChanges();
@@ -499,14 +503,46 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.closed.emit).toHaveBeenCalledWith({ owner: dateRange });
                 }));
 
-                it('should show the "Done" button only in dialog mode', fakeAsync(() => {
+                it('should close the calendar with the "Cancel" button and retain original value', fakeAsync(() => {
+                    fixture.componentInstance.mode = PickerInteractionMode.Dialog;
+                    const orig = { start: new Date(2020, 0, 1), end: new Date(2020, 0, 5) };
+                    fixture.componentInstance.dateRange.value = orig;
+                    fixture.detectChanges();
+
+                    spyOn(dateRange.closing, 'emit').and.callThrough();
+                    spyOn(dateRange.closed, 'emit').and.callThrough();
+
+                    dateRange.open();
+                    tick();
+                    fixture.detectChanges();
+                    expect(dateRange.collapsed).toBeFalsy();
+
+                    selectDateRangeFromCalendar(new Date(2020, 0, 8), new Date(2020, 0, 12), false);
+
+                    const cancelBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[0];
+                    UIInteractions.simulateClickAndSelectEvent(cancelBtn);
+                    tick();
+                    fixture.detectChanges();
+
+                    expect(dateRange.collapsed).toBeTrue();
+                    expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
+                    expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closed.emit).toHaveBeenCalledWith({ owner: dateRange });
+
+                    expect(fixture.componentInstance.dateRange.value).toEqual(orig);
+                }));
+
+                it('should show the "Done" and "Cancel" buttons only in dialog mode', fakeAsync(() => {
                     fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                     fixture.detectChanges();
 
                     dateRange.open();
                     fixture.detectChanges();
-                    let doneBtn = document.getElementsByClassName(CSS_CLASS_DONE_BUTTON)[0];
+                    let doneBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[0];
+                    let cancelBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[1];
                     expect(doneBtn).not.toBe(null);
+                    expect(cancelBtn).not.toBe(null);
                     dateRange.close();
                     tick();
                     fixture.detectChanges();
@@ -517,8 +553,10 @@ describe('IgxDateRangePicker', () => {
                     dateRange.open();
                     tick();
                     fixture.detectChanges();
-                    doneBtn = document.getElementsByClassName(CSS_CLASS_DONE_BUTTON)[0];
+                    doneBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[0];
+                    cancelBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[1];
                     expect(doneBtn).not.toBeDefined();
+                    expect(cancelBtn).not.toBeDefined();
                 }));
 
                 it('should be able to change the "Done" button text', fakeAsync(() => {
@@ -527,19 +565,24 @@ describe('IgxDateRangePicker', () => {
 
                     dateRange.toggle();
                     fixture.detectChanges();
-                    let doneBtn = document.getElementsByClassName(CSS_CLASS_DONE_BUTTON)[0];
+                    let doneBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[1];
+                    let cancelBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[0];
                     expect(doneBtn.textContent.trim()).toEqual('Done');
+                    expect(cancelBtn.textContent.trim()).toEqual('Cancel');
                     dateRange.toggle();
                     tick();
                     fixture.detectChanges();
 
                     dateRange.doneButtonText = 'Close';
+                    dateRange.cancelButtonText = 'Discard'
                     fixture.detectChanges();
                     dateRange.toggle();
                     tick();
                     fixture.detectChanges();
-                    doneBtn = document.getElementsByClassName(CSS_CLASS_DONE_BUTTON)[0];
+                    doneBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[1];
+                    cancelBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[0];
                     expect(doneBtn.textContent.trim()).toEqual('Close');
+                    console.log(cancelBtn.textContent.trim());
                 }));
 
                 it('should emit open/close events - open/close methods', fakeAsync(() => {

@@ -535,7 +535,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.gridSize).toBe(Size.Small);
             const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
             let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
-            expect(rowHeaders[0].componentInstance.column.minWidth).toBe(minWidthSupercompact);
+            expect(rowHeaders[0].componentInstance.column.defaultMinWidth).toBe(minWidthSupercompact);
             expect(pivotGrid.rowList.first.cells.first.nativeElement.offsetHeight).toBe(cellHeightSuperCompact);
 
             pivotGrid.superCompactMode = false;
@@ -547,7 +547,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             expect(pivotGrid.gridSize).toBe(Size.Large);
             rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
-            expect(rowHeaders[0].componentInstance.column.minWidth).toBe(minWidthComf);
+            expect(rowHeaders[0].componentInstance.column.defaultMinWidth).toBe(minWidthComf);
             expect(pivotGrid.rowList.first.cells.first.nativeElement.offsetHeight).toBe(cellHeightComf);
         }));
 
@@ -2415,7 +2415,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
 
             rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
-            const minWdith = parseFloat(rowHeaders[0].componentInstance.column.minWidth);
+            const minWdith = parseFloat(rowHeaders[0].componentInstance.column.defaultMinWidth);
             expect(parseFloat(rowHeaders[0].componentInstance.column.width)).toEqual(minWdith);
             expect(parseFloat(rowHeaders[3].componentInstance.column.width)).toEqual(minWdith);
 
