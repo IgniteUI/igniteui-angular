@@ -5,7 +5,8 @@ import {
     SelectionWithScrollsComponent,
     SelectionWithTransactionsComponent,
     CellSelectionNoneComponent,
-    CellSelectionSingleComponent
+    CellSelectionSingleComponent,
+    IgxGridRowEditingWithoutEditableColumnsComponent
 } from '../../test-utils/grid-samples.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
@@ -26,7 +27,8 @@ describe('IgxGrid - Cell selection #grid', () => {
                 SelectionWithScrollsComponent,
                 SelectionWithTransactionsComponent,
                 CellSelectionNoneComponent,
-                CellSelectionSingleComponent
+                CellSelectionSingleComponent,
+                IgxGridRowEditingWithoutEditableColumnsComponent
             ]
         }).compileComponents();
     }));
@@ -254,6 +256,31 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(firstCell, false);
             GridSelectionFunctions.verifyCellSelected(secondCell, true);
             expect(grid.selectedCells.length).toBe(1);
+        });
+
+        it('Should not trigger range selection when CellTemplate is used and the user clicks on element inside it', () => {
+            fix = TestBed.createComponent(IgxGridRowEditingWithoutEditableColumnsComponent);
+            fix.detectChanges();
+
+            const component = fix.componentInstance;
+            grid = fix.componentInstance.grid;
+
+            expect(component.customCell).toBeDefined();
+
+            const column = grid.getColumnByName('ProductID');
+            column.bodyTemplate = component.customCell;
+            fix.detectChanges();
+
+            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const cell = grid.gridAPI.get_cell_by_index(1, 'ProductID');
+            const cellElement = cell.nativeElement;
+            const span = cellElement.querySelector('span');
+
+            expect(span).not.toBeNull();
+
+            UIInteractions.simulateClickAndSelectEvent(span);
+            fix.detectChanges();
+            expect(selectionChangeSpy).not.toHaveBeenCalled();
         });
 
         it('Should be able to select range when click on a cell and hold Shift key and click on another Cell', () => {

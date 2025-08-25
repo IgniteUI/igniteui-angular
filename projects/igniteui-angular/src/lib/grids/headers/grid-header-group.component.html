@@ -42,9 +42,14 @@
     }
     <div class="igx-grid-thead__title"
         role="columnheader"
+        [attr.aria-hidden]="ariaHidden"
+        [id]="headerID"
         [attr.aria-label]="column.header || column.field"
         [attr.aria-expanded]="column.expanded"
         [attr.aria-selected]="column.selected"
+        [attr.aria-colindex]="column.index + 1"
+        [attr.aria-colspan]="column.children.length"
+        [attr.aria-rowindex]="1"
         [ngClass]="{
             'igx-grid-th--pinned-last': hasLastPinnedChildColumn,
             'igx-grid-th--pinned-first': hasFirstPinnedChildColumn,
@@ -97,8 +102,9 @@
     }
     <igx-grid-header
         role="columnheader"
+        [attr.aria-hidden]="ariaHidden"
         class="igx-grid-th--fw"
-        [id]="grid.id + '_' + column.field"
+        [id]="headerID"
         [ngClass]="column.headerClasses"
         [ngStyle]="column.headerStyles | igxHeaderGroupStyle:column:grid.pipeTrigger"
         [igxColumnMovingDrag]="column"

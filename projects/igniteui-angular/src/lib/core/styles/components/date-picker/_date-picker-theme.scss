@@ -56,6 +56,10 @@
         flex: 1 0 0;
         flex-direction: column;
         box-shadow: $border-shadow, elevation(3);
+
+        @if $variant == 'indigo' and $theme-variant == 'dark' {
+            box-shadow: $border-shadow, elevation(2);
+        }
     }
 
     %date-picker__buttons {

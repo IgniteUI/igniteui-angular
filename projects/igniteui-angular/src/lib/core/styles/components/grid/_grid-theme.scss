@@ -1,587 +1,8 @@
 @use 'sass:map';
-@use 'sass:meta';
-@use 'sass:color';
 @use 'sass:math';
 @use '../../base' as *;
 @use './excel-filtering-theme' as *;
 @use 'igniteui-theming/sass/animations' as *;
-@use '../../themes/schemas' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
-
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Color} $header-background [null] - The table header background color.
-/// @param {Color} $header-text-color [null] - The table header text color.
-/// @param {String} $header-border-width [null] - The border width used for header borders.
-/// @param {String} $header-border-style [null] - The border style used for header borders.
-/// @param {Color} $header-border-color [null] - The color used for header borders.
-/// @param {Color} $header-selected-background [null] - The table header background color when selected (ex. column selection).
-/// @param {Color} $header-selected-text-color [null] - The table header text color when selected (ex. column selection).
-/// @param {Color} $sorted-header-icon-color [null] - The sort icon color when sorted.
-/// @param {color} $sortable-header-icon-hover-color [null] - The icon color on hover in grid header when the column is sortable.
-/// @param {Color} $content-background [null] - The table body background color.
-/// @param {Color} $content-text-color [null] - The table body text color.
-/// @param {Color} $ghost-header-text-color [null] - The dragged header text color.
-/// @param {Color} $ghost-header-icon-color [null] - The dragged header icon color.
-/// @param {Color} $ghost-header-background [null] - The dragged header background color.
-/// @param {Color} $row-odd-background [null] - The background color of odd rows.
-/// @param {Color} $row-even-background [null] - The background color of even rows.
-/// @param {Color} $row-odd-text-color [null] - The text color of odd rows.
-/// @param {Color} $row-even-text-color [null] - The text color of even rows.
-/// @param {Color} $row-selected-background [null] - The selected row background color.
-/// @param {Color} $row-selected-hover-background [null] - The selected row hover background color.
-/// @param {Color} $row-selected-text-color [null] - The selected row text color.
-/// @param {Color} $row-selected-hover-text-color [null] - The selected row hover text color.
-/// @param {Color} $row-hover-background [null] - The hover row background color.
-/// @param {Color} $row-hover-text-color [null] - The hover row text color.
-/// @param {Color} $row-border-color [null] - The row bottom border color.
-/// @param {String} $pinned-border-width [null] - The border width of the pinned border.
-/// @param {String} $pinned-border-style [null] - The CSS border style of the pinned border.
-/// @param {Color} $pinned-border-color [null] - The color of the pinned border.
-/// @param {Color} $cell-active-border-color [null] - The border color for the currently active(focused) cell.
-/// @param {Color} $cell-selected-background [null] - The selected cell background color.
-/// @param {Color} $cell-selected-text-color [null] - The selected cell text color.
-/// @param {Color} $cell-editing-background [null] - The background color of the cell being edited.
-/// @param {Color} $cell-editing-foreground [null] - The cell text color in edit mode.
-/// @param {Color} $cell-editing-focus-foreground [null] - The cell text color in edit mode on focus.
-/// @param {Color} $cell-edited-value-color [null] - The text color of a cell that has been edited.
-/// @param {Color} $cell-new-color [null] - The text color of a new, unedited cell. Used when adding new row in a grid.
-/// @param {Color} $cell-disabled-color [null] - The text color of a disabled cell.
-/// @param {Color} $cell-selected-within-background [null] - The background of the selected cell inside a selected row/column.
-/// @param {Color} $cell-selected-within-text-color [null] - The color of the selected cell inside a selected row/column.
-/// @param {Color} $edit-mode-color [null] - The color applied around the row/cell when in editing mode.
-/// @param {Color} $edited-row-indicator [null] - The color applied to the edited row indicator line.
-/// @param {Color} $resize-line-color [null] - The table header resize line color.
-/// @param {Color} $drop-indicator-color [null] - The color applied to the line between the columns when dragging a column.
-/// @param {Color} $grouparea-background [null] - The grid group area background color.
-/// @param {Color} $grouparea-color [null] - The grid group area color.
-/// @param {Color} $group-row-background [null] - The grid group row background color.
-/// @param {Color} $group-row-selected-background [null] - The drop area background on drop color.
-/// @param {Color} $group-label-column-name-text [null] - The grid group row column name text color.
-/// @param {Color} $group-label-icon [null] - The grid group row icon color.
-/// @param {Color} $group-label-text [null] - The grid group row text color.
-/// @param {Color} $expand-all-icon-color [null] - The grid header expand all group rows icon color.
-/// @param {Color} $expand-all-icon-hover-color [null] - The grid header expand all group rows icon hover color.
-/// @param {Color} $expand-icon-color [null] - The grid row expand icon color.
-/// @param {Color} $expand-icon-hover-color [null] - The grid row expand icon hover color.
-/// @param {Color} $active-expand-icon-color [null] - The drop area background on drop color.
-/// @param {Color} $active-expand-icon-hover-color [null] - The drop area background on drop color.
-/// @param {Color} $group-count-background [null] - The grid group row cont badge background color.
-/// @param {Color} $group-count-text-color [null] - The grid group row cont badge text color.
-/// @param {Color} $drop-area-text-color [null] - The drop area text color.
-/// @param {Color} $drop-area-icon-color [null] - The drop area icon color.
-/// @param {Color} $drop-area-background [null] - The drop area background color.
-/// @param {Color} $drop-area-on-drop-background [null] - The drop area background on drop color.
-/// @param {Color} $filtering-background-and [null] - The background color of advanced filtering "AND" condition.
-/// @param {Color} $filtering-background-and--focus [null] - The background color on focus/selected of advanced filtering "AND" condition.
-/// @param {Color} $filtering-background-or [null] - The background color of advanced filtering "OR" condition.
-/// @param {Color} $filtering-background-or--focus [null] - The background color on focus/selected of advanced filtering "OR" condition.
-/// @param {Color} $filtering-header-background [null] - The background color of the filtered column header.
-/// @param {Color} $filtering-header-text-color [null] - The text color of the filtered column header.
-/// @param {Color} $filtering-row-background [null] - The background color of the filtering row.
-/// @param {Color} $filtering-row-text-color [null] - The text color of the filtering row.
-/// @param {Color} $excel-filtering-header-foreground [null] - The text color of the header in the excel style filtering.
-/// @param {Color} $excel-filtering-subheader-foreground [null] - The text color of the sorting and moving headers in the excel style filtering.
-/// @param {Color} $excel-filtering-actions-foreground [null] - The text color of the excel style filtering options.
-/// @param {Color} $excel-filtering-actions-hover-foreground [null] - The text color of the excel style filtering options in hover/focus state.
-/// @param {Color} $excel-filtering-actions-disabled-foreground [null] - The text color of the excel style filtering options in disabled state.
-/// @param {Color} $tree-filtered-text-color [null] - Grouping row background color on focus.
-/// @param {Color} $summaries-patch-background [null] - The leading summaries patch backround. Used in hierarchical grids.
-/// @param {Color} $row-highlight [null] - The grid row highlight indication color.
-/// @param {box-shadow} $grid-shadow [null] - The shadow of the grid.
-/// @param {box-shadow} $drag-shadow [null] - The shadow used for movable elements (ex. column headers).
-/// @param {color} $row-ghost-background [null] - The dragged row background color.
-/// @param {color} $row-drag-color [null] - The row drag handle color.
-/// @param {Color} $grid-border-color [null] - The color of the grid border.
-/// @param {List} $drop-area-border-radius [null] - The border radius used for column drop area.
-/// @requires $light-material-schema
-/// @example scss Change the header background color
-///   $my-grid-theme: grid-theme($header-background: black);
-///   // Pass the theme to the css-vars() mixin
-///   @include css-vars($my-grid-theme);
-@function grid-theme(
-    $schema: $light-material-schema,
-
-    $header-background: null,
-    $header-text-color: null,
-    $header-border-width: null,
-    $header-border-style: null,
-    $header-border-color: null,
-
-    $header-selected-background: null,
-    $header-selected-text-color: null,
-
-    $sorted-header-icon-color: null,
-
-    $content-background: null,
-    $content-text-color: null,
-
-    $ghost-header-text-color: null,
-    $ghost-header-icon-color: null,
-    $ghost-header-background: null,
-
-    $row-odd-background: null,
-    $row-even-background: null,
-    $row-odd-text-color: null,
-    $row-even-text-color: null,
-    $row-selected-background: null,
-    $row-selected-hover-background: null,
-    $row-selected-text-color: null,
-    $row-selected-hover-text-color: null,
-    $row-hover-background: null,
-    $row-hover-text-color: null,
-    $row-border-color: null,
-
-    $pinned-border-width: null,
-    $pinned-border-style: null,
-    $pinned-border-color: null,
-
-    $cell-active-border-color: null,
-    $cell-selected-background: null,
-    $cell-selected-text-color: null,
-    $cell-editing-background: null,
-    $cell-editing-foreground: null,
-    $cell-editing-focus-foreground: null,
-    $cell-edited-value-color: null,
-    $cell-new-color: null,
-    $cell-disabled-color: null,
-
-    $edit-mode-color: null,
-    $edited-row-indicator: null,
-
-    $resize-line-color: null,
-    $drop-indicator-color: null,
-
-    $grouparea-background: null,
-    $grouparea-color: null,
-
-    $group-row-background: null,
-    $group-row-selected-background: null,
-    $group-label-column-name-text: null,
-    $group-label-icon: null,
-    $group-label-text: null,
-
-    $expand-all-icon-color: null,
-    $expand-all-icon-hover-color: null,
-
-    $expand-icon-color: null,
-    $expand-icon-hover-color: null,
-
-    $active-expand-icon-color: null,
-    $active-expand-icon-hover-color: null,
-
-    $group-count-background: null,
-    $group-count-text-color: null,
-
-    $drop-area-text-color: null,
-    $drop-area-icon-color: null,
-    $drop-area-background: null,
-    $drop-area-on-drop-background: null,
-
-    $filtering-header-background: null,
-    $filtering-header-text-color: null,
-    $filtering-row-background: null,
-    $filtering-row-text-color: null,
-    $filtering-background-and: null,
-    $filtering-background-or: null,
-    $filtering-background-and--focus: null,
-    $filtering-background-or--focus: null,
-    $tree-filtered-text-color: null,
-    $tree-selected-filtered-row-text-color: null,
-    $tree-selected-filtered-cell-text-color: null,
-
-    $excel-filtering-header-foreground: null,
-    $excel-filtering-subheader-foreground: null,
-    $excel-filtering-actions-foreground: null,
-    $excel-filtering-actions-hover-foreground: null,
-    $excel-filtering-actions-disabled-foreground: null,
-
-    $row-highlight: null,
-    $grid-shadow: null,
-    $drag-shadow: null,
-    $row-ghost-background: null,
-    $row-drag-color: null,
-    $drop-area-border-radius: null,
-    $grid-border-color: null,
-    $sortable-header-icon-hover-color: null,
-    $summaries-patch-background: null,
-
-    $cell-selected-within-background: null,
-    $cell-selected-within-text-color: null,
-) {
-    $name: 'igx-grid';
-    $selector: 'igx-grid, igx-hierarchical-grid, igx-pivot-grid, igx-tree-grid, igx-advanced-filtering-dialog, igx-grid-excel-style-filtering, .igx-excel-filter__secondary';
-    $grid-schema: ();
-
-    @if map.has-key($schema, 'grid') {
-        $grid-schema: map.get($schema, 'grid');
-    } @else {
-        $grid-schema: $schema;
-    }
-
-    $theme: digest-schema($grid-schema);
-
-    @if not($ghost-header-icon-color) and $ghost-header-background {
-        $ghost-header-icon-color: hsla(from adaptive-contrast(var(--ghost-header-background)) h s l / .07);
-    }
-
-    @if not($ghost-header-text-color) and $ghost-header-background {
-        $ghost-header-text-color: adaptive-contrast(var(--ghost-header-background));
-    }
-
-    @if not($header-text-color) and $header-background {
-        $header-text-color: adaptive-contrast(var(--header-background));
-    }
-
-    @if not($header-selected-background) and $header-background {
-        $header-selected-background: hsl(from var(--header-background) h s calc(l * 0.9));
-    }
-
-    @if not($header-selected-text-color) and $header-selected-background {
-        $header-selected-text-color: adaptive-contrast(var(--header-selected-background));
-    }
-
-    @if not($header-border-color) and $header-background {
-        $header-border-color: hsla(from adaptive-contrast(var(--header-background)) h s l / .24);
-    }
-
-    @if not($content-text-color) and $content-background {
-        $content-text-color: adaptive-contrast(var(--content-background));
-    }
-
-    @if not($row-odd-background) and $content-background {
-        $row-odd-background: hsl(from var(--content-background) h calc(s - 10) l);
-    }
-
-    @if not($row-odd-text-color) and $row-odd-background {
-        $row-odd-text-color: adaptive-contrast(var(--row-odd-background));
-    }
-
-    @if not($row-even-background) and $content-background {
-        $row-even-background: hsl(from var(--content-background) h calc(s + 10) l);
-    }
-
-    @if not($row-even-text-color) and $row-even-background {
-        $row-even-text-color: adaptive-contrast(var(--row-even-background));
-    }
-
-    @if not($row-hover-background) and $content-background {
-        $row-hover-background: hsl(from var(--content-background) h s calc(l * 0.85));
-    }
-
-    @if not($row-hover-text-color) and $row-hover-background {
-        $row-hover-text-color: adaptive-contrast(var(--row-hover-background));
-    }
-
-    @if not($cell-selected-background) and $content-background {
-        $cell-selected-background: hsl(from var(--content-background) h s calc(l * 0.9));
-    }
-
-    @if not($cell-selected-text-color) and $cell-selected-background {
-        $cell-selected-text-color: adaptive-contrast(var(--cell-selected-background));
-    }
-
-    @if not($row-selected-background) and $content-background {
-        $row-selected-background: hsl(from var(--content-background) h s calc(l * 0.9));
-    }
-
-    @if not($row-selected-text-color) and $row-selected-background {
-        $row-selected-text-color: adaptive-contrast(var(--row-selected-background));
-    }
-
-    @if not($row-selected-hover-background) and $row-selected-background {
-        $row-selected-hover-background: hsl(from var(--row-selected-background) h s calc(l * 0.85));
-    }
-
-    @if not($row-selected-hover-text-color) and $row-selected-hover-background {
-        $row-selected-hover-text-color: adaptive-contrast(var(--row-selected-hover-background));
-    }
-
-    @if not($row-border-color) and $content-background {
-        $row-border-color: hsla(from adaptive-contrast(var(--content-background)) h s l / .08);
-    }
-
-    @if not($cell-selected-within-background) and $row-selected-background {
-        $cell-selected-within-background: hsl(from var(--row-selected-background) h s calc(l * 0.85));
-    }
-
-    @if not($cell-selected-within-text-color) and $cell-selected-within-background {
-        $cell-selected-within-text-color: adaptive-contrast(var(--cell-selected-within-background));
-    }
-
-    @if not($cell-editing-background) and $content-background {
-        $cell-editing-background: var(--content-background);
-    }
-
-    @if not($cell-editing-foreground) and $cell-editing-background {
-        $cell-editing-foreground: adaptive-contrast(var(--cell-editing-background));
-    }
-
-    @if not($cell-editing-focus-foreground) and $cell-editing-background {
-        $cell-editing-focus-foreground: adaptive-contrast(var(--cell-editing-background));
-    }
-
-    @if not($cell-active-border-color) and $content-background {
-        $cell-active-border-color: hsla(from adaptive-contrast(var(--content-background)) h s l / .5);
-    }
-
-    @if not($pinned-border-color) and $content-background {
-        $pinned-border-color: hsla(from adaptive-contrast(var(--content-background)) h s l / .08);
-    }
-
-    @if not($group-row-background) and $header-background {
-        $group-row-background: $header-background
-    }
-
-    @if not($expand-icon-color) and $group-row-background {
-        $expand-icon-color: adaptive-contrast(var(--group-row-background))
-    }
-
-    @if not($group-row-selected-background) and $group-row-background {
-        $group-row-selected-background: hsl(from var(--group-row-background) h s calc(l * 0.8));
-    }
-
-    @if not($group-label-text) and $group-row-selected-background {
-        $group-label-text: adaptive-contrast(var(--group-row-selected-background))
-    }
-
-    @if not($expand-icon-color) and $group-row-selected-background {
-        $expand-icon-color: adaptive-contrast(var(--group-row-selected-background))
-    }
-
-    @if not($expand-icon-hover-color) and $expand-icon-color {
-        $expand-icon-hover-color: var(--expand-icon-color);
-    }
-
-    @if not($group-count-background) and $group-row-selected-background {
-        $group-count-background: adaptive-contrast(var(--group-row-selected-background));
-    }
-
-    @if not($expand-all-icon-color) and $header-background {
-        $expand-all-icon-color: hsla(from adaptive-contrast(var(--header-background)) h s l / .87);
-    }
-
-    @if not($expand-all-icon-hover-color) and $header-background {
-        $expand-all-icon-hover-color: adaptive-contrast(var(--header-background));
-    }
-
-    @if not($sorted-header-icon-color) and $header-background {
-        $sorted-header-icon-color: hsla(from adaptive-contrast(var(--header-background)) h s l / 0.8);
-    }
-
-    @if not($sortable-header-icon-hover-color) and $sorted-header-icon-color {
-        $sortable-header-icon-hover-color: hsla(from var(--sorted-header-icon-color) h s l / 1);
-    }
-
-    @if not($edit-mode-color) and $content-background {
-        $edit-mode-color: hsla(from adaptive-contrast(var(--content-background)) h s l / 0.5);
-    }
-
-    @if not($group-label-text) and $group-row-background {
-        $group-label-text: adaptive-contrast(var(--group-row-background))
-    }
-
-    @if not($group-count-background) and $group-row-background {
-        $group-count-background: adaptive-contrast(var(--group-row-background));
-    }
-
-    @if not($group-count-text-color) and $group-count-background {
-        $group-count-text-color: adaptive-contrast(var(--group-count-background));
-    }
-
-    @if not($grouparea-background) and $header-background {
-        $grouparea-background: var(--header-background);
-    }
-
-    @if not($grouparea-color) and $grouparea-background {
-        $grouparea-color: hsla(from adaptive-contrast(var(--grouparea-background)) h s l / .8);
-    }
-
-    @if not($grouparea-color) and $header-background {
-        $grouparea-color: hsla(from adaptive-contrast(var(--header-background)) h s l / .8);
-    }
-
-    @if not($drop-area-background) and $grouparea-background {
-        $drop-area-background: adaptive-contrast(var(--grouparea-background));
-    }
-
-    @if not($drop-area-on-drop-background) and $drop-area-background {
-        $drop-area-on-drop-background: $drop-area-background;
-    }
-
-    @if not($drop-area-text-color) and $drop-area-background {
-        $drop-area-text-color: adaptive-contrast(var(--drop-area-background));
-    }
-
-    @if not($drop-area-icon-color) and $drop-area-background {
-        $drop-area-icon-color: adaptive-contrast(var(--drop-area-background));
-    }
-
-    @if not($filtering-header-background) and $header-background {
-        $filtering-header-background: color-mix(in hsl, var(--header-background), #fff 5%);
-    }
-
-    @if not($filtering-header-text-color) and $filtering-header-background {
-        $filtering-header-text-color: adaptive-contrast(var(--filtering-header-background));
-    }
-
-    @if not($filtering-row-background) and $header-background {
-        $filtering-row-background: color-mix(in hsl, var(--header-background), #fff 5%);
-    }
-
-    @if not($filtering-row-text-color) and $filtering-row-background {
-        $filtering-row-text-color: adaptive-contrast(var(--filtering-row-background));
-    }
-
-    @if not($excel-filtering-header-foreground) and $filtering-row-background {
-        $excel-filtering-header-foreground: adaptive-contrast(var(--filtering-row-background));
-    }
-
-    @if not($excel-filtering-subheader-foreground) and $filtering-row-background {
-        $excel-filtering-subheader-foreground: adaptive-contrast(var(--filtering-row-background));
-    }
-
-    @if not($excel-filtering-actions-foreground) and $filtering-row-background {
-        $excel-filtering-actions-foreground: hsla(from adaptive-contrast(var(--filtering-row-background)) h s l / 0.8);
-    }
-
-    @if not($excel-filtering-actions-disabled-foreground) and $filtering-row-background {
-        $excel-filtering-actions-disabled-foreground: hsla(from adaptive-contrast(var(--filtering-row-background)) h s l / 0.5);
-    }
-
-    @if not($grid-shadow) {
-        $grid-elevation: map.get($grid-schema, 'grid-elevation');
-        $grid-shadow: elevation($grid-elevation);
-    }
-
-    @if not($drag-shadow) {
-        $drag-elevation: map.get($grid-schema, 'drag-elevation');
-        $drag-shadow: elevation($drag-elevation);
-    }
-
-    @if not($drop-area-border-radius) {
-        $drop-area-border-radius: map.get($theme, 'drop-area-border-radius');
-    }
-
-    @return extend($theme, (
-        name: $name,
-        selector: $selector,
-
-        header-background: $header-background,
-        header-text-color: $header-text-color,
-        header-selected-background:  $header-selected-background,
-        header-selected-text-color:  $header-selected-text-color,
-        header-border-width: $header-border-width,
-        header-border-style: $header-border-style,
-        header-border-color: $header-border-color,
-
-        sorted-header-icon-color: $sorted-header-icon-color,
-
-        ghost-header-text-color: $ghost-header-text-color,
-        ghost-header-icon-color: $ghost-header-icon-color,
-        ghost-header-background: $ghost-header-background,
-
-        content-background: $content-background,
-        content-text-color: $content-text-color,
-
-        row-odd-background: $row-odd-background,
-        row-even-background: $row-even-background,
-        row-odd-text-color: $row-odd-text-color,
-        row-even-text-color: $row-even-text-color,
-        row-selected-background: $row-selected-background,
-        row-selected-hover-background: $row-selected-hover-background,
-        row-selected-text-color: $row-selected-text-color,
-        row-selected-hover-text-color: $row-selected-hover-text-color,
-        row-hover-background: $row-hover-background,
-        row-hover-text-color: $row-hover-text-color,
-        row-border-color: $row-border-color,
-
-        pinned-border-width: $pinned-border-width,
-        pinned-border-style: $pinned-border-style,
-        pinned-border-color: $pinned-border-color,
-
-        cell-active-border-color: $cell-active-border-color,
-        cell-selected-background: $cell-selected-background,
-        cell-editing-background: $cell-editing-background,
-        cell-editing-foreground: $cell-editing-foreground,
-        cell-editing-focus-foreground: $cell-editing-focus-foreground,
-        cell-selected-text-color: $cell-selected-text-color,
-
-        edit-mode-color: $edit-mode-color,
-        edited-row-indicator: $edited-row-indicator,
-        cell-edited-value-color: $cell-edited-value-color,
-        cell-new-color: $cell-new-color,
-
-        cell-disabled-color: $cell-disabled-color,
-
-        resize-line-color: $resize-line-color,
-
-        drop-indicator-color: $drop-indicator-color,
-
-        grouparea-background: $grouparea-background,
-        grouparea-color: $grouparea-color,
-
-        group-label-column-name-text: $group-label-column-name-text,
-        group-label-icon: $group-label-icon,
-        group-label-text: $group-label-text,
-
-        expand-all-icon-color: $expand-all-icon-color,
-        expand-all-icon-hover-color: $expand-all-icon-hover-color,
-
-        expand-icon-color: $expand-icon-color,
-        expand-icon-hover-color: $expand-icon-hover-color,
-        active-expand-icon-color: $active-expand-icon-color,
-        active-expand-icon-hover-color: $active-expand-icon-hover-color,
-
-        group-count-background: $group-count-background,
-        group-count-text-color: $group-count-text-color,
-
-        group-row-background: $group-row-background,
-        group-row-selected-background: $group-row-selected-background,
-
-        drop-area-text-color: $drop-area-text-color,
-        drop-area-icon-color: $drop-area-icon-color,
-        drop-area-on-drop-background: $drop-area-on-drop-background,
-        drop-area-background: $drop-area-background,
-
-        filtering-header-background: $filtering-header-background,
-        filtering-header-text-color: $filtering-header-text-color,
-        filtering-row-background: $filtering-row-background,
-        filtering-row-text-color: $filtering-row-text-color,
-        filtering-background-and: $filtering-background-and,
-        filtering-background-or: $filtering-background-or,
-        filtering-background-and--focus: $filtering-background-and--focus,
-        filtering-background-or--focus: $filtering-background-or--focus,
-
-        excel-filtering-header-foreground: $excel-filtering-header-foreground,
-        excel-filtering-subheader-foreground: $excel-filtering-subheader-foreground,
-        excel-filtering-actions-foreground: $excel-filtering-actions-foreground,
-        excel-filtering-actions-hover-foreground: $excel-filtering-actions-hover-foreground,
-        excel-filtering-actions-disabled-foreground: $excel-filtering-actions-disabled-foreground,
-
-        tree-filtered-text-color: $tree-filtered-text-color,
-        tree-selected-filtered-row-text-color: $tree-selected-filtered-row-text-color,
-        tree-selected-filtered-cell-text-color: $tree-selected-filtered-cell-text-color,
-
-        row-highlight: $row-highlight,
-        grid-shadow: $grid-shadow,
-        drag-shadow: $drag-shadow,
-        row-ghost-background: $row-ghost-background,
-        row-drag-color: $row-drag-color,
-        drop-area-border-radius: $drop-area-border-radius,
-        sortable-header-icon-hover-color: $sortable-header-icon-hover-color,
-        grid-border-color: $grid-border-color,
-        summaries-patch-background: $summaries-patch-background,
-
-        cell-selected-within-background: $cell-selected-within-background,
-        cell-selected-within-text-color: $cell-selected-within-text-color,
-    ));
-}
 
 @mixin _filtering-scroll-mask($theme, $dir) {
     display: block;
@@ -880,7 +301,10 @@
                 width: 100%;
                 max-width: rem(200px);
                 min-width: rem(140px);
-                border: rem(1px) solid color($color: 'gray', $variant: 300);
+
+                @if $variant != 'fluent' {
+                    border: rem(1px) solid color($color: 'gray', $variant: 300);
+                }
 
                 --size: calc(#{$filtering-row-height} - #{rem(8px)});
 
@@ -892,9 +316,8 @@
                     background: transparent;
                     border-radius: 0;
 
-                    &:hover,
-                    &:focus,
-                    &:focus-within {
+                    /* stylelint-disable-next-line */
+                    &:hover {
                         background: transparent;
                     }
                 }
@@ -918,9 +341,8 @@
                 .igx-input-group__input {
                     border: 0;
 
-                    &:hover,
-                    &:focus,
-                    &:focus-within {
+                    /* stylelint-disable-next-line */
+                    &:hover {
                         border: 0;
                         box-shadow: none;
                     }
@@ -930,28 +352,50 @@
                     display: none;
                 }
 
-                .igx-input-group__bundle:focus,
-                .igx-input-group__bundle:focus-within {
-                    .igx-input-group__bundle-main,
-                    .igx-input-group__bundle-start,
-                    .igx-input-group__bundle-end {
-                        margin: 0 !important;
-                    }
-
-                    border-width: rem(1px);
-                }
-
                 .igx-input-group__bundle-main {
                     padding-inline-start: 0;
                 }
 
                 color: var-get($theme, 'filtering-row-text-color');
 
-                &:hover,
-                &:focus,
-                &:focus-within {
+                &:hover{
                     color: var-get($theme, 'filtering-row-text-color');
                     border-color: color($color: 'primary', $variant: 500);
+                }
+            }
+
+            .igx-input-group--focused {
+                @if $variant != 'fluent' {
+                    border-color: color($color: 'primary', $variant: 500);
+                    border-width: rem(1px);
+                }
+
+                color: var-get($theme, 'filtering-row-text-color');
+
+                .igx-input-group__bundle,
+                .igx-input-group__bundle-start,
+                .igx-input-group__bundle-end,
+                .igx-input-group__input {
+                    border: 0 !important;
+
+                    @if $variant != 'fluent' {
+                        box-shadow: none !important;
+                    }
+                }
+
+                .igx-input-group__bundle-main,
+                .igx-input-group__bundle-start,
+                .igx-input-group__bundle-end {
+                    margin: 0 !important;
+                }
+
+                .igx-input-group__bundle,
+                .igx-input-group__bundle-start,
+                .igx-input-group__bundle-end,
+                igx-prefix,
+                igx-suffix {
+                    background: transparent !important;
+                    border-radius: 0;
                 }
             }
 

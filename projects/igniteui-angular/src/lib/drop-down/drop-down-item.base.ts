@@ -34,11 +34,11 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
 
     @HostBinding('attr.aria-label')
     @Input()
-    public get ariaLabel(): string {
-        return this._label ? this._label : this.value ? this.value : this.id;
+    public get ariaLabel(): string | null{
+        return this._label ? this._label : this.value ? this.value : null;
     }
 
-    public set ariaLabel(value: string) {
+    public set ariaLabel(value: string | null) {
         this._label = value;
     }
 
