@@ -69,7 +69,7 @@ $theme: $base;
 
             position: relative;
             overflow: hidden;
-            max-height: calc(var(--size) * 10);
+            max-height: calc(var(--size) * 6);
 
             &:focus {
                 outline: transparent;
