@@ -102,6 +102,10 @@
         overflow: hidden;
         max-height: calc(var(--size) * 6);
 
+        @if $variant == 'indigo' {
+            max-height: calc(var(--size) * 6 + rem(10px));
+        }
+
         &:focus {
             outline: transparent;
         }
