@@ -14,7 +14,7 @@ import { IgxButtonDirective } from '../../../directives/button/button.directive'
 import { IgxQueryBuilderHeaderComponent } from '../../../query-builder/query-builder-header.component';
 import { NgClass } from '@angular/common';
 import { getCurrentResourceStrings } from '../../../core/i18n/resources';
-import { QueryBuilderResourceStringsEN } from '../../../core/i18n/query-builder-resources';
+import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../../../core/i18n/query-builder-resources';
 import { IgxHierarchicalGridComponent } from '../../hierarchical-grid/hierarchical-grid.component';
 
 /**
@@ -55,6 +55,11 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public lastActiveNode = {} as IActiveNode;
+
+    /**
+     * @hidden @internal
+     */
+    public queryBuilderResourceStrings: IQueryBuilderResourceStrings;
 
     private destroy$ = new Subject<any>();
     private _overlayComponentId: string;
@@ -229,7 +234,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         // If grid has custom resource strings set for the advanced filtering,
         // they are passed to the query builder resource strings.
         const gridRS = this.grid.resourceStrings;
-
         if (gridRS !== GridResourceStringsEN) {
             const queryBuilderRS = getCurrentResourceStrings(QueryBuilderResourceStringsEN, init);
             Object.keys(gridRS).forEach((prop) => {
@@ -246,6 +250,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
                     queryBuilderRS[generalProp] = gridRS[prop];
                 }
             });
+
+            this.queryBuilderResourceStrings = queryBuilderRS;
         }
     }
 }
