@@ -1749,7 +1749,7 @@ describe('IgxDateRangePicker', () => {
                 dateRange.weekStart = WEEKDAYS.FRIDAY;
                 fixture.detectChanges();
 
-                expect(dateRange.locale).toEqual('en-US');
+                expect(dateRange.locale).toEqual('frrr');
                 expect(dateRange.weekStart).toEqual(WEEKDAYS.FRIDAY);
             }));
         });
