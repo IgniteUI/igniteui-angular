@@ -15,4 +15,8 @@ $_theme: $indigo;
             --ig-size: 2;
         }
     }
+
+    @include e(content) {
+        max-height: calc(var(--size) * 6 + rem(16px));
+    }
 }
