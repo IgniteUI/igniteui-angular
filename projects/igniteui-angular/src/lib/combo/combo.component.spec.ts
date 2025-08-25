@@ -56,7 +56,7 @@ const CSS_CLASS_EMPTY = 'igx-combo__empty';
 const CSS_CLASS_ITEM_CHECKBOX = 'igx-combo__checkbox';
 const CSS_CLASS_ITME_CHECKBOX_CHECKED = 'igx-checkbox--checked';
 const defaultDropdownItemHeight = 40;
-const defaultDropdownItemMaxHeight = 400;
+const defaultDropdownItemMaxHeight = 240;
 
 describe('igxCombo', () => {
     let fixture: ComponentFixture<any>;
@@ -1195,17 +1195,18 @@ describe('igxCombo', () => {
             it('should render selected items properly', () => {
                 combo.toggle();
                 fixture.detectChanges();
+
                 const dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement;
                 const dropdownItems = dropdownList.querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`);
+
+
                 expect(dropdownItems[1].classList.contains(CSS_CLASS_SELECTED)).toBeFalsy();
                 expect(dropdownItems[3].classList.contains(CSS_CLASS_SELECTED)).toBeFalsy();
-                expect(dropdownItems[7].classList.contains(CSS_CLASS_SELECTED)).toBeFalsy();
 
-                combo.select(['Illinois', 'Mississippi', 'Ohio']);
+                combo.select(['Illinois', 'Ohio']);
                 fixture.detectChanges();
                 expect(dropdownItems[1].classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
                 expect(dropdownItems[3].classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
-                expect(dropdownItems[7].classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
 
                 combo.deselect(['Ohio']);
                 fixture.detectChanges();
@@ -1225,9 +1226,9 @@ describe('igxCombo', () => {
                 expect(focusedItem_1.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
 
                 // Change focus
-                dropdown.navigateItem(6);
+                dropdown.navigateItem(4);
                 fixture.detectChanges();
-                const focusedItem_2 = dropdownItems[5];
+                const focusedItem_2 = dropdownItems[3];
                 expect(focusedItem_2.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
                 expect(focusedItem_1.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
             });
@@ -1772,7 +1773,7 @@ describe('igxCombo', () => {
                     dropdown.toggle();
                     fixture.detectChanges();
                     expect(dropdown.items).toBeDefined();
-                    expect(dropdown.items.length).toEqual(9);
+                    expect(dropdown.items.length).toEqual(5);
                     dropdown.onFocus();
                     expect(dropdown.focusedItem).toEqual(dropdown.items[0]);
                     expect(dropdown.focusedItem.focused).toEqual(true);
@@ -1894,17 +1895,17 @@ describe('igxCombo', () => {
                     selectedItemsCount++;
                     selectAndVerifyItem(0);
 
-                    for (let index = 1; index < 7; index++) {
+                    for (let index = 1; index < 5; index++) {
                         focusAndVerifyItem(index, 'ArrowDown');
                     }
                     selectedItemsCount++;
-                    selectAndVerifyItem(6);
+                    selectAndVerifyItem(4);
 
-                    for (let index = 5; index > 3; index--) {
+                    for (let index = 3; index >= 2; index--) {
                         focusAndVerifyItem(index, 'ArrowUp');
                     }
                     selectedItemsCount++;
-                    selectAndVerifyItem(4);
+                    selectAndVerifyItem(2);
                 });
                 it('should properly navigate using HOME/END key', (async () => {
                     let firstVisibleItem: Element;
@@ -2072,7 +2073,7 @@ describe('igxCombo', () => {
                 const scrollbar = fixture.debugElement.query(By.css(`.${CSS_CLASS_SCROLLBAR_VERTICAL}`)).nativeElement as HTMLElement;
                 expect(scrollbar.scrollTop).toEqual(0);
 
-                combo.virtualScrollContainer.scrollTo(16);
+                combo.virtualScrollContainer.scrollTo(12);
                 await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 let selectedItem = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[1];
@@ -2088,7 +2089,7 @@ describe('igxCombo', () => {
                 // Content was scrolled to bottom
                 expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
 
-                combo.virtualScrollContainer.scrollTo(5);
+                combo.virtualScrollContainer.scrollTo(4);
                 await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 selectedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_SELECTED}`));
@@ -2163,15 +2164,14 @@ describe('igxCombo', () => {
                 expect(input.nativeElement.value).toEqual(expectedOutput);
             });
             it('should dismiss all selected items by pressing clear button', () => {
-                const expectedOutput = 'Kentucky, Ohio, Indiana';
-                combo.select(['Kentucky', 'Ohio', 'Indiana']);
+                const expectedOutput = 'Ohio, Indiana';
+                combo.select(['Ohio', 'Indiana']);
                 fixture.detectChanges();
                 expect(input.nativeElement.value).toEqual(expectedOutput);
                 combo.toggle();
                 fixture.detectChanges();
                 expect(combo.dropdown.items[1].selected).toBeTruthy();
                 expect(combo.dropdown.items[4].selected).toBeTruthy();
-                expect(combo.dropdown.items[6].selected).toBeTruthy();
 
                 const clearBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
                 clearBtn.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
@@ -2184,7 +2184,6 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(combo.dropdown.items[1].selected).toBeFalsy();
                 expect(combo.dropdown.items[4].selected).toBeFalsy();
-                expect(combo.dropdown.items[6].selected).toBeFalsy();
             });
             it('should show/hide clear button after selecting/deselecting items', () => {
                 // This is a workaround for issue github.com/angular/angular/issues/14235
@@ -2242,8 +2241,8 @@ describe('igxCombo', () => {
                         cancel: false
                     });
 
-                const selectedItem_2 = dropdown.items[5];
-                simulateComboItemClick(5);
+                const selectedItem_2 = dropdown.items[4];
+                simulateComboItemClick(4);
                 expect(combo.selection[1]).toEqual(selectedItem_2.value);
                 expect(combo.value[1]).toEqual(selectedItem_2.value[combo.valueKey]);
                 expect(selectedItem_2.selected).toBeTruthy();
@@ -2691,19 +2690,19 @@ describe('igxCombo', () => {
                 combo.toggle();
                 fixture.detectChanges();
                 let headers = combo.dropdown.headers.map(header => header.element.nativeElement.innerText);
-                expect(headers).toEqual(['Ángel', 'Boris', 'México', 'Méxícó']);
+                expect(headers).toEqual(['Ángel', 'Boris', 'México']);
 
                 combo.groupSortingDirection = SortingDirection.Desc;
                 combo.toggle();
                 fixture.detectChanges();
                 headers = combo.dropdown.headers.map(header => header.element.nativeElement.innerText);
-                expect(headers).toEqual(['Méxícó', 'México', 'Boris', 'Ángel']);
+                expect(headers).toEqual(['Méxícó', 'México', 'Boris']);
 
                 combo.groupSortingDirection = SortingDirection.None;
                 combo.toggle();
                 fixture.detectChanges();
                 headers = combo.dropdown.headers.map(header => header.element.nativeElement.innerText);
-                expect(headers).toEqual(['Méxícó', 'Ángel', 'México', 'Boris']);
+                expect(headers).toEqual(['Méxícó', 'Ángel', 'México']);
             });
         });
         describe('Filtering tests: ', () => {
@@ -2862,8 +2861,8 @@ describe('igxCombo', () => {
 
                 verifyFilteredItems('jose', 1);
                 verifyFilteredItems('mexico', 3);
-                verifyFilteredItems('o', 7);
-                verifyFilteredItems('é', 7);
+                verifyFilteredItems('o', 6);
+                verifyFilteredItems('é', 6);
             }));
 
             it('should filter the dropdown items when typing in the search input', fakeAsync(() => {
@@ -2888,9 +2887,9 @@ describe('igxCombo', () => {
                     dropdownItems = dropdownList.querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`);
                     expect(dropdownItems.length).toEqual(expectedItemsNumber);
                 };
-                verifyFilteredItems('M', 7);
+                verifyFilteredItems('M', 4);
 
-                verifyFilteredItems('Mi', 5);
+                verifyFilteredItems('Mi', 3);
                 expectedValues = expectedValues.filter(data => data.field.toLowerCase().includes('mi'));
                 checkFilteredItems(dropdownItems);
 
@@ -2960,9 +2959,9 @@ describe('igxCombo', () => {
                     expect(combo.filteredData.length).toEqual(expectedFilteredItemsNumber);
                 };
 
-                verifyFilteredItems('M', 7, 15);
-                verifyFilteredItems('Mi', 5, 5);
-                verifyFilteredItems('M', 7, 15);
+                verifyFilteredItems('M', 4, 15);
+                verifyFilteredItems('Mi', 3, 5);
+                verifyFilteredItems('M', 4, 15);
                 combo.filteredData.forEach((item) => expect(combo.data).toContain(item));
             });
             it('should clear the search input and close the dropdown list on pressing ESC key', fakeAsync(() => {
@@ -3768,7 +3767,6 @@ class IgxComboFormComponent {
             password: ['', Validators.required],
             townCombo: [[this.items[0]], Validators.required]
         });
-
     }
     public onSubmitReactive() { }
 
