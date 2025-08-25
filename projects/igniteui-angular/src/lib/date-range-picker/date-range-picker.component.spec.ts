@@ -127,7 +127,9 @@ describe('IgxDateRangePicker', () => {
             mockAnimationService = new IgxAngularAnimationService(mockAnimationBuilder);
             overlay = new IgxOverlayService(
                 mockApplicationRef, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
-            mockCalendar = new IgxCalendarComponent(platform, 'en');
+            mockCalendar = TestBed.runInInjectionContext(() => {
+                return new IgxCalendarComponent(platform, 'en');
+            });
 
             mockDaysView = {
                 focusActiveDate: jasmine.createSpy()

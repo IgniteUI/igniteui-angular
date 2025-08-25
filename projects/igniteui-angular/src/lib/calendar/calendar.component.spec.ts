@@ -2930,7 +2930,7 @@ describe("IgxCalendar - ", () => {
             it("Should prioritize weekStart property over locale.", fakeAsync(() => {
                 calendar.locale = "en";
                 fixture.detectChanges();
-                expect(calendar.weekStart).toEqual(1);
+                expect(calendar.weekStart).toEqual(0);
 
                 calendar.weekStart = WEEKDAYS.FRIDAY;
                 expect(calendar.weekStart).toEqual(5);
@@ -2942,14 +2942,16 @@ describe("IgxCalendar - ", () => {
                 flush();
             }));
 
-            it("Should respect passing invalid value for locale, then setting weekStart.", fakeAsync(() => {
-                calendar.locale = "frrr";
-                calendar.weekStart = WEEKDAYS.FRIDAY;
-                fixture.detectChanges();
+            it("Should throw error when setting incorrect locale", fakeAsync(() => {
+                let errorThrown;
+                try {
+                    calendar.locale = "frrr";
+                    fixture.detectChanges();
+                } catch(err) {
+                    errorThrown = err;
+                }
 
-                expect(calendar.locale).toEqual("fr");
-                expect(calendar.weekStart).toEqual(WEEKDAYS.FRIDAY);
-
+                expect(errorThrown).not.toBeUndefined();
                 flush();
             }));
 

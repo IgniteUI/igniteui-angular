@@ -6,7 +6,7 @@ import {
     isPlatformBrowser,
     FormatWidth
 } from '@angular/common';
-import { DestroyRef, Inject, Injectable, InjectionToken, PLATFORM_ID, inject } from '@angular/core';
+import { DestroyRef, Inject, Injectable, InjectionToken, PLATFORM_ID, inject, ɵR3Injector as R3Injector } from '@angular/core';
 import { mergeWith } from 'lodash-es';
 import { NEVER, Observable, Subject } from 'rxjs';
 import { setImmediate } from './setImmediate';
@@ -596,9 +596,10 @@ export function onResourceChangeHandle(destroyObj: Subject<any> | DestroyRef, ca
     const removeHandler = () => {
         getI18nManager().removeEventListener("onResourceChange", onResourceChangeHandler);
     }
-    if (destroyObj instanceof DestroyRef) {
+    if (destroyObj instanceof DestroyRef || destroyObj instanceof R3Injector) {
+        // R3Injector is for tests only
         destroyObj.onDestroy(() => removeHandler());
-    } else {
+    } else if (destroyObj) {
         destroyObj.subscribe({
             complete: () =>  removeHandler()
         });
@@ -666,11 +667,11 @@ export function formatDate(value: Date | string | number | null | undefined, for
     if (format === 'short' || format === 'medium' || format === 'long' || format === 'full') {
         dateStyle = format;
         timeStyle = format;
-    } else if (format.includes('Date')) {
+    } else if (format?.includes('Date')) {
         dateStyle = format.replace('Date', '');
-    } else if (format.includes('Time')) {
+    } else if (format?.includes('Time')) {
         timeStyle = format.replace('Time', '');
-    } else {
+    } else if (format) {
         return getI18nManager().formatDateCustomFormat(value, locale, format, timezone);
     }
     const options: Intl.DateTimeFormatOptions = {
@@ -681,18 +682,18 @@ export function formatDate(value: Date | string | number | null | undefined, for
     return getI18nManager().formatDateTime(value, locale, options);
 }
 
-function parseDigitsInfo(value: string) {
+function parseDigitsInfo(value?: string) {
     let minIntegerDigits = undefined, minFractionDigits = undefined, maxFractionDigits = undefined;
     if (value) {
         const parts = value.split("-");
         const innerParts = parts[0].split(".");
-        if (innerParts[0] !== "1") {
+        if (innerParts.length > 0) {
             minIntegerDigits = parseInt(innerParts[0]);
         }
-        if (innerParts.length == 2 && innerParts[1] !== "0") {
+        if (innerParts.length == 2) {
             minFractionDigits = parseInt(innerParts[1]);
         }
-        if (parts.length == 2 && parts[1] !== "3") {
+        if (parts.length == 2) {
             maxFractionDigits = parseInt(parts[1]);
         }
     }
@@ -758,6 +759,7 @@ export function getCurrencySymbol(currencyCode: string, locale?: string,  curren
 
 export function getLocaleFirstDayOfWeek(locale?: string) {
     try {
+        // Angular returns 0 for Sunday...
         return ngGetLocaleFirstDayOfWeek(locale);
     } catch {}
     return getI18nManager().getFirstDayOfWeek(locale);
