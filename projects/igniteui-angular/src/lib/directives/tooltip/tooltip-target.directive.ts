@@ -348,6 +348,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     public override onClick() {
         if (!this.target.collapsed) {
             this._hideOnInteraction();
+        } else if (this.target.timeoutId) {
+            clearTimeout(this.target.timeoutId);
+            this.target.timeoutId = null;
         }
     }
 
