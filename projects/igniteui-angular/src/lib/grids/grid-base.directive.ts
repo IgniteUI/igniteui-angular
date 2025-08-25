@@ -5484,7 +5484,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public getPossibleColumnWidth(baseWidth: number = null) {
+    public getPossibleColumnWidth(baseWidth: number = null, minColumnWidth: number = null) {
         let computedWidth;
         if (baseWidth !== null) {
             computedWidth = baseWidth;
@@ -5533,9 +5533,11 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
         computedWidth -= this.featureColumnsWidth();
 
+        const minColWidth = minColumnWidth || this.minColumnWidth;
+
         const columnWidth = !Number.isFinite(sumExistingWidths) ?
-            Math.max(computedWidth / columnsToSize, this.minColumnWidth) :
-            Math.max((computedWidth - sumExistingWidths) / columnsToSize, this.minColumnWidth);
+            Math.max(computedWidth / columnsToSize, minColWidth) :
+            Math.max((computedWidth - sumExistingWidths) / columnsToSize, minColWidth);
 
         return columnWidth + 'px';
     }
