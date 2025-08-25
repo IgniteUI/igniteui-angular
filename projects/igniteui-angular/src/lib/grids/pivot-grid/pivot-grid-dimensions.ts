@@ -78,7 +78,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
     }
 
     public get resourceStrings(): IGridResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings || getCurrentResourceStrings(GridResourceStringsEN, false);
     }
 
     /**
@@ -112,11 +112,8 @@ export class IgxPivotDateDimension implements IPivotDimension {
     public memberName = 'AllPeriods';
     public displayName: string;
     private _resourceStrings: IGridResourceStrings = null;
-    private _defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
     private _baseDimension: IPivotDimension;
     private _options: IPivotDateDimensionOptions = {};
-    private _destroyRef = inject(DestroyRef);
-
 
     /**
      * Creates additional pivot date dimensions based on a provided dimension describing date data:
@@ -135,9 +132,6 @@ export class IgxPivotDateDimension implements IPivotDimension {
         if (this.baseDimension && this.options) {
             this.initialize(this.baseDimension, this.options);
         }
-        onResourceChangeHandle(this._destroyRef, () => {
-            this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false);
-        }, this);
     }
 
     protected initialize(inBaseDimension, inOptions) {
