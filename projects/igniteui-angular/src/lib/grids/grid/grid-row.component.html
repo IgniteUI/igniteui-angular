@@ -65,7 +65,6 @@
         <div class="igx-grid__mrl-block"
             [class.igx-grid__td--pinned-last]="col.hasLastPinnedChildColumn"
             [class.igx-grid__td--pinned-first]="col.hasFirstPinnedChildColumn"
-            [style.left]="mrlRightPinnedOffset"
             [ngStyle]="{
                 'grid-template-rows':col.getGridTemplate(true),
                 'grid-template-columns':col.getGridTemplate(false),
@@ -113,7 +112,6 @@
         [style.min-width]="col.resolvedWidth"
         [style.max-width]="col.resolvedWidth"
         [style.flex-basis]="col.resolvedWidth"
-        [style.left]="col.rightPinnedOffset"
         [width]="col.getCellWidth()"
         [visibleColumnIndex]="col.visibleIndex"
         [value]="data | dataMapper:col.field:grid.pipeTrigger:data[col.field]:col.hasNestedPath"
