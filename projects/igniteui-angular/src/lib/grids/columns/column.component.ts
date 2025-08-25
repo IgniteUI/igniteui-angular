@@ -1597,13 +1597,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
 
     /** @hidden @internal **/
-    public get rightPinnedOffset(): string {
-        return this.pinned && !this.grid.isPinningToStart ?
-            - this.grid.pinnedWidth - this.grid.headerFeaturesWidth + 'px' :
-            null;
-    }
-
-    /** @hidden @internal **/
     public get gridRowSpan(): number {
         return this.rowEnd && this.rowStart ? this.rowEnd - this.rowStart : 1;
     }

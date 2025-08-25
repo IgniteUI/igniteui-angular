@@ -1275,6 +1275,7 @@
         width: 100%;
         overflow: visible;
         flex: 1;
+        min-width: 0; // needed to override the min-width of the column headers
     }
 
     %grid-mrl-block {
