@@ -1,3 +1,6 @@
+import { ComboResourceStringsEN as AComboResourceStrings } from 'igniteui-i18n-core';
+import { convertToIgxResource } from './resources';
+
 export interface IComboResourceStrings {
     igx_combo_empty_message?: string;
     igx_combo_filter_search_placeholder?: string;
@@ -7,11 +10,4 @@ export interface IComboResourceStrings {
     igx_combo_aria_label_no_options?: string;
 }
 
-export const ComboResourceStringsEN: IComboResourceStrings = {
-    igx_combo_empty_message: 'The list is empty',
-    igx_combo_filter_search_placeholder: 'Enter a Search Term',
-    igx_combo_addCustomValues_placeholder: 'Add Item',
-    igx_combo_clearItems_placeholder: 'Clear Selection',
-    igx_combo_aria_label_options: 'Selected options',
-    igx_combo_aria_label_no_options: 'No options selected'
-};
+export const ComboResourceStringsEN: IComboResourceStrings = convertToIgxResource(AComboResourceStrings);

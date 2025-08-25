@@ -8,6 +8,16 @@
             </label>
             }
 
+            @if (getControlType(key) === 'locale') {
+                <igx-select (selectionChanging)="updateLocale($event)" [placeholder]="config[key]?.control?.defaultValue ?? ''">
+                    @for (locale of config[key]?.control.options; track locale) {
+                        <igx-select-item [value]="locale">
+                            {{ locale }}
+                        </igx-select-item>
+                    }
+                </igx-select>
+            }
+
             <!-- Text Input -->
             @if (getControlType(key) === 'text') {
             <igx-input-group type="border">

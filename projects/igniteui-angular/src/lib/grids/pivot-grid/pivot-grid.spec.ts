@@ -23,6 +23,7 @@ import { setElementSize } from '../../test-utils/helper-utils.spec';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
 import { IgxGridCellComponent } from '../cell.component';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
@@ -45,8 +46,10 @@ describe('IgxPivotGrid #pivotGrid', () => {
         let fixture: ComponentFixture<IgxPivotGridTestBaseComponent>;
 
         beforeEach(waitForAsync(() => {
+            getI18nManager().toggleEvents(false);
             fixture = TestBed.createComponent(IgxPivotGridTestBaseComponent);
             fixture.detectChanges();
+            getI18nManager().toggleEvents(true);
         }));
 
         it('should show empty template when there are no dimensions and values', () => {
@@ -316,9 +319,10 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 {
                     memberName: 'Date',
                     enabled: true
-                }, {
-                total: false
-            }
+                },
+                {
+                    total: false
+                }
             );
             pivotGrid.notifyDimensionChange(true);
             expect(pivotGrid.columns.length).toBe(5);
@@ -760,7 +764,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.columns.length).toBe(3);
         });
 
-        it('should calculate row headers according to grid size', async() => {
+        it('should calculate row headers according to grid size', async () => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
             const rowHeightSmall = 32;
             const rowHeightMedium = 40;
@@ -797,7 +801,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(rowHeader[0].nativeElement.offsetHeight).toBe(rowHeightMedium);
         });
 
-        it('should render with correct width when set to 100% inside of flex container', async() => {
+        it('should render with correct width when set to 100% inside of flex container', async () => {
             fixture = TestBed.createComponent(IgxPivotGridFlexContainerComponent);
             fixture.detectChanges();
             await wait(100);
@@ -2119,7 +2123,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 cell.nativeElement.click();
                 const cellClickargs: IGridCellEventArgs = { cell, event: new MouseEvent('click') };
 
-                const gridCell = cellClickargs.cell as  IgxGridCellComponent;
+                const gridCell = cellClickargs.cell as IgxGridCellComponent;
                 const firstEntry = gridCell.rowData.aggregationValues.entries().next().value;
                 expect(firstEntry).toEqual(['USA-UnitsSold', 829]);
             });
@@ -2233,38 +2237,38 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 columns: fixture.componentInstance.pivotConfigHierarchy.columns,
                 rows: fixture.componentInstance.pivotConfigHierarchy.rows,
                 values: [
-                {
-                    member: 'UnitsSold',
-                    aggregate: {
-                        aggregator: IgxPivotNumericAggregate.sum,
-                        key: 'SUM',
-                        label: 'Sum'
-                    },
-                    enabled: true,
-                    formatter: (value, row, column) => {
-                        if (!column || !column.value || column.value.member !== 'UnitsSold') {
-                            correctFirstColumnData = false;
+                    {
+                        member: 'UnitsSold',
+                        aggregate: {
+                            aggregator: IgxPivotNumericAggregate.sum,
+                            key: 'SUM',
+                            label: 'Sum'
+                        },
+                        enabled: true,
+                        formatter: (value, row, column) => {
+                            if (!column || !column.value || column.value.member !== 'UnitsSold') {
+                                correctFirstColumnData = false;
+                            }
+                            return value;
                         }
-                        return value;
-                    }
-                },
-                {
-                    member: 'AmountOfSale',
-                    displayName: 'Amount of Sale',
-                    aggregate: {
-                        aggregator: IgxTotalSaleAggregate.totalSale,
-                        key: 'TOTAL',
-                        label: 'Total'
                     },
-                    enabled: true,
-                    formatter: (value, row, column) => {
-                        if (!column || !column.value || column.value.member !== 'AmountOfSale') {
-                            correctSecondColumnData = false;
+                    {
+                        member: 'AmountOfSale',
+                        displayName: 'Amount of Sale',
+                        aggregate: {
+                            aggregator: IgxTotalSaleAggregate.totalSale,
+                            key: 'TOTAL',
+                            label: 'Total'
+                        },
+                        enabled: true,
+                        formatter: (value, row, column) => {
+                            if (!column || !column.value || column.value.member !== 'AmountOfSale') {
+                                correctSecondColumnData = false;
+                            }
+                            return value;
                         }
-                        return value;
                     }
-                }
-            ]
+                ]
             };
 
             pivotGrid.width = '1500px';

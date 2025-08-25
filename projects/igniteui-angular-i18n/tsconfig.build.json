@@ -2,7 +2,7 @@
     "compilerOptions": {
         "baseUrl": "./",
         "rootDir": "./src",
-        "target": "es2015",
+        "target": "es2022",
         "module": "esnext",
         "moduleResolution": "node",
         "declaration": true,
@@ -14,7 +14,13 @@
         "paths": {
             "igniteui-angular": [
                 "../../dist/igniteui-angular/"
-            ]
+            ],
+            "igniteui-i18n-core": [
+                "../../node_modules/igniteui-i18n-core/"
+            ],
+            "igniteui-i18n-resources": [
+                "../../node_modules/igniteui-i18n-resources/"
+            ],
         }
     }
 }

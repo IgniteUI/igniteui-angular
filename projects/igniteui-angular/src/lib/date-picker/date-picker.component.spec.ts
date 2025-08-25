@@ -331,7 +331,7 @@ describe('IgxDatePicker', () => {
                 flush();
             }));
 
-            it('Should passing invalid value for locale, then setting weekStart must be respected.', fakeAsync(() => {
+            it('Should throw error when passing invalid value for locale', fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxDatePickerReactiveFormComponent);
                 fixture.detectChanges();
                 datePicker = fixture.componentInstance.datePicker;
@@ -343,12 +343,14 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.locale).toEqual(locale);
                 expect(datePicker.weekStart).toEqual(WEEKDAYS.SUNDAY)
 
-                datePicker.locale = 'frrr';
-                datePicker.weekStart = WEEKDAYS.FRIDAY;
-                fixture.detectChanges();
-
-                expect(datePicker.locale).toEqual('en-US');
-                expect(datePicker.weekStart).toEqual(WEEKDAYS.FRIDAY);
+                let errorThrown;
+                try {
+                    datePicker.locale = "frrr";
+                    fixture.detectChanges();
+                } catch(err) {
+                    errorThrown = err;
+                }
+                expect(errorThrown).not.toBeUndefined();
             }));
 
             it('should set initial validity state when the form group is disabled', () => {

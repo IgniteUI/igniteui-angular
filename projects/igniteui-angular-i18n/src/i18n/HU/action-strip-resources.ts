@@ -1,9 +1,7 @@
-import { IActionStripResourceStrings } from 'igniteui-angular';
+import { IActionStripResourceStrings, convertToIgxResource } from 'igniteui-angular';
+import { ActionStripResourceStringsHU as AActionStripResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Hungarian resource strings for IgxActionStrip
  */
-export const ActionStripResourceStringsHU = {
-    igx_action_strip_button_more_title: 'Továbbiak'
-} satisfies MakeRequired<IActionStripResourceStrings>;
+export const ActionStripResourceStringsHU: IActionStripResourceStrings = convertToIgxResource(AActionStripResourceStrings);
