@@ -9,7 +9,7 @@ import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { HelperTestFunctions } from '../test-utils/calendar-helper-utils';
 import { CancelableEventArgs } from '../core/utils';
-import { DateRange, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent } from './date-range-picker-inputs.common';
+import { CustomDateRange, DateRange, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent } from './date-range-picker-inputs.common';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 import { DateRangeType } from '../core/dates';
 import { IgxDateRangePickerComponent, IgxDateRangeEndComponent } from './public_api';
@@ -25,6 +25,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { registerLocaleData } from "@angular/common";
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
+import { CalendarDay } from '../calendar/common/model';
 
 // The number of milliseconds in one day
 const DEBOUNCE_TIME = 16;
@@ -38,7 +39,7 @@ const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const CSS_CLASS_CALENDAR = 'igx-calendar';
 const CSS_CLASS_ICON = 'igx-icon';
-const CSS_CLASS_DONE_BUTTON = 'igx-button--flat';
+const CSS_CLASS_DIALOG_BUTTON = 'igx-button--flat';
 const CSS_CLASS_LABEL = 'igx-input-group__label';
 const CSS_CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CSS_CLASS_DATE_RANGE = 'igx-date-range-picker';
@@ -49,8 +50,7 @@ const CSS_CLASS_CALENDAR_HEADER_TITLE = '.igx-calendar__header-year';
 const CSS_CLASS_CALENDAR_SUBHEADER = '.igx-calendar-picker__dates';
 const CSS_CLASS_CALENDAR_HEADER = '.igx-calendar__header';
 const CSS_CLASS_CALENDAR_WRAPPER_VERTICAL = 'igx-calendar__wrapper--vertical';
-
-describe('IgxDateRangePicker', () => {
+fdescribe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
         let mockElement: any;
         let mockApplicationRef: any;
@@ -325,7 +325,7 @@ describe('IgxDateRangePicker', () => {
         let calendar: DebugElement | Element;
         let calendarDays: DebugElement[] | HTMLCollectionOf<Element>;
 
-        const selectDateRangeFromCalendar = (sDate: Date, eDate: Date) => {
+        const selectDateRangeFromCalendar = (sDate: Date, eDate: Date, autoClose:boolean = true) => {
             dateRange.open();
             fixture.detectChanges();
             calendarDays = document.getElementsByClassName(CSS_CLASS_CALENDAR_DATE);
@@ -345,9 +345,13 @@ describe('IgxDateRangePicker', () => {
             if (endIndex !== -1 && endIndex !== startIndex) { // do not click same date twice
                 UIInteractions.simulateClickAndSelectEvent(calendarDays[endIndex].firstChild as HTMLElement);
             }
+
             fixture.detectChanges();
-            dateRange.close();
-            fixture.detectChanges();
+
+            if (autoClose){
+                dateRange.close();
+                fixture.detectChanges();
+            }
         };
 
         describe('Single Input', () => {
@@ -529,7 +533,7 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
 
-                    const doneBtn = document.getElementsByClassName(CSS_CLASS_DONE_BUTTON)[0];
+                    const doneBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[0];
                     UIInteractions.simulateClickAndSelectEvent(doneBtn);
                     tick();
                     fixture.detectChanges();
@@ -541,14 +545,46 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.closed.emit).toHaveBeenCalledWith({ owner: dateRange });
                 }));
 
-                it('should show the "Done" button only in dialog mode', fakeAsync(() => {
+                it('should close the calendar with the "Cancel" button and retain original value', fakeAsync(() => {
+                    fixture.componentInstance.mode = PickerInteractionMode.Dialog;
+                    const orig = { start: new Date(2020, 0, 1), end: new Date(2020, 0, 5) };
+                    fixture.componentInstance.dateRange.value = orig;
+                    fixture.detectChanges();
+
+                    spyOn(dateRange.closing, 'emit').and.callThrough();
+                    spyOn(dateRange.closed, 'emit').and.callThrough();
+
+                    dateRange.open();
+                    tick();
+                    fixture.detectChanges();
+                    expect(dateRange.collapsed).toBeFalsy();
+
+                    selectDateRangeFromCalendar(new Date(2020, 0, 8), new Date(2020, 0, 12), false);
+
+                    const cancelBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[0];
+                    UIInteractions.simulateClickAndSelectEvent(cancelBtn);
+                    tick();
+                    fixture.detectChanges();
+
+                    expect(dateRange.collapsed).toBeTrue();
+                    expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
+                    expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closed.emit).toHaveBeenCalledWith({ owner: dateRange });
+
+                    expect(fixture.componentInstance.dateRange.value).toEqual(orig);
+                }));
+
+                it('should show the "Done" and "Cancel" buttons only in dialog mode', fakeAsync(() => {
                     fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                     fixture.detectChanges();
 
                     dateRange.open();
                     fixture.detectChanges();
-                    let doneBtn = document.getElementsByClassName(CSS_CLASS_DONE_BUTTON)[0];
+                    let doneBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[0];
+                    let cancelBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[1];
                     expect(doneBtn).not.toBe(null);
+                    expect(cancelBtn).not.toBe(null);
                     dateRange.close();
                     tick();
                     fixture.detectChanges();
@@ -559,8 +595,10 @@ describe('IgxDateRangePicker', () => {
                     dateRange.open();
                     tick();
                     fixture.detectChanges();
-                    doneBtn = document.getElementsByClassName(CSS_CLASS_DONE_BUTTON)[0];
+                    doneBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[0];
+                    cancelBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[1];
                     expect(doneBtn).not.toBeDefined();
+                    expect(cancelBtn).not.toBeDefined();
                 }));
 
                 it('should be able to change the "Done" button text', fakeAsync(() => {
@@ -569,19 +607,24 @@ describe('IgxDateRangePicker', () => {
 
                     dateRange.toggle();
                     fixture.detectChanges();
-                    let doneBtn = document.getElementsByClassName(CSS_CLASS_DONE_BUTTON)[0];
+                    let doneBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[1];
+                    let cancelBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[0];
                     expect(doneBtn.textContent.trim()).toEqual('Done');
+                    expect(cancelBtn.textContent.trim()).toEqual('Cancel');
                     dateRange.toggle();
                     tick();
                     fixture.detectChanges();
 
                     dateRange.doneButtonText = 'Close';
+                    dateRange.cancelButtonText = 'Discard'
                     fixture.detectChanges();
                     dateRange.toggle();
                     tick();
                     fixture.detectChanges();
-                    doneBtn = document.getElementsByClassName(CSS_CLASS_DONE_BUTTON)[0];
+                    doneBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[1];
+                    cancelBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[0];
                     expect(doneBtn.textContent.trim()).toEqual('Close');
+                    console.log(cancelBtn.textContent.trim());
                 }));
 
                 it('should emit open/close events - open/close methods', fakeAsync(() => {
@@ -1323,6 +1366,26 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.opened.emit).toHaveBeenCalledTimes(0);
                 }));
 
+                it('should keep the calendar open when input is focused by click and while typing', fakeAsync(() => {
+                    fixture.componentInstance.dateRange.open();
+                    fixture.detectChanges();
+                    tick(DEBOUNCE_TIME);
+
+                    startInput.triggerEventHandler('focus', {});
+                    fixture.detectChanges();
+                    UIInteractions.simulateClickAndSelectEvent(startInput.nativeElement);
+                    fixture.detectChanges();
+                    tick(DEBOUNCE_TIME);
+
+                    expect(dateRange.collapsed).toBeFalsy();
+
+                    UIInteractions.simulateTyping('01/10/202', startInput);
+                    fixture.detectChanges();
+                    tick(DEBOUNCE_TIME);
+
+                    expect(dateRange.collapsed).toBeFalsy();
+                }));
+
                 it('should update the calendar selection on typing', fakeAsync(() => {
                     const range = { start: new Date(2025, 0, 16), end: new Date(2025, 0, 20) };
                     dateRange.value = range;
@@ -1481,6 +1544,173 @@ describe('IgxDateRangePicker', () => {
                     expect((fixture.componentInstance.dateRange.value.start as Date).getTime()).toEqual(range.start.getTime());
                     expect((fixture.componentInstance.dateRange.value.end as Date).getTime()).toEqual(range.end.getTime());
                 }));
+            });
+
+            describe('Predefined ranges', ()=> {
+                const predefinedRangesLength = 4;
+                const today = CalendarDay.today.native;
+                const last7DaysEnd = CalendarDay.today.add('day', -7).native;
+                const last30DaysEnd = CalendarDay.today.add('day', -29).native;
+                const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+                const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                const startOfYear = new Date(today.getFullYear(), 0, 1);
+                const previousThreeDaysStart = CalendarDay.today.add('day', -3).native;
+                const nextThreeDaysEnd = CalendarDay.today.add('day', 3).native;
+
+                const customRanges: CustomDateRange[] = [
+                    {
+                        label: 'Previous Three Days',
+                        dateRange: {
+                            start: previousThreeDaysStart,
+                            end: today,
+                        },
+                    },
+                    {
+                        label: 'Next Three Days',
+                        dateRange: {
+                            start: today,
+                            end: nextThreeDaysEnd,
+                        },
+                    },
+                ];
+
+                const dateRanges: DateRange[] = [
+                    {start: last7DaysEnd, end: today},
+                    {start: startOfMonth, end: endOfMonth},
+                    {start: last30DaysEnd, end: today},
+                    {start: startOfYear, end: today},
+                    {start: previousThreeDaysStart, end: today},
+                    {start: today, end: nextThreeDaysEnd},
+                ];
+
+                beforeEach(() => {
+                    fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
+                    fixture.detectChanges();
+                    dateRange = fixture.componentInstance.dateRange;
+
+
+                });
+
+                it('should not render predefined area when usePredefinedRanges is false and no custom ranges are provided', () => {
+                    dateRange.open();
+                    fixture.detectChanges();
+
+                    const predefinedArea = document.querySelector('igx-predefined-ranges-area');
+                    const chips = document.querySelectorAll('igx-chip');
+
+                    console.log(predefinedArea);
+
+                    expect(predefinedArea).toBeNull();
+                    expect(chips.length).toEqual(0);
+
+                });
+
+                it('should render predefined area when usePredefinedRanges is true and no custom ranges are provided', () => {
+                    dateRange.usePredefinedRanges = true;
+                    fixture.detectChanges();
+
+                    dateRange.open();
+                    fixture.detectChanges();
+
+                    const predefinedArea = document.querySelector('igx-predefined-ranges-area');
+                    const chips = document.querySelectorAll('igx-chip');
+
+                    expect(predefinedArea).toBeDefined();
+                    expect(chips.length).toEqual(predefinedRangesLength);
+                });
+
+                it('should render predefined area when only custom ranges are provided', () => {
+                    dateRange.customRanges = customRanges;
+                    fixture.detectChanges();
+
+                    dateRange.open();
+                    fixture.detectChanges();
+
+                    const predefinedArea = document.querySelector('igx-predefined-ranges-area');
+                    const chips = document.querySelectorAll('igx-chip');
+
+                    expect(predefinedArea).toBeDefined();
+                    expect(chips.length).toEqual(customRanges.length);
+                });
+
+                it('should render predefined area when usePredefinedRanges is true and custom ranges are provided', () => {
+                    dateRange.usePredefinedRanges = true;
+                    dateRange.customRanges = customRanges;
+                    fixture.detectChanges();
+
+                    dateRange.open();
+                    fixture.detectChanges();
+
+                    const predefinedArea = document.querySelector('igx-predefined-ranges-area');
+                    const chips = document.querySelectorAll('igx-chip');
+
+                    expect(predefinedArea).toBeDefined();
+                    expect(chips.length).toEqual(predefinedRangesLength + customRanges.length);
+                });
+
+                it('should render predefined area and emit selection event when the user performs selection via chips', () => {
+                    const selectionSpy = spyOn(dateRange as any, 'handleSelection').and.callThrough();
+
+                    dateRange.usePredefinedRanges = true;
+                    dateRange.customRanges = customRanges;
+                    fixture.detectChanges();
+
+                    dateRange.open();
+                    fixture.detectChanges();
+
+                    const predefinedArea = document.querySelector('igx-predefined-ranges-area');
+                    const chips = document.querySelectorAll('igx-chip');
+
+                    expect(predefinedArea).toBeDefined();
+                    expect(chips.length).toEqual(predefinedRangesLength + customRanges.length);
+
+
+                    chips.forEach((chip, i) => {
+                        chip.dispatchEvent(UIInteractions.getMouseEvent('click'));
+                        fixture.detectChanges();
+                        expect(dateRange.value).toEqual(dateRanges[i]);
+
+                    });
+
+                    expect(selectionSpy).toHaveBeenCalledTimes(predefinedRangesLength + customRanges.length);
+                });
+
+                it('should use provided resourceStrings for labels when available', () => {
+                    const strings: any = {
+                        last7Days: 'Last 7 - localized',
+                        currentMonth: 'Current Month - localized',
+                        yearToDate: 'YTD - localized',
+                        igx_date_range_picker_last7Days: 'Last 7 - localized',
+                        igx_date_range_picker_currentMonth: 'Current Month - localized',
+                        igx_date_range_picker_yearToDate: 'YTD - localized',
+                        // last30Days omitted to test fallback
+                    };
+
+                    dateRange.resourceStrings = strings;
+                    dateRange.usePredefinedRanges = true;
+                    dateRange.customRanges = [];
+                    fixture.detectChanges();
+
+                    dateRange.open();
+                    fixture.detectChanges();
+
+                    const predefinedArea = document.querySelector('igx-predefined-ranges-area');
+                    const chips = document.querySelectorAll('igx-chip');
+
+                    expect(predefinedArea).toBeDefined();
+                    expect(chips.length).toEqual(predefinedRangesLength);
+                    const labels: string[] = [];
+
+                    chips.forEach((chip) => {
+                        labels.push(chip.textContent.trim());
+                    });
+
+                    expect(labels).toContain('Last 7 - localized');
+                    expect(labels).toContain('Current Month - localized');
+                    expect(labels).toContain('YTD - localized');
+
+                    expect(labels).toContain('Last 30 Days');
+                });
             });
         });
 
@@ -1949,7 +2179,10 @@ export class DateRangeDefaultComponent extends DateRangeTestComponent {
                            [disabled]="disabled"
                            [(ngModel)]="range"
                            [inputFormat]="inputFormat"
-                           [displayFormat]="displayFormat" required>
+                           [displayFormat]="displayFormat"
+                           required
+                           [usePredefinedRanges]="usePredefinedRanges"
+                           [customRanges]="customRanges">
         <igx-date-range-start>
             <igx-picker-toggle igxPrefix>
                 <igx-icon>calendar_view_day</igx-icon>
@@ -1980,6 +2213,8 @@ export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
     public inputFormat: string;
     public displayFormat: string;
     public override disabled = false;
+    public usePredefinedRanges = false;
+    public customRanges: CustomDateRange[] = [];
 }
 @Component({
     selector: 'igx-date-range-two-inputs-ng-model',

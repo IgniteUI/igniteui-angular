@@ -30,7 +30,7 @@ import {
     AutoPositionStrategy, IgxOverlayService, OverlayCancelableEventArgs, OverlayEventArgs,
     OverlaySettings, PositionSettings
 } from '../services/public_api';
-import { DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, DateRangePickerFormatPipe } from './date-range-picker-inputs.common';
+import { DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, DateRangePickerFormatPipe, CustomDateRange } from './date-range-picker-inputs.common';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
@@ -165,6 +165,29 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             return this.resourceStrings.igx_date_range_picker_done_button;
         }
         return this._doneButtonText;
+    }
+    /**
+     * Overrides the default text of the calendar dialog **Cancel** button.
+     *
+     * @remarks
+     * Defaults to the value from resource strings, `"Cancel"` for the built-in EN.
+     * The button will only show up in `dialog` mode.
+     *
+     * @example
+     * ```html
+     * <igx-date-range-picker cancelButtonText="取消"></igx-date-range-picker>
+     * ```
+     */
+    @Input()
+    public set cancelButtonText(value: string) {
+        this._cancelButtonText = value;
+    }
+
+    public get cancelButtonText(): string {
+        if (this._cancelButtonText === null) {
+            return this.resourceStrings.igx_date_range_picker_cancel_button;
+        }
+        return this._cancelButtonText;
     }
     /**
      * Custom overlay settings that should be used to display the calendar.
@@ -335,6 +358,27 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * <igx-date-range-picker [(value)]="date"></igx-date-range-picker>
      * ```
      */
+
+     /**
+      * Whether to render built-in predefined ranges.
+      *
+      * @example
+      * ```html
+      * <igx-date-range-picker [(usePredefinedRanges)]="true"></igx-date-range-picker>
+      * ``
+      *  */
+    @Input() public usePredefinedRanges = false;
+
+    /**
+     *  Custom ranges rendered as chips.
+     *
+     * @example
+     * ```html
+     * <igx-date-range-picker [(usePredefinedRanges)]="true"></igx-date-range-picker>
+     * ``
+    */
+    @Input() public customRanges: CustomDateRange[] = [];
+
     @Output()
     public valueChange = new EventEmitter<DateRange>();
 
@@ -524,8 +568,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     private _resourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN);
     private _doneButtonText = null;
+    private _cancelButtonText = null;
     private _dateSeparator = null;
     private _value: DateRange | null;
+    private _originalValue: DateRange | null;
     private _overlayId: string;
     private _ngControl: NgControl;
     private _statusChanges$: Subscription;
@@ -599,6 +645,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         if (!this.collapsed || this.disabled) {
             return;
         }
+
+        this._originalValue = this._value
+            ? { start: new Date(this._value.start), end: new Date(this._value.end) }
+            : null;
 
         const settings = Object.assign({}, this.isDropdown
             ? this.dropdownOverlaySettings
@@ -882,7 +932,11 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             this.opened.emit({ owner: this });
         });
 
-        this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((e) => {
+        this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((e: OverlayCancelableEventArgs) => {
+            const isEscape = e.event && (e.event as KeyboardEvent).key === this.platform.KEYMAP.ESCAPE;
+            if (this.isProjectedInputTarget(e.event) && !isEscape) {
+                e.cancel = true;
+            }
             this.handleClosing(e as OverlayCancelableEventArgs);
         });
 
@@ -894,6 +948,16 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             this._calendarContainer = undefined;
             this.closed.emit({ owner: this });
         });
+    }
+
+    private isProjectedInputTarget(event: Event): boolean {
+        if (!this.hasProjectedInputs || !event) {
+            return false;
+        }
+        const path = event.composed ? event.composedPath() : [event.target];
+        return this.projectedInputs.some(i =>
+            path.includes(i.dateTimeEditor.nativeElement)
+        );
     }
 
     private updateValue(value: DateRange) {
@@ -1187,8 +1251,27 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
         componentInstance.mode = this.mode;
         componentInstance.closeButtonLabel = !this.isDropdown ? this.doneButtonText : null;
+        componentInstance.cancelButtonLabel = !this.isDropdown ? this.cancelButtonText : null;
         componentInstance.pickerActions = this.pickerActions;
+        componentInstance.usePredefinedRanges = this.usePredefinedRanges;
+        componentInstance.customRanges = this.customRanges;
+        componentInstance.resourceStrings = this.resourceStrings;
         componentInstance.calendarClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.close());
+        componentInstance.calendarCancel.pipe(takeUntil(this._destroy$)).subscribe(() => {
+            this._value = this._originalValue;
+            this.close()
+        });
+        componentInstance.rangeSelected
+        .pipe(takeUntil(this._destroy$))
+        .subscribe((r: DateRange) => {
+            if (r?.start && r?.end) {
+            this.select(new Date(r.start), new Date(r.end));
+            }
+
+            if (this.isDropdown) {
+            this.close();
+            }
+        });
     }
 
     private _setDisabledDates(): void {
