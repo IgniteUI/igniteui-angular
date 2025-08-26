@@ -50,7 +50,7 @@ const CSS_CLASS_CALENDAR_HEADER_TITLE = '.igx-calendar__header-year';
 const CSS_CLASS_CALENDAR_SUBHEADER = '.igx-calendar-picker__dates';
 const CSS_CLASS_CALENDAR_HEADER = '.igx-calendar__header';
 const CSS_CLASS_CALENDAR_WRAPPER_VERTICAL = 'igx-calendar__wrapper--vertical';
-fdescribe('IgxDateRangePicker', () => {
+describe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
         let mockElement: any;
         let mockApplicationRef: any;
