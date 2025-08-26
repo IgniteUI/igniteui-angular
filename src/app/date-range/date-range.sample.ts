@@ -162,11 +162,11 @@ export class DateRangeSampleComponent {
                 type: 'text'
             }
         },
-        hasHeader: {
-            label: 'Has Header (for dialog mode)',
+        hideHeader: {
+            label: 'Hide Header (for dialog mode)',
             control: {
                 type: 'boolean',
-                defaultValue: true
+                defaultValue: false
             }
         },
         orientation: {
