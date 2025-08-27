@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync, flush } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy } from '@angular/core';
 import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../input-group/public_api';
-import { PickerInteractionMode } from '../date-common/types';
+import { PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../date-common/types';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -15,7 +15,7 @@ import { DateRangeType } from '../core/dates';
 import { IgxDateRangePickerComponent, IgxDateRangeEndComponent } from './public_api';
 import { AutoPositionStrategy, IgxOverlayService } from '../services/public_api';
 import { AnimationMetadata, AnimationOptions } from '@angular/animations';
-import { IgxCalendarComponent, WEEKDAYS } from '../calendar/public_api';
+import { IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective, WEEKDAYS } from '../calendar/public_api';
 import { Subject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { AnimationService } from '../services/animation/animation';
@@ -46,7 +46,11 @@ const CSS_CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CSS_CLASS_DATE_RANGE = 'igx-date-range-picker';
 const CSS_CLASS_CALENDAR_DATE = 'igx-days-view__date';
 const CSS_CLASS_INACTIVE_DATE = 'igx-days-view__date--inactive';
-
+const CSS_CLASS_CALENDAR_HEADER_TEMPLATE = '.igx-calendar__header-date';
+const CSS_CLASS_CALENDAR_HEADER_TITLE = '.igx-calendar__header-year';
+const CSS_CLASS_CALENDAR_SUBHEADER = '.igx-calendar-picker__dates';
+const CSS_CLASS_CALENDAR_HEADER = '.igx-calendar__header';
+const CSS_CLASS_CALENDAR_WRAPPER_VERTICAL = 'igx-calendar__wrapper--vertical';
 describe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
         let mockElement: any;
@@ -60,6 +64,7 @@ describe('IgxDateRangePicker', () => {
         let mockCalendar: IgxCalendarComponent;
         let mockDaysView: any;
         let mockAnimationService: AnimationService;
+        let mockCdr: any;
         const elementRef = { nativeElement: null };
         const platform = {} as any;
         const mockNgControl = jasmine.createSpyObj('NgControl',
@@ -84,6 +89,9 @@ describe('IgxDateRangePicker', () => {
             mockApplicationRef = { attachView: (h: any) => { }, detachView: (h: any) => { } };
             mockInjector = jasmine.createSpyObj('Injector', {
                 get: mockNgControl
+            });
+            mockCdr = jasmine.createSpyObj('ChangeDetectorRef', {
+                detectChanges: () => { }
             });
             mockAnimationBuilder = {
                 build: (a: AnimationMetadata | AnimationMetadata[]) => ({
@@ -241,7 +249,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should disable calendar dates when min and/or max values as dates are provided', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, null, overlay);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, mockCdr, overlay);
             dateRange.ngOnInit();
 
             spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
@@ -257,7 +265,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en', platform, mockInjector, null, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en', platform, mockInjector, mockCdr, null, null);
             dateRange.ngOnInit();
 
             spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
@@ -272,6 +280,42 @@ describe('IgxDateRangePicker', () => {
             expect((dateRange as any).calendar.disabledDates[1].type).toEqual(DateRangeType.After);
             expect((dateRange as any).calendar.disabledDates[1].dateRange[0]).toEqual(new Date(dateRange.maxValue));
         }));
+
+        it('should validate correctly when disabledDates are set', () => {
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, mockCdr, null, null);
+            dateRange.ngOnInit();
+
+            dateRange.registerOnChange(mockNgControl.registerOnChangeCb);
+            dateRange.registerOnValidatorChange(mockNgControl.registerOnValidatorChangeCb);
+            mockNgControl.registerOnValidatorChangeCb.calls.reset();
+            spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
+
+            const start = new Date(new Date().getFullYear(), new Date().getMonth(), 10);
+            const end = new Date(new Date().getFullYear(), new Date().getMonth(), 18);
+
+            const disabledDates = [{
+                type: DateRangeType.Between, dateRange: [ start, end ]
+            }];
+            dateRange.disabledDates = disabledDates;
+            expect(mockNgControl.registerOnValidatorChangeCb).toHaveBeenCalledTimes(1);
+
+
+            const validRange = {
+                start: new Date(new Date().getFullYear(), new Date().getMonth(), 2),
+                end: new Date(new Date().getFullYear(), new Date().getMonth(), 5),
+            };
+            dateRange.writeValue(validRange);
+            const mockFormControl = new UntypedFormControl(dateRange.value);
+            expect(dateRange.validate(mockFormControl)).toBeNull();
+
+            (dateRange as any).updateCalendar();
+            expect((dateRange as any).calendar.disabledDates.length).toEqual(1);
+            expect((dateRange as any).calendar.disabledDates[0].type).toEqual(DateRangeType.Between);
+
+            start.setDate(start.getDate() - 2);
+            dateRange.writeValue({ start, end });
+            expect(dateRange.validate(mockFormControl)).toEqual({ dateIsDisabled: true });
+        });
     });
 
     describe('Integration tests', () => {
@@ -1239,7 +1283,8 @@ describe('IgxDateRangePicker', () => {
                     expect(endInput.nativeElement.value).toEqual(inputEndDate);
                 });
 
-                it('should select a range from the calendar only when the two inputs are filled in', fakeAsync(() => {
+                it('should select a range from the calendar only when any of the two inputs are filled in', fakeAsync(() => {
+                    // refactored to any of the two inputs, instead of both, to match the behavior in WC - #16131
                     startInput.triggerEventHandler('focus', {});
                     fixture.detectChanges();
                     UIInteractions.simulateTyping('11/10/2015', startInput);
@@ -1248,7 +1293,7 @@ describe('IgxDateRangePicker', () => {
                     tick(DEBOUNCE_TIME);
                     fixture.detectChanges();
                     const rangePicker = fixture.componentInstance.dateRange;
-                    expect((rangePicker as any).calendar.selectedDates.length).toBe(0);
+                    expect((rangePicker as any).calendar.selectedDates.length).toBe(1);
 
                     calendar = document.getElementsByClassName(CSS_CLASS_CALENDAR)[0];
                     UIInteractions.triggerKeyDownEvtUponElem('Escape', calendar);
@@ -1450,6 +1495,60 @@ describe('IgxDateRangePicker', () => {
                     tick(DEBOUNCE_TIME);
 
                     expect(dateRange.collapsed).toBeFalsy();
+                }));
+
+                it('should update the calendar selection on typing', fakeAsync(() => {
+                    const range = { start: new Date(2025, 0, 16), end: new Date(2025, 0, 20) };
+                    dateRange.value = range;
+                    fixture.detectChanges();
+                    dateRange.open();
+                    fixture.detectChanges();
+
+                    expect((dateRange['_calendar'].value as Date[]).length).toBe(5);
+
+                    startInput.triggerEventHandler('focus', {});
+                    fixture.detectChanges();
+                    UIInteractions.simulateTyping('01/18/2025', startInput);
+
+                    tick(DEBOUNCE_TIME);
+                    fixture.detectChanges();
+
+                    expect((dateRange['_calendar'].value as Date[]).length).toBe(3);
+
+                    startDate = new Date(2025, 0, 18);
+                    const expectedRange = { start: startDate, end: new Date(2025, 0, 20) };
+                    expect(dateRange.value).toEqual(expectedRange);
+                    expect(dateRange.activeDate).toEqual(expectedRange.start);
+
+                    const activeDescendantDate = new Date(startDate.setHours(0, 0, 0, 0)).getTime().toString();
+                    expect(dateRange['_calendar'].activeDate).toEqual(startDate);
+                    expect(dateRange['_calendar'].viewDate.getMonth()).toEqual(startDate.getMonth());
+                    expect(dateRange['_calendar'].value[0]).toEqual(startDate);
+                    expect(dateRange['_calendar'].wrapper.nativeElement.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
+                }));
+
+                it('should update the calendar view and active date on typing a date that is not in the current view', fakeAsync(() => {
+                    const range = { start: new Date(2025, 0, 16), end: new Date(2025, 0, 20) };
+                    dateRange.value = range;
+                    fixture.detectChanges();
+                    dateRange.open();
+                    fixture.detectChanges();
+
+                    expect((dateRange['_calendar'].value as Date[]).length).toBe(5);
+
+                    startInput.triggerEventHandler('focus', {});
+                    fixture.detectChanges();
+                    UIInteractions.simulateTyping('11/18/2025', startInput);
+
+                    tick(DEBOUNCE_TIME);
+                    fixture.detectChanges();
+
+                    startDate = new Date(2025, 10, 18);
+
+                    const activeDescendantDate = new Date(startDate.setHours(0, 0, 0, 0)).getTime().toString();
+                    expect(dateRange['_calendar'].activeDate).toEqual(startDate);
+                    expect(dateRange['_calendar'].viewDate.getMonth()).toEqual(startDate.getMonth());
+                    expect(dateRange['_calendar'].wrapper.nativeElement.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
                 }));
             });
 
@@ -1915,6 +2014,249 @@ describe('IgxDateRangePicker', () => {
                 expect(dateRange.weekStart).toEqual(WEEKDAYS.FRIDAY);
             }));
 
+            it('Should render calendar with header in dialog mode by default', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+                dateRange.mode = 'dialog';
+                dateRange.open();
+                tick();
+                fixture.detectChanges();
+
+                expect(dateRange['_calendar'].hasHeader).toBeTrue();
+                const calendarHeader = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR_HEADER_TEMPLATE));
+                expect(calendarHeader).toBeTruthy('Calendar header should be present');
+            }));
+
+            it('should set calendar headerOrientation prop in dialog mode', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+
+                dateRange.mode = 'dialog';
+                dateRange.open();
+                tick();
+                fixture.detectChanges();
+
+                expect(dateRange['_calendar'].headerOrientation).toBe(PickerHeaderOrientation.Horizontal);
+
+                dateRange.close();
+                tick();
+                fixture.detectChanges();
+
+                dateRange.headerOrientation = PickerHeaderOrientation.Vertical;
+                dateRange.open();
+                tick();
+                fixture.detectChanges();
+
+                expect(dateRange['_calendar'].headerOrientation).toBe(PickerHeaderOrientation.Vertical);
+            }));
+
+            it('should hide the calendar header if hideHeader is true in dialog mode', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+
+                dateRange.mode = 'dialog';
+                dateRange.hideHeader = true;
+                dateRange.open();
+                tick();
+                fixture.detectChanges();
+
+                expect(dateRange['_calendar'].hasHeader).toBeFalse();
+                const calendarHeader = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR_HEADER));
+                expect(calendarHeader).toBeFalsy('Calendar header should not be present');
+            }));
+
+            it('should set calendar orientation property', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+                dateRange.open();
+                tick();
+                fixture.detectChanges();
+
+                expect(dateRange['_calendar'].orientation).toEqual(PickerCalendarOrientation.Horizontal.toString());
+                expect(dateRange['_calendar'].wrapper.nativeElement).not.toHaveClass(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL);
+                dateRange.close();
+                tick();
+                fixture.detectChanges();
+
+                dateRange.orientation = PickerCalendarOrientation.Vertical;
+                dateRange.open();
+                tick();
+                fixture.detectChanges();
+
+                expect(dateRange['_calendar'].orientation).toEqual(PickerCalendarOrientation.Vertical.toString());
+                expect(dateRange['_calendar'].wrapper.nativeElement).toHaveClass(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL);
+            }));
+
+            it('should limit the displayMonthsCount property between 1 and 2', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+                dateRange.open();
+                tick();
+
+                dateRange.displayMonthsCount = 3;
+                fixture.detectChanges();
+
+                expect(dateRange.displayMonthsCount).toBe(2);
+
+                dateRange.displayMonthsCount = -1;
+                fixture.detectChanges();
+
+                expect(dateRange.displayMonthsCount).toBe(1);
+            }));
+
+            it('should set the specialDates of the calendar', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+
+                const specialDates = [{
+                    type: DateRangeType.Between, dateRange: [
+                        new Date(new Date().getFullYear(), new Date().getMonth(), 3),
+                        new Date(new Date().getFullYear(), new Date().getMonth(), 8)
+                    ]
+                }];
+                dateRange.specialDates = specialDates;
+                fixture.detectChanges();
+
+                dateRange.open();
+                tick();
+                fixture.detectChanges();
+
+                expect(dateRange['_calendar'].specialDates).toEqual(specialDates);
+            }));
+
+            it('should set the disabledDates of the calendar', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+
+                const disabledDates = [{
+                    type: DateRangeType.Between, dateRange: [
+                        new Date(new Date().getFullYear(), new Date().getMonth(), 3),
+                        new Date(new Date().getFullYear(), new Date().getMonth(), 8)
+                    ]
+                }];
+                dateRange.disabledDates = disabledDates;
+                fixture.detectChanges();
+
+                dateRange.open();
+                tick();
+                fixture.detectChanges();
+
+                expect(dateRange['_calendar'].disabledDates).toEqual(disabledDates);
+            }));
+
+             it('should initialize activeDate with current date, when not set', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+                const todayDate = new Date();
+                const today = new Date(todayDate.setHours(0, 0, 0, 0)).getTime().toString();
+
+                expect(dateRange.activeDate).toEqual(todayDate);
+
+                dateRange.open();
+                fixture.detectChanges();
+
+                expect(dateRange['_calendar'].activeDate).toEqual(todayDate);
+                expect(dateRange['_calendar'].value).toEqual([]);
+                const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(wrapper.getAttribute('aria-activedescendant')).toEqual(today);
+            }));
+
+            it('should initialize activeDate = first defined in value (start/end) when it is not set, but value is', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+                let range = { start: new Date(2025, 0, 1), end: new Date(2025, 0, 5) };
+                dateRange.value = range;
+                fixture.detectChanges();
+
+                expect(dateRange.activeDate).toEqual(range.start);
+                dateRange.open();
+                fixture.detectChanges();
+
+                const activeDescendantDate = new Date(range.start.setHours(0, 0, 0, 0)).getTime().toString();
+                expect(dateRange['_calendar'].activeDate).toEqual(range.start);
+                expect(dateRange['_calendar'].value[0]).toEqual(range.start);
+                const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(wrapper.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
+
+                range = { ...range, start: null};
+                dateRange.value = range;
+                fixture.detectChanges();
+
+                expect(dateRange.activeDate).toEqual(range.end);
+            }));
+
+            it('should set activeDate correctly', fakeAsync(() => {
+                const targetDate = new Date(2025, 11, 1);
+                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+                const range = { start: new Date(2025, 0, 1), end: new Date(2025, 0, 5) };
+                dateRange.value = range;
+                dateRange.activeDate = targetDate;
+                fixture.detectChanges();
+
+                expect(dateRange.activeDate).toEqual(targetDate);
+                dateRange.open();
+                fixture.detectChanges();
+
+                const activeDescendantDate = new Date(targetDate.setHours(0, 0, 0, 0)).getTime().toString();
+                expect(dateRange['_calendar'].activeDate).toEqual(targetDate);
+                expect(dateRange['_calendar'].value[0]).toEqual(range.start);
+                const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(wrapper.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
+            }));
+
+            describe('Templated Calendar Header', () => {
+                let dateRangeDebugEl: DebugElement;
+                beforeEach(fakeAsync(() => {
+                    TestBed.configureTestingModule({
+                        imports: [DateRangeTemplatesComponent]
+                    }).compileComponents();
+
+                    fixture = TestBed.createComponent(DateRangeTemplatesComponent);
+                    fixture.detectChanges();
+                    dateRangeDebugEl = fixture.debugElement.queryAll(By.directive(IgxDateRangePickerComponent))[0];
+                    dateRange = dateRangeDebugEl.componentInstance;
+                    dateRange.mode = 'dialog';
+                    dateRange.open();
+                    tick();
+                    fixture.detectChanges();
+                }));
+
+                it('Should use the custom template for header title', fakeAsync(() => {
+                    const headerTitleElement = dateRangeDebugEl.query(By.css(CSS_CLASS_CALENDAR_HEADER_TITLE));
+                    expect(headerTitleElement).toBeTruthy('Header title element should be present');
+                    if (headerTitleElement) {
+                        expect(headerTitleElement.nativeElement.textContent.trim()).toBe('Test header title');
+                    }
+                }));
+
+                it('Should use the custom template for header', fakeAsync(() => {
+                    const headerElement = dateRangeDebugEl.query(By.css(CSS_CLASS_CALENDAR_HEADER_TEMPLATE));
+                    expect(headerElement).toBeTruthy('Header element should be present');
+                    if (headerElement) {
+                        expect(headerElement.nativeElement.textContent.trim()).toBe('Test header');
+                    }
+                }));
+
+                it('Should use the custom template for subheader', fakeAsync(() => {
+                    const headerElement = dateRangeDebugEl.query(By.css(CSS_CLASS_CALENDAR_SUBHEADER));
+                    expect(headerElement).toBeTruthy('Subheader element should be present');
+                    if (headerElement) {
+                        expect(headerElement.nativeElement.textContent.trim()).toBe('Test subheader');
+                    }
+                }));
+            });
+
             it('should render projected clear icons which clear the range on click', () => {
                 fixture = TestBed.createComponent(DateRangeTwoInputsClearComponent);
                 fixture.detectChanges();
@@ -2097,6 +2439,9 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
         <igx-picker-toggle igxPrefix>
             <igx-icon>flight_takeoff</igx-icon>
         </igx-picker-toggle>
+        <ng-template igxCalendarHeader let-formatCalendar>Test header</ng-template>
+        <ng-template igxCalendarHeaderTitle let-formatCalendar>Test header title</ng-template>
+        <ng-template igxCalendarSubheader let-formatCalendar>Test subheader</ng-template>
     </igx-date-range-picker>
     <igx-date-range-picker #suffixSingleRange>
         <igx-picker-toggle igxSuffix>
@@ -2146,7 +2491,10 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
         IgxInputDirective,
         IgxDateTimeEditorDirective,
         IgxPrefixDirective,
-        IgxSuffixDirective
+        IgxSuffixDirective,
+        IgxCalendarHeaderTemplateDirective,
+        IgxCalendarHeaderTitleTemplateDirective,
+        IgxCalendarSubheaderTemplateDirective
     ]
 })
 export class DateRangeTemplatesComponent extends DateRangeTestComponent {
