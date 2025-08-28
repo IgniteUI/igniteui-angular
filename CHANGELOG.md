@@ -65,8 +65,6 @@ All notable changes for each version of this project will be documented in this 
         - `disabledDates`
         - `specialDates`
 
-    - Added cancel button to the dialog, allowing the user to cancel the selection.
-
     - As well as the following templates, available to customize the contents of the calendar header in `dialog` mode:
         - `igxCalendarHeader`
         - `igxCalendarHeaderTitle`
