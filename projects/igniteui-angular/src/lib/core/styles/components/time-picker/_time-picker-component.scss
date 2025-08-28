@@ -104,5 +104,9 @@
                 @extend %time-picker__buttons--vertical !optional;
             }
         }
+
+        @include m(readonly) {
+            @extend %time-picker-display--readonly !optional;
+        }
     }
 }

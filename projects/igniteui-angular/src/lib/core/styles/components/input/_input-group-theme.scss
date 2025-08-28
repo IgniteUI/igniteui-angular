@@ -383,8 +383,6 @@
     }
 
     %form-group-bundle--hover {
-        //cursor: pointer;
-
         &:has(input:not([readonly])),
         &:has(textarea:not([readonly])),
         &:has(input[readonly][role="combobox"]),
@@ -397,16 +395,21 @@
     }
 
     %form-group-bundle--focus {
-        &::after {
-            @if $variant != 'indigo' {
-                border-block-end-width: rem(2px);
+        &:has(input:not([readonly])),
+        &:has(textarea:not([readonly])),
+        &:has(input[readonly][role="combobox"]),
+        &:has(input[readonly][type="file"]) {
+            &::after {
+                @if $variant != 'indigo' {
+                    border-block-end-width: rem(2px);
+                }
+                border-block-end-color: var-get($theme, 'focused-bottom-line-color');
             }
-            border-block-end-color: var-get($theme, 'focused-bottom-line-color');
-        }
 
-        @if $variant == 'indigo' {
-            caret-color: var-get($theme, 'focused-bottom-line-color');
-        }
+            @if $variant == 'indigo' {
+                caret-color: var-get($theme, 'focused-bottom-line-color');
+            }
+        }   
     }
 
     %form-group-bundle--success {
@@ -915,21 +918,15 @@
         &:has(input[readonly][role="combobox"]),
         &:has(input[readonly][type="file"]) {
             &:hover {
-                %form-group-bundle-start {
-                    border-color: var-get($theme, 'hover-border-color');
-                }
-
-                %igx-input-group__filler {
+                %form-group-bundle-start,
+                %igx-input-group__filler,
+                %form-group-bundle-end {
                     border-color: var-get($theme, 'hover-border-color');
                 }
 
                 %igx-input-group__notch {
                     border-block-start-color: var-get($theme, 'hover-border-color');
                     border-block-end-color: var-get($theme, 'hover-border-color');
-                }
-
-                %form-group-bundle-end {
-                    border-color: var-get($theme, 'hover-border-color');
                 }
             }
         }
@@ -1909,10 +1906,9 @@
         }
     }
 
-    %form-group-bundle-error--fluent,
+    %form-group-bundle-error--fluent:not(:focus-within),
     %form-group-bundle-error--fluent--hover,
     %form-group-bundle-error--fluent--focus {
-        // should be fixed
         &:has(input:not([readonly])),
         &:has(textarea:not([readonly])),
         &:has(input[readonly][role="combobox"]),

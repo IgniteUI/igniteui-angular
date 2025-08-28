@@ -253,6 +253,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public headerOrientation: PickerHeaderOrientation = PickerHeaderOrientation.Horizontal;
 
     /** @hidden @internal */
+    @HostBinding('class.igx-time-picker--readonly')
     @Input({ transform: booleanAttribute })
     public readOnly = false;
 
@@ -780,7 +781,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * ```
      */
     public open(settings?: OverlaySettings): void {
-        if (this.disabled || !this.toggleRef.collapsed) {
+        if (this.disabled || !this.toggleRef.collapsed || this.readOnly) {
             return;
         }
 
@@ -824,7 +825,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * ```
      */
     public clear(): void {
-        if (this.disabled) {
+        if (this.disabled || this.readOnly) {
             return;
         }
 
