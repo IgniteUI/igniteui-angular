@@ -68,6 +68,7 @@ import { IgxTextSelectionDirective } from '../directives/text-selection/text-sel
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { PickerCalendarOrientation } from '../date-common/types';
+import { IgxReadOnlyInputDirective } from '../directives/input/readOnlyInput.directive';
 
 let NEXT_ID = 0;
 
@@ -96,6 +97,7 @@ let NEXT_ID = 0;
         IgxPrefixDirective,
         IgxIconComponent,
         IgxInputDirective,
+        IgxReadOnlyInputDirective,
         IgxDateTimeEditorDirective,
         IgxTextSelectionDirective,
         IgxSuffixDirective
