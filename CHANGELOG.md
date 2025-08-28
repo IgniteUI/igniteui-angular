@@ -5,7 +5,12 @@ All notable changes for each version of this project will be documented in this 
 
 ## 20.1.0
 ### New Features
-`IgxDateRangePicker`
+- `Internationalization`
+  - Old api is being marked as deprecated but it should remain working the same without any breaking change.
+  - New localization and locale implementation based on Intl. for all components with new public API and package named 'igniteui-i18n-resources' containing now the resources.
+  - With the new implementation locales no longer need to be registered, only language resources for components.
+
+- `IgxDateRangePicker`
   - Added cancel button to the dialog, allowing the user to cancel the selection. 
 
 - `IgxCarousel`
