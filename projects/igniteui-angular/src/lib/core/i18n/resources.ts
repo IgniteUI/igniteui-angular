@@ -17,8 +17,7 @@ import {
     getCurrentResourceStrings as getCurrentResourceStringsCore,
     IResourceStrings as IResourceStringsCore,
     setCurrentI18n,
-    getI18nManager,
-    getCurrentI18n
+    getI18nManager
 } from 'igniteui-i18n-core';
 
 export interface IResourceStrings extends IGridResourceStrings, ITimePickerResourceStrings, ICalendarResourceStrings,
@@ -27,7 +26,7 @@ export interface IResourceStrings extends IGridResourceStrings, ITimePickerResou
     IActionStripResourceStrings, IQueryBuilderResourceStrings, IBannerResourceStrings { }
 
 
-function igxRegisterI18n(resourceStrings: IResourceStrings, locale: string)  {
+function igxRegisterI18n(resourceStrings: IResourceStrings, locale: string) {
     // Remove `igx_` prefix for compatibility with older versions.
     const genericResourceStrings: IResourceStringsCore = {};
     for (const key of Object.keys(resourceStrings)) {
@@ -60,13 +59,15 @@ export function getCurrentResourceStrings<T>(defaultEN: T, init = true) {
     const resourceStrings = getCurrentResourceStringsCore();
     const normalizedResourceStrings: T = {} as T;
     const resourceStringsKeys = Object.keys(resourceStrings);
-    for (const key of resourceStringsKeys) {
-        let stringKey = key;
-        if (!stringKey.startsWith("igx_")) {
-            stringKey = "igx_" + stringKey;
+    for (const igxKey of igxResourceStringKeys) {
+        let coreKey = igxKey;
+        if (coreKey.startsWith("igx_")) {
+            coreKey = coreKey.replace("igx_", "");
         }
-        if (igxResourceStringKeys.includes(stringKey)) {
-            normalizedResourceStrings[stringKey] = resourceStrings[key];
+        if (resourceStringsKeys.includes(coreKey)) {
+            normalizedResourceStrings[igxKey] = resourceStrings[coreKey];
+        } else {
+            normalizedResourceStrings[igxKey] = defaultEN[igxKey];
         }
     }
 

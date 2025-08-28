@@ -601,7 +601,7 @@ export function onResourceChangeHandle(destroyObj: Subject<any> | DestroyRef, ca
         destroyObj.onDestroy(() => removeHandler());
     } else if (destroyObj) {
         destroyObj.subscribe({
-            complete: () =>  removeHandler()
+            complete: () => removeHandler()
         });
     }
 }
@@ -753,7 +753,7 @@ export function getCurrencyCode(locale: string, overrideCode?: string) {
     return currencyCode;
 }
 
-export function getCurrencySymbol(currencyCode: string, locale?: string,  currencyDisplay: keyof Intl.NumberFormatOptionsCurrencyDisplayRegistry = "symbol") {
+export function getCurrencySymbol(currencyCode: string, locale?: string, currencyDisplay: keyof Intl.NumberFormatOptionsCurrencyDisplayRegistry = "symbol") {
     return getI18nManager().getCurrencySymbol(currencyCode, locale, currencyDisplay);
 }
 
@@ -761,7 +761,7 @@ export function getLocaleFirstDayOfWeek(locale?: string) {
     try {
         // Angular returns 0 for Sunday...
         return ngGetLocaleFirstDayOfWeek(locale);
-    } catch {}
+    } catch { }
     return getI18nManager().getFirstDayOfWeek(locale);
 }
 
