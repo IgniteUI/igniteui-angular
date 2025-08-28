@@ -1,7 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ViewChild } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidatorFn, AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DateRange, IgxButtonDirective, IgxDateRangePickerComponent, IgxDateTimeEditorDirective, IgxInputDirective, IgxLabelDirective, IgxRadioComponent, IgxRippleDirective, IGX_INPUT_GROUP_TYPE, IChangeCheckboxEventArgs, IGX_DATE_RANGE_PICKER_DIRECTIVES, IgxIconComponent, IgSizeDirective, CustomDateRange } from 'igniteui-angular';
+import { DateRange, IgxButtonDirective, IgxDateRangePickerComponent, IgxDateTimeEditorDirective, IgxInputDirective, IgxLabelDirective, IgxRadioComponent, IgxRippleDirective, IGX_INPUT_GROUP_TYPE, IChangeCheckboxEventArgs, IGX_DATE_RANGE_PICKER_DIRECTIVES, IgxIconComponent, IgSizeDirective, CustomDateRange, IgxPickerClearComponent } from 'igniteui-angular';
 import { DateRangeType } from 'igniteui-angular/src/lib/calendar/common/types';
 import { defineComponents, IgcButtonComponent, IgcDateRangePickerComponent, IgcDateTimeInputComponent, IgcIconComponent } from 'igniteui-webcomponents';
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
