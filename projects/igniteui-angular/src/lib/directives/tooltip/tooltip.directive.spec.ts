@@ -261,6 +261,21 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
+        it('IgxTooltip should not be shown if the target is clicked - #16145', fakeAsync(() => {
+            tooltipTarget.showDelay = 500;
+            fix.detectChanges();
+
+            hoverElement(button);
+            tick(300);
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+
+            UIInteractions.simulateClickAndSelectEvent(button);
+            fix.detectChanges();
+
+            tick(300);
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+        }));
+
         it('IgxTooltip hides on pressing \'escape\' key', fakeAsync(() => {
             tooltipTarget.showTooltip();
             flush();

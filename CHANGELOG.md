@@ -2,7 +2,6 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-
 ## 20.1.0
 ### New Features
 - `IgxCarousel`
@@ -10,15 +9,66 @@ All notable changes for each version of this project will be documented in this 
     ```ts
     this.carousel.select(2, Direction.NEXT);
     ```
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Added ability to pin individual columns to a specific side (start or end of the grid), so that you can now have pinning from both sides. This can be done either declaratively by setting the `pinningPosition` property on the column:
+
+    ```html
+    <igx-column [field]="'Col1'" [pinned]='true' [pinningPosition]='pinningPosition'>
+    </igx-column>
+    ```
+
+    ```ts
+      public pinningPosition = ColumnPinningPosition.End;
+    ```
+
+    Or with the API, via optional parameter:
+
+    ```ts
+        grid.pinColumn('Col1', 0, ColumnPinningPosition.End);
+        grid.pinColumn('Col2', 0, ColumnPinningPosition.Start);
+    ```
+
+    If property `pinningPosition` is not set on a column, the column will default to the position specified on the grid's `pinning` options for `columns`.
 
 - `IgxDateRangePicker`
-  - Added new properties:
+    - Now has a complete set of properties to customize the calendar:
+        - `headerOrientation`
+        - `orientation`
+        - `hideHeader`
+        - `activeDate`
+        - `disabledDates`
+        - `specialDates`
+
+    - As well as the following templates, available to customize the contents of the calendar header in `dialog` mode:
+        - `igxCalendarHeader`
+        - `igxCalendarHeaderTitle`
+        - `igxCalendarSubheader`
+
+    - Added new properties:
       - `usePredefinedRanges` - Whether to render built-in predefined ranges 
       - `customRanges` - Allows the user to provide custom ranges rendered as chips
       - `resourceStrings` - Allows the user to provide set of resource strings 
         
-- `IgxPredefinedRangesAreaComponent`
-  - Added new component for rendering the predefined or custom ranges inside the calendar of the `IgxDateRangePicker`
+    - **Behavioral Changes**
+        - Added cancel button to the dialog, allowing the user to cancel the selection. 
+        - The calendar is displayed with header in `dialog` mode by default.
+        - The picker remains open when typing (in two-inputs and `dropdown` mode).
+        - The calendar selection is updated with the typed value.
+        - The calendar view is updated as per the typed value.
+        - The picker displays a clear icon by default in single input mode.
+
+    - `IgxPredefinedRangesAreaComponent`
+        - Added new component for rendering the predefined or custom ranges inside the calendar of the `IgxDateRangePicker`
+
+- `IgxDatePicker`
+    - Similar to the `IgxDateRangePicker`, also completes the ability to customize the calendar by introducing the following
+    properties in addition to the existing ones:
+        - `hideHeader`
+        - `orientation`
+        - `activeDate`
+    - **Behavioral Changes**
+        - The calendar selection is updated with the typed value.
+        - The calendar view is updated as per the typed date value.
 
 - `IgxOverlay`
     - Position Settings now accept a new optional `offset` input property of type `number`. Used to set the offset of the element from the target in pixels.
