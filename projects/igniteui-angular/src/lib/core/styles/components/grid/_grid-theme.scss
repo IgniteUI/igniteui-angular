@@ -1253,6 +1253,9 @@
     %grid-display-container-tr {
         width: 100%;
         overflow: visible;
+        flex: 1;
+        // needed to override the min-width of the column headers
+        min-width: 0;
     }
 
     %grid-mrl-block {
@@ -1450,7 +1453,7 @@
         }
 
         padding-block: 0;
-        flex: 1 0 auto;
+        flex: 0 0 auto;
         background: inherit;
         z-index: 4;
         cursor: move;
