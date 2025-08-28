@@ -90,7 +90,7 @@ export class IgxGridCellMergePipe implements PipeTransform {
         if (colsToMerge.length === 0) {
             return collection;
         }
-        if (!pinned && this.grid.pinning.rows !== RowPinningPosition.Bottom) {
+        if (this.grid.hasPinnedRecords && !pinned && this.grid.pinning.rows !== RowPinningPosition.Bottom) {
             activeRowIndexes = activeRowIndexes.map(x => x - this.grid.pinnedRecordsCount);
         }
         const result = DataUtil.merge(cloneArray(collection), colsToMerge, mergeStrategy, activeRowIndexes, this.grid);
