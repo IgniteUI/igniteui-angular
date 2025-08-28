@@ -114,6 +114,14 @@ All notable changes for each version of this project will be documented in this 
         - The `hideDelay` input property now defaults to `300`.
         - The `showTooltip` and `hideTooltip` methods do not take `showDelay`/`hideDelay` into account.
 
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
+  - **Sorting improvements**
+    - Improved sorting algorithm efficiency using Schwartzian transformation. This is a technique, also known as decorate-sort-undecorate, which avoids recomputing the sort keys by temporarily associating them with the original data records.
+    - Refactored sorting algorithms from recursive to iterative.
+  - **Groupby improvements**
+    - Refactored grouping algorithm from recursive to iterative.
+    - Optimized grouping operations.
+  
 ## 20.0.6
 ### General
 - `IgxSimpleCombo`
