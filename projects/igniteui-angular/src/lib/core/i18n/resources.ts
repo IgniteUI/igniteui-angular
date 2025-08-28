@@ -74,6 +74,10 @@ export function getCurrentResourceStrings<T>(defaultEN: T, init = true) {
     return normalizedResourceStrings;
 }
 
+/**
+ * Change resource strings for all components globally. The locale is not taken into account and this method should be called when the locale is changed.
+ * @deprecated Please use the new `registerI18n` and `setCurrentI18n` methods instead.
+ */
 export function changei18n(resourceStrings: IResourceStrings) {
     igxRegisterI18n(resourceStrings, getI18nManager().defaultLocale);
 }
