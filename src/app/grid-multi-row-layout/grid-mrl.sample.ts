@@ -1,5 +1,5 @@
 import { Component, HostBinding, ViewChild } from '@angular/core';
-import { GridSelectionMode, IgxActionStripComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxColumnComponent, IgxColumnLayoutComponent, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular';
+import { ColumnPinningPosition, GridSelectionMode, IgxActionStripComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxColumnComponent, IgxColumnLayoutComponent, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular';
 
 
 @Component({
@@ -14,6 +14,8 @@ export class GridMRLSampleComponent {
     }
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     private grid: IgxGridComponent;
+
+    public pinPos = ColumnPinningPosition.End;
 
     public width = null;
     public cols: Array<any> = [

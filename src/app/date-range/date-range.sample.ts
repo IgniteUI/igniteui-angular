@@ -1,7 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidatorFn, AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DateRange, IgxButtonDirective, IgxDateRangeEndComponent, IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateTimeEditorDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxPickerToggleComponent, IgxPrefixDirective, IgxRadioComponent, IgxRippleDirective, IgxSuffixDirective, IGX_INPUT_GROUP_TYPE, IChangeCheckboxEventArgs } from 'igniteui-angular';
+import { DateRange, IgxButtonDirective, IgxDateRangeEndComponent, IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateTimeEditorDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxPickerToggleComponent, IgxPrefixDirective, IgxRadioComponent, IgxRippleDirective, IgxSuffixDirective, IGX_INPUT_GROUP_TYPE, IChangeCheckboxEventArgs, CustomDateRange } from 'igniteui-angular';
+import { CalendarDay } from 'igniteui-angular/src/lib/calendar/common/model';
 
 
 @Component({
@@ -31,6 +32,31 @@ export class DateRangeSampleComponent {
     public range6: DateRange = { start: this.range6Start, end: this.range6End };
     public minDate: Date = new Date();
     public maxDate: Date = new Date(new Date().setDate(new Date().getDate() + 25));
+    public today = CalendarDay.today;
+    public previousThreeMonthsStart = new Date(
+        this.today.native.getFullYear(),
+        this.today.native.getMonth() - 3,
+        1
+    );
+    public previousThreeMonthsEnd = new Date(
+        this.today.native.getFullYear(),
+        this.today.native.getMonth(),
+        0
+    );
+    public nextThreeMonthsStart = new Date(
+        this.today.native.getFullYear(),
+        this.today.native.getMonth() + 1,
+        1
+    );
+    public nextThreeMonthsEnd = new Date(
+        this.today.native.getFullYear(),
+        this.today.native.getMonth() + 4,
+        0
+    );
+    public customRanges : CustomDateRange[] = [
+        { label:"Next three months", dateRange: {start: this.nextThreeMonthsStart, end: this.nextThreeMonthsEnd} },
+        { label:"Previous three months", dateRange: {start: this.previousThreeMonthsStart, end: this.previousThreeMonthsEnd} },
+    ]
 
     public reactiveForm: UntypedFormGroup;
 

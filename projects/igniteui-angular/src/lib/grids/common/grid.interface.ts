@@ -296,19 +296,63 @@ export interface RowType {
      */
     unpin?: () => void;
 }
-
+/**
+ * Describes a field that can be used in the Grid and QueryBuilder components.
+ */
 export interface FieldType {
+    /**
+     * Display label for the field.
+     */
     label?: string;
+
+    /**
+     * The internal field name, used in expressions and queries.
+     */
     field: string;
+
+    /**
+     * Optional column header for UI display purposes.
+     */
     header?: string;
+
+    /**
+     * The data type of the field.
+     */
     /* alternateType: GridColumnDataType */
     dataType: DataType;
+
+    /**
+     * Options for the editor associated with this field.
+     */
     editorOptions?: IFieldEditorOptions;
+
+    /**
+     * Optional filtering operands that apply to this field.
+     */
     filters?: IgxFilteringOperand;
+
+    /**
+     * Optional arguments for any pipe applied to the field.
+     */
     pipeArgs?: IFieldPipeArgs;
+
+    /**
+     * Default time format for Date/Time fields.
+     */
     defaultTimeFormat?: string;
+
+    /**
+     * Default date/time format for Date/Time fields.
+     */
     defaultDateTimeFormat?: string;
 
+    /**
+     * Optional formatter function to transform the value before display.
+     *
+     * @param value - The value of the field.
+     * @param rowData - Optional row data that contains this field.
+     * @returns The formatted value.
+     */
     formatter?(value: any, rowData?: any): any;
 }
 
@@ -523,7 +567,7 @@ export interface ColumnType extends FieldType {
     toggleVisibility(value?: boolean): void;
     populateVisibleIndexes?(): void;
     /** Pins the column at the specified index (if not already pinned). */
-    pin(index?: number): boolean;
+    pin(index?: number, pinningPosition?: ColumnPinningPosition): boolean;
     /** Unpins the column at the specified index (if not already unpinned). */
     unpin(index?: number): boolean;
 }
@@ -785,13 +829,13 @@ export interface GridType extends IGridDataBindable {
     isRowSelectable: boolean;
     /** Indicates whether the selectors of the rows are visible */
     showRowSelectors: boolean;
-    /** Indicates whether the grid's element is pinned to the start of the grid */
-    isPinningToStart: boolean;
     /** Indicates if the column of the grid is in drag mode */
     columnInDrag: any;
     /** @hidden @internal */
-    /** The width of pinned element */
-    pinnedWidth: number;
+    /** The width of pinned element for pinning at start. */
+    pinnedStartWidth: number;
+    /** The width of pinned element for pinning at end. */
+    pinnedEndWidth: number;
     /** @hidden @internal */
     /** The width of unpinned element */
     unpinnedWidth: number;
@@ -926,6 +970,10 @@ export interface GridType extends IGridDataBindable {
     unpinnedColumns: ColumnType[];
     /** An array of columns, but it counts only the ones that are pinned */
     pinnedColumns: ColumnType[];
+    /** An array of columns, but it counts only the ones that are pinned to the start. */
+    pinnedStartColumns: ColumnType[];
+    /** An array of columns, but it counts only the ones that are pinned to the end. */
+    pinnedEndColumns: ColumnType[];
     /** represents an array of the headers of the columns */
     /** @hidden @internal */
     headerCellList: any[];
@@ -1165,7 +1213,7 @@ export interface GridType extends IGridDataBindable {
     refreshSearch(): void;
     getDefaultExpandState(record: any): boolean;
     trackColumnChanges(index: number, column: any): any;
-    getPossibleColumnWidth(): string;
+    getPossibleColumnWidth(baseWidth?: number, minColumnWidth?: number): string;
     resetHorizontalVirtualization(): void;
     hasVerticalScroll(): boolean;
     getVisibleContentHeight(): number;
@@ -1502,10 +1550,24 @@ export interface IClipboardOptions {
 }
 
 /**
- * An interface describing entity
+ * Describes an entity in the QueryBuilder.
+ * An entity represents a logical grouping of fields and can have nested child entities.
  */
 export interface EntityType {
+    /**
+     * The name of the entity.
+     * Typically used as an identifier in expressions.
+     */
     name: string;
+
+    /**
+     * The list of fields that belong to this entity.
+     */
     fields: FieldType[];
+
+    /**
+     * Optional child entities.
+     * This allows building hierarchical or nested query structures.
+     */
     childEntities?: EntityType[];
 }
