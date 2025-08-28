@@ -9,7 +9,7 @@ import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridSortingStrategy, IGridGroupingStrategy } from '../common/strategy';
-import { GridCellMergeMode } from '../common/enums';
+import { GridCellMergeMode, RowPinningPosition } from '../common/enums';
 import { IGridMergeStrategy } from '../../data-operations/merge-strategy';
 
 /**
@@ -90,7 +90,7 @@ export class IgxGridCellMergePipe implements PipeTransform {
         if (colsToMerge.length === 0) {
             return collection;
         }
-        if (!pinned && this.grid.isPinningToStart) {
+        if (!pinned && this.grid.pinning.rows !== RowPinningPosition.Bottom) {
             activeRowIndexes = activeRowIndexes.map(x => x - this.grid.pinnedRecordsCount);
         }
         const result = DataUtil.merge(cloneArray(collection), colsToMerge, mergeStrategy, activeRowIndexes, this.grid);
