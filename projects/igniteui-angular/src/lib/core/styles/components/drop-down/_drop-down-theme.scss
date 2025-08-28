@@ -25,7 +25,7 @@
         border: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
 
         @if $variant == 'indigo' {
-            padding: rem(3px);
+            padding: pad(rem(3px));
 
             %igx-drop-down__item {
                 margin-block: rem(2px);

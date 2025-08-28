@@ -687,7 +687,7 @@
             %form-group-prefix:not(:first-child) {
                 border-inline-start-color: var-get($theme, 'warning-secondary-color');
             }
-    
+
             %form-group-suffix:not(:last-child) {
                 border-inline-end-color: var-get($theme, 'warning-secondary-color');
             }
@@ -1586,7 +1586,7 @@
         position: relative;
         display: grid;
         grid-auto-rows: minmax($hint-min-size, auto);
-        padding-inline: $hint-spacing-inline;
+        padding-inline: pad-inline($hint-spacing-inline);
 
         justify-content: space-between;
 

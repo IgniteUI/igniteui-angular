@@ -19,7 +19,7 @@
         color: var-get($theme, 'text-color');
         border-radius: var-get($theme, 'border-radius');
         box-shadow: map.get($theme, 'shadow');
-        padding: rem(4px) rem(8px);
+        padding: pad-block(rem(4px)) pad-inline(rem(8px));
         gap: rem(8px);
         min-height: rem(24px);
         min-width: rem(24px);
