@@ -39,7 +39,7 @@ const CSS_CLASS_FOOTER = 'footer-class';
 const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const defaultDropdownItemHeight = 40;
-const defaultDropdownItemMaxHeight = 400;
+const defaultDropdownItemMaxHeight = 240;
 
 describe('IgxSimpleCombo', () => {
     let fixture: ComponentFixture<any>;
@@ -718,9 +718,9 @@ describe('IgxSimpleCombo', () => {
             expect(focusedItem_1.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
 
             // Change focus
-            dropdown.navigateItem(6);
+            dropdown.navigateItem(5);
             fixture.detectChanges();
-            const focusedItem_2 = dropdownItems[5];
+            const focusedItem_2 = dropdownItems[4];
             expect(focusedItem_2.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
             expect(focusedItem_1.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
         });
