@@ -8,7 +8,7 @@ import { IGroupingState } from './groupby-state.interface';
 import { mergeObjects } from '../core/utils';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/transaction/transaction';
 import { getHierarchy, isHierarchyMatch } from './operations';
-import { GridType } from '../grids/common/grid.interface';
+import { ColumnType, GridType } from '../grids/common/grid.interface';
 import { ITreeGridRecord } from '../grids/tree-grid/tree-grid.interfaces';
 import { ISortingExpression } from './sorting-strategy';
 import {
@@ -20,6 +20,7 @@ import {
 } from '../grids/common/strategy';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IGroupingExpression } from './grouping-expression.interface';
+import { DefaultMergeStrategy, IGridMergeStrategy } from './merge-strategy';
 
 /**
  * @hidden
@@ -113,6 +114,25 @@ export class DataUtil {
         groupsRecords: any[] = [], fullResult: IGroupByResult = { data: [], metadata: [] }): IGroupByResult {
         groupsRecords.splice(0, groupsRecords.length);
         return grouping.groupBy(data, state, grid, groupsRecords, fullResult);
+    }
+
+    public static merge<T>(data: T[], columns: ColumnType[], strategy: IGridMergeStrategy = new DefaultMergeStrategy(), activeRowIndexes = [], grid: GridType = null,
+    ): any[] {
+        let result = [];
+        for (const col of columns) {
+            const isDate = col?.dataType === 'date' || col?.dataType === 'dateTime';
+            const isTime = col?.dataType === 'time' || col?.dataType === 'dateTime';
+            strategy.merge(
+                data,
+                col.field,
+                col.mergingComparer,
+                result,
+                activeRowIndexes,
+                isDate,
+                isTime,
+                grid);
+        }
+        return result;
     }
 
     public static page<T>(data: T[], state: IPagingState, dataLength?: number): T[] {
