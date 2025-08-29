@@ -5,7 +5,7 @@ import { IgxFocusTrapDirective } from './focus-trap.directive';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IgxTimePickerComponent } from 'igniteui-angular';
+import { IgxTimePickerComponent } from '../../time-picker/time-picker.component';
 
 describe('igxFocusTrap', () => {
     beforeEach(waitForAsync(() => {
