@@ -1767,7 +1767,8 @@ describe("IgxCalendar - ", () => {
                 });
 
                 it("Should not select date from model, if it is part of disabled dates", () => {
-                    expect(calendar.value).toBeFalsy();
+                    // Changed per WC alignment task #16131 - calendar should not block selection of dates through API/model
+                    expect(calendar.value).toBeTruthy();
                 });
 
                 it("Should not select date from model in range selection, if model passes null", () => {

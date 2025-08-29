@@ -26,6 +26,7 @@ import {
     IgxDatePickerComponent,
     IgxTimePickerComponent,
     IgxDateTimeEditorModule,
+    IgxDateRangePickerComponent,
     ISelectionEventArgs
 } from 'igniteui-angular';
 import { setCurrentI18n } from 'igniteui-i18n-core';
@@ -51,7 +52,8 @@ import { setCurrentI18n } from 'igniteui-i18n-core';
         IgxSelectItemComponent,
         IgxDatePickerComponent,
         IgxTimePickerComponent,
-        IgxDateTimeEditorModule
+        IgxDateTimeEditorModule,
+        IgxDateRangePickerComponent
     ]
 })
 
