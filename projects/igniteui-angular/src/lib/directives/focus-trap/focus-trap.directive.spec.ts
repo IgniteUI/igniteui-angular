@@ -5,6 +5,7 @@ import { IgxFocusTrapDirective } from './focus-trap.directive';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { IgxTimePickerComponent } from 'igniteui-angular';
 
 describe('igxFocusTrap', () => {
     beforeEach(waitForAsync(() => {
@@ -161,6 +162,39 @@ describe('igxFocusTrap', () => {
         fix.detectChanges();
         expect(document.activeElement).toEqual(button.nativeElement);
     }));
+
+    it('should focus only visible focusable elements on Tab key pressed', () => {
+        const fix = TestBed.createComponent(TrapFocusTestComponent);
+        fix.detectChanges();
+
+        fix.componentInstance.showTimePicker = true;
+        fix.detectChanges();
+
+        const focusTrap = fix.debugElement.query(By.directive(IgxFocusTrapDirective));
+        const buttons = fix.debugElement.queryAll(By.css('button'));
+        const inputs = fix.debugElement.queryAll(By.css('input'));
+        const timePickerInput = fix.debugElement.query(By.css('.igx-input-group__input'));
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        fix.detectChanges();
+        expect(document.activeElement).toEqual(inputs[0].nativeElement);
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        fix.detectChanges();
+        expect(document.activeElement).toEqual(inputs[1].nativeElement);
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        fix.detectChanges();
+        expect(document.activeElement).toEqual(timePickerInput.nativeElement);
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        fix.detectChanges();
+        expect(document.activeElement).toEqual(buttons[buttons.length - 1].nativeElement);
+
+        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        fix.detectChanges();
+        expect(document.activeElement).toEqual(inputs[0].nativeElement);
+    });
 });
 
 
@@ -177,14 +211,19 @@ describe('igxFocusTrap', () => {
             <input type="password" placeholder="Enter Password" name="psw">
         }
         <br>
+        @if (showTimePicker) {
+            <igx-time-picker> </igx-time-picker>
+        }
+        <br>
         @if (showButton) {
             <button>SIGN IN</button>
         }
     </div>`,
-    imports: [IgxFocusTrapDirective]
+    imports: [IgxFocusTrapDirective, IgxTimePickerComponent]
 })
 class TrapFocusTestComponent {
     public showInput = true;
     public showButton = true;
     public focusTrap = true;
+    public showTimePicker = false;
 }
