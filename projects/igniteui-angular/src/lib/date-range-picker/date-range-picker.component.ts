@@ -24,7 +24,7 @@ import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
     IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState,
-    IgxLabelDirective, IGX_INPUT_GROUP_TYPE
+    IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxSuffixDirective
 } from '../input-group/public_api';
 import {
     AutoPositionStrategy, IgxOverlayService, OverlayCancelableEventArgs, OverlayEventArgs,
@@ -76,6 +76,7 @@ const SingleInputDatesConcatenationString = ' - ';
         IgxInputGroupComponent,
         IgxInputDirective,
         IgxPrefixDirective,
+        IgxSuffixDirective,
         IgxReadOnlyInputDirective,
         DateRangePickerFormatPipe
     ]
@@ -719,6 +720,30 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         this.handleSelection(dateRange);
     }
 
+    /**
+     * Clears the input field(s) and the picker's value.
+     *
+     * @example
+     * ```typescript
+     * this.dateRangePicker.clear();
+     * ```
+     */
+    public clear(): void {
+        if (this.disabled) {
+            return;
+        }
+
+        this.value = null;
+        this._calendar?.deselectDate();
+        if (this.hasProjectedInputs) {
+            this.projectedInputs.forEach((i) => {
+                i.inputDirective.clear();
+            });
+        } else {
+            this.inputDirective.clear();
+        }
+    }
+
     /** @hidden @internal */
     public writeValue(value: DateRange): void {
         this.updateValue(value);
@@ -791,6 +816,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public override ngAfterViewInit(): void {
         super.ngAfterViewInit();
         this.subscribeToDateEditorEvents();
+        this.subscribeToClick();
         this.configPositionStrategy();
         this.configOverlaySettings();
         this.cacheFocusedInput();
@@ -845,8 +871,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     /** @hidden @internal */
-    public getEditElement() {
-        return this.inputDirective.nativeElement;
+    public getEditElement(): HTMLInputElement | undefined {
+        return this.inputDirective?.nativeElement;
     }
 
     protected onStatusChanged = () => {
@@ -1104,6 +1130,21 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         }
 
         return { start: range.start as Date, end: range.end as Date };
+    }
+
+    private subscribeToClick() {
+        const inputs = this.hasProjectedInputs
+            ? this.projectedInputs.map(i => i.inputDirective.nativeElement)
+            : [this.getEditElement()];
+        inputs.forEach(input => {
+            fromEvent(input, 'click')
+                .pipe(takeUntil(this._destroy$))
+                .subscribe(() => {
+                    if (!this.isDropdown) {
+                        this.toggle();
+                    }
+                });
+        });
     }
 
     private subscribeToDateEditorEvents(): void {

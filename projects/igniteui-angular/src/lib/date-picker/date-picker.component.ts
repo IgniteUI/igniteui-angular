@@ -5,7 +5,6 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
-    ContentChildren,
     ElementRef,
     EventEmitter,
     HostBinding,
@@ -19,7 +18,6 @@ import {
     Optional,
     Output,
     PipeTransform,
-    QueryList,
     Renderer2,
     ViewChild,
     ViewContainerRef,
@@ -50,7 +48,7 @@ import { DatePickerResourceStringsEN, IDatePickerResourceStrings } from '../core
 import { IBaseCancelableBrowserEventArgs, isDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
-import { IgxPickerActionsDirective, IgxPickerClearComponent } from '../date-common/public_api';
+import { IgxPickerActionsDirective } from '../date-common/public_api';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { DatePart, DatePartDeltas, IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
@@ -417,10 +415,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     public validationFailed = new EventEmitter<IDatePickerValidationFailedEventArgs>();
 
     /** @hidden @internal */
-    @ContentChildren(IgxPickerClearComponent)
-    public clearComponents: QueryList<IgxPickerClearComponent>;
-
-    /** @hidden @internal */
     @ContentChild(IgxLabelDirective)
     public label: IgxLabelDirective;
 
@@ -785,10 +779,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this.subscribeToClick();
         this.subscribeToOverlayEvents();
         this.subscribeToDateEditorEvents();
-
-        this.subToIconsClicked(this.clearComponents, () => this.clear());
-        this.clearComponents.changes.pipe(takeUntil(this._destroy$))
-            .subscribe(() => this.subToIconsClicked(this.clearComponents, () => this.clear()));
 
         this._dropDownOverlaySettings.excludeFromOutsideClick = [this.inputGroup.element.nativeElement];
 
