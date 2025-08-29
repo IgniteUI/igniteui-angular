@@ -26,7 +26,6 @@ export class IgxGridRowComponent extends IgxRowDirective {
         };
     }
 
-
     public getContextMRL(pinnedCols, row) {
         return {
             $implicit: pinnedCols,
