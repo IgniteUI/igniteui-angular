@@ -60,7 +60,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxDividerDirective } from '../directives/divider/divider.directive';
-import { IgxReadOnlyInputDirective } from '../directives/input/readOnlyInput.directive';
+import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
 
 let NEXT_ID = 0;
 export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {

@@ -37,7 +37,7 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { PickerCalendarOrientation } from '../date-common/types';
 import { calendarRange, isDateInRanges } from '../calendar/common/helpers';
-import { IgxReadOnlyInputDirective } from '../directives/input/readOnlyInput.directive';
+import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
 
 const SingleInputDatesConcatenationString = ' - ';
 
