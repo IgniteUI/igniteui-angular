@@ -60,6 +60,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxDividerDirective } from '../directives/divider/divider.directive';
+import { IgxReadOnlyInputDirective } from '../directives/input/readOnlyInput.directive';
 
 let NEXT_ID = 0;
 export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
@@ -91,7 +92,7 @@ export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
             display: block;
         }`
     ],
-    imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxTextSelectionDirective, IgxPrefixDirective, IgxIconComponent, IgxSuffixDirective, IgxButtonDirective, IgxToggleDirective, NgClass, IgxItemListDirective, IgxTimeItemDirective, NgTemplateOutlet, TimeFormatPipe, TimeItemPipe, IgxDividerDirective]
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxTextSelectionDirective, IgxPrefixDirective, IgxIconComponent, IgxSuffixDirective, IgxButtonDirective, IgxToggleDirective, NgClass, IgxItemListDirective, IgxTimeItemDirective, NgTemplateOutlet, TimeFormatPipe, TimeItemPipe, IgxDividerDirective, IgxReadOnlyInputDirective]
 })
 export class IgxTimePickerComponent extends PickerBaseDirective
     implements
@@ -240,7 +241,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public formatter: (val: Date) => string;
 
     /** @hidden @internal */
-    @HostBinding('class.igx-time-picker--readonly')
     @Input({ transform: booleanAttribute })
     public readOnly = false;
 

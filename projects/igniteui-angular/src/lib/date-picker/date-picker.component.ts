@@ -388,7 +388,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     public resourceStrings: IDatePickerResourceStrings;
 
     /** @hidden @internal */
-    @HostBinding('class.igx-date-picker--readonly')
     @Input({ transform: booleanAttribute })
     public readOnly = false;
 

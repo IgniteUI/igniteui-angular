@@ -30,9 +30,5 @@
         @include m(dropdown) {
             @extend %date-picker--dropdown !optional;
         }
-
-        @include m(readonly) {
-            @extend %date-picker--readonly !optional;
-        }
     }
 }
