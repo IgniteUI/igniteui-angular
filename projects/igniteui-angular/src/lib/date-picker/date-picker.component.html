@@ -14,7 +14,9 @@
         </igx-prefix>
     }
 
-    <input class="igx-date-picker__input-date" [displayValuePipe]="formatter ? displayValue : null" igxInput
+    <input class="igx-date-picker__input-date"
+        [igxReadOnlyInput]="readOnly"
+        [displayValuePipe]="formatter ? displayValue : null" igxInput
         [igxDateTimeEditor]="inputFormat" [displayFormat]="displayFormat"
         [minValue]="minValue" [maxValue]="maxValue" [spinDelta]="spinDelta" [spinLoop]="spinLoop"
         [disabled]="disabled" [placeholder]="placeholder" [readonly]="!isDropdown || readOnly"
