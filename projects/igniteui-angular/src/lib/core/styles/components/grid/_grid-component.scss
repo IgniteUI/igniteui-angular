@@ -272,6 +272,14 @@
             @extend %igx-grid__tr--pinned !optional;
         }
 
+        @include e(tr, $m: merged) {
+            @extend %igx-grid__tr--merged !optional;
+        }
+
+        @include e(tr, $m: merged-top) {
+            @extend %igx-grid__tr--merged-top !optional;
+        }
+
         @include e(tr, $m: pinned-top) {
             @extend %igx-grid__tr--pinned-top !optional;
         }
@@ -294,6 +302,22 @@
 
         @include e(td, $m: edited) {
             @extend %igx-grid__td--edited !optional;
+        }
+
+        @include e(td, $m: merged) {
+            @extend %igx-grid__td--merged !optional;
+        }
+
+        @include e(td, $mods: (merged-selected, merged-hovered)) {
+            @extend %igx-grid__td--merged-selected-hovered !optional;
+        }
+
+        @include e(td, $m: merged-selected) {
+            @extend %igx-grid__td--merged-selected !optional;
+        }
+
+        @include e(td, $m: merged-hovered) {
+            @extend %igx-grid__td--merged-hovered !optional;
         }
 
         @include e(td, $m: editing) {

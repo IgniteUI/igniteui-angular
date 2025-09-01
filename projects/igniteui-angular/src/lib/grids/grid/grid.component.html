@@ -47,6 +47,20 @@
         }
         <ng-container *ngTemplateOutlet="hasPinnedRecords && isRowPinningToTop ? pinnedRecordsTemplate : null">
         </ng-container>
+
+        @if (mergedDataInView && mergedDataInView.length > 0) {
+            <div igxScrollInertia
+            [IgxScrollInertiaScrollContainer]="this.verticalScrollContainer.dc.instance.scrollContainer"
+            [IgxScrollInertiaDirection]="this.verticalScrollContainer.dc.instance.scrollDirection">
+                @for (rowData of mergedDataInView; track rowData.record;) {
+                    <igx-grid-row  class="igx-grid__tr--merged-top" [gridID]="id" [index]="rowData.index" [data]="rowData.record.recordRef" [metaData]="rowData.record" [style.top.px]="getMergeCellOffset(rowData)"
+                    [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowData.index:hasColumnLayouts:isRecordMerged(rowData):false:rowData.record:pipeTrigger"
+                    [ngStyle]="rowStyles | igxGridRowStyles:rowData.record:rowData.index:pipeTrigger" #row>
+                    </igx-grid-row>
+                }
+            </div>
+        }
+
         <ng-template #pinnedRecordsTemplate>
             @if (data
                 | gridTransaction:id:pipeTrigger
@@ -54,7 +68,8 @@
                 | gridAddRow:true:pipeTrigger
                 | gridRowPinning:id:true:pipeTrigger
                 | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
-                | gridSort:sortingExpressions:groupingExpressions:sortStrategy:id:pipeTrigger:true; as pinnedData) {
+                | gridSort:sortingExpressions:groupingExpressions:sortStrategy:id:pipeTrigger:true
+                | gridCellMerge:columnsToMerge:cellMergeMode:mergeStrategy:activeRowIndexes:true:pipeTrigger; as pinnedData) {
                 @if (pinnedData.length > 0) {
                     <div #pinContainer
                         [ngClass]="{
@@ -62,7 +77,7 @@
                             'igx-grid__tr--pinned-top': isRowPinningToTop
                         }"
                         class="igx-grid__tr--pinned" [style.width.px]="calcWidth">
-                        @for (rowData of pinnedData; track rowData; let rowIndex = $index) {
+                        @for (rowData of pinnedData; track (rowData.recordRef || rowData); let rowIndex = $index) {
                             <ng-container *ngTemplateOutlet="pinned_record_template; context: getContext(rowData, rowIndex, true)">
                             </ng-container>
                         }
@@ -80,7 +95,8 @@
         | gridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:showSummaryOnCollapse:pipeTrigger:summaryPipeTrigger
         | gridDetails:hasDetails:expansionStates:pipeTrigger
         | gridAddRow:false:pipeTrigger
-        | gridRowPinning:id:false:pipeTrigger"
+        | gridRowPinning:id:false:pipeTrigger
+        | gridCellMerge:columnsToMerge:cellMergeMode:mergeStrategy:activeRowIndexes:false:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]="verticalScroll"
             [igxForContainerSize]="calcHeight"
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
@@ -96,15 +112,15 @@
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null">
         </ng-container>
-        <ng-template #record_template let-rowIndex="index" let-rowData let-disabledRow="disabled">
-            <igx-grid-row [gridID]="id" [index]="rowIndex" [data]="rowData" [disabled]="disabledRow"
-                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:rowData:pipeTrigger"
+        <ng-template #record_template let-rowIndex="index" let-rowData let-disabledRow="disabled" let-metaData="metaData">
+            <igx-grid-row [gridID]="id" [index]="rowIndex" [data]="rowData" [disabled]="disabledRow" [metaData]="metaData"
+                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:isRecordMerged(metaData):false:rowData:pipeTrigger"
                 [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
             </igx-grid-row>
         </ng-template>
-        <ng-template #pinned_record_template let-rowIndex="index" let-rowData>
-            <igx-grid-row [gridID]="id" [index]="rowIndex" [data]="rowData"
-                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:rowData:pipeTrigger"
+        <ng-template #pinned_record_template let-rowIndex="index" let-rowData let-metaData="metaData">
+            <igx-grid-row [gridID]="id" [index]="rowIndex" [data]="rowData" [metaData]="metaData"
+                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:isRecordMerged(metaData):false:rowData:pipeTrigger"
                 [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger"#row #pinnedRow>
             </igx-grid-row>
         </ng-template>
