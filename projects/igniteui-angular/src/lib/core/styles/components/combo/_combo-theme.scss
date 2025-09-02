@@ -98,9 +98,15 @@
     }
 
     %igx-combo__content {
+        --item-count: 6;
+
         position: relative;
         overflow: hidden;
-        max-height: calc(var(--size) * 10);
+        max-height: calc(var(--size) * var(--item-count));
+
+        @if $variant == 'indigo' {
+            max-height: calc(var(--size) * var(--item-count) + rem(16px));
+        }
 
         &:focus {
             outline: transparent;
