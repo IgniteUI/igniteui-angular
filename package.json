@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve --open --hmr",
     "start:elements": "ng serve --project igniteui-angular-elements",
+    "start:performance": "ng serve --project igniteui-angular-performance",
     "build": "ng build --configuration production",
     "test": "ng test igniteui-angular",
     "lint": "ng lint",

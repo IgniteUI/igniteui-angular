@@ -773,7 +773,7 @@ describe('IgxQueryBuilder', () => {
       // Verify value input placeholder
       const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
       // Verify value input placeholder
-      expect(input.placeholder).toEqual('Select date');
+      expect(input.placeholder).toEqual(queryBuilder.resourceStrings.igx_query_builder_date_placeholder);
 
       QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, true); // Third input should be disabled for unary operators.
       // Commit the populated expression.
