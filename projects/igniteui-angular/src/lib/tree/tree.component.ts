@@ -29,7 +29,7 @@ import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
-import { resizeObservable } from '../core/utils';
+import { PlatformUtil, resizeObservable } from '../core/utils';
 
 /**
  * @hidden @internal
@@ -327,6 +327,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         private selectionService: IgxTreeSelectionService,
         private treeService: IgxTreeService,
         private element: ElementRef<HTMLElement>,
+        private platform: PlatformUtil
     ) {
         this.selectionService.register(this);
         this.treeService.register(this);
@@ -501,9 +502,13 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     private subToChanges() {
         this.unsubChildren$.next();
         const toBeSelected = [...this.forceSelect];
-        requestAnimationFrame(() => {
+        if(this.platform.isBrowser) {
+            requestAnimationFrame(() => {
+                this.selectionService.selectNodesWithNoEvent(toBeSelected);
+            });
+        } else {
             this.selectionService.selectNodesWithNoEvent(toBeSelected);
-        });
+        }
         this.forceSelect = [];
         this.nodes.forEach(node => {
             node.expandedChange.pipe(takeUntil(this.unsubChildren$)).subscribe(nodeState => {
