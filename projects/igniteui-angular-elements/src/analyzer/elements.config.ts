@@ -95,6 +95,7 @@ export var registerConfig = [
     ],
     numericProps: ["rowEnd", "colEnd", "rowStart", "colStart"],
     boolProps: [
+      "merge",
       "sortable",
       "selectable",
       "groupable",
@@ -158,6 +159,7 @@ export var registerConfig = [
       "expanded",
       "searchable",
       "hidden",
+      "merge",
       "sortable",
       "groupable",
       "editable",
@@ -213,6 +215,7 @@ export var registerConfig = [
       "collapsible",
       "expanded",
       "searchable",
+      "merge",
       "sortable",
       "groupable",
       "editable",
