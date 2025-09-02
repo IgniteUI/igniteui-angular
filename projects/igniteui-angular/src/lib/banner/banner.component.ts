@@ -1,9 +1,11 @@
 import {
     Component,
     ContentChild,
+    DestroyRef,
     ElementRef,
     EventEmitter,
     HostBinding,
+    inject,
     Input,
     Output,
     ViewChild
@@ -14,7 +16,7 @@ import { IToggleView } from '../core/navigation';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IgxBannerActionsDirective } from './banner.directives';
-import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
+import { CancelableEventArgs, IBaseEventArgs, onResourceChangeHandle } from '../core/utils';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 import { IgxExpansionPanelBodyComponent } from '../expansion-panel/expansion-panel-body.component';
 import { IgxExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
@@ -153,7 +155,7 @@ export class IgxBannerComponent implements IToggleView {
     }
 
     public get resourceStrings(): IBannerResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -231,13 +233,19 @@ export class IgxBannerComponent implements IToggleView {
     @ContentChild(IgxBannerActionsDirective)
     private _bannerActionTemplate: IgxBannerActionsDirective;
 
+    private _destroyRef = inject(DestroyRef);
     private _expanded: boolean = false;
     private _shouldFireEvent: boolean = false;
     private _bannerEvent: BannerEventArgs;
     private _animationSettings: ToggleAnimationSettings;
-    private _resourceStrings = getCurrentResourceStrings(BannerResourceStringsEN);
+    private _resourceStrings: IBannerResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(BannerResourceStringsEN);
 
-    constructor(public elementRef: ElementRef<HTMLElement>) { }
+    constructor(public elementRef: ElementRef<HTMLElement>) {
+        onResourceChangeHandle(this._destroyRef, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(BannerResourceStringsEN, false);
+        }, this);
+    }
 
     /**
      * Opens the banner

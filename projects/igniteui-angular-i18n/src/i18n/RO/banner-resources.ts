@@ -1,9 +1,7 @@
-import { IBannerResourceStrings } from 'igniteui-angular';
+import { IBannerResourceStrings, convertToIgxResource } from 'igniteui-angular';
+import { BannerResourceStringsRO as ABannerResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Romanian resource strings for IgxBanner
  */
-export const BannerResourceStringsRO = {
-    igx_banner_button_dismiss: 'Îndepărtare'
-} satisfies MakeRequired<IBannerResourceStrings>;
+export const BannerResourceStringsRO: IBannerResourceStrings = convertToIgxResource(ABannerResourceStrings);
