@@ -42,11 +42,11 @@
         }
 
         @include e(notch) {
-            @extend  %igx-input-group__notch !optional;
+            @extend %igx-input-group__notch !optional;
         }
 
         @include e(filler) {
-            @extend  %igx-input-group__filler !optional;
+            @extend %igx-input-group__filler !optional;
         }
 
         @include e(input) {
@@ -111,20 +111,24 @@
             @extend %suffixed !optional;
         }
 
+        @include m(readonly) {
+            @extend %form-group-display--readonly !optional;
+        }
+
         // Textarea modifier
         @include m(textarea-group) {
             @extend %textarea-group !optional;
 
             @include e(bundle-main) {
-                @extend  %form-group-textarea-group-bundle-main !optional;
+                @extend %form-group-textarea-group-bundle-main !optional;
             }
 
             @include e(bundle) {
-                @extend  %form-group-textarea-group-bundle !optional;
+                @extend %form-group-textarea-group-bundle !optional;
             }
 
             @include e(label) {
-                @extend  %form-group-textarea-label !optional;
+                @extend %form-group-textarea-label !optional;
             }
         }
 
@@ -282,6 +286,8 @@
         }
 
         @include m(invalid) {
+            @extend %form-group-display--invalid !optional;
+
             @include e(label) {
                 @extend %form-group-label--error !optional;
             }
