@@ -305,7 +305,7 @@
                         [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
                         [style.min-width]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                         [style.flex-basis]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                        [style.left]="column.rightPinnedOffset" (pointerdown)="grid.navigation.focusOutRowHeader($event)">
+                        (pointerdown)="grid.navigation.focusOutRowHeader($event)">
                     </igx-grid-header-group>
                 }
             }
