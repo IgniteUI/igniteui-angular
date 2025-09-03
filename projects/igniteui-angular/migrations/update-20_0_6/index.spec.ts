@@ -3,104 +3,101 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 import { setupTestTree } from '../common/setup.spec';
 
 describe('Migration 20.0.6 - Replace filteringOptions.filterable', () => {
-    let appTree: UnitTestTree;
-    const runner = new SchematicTestRunner(
-        'ig-migrate',
-        path.join(__dirname, '../migration-collection.json')
-    );
-    const migrationName = 'migration-48';
-    const makeTemplate = (name: string) => `/testSrc/appPrefix/component/${name}.component.html`;
-    const makeScript = (name: string) => `/testSrc/appPrefix/component/${name}.component.ts`;
-    const components = ['igx-simple-combo', 'igx-combo'];
+  let appTree: UnitTestTree;
+  const runner = new SchematicTestRunner(
+    'ig-migrate',
+    path.join(__dirname, '../migration-collection.json')
+  );
+  const migrationName = 'migration-48';
+  const makeTemplate = (name: string) => `/testSrc/appPrefix/component/${name}.component.html`;
+  const makeScript = (name: string) => `/testSrc/appPrefix/component/${name}.component.ts`;
+  const components = ['igx-simple-combo', 'igx-combo'];
 
+  const warnMsg =
+    "Manual migration needed: please use 'disableFiltering' instead of filteringOptions.filterable. Since it has been deprecated.";
 
+  beforeEach(() => {
+    appTree = setupTestTree();
+  });
 
-    beforeEach(() => {
-        appTree = setupTestTree();
+  it('should replace simple inline filteringOptions.filterable true with default behavior of the simple combo', async () => {
+    components.forEach(async component =>{
+      const input = `<${component} [filteringOptions]="{ filterable: true }"></${component}>`;
+      appTree.create(makeTemplate(`${component}-inline-true`), input);
+
+      const tree = await runner.runSchematic(migrationName, {}, appTree);
+      const output = tree.readContent(makeTemplate(`${component}-inline-true`));
+
+      expect(output).not.toContain('[disableFiltering]');
+      expect(output).not.toContain('filterable');
+     });
+  });
+
+  it('should handle mixed object literal correctly', async () => {
+    components.forEach(async component =>{
+      const input = `<${component} [filteringOptions]="{ filterable: false, caseSensitive: true }"></${component}>`;
+      appTree.create(makeTemplate(`${component}-inline2`), input);
+
+      const tree = await runner.runSchematic(migrationName, {}, appTree);
+      const output = tree.readContent(makeTemplate(`${component}-inline2`));
+
+      expect(output).toContain(`[disableFiltering]="true"`);
+      expect(output).toContain(`[filteringOptions]="{ caseSensitive: true }"`);
+      expect(output).not.toContain('filterable');
     });
+  });
 
-    it('should replace simple inline filteringOptions.filterable true with default behavior of the simple combo', async () => {
-        components.forEach(async component =>{
-            const input = `<${component} [filteringOptions]="{ filterable: true }"></${component}>`;
-            appTree.create(makeTemplate(`${component}-inline-true`), input);
+  it('should warn on variable reference', async () => {
+    for (const component of components) {
+      const input = `<${component} [filteringOptions]="filterOpts"></${component}>`;
 
-            const tree = await runner.runSchematic(migrationName, {}, appTree);
-            const output = tree.readContent(makeTemplate(`${component}-inline-true`));
+      appTree.create(makeTemplate(`${component}-referenceInTsFile`), input);
 
-            expect(output).not.toContain('[disableFiltering]');
-            expect(output).not.toContain('filterable');
-        });
-    });
+      const tree = await runner.runSchematic(migrationName, {}, appTree);
+      const output = tree.readContent(makeTemplate(`${component}-referenceInTsFile`));
 
-    it('should handle mixed object literal correctly', async () => {
-        components.forEach(async component =>{
-            const input = `<${component} [filteringOptions]="{ filterable: false, caseSensitive: true }"></${component}>`;
-            appTree.create(makeTemplate(`${component}-inline2`), input);
+      expect(output).toContain('[filteringOptions]');
+      expect(output).toContain(warnMsg);
+    }
+  });
 
-            const tree = await runner.runSchematic(migrationName, {}, appTree);
-            const output = tree.readContent(makeTemplate(`${component}-inline2`));
+  it('should skip adding new [disableFiltering] if already present on igx-combo', async () => {
+    const input = `<igx-combo [disableFiltering]="true" [filteringOptions]="{ filterable: false }"></igx-combo>`;
+    appTree.create(makeTemplate('combo-has-disableFiltering'), input);
 
-            expect(output).toContain(`[disableFiltering]="true"`);
-            expect(output).toContain(`[filteringOptions]="{ caseSensitive: true }"`);
-        });
-    });
+    const tree = await runner.runSchematic(migrationName, {}, appTree);
+    const output = tree.readContent(makeTemplate('combo-has-disableFiltering'));
 
-    it('should warn on variable reference', async () => {
-        components.forEach(async component =>{
-            const input = `<${component} [filteringOptions]="filterOpts""></${component}>`;
-            const warnMsg = "Manual migration needed: please use 'disableFiltering' instead of filteringOptions.filterable." +
-            "Since it has been deprecated.'";
+    const occurrences = (output.match(/\[disableFiltering\]/g) || []).length;
 
-            appTree.create(makeTemplate(`${component}-referenceInTsFile`), input);
+    expect(occurrences).toBe(1);
+    expect(output).not.toContain('filterable');
+  });
 
-            const tree = await runner.runSchematic(migrationName, {}, appTree);
-            const output = tree.readContent(makeTemplate(`${component}-referenceInTsFile`));
+  // TS file tests
 
-            expect(output).toContain('[filteringOptions]');
-            expect(output).toContain(warnMsg);
-        });
-    });
+  it('should insert warning comment before `.filteringOptions.filterable = ...` assignment', async () => {
+    const input = `this.igxCombo.filteringOptions.filterable = false;`;
+    const expectedComment = `// ${warnMsg}`;
 
-    it('should skip adding new [disableFiltering] if already present on igx-combo', async () => {
-        const input = `<igx-combo [disableFiltering]="true" [filteringOptions]="{ filterable: false }"></igx-combo>`;
-        appTree.create(makeTemplate('combo-has-disableFiltering'), input);
+    appTree.create(makeScript('tsWarnOnDirectAssignment'), input);
 
-        const tree = await runner.runSchematic(migrationName, {}, appTree);
-        const output = tree.readContent(makeTemplate('combo-has-disableFiltering'));
+    const tree = await runner.runSchematic(migrationName, {}, appTree);
+    const output = tree.readContent(makeScript('tsWarnOnDirectAssignment'));
 
-        const occurrences = (output.match(/\[disableFiltering\]/g) || []).length;
+    expect(output).toContain(expectedComment);
+    expect(output).toContain('this.igxCombo.filteringOptions.filterable = false;');
+  });
 
-        expect(occurrences).toBe(1);
-        expect(output).not.toContain('filterable');
-    });
+  it('should insert warning comment before `.filteringOptions = { ... }` assignment', async () => {
+    const input = `this.igxCombo.filteringOptions = { filterable: false, caseSensitive: true };`;
+    const expectedComment = `// ${warnMsg}`;
+    appTree.create(makeScript('tsWarnOnObjectAssignment'), input);
 
-    // TS file tests
+    const tree = await runner.runSchematic(migrationName, {}, appTree);
+    const output = tree.readContent(makeScript('tsWarnOnObjectAssignment'));
 
-    it('should insert warning comment before `.filteringOptions.filterable = ...` assignment', async () => {
-        const input = `this.igxCombo.filteringOptions.filterable = false;`;
-        const expectedComment = "// Manual migration needed: please use 'disableFiltering' instead of filteringOptions.filterable." +
-            "Since it has been deprecated.'";
-
-        appTree.create(makeScript('tsWarnOnDirectAssignment'), input);
-
-        const tree = await runner.runSchematic(migrationName, {}, appTree);
-        const output = tree.readContent(makeScript('tsWarnOnDirectAssignment'));
-
-        expect(output).toContain(expectedComment);
-        expect(output).toContain('this.igxCombo.filteringOptions.filterable = false;');
-    });
-
-    it('should insert warning comment before `.filteringOptions = { ... }` assignment', async () => {
-        const input = `this.igxCombo.filteringOptions = { filterable: false, caseSensitive: true };`;
-        const expectedComment = "// Manual migration needed: please use 'disableFiltering' instead of filteringOptions.filterable." +
-            "Since it has been deprecated.'";
-
-        appTree.create(makeScript('tsWarnOnObjectAssignment'), input);
-
-        const tree = await runner.runSchematic(migrationName, {}, appTree);
-        const output = tree.readContent(makeScript('tsWarnOnObjectAssignment'));
-
-        expect(output).toContain(expectedComment);
-        expect(output).toContain('this.igxCombo.filteringOptions = { filterable: false, caseSensitive: true };');
-    });
+    expect(output).toContain(expectedComment);
+    expect(output).toContain('this.igxCombo.filteringOptions = { filterable: false, caseSensitive: true };');
+  });
 });
