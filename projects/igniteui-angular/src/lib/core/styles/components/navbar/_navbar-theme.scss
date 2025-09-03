@@ -22,7 +22,7 @@
         width: 100%;
         min-height: rem(56px);
         max-height: rem(128px);
-        padding-inline: $navbar-padding;
+        padding-inline: pad-inline($navbar-padding);
         background: var-get($theme, 'background');
         color: var-get($theme, 'text-color');
         box-shadow: var-get($theme, 'shadow');

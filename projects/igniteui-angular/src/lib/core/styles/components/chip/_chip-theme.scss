@@ -42,7 +42,7 @@
         width: 100%;
 
         @if $variant == 'indigo' {
-            padding: rem(4px);
+            padding: pad(rem(4px));
             gap: rem(8px);
         }
 
@@ -107,10 +107,12 @@
         justify-content: center;
         text-align: center;
         height: var-get($theme, 'size');
-        padding-inline: sizable(
-            map.get($chip-padding, 'compact'),
-            map.get($chip-padding, 'cosy'),
-            map.get($chip-padding, 'comfortable')
+        padding-inline: pad-inline(
+            sizable(
+                map.get($chip-padding, 'compact'),
+                map.get($chip-padding, 'cosy'),
+                map.get($chip-padding, 'comfortable')
+            )
         );
 
         gap: sizable(rem(3px), rem(6px), rem(8px));
