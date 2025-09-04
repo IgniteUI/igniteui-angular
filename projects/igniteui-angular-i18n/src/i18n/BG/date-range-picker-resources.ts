@@ -7,6 +7,7 @@ import { IDateRangePickerResourceStrings } from 'igniteui-angular';
 export const DateRangePickerResourceStringsBG = {
     igx_date_range_picker_date_separator: 'до',
     igx_date_range_picker_done_button: 'Завърши',
+    igx_date_range_picker_cancel_button: 'Отмени',
     igx_date_range_picker_last7Days: 'Последните 7 дни',
     igx_date_range_picker_currentMonth: 'Текущ месец',
     igx_date_range_picker_last30Days: 'Последните 30 дни',
