@@ -83,9 +83,7 @@
                     <igx-grid-header-group class="igx-grid-thead__subgroup"
                         [ngClass]="child.headerGroupClasses"
                         [ngStyle]="child.headerGroupStyles | igxHeaderGroupStyle:child:grid.pipeTrigger"
-                        [column]="child"
-                        [style.min-width]="child.resolvedWidth | igxHeaderGroupWidth:grid.hasColumnLayouts"
-                        [style.flex-basis]="child.resolvedWidth | igxHeaderGroupWidth:grid.hasColumnLayouts">
+                        [column]="child">
                     </igx-grid-header-group>
                 }
             }
@@ -111,6 +109,7 @@
         [ghostHost]="grid.outlet.nativeElement"
         [attr.droppable]="true"
         (pointerdown)="activate()"
+        [style.width]="column.resolvedWidth"
         [igxColumnMovingDrop]="column"
         [column]="column"
     >

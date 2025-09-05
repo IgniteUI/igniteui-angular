@@ -37,7 +37,7 @@ import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-header-row',
     templateUrl: './grid-header-row.component.html',
-    imports: [IgxColumnMovingDropDirective, NgTemplateOutlet, NgClass, IgxGridHeaderGroupComponent, NgStyle, IgxGridForOfDirective, IgxGridFilteringRowComponent, IgxCheckboxComponent, IgxGridTopLevelColumns, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
+    imports: [IgxColumnMovingDropDirective, NgTemplateOutlet, NgClass, IgxGridHeaderGroupComponent, NgStyle, IgxGridForOfDirective, IgxGridFilteringRowComponent, IgxCheckboxComponent, IgxGridTopLevelColumns, IgxHeaderGroupStylePipe]
 })
 export class IgxGridHeaderRowComponent implements DoCheck {
 

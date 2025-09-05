@@ -36,7 +36,7 @@ const Z_INDEX = 9999;
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-header-group',
     templateUrl: './grid-header-group.component.html',
-    imports: [NgClass, NgStyle, IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxIconComponent, NgTemplateOutlet, IgxGridHeaderComponent, IgxGridFilteringCellComponent, IgxResizeHandleDirective, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
+    imports: [NgClass, NgStyle, IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxIconComponent, NgTemplateOutlet, IgxGridHeaderComponent, IgxGridFilteringCellComponent, IgxResizeHandleDirective, IgxHeaderGroupStylePipe]
 })
 export class IgxGridHeaderGroupComponent implements DoCheck {
 
@@ -120,21 +120,6 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         public colResizingService: IgxColumnResizingService,
         public filteringService: IgxFilteringService,
         protected platform: PlatformUtil) { }
-
-    @HostBinding('class.igx-grid-th--pinned')
-    public get pinnedCss() {
-        return this.isPinned;
-    }
-
-    @HostBinding('class.igx-grid-th--pinned-last')
-    public get pinnedLastCss() {
-        return this.isLastPinned;
-    }
-
-    @HostBinding('class.igx-grid-th--pinned-first')
-    public get pinnedFirstCSS() {
-        return this.isFirstPinned;
-    }
 
     @HostBinding('class.igx-grid__drag-col-header')
     public get headerDragCss() {
