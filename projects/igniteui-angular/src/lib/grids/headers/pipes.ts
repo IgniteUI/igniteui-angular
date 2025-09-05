@@ -15,19 +15,6 @@ export class SortingIndexPipe implements PipeTransform {
 }
 
 @Pipe({
-    name: 'igxHeaderGroupWidth',
-    standalone: true
-})
-export class IgxHeaderGroupWidthPipe implements PipeTransform {
-
-    public transform(width: any, hasLayout: boolean) {
-        const isFitContent = width === 'fit-content';
-        return hasLayout ? '' : isFitContent ? width : `${parseFloat(width)}px`;
-    }
-}
-
-
-@Pipe({
     name: 'igxHeaderGroupStyle',
     standalone: true
 })

@@ -20,7 +20,7 @@ import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-
 import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { GridSelectionMode } from '../common/enums';
 import { PlatformUtil } from '../../core/utils';
-import { IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe } from './pipes';
+import { IgxHeaderGroupStylePipe } from './pipes';
 import { IgxResizeHandleDirective } from '../resizing/resize-handle.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';

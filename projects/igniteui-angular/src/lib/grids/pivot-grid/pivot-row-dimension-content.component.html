@@ -3,9 +3,9 @@
     <div class="igx-grid__tr igx-grid__tr-header-row" role="row" [style.width.px]="width">
             <igx-pivot-row-dimension-header-group [ngClass]="rowDimensionColumn.headerGroupClasses"
                 [ngStyle]="rowDimensionColumn.headerGroupStyles | igxHeaderGroupStyle:rowDimensionColumn:grid.pipeTrigger" [column]="rowDimensionColumn"
-                [style.min-width]="getHeaderWidthFromDimension() | igxHeaderGroupWidth:hasMRL"
-                [style.width]="getHeaderWidthFromDimension() | igxHeaderGroupWidth:hasMRL"
-                [style.flex-basis]="getHeaderWidthFromDimension() | igxHeaderGroupWidth:hasMRL"
+                [style.min-width]="getHeaderWidthFromDimension()"
+                [style.width]="getHeaderWidthFromDimension()"
+                [style.flex-basis]="getHeaderWidthFromDimension()"
                 [rowIndex]="rowIndex"
                 [colIndex]="colIndex"
                 [layout]="layout"

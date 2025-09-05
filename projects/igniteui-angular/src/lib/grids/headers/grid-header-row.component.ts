@@ -19,7 +19,7 @@ import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-
 import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
-import { IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe } from './pipes';
+import { IgxHeaderGroupStylePipe } from './pipes';
 import { IgxGridTopLevelColumns } from '../common/pipes';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
