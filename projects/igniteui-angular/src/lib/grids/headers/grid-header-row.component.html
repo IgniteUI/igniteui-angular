@@ -67,8 +67,8 @@
                     [ngClass]="column.headerGroupClasses"
                     [ngStyle]="column.headerGroupStyles | igxHeaderGroupStyle:column:grid.pipeTrigger"
                     [column]="column"
-                    [style.min-width]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                    [style.flex-basis]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL">
+                    [style.min-width]="column.resolvedWidth | igxHeaderGroupWidth:hasMRL"
+                    [style.flex-basis]="column.resolvedWidth | igxHeaderGroupWidth:hasMRL">
                 </igx-grid-header-group>
             }
         }
@@ -86,8 +86,8 @@
                 [ngClass]="column.headerGroupClasses"
                 [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger"
                 [column]="column"
-                [style.min-width]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                [style.flex-basis]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL">
+                [style.min-width]="column.resolvedWidth | igxHeaderGroupWidth:hasMRL"
+                [style.flex-basis]="column.resolvedWidth | igxHeaderGroupWidth:hasMRL">
             </igx-grid-header-group>
         </ng-template>
 
@@ -98,8 +98,8 @@
                     [ngClass]="column.headerGroupClasses"
                     [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger"
                     [column]="column"
-                    [style.min-width]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                    [style.flex-basis]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                    [style.min-width]="column.resolvedWidth | igxHeaderGroupWidth:hasMRL"
+                    [style.flex-basis]="column.resolvedWidth | igxHeaderGroupWidth:hasMRL"
                     [style.left]="column.rightPinnedOffset">
                 </igx-grid-header-group>
             }
