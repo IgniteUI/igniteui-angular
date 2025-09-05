@@ -19,7 +19,7 @@ import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-
 import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
-import { IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe } from './pipes';
+import { IgxHeaderGroupStylePipe } from './pipes';
 import { IgxGridTopLevelColumns } from '../common/pipes';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
@@ -37,7 +37,7 @@ import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-header-row',
     templateUrl: './grid-header-row.component.html',
-    imports: [IgxColumnMovingDropDirective, NgTemplateOutlet, NgClass, IgxGridHeaderGroupComponent, NgStyle, IgxGridForOfDirective, IgxGridFilteringRowComponent, IgxCheckboxComponent, IgxGridTopLevelColumns, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
+    imports: [IgxColumnMovingDropDirective, NgTemplateOutlet, NgClass, IgxGridHeaderGroupComponent, NgStyle, IgxGridForOfDirective, IgxGridFilteringRowComponent, IgxCheckboxComponent, IgxGridTopLevelColumns, IgxHeaderGroupStylePipe]
 })
 export class IgxGridHeaderRowComponent implements DoCheck {
 

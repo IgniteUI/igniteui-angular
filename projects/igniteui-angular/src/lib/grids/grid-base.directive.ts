@@ -4560,24 +4560,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
     }
 
-    /**
-     * Returns the `IgxGridHeaderGroupComponent`'s minimum allowed width.
-     *
-     * @remarks
-     * Used internally for restricting header group component width.
-     * The values below depend on the header cell default right/left padding values.
-     */
-    public get defaultHeaderGroupMinWidth(): number {
-        switch (this.gridSize) {
-            case Size.Medium:
-                return 32;
-            case Size.Small:
-                return 24;
-            default:
-                return 48;
-        }
-    }
-
     /** @hidden @internal */
     public get pinnedStartWidth() {
         if (!isNaN(this._pinnedStartWidth)) {
@@ -4743,7 +4725,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     public getHeaderGroupWidth(column: IgxColumnComponent): string {
         return this.hasColumnLayouts
             ? ''
-            : `${Math.max(parseFloat(column.calcWidth), this.defaultHeaderGroupMinWidth)}px`;
+            : `${parseFloat(column.calcWidth)}px`;
     }
 
     /**

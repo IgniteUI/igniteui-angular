@@ -23,7 +23,7 @@ import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component'
 import { IPivotDimension, IPivotDimensionData, IPivotGridGroupRecord } from './pivot-grid.interface';
 import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
 import { PivotUtil } from './pivot-util';
-import { IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe } from '../headers/pipes';
+import { IgxHeaderGroupStylePipe } from '../headers/pipes';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { NgClass, NgStyle } from '@angular/common';
 import { IMultiRowLayoutNode } from '../common/types';
@@ -40,7 +40,7 @@ import { IMultiRowLayoutNode } from '../common/types';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-row-dimension-content',
     templateUrl: './pivot-row-dimension-content.component.html',
-    imports: [IgxPivotRowDimensionHeaderGroupComponent, NgClass, NgStyle, IgxIconComponent, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
+    imports: [IgxPivotRowDimensionHeaderGroupComponent, NgClass, NgStyle, IgxIconComponent, IgxHeaderGroupStylePipe]
 })
 export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowComponent implements OnChanges {
     @HostBinding('style.grid-row-start')
