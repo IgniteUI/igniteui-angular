@@ -60,6 +60,11 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         return this.column.colStart;
     }
 
+    @HostBinding('class.igx-grid-th--pinned')
+    public get pinnedCss() {
+        return this.column.pinned;
+    }
+
     public get headerID() {
         return `${this.grid.id}_-1_${this.column.level}_${this.column.visibleIndex}`;
     }
