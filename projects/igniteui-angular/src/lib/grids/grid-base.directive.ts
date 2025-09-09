@@ -4605,9 +4605,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
             parseFloat(headerStyle.borderRightWidth);
 
-        // Take into consideration border since column pinning applies borders to it if its not a columnGroup.
-        const borderSize = parseFloat(headerStyle.borderRightWidth) + parseFloat(headerStyle.borderLeftWidth);
-        return { width: Math.ceil(headerWidth), padding: Math.ceil(headerPadding + borderSize) };
+        return { width: Math.ceil(headerWidth), padding: Math.ceil(headerPadding) };
     }
 
     /**
