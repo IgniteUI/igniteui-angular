@@ -4599,16 +4599,14 @@ export abstract class IgxGridBaseDirective implements GridType,
     public getHeaderCellWidth(element: HTMLElement): ISizeInfo {
         const range = this.document.createRange();
         const headerWidth = this.platform.getNodeSizeViaRange(range,
-            element,
-            element.parentElement);
+            element, element);
 
         const headerStyle = this.document.defaultView.getComputedStyle(element);
         const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
             parseFloat(headerStyle.borderRightWidth);
 
-        // Take into consideration the header group element, since column pinning applies borders to it if its not a columnGroup.
-        const headerGroupStyle = this.document.defaultView.getComputedStyle(element.parentElement);
-        const borderSize = parseFloat(headerGroupStyle.borderRightWidth) + parseFloat(headerGroupStyle.borderLeftWidth);
+        // Take into consideration border since column pinning applies borders to it if its not a columnGroup.
+        const borderSize = parseFloat(headerStyle.borderRightWidth) + parseFloat(headerStyle.borderLeftWidth);
         return { width: Math.ceil(headerWidth), padding: Math.ceil(headerPadding + borderSize) };
     }
 
