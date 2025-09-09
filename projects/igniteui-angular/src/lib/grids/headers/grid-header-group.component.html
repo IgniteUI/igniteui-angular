@@ -65,6 +65,8 @@
         (click)="groupClicked($event)"
         (pointerenter)="onPinterEnter()"
         (pointerleave)="onPointerLeave()"
+        [style.max-width]="column.resolvedWidth"
+        [style.flex-basis]="column.resolvedWidth"
         >
         @if (column.collapsible) {
             <div class="igx-grid-th__expander" (pointerdown)="onPointerDownIndicator($event)" (click)="toggleExpandState($event)">
