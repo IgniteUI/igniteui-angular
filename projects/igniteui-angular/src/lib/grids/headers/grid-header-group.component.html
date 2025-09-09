@@ -117,7 +117,7 @@
     >
     </igx-grid-header>
     @if (grid.allowFiltering && grid.filterMode === 'quickFilter') {
-        <igx-grid-filtering-cell [column]="column" [attr.draggable]="false"></igx-grid-filtering-cell>
+        <igx-grid-filtering-cell [column]="column" [attr.draggable]="false" [style.width]="column.resolvedWidth"></igx-grid-filtering-cell>
     }
     @if (!column.columnGroup && column.resizable) {
         <span class="igx-grid-th__resize-handle"
