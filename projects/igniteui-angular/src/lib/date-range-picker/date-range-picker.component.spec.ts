@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync, flush } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy } from '@angular/core';
-import { IgxInputDirective, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../input-group/public_api';
+import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../input-group/public_api';
 import { PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../date-common/types';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
@@ -20,7 +20,7 @@ import { Subject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { AnimationService } from '../services/animation/animation';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
-import { IgxPickerToggleComponent } from '../date-common/picker-icons.common';
+import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-common/picker-icons.common';
 import { IgxIconComponent } from '../icon/icon.component';
 import { registerLocaleData } from "@angular/common";
 import localeJa from "@angular/common/locales/ja";
@@ -30,6 +30,7 @@ import { CalendarDay } from '../calendar/common/model';
 // The number of milliseconds in one day
 const DEBOUNCE_TIME = 16;
 const DEFAULT_ICON_TEXT = 'date_range';
+const CLEAR_ICON_TEXT = 'clear';
 const DEFAULT_FORMAT_OPTIONS = { day: '2-digit', month: '2-digit', year: 'numeric' };
 const CSS_CLASS_INPUT_BUNDLE = '.igx-input-group__bundle';
 const CSS_CLASS_INPUT_START = '.igx-input-group__bundle-start'
@@ -448,6 +449,100 @@ describe('IgxDateRangePicker', () => {
                 });
             });
 
+            describe('Clear tests', () => {
+                const range = { start: new Date(2025, 1, 1), end: new Date(2025, 1, 2) };
+
+                describe('Default clear icon', () => {
+                    it('should display default clear icon when value is set', () => {
+                        const inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
+                        let suffix = inputGroup.query(By.directive(IgxSuffixDirective));
+                        expect(suffix).toBeNull();
+
+                        dateRange.value = range;
+                        fixture.detectChanges();
+
+                        suffix = inputGroup.query(By.directive(IgxSuffixDirective));
+                        const icon = suffix.query(By.css(CSS_CLASS_ICON));
+                        expect(icon).not.toBeNull();
+                        expect(icon.nativeElement.textContent.trim()).toEqual(CLEAR_ICON_TEXT);
+                    });
+
+                    it('should clear the value when clicking the default clear icon (suffix)', fakeAsync(() => {
+                        dateRange.value = range;
+                        fixture.detectChanges();
+
+                        const inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
+                        let suffix = inputGroup.query(By.directive(IgxSuffixDirective));
+                        spyOn(dateRange.valueChange, 'emit');
+
+                        UIInteractions.simulateClickAndSelectEvent(suffix.nativeElement);
+                        tick();
+                        fixture.detectChanges();
+
+                        expect(dateRange.value).toBeNull();
+                        suffix = inputGroup.query(By.directive(IgxSuffixDirective));
+                        expect(suffix).toBeNull();
+                        expect(dateRange.valueChange.emit).toHaveBeenCalledOnceWith(null);
+                    }));
+
+                    it('should not clear the value when clicking element in the suffix that is not the clear icon', fakeAsync(() => {
+                        fixture = TestBed.createComponent(DateRangeTemplatesComponent);
+                        fixture.detectChanges();
+
+                        dateRange = fixture.debugElement.queryAll(By.directive(IgxDateRangePickerComponent))[0].componentInstance;
+                        dateRange.value = range;
+                        fixture.detectChanges();
+
+                        const suffixIconText = 'flight_land';
+                        const inputGroupsEnd = fixture.debugElement.queryAll(By.css(CSS_CLASS_INPUT_END));
+
+                        const customSuffix = inputGroupsEnd[1];
+                        expect(customSuffix.children[0].nativeElement.innerText).toBe(suffixIconText);
+                        expect(customSuffix.children[0].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
+
+                        const suffix = inputGroupsEnd[0];
+                        const icon = suffix.query(By.css(CSS_CLASS_ICON));
+                        expect(icon).not.toBeNull();
+                        expect(icon.nativeElement.textContent.trim()).toEqual(CLEAR_ICON_TEXT);
+
+                        UIInteractions.simulateClickAndSelectEvent(customSuffix.nativeElement);
+                        tick();
+                        fixture.detectChanges();
+
+                        expect(dateRange.value).toEqual(range);
+                    }));
+                });
+
+                describe('Projected clear icon', () => {
+                    it('should clear the value when clicking the projected clear icon', fakeAsync(() => {
+                        fixture = TestBed.createComponent(DateRangeTemplatesComponent);
+                        fixture.detectChanges();
+
+                        dateRange = fixture.debugElement.queryAll(By.directive(IgxDateRangePickerComponent))[4].componentInstance;
+
+                        const pickerClear = fixture.debugElement.queryAll(By.directive(IgxPickerClearComponent))[0];
+                        // Projected clear icon is rendered even if value is unassigned
+                        expect(pickerClear).not.toBeNull();
+
+                        const suffixes = dateRange.element.nativeElement.querySelectorAll(CSS_CLASS_INPUT_END);
+                        expect(suffixes.length).toBe(1);
+                        // the default clear icon is overridden by the projected one
+                        expect(suffixes[0].textContent.trim()).toEqual('delete');
+
+                        dateRange.value = range;
+                        fixture.detectChanges();
+
+                        spyOn(dateRange.valueChange, 'emit');
+                        UIInteractions.simulateClickAndSelectEvent(pickerClear.nativeElement);
+                        tick();
+                        fixture.detectChanges();
+
+                        expect(dateRange.value).toBeNull();
+                        expect(dateRange.valueChange.emit).toHaveBeenCalledOnceWith(null);
+                    }));
+                });
+            });
+
             describe('Properties & events tests', () => {
                 it('should display placeholder', () => {
                     fixture.detectChanges();
@@ -795,19 +890,35 @@ describe('IgxDateRangePicker', () => {
                 }));
             });
 
-            it('should expand the calendar if the default icon is clicked', fakeAsync(() => {
-                const input = fixture.debugElement.query(By.css('igx-input-group'));
-                input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            it('should expand the calendar if the default icon (prefix) is clicked', fakeAsync(() => {
+                const prefix = fixture.debugElement.query(By.directive(IgxPrefixDirective));
+                prefix.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
                 expect(fixture.componentInstance.dateRange.collapsed).toBeFalsy();
             }));
 
-            it('should not expand the calendar if the default icon is clicked when disabled is set to true', fakeAsync(() => {
+            it('should not expand the calendar if the input is clicked in dropdown mode', fakeAsync(() => {
+                UIInteractions.simulateClickAndSelectEvent(dateRange.getEditElement());
+                tick();
+                fixture.detectChanges();
+                expect(fixture.componentInstance.dateRange.collapsed).toBeTruthy();
+            }));
+
+            it('should expand the calendar if the input is clicked in dialog mode', fakeAsync(() => {
+                dateRange.mode = PickerInteractionMode.Dialog;
+                fixture.detectChanges();
+                UIInteractions.simulateClickAndSelectEvent(dateRange.getEditElement());
+                fixture.detectChanges();
+                tick();
+                expect(fixture.componentInstance.dateRange.collapsed).toBeFalsy();
+            }));
+
+            it('should not expand the calendar if the default icon (in prefix) is clicked when disabled is set to true', fakeAsync(() => {
                 fixture.componentInstance.disabled = true;
                 fixture.detectChanges();
-                const input = fixture.debugElement.query(By.css('igx-input-group'));
-                input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                const prefix = fixture.debugElement.query(By.directive(IgxPrefixDirective));
+                prefix.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
                 expect(fixture.componentInstance.dateRange.collapsed).toBeTruthy();
@@ -1486,6 +1597,16 @@ describe('IgxDateRangePicker', () => {
                 expect(fixture.componentInstance.dateRange.collapsed).toBeFalsy();
             }));
 
+            it('should expand the calendar if any of the inputs is clicked in dialog mode', fakeAsync(() => {
+                fixture.componentInstance.mode = PickerInteractionMode.Dialog;
+                fixture.detectChanges();
+                endInput = fixture.debugElement.queryAll(By.css(CSS_CLASS_INPUT))[1];
+                endInput.nativeElement.dispatchEvent(new Event('click'));
+                fixture.detectChanges();
+                tick();
+                expect(fixture.componentInstance.dateRange.collapsed).toBeFalsy();
+            }));
+
             it('should not expand the calendar if the default icon is clicked when disabled is set to true', fakeAsync(() => {
                 fixture.componentInstance.disabled = true;
                 fixture.detectChanges();
@@ -2135,6 +2256,39 @@ describe('IgxDateRangePicker', () => {
                     }
                 }));
             });
+
+            it('should render projected clear icons which clear the range on click', () => {
+                fixture = TestBed.createComponent(DateRangeTwoInputsClearComponent);
+                fixture.detectChanges();
+
+                const drp = fixture.debugElement.query(By.directive(IgxDateRangePickerComponent)).componentInstance;
+                const start = fixture.debugElement.query(By.directive(IgxDateRangeStartComponent));
+                const end = fixture.debugElement.query(By.directive(IgxDateRangeEndComponent));
+
+                const startSuffix = start.nativeElement.querySelectorAll(CSS_CLASS_INPUT_END)[0];
+                const endSuffix = end.nativeElement.querySelectorAll(CSS_CLASS_INPUT_END)[0];
+
+                expect(startSuffix.innerText).toBe('delete');
+                expect(endSuffix.innerText).toBe('delete');
+
+                const pickerClearComponents = fixture.debugElement.queryAll(By.directive(IgxPickerClearComponent));
+
+                drp.value = { start: new Date(2025, 0, 1), end: new Date(2025, 0, 2) };
+                fixture.detectChanges();
+
+                UIInteractions.simulateClickAndSelectEvent(pickerClearComponents[0].nativeNode);
+                fixture.detectChanges();
+
+                expect(drp.value).toEqual(null);
+
+                drp.value = { start: new Date(2025, 0, 1), end: new Date(2025, 0, 2) };
+                fixture.detectChanges();
+
+                UIInteractions.simulateClickAndSelectEvent(pickerClearComponents[1].nativeNode);
+                fixture.detectChanges();
+
+                expect(drp.value).toEqual(null);
+            });
         });
     });
 });
@@ -2234,6 +2388,29 @@ export class DateRangeTwoInputsNgModelTestComponent extends DateRangeTestCompone
 }
 
 @Component({
+    selector: 'igx-date-range-two-inputs-clear',
+    template: `
+        <igx-date-range-picker>
+            <igx-date-range-start>
+                <input igxInput igxDateTimeEditor type="text">
+                <igx-picker-clear igxSuffix>
+                    <igx-icon>delete</igx-icon>
+                </igx-picker-clear>
+            </igx-date-range-start>
+            <igx-date-range-end>
+                <input igxInput igxDateTimeEditor type="text">
+                <igx-picker-clear igxSuffix>
+                    <igx-icon>delete</igx-icon>
+                </igx-picker-clear>
+            </igx-date-range-end>
+        </igx-date-range-picker>`,
+    imports: [IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent, IgxInputDirective,
+        IgxDateTimeEditorDirective, FormsModule, IgxPickerClearComponent, IgxIconComponent, IgxSuffixDirective]
+})
+export class DateRangeTwoInputsClearComponent extends DateRangeTestComponent {
+}
+
+@Component({
     selector: 'igx-date-range-single-input-label-test',
     template: `
     <igx-date-range-picker [value]="date" [mode]="'dropdown'" [formatter]="formatter">
@@ -2291,11 +2468,16 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
                 <igx-icon>flight_land</igx-icon>
             </igx-picker-toggle>
             <igx-suffix>
-            <igx-icon>
-                calendar_view_day
-            </igx-icon>
-        </igx-suffix>
+                <igx-icon>
+                    calendar_view_day
+                </igx-icon>
+            </igx-suffix>
         </igx-date-range-end>
+    </igx-date-range-picker>
+     <igx-date-range-picker>
+        <igx-picker-clear igxSuffix>
+            <igx-icon>delete</igx-icon>
+        </igx-picker-clear>
     </igx-date-range-picker>
     `,
     imports: [
@@ -2303,6 +2485,7 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
         IgxDateRangeStartComponent,
         IgxDateRangeEndComponent,
         IgxPickerToggleComponent,
+        IgxPickerClearComponent,
         IgxIconComponent,
         FormsModule,
         IgxInputDirective,
