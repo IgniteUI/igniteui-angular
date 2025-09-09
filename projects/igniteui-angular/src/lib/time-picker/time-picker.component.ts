@@ -45,7 +45,7 @@ import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-time-editor.directive';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from '../core/i18n/time-picker-resources';
-import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs } from '../core/utils';
+import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs, onResourceChangeHandle } from '../core/utils';
 import { PickerInteractionMode } from '../date-common/types';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
@@ -445,7 +445,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private _dateMinValue: Date;
     private _dateMaxValue: Date;
     private _selectedDate: Date;
-    private _resourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN);
+    private _resourceStrings: ITimePickerResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN);
     private _okButtonLabel = null;
     private _cancelButtonLabel = null;
     private _itemsDelta: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds' | 'fractionalSeconds'> =
@@ -530,7 +531,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ITimePickerResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -607,7 +608,9 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         private cdr: ChangeDetectorRef,
     ) {
         super(element, _localeId, _inputGroupType);
-        this.locale = this.locale || this._localeId;
+        onResourceChangeHandle(this._destroy$, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN, false);
+        }, this);
     }
 
     /** @hidden @internal */

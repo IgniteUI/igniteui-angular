@@ -11,7 +11,7 @@ import {
     OnDestroy,
     Inject
 } from '@angular/core';
-import { NgTemplateOutlet, DecimalPipe, DatePipe, getLocaleCurrencyCode, PercentPipe, CurrencyPipe } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -27,7 +27,8 @@ import { ISelectionNode } from '../common/types';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxBadgeComponent } from '../../badge/badge.component';
 import { IgxIconComponent } from '../../icon/icon.component';
-import { IgxColumnFormatterPipe } from '../common/pipes';
+import { IgxColumnFormatterPipe, IgxCurrencyFormatterPipe, IgxDateFormatterPipe, IgxNumberFormatterPipe, IgxPercentFormatterPipe } from '../common/pipes';
+import { getCurrencyCode } from '../../core/utils';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,10 +36,10 @@ import { IgxColumnFormatterPipe } from '../common/pipes';
     templateUrl: './groupby-row.component.html',
     imports: [
         NgTemplateOutlet,
-        DecimalPipe,
-        DatePipe,
-        PercentPipe,
-        CurrencyPipe,
+        IgxNumberFormatterPipe,
+        IgxDateFormatterPipe,
+        IgxPercentFormatterPipe,
+        IgxCurrencyFormatterPipe,
         IgxIconComponent,
         IgxBadgeComponent,
         IgxCheckboxComponent,
@@ -139,8 +140,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
 
     /** @hidden @internal */
     public get currencyCode(): string {
-        return this.groupRow.column.pipeArgs.currencyCode ?
-            this.groupRow.column.pipeArgs.currencyCode : getLocaleCurrencyCode(this.grid.locale);
+        return getCurrencyCode(this.grid.locale, this.groupRow.column.pipeArgs.currencyCode);
     }
 
     constructor(

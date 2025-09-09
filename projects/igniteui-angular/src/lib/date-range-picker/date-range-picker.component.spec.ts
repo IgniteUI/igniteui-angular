@@ -136,7 +136,9 @@ describe('IgxDateRangePicker', () => {
             mockAnimationService = new IgxAngularAnimationService(mockAnimationBuilder);
             overlay = new IgxOverlayService(
                 mockApplicationRef, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
-            mockCalendar = new IgxCalendarComponent(platform, 'en');
+            mockCalendar = TestBed.runInInjectionContext(() => {
+                return new IgxCalendarComponent(platform, 'en');
+            });
 
             mockDaysView = {
                 focusActiveDate: jasmine.createSpy()
@@ -2010,7 +2012,7 @@ describe('IgxDateRangePicker', () => {
                 dateRange.weekStart = WEEKDAYS.FRIDAY;
                 fixture.detectChanges();
 
-                expect(dateRange.locale).toEqual('en-US');
+                expect(dateRange.locale).toEqual('frrr');
                 expect(dateRange.weekStart).toEqual(WEEKDAYS.FRIDAY);
             }));
 
