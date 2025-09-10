@@ -109,6 +109,10 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
             return filterItem;
         });
     }
+
+    protected override getRecord(item: any) {
+        return item.data;
+    }
 }
 
 export class TreeGridFormattedValuesFilteringStrategy extends TreeGridFilteringStrategy {
