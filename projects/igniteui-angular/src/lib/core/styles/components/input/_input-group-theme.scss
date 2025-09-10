@@ -1830,6 +1830,15 @@
             background: var(--igx-input-group-input-suffix-background, transparent);
             color: var(--igx-input-group-input-suffix-color, var(--ig-primary-500));
         }
+
+        &%form-group-display--readonly {
+            igx-prefix,
+            [igxPrefix],
+            igx-suffix,
+            [igxSuffix] {
+                color: var(--igx-input-group-disabled-text-color, var(--ig-gray-500));
+            }
+        }
     }
 
     %igx-input-group-fluent-search--focused {
@@ -1841,6 +1850,13 @@
         igx-suffix,
         [igxSuffix] {
             color: var(--igx-input-group-input-suffix-color--focused, var(--ig-gray-900));
+        }
+
+        &%form-group-display--readonly {
+            igx-suffix,
+            [igxSuffix] {
+                color: var(--igx-input-group-input-suffix-color--focused, var(--ig-gray-900));
+            }
         }
     }
 
