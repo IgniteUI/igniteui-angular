@@ -743,7 +743,7 @@
         @include tree($tree-theme-map);
     }
 
-    @if is-used('igx-watermark', $exclude) {
+    @if is-used('igc-trial-watermark', $exclude) {
         $watermark-theme-map: watermark-theme(
             $schema: $schema,
         );
