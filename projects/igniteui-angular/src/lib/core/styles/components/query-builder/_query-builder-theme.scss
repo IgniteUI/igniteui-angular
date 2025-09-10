@@ -12,7 +12,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The grid theme used to style the component.
 @mixin query-builder($theme) {
-    @include css-vars($theme);
+    @include css-vars($theme, 'igx-query-builder');
 
     $variant: map.get($theme, '_meta', 'theme');
     $theme-variant: map.get($theme, '_meta', 'variant');

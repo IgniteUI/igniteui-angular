@@ -5,7 +5,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin highlight($theme) {
-    @include css-vars($theme);
+    @include css-vars($theme, '.igx-highlight');
 
     %igx-highlight {
         color: var-get($theme, 'resting-color');

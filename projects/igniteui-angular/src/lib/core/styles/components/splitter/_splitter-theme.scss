@@ -7,7 +7,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin splitter($theme) {
-    @include css-vars($theme);
+    @include css-vars($theme, 'igx-splitter');
     $splitter-color: var-get($theme, 'bar-color');
     $hitbox-size: rem(4px);
     $debug-hitbox: false;
