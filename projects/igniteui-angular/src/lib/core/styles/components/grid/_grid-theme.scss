@@ -18,7 +18,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} excel-filtering
 @mixin grid($theme) {
-    @include css-vars($theme);
+    @include css-vars($theme, 'igx-grid, igx-hierarchical-grid, igx-pivot-grid, igx-tree-grid, igx-advanced-filtering-dialog, igx-grid-excel-style-filtering, .igx-excel-filter__secondary');
 
     @include scale-in-ver-center();
 

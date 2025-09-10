@@ -5,7 +5,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin grid-summary($theme) {
-    @include css-vars($theme);
+    @include css-vars($theme, '.igx-grid-summary');
 
     $variant: map.get($theme, '_meta', 'theme');
 
