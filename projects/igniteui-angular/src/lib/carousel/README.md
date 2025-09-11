@@ -34,8 +34,9 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | `next()` | void | Switches to the next slide. Emits `slideChanged` event. |
 | `add(slide: IgxSlide)` | void | Adds a slide to the carousel. Emits `slideAdded` event. |
 | `remove(slide: IgxSlide)` | void | Removes an existing slide from the carousel. Emits `slideRemoved` event. |
-| `get(index: Number)` | IgxSlide or void | Returns the slide with the given index or null. |
-| `select(slide: IgxSlide, direction: Direction)`| void | Selects the slide and the direction to transition to. Emits `slideChanged` event. |
+| `get(index: number)` | IgxSlide or void | Returns the slide with the given index or null. |
+| `select(slide: IgxSlide, direction: Direction)`| void | Switches to the passed-in slide with a given direction. Emits `slideChanged` event. |
+| `select(index: number, direction: Direction)`| void | Switches to slide by index with a given direction. Emits `slideChanged` event. |
 
 ### Keyboard navigation
 

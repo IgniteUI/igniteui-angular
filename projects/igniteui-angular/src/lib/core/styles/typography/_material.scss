@@ -32,6 +32,7 @@
 @use '../components/tree/tree-theme' as *;
 @use '../components/label/label-theme' as *;
 @use '../components/query-builder/query-builder-theme' as *;
+@use '../components/input/file-input-theme' as *;
 
 @mixin typography() {
     @include badge-typography();
@@ -68,4 +69,5 @@
     @include tree-typography();
     @include label-typography();
 	@include query-builder-typography();
+	@include file-input-typography();
 }
