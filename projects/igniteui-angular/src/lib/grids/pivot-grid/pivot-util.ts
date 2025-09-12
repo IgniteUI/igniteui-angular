@@ -3,7 +3,7 @@ import { DataUtil, GridColumnDataType } from '../../data-operations/data-util';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
-import { PivotGridType } from '../common/grid.interface';
+import { ColumnType, PivotGridType } from '../common/grid.interface';
 import { IGridSortingStrategy, IgxSorting } from '../common/strategy';
 import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
 import { IPivotAggregator, IPivotConfiguration, IPivotDimension, IPivotGridRecord, IPivotKeys, IPivotValue, PivotDimensionType, PivotSummaryPosition } from './pivot-grid.interface';
@@ -88,13 +88,13 @@ export class PivotUtil {
     }
 
     public static flattenGroupsHorizontally(data: IPivotGridRecord[],
-                                            dimension: IPivotDimension,
-                                            expansionStates,
-                                            defaultExpand: boolean,
-                                            visibleDimensions: IPivotDimension[],
-                                            summariesPosition: PivotSummaryPosition,
-                                            parent?: IPivotDimension,
-                                            parentRec?: IPivotGridRecord) {
+        dimension: IPivotDimension,
+        expansionStates,
+        defaultExpand: boolean,
+        visibleDimensions: IPivotDimension[],
+        summariesPosition: PivotSummaryPosition,
+        parent?: IPivotDimension,
+        parentRec?: IPivotGridRecord) {
         for (let i = 0; i < data.length; i++) {
             const rec = data[i];
             const field = dimension.memberName;
@@ -209,14 +209,18 @@ export class PivotUtil {
     }
 
     public static sort(data: IPivotGridRecord[], expressions: ISortingExpression[], sorting: IGridSortingStrategy = new IgxSorting()): any[] {
-        data.forEach(rec => {
+        for (const rec of data) {
             const children = rec.children;
-            if (children) {
-                children.forEach(x => {
-                    this.sort(x, expressions, sorting);
-                });
+            for (const [key, child] of children) {
+                /**
+                * DataUtil.sort is returning new reference of the sorted array
+                * because of the Schwartizian transform
+                */
+                const sorted = this.sort(child, expressions, sorting);
+                children.set(key, sorted);
             }
-        });
+
+        }
         return DataUtil.sort(data, expressions, sorting);
     }
 
@@ -316,7 +320,7 @@ export class PivotUtil {
                 const aggregationKey = groupName ? groupName + pivotKeys.columnDimensionSeparator + key : key;
                 rec.aggregationValues.set(aggregationKey, aggregationData[key]);
             });
-        } else  if (aggregationKeys.length === 1) {
+        } else if (aggregationKeys.length === 1) {
             const aggregationKey = aggregationKeys[0];
             rec.aggregationValues.set(groupName || aggregationKey, aggregationData[aggregationKey]);
         }
@@ -508,5 +512,24 @@ export class PivotUtil {
         }
     }
 
+    public static updateColumnTypeByAggregator(columns: any[], value: IPivotValue, isSingleValue: boolean): void {
+        const targetColumnType = PivotUtil.getColumnDataTypeForValue(value);
+        columns.forEach(column => {
+            if ((column.field?.includes(value.member) || isSingleValue) && targetColumnType !== undefined) {
+                column.dataType = targetColumnType;
+            }
+        })
+    }
 
+    private static getColumnDataTypeForValue(value: IPivotValue): GridColumnDataType {
+        const isCountAggregator = value.aggregate.aggregator?.name?.toLowerCase() === 'count' || value.aggregate.aggregatorName?.toLowerCase() === 'count';
+
+        if ((value.dataType === GridColumnDataType.Currency || value.dataType === GridColumnDataType.Percent) && isCountAggregator) {
+            return GridColumnDataType.Number;
+        } else if (value.dataType === GridColumnDataType.Currency && !isCountAggregator) {
+            return GridColumnDataType.Currency;
+        } else if (value.dataType === GridColumnDataType.Percent && !isCountAggregator) {
+            return GridColumnDataType.Percent;
+        }
+    }
 }
