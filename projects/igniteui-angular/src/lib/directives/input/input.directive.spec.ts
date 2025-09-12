@@ -888,7 +888,7 @@ describe('IgxInput', () => {
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
     }));
 
-    fit('should mark the reactive form control as touched when igxInput loses focus', fakeAsync(() => {
+    it('should mark the reactive form control as touched when igxInput loses focus', fakeAsync(() => {
         const fixture = TestBed.createComponent(ReactiveFormComponent);
         fixture.detectChanges();
 
