@@ -51,11 +51,8 @@
     $file-selector-button-foreground--disabled: null,
 ) {
     $name: 'igx-file-input';
-
-    // the variable are scoped to the selector so no other input except the file type will have them.
-    $selector: '.igx-file-input';
-
     $file-input-schema: ();
+
     @if map.has-key($schema, 'file-input') {
         $file-input-schema: map.get($schema, 'file-input');
     } @else {
@@ -68,7 +65,6 @@
         $theme,
         (
             name: $name,
-            selector: $selector,
             file-names-background: $file-names-background,
             file-names-background--focused: $file-names-background--focused,
             file-names-background--filled: $file-names-background--filled,
@@ -94,7 +90,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin file-input($theme) {
-    @include css-vars($theme);
+    @include css-vars($theme, '.igx-file-input');
     $variant: map.get($theme, '_meta', 'theme');
 
     %file-names {

@@ -8,7 +8,7 @@
 @mixin input-group($theme) {
     // The --variant CSS produced by css-vars is needed also
     // when dynamically switching between the input `type` attribute.
-    @include css-vars($theme);
+    @include css-vars($theme, 'igx-input-group, igx-date-range-start, igx-date-range-end');
 
     $variant: map.get($theme, '_meta', 'theme');
     $transition-timing: .25s $out-cubic;
@@ -687,7 +687,7 @@
             %form-group-prefix:not(:first-child) {
                 border-inline-start-color: var-get($theme, 'warning-secondary-color');
             }
-    
+
             %form-group-suffix:not(:last-child) {
                 border-inline-end-color: var-get($theme, 'warning-secondary-color');
             }
