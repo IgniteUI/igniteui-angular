@@ -22,7 +22,6 @@ export const IgxBaseButtonType = {
 @Directive()
 export abstract class IgxButtonBaseDirective {
     private _platformUtil = inject(PlatformUtil);
-    private _elementRef = inject(ElementRef);
 
     /**
      * Emitted when the button is clicked.
