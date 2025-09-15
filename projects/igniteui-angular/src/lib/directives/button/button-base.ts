@@ -1,4 +1,16 @@
-import { Directive, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output, booleanAttribute, inject } from '@angular/core';
+import {
+    Directive,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Input,
+    Output,
+    booleanAttribute, inject,
+    inject,
+    afterRenderEffect,
+} from '@angular/core';
+import { PlatformUtil } from '../../core/utils';
 
 export const IgxBaseButtonType = {
     Flat: 'flat',
@@ -6,8 +18,10 @@ export const IgxBaseButtonType = {
     Outlined: 'outlined'
 } as const;
 
+
 @Directive()
 export abstract class IgxButtonBaseDirective {
+    private _platformUtil = inject(PlatformUtil);
     public element = inject(ElementRef);
     
     /**
@@ -79,6 +93,24 @@ export abstract class IgxButtonBaseDirective {
     @HostBinding('attr.disabled')
     public get disabledAttribute() {
         return this.disabled || null;
+    }
+
+    protected constructor() {
+        // In browser, set via native API for immediate effect (no-op on server).
+        // In SSR there is no paint, so there’s no visual rendering or transitions to suppress.
+        // Fix style flickering https://github.com/IgniteUI/igniteui-angular/issues/14759
+        if (this._platformUtil.isBrowser) {
+            afterRenderEffect({
+                write: () => {
+                    this.element.nativeElement.style.setProperty('--_init-transition', '0s');
+                },
+                read: () => {
+                    requestAnimationFrame(() => {
+                        this.element.nativeElement.style.removeProperty('--_init-transition');
+                    });
+                }
+            });
+        }
     }
 
     /**
