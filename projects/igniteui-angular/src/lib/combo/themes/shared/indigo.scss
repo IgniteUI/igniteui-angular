@@ -17,6 +17,6 @@ $_theme: $indigo;
     }
 
     @include e(content) {
-        max-height: calc(var(--size) * 6 + rem(16px));
+        max-height: calc(var(--size) * var(--item-count) + rem(16px));
     }
 }
