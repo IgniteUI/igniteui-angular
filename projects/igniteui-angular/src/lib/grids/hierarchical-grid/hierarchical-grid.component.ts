@@ -1244,8 +1244,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                     fields: filterableFields.map(f => ({
                             field: f.field,
                             dataType: f.dataType,
-                        //  label: f.label,
-                        //  header: f.header,
+                            header: f.header,
                             editorOptions: f.editorOptions,
                             filters: f.filters,
                             pipeArgs: f.pipeArgs,
