@@ -1,12 +1,12 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrategy, GridCellMergeMode, GridColumnDataType, GridType, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent, IgxPaginatorComponent, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular';
+import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrategy, GridCellMergeMode, GridColumnDataType, GridType, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent, IgxPaginatorComponent, IgxStringFilteringOperand, Size, SortingDirection } from 'igniteui-angular';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { hasClass } from '../../test-utils/helper-utils.spec';
+import { hasClass, setElementSize } from '../../test-utils/helper-utils.spec';
 import { ColumnLayoutTestComponent } from './grid.multi-row-layout.spec';
 import { IgxHierarchicalGridTestBaseComponent } from '../hierarchical-grid/hierarchical-grid.spec';
 import { IgxHierarchicalRowComponent } from '../hierarchical-grid/hierarchical-row.component';
@@ -205,7 +205,7 @@ describe('IgxGrid - Cell merging #grid', () => {
                 fix.componentInstance.height = '300px';
                 fix.detectChanges();
             });
-            it('should retain rows with merged cells that span multiple rows in DOM as long as merged cell is still in view.',  async() => {
+            it('should retain rows with merged cells that span multiple rows in DOM as long as merged cell is still in view.', async () => {
                 // initial row list is same as the virtualization chunk
                 expect(grid.rowList.length).toBe(grid.virtualizationState.chunkSize);
 
@@ -224,22 +224,22 @@ describe('IgxGrid - Cell merging #grid', () => {
                 expect(grid.rowList.first.nativeElement.offsetTop).toBeLessThan(-50);
             });
 
-            it('should remove row from DOM when merged cell is no longer in view.', async() => {
+            it('should remove row from DOM when merged cell is no longer in view.', async () => {
                 // scroll so that first row with merged cell is not in view
                 grid.navigateTo(grid.virtualizationState.chunkSize, 0);
                 await wait(100);
                 fix.detectChanges();
 
-                 //virtualization starts from 2
-                 expect(grid.virtualizationState.startIndex).toBe(2);
+                //virtualization starts from 2
+                expect(grid.virtualizationState.startIndex).toBe(2);
 
-                 // no merge cells from previous chunks
-                 expect(grid.rowList.length).toBe(grid.virtualizationState.chunkSize);
-                 // first row is from the virtualization
-                 expect(grid.rowList.first.index).toBe(grid.virtualizationState.startIndex);
+                // no merge cells from previous chunks
+                expect(grid.rowList.length).toBe(grid.virtualizationState.chunkSize);
+                // first row is from the virtualization
+                expect(grid.rowList.first.index).toBe(grid.virtualizationState.startIndex);
             });
 
-            it('horizontal virtualization should not be affected by vertically merged cells.', async() => {
+            it('horizontal virtualization should not be affected by vertically merged cells.', async () => {
                 let mergedCell = grid.rowList.first.cells.find(x => x.column.field === 'ProductName');
                 expect(mergedCell.value).toBe('Ignite UI for JavaScript');
                 expect(mergedCell.nativeElement.parentElement.style.gridTemplateRows).toBe("50px 50px");
@@ -392,7 +392,7 @@ describe('IgxGrid - Cell merging #grid', () => {
                 fix.detectChanges();
 
                 expect(grid.pinnedRows.length).toBe(2);
-                const pinnedRow =  grid.pinnedRows[0];
+                const pinnedRow = grid.pinnedRows[0];
                 expect(pinnedRow.metaData.cellMergeMeta.get(col.field)?.rowSpan).toBe(2);
                 const mergedPinnedCell = pinnedRow.cells.find(x => x.column.field === 'ProductName');
                 expect(mergedPinnedCell.value).toBe('Ignite UI for JavaScript');
@@ -436,7 +436,7 @@ describe('IgxGrid - Cell merging #grid', () => {
 
         describe('Activation', () => {
 
-            it('should interrupt merge sequence so that active row has no merging.', async() => {
+            it('should interrupt merge sequence so that active row has no merging.', async () => {
                 const col = grid.getColumnByName('ProductName');
                 GridFunctions.verifyColumnMergedState(grid, col, [
                     { value: 'Ignite UI for JavaScript', span: 2 },
@@ -474,7 +474,7 @@ describe('IgxGrid - Cell merging #grid', () => {
                 fix.detectChanges();
             });
 
-            it('should edit the individual row values for the active row.', async() => {
+            it('should edit the individual row values for the active row.', async () => {
                 const col = grid.getColumnByName('ProductName');
                 grid.rowEditable = true;
                 fix.detectChanges();
@@ -498,7 +498,7 @@ describe('IgxGrid - Cell merging #grid', () => {
                 ]);
 
                 // enter new val
-                const cellInput =  grid.gridAPI.get_cell_by_index(0, 'ProductName').nativeElement.querySelector('[igxinput]');
+                const cellInput = grid.gridAPI.get_cell_by_index(0, 'ProductName').nativeElement.querySelector('[igxinput]');
                 UIInteractions.setInputElementValue(cellInput, "NewValue");
                 fix.detectChanges();
 
@@ -529,15 +529,15 @@ describe('IgxGrid - Cell merging #grid', () => {
                 expect(cell.editMode).toBe(true);
 
                 // enter new val
-                const cellInput =  grid.gridAPI.get_cell_by_index(0, 'ProductName').nativeElement.querySelector('[igxinput]');
+                const cellInput = grid.gridAPI.get_cell_by_index(0, 'ProductName').nativeElement.querySelector('[igxinput]');
                 UIInteractions.setInputElementValue(cellInput, "NewValue");
                 fix.detectChanges();
 
                 UIInteractions.triggerEventHandlerKeyDown('enter', GridFunctions.getGridContent(fix));
                 fix.detectChanges();
 
-                 // row with edit cell is not merged anymore
-                 GridFunctions.verifyColumnMergedState(grid, col, [
+                // row with edit cell is not merged anymore
+                GridFunctions.verifyColumnMergedState(grid, col, [
                     { value: 'NewValue', span: 1 },
                     { value: 'Ignite UI for JavaScript', span: 1 },
                     { value: 'Ignite UI for Angular', span: 1 },
@@ -563,7 +563,7 @@ describe('IgxGrid - Cell merging #grid', () => {
 
                 const mergedIntersectedCell = grid.gridAPI.get_cell_by_index(0, 'ProductName');
                 // check cell has selected style
-                hasClass(mergedIntersectedCell.nativeElement,'igx-grid__td--merged-selected', true);
+                hasClass(mergedIntersectedCell.nativeElement, 'igx-grid__td--merged-selected', true);
             });
 
         });
@@ -603,7 +603,7 @@ describe('IgxGrid - Cell merging #grid', () => {
                 // check api
                 expect(grid.getSelectedData().length).toBe(5);
                 expect(grid.getSelectedData()).toEqual(grid.data.slice(0, 5).map(x => {
-                    return { 'ID': x.ID, 'ProductName': x. ProductName};
+                    return { 'ID': x.ID, 'ProductName': x.ProductName };
                 }));
             });
         });
@@ -630,7 +630,7 @@ describe('IgxGrid - Cell merging #grid', () => {
                 fix.detectChanges();
 
                 expect(grid.getSelectedColumnsData()).toEqual(grid.data.map(x => {
-                    return {'ProductName': x. ProductName};
+                    return { 'ProductName': x.ProductName };
                 }));
             });
         });
@@ -676,7 +676,7 @@ describe('IgxGrid - Cell merging #grid', () => {
                 expect(activeHighlight[0].closest("igx-grid-cell")).toBe(cell0);
             });
 
-            it('should update matches if a cell becomes unmerged.', async() => {
+            it('should update matches if a cell becomes unmerged.', async () => {
                 let matches = grid.findNext('JavaScript');
                 fix.detectChanges();
 
@@ -710,55 +710,71 @@ describe('IgxGrid - Cell merging #grid', () => {
 
         });
 
+        describe('Sizing', () => {
+            it('should size correct when size is set to anything other than large', async () => {
+                fix.componentInstance.cols = [{ field: 'ProductName', dataType: GridColumnDataType.String, merge: true }]
+                fix.detectChanges();
+                setElementSize(grid.nativeElement, Size.Small)
+                fix.detectChanges();
+                await wait(100);
+                fix.detectChanges();
+                const sizes = grid.rowList.map(x => parseFloat(getComputedStyle(x.nativeElement).getPropertyValue("height")));
+                const expectedSizes = new Array(9).fill(32);
+
+                expect(sizes).toEqual(expectedSizes);
+            });
+
+        });
+
         describe('HierarchicalGrid', () => {
 
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
                 fix.componentInstance.data = [
                     {
-                        ID: 1, ChildLevels: 1,  ProductName: 'Product A' , Col1: 1,
+                        ID: 1, ChildLevels: 1, ProductName: 'Product A', Col1: 1,
                         childData: [
                             {
-                                ID: 1, ChildLevels: 2,  ProductName: 'Product A' , Col1: 1,
+                                ID: 1, ChildLevels: 2, ProductName: 'Product A', Col1: 1,
                             },
                             {
-                                ID: 2, ChildLevels: 2,  ProductName: 'Product A' , Col1: 1,
+                                ID: 2, ChildLevels: 2, ProductName: 'Product A', Col1: 1,
                             },
                             {
-                                ID: 3, ChildLevels: 2,  ProductName: 'Product B' , Col1: 1,
+                                ID: 3, ChildLevels: 2, ProductName: 'Product B', Col1: 1,
                             },
                             {
-                                ID: 4, ChildLevels: 2,  ProductName: 'Product A' , Col1: 1,
+                                ID: 4, ChildLevels: 2, ProductName: 'Product A', Col1: 1,
                             }
                         ]
                     },
                     {
-                        ID: 2, ChildLevels: 1,  ProductName: 'Product A' , Col1: 1, childData: [
+                        ID: 2, ChildLevels: 1, ProductName: 'Product A', Col1: 1, childData: [
                             {
-                                ID: 1, ChildLevels: 2,  ProductName: 'Product A' , Col1: 1,
+                                ID: 1, ChildLevels: 2, ProductName: 'Product A', Col1: 1,
                             },
                             {
-                                ID: 2, ChildLevels: 2,  ProductName: 'Product A' , Col1: 1,
+                                ID: 2, ChildLevels: 2, ProductName: 'Product A', Col1: 1,
                             },
                             {
-                                ID: 3, ChildLevels: 2,  ProductName: 'Product A' , Col1: 1,
+                                ID: 3, ChildLevels: 2, ProductName: 'Product A', Col1: 1,
                             },
                             {
-                                ID: 4, ChildLevels: 2,  ProductName: 'Product A' , Col1: 1,
+                                ID: 4, ChildLevels: 2, ProductName: 'Product A', Col1: 1,
                             }
                         ]
                     },
                     {
-                        ID: 3, ChildLevels: 1,  ProductName: 'Product B' , Col1: 1
+                        ID: 3, ChildLevels: 1, ProductName: 'Product B', Col1: 1
                     },
                     {
-                        ID: 4, ChildLevels: 1,  ProductName: 'Product B' , Col1: 1
+                        ID: 4, ChildLevels: 1, ProductName: 'Product B', Col1: 1
                     },
                     {
-                        ID: 5, ChildLevels: 1,  ProductName: 'Product C' , Col1: 1
+                        ID: 5, ChildLevels: 1, ProductName: 'Product C', Col1: 1
                     },
                     {
-                        ID: 6, ChildLevels: 1,  ProductName: 'Product B' , Col1: 1
+                        ID: 6, ChildLevels: 1, ProductName: 'Product B', Col1: 1
                     }
                 ];
                 fix.detectChanges();
