@@ -5,10 +5,12 @@ import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.
 import { IGroupByResult } from '../../data-operations/grouping-result.interface';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
-import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
+import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridSortingStrategy, IGridGroupingStrategy } from '../common/strategy';
+import { GridCellMergeMode, RowPinningPosition } from '../common/enums';
+import { IGridMergeStrategy } from '../../data-operations/merge-strategy';
 
 /**
  * @hidden
@@ -72,6 +74,26 @@ export class IgxGridGroupingPipe implements PipeTransform {
         this.grid.groupingFlatResult = result.data;
         this.grid.groupingResult = fullResult.data;
         this.grid.groupingMetadata = fullResult.metadata;
+        return result;
+    }
+}
+
+@Pipe({
+    name: 'gridCellMerge',
+    standalone: true
+})
+export class IgxGridCellMergePipe implements PipeTransform {
+
+    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
+
+    public transform(collection: any, colsToMerge: ColumnType[], mergeMode: GridCellMergeMode, mergeStrategy: IGridMergeStrategy, activeRowIndexes: number[], pinned: boolean, _pipeTrigger: number) {
+        if (colsToMerge.length === 0) {
+            return collection;
+        }
+        if (this.grid.hasPinnedRecords && !pinned && this.grid.pinning.rows !== RowPinningPosition.Bottom) {
+            activeRowIndexes = activeRowIndexes.map(x => x - this.grid.pinnedRecordsCount);
+        }
+        const result = DataUtil.merge(cloneArray(collection), colsToMerge, mergeStrategy, activeRowIndexes, this.grid);
         return result;
     }
 }

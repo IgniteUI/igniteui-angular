@@ -1,7 +1,20 @@
-import { HostListener, ElementRef, ChangeDetectorRef, OnDestroy, Directive, AfterViewInit, NgZone, DOCUMENT, inject } from '@angular/core';
+import {
+    HostListener,
+    ElementRef,
+    ChangeDetectorRef,
+    OnDestroy,
+    Directive,
+    AfterViewInit,
+    Inject,
+    NgZone,
+    Renderer2,
+    PLATFORM_ID,
+    inject
+} from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
 import { resizeObservable, PlatformUtil } from '../../core/utils';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 
 @Directive({
     selector: '[igxVirtualHelperBase]',
@@ -23,6 +36,9 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
     private _afterViewInit = false;
     private _scrollNativeSize: number;
     private _detached = false;
+    protected renderer = inject(Renderer2);
+    protected platformId = inject(PLATFORM_ID);
+    protected ngZone = inject(NgZone);
 
     constructor() {
         this._scrollNativeSize = this.calculateScrollNativeSize();
@@ -94,6 +110,34 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
         return this.document.body.contains(this.nativeElement);
     }
 
+    private toggleClass(element: HTMLElement, className: string, shouldHaveClass: boolean): void {
+        if (shouldHaveClass) {
+            this.renderer.addClass(element, className);
+        } else {
+            this.renderer.removeClass(element, className);
+        }
+    }
+
+    private updateScrollbarClass() {
+        if (!isPlatformBrowser(this.platformId)) {
+            return;
+        }
+
+        this.ngZone.runOutsideAngular(() => {
+            requestAnimationFrame(() => {
+            const el = this.nativeElement;
+            const hasScrollbar = el.scrollHeight > el.clientHeight;
+            const prevSibling = el.previousElementSibling as HTMLElement | null;
+            const scrollbarClass = 'igx-display-container--scrollbar';
+
+            if (prevSibling?.tagName.toLowerCase() === 'igx-display-container') {
+                this.toggleClass(prevSibling, scrollbarClass, hasScrollbar);
+            }
+            });
+        });
+    }
+
+
     protected handleMutations(event) {
         const hasSize = !(event[0].contentRect.height === 0 && event[0].contentRect.width === 0);
         if (!hasSize && !this.isAttachedToDom) {
@@ -103,6 +147,8 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
             // attached back now.
             this.restoreScroll();
         }
+
+        this.updateScrollbarClass();
     }
 
     protected restoreScroll() {}

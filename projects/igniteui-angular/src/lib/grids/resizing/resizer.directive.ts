@@ -105,7 +105,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
         this.resizeEnd.complete();
     }
 
-    public onMousedown(event: MouseEvent) {
+    public onMousedown(event: MouseEvent, resizeHandleTarget: HTMLElement) {
         event.preventDefault();
         const parent = this.element.nativeElement.parentElement.parentElement;
         const parentRectWidth = parent.getBoundingClientRect().width;
@@ -114,7 +114,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
             this._ratio = parentRectWidth / parentComputedWidth;
         }
         this.left = this._left = (event.clientX - parent.getBoundingClientRect().left) / this._ratio;
-        this.top = (event.target as HTMLElement).getBoundingClientRect().top - parent.getBoundingClientRect().top;
+        this.top = (resizeHandleTarget.getBoundingClientRect().top - parent.getBoundingClientRect().top) / this._ratio;
 
         this.resizeStart.next(event);
     }

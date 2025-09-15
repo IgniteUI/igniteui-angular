@@ -8,27 +8,30 @@ import {
 import { fromEvent, merge, MonoTypeOperatorFunction, noop, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
-import { CalendarSelection, IgxCalendarComponent } from '../calendar/public_api';
-import { DateRangeType } from '../core/dates';
+import { CalendarSelection, IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from '../calendar/public_api';
+import { DateRangeDescriptor, DateRangeType } from '../core/dates';
 import { DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } from '../core/i18n/date-range-picker-resources';
-import { IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from '../core/utils';
+import { clamp, IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { IgxPickerActionsDirective } from '../date-common/picker-icons.common';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
-    IgxInputDirective, IgxInputGroupComponent, IgxInputState,
-    IgxLabelDirective} from '../input-group/public_api';
+    IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState,
+    IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxSuffixDirective
+} from '../input-group/public_api';
 import {
     AutoPositionStrategy, IgxOverlayService, OverlayCancelableEventArgs, OverlayEventArgs,
     OverlaySettings, PositionSettings
 } from '../services/public_api';
-import { DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, DateRangePickerFormatPipe } from './date-range-picker-inputs.common';
+import { DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, DateRangePickerFormatPipe, CustomDateRange } from './date-range-picker-inputs.common';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
+import { PickerCalendarOrientation } from '../date-common/types';
+import { calendarRange, isDateInRanges } from '../calendar/common/helpers';
 
 const SingleInputDatesConcatenationString = ' - ';
 
@@ -67,6 +70,7 @@ const SingleInputDatesConcatenationString = ' - ';
         IgxInputGroupComponent,
         IgxInputDirective,
         IgxPrefixDirective,
+        IgxSuffixDirective,
         DateRangePickerFormatPipe
     ]
 })
@@ -90,7 +94,22 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public displayMonthsCount = 2;
+    public get displayMonthsCount(): number {
+        return this._displayMonthsCount;
+    }
+
+    public set displayMonthsCount(value: number) {
+        this._displayMonthsCount = clamp(value, 1, 2);
+    }
+
+    /**
+     * Gets/Sets the orientation of the multiple months displayed in the picker's calendar's days view.
+     *
+     * @example
+     * <igx-date-range-picker orientation="vertical"></igx-date-range-picker>
+     */
+    @Input()
+    public orientation: PickerCalendarOrientation = PickerCalendarOrientation.Horizontal;
 
     /**
      * Gets/Sets whether dates that are not part of the current month will be displayed.
@@ -147,6 +166,29 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             return this.resourceStrings.igx_date_range_picker_done_button;
         }
         return this._doneButtonText;
+    }
+    /**
+     * Overrides the default text of the calendar dialog **Cancel** button.
+     *
+     * @remarks
+     * Defaults to the value from resource strings, `"Cancel"` for the built-in EN.
+     * The button will only show up in `dialog` mode.
+     *
+     * @example
+     * ```html
+     * <igx-date-range-picker cancelButtonText="取消"></igx-date-range-picker>
+     * ```
+     */
+    @Input()
+    public set cancelButtonText(value: string) {
+        this._cancelButtonText = value;
+    }
+
+    public get cancelButtonText(): string {
+        if (this._cancelButtonText === null) {
+            return this.resourceStrings.igx_date_range_picker_cancel_button;
+        }
+        return this._cancelButtonText;
     }
     /**
      * Custom overlay settings that should be used to display the calendar.
@@ -218,6 +260,41 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     /**
+     * Gets/Sets the disabled dates descriptors.
+     *
+     * @example
+     * ```typescript
+     * let disabledDates = this.dateRangePicker.disabledDates;
+     * this.dateRangePicker.disabledDates = [ {type: DateRangeType.Weekends}, ...];
+     * ```
+     */
+    @Input()
+    public get disabledDates(): DateRangeDescriptor[] {
+        return this._disabledDates;
+    }
+    public set disabledDates(value: DateRangeDescriptor[]) {
+        this._disabledDates = value;
+        this.onValidatorChange();
+    }
+
+    /**
+     * Gets/Sets the special dates descriptors.
+     *
+     * @example
+     * ```typescript
+     * let specialDates = this.dateRangePicker.specialDates;
+     * this.dateRangePicker.specialDates = [ {type: DateRangeType.Weekends}, ... ];
+     * ```
+     */
+    @Input()
+    public get specialDates(): DateRangeDescriptor[] {
+        return this._specialDates;
+    }
+    public set specialDates(value: DateRangeDescriptor[]) {
+        this._specialDates = value;
+    }
+
+    /**
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
      */
@@ -282,6 +359,27 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * <igx-date-range-picker [(value)]="date"></igx-date-range-picker>
      * ```
      */
+
+     /**
+      * Whether to render built-in predefined ranges.
+      *
+      * @example
+      * ```html
+      * <igx-date-range-picker [(usePredefinedRanges)]="true"></igx-date-range-picker>
+      * ``
+      *  */
+    @Input() public usePredefinedRanges = false;
+
+    /**
+     *  Custom ranges rendered as chips.
+     *
+     * @example
+     * ```html
+     * <igx-date-range-picker [(usePredefinedRanges)]="true"></igx-date-range-picker>
+     * ``
+    */
+    @Input() public customRanges: CustomDateRange[] = [];
+
     @Output()
     public valueChange = new EventEmitter<DateRange>();
 
@@ -310,6 +408,16 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     @ContentChild(IgxDateRangeSeparatorDirective, { read: TemplateRef })
     public dateSeparatorTemplate: TemplateRef<any>;
 
+
+    @ContentChild(IgxCalendarHeaderTitleTemplateDirective)
+    private headerTitleTemplate: IgxCalendarHeaderTitleTemplateDirective;
+
+    @ContentChild(IgxCalendarHeaderTemplateDirective)
+    private headerTemplate: IgxCalendarHeaderTemplateDirective;
+
+    @ContentChild(IgxCalendarSubheaderTemplateDirective)
+    private subheaderTemplate: IgxCalendarSubheaderTemplateDirective;
+
     /** @hidden @internal */
     public get dateSeparator(): string {
         if (this._dateSeparator === null) {
@@ -322,6 +430,21 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public get appliedFormat(): string {
         return DateTimeUtil.getLocaleDateFormat(this.locale, this.displayFormat)
             || DateTimeUtil.DEFAULT_INPUT_FORMAT;
+    }
+
+    /**
+     * Gets/Sets the date which is shown in the calendar picker and is highlighted.
+     * By default it is the current date, or the value of the picker, if set.
+    */
+    @Input()
+    public get activeDate(): Date {
+        const today = new Date(new Date().setHours(0, 0, 0, 0));
+        const dateValue = DateTimeUtil.isValidDate(this._firstDefinedInRange) ? new Date(this._firstDefinedInRange.setHours(0, 0, 0, 0)) : null;
+        return this._activeDate ?? dateValue ?? this._calendar?.activeDate ?? today;
+    }
+
+    public set activeDate(value: Date) {
+        this._activeDate = value;
     }
 
     /**
@@ -436,10 +559,20 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         return Object.assign({}, this._dialogOverlaySettings, this.overlaySettings);
     }
 
+    private get _firstDefinedInRange(): Date | null {
+        if (!this.value) {
+            return null;
+        }
+        const range = this.toRangeOfDates(this.value);
+        return range?.start ?? range?.end ?? null;
+    }
+
     private _resourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN);
     private _doneButtonText = null;
+    private _cancelButtonText = null;
     private _dateSeparator = null;
     private _value: DateRange | null;
+    private _originalValue: DateRange | null;
     private _overlayId: string;
     private _ngControl: NgControl;
     private _statusChanges$: Subscription;
@@ -447,6 +580,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private _calendarContainer?: HTMLElement;
     private _positionSettings: PositionSettings;
     private _focusedInput: IgxDateRangeInputsBaseComponent;
+    private _displayMonthsCount = 2;
+    private _specialDates: DateRangeDescriptor[] = null;
+    private _disabledDates: DateRangeDescriptor[] = null;
+    private _activeDate: Date | null = null;
     private _overlaySubFilter:
         [MonoTypeOperatorFunction<OverlayEventArgs>, MonoTypeOperatorFunction<OverlayEventArgs | OverlayCancelableEventArgs>] = [
             filter(x => x.id === this._overlayId),
@@ -503,6 +640,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         if (!this.collapsed || this.disabled) {
             return;
         }
+
+        this._originalValue = this._value
+            ? { start: new Date(this._value.start), end: new Date(this._value.end) }
+            : null;
 
         const settings = Object.assign({}, this.isDropdown
             ? this.dropdownOverlaySettings
@@ -567,6 +708,30 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         this.handleSelection(dateRange);
     }
 
+    /**
+     * Clears the input field(s) and the picker's value.
+     *
+     * @example
+     * ```typescript
+     * this.dateRangePicker.clear();
+     * ```
+     */
+    public clear(): void {
+        if (this.disabled) {
+            return;
+        }
+
+        this.value = null;
+        this._calendar?.deselectDate();
+        if (this.hasProjectedInputs) {
+            this.projectedInputs.forEach((i) => {
+                i.inputDirective.clear();
+            });
+        } else {
+            this.inputDirective.clear();
+        }
+    }
+
     /** @hidden @internal */
     public writeValue(value: DateRange): void {
         this.updateValue(value);
@@ -598,16 +763,19 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
                 }
             }
 
-            const min = parseDate(this.minValue);
-            const max = parseDate(this.maxValue);
+            if (this._isValueInDisabledRange(value)) {
+                Object.assign(errors, { dateIsDisabled: true });
+            }
+
+            const { minValue, maxValue } = this._getMinMaxDates();
             const start = parseDate(value.start);
             const end = parseDate(value.end);
-            if ((min && start && DateTimeUtil.lessThanMinValue(start, min, false))
-                || (min && end && DateTimeUtil.lessThanMinValue(end, min, false))) {
+            if ((minValue && start && DateTimeUtil.lessThanMinValue(start, minValue, false))
+                || (minValue && end && DateTimeUtil.lessThanMinValue(end, minValue, false))) {
                 Object.assign(errors, { minValue: true });
             }
-            if ((max && start && DateTimeUtil.greaterThanMaxValue(start, max, false))
-                || (max && end && DateTimeUtil.greaterThanMaxValue(end, max, false))) {
+            if ((maxValue && start && DateTimeUtil.greaterThanMaxValue(start, maxValue, false))
+                || (maxValue && end && DateTimeUtil.greaterThanMaxValue(end, maxValue, false))) {
                 Object.assign(errors, { maxValue: true });
             }
         }
@@ -636,6 +804,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public override ngAfterViewInit(): void {
         super.ngAfterViewInit();
         this.subscribeToDateEditorEvents();
+        this.subscribeToClick();
         this.configPositionStrategy();
         this.configOverlaySettings();
         this.cacheFocusedInput();
@@ -690,8 +859,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     /** @hidden @internal */
-    public getEditElement() {
-        return this.inputDirective.nativeElement;
+    public getEditElement(): HTMLInputElement | undefined {
+        return this.inputDirective?.nativeElement;
     }
 
     protected onStatusChanged = () => {
@@ -735,6 +904,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         if (this.isDropdown && selectionData?.length > 1) {
             this.close();
         }
+        this._setCalendarActiveDate();
     }
 
     private handleClosing(e: IBaseCancelableBrowserEventArgs): void {
@@ -782,7 +952,11 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             this.opened.emit({ owner: this });
         });
 
-        this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((e) => {
+        this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((e: OverlayCancelableEventArgs) => {
+            const isEscape = e.event && (e.event as KeyboardEvent).key === this.platform.KEYMAP.ESCAPE;
+            if (this.isProjectedInputTarget(e.event) && !isEscape) {
+                e.cancel = true;
+            }
             this.handleClosing(e as OverlayCancelableEventArgs);
         });
 
@@ -794,6 +968,16 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             this._calendarContainer = undefined;
             this.closed.emit({ owner: this });
         });
+    }
+
+    private isProjectedInputTarget(event: Event): boolean {
+        if (!this.hasProjectedInputs || !event) {
+            return false;
+        }
+        const path = event.composed ? event.composedPath() : [event.target];
+        return this.projectedInputs.some(i =>
+            path.includes(i.dateTimeEditor.nativeElement)
+        );
     }
 
     private updateValue(value: DateRange) {
@@ -876,24 +1060,21 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         if (!this.calendar) {
             return;
         }
-        this.calendar.disabledDates = [];
-        const minValue = this.parseMinValue(this.minValue);
-        if (minValue) {
-            this.calendar.disabledDates.push({ type: DateRangeType.Before, dateRange: [minValue] });
-        }
-        const maxValue = this.parseMaxValue(this.maxValue);
-        if (maxValue) {
-            this.calendar.disabledDates.push({ type: DateRangeType.After, dateRange: [maxValue] });
-        }
+        this._setDisabledDates();
 
         const range: Date[] = [];
-        if (this.value?.start && this.value?.end) {
+        if (this.value) {
             const _value = this.toRangeOfDates(this.value);
-            if (DateTimeUtil.greaterThanMaxValue(_value.start, _value.end)) {
-                this.swapEditorDates();
+            if (_value.start && _value.end) {
+                if (DateTimeUtil.greaterThanMaxValue(_value.start, _value.end)) {
+                    this.swapEditorDates();
+                }
             }
-            if (this.valueInRange(this.value, minValue, maxValue)) {
-                range.push(_value.start, _value.end);
+            if (_value.start) {
+                range.push(_value.start);
+            }
+            if (_value.end) {
+                range.push(_value.end);
             }
         }
 
@@ -902,7 +1083,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         } else if (range.length === 0 && this.calendar.monthViews) {
             this.calendar.deselectDate();
         }
-        this.calendar.viewDate = range[0] || new Date();
+        this._setCalendarActiveDate();
+        this._cdr.detectChanges();
     }
 
     private swapEditorDates(): void {
@@ -912,18 +1094,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             [start.dateTimeEditor.value, end.dateTimeEditor.value] = [end.dateTimeEditor.value, start.dateTimeEditor.value];
             [this.value.start, this.value.end] = [this.value.end, this.value.start];
         }
-    }
-
-    private valueInRange(value: DateRange, minValue?: Date, maxValue?: Date): boolean {
-        const _value = this.toRangeOfDates(value);
-        if (minValue && DateTimeUtil.lessThanMinValue(_value.start, minValue, false)) {
-            return false;
-        }
-        if (maxValue && DateTimeUtil.greaterThanMaxValue(_value.end, maxValue, false)) {
-            return false;
-        }
-
-        return true;
     }
 
     private extractRange(selection: Date[]): DateRange {
@@ -950,6 +1120,21 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         return { start: range.start as Date, end: range.end as Date };
     }
 
+    private subscribeToClick() {
+        const inputs = this.hasProjectedInputs
+            ? this.projectedInputs.map(i => i.inputDirective.nativeElement)
+            : [this.getEditElement()];
+        inputs.forEach(input => {
+            fromEvent(input, 'click')
+                .pipe(takeUntil(this._destroy$))
+                .subscribe(() => {
+                    if (!this.isDropdown) {
+                        this.toggle();
+                    }
+                });
+        });
+    }
+
     private subscribeToDateEditorEvents(): void {
         if (this.hasProjectedInputs) {
             const start = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent;
@@ -963,6 +1148,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
                         } else {
                             this.value = { start: value, end: null };
                         }
+                        if (this.calendar) {
+                            this._setCalendarActiveDate(parseDate(value));
+                            this._cdr.detectChanges();
+                        }
                     });
                 end.dateTimeEditor.valueChange
                     .pipe(takeUntil(this._destroy$))
@@ -971,6 +1160,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
                             this.value = { start: this.value.start, end: value as Date };
                         } else {
                             this.value = { start: null, end: value as Date };
+                        }
+                        if (this.calendar) {
+                            this._setCalendarActiveDate(parseDate(value));
+                            this._cdr.detectChanges();
                         }
                     });
             }
@@ -1073,18 +1266,86 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {
         this._calendar = componentInstance.calendar;
-        this.calendar.hasHeader = false;
-        this.calendar.locale = this.locale;
-        this.calendar.selection = CalendarSelection.RANGE;
-        this.calendar.weekStart = this.weekStart;
-        this.calendar.hideOutsideDays = this.hideOutsideDays;
-        this.calendar.monthsViewNumber = this.displayMonthsCount;
-        this.calendar.showWeekNumbers = this.showWeekNumbers;
-        this.calendar.selected.pipe(takeUntil(this._destroy$)).subscribe((ev: Date[]) => this.handleSelection(ev));
+        this._calendar.hasHeader = !this.isDropdown && !this.hideHeader;
+        this._calendar.locale = this.locale;
+        this._calendar.selection = CalendarSelection.RANGE;
+        this._calendar.weekStart = this.weekStart;
+        this._calendar.hideOutsideDays = this.hideOutsideDays;
+        this._calendar.monthsViewNumber = this._displayMonthsCount;
+        this._calendar.showWeekNumbers = this.showWeekNumbers;
+        this._calendar.headerTitleTemplate = this.headerTitleTemplate;
+        this._calendar.headerTemplate = this.headerTemplate;
+        this._calendar.subheaderTemplate = this.subheaderTemplate;
+        this._calendar.headerOrientation = this.headerOrientation;
+        this._calendar.orientation = this.orientation;
+        this._calendar.specialDates = this.specialDates;
+        this._calendar.selected.pipe(takeUntil(this._destroy$)).subscribe((ev: Date[]) => this.handleSelection(ev));
+
+        this._setDisabledDates();
+        this._setCalendarActiveDate();
 
         componentInstance.mode = this.mode;
         componentInstance.closeButtonLabel = !this.isDropdown ? this.doneButtonText : null;
+        componentInstance.cancelButtonLabel = !this.isDropdown ? this.cancelButtonText : null;
         componentInstance.pickerActions = this.pickerActions;
+        componentInstance.usePredefinedRanges = this.usePredefinedRanges;
+        componentInstance.customRanges = this.customRanges;
+        componentInstance.resourceStrings = this.resourceStrings;
         componentInstance.calendarClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.close());
+        componentInstance.calendarCancel.pipe(takeUntil(this._destroy$)).subscribe(() => {
+            this._value = this._originalValue;
+            this.close()
+        });
+        componentInstance.rangeSelected
+        .pipe(takeUntil(this._destroy$))
+        .subscribe((r: DateRange) => {
+            if (r?.start && r?.end) {
+            this.select(new Date(r.start), new Date(r.end));
+            }
+
+            if (this.isDropdown) {
+            this.close();
+            }
+        });
+    }
+
+    private _setDisabledDates(): void {
+        if (!this.calendar) {
+            return;
+        }
+        this.calendar.disabledDates = this.disabledDates ? [...this.disabledDates] : [];
+        const { minValue, maxValue } = this._getMinMaxDates();
+        if (minValue) {
+            this.calendar.disabledDates.push({ type: DateRangeType.Before, dateRange: [minValue] });
+        }
+        if (maxValue) {
+            this.calendar.disabledDates.push({ type: DateRangeType.After, dateRange: [maxValue] });
+        }
+    }
+
+    private _getMinMaxDates() {
+        const minValue = this.parseMinValue(this.minValue);
+        const maxValue = this.parseMaxValue(this.maxValue);
+        return { minValue, maxValue };
+    }
+
+    private _isValueInDisabledRange(value: DateRange) {
+        if (value && value.start && value.end && this.disabledDates) {
+            const isOutsideDisabledRange = Array.from(
+                calendarRange({
+                    start: parseDate(this.value.start),
+                    end: parseDate(this.value.end),
+                    inclusive: true
+                })).every((date) => !isDateInRanges(date, this.disabledDates));
+            return !isOutsideDisabledRange;
+        }
+        return false;
+    }
+
+    private _setCalendarActiveDate(value = null): void {
+        if (this._calendar) {
+            this._calendar.activeDate = value ?? this.activeDate;
+            this._calendar.viewDate = value ?? this.activeDate;
+        }
     }
 }

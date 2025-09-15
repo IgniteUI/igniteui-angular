@@ -1,4 +1,5 @@
 import { Component, AfterViewInit, Input, Output, EventEmitter, ChangeDetectorRef, ViewChild, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { GridColumnDataType, DataUtil } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
@@ -33,7 +34,7 @@ export interface ILogicOperatorChangedArgs extends IBaseEventArgs {
 @Component({
     selector: 'igx-excel-style-default-expression',
     templateUrl: './excel-style-default-expression.component.html',
-    imports: [IgxSelectComponent, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, IgxIconButtonDirective]
+    imports: [FormsModule, IgxSelectComponent, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, IgxIconButtonDirective]
 })
 export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     public cdr = inject(ChangeDetectorRef);
@@ -156,7 +157,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         return this.grid.resourceStrings[`igx_grid_filter_${name}`] || name;
     }
 
-    public onValuesInput(eventArgs) {
+    public updateSearchValueOnBlur(eventArgs) {
         this.expressionUI.expression.searchVal = DataUtil.parseValue(this.column.dataType, eventArgs.target.value);
     }
 

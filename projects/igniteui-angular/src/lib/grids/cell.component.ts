@@ -1,4 +1,5 @@
-﻿import {
+﻿import { useAnimation } from '@angular/animations';
+import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -52,6 +53,7 @@ import { IgxFocusDirective } from '../directives/focus/focus.directive';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxChipComponent } from '../chips/chip.component';
+import { fadeOut, scaleInCenter } from 'igniteui-angular/animations';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -151,6 +153,18 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @Input()
     public column: ColumnType;
 
+    /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    public isPlaceholder: boolean;
+
+    /**
+        Gets whether this cell is a merged cell.
+     */
+    @Input()
+    public isMerged: boolean;
 
     /**
      * @hidden
@@ -293,6 +307,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @memberof IgxGridCellComponent
      */
     public get template(): TemplateRef<any> {
+        if (this.isPlaceholder) {
+            return this.emptyCellTemplate;
+        }
         if (this.editMode && this.formGroup) {
             const inlineEditorTemplate = this.column.inlineEditorTemplate;
             return inlineEditorTemplate ? inlineEditorTemplate : this.inlineEditorTemplate;
@@ -526,11 +543,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     /** @hidden @internal */
     @HostBinding('attr.aria-describedby')
     public get ariaDescribeBy() {
-        let describeBy = (this.gridID + '_' + this.column.field).replace('.', '_');
-        if (this.isInvalid) {
-            describeBy += ' ' + this.ariaErrorMessage;
-        }
-        return describeBy;
+        return this.isInvalid ? this.ariaErrorMessage : null;
     }
 
     /** @hidden @internal */
@@ -545,8 +558,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @HostBinding('class.igx-grid__td--invalid')
     @HostBinding('attr.aria-invalid')
     public get isInvalid() {
-        const isInvalid = this.formGroup?.get(this.column?.field)?.invalid && this.formGroup?.get(this.column?.field)?.touched;
-        return !this.intRow.deleted && isInvalid;
+        if (this.formGroup) {
+            const isInvalid = this.grid.validation?.isFieldInvalid(this.formGroup, this.column?.field);
+            return !this.intRow.deleted && isInvalid;
+        }
+        return false;
     }
 
     /**
@@ -555,8 +571,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      */
     @HostBinding('class.igx-grid__td--valid')
     public get isValidAfterEdit() {
-        const formControl = this.formGroup?.get(this.column?.field);
-        return this.editMode && formControl && !formControl.invalid && formControl.dirty;
+        if (this.formGroup) {
+            const isValidAfterEdit = this.grid.validation?.isFieldValidAfterEdit(this.formGroup, this.column?.field);
+            return this.editMode && isValidAfterEdit;
+        }
+        return false;
     }
 
     /**
@@ -708,8 +727,22 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         }
     }
 
+    @HostBinding('attr.aria-rowindex')
+    protected get ariaRowIndex(): number {
+        // +2 because aria-rowindex is 1-based and the first row is the header
+        return this.rowIndex + 2;
+    }
+
+    @HostBinding('attr.aria-colindex')
+    protected get ariaColIndex(): number {
+        return this.column.index + 1;
+    }
+
     @ViewChild('defaultCell', { read: TemplateRef, static: true })
     protected defaultCellTemplate: TemplateRef<any>;
+
+    @ViewChild('emptyCell', { read: TemplateRef, static: true })
+    protected emptyCellTemplate: TemplateRef<any>;
 
     @ViewChild('defaultPinnedIndicator', { read: TemplateRef, static: true })
     protected defaultPinnedIndicator: TemplateRef<any>;
@@ -883,7 +916,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 modal: false,
                 positionStrategy: new AutoPositionStrategy({
                     horizontalStartPoint: HorizontalAlignment.Center,
-                    horizontalDirection: HorizontalAlignment.Center
+                    horizontalDirection: HorizontalAlignment.Center,
+                    openAnimation: useAnimation(scaleInCenter, { params: { duration: '150ms' } }),
+                    closeAnimation: useAnimation(fadeOut, { params: { duration: '75ms' } })
                 })
             }
         );
@@ -925,6 +960,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 this.highlight.lastSearchInfo.searchText = this.grid.lastSearchInfo.searchText;
                 this.highlight.lastSearchInfo.caseSensitive = this.grid.lastSearchInfo.caseSensitive;
                 this.highlight.lastSearchInfo.exactMatch = this.grid.lastSearchInfo.exactMatch;
+            }
+            const isInEdit = this.grid.rowEditable ? this.row.inEditMode : this.editMode;
+            if (this.formControl && this.formControl.value !== changes.value.currentValue && !isInEdit) {
+                this.formControl.setValue(changes.value.currentValue);
             }
         }
     }
@@ -995,6 +1034,19 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @internal
      */
     public pointerdown = (event: PointerEvent) => {
+
+        if (this.isMerged) {
+            // need an approximation of where in the cell the user clicked to get actual index to be activated.
+            const scrollOffset = this.grid.verticalScrollContainer.scrollPosition + (event.y - this.grid.tbody.nativeElement.getBoundingClientRect().y);
+            const targetRowIndex = this.grid.verticalScrollContainer.getIndexAtScroll(scrollOffset);
+            if (targetRowIndex != this.rowIndex) {
+                const row = this.grid.rowList.toArray().find(x => x.index === targetRowIndex);
+                const actualTarget = row.cells.find(x => x.column === this.column);
+                actualTarget.pointerdown(event);
+                return;
+            }
+        }
+
         if (this.cellSelectionMode !== GridSelectionMode.multiple) {
             this.activate(event);
             return;

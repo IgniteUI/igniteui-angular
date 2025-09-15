@@ -4,6 +4,7 @@ import { BaseFilteringComponent } from './base-filtering.component';
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { IgxButtonDirective } from '../../../directives/button/button.directive';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
+import { ColumnPinningPosition } from '../../common/enums';
 
 /**
  * A component used for presenting Excel style column moving UI.
@@ -49,25 +50,26 @@ export class IgxExcelStyleMovingComponent {
     public onMoveButtonClicked(moveDirection) {
         let targetColumn;
         if (this.esf.column.pinned) {
-            if (this.esf.column.isLastPinned && moveDirection === 1 && this.esf.grid.isPinningToStart) {
+            if (this.esf.column.isLastPinned && moveDirection === 1 && this.esf.column.pinningPosition === ColumnPinningPosition.Start) {
                 targetColumn = this.esf.grid.unpinnedColumns[0];
                 moveDirection = 0;
-            } else if (this.esf.column.isFirstPinned && moveDirection === 0 && !this.esf.grid.isPinningToStart) {
+            } else if (this.esf.column.isFirstPinned && moveDirection === 0 && this.esf.column.pinningPosition === ColumnPinningPosition.End) {
                 targetColumn = this.esf.grid.unpinnedColumns[this.esf.grid.unpinnedColumns.length - 1];
                 moveDirection = 1;
             } else {
                 targetColumn = this.findColumn(moveDirection, this.esf.grid.pinnedColumns);
             }
-        } else if (this.esf.grid.unpinnedColumns.indexOf(this.esf.column) === 0 && moveDirection === 0 &&
-                    this.esf.grid.isPinningToStart) {
-            targetColumn = this.esf.grid.pinnedColumns[this.esf.grid.pinnedColumns.length - 1];
+        } else if (this.esf.grid.unpinnedColumns.indexOf(this.esf.column) === 0 && moveDirection === 0) {
+            // moving first unpinned, left (into pin start area)
+            targetColumn = this.esf.grid.pinnedStartColumns[this.esf.grid.pinnedStartColumns.length - 1];
             if (targetColumn.parent) {
                 targetColumn = targetColumn.topLevelParent;
             }
             moveDirection = 1;
         } else if (this.esf.grid.unpinnedColumns.indexOf(this.esf.column) === this.esf.grid.unpinnedColumns.length - 1 &&
-            moveDirection === 1 && !this.esf.grid.isPinningToStart) {
-            targetColumn = this.esf.grid.pinnedColumns[0];
+            moveDirection === 1) {
+                // moving last unpinned, right (into pin end area)
+            targetColumn = this.esf.grid.pinnedEndColumns[0];
             moveDirection = 0;
         } else {
             targetColumn = this.findColumn(moveDirection, this.esf.grid.unpinnedColumns);

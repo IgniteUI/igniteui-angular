@@ -1,5 +1,6 @@
 import { NgTemplateOutlet, NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, ContentChild, ContentChildren, DestroyRef, ElementRef, HostBinding, HostListener, Input, QueryList, booleanAttribute, inject, DOCUMENT } from '@angular/core';
+import { ChangeDetectorRef, Component, ContentChild, ContentChildren, DestroyRef, ElementRef, HostBinding, HostListener, Input, QueryList, booleanAttribute, inject, DOCUMENT,
+    AfterContentChecked } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
 import { PlatformUtil, getComponentTheme } from '../core/utils';
 import { IgxButtonDirective } from '../directives/button/button.directive';
@@ -21,9 +22,9 @@ import { IgxTheme, THEME_TOKEN, ThemeToken } from '../services/theme/theme.token
     selector: 'igx-input-group',
     templateUrl: 'input-group.component.html',
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }],
-    imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent]
+    imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
 })
-export class IgxInputGroupComponent implements IgxInputGroupBase {
+export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentChecked {
     public element = inject<ElementRef<HTMLElement>>(ElementRef);
     private _inputGroupType = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE, { optional: true });
     private document = inject(DOCUMENT);
@@ -254,7 +255,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     /** @hidden @internal */
     @HostBinding('class.igx-input-group--prefixed')
     public get hasPrefixes() {
-        return this._prefixes.length > 0 || this.isFileType;
+        return this._prefixes.length > 0;
     }
 
     /** @hidden @internal */
@@ -320,11 +321,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     }
 
     /** @hidden @internal */
-    public uploadButtonHandler() {
-        this.input.nativeElement.click();
-    }
-
-    /** @hidden @internal */
     public clearValueHandler() {
         this.input.clear();
     }
@@ -333,6 +329,30 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     @HostBinding('class.igx-input-group--file')
     public get isFileType() {
         return this.input.type === 'file';
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-file-input')
+    public get isFileInput() {
+        return this.input.type === 'file';
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-file-input--filled')
+    public get isFileInputFilled() {
+        return this.isFileType && this.isFilled;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-file-input--focused')
+    public get isFileInputFocused() {
+        return this.isFileType && this.isFocused;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-file-input--disabled')
+    public get isFileInputDisabled() {
+        return this.isFileType && this.disabled;
     }
 
     /** @hidden @internal */

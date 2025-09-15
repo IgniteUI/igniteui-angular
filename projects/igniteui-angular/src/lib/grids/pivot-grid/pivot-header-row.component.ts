@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnChanges, QueryList, Renderer2, ViewChild, SimpleChanges, ViewChildren, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnChanges, QueryList, Renderer2, ViewChild, SimpleChanges, ViewChildren,
+    HostBinding, inject } from '@angular/core';
 import { IBaseChipEventArgs, IgxChipComponent } from '../../chips/chip.component';
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
@@ -25,7 +26,6 @@ import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
-import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
 
 /**
  *
@@ -118,10 +118,29 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @internal
     */
     @ViewChildren('rowDimensionHeaders')
-    public rowDimensionHeaders: QueryList<IgxPivotRowDimensionHeaderGroupComponent>;
+    public rowDimensionHeaders: QueryList<IgxPivotRowHeaderGroupComponent>;
 
     public override get headerForOf() {
         return this.headerContainers?.last;
+    }
+
+    @HostBinding('attr.aria-activedescendant')
+    public override get activeDescendant(): string {
+        const activeElem = this.navigation.activeNode;
+        if (!activeElem || !Object.keys(activeElem).length || this.grid.navigation.headerRowActiveDescendant) {
+            return null;
+        }
+
+        if (this.navigation.isRowDimensionHeaderActive) {
+            const activeHeader = this.grid.theadRow.rowDimensionHeaders.find(h => h.active);
+            if (activeHeader) {
+                const key = activeHeader.title ?? activeHeader.rootDimension?.memberName;
+                return key ? `${this.grid.id}_${key}` : null;
+            }
+            return null;
+        }
+
+        return super.activeDescendant;
     }
 
     /**
@@ -182,6 +201,14 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     */
     public get maxContainerHeight() {
         return this.totalDepth * this.grid.renderedRowHeight;
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public override get isLeafHeaderAriaHidden(): boolean {
+        return super.isLeafHeaderAriaHidden || this.grid.navigation.isRowHeaderActive || this.grid.navigation.isRowDimensionHeaderActive;
     }
 
     /**

@@ -1,0 +1,23 @@
+<div class="grid-wrapper">
+  <igx-tree-grid
+    #grid
+    [data]="data"
+    [allowFiltering]="true"
+    [primaryKey]="'ID'"
+    [height]="'100%'"
+    [width]="'100%'"
+    [foreignKey]="'ParentID'"
+  >
+    @for (col of columns; track col) {
+      <igx-column
+        [field]="col.field"
+        [header]="col.header"
+        [sortable]="col.sortable"
+        [dataType]="col.dataType"
+        [width]="col.width"
+        [groupable]="col.groupable"
+      >
+      </igx-column>
+    }
+  </igx-tree-grid>
+</div>

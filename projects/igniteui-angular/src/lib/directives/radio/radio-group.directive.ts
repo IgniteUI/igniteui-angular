@@ -1,4 +1,22 @@
-import { ChangeDetectorRef, Directive, DoCheck, EventEmitter, HostBinding, HostListener, Input, OnDestroy, Output, QueryList, booleanAttribute, contentChildren, effect, signal, inject } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Directive,
+    DoCheck,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Input,
+    OnDestroy,
+    Optional,
+    Output,
+    QueryList,
+    Self,
+    booleanAttribute,
+    contentChildren,
+    effect,
+    signal,
+    inject
+} from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { fromEvent, noop, Subject, takeUntil } from 'rxjs';
 import { IgxRadioComponent } from '../../radio/radio.component';
@@ -48,8 +66,8 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     public ngControl = inject(NgControl, { optional: true, self: true });
     private _directionality = inject(IgxDirectionality);
     private cdr = inject(ChangeDetectorRef);
-
-    private _radioButtons = contentChildren(IgxRadioComponent, { descendants: true });
+    
+    private _radioButtons = signal<IgxRadioComponent[]>([]);
     private _radioButtonsList = new QueryList<IgxRadioComponent>();
 
     /**
@@ -61,8 +79,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * ```
      */
     public get radioButtons(): QueryList<IgxRadioComponent> {
-        const buttons = Array.from(this._radioButtons());
-        this._radioButtonsList.reset(buttons);
+        this._radioButtonsList.reset(this._radioButtons());
         return this._radioButtonsList;
     }
 
@@ -475,10 +492,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
 
         effect(() => {
             this.initialize();
-
-            Promise.resolve().then(() => {
-                this.setRadioButtons();
-            });
+            this.setRadioButtons();
         });
     }
 
@@ -516,8 +530,10 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      */
     private setRadioButtons() {
         this._radioButtons().forEach((button) => {
-            button.name = this._name;
-            button.required = this._required;
+            Promise.resolve().then(() => {
+                button.name = this._name;
+                button.required = this._required;
+            });
 
             if (button.value === this._value) {
                 button.checked = true;
@@ -627,6 +643,34 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
                 button.required = this._required;
             });
         }
+    }
+
+
+    /**
+     * Registers a radio button with this radio group.
+     * This method is called by radio button components when they are created.
+     * @hidden @internal
+     */
+    public _addRadioButton(radioButton: IgxRadioComponent): void {
+        this._radioButtons.update(buttons => {
+            if (!buttons.includes(radioButton)) {
+                this._setRadioButtonEvents(radioButton);
+
+                return [...buttons, radioButton];
+            }
+            return buttons;
+        });
+    }
+
+    /**
+     * Unregisters a radio button from this radio group.
+     * This method is called by radio button components when they are destroyed.
+     * @hidden @internal
+     */
+    public _removeRadioButton(radioButton: IgxRadioComponent): void {
+        this._radioButtons.update(buttons =>
+            buttons.filter(btn => btn !== radioButton)
+        );
     }
 
     /**

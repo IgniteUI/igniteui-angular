@@ -39,6 +39,11 @@ export class IgxGridSelectionService {
     public selectedRowsChange = new Subject<any[]>();
 
     /**
+     * @hidden @internal
+     */
+    public selectedRangeChange = new Subject<Map<number, Set<number>>>();
+
+    /**
      * Toggled when a pointerdown event is triggered inside the grid body (cells).
      * When `false` the drag select behavior is disabled.
      */
@@ -358,6 +363,8 @@ export class IgxGridSelectionService {
                 }
             }
         }
+
+        this.selectedRangeChange.next(collection);
     }
 
     public dragSelect(node: ISelectionNode, state: SelectionState): void {
@@ -640,7 +647,7 @@ export class IgxGridSelectionService {
         if (this.areEqualCollections(currSelection, newSelection)) {
             return;
         }
-        
+
         const args: IRowSelectionEventArgs = {
             owner: this.grid,
             oldSelection: currSelection,
@@ -860,8 +867,10 @@ export class IgxGridSelectionService {
         this.pointerEventInGridBody = false;
         this.grid.document.body.removeEventListener('pointerup', this.pointerOriginHandler);
 
-        const targetTagName = event.target.tagName.toLowerCase();
-        if (targetTagName !== 'igx-grid-cell' && targetTagName !== 'igx-tree-grid-cell') {
+        const gridCellSelectors = ['igx-grid-cell', 'igx-hierarchical-grid-cell', 'igx-tree-grid-cell'];
+        const isInsideGridCell = gridCellSelectors.some(selector => event.target.closest(selector));
+
+        if (!isInsideGridCell) {
             this.pointerUp(this._lastSelectedNode, this.grid.rangeSelected, true);
         }
     };

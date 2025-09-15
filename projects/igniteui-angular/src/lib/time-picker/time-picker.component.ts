@@ -225,19 +225,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     @Input()
     public formatter: (val: Date) => string;
 
-    /**
-     * Sets the orientation of the picker's header.
-     *
-     * @remarks
-     * Available in dialog mode only. Default value is `horizontal`.
-     *
-     * ```html
-     * <igx-time-picker [headerOrientation]="'vertical'"></igx-time-picker>
-     * ```
-     */
-    @Input()
-    public headerOrientation: PickerHeaderOrientation = PickerHeaderOrientation.Horizontal;
-
     /** @hidden @internal */
     @Input({ transform: booleanAttribute })
     public readOnly = false;
@@ -294,9 +281,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     @ViewChild('ampmList')
     public ampmList: ElementRef;
 
-    /** @hidden @internal */
-    @ContentChildren(IgxPickerClearComponent)
-    public clearComponents: QueryList<IgxPickerClearComponent>;
 
     /** @hidden @internal */
     @ContentChild(IgxLabelDirective)
@@ -724,10 +708,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                     this.updateValidityOnBlur();
                 }
             });
-
-        this.subToIconsClicked(this.clearComponents, () => this.clear());
-        this.clearComponents.changes.pipe(takeUntil(this._destroy$))
-            .subscribe(() => this.subToIconsClicked(this.clearComponents, () => this.clear()));
 
         if (this._ngControl) {
             this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));

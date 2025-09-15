@@ -14,7 +14,7 @@ import {
 } from '../services/public_api';
 import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, Injector, QueryList, Renderer2, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { PickerHeaderOrientation, PickerInteractionMode } from '../date-common/types';
+import { PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../date-common/types';
 import { DatePart } from '../directives/date-time-editor/date-time-editor.common';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
@@ -32,6 +32,8 @@ const DATE_PICKER_CLEAR_ICON = 'clear';
 
 const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
+const CSS_CLASS_CALENDAR_HEADER = '.igx-calendar__header';
+const CSS_CLASS_CALENDAR_WRAPPER_VERTICAL = 'igx-calendar__wrapper--vertical';
 
 describe('IgxDatePicker', () => {
     describe('Integration tests', () => {
@@ -66,6 +68,117 @@ describe('IgxDatePicker', () => {
                 expect(suffix).toHaveSize(1);
                 expect(suffix[0].nativeElement.innerText).toEqual(DATE_PICKER_CLEAR_ICON);
             });
+
+            it('should hide the calendar header if hideHeader is true in dialog mode', fakeAsync(() => {
+                const datePicker = fixture.componentInstance.datePicker;
+                datePicker.mode = 'dialog';
+                datePicker.hideHeader = true;
+                datePicker.open();
+                tick();
+                fixture.detectChanges();
+
+                expect(datePicker['_calendar'].hasHeader).toBeFalse();
+                const calendarHeader = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR_HEADER));
+                expect(calendarHeader).toBeFalsy('Calendar header should not be present');
+            }));
+
+            it('should set calendar orientation property', fakeAsync(() => {
+                const datePicker = fixture.componentInstance.datePicker;
+                datePicker.orientation = PickerCalendarOrientation.Horizontal;
+                datePicker.open();
+                tick();
+                fixture.detectChanges();
+
+                expect(datePicker['_calendar'].orientation).toEqual(PickerCalendarOrientation.Horizontal.toString());
+                expect(datePicker['_calendar'].wrapper.nativeElement).not.toHaveClass(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL);
+                datePicker.close();
+                tick();
+                fixture.detectChanges();
+
+                datePicker.orientation = PickerCalendarOrientation.Vertical;
+                datePicker.open();
+                tick();
+                fixture.detectChanges();
+
+                expect(datePicker['_calendar'].orientation).toEqual(PickerCalendarOrientation.Vertical.toString());
+                expect(datePicker['_calendar'].wrapper.nativeElement).toHaveClass(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL);
+            }));
+
+            it('should initialize activeDate with current date, when not set', fakeAsync(() => {
+                const datePicker = fixture.componentInstance.datePicker;
+                datePicker.value = null;
+                fixture.detectChanges();
+                const todayDate = new Date();
+                const today = new Date(todayDate.setHours(0, 0, 0, 0)).getTime().toString();
+
+                expect(datePicker.activeDate).toEqual(todayDate);
+
+                datePicker.open();
+                fixture.detectChanges();
+
+                expect(datePicker['_calendar'].activeDate).toEqual(todayDate);
+                expect(datePicker['_calendar'].value).toBeUndefined();
+                const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(wrapper.getAttribute('aria-activedescendant')).toEqual(today);
+            }));
+
+            it('should initialize activeDate = value when it is not set, but value is', fakeAsync(() => {
+                const datePicker = fixture.componentInstance.datePicker;
+                const date = fixture.componentInstance.date;
+
+                expect(datePicker.activeDate).toEqual(date);
+                datePicker.open();
+                fixture.detectChanges();
+
+                const activeDescendantDate = new Date(date.setHours(0, 0, 0, 0)).getTime().toString();
+                expect(datePicker['_calendar'].activeDate).toEqual(date);
+                expect(datePicker['_calendar'].value).toEqual(date);
+                const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(wrapper.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
+            }));
+
+            it('should set activeDate correctly', fakeAsync(() => {
+                const datePicker = fixture.componentInstance.datePicker;
+                const targetDate = new Date(2025, 0, 1);
+                datePicker.activeDate = new Date(targetDate);
+                fixture.detectChanges();
+
+                expect(datePicker.activeDate).toEqual(targetDate);
+                expect(datePicker.value).toEqual(fixture.componentInstance.date);
+
+                datePicker.open();
+                fixture.detectChanges();
+
+                const activeDescendantDate = new Date(targetDate.setHours(0, 0, 0, 0)).getTime().toString();
+                expect(datePicker['_calendar'].activeDate).toEqual(targetDate);
+                expect(datePicker['_calendar'].viewDate.getMonth()).toEqual(targetDate.getMonth());
+                expect(datePicker['_calendar'].value).toEqual(fixture.componentInstance.date);
+                const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(wrapper.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
+            }));
+
+            it('should set activeDate of the calendar to value of picker even when it is outside the enabled range, i.e. > maxValue', fakeAsync(() => {
+                const datePicker = fixture.componentInstance.datePicker;
+                const maxDate = new Date(2025, 7, 1);
+                datePicker.maxValue = maxDate;
+                fixture.detectChanges();
+
+                const valueGreaterThanMax = new Date(2025, 10, 1);
+                datePicker.value = valueGreaterThanMax;
+                fixture.detectChanges();
+
+                expect(datePicker.activeDate).toEqual(valueGreaterThanMax);
+
+                datePicker.open();
+                fixture.detectChanges();
+
+                const activeDescendantDate = new Date(valueGreaterThanMax.setHours(0, 0, 0, 0)).getTime().toString();
+                expect(datePicker['_calendar'].activeDate).toEqual(valueGreaterThanMax);
+                expect(datePicker['_calendar'].viewDate.getMonth()).toEqual(valueGreaterThanMax.getMonth());
+                expect(datePicker['_calendar'].value).toEqual(valueGreaterThanMax);
+                const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(wrapper.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
+            }));
         });
 
         describe('Events', () => {
@@ -211,6 +324,58 @@ describe('IgxDatePicker', () => {
                     .withContext('focus should return to the picker input')
                     .toBeTrue();
                 expect(datePicker.isFocused).toBeTrue();
+            }));
+
+            it('should update the calendar selection on typing', fakeAsync(() => {
+                const date = new Date(2025, 0, 1);
+                datePicker.value = date;
+                datePicker.open();
+                fixture.detectChanges();
+
+                const input = fixture.debugElement.query(By.css('.igx-input-group__input'));
+                input.nativeElement.focus();
+                tick();
+                fixture.detectChanges();
+
+                fixture.detectChanges();
+                UIInteractions.simulateTyping('02/01/2025', input);
+
+                const expectedDate = new Date(2025, 0, 2);
+                expect(datePicker.value).toEqual(expectedDate);
+                expect(datePicker.activeDate).toEqual(expectedDate);
+
+                const activeDescendantDate = new Date(expectedDate.setHours(0, 0, 0, 0)).getTime().toString();
+                expect(datePicker['_calendar'].activeDate).toEqual(expectedDate);
+                expect(datePicker['_calendar'].viewDate.getMonth()).toEqual(expectedDate.getMonth());
+                expect(datePicker['_calendar'].value).toEqual(expectedDate);
+                const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(wrapper.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
+            }));
+
+            it('should update the calendar view and active date on typing a date that is not in the current view', fakeAsync(() => {
+                const date = new Date(2025, 0, 1);
+                datePicker.value = date;
+                datePicker.open();
+                fixture.detectChanges();
+
+                const input = fixture.debugElement.query(By.css('.igx-input-group__input'));
+                input.nativeElement.focus();
+                tick();
+                fixture.detectChanges();
+
+                fixture.detectChanges();
+                UIInteractions.simulateTyping('02/11/2025', input);
+
+                const expectedDate = new Date(2025, 10, 2);
+                expect(datePicker.value).toEqual(expectedDate);
+                expect(datePicker.activeDate).toEqual(expectedDate);
+
+                const activeDescendantDate = new Date(expectedDate.setHours(0, 0, 0, 0)).getTime().toString();
+                expect(datePicker['_calendar'].activeDate).toEqual(expectedDate);
+                expect(datePicker['_calendar'].viewDate.getMonth()).toEqual(expectedDate.getMonth());
+                expect(datePicker['_calendar'].value).toEqual(expectedDate);
+                const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(wrapper.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
             }));
         });
 
@@ -739,7 +904,7 @@ describe('IgxDatePicker', () => {
 
             mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
 
-            mockCalendar = { selected: new EventEmitter<any>() };
+            mockCalendar = { selected: new EventEmitter<any>(), selectDate: () => {} };
             const mockComponentInstance = {
                 calendar: mockCalendar,
                 todaySelection: new EventEmitter<any>(),

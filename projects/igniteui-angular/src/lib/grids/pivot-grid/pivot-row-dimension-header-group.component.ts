@@ -35,6 +35,13 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
 
     /**
      * @hidden
+     */
+    public get role(): string {
+        return 'rowheader';
+    }
+
+    /**
+     * @hidden
      * @internal
      */
     @Input()

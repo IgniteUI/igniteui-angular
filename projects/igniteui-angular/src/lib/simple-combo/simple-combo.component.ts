@@ -402,11 +402,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public handleClear(event: Event): void {
-        if (this.disabled) {
-            return;
-        }
-
+    public clearInput(event: Event): void {
         const oldSelection = this.selection;
         this.clearSelection(true);
 
@@ -422,6 +418,23 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.dropdown.focusedItem = null;
         this.composing = false;
         this.comboInput.focus();
+    }
+
+    /** @hidden @internal */
+    public handleClear(event: Event): void {
+        if (this.disabled) {
+            return;
+        }
+
+        this.clearInput(event);
+    }
+
+    /** @hidden @internal */
+    public handleClearKeyDown(event: KeyboardEvent): void {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            this.clearInput(event);
+        }
     }
 
     /** @hidden @internal */

@@ -535,7 +535,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.gridSize).toBe(Size.Small);
             const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
             let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
-            expect(rowHeaders[0].componentInstance.column.minWidth).toBe(minWidthSupercompact);
+            expect(rowHeaders[0].componentInstance.column.defaultMinWidth).toBe(minWidthSupercompact);
             expect(pivotGrid.rowList.first.cells.first.nativeElement.offsetHeight).toBe(cellHeightSuperCompact);
 
             pivotGrid.superCompactMode = false;
@@ -547,7 +547,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             expect(pivotGrid.gridSize).toBe(Size.Large);
             rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
-            expect(rowHeaders[0].componentInstance.column.minWidth).toBe(minWidthComf);
+            expect(rowHeaders[0].componentInstance.column.defaultMinWidth).toBe(minWidthComf);
             expect(pivotGrid.rowList.first.cells.first.nativeElement.offsetHeight).toBe(cellHeightComf);
         }));
 
@@ -1402,6 +1402,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 let expectedOrder = [829, undefined, 240, 293, 296];
                 let columnValues = pivotGrid.dataView.map(x => (x as IPivotGridRecord).aggregationValues.get('USA-UnitsSold'));
                 expect(columnValues).toEqual(expectedOrder);
+                expect(headerCell.attributes['aria-sort']).toBe('ascending');
 
                 headerCell = GridFunctions.getColumnHeader('USA-UnitsSold', fixture);
                 // sort desc
@@ -1411,6 +1412,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expectedOrder = [829, 296, 293, 240, undefined];
                 columnValues = pivotGrid.dataView.map(x => (x as IPivotGridRecord).aggregationValues.get('USA-UnitsSold'));
                 expect(columnValues).toEqual(expectedOrder);
+                expect(headerCell.attributes['aria-sort']).toBe('descending');
 
                 // remove sort
                 headerCell = GridFunctions.getColumnHeader('USA-UnitsSold', fixture);
@@ -2226,6 +2228,54 @@ describe('IgxPivotGrid #pivotGrid', () => {
             GridSelectionFunctions.verifyColumnSelected(amountOfSale, false);
             GridSelectionFunctions.verifyColumnGroupSelected(fixture, group, false);
         });
+
+        it('should provide value formatter column data for second value', () => {
+            let correctFirstColumnData = true;
+            let correctSecondColumnData = true;
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotGrid.pivotConfiguration = {
+                columns: fixture.componentInstance.pivotConfigHierarchy.columns,
+                rows: fixture.componentInstance.pivotConfigHierarchy.rows,
+                values: [
+                {
+                    member: 'UnitsSold',
+                    aggregate: {
+                        aggregator: IgxPivotNumericAggregate.sum,
+                        key: 'SUM',
+                        label: 'Sum'
+                    },
+                    enabled: true,
+                    formatter: (value, row, column) => {
+                        if (!column || !column.value || column.value.member !== 'UnitsSold') {
+                            correctFirstColumnData = false;
+                        }
+                        return value;
+                    }
+                },
+                {
+                    member: 'AmountOfSale',
+                    displayName: 'Amount of Sale',
+                    aggregate: {
+                        aggregator: IgxTotalSaleAggregate.totalSale,
+                        key: 'TOTAL',
+                        label: 'Total'
+                    },
+                    enabled: true,
+                    formatter: (value, row, column) => {
+                        if (!column || !column.value || column.value.member !== 'AmountOfSale') {
+                            correctSecondColumnData = false;
+                        }
+                        return value;
+                    }
+                }
+            ]
+            };
+
+            pivotGrid.width = '1500px';
+            fixture.detectChanges();
+            expect(correctFirstColumnData).toBeTruthy();
+            expect(correctSecondColumnData).toBeTruthy();
+        });
     });
 
     describe('IgxPivotGrid Resizing #pivotGrid', () => {
@@ -2365,7 +2415,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
 
             rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
-            const minWdith = parseFloat(rowHeaders[0].componentInstance.column.minWidth);
+            const minWdith = parseFloat(rowHeaders[0].componentInstance.column.defaultMinWidth);
             expect(parseFloat(rowHeaders[0].componentInstance.column.width)).toEqual(minWdith);
             expect(parseFloat(rowHeaders[3].componentInstance.column.width)).toEqual(minWdith);
 

@@ -361,7 +361,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     @HostBinding('attr.role')
     public role = 'grid';
 
-
     /**
      * Enables a super compact theme for the component.
      * @remarks
@@ -415,6 +414,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @ViewChild('record_template', { read: TemplateRef, static: true })
     public recordTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild(IgxPivotRowDimensionMrlRowComponent, { read: IgxPivotRowDimensionMrlRowComponent })
+    public rowDimensionMrlComponent: IgxPivotRowDimensionMrlRowComponent;
 
     /**
      * @hidden @internal
@@ -835,8 +840,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public override get pinnedWidth() {
-        return super.pinnedWidth;
+    public override get pinnedStartWidth() {
+        return super.pinnedStartWidth;
     }
 
     /**
@@ -1229,8 +1234,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /** @hidden @internal */
-    public get pivotPinnedWidth() {
-        return !this._init ? (this.isPinningToStart ? this.pinnedWidth : this.headerFeaturesWidth) : 0;
+    public get pivotPinnedStartWidth() {
+        return !this._init ? this.pinnedStartWidth : 0;
+    }
+
+    /** @hidden @internal */
+    public get pivotPinnedEndWidth() {
+        return !this._init ? this.pinnedEndWidth : 0;
     }
 
     /** @hidden @internal */
@@ -1512,8 +1522,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
     * @hidden @internal
     */
-    public override getPinnedWidth(takeHidden = false) {
-        return super.getPinnedWidth(takeHidden);
+    public override getPinnedStartWidth(takeHidden = false) {
+        return super.getPinnedStartWidth(takeHidden);
     }
 
     /**
@@ -1995,17 +2005,27 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /** @hidden @internal */
     public override get activeDescendant() {
-        const activeElem = this.navigation.activeNode;
-        if ((this.navigation as IgxPivotGridNavigationService).isRowHeaderActive ||
-            (this.navigation as IgxPivotGridNavigationService).isRowDimensionHeaderActive) {
-            if (!activeElem || !Object.keys(activeElem).length) {
-                return this.id;
-            }
+        if (this.navigation.isRowHeaderActive || this.navigation.isRowDimensionHeaderActive) {
+            return null;
+        }
+        return super.activeDescendant;
+    }
 
-            return `${this.id}_${activeElem.row}_${activeElem.column}`;
+    /** @hidden @internal */
+    public get headerRowActiveDescendant() {
+        const activeElem = this.navigation.activeNode;
+        if (!activeElem || !Object.keys(activeElem).length || !this.navigation.isRowHeaderActive) {
+            return null;
         }
 
-        return super.activeDescendant;
+        const rowDimensions = this.rowDimensionContentCollection.length > 0 ?
+            this.rowDimensionContentCollection.toArray() :
+            this.rowDimensionMrlComponent.rowDimensionContentCollection.toArray();
+
+        const rowDimensionContentActive = rowDimensions.find(rd => rd && rd.headerGroups?.some(hg => hg.active));
+        const activeHeader = rowDimensionContentActive?.headerGroups.toArray().find(hg => hg.active);
+
+        return activeHeader ? `${this.id}_${activeHeader.title}` : null;
     }
 
     protected resolveToggle(groupColumn: IgxColumnComponent, state: boolean) {

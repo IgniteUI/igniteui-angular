@@ -29,6 +29,14 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
 
     public isActive: boolean;
 
+    private readonly SCROLL_THRESHOLD = 50;
+    private readonly PAN_THRESHOLD = 10;
+
+    /**
+     * accumulates wheel scrolls and triggers a change action above SCROLL_THRESHOLD
+     */
+    private scrollAccumulator = 0;
+
     @HostBinding('class.igx-time-picker__column')
     public get defaultCSS(): boolean {
         return true;
@@ -159,9 +167,10 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
         event.preventDefault();
         event.stopPropagation();
 
-        const delta = event.deltaY;
-        if (delta !== 0) {
-            this.nextItem(delta);
+        this.scrollAccumulator += event.deltaY;
+        if (Math.abs(this.scrollAccumulator) > this.SCROLL_THRESHOLD) {
+            this.nextItem(this.scrollAccumulator);
+            this.scrollAccumulator = 0;
         }
     }
 
@@ -169,14 +178,24 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
      * @hidden @internal
      */
     public ngOnInit() {
-        const hammerOptions: HammerOptions = { recognizers: [[HammerGesturesManager.Hammer?.Pan, { direction: HammerGesturesManager.Hammer?.DIRECTION_VERTICAL, threshold: 10 }]] };
+        const hammerOptions: HammerOptions = {
+            recognizers: [
+                [
+                    HammerGesturesManager.Hammer?.Pan,
+                    {
+                        direction: HammerGesturesManager.Hammer?.DIRECTION_VERTICAL,
+                        threshold: this.PAN_THRESHOLD
+                    }
+                ]
+            ]
+        };
         this.touchManager.addEventListener(this.elementRef.nativeElement, 'pan', this.onPanMove, hammerOptions);
     }
 
     /**
      * @hidden @internal
      */
-     public ngOnDestroy() {
+    public ngOnDestroy() {
         this.touchManager.destroy();
     }
 
@@ -343,7 +362,7 @@ export class IgxTimeItemDirective {
     private getHourPart(date: Date): string {
         const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat);
         const hourPart = inputDateParts.find(element => element.type === 'hours');
-        const ampmPart = inputDateParts.find(element =>element.format.indexOf('a') !== -1 || element.format === 'tt');
+        const ampmPart = inputDateParts.find(element => element.format.indexOf('a') !== -1 || element.format === 'tt');
         const hour = DateTimeUtil.getPartValue(date, hourPart, hourPart.format.length);
         if (ampmPart) {
             const ampm = DateTimeUtil.getPartValue(date, ampmPart, ampmPart.format.length);

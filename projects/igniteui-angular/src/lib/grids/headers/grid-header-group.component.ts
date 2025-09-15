@@ -53,7 +53,6 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         return this.column.colStart;
     }
 
-    @HostBinding('attr.id')
     public get headerID() {
         return `${this.grid.id}_-1_${this.column.level}_${this.column.visibleIndex}`;
     }
@@ -142,6 +141,13 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
             return null;
         }
         return Z_INDEX - this.grid.pinnedColumns.indexOf(this.column);
+    }
+
+    /**
+     * @hidden
+     */
+    public get ariaHidden(): boolean {
+        return this.grid.hasColumnGroups && (this.column.hidden || this.grid.navigation.activeNode.row !== -1);
     }
 
     /**

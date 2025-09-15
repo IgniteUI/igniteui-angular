@@ -1,4 +1,18 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, Input, QueryList, TemplateRef, ViewChild, ViewChildren, booleanAttribute, inject } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    DoCheck,
+    ElementRef,
+    HostBinding,
+    Input,
+    QueryList,
+    TemplateRef,
+    ViewChild,
+    ViewChildren,
+    booleanAttribute,
+    inject
+} from '@angular/core';
 import { flatten, trackByIdentity } from '../../core/utils';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { ColumnType, GridType, IgxHeadSelectorTemplateContext } from '../common/grid.interface';
@@ -35,16 +49,28 @@ export class IgxGridHeaderRowComponent implements DoCheck {
     @Input()
     public grid: GridType;
 
-    /** Pinned columns of the grid. */
+    /** Pinned columns of the grid at start. */
     @Input()
-    public pinnedColumnCollection: ColumnType[] = [];
+    public pinnedStartColumnCollection: ColumnType[] = [];
+
+    /** Pinned columns of the grid at end. */
+    @Input()
+    public pinnedEndColumnCollection: ColumnType[] = [];
+
 
     /** Unpinned columns of the grid. */
     @Input()
     public unpinnedColumnCollection: ColumnType[] = [];
 
-    @Input()
-    public activeDescendant: string;
+    @HostBinding('attr.aria-activedescendant')
+    public get activeDescendant() {
+        const activeElem = this.navigation.activeNode;
+
+        if (!activeElem || !Object.keys(activeElem).length || activeElem.row >= 0) {
+            return null;
+        }
+        return `${this.grid.id}_${activeElem.row}_${activeElem.level}_${activeElem.column}`;
+    }
 
     @Input({ transform: booleanAttribute })
     public hasMRL: boolean;
@@ -82,6 +108,26 @@ export class IgxGridHeaderRowComponent implements DoCheck {
     /** Filtering cell components in the header row. */
     public get filters(): IgxGridFilteringCellComponent[] {
         return this.groups.map(group => group.filter);
+    }
+
+    /**
+     * Gets a list of all visible leaf columns in the grid.
+     *
+     * @hidden @internal
+     */
+    public get visibleLeafColumns(): ColumnType[] {
+        const row = this.grid.gridAPI.get_row_by_index(this.grid.rowList.first?.index || 0);
+        if (row && row.cells) {
+            return row.cells.map(cell => cell.column);
+        }
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public get isLeafHeaderAriaHidden(): boolean {
+        return this.grid.navigation.activeNode.row === -1;
     }
 
     /** The virtualized part of the header row containing the unpinned header groups. */

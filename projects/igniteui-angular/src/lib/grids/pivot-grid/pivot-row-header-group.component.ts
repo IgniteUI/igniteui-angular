@@ -33,6 +33,13 @@ export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent
 
     /**
      * @hidden
+     */
+    public get role(): string {
+        return 'columnheader';
+    }
+
+    /**
+     * @hidden
      * @internal
      */
     @Input()

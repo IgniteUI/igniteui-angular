@@ -26,6 +26,8 @@ export class IgxPivotRowDimensionMrlRowComponent extends IgxGridHeaderRowCompone
     protected envInjector = inject(EnvironmentInjector);
     protected viewRef = inject(ViewContainerRef);
 
+    @ViewChildren(IgxPivotRowDimensionContentComponent)
+    public rowDimensionContentCollection: QueryList<IgxPivotRowDimensionContentComponent>;
 
     @HostBinding('class.igx-grid__tbody-pivot-dimension')
     public pivotDim = true;
