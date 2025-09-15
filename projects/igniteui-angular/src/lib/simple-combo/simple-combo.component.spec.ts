@@ -699,8 +699,8 @@ describe('IgxSimpleCombo', () => {
         it('should render dropdown list and item height defaults properly', fakeAsync(() => {
             let itemHeight = 40;
 
-            // Initially there are 11 items inside the combo that's why it should be 440
-            let dropdownHeight = 440;
+            // Initially there are 6 items inside the combo that's why it should be 240
+            let dropdownHeight = 240;
 
             // NOTE: item height is 40px for a large variant
             fixture.componentInstance.size = "large";
@@ -721,7 +721,7 @@ describe('IgxSimpleCombo', () => {
             verifyDropdownItemHeight();
 
             itemHeight = 48;
-            dropdownHeight = 480;
+            dropdownHeight = 288;
             combo.itemHeight = itemHeight;
             tick();
             fixture.detectChanges();
@@ -760,9 +760,9 @@ describe('IgxSimpleCombo', () => {
             expect(focusedItem_1.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
 
             // Change focus
-            dropdown.navigateItem(6);
+            dropdown.navigateItem(5);
             fixture.detectChanges();
-            const focusedItem_2 = dropdownItems[5];
+            const focusedItem_2 = dropdownItems[4];
             expect(focusedItem_2.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
             expect(focusedItem_1.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
         });
