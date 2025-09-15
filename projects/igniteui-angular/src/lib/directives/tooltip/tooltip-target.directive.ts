@@ -14,7 +14,6 @@ import { IgxTooltipComponent } from './tooltip.component';
 import { IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipCloseButtonComponent } from './tooltip-close-button.component';
 import { TooltipPositionSettings, TooltipPositionStrategy } from './tooltip.common';
-import { IgxNavigationService } from 'igniteui-angular';
 
 export interface ITooltipShowEventArgs extends IBaseEventArgs {
     target: IgxTooltipTargetDirective;
