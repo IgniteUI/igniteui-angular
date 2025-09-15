@@ -61,10 +61,10 @@
         $variant
     );
 
-    $button-transition: color var(--_ig-init-transition, #{$time}) ease-in-out,
-        background-color var(--_ig-init-transition, #{$time}) ease-in-out,
-        border-color var(--_ig-init-transition, #{$time}) ease-in-out,
-        box-shadow var(--_ig-init-transition, #{$time}) ease-in-out;
+    $button-transition: color var(--_init-transition, #{$time}) ease-in-out,
+        background-color var(--_init-transition, #{$time}) ease-in-out,
+        border-color var(--_init-transition, #{$time}) ease-in-out,
+        box-shadow var(--_init-transition, #{$time}) ease-in-out;
 
     $button-disabled-shadow: none;
 
