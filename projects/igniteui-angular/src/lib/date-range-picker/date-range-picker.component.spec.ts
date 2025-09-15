@@ -58,6 +58,8 @@ describe('IgxDateRangePicker', () => {
         let mockCalendar: IgxCalendarComponent;
         let mockDaysView: any;
         let mockCdr: any;
+        let fixture: any;
+        let dateRange: IgxDateRangePickerComponent;
         const elementRef = { nativeElement: null };
         const mockNgControl = jasmine.createSpyObj('NgControl',
             ['registerOnChangeCb',
@@ -79,6 +81,10 @@ describe('IgxDateRangePicker', () => {
             mockElement.parent = mockElement;
             mockElement.parentElement = mockElement;
 
+            mockCdr = jasmine.createSpyObj('ChangeDetectorRef', {
+                detectChanges: () => { }
+            });
+
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule],
                 providers: [
@@ -88,9 +94,12 @@ describe('IgxDateRangePicker', () => {
                     IgxCalendarComponent,
                     KeyboardNavigationService,
                     ChangeDetectorRef,
-                    IgxDateRangePickerComponent
                 ]
             });
+
+            fixture = TestBed.createComponent(IgxDateRangePickerComponent);
+            dateRange = fixture.componentInstance;
+            (dateRange as any)._cdr = mockCdr;
 
             mockCalendar = TestBed.inject(IgxCalendarComponent);
 
@@ -101,7 +110,7 @@ describe('IgxDateRangePicker', () => {
         });
         /* eslint-enable @typescript-eslint/no-unused-vars */
         it('should set range dates correctly through selectRange method', () => {
-            const dateRange = TestBed.inject(IgxDateRangePickerComponent);
+            //const dateRange = TestBed.inject(IgxDateRangePickerComponent);
             // dateRange.calendar = calendar;
             let startDate = new Date(2020, 3, 7);
             const endDate = new Date(2020, 6, 27);
@@ -119,7 +128,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should emit valueChange on selection', () => {
-            const dateRange = TestBed.inject(IgxDateRangePickerComponent);
+            //const dateRange = TestBed.inject(IgxDateRangePickerComponent);
             // dateRange.calendar = calendar;
             spyOn(dateRange.valueChange, 'emit');
             let startDate = new Date(2017, 4, 5);
@@ -146,44 +155,41 @@ describe('IgxDateRangePicker', () => {
             const rangeUpdate = { start: new Date(2020, 2, 22), end: new Date(2020, 2, 25) };
 
             // init
-            const dateRangePicker = TestBed.inject(IgxDateRangePickerComponent);
-            dateRangePicker.registerOnChange(mockNgControl.registerOnChangeCb);
-            dateRangePicker.registerOnTouched(mockNgControl.registerOnTouchedCb);
-            spyOn(dateRangePicker as any, 'handleSelection').and.callThrough();
+            dateRange.registerOnChange(mockNgControl.registerOnChangeCb);
+            dateRange.registerOnTouched(mockNgControl.registerOnTouchedCb);
+            spyOn(dateRange as any, 'handleSelection').and.callThrough();
 
             // writeValue
-            expect(dateRangePicker.value).toBeUndefined();
+            expect(dateRange.value).toBeUndefined();
             expect(mockNgControl.registerOnChangeCb).not.toHaveBeenCalled();
-            dateRangePicker.writeValue(range);
-            expect(dateRangePicker.value).toBe(range);
+            dateRange.writeValue(range);
+            expect(dateRange.value).toBe(range);
 
             // set value & handleSelection call _onChangeCallback
-            dateRangePicker.value = rangeUpdate;
+            dateRange.value = rangeUpdate;
             expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith(rangeUpdate);
 
-            (dateRangePicker as any).handleSelection([range.start]);
-            expect((dateRangePicker as any).handleSelection).toHaveBeenCalledWith([range.start]);
-            expect((dateRangePicker as any).handleSelection).toHaveBeenCalledTimes(1);
+            (dateRange as any).handleSelection([range.start]);
+            expect((dateRange as any).handleSelection).toHaveBeenCalledWith([range.start]);
+            expect((dateRange as any).handleSelection).toHaveBeenCalledTimes(1);
             expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith({ start: range.start, end: range.start });
 
             // awaiting implementation - OnTouched callback
             // Docs: changes the value, turning the control dirty; or blurs the form control element, setting the control to touched.
             // when handleSelection fires should be touched&dirty // when input is blurred(two inputs), should be touched.
-            (dateRangePicker as any).handleSelection([range.start]);
-            (dateRangePicker as any).updateValidityOnBlur();
+            (dateRange as any).handleSelection([range.start]);
+            (dateRange as any).updateValidityOnBlur();
             expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
 
-            dateRangePicker.setDisabledState(true);
-            expect(dateRangePicker.disabled).toBe(true);
-            dateRangePicker.setDisabledState(false);
-            expect(dateRangePicker.disabled).toBe(false);
+            dateRange.setDisabledState(true);
+            expect(dateRange.disabled).toBe(true);
+            dateRange.setDisabledState(false);
+            expect(dateRange.disabled).toBe(false);
         });
 
         it('should validate correctly minValue and maxValue', () => {
-            const dateRange = TestBed.inject(IgxDateRangePickerComponent);
             dateRange.ngOnInit();
 
-            // dateRange.calendar = calendar;
             dateRange.registerOnChange(mockNgControl.registerOnChangeCb);
             dateRange.registerOnValidatorChange(mockNgControl.registerOnValidatorChangeCb);
 
@@ -205,7 +211,6 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should disable calendar dates when min and/or max values as dates are provided', () => {
-            const dateRange = TestBed.inject(IgxDateRangePickerComponent);
             dateRange.ngOnInit();
 
             spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
@@ -221,7 +226,6 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
-            const dateRange = TestBed.inject(IgxDateRangePickerComponent);
             dateRange.ngOnInit();
 
             spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
@@ -238,7 +242,6 @@ describe('IgxDateRangePicker', () => {
         }));
 
         it('should validate correctly when disabledDates are set', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, mockCdr, null, null);
             dateRange.ngOnInit();
 
             dateRange.registerOnChange(mockNgControl.registerOnChangeCb);
