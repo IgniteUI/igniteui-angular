@@ -5,7 +5,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin tooltip($theme) {
-    @include css-vars($theme);
+    @include css-vars($theme, '.igx-tooltip');
     $variant: map.get($theme, '_meta', 'theme');
 
     $transparent-border: rem(4px) solid transparent;

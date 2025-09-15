@@ -5,7 +5,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin combo($theme) {
-    @include css-vars($theme);
+    @include css-vars($theme, 'igx-combo, igx-simple-combo');
 
     $variant: map.get($theme, '_meta', 'theme');
 
@@ -98,9 +98,15 @@
     }
 
     %igx-combo__content {
+        --item-count: 6;
+
         position: relative;
         overflow: hidden;
-        max-height: calc(var(--size) * 10);
+        max-height: calc(var(--size) * var(--item-count));
+
+        @if $variant == 'indigo' {
+            max-height: calc(var(--size) * var(--item-count) + rem(16px));
+        }
 
         &:focus {
             outline: transparent;

@@ -7,7 +7,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin switch($theme) {
-    @include css-vars($theme);
+    @include css-vars($theme, 'igx-switch');
     @include scale-in-out($start-scale: .9);
 
     $variant: map.get($theme, '_meta', 'theme');

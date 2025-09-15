@@ -6,7 +6,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin snackbar($theme) {
-    @include css-vars($theme);
+    @include css-vars($theme, 'igx-snackbar');
     @include fade-in();
 
     $variant: map.get($theme, '_meta', 'theme');
