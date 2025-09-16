@@ -54,20 +54,6 @@ export class IgxGridStateComponent extends IgxGridStateBaseDirective {
     protected override envInjector: EnvironmentInjector;
     protected override injector: Injector;
 
-
-    constructor() {
-            const grid = inject<GridType>(IGX_GRID_BASE);
-            const viewRef = inject(ViewContainerRef);
-            const envInjector = inject(EnvironmentInjector);
-            const injector = inject(Injector);
-
-            super(grid, viewRef, envInjector, injector);
-        
-            this.viewRef = viewRef;
-            this.envInjector = envInjector;
-            this.injector = injector;
-    }
-
     /**
      * Restores grid features' state based on the IGridStateInfo object passed as an argument.
      * @param state object to restore state from.
