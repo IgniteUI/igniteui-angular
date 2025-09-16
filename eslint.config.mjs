@@ -83,6 +83,7 @@ export default [{
         }],
 
         "@angular-eslint/no-input-rename": "off",
+        "@angular-eslint/prefer-inject": "warn",
 
         "brace-style": ["error", "1tbs"],
         "id-blacklist": "off",
