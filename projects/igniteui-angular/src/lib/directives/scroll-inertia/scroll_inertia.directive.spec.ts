@@ -1,4 +1,4 @@
-import { Component, Directive, NgZone, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, Directive, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxScrollInertiaDirective } from './scroll_inertia.directive';
 

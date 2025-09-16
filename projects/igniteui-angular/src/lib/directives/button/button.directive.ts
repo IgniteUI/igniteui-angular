@@ -111,6 +111,10 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
         return this._selected;
     }
 
+    constructor() {
+        super();
+    }
+
     /**
      * Sets the type of the button.
      *

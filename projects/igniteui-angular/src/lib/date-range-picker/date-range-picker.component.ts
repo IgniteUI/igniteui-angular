@@ -18,8 +18,8 @@ import { IgxPickerActionsDirective } from '../date-common/picker-icons.common';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
-    IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState,
-    IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxSuffixDirective
+    IgxInputDirective, IgxInputGroupComponent, IgxInputState,
+    IgxLabelDirective, IgxSuffixDirective
 } from '../input-group/public_api';
 import {
     AutoPositionStrategy, IgxOverlayService, OverlayCancelableEventArgs, OverlayEventArgs,

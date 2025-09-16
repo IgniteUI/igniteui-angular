@@ -13,7 +13,7 @@ import {
 defineComponents(IgcExpansionPanelComponent);
 
 @Component({
-    // eslint-disable-next-line @angular-eslint/component-selector
+     
     selector: 'expansion-panel-sample',
     templateUrl: './expansion-panel-sample.html',
     styleUrls: ['expansion-panel-sample.scss'],

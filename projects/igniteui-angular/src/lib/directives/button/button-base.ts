@@ -6,7 +6,7 @@ import {
     HostListener,
     Input,
     Output,
-    booleanAttribute, inject,
+    booleanAttribute,
     inject,
     afterRenderEffect,
 } from '@angular/core';

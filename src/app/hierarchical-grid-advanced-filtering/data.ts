@@ -1,6 +1,6 @@
 
-/* eslint-disable id-blacklist */
-/* eslint-disable @typescript-eslint/naming-convention */
+ 
+ 
 export interface Song {
     Number: number;
     Title: string;

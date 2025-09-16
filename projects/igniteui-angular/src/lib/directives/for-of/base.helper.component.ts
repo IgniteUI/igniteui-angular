@@ -5,7 +5,6 @@ import {
     OnDestroy,
     Directive,
     AfterViewInit,
-    Inject,
     NgZone,
     Renderer2,
     PLATFORM_ID,

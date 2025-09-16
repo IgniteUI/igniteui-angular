@@ -1,4 +1,4 @@
-import { NgTemplateOutlet, NgClass } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectorRef, Component, ContentChild, ContentChildren, DestroyRef, ElementRef, HostBinding, HostListener, Input, QueryList, booleanAttribute, inject, DOCUMENT,
     AfterContentChecked } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';

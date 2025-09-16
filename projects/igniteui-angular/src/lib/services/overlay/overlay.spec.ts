@@ -1,4 +1,4 @@
-import { ApplicationRef, Component, ComponentRef, DOCUMENT, ElementRef, HostBinding, Injector, NgZone, ViewChild, ViewContainerRef, ViewEncapsulation, inject } from '@angular/core';
+import { Component, ComponentRef, ElementRef, HostBinding, Injector, ViewChild, ViewContainerRef, ViewEncapsulation, inject } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first } from 'rxjs/operators';
@@ -7,7 +7,6 @@ import { IgxCalendarComponent } from '../../calendar/public_api';
 import { IgxCalendarContainerComponent } from '../../date-common/calendar-container/calendar-container.component';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxAngularAnimationService } from '../animation/angular-animation-service';
-import { AnimationService } from '../animation/animation';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from './../../directives/toggle/toggle.directive';
 import { IgxOverlayService } from './overlay';
 import { ContainerPositionStrategy } from './position';
@@ -33,7 +32,6 @@ import {
 } from './utilities';
 import { scaleInVerTop, scaleOutVerTop } from 'igniteui-angular/animations';
 import { PlatformUtil } from '../../core/utils';
-import { AnimationBuilder } from '@angular/animations';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';

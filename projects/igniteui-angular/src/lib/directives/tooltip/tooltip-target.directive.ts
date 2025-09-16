@@ -3,7 +3,6 @@ import {
     Input, EventEmitter, booleanAttribute, inject, TemplateRef, ComponentRef, Renderer2, OnChanges, SimpleChanges,
     EnvironmentInjector,
     createComponent,
-    ElementRef,
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

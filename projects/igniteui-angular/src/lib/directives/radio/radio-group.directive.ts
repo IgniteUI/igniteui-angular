@@ -7,12 +7,9 @@ import {
     HostListener,
     Input,
     OnDestroy,
-    Optional,
     Output,
     QueryList,
-    Self,
     booleanAttribute,
-    contentChildren,
     effect,
     signal,
     inject
