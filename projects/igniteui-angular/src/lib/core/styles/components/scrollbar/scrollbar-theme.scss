@@ -6,7 +6,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin scrollbar($theme) {
-    @include css-vars($theme);
+    @include css-vars($theme, '.ig-scrollbar');
 
     %scrollbar-display {
         // The @-moz-document rule is specifically for Firefox because it does not support the WebKit pseudo-selectors for scrollbar styling.
