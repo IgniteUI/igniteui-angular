@@ -6,7 +6,8 @@
     [grid]="this"
     [hasMRL]="hasColumnLayouts"
     [width]="calcWidth"
-    [pinnedColumnCollection]="pinnedColumns"
+    [pinnedStartColumnCollection]="pinnedStartColumns"
+    [pinnedEndColumnCollection]="pinnedEndColumns"
     [unpinnedColumnCollection]="unpinnedColumns"
     (keydown.meta.c)="copyHandler($event)"
     (keydown.control.c)="copyHandler($event)"
@@ -28,7 +29,7 @@
         }
         @if (hasMovableColumns && columnInDrag && pinnedColumns.length > 0) {
             <span [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
-            class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
+            class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedStartWidth"></span>
         }
         <ng-template igxGridFor let-rowData [igxGridForOf]="renderData
         | pivotGridFilter:pivotConfiguration:filterStrategy:advancedFilteringExpressionsTree:filteringPipeTrigger:pipeTrigger
@@ -51,7 +52,7 @@
         </ng-template>
         <ng-template #record_template let-rowIndex="index" let-rowData>
             <igx-pivot-row [gridID]="id" [index]="rowIndex" [data]="rowData"
-                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:rowData:pipeTrigger"
+                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:isRecordMerged(rowData):false:rowData:pipeTrigger"
                 [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
             </igx-pivot-row>
         </ng-template>
@@ -85,12 +86,12 @@
 </div>
 
 <div class="igx-grid__scroll" [style.height.px]="scrollSize" #scr [hidden]="isHorizontalScrollHidden" (pointerdown)="$event.preventDefault()">
-    <div class="igx-grid__scroll-start" [style.width.px]="pivotPinnedWidth" [style.min-width.px]="pivotPinnedWidth"></div>
+    <div class="igx-grid__scroll-start" [style.width.px]="pivotPinnedStartWidth" [style.min-width.px]="pivotPinnedStartWidth"></div>
     <div class="igx-grid__scroll-main" [style.width.px]="pivotUnpinnedWidth">
         <ng-template igxGridFor [igxGridForOf]="EMPTY_DATA" #scrollContainer>
         </ng-template>
     </div>
-    <div class="igx-grid__scroll-end" [style.width.px]="pivotPinnedWidth" [style.min-width.px]="pivotPinnedWidth" [hidden]="pivotPinnedWidth === 0 || isPinningToStart"></div>
+    <div class="igx-grid__scroll-end" [style.width.px]="pivotPinnedEndWidth" [style.min-width.px]="pivotPinnedEndWidth" [hidden]="pivotPinnedEndWidth === 0"></div>
 </div>
 
 <div class="igx-grid__tfoot" role="rowgroup" #tfoot>

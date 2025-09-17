@@ -3,9 +3,9 @@
 <igx-grid-header-row class="igx-grid-thead" tabindex="0"
     [grid]="this"
     [hasMRL]="hasColumnLayouts"
-    [activeDescendant]="activeDescendant"
     [width]="calcWidth"
-    [pinnedColumnCollection]="pinnedColumns"
+    [pinnedStartColumnCollection]="pinnedStartColumns"
+    [pinnedEndColumnCollection]="pinnedEndColumns"
     [unpinnedColumnCollection]="unpinnedColumns"
     (keydown.meta.c)="copyHandler($event)"
     (keydown.control.c)="copyHandler($event)"
@@ -28,8 +28,22 @@
         @if (moving && columnInDrag && pinnedColumns.length > 0) {
             <span
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
-                class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
+                class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedStartWidth"></span>
         }
+
+        @if (mergedDataInView && mergedDataInView.length > 0) {
+            <div igxScrollInertia
+            [IgxScrollInertiaScrollContainer]="this.verticalScrollContainer.dc.instance.scrollContainer"
+            [IgxScrollInertiaDirection]="this.verticalScrollContainer.dc.instance.scrollDirection">
+                @for (rowData of mergedDataInView; track rowData.record;) {
+                    <igx-tree-grid-row class="igx-grid__tr--merged-top" [gridID]="id" [index]="rowData.index" [treeRow]="rowData.record.recordRef" [metaData]="rowData.record" [style.top.px]="getMergeCellOffset(rowData)"
+                    [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowData.index:hasColumnLayouts:isRecordMerged(rowData):row.treeRow.isFilteredOutParent:rowData:pipeTrigger"
+                    [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowData.index:pipeTrigger" #row>
+                </igx-tree-grid-row>
+                }
+            </div>
+        }
+
         <ng-template #pinnedRecordsTemplate>
             @if (data
                 | treeGridTransaction:pipeTrigger
@@ -38,7 +52,8 @@
                 | treeGridAddRow:true:pipeTrigger
                 | gridRowPinning:id:true:pipeTrigger
                 | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:pipeTrigger:filteringPipeTrigger:true
-                | treeGridSorting:sortingExpressions:treeGroupArea?.expressions:sortStrategy:pipeTrigger:true; as pinnedData
+                | treeGridSorting:sortingExpressions:treeGroupArea?.expressions:sortStrategy:pipeTrigger:true
+                | gridCellMerge:columnsToMerge:cellMergeMode:mergeStrategy:activeRowIndexes:true:pipeTrigger; as pinnedData
             ) {
                 @if (pinnedData.length > 0) {
                     <div #pinContainer
@@ -66,7 +81,8 @@
         | treeGridPaging:!!paginator:page:perPage:pipeTrigger
         | treeGridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:showSummaryOnCollapse:pipeTrigger:summaryPipeTrigger
         | treeGridAddRow:false:pipeTrigger
-        | gridRowPinning:id:false:pipeTrigger"
+        | gridRowPinning:id:false:pipeTrigger
+        | gridCellMerge:columnsToMerge:cellMergeMode:mergeStrategy:activeRowIndexes:false:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" #verticalScrollContainer
             (dataChanging)="dataRebinding($event)" (dataChanged)="dataRebound($event)">
@@ -76,15 +92,15 @@
             </ng-template>
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null"></ng-container>
-        <ng-template #record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData>
-            <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" [disabled]="disabledRow"
-                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:row.treeRow.isFilteredOutParent:rowData:pipeTrigger"
+        <ng-template #record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData let-metaData="metaData">
+            <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" [disabled]="disabledRow" [metaData]="metaData"
+                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:isRecordMerged(metaData):row.treeRow.isFilteredOutParent:rowData:pipeTrigger"
                 [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
             </igx-tree-grid-row>
         </ng-template>
-        <ng-template #pinned_record_template let-rowIndex="index" let-rowData>
-            <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData"
-                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:row.treeRow.isFilteredOutParent:rowData:pipeTrigger"
+        <ng-template #pinned_record_template let-rowIndex="index" let-rowData let-metaData="metaData">
+            <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" [metaData]="metaData"
+                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:isRecordMerged(metaData):row.treeRow.isFilteredOutParent:rowData:pipeTrigger"
                 [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger"#row #pinnedRow>
             </igx-tree-grid-row>
         </ng-template>
@@ -139,12 +155,12 @@
 </div>
 
 <div class="igx-grid__scroll" [style.height.px]="scrollSize" #scr [hidden]="isHorizontalScrollHidden" (pointerdown)="$event.preventDefault()">
-    <div class="igx-grid__scroll-start" [style.width.px]='isPinningToStart ? pinnedWidth : headerFeaturesWidth' [style.min-width.px]='isPinningToStart ? pinnedWidth : headerFeaturesWidth'></div>
+    <div class="igx-grid__scroll-start" [style.width.px]='pinnedStartWidth' [style.min-width.px]='pinnedStartWidth'></div>
     <div class="igx-grid__scroll-main" [style.width.px]='unpinnedWidth'>
         <ng-template igxGridFor [igxGridForOf]='[]' #scrollContainer>
         </ng-template>
     </div>
-    <div class="igx-grid__scroll-end" [style.width.px]='pinnedWidth' [style.min-width.px]='pinnedWidth' [hidden]="pinnedWidth === 0 || isPinningToStart"></div>
+    <div class="igx-grid__scroll-end" [style.width.px]='pinnedEndWidth' [style.min-width.px]='pinnedEndWidth' [hidden]="pinnedEndWidth === 0"></div>
 </div>
 
 <div class="igx-grid__footer" #footer>

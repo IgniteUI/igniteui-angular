@@ -6,7 +6,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin calendar($theme) {
-    @include css-vars($theme);
+    @include css-vars($theme, 'igx-calendar, .igx-days-view--standalone, .igx-calendar-view--standalone, .igx-date-picker, .igx-month-picker');
 
     $variant: map.get($theme, '_meta', 'theme');
     $bootstrap-theme: $variant == 'bootstrap';
@@ -814,11 +814,9 @@
         %date-inner {
             color: var-get($theme, 'weekend-color');
 
-            @if $variant == 'indigo' {
-                &:hover {
-                    color: var-get($theme, 'date-hover-foreground');
-                }
-            }
+           &:hover {
+               color: var-get($theme, 'date-hover-foreground');
+           }
         }
     }
 

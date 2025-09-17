@@ -5,28 +5,12 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin select($theme) {
-    @include css-vars($theme);
+    @include css-vars($theme, 'igx-select');
     $variant: map.get($theme, '_meta', 'theme');
 
     %igx-select {
         position: relative;
         display: block;
-    }
-
-    @if $variant == 'bootstrap' {
-        .igx-input-group--disabled {
-            %igx-select__toggle-button {
-                border-inline-start-width: rem(1px);
-                border-inline-start-style: solid;
-                border-inline-start-color: inherit;
-            }
-        }
-
-        igx-suffix + %igx-select__toggle-button {
-            border-inline-start-width: rem(1px);
-            border-inline-start-style: solid;
-            border-inline-start-color: inherit;
-        }
     }
 
     .igx-input-group {
