@@ -46,6 +46,7 @@ import { IgxActionStripToken } from '../../action-strip/token';
 import { flatten } from '../../core/utils';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IgxScrollInertiaDirective } from '../../directives/scroll-inertia/scroll_inertia.directive';
+import { IgxGridNavigationService } from '../grid-navigation.service';
 
 let NEXT_ID = 0;
 
@@ -288,6 +289,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         { provide: IGX_GRID_BASE, useExisting: IgxHierarchicalGridComponent },
         IgxGridSummaryService,
         IgxFilteringService,
+        IgxGridNavigationService,
         IgxHierarchicalGridNavigationService,
         IgxColumnResizingService,
         IgxForOfSyncService,
@@ -653,6 +655,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden
      */
     public override ngOnInit() {
+        console.log("LOGGING ON INIT")
         // this.expansionStatesChange.pipe(takeUntil(this.destroy$)).subscribe((value: Map<any, boolean>) => {
         //     const res = Array.from(value.entries()).filter(({1: v}) => v === true).map(([k]) => k);
         // });

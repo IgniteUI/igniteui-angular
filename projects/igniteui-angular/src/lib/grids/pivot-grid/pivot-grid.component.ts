@@ -71,6 +71,7 @@ import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.compon
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
 import { IgxPivotGridRow } from '../grid-public-row';
+import { IgxGridNavigationService } from '../grid-navigation.service';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -123,6 +124,7 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
         { provide: IGX_GRID_SERVICE_BASE, useClass: GridBaseAPIService },
         { provide: IGX_GRID_BASE, useExisting: IgxPivotGridComponent },
         { provide: IgxFilteringService, useClass: IgxPivotFilteringService },
+        IgxGridNavigationService,
         IgxPivotGridNavigationService,
         IgxPivotColumnResizingService,
         IgxForOfSyncService,
