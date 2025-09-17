@@ -99,13 +99,17 @@ export function asString(x?: ts.Symbol) {
 /** Get the properties of the `@Component({ ...properties })` decorator object param */
 function getDecoratorProps(component: ts.ClassDeclaration): ts.NodeArray<ts.ObjectLiteralElementLike> | null {
     const expression = getDecorators(component)?.find(x => getDecoratorName(x) === 'Component')?.expression;
+    return getCallExpressionProps(expression);
+}
 
+/** Get the properties of the `func({ ...properties })` call expression object param */
+function getCallExpressionProps(expression?: ts.Expression): ts.NodeArray<ts.ObjectLiteralElementLike> | null {
     if (!expression || !ts.isCallExpression(expression))
         return null;
 
     const args = [...expression.arguments];
 
-    if (!ts.isObjectLiteralExpression(args[0]))
+    if (!args[0] || !ts.isObjectLiteralExpression(args[0]))
         return null;
 
     const literal = args[0];
@@ -143,7 +147,6 @@ export function getProvidedAs(component: ts.ClassDeclaration, type: ts.Interface
     }
 
     return null;
-
 }
 
 /**
@@ -198,6 +201,22 @@ export function isUseExistingType(obj: ts.ObjectLiteralExpression, type: ts.Inte
     // `useExisting: forwardRef(() => <type>)`
     const initializer = getTypeExpressionIdentifier(useExistingValue.initializer);
     return initializer ? initializer.getText() === type.symbol.escapedName : false;
+}
+
+/**
+ * Checks if a provided decorator's prams object transform property has the required value set
+ * 
+ * @example
+ * ```ts
+ * Input({ transform: booleanAttribute })
+ * ```
+ * 
+ * @param decorator The decorator node
+ * @param transform The transform value to check for
+ */
+export function hasDecoratorTransformValue(decorator: ts.Decorator | undefined, transform: string): boolean {
+    const props = getCallExpressionProps(decorator?.expression);
+    return !!props?.some(p => ts.isPropertyAssignment(p) && p.name.getText() === 'transform' && p.initializer.getText() === transform);
 }
 
 /**
