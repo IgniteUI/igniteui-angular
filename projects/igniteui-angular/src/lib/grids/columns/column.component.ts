@@ -114,12 +114,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * ```
      *
      */
-    @Input()
-    public get merge() {
+    @Input({ transform: booleanAttribute })
+    public get merge(): boolean {
         return this._merge;
     }
 
-    public set merge(value) {
+    public set merge(value: boolean) {
         if (this.grid.hasColumnLayouts) {
             console.warn('Merging is not supported with multi-row layouts.');
             return;
@@ -192,7 +192,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
-    @Input()
+    @Input({ transform: booleanAttribute })
     public get selectable(): boolean {
         return this._selectable;
     }
