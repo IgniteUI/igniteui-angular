@@ -3813,12 +3813,15 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // set first expression's value
             GridFunctions.setInputValueESF(fix, 0, 0);
+            tick(100);
 
             // select second expression's operator
             GridFunctions.setOperatorESF(fix, 1, 1);
+            tick(100);
 
             // set second expression's value
             GridFunctions.setInputValueESF(fix, 1, 20);
+            tick(100);
 
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
 
@@ -6298,6 +6301,55 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 const input = expr.children[0].querySelector('input');
                 expect(input.value).toBe('');
             });
+        }));
+
+        it('should correctly filter negative decimal values in Excel Style filtering', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 2);
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.setInputValueESF(fix, 0, '-1');
+            tick(100);
+            fix.detectChanges();
+            expect(GridFunctions.getExcelFilteringInput(fix, 0).value).toBe('-1');
+
+            const applyButton = GridFunctions.getApplyExcelStyleCustomFiltering(fix);
+            applyButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            expect(grid.filteredData.length).toBe(8);
+
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 2);
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.setInputValueESF(fix, 0, '-0.1');
+            tick(100);
+            fix.detectChanges();
+            expect(GridFunctions.getExcelFilteringInput(fix, 0).value).toBe('-0.1');
+
+            applyButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            expect(grid.filteredData.length).toBe(8);
         }));
     });
 

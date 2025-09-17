@@ -124,11 +124,11 @@ export class PropertiesPanelComponent {
         return this.config[key].control.options;
     }
 
-    protected getControlLabels(key: string): string[] {
+    protected getControlLabels(key: string): string[] | { label: string, value: any }[] {
         const labels = this.config[key].control.labels || [];
         const options = this.getControlOptions(key);
         return labels.length > 0
             ? labels
-            : options.map((option) => option.toString());
+            : options.map((option) => option.label || option.toString());
     }
 }

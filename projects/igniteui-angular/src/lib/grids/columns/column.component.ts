@@ -967,8 +967,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     public get minWidthPx() {
         const gridAvailableSize = this.grid.calcWidth;
-        const isPercentageWidth = this.minWidth && typeof this.minWidth === 'string' && this.minWidth.indexOf('%') !== -1;
-        return isPercentageWidth ? parseFloat(this.minWidth) / 100 * gridAvailableSize : parseFloat(this.minWidth);
+        const minWidth = this.minWidth || this.defaultMinWidth;
+        const isPercentageWidth = minWidth && typeof minWidth === 'string' && minWidth.indexOf('%') !== -1;
+        return isPercentageWidth ? parseFloat(minWidth) / 100 * gridAvailableSize : parseFloat(minWidth);
     }
 
     /**
@@ -985,8 +986,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     public get minWidthPercent() {
         const gridAvailableSize = this.grid.calcWidth;
-        const isPercentageWidth = this.minWidth && typeof this.minWidth === 'string' && this.minWidth.indexOf('%') !== -1;
-        return isPercentageWidth ? parseFloat(this.minWidth) : parseFloat(this.minWidth) / gridAvailableSize * 100;
+        const minWidth = this.minWidth || this.defaultMinWidth;
+        const isPercentageWidth = minWidth && typeof minWidth === 'string' && minWidth.indexOf('%') !== -1;
+        return isPercentageWidth ? parseFloat(minWidth) : parseFloat(minWidth) / gridAvailableSize * 100;
     }
 
 
@@ -1014,7 +1016,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         this.grid.notifyChanges(true);
     }
     public get minWidth(): string {
-        return !this._defaultMinWidth ? this.defaultMinWidth : this._defaultMinWidth;
+        return this._defaultMinWidth;
     }
 
     /** @hidden @internal **/
@@ -2309,7 +2311,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         // estimate the exact index at which column will be inserted
         // takes into account initial unpinned index of the column
         if (!hasIndex) {
-            const indices = grid.unpinnedColumns.map(col => col.index);
+            const indices = grid._unpinnedColumns.map(col => col.index);
             indices.push(this.index);
             indices.sort((a, b) => a - b);
             index = indices.indexOf(this.index);
@@ -2646,8 +2648,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             const currentCalcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
             this._calcWidth = this.getConstrainedSizePx(currentCalcWidth);
         } else {
-            const currentCalcWidth =  parseFloat(this.width);
-            this._calcWidth =this.getConstrainedSizePx(currentCalcWidth);
+            let possibleColumnWidth = '';
+            if (!this.widthSetByUser && this.userSetMinWidthPx && this.userSetMinWidthPx < this.grid.minColumnWidth) {
+                possibleColumnWidth = this.defaultWidth = this.grid.getPossibleColumnWidth(null, this.userSetMinWidthPx);
+            } else {
+                possibleColumnWidth = this.width;
+            }
+
+            const currentCalcWidth = parseFloat(possibleColumnWidth);
+            this._calcWidth = this.getConstrainedSizePx(currentCalcWidth);
         }
         this.calcPixelWidth = parseFloat(this._calcWidth);
     }
