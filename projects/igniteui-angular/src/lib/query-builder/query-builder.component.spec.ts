@@ -127,6 +127,13 @@ describe('IgxQueryBuilder', () => {
         expect(field.pipeArgs).toBeUndefined();
       });
     }));
+
+    it('Should not throw error when entities are empty and expressionTree is set.', fakeAsync(() => {
+      expect(() => {
+        fix = TestBed.createComponent(IgxQueryBuilderInvalidSampleTestComponent);
+        fix.detectChanges();
+      }).not.toThrow();
+    }));
   });
 
   describe('Interactions', () => {
@@ -3231,6 +3238,27 @@ export class IgxQueryBuilderSampleTestComponent implements OnInit {
 
   public ngOnInit(): void {
     this.entities = SampleEntities.map(a => ({ ...a }));
+  }
+}
+
+@Component({
+  template: `
+     <igx-query-builder #queryBuilder [entities]="this.entities" [expressionTree]="this.expressionTree">
+     </igx-query-builder>
+    `,
+  standalone: true,
+  imports: [
+    IgxQueryBuilderComponent
+  ]
+})
+export class IgxQueryBuilderInvalidSampleTestComponent implements OnInit {
+  @ViewChild(IgxQueryBuilderComponent) public queryBuilder: IgxQueryBuilderComponent;
+  public entities: Array<any>;
+  public expressionTree: IExpressionTree;
+
+  public ngOnInit(): void {
+    this.entities = [];
+    this.expressionTree = QueryBuilderFunctions.generateExpressionTree();
   }
 }
 

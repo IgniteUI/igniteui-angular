@@ -1,5 +1,4 @@
 import { booleanAttribute, Component, HostBinding, Input } from '@angular/core';
-import { mkenum } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 
 let NEXT_ID = 0;
@@ -7,13 +6,13 @@ let NEXT_ID = 0;
 /**
  * Determines the igxBadge type
  */
-export const IgxBadgeType = /*@__PURE__*/mkenum({
+export const IgxBadgeType = {
     PRIMARY: 'primary',
     INFO: 'info',
     SUCCESS: 'success',
     WARNING: 'warning',
     ERROR: 'error'
-});
+} as const;
 export type IgxBadgeType = (typeof IgxBadgeType)[keyof typeof IgxBadgeType];
 /**
  * Badge provides visual notifications used to decorate avatars, menus, etc.

@@ -80,7 +80,8 @@ import { FilteringStrategy, IFilteringStrategy } from '../data-operations/filter
 import {
     IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective,
     IgxHeaderCollapsedIndicatorDirective, IgxExcelStyleHeaderIconDirective, IgxSortAscendingHeaderIconDirective,
-    IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective
+    IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective,
+    IgxGridLoadingTemplateDirective, IgxGridEmptyTemplateDirective,
 } from './grid.directives';
 import {
     GridKeydownTargetType,
@@ -260,11 +261,22 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @example
      * ```html
+     * <ng-template igxGridEmpty>
+     *   <!-- content to show when the grid is empty -->
+     * </ng-template>
+     * ```
+     * Or
+     * ```html
      * <igx-grid [id]="'igx-grid-1'" [data]="Data" [emptyGridTemplate]="myTemplate" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Input()
-    public emptyGridTemplate: TemplateRef<IgxGridTemplateContext>;
+    public get emptyGridTemplate(): TemplateRef<IgxGridTemplateContext> {
+        return this._emptyGridTemplate || this.emptyDirectiveTemplate;
+    }
+    public set emptyGridTemplate(template: TemplateRef<IgxGridTemplateContext>) {
+        this._emptyGridTemplate = template;
+    }
 
     /**
      * Gets/Sets a custom template for adding row UI when grid is empty.
@@ -282,11 +294,22 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @example
      * ```html
+     * <ng-template igxGridLoading>
+     *   <!-- content to show when the grid is loading -->
+     * </ng-template>
+     * ```
+     * Or
+     * ```html
      * <igx-grid [id]="'igx-grid-1'" [data]="Data" [loadingGridTemplate]="myTemplate" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Input()
-    public loadingGridTemplate: TemplateRef<IgxGridTemplateContext>;
+    public get loadingGridTemplate(): TemplateRef<IgxGridTemplateContext> {
+        return this._loadingGridTemplate || this.loadingDirectiveTemplate;
+    }
+    public set loadingGridTemplate(template: TemplateRef<IgxGridTemplateContext>) {
+        this._loadingGridTemplate = template;
+    }
 
     /**
      * Get/Set IgxSummaryRow height
@@ -1709,6 +1732,13 @@ export abstract class IgxGridBaseDirective implements GridType,
     @ContentChildren(IgxDragIndicatorIconDirective, { read: TemplateRef, descendants: false })
     public dragIndicatorIconTemplates: QueryList<TemplateRef<IgxGridEmptyTemplateContext>>;
 
+
+    @ContentChild(IgxGridLoadingTemplateDirective, { read: TemplateRef })
+    protected loadingDirectiveTemplate: TemplateRef<IgxGridTemplateContext>;
+
+    @ContentChild(IgxGridEmptyTemplateDirective, { read: TemplateRef })
+    protected emptyDirectiveTemplate: TemplateRef<IgxGridTemplateContext>;
+
     /**
      * @hidden @internal
      */
@@ -1809,6 +1839,15 @@ export abstract class IgxGridBaseDirective implements GridType,
     @HostBinding('class.igx-grid')
     protected baseClass = 'igx-grid';
 
+    @HostBinding('attr.aria-colcount')
+    protected get ariaColCount(): number {
+        return this.visibleColumns.length;
+    }
+
+    @HostBinding('attr.aria-rowcount')
+    protected get ariaRowCount(): number {
+        return this._rendered ? this._rowCount : null;
+    }
 
     /**
      * Gets/Sets the resource strings.
@@ -2735,13 +2774,10 @@ export abstract class IgxGridBaseDirective implements GridType,
     public get activeDescendant() {
         const activeElem = this.navigation.activeNode;
 
-        if (!activeElem || !Object.keys(activeElem).length) {
-            return this.id;
+        if (!activeElem || !Object.keys(activeElem).length || activeElem.row < 0) {
+            return null;
         }
-
-        return activeElem.row < 0 ?
-            `${this.id}_${activeElem.row}_${activeElem.mchCache.level}_${activeElem.column}` :
-            `${this.id}_${activeElem.row}_${activeElem.column}`;
+        return `${this.id}_${activeElem.row}_${activeElem.column}`;
     }
 
     /** @hidden @internal */
@@ -3186,6 +3222,8 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _rowCollapsedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext>;
     private _headerExpandIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
     private _headerCollapseIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
+    private _emptyGridTemplate: TemplateRef<IgxGridTemplateContext>;
+    private _loadingGridTemplate: TemplateRef<IgxGridTemplateContext>;
 
     private _cdrRequests = false;
     private _resourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
@@ -3270,6 +3308,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _gridSize: Size = Size.Large;
     private _defaultRowHeight = 50;
+    private _rowCount: number;
 
     /**
      * @hidden @internal
@@ -3781,7 +3820,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         // notifier for column autosize requests
         this._autoSizeColumnsNotify.pipe(
-            throttleTime(0, animationFrameScheduler, { leading: false, trailing: true }),
+            throttleTime(0, this.platform.isBrowser ? animationFrameScheduler : undefined, { leading: false, trailing: true }),
             destructor
         )
             .subscribe(() => {
@@ -4091,6 +4130,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (this.hasColumnsToAutosize) {
                 this.autoSizeColumnsInView();
             }
+            this._calculateRowCount();
             this._rendered = true;
         });
         Promise.resolve().then(() => this.rendered.next(true));
@@ -5444,7 +5484,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public getPossibleColumnWidth(baseWidth: number = null) {
+    public getPossibleColumnWidth(baseWidth: number = null, minColumnWidth: number = null) {
         let computedWidth;
         if (baseWidth !== null) {
             computedWidth = baseWidth;
@@ -5493,9 +5533,11 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
         computedWidth -= this.featureColumnsWidth();
 
+        const minColWidth = minColumnWidth || this.minColumnWidth;
+
         const columnWidth = !Number.isFinite(sumExistingWidths) ?
-            Math.max(computedWidth / columnsToSize, this.minColumnWidth) :
-            Math.max((computedWidth - sumExistingWidths) / columnsToSize, this.minColumnWidth);
+            Math.max(computedWidth / columnsToSize, minColWidth) :
+            Math.max((computedWidth - sumExistingWidths) / columnsToSize, minColWidth);
 
         return columnWidth + 'px';
     }
@@ -5525,7 +5567,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         let sum = 0;
         for (const col of fc) {
             if (col.level === 0) {
-                sum += parseInt(col.calcWidth, 10);
+                sum += parseFloat(col.calcWidth);
             }
         }
         if (this.isPinningToStart) {
@@ -6137,7 +6179,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public trackColumnChanges(_index, col) {
-        return col.field + col._calcWidth;
+        return col.field + col._calcWidth.toString();
     }
 
     /**
@@ -6266,7 +6308,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public hasHorizontalScroll() {
-        return this.totalWidth - this.unpinnedWidth > 0 && this.width !== null;
+        return Math.round(this.totalWidth - this.unpinnedWidth) > 0 && this.width !== null;
     }
 
     /**
@@ -6317,6 +6359,9 @@ export abstract class IgxGridBaseDirective implements GridType,
     // TODO: do not remove this, as it is used in rowEditTemplate, but mark is as internal and hidden
     /* blazorCSSuppress */
     public endEdit(commit = true, event?: Event): boolean {
+        if (!this.crudService.cellInEditMode && !this.crudService.rowInEditMode) {
+            return;
+        }
         const document = this.nativeElement?.getRootNode() as Document | ShadowRoot;
         const focusWithin = this.nativeElement?.contains(document.activeElement);
 
@@ -6730,6 +6775,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
+        this._calculateRowCount();
 
         this.columnList.changes
             .pipe(takeUntil(this.destroy$))
@@ -7952,5 +7998,16 @@ export abstract class IgxGridBaseDirective implements GridType,
         } else {
             return recreateTreeFromFields(value, this._columns) as IFilteringExpressionsTree;
         }
+    }
+
+    private _calculateRowCount(): void {
+        if (this.verticalScrollContainer?.isRemote) {
+            this._rowCount = this.verticalScrollContainer.totalItemCount ?? 0;
+        } else if (this.paginator) {
+            this._rowCount = this.totalRecords ?? 0;
+        } else {
+            this._rowCount = this.verticalScrollContainer?.igxForOf?.length ?? 0;
+        }
+        this._rowCount += 1; // include header row
     }
 }

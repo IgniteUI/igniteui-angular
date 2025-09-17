@@ -1,75 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
 @use 'igniteui-theming/sass/animations' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
-
-/// If you specify a background color, but do not specify colors for either the
-/// button or the text, their colors will be set automatically to a contrasting color.
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Color} $background [null] - The background color used in the snackbar.
-/// @param {Color} $text-color [null] - The text color used in the snackbar.
-/// @param {Color} $button-color [null] - The button color used in the snackbar.
-/// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the snackbar.
-/// @param {List} $border-radius [null] - The border radius used for the snackbar component.
-/// @requires $light-material-schema
-/// @example scss Set a custom background color
-///   $my-snackbar-theme: snackbar-theme($background: white);
-///   // Pass the theme to the css-vars() mixin
-///   @include css-vars($my-snackbar-theme);
-@function snackbar-theme(
-    $schema: $light-material-schema,
-
-    $border-radius: null,
-    $background: null,
-    $text-color: null,
-    $button-color: null,
-    $shadow: null
-) {
-    $name: 'igx-snackbar';
-    $snackbar-schema: ();
-
-    @if map.has-key($schema, 'snackbar') {
-        $snackbar-schema: map.get($schema, 'snackbar');
-    } @else {
-        $snackbar-schema: $schema;
-    }
-
-    $theme: digest-schema($snackbar-schema);
-    $meta: map.get($theme, '_meta');
-
-    @if not($button-color) and $background {
-        $button-color: text-contrast($background);
-    }
-
-    @if not($text-color) and $background {
-        $text-color: text-contrast($background);
-    }
-
-    @if not($shadow) {
-        $elevation: map.get($snackbar-schema, 'elevation');
-        $shadow: elevation($elevation);
-    }
-
-    @return extend($theme, (
-        name: $name,
-        border-radius: $border-radius,
-        background: $background,
-        text-color: $text-color,
-        button-color: $button-color,
-        shadow: $shadow,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
-    ));
-}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
@@ -78,7 +9,7 @@
     @include css-vars($theme);
     @include fade-in();
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     $snackbar-min-height: rem(48px);
     $snackbar-padding: rem(7px) rem(24px);

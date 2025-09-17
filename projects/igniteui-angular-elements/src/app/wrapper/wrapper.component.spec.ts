@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { html } from 'lit-html';
+import { html } from 'lit';
 import { AsyncDirective, directive } from 'lit/async-directive.js';
 import { TemplateWrapperComponent } from './wrapper.component';
 

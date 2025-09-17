@@ -1,90 +1,5 @@
 @use 'sass:map';
-@use 'sass:meta';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
-
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Color} $background-color [null] - The summaries background color is inherited form igx-grid__tfoot
-/// @param {Color} $label-color [null] - The summaries label color.
-/// @param {Color} $result-color [null] - The summaries value/result color.
-/// @param {Color} $border-color [null] - The summaries border color.
-/// @param {Color} $pinned-border-width [null] - The border width of the summary panel.
-/// @param {Color} $pinned-border-style [null] - The border style of the summary panel.
-/// @param {Color} $pinned-border-color [null] - The border color of the summary panel.
-/// @param {Color} $label-hover-color [null] - The summaries hover label color.
-/// @requires $light-material-schema
-/// @example scss Change the summaries background and labels color
-///   $my-summary-theme: grid-summary-theme(
-///     $background-color: black,
-///     $label-color: white
-///   );
-///   // Pass the theme to the css-vars mixin
-///   @include css-vars($my-summary-theme);
-@function grid-summary-theme(
-    $schema: $light-material-schema,
-
-    $background-color: null,
-    $label-color: null,
-    $result-color: null,
-    $border-color: null,
-    $pinned-border-width: null,
-    $pinned-border-style: null,
-    $pinned-border-color: null,
-    $label-hover-color: null
-) {
-    $name: 'igx-grid-summary';
-    $selector: '.igx-grid-summary';
-    $grid-summary-schema: ();
-
-    @if map.has-key($schema, 'grid-summary') {
-        $grid-summary-schema: map.get($schema, 'grid-summary');
-    } @else {
-        $grid-summary-schema: $schema;
-    }
-
-    $theme: digest-schema($grid-summary-schema);
-    $meta: map.get($theme, '_meta');
-
-    @if not($result-color) and $background-color {
-        $result-color: text-contrast($background-color);
-    }
-
-    @if not($border-color) and $background-color {
-        @if type-of($background-color) == 'color' {
-            $border-color: rgba(text-contrast($background-color), .26);
-        }
-    }
-
-    @if not($pinned-border-color) and $background-color {
-        @if type-of($background-color) == 'color' {
-            $pinned-border-color: rgba(text-contrast($background-color), .26);
-        }
-    }
-
-    @return extend($theme, (
-        name: $name,
-        selector: $selector,
-        background-color: $background-color,
-        label-color: $label-color,
-        result-color: $result-color,
-        border-color: $border-color,
-        pinned-border-width: $pinned-border-width,
-        pinned-border-style: $pinned-border-style,
-        pinned-border-color: $pinned-border-color,
-        label-hover-color: $label-hover-color,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
-    ));
-}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
@@ -92,7 +7,7 @@
 @mixin grid-summary($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     $cell-pin: (
         style: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style'),

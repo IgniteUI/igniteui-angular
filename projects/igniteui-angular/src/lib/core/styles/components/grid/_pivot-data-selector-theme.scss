@@ -25,14 +25,9 @@
     }
 
     $theme: digest-schema($pivot-data-selector-schema);
-    $meta: map.get($theme, '_meta');
 
     @return extend($theme, (
         name: $name,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -41,7 +36,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin pivot-data-selector($theme) {
     @include css-vars($theme);
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     $chip-height-material: (
         comfortable: rem(22px),

@@ -5,7 +5,7 @@ import { IPagingState, PagingError } from './paging-state.interface';
 import { IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
-import { mergeObjects, mkenum } from '../core/utils';
+import { mergeObjects } from '../core/utils';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/transaction/transaction';
 import { getHierarchy, isHierarchyMatch } from './operations';
 import { GridType } from '../grids/common/grid.interface';
@@ -24,7 +24,7 @@ import { IGroupingExpression } from './grouping-expression.interface';
 /**
  * @hidden
  */
- export const DataType = /*@__PURE__*/mkenum({
+ export const DataType = {
     String: 'string',
     Number: 'number',
     Boolean: 'boolean',
@@ -34,7 +34,7 @@ import { IGroupingExpression } from './grouping-expression.interface';
     Currency: 'currency',
     Percent: 'percent',
     Image: 'image'
-});
+} as const;
 export type DataType = (typeof DataType)[keyof typeof DataType];
 
 /**

@@ -21,10 +21,10 @@ import { FilteringLogic } from '../../data-operations/filtering-expression.inter
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from '../../tabs/tabs/public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
-import { GRID_SCROLL_CLASS } from '../../test-utils/grid-functions.spec';
+import { GRID_SCROLL_CLASS, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { AsyncPipe } from '@angular/common';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../../paginator/paginator.component';
-import { IGridRowEventArgs, IgxColumnGroupComponent, IgxGridFooterComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
+import { IGridRowEventArgs, IgxColumnGroupComponent, IgxGridEmptyTemplateDirective, IgxGridFooterComponent, IgxGridLoadingTemplateDirective, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
 import { getComponentSize } from '../../core/utils';
 import { setElementSize, ymd } from '../../test-utils/helper-utils.spec';
 
@@ -580,9 +580,9 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
         }));
 
-        it('should allow applying custom loading indicator', fakeAsync(() => {
+        it('should allow applying custom empty and loading indicator', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridRemoteOnDemandComponent);
-            fixture.componentInstance.instance.loadingGridTemplate = fixture.componentInstance.customTemplate;
+            fixture.componentInstance.customLoading = true;
             fixture.detectChanges();
             tick(16);
 
@@ -590,6 +590,18 @@ describe('IgxGrid Component Tests #grid', () => {
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
             const gridHead = fixture.debugElement.query(By.css(THEAD_CLASS));
 
+            grid.isLoading = false;
+            tick();
+            fixture.detectChanges();
+            expect(gridBody.nativeElement.textContent).toEqual('No Data 😢');
+            grid.isLoading = true;
+            tick();
+            fixture.detectChanges();
+            expect(gridBody.nativeElement.textContent).toEqual('Loading 🔃');
+
+            grid.loadingGridTemplate = fixture.componentInstance.customTemplate;
+            grid.markForCheck();
+            fixture.detectChanges();
             expect(gridBody.nativeElement.textContent).toEqual('Loading...');
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
@@ -2004,6 +2016,33 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.columns[1].field).toBe('firstName');
             expect(grid.columns[2].field).toBe('lastName');
         }));
+
+        it('should set correct aria attributes related to total rows/cols count and indexes', async () => {
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.componentInstance.initColumnsRows(80, 20);
+            fix.detectChanges();
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const gridHeader = GridFunctions.getGridHeader(grid);
+            const headerRowElement = gridHeader.nativeElement.querySelector('[role="row"]');
+
+            grid.navigateTo(50, 16);
+            fix.detectChanges();
+            await wait();
+            fix.detectChanges();
+
+            expect(headerRowElement.getAttribute('aria-rowindex')).toBe('1');
+            expect(grid.nativeElement.getAttribute('aria-rowcount')).toBe('81');
+            expect(grid.nativeElement.getAttribute('aria-colcount')).toBe('20');
+
+            const cell = grid.gridAPI.get_cell_by_index(50, 'col16');
+            // The following attributes indicate to assistive technologies which portions
+            // of the content are displayed in case not all are rendered,
+            // such as with the built-in virtualization of the grid. 1-based index.
+            expect(cell.nativeElement.getAttribute('aria-rowindex')).toBe('52');
+            expect(cell.nativeElement.getAttribute('aria-colindex')).toBe('17');
+        });
     });
 
     describe('IgxGrid - min/max width constraints rules', () => {
@@ -3612,6 +3651,10 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
 @Component({
     template: `
         <igx-grid [data]="data | async" (dataPreLoad)="dataLoading($event)" [isLoading]="true" [autoGenerate]="true" [height]="'600px'">
+            <span *igxGridEmpty>No Data 😢</span>
+            @if (customLoading) {
+                <ng-template igxGridLoading>Loading 🔃</ng-template>
+            }
         </igx-grid>
 
         <ng-template #customTemplate>
@@ -3619,7 +3662,7 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
         </ng-template>
     `,
     providers: [LocalService],
-    imports: [IgxGridComponent, AsyncPipe]
+    imports: [IgxGridComponent, IgxGridEmptyTemplateDirective, IgxGridLoadingTemplateDirective, AsyncPipe]
 })
 export class IgxGridRemoteOnDemandComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3627,6 +3670,7 @@ export class IgxGridRemoteOnDemandComponent {
     @ViewChild('customTemplate', { read: TemplateRef, static: true })
     public customTemplate: TemplateRef<any>;
     public data;
+    public customLoading = false;
     constructor(private localService: LocalService, public cdr: ChangeDetectorRef) { }
 
     public bind() {

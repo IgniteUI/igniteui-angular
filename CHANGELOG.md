@@ -2,8 +2,53 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 19.2.0
+## 20.0.6
+### General
+- `IgxSimpleCombo`
+    - Added `disableFiltering` to the `IgxSimpleCombo`, which enables/disables the filtering in the list. The default is `false`.
+- `IgxCombo`, `IgxSimpleCombo`
+    -  Removed deprecated `filteringOptions.filterable` option.
 
+## 20.0.2
+
+### New Features
+- **Separating Button and Icon Button Themes** - The `button-theme` and `icon-button-theme` functions are still available, but for more targeted customization, you can now use the specific theme function for each button type.
+- **Component Themes Enchancements** - Component themes have been improved to automatically calculate all necessary states (e.g., hover, focus, active) based on just a few key values. For example, customizing a contained button requires only a background color:
+```scss
+    $custom-contained-button: contained-button-theme(
+        $background: #09f;
+    );
+```
+
+## 20.0.0
+
+### General
+- **Angular 20 Compatibility** - Ignite UI for Angular now plays nice with Angular 20! Upgrade your apps and enjoy the latest features.
+- `IgxActionStrip`
+    - **Behavioral Changes** - When using the Action Strip standalone, outside of Grid, scenarios the component is no longer initially visible and the `hidden` property now defaults to `true`.
+- `IgxChip`
+    - **Behavioral Change** The `variant` is now strictly typed with the union of supported options and no longer accepts invalid values for the default state, provide no value (nullish) instead is needed.
+
+### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
+  - Added a new `igxGridEmpty` template directive that allows assigning the `emptyGridTemplate` declaratively, without the need to get and assign reference, like other grid templates like:
+    ```html
+    <igx-grid>
+      <ng-template igxGridEmpty>
+        <!-- content to show when the grid is empty -->
+      </ng-template>
+    </igx-grid>
+    ```
+  - Added a new `igxGridLoading` template directive that allows assigning the `loadingGridTemplate` declaratively, without the need to get and assign reference, like other grid templates like:
+    ```html
+    <igx-grid>
+      <ng-template igxGridLoading>
+        <!-- content to show when the grid is loading -->
+      </ng-template>
+    </igx-grid>
+    ```
+
+## 19.2.0
 ### General
 - `IgxCarousel`
     - Removed deprecated property `keyboardSupport`.
