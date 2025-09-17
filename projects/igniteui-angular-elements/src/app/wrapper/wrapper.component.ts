@@ -16,7 +16,6 @@ export class TemplateWrapperComponent {
 
     public templateFunctions: TemplateFunction[] = [];
     public templateRendered = new Subject<HTMLElement>();
-
     private childParts: WeakMap<HTMLElement, RootPart> = new WeakMap();
 
     /**
@@ -28,7 +27,7 @@ export class TemplateWrapperComponent {
     public templateRefs: QueryList<TemplateRef<any>>;
 
     constructor(private cdr: ChangeDetectorRef) { }
-
+  
     protected litRender(container: HTMLElement, templateFunc: (arg: any) => TemplateResult, arg: any) {
         const part = render(templateFunc(arg), container);
 

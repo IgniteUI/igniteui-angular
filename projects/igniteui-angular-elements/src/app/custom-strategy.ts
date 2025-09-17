@@ -1,11 +1,11 @@
-import { ApplicationRef, ChangeDetectorRef, ComponentFactory, ComponentRef, DestroyRef, EventEmitter, Injector, OnChanges, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
+import { ApplicationRef, ComponentFactory, ComponentRef, DestroyRef, EventEmitter, Injector, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgElement, NgElementStrategyEvent } from '@angular/elements';
 import { fromEvent, Observable } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { ComponentConfig, ContentQueryMeta } from './component-config';
 
-import { ComponentNgElementStrategy, ComponentNgElementStrategyFactory, extractProjectableNodes, isFunction } from './ng-element-strategy';
+import { ComponentNgElementStrategy, ComponentNgElementStrategyFactory, extractProjectableNodes } from './ng-element-strategy';
 import { TemplateWrapperComponent } from './wrapper/wrapper.component';
 
 export const ComponentRefKey = Symbol('ComponentRef');
@@ -61,8 +61,13 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         return this._configSelectors;
     }
 
-    constructor(private _componentFactory: ComponentFactory<any>, private _injector: Injector, private config: ComponentConfig[]) {
-        super(_componentFactory, _injector);
+    constructor(
+        private _componentFactory: ComponentFactory<any>,
+        private _injector: Injector,
+        private _inputMap: Map<string, string>,
+        private config: ComponentConfig[],
+    ) {
+        super(_componentFactory, _injector, _inputMap);
     }
 
     protected override async initializeComponent(element: HTMLElement) {
@@ -147,9 +152,6 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         );
         (this as any).componentRef = this._componentFactory.create(childInjector, projectableNodes, element);
         this.setComponentRef((this as any).componentRef);
-        (this as any).viewChangeDetectorRef = (this as any).componentRef.injector.get(ChangeDetectorRef);
-
-        (this as any).implementsOnChanges = isFunction(((this as any).componentRef.instance as OnChanges).ngOnChanges);
 
         //we need a name ref on the WC element to be copied down for the purposes of blazor.
         //alternatively we need to be able to hop back out to the WC element on demand.
@@ -162,7 +164,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         this.initializeInputs();
         this.initializeOutputs((this as any).componentRef);
 
-        this.detectChanges();
+        // TODO(D.P.): Temporary maintain pre-check for ngAfterViewInit handling on _init flag w/ ngDoCheck interaction of row island
+        (this as any).componentRef.changeDetectorRef.detectChanges();
 
         // check if there are any content children associated with a content query collection.
         // if no, then just emit the event, otherwise we wait for the collection to be updated in updateQuery.
@@ -182,10 +185,10 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             parentAnchor.insert((this as any).componentRef.hostView); //bad, moves in DOM, AND need to be in inner anchor :S
             //restore original DOM position
             domParent.insertBefore(element, nextSibling);
-            this.detectChanges();
+            (this as any).componentRef.hostView.detectChanges();
         } else if (!parentAnchor) {
-            const applicationRef = this._injector.get<ApplicationRef>(ApplicationRef);
-            applicationRef.attachView((this as any).componentRef.hostView);
+            (this as any).appRef.attachView((this as any).componentRef.hostView);
+            (this as any).componentRef.hostView.detectChanges();
         }
         /**
         * End modified copy of super.initializeComponent
@@ -234,7 +237,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         });
     }
 
-    public override setInputValue(property: string, value: any, transform?: (value: any) => any): void {
+    public override setInputValue(property: string, value: any): void {
         if ((this as any).componentRef === null ||
             !(this as any).componentRef.instance) {
             (this as any).initialInputValues.set(property, value);
@@ -281,7 +284,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         if (componentConfig.selector === 'igc-pivot-data-selector' && property === 'grid' && value) {
             value = value.ngElementStrategy?.componentRef?.instance || value;
         }
-        super.setInputValue(property, value, transform);
+        super.setInputValue(property, value);
     }
 
     public override getInputValue(property: string): any {
@@ -553,6 +556,6 @@ export class IgxCustomNgElementStrategyFactory extends ComponentNgElementStrateg
     }
 
     public override create(injector: Injector) {
-        return new IgxCustomNgElementStrategy(this.componentFactory, injector, this.config);
+        return new IgxCustomNgElementStrategy(this.componentFactory, injector, this.inputMap, this.config);
     }
 }
