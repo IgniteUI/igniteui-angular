@@ -9,7 +9,6 @@ import { IGroupingState } from '../../data-operations/groupby-state.interface';
 import { getHierarchy, isHierarchyMatch } from '../../data-operations/operations';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IFilteringState } from '../../data-operations/filtering-state.interface';
-import { FormatWidth, getLocaleDateFormat, getLocaleDateTimeFormat } from '@angular/common';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { ColumnType, GridType, IPathSegment } from '../../grids/common/grid.interface';
 import { FilterUtil } from '../../data-operations/filtering-strategy';
@@ -1170,14 +1169,6 @@ export abstract class IgxBaseExporter {
                 columnInfo.digitsInfo = column.pipeArgs.digitsInfo
                     ? column.pipeArgs.digitsInfo
                     : '1.0-2';
-            }
-
-            if (column.dataType === 'date') {
-                columnInfo.dateFormat = getLocaleDateFormat(this.locale, FormatWidth.Medium);
-            }
-
-            if (column.dataType === 'dateTime') {
-                columnInfo.dateFormat = getLocaleDateTimeFormat(this.locale, FormatWidth.Medium);
             }
 
             if (this.options.ignoreColumnsOrder) {
