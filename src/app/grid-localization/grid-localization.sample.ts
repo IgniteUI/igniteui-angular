@@ -34,7 +34,7 @@ import {
     IgxGridEditingActionsComponent,
     IgxActionStripComponent
 } from 'igniteui-angular';
-import { setCurrentI18n, getI18nManager, registerI18n, ResourceStringsEN } from 'igniteui-i18n-core';
+import { setCurrentI18n, registerI18n, ResourceStringsEN, getDateFormatter } from 'igniteui-i18n-core';
 import { ResourceStringsBG, ResourceStringsDE, ResourceStringsES, ResourceStringsFR, ResourceStringsIT, ResourceStringsJA, ResourceStringsKO, ResourceStringsZHHANS, ResourceStringsZHHANT } from 'igniteui-i18n-resources';
 
 @Component({
@@ -139,6 +139,6 @@ export class GridLocalizationSampleComponent implements OnInit {
 
     public onButtonClick() {
         console.log("Old: " + formatDate(new Date("10/10/1993"), this.inputValue, this.locale));
-        console.log("New: " + getI18nManager().formatDateCustomFormat(new Date("10/10/1993"), this.locale, this.inputValue));
+        console.log("New: " + getDateFormatter().formatDateCustomFormat(new Date("10/10/1993"), this.locale, this.inputValue));
     }
 }

@@ -12,7 +12,7 @@ import { NEVER, Observable, Subject } from 'rxjs';
 import { setImmediate } from './setImmediate';
 import { isDevMode } from '@angular/core';
 import type { IgxTheme } from '../services/theme/theme.token';
-import { getI18nManager, IntlDateTimeStyleValues, IResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { getDateFormatter, getI18nManager, getNumberFormatter, IntlDateTimeStyleValues, IResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 /** @hidden @internal */
 export const ELEMENTS_TOKEN = /*@__PURE__*/new InjectionToken<boolean>('elements environment');
@@ -647,7 +647,7 @@ export function getLocaleDateFormat(locale: string, displayFormat?: string): str
         format = ngGetLocaleDateFormat(locale, FormatWidth[IntlDateTimeStyleValues[targetKey]]);
     } catch {
         // No longer throw warnings. Back up is to use Intl now, which should return the format without registering locales.
-        format = getI18nManager().getLocaleDateTimeFormat(locale, { dateStyle: targetKey });
+        format = getDateFormatter().getLocaleDateTimeFormat(locale, false, { dateStyle: targetKey });
     }
 
     return format;
@@ -670,7 +670,7 @@ export function getLocaleDateTimeFormat(locale: string, displayFormat?: string) 
         format = ngGetLocaleDateTimeFormat(locale, FormatWidth[IntlDateTimeStyleValues[targetKey]]);
     } catch {
         // No longer throw warnings. Back up is to use Intl now, which should return the format without registering locales.
-        format = getI18nManager().getLocaleDateTimeFormat(locale, { dateStyle: targetKey, timeStyle: targetKey });
+        format = getDateFormatter().getLocaleDateTimeFormat(locale, false, { dateStyle: targetKey, timeStyle: targetKey });
     }
 
     return format;
@@ -685,7 +685,7 @@ export function formatDate(value: Date | string | number | null | undefined, for
         return '';
     }
     if (typeof value === "string" || typeof value === "number") {
-        value = getI18nManager().createDateFromValue(value);
+        value = getDateFormatter().createDateFromValue(value);
     }
     let dateStyle = undefined, timeStyle = undefined;
     if (format === 'short' || format === 'medium' || format === 'long' || format === 'full') {
@@ -696,14 +696,14 @@ export function formatDate(value: Date | string | number | null | undefined, for
     } else if (format?.includes('Time')) {
         timeStyle = format.replace('Time', '');
     } else if (format) {
-        return getI18nManager().formatDateCustomFormat(value, locale, format, timezone);
+        return getDateFormatter().formatDateCustomFormat(value, locale, format, false, timezone);
     }
     const options: Intl.DateTimeFormatOptions = {
         dateStyle,
         timeStyle,
         timeZone: timezone
     };
-    return getI18nManager().formatDateTime(value, locale, options);
+    return getDateFormatter().formatDateTime(value, locale, options);
 }
 
 function parseDigitsInfo(value?: string) {
@@ -748,7 +748,7 @@ function formatNumberGeneric(value: number | string | null | undefined, style?: 
         minimumFractionDigits: parsedDigitsInfo.minFractionDigits,
         maximumFractionDigits: parsedDigitsInfo.maxFractionDigits
     };
-    return getI18nManager().formatNumber(value, locale, options);
+    return getNumberFormatter().formatNumber(value, locale, options);
 }
 
 export function formatNumber(value: number | string | null | undefined, locale?: string, digitsInfo?: string): string {
@@ -778,15 +778,15 @@ export function getCurrencyCode(locale: string, overrideCode?: string) {
 }
 
 export function getCurrencySymbol(currencyCode: string, locale?: string, currencyDisplay: keyof Intl.NumberFormatOptionsCurrencyDisplayRegistry = "symbol") {
-    return getI18nManager().getCurrencySymbol(currencyCode, locale, currencyDisplay);
+    return getNumberFormatter().getCurrencySymbol(currencyCode, locale, currencyDisplay);
 }
 
 export function getLocaleFirstDayOfWeek(locale?: string) {
     try {
         // Angular returns 0 for Sunday...
         return ngGetLocaleFirstDayOfWeek(locale);
-    } catch { }
-    return getI18nManager().getFirstDayOfWeek(locale);
+    } catch {}
+    return getDateFormatter().getFirstDayOfWeek(locale);
 }
 
 /** Converts pixel values to their rem counterparts for a base value */

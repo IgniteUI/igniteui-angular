@@ -185,7 +185,7 @@ import { getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
 import { isTree, recreateTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 import { getUUID } from './common/random';
 import { DefaultMergeStrategy, IGridMergeStrategy } from '../data-operations/merge-strategy';
-import { getCurrentI18n, getI18nManager, IResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { getCurrentI18n, getNumberFormatter, IResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 interface IMatchInfoCache {
     row: any;
@@ -2905,7 +2905,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this._currencyPositionLeft !== undefined) {
             return this._currencyPositionLeft;
         }
-        const i = getI18nManager().getCurrencyPosition(this.locale);
+        const i = getNumberFormatter().getCurrencyPosition(this.locale);
         return this._currencyPositionLeft = i < 1;
     }
 
