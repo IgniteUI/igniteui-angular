@@ -673,33 +673,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     }
 
     /**
-     * Registers a radio button with this radio group.
-     * This method is called by radio button components when they are created.
-     * @hidden @internal
-     */
-    public _addRadioButton(radioButton: IgxRadioComponent): void {
-        this._radioButtons.update(buttons => {
-            if (!buttons.includes(radioButton)) {
-                this._setRadioButtonEvents(radioButton);
-
-                return [...buttons, radioButton];
-            }
-            return buttons;
-        });
-    }
-
-    /**
-     * Unregisters a radio button from this radio group.
-     * This method is called by radio button components when they are destroyed.
-     * @hidden @internal
-     */
-    public _removeRadioButton(radioButton: IgxRadioComponent): void {
-        this._radioButtons.update(buttons =>
-            buttons.filter(btn => btn !== radioButton)
-        );
-    }
-
-    /**
      * @hidden
      * @internal
      */

@@ -1,5 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
+@use '../../../styles/themes/standalone' as *;
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars

@@ -420,24 +420,6 @@
                 color: var-get($flat-theme, 'icon-color');
             }
 
-            &:hover {
-                background: var-get($flat-theme, 'focus-hover-background');
-                color: var-get($flat-theme, 'focus-hover-foreground');
-
-                igx-icon {
-                    color: var-get($flat-theme, 'icon-color-hover');
-                }
-            }
-
-            &:active {
-                background: var-get($flat-theme, 'focus-background');
-                color: var-get($flat-theme, 'focus-foreground');
-
-                igx-icon {
-                    color: var-get($flat-theme, 'focus-foreground');
-                }
-            }
-
             @if $variant == 'bootstrap' {
                 box-shadow: 0 0 0 rem(4px) var-get($flat-theme, 'shadow-color');
             }
@@ -463,6 +445,24 @@
                     igx-icon {
                         color: var-get($flat-theme, 'icon-color-hover');
                     }
+                }
+            }
+
+            &:hover {
+                background: var-get($flat-theme, 'focus-hover-background');
+                color: var-get($flat-theme, 'focus-hover-foreground');
+
+                igx-icon {
+                    color: var-get($flat-theme, 'icon-color-hover');
+                }
+            }
+
+            &:active {
+                background: var-get($flat-theme, 'focus-background');
+                color: var-get($flat-theme, 'focus-foreground');
+
+                igx-icon {
+                    color: var-get($flat-theme, 'focus-foreground');
                 }
             }
         }
