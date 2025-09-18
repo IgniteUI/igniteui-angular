@@ -92,6 +92,7 @@ export class TestNgZone extends NgZone {
     }
 }
 
+/* eslint-disable no-console */
 // TODO: enable on re-run by selecting enable debug logging
 // https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/troubleshooting-workflows/enabling-debug-logging
 const shardLogging = false;
