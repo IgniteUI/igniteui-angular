@@ -676,7 +676,6 @@ describe('IgxDateRangePicker', () => {
                     doneBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[1];
                     cancelBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[0];
                     expect(doneBtn.textContent.trim()).toEqual('Close');
-                    console.log(cancelBtn.textContent.trim());
                 }));
 
                 it('should emit open/close events - open/close methods', fakeAsync(() => {
@@ -1675,8 +1674,6 @@ describe('IgxDateRangePicker', () => {
 
                     const predefinedArea = document.querySelector('igx-predefined-ranges-area');
                     const chips = document.querySelectorAll('igx-chip');
-
-                    console.log(predefinedArea);
 
                     expect(predefinedArea).toBeNull();
                     expect(chips.length).toEqual(0);

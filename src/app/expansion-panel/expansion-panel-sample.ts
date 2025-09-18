@@ -13,7 +13,6 @@ import {
 defineComponents(IgcExpansionPanelComponent);
 
 @Component({
-     
     selector: 'expansion-panel-sample',
     templateUrl: './expansion-panel-sample.html',
     styleUrls: ['expansion-panel-sample.scss'],

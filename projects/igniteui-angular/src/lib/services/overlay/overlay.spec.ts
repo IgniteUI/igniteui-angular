@@ -1293,7 +1293,7 @@ describe('igxOverlay', () => {
             let wrapperElement = shadowRoot.querySelector(`.${CLASS_OVERLAY_WRAPPER}`) as HTMLElement;
             expect(wrapperElement.style.visibility).toEqual('');
 
-            const componentElement = shadowRoot.querySelector('component') as HTMLElement;
+            const componentElement = shadowRoot.querySelector('test-simple-dynamic-component') as HTMLElement;
             const toggledDiv = componentElement.children[0] as HTMLElement;
             toggledDiv.click();
 
@@ -1618,10 +1618,10 @@ describe('igxOverlay', () => {
             const contentElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
             const componentElement = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByTagName('component')[0] as HTMLElement;
+                .parentElement.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
             expect(wrapperElement.nodeName).toEqual('DIV');
             expect(contentElement.nodeName).toEqual('DIV');
-            expect(componentElement.nodeName).toEqual('COMPONENT');
+            expect(componentElement.localName).toEqual('test-simple-dynamic-component');
 
             overlay.detachAll();
         }));
@@ -1674,7 +1674,7 @@ describe('igxOverlay', () => {
             overlay.show(overlay.attach(SimpleDynamicComponent));
             tick();
             const componentElement = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByTagName('component')[0] as HTMLElement;
+                .parentElement.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
             const componentRect = componentElement.getBoundingClientRect();
             expect((window.innerWidth - componentRect.width) / 2).toEqual(componentRect.left);
             expect((window.innerHeight - componentRect.height) / 2).toEqual(componentRect.top);
@@ -1694,8 +1694,8 @@ describe('igxOverlay', () => {
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL) as HTMLCollectionOf<HTMLElement>;
             const wrapperElement1 = wrapperElements[0];
             const wrapperElement2 = wrapperElements[1];
-            const componentElement1 = wrapperElement1.getElementsByTagName('component')[0] as HTMLElement;
-            const componentElement2 = wrapperElement2.getElementsByTagName('component')[0] as HTMLElement;
+            const componentElement1 = wrapperElement1.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
+            const componentElement2 = wrapperElement2.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
             const componentRect1 = componentElement1.getBoundingClientRect();
             const componentRect2 = componentElement2.getBoundingClientRect();
             expect(componentRect1.left).toEqual(componentRect2.left);
@@ -1891,8 +1891,8 @@ describe('igxOverlay', () => {
                     .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL) as HTMLCollectionOf<HTMLElement>;
                 const wrapperElement1 = wrapperElements[0];
                 const wrapperElement2 = wrapperElements[1];
-                const componentElement1 = wrapperElement1.getElementsByTagName('component')[0] as HTMLElement;
-                const componentElement2 = wrapperElement2.getElementsByTagName('component')[0] as HTMLElement;
+                const componentElement1 = wrapperElement1.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
+                const componentElement2 = wrapperElement2.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
                 const componentRect1 = componentElement1.getBoundingClientRect();
                 const componentRect2 = componentElement2.getBoundingClientRect();
                 expect(componentRect1.left).toEqual(0);
@@ -1931,8 +1931,8 @@ describe('igxOverlay', () => {
                     .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL) as HTMLCollectionOf<HTMLElement>;
                 const wrapperElement1 = wrapperElements[0];
                 const wrapperElement2 = wrapperElements[1];
-                const componentElement1 = wrapperElement1.getElementsByTagName('component')[0] as HTMLElement;
-                const componentElement2 = wrapperElement2.getElementsByTagName('component')[0] as HTMLElement;
+                const componentElement1 = wrapperElement1.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
+                const componentElement2 = wrapperElement2.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
                 const componentRect1 = componentElement1.getBoundingClientRect();
                 const componentRect2 = componentElement2.getBoundingClientRect();
                 expect(componentRect1.left).toEqual(x - componentRect1.width);
@@ -2292,7 +2292,7 @@ describe('igxOverlay', () => {
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
             expect(contentElement.children.length).toEqual(1);
 
-            const componentElement = contentElement.getElementsByTagName('component')[0];
+            const componentElement = contentElement.getElementsByTagName('test-simple-dynamic-component')[0];
             const buttonLeft = buttonElement.offsetLeft;
             const buttonTop = buttonElement.offsetTop;
             const expectedLeft = buttonLeft - componentElement.clientWidth;
@@ -2355,7 +2355,7 @@ describe('igxOverlay', () => {
 
         //                         const targetRect = (overlaySettings.target as HTMLElement).getBoundingClientRect();
         //                         const componentElement = (fixture.debugElement.nativeElement as HTMLElement)
-        //                             .parentElement.getElementsByTagName('component')[0];
+        //                             .parentElement.getElementsByTagName('test-simple-dynamic-component')[0];
         //                         const componentRect = componentElement.getBoundingClientRect();
         //                         const screenRect: ClientRect = {
         //                             left: 0,
@@ -2525,8 +2525,8 @@ describe('igxOverlay', () => {
                     .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER) as HTMLCollectionOf<HTMLElement>;
                 const wrapperElement1 = wrapperElements[0];
                 const wrapperElement2 = wrapperElements[1];
-                const componentElement1 = wrapperElement1.getElementsByTagName('component')[0] as HTMLElement;
-                const componentElement2 = wrapperElement2.getElementsByTagName('component')[0] as HTMLElement;
+                const componentElement1 = wrapperElement1.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
+                const componentElement2 = wrapperElement2.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
                 const componentRect1 = componentElement1.getBoundingClientRect();
                 const componentRect2 = componentElement2.getBoundingClientRect();
                 const buttonRect = button.getBoundingClientRect();
@@ -2574,8 +2574,8 @@ describe('igxOverlay', () => {
                     .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER) as HTMLCollectionOf<HTMLElement>;
                 const wrapperElement1 = wrapperElements[0];
                 const wrapperElement2 = wrapperElements[1];
-                const componentElement1 = wrapperElement1.getElementsByTagName('component')[0] as HTMLElement;
-                const componentElement2 = wrapperElement2.getElementsByTagName('component')[0] as HTMLElement;
+                const componentElement1 = wrapperElement1.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
+                const componentElement2 = wrapperElement2.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
                 const componentRect1 = componentElement1.getBoundingClientRect();
                 const componentRect2 = componentElement2.getBoundingClientRect();
 
@@ -3026,8 +3026,8 @@ describe('igxOverlay', () => {
                     .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER) as HTMLCollectionOf<HTMLElement>;
                 const wrapperElement1 = wrapperElements[0];
                 const wrapperElement2 = wrapperElements[1];
-                const componentElement1 = wrapperElement1.getElementsByTagName('component')[0] as HTMLElement;
-                const componentElement2 = wrapperElement2.getElementsByTagName('component')[0] as HTMLElement;
+                const componentElement1 = wrapperElement1.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
+                const componentElement2 = wrapperElement2.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
                 const componentRect1 = componentElement1.getBoundingClientRect();
                 const componentRect2 = componentElement2.getBoundingClientRect();
                 expect(componentRect1.left.toFixed(1)).toEqual((buttonRect.left + buttonRect.width / 2).toFixed(1));
@@ -3077,8 +3077,8 @@ describe('igxOverlay', () => {
                     .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER) as HTMLCollectionOf<HTMLElement>;
                 const wrapperElement1 = wrapperElements[0];
                 const wrapperElement2 = wrapperElements[1];
-                const componentElement1 = wrapperElement1.getElementsByTagName('component')[0] as HTMLElement;
-                const componentElement2 = wrapperElement2.getElementsByTagName('component')[0] as HTMLElement;
+                const componentElement1 = wrapperElement1.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
+                const componentElement2 = wrapperElement2.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
                 const componentRect1 = componentElement1.getBoundingClientRect();
                 const componentRect2 = componentElement2.getBoundingClientRect();
                 expect(componentRect1.left).toEqual(buttonRect.left - positionSettings.minSize.width);
@@ -3571,7 +3571,7 @@ describe('igxOverlay', () => {
 
             tick();
             const componentElement = (fixture.debugElement.nativeElement as HTMLElement)
-                .parentElement.getElementsByTagName('component')[0];
+                .parentElement.getElementsByTagName('test-simple-dynamic-component')[0];
             const componentRect = componentElement.getBoundingClientRect();
 
             document.documentElement.scrollTop = 100;
@@ -4009,7 +4009,7 @@ describe('igxOverlay', () => {
             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
             const componentElement = (fixture.debugElement.nativeElement as HTMLElement)
-                .parentElement.getElementsByTagName('component')[0];
+                .parentElement.getElementsByTagName('test-simple-dynamic-component')[0];
             const componentRect = componentElement.getBoundingClientRect();
 
             document.documentElement.scrollTop = 100;
@@ -4049,7 +4049,7 @@ describe('igxOverlay', () => {
                 overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
                 tick();
                 const componentElement = (fixture.debugElement.nativeElement as HTMLElement)
-                    .parentElement.getElementsByTagName('component')[0];
+                    .parentElement.getElementsByTagName('test-simple-dynamic-component')[0];
                 const componentRect = componentElement.getBoundingClientRect();
 
                 document.documentElement.scrollTop = 40;
@@ -4230,7 +4230,7 @@ describe('igxOverlay', () => {
                 expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
 
                 const componentElement = (fixture.debugElement.nativeElement as HTMLElement)
-                    .parentElement.getElementsByTagName('component')[0];
+                    .parentElement.getElementsByTagName('test-simple-dynamic-component')[0];
                 const componentRect = componentElement.getBoundingClientRect();
 
                 document.documentElement.scrollTop += scrollTolerance;
@@ -4273,7 +4273,7 @@ describe('igxOverlay', () => {
             expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
 
             const componentElement = (fixture.debugElement.nativeElement as HTMLElement)
-                .parentElement.getElementsByTagName('component')[0];
+                .parentElement.getElementsByTagName('test-simple-dynamic-component')[0];
             const componentRect = componentElement.getBoundingClientRect();
 
             document.documentElement.scrollTop += scrollTolerance;
@@ -4458,7 +4458,7 @@ describe('igxOverlay', () => {
 });
 
 @Component({
-    selector: `simple - dynamic - component`,
+    selector: `test-simple-dynamic-component`,
     template: `<div style='width:100px; height: 100px; background-color: red;'></div>`,
     standalone: true
 })
