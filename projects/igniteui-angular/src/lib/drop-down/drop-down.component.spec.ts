@@ -17,6 +17,7 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { ConnectedPositioningStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../services/public_api';
 
+const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
 const CSS_CLASS_LIST = 'igx-drop-down';
 const CSS_CLASS_SCROLL = 'igx-drop-down__list-scroll';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';

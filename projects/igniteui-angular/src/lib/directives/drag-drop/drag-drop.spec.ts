@@ -14,6 +14,7 @@ import {
     IgxDragIgnoreDirective
 } from './drag-drop.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('General igxDrag/igxDrop', () => {
     let fix: ComponentFixture<TestDragDropComponent>;
