@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 export interface Invoice {
     ID: number;
     ShipAddress: string;

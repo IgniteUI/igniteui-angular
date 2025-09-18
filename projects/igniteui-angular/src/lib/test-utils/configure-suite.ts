@@ -6,6 +6,7 @@ const checkLeaksAvailable = typeof window.gc === 'function';
 const debug = false;
 function debugLog(...args) {
     if (debug) {
+        // eslint-disable-next-line no-console
         console.log(...args);
     }
 }
