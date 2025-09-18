@@ -10,7 +10,7 @@ import { getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
 import { KeyboardNavigationService } from './calendar.services';
 import { getYearRange, isDateInRanges } from './common/helpers';
 import { CalendarDay } from './common/model';
-import { getCurrentI18n, getI18nManager, IResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { getCurrentI18n, getDateFormatter, IResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 /** @hidden @internal */
 @Directive({
@@ -132,42 +132,42 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     protected get formatterWeekday(): Intl.DateTimeFormat {
-        return getI18nManager().getDateFormatter(this.locale, { weekday: this._formatOptions.weekday });
+        return getDateFormatter().getIntlFormatter(this.locale, { weekday: this._formatOptions.weekday });
     }
 
     /**
      * @hidden
      */
     protected get formatterDay(): Intl.DateTimeFormat {
-        return getI18nManager().getDateFormatter(this.locale, { day: this._formatOptions.day });
+        return getDateFormatter().getIntlFormatter(this.locale, { day: this._formatOptions.day });
     }
 
     /**
      * @hidden
      */
     protected get formatterMonth(): Intl.DateTimeFormat {
-        return getI18nManager().getDateFormatter(this.locale, { month: this._formatOptions.month });
+        return getDateFormatter().getIntlFormatter(this.locale, { month: this._formatOptions.month });
     }
 
     /**
      * @hidden
      */
     protected get formatterYear(): Intl.DateTimeFormat {
-        return getI18nManager().getDateFormatter(this.locale, { year: this._formatOptions.year });
+        return getDateFormatter().getIntlFormatter(this.locale, { year: this._formatOptions.year });
     }
 
     /**
      * @hidden
      */
     protected get formatterMonthDay(): Intl.DateTimeFormat {
-        return getI18nManager().getDateFormatter(this.locale, { month: this._formatOptions.month, day: this._formatOptions.day });
+        return getDateFormatter().getIntlFormatter(this.locale, { month: this._formatOptions.month, day: this._formatOptions.day });
     }
 
     /**
      * @hidden
      */
     protected get formatterRangeDay(): Intl.DateTimeFormat {
-        return getI18nManager().getDateFormatter(this.locale, { day: this._formatOptions.day, month: 'short' });
+        return getDateFormatter().getIntlFormatter(this.locale, { day: this._formatOptions.day, month: 'short' });
     }
 
     /**
