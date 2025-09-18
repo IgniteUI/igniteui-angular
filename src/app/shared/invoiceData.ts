@@ -1,5 +1,3 @@
- 
-
 export interface Invoice {
     ID: number;
     ShipAddress: string;

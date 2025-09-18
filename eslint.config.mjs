@@ -40,7 +40,6 @@ export default [{
         parserOptions: {
             project: ["tsconfig.json"],
             createDefaultProgram: true,
-            suppressParseErrors: true
         },
     },
 
