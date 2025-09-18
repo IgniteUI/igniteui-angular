@@ -33,16 +33,6 @@ export default [{
         "@typescript-eslint": typescriptEslint,
     },
 
-    languageOptions: {
-        ecmaVersion: 5,
-        sourceType: "script",
-
-        parserOptions: {
-            project: ["tsconfig.json"],
-            createDefaultProgram: true,
-        },
-    },
-
     rules: {
         "no-shadow": "off",
         "no-prototype-builtins": "off",
