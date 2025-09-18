@@ -2517,7 +2517,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     public get mergeStrategy() {
         return this._mergeStrategy;
     }
-    public set  mergeStrategy(value) {
+    public set mergeStrategy(value) {
         this._mergeStrategy = value;
     }
 
@@ -3119,7 +3119,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-        public hoverIndex: number;
+    public hoverIndex: number;
 
     /**
     * @hidden @internal
@@ -4001,13 +4001,13 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden
      * @internal
      */
-    public get columnsToMerge() : ColumnType[] {
+    public get columnsToMerge(): ColumnType[] {
         if (this._columnsToMerge.length) {
             return this._columnsToMerge;
         }
         const cols = this.visibleColumns.filter(
-            x => x.merge && (this.cellMergeMode ==='always' ||
-            (this.cellMergeMode === 'onSort' && !!this.sortingExpressions.find( y => y.fieldName === x.field)))
+            x => x.merge && (this.cellMergeMode === 'always' ||
+                (this.cellMergeMode === 'onSort' && !!this.sortingExpressions.find(y => y.fieldName === x.field)))
         );
         this._columnsToMerge = cols;
         return this._columnsToMerge;
@@ -4015,8 +4015,8 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     protected allowResetOfColumnsToMerge() {
         const cols = this.visibleColumns.filter(
-            x => x.merge && (this.cellMergeMode ==='always' ||
-            (this.cellMergeMode === 'onSort' && !!this.sortingExpressions.find( y => y.fieldName === x.field)))
+            x => x.merge && (this.cellMergeMode === 'always' ||
+                (this.cellMergeMode === 'onSort' && !!this.sortingExpressions.find(y => y.fieldName === x.field)))
         );
         if (areEqualArrays(cols, this._columnsToMerge)) {
             return false;
@@ -5628,6 +5628,9 @@ export abstract class IgxGridBaseDirective implements GridType,
      * The rowHeight input is bound to min-height css prop of rows that adds a 1px border in all cases
      */
     public get renderedRowHeight(): number {
+        if (this.hasCellsToMerge) {
+            return this.rowHeight;
+        }
         return this.rowHeight + 1;
     }
 
@@ -7718,9 +7721,9 @@ export abstract class IgxGridBaseDirective implements GridType,
         const virtRec = this.verticalScrollContainer.igxForOf[targetRowIndex];
         const col = typeof (column) === 'number' ? this.visibleColumns[column] : column;
         const rowSpan = this.isRecordMerged(virtRec) ? virtRec?.cellMergeMeta.get(col)?.rowSpan : 1;
-       if (rowSpan > 1) {
-            targetRowIndex += Math.floor(rowSpan/2);
-       }
+        if (rowSpan > 1) {
+            targetRowIndex += Math.floor(rowSpan / 2);
+        }
         if (delayScrolling) {
             this.verticalScrollContainer.dataChanged.pipe(first(), takeUntil(this.destroy$)).subscribe(() => {
                 this.scrollDirective(this.verticalScrollContainer,
@@ -8074,10 +8077,10 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this.hasCellsToMerge) {
             let indexes = this.activeRowIndexes;
             if (this.page > 0) {
-                indexes = indexes.map(x => this.perPage * this.page + x );
+                indexes = indexes.map(x => this.perPage * this.page + x);
             }
 
-            data =  DataUtil.merge(cloneArray(this.filteredSortedData), this.columnsToMerge, this.mergeStrategy, indexes, this);
+            data = DataUtil.merge(cloneArray(this.filteredSortedData), this.columnsToMerge, this.mergeStrategy, indexes, this);
         }
         const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
         const columnsPathParts = columnItems.map(col => columnFieldPath(col.field));
@@ -8093,7 +8096,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                             : resolveNestedPath(currentRowData, columnsPathParts[cid]);
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
-                    const isMergePlaceHolder =  this.isRecordMerged(dataRow) ? !!dataRow?.cellMergeMeta.get(c.field)?.root : false;
+                    const isMergePlaceHolder = this.isRecordMerged(dataRow) ? !!dataRow?.cellMergeMeta.get(c.field)?.root : false;
                     if (exactMatch) {
                         if (searchValue === searchText && !isMergePlaceHolder) {
                             const mic: IMatchInfoCache = {
@@ -8234,7 +8237,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._rowCount += 1; // include header row
     }
 
-    private updateMergedData(){
+    private updateMergedData() {
         // recalc merged data
         if (this.columnsToMerge.length > 0) {
             const startIndex = this.verticalScrollContainer.state.startIndex;
@@ -8245,9 +8248,9 @@ export abstract class IgxGridBaseDirective implements GridType,
                 if (rec.cellMergeMeta &&
                     // index + maxRowSpan is within view
                     startIndex < (index + Math.max(...rec.cellMergeMeta.values().toArray().map(x => x.rowSpan)))) {
-                        const visibleIndex = this.isRowPinningToTop ? index + this.pinnedRecordsCount : index;
-                        data.push({record: rec, index: visibleIndex, dataIndex: index });
-                    }
+                    const visibleIndex = this.isRowPinningToTop ? index + this.pinnedRecordsCount : index;
+                    data.push({ record: rec, index: visibleIndex, dataIndex: index });
+                }
             }
             this._mergedDataInView = data;
             this.notifyChanges();

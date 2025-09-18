@@ -1,0 +1,29 @@
+{
+  "$schema": "../../common/schema/theme-changes.schema.json",
+  "changes": [
+			{
+        "name": "$filtering-background-and",
+        "remove": true,
+        "owner": "grid-theme",
+        "type": "property"
+      },
+      {
+        "name": "$filtering-background-and--focus",
+        "remove": true,
+        "owner": "grid-theme",
+        "type": "property"
+      },
+      {
+        "name": "$filtering-background-or",
+        "remove": true,
+        "owner": "grid-theme",
+        "type": "property"
+      },
+      {
+        "name": "$filtering-background-or--focus",
+        "remove": true,
+        "owner": "grid-theme",
+        "type": "property"
+      }
+  ]
+}

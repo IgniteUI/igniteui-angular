@@ -213,7 +213,8 @@
             "lintFilePatterns": [
               "projects/igniteui-angular/**/*.ts",
               "projects/igniteui-angular/**/*.html"
-            ]
+            ],
+            "eslintConfig": "projects/igniteui-angular/eslint.config.mjs"
           }
         },
         "cypress-run": {
