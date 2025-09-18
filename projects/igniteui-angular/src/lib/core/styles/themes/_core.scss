@@ -8,6 +8,7 @@
 // Used to configure color accessibility for charts
 @use 'igniteui-theming/sass/color/functions' as color;
 @use 'igniteui-theming/sass/themes/mixins' as theming;
+@use 'igniteui-theming/sass/themes/components' as themes;
 
 // Common components
 @use '../components/_common/igx-control';
@@ -91,6 +92,7 @@
     $enhanced-accessibility: false
 ) {
     @include color.configure-colors($enhanced-accessibility);
+    @include themes.configure-prefix('igx');
 
     // Angular hack for binding to [hidden] property
     // not working
