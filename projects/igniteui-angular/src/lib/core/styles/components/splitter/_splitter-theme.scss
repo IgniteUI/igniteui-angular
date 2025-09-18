@@ -1,71 +1,7 @@
 @use 'sass:map';
 @use 'sass:math';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-///
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-///
-/// @param {Color} $bar-color [null] - The background color of the bar.
-/// @param {Color} $handle-color [null] - The color for the bar drag handle.
-/// @param {Color} $expander-color [null] - The color for the arrow expander's.
-/// @param {List} $border-radius [null] - the border radios of the splitter bar drag handle
-/// @param {Color} $focus-color [null] - The color used for focused splitter bar.
-/// @param {Number} $size [null] - The size of the splitter, its width for vertical and height for horizontal splitter.
-/// @requires $light-material-schema
-/// @example scss Set a custom expander color
-///   $my-splitter-theme: splitter-theme($expander-color: red);
-///   // Pass the theme to the css-vars() mixin
-///   @include css-vars($my-splitter-them);
-@function splitter-theme(
-    $schema: $light-material-schema,
-
-    $bar-color: null,
-    $handle-color: null,
-    $expander-color: null,
-    $border-radius: null,
-    $focus-color: null,
-    $size: null
-) {
-    $name: 'igx-splitter';
-    $splitter-schema: ();
-
-    @if map.has-key($schema, 'splitter') {
-        $splitter-schema: map.get($schema, 'splitter');
-    } @else {
-        $splitter-schema: $schema;
-    }
-
-    $theme: digest-schema($splitter-schema);
-    $meta: map.get($theme, '_meta');
-
-    @if not($handle-color) and $bar-color {
-        $handle-color: text-contrast($bar-color);
-    }
-
-    @if not($expander-color) and $bar-color {
-        $expander-color: text-contrast($bar-color);
-    }
-
-    @return extend($theme, (
-        name: $name,
-        bar-color: $bar-color,
-        handle-color: $handle-color,
-        expander-color: $expander-color,
-        border-radius: $border-radius,
-        focus-color: $focus-color,
-        size: $size,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
-    ));
-}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
@@ -77,7 +13,7 @@
     $debug-hitbox: false;
     $hitbox-debug-color: rgba(coral, .24);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     //splitter-size + borders
     $splitter-size: unitless(map.get($theme, 'size')) + 2;

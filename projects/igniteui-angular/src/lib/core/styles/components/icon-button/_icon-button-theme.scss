@@ -1,146 +1,47 @@
 @use 'sass:map';
 @use 'sass:meta';
-@use 'sass:color';
+@use 'sass:list';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/SisIvanova" target="_blank">Silvia Ivanova</a>
-////
-
-@function icon-button-theme(
-    $schema: $light-material-schema,
-
-    $background: null,
-    $foreground: null,
-    $shadow-color: null,
-
-    $hover-background: null,
-    $hover-foreground: null,
-
-    $focus-background: null,
-    $focus-foreground: null,
-
-    $focus-hover-background: null,
-    $focus-hover-foreground: null,
-
-    $active-background: null,
-    $active-foreground: null,
-
-    $border-radius: null,
-    $border-color: null,
-    $focus-border-color: null,
-
-    $disabled-background: null,
-    $disabled-foreground: null,
-    $disabled-border-color: null,
-
-    $size: null,
-) {
-    $name: 'igx-icon-button';
-    $icon-button-schema: ();
-
-    @if map.has-key($schema, 'icon-button') {
-        $icon-button-schema: map.get($schema, 'icon-button');
-    } @else {
-        $icon-button-schema: $schema;
-    }
-
-    $themes: ();
-    $variant: null;
-
-    @each $_name, $_schema in $icon-button-schema {
-        @if not($variant) {
-            $variant: map.get($schema, '_meta', 'theme');
-        }
-
-        @if not($foreground) and $background {
-            $foreground: text-contrast($background);
-        }
-
-        @if not($hover-background) and $background {
-            @if meta.type-of($background) == 'color' {
-                $hover-background: color.scale($background, $lightness: 5%);
-            }
-        }
-
-        @if not($hover-foreground) and $hover-background {
-            @if meta.type-of($hover-background) == 'color' {
-                $hover-foreground: text-contrast($hover-background);
-            }
-        }
-
-        @if not($focus-background) and $background {
-            $focus-background: color.scale($background, $lightness: 5%);
-        }
-
-        @if not($focus-foreground) and $focus-background {
-            $focus-foreground: text-contrast($focus-background);
-        }
-
-        @if not($focus-hover-background) and $background {
-            @if meta.type-of($background) == 'color' {
-                $focus-hover-background: color.scale($background, $lightness: 5%);
-            }
-        }
-
-        @if not($focus-hover-foreground) and $focus-hover-background {
-            $focus-hover-foreground: text-contrast($focus-hover-background);
-        }
-
-        $themes: map.merge($themes, (
-            $_name: extend( digest-schema($_schema), (
-                name: $name,
-                background: $background,
-                foreground: $foreground,
-                shadow-color: $shadow-color,
-
-                hover-background: $hover-background,
-                hover-foreground: $hover-foreground,
-
-                focus-background: $focus-background,
-                focus-foreground: $focus-foreground,
-
-                focus-hover-background: $focus-hover-background,
-                focus-hover-foreground: $focus-hover-foreground,
-
-                active-background: $active-background,
-                active-foreground: $active-foreground,
-
-                border-radius: $border-radius,
-                border-color: $border-color,
-                focus-border-color: $focus-border-color,
-
-                disabled-background: $disabled-background,
-                disabled-foreground: $disabled-foreground,
-                disabled-border-color: $disabled-border-color,
-                size: $size,
-                theme: map.get($schema, '_meta', 'theme'),
-            ))
-        ));
-    }
-
-    @return (
-        name: $name,
-        variant: $variant,
-        themes: $themes,
-    );
-}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
-@mixin icon-button($theme) {
-    $variant: map.get($theme, variant);
-    $flat-theme: map.get(map.get($theme, 'themes'), 'flat');
-    $outlined-theme: map.get(map.get($theme, 'themes'), 'outlined');
-    $contained-theme: map.get(map.get($theme, 'themes'), 'contained');
+@mixin icon-button($themes...) {
+    $flat-theme: null;
+    $contained-theme: null;
+    $outlined-theme: null;
+    $variant: 'material';
 
-    @include css-vars($flat-theme);
-    @include css-vars($outlined-theme);
-    @include css-vars($contained-theme);
+    $required: ('flat', 'contained', 'outlined');
+    $added: ();
+    $missing: ();
+
+    @each $key, $theme in meta.keywords($themes) {
+        $type: map.get($theme, _meta, type);
+
+        $added: list.append($added, $key);
+
+        @if $type == 'flat' {
+            $flat-theme: $theme;
+        } @else if $type == 'contained' {
+            $contained-theme: $theme;
+        } @else if $type == 'outlined' {
+            $outlined-theme: $theme;
+        }
+
+        $variant: map.get($theme, '_meta', 'theme');
+        @include css-vars($theme);
+    }
+
+    @each $item in $required {
+        @if not(list.index($added, $item)) {
+            $missing: list.append($missing, '$#{$item}', $separator: comma);
+        }
+    }
+
+    @if list.length($missing) != 0 {
+        @error meta.inspect(string.unquote("Missing theme properties:") #{$missing});
+    }
 
     $icon-sizes: map.get((
         'material': rem(18px),

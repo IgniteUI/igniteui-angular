@@ -17,7 +17,7 @@ import {
     DOCUMENT
 } from '@angular/core';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
-import { IBaseEventArgs, mkenum } from '../core/utils';
+import { IBaseEventArgs } from '../core/utils';
 import { ChipResourceStringsEN, IChipResourceStrings } from '../core/i18n/chip-resources';
 import { Subject } from 'rxjs';
 import { IgxIconComponent } from '../icon/icon.component';
@@ -25,13 +25,14 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { Size } from '../grids/common/enums';
 
-export const IgxChipTypeVariant = /*@__PURE__*/mkenum({
+export const IgxChipTypeVariant = {
     PRIMARY: 'primary',
     INFO: 'info',
     SUCCESS: 'success',
     WARNING: 'warning',
     DANGER: 'danger'
-});
+} as const;
+export type IgxChipTypeVariant = (typeof IgxChipTypeVariant)[keyof typeof IgxChipTypeVariant];
 
 export interface IBaseChipEventArgs extends IBaseEventArgs {
     originalEvent: IDragBaseEventArgs | IDropBaseEventArgs | KeyboardEvent | MouseEvent | TouchEvent;
@@ -93,15 +94,15 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      *
      * @remarks
      * Allowed values are `primary`, `info`, `success`, `warning`, `danger`.
-     * Providing an invalid value won't change the chip.
+     * Providing no/nullish value leaves the chip in its default state.
      *
      * @example
      * ```html
-     * <igx-chip [variant]="success"></igx-chip>
+     * <igx-chip variant="success"></igx-chip>
      * ```
      */
     @Input()
-    public variant: string | typeof IgxChipTypeVariant;
+    public variant?: IgxChipTypeVariant | null;
     /**
      * Sets the value of `id` attribute. If not provided it will be automatically generated.
      *

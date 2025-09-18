@@ -25,10 +25,9 @@ import { IgxColumnGroupComponent } from './column-group.component';
     providers: [{ provide: IgxColumnComponent, useExisting: forwardRef(() => IgxColumnLayoutComponent) }],
     selector: 'igx-column-layout',
     template: `@if (platform.isElements) {
-        <div #sink style="display: none;">
-            <ng-content select="igx-column,igc-column"></ng-content>
-        </div>
+        <ng-content select="igx-column,igc-column"></ng-content>
     }`,
+    styles: `:host { display: none }`,
     standalone: true
 })
 export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit {

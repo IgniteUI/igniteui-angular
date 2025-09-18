@@ -2,98 +2,6 @@
 @use 'sass:math';
 @use '../../base' as *;
 @use 'igniteui-theming/sass/animations' as *;
-@use '../../themes/schemas' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
-
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-///
-/// @param {Color} $label-color [null]- The text color used for the label text.
-/// @param {Color} $label-color-hover [null]- The text color used for the label text on hover.
-/// @param {Color} $empty-color [null] - The unchecked border color.
-/// @param {Color} $empty-fill-color [null] - The unchecked radio fill color.
-/// @param {Color} $fill-color [null] - The checked border and dot colors.
-/// @param {Color} $disabled-color [null] - The disabled border and dot colors.
-/// @param {Color} $disabled-label-color [null] - The disabled label color.
-/// @param {Color} $disabled-fill-color [null] - The disabled checked border and dot colors.
-/// @param {Color} $hover-color [null] - The border and dot colors on hover.
-/// @param {Color} $fill-color-hover [null] - The checked dot color on hover.
-/// @param {Color} $fill-hover-border-color [null] - The checked border color on hover.
-/// @param {Color} $focus-outline-color [null] - The focus outlined color.
-/// @param {Color} $focus-outline-color-filled [null] - The focus outline color when radio is filled.
-/// @param {Color} $error-color [null] - The label, border and dot color in invalid state.
-/// @param {Color} $error-color-hover [null] - The label, border and dot color in invalid state on hover.
-/// @param {Color} $focus-outline-color-error [null] - The focus outline color in invalid state.
-///
-/// @requires $light-material-schema
-///
-/// Set light to true when the surrounding area is dark.
-/// @example scss Change the checked dot and border colors
-///   $my-radio-theme: radio-theme($fill-color: magenta);
-///   // Pass the theme to the css-vars() mixin
-///   @include css-vars($my-radio-theme);
-@function radio-theme(
-    $schema: $light-material-schema,
-
-    $label-color: null,
-    $label-color-hover: null,
-    $empty-color: null,
-    $empty-fill-color: null,
-    $fill-color: null,
-    $fill-hover-border-color: null,
-    $focus-outline-color: null,
-    $focus-outline-color-filled: null,
-    $disabled-color: null,
-    $disabled-label-color: null,
-    $disabled-fill-color: null,
-    $hover-color: null,
-    $fill-color-hover: null,
-    $error-color: null,
-    $error-color-hover: null,
-    $focus-outline-color-error: null,
-) {
-    $name: 'igx-radio';
-    $radio-schema: ();
-
-    @if map.has-key($schema, 'radio') {
-        $radio-schema: map.get($schema, 'radio');
-    } @else {
-        $radio-schema: $schema;
-    }
-
-    $theme: digest-schema($radio-schema);
-    $meta: map.get($theme, '_meta');
-
-    @return extend($theme, (
-        name: $name,
-        label-color: $label-color,
-        label-color-hover: $label-color-hover,
-        empty-color: $empty-color,
-        empty-fill-color: $empty-fill-color,
-        fill-color: $fill-color,
-        fill-hover-border-color: $fill-hover-border-color,
-        disabled-color: $disabled-color,
-        disabled-label-color: $disabled-label-color,
-        disabled-fill-color: $disabled-fill-color,
-        hover-color: $hover-color,
-        fill-color-hover: $fill-color-hover,
-        focus-outline-color: $focus-outline-color,
-        focus-outline-color-filled: $focus-outline-color-filled,
-        error-color: $error-color,
-        error-color-hover: $error-color-hover,
-        focus-outline-color-error: $focus-outline-color-error,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme'),
-            theme-variant: map.get($schema, '_meta', 'variant')
-        )),
-    ));
-}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
@@ -102,8 +10,8 @@
     @include css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
-    $theme-variant: map.get($theme, '_meta', 'theme-variant');
-    $variant: map.get($theme, '_meta', 'variant');
+    $theme-variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $material-theme: $variant == 'material';
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: $variant != 'bootstrap';
@@ -462,7 +370,7 @@
                 box-shadow: 0 0 0 rem(4px) var-get($theme, 'focus-outline-color');
 
                 &::after {
-                    border-color: color($color: 'primary', $variant: 200);
+                    border-color: var-get($theme, 'focus-border-color');
                 }
             }
         }
@@ -478,7 +386,7 @@
     %igx-checkbox--focused-hovered {
         @if $variant == 'bootstrap' {
             %radio-composite:after {
-                border-color: color($color: 'primary', $variant: 300);
+                border-color: hsl(from var-get($theme, 'focus-border-color') h calc(s * 1.12) calc(l * 0.82));
             }
         }
     }

@@ -1,13 +1,12 @@
-import { mkenum } from '../core/utils';
 
-export const CarouselAnimationType = /*@__PURE__*/mkenum({
+export const CarouselAnimationType = {
     none: 'none',
     slide: 'slide',
     fade: 'fade'
-});
+} as const;
 export type CarouselAnimationType = (typeof CarouselAnimationType)[keyof typeof CarouselAnimationType];
 
-export const CarouselIndicatorsOrientation = /*@__PURE__*/mkenum({
+export const CarouselIndicatorsOrientation = {
     /**
      * @deprecated in version 19.1.0. Use `end` instead.
      */
@@ -18,5 +17,5 @@ export const CarouselIndicatorsOrientation = /*@__PURE__*/mkenum({
     top: 'top',
     start: 'start',
     end: 'end'
-});
+} as const;
 export type CarouselIndicatorsOrientation = (typeof CarouselIndicatorsOrientation)[keyof typeof CarouselIndicatorsOrientation];

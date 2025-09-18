@@ -5,197 +5,6 @@
 @use '../ripple/ripple-component' as *;
 @use '../../themes/schemas' as *;
 
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
-
-/// If only background color is specified,
-/// the idle item color will be assigned automatically to a contrasting color.
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Color} $item-text-color [null] - The color used for the tab text color.
-/// @param {Color} $item-background [null] - The background color used for the tabs header.
-/// @param {Color} $item-hover-background [null] - The background used for the tabs on hover.
-/// @param {Color} $item-hover-color [null] - The text color used for the tabs on hover.
-/// @param {Color} $item-icon-color [null] - The color used for the tab icon.
-/// @param {Color} $item-active-icon-color [null] - The color used for the active tab icon.
-/// @param {Color} $item-hover-icon-color [null] - The color used for the tab icon on hover.
-/// @param {Color} $item-disabled-icon-color [null] - The color used for the disabled tab icon.
-/// @param {Color} $item-active-color [null] - The color used for the active tabs text.
-/// @param {Color} $item-active-background [null] - The color used for the active/focused tab background.
-/// @param {Color} $item-disabled-color [null] - The color used for the disabled tabs text.
-/// @param {Color} $indicator-color [null] - The color used for the active tab indicator.
-/// @param {Color} $button-color [null] - The color used for the button icon/text color.
-/// @param {Color} $button-hover-color [null] - The color used for the button icon/text color on hover.
-/// @param {Color} $button-disabled-color [null] - The color used for the disabled button icon/text.
-/// @param {Color} $button-background [null] - The color used for the button background.
-/// @param {Color} $button-hover-background [null] - The color used for the button background on hover.
-/// @param {List} $border-radius [null] - The border radius for the tabs.
-/// @param {Color} $border-color [null] - The border color of the tabs.
-/// @param {Color} $border-color--hover [null] - The border color of the tabs on hover.
-/// @param {Color} $tab-ripple-color [null] - The color used for the button background.
-/// @param {Color} $button-ripple-color [null] - The color used for the button background on hover.
-/// @requires $light-material-schema
-/// @example scss Set a custom background color
-///   $my-tabs-theme: tabs-theme(
-///      $item-background: orange
-///    );
-///   // Pass the theme to the css-vars() mixin
-///   @include css-vars($my-tabs-theme);
-@function tabs-theme(
-    $schema: $light-material-schema,
-    $item-text-color: null,
-    $item-background: null,
-    $item-hover-background: null,
-    $item-hover-color: null,
-    $item-icon-color: null,
-    $item-active-icon-color: null,
-    $item-hover-icon-color: null,
-    $item-disabled-icon-color: null,
-    $item-active-color: null,
-    $item-active-background: null,
-    $item-disabled-color: null,
-    $indicator-color: null,
-    $button-color: null,
-    $button-background: null,
-    $button-hover-background: null,
-    $button-hover-color: null,
-    $button-disabled-color: null,
-    $tab-ripple-color: null,
-    $button-ripple-color: null,
-    $border-radius: null,
-    $border-color: null,
-    $border-color--hover: null,
-) {
-    $name: 'igx-tabs';
-    $tabs-schema: ();
-
-    @if map.has-key($schema, 'tabs') {
-        $tabs-schema: map.get($schema, 'tabs');
-    } @else {
-        $tabs-schema: $schema;
-    }
-
-    $theme: digest-schema($tabs-schema);
-    $meta: map.get($theme, '_meta');
-
-    @if not($item-text-color) and $item-background {
-        @if meta.type-of($item-background) == 'color' {
-            $item-text-color: rgba(text-contrast($item-background), .54);
-        }
-    }
-
-    @if not($item-hover-color) and $item-background {
-        $item-hover-color: text-contrast($item-background);
-    }
-
-    @if not($item-hover-color) and $item-hover-background {
-        $item-hover-color: text-contrast($item-hover-background);
-    }
-
-    @if not($item-active-icon-color) and $item-active-background {
-        $item-active-icon-color: text-contrast($item-active-background);
-    }
-
-    @if not($item-active-icon-color) and $item-background {
-        $item-active-icon-color: text-contrast($item-background);
-    }
-
-    @if not($indicator-color) and $item-background {
-        $indicator-color: text-contrast($item-background);
-    }
-
-    @if not($item-active-color) and $item-active-icon-color {
-        $item-active-color: $item-active-icon-color;
-    }
-
-    // Button
-    @if not($button-color) and $item-background {
-        $button-color: text-contrast($item-background);
-    }
-
-    @if not($button-color) and $button-background {
-        $button-color: text-contrast($button-background);
-    }
-
-    @if not($button-color) and $item-background {
-        $button-background: transparent;
-    }
-
-    @if not($button-hover-color) and $button-hover-background {
-        $button-hover-color: text-contrast($button-hover-background);
-    }
-
-    @if not($button-hover-background) and $item-background {
-        $button-hover-color: text-contrast($item-background);
-    }
-
-    @if not($button-background) and $item-background {
-        @if meta.type-of($item-background) == 'color' and lightness($item-background) > 50 {
-            $button-background: transparent;
-        } @else {
-            $button-background: rgba(255, 255, 255 , .1);
-        }
-    }
-
-    @if not($button-hover-background) and $item-background {
-        @if meta.type-of($item-background) == 'color' and lightness($item-background) > 50 {
-            $button-hover-background: rgba(0, 0, 0, .05);
-        } @else {
-            $button-hover-background: rgba(255, 255, 255 , .14);
-        }
-    }
-
-    @if not($button-ripple-color) and $button-background {
-        @if meta.type-of($item-background) == 'color' and lightness($item-background) > 50 {
-            $button-ripple-color: rgba(0, 0, 0, .4);
-        } @else {
-            $button-ripple-color: rgba(255, 255, 255, .4);
-        }
-    }
-    // Button end
-
-    @if not($tab-ripple-color) and $item-active-background {
-        $tab-ripple-color: text-contrast($item-active-background);
-    }
-
-    @if not($tab-ripple-color) and $item-background {
-        $tab-ripple-color: text-contrast($item-background);
-    }
-
-    @return extend($theme, (
-        name: $name,
-        item-text-color: $item-text-color,
-        item-background: $item-background,
-        item-hover-color: $item-hover-color,
-        item-hover-background: $item-hover-background,
-        item-icon-color: $item-icon-color,
-        item-active-icon-color: $item-active-icon-color,
-        item-hover-icon-color: $item-hover-icon-color,
-        item-disabled-icon-color: $item-disabled-icon-color,
-        item-active-color: $item-active-color,
-        item-active-background: $item-active-background,
-        item-disabled-color: $item-disabled-color,
-        indicator-color: $indicator-color,
-        button-color: $button-color,
-        button-background: $button-background,
-        button-hover-background:$button-hover-background,
-        button-hover-color:$button-hover-color,
-        button-disabled-color:$button-disabled-color,
-        tab-ripple-color: $tab-ripple-color,
-        button-ripple-color: $button-ripple-color,
-        border-color: $border-color,
-        border-radius: $border-radius,
-        border-color--hover: $border-color--hover,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme'),
-            theme-variant: map.get($schema, '_meta', 'variant')
-        )),
-    ));
-}
-
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
@@ -204,11 +13,11 @@
 @mixin tabs($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $not-bootstrap-theme: $variant != 'bootstrap';
     $bootstrap-theme: $variant == 'bootstrap';
     $indigo-theme: $variant == 'indigo';
-    $theme-variant: map.get($theme, '_meta', 'theme-variant');
+    $theme-variant: map.get($theme, '_meta', 'variant');
 
     $item-min-width: rem(90px);
     $item-max-width: rem(360px);
@@ -254,10 +63,10 @@
         flex: 0 0 auto;
         background: var-get($theme, 'item-background');
         z-index: 1;
-	    
+
 	    @if $bootstrap-theme {
 		    position: relative;
-		    
+
 		    &::after {
 			    content: '';
 			    position: absolute;

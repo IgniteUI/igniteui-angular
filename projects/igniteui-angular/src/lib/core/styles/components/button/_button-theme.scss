@@ -1,283 +1,65 @@
 @use 'sass:map';
 @use 'sass:meta';
-@use 'sass:color';
+@use 'sass:list';
+@use 'sass:string';
 @use '../../base' as *;
-@use '../../themes/schemas' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-////
-
-/// If only background color is specified, text/icon color
-/// will be assigned automatically to a contrasting color.
-/// Does ___not___ apply for disabled state colors.
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Color} $background [null] - The background color of the button.
-/// @param {Color} $foreground [null] - The text color of the button.
-/// @param {Color} $icon-color [null] - The icon color in the button.
-/// @param {Color} $icon-color-hover [null] - The icon color in the button on hover.
-/// @param {Color} $hover-background [null] - The hover background color of the button.
-/// @param {Color} $hover-foreground [null] - The hover text color of the button.
-/// @param {Color} $focus-background [null] - The focus background color of the button.
-/// @param {Color} $focus-foreground [null] - The focus text color of the button.
-/// @param {Color} $focus-hover-background [null] - The background color on focus hovered state of the button.
-/// @param {Color} $focus-hover-foreground [null] - The text color on focus hovered state of the button.
-/// @param {Color} $focus-visible-background [null] - The focus-visible background color of the button.
-/// @param {Color} $focus-visible-foreground [null] - The focus-visible text color of the button.
-/// @param {Color} $active-background [null] - The active background of the button.
-/// @param {Color} $active-foreground [null] - The active text color of the button.
-/// @param {List} $border-radius [null] - The border radius of the button.
-/// @param {Color} $border-color [null] - The border color of the button.
-/// @param {Color} $hover-border-color [null] - The hover border color of the button.
-/// @param {Color} $focus-border-color [null] - The focus border color of the button.
-/// @param {Color} $focus-visible-border-color [null] - The focus-visible border color of the button.
-/// @param {Color} $active-border-color [null] - The active border color of the button.
-/// @param {Color} $shadow-color [null] - The shadow color of the button.
-/// @param {Color} $resting-shadow [null] - The shadow of the button in its idle state.
-/// @param {Color} $hover-shadow [null] - The shadow of the button in its hover state.
-/// @param {Color} $focus-shadow [null] - The shadow of the button in its focus state.
-/// @param {Color} $active-shadow [null] - The shadow of the button in its focus state.
-/// @param {Color} $disabled-background [null] - The disabled background color of the button.
-/// @param {Color} $disabled-foreground [null] - The disabled text color of the button.
-/// @param {Color} $disabled-icon-color [null] - The disabled icon color of the button.
-/// @param {Color} $disabled-border-color [null] - The disabled border color of the button.
-///
-/// @requires $light-material-schema
-///
-/// @example scss Change the background and text colors in contained buttons
-///   $my-button-theme: button-theme(
-///     $foreground: white,
-///     $background: black
-///   );
-///   // Pass the theme to the css-vars() mixin
-///   @include css-vars($my-button-theme);
-@function button-theme(
-    $schema: $light-material-schema,
-
-    $background: null,
-    $foreground: null,
-
-    $hover-background: null,
-    $hover-foreground: null,
-
-    $icon-color: $foreground,
-    $icon-color-hover: $hover-foreground,
-
-    $focus-background: null,
-    $focus-foreground: null,
-
-    $focus-hover-background: null,
-    $focus-hover-foreground: null,
-
-    $focus-visible-background: null,
-    $focus-visible-foreground: null,
-
-    $active-background: null,
-    $active-foreground: null,
-
-    $border-radius: null,
-    $border-color: null,
-    $hover-border-color: null,
-    $focus-border-color: null,
-    $focus-visible-border-color: null,
-    $active-border-color: null,
-
-    $shadow-color: null,
-
-    $resting-shadow: null,
-    $hover-shadow: null,
-    $focus-shadow: null,
-    $active-shadow: null,
-
-    $disabled-background: null,
-    $disabled-foreground: null,
-    $disabled-icon-color: $disabled-foreground,
-    $disabled-border-color: null,
-    $size: null,
-) {
-    $name: 'igx-button';
-    $button-schema: ();
-
-    @if map.has-key($schema, 'button') {
-        $button-schema: map.get($schema, 'button');
-    } @else {
-        $button-schema: $schema;
-    }
-
-    $themes: ();
-    $variant: null;
-
-    @each $_name, $_schema in $button-schema {
-        $_resting-shadow: $resting-shadow;
-        $_hover-shadow: $hover-shadow;
-        $_focus-shadow: $focus-shadow;
-        $_active-shadow: $active-shadow;
-        $_border-radius: $border-radius;
-
-        @if not($variant) {
-            $variant: map.get($schema, '_meta', 'theme');
-        }
-
-        @if not($foreground) and $background {
-            $foreground: text-contrast($background);
-        }
-
-        @if not($hover-background) and $background {
-            @if meta.type-of($background) == 'color' {
-                $hover-background: color.scale($background, $lightness: 5%);
-            }
-        }
-
-        @if not($hover-foreground) and $hover-background {
-            @if meta.type-of($hover-background) == 'color' {
-                $hover-foreground: text-contrast($hover-background);
-            }
-        }
-
-        @if not($icon-color) and $background {
-            @if meta.type-of($background) == 'color' {
-                $icon-color: text-contrast($background);
-            }
-        }
-
-        @if not($icon-color-hover) and $hover-foreground {
-            @if meta.type-of($hover-background) == 'color' {
-                $icon-color-hover: $hover-foreground;
-            }
-        }
-
-        @if not($focus-background) and $background {
-            $focus-background: color.scale($background, $lightness: 5%);
-        }
-
-        @if not($focus-foreground) and $focus-background {
-            $focus-foreground: text-contrast($focus-background);
-        }
-
-        @if not($focus-hover-background) and $background {
-            @if meta.type-of($background) == 'color' {
-                $focus-hover-background: color.scale($background, $lightness: 5%);
-            }
-        }
-
-        @if not($focus-hover-foreground) and $focus-hover-background {
-            $focus-hover-foreground: text-contrast($focus-hover-background);
-        }
-
-        @if not($focus-visible-background) and $focus-background {
-            $focus-visible-background: $focus-background;
-        }
-
-        @if not($focus-visible-foreground) and $focus-foreground {
-            $focus-visible-foreground: $focus-foreground;
-        }
-
-        @if not($focus-visible-border-color) and $focus-border-color {
-            $focus-visible-border-color: $focus-border-color;
-        }
-
-        @if not($_resting-shadow) {
-            $resting-elevation: map.get($_schema, 'resting-elevation');
-            $_resting-shadow: elevation($resting-elevation);
-        }
-
-        @if not($_hover-shadow) {
-            $hover-elevation: map.get($_schema, 'hover-elevation');
-            $_hover-shadow: elevation($hover-elevation);
-        }
-
-        @if not($_focus-shadow) {
-            $focus-elevation: map.get($_schema, 'focus-elevation');
-            $_focus-shadow: elevation($focus-elevation);
-        }
-
-        @if not($_active-shadow) {
-            $active-elevation: map.get($_schema, 'active-elevation');
-            $_active-shadow: elevation($active-elevation);
-        }
-
-        $themes: map.merge($themes, (
-            $_name: extend( digest-schema($_schema), (
-                name: $name,
-                background: $background,
-                foreground: $foreground,
-
-                icon-color: $icon-color,
-                icon-color-hover: $icon-color-hover,
-
-                hover-background: $hover-background,
-                hover-foreground: $hover-foreground,
-
-                focus-background: $focus-background,
-                focus-foreground: $focus-foreground,
-
-                focus-hover-background: $focus-hover-background,
-                focus-hover-foreground: $focus-hover-foreground,
-
-                focus-visible-background: $focus-visible-background,
-                focus-visible-foreground: $focus-visible-foreground,
-
-                active-background: $active-background,
-                active-foreground: $active-foreground,
-
-                border-radius: $_border-radius,
-                border-color: $border-color,
-                hover-border-color: $hover-border-color,
-                focus-border-color: $focus-border-color,
-                focus-visible-border-color: $focus-visible-border-color,
-                active-border-color: $active-border-color,
-
-                shadow-color: $shadow-color,
-
-                resting-shadow: $_resting-shadow,
-                hover-shadow: $_hover-shadow,
-                focus-shadow: $_focus-shadow,
-                active-shadow: $_active-shadow,
-
-                disabled-background: $disabled-background,
-                disabled-foreground: $disabled-foreground,
-                disabled-icon-color: $disabled-icon-color,
-                disabled-border-color: $disabled-border-color,
-                size: $size,
-                theme: map.get($schema, '_meta', 'theme'),
-            ))
-        ));
-    }
-
-    @return (
-        name: $name,
-        variant: $variant,
-        themes: $themes,
-    );
-}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
-/// @param {Map} $theme - The theme used to style the component.
-@mixin button($theme) {
+/// @param {Map} $flat [null] - The flat theme used to style the component.
+/// @param {Map} $contained [null] - The contained theme used to style the component.
+/// @param {Map} $outlined [null] - The outlined theme used to style the component.
+/// @param {Map} $fab [null] - The fab theme used to style the component.
+@mixin button($themes...) {
     $button-width: rem(88px);
+    $flat-theme: null;
+    $contained-theme: null;
+    $outlined-theme: null;
+    $fab-theme: null;
+    $variant: 'material';
 
-    $variant: map.get($theme, variant);
+    $required: ('flat', 'contained', 'outlined', 'fab');
+    $added: ();
+    $missing: ();
 
-    $flat-theme: map.get(map.get($theme, 'themes'), 'flat');
-    $outlined-theme: map.get(map.get($theme, 'themes'), 'outlined');
-    $contained-theme: map.get(map.get($theme, 'themes'), 'contained');
-    $fab-theme: map.get(map.get($theme, 'themes'), 'fab');
+    @each $key, $theme in meta.keywords($themes) {
+        $type: map.get($theme, _meta, type);
 
-    @include css-vars($flat-theme);
-    @include css-vars($outlined-theme);
-    @include css-vars($contained-theme);
-    @include css-vars($fab-theme);
+        $added: list.append($added, $key);
 
-    $time: map.get((
-        'material': .1s,
-        'fluent': .1s,
-        'bootstrap': .15s,
-        'indigo': .15s
-    ), $variant);
+        @if $type == 'flat' {
+            $flat-theme: $theme;
+        } @else if $type == 'contained' {
+            $contained-theme: $theme;
+        } @else if $type == 'outlined' {
+            $outlined-theme: $theme;
+        } @else if $type == 'fab' {
+            $fab-theme: $theme;
+        }
+
+        $variant: map.get($theme, '_meta', 'theme');
+        @include css-vars($theme);
+    }
+
+    @each $item in $required {
+        @if not(list.index($added, $item)) {
+            $missing: list.append($missing, '$#{$item}', $separator: comma);
+        }
+    }
+
+    @if list.length($missing) != 0 {
+        @error meta.inspect(string.unquote("Missing theme properties:") #{$missing});
+    }
+
+    $time: map.get(
+        (
+            'material': 0.1s,
+            'fluent': 0.1s,
+            'bootstrap': 0.15s,
+            'indigo': 0.15s,
+        ),
+        $variant
+    );
 
     $button-transition: color $time ease-in-out,
         background-color $time ease-in-out,
@@ -292,89 +74,101 @@
     $button-padding-inline: (
         comfortable: rem(16px, 16px),
         cosy: rem(12px, 16px),
-        compact: rem(8px, 16px)
+        compact: rem(8px, 16px),
     );
 
     $button-padding-indigo-inline: (
         comfortable: rem(24px, 16px),
         cosy: rem(16px, 16px),
-        compact: rem(10px, 16px)
+        compact: rem(10px, 16px),
     );
 
     $button-padding-material-block: (
         comfortable: rem(7px, 16px),
         cosy: rem(4px, 16px),
-        compact: rem(1px, 16px)
+        compact: rem(1px, 16px),
     );
 
     $button-padding-fluent-block: (
         comfortable: 0,
         cosy: 0,
-        compact: 0
+        compact: 0,
     );
 
     $button-padding-bootstrap-block: (
         comfortable: rem(6px, 16px),
         cosy: rem(4px, 16px),
-        compact: rem(2px, 16px)
+        compact: rem(2px, 16px),
     );
 
     $button-padding-indigo-block: (
         comfortable: 0,
         cosy: 0,
-        compact: 0
+        compact: 0,
     );
 
-    $button-padding-inline: map.get((
-        'material': $button-padding-inline,
-        'fluent': $button-padding-inline,
-        'bootstrap': $button-padding-inline,
-        'indigo': $button-padding-indigo-inline,
-    ), $variant);
+    $button-padding-inline: map.get(
+        (
+            'material': $button-padding-inline,
+            'fluent': $button-padding-inline,
+            'bootstrap': $button-padding-inline,
+            'indigo': $button-padding-indigo-inline,
+        ),
+        $variant
+    );
 
-    $button-padding-block: map.get((
-        'material': $button-padding-material-block,
-        'fluent': $button-padding-fluent-block,
-        'bootstrap': $button-padding-bootstrap-block,
-        'indigo': $button-padding-indigo-block,
-    ), $variant);
+    $button-padding-block: map.get(
+        (
+            'material': $button-padding-material-block,
+            'fluent': $button-padding-fluent-block,
+            'bootstrap': $button-padding-bootstrap-block,
+            'indigo': $button-padding-indigo-block,
+        ),
+        $variant
+    );
 
-    $outlined-button-padding-inline: map.get((
-        'material': $button-padding-inline,
-        'fluent': $button-padding-inline,
-        'bootstrap': $button-padding-inline,
-        'indigo': $button-padding-indigo-inline,
-    ), $variant);
+    $outlined-button-padding-inline: map.get(
+        (
+            'material': $button-padding-inline,
+            'fluent': $button-padding-inline,
+            'bootstrap': $button-padding-inline,
+            'indigo': $button-padding-indigo-inline,
+        ),
+        $variant
+    );
 
-    $outlined-button-padding-block: map.get((
-        'material': $button-padding-material-block,
-        'fluent': $button-padding-fluent-block,
-        'bootstrap': $button-padding-bootstrap-block,
-        'indigo': $button-padding-indigo-block
-    ), $variant);
+    $outlined-button-padding-block: map.get(
+        (
+            'material': $button-padding-material-block,
+            'fluent': $button-padding-fluent-block,
+            'bootstrap': $button-padding-bootstrap-block,
+            'indigo': $button-padding-indigo-block,
+        ),
+        $variant
+    );
 
     $button-floating-padding-block: (
         comfortable: rem(8px),
         cosy: rem(4px),
-        compact: 0
+        compact: 0,
     );
 
     $button-floating-padding-inline: (
         comfortable: rem(14px),
         cosy: rem(10px),
-        compact: rem(6px)
+        compact: rem(6px),
     );
 
     $button-floating-padding-indigo-inline: (
         comfortable: rem(10px),
         cosy: rem(8px),
-        compact: rem(6px)
+        compact: rem(6px),
     );
 
     $items-gap: (
         comfortable: rem(12px),
         cosy: rem(8px),
-        compact: rem(4px)
+        compact: rem(4px),
     );
 
     $items-gap-indigo-comfortable: rem(8px);
@@ -382,73 +176,102 @@
     $filtering-row-button-size: (
         comfortable: rem(40px),
         cosy: rem(30px),
-        compact: rem(21px)
+        compact: rem(21px),
     );
 
-    $icon-sizes: map.get((
-        'material': rem(18px),
-        'fluent': rem(18px),
-        'bootstrap': rem(18px),
-        'indigo': rem(16px),
-    ), $variant);
+    $icon-sizes: map.get(
+        (
+            'material': rem(18px),
+            'fluent': rem(18px),
+            'bootstrap': rem(18px),
+            'indigo': rem(16px),
+        ),
+        $variant
+    );
 
     $icon-in-button-size: $icon-sizes;
 
-    $contained-shadow: map.get((
-        'material': var-get($contained-theme, 'resting-shadow'),
-        'fluent': none,
-        'bootstrap': none,
-        'indigo': none
-    ), $variant);
+    $contained-shadow: map.get(
+        (
+            'material': var-get($contained-theme, 'resting-shadow'),
+            'fluent': none,
+            'bootstrap': none,
+            'indigo': none,
+        ),
+        $variant
+    );
 
-    $contained-shadow--hover: map.get((
-        'material': var-get($contained-theme, 'hover-shadow'),
-        'fluent': none,
-        'bootstrap': none,
-        'indigo': none
-    ), $variant);
+    $contained-shadow--hover: map.get(
+        (
+            'material': var-get($contained-theme, 'hover-shadow'),
+            'fluent': none,
+            'bootstrap': none,
+            'indigo': none,
+        ),
+        $variant
+    );
 
-    $contained-shadow--focus: map.get((
-        'material': var-get($contained-theme, 'focus-shadow'),
-        'fluent': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'),
-        'bootstrap': 0 0 0 rem(4px) var-get($contained-theme, 'shadow-color'),
-        'indigo': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color')
-    ), $variant);
+    $contained-shadow--focus: map.get(
+        (
+            'material': var-get($contained-theme, 'focus-shadow'),
+            'fluent': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'),
+            'bootstrap': 0 0 0 rem(4px)
+                var-get($contained-theme, 'shadow-color'),
+            'indigo': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'),
+        ),
+        $variant
+    );
 
-    $contained-shadow--active: map.get((
-        'material': var-get($contained-theme, 'active-shadow'),
-        'fluent': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'),
-        'bootstrap': 0 0 0 rem(4px) var-get($contained-theme, 'shadow-color'),
-        'indigo': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color')
-    ), $variant);
+    $contained-shadow--active: map.get(
+        (
+            'material': var-get($contained-theme, 'active-shadow'),
+            'fluent': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'),
+            'bootstrap': 0 0 0 rem(4px)
+                var-get($contained-theme, 'shadow-color'),
+            'indigo': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'),
+        ),
+        $variant
+    );
 
-    $fab-shadow: map.get((
-        'material': var-get($fab-theme, 'resting-shadow'),
-        'fluent': none,
-        'bootstrap': none,
-        'indigo': none
-    ), $variant);
+    $fab-shadow: map.get(
+        (
+            'material': var-get($fab-theme, 'resting-shadow'),
+            'fluent': none,
+            'bootstrap': none,
+            'indigo': none,
+        ),
+        $variant
+    );
 
-    $fab-shadow--hover: map.get((
-        'material': var-get($fab-theme, 'hover-shadow'),
-        'fluent': none,
-        'bootstrap': none,
-        'indigo': none
-    ), $variant);
+    $fab-shadow--hover: map.get(
+        (
+            'material': var-get($fab-theme, 'hover-shadow'),
+            'fluent': none,
+            'bootstrap': none,
+            'indigo': none,
+        ),
+        $variant
+    );
 
-    $fab-shadow--focus: map.get((
-        'material': var-get($fab-theme, 'focus-shadow'),
-        'fluent':  0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
-        'bootstrap': 0 0 0 rem(4px) var-get($fab-theme, 'shadow-color'),
-        'indigo': 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color')
-    ), $variant);
+    $fab-shadow--focus: map.get(
+        (
+            'material': var-get($fab-theme, 'focus-shadow'),
+            'fluent': 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
+            'bootstrap': 0 0 0 rem(4px) var-get($fab-theme, 'shadow-color'),
+            'indigo': 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
+        ),
+        $variant
+    );
 
-    $fab-shadow--active: map.get((
-        'material': var-get($fab-theme, 'active-shadow'),
-        'fluent':  0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
-        'bootstrap': 0 0 0 rem(4px) var-get($fab-theme, 'shadow-color'),
-        'indigo': 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color')
-    ), $variant);
+    $fab-shadow--active: map.get(
+        (
+            'material': var-get($fab-theme, 'active-shadow'),
+            'fluent': 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
+            'bootstrap': 0 0 0 rem(4px) var-get($fab-theme, 'shadow-color'),
+            'indigo': 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
+        ),
+        $variant
+    );
 
     %fluent-border {
         &::after {
@@ -514,10 +337,10 @@
     igx-grid-filtering-row {
         @if $variant == 'bootstrap' {
             --filtering-row-button-size: #{sizable(
-                #{map.get($filtering-row-button-size, 'compact')},
-                #{map.get($filtering-row-button-size, 'cosy')},
-                #{map.get($filtering-row-button-size, 'comfortable')}
-            )};
+                    #{map.get($filtering-row-button-size, 'compact')},
+                    #{map.get($filtering-row-button-size, 'cosy')},
+                    #{map.get($filtering-row-button-size, 'comfortable')}
+                )};
 
             %igx-button-display {
                 min-height: var(--filtering-row-button-size);
@@ -771,7 +594,7 @@
             color: var-get($contained-theme, 'active-foreground');
             background: var-get($contained-theme, 'active-background');
             border-color: var-get($contained-theme, 'active-border-color');
-            box-shadow: var-get($contained-theme, 'hover-shadow');
+            box-shadow: var-get($contained-theme, 'active-shadow');
 
             igx-icon {
                 color: var-get($contained-theme, 'active-foreground');
@@ -911,7 +734,7 @@
             color: var-get($fab-theme, 'active-foreground');
             background: var-get($fab-theme, 'active-background');
             border-color: var-get($fab-theme, 'active-border-color');
-            box-shadow: var-get($fab-theme, 'focus-shadow');
+            box-shadow: var-get($fab-theme, 'active-shadow');
 
             igx-icon {
                 color: var-get($fab-theme, 'active-foreground');
@@ -994,7 +817,11 @@
 /// Uses the 'button' category from the typographic scale.
 /// @group typography
 /// @param {String} $categories [(text: 'button')] - The category from the typographic scale used for type styles.
-@mixin button-typography($categories: (text: 'button')) {
+@mixin button-typography(
+    $categories: (
+        text: 'button',
+    )
+) {
     $text: map.get($categories, 'text');
 
     %igx-button-display {
