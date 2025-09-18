@@ -4502,7 +4502,7 @@ describe('igxOverlay', () => {
 });
 
 @Component({
-    selector: `simple - dynamic - component`,
+    selector: `test-simple-dynamic-component`,
     template: `<div style='width:100px; height: 100px; background-color: red;'></div>`,
     standalone: true
 })
