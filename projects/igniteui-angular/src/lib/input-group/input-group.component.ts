@@ -15,7 +15,7 @@ import {
     booleanAttribute,
     inject,
     ViewEncapsulation,
-    DOCUMENT
+    DOCUMENT,
 } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
 import { PlatformUtil } from '../core/utils';
@@ -40,7 +40,7 @@ import { IgxTheme, THEME_TOKEN, ThemeToken } from '../services/theme/theme.token
     styleUrl: 'input-group.component.css',
     encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }],
-    imports: [NgTemplateOutlet, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
+    imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
 })
 export class IgxInputGroupComponent implements IgxInputGroupBase {
     /**
@@ -358,6 +358,30 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     @HostBinding('class.igx-input-group--file')
     public get isFileType() {
         return this.input.type === 'file';
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-file-input')
+    public get isFileInput() {
+        return this.input.type === 'file';
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-file-input--filled')
+    public get isFileInputFilled() {
+        return this.isFileType && this.isFilled;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-file-input--focused')
+    public get isFileInputFocused() {
+        return this.isFileType && this.isFocused;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-file-input--disabled')
+    public get isFileInputDisabled() {
+        return this.isFileType && this.disabled;
     }
 
     /** @hidden @internal */

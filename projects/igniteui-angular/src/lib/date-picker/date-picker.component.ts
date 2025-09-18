@@ -5,7 +5,6 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
-    ContentChildren,
     ElementRef,
     EventEmitter,
     HostBinding,
@@ -19,7 +18,6 @@ import {
     Optional,
     Output,
     PipeTransform,
-    QueryList,
     Renderer2,
     ViewChild,
     ViewContainerRef,
@@ -50,8 +48,7 @@ import { DatePickerResourceStringsEN, IDatePickerResourceStrings } from '../core
 import { IBaseCancelableBrowserEventArgs, isDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
-import { IgxPickerActionsDirective, IgxPickerClearComponent } from '../date-common/public_api';
-import { PickerHeaderOrientation } from '../date-common/types';
+import { IgxPickerActionsDirective } from '../date-common/public_api';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { DatePart, DatePartDeltas, IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
@@ -68,6 +65,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
+import { PickerCalendarOrientation } from '../date-common/types';
 
 let NEXT_ID = 0;
 
@@ -143,6 +141,15 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     public displayMonthsCount = 1;
 
     /**
+    * Gets/Sets the orientation of the multiple months displayed in the picker's calendar's days view.
+    *
+    * @example
+    * <igx-date-picker orientation="vertical"></igx-date-picker>
+    */
+    @Input()
+    public orientation: PickerCalendarOrientation = PickerCalendarOrientation.Horizontal;
+
+    /**
      * Show/hide week numbers
      *
      * @example
@@ -152,6 +159,22 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      */
     @Input({ transform: booleanAttribute })
     public showWeekNumbers: boolean;
+
+
+    /**
+     * Gets/Sets the date which is shown in the calendar picker and is highlighted.
+     * By default it is the current date, or the value of the picker, if set.
+     */
+    @Input()
+    public get activeDate(): Date {
+        const today = new Date(new Date().setHours(0, 0, 0, 0));
+        const dateValue = DateTimeUtil.isValidDate(this._dateValue) ? new Date(this._dateValue.setHours(0, 0, 0, 0)) : null;
+        return this._activeDate ?? dateValue ?? this._calendar?.activeDate ?? today;
+    }
+
+    public set activeDate(value: Date) {
+        this._activeDate = value;
+    }
 
     /**
      * Gets/Sets a custom formatter function on the selected or passed date.
@@ -163,17 +186,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      */
     @Input()
     public formatter: (val: Date) => string;
-
-    /**
-     * Gets/Sets the orientation of the `IgxDatePickerComponent` header.
-     *
-     *  @example
-     * ```html
-     * <igx-date-picker headerOrientation="vertical"></igx-date-picker>
-     * ```
-     */
-    @Input()
-    public headerOrientation: PickerHeaderOrientation = PickerHeaderOrientation.Horizontal;
 
     /**
      * Gets/Sets the today button's label.
@@ -403,10 +415,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     public validationFailed = new EventEmitter<IDatePickerValidationFailedEventArgs>();
 
     /** @hidden @internal */
-    @ContentChildren(IgxPickerClearComponent)
-    public clearComponents: QueryList<IgxPickerClearComponent>;
-
-    /** @hidden @internal */
     @ContentChild(IgxLabelDirective)
     public label: IgxLabelDirective;
 
@@ -465,13 +473,13 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private _dateValue: Date;
     private _overlayId: string;
     private _value: Date | string;
-    private _targetViewDate: Date;
     private _ngControl: NgControl = null;
     private _statusChanges$: Subscription;
     private _calendar: IgxCalendarComponent;
     private _calendarContainer?: HTMLElement;
     private _specialDates: DateRangeDescriptor[] = null;
     private _disabledDates: DateRangeDescriptor[] = null;
+    private _activeDate: Date = null;
     private _overlaySubFilter:
         [MonoTypeOperatorFunction<OverlayEventArgs>,
             MonoTypeOperatorFunction<OverlayEventArgs | OverlayCancelableEventArgs>] = [
@@ -772,10 +780,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this.subscribeToOverlayEvents();
         this.subscribeToDateEditorEvents();
 
-        this.subToIconsClicked(this.clearComponents, () => this.clear());
-        this.clearComponents.changes.pipe(takeUntil(this._destroy$))
-            .subscribe(() => this.subToIconsClicked(this.clearComponents, () => this.clear()));
-
         this._dropDownOverlaySettings.excludeFromOutsideClick = [this.inputGroup.element.nativeElement];
 
         fromEvent(this.inputDirective.nativeElement, 'blur')
@@ -837,6 +841,12 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             return;
         }
         this._dateValue = DateTimeUtil.isValidDate(value) ? value : DateTimeUtil.parseIsoDate(value);
+        if (this._calendar) {
+            this._calendar.selectDate(this._dateValue);
+            this._calendar.activeDate = this.activeDate;
+            this._calendar.viewDate = this.activeDate;
+            this.cdr.detectChanges();
+        }
     }
 
     private updateValidity() {
@@ -874,7 +884,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             date.setMilliseconds(this.dateValue.getMilliseconds());
         }
         this.value = date;
-        this._calendar.viewDate = date;
+        if (this._calendar) {
+            this._calendar.activeDate = this.activeDate;
+            this._calendar.viewDate = this.activeDate;
+        }
         this.close();
     }
 
@@ -912,13 +925,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             this.opened.emit({ owner: this });
 
             this._calendar.wrapper?.nativeElement?.focus();
-
-            if (this._targetViewDate) {
-                this._targetViewDate.setHours(0, 0, 0, 0);
-                // INFO: We need to set the active date to the target view date so there's something to
-                // navigate when the calendar is opened.
-                this._calendar.activeDate = this._targetViewDate;
-            }
         });
 
         this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((e: OverlayCancelableEventArgs) => {
@@ -965,10 +971,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         }
     }
 
-
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {
         this._calendar = componentInstance.calendar;
-        this._calendar.hasHeader = !this.isDropdown;
+        this._calendar.hasHeader = !this.isDropdown && !this.hideHeader;
         this._calendar.formatOptions = this.pickerCalendarFormat;
         this._calendar.formatViews = this.pickerFormatViews;
         this._calendar.locale = this.locale;
@@ -981,6 +986,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this._calendar.hideOutsideDays = this.hideOutsideDays;
         this._calendar.monthsViewNumber = this.displayMonthsCount;
         this._calendar.showWeekNumbers = this.showWeekNumbers;
+        this._calendar.orientation = this.orientation;
         this._calendar.selected.pipe(takeUntil(this._destroy$)).subscribe((ev: Date) => this.handleSelection(ev));
         this.setDisabledDates();
 
@@ -988,29 +994,15 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             // calendar will throw if the picker's value is InvalidDate #9208
             this._calendar.value = this.dateValue;
         }
-        this.setCalendarViewDate();
+        this._calendar.activeDate = this.activeDate;
+        this._calendar.viewDate = this.activeDate;
 
         componentInstance.mode = this.mode;
-        // componentInstance.headerOrientation = this.headerOrientation;
         componentInstance.closeButtonLabel = this.cancelButtonLabel;
         componentInstance.todayButtonLabel = this.todayButtonLabel;
         componentInstance.pickerActions = this.pickerActions;
 
         componentInstance.calendarClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.close());
         componentInstance.todaySelection.pipe(takeUntil(this._destroy$)).subscribe(() => this.selectToday());
-    }
-
-    private setCalendarViewDate() {
-        const { minValue, maxValue } = this.getMinMaxDates();
-        const dateValue = DateTimeUtil.isValidDate(this.dateValue) ? this.dateValue : new Date();
-        if (minValue && DateTimeUtil.lessThanMinValue(dateValue, minValue)) {
-            this._calendar.viewDate = this._targetViewDate = minValue;
-            return;
-        }
-        if (maxValue && DateTimeUtil.greaterThanMaxValue(dateValue, maxValue)) {
-            this._calendar.viewDate = this._targetViewDate = maxValue;
-            return;
-        }
-        this._calendar.viewDate = this._targetViewDate = dateValue;
     }
 }

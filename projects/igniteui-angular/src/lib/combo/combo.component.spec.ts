@@ -1061,6 +1061,7 @@ describe('igxCombo', () => {
                 expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
                 expect(input.nativeElement.getAttribute('aria-controls')).toEqual(combo.dropdown.listId);
                 expect(input.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
+                expect(input.nativeElement.getAttribute('aria-label')).toEqual('No options selected');
 
                 const dropdown = fixture.debugElement.query(By.css(`div[role="listbox"]`));
                 expect(dropdown.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
@@ -1076,12 +1077,16 @@ describe('igxCombo', () => {
 
                 const list = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
                 expect(list.nativeElement.getAttribute('aria-multiselectable')).toEqual('true');
-                expect(list.nativeElement.getAttribute('aria-activedescendant')).toEqual('');
+                expect(list.nativeElement.getAttribute('aria-activedescendant')).toEqual(null);
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', list);
                 tick();
                 fixture.detectChanges();
                 expect(list.nativeElement.getAttribute('aria-activedescendant')).toEqual(combo.dropdown.focusedItem.id);
+
+                combo.select(['Illinois', 'Mississippi', 'Ohio']);
+                fixture.detectChanges();
+                expect(input.nativeElement.getAttribute('aria-label')).toEqual('Selected options');
             }));
             it('should render aria-expanded attribute properly', fakeAsync(() => {
                 expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
@@ -1207,8 +1212,11 @@ describe('igxCombo', () => {
             it('should render selected items properly', () => {
                 combo.toggle();
                 fixture.detectChanges();
+
                 const dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement;
                 const dropdownItems = dropdownList.querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`);
+
+
                 expect(dropdownItems[1].classList.contains(CSS_CLASS_SELECTED)).toBeFalsy();
                 expect(dropdownItems[3].classList.contains(CSS_CLASS_SELECTED)).toBeFalsy();
 
@@ -1972,6 +1980,16 @@ describe('igxCombo', () => {
                     fixture.detectChanges();
                     expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
                 }));
+                it('should close the dropdown list on pressing Tab key', fakeAsync(() => {
+                    combo.toggle();
+                    fixture.detectChanges();
+
+                    const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+                    UIInteractions.triggerEventHandlerKeyDown('Tab', dropdownContent);
+                    tick();
+                    fixture.detectChanges();
+                    expect(combo.collapsed).toBeTruthy();
+                }));
             });
             describe('primitive data dropdown: ', () => {
                 it('should properly navigate with HOME/END keys when no virtScroll is necessary', async () => {
@@ -2300,6 +2318,37 @@ describe('igxCombo', () => {
                         displayText: selectedItem_2.value[combo.valueKey],
                         cancel: false
                     });
+            });
+            it('should toggle combo dropdown on Enter of the focused toggle icon', fakeAsync(() => {
+                spyOn(combo, 'toggle').and.callThrough();
+                const toggleBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_TOGGLEBUTTON}`));
+
+                UIInteractions.triggerEventHandlerKeyDown('Enter', toggleBtn);
+                tick();
+                fixture.detectChanges();
+                expect(combo.toggle).toHaveBeenCalledTimes(1);
+                expect(combo.collapsed).toEqual(false);
+
+                UIInteractions.triggerEventHandlerKeyDown('Enter', toggleBtn);
+                tick();
+                fixture.detectChanges();
+                expect(combo.toggle).toHaveBeenCalledTimes(2);
+                expect(combo.collapsed).toEqual(true);
+            }));
+            it('should clear the selection on Enter of the focused clear icon', () => {
+                const selectedItem_1 = combo.dropdown.items[1];
+                combo.toggle();
+                fixture.detectChanges();
+                simulateComboItemClick(1);
+                expect(combo.selection[0]).toEqual(selectedItem_1.value);
+                expect(combo.value[0]).toEqual(selectedItem_1.value[combo.valueKey]);
+
+                const clearBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+                UIInteractions.triggerEventHandlerKeyDown('Enter', clearBtn);
+                fixture.detectChanges();
+                expect(input.nativeElement.value).toEqual('');
+                expect(combo.selection.length).toEqual(0);
+                expect(combo.value.length).toEqual(0);
             });
             it('should not be able to select group header', () => {
                 spyOn(combo.selectionChanging, 'emit').and.callThrough();
@@ -3754,7 +3803,6 @@ class IgxComboFormComponent {
             password: ['', Validators.required],
             townCombo: [[this.items[0]], Validators.required]
         });
-
     }
     public onSubmitReactive() { }
 

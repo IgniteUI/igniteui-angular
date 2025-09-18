@@ -7,6 +7,8 @@
 
 // Used to configure color accessibility for charts
 @use 'igniteui-theming/sass/color/functions' as color;
+@use 'igniteui-theming/sass/themes/mixins' as theming;
+@use 'igniteui-theming/sass/themes/components' as themes;
 
 // Common components
 @use '../components/_common/igx-control';
@@ -80,6 +82,7 @@
 @use '../components/time-picker/time-picker-component' as time-picker;
 @use '../components/tree/tree-component' as tree;
 @use '../components/watermark/watermark-component' as watermark;
+@use '../components/input/file-input-component' as file-input;
 @use '../print';
 
 /// @param {boolean} $print-layout [true] - Activates the printing styles of the components.
@@ -89,6 +92,7 @@
     $enhanced-accessibility: false
 ) {
     @include color.configure-colors($enhanced-accessibility);
+    @include themes.configure-prefix('igx');
 
     // Angular hack for binding to [hidden] property
     // not working
@@ -111,6 +115,8 @@
             box-sizing: border-box;
         }
     }
+
+    @include theming.spacing();
 
     @property --_transition-delay {
         syntax: '<time>';
@@ -214,6 +220,7 @@
     @include time-picker.component();
     @include tree.component();
     @include watermark.component();
+    @include file-input.component();
 
     // Build the component dependency-tree
     @include base.dependecy-tree(base.$components);

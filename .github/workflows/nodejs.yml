@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x, 22.x]
+        node-version: [20.x, 22.17.1]
 
     steps:
       - name: Checkout
@@ -42,8 +42,7 @@ jobs:
         run: npm run build:migrations
       - name: Build TypeDoc & SassDoc
         run: |
-            npm run build:typedoc:en:production
-            npm run build:sassdoc:en:production
+            npm run build:docs
       - name: Test
         run: |
             npm run test:lib

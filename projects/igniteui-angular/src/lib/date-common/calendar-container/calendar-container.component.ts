@@ -13,6 +13,9 @@ import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 import { IgxPickerActionsDirective } from '../picker-icons.common';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
 import { IgxDividerComponent } from "../../directives/divider/divider.component";
+import { CustomDateRange, DateRange } from '../../date-range-picker/date-range-picker-inputs.common';
+import { IDateRangePickerResourceStrings } from '../../core/i18n/date-range-picker-resources';
+import { IgxPredefinedRangesAreaComponent } from '../../date-range-picker/predefined-ranges/predefined-ranges-area.component';
 
 /** @hidden */
 @Component({
@@ -25,6 +28,7 @@ import { IgxDividerComponent } from "../../directives/divider/divider.component"
         IgxCalendarComponent,
         NgTemplateOutlet,
         IgxDividerComponent,
+        IgxPredefinedRangesAreaComponent
     ]
 })
 export class IgxCalendarContainerComponent {
@@ -35,7 +39,14 @@ export class IgxCalendarContainerComponent {
     public calendarClose = new EventEmitter<IBaseEventArgs>();
 
     @Output()
+    public calendarCancel = new EventEmitter<IBaseEventArgs>();
+
+    @Output()
     public todaySelection = new EventEmitter<IBaseEventArgs>();
+
+    @Output()
+    public rangeSelected = new EventEmitter<DateRange>();
+
 
     @HostBinding('class.igx-date-picker')
     public styleClass = 'igx-date-picker';
@@ -45,8 +56,12 @@ export class IgxCalendarContainerComponent {
         return this.mode === PickerInteractionMode.DropDown;
     }
 
+    public usePredefinedRanges = false;
+    public customRanges: CustomDateRange[] = [];
+    public resourceStrings!: IDateRangePickerResourceStrings;
     public vertical = false;
     public closeButtonLabel: string;
+    public cancelButtonLabel: string;
     public todayButtonLabel: string;
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
     public pickerActions: IgxPickerActionsDirective;
