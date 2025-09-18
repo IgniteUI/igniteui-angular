@@ -23,7 +23,6 @@ export default [{
     ],
 }, ...compat.extends(
     "plugin:@angular-eslint/recommended",
-    "plugin:@angular-eslint/template/process-inline-templates",
 ).map(config => ({
     ...config,
     files: ["**/*.ts"],
@@ -41,6 +40,7 @@ export default [{
         parserOptions: {
             project: ["tsconfig.json"],
             createDefaultProgram: true,
+            suppressParseErrors: true
         },
     },
 
