@@ -11,6 +11,7 @@ import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeComponent } from './tree.component';
 import { IgxTreeService } from './tree.service';
+import { PlatformUtil } from '../core/utils';
 
 const TREE_ROOT_CLASS = 'igx-tree__root';
 const NODE_TAG = 'igx-tree-node';
@@ -45,8 +46,10 @@ describe('IgxTree #treeView', () => {
             mockElementRef = jasmine.createSpyObj('elementRef', [], {
                 nativeElement: document.createElement('div')
             });
+            const mockPlatform = jasmine.createSpyObj('platform', ['isBrowser', 'isServer']);
+            mockPlatform.isBrowser = true;
             tree?.ngOnDestroy();
-            tree = new IgxTreeComponent(mockNavService, mockSelectionService, mockTreeService, mockElementRef);
+            tree = new IgxTreeComponent(mockNavService, mockSelectionService, mockTreeService, mockElementRef, mockPlatform);
             mockNodes = jasmine.createSpyObj('mockList', ['toArray'], {
                 changes: new Subject<void>(),
                 get first() {
