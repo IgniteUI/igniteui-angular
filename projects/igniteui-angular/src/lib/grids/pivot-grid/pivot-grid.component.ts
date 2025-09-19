@@ -1164,6 +1164,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         options.outlet = this.outlet;
         if (dropdown) {
             dropdown.initialize(column, this.overlayService);
+            dropdown.populateData();
             if (shouldReatach) {
                 const id = this.overlayService.attach(dropdown.element, options);
                 dropdown.overlayComponentId = id;

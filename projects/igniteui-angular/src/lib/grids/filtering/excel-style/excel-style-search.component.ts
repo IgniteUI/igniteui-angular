@@ -203,7 +203,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     protected activeDescendant = '';
 
     private _id = `igx-excel-style-search-${NEXT_ID++}`;
-    private _isLoading;
+    private _isLoading = true;
     private _addToCurrentFilterItem: FilterListItem;
     private _selectAllItem: FilterListItem;
     private _hierarchicalSelectedItems: FilterListItem[];
