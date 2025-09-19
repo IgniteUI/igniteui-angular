@@ -1,19 +1,4 @@
-import {
-    AfterViewInit,
-    Component,
-    ContentChildren,
-    ChangeDetectorRef,
-    EventEmitter,
-    HostBinding,
-    Input,
-    Output,
-    QueryList,
-    Renderer2,
-    ViewChildren,
-    OnDestroy,
-    ElementRef,
-    booleanAttribute
-} from '@angular/core';
+import { AfterViewInit, Component, ContentChildren, ChangeDetectorRef, EventEmitter, HostBinding, Input, Output, QueryList, Renderer2, ViewChildren, OnDestroy, ElementRef, booleanAttribute, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
@@ -59,6 +44,10 @@ let NEXT_ID = 0;
     imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent]
 })
 export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
+    private _cdr = inject(ChangeDetectorRef);
+    private _renderer = inject(Renderer2);
+    private _el = inject(ElementRef);
+
     /**
      * A collection containing all buttons inside the button group.
      */
@@ -308,12 +297,6 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
       childList: true,
       subtree: true,
     };
-
-    constructor(
-        private _cdr: ChangeDetectorRef,
-        private _renderer: Renderer2,
-        private _el: ElementRef
-    ) {}
 
     /**
      * Gets the selected button/buttons.

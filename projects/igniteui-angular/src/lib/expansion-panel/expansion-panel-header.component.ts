@@ -1,18 +1,4 @@
-import {
-    Component,
-    ChangeDetectorRef,
-    ElementRef,
-    HostBinding,
-    HostListener,
-    Input,
-    Host,
-    EventEmitter,
-    Output,
-    ContentChild,
-    Inject,
-    ViewChild,
-    booleanAttribute
-} from '@angular/core';
+import { Component, ChangeDetectorRef, ElementRef, HostBinding, HostListener, Input, EventEmitter, Output, ContentChild, ViewChild, booleanAttribute, inject } from '@angular/core';
 import { IgxExpansionPanelIconDirective } from './expansion-panel.directives';
 import { IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase, IExpansionPanelCancelableEventArgs } from './expansion-panel.common';
 import { IgxIconComponent } from '../icon/icon.component';
@@ -34,6 +20,10 @@ export type ExpansionPanelHeaderIconPosition = (typeof ExpansionPanelHeaderIconP
     imports: [IgxIconComponent]
 })
 export class IgxExpansionPanelHeaderComponent {
+    public panel = inject<IgxExpansionPanelBase>(IGX_EXPANSION_PANEL_COMPONENT, { host: true });
+    public cdr = inject(ChangeDetectorRef);
+    public elementRef = inject(ElementRef);
+
     /**
      * Returns a reference to the `igx-expansion-panel-icon` element;
      * If `iconPosition` is `NONE` - return null;
@@ -213,12 +203,7 @@ export class IgxExpansionPanelHeaderComponent {
     private _iconTemplate = false;
     private _disabled = false;
 
-    constructor(
-        @Host() @Inject(IGX_EXPANSION_PANEL_COMPONENT)
-        public panel: IgxExpansionPanelBase,
-        public cdr: ChangeDetectorRef,
-        public elementRef: ElementRef,
-    ) {
+    constructor() {
         this.id = `${this.panel.id}-header`;
     }
 

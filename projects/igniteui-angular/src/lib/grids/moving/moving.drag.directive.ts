@@ -1,8 +1,7 @@
-import { Directive, OnDestroy, Input, ElementRef, ViewContainerRef, NgZone, ChangeDetectorRef, Renderer2 } from '@angular/core';
+import { Directive, OnDestroy, Input, inject } from '@angular/core';
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { Subscription, fromEvent } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { PlatformUtil } from '../../core/utils';
 import { IgxColumnMovingService } from './moving.service';
 import { ColumnType } from '../common/grid.interface';
 
@@ -15,6 +14,8 @@ import { ColumnType } from '../common/grid.interface';
     standalone: true
 })
 export class IgxColumnMovingDragDirective extends IgxDragDirective implements OnDestroy {
+    private cms = inject(IgxColumnMovingService);
+
 
     @Input('igxColumnMovingDrag')
     public column: ColumnType;
@@ -33,16 +34,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
     private ghostImgIconGroupClass = 'igx-grid__drag-ghost-image-icon-group';
     private columnSelectedClass = 'igx-grid-th--selected';
 
-    constructor(
-        element: ElementRef<HTMLElement>,
-        viewContainer: ViewContainerRef,
-        zone: NgZone,
-        renderer: Renderer2,
-        cdr: ChangeDetectorRef,
-        private cms: IgxColumnMovingService,
-        _platformUtil: PlatformUtil,
-    ) {
-        super(cdr, element, viewContainer, zone, renderer, _platformUtil);
+    constructor() {
+        super();
         this.ghostClass = this._ghostClass;
     }
 

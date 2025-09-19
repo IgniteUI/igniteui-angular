@@ -1,10 +1,8 @@
-import { AfterViewInit, Component, ElementRef, HostBinding, HostListener, NgZone, OnDestroy } from '@angular/core';
-import { IgxTabItemDirective } from '../tab-item.directive';
+import { AfterViewInit, Component, HostBinding, HostListener, NgZone, OnDestroy, inject } from '@angular/core';
 import { IgxTabHeaderDirective } from '../tab-header.directive';
 import { IgxTabHeaderBase } from '../tabs.base';
 import { IgxTabsComponent } from './tabs.component';
 import { getResizeObserver } from '../../core/utils';
-import { PlatformUtil } from '../../core/utils';
 import { IgxDirectionality } from '../../services/direction/directionality';
 
 @Component({
@@ -14,6 +12,9 @@ import { IgxDirectionality } from '../../services/direction/directionality';
     standalone: true
 })
 export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements AfterViewInit, OnDestroy {
+    protected override tabs = inject(IgxTabsComponent);
+    private ngZone = inject(NgZone);
+    private dir = inject(IgxDirectionality);
 
     /** @hidden @internal */
     @HostBinding('class.igx-tabs__header-item--selected')
@@ -32,18 +33,6 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
     public cssClass = true;
 
     private _resizeObserver: ResizeObserver;
-
-    /** @hidden @internal */
-    constructor(
-        protected override tabs: IgxTabsComponent,
-        tab: IgxTabItemDirective,
-        elementRef: ElementRef<HTMLElement>,
-        platform: PlatformUtil,
-        private ngZone: NgZone,
-        private dir: IgxDirectionality
-    ) {
-        super(tabs, tab, elementRef, platform);
-    }
 
     /** @hidden @internal */
     @HostListener('keydown', ['$event'])

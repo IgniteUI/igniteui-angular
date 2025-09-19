@@ -11,6 +11,7 @@ import { ICellPosition } from '../common/events';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../test-utils/grid-functions.spec';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
+import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 
 const GRID_COL_THEAD_CLASS = '.igx-grid-th';
 const GRID_MRL_BLOCK_CLASS = `.${GRID_MRL_BLOCK}`;
@@ -24,6 +25,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
                 NoopAnimationsModule,
                 ColumnLayoutTestComponent,
                 ColumnLayoutAndGroupsTestComponent
+            ],
+            providers: [
+                IgxGridMRLNavigationService
             ]
         }).compileComponents();
     }));
@@ -677,7 +681,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         gridFirstRow = grid.rowList.first;
         GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
-        GridFunctions.verifyDOMMatchesLayoutSettings(grid,gridFirstRow, fixture.componentInstance.colGroups);
+        GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridFirstRow, fixture.componentInstance.colGroups);
     }));
 
     it('should initialize correctly when grid width is in % and no widths are set for columns.', fakeAsync(() => {

@@ -18,6 +18,7 @@ import {
 } from "./pivot-grid.interface";
 import { Size } from '../common/enums';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
+import { IgxGridNavigationService } from '../grid-navigation.service';
 
 describe("Pivot data selector", () => {
 
@@ -47,6 +48,9 @@ describe("Pivot data selector integration", () => {
             imports: [
                 NoopAnimationsModule,
                 IgxPivotGridTestBaseComponent
+            ],
+            providers: [
+                IgxGridNavigationService
             ]
         }).compileComponents();
     }));

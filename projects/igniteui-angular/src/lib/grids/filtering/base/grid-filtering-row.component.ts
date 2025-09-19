@@ -1,19 +1,4 @@
-import {
-    AfterViewInit,
-    ChangeDetectorRef,
-    Component,
-    Input,
-    TemplateRef,
-    ViewChild,
-    ViewChildren,
-    QueryList,
-    ElementRef,
-    HostBinding,
-    ChangeDetectionStrategy,
-    ViewRef,
-    HostListener,
-    OnDestroy
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, TemplateRef, ViewChild, ViewChildren, QueryList, ElementRef, HostBinding, ChangeDetectionStrategy, ViewRef, HostListener, OnDestroy, inject } from '@angular/core';
 import { GridColumnDataType, DataUtil } from '../../../data-operations/data-util';
 import { IgxDropDownComponent } from '../../../drop-down/drop-down.component';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
@@ -57,6 +42,11 @@ import { Size } from '../../common/enums';
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxInputGroupComponent, IgxPrefixDirective, IgxDropDownItemNavigationDirective, IgxInputDirective, IgxSuffixDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, IgxButtonDirective, NgClass, IgxRippleDirective, IgxIconButtonDirective]
 })
 export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
+    public filteringService = inject(IgxFilteringService);
+    public ref = inject<ElementRef<HTMLElement>>(ElementRef);
+    public cdr = inject(ChangeDetectorRef);
+    protected platform = inject(PlatformUtil);
+
     @Input()
     public get column(): ColumnType {
         return this._column;
@@ -197,13 +187,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     private readonly NARROW_WIDTH_THRESHOLD = 432;
 
     private $destroyer = new Subject<void>();
-
-    constructor(
-        public filteringService: IgxFilteringService,
-        public ref: ElementRef<HTMLElement>,
-        public cdr: ChangeDetectorRef,
-        protected platform: PlatformUtil,
-    ) { }
 
     @HostListener('keydown', ['$event'])
     public onKeydownHandler(evt: KeyboardEvent) {

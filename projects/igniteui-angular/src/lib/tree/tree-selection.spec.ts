@@ -1,10 +1,10 @@
 import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { EventEmitter, QueryList } from '@angular/core';
+import { ChangeDetectorRef, ElementRef, EventEmitter, QueryList } from '@angular/core';
 import { IgxTreeComponent } from './tree.component';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { TreeTestFunctions, TREE_NODE_DIV_SELECTION_CHECKBOX_CSS_CLASS } from './tree-functions.spec';
-import { IgxTree, IgxTreeSelectionType, ITreeNodeSelectionEvent } from './common';
+import { IGX_TREE_COMPONENT, IgxTree, IgxTreeSelectionType, ITreeNodeSelectionEvent } from './common';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
@@ -551,10 +551,25 @@ describe('IgxTree - Selection #treeView', () => {
         let mockQuery: jasmine.SpyObj<QueryList<any>>;
         const selectionService = new IgxTreeSelectionService();
         const treeService = new IgxTreeService();
-        const navService = new IgxTreeNavigationService(treeService, selectionService);
-        const tree = new IgxTreeComponent(navService, selectionService, treeService, null);
+        const elementRef = { nativeElement: null };
+        let navService: IgxTreeNavigationService;
+        let tree: IgxTreeComponent;
+
 
         beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [
+                    { provide: IgxTreeSelectionService, useValue: selectionService },
+                    { provide: IgxTreeService, useValue: treeService },
+                    { provide: ElementRef, useValue: elementRef },
+                    IgxTreeNavigationService,
+                    IgxTreeComponent
+                ]
+            });
+
+            navService = TestBed.inject(IgxTreeNavigationService);
+            tree = TestBed.inject(IgxTreeComponent);
+
             mockNodes = TreeTestFunctions.createNodeSpies(0, 5);
             mockQuery = TreeTestFunctions.createQueryListSpy(mockNodes);
             mockQuery.toArray.and.returnValue(mockNodes);
@@ -562,6 +577,11 @@ describe('IgxTree - Selection #treeView', () => {
 
             tree.selection = IgxTreeSelectionType.BiState;
             (tree.nodes as any) = mockQuery;
+        });
+
+        afterAll(() => {
+            navService.ngOnDestroy();
+            tree.ngOnDestroy();
         });
 
         it('Should be able to deselect all nodes', () => {
@@ -585,26 +605,47 @@ describe('IgxTree - Selection #treeView', () => {
             expect((tree as any).selectionService.deselectNodesWithNoEvent)
                 .toHaveBeenCalledWith([tree.nodes.toArray()[0], tree.nodes.toArray()[1]]);
         });
-        navService.ngOnDestroy();
-        tree.ngOnDestroy();
     });
 
     describe('IgxTreeNode - API Tests', () => {
+        let node: IgxTreeNodeComponent<any>;
+        let navService: IgxTreeNavigationService;
         const elementRef = { nativeElement: null };
         const selectionService = new IgxTreeSelectionService();
         const treeService = new IgxTreeService();
-        const navService = new IgxTreeNavigationService(treeService, selectionService);
         const mockEmitter: EventEmitter<ITreeNodeSelectionEvent> = jasmine.createSpyObj('emitter', ['emit']);
         const mockTree: IgxTree = jasmine.createSpyObj('tree', [''],
-            { selection: IgxTreeSelectionType.BiState, nodeSelection: mockEmitter, nodes: {
-                find: () => true
-            } });
+            {
+                selection: IgxTreeSelectionType.BiState, nodeSelection: mockEmitter, nodes: {
+                    find: () => true
+                }
+            });
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck', 'detectChanges']);
+
         selectionService.register(mockTree);
 
-        const node = new IgxTreeNodeComponent(mockTree, selectionService, treeService, navService, mockCdr, null, elementRef, null);
+        beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [
+                    { provide: IgxTreeSelectionService, useValue: selectionService },
+                    { provide: IgxTreeService, useValue: treeService },
+                    { provide: IgxTreeNavigationService, useClass: IgxTreeNavigationService },
+                    { provide: IGX_TREE_COMPONENT, useValue: mockTree },
+                    { provide: ChangeDetectorRef, useValue: mockCdr },
+                    { provide: ElementRef, useValue: elementRef },
+                    IgxTreeNodeComponent
+                ]
+            });
 
-        it('Should call selectNodesWithNoEvent when seting node`s selected property to true', () => {
+            navService = TestBed.inject(IgxTreeNavigationService);
+            node = TestBed.inject(IgxTreeNodeComponent);
+        });
+
+        afterAll(() => {
+            navService.ngOnDestroy();
+        });
+
+        it('Should call selectNodesWithNoEvent when setting node`s selected property to true', () => {
             spyOn(selectionService, 'selectNodesWithNoEvent').and.callThrough();
             node.selected = true;
 
@@ -614,6 +655,11 @@ describe('IgxTree - Selection #treeView', () => {
 
         it('Should call deselectNodesWithNoEvent when seting node`s selected property to false', () => {
             spyOn(selectionService, 'deselectNodesWithNoEvent').and.callThrough();
+
+            if (!node.selected) {
+                node.selected = true;
+            }
+
             node.selected = false;
 
             expect((node as any).selectionService.deselectNodesWithNoEvent).toHaveBeenCalled();
@@ -637,8 +683,6 @@ describe('IgxTree - Selection #treeView', () => {
             expect((node as any).selectionService.isNodeIndeterminate).toHaveBeenCalled();
             expect((node as any).selectionService.isNodeIndeterminate).toHaveBeenCalledWith(node);
         });
-
-        navService.ngOnDestroy();
     });
 });
 

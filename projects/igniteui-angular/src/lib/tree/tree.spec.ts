@@ -11,6 +11,8 @@ import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeComponent } from './tree.component';
 import { IgxTreeService } from './tree.service';
+import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
+import { IGX_TREE_COMPONENT } from './common';
 
 const TREE_ROOT_CLASS = 'igx-tree__root';
 const NODE_TAG = 'igx-tree-node';
@@ -45,8 +47,19 @@ describe('IgxTree #treeView', () => {
             mockElementRef = jasmine.createSpyObj('elementRef', [], {
                 nativeElement: document.createElement('div')
             });
-            tree?.ngOnDestroy();
-            tree = new IgxTreeComponent(mockNavService, mockSelectionService, mockTreeService, mockElementRef);
+
+            TestBed.configureTestingModule({
+                providers: [
+                    { provide: IgxTreeNavigationService, useValue: mockNavService },
+                    { provide: IgxTreeService, useValue: mockTreeService },
+                    { provide: IgxTreeSelectionService, useValue: mockSelectionService },
+                    { provide: ElementRef, useValue: mockElementRef },
+                    IgxTreeComponent
+                ]
+            });
+
+            tree = TestBed.inject(IgxTreeComponent);
+
             mockNodes = jasmine.createSpyObj('mockList', ['toArray'], {
                 changes: new Subject<void>(),
                 get first() {
@@ -235,9 +248,11 @@ describe('IgxTree #treeView', () => {
             });
         });
         describe('IgxTreeNodeComponent', () => {
+            let node: IgxTreeNodeComponent<any>;
             let mockTree: IgxTreeComponent;
             let mockCdr: ChangeDetectorRef;
             let mockAnimationService: AnimationService;
+            let treeService: IgxTreeService;
 
             beforeEach(() => {
                 mockTree = jasmine.createSpyObj<any>('mockTree', ['findNodes'],
@@ -249,10 +264,44 @@ describe('IgxTree #treeView', () => {
                     });
                 mockCdr = jasmine.createSpyObj<ChangeDetectorRef>('mockCdr', ['detectChanges', 'markForCheck'], {});
                 mockAnimationService = jasmine.createSpyObj<AnimationService>('mockAB', ['buildAnimation'], {});
+                treeService = new IgxTreeService();
+
+                TestBed.resetTestingModule();
+                TestBed.configureTestingModule({
+                    providers: [
+                        { provide: IgxTreeSelectionService, useValue: mockSelectionService },
+                        { provide: IgxTreeService, useValue: treeService },
+                        { provide: IgxTreeNavigationService, useValue: mockNavService },
+                        { provide: ElementRef, useValue: mockElementRef },
+                        { provide: ChangeDetectorRef, useValue: mockCdr },
+                        { provide: IgxAngularAnimationService, useValue: mockAnimationService },
+                        { provide: IgxTreeComponent, useValue: mockTree },
+                        { provide: IGX_TREE_COMPONENT, useValue: mockTree },
+                        IgxTreeNodeComponent
+                    ]
+                });
+
+                node = TestBed.inject(IgxTreeNodeComponent);
             });
             it('Should call service expand/collapse methods when toggling state through `[expanded]` input', () => {
-                const node = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,
-                    mockNavService, mockCdr, mockAnimationService, mockElementRef, null);
+                TestBed.resetTestingModule();
+                TestBed.configureTestingModule({
+                    providers: [
+                        { provide: IgxTreeSelectionService, useValue: mockSelectionService },
+                        { provide: IgxTreeService, useValue: mockTreeService },
+                        { provide: IgxTreeNavigationService, useValue: mockNavService },
+                        { provide: ElementRef, useValue: mockElementRef },
+                        { provide: ChangeDetectorRef, useValue: mockCdr },
+                        { provide: IgxAngularAnimationService, useValue: mockAnimationService },
+                        { provide: IgxTreeComponent, useValue: mockTree },
+                        { provide: IGX_TREE_COMPONENT, useValue: mockTree },
+                        IgxTreeNodeComponent
+                    ]
+                });
+
+                node = TestBed.inject(IgxTreeNodeComponent);
+
+                mockTreeService.register(mockTree);
                 expect(mockTreeService.collapse).not.toHaveBeenCalled();
                 expect(mockTreeService.expand).not.toHaveBeenCalled();
                 expect(mockTree.nodeExpanded.emit).not.toHaveBeenCalled();
@@ -272,38 +321,29 @@ describe('IgxTree #treeView', () => {
                 expect(mockTree.nodeExpanded.emit).not.toHaveBeenCalled();
             });
             it('Expand() should expand currently collapsing node', () => {
-                mockTreeService = new IgxTreeService();
-                mockTreeService.register(mockTree);
-                const node = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,
-                    mockNavService, mockCdr, mockAnimationService, mockElementRef, null);
-                mockTreeService.expandedNodes.add(node);
-                mockTreeService.collapsingNodes.add(node);
+                treeService.register(mockTree);
+                treeService.expandedNodes.add(node);
+                treeService.collapsingNodes.add(node);
                 node.expand();
                 expect(mockTree.nodeExpanding.emit).toHaveBeenCalledTimes(1);
 
             });
             it('Collapse() shouldn`t affect a currently collapsing node', () => {
-                mockTreeService = new IgxTreeService();
-                mockTreeService.register(mockTree);
-                const node = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,
-                    mockNavService, mockCdr, mockAnimationService, mockElementRef, null);
-                mockTreeService.expandedNodes.add(node);
-                mockTreeService.collapsingNodes.add(node);
+                treeService.register(mockTree);
+                treeService.expandedNodes.add(node);
+                treeService.collapsingNodes.add(node);
                 node.collapse();
                 expect(mockTree.nodeCollapsing.emit).toHaveBeenCalledTimes(0);
             });
             it('Should call service expand/collapse methods when calling API state methods', () => {
-                mockTreeService = new IgxTreeService();
-                mockTreeService.register(mockTree);
-                const node = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,
-                    mockNavService, mockCdr, mockAnimationService, mockElementRef, null);
+                treeService.register(mockTree);
                 node.expandedChange = jasmine.createSpyObj('emitter', ['emit'])
                 const openAnimationSpy = spyOn(node, 'playOpenAnimation');
                 const closeAnimationSpy = spyOn(node, 'playCloseAnimation');
                 const mockObj = jasmine.createSpyObj<any>('mockElement', ['focus']);
-                spyOn(mockTreeService, 'collapse').and.callThrough();
-                spyOn(mockTreeService, 'collapsing').and.callThrough();
-                spyOn(mockTreeService, 'expand').and.callThrough();
+                spyOn(treeService, 'collapse').and.callThrough();
+                spyOn(treeService, 'collapsing').and.callThrough();
+                spyOn(treeService, 'expand').and.callThrough();
                 spyOn(node, 'expandedChange').and.callThrough();
                 const ingArgs = {
                     owner: mockTree,
@@ -315,13 +355,13 @@ describe('IgxTree #treeView', () => {
                     node
                 };
                 (node as any).childrenContainer = mockObj;
-                expect(mockTreeService.collapse).not.toHaveBeenCalled();
-                expect(mockTreeService.expand).not.toHaveBeenCalled();
-                expect(mockTreeService.collapsing).not.toHaveBeenCalled();
+                expect(treeService.collapse).not.toHaveBeenCalled();
+                expect(treeService.expand).not.toHaveBeenCalled();
+                expect(treeService.collapsing).not.toHaveBeenCalled();
                 expect(openAnimationSpy).not.toHaveBeenCalled();
                 expect(closeAnimationSpy).not.toHaveBeenCalled();
                 expect(mockCdr.markForCheck).not.toHaveBeenCalled();
-                expect(mockTreeService.collapsing).not.toHaveBeenCalled();
+                expect(treeService.collapsing).not.toHaveBeenCalled();
                 expect(mockTree.nodeExpanding.emit).not.toHaveBeenCalledWith();
                 expect(mockTree.nodeCollapsing.emit).not.toHaveBeenCalledWith();
                 expect(mockTree.nodeExpanded.emit).not.toHaveBeenCalledWith();
@@ -333,8 +373,8 @@ describe('IgxTree #treeView', () => {
                 expect(openAnimationSpy).toHaveBeenCalledTimes(1);
                 expect(mockTree.nodeExpanded.emit).toHaveBeenCalledTimes(0);
                 expect(mockTree.nodeExpanding.emit).toHaveBeenCalledWith(ingArgs);
-                expect(mockTreeService.expand).toHaveBeenCalledWith(node, true);
-                expect(mockTreeService.expand).toHaveBeenCalledTimes(1);
+                expect(treeService.expand).toHaveBeenCalledWith(node, true);
+                expect(treeService.expand).toHaveBeenCalledTimes(1);
                 node.openAnimationDone.emit();
                 expect(node.expandedChange.emit).toHaveBeenCalledTimes(1);
                 expect(node.expandedChange.emit).toHaveBeenCalledWith(true);
@@ -346,10 +386,10 @@ describe('IgxTree #treeView', () => {
                 expect(mockTree.nodeCollapsed.emit).toHaveBeenCalledTimes(0);
                 expect(mockTree.nodeCollapsing.emit).toHaveBeenCalledWith(ingArgs);
                 // collapse happens after animation finishes
-                expect(mockTreeService.collapse).toHaveBeenCalledTimes(0);
+                expect(treeService.collapse).toHaveBeenCalledTimes(0);
                 node.closeAnimationDone.emit();
-                expect(mockTreeService.collapse).toHaveBeenCalledTimes(1);
-                expect(mockTreeService.collapse).toHaveBeenCalledWith(node);
+                expect(treeService.collapse).toHaveBeenCalledTimes(1);
+                expect(treeService.collapse).toHaveBeenCalledWith(node);
                 expect(node.expandedChange.emit).toHaveBeenCalledTimes(2);
                 expect(node.expandedChange.emit).toHaveBeenCalledWith(false);
                 expect(mockTree.nodeCollapsed.emit).toHaveBeenCalledTimes(1);
@@ -359,24 +399,20 @@ describe('IgxTree #treeView', () => {
                 node.toggle();
                 expect(node.expand).toHaveBeenCalledTimes(1);
                 expect(node.collapse).toHaveBeenCalledTimes(0);
-                spyOn(mockTreeService, 'isExpanded').and.returnValue(true);
+                spyOn(treeService, 'isExpanded').and.returnValue(true);
                 node.toggle();
                 expect(node.expand).toHaveBeenCalledTimes(1);
                 expect(node.collapse).toHaveBeenCalledTimes(1);
             });
 
             it('Should have correct path to node, regardless if node has parent or not', () => {
-                const node = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,
-                    mockNavService, mockCdr, mockAnimationService, mockElementRef, null);
                 expect(node.path).toEqual([node]);
-                const childNode = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,
-                    mockNavService, mockCdr, mockAnimationService, mockElementRef, node);
+                const childNode = TestBed.createComponent(IgxTreeNodeComponent).componentInstance;
+                (childNode as any).parentNode = node;
                 expect(childNode.path).toEqual([node, childNode]);
             });
 
             it('Should clear itself from selection service on destroy', () => {
-                const node = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,
-                    mockNavService, mockCdr, mockAnimationService, mockElementRef, null);
                 node.ngOnDestroy();
                 expect(mockSelectionService.ensureStateOnNodeDelete).toHaveBeenCalledWith(node);
             });

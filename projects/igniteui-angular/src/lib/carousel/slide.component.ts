@@ -1,4 +1,4 @@
-import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, AfterContentChecked, booleanAttribute, Inject } from '@angular/core';
+import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, AfterContentChecked, booleanAttribute, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Direction, IgxSlideComponentBase } from './carousel-base';
 
@@ -20,6 +20,8 @@ import { Direction, IgxSlideComponentBase } from './carousel-base';
     standalone: true
 })
 export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSlideComponentBase {
+    private elementRef = inject(ElementRef);
+
     /**
      * Gets/sets the `index` of the slide inside the carousel.
      * ```html
@@ -129,8 +131,6 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
 
     private _active = false;
     private _destroy$ = new Subject<boolean>();
-
-    constructor(private elementRef: ElementRef) { }
 
     /**
      * Returns a reference to the carousel element in the DOM.

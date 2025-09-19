@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewChildren, QueryList, DebugElement } from '@angular/core';
+import { Component, ViewChild, ViewChildren, QueryList, DebugElement, inject } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, UntypedFormBuilder, ReactiveFormsModule, Validators, UntypedFormControl, UntypedFormGroup, FormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -1171,6 +1171,8 @@ class DataBoundDisabledInputWithoutValueComponent extends DataBoundDisabledInput
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, IgxMaskDirective, ReactiveFormsModule]
 })
 class ReactiveFormComponent {
+    private fb = inject(UntypedFormBuilder);
+
     @ViewChild('strinput', { static: true, read: IgxInputDirective }) public strIgxInput: IgxInputDirective;
 
     public form = this.fb.group({
@@ -1182,8 +1184,6 @@ class ReactiveFormComponent {
 
     public inputControl = new FormControl('', [Validators.required]);
     public textareaControl = new FormControl('', [Validators.required]);
-
-    constructor(private fb: UntypedFormBuilder) { }
 
     public markAsTouched() {
         if (!this.form.valid) {
@@ -1251,7 +1251,9 @@ class InputReactiveFormComponent {
         fullName: [Validators.required]
     };
 
-    constructor(fb: UntypedFormBuilder) {
+    constructor() {
+        const fb = inject(UntypedFormBuilder);
+
         this.reactiveForm = fb.group({
             fullName: new UntypedFormControl('', Validators.required)
         });
@@ -1316,7 +1318,9 @@ class FileInputFormComponent {
         inputValue: null
     };
 
-    constructor(fb: UntypedFormBuilder) {
+    constructor() {
+        const fb = inject(UntypedFormBuilder);
+
         this.formWithFileInput = fb.group({
             fileInput: new UntypedFormControl('')
         });

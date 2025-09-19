@@ -1,4 +1,4 @@
-import { Injectable, Inject, InjectionToken, inject, DOCUMENT } from '@angular/core';
+import { Injectable, InjectionToken, inject, DOCUMENT } from '@angular/core';
 
 /**
  * @hidden
@@ -53,7 +53,9 @@ export class IgxDirectionality {
         return this._dir === 'rtl';
     }
 
-    constructor(@Inject(DIR_DOCUMENT) document) {
+    constructor() {
+        const document = inject(DIR_DOCUMENT);
+
         this._document = document;
         const bodyDir = this._document.body ? this._document.body.dir : null;
         const htmlDir = this._document.documentElement ? this._document.documentElement.dir : null;

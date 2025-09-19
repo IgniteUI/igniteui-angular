@@ -1,22 +1,4 @@
-import {
-    AfterContentInit,
-    Component,
-    ContentChild,
-    ElementRef,
-    EventEmitter,
-    HostBinding,
-    Inject,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Optional,
-    Output,
-    SimpleChange,
-    ViewChild,
-    Renderer2,
-    booleanAttribute
-} from '@angular/core';
+import { AfterContentInit, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange, ViewChild, Renderer2, booleanAttribute, inject } from '@angular/core';
 import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
@@ -65,6 +47,12 @@ export class IgxNavigationDrawerComponent implements
     AfterContentInit,
     OnDestroy,
     OnChanges {
+    private elementRef = inject<ElementRef>(ElementRef);
+    private _state = inject(IgxNavigationService, { optional: true });
+    protected renderer = inject(Renderer2);
+    private _touchManager = inject(HammerGesturesManager);
+    private platformUtil = inject(PlatformUtil);
+
 
     /** @hidden @internal */
     @HostBinding('class.igx-nav-drawer')
@@ -450,14 +438,6 @@ export class IgxNavigationDrawerComponent implements
      */
     public get state() {
         return this._state;
-    }
-
-    constructor(
-        @Inject(ElementRef) private elementRef: ElementRef,
-        @Optional() private _state: IgxNavigationService,
-        protected renderer: Renderer2,
-        private _touchManager: HammerGesturesManager,
-        private platformUtil: PlatformUtil) {
     }
 
     /**

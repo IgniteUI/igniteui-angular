@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { IgxGridColumnResizerComponent } from '../resizer.component';
 import { IgxPivotColumnResizingService } from './pivot-resizing.service';
 import { IgxColumnResizerDirective } from '../resizer.directive';
@@ -10,7 +10,5 @@ import { IgxColumnResizerDirective } from '../resizer.directive';
     imports: [IgxColumnResizerDirective]
 })
 export class IgxPivotGridColumnResizerComponent extends IgxGridColumnResizerComponent {
-    constructor(public override colResizingService: IgxPivotColumnResizingService) {
-        super(colResizingService);
-    }
+    public override colResizingService = inject(IgxPivotColumnResizingService);
 }

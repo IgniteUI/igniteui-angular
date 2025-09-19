@@ -1,7 +1,4 @@
-import {
-    Directive, EmbeddedViewRef, Input, OnChanges, ChangeDetectorRef,
-    SimpleChange, SimpleChanges, TemplateRef, ViewContainerRef, NgZone, Output, EventEmitter
-} from '@angular/core';
+import { Directive, EmbeddedViewRef, Input, OnChanges, ChangeDetectorRef, SimpleChange, SimpleChanges, TemplateRef, ViewContainerRef, NgZone, Output, EventEmitter, inject } from '@angular/core';
 
 import { IBaseEventArgs } from '../../core/utils';
 
@@ -13,6 +10,10 @@ import { IBaseEventArgs } from '../../core/utils';
     standalone: true
 })
 export class IgxTemplateOutletDirective implements OnChanges {
+    public _viewContainerRef = inject(ViewContainerRef);
+    private _zone = inject(NgZone);
+    public cdr = inject(ChangeDetectorRef);
+
     @Input() public igxTemplateOutletContext !: any;
 
     @Input() public igxTemplateOutlet !: TemplateRef<any>;
@@ -37,9 +38,6 @@ export class IgxTemplateOutletDirective implements OnChanges {
      * where the key is the template id and value is the embedded view for the related template.
      */
     private _embeddedViewsMap: Map<string, Map<any, EmbeddedViewRef<any>>> = new Map();
-
-    constructor(public _viewContainerRef: ViewContainerRef, private _zone: NgZone, public cdr: ChangeDetectorRef) {
-    }
 
     public ngOnChanges(changes: SimpleChanges) {
         const actionType: TemplateOutletAction = this._getActionType(changes);

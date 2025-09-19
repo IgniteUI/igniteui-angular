@@ -5,20 +5,7 @@
  *
  * @preferred
  */
-import {
-    Directive,
-    EventEmitter,
-    HostBinding,
-    HostListener,
-    Input,
-    InjectionToken,
-    Output,
-    TemplateRef,
-    ElementRef,
-    AfterViewInit,
-    OnDestroy,
-    NgZone
-} from '@angular/core';
+import { Directive, EventEmitter, HostBinding, HostListener, Input, InjectionToken, Output, TemplateRef, ElementRef, AfterViewInit, OnDestroy, NgZone, inject } from '@angular/core';
 import { fromEvent, Subject, interval } from 'rxjs';
 import { takeUntil, debounce, tap } from 'rxjs/operators';
 import { PlatformUtil } from '../core/utils';
@@ -29,6 +16,8 @@ export const IGX_CALENDAR_VIEW_ITEM =
 
 @Directive()
 export abstract class IgxCalendarViewBaseDirective {
+    public elementRef = inject(ElementRef);
+
     @Input()
     public value: Date;
 
@@ -44,8 +33,6 @@ export abstract class IgxCalendarViewBaseDirective {
     public get nativeElement() {
         return this.elementRef.nativeElement;
     }
-
-    constructor(public elementRef: ElementRef) { }
 
     @HostListener('mousedown', ['$event'])
     public onMouseDown(event: MouseEvent) {
@@ -123,7 +110,7 @@ export class IgxCalendarMonthDirective extends IgxCalendarViewBaseDirective {
     standalone: true
 })
 export class IgxCalendarHeaderTitleTemplateDirective {
-    constructor(public template: TemplateRef<any>) { }
+    public template = inject<TemplateRef<any>>(TemplateRef);
 }
 
 /**
@@ -134,7 +121,7 @@ export class IgxCalendarHeaderTitleTemplateDirective {
     standalone: true
 })
 export class IgxCalendarHeaderTemplateDirective {
-    constructor(public template: TemplateRef<any>) { }
+    public template = inject<TemplateRef<any>>(TemplateRef);
 }
 
 /**
@@ -145,7 +132,7 @@ export class IgxCalendarHeaderTemplateDirective {
     standalone: true
 })
 export class IgxCalendarSubheaderTemplateDirective {
-    constructor(public template: TemplateRef<any>) { }
+    public template = inject<TemplateRef<any>>(TemplateRef);
 }
 
 /**
@@ -156,6 +143,10 @@ export class IgxCalendarSubheaderTemplateDirective {
     standalone: true
 })
 export class IgxCalendarScrollPageDirective implements AfterViewInit, OnDestroy {
+    private element = inject(ElementRef);
+    private zone = inject(NgZone);
+    protected platform = inject(PlatformUtil);
+
     /**
      * A callback function to be invoked when increment/decrement page is triggered.
      *
@@ -176,8 +167,6 @@ export class IgxCalendarScrollPageDirective implements AfterViewInit, OnDestroy 
      * @hidden
      */
     private destroy$ = new Subject<boolean>();
-
-    constructor(private element: ElementRef, private zone: NgZone, protected platform: PlatformUtil) { }
 
     /**
      * @hidden

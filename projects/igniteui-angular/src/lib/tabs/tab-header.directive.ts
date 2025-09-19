@@ -1,23 +1,23 @@
 
-import { Directive, ElementRef, HostBinding, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostBinding, HostListener, inject } from '@angular/core';
 import { PlatformUtil } from '../core/utils';
 import { IgxTabItemDirective } from './tab-item.directive';
 import { IgxTabHeaderBase, IgxTabsBase } from './tabs.base';
 
 @Directive()
 export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
+    /** @hidden */
+    protected tabs = inject(IgxTabsBase);
+    /** @hidden */
+    public tab = inject(IgxTabItemDirective);
+    /** @hidden */
+    private elementRef = inject(ElementRef<HTMLElement>);
+    /** @hidden */
+    protected platform = inject(PlatformUtil);
 
     /** @hidden */
     @HostBinding('attr.role')
-    public role = 'tab';
-
-    /** @hidden */
-    constructor(
-        protected tabs: IgxTabsBase,
-        public tab: IgxTabItemDirective,
-        private elementRef: ElementRef<HTMLElement>,
-        protected platform: PlatformUtil
-    ) { }
+    public role = 'tab';    
 
     /** @hidden */
     @HostBinding('attr.tabindex')

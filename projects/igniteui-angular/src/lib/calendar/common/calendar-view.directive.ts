@@ -9,7 +9,7 @@ import {
     Directive,
     HostBinding,
     InjectionToken,
-    Inject,
+    inject,
 } from "@angular/core";
 import { noop } from "rxjs";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
@@ -43,6 +43,8 @@ export const DAY_INTERVAL_TOKEN = new InjectionToken<DayInterval>(
     standalone: true,
 })
 export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
+    protected dayInterval = inject<DayInterval>(DAY_INTERVAL_TOKEN);
+    
     @HostBinding("attr.role")
     @Input()
     public role = 'grid';
@@ -177,7 +179,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
         this.initFormatter();
     }
 
-    constructor(@Inject(DAY_INTERVAL_TOKEN) protected dayInterval?: DayInterval) {
+    constructor() {
         this.initFormatter();
     }
 

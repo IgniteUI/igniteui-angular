@@ -600,7 +600,7 @@ describe('IgxTree - Navigation #treeView', () => {
             selectionService = new IgxTreeSelectionService();
             treeService = new IgxTreeService();
             navService?.ngOnDestroy();
-            navService = new IgxTreeNavigationService(treeService, selectionService);
+            //navService = new IgxTreeNavigationService();
             mockNodesLevel1 = TreeTestFunctions.createNodeSpies(0, 3, null, [mockQuery2, mockQuery3, []], [mockQuery6, mockQuery3, []]);
             mockNodesLevel2_1 = TreeTestFunctions.createNodeSpies(1, 2,
                 mockNodesLevel1[0], [mockQuery4, mockQuery5], [mockQuery4, mockQuery5]);
@@ -617,6 +617,8 @@ describe('IgxTree - Navigation #treeView', () => {
                 ...mockNodesLevel2_2,
                 mockNodesLevel1[2]
             ];
+
+
 
             Object.assign(mockQuery1, TreeTestFunctions.createQueryListSpy(allNodes));
             Object.assign(mockQuery2, TreeTestFunctions.createQueryListSpy(mockNodesLevel2_1));
@@ -636,12 +638,20 @@ describe('IgxTree - Navigation #treeView', () => {
                 mockEmitter = jasmine.createSpyObj('emitter', ['emit']);
                 mockTree = jasmine.createSpyObj('tree', [''],
                     { selection: IgxTreeSelectionType.BiState, activeNodeChanged: mockEmitter, nodes: mockQuery1 });
-                navService.register(mockTree);
+
+                TestBed.configureTestingModule({
+                    providers: [
+                        { provide: IgxTreeComponent, useValue: mockTree },
+                        { provide: IgxTreeService, useValue: treeService },
+                        { provide: IgxTreeSelectionService, useValue: selectionService },
+                        IgxTreeNavigationService
+                    ]
+                });
+
+                navService = TestBed.inject(IgxTreeNavigationService);
             });
 
             it('Should properly register the specified tree', () => {
-                navService = new IgxTreeNavigationService(treeService, selectionService);
-
                 expect((navService as any).tree).toBeFalsy();
 
                 navService.register(mockTree);
@@ -649,6 +659,7 @@ describe('IgxTree - Navigation #treeView', () => {
             });
 
             it('Should properly calculate VisibleChildren collection', () => {
+                navService.register(mockTree);
                 navService.init_invisible_cache();
                 expect(navService.visibleChildren.length).toEqual(3);
 
@@ -672,6 +683,7 @@ describe('IgxTree - Navigation #treeView', () => {
             });
 
             it('Should set activeNode and focusedNode correctly', () => {
+                navService.register(mockTree);
                 const someNode = {
                     tabIndex: null,
                     header: {
@@ -711,6 +723,7 @@ describe('IgxTree - Navigation #treeView', () => {
             });
 
             it('Should traverse visibleChildren on handleKeyDown', async () => {
+                navService.register(mockTree);
                 navService.init_invisible_cache();
                 const mockEvent1 = new KeyboardEvent('keydown', { key: 'arrowdown', bubbles: true });
                 spyOn(mockEvent1, 'preventDefault');
@@ -772,7 +785,20 @@ describe('IgxTree - Navigation #treeView', () => {
                 });
                 const mockSelectionService = jasmine.createSpyObj<IgxTreeSelectionService>('mockSelection',
                     ['selectNodesWithNoEvent', 'selectMultipleNodes', 'deselectNode', 'selectNode', 'register']);
-                const nav = new IgxTreeNavigationService(mockTreeService, mockSelectionService);
+
+                TestBed.resetTestingModule();
+                TestBed.configureTestingModule({
+                    providers: [
+                        { provide: IgxTreeService, useValue: mockTreeService },
+                        { provide: ElementRef, useValue: mockElementRef },
+                        { provide: IgxTreeSelectionService, useValue: mockSelectionService },
+                        IgxTreeNavigationService,
+                        IgxTreeComponent
+                    ]
+                });
+
+                const nav = TestBed.inject(IgxTreeNavigationService);
+
                 const lvl1Nodes = TreeTestFunctions.createNodeSpies(0, 5);
                 const mockQuery = TreeTestFunctions.createQueryListSpy(lvl1Nodes);
                 Object.assign(mockQuery, { changes: new EventEmitter<any>() });
@@ -780,7 +806,7 @@ describe('IgxTree - Navigation #treeView', () => {
                 spyOn(nav, 'update_disabled_cache');
                 spyOn(nav, 'update_visible_cache');
                 spyOn(nav, 'register');
-                const tree = new IgxTreeComponent(nav, mockSelectionService, mockTreeService, mockElementRef);
+                const tree = TestBed.inject(IgxTreeComponent);
                 tree.nodes = mockQuery;
                 expect(nav.register).toHaveBeenCalledWith(tree);
                 expect(nav.init_invisible_cache).not.toHaveBeenCalled();

@@ -1,18 +1,6 @@
-import { NgTemplateOutlet, NgClass } from '@angular/common';
-import {
-    ChangeDetectorRef,
-    Component,
-    ContentChild,
-    ContentChildren,
-    DestroyRef,
-    ElementRef,
-    HostBinding,
-    HostListener, Inject, Input,
-    Optional, QueryList, booleanAttribute,
-    inject,
-    DOCUMENT,
-    AfterContentChecked
-} from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectorRef, Component, ContentChild, ContentChildren, DestroyRef, ElementRef, HostBinding, HostListener, Input, QueryList, booleanAttribute, inject, DOCUMENT,
+    AfterContentChecked } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
 import { PlatformUtil, getComponentTheme } from '../core/utils';
 import { IgxButtonDirective } from '../directives/button/button.directive';
@@ -37,6 +25,13 @@ import { IgxTheme, THEME_TOKEN, ThemeToken } from '../services/theme/theme.token
     imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
 })
 export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentChecked {
+    public element = inject<ElementRef<HTMLElement>>(ElementRef);
+    private _inputGroupType = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE, { optional: true });
+    private document = inject(DOCUMENT);
+    private platform = inject(PlatformUtil);
+    private cdr = inject(ChangeDetectorRef);
+    private themeToken = inject<ThemeToken>(THEME_TOKEN);
+
     /**
      * Sets the resource strings.
      * By default it uses EN resources.
@@ -207,18 +202,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
         return this._theme;
     }
 
-    constructor(
-        public element: ElementRef<HTMLElement>,
-        @Optional()
-        @Inject(IGX_INPUT_GROUP_TYPE)
-        private _inputGroupType: IgxInputGroupType,
-        @Inject(DOCUMENT)
-        private document: any,
-        private platform: PlatformUtil,
-        private cdr: ChangeDetectorRef,
-        @Inject(THEME_TOKEN)
-        private themeToken: ThemeToken
-    ) {
+    constructor() {
         this._theme = this.themeToken.theme;
         const themeChange = this.themeToken.onChange((theme) => {
             if (this._theme !== theme) {

@@ -4,10 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { IgxMaskDirective } from './mask.directive';
 
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { Replaced } from './mask-parsing.service';
+import { MaskParsingService, Replaced } from './mask-parsing.service';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent } from '../../input-group/input-group.component';
 import { IgxInputDirective } from '../input/input.directive';
+import { PlatformUtil } from '../../core/utils';
 
 describe('igxMask', () => {
     // TODO: Refactor tests to reuse components
@@ -609,7 +610,18 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
 
         // init
         renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute']);
-        mask = new IgxMaskDirective({ nativeElement: {} } as any, mockParser, renderer2, platformMock as any);
+
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: ElementRef, useValue: { nativeElement: {} } },
+                { provide: MaskParsingService, useValue: mockParser },
+                { provide: Renderer2, useValue: renderer2 },
+                { provide: PlatformUtil, useValue: platformMock },
+                IgxMaskDirective
+            ]
+        });
+
+        mask = TestBed.inject(IgxMaskDirective);
         mask.mask = format;
         mask.registerOnChange(mockNgControl.registerOnChangeCb);
         mask.registerOnTouched(mockNgControl.registerOnTouchedCb);

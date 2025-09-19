@@ -11,6 +11,8 @@ import { ColumnLayoutTestComponent } from './grid.multi-row-layout.spec';
 import { IgxHierarchicalGridTestBaseComponent } from '../hierarchical-grid/hierarchical-grid.spec';
 import { IgxHierarchicalRowComponent } from '../hierarchical-grid/hierarchical-row.component';
 import { IgxTreeGridSelectionComponent } from '../../test-utils/tree-grid-components.spec';
+import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
+import { IgxGridNavigationService } from '../grid-navigation.service';
 
 describe('IgxGrid - Cell merging #grid', () => {
     let fix;
@@ -25,6 +27,10 @@ describe('IgxGrid - Cell merging #grid', () => {
             imports: [
                 NoopAnimationsModule, DefaultCellMergeGridComponent, ColumnLayoutTestComponent,
                 IgxHierarchicalGridTestBaseComponent, IgxTreeGridSelectionComponent
+            ],
+            providers: [
+                IgxGridMRLNavigationService,
+                IgxGridNavigationService
             ]
         }).compileComponents();
     }));

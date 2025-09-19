@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement, OnInit, ElementRef } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { TestBed, tick, fakeAsync, waitForAsync, discardPeriodicTasks } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
@@ -17,6 +17,8 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxInputState } from './../directives/input/input.directive';
 import { IgxSelectGroupComponent } from './select-group.component';
 import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
+import { IgxSelectionAPIService } from '../core/selection';
+import { IGX_DROPDOWN_BASE } from '../drop-down/drop-down.common';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
@@ -2659,8 +2661,22 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         });
         const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
 
+        TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule],
+            providers: [
+                { provide: ElementRef, useValue: null },
+                { provide: IgxSelectionAPIService, useValue: mockSelection },
+                { provide: ChangeDetectorRef, useValue: mockCdr },
+                { provide: DOCUMENT, useValue: mockDocument },
+                { provide: Injector, useValue: mockInjector },
+                { provide: IGX_DROPDOWN_BASE, useValue: {} },
+                IgxSelectComponent,
+                IgxDropDownItemComponent,
+            ]
+        });
+
         // init
-        select = new IgxSelectComponent(null, mockCdr, mockDocument, mockSelection, null, null, mockInjector);
+        select = TestBed.inject(IgxSelectComponent);
         select.ngOnInit();
         select.registerOnChange(mockNgControl.registerOnChangeCb);
         select.registerOnTouched(mockNgControl.registerOnTouchedCb);
@@ -2679,7 +2695,7 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         expect(select.disabled).toBe(false);
 
         // OnChange callback
-        const item = new IgxDropDownItemComponent(select, null, null, mockSelection);
+        const item = TestBed.inject(IgxDropDownItemComponent);
         item.value = 'itemValue';
         select.selectItem(item);
         expect(mockSelection.set).toHaveBeenCalledWith(select.id, new Set([item]));
@@ -2944,7 +2960,9 @@ class IgxSelectReactiveFormComponent {
         optionsSelect: [Validators.required]
     };
 
-    constructor(fb: UntypedFormBuilder) {
+    constructor() {
+        const fb = inject(UntypedFormBuilder);
+
         this.reactiveForm = fb.group({
             firstName: new UntypedFormControl('', Validators.required),
             password: ['', Validators.required],

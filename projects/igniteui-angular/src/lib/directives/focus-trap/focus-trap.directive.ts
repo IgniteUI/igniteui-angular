@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, booleanAttribute } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, booleanAttribute, inject } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PlatformUtil } from '../../core/utils';
@@ -8,6 +8,9 @@ import { PlatformUtil } from '../../core/utils';
     standalone: true
 })
 export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
+    private elementRef = inject(ElementRef);
+    protected platformUtil = inject(PlatformUtil);
+
     /** @hidden */
     public get element(): HTMLElement | null {
         return this.elementRef.nativeElement;
@@ -15,12 +18,6 @@ export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
 
     private destroy$ = new Subject();
     private _focusTrap = true;
-
-    /** @hidden */
-    constructor(
-        private elementRef: ElementRef,
-        protected platformUtil: PlatformUtil) {
-    }
 
     /**
      * Sets whether the Tab key focus is trapped within the element.

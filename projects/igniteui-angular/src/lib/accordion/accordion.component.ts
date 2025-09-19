@@ -1,7 +1,4 @@
-import {
-    AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChildren, EventEmitter,
-    HostBinding, Input, OnDestroy, Output, QueryList, booleanAttribute
-} from '@angular/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChildren, EventEmitter, HostBinding, Input, OnDestroy, Output, QueryList, booleanAttribute, inject } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ACCORDION_NAVIGATION_KEYS } from '../core/utils';
@@ -55,6 +52,8 @@ let NEXT_ID = 0;
     standalone: true
 })
 export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, OnDestroy {
+    private cdr = inject(ChangeDetectorRef);
+
     /**
      * Get/Set the `id` of the accordion component.
      * Default value is `"igx-accordion-0"`;
@@ -215,8 +214,6 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
     private _unsubChildren$ = new Subject<void>();
     private _enabledPanels!: IgxExpansionPanelComponent[];
     private _singleBranchExpand = false;
-
-    constructor(private cdr: ChangeDetectorRef) { }
 
     /** @hidden @internal **/
     public ngAfterContentInit(): void {

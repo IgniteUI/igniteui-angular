@@ -1,4 +1,4 @@
-import { Directive, TemplateRef } from '@angular/core';
+import { Directive, TemplateRef, inject } from '@angular/core';
 import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
 
 export interface IPageEventArgs extends IBaseEventArgs {
@@ -16,6 +16,5 @@ export interface IPageCancellableEventArgs extends CancelableEventArgs {
     standalone: true
 })
 export class IgxPaginatorDirective {
-
-    constructor(public template: TemplateRef<any>) { }
+    public template = inject<TemplateRef<any>>(TemplateRef);
 }

@@ -14,6 +14,7 @@ import { IgxGridToolbarComponent } from '../toolbar/grid-toolbar.component';
 import { IgxGridToolbarActionsComponent } from '../toolbar/common';
 import { IgxGridToolbarHidingComponent } from '../toolbar/grid-toolbar-hiding.component';
 import { IgxGridToolbarPinningComponent } from '../toolbar/grid-toolbar-pinning.component';
+import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 
 
 type FixtureType = ColumnLayoutGroupingTestComponent | ColumnLayoutHidingTestComponent | ColumnLayoutResizingTestComponent
@@ -39,6 +40,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 ColumnLayoutHidingTestComponent,
                 ColumnLayoutGroupingTestComponent,
                 ColumnLayoutResizingTestComponent
+            ],
+            providers: [
+                IgxGridMRLNavigationService
             ]
         }).compileComponents();
     }));

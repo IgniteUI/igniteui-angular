@@ -1,4 +1,4 @@
-import { Component, ViewChildren, QueryList, ViewChild, ElementRef, TemplateRef, Renderer2 } from '@angular/core';
+import { Component, ViewChildren, QueryList, ViewChild, ElementRef, TemplateRef, Renderer2, inject } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait} from '../../test-utils/ui-interactions.spec';
@@ -2023,6 +2023,8 @@ const generalStyles = [`
     imports: [IgxDragDirective, IgxDropDirective, IgxDragHandleDirective, IgxDragIgnoreDirective]
 })
 class TestDragDropComponent {
+    public renderer = inject(Renderer2);
+
     @ViewChildren(IgxDragDirective)
     public dragElems: QueryList<IgxDragDirective>;
 
@@ -2037,8 +2039,6 @@ class TestDragDropComponent {
 
     @ViewChild('ghostTemplateContents', { read: TemplateRef, static: true })
     public ghostTemplateContents: TemplateRef<any>;
-
-    constructor(public renderer: Renderer2) { }
 }
 
 @Component({

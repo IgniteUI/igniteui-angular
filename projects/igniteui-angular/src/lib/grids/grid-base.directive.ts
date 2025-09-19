@@ -15,7 +15,6 @@ import {
     EventEmitter,
     HostBinding,
     HostListener,
-    Inject,
     Injector,
     Input,
     IterableChangeRecord,
@@ -24,14 +23,14 @@ import {
     NgZone,
     OnDestroy,
     OnInit,
-    Optional,
     Output,
     TemplateRef,
     QueryList,
     ViewChild,
     ViewChildren,
     ViewContainerRef,
-    DOCUMENT
+    DOCUMENT,
+    inject
 } from '@angular/core';
 import { areEqualArrays, columnFieldPath, formatDate, resizeObservable } from '../core/utils';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
@@ -132,7 +131,6 @@ import {
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import {
     ColumnType,
-    GridServiceType,
     GridType,
     IGridFormGroupCreatedEventArgs,
     IGridValidationStatusEventArgs,
@@ -151,7 +149,8 @@ import {
     RowType,
     IPinningConfig,
     IClipboardOptions,
-    EntityType
+    EntityType,
+    GridServiceType
 } from './common/grid.interface';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
@@ -211,6 +210,32 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 @Directive()
 export abstract class IgxGridBaseDirective implements GridType,
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
+
+    public readonly validation = inject(IgxGridValidationService);
+    /** @hidden @internal */
+    public readonly selectionService = inject(IgxGridSelectionService);
+    protected colResizingService = inject(IgxColumnResizingService);
+    public readonly gridAPI = inject<GridServiceType>(IGX_GRID_SERVICE_BASE);
+    protected transactionFactory = inject(IgxFlatTransactionFactory);
+    private elementRef = inject(ElementRef<HTMLElement>);
+    protected zone = inject(NgZone);
+    /** @hidden @internal */
+    public document = inject(DOCUMENT);
+    public readonly cdr = inject(ChangeDetectorRef);
+    protected differs = inject(IterableDiffers);
+    protected viewRef = inject(ViewContainerRef);
+    protected injector = inject(Injector);
+    protected envInjector = inject(EnvironmentInjector);
+    public navigation = inject(IgxGridNavigationService);
+    /** @hidden @internal */
+    public filteringService = inject(IgxFilteringService);
+    protected textHighlightService = inject(IgxTextHighlightService);
+    protected overlayService = inject(IgxOverlayService);
+    /** @hidden @internal */
+    public summaryService = inject(IgxGridSummaryService);
+    private localeId = inject(LOCALE_ID);
+    protected platform = inject(PlatformUtil);
+    protected _diTransactions = inject(IgxGridTransaction, { optional: true });
 
     /**
      * Gets/Sets the display time for the row adding snackbar notification.
@@ -3535,33 +3560,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this.gridAPI.cms.column;
     }
 
-    constructor(
-        public readonly validation: IgxGridValidationService,
-        /** @hidden @internal */
-        public readonly selectionService: IgxGridSelectionService,
-        protected colResizingService: IgxColumnResizingService,
-        @Inject(IGX_GRID_SERVICE_BASE) public readonly gridAPI: GridServiceType,
-        protected transactionFactory: IgxFlatTransactionFactory,
-        private elementRef: ElementRef<HTMLElement>,
-        protected zone: NgZone,
-        /** @hidden @internal */
-        @Inject(DOCUMENT) public document: any,
-        public readonly cdr: ChangeDetectorRef,
-        protected differs: IterableDiffers,
-        protected viewRef: ViewContainerRef,
-        protected injector: Injector,
-        protected envInjector: EnvironmentInjector,
-        public navigation: IgxGridNavigationService,
-        /** @hidden @internal */
-        public filteringService: IgxFilteringService,
-        protected textHighlightService: IgxTextHighlightService,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        /** @hidden @internal */
-        public summaryService: IgxGridSummaryService,
-        @Inject(LOCALE_ID) private localeId: string,
-        protected platform: PlatformUtil,
-        @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>,
-    ) {
+    constructor() {
         this.locale = this.locale || this.localeId;
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
