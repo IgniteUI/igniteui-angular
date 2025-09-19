@@ -99,7 +99,7 @@
         height: $size;
 
         @if $variant == 'material' {
-            padding: rem(20px);
+            padding: pad(rem(20px));
         }
 
         //ripple color

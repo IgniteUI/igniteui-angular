@@ -139,7 +139,7 @@
 
     %time-picker__item {
         width: rem(46px);
-        padding: rem(5px) rem(10px);
+        padding: pad-block(rem(5px)) pad-inline(rem(10px));
         border-radius: var-get($theme, 'active-item-border-radius');
         height: var-get($theme, 'time-item-size');
         display: flex;
