@@ -939,8 +939,6 @@ export interface GridType extends IGridDataBindable {
     /** The height of each row in the grid. Setting a constant height can solve problems with not showing all elements when scrolling */
     rowHeight: number;
     multiRowLayoutRowSize: number;
-    /** Minimal width for headers */
-    defaultHeaderGroupMinWidth: any;
     maxLevelHeaderDepth: number;
     defaultRowHeight: number;
     /** The default font size, calculated for each element */

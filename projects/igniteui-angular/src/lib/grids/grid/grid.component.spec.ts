@@ -1888,9 +1888,12 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(hScroll.nativeElement.hidden).toBe(true);
 
             for (let i = 0; i < grid.columnList.length; i++) {
-                const header = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[i];
+                const header = fix.debugElement.queryAll(By.css('igx-grid-header'))[i];
                 const cell = fix.debugElement.queryAll(By.css('igx-grid-cell'))[i];
-                expect(header.nativeElement.offsetWidth).toEqual(cell.nativeElement.offsetWidth);
+                const headerStyle = document.defaultView.getComputedStyle(header.nativeElement);
+                const paddingsAndBorders = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
+            parseFloat(headerStyle.borderRightWidth);
+                expect(header.nativeElement.offsetWidth).toEqual(Math.max(cell.nativeElement.offsetWidth, paddingsAndBorders));
                 expect(Number.isInteger(header.nativeElement.offsetWidth)).toBe(true);
             }
         });

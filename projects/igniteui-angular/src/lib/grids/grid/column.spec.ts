@@ -259,7 +259,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(item.width).toEqual('200px');
         });
         const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
-        expect(headers[0].nativeElement.style['min-width']).toEqual('200px');
+        expect(headers[0].nativeElement.clientWidth).toEqual(200);
     });
 
     it('headers and cells classes should be correct after scroll horizontal', async () => {
