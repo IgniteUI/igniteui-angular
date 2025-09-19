@@ -2146,7 +2146,7 @@
 
     %views-navigation,
     %picker-date {
-        @include type-style($picker-date) {
+        @include type-style(subtitle-1) {
             margin: 0;
         }
     }
