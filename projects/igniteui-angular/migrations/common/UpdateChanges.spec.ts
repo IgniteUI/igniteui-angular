@@ -1,4 +1,4 @@
-import { UnitTestTree } from '@angular-devkit/schematics/testing/index.ts';
+import { UnitTestTree } from '@angular-devkit/schematics/testing/index.js';
 import * as fs from 'fs';
 import * as path from 'path';
 import { ClassChanges, BindingChanges, SelectorChanges, ThemeChanges, ImportsChanges, ElementType, ThemeType, MemberChanges } from './schema';
