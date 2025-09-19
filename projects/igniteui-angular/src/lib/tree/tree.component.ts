@@ -506,8 +506,6 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
             requestAnimationFrame(() => {
                 this.selectionService.selectNodesWithNoEvent(toBeSelected);
             });
-        } else {
-            this.selectionService.selectNodesWithNoEvent(toBeSelected);
         }
         this.forceSelect = [];
         this.nodes.forEach(node => {
