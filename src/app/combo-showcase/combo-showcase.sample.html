@@ -6,6 +6,7 @@
         <form class="combo-sample__form" [igSize]="properties.size">
             <div class="combo-sample__row combo-sample__row--stretch">
                 <igx-combo
+                    name="angularCombo"
                     [showSearchCaseIcon]="properties.caseSensitiveIcon"
                     [disableFiltering]="properties.disableFiltering"
                     [groupSortingDirection]="groupSortingAngular"
@@ -16,7 +17,8 @@
                     [displayKey]="valueKeyVar"
                     [valueKey]="valueKeyVar"
                     [groupKey]="valueKeyVar ? 'region' : ''"
-                >
+                    [(ngModel)]="angularComboVal"
+                    [required]="properties.required">
                     <label igxLabel>Angular Combo</label>
                     <igx-hint>Select a unique falsy value</igx-hint>
                 </igx-combo>
@@ -29,8 +31,7 @@
                     [groupSorting]="properties.groupSorting"
                     [placeholder]="properties.placeholder"
                     [placeholderSearch]="properties.placeholderSearch"
-                    outlined="true"
-                    [disabled]="properties.disabled"
+                    outlined
                     label="WC Combo"
                     [data]="items"
                     [displayKey]="valueKeyVar"

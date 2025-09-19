@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
     IGX_COMBO_DIRECTIVES,
     IgxHintDirective,
@@ -19,6 +19,7 @@ defineComponents(IgcComboComponent);
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     imports: [
         FormsModule,
+        ReactiveFormsModule,
         IgxLabelDirective,
         IgxHintDirective,
         IGX_COMBO_DIRECTIVES,
@@ -28,6 +29,7 @@ defineComponents(IgcComboComponent);
 export class ComboShowcaseSampleComponent {
     protected items: any[] = [];
     public valueKeyVar = 'field';
+    public angularComboVal: any[] = [];
 
     public panelConfig: PropertyPanelConfig = {
         size: {

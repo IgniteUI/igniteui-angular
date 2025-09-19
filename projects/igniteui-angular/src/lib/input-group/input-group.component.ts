@@ -40,7 +40,7 @@ import { IgxTheme, THEME_TOKEN, ThemeToken } from '../services/theme/theme.token
     styleUrl: 'input-group.component.css',
     encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }],
-    imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
+    imports: [NgTemplateOutlet, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
 })
 export class IgxInputGroupComponent implements IgxInputGroupBase {
     /**
