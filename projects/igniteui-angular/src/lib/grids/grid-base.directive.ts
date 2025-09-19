@@ -1043,6 +1043,14 @@ export abstract class IgxGridBaseDirective implements GridType,
     @Output()
     public selectedRowsChange = new EventEmitter<any[]>();
 
+    /* blazorInclude */
+    /** @hidden @internal */
+    /**
+     * Emitted when content children are attached and collections in grid are updated.
+     */
+    @Output()
+    public childrenAttached = new EventEmitter<void>();
+
     /**
      * Emitted when the expanded state of a row gets changed.
      *
