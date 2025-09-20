@@ -60,7 +60,6 @@
 <ng-template #defaultDateUI>
     <igx-date-picker #picker
         [(value)]="value"
-        [readOnly]="true"
         [outlet]="filteringService.grid.outlet"
         [locale]="filteringService.grid.locale"
         (click)="expression.condition.isUnary ? null : picker.open()"
@@ -112,7 +111,6 @@
         [formatter]="column.formatter"
         [outlet]="filteringService.grid.outlet"
         type="box"
-        [readOnly]="true"
         [style.--ig-size]="filteringElementsSize"
         [placeholder]="placeholder"
         (closed)="focusEditElement()"
