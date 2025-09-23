@@ -56,13 +56,17 @@
         flex: 1 0 0;
         flex-direction: column;
         box-shadow: $border-shadow, elevation(3);
+
+        @if $variant == 'indigo' and $theme-variant == 'dark' {
+            box-shadow: $border-shadow, elevation(2);
+        }
     }
 
     %date-picker__buttons {
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        padding: rem(8px);
+        padding: pad(rem(8px));
     }
 
     %date-picker__actions {
@@ -75,9 +79,9 @@
         justify-content: flex-end;
 
         @if $variant == 'indigo' {
-            padding: rem(8px) rem(16px);
+            padding: pad-block(rem(8px)) pad-inline(rem(16px));
         } @else {
-            padding: rem(8px);
+            padding: pad(rem(8px));
         }
 
         gap: rem(8px);

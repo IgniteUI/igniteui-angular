@@ -17,6 +17,7 @@
         [attr.aria-expanded]="!this.dropdown.collapsed" [attr.aria-controls]="this.dropdown.listId"
         [attr.aria-labelledby]="this.ariaLabelledBy || this.label?.id || this.placeholder"
         [attr.placeholder]="placeholder" [disabled]="disabled" [igxTextSelection]="!composing"
+        [attr.aria-label]="getAriaLabel()"
         (input)="handleInputChange($event)" (click)="handleInputClick()"
         (keyup)="handleKeyUp($event)" (keydown)="handleKeyDown($event)" (blur)="onBlur()" (paste)="handleInputChange($event)"/>
 
@@ -26,7 +27,7 @@
 
     @if (hasSelectedItem) {
         <igx-suffix [attr.aria-label]="resourceStrings.igx_combo_clearItems_placeholder" class="igx-combo__clear-button"
-            (click)="handleClear($event)">
+            (click)="handleClear($event)" (keydown)="handleClearKeyDown($event)" [tabindex]="disabled ? -1 : 0" role="button">
             @if (clearIconTemplate) {
                 <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
             }
@@ -44,7 +45,8 @@
         </igx-suffix>
     }
 
-    <igx-suffix class="igx-combo__toggle-button" (click)="onClick($event)">
+    <igx-suffix class="igx-combo__toggle-button" (click)="onClick($event)" (keydown)="handleToggleKeyDown($event)"
+        [tabindex]="disabled ? -1 : 0" role="button">
         @if (toggleIconTemplate) {
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: collapsed}"></ng-container>
         }
