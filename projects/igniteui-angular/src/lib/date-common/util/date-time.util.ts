@@ -1,7 +1,7 @@
 import { DatePart, DatePartInfo } from '../../directives/date-time-editor/date-time-editor.common';
-import { formatDate, FormatWidth, getLocaleDateFormat } from '@angular/common';
+import { formatDate } from '@angular/common';
 import { ValidationErrors } from '@angular/forms';
-import { isDate } from '../../core/utils';
+import { getLocaleDateFormat, isDate } from '../../core/utils';
 import { DataType } from '../../data-operations/data-util';
 
 /** @hidden */
@@ -283,22 +283,7 @@ export abstract class DateTimeUtil {
      * Supports Angular's DatePipe format options such as `shortDate`, `longDate`.
      */
     public static getLocaleDateFormat(locale: string, displayFormat?: string): string {
-        const formatKeys = Object.keys(FormatWidth) as (keyof FormatWidth)[];
-        const targetKey = formatKeys.find(k => k.toLowerCase() === displayFormat?.toLowerCase().replace('date', ''));
-        if (!targetKey) {
-            // if displayFormat is not shortDate, longDate, etc.
-            // or if it is not set by the user
-            return displayFormat;
-        }
-        let format: string;
-        try {
-            format = getLocaleDateFormat(locale, FormatWidth[targetKey]);
-        } catch {
-            DateTimeUtil.logMissingLocaleSettings(locale);
-            format = DateTimeUtil.getDefaultInputFormat(locale);
-        }
-
-        return format;
+        return getLocaleDateFormat(locale, displayFormat);
     }
 
     /** Determines if a given character is `d/M/y` or `h/m/s`. */

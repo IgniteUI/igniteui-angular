@@ -139,7 +139,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
 
     public get displayFormat(): string {
-        return this._displayFormat || this.inputFormat;
+        return this._displayFormat || this._inputFormat ||  DateTimeUtil.getLocaleDateFormat(this.locale, 'short');
     }
 
     /**
