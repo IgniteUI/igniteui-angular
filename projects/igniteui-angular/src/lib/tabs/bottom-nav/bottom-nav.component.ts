@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding, ViewEncapsulation } from '@angular/core';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
 import { NgTemplateOutlet } from '@angular/common';
@@ -41,14 +41,21 @@ let NEXT_BOTTOM_NAV_ITEM_ID = 0;
 @Component({
     selector: 'igx-bottom-nav',
     templateUrl: 'bottom-nav.component.html',
+    styleUrl: 'bottom-nav.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxTabsBase, useExisting: IgxBottomNavComponent }],
     imports: [NgTemplateOutlet]
 })
 export class IgxBottomNavComponent extends IgxTabsDirective {
     /** @hidden */
     public override disableAnimation = true;
+
     /** @hidden */
     protected override componentName = 'igx-bottom-nav';
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-bottom-nav')
+    public readonly hostClass = 'igx-bottom-nav';
 
     /** @hidden */
     protected getNextTabId() {
