@@ -128,6 +128,12 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     @Output()
     public listDataLoaded = new EventEmitter();
 
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public filterCleared = new EventEmitter();
+
     @ViewChild('mainDropdown', { read: ElementRef })
     public mainDropdown: ElementRef<HTMLElement>;
 
@@ -434,7 +440,11 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
             this.subscriptions.add(this.grid.columnVisibilityChanged.subscribe(() => this.detectChanges()));
             this.subscriptions.add(this.grid.sortingExpressionsChange.subscribe(() => this.sortingChanged.emit()));
-            this.subscriptions.add(this.grid.filteringExpressionsTreeChange.subscribe(() => this.init()));
+            this.subscriptions.add(this.grid.filteringExpressionsTreeChange.subscribe(() => {
+                this.expressionsList = new Array<ExpressionUI>();
+                generateExpressionsList(this.column.filteringExpressionsTree, this.grid.filteringLogic, this.expressionsList);
+                this.cdr.detectChanges();
+            }));
             this.subscriptions.add(this.grid.columnMovingEnd.subscribe(() => this.cdr.markForCheck()));
         }
     }
@@ -528,12 +538,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     private renderValues() {
         this.filterValues = this.generateFilterValues();
         this.generateListData();
-        this.expressionsList.forEach(expr => {
-            if (this.column.dataType === GridColumnDataType.String && this.column.filteringIgnoreCase
-                && expr.expression.searchVal && expr.expression.searchVal instanceof Set) {
-                this.modifyExpression(expr);
-            }
-        });
     }
 
     private generateFilterValues() {
@@ -562,16 +566,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         const filterValues = new Set<any>(this.expressionsList.reduce(processExpression, []));
 
         return filterValues;
-    }
-
-    private modifyExpression(expr: ExpressionUI) {
-        const lowerCaseFilterValues = new Set(Array.from(expr.expression.searchVal).map((value: string) => value.toLowerCase()));
-
-        this.grid.data.forEach(item => {
-            if (typeof item[this.column.field] === "string" && lowerCaseFilterValues.has(item[this.column.field]?.toLowerCase())) {
-                expr.expression.searchVal.add(item[this.column.field]);
-            }
-        });
     }
 
     private generateListData() {
