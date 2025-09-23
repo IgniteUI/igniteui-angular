@@ -1,4 +1,4 @@
-import { Directive, ElementRef, EventEmitter, InjectionToken } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, inject, InjectionToken } from '@angular/core';
 import { AnimationReferenceMetadata } from '@angular/animations';
 import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
 
@@ -29,8 +29,7 @@ export interface IExpansionPanelCancelableEventArgs  extends IExpansionPanelEven
 
 @Directive()
 export abstract class HeaderContentBaseDirective {
-
-    constructor(protected element: ElementRef) { }
+    protected element = inject(ElementRef);
 
     /**
      * Returns the `textContent` of an element

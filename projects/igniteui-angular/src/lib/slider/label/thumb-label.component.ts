@@ -1,4 +1,4 @@
-import { Component, Input, TemplateRef, HostBinding, ElementRef, booleanAttribute } from '@angular/core';
+import { Component, Input, TemplateRef, HostBinding, ElementRef, booleanAttribute, inject } from '@angular/core';
 import { SliderHandle } from '../slider.common';
 import { IgxSliderThumbComponent } from '../thumb/thumb-slider.component';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
@@ -12,6 +12,8 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
     imports: [NgClass, NgTemplateOutlet]
 })
 export class IgxThumbLabelComponent {
+    private _elementRef = inject(ElementRef);
+
     @Input()
     public value: any;
 
@@ -72,8 +74,6 @@ export class IgxThumbLabelComponent {
     }
 
     private _active: boolean;
-
-    constructor(private _elementRef: ElementRef) { }
 
     public get nativeElement() {
         return this._elementRef.nativeElement;

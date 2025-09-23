@@ -18,6 +18,7 @@ import { CustomFilter } from '../test-utils/grid-samples.spec';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridDetailTemplateDirective } from './public_api';
 import { IColumnState, IGridState } from './state-base.directive';
+import { IgxGridMRLNavigationService } from './grid-mrl-navigation.service';
 
 describe('IgxGridState - input properties #grid', () => {
     beforeEach(waitForAsync(() => {
@@ -27,6 +28,9 @@ describe('IgxGridState - input properties #grid', () => {
                 IgxGridStateComponent,
                 IgxGridStateWithOptionsComponent,
                 IgxGridStateWithDetailsComponent
+            ],
+            providers: [
+                IgxGridMRLNavigationService
             ]
         }).compileComponents();
     }));

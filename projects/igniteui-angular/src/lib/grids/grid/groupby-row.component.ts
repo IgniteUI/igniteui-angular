@@ -1,16 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    HostBinding,
-    HostListener,
-    Input,
-    ViewChild,
-    TemplateRef,
-    OnDestroy,
-    Inject
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, HostListener, Input, ViewChild, TemplateRef, OnDestroy, inject } from '@angular/core';
 import { NgTemplateOutlet, DecimalPipe, DatePipe, getLocaleCurrencyCode, PercentPipe, CurrencyPipe } from '@angular/common';
 
 import { takeUntil } from 'rxjs/operators';
@@ -46,6 +34,12 @@ import { IgxColumnFormatterPipe } from '../common/pipes';
     ]
 })
 export class IgxGridGroupByRowComponent implements OnDestroy {
+    public grid = inject<GridType>(IGX_GRID_BASE);
+    public gridSelection = inject(IgxGridSelectionService);
+    public element = inject(ElementRef);
+    public cdr = inject(ChangeDetectorRef);
+    public filteringService = inject(IgxFilteringService);
+
     /**
      * @hidden
      */
@@ -143,12 +137,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
             this.groupRow.column.pipeArgs.currencyCode : getLocaleCurrencyCode(this.grid.locale);
     }
 
-    constructor(
-        @Inject(IGX_GRID_BASE) public grid: GridType,
-        public gridSelection: IgxGridSelectionService,
-        public element: ElementRef,
-        public cdr: ChangeDetectorRef,
-        public filteringService: IgxFilteringService) {
+    constructor() {
         this.gridSelection.selectedRowsChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.cdr.markForCheck();
         });

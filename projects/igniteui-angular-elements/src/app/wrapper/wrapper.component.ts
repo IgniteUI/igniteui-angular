@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, QueryList, TemplateRef, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, QueryList, TemplateRef, ViewChildren, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRefWrapper } from './template-ref-wrapper';
 
@@ -13,6 +13,8 @@ type TemplateFunction = (arg: any) => TemplateResult;
     imports: []
 })
 export class TemplateWrapperComponent {
+    private cdr = inject(ChangeDetectorRef);
+
 
     public templateFunctions: TemplateFunction[] = [];
     public templateRendered = new Subject<HTMLElement>();
@@ -25,8 +27,6 @@ export class TemplateWrapperComponent {
      */
     @ViewChildren(TemplateRef)
     public templateRefs: QueryList<TemplateRef<any>>;
-
-    constructor(private cdr: ChangeDetectorRef) { }
   
     protected litRender(container: HTMLElement, templateFunc: (arg: any) => TemplateResult, arg: any) {
         const part = render(templateFunc(arg), container);

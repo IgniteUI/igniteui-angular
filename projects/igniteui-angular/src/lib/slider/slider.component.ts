@@ -1,7 +1,4 @@
-import {
-    AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter,
-    HostBinding, HostListener, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, QueryList, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewChildren, booleanAttribute
-} from '@angular/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, HostListener, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, QueryList, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewChildren, booleanAttribute, inject } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { animationFrameScheduler, fromEvent, interval, merge, noop, Observable, Subject, timer } from 'rxjs';
 import { takeUntil, throttle, throttleTime } from 'rxjs/operators';
@@ -48,6 +45,12 @@ export class IgxSliderComponent implements
     AfterContentInit,
     OnChanges,
     OnDestroy {
+    private renderer = inject(Renderer2);
+    private _el = inject(ElementRef);
+    private _cdr = inject(ChangeDetectorRef);
+    private _ngZone = inject(NgZone);
+    private _dir = inject(IgxDirectionality);
+
     /**
      * @hidden
      */
@@ -754,11 +757,7 @@ export class IgxSliderComponent implements
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
 
-    constructor(private renderer: Renderer2,
-        private _el: ElementRef,
-        private _cdr: ChangeDetectorRef,
-        private _ngZone: NgZone,
-        private _dir: IgxDirectionality) {
+    constructor() {
         this.stepDistance = this._step;
     }
 

@@ -1,4 +1,4 @@
-import { Inject, Injectable, NgZone, DOCUMENT } from '@angular/core';
+import { Injectable, NgZone, DOCUMENT, inject } from '@angular/core';
 import { ɵgetDOM as getDOM } from '@angular/platform-browser';
 import { PlatformUtil } from './utils';
 import { HammerManager, HammerOptions, HammerStatic } from './touch-annotations';
@@ -13,6 +13,10 @@ const EVENT_SUFFIX = 'precise';
  */
 @Injectable()
 export class HammerGesturesManager {
+    private _zone = inject(NgZone);
+    private doc = inject(DOCUMENT);
+    private platformUtil = inject(PlatformUtil);
+
     public static Hammer: HammerStatic = typeof window !== 'undefined' ? (window as any).Hammer : null;
     /**
      * Event option defaults for each recognizer, see http://hammerjs.github.io/api/ for API listing.
@@ -22,7 +26,7 @@ export class HammerGesturesManager {
     private platformBrowser: boolean;
     private _hammerManagers: Array<{ element: EventTarget; manager: HammerManager }> = [];
 
-    constructor(private _zone: NgZone, @Inject(DOCUMENT) private doc: any, private platformUtil: PlatformUtil) {
+    constructor() {
         this.platformBrowser = this.platformUtil.isBrowser;
         if (this.platformBrowser && HammerGesturesManager.Hammer) {
             this.hammerOptions = {

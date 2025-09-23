@@ -1,14 +1,5 @@
 import { useAnimation } from "@angular/animations";
-import {
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    HostBinding,
-    Input,
-    Output,
-    Renderer2,
-    booleanAttribute
-} from "@angular/core";
+import { ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, Output, Renderer2, booleanAttribute, inject } from "@angular/core";
 import { first } from "rxjs/operators";
 import { SortingDirection } from "../../data-operations/sorting-strategy";
 import { IDragBaseEventArgs, IDragGhostBaseEventArgs, IDragMoveEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective, IgxDragDirective, IgxDragHandleDirective } from "../../directives/drag-drop/drag-drop.directive";
@@ -47,7 +38,6 @@ import { IgxIconComponent } from "../../icon/icon.component";
 import { IgxInputGroupComponent } from "../../input-group/input-group.component";
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { Size } from '../common/enums';
-import { GridColumnDataType } from '../../data-operations/data-util';
 
 interface IDataSelectorPanel {
     name: string;
@@ -88,6 +78,9 @@ interface IDataSelectorPanel {
     imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, IgxInputDirective, IgxListComponent, IgxListItemComponent, IgxCheckboxComponent, IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxDropDirective, IgxExpansionPanelTitleDirective, IgxChipComponent, IgxExpansionPanelBodyComponent, IgxDragDirective, IgxDropDownItemNavigationDirective, IgxDragHandleDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxFilterPivotItemsPipe]
 })
 export class IgxPivotDataSelectorComponent {
+    private renderer = inject(Renderer2);
+    private cdr = inject(ChangeDetectorRef);
+
 
     /**
      * Gets/sets whether the columns panel is expanded
@@ -274,8 +267,6 @@ export class IgxPivotDataSelectorComponent {
     public get values(): IPivotValue[] {
         return this._grid?.pivotConfiguration.values || [];
     }
-
-    constructor(private renderer: Renderer2, private cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden @internal

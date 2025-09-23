@@ -1,17 +1,5 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    Inject,
-    OnChanges,
-    QueryList,
-    Renderer2,
-    ViewChild,
-    SimpleChanges,
-    ViewChildren,
-    HostBinding
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnChanges, QueryList, Renderer2, ViewChild, SimpleChanges, ViewChildren,
+    HostBinding, inject } from '@angular/core';
 import { IBaseChipEventArgs, IgxChipComponent } from '../../chips/chip.component';
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
@@ -60,6 +48,9 @@ import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.compon
         IgxPivotRowHeaderGroupComponent]
 })
 export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implements OnChanges {
+    public override grid = inject<PivotGridType>(IGX_GRID_BASE);
+    protected renderer = inject(Renderer2);
+
     public aggregateList: IPivotAggregator[] = [];
 
     public value: IPivotValue;
@@ -150,15 +141,6 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         }
 
         return super.activeDescendant;
-    }
-
-    constructor(
-        @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
-        ref: ElementRef<HTMLElement>,
-        cdr: ChangeDetectorRef,
-        protected renderer: Renderer2
-    ) {
-        super(ref, cdr);
     }
 
     /**

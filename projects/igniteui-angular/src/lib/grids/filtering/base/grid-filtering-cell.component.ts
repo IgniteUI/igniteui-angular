@@ -1,16 +1,4 @@
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    DoCheck,
-    ElementRef,
-    HostBinding,
-    Input,
-    OnInit,
-    TemplateRef,
-    ViewChild
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild, inject } from '@angular/core';
 import { IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { IgxFilteringService } from '../grid-filtering.service';
 import { ExpressionUI } from '../excel-style/common';
@@ -41,6 +29,9 @@ import { Size } from '../../common/enums';
     ]
 })
 export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoCheck {
+    public cdr = inject(ChangeDetectorRef);
+    public filteringService = inject(IgxFilteringService);
+
     @Input()
     public column: ColumnType;
 
@@ -78,10 +69,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
 
     private baseClass = 'igx-grid__filtering-cell-indicator';
 
-    constructor(
-        public cdr: ChangeDetectorRef,
-        public filteringService: IgxFilteringService,
-    ) {
+    constructor() {
         this.filteringService.subscribeToEvents();
     }
 

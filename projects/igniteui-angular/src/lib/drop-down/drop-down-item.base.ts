@@ -1,5 +1,5 @@
 import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
-import { Directive, Input, HostBinding, HostListener, ElementRef, Optional, Inject, Output, EventEmitter, booleanAttribute, DoCheck } from '@angular/core';
+import { Directive, Input, HostBinding, HostListener, ElementRef, Output, EventEmitter, booleanAttribute, DoCheck, inject } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
 
@@ -17,6 +17,11 @@ let NEXT_ID = 0;
     standalone: true
 })
 export class IgxDropDownItemBaseDirective implements DoCheck {
+    protected dropDown = inject<IDropDownBase>(IGX_DROPDOWN_BASE);
+    protected elementRef = inject(ElementRef);
+    protected group = inject(IgxDropDownGroupComponent, { optional: true });
+    protected selection? = inject<IgxSelectionAPIService>(IgxSelectionAPIService, { optional: true });
+
     /**
      * Sets/gets the `id` of the item.
      * ```html
@@ -256,13 +261,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     protected _index = null;
     protected _disabled = false;
     protected _label = null;
-
-    constructor(
-        @Inject(IGX_DROPDOWN_BASE) protected dropDown: IDropDownBase,
-        protected elementRef: ElementRef,
-        @Optional() protected group: IgxDropDownGroupComponent,
-        @Optional() @Inject(IgxSelectionAPIService) protected selection?: IgxSelectionAPIService
-    ) { }
 
     /**
      * @hidden

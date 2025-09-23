@@ -1,54 +1,17 @@
-import {
-    AfterContentInit,
-    AfterViewInit,
-    booleanAttribute,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ContentChild,
-    ContentChildren,
-    ElementRef,
-    EnvironmentInjector,
-    EventEmitter,
-    forwardRef,
-    Inject,
-    Injector,
-    Input,
-    IterableChangeRecord,
-    IterableDiffers,
-    LOCALE_ID,
-    NgZone,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Output,
-    QueryList,
-    TemplateRef,
-    ViewContainerRef,
-    DOCUMENT
-} from '@angular/core';
-import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
+import { AfterContentInit, AfterViewInit, booleanAttribute, ChangeDetectionStrategy, Component, ContentChild, ContentChildren, EventEmitter, forwardRef, Input, IterableChangeRecord, OnChanges, OnDestroy, OnInit, Output, QueryList, TemplateRef, inject } from '@angular/core';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
-import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { IgxOverlayService } from '../../services/public_api';
 import { first, filter, takeUntil, pluck } from 'rxjs/operators';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ISearchInfo } from '../common/events';
 import { IgxRowIslandAPIService } from './row-island-api.service';
-import { PlatformUtil } from '../../core/utils';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { GridType, IGX_GRID_SERVICE_BASE, IgxGridPaginatorTemplateContext } from '../common/grid.interface';
+import { GridType, IgxGridPaginatorTemplateContext } from '../common/grid.interface';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 import { IgxActionStripToken } from '../../action-strip/token';
 import { IgxPaginatorDirective } from '../../paginator/paginator-interfaces';
-import { IgxFlatTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IGridCreatedEventArgs } from './events';
-import { IgxGridValidationService } from '../grid/grid-validation.service';
-import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 
 /* blazorCopyInheritedMembers */
@@ -84,6 +47,8 @@ import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy {
+    public rowIslandAPI = inject(IgxRowIslandAPIService);
+
 
     /* blazorSuppress */
     /**
@@ -370,52 +335,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             ptr = ptr.parentIsland;
         }
         return lvl + 1;
-    }
-
-    constructor(
-        validationService: IgxGridValidationService,
-        selectionService: IgxGridSelectionService,
-        colResizingService: IgxColumnResizingService,
-        @Inject(IGX_GRID_SERVICE_BASE) gridAPI: IgxHierarchicalGridAPIService,
-        transactionFactory: IgxFlatTransactionFactory,
-        elementRef: ElementRef<HTMLElement>,
-        zone: NgZone,
-        @Inject(DOCUMENT) document,
-        cdr: ChangeDetectorRef,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        injector: Injector,
-        envInjector: EnvironmentInjector,
-        navigation: IgxHierarchicalGridNavigationService,
-        filteringService: IgxFilteringService,
-        textHighlightService: IgxTextHighlightService,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        summaryService: IgxGridSummaryService,
-        public rowIslandAPI: IgxRowIslandAPIService,
-        @Inject(LOCALE_ID) localeId: string,
-        platform: PlatformUtil) {
-        super(
-            validationService,
-            selectionService,
-            colResizingService,
-            gridAPI,
-            transactionFactory,
-            elementRef,
-            zone,
-            document,
-            cdr,
-            differs,
-            viewRef,
-            injector,
-            envInjector,
-            navigation,
-            filteringService,
-            textHighlightService,
-            overlayService,
-            summaryService,
-            localeId,
-            platform
-        );
     }
 
     /**

@@ -4,6 +4,8 @@ import { columnFieldPath, resolveNestedPath } from '../core/utils';
 
 export class IgxGridCell implements CellType {
 
+    
+
     /**
      * Returns the grid containing the cell.
      *

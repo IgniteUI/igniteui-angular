@@ -22,6 +22,7 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxRowDirective } from '../row.directive';
 import { NgStyle } from '@angular/common';
 import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxGridNavigationService } from '../grid-navigation.service';
 
 const DEBOUNCE_TIME = 50;
 const CSS_CLASS_DRAG_INDICATOR = '.igx-grid__drag-indicator';
@@ -954,6 +955,9 @@ describe('Row Drag Tests', () => {
                     NoopAnimationsModule,
                     IgxHierarchicalGridTestComponent,
                     IgxHierarchicalGridCustomGhostTestComponent
+                ],
+                providers: [
+                    IgxGridNavigationService
                 ]
             }).compileComponents();
         }));

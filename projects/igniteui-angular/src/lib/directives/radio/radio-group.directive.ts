@@ -7,13 +7,12 @@ import {
     HostListener,
     Input,
     OnDestroy,
-    Optional,
     Output,
     QueryList,
-    Self,
     booleanAttribute,
     effect,
-    signal
+    signal,
+    inject
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { fromEvent, noop, Subject, takeUntil } from 'rxjs';
@@ -61,6 +60,10 @@ let nextId = 0;
     standalone: true
 })
 export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, DoCheck {
+    public ngControl = inject(NgControl, { optional: true, self: true });
+    private _directionality = inject(IgxDirectionality);
+    private cdr = inject(ChangeDetectorRef);
+    
     private _radioButtons = signal<IgxRadioComponent[]>([]);
     private _radioButtonsList = new QueryList<IgxRadioComponent>();
 
@@ -479,11 +482,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         this.destroy$.complete();
     }
 
-    constructor(
-        @Optional() @Self() public ngControl: NgControl,
-        private _directionality: IgxDirectionality,
-        private cdr: ChangeDetectorRef,
-    ) {
+    constructor() {
         if (this.ngControl !== null) {
             this.ngControl.valueAccessor = this;
         }

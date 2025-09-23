@@ -45,7 +45,7 @@ export class HierarchicalRemoteService {
     }
 
     public getData(virtualizationState: any, grid: IgxHierarchicalGridComponent, cb?: (any) => void) {
-        this.hierarchyPipe = this.hierarchyPipe ?? new IgxGridHierarchicalPipe(grid);
+        this.hierarchyPipe = this.hierarchyPipe ?? new IgxGridHierarchicalPipe();
         return this.http.get(this.buildUrl(virtualizationState, grid)).pipe(
             map(response => response),
         )

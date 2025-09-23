@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { NgClass } from '@angular/common';
@@ -12,5 +12,5 @@ import { NgClass } from '@angular/common';
     imports: [NgClass, IgxIconComponent]
 })
 export class IgxExcelStyleSelectingComponent {
-    constructor(public esf: BaseFilteringComponent) { }
+    public esf = inject(BaseFilteringComponent);
 }

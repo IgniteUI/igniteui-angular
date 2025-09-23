@@ -1,10 +1,4 @@
-import {
-    ChangeDetectorRef,
-    Component,
-    HostBinding,
-    ViewChild,
-    ViewContainerRef
-} from '@angular/core';
+import { ChangeDetectorRef, Component, HostBinding, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { IgxScrollInertiaDirective } from '../scroll-inertia/scroll_inertia.directive';
 
 @Component({
@@ -20,6 +14,9 @@ import { IgxScrollInertiaDirective } from '../scroll-inertia/scroll_inertia.dire
     imports: [IgxScrollInertiaDirective]
 })
 export class DisplayContainerComponent {
+    public cdr = inject(ChangeDetectorRef);
+    public _viewContainer = inject(ViewContainerRef);
+
     @ViewChild('display_container', { read: ViewContainerRef, static: true })
     public _vcr;
 
@@ -35,6 +32,4 @@ export class DisplayContainerComponent {
     public scrollDirection: string;
 
     public scrollContainer;
-
-    constructor(public cdr: ChangeDetectorRef, public _viewContainer: ViewContainerRef) { }
 }

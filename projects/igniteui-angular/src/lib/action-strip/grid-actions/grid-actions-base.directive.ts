@@ -1,5 +1,5 @@
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
-import { Directive, Input, AfterViewInit, QueryList, ViewChildren, IterableDiffers, booleanAttribute } from '@angular/core';
+import { Directive, Input, AfterViewInit, QueryList, ViewChildren, IterableDiffers, booleanAttribute, inject } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
 import { IgxRowDirective } from '../../grids/row.directive';
 import { IgxIconService } from '../../icon/icon.service';
@@ -14,6 +14,9 @@ import { IgxIconService } from '../../icon/icon.service';
     standalone: true
 })
 export class IgxGridActionsBaseDirective implements AfterViewInit {
+    protected iconService = inject(IgxIconService);
+    protected differs = inject(IterableDiffers);
+
     /** @hidden @internal **/
     @ViewChildren(IgxGridActionButtonComponent)
     public buttons: QueryList<IgxGridActionButtonComponent>;
@@ -50,9 +53,6 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
     public get isRowContext(): boolean {
         return this.isRow(this.strip?.context) && !this.strip.context.inEditMode;
     }
-
-    constructor(protected iconService: IgxIconService,
-        protected differs: IterableDiffers) { }
 
     /**
      * @hidden

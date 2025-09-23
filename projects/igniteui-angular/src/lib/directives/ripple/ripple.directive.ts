@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, Input, NgZone, Renderer2, booleanAttribute } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, NgZone, Renderer2, booleanAttribute, inject } from '@angular/core';
 import { AnimationBuilder, style, animate } from '@angular/animations';
 
 @Directive({
@@ -6,6 +6,11 @@ import { AnimationBuilder, style, animate } from '@angular/animations';
     standalone: true
 })
 export class IgxRippleDirective {
+    protected builder = inject(AnimationBuilder);
+    protected elementRef = inject(ElementRef);
+    protected renderer = inject(Renderer2);
+    private zone = inject(NgZone);
+
     /**
      * Sets/gets the ripple target.
      * ```html
@@ -95,12 +100,6 @@ export class IgxRippleDirective {
     private rippleHostClass = 'igx-ripple';
     private _centered = false;
     private animationQueue = [];
-
-    constructor(
-        protected builder: AnimationBuilder,
-        protected elementRef: ElementRef,
-        protected renderer: Renderer2,
-        private zone: NgZone) { }
     /**
      * @hidden
      */

@@ -8,13 +8,17 @@ import { IgxPivotNumericAggregate } from './pivot-grid/pivot-grid-aggregate';
 import { IgxPivotDateDimension } from './pivot-grid/pivot-grid-dimensions';
 import { IPivotDimension, IPivotGridRecord } from './pivot-grid/pivot-grid.interface';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-grid/pivot-row-dimension-header.component';
+import { IgxGridNavigationService } from './grid-navigation.service';
 
 describe('IgxPivotGridState #pivotGrid :', () => {
     let fixture;
     let pivotGrid;
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, IgxPivotGridPersistanceComponent]
+            imports: [NoopAnimationsModule, IgxPivotGridPersistanceComponent],
+            providers: [
+                IgxGridNavigationService
+            ]
         }).compileComponents();
     }));
 

@@ -1,17 +1,4 @@
-import {
-    Component,
-    ElementRef,
-    EventEmitter,
-    HostBinding,
-    Input,
-    OnDestroy,
-    OnInit,
-    Optional,
-    Output,
-    ViewChild,
-    AfterContentInit,
-    booleanAttribute
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output, ViewChild, AfterContentInit, booleanAttribute, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
@@ -58,6 +45,9 @@ let DIALOG_ID = 0;
     imports: [IgxToggleDirective, IgxFocusTrapDirective, IgxFocusDirective, IgxButtonDirective, IgxRippleDirective]
 })
 export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, AfterContentInit {
+    private elementRef = inject(ElementRef);
+    private navService = inject(IgxNavigationService, { optional: true });
+
     private static NEXT_ID = 1;
     private static readonly DIALOG_CLASS = 'igx-dialog';
 
@@ -443,10 +433,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     private _isModal = true;
     private _titleId: string;
 
-    constructor(
-        private elementRef: ElementRef,
-        @Optional() private navService: IgxNavigationService
-    ) {
+    constructor() {
         this._titleId = IgxDialogComponent.NEXT_ID++ + '_title';
 
         this._overlayDefaultSettings = {

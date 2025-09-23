@@ -9,19 +9,17 @@ import {
     EventEmitter,
     HostBinding,
     HostListener,
-    Inject,
     Injector,
     Input,
-    LOCALE_ID,
     OnDestroy,
     OnInit,
-    Optional,
     Output,
     PipeTransform,
     Renderer2,
     ViewChild,
     ViewContainerRef,
-    booleanAttribute
+    booleanAttribute,
+    inject
 } from '@angular/core';
 import {
     AbstractControl,
@@ -38,7 +36,7 @@ import {
 } from '../calendar/public_api';
 import { isDateInRanges } from '../calendar/common/helpers';
 import {
-    IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupType, IgxInputState, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxSuffixDirective
+    IgxLabelDirective, IgxInputState, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxSuffixDirective
 } from '../input-group/public_api';
 import { fromEvent, Subscription, noop, MonoTypeOperatorFunction } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
@@ -101,6 +99,12 @@ let NEXT_ID = 0;
 })
 export class IgxDatePickerComponent extends PickerBaseDirective implements ControlValueAccessor, Validator,
     OnInit, AfterViewInit, OnDestroy, AfterViewChecked, AfterContentChecked {
+    private _overlayService = inject<IgxOverlayService>(IgxOverlayService);
+    private _injector = inject(Injector);
+    private _renderer = inject(Renderer2);
+    private platform = inject(PlatformUtil);
+    private cdr = inject(ChangeDetectorRef);
+
 
     /**
      * Gets/Sets whether the inactive dates will be hidden.
@@ -515,15 +519,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private _onTouchedCallback: () => void = noop;
     private _onValidatorChange: () => void = noop;
 
-    constructor(element: ElementRef<HTMLElement>,
-        @Inject(LOCALE_ID) _localeId: string,
-        @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
-        private _injector: Injector,
-        private _renderer: Renderer2,
-        private platform: PlatformUtil,
-        private cdr: ChangeDetectorRef,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
-        super(element, _localeId, _inputGroupType);
+    constructor() {
+        super();
         this.locale = this.locale || this._localeId;
     }
 

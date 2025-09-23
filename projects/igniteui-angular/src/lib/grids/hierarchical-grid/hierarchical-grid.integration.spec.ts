@@ -21,6 +21,7 @@ import { GridSelectionMode, ColumnPinningPosition, RowPinningPosition, Size } fr
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
+import { IgxGridNavigationService } from '../grid-navigation.service';
 
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
     let fixture: ComponentFixture<IgxHierarchicalGridTestBaseComponent>;
@@ -41,6 +42,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
                 IgxHierarchicalGridWithTransactionProviderComponent,
                 IgxHierarchicalGridTestInputPaginatorComponent,
                 IgxHierarchicalGridTestInputToolbarComponent
+            ],
+            providers: [
+                IgxGridNavigationService
             ]
         }).compileComponents();
     }))
