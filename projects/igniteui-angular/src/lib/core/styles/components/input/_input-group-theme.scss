@@ -1642,7 +1642,7 @@
         position: relative;
         display: grid;
         grid-auto-rows: minmax($hint-min-size, auto);
-        padding-inline: $hint-spacing-inline;
+        padding-inline: pad-inline($hint-spacing-inline);
 
         justify-content: space-between;
 
