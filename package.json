@@ -55,7 +55,8 @@
     "postinstall": "gulp copyGitHooks",
     "cypress:open": "cypress open --config-file=cypress.config.ts",
     "cypress:run": "cypress run --config-file=cypress.config.ts",
-    "serve:ssr:ssr-test": "node dist/ssr-test/server/server.mjs"
+    "serve:ssr:ssr-test": "node dist/ssr-test/server/server.mjs",
+    "polluter:bisect": "node scripts/test-polluter-bisect.js"
   },
   "private": true,
   "dependencies": {
