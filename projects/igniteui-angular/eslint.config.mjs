@@ -2,6 +2,7 @@ import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import localRules from "./rules/index.mjs";
 import rootConfig from "../../eslint.config.mjs";
 // import tseslint from "typescript-eslint";
 // import angular from "angular-eslint";
@@ -18,6 +19,9 @@ export default [
     ...rootConfig,
     {
         files: ["**/*.ts"],
+        plugins: {
+            'igniteui-angular-local': localRules,
+        },
         rules: {
             "@angular-eslint/component-selector": ["error", {
                 type: "element",
@@ -48,6 +52,7 @@ export default [
             }],
 
             "no-debugger": "error",
+            "igniteui-angular-local/boolean-input-transform": ["error"],
         },
     },
     ...compat.extends(
