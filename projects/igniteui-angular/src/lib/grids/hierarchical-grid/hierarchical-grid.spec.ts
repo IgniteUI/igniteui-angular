@@ -1689,7 +1689,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             UIInteractions.simulateClickAndSelectEvent(row.expander);
             fixture.detectChanges();
 
-            let childGrid = hierarchicalGrid.gridAPI.getChildGrids()[0];
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids()[0];
             const childRow = childGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             UIInteractions.simulateClickAndSelectEvent(childRow.expander);
             fixture.detectChanges();
