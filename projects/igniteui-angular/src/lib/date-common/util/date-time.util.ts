@@ -250,12 +250,7 @@ export abstract class DateTimeUtil {
     /** Builds a date-time editor's default input format based on provided locale settings and data type. */
     public static getDefaultInputFormat(locale: string, dataType: DataType = DataType.Date): string {
         locale = locale || DateTimeUtil.DEFAULT_LOCALE;
-
-        if (dataType === DataType.Date) {
-            return getDateFormatter().getLocaleDateTimeFormat(locale, true);
-        } else if(dataType === DataType.DateTime) {
-            return getDateFormatter().getLocaleDateTimeFormat(locale, true);
-        }
+        return getDateFormatter().getLocaleDateTimeFormat(locale, true, DateTimeUtil.getFormatOptions(dataType));
     }
 
 
