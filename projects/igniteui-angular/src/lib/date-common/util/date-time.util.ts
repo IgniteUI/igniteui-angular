@@ -2,6 +2,7 @@ import { DatePart, DatePartInfo } from '../../directives/date-time-editor/date-t
 import { ValidationErrors } from '@angular/forms';
 import { formatDate, getLocaleDateFormat, isDate } from '../../core/utils';
 import { DataType } from '../../data-operations/data-util';
+import { getDateFormatter } from 'igniteui-i18n-core';
 
 /** @hidden */
 const enum FormatDesc {
@@ -249,18 +250,12 @@ export abstract class DateTimeUtil {
     /** Builds a date-time editor's default input format based on provided locale settings and data type. */
     public static getDefaultInputFormat(locale: string, dataType: DataType = DataType.Date): string {
         locale = locale || DateTimeUtil.DEFAULT_LOCALE;
-        if (!Intl || !Intl.DateTimeFormat || !Intl.DateTimeFormat.prototype.formatToParts) {
-            // TODO: fallback with Intl.format for IE?
-            return DateTimeUtil.DEFAULT_INPUT_FORMAT;
-        }
-        const parts = DateTimeUtil.getDefaultLocaleMask(locale, dataType);
-        parts.forEach(p => {
-            if (p.type !== DatePart.Year && p.type !== DateTimeUtil.SEPARATOR && p.type !== DatePart.AmPm) {
-                p.formatType = FormatDesc.TwoDigits;
-            }
-        });
 
-        return DateTimeUtil.getMask(parts);
+        if (dataType === DataType.Date) {
+            return getDateFormatter().getLocaleDateTimeFormat(locale, true);
+        } else if(dataType === DataType.DateTime) {
+            return getDateFormatter().getLocaleDateTimeFormat(locale, true);
+        }
     }
 
 
