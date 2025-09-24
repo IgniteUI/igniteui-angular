@@ -257,21 +257,21 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     }
 
     public override setInputValue(property: string, value: any): void {
-        if (this._componentRef === null ||
-            !this._componentRef.instance) {
+        if (this._componentRef === null || !this._componentRef.instance) {
             this._initialInputValues.set(property, value);
             return;
         }
-        const componentRef = this._componentRef;
-        const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
 
-        if (value === componentRef.instance[property]) {
+        if (value === this._componentRef.instance[property]) {
             return;
         }
-        if (componentRef && componentConfig?.templateProps?.includes(property)) {
+
+        const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
+
+        if (componentConfig?.templateProps?.includes(property)) {
             // const oldValue = this.getInputValue(property);
             if (this.templateWrapper.templateFunctions.includes(value)) return;
-            const oldRef = componentRef.instance[property];
+            const oldRef = this._componentRef.instance[property];
             const oldValue = oldRef && this.templateWrapper.getTemplateFunction(oldRef);
             if (oldValue === value) {
                 return;
@@ -280,18 +280,18 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             // TODO: discard oldValue
 
             // check template for any angular-element components
-            this.templateWrapper.templateRendered.pipe(takeUntilDestroyed(componentRef.injector.get(DestroyRef))).subscribe((element) => {
+            this.templateWrapper.templateRendered.pipe(takeUntilDestroyed(this._componentRef.injector.get(DestroyRef))).subscribe((element) => {
                 element.querySelectorAll<IgcNgElement>(this.configSelectors)?.forEach((c) => {
                     // tie to angularParent lifecycle for cached scenarios like detailTemplate:
-                    c.ngElementStrategy.angularParent = componentRef;
+                    c.ngElementStrategy.angularParent = this._componentRef;
                 });
             });
         }
-        if (componentRef && componentConfig?.boolProps?.includes(property)) {
+        if (componentConfig?.boolProps?.includes(property)) {
             // bool coerce:
             value = value != null && `${value}` !== 'false';
         }
-        if (componentRef && componentConfig?.numericProps?.includes(property)) {
+        if (componentConfig?.numericProps?.includes(property)) {
             // number coerce:
             if (!isNaN(Number(value) - parseFloat(value))) {
                 value = Number(value);
