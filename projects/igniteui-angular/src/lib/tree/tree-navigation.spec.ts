@@ -10,6 +10,7 @@ import { IgxTreeService } from './tree.service';
 import { IgxTreeComponent } from './tree.component';
 import { IgxTree, IgxTreeNode, IgxTreeSelectionType } from './common';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
+import { PlatformUtil } from '../core/utils';
 
 describe('IgxTree - Navigation #treeView', () => {
 
@@ -780,7 +781,8 @@ describe('IgxTree - Navigation #treeView', () => {
                 spyOn(nav, 'update_disabled_cache');
                 spyOn(nav, 'update_visible_cache');
                 spyOn(nav, 'register');
-                const tree = new IgxTreeComponent(nav, mockSelectionService, mockTreeService, mockElementRef);
+                const mockPlatform = jasmine.createSpyObj('platform', ['isBrowser', 'isServer']);
+                const tree = new IgxTreeComponent(nav, mockSelectionService, mockTreeService, mockElementRef, mockPlatform);
                 tree.nodes = mockQuery;
                 expect(nav.register).toHaveBeenCalledWith(tree);
                 expect(nav.init_invisible_cache).not.toHaveBeenCalled();
