@@ -27,7 +27,6 @@
         [outlet]="grid.outlet"
         (click)="picker.open()"
         [placeholder]="inputDatePlaceholder"
-        [displayFormat]="column.pipeArgs.format"
         [formatter]="column.formatter"
         [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"
         type="box"
