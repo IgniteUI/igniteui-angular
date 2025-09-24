@@ -5,7 +5,7 @@ import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputGroupBase } from '../input-group/input-group.common';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
-import { isDate } from '../core/utils';
+import { formatDate, isDate } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxButtonDirective } from '../directives/button/button.directive';
@@ -44,8 +44,8 @@ export class DateRangePickerFormatPipe implements PipeTransform {
         if (!isDate(end)) {
             end = DateTimeUtil.parseIsoDate(end);
         }
-        const startDate = appliedFormat ? DateTimeUtil.formatDate(start, appliedFormat, locale || 'en') : start?.toLocaleDateString();
-        const endDate = appliedFormat ? DateTimeUtil.formatDate(end, appliedFormat, locale || 'en') : end?.toLocaleDateString();
+        const startDate = appliedFormat ? formatDate(start, appliedFormat, locale || 'en') : start?.toLocaleDateString();
+        const endDate = appliedFormat ? formatDate(end, appliedFormat, locale || 'en') : end?.toLocaleDateString();
         let formatted;
         if (start) {
             formatted = `${startDate} - `;

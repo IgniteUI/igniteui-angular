@@ -1,7 +1,6 @@
 import { DatePart, DatePartInfo } from '../../directives/date-time-editor/date-time-editor.common';
-import { formatDate } from '@angular/common';
 import { ValidationErrors } from '@angular/forms';
-import { getLocaleDateFormat, isDate } from '../../core/utils';
+import { formatDate, getLocaleDateFormat, isDate } from '../../core/utils';
 import { DataType } from '../../data-operations/data-util';
 
 /** @hidden */
@@ -264,19 +263,6 @@ export abstract class DateTimeUtil {
         return DateTimeUtil.getMask(parts);
     }
 
-    /** Tries to format a date using Angular's DatePipe. Fallbacks to `Intl` if no locale settings have been loaded. */
-    public static formatDate(value: number | Date, format: string, locale: string, timezone?: string): string {
-        let formattedDate: string;
-        try {
-            formattedDate = formatDate(value, format, locale, timezone);
-        } catch {
-            DateTimeUtil.logMissingLocaleSettings(locale);
-            const formatter = new Intl.DateTimeFormat(locale);
-            formattedDate = formatter.format(value);
-        }
-
-        return formattedDate;
-    }
 
     /**
      * Returns the date format based on a provided locale.

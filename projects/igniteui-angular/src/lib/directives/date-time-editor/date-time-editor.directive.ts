@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { IgxMaskDirective } from '../mask/mask.directive';
 import { MaskParsingService } from '../mask/mask-parsing.service';
-import { isDate, PlatformUtil } from '../../core/utils';
+import { formatDate, isDate, PlatformUtil } from '../../core/utils';
 import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-editor.common';
 import { noop } from 'rxjs';
 import { DatePartDeltas } from './date-time-editor.common';
@@ -549,7 +549,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
             }
             const format = this.displayFormat || this.inputFormat;
             if (format) {
-                this.inputValue = DateTimeUtil.formatDate(this.dateValue, format.replace('tt', 'aa'), this.locale);
+                this.inputValue = formatDate(this.dateValue, format.replace('tt', 'aa'), this.locale);
             } else {
                 this.inputValue = this.dateValue.toLocaleString();
             }
