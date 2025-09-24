@@ -27,7 +27,7 @@ export class TemplateWrapperComponent {
     public templateRefs: QueryList<TemplateRef<any>>;
 
     constructor(private cdr: ChangeDetectorRef) { }
-  
+
     protected litRender(container: HTMLElement, templateFunc: (arg: any) => TemplateResult, arg: any) {
         const part = render(templateFunc(arg), container);
 

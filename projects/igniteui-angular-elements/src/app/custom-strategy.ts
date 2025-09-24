@@ -1,4 +1,4 @@
-import { ApplicationRef, ComponentFactory, ComponentRef, DestroyRef, EventEmitter, Injector, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
+import { ComponentFactory, ComponentRef, DestroyRef, EventEmitter, Injector, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgElement, NgElementStrategyEvent } from '@angular/elements';
 import { fromEvent, Observable } from 'rxjs';
@@ -20,9 +20,6 @@ export abstract class IgcNgElement extends NgElement {
  * Custom Ignite UI for Angular Elements strategy
  */
 class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
-
-    // public override componentRef: ComponentRef<any>|null = null;
-
     protected element: IgcNgElement;
     /** The parent _component_'s element (a.k.a the semantic parent, rather than the DOM one after projection) */
     protected parentElement?: WeakRef<IgcNgElement>;
@@ -46,8 +43,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     private _templateWrapperRef: ComponentRef<TemplateWrapperComponent>;
     protected get templateWrapper(): TemplateWrapperComponent {
         if (!this._templateWrapperRef) {
-            const componentRef = (this as any).componentRef as ComponentRef<any>;
-            const viewRef = componentRef.injector.get(ViewContainerRef);
+            const viewRef = this._componentRef.injector.get(ViewContainerRef);
             this._templateWrapperRef = viewRef.createComponent(TemplateWrapperComponent);
         }
         return this._templateWrapperRef.instance;
@@ -61,13 +57,49 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         return this._configSelectors;
     }
 
+    //#region private props accessors
+    // D.P. Explicitly type assert with T[K] so base changes affect these accessor, otherwise
+    // indexed access will fallback to `any` for `this['nonExisting']` and thus fail silently
+
+    /** Internal accessor for private {@link componentRef} */
+    private get _componentRef() {
+        return this['componentRef'] as ComponentNgElementStrategy['componentRef'];
+    }
+    private set _componentRef(value) {
+        this['componentRef'] = value;
+    }
+
+    /** Internal accessor for private {@link injector} */
+    private get _injector() {
+        return this['injector'] as ComponentNgElementStrategy['injector'];
+    }
+    private set _injector(value) {
+        this['injector'] = value;
+    }
+
+    /** Internal accessor for private {@link appRef} */
+    private get _appRef() {
+        return this['appRef'] as ComponentNgElementStrategy['appRef'];
+    }
+
+    /** Internal accessor for private {@link eventEmitters} */
+    private get _initialInputValues() {
+        return this['initialInputValues'] as ComponentNgElementStrategy['initialInputValues'];
+    }
+
+    /** Internal accessor for private {@link eventEmitters} */
+    private get _eventEmitters() {
+        return this['eventEmitters'] as ComponentNgElementStrategy['eventEmitters'];
+    }
+    //#endregion private props accessors
+
     constructor(
         private _componentFactory: ComponentFactory<any>,
-        private _injector: Injector,
+        injector: Injector,
         private _inputMap: Map<string, string>,
         private config: ComponentConfig[],
     ) {
-        super(_componentFactory, _injector, _inputMap);
+        super(_componentFactory, injector, _inputMap);
     }
 
     protected override async initializeComponent(element: HTMLElement) {
@@ -81,7 +113,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
         // set componentRef to non-null to prevent DOM moves from re-initializing
         // TODO: Fail handling or cancellation needed?
-        (this as any).componentRef = {};
+        this._componentRef = {} as any;
 
         // const toBeOrphanedChildren = Array.from(element.children).filter(x => !this._componentFactory.ngContentSelectors.some(sel => x.matches(sel)));
         // for (const iterator of toBeOrphanedChildren) {
@@ -138,33 +170,33 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         }
 
         // need to be able to reset the injector (as protected) to the parent's to call super normally
-        (this as any).injector = parentInjector || this._injector;
+        this._injector = parentInjector || this._injector;
         // super.initializeComponent(element);
 
         /**
          * Modified copy of super.initializeComponent:
          */
-        const childInjector = Injector.create({ providers: [], parent: (this as any).injector });
+        const childInjector = Injector.create({ providers: [], parent: this._injector });
         const projectableNodes = extractProjectableNodes(
             element,
             this._componentFactory.ngContentSelectors,
         );
-        (this as any).componentRef = this._componentFactory.create(childInjector, projectableNodes, element);
-        this.setComponentRef((this as any).componentRef);
+        this._componentRef = this._componentFactory.create(childInjector, projectableNodes, element);
+        this.setComponentRef(this._componentRef);
 
         //we need a name ref on the WC element to be copied down for the purposes of blazor.
         //alternatively we need to be able to hop back out to the WC element on demand.
         if (element) {
-            if ((this as any).componentRef.instance) {
-                (this as any).componentRef.instance.___wcElement = element;
+            if (this._componentRef.instance) {
+                this._componentRef.instance.___wcElement = element;
             }
         }
 
         this.initializeInputs();
-        this.initializeOutputs((this as any).componentRef);
+        this.initializeOutputs(this._componentRef);
 
         // TODO(D.P.): Temporary maintain pre-check for ngAfterViewInit handling on _init flag w/ ngDoCheck interaction of row island
-        (this as any).componentRef.changeDetectorRef.detectChanges();
+        this._componentRef.changeDetectorRef.detectChanges();
 
         if (parentAnchor && parentInjector) {
             // attempt to attach the newly created ViewRef to the parents's instead of the App global
@@ -172,20 +204,17 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             // preserve original position in DOM (in case of projection, e.g. grid pager):
             const domParent = element.parentElement;
             const nextSibling = element.nextSibling;
-            parentAnchor.insert((this as any).componentRef.hostView); //bad, moves in DOM, AND need to be in inner anchor :S
+            parentAnchor.insert(this._componentRef.hostView); //bad, moves in DOM, AND need to be in inner anchor :S
             //restore original DOM position
             domParent.insertBefore(element, nextSibling);
-            (this as any).componentRef.hostView.detectChanges();
+            this._componentRef.hostView.detectChanges();
         } else if (!parentAnchor) {
-            (this as any).appRef.attachView((this as any).componentRef.hostView);
-            (this as any).componentRef.hostView.detectChanges();
+            this._appRef.attachView(this._componentRef.hostView);
+            this._componentRef.hostView.detectChanges();
         }
         /**
         * End modified copy of super.initializeComponent
         */
-
-        // componentRef should also likely be protected:
-        const componentRef = (this as any).componentRef as ComponentRef<any>;
 
         const parentQueries = this.getParentContentQueries(componentConfig, parents, configParents);
 
@@ -199,7 +228,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 }
             } else {
                 const parentRef = await parent.ngElementStrategy[ComponentRefKey];
-                parentRef.instance[query.property] = componentRef.instance;
+                parentRef.instance[query.property] = this._componentRef.instance;
                 parentRef.changeDetectorRef.detectChanges();
             }
         }
@@ -209,7 +238,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         }
 
         // instead of duplicating super.disconnect() w/ the scheduled destroy:
-        componentRef.onDestroy(() => {
+        this._componentRef.onDestroy(() => {
             if (this._templateWrapperRef) {
                 this._templateWrapperRef.destroy();
                 this._templateWrapperRef = null;
@@ -228,12 +257,12 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     }
 
     public override setInputValue(property: string, value: any): void {
-        if ((this as any).componentRef === null ||
-            !(this as any).componentRef.instance) {
-            (this as any).initialInputValues.set(property, value);
+        if (this._componentRef === null ||
+            !this._componentRef.instance) {
+            this._initialInputValues.set(property, value);
             return;
         }
-        const componentRef = (this as any).componentRef as ComponentRef<any>;
+        const componentRef = this._componentRef;
         const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
 
         if (value === componentRef.instance[property]) {
@@ -281,8 +310,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         let returnValue = super.getInputValue(property);
 
         const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
-        const componentRef = (this as any).componentRef as ComponentRef<any>;
-        if (componentRef && componentConfig?.templateProps?.includes(property)) {
+        if (this._componentRef && componentConfig?.templateProps?.includes(property)) {
             returnValue = this.templateWrapper.getTemplateFunction(returnValue) || returnValue;
         }
 
@@ -307,8 +335,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
     private updateQuery(queryName: string) {
         this.schedule.delete(queryName);
-        const componentRef = (this as any).componentRef as ComponentRef<any>;
-        if (componentRef) {
+        if (this._componentRef) {
             const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
             const query = componentConfig.contentQueries.find(x => x.property === queryName);
             const children = this.runQueryInDOM(this.element, query);
@@ -319,7 +346,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 // On the off chance one of many component is stuck initializing(async) and the update runs, don't want it to be stuck waiting for that too
                 // Also the newly initialized comp will schedule an update again anyway
                 // const childRef = await child.ngElementStrategy[ComponentRefKey];
-                const childRef = (child.ngElementStrategy as any).componentRef as ComponentRef<any>;
+                const childRef = child.ngElementStrategy._componentRef;
                 if (childRef?.instance) {
                     childRefs.push(childRef.instance);
                 }
@@ -327,7 +354,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             if (query.descendants && this.cachedChildComponents.has(queryName)) {
                 childRefs = [...this.cachedChildComponents.get(queryName), ...childRefs];
             }
-            const list = (this as any).componentRef.instance[query.property] as QueryList<any>;
+            const list = this._componentRef.instance[query.property] as QueryList<any>;
             list.reset(childRefs);
             list.notifyOnChanges();
         }
@@ -354,13 +381,13 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
     private addToParentCache(parentElement: IgcNgElement, queryName: string) {
         const cachedComponents = parentElement.ngElementStrategy.cachedChildComponents.get(queryName) || [];
-        cachedComponents.push((this as any).componentRef.instance);
+        cachedComponents.push(this._componentRef.instance);
         parentElement.ngElementStrategy.cachedChildComponents.set(queryName, cachedComponents);
     }
 
     private removeFromParentCache(parentElement: IgcNgElement, queryName: string) {
         let cachedComponents = parentElement.ngElementStrategy.cachedChildComponents.get(queryName) || [];
-        cachedComponents = cachedComponents.filter(x => x !== (this as any).componentRef.instance);
+        cachedComponents = cachedComponents.filter(x => x !== this._componentRef.instance);
         parentElement.ngElementStrategy.cachedChildComponents.set(queryName, cachedComponents);
     }
 
@@ -403,9 +430,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
      */
     private patchGridPopups() {
         const toggles = new Set<HTMLElement & { hide(): void /* IgcToggleComponent */ }>();
-        const componentRef = (this as any).componentRef as ComponentRef<any>;
 
-        const scrollSub = fromEvent(this.element, 'gridScroll').pipe(takeUntil(componentRef.instance.destroy$));
+        const scrollSub = fromEvent(this.element, 'gridScroll').pipe(takeUntil(this._componentRef.instance.destroy$));
         scrollSub.subscribe(() => {
             // this.element.querySelectorAll<IgcComboComponent<any>>('igc-combo,igc-select').forEach(c => c.hide());
             // this.element.dispatchEvent(new CustomEvent('scroll', { bubbles: false }));
@@ -419,7 +445,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             }
         });
 
-        fromEvent(this.element, 'igcOpened').pipe(takeUntil(componentRef.instance.destroy$)).subscribe((e: CustomEvent) => {
+        fromEvent(this.element, 'igcOpened').pipe(takeUntil(this._componentRef.instance.destroy$)).subscribe((e: CustomEvent) => {
             if (!Object.keys(e.detail).length) {
                 // toggle directive-based components emit void details
                 // TODO: need better flag
@@ -447,7 +473,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             },
         );
 
-        (this as any).eventEmitters.next(eventEmitters);
+        this._eventEmitters.next(eventEmitters);
     }
 
     protected patchOutputComponents(eventName: string, eventArgs: any) {
