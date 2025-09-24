@@ -23,7 +23,6 @@ export default [{
     ],
 }, ...compat.extends(
     "plugin:@angular-eslint/recommended",
-    "plugin:@angular-eslint/template/process-inline-templates",
 ).map(config => ({
     ...config,
     files: ["**/*.ts"],
@@ -32,16 +31,6 @@ export default [{
 
     plugins: {
         "@typescript-eslint": typescriptEslint,
-    },
-
-    languageOptions: {
-        ecmaVersion: 5,
-        sourceType: "script",
-
-        parserOptions: {
-            project: ["tsconfig.json"],
-            createDefaultProgram: true,
-        },
     },
 
     rules: {
@@ -83,6 +72,7 @@ export default [{
         }],
 
         "@angular-eslint/no-input-rename": "off",
+        "@angular-eslint/prefer-inject": "warn",
 
         "brace-style": ["error", "1tbs"],
         "id-blacklist": "off",

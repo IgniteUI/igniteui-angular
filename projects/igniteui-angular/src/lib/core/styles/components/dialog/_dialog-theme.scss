@@ -5,7 +5,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin dialog($theme) {
-    @include css-vars($theme);
+    @include css-vars($theme, '.igx-dialog');
 
     $variant: map.get($theme, '_meta', 'theme');
     $bootstrap-theme: map.get($theme, '_meta', 'theme') == 'bootstrap';
@@ -17,24 +17,24 @@
     ), $variant);
 
     $dialog-title-padding: map.get((
-        'material': rem(16px) rem(24px) rem(0px) rem(24px),
-        'fluent': rem(16px) rem(24px) rem(24px) rem(24px),
-        'bootstrap': rem(16px),
-        'indigo': rem(24px) rem(24px) 0 rem(24px),
+        'material': pad-block(rem(16px)) pad-inline(rem(24px)) 0,
+        'fluent': pad-block(rem(16px)) pad-inline(rem(24px)) pad-inline(rem(24px)),
+        'bootstrap': pad(rem(16px)),
+        'indigo': pad-block(rem(24px)) pad-inline(rem(24px)) 0,
     ), $variant);
 
     $dialog-message-padding: map.get((
-        'material': rem(14px) rem(24px),
-        'fluent': 0 rem(24px) rem(20px) rem(24px),
-        'bootstrap': rem(16px),
-        'indigo': rem(16px) rem(24px),
+        'material': pad-block(rem(14px)) pad-inline(rem(24px)),
+        'fluent': 0 pad-inline(rem(24px)) pad-block(rem(20px)),
+        'bootstrap': pad(rem(16px)),
+        'indigo': pad-block(rem(16px)) pad-inline(rem(24px)),
     ), $variant);
 
     $dialog-actions-padding: map.get((
-        'material': 0 rem(8px) rem(8px),
-        'fluent': 0 rem(24px) rem(24px) rem(24px),
-        'bootstrap': rem(16px),
-        'indigo': rem(16px) rem(24px) rem(24px) rem(24px),
+        'material': 0 pad-inline(rem(8px)) pad-block(rem(8px)),
+        'fluent': 0 pad-inline(rem(24px)) pad-block(rem(24px)),
+        'bootstrap': pad(rem(16px)),
+        'indigo': pad-block(rem(16px)) pad-inline(rem(24px)) pad-block(rem(24px)),
     ), $variant);
 
     %igx-dialog-display {
