@@ -544,10 +544,8 @@ export abstract class DateTimeUtil {
                 options[p] = FormatDesc.TwoDigits;
             }
         });
-        const formatter = new Intl.DateTimeFormat(locale, options);
-        const dateStruct = DateTimeUtil.getDateStructFromParts(formatter.formatToParts(new Date()), formatter);
-        DateTimeUtil.fillDatePartsPositions(dateStruct);
-        return DateTimeUtil.getMask(dateStruct);
+
+        return getDateFormatter().getLocaleDateTimeFormat(locale, true, options);
     }
 
     private static addCurrentPart(currentPart: DatePartInfo, dateTimeParts: DatePartInfo[]): void {
