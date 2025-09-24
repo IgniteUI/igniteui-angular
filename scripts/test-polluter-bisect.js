@@ -82,18 +82,35 @@ function runTests(files, sentinelFile) {
             "test",
             "igniteui-angular",
             "--watch=false",
-            "--browsers=ChromeHeadlessNoSandbox",
             "--include",
             runnerFile
         ];
 
         let output = "";
+        let finished = false;
+
+        const finish = (reason) => {
+            if (finished) return;
+            finished = true;
+
+            const sentinelFailed = path.basename(sentinelNorm);
+            const failed = output.includes("FAILED") && output.includes(sentinelFailed);
+            console.log(`Sentinel ${sentinelFailed} ${failed ? "FAILED" : "PASSED"} [via ${reason}]`);
+            resolve(!failed);
+
+            if (!proc.killed) proc.kill();
+        };
+
         const proc = spawn("npx", ["ng", ...args], { shell: true });
 
         proc.stdout.on("data", (data) => {
             const text = data.toString();
             output += text;
             process.stdout.write(text);
+
+            if (text.includes("TOTAL:")) {
+                finish("stdout");
+            }
         });
         proc.stderr.on("data", (data) => {
             const text = data.toString();
@@ -102,10 +119,7 @@ function runTests(files, sentinelFile) {
         });
 
         proc.on("exit", () => {
-            const sentinelFailed = path.basename(sentinelNorm);
-            const failed = output.includes("FAILED") && output.includes(sentinelFailed);
-            console.log(`Sentinel ${sentinelFailed} ${failed ? "FAILED" : "PASSED"}`);
-            resolve(!failed);
+            finish("exit");
         });
     })
 }
