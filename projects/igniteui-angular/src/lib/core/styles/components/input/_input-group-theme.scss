@@ -47,12 +47,6 @@
         'compact': rem(4px)
     );
 
-    $bootstrap-font-size: (
-        'comfortable': rem(20px),
-        'cosy': rem(16px),
-        'compact': rem(14px),
-    );
-
     $input-top-padding: rem(20px);
     $input-bottom-padding: rem(6px);
 
@@ -1586,7 +1580,7 @@
         position: relative;
         display: grid;
         grid-auto-rows: minmax($hint-min-size, auto);
-        padding-inline: $hint-spacing-inline;
+        padding-inline: pad-inline($hint-spacing-inline);
 
         justify-content: space-between;
 
@@ -2187,11 +2181,6 @@
         grid-area: 1 / 2;
         margin: 0;
         z-index: 2;
-        font-size: pad(
-            map.get($bootstrap-font-size, 'compact'),
-            map.get($bootstrap-font-size, 'cosy'),
-            map.get($bootstrap-font-size, 'comfortable')
-        );
         padding-block: pad-inline(
             map.get($bootstrap-block-padding, 'compact'),
             map.get($bootstrap-block-padding, 'cosy'),

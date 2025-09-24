@@ -1,7 +1,7 @@
 import { getUUID } from './random';
 
 describe('Random (crypto.randomUuid()) fallback unit tests', () => {
-    let originalRandomUuid = crypto.randomUUID;
+    const originalRandomUuid = crypto.randomUUID;
 
     beforeAll(() => {
         crypto.randomUUID = null; // Mock crypto.randomUUID to simulate a non-secure context

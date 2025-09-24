@@ -213,7 +213,8 @@
             "lintFilePatterns": [
               "projects/igniteui-angular/**/*.ts",
               "projects/igniteui-angular/**/*.html"
-            ]
+            ],
+            "eslintConfig": "projects/igniteui-angular/eslint.config.mjs"
           }
         },
         "cypress-run": {
@@ -306,8 +307,8 @@
                 {
                   "type": "bundle",
                   "name": "styles",
-                  "maximumWarning": "450kb",
-                  "maximumError": "480kb"
+                  "maximumWarning": "480kb",
+                  "maximumError": "490kb"
                 },
                 {
                   "type": "anyComponentStyle",

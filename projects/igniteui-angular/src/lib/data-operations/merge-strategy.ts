@@ -74,7 +74,7 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
                 index++;
                 continue;
             }
-            let recToUpdateData = recData ?? { recordRef: grid.isGhostRecord(rec) ? rec.recordRef : rec, cellMergeMeta: new Map<string, IMergeByResult>(), ghostRecord: rec.ghostRecord };
+            const recToUpdateData = recData ?? { recordRef: grid.isGhostRecord(rec) ? rec.recordRef : rec, cellMergeMeta: new Map<string, IMergeByResult>(), ghostRecord: rec.ghostRecord };
             recToUpdateData.cellMergeMeta.set(field, { rowSpan: 1 });
             if (prev && comparer.call(this, prev.recordRef, recToUpdateData.recordRef, field, isDate, isTime) && prev.ghostRecord === recToUpdateData.ghostRecord) {
                 const root = prev.cellMergeMeta.get(field)?.root ?? prev;
@@ -127,7 +127,7 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
    * @internal
    */
     protected getDateValue<T>(obj: T, isDate = false, isTime = false) {
-        let date = obj instanceof Date ? obj : parseDate(obj);
+        const date = obj instanceof Date ? obj : parseDate(obj);
         let resolvedValue;
         if (isDate && isTime) {
             // date + time
