@@ -254,8 +254,8 @@
                             <igx-pivot-row-header-group #rowDimensionHeaders
                                 [ngClass]="dimCol.headerGroupClasses"
                                 [ngStyle]="dimCol.headerGroupStyles | igxHeaderGroupStyle:dimCol:grid.pipeTrigger"
-                                [style.min-width]="grid.rowDimensionWidthToPixels(this.grid.visibleRowDimensions[colIndex]) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                                [style.flex-basis]="grid.rowDimensionWidthToPixels(this.grid.visibleRowDimensions[colIndex]) | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                                [style.min-width]="grid.rowDimensionWidthToPixels(this.grid.visibleRowDimensions[colIndex])"
+                                [style.flex-basis]="grid.rowDimensionWidthToPixels(this.grid.visibleRowDimensions[colIndex])"
                                 [column]="dimCol"
                                 [rootDimension]="grid.visibleRowDimensions[colIndex]"
                                 [dimWidth]="grid.rowDimensionWidthToPixels(this.grid.visibleRowDimensions[colIndex])"
@@ -271,8 +271,8 @@
                 @for (column of pinnedStartColumnCollection | igxTopLevel; track column) {
                     <igx-grid-header-group [ngClass]="column.headerGroupClasses"
                         [ngStyle]="column.headerGroupStyles | igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
-                        [style.min-width]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                        [style.flex-basis]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                        [style.min-width]="column.resolvedWidth"
+                        [style.flex-basis]="column.resolvedWidth"
                         (pointerdown)="grid.navigation.focusOutRowHeader($event)">
                     </igx-grid-header-group>
                 }
@@ -287,8 +287,8 @@
                             <igx-grid-header-group [ngClass]="column.headerGroupClasses"
                                 [style.height.px]="totalDepth > 1 ? calcHeight(column, i) : undefined"
                                 [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
-                                [style.min-width]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                                [style.flex-basis]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                                [style.min-width]="column.resolvedWidth"
+                                [style.flex-basis]="column.resolvedWidth"
                                 [class.igx-grid__tr-pivot--columnDimensionLeaf]="isDuplicateOfExistingParent(column, i)"
                                 [class.igx-grid__tr-pivot--columnMultiRowSpan]="isMultiRow(column, i)"
                             >
@@ -303,8 +303,8 @@
                 @for (column of pinnedEndColumnCollection | igxTopLevel; track column) {
                     <igx-grid-header-group [ngClass]="column.headerGroupClasses"
                         [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
-                        [style.min-width]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                        [style.flex-basis]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                        [style.min-width]="column.resolvedWidth"
+                        [style.flex-basis]="column.resolvedWidth"
                         [style.left]="column.rightPinnedOffset" (pointerdown)="grid.navigation.focusOutRowHeader($event)">
                     </igx-grid-header-group>
                 }
