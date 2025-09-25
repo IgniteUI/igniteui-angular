@@ -107,6 +107,31 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this._field;
     }
 
+    /**
+     * Sets/gets whether to merge cells in this column.
+     * ```html
+     * <igx-column [merge]="true"></igx-column>
+     * ```
+     *
+     */
+    @Input()
+    public get merge() {
+        return this._merge;
+    }
+
+    public set merge(value) {
+        if (this.grid.hasColumnLayouts) {
+            console.warn('Merging is not supported with multi-row layouts.');
+            return;
+        }
+        if (value !== this._merge) {
+            this._merge = value;
+            if (this.grid) {
+                this.grid.resetColumnCollections();
+                this.grid.notifyChanges();
+            }
+        }
+    }
 
     /**
      * @hidden @internal
@@ -1226,6 +1251,30 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /* blazorSuppress */
     /**
+     * Gets the function that compares values for merging.
+     * ```typescript
+     * let mergingComparer = this.column.mergingComparer'
+     * ```
+     */
+    @Input()
+    public get mergingComparer(): (prevRecord: any, record: any, field: string) => boolean {
+        return this._mergingComparer;
+    }
+
+    /* blazorSuppress */
+    /**
+     * Sets a custom function to compare values for merging.
+     * ```typescript
+     * this.column.mergingComparer = (prevRecord: any, record: any, field: string) => { return prevRecord[field] === record[field]; }
+     * ```
+     */
+    public set mergingComparer(funcRef: (prevRecord: any, record: any, field: string) => boolean) {
+        this._mergingComparer = funcRef;
+    }
+
+
+    /* blazorSuppress */
+    /**
      * Gets the function that compares values for grouping.
      * ```typescript
      * let groupingComparer = this.column.groupingComparer'
@@ -1857,6 +1906,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      */
     protected _groupingComparer: (a: any, b: any, currRec?: any, groupRec?: any) => number;
+
+    protected _mergingComparer: (prevRecord: any, record: any, field: string) => boolean;
     /**
      * @hidden
      */
@@ -1893,6 +1944,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      */
     protected _groupable = false;
+    /**
+     * @hidden
+     */
+    protected _merge = false;
     /**
      *  @hidden
      */

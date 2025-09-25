@@ -126,6 +126,18 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     private _filled = false;
     private _theme: IgxTheme;
     private _resourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
+    private _readOnly: undefined | boolean;
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-input-group--readonly')
+    public get readOnly(): boolean {
+        return this._readOnly ?? (this.input?.nativeElement.readOnly || false);
+    }
+
+    /** @hidden @internal */
+    public set readOnly(value: boolean) {
+        this._readOnly = value;
+    }
 
     /** @hidden */
     @HostBinding('class.igx-input-group--valid')

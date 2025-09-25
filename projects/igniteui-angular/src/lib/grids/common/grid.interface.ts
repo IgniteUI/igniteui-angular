@@ -1,4 +1,4 @@
-import { ColumnPinningPosition, FilterMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition, GridValidationTrigger, RowPinningPosition, Size } from './enums';
+import { ColumnPinningPosition, FilterMode, GridCellMergeMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition, GridValidationTrigger, RowPinningPosition, Size } from './enums';
 import {
     ISearchInfo, IGridCellEventArgs, IRowSelectionEventArgs, IColumnSelectionEventArgs,
     IPinColumnCancellableEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs,
@@ -38,6 +38,7 @@ import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IP
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { FormControl, FormGroup, ValidationErrors } from '@angular/forms';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
+import { IGridMergeStrategy } from '../../data-operations/merge-strategy';
 
 export const IGX_GRID_BASE = /*@__PURE__*/new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = /*@__PURE__*/new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
@@ -379,6 +380,7 @@ export interface ColumnType extends FieldType {
     /** @hidden @internal */
     headerCell: any;
     validators: any[];
+    mergingComparer: (prevRecord: any, record: any, field: string) => boolean;
 
     /**
      * The template reference for the custom header of the column
@@ -497,6 +499,7 @@ export interface ColumnType extends FieldType {
     pinned: boolean;
     /** Indicates if the column is currently expanded or collapsed. If the value is true, the column is expanded */
     expanded: boolean;
+    merge: boolean;
     /** Indicates if the column is currently selected. If the value is true, the column is selected */
     selected: boolean;
     /** Indicates if the column can be selected. If the value is true, the column can be selected */
@@ -734,6 +737,8 @@ export interface GridServiceType {
 export interface GridType extends IGridDataBindable {
     /** Represents the locale of the grid: `USD`, `EUR`, `GBP`, `CNY`, `JPY`, etc. */
     locale: string;
+    cellMergeMode: GridCellMergeMode;
+    mergeStrategy: IGridMergeStrategy;
     resourceStrings: IGridResourceStrings;
     /* blazorSuppress */
     /** Represents the native HTML element itself */
@@ -754,6 +759,8 @@ export interface GridType extends IGridDataBindable {
     pipeTrigger: number;
     summaryPipeTrigger: number;
     /** @hidden @internal */
+    columnsToMerge: ColumnType[],
+    /** @hidden @internal */
     groupablePipeTrigger: number;
     filteringPipeTrigger: number;
     /** @hidden @internal */
@@ -767,6 +774,8 @@ export interface GridType extends IGridDataBindable {
     isColumnWidthSum: boolean;
     /** @hidden @internal */
     minColumnWidth: number;
+    /** @hidden @internal */
+    hoverIndex?: number;
     /** Strategy, used for cloning the provided data. The type has one method, that takes any type of data */
     dataCloneStrategy: IDataCloneStrategy;
 
@@ -1034,7 +1043,7 @@ export interface GridType extends IGridDataBindable {
     hasColumnGroups: boolean;
     /** @hidden @internal */
     hasEditableColumns: boolean;
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     /** Property, that provides a callback for loading unique column values on demand.
      * If this property is provided, the unique values it generates will be used by the Excel Style Filtering  */
     uniqueColumnValuesStrategy: (column: ColumnType, tree: FilteringExpressionsTree, done: (values: any[]) => void) => void;
@@ -1228,6 +1237,7 @@ export interface GridType extends IGridDataBindable {
     getEmptyRecordObjectFor(inRow: RowType): any;
     isSummaryRow(rec: any): boolean;
     isRecordPinned(rec: any): boolean;
+    isRecordMerged(rec: any): boolean;
     getInitialPinnedIndex(rec: any): number;
     isRecordPinnedByViewIndex(rowIndex: number): boolean;
     isColumnGrouped(fieldName: string): boolean;

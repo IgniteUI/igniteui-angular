@@ -18,7 +18,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} excel-filtering
 @mixin grid($theme) {
-    @include css-vars($theme);
+    @include css-vars($theme, 'igx-grid, igx-hierarchical-grid, igx-pivot-grid, igx-tree-grid, igx-advanced-filtering-dialog, igx-grid-excel-style-filtering, .igx-excel-filter__secondary');
 
     @include scale-in-ver-center();
 
@@ -622,6 +622,7 @@
 
         %grid-row--mrl {
             %igx-grid__hierarchical-expander--header,
+            %igx-grid__hierarchical-expander,
             %igx-grid__header-indentation,
             %igx-grid__row-indentation,
             %grid__cbx-selection {
@@ -757,6 +758,7 @@
         }
 
         %grid__cbx-selection,
+        %igx-grid__hierarchical-expander,
         %igx-grid__row-indentation,
         %igx-grid__drag-indicator {
             border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
@@ -903,8 +905,18 @@
                 map.get($grid-cell-padding-inline, 'cosy'),
                 map.get($grid-cell-padding-inline, 'comfortable')
             );
+            min-height: sizable(
+                    rem(32px),
+                    rem(40px),
+                    rem(50px)
+                );
         } @else {
             padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+            min-height: sizable(
+                    rem(32px),
+                    rem(40px),
+                    rem(48px)
+                );
 
             igx-icon {
                 opacity: if($theme-variant == 'light', .75, .85);
@@ -1339,6 +1351,35 @@
             color: var-get($theme, 'cell-edited-value-color');
             padding: 0 rem(1px);
         }
+    }
+
+    %igx-grid__tr--merged {
+        border-block-end: 0;
+    }
+
+    %igx-grid__tr--merged-top {
+        position: absolute;
+        width: 100%;
+    }
+
+    %igx-grid__td--merged {
+        z-index: 1;
+        grid-row: 1 / -1;
+    }
+
+    %igx-grid__td--merged-selected {
+        color: var-get($theme, 'row-selected-text-color');
+        background: var-get($theme, 'row-selected-background') !important;
+    }
+
+    %igx-grid__td--merged-hovered {
+        background: var-get($theme, 'row-hover-background') !important;
+        color: var-get($theme, 'row-hover-text-color');
+    }
+
+    %igx-grid__td--merged-selected-hovered {
+        background: var-get($theme, 'row-selected-hover-background') !important;
+        color: var-get($theme, 'row-selected-hover-text-color');
     }
 
     %igx-grid__tr--deleted {
@@ -2708,6 +2749,19 @@
     %igx-grid__tr-action {
         &:last-of-type {
             border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+            @if $variant != 'indigo' {
+                min-height: sizable(
+                    rem(32px),
+                    rem(40px),
+                    rem(50px)
+                );
+            } @else {
+                min-height: sizable(
+                    rem(32px),
+                    rem(40px),
+                    rem(48px)
+                );
+            }
         }
     }
 

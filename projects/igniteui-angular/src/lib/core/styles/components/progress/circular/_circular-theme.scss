@@ -9,7 +9,7 @@
     // Include rotate animation
     @include rotate-center();
 
-    @include css-vars($theme);
+    @include css-vars($theme, 'igx-circular-bar');
 
     $animation-direction: normal;
     $animation-direction-rtl: reverse;

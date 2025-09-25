@@ -5,7 +5,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin drop-down($theme) {
-    @include css-vars($theme);
+    @include css-vars($theme, '.igx-drop-down__list, .igx-grid-toolbar__dd-list');
     $variant: map.get($theme, '_meta', 'theme');
 
     %igx-drop-down {
@@ -25,7 +25,7 @@
         border: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
 
         @if $variant == 'indigo' {
-            padding: rem(3px);
+            padding: pad(rem(3px));
 
             %igx-drop-down__item {
                 margin-block: rem(2px);
