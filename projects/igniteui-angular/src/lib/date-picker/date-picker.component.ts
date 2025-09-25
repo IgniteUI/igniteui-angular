@@ -66,6 +66,7 @@ import { IgxTextSelectionDirective } from '../directives/text-selection/text-sel
 import { getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { PickerCalendarOrientation } from '../date-common/types';
+import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
 import { IResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
@@ -95,6 +96,7 @@ let NEXT_ID = 0;
         IgxPrefixDirective,
         IgxIconComponent,
         IgxInputDirective,
+        IgxReadOnlyInputDirective,
         IgxDateTimeEditorDirective,
         IgxTextSelectionDirective,
         IgxSuffixDirective
@@ -580,7 +582,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```
      */
     public open(settings?: OverlaySettings): void {
-        if (!this.collapsed || this.disabled) {
+        if (!this.collapsed || this.disabled || this.readOnly) {
             return;
         }
 
@@ -678,7 +680,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```
      */
     public clear(): void {
-        if (!this.disabled) {
+        if (!this.disabled || !this.readOnly) {
             this._calendar?.deselectDate();
             this.dateTimeEditor.clear();
         }

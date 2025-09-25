@@ -5,7 +5,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin rating($theme) {
-    @include css-vars($theme: $theme);
+    @include css-vars($theme, 'igc-rating');
 
     igc-rating::part(label) {
         color: var-get($theme, 'label-color');

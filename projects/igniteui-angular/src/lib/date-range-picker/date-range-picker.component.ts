@@ -37,6 +37,7 @@ import { getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { PickerCalendarOrientation } from '../date-common/types';
 import { calendarRange, isDateInRanges } from '../calendar/common/helpers';
+import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
 import { IResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 const SingleInputDatesConcatenationString = ' - ';
@@ -77,6 +78,7 @@ const SingleInputDatesConcatenationString = ' - ';
         IgxInputDirective,
         IgxPrefixDirective,
         IgxSuffixDirective,
+        IgxReadOnlyInputDirective,
         DateRangePickerFormatPipe
     ]
 })
@@ -351,6 +353,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      */
     @Input({ transform: booleanAttribute })
     public showWeekNumbers = false;
+
+    /** @hidden @internal */
+    @Input({ transform: booleanAttribute })
+    public readOnly = false;
 
     /**
      * Emitted when the picker's value changes. Used for two-way binding.
@@ -639,7 +645,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```
      */
     public open(overlaySettings?: OverlaySettings): void {
-        if (!this.collapsed || this.disabled) {
+        if (!this.collapsed || this.disabled || this.readOnly) {
             return;
         }
 

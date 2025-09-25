@@ -114,7 +114,20 @@ export class DatePickerSampleComponent {
                 defaultValue: 'dropdown'
             }
         },
+        type: {
+            control: {
+                type: 'button-group',
+                options: ['box', 'border', 'line'],
+                defaultValue: 'box'
+            }
+        },
         required: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        readonly: {
             control: {
                 type: 'boolean',
                 defaultValue: false
