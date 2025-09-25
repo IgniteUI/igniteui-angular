@@ -14,13 +14,7 @@
         "paths": {
             "igniteui-angular": [
                 "../../dist/igniteui-angular/"
-            ],
-            "igniteui-i18n-core": [
-                "../../node_modules/igniteui-i18n-core/"
-            ],
-            "igniteui-i18n-resources": [
-                "../../node_modules/igniteui-i18n-resources/"
-            ],
+            ]
         }
     }
 }

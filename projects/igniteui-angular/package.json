@@ -74,7 +74,7 @@
         "igniteui-trial-watermark": "^3.1.0",
         "lodash-es": "^4.17.21",
         "igniteui-theming": "^19.2.3",
-        "igniteui-i18n-core": "^1.0.0",
+        "igniteui-i18n-core": "^0.5.0-alpha.5",
         "@igniteui/material-icons-extended": "^3.1.0"
     },
     "peerDependencies": {
