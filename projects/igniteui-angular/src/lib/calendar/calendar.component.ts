@@ -34,7 +34,7 @@ import { CalendarDay } from './common/model';
 import { IgxCalendarBaseDirective } from './calendar-base';
 import { KeyboardNavigationService } from './calendar.services';
 import { IgxDateFormatterPipe } from '../grids/common/pipes';
-import { getI18nManager } from 'igniteui-i18n-core';
+import { getDateFormatter } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
 
@@ -880,8 +880,8 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 */
 	protected getFormattedDate(): { weekday: string; monthday: string } {
 		const date = this.headerDate;
-        const monthFormatted = getI18nManager().formatDateTime(date, this.locale, { month: 'short', day: 'numeric' });
-        const dayFormatted = getI18nManager().formatDateTime(date, this.locale,{ weekday: 'short' });
+        const monthFormatted = getDateFormatter().formatDateTime(date, this.locale, { month: 'short', day: 'numeric' });
+        const dayFormatted = getDateFormatter().formatDateTime(date, this.locale,{ weekday: 'short' });
 
 		return {
 			monthday: monthFormatted,

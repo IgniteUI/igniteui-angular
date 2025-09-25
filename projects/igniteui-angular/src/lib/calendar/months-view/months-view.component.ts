@@ -16,7 +16,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { CalendarDay } from "../common/model";
 import type { DayInterval } from "../common/model";
 import { calendarRange } from "../common/helpers";
-import { getI18nManager } from 'igniteui-i18n-core';
+import { getDateFormatter } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
 
@@ -127,7 +127,7 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      * @hidden
      */
     protected override get formatter() {
-        return getI18nManager().getDateFormatter(this.locale, { month: this.monthFormat });
+        return getDateFormatter().getIntlFormatter(this.locale, { month: this.monthFormat });
     }
 
     /**
@@ -157,7 +157,7 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      * @hidden
      */
     public formattedMonth(value: Date): { long: string; formatted: string } {
-        const rawFormatter = getI18nManager().getDateFormatter(this.locale, {
+        const rawFormatter = getDateFormatter().getIntlFormatter(this.locale, {
             month: "long",
             year: "numeric",
         });

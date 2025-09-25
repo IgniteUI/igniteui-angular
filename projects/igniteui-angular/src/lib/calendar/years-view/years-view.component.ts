@@ -14,7 +14,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { CalendarDay } from "../common/model";
 import type { DayInterval } from "../common/model";
 import { calendarRange } from "../common/helpers";
-import { getI18nManager } from 'igniteui-i18n-core';
+import { getDateFormatter } from 'igniteui-i18n-core';
 
 @Component({
     providers: [
@@ -60,7 +60,7 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements C
      * @hidden
      */
     protected override get formatter(): Intl.DateTimeFormat {
-        return getI18nManager().getDateFormatter(this.locale, { year: this.yearFormat});
+        return getDateFormatter().getIntlFormatter(this.locale, { year: this.yearFormat});
     }
 
     /**
@@ -130,7 +130,7 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements C
      * @hidden
      */
     public formattedYear(value: Date): {long: string, formatted: string} {
-        const rawFormatter = getI18nManager().getDateFormatter(this.locale, { year: 'numeric' });
+        const rawFormatter = getDateFormatter().getIntlFormatter(this.locale, { year: 'numeric' });
 
         if (this.formatView) {
             return {
