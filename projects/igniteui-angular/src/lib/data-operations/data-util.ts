@@ -118,7 +118,7 @@ export class DataUtil {
 
     public static merge<T>(data: T[], columns: ColumnType[], strategy: IGridMergeStrategy = new DefaultMergeStrategy(), activeRowIndexes = [], grid: GridType = null,
     ): any[] {
-        let result = [];
+        const result = [];
         for (const col of columns) {
             const isDate = col?.dataType === 'date' || col?.dataType === 'dateTime';
             const isTime = col?.dataType === 'time' || col?.dataType === 'dateTime';

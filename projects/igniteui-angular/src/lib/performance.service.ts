@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { inject, Injectable, NgZone, isDevMode } from '@angular/core';
 
 

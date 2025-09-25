@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/IgniteUI/igniteui-angular/issues"
   },
-  "homepage": "https://github.com/IgniteUI/igniteui-angular/projects/igniteui-angular-i18n#readme"
+  "homepage": "https://github.com/IgniteUI/igniteui-angular/projects/igniteui-angular-i18n#readme",
+  "dependencies": {
+    "igniteui-i18n-resources": "^0.5.0-alpha.5"
+  }
 }
