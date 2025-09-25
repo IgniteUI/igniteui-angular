@@ -193,11 +193,12 @@ describe('IgxSimpleCombo', () => {
             expect(combo.value).toEqual(selectedItem);
         });
         it('should emit owner on `opening` and `closing`', () => {
+            const mockPlatformUtil = { KEYMAP: { TAB: 'Tab' } } as any;
             combo = new IgxSimpleComboComponent(
                 elementRef,
                 mockCdr, mockSelection as any,
                 mockComboService,
-                platformUtil,
+                mockPlatformUtil,
                 mockDocument,
                 null,
                 mockInjector
