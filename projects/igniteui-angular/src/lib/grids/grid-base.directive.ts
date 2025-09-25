@@ -4143,6 +4143,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         options.outlet = this.outlet;
         if (this.excelStyleFilteringComponent) {
             this.excelStyleFilteringComponent.initialize(column, this.overlayService);
+            this.excelStyleFilteringComponent.populateData();
             const id = this.overlayService.attach(this.excelStyleFilteringComponent.element, options);
             this.excelStyleFilteringComponent.overlayComponentId = id;
             return id;

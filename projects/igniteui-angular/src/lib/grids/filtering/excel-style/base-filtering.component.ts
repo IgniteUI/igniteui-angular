@@ -23,6 +23,7 @@ export abstract class BaseFilteringComponent {
     public abstract columnChange: EventEmitter<any>;
     public abstract sortingChanged: EventEmitter<undefined>;
     public abstract listDataLoaded: EventEmitter<undefined>;
+    public abstract filterCleared: EventEmitter<undefined>;
 
     constructor(
         protected cdr: ChangeDetectorRef,
