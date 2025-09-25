@@ -7,6 +7,9 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 
+- `IgxCombo`, `IgxSimpleCombo`
+    - Introduced the ability for Combo and Simple Combo to close the dropdown list and move the focus to the next focusable element on "Tab" press and clear the selection if the combo is collapsed on "Escape".
+
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Introduced a new cell merging feature that allows you to configure and merge cells in a column based on same data or other custom condition, into a single cell.
 
