@@ -85,7 +85,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         const pinnedStart = this.grid.pinnedStartColumns.filter(c => c.columnLayout && !c.hidden);
         const pinnedEndColumns = this.grid.pinnedEndColumns.filter(c => c.columnLayout && !c.hidden);
         const ordered = pinnedStart.concat(unpinnedColumns, pinnedEndColumns);
-        let vIndex = ordered.indexOf(this);
+        const vIndex = ordered.indexOf(this);
         this._vIndex = vIndex;
         return vIndex;
     }

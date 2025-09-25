@@ -810,7 +810,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 .toEqual(grid.pinnedStartColumns.length + grid.unpinnedColumns.length + 1);
             expect(col.pinningPosition).toBe(ColumnPinningPosition.End);
 
-            let cell = grid.gridAPI.get_cell_by_index(0, 'ID');
+            const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
             expect(cell.visibleColumnIndex)
                 .toEqual(grid.pinnedStartColumns.length + grid.unpinnedColumns.length + 1);
             expect(GridFunctions.isCellPinned(cell)).toBe(true);

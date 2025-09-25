@@ -1463,7 +1463,7 @@ export class IgxGridRowEditingWithoutEditableColumnsComponent extends BasicGridC
                 </igx-column>
             </igx-column-group>
         }
-        @if (!columnGroupingFlag) {
+        @else {
             <igx-column field="Released" header="Released" [dataType]="'boolean'" [pinned]="pinnedFlag" [editable]="true" width="100px">
             </igx-column>
             <igx-column field="Category" header="Category" [dataType]="'string'" [editable]="true" [hidden]="hiddenFlag" width="150px">
