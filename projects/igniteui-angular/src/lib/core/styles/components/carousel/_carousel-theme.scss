@@ -160,7 +160,7 @@
         justify-content: center;
         align-items: center;
         margin: rem(16px) 0;
-        padding: rem(4px) rem(6px);
+        padding: pad-block(rem(4px)) pad-inline(rem(6px));
         gap: rem(8px);
         list-style: none;
         z-index: 10;
@@ -176,7 +176,7 @@
 
         @if $variant == 'indigo' {
             gap: rem(4px);
-            padding: rem(6px);
+            padding: pad(rem(6px));
         }
     }
 
@@ -207,7 +207,7 @@
         }
 
         @if $variant == 'indigo' {
-            padding: rem(4px) rem(6px);
+            padding: pad-block(rem(4px)) pad-inline(rem(6px));
             min-width: rem(28px);
         }
     }
@@ -444,13 +444,13 @@
             transform: translateY(-50%);
             margin-block: 0;
             margin-inline-end: rem(29px);
-            padding: rem(6px) rem(4px);
+            padding: pad-block(rem(6px)) pad-inline(rem(4px));
             bottom: unset;
         }
 
         %igx-carousel-label-indicator {
             margin-inline-end: rem(16px);
-            padding: rem(4px) rem(6px);
+            padding: pad-block(rem(4px)) pad-inline(rem(6px));
         }
 
         %igx-carousel-indicators--start {
@@ -463,12 +463,12 @@
         @if $variant == 'indigo' {
             %igx-carousel-indicators {
                 margin-inline-end: rem(16px);
-                padding: rem(6px);
+                padding: pad(rem(6px));
             }
 
 
             %igx-carousel-label-indicator {
-                padding: rem(4px) rem(6px);
+                padding: pad-block(rem(4px)) pad-inline(rem(6px));
                 margin-inline-end: rem(16px);
             }
 
