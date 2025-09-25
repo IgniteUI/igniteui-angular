@@ -54,7 +54,7 @@
 
     %igx-badge-value {
         white-space: nowrap;
-        padding-inline: rem(4px);
+        padding-inline: pad-inline(rem(4px));
     }
 
     %igx-badge--success {
