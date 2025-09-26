@@ -49,7 +49,7 @@ import { GridSelectionMode, FilterMode, Size } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { FilteringStrategy, FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxInputGroupComponent } from '../../input-group/public_api';
-import { formatDate, getComponentSize } from '../../core/utils';
+import { getComponentSize } from '../../core/utils';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
 import { GridResourceStringsEN } from '../../core/i18n/grid-resources';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
@@ -1206,7 +1206,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('Should correctly change resource strings for filter row using Changei18n.', fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringComponent);
-            const strings = GridResourceStringsEN;
+            const strings = Object.assign({}, GridResourceStringsEN);
             strings.igx_grid_filter = 'My filter';
             strings.igx_grid_filter_row_close = 'My close';
             changei18n(strings);

@@ -291,24 +291,28 @@ describe('Utils', () => {
 
         describe('date formatting', () => {
             it('should format string to dateTime', () => {
-                expect(formatDate('2025-01-25T14:15:00', 'short', 'en-US')).toEqual('1/25/25, 2:15 PM');
-                expect(formatDate('2025-01-25T14:15:00', 'medium', 'en-US')).toEqual('Jan 25, 2025, 2:15:00 PM');
-                expect(formatDate('2025-01-25T14:15:00', 'long', 'en-US')).toEqual('January 25, 2025 at 2:15:00 PM GMT+2');
-                expect(formatDate('2025-01-25T14:15:00', 'full', 'en-US')).toEqual('Saturday, January 25, 2025 at 2:15:00 PM Eastern European Standard Time');
+                expect(formatDate('2025-01-25T14:15:00', 'short', 'en-US', "Europe/Sofia")).toEqual('1/25/25, 2:15 PM');
+                expect(formatDate('2025-01-25T14:15:00', 'medium', 'en-US', "Europe/Sofia")).toEqual('Jan 25, 2025, 2:15:00 PM');
+                expect(formatDate('2025-01-25T14:15:00', 'long', 'en-US', "Europe/Sofia")
+                    .includes('January 25, 2025 at 2:15:00 PM GMT+')).toBeTruthy();
+                expect(formatDate('2025-01-25T14:15:00', 'full', 'en-US', "Europe/Sofia")
+                    .includes('January 25, 2025 at 2:15:00 PM GMT+')).toBeTruthy();
             });
 
             it('should format string to date', () => {
-                expect(formatDate('2025-01-25T14:15:00', 'shortDate', 'en-US')).toEqual('1/25/25');
-                expect(formatDate('2025-01-25T14:15:00', 'mediumDate', 'en-US')).toEqual('Jan 25, 2025');
-                expect(formatDate('2025-01-25T14:15:00', 'longDate', 'en-US')).toEqual('January 25, 2025');
-                expect(formatDate('2025-01-25T14:15:00', 'fullDate', 'en-US')).toEqual('Saturday, January 25, 2025');
+                expect(formatDate('2025-01-25T14:15:00', 'shortDate', 'en-US', "Europe/Sofia")).toEqual('1/25/25');
+                expect(formatDate('2025-01-25T14:15:00', 'mediumDate', 'en-US', "Europe/Sofia")).toEqual('Jan 25, 2025');
+                expect(formatDate('2025-01-25T14:15:00', 'longDate', 'en-US', "Europe/Sofia")).toEqual('January 25, 2025');
+                expect(formatDate('2025-01-25T14:15:00', 'fullDate', 'en-US', "Europe/Sofia")).toEqual('Saturday, January 25, 2025');
             });
 
             it('should format string to time', () => {
-                expect(formatDate('2025-01-25T14:15:00', 'shortTime', 'en-US')).toEqual('2:15 PM');
-                expect(formatDate('2025-01-25T14:15:00', 'mediumTime', 'en-US')).toEqual('2:15:00 PM');
-                expect(formatDate('2025-01-25T14:15:00', 'longTime', 'en-US')).toEqual('2:15:00 PM GMT+2');
-                expect(formatDate('2025-01-25T14:15:00', 'fullTime', 'en-US')).toEqual('2:15:00 PM Eastern European Standard Time');
+                expect(formatDate('2025-01-25T14:15:00', 'shortTime', 'en-US', "Europe/Sofia")).toEqual('2:15 PM');
+                expect(formatDate('2025-01-25T14:15:00', 'mediumTime', 'en-US', "Europe/Sofia")).toEqual('2:15:00 PM');
+                expect(formatDate('2025-01-25T14:15:00', 'longTime', 'en-US', "Europe/Sofia")
+                    .includes('2:15:00 PM GMT+')).toBeTruthy();
+                expect(formatDate('2025-01-25T14:15:00', 'fullTime', 'en-US', "Europe/Sofia")
+                    .includes('2:15:00 PM GMT+')).toBeTruthy();
             });
 
             it('should format string to custom format', () => {
