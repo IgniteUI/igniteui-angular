@@ -1,10 +1,7 @@
-import { ITreeResourceStrings } from 'igniteui-angular';
+import { ITreeResourceStrings, convertToIgxResource } from 'igniteui-angular';
+import { TreeResourceStringsRO as ATreeResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Romanian resource strings for IgxTree
  */
-export const TreeResourceStringsRO = {
-    igx_expand: 'Extindere',
-    igx_collapse: 'Restrângere'
-} satisfies MakeRequired<ITreeResourceStrings>;
+export const TreeResourceStringsRO: ITreeResourceStrings = convertToIgxResource(ATreeResourceStrings);

@@ -6,7 +6,7 @@ import {
     inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {
     PropertyChangeService,
     PropertyPanelConfig,
@@ -26,8 +26,10 @@ import {
     IgxDatePickerComponent,
     IgxTimePickerComponent,
     IgxDateTimeEditorModule,
-    IgxDateRangePickerComponent
+    IgxDateRangePickerComponent,
+    ISelectionEventArgs
 } from 'igniteui-angular';
+import { setCurrentI18n } from 'igniteui-i18n-core';
 
 @Component({
     selector: 'app-properties-panel',
@@ -35,6 +37,7 @@ import {
     templateUrl: './properties-panel.component.html',
     styleUrl: './properties-panel.component.scss',
     imports: [
+        FormsModule,
         ReactiveFormsModule,
         CommonModule,
         IgxButtonDirective,
@@ -132,5 +135,9 @@ export class PropertiesPanelComponent {
         return labels.length > 0
             ? labels
             : options.map((option) => option.label || option.toString());
+    }
+
+    protected updateLocale(event: ISelectionEventArgs) {
+        setCurrentI18n(event.newSelection.value);
     }
 }

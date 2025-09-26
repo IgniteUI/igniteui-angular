@@ -70,7 +70,7 @@ import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTempl
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
 import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
 import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from '../../services/public_api';
-import { cloneArray, PlatformUtil, resizeObservable } from '../../core/utils';
+import { cloneArray, onResourceChangeHandle, PlatformUtil, resizeObservable } from '../../core/utils';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
 import { DataUtil, GridColumnDataType } from '../../data-operations/data-util';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
@@ -1082,6 +1082,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 this.generateConfig();
             }
             this.setupColumns();
+            // Bind to onResourceChange after the columns have initialized the first time to avoid premature initialization.
+            onResourceChangeHandle(this.destroy$, () => {
+                // Since the columns are kinda static, due to assigning DisplayName on init, they need to be regenerated.
+                this.setupColumns();
+            }, this);
         });
         if (this.valueChipTemplateDirective) {
             this.valueChipTemplate = this.valueChipTemplateDirective.template;
@@ -1098,6 +1103,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         Promise.resolve().then(() => {
             super.ngAfterViewInit();
         });
+
     }
 
     /**

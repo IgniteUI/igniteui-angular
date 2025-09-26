@@ -13,7 +13,9 @@ import {
     TemplateRef,
     ViewChild,
     Directive,
-    booleanAttribute
+    booleanAttribute,
+    inject,
+    DestroyRef
 } from '@angular/core';
 
 
@@ -27,7 +29,7 @@ import {
     IgxListItemLeftPanningTemplateDirective,
     IgxListItemRightPanningTemplateDirective
 } from './list.common';
-import { IBaseEventArgs } from '../core/utils';
+import { IBaseEventArgs, onResourceChangeHandle } from '../core/utils';
 import { IListResourceStrings, ListResourceStringsEN } from '../core/i18n/list-resources';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 
@@ -442,7 +444,9 @@ export class IgxListComponent extends IgxListBaseDirective {
     @ViewChild('defaultDataLoading', { read: TemplateRef, static: true })
     protected defaultDataLoadingTemplate: TemplateRef<any>;
 
-    private _resourceStrings = getCurrentResourceStrings(ListResourceStringsEN);
+    private _destroyRef = inject(DestroyRef);
+    private _resourceStrings: IListResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(ListResourceStringsEN);
 
     /**
      * Sets the resource strings.
@@ -457,11 +461,14 @@ export class IgxListComponent extends IgxListBaseDirective {
      * Returns the resource strings.
      */
     public get resourceStrings(): IListResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     constructor(public element: ElementRef) {
         super(element);
+        onResourceChangeHandle(this._destroyRef, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(ListResourceStringsEN, false);
+        }, this);
     }
 
     /**

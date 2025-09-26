@@ -13,48 +13,90 @@ import { IActionStripResourceStrings } from './action-strip-resources';
 import { IQueryBuilderResourceStrings } from './query-builder-resources';
 import { IComboResourceStrings } from './combo-resources';
 import { IBannerResourceStrings } from './banner-resources';
+import {
+    getCurrentResourceStrings as getCurrentResourceStringsCore,
+    IResourceStrings as IResourceStringsCore,
+    setCurrentI18n,
+    getI18nManager
+} from 'igniteui-i18n-core';
 
 export interface IResourceStrings extends IGridResourceStrings, ITimePickerResourceStrings, ICalendarResourceStrings,
     ICarouselResourceStrings, IChipResourceStrings, IComboResourceStrings, IInputResourceStrings, IDatePickerResourceStrings,
     IDateRangePickerResourceStrings, IListResourceStrings, IPaginatorResourceStrings, ITreeResourceStrings,
     IActionStripResourceStrings, IQueryBuilderResourceStrings, IBannerResourceStrings { }
 
-export class igxI18N {
-    private static _instance: igxI18N;
 
-    private _currentResourceStrings: IResourceStrings = { };
+function igxRegisterI18n(resourceStrings: IResourceStrings, locale: string) {
+    // Remove `igx_` prefix for compatibility with older versions.
+    const genericResourceStrings: IResourceStringsCore = {};
+    for (const key of Object.keys(resourceStrings)) {
+        let stringKey = key;
+        if (stringKey.startsWith("igx_")) {
+            stringKey = stringKey.replace("igx_", "");
+        }
+        genericResourceStrings[stringKey] = resourceStrings[key];
+    }
+    getI18nManager().registerI18n(genericResourceStrings, locale);
+}
 
-    private constructor() { }
+export function convertToIgxResource<T>(inObject: T) {
+    const result: any = {};
+    const memberNames = Object.getOwnPropertyNames(inObject);
+    for (const memberName of memberNames) {
+        result['igx_' + memberName] = inObject[memberName];
+    }
+    return result;
+}
 
-    public static instance() {
-        return this._instance || (this._instance = new this());
+/** Get current resource strings based on default. Result is truncated result, containing only relevant locale strings. */
+export function getCurrentResourceStrings<T>(defaultEN: T, init = true) {
+    const igxResourceStringKeys = Object.keys(defaultEN);
+    if (init) {
+        igxRegisterI18n(defaultEN, getI18nManager().defaultLocale);
     }
 
-    /**
-     * Changes the resource strings for all components in the application
-     * ```
-     * @param resourceStrings to be applied
-     */
-    public changei18n(resourceStrings: IResourceStrings) {
-        for (const key of Object.keys(resourceStrings)) {
-            this._currentResourceStrings[key] = resourceStrings[key];
+    // Append back `igx_` prefix for compatibility with older versions.
+    const resourceStrings = getCurrentResourceStringsCore();
+    const normalizedResourceStrings: T = {} as T;
+    const resourceStringsKeys = Object.keys(resourceStrings);
+    for (const igxKey of igxResourceStringKeys) {
+        let coreKey = igxKey;
+        if (coreKey.startsWith("igx_")) {
+            coreKey = coreKey.replace("igx_", "");
+        }
+        if (resourceStringsKeys.includes(coreKey)) {
+            normalizedResourceStrings[igxKey] = resourceStrings[coreKey];
+        } else {
+            normalizedResourceStrings[igxKey] = defaultEN[igxKey];
         }
     }
 
-    public getCurrentResourceStrings(en: IResourceStrings): IResourceStrings {
-        for (const key of Object.keys(en)) {
-            if (!this._currentResourceStrings[key]) {
-                this._currentResourceStrings[key] = en[key];
-            }
-        }
-        return this._currentResourceStrings;
-    }
+    return normalizedResourceStrings;
 }
 
-export function getCurrentResourceStrings(en: IResourceStrings) {
-    return igxI18N.instance().getCurrentResourceStrings(en);
-}
-
+/**
+ * Change resource strings for all components globally. The locale is not taken into account and this method should be called when the locale is changed.
+ * @deprecated Please use the new `registerI18n` and `setCurrentI18n` methods instead.
+ */
 export function changei18n(resourceStrings: IResourceStrings) {
-    igxI18N.instance().changei18n(resourceStrings);
+    igxRegisterI18n(resourceStrings, getI18nManager().defaultLocale);
+}
+
+const angularLocalizationProp = Symbol.for('igx.i18n.angularLocalization');
+
+/** Toggle Angular's localization and formatting in favor of our Intl implementation.
+ * @enable If should be enabled(true) or disabled(false). True by default.
+ * @returns If is now enabled or disabled.
+ */
+export function toggleIgxAngularLocalization(enable?: boolean): boolean {
+  globalThis[angularLocalizationProp] = enable != null ? enable : !globalThis[angularLocalizationProp];
+  return globalThis[angularLocalizationProp];
+}
+
+/** Get if the Angular's localization and formatting is enabled. It is true by default. */
+export function isIgxAngularLocalizationEnabled(): boolean {
+    if (globalThis[angularLocalizationProp] == null) {
+        globalThis[angularLocalizationProp] = true;
+    }
+    return globalThis[angularLocalizationProp];
 }

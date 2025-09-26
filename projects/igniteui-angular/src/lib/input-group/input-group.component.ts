@@ -1,4 +1,4 @@
-import { NgTemplateOutlet, NgClass } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectorRef,
     Component,
@@ -14,7 +14,7 @@ import {
     AfterContentChecked
 } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
-import { PlatformUtil, getComponentTheme } from '../core/utils';
+import { PlatformUtil, getComponentTheme, onResourceChangeHandle } from '../core/utils';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import {
@@ -50,7 +50,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      * Returns the resource strings.
      */
     public get resourceStrings(): IInputResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -125,7 +125,8 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     private _type: IgxInputGroupType = null;
     private _filled = false;
     private _theme: IgxTheme;
-    private _resourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
+    private _resourceStrings: IInputResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
     private _readOnly: undefined | boolean;
 
     /** @hidden @internal */
@@ -239,6 +240,9 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
             }
         });
         this._destroyRef.onDestroy(() => themeChange.unsubscribe());
+        onResourceChangeHandle(this._destroyRef, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(InputResourceStringsEN, false);
+        }, this);
     }
 
     /** @hidden */
@@ -385,7 +389,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
 
     /** @hidden @internal */
     public get fileNames() {
-        return this.input.fileNames || this._resourceStrings.igx_input_file_placeholder;
+        return this.input.fileNames || this.resourceStrings.igx_input_file_placeholder;
     }
 
     /**

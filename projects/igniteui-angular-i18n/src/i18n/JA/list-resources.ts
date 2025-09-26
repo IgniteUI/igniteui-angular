@@ -1,10 +1,7 @@
-import { IListResourceStrings } from 'igniteui-angular';
+import { IListResourceStrings, convertToIgxResource } from 'igniteui-angular';
+import { ListResourceStringsJA as AListResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Japanese resource strings for IgxList
  */
-export const ListResourceStringsJA = {
-    igx_list_no_items: 'リストに項目がありません。',
-    igx_list_loading: 'サーバーからデータを読み込んでいます。'
-} satisfies MakeRequired<IListResourceStrings>;
+export const ListResourceStringsJA: IListResourceStrings = convertToIgxResource(AListResourceStrings);
