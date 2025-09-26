@@ -14,6 +14,7 @@ import { setImmediate } from './setImmediate';
 import { isDevMode } from '@angular/core';
 import type { IgxTheme } from '../services/theme/theme.token';
 import { getDateFormatter, getI18nManager, getNumberFormatter, IResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { isIgxAngularLocalizationEnabled } from './i18n/resources';
 
 /** @hidden @internal */
 export const ELEMENTS_TOKEN = /*@__PURE__*/new InjectionToken<boolean>('elements environment');
@@ -631,6 +632,8 @@ export function onResourceChangeHandle(destroyObj: Subject<any> | DestroyRef, ca
     }
 }
 
+//#region Localization
+const angularDisabledError = new Error('Angular localization disabled!');
 const IntlDateTimeStyleValues = {
     full: 'Full',
     long: 'Long',
@@ -652,7 +655,11 @@ export function getLocaleDateFormat(locale: string, displayFormat?: string): str
     }
     let format: string;
     try {
-        format = ngGetLocaleDateFormat(locale, FormatWidth[IntlDateTimeStyleValues[targetKey]]);
+        if (isIgxAngularLocalizationEnabled()) {
+            format = ngGetLocaleDateFormat(locale, FormatWidth[IntlDateTimeStyleValues[targetKey]]);
+        } else {
+            throw angularDisabledError;
+        }
     } catch {
         // No longer throw warnings. Back up is to use Intl now, which should return the format without registering locales.
         format = getDateFormatter().getLocaleDateTimeFormat(locale, false, { dateStyle: targetKey });
@@ -675,7 +682,11 @@ export function getLocaleDateTimeFormat(locale: string, displayFormat?: string) 
     }
     let format: string;
     try {
-        format = ngGetLocaleDateTimeFormat(locale, FormatWidth[IntlDateTimeStyleValues[targetKey]]);
+        if (isIgxAngularLocalizationEnabled()) {
+            format = ngGetLocaleDateTimeFormat(locale, FormatWidth[IntlDateTimeStyleValues[targetKey]]);
+        } else {
+            throw angularDisabledError;
+        }
     } catch {
         // No longer throw warnings. Back up is to use Intl now, which should return the format without registering locales.
         format = getDateFormatter().getLocaleDateTimeFormat(locale, false, { dateStyle: targetKey, timeStyle: targetKey });
@@ -691,7 +702,11 @@ export function getLocaleDateTimeFormat(locale: string, displayFormat?: string) 
 export function formatDate(value: Date | string | number | null | undefined, format: string, locale: string, timezone?: string): string {
     let formattedDate: string;
     try {
-        formattedDate = ngFormatDate(value, format, locale, timezone);
+        if (isIgxAngularLocalizationEnabled()) {
+            formattedDate = ngFormatDate(value, format, locale, timezone);
+        } else {
+            throw angularDisabledError;
+        }
     } catch {
         if (value === null || value === undefined || value === '') {
             return '';
@@ -784,7 +799,11 @@ export function getCurrencyCode(locale: string, overrideCode?: string) {
         return overrideCode;
     } else {
         try {
-            currencyCode = getLocaleCurrencyCode(locale)
+            if (isIgxAngularLocalizationEnabled()) {
+               currencyCode = getLocaleCurrencyCode(locale);
+            } else {
+                throw angularDisabledError;
+            }
         } catch {
             // If not available the user needs to define it.
         }
@@ -798,11 +817,16 @@ export function getCurrencySymbol(currencyCode: string, locale?: string, currenc
 
 export function getLocaleFirstDayOfWeek(locale?: string) {
     try {
-        // Angular returns 0 for Sunday...
-        return ngGetLocaleFirstDayOfWeek(locale);
+        if (isIgxAngularLocalizationEnabled()) {
+            // Angular returns 0 for Sunday...
+            return ngGetLocaleFirstDayOfWeek(locale);
+        } else {
+            throw angularDisabledError;
+        }
     } catch {}
     return getDateFormatter().getFirstDayOfWeek(locale);
 }
+//#endregion
 
 /** Converts pixel values to their rem counterparts for a base value */
 export const rem = (value: number | string) => {

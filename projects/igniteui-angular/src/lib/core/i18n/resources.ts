@@ -81,3 +81,22 @@ export function getCurrentResourceStrings<T>(defaultEN: T, init = true) {
 export function changei18n(resourceStrings: IResourceStrings) {
     igxRegisterI18n(resourceStrings, getI18nManager().defaultLocale);
 }
+
+const angularLocalizationProp = Symbol.for('igx.i18n.angularLocalization');
+
+/** Toggle Angular's localization and formatting in favor of our Intl implementation.
+ * @enable If should be enabled(true) or disabled(false). True by default.
+ * @returns If is now enabled or disabled.
+ */
+export function toggleIgxAngularLocalization(enable?: boolean): boolean {
+  globalThis[angularLocalizationProp] = enable != null ? enable : !globalThis[angularLocalizationProp];
+  return globalThis[angularLocalizationProp];
+}
+
+/** Get if the Angular's localization and formatting is enabled. It is true by default. */
+export function isIgxAngularLocalizationEnabled(): boolean {
+    if (globalThis[angularLocalizationProp] == null) {
+        globalThis[angularLocalizationProp] = true;
+    }
+    return globalThis[angularLocalizationProp];
+}
