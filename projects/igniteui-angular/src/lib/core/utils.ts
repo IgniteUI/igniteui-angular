@@ -1,4 +1,5 @@
 import {
+    formatDate as ngFormatDate,
     getLocaleCurrencyCode,
     getLocaleDateFormat as ngGetLocaleDateFormat,
     getLocaleDateTimeFormat as ngGetLocaleDateTimeFormat,
@@ -681,29 +682,36 @@ export function getLocaleDateTimeFormat(locale: string, displayFormat?: string) 
  * coalescing to an empty string.
  */
 export function formatDate(value: Date | string | number | null | undefined, format: string, locale: string, timezone?: string): string {
-    if (value === null || value === undefined || value === '') {
-        return '';
+    let formattedDate: string;
+    try {
+        formattedDate = ngFormatDate(value, format, locale, timezone);
+    } catch {
+        if (value === null || value === undefined || value === '') {
+            return '';
+        }
+        if (typeof value === "string" || typeof value === "number") {
+            value = getDateFormatter().createDateFromValue(value);
+        }
+        let dateStyle = undefined, timeStyle = undefined;
+        if (format === 'short' || format === 'medium' || format === 'long' || format === 'full') {
+            dateStyle = format;
+            timeStyle = format;
+        } else if (format?.includes('Date')) {
+            dateStyle = format.replace('Date', '');
+        } else if (format?.includes('Time')) {
+            timeStyle = format.replace('Time', '');
+        } else if (format) {
+            return getDateFormatter().formatDateCustomFormat(value, locale, format, false, timezone);
+        }
+        const options: Intl.DateTimeFormatOptions = {
+            dateStyle,
+            timeStyle,
+            timeZone: timezone
+        };
+        formattedDate =  getDateFormatter().formatDateTime(value, locale, options);
     }
-    if (typeof value === "string" || typeof value === "number") {
-        value = getDateFormatter().createDateFromValue(value);
-    }
-    let dateStyle = undefined, timeStyle = undefined;
-    if (format === 'short' || format === 'medium' || format === 'long' || format === 'full') {
-        dateStyle = format;
-        timeStyle = format;
-    } else if (format?.includes('Date')) {
-        dateStyle = format.replace('Date', '');
-    } else if (format?.includes('Time')) {
-        timeStyle = format.replace('Time', '');
-    } else if (format) {
-        return getDateFormatter().formatDateCustomFormat(value, locale, format, false, timezone);
-    }
-    const options: Intl.DateTimeFormatOptions = {
-        dateStyle,
-        timeStyle,
-        timeZone: timezone
-    };
-    return getDateFormatter().formatDateTime(value, locale, options);
+
+    return formattedDate;
 }
 
 function parseDigitsInfo(value?: string) {
