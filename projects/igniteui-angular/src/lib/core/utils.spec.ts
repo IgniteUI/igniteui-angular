@@ -293,10 +293,8 @@ describe('Utils', () => {
             it('should format string to dateTime', () => {
                 expect(formatDate('2025-01-25T14:15:00', 'short', 'en-US', "Europe/Sofia")).toEqual('1/25/25, 2:15 PM');
                 expect(formatDate('2025-01-25T14:15:00', 'medium', 'en-US', "Europe/Sofia")).toEqual('Jan 25, 2025, 2:15:00 PM');
-                expect(formatDate('2025-01-25T14:15:00', 'long', 'en-US', "Europe/Sofia")
-                    .includes('January 25, 2025 at 2:15:00 PM GMT+')).toBeTruthy();
-                expect(formatDate('2025-01-25T14:15:00', 'full', 'en-US', "Europe/Sofia")
-                    .includes('January 25, 2025 at 2:15:00 PM GMT+')).toBeTruthy();
+                expect(formatDate('2025-01-25T14:15:00', 'long', 'en-US', "Europe/Sofia")).toEqual('January 25, 2025 at 2:15:00 PM GMT+2');
+                expect(formatDate('2025-01-25T14:15:00', 'full', 'en-US', "Europe/Sofia")).toEqual('Saturday, January 25, 2025 at 2:15:00 PM GMT+02:00');
             });
 
             it('should format string to date', () => {
@@ -309,10 +307,8 @@ describe('Utils', () => {
             it('should format string to time', () => {
                 expect(formatDate('2025-01-25T14:15:00', 'shortTime', 'en-US', "Europe/Sofia")).toEqual('2:15 PM');
                 expect(formatDate('2025-01-25T14:15:00', 'mediumTime', 'en-US', "Europe/Sofia")).toEqual('2:15:00 PM');
-                expect(formatDate('2025-01-25T14:15:00', 'longTime', 'en-US', "Europe/Sofia")
-                    .includes('2:15:00 PM GMT+')).toBeTruthy();
-                expect(formatDate('2025-01-25T14:15:00', 'fullTime', 'en-US', "Europe/Sofia")
-                    .includes('2:15:00 PM GMT+')).toBeTruthy();
+                expect(formatDate('2025-01-25T14:15:00', 'longTime', 'en-US', "Europe/Sofia")).toEqual('2:15:00 PM GMT+2');
+                expect(formatDate('2025-01-25T14:15:00', 'fullTime', 'en-US', "Europe/Sofia")).toEqual('2:15:00 PM GMT+02:00');
             });
 
             it('should format string to custom format', () => {
