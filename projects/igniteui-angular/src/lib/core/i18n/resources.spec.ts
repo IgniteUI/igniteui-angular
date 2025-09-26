@@ -95,6 +95,8 @@ describe('i18n', () => {
             expect(igxGetCurrentResourceStrings(ActionStripResourceStringsEN, false)).toEqual({
                 igx_action_strip_button_more_title: 'Още'
             });
+
+            setCurrentI18n('en-US');
         })
 
         it('should return default strings if locale is changed using new API, but its missing resources', () => {
@@ -108,6 +110,8 @@ describe('i18n', () => {
             expect(igxGetCurrentResourceStrings(ActionStripResourceStringsEN, false)).toEqual({
                 igx_action_strip_button_more_title: 'More'
             });
+
+            setCurrentI18n('en-US');
         });
 
         it('should return default strings if locale is changed using new API, but its missing resources for this particular component', () => {
@@ -122,6 +126,8 @@ describe('i18n', () => {
             expect(igxGetCurrentResourceStrings(ActionStripResourceStringsEN, false)).toEqual({
                 igx_action_strip_button_more_title: 'More'
             });
+
+            setCurrentI18n('en-US');
         });
     });
 });

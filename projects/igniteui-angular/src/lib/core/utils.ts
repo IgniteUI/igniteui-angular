@@ -13,7 +13,7 @@ import { NEVER, Observable, Subject } from 'rxjs';
 import { setImmediate } from './setImmediate';
 import { isDevMode } from '@angular/core';
 import type { IgxTheme } from '../services/theme/theme.token';
-import { getDateFormatter, getI18nManager, getNumberFormatter, IntlDateTimeStyleValues, IResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { getDateFormatter, getI18nManager, getNumberFormatter, IResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 /** @hidden @internal */
 export const ELEMENTS_TOKEN = /*@__PURE__*/new InjectionToken<boolean>('elements environment');
@@ -630,6 +630,13 @@ export function onResourceChangeHandle(destroyObj: Subject<any> | DestroyRef, ca
         });
     }
 }
+
+const IntlDateTimeStyleValues = {
+    full: 'Full',
+    long: 'Long',
+    medium: 'Medium',
+    short: 'Short'
+};
 
 /**
  * Returns the date format based on a provided locale.

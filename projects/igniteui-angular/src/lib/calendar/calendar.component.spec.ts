@@ -619,7 +619,7 @@ describe("IgxCalendar - ", () => {
 
                     calendarRowsMar.forEach((row, idx) => {
                         const firstRowItem = row.nativeElement.children[0];
-                        if (idx === 4) {
+                        if (idx === 5) {
                             expect(firstRowItem.firstChild.innerText).toEqual(
                                 "12",
                             );
