@@ -1,5 +1,6 @@
 import { cloneValue, isObject, isDate, getCurrencyCode, getCurrencySymbol, getLocaleFirstDayOfWeek, formatDate, formatCurrency, formatPercent, formatNumber, getLocaleDateFormat, getLocaleDateTimeFormat } from './utils';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
+import { toggleIgxAngularLocalization } from './i18n/resources';
 
 describe('Utils', () => {
     const complexObject = {
@@ -290,25 +291,45 @@ describe('Utils', () => {
         })
 
         describe('date formatting', () => {
-            it('should format string to dateTime', () => {
+            it('should format string to dateTime using Angular', () => {
+                // Angular expects time to be already in local time so we don't exact check timezone...
+                expect(formatDate('2025-01-25T14:15:00', 'short', 'en-US')).toEqual('1/25/25, 2:15 PM');
+                expect(formatDate('2025-01-25T14:15:00', 'medium', 'en-US')).toEqual('Jan 25, 2025, 2:15:00 PM');
+                expect(formatDate('2025-01-25T14:15:00', 'long', 'en-US')).toContain('January 25, 2025 at 2:15:00 PM GMT');
+                expect(formatDate('2025-01-25T14:15:00', 'full', 'en-US')).toContain('Saturday, January 25, 2025 at 2:15:00 PM GMT');
+            });
+
+            it('should format string to dateTime using Intl', () => {
+                toggleIgxAngularLocalization(false);
                 expect(formatDate('2025-01-25T14:15:00', 'short', 'en-US', "Europe/Sofia")).toEqual('1/25/25, 2:15 PM');
                 expect(formatDate('2025-01-25T14:15:00', 'medium', 'en-US', "Europe/Sofia")).toEqual('Jan 25, 2025, 2:15:00 PM');
                 expect(formatDate('2025-01-25T14:15:00', 'long', 'en-US', "Europe/Sofia")).toEqual('January 25, 2025 at 2:15:00 PM GMT+2');
-                expect(formatDate('2025-01-25T14:15:00', 'full', 'en-US', "Europe/Sofia")).toEqual('Saturday, January 25, 2025 at 2:15:00 PM GMT+02:00');
+                expect(formatDate('2025-01-25T14:15:00', 'full', 'en-US', "Europe/Sofia")).toEqual('Saturday, January 25, 2025 at 2:15:00 PM Eastern European Standard Time');
+                toggleIgxAngularLocalization(true);
             });
 
-            it('should format string to date', () => {
+            it('should format string to date using Angular', () => {
                 expect(formatDate('2025-01-25T14:15:00', 'shortDate', 'en-US', "Europe/Sofia")).toEqual('1/25/25');
                 expect(formatDate('2025-01-25T14:15:00', 'mediumDate', 'en-US', "Europe/Sofia")).toEqual('Jan 25, 2025');
                 expect(formatDate('2025-01-25T14:15:00', 'longDate', 'en-US', "Europe/Sofia")).toEqual('January 25, 2025');
                 expect(formatDate('2025-01-25T14:15:00', 'fullDate', 'en-US', "Europe/Sofia")).toEqual('Saturday, January 25, 2025');
             });
 
-            it('should format string to time', () => {
+            it('should format string to time using Angular', () => {
+                // Angular expects time to be already in local time so we don't exact check timezone...
+                expect(formatDate('2025-01-25T14:15:00', 'shortTime', 'en-US')).toEqual('2:15 PM');
+                expect(formatDate('2025-01-25T14:15:00', 'mediumTime', 'en-US')).toEqual('2:15:00 PM');
+                expect(formatDate('2025-01-25T14:15:00', 'longTime', 'en-US')).toContain('2:15:00 PM GMT');
+                expect(formatDate('2025-01-25T14:15:00', 'fullTime', 'en-US')).toContain('2:15:00 PM GMT');
+            });
+
+            it('should format string to time using Intl', () => {
+                toggleIgxAngularLocalization(false);
                 expect(formatDate('2025-01-25T14:15:00', 'shortTime', 'en-US', "Europe/Sofia")).toEqual('2:15 PM');
                 expect(formatDate('2025-01-25T14:15:00', 'mediumTime', 'en-US', "Europe/Sofia")).toEqual('2:15:00 PM');
                 expect(formatDate('2025-01-25T14:15:00', 'longTime', 'en-US', "Europe/Sofia")).toEqual('2:15:00 PM GMT+2');
-                expect(formatDate('2025-01-25T14:15:00', 'fullTime', 'en-US', "Europe/Sofia")).toEqual('2:15:00 PM GMT+02:00');
+                expect(formatDate('2025-01-25T14:15:00', 'fullTime', 'en-US', "Europe/Sofia")).toEqual('2:15:00 PM Eastern European Standard Time');
+                toggleIgxAngularLocalization(true);
             });
 
             it('should format string to custom format', () => {
