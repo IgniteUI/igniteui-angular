@@ -1060,10 +1060,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             localeId,
             platform,
             _diTransactions);
-        onResourceChangeHandle(this.destroy$, () => {
-            // Since the columns are kinda static, due to assigning DisplayName on init, they need to be regenerated.
-            this.setupColumns();
-        }, this);
     }
 
     /**
@@ -1086,6 +1082,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 this.generateConfig();
             }
             this.setupColumns();
+            // Bind to onResourceChange after the columns have initialized the first time to avoid premature initialization.
+            onResourceChangeHandle(this.destroy$, () => {
+                // Since the columns are kinda static, due to assigning DisplayName on init, they need to be regenerated.
+                this.setupColumns();
+            }, this);
         });
         if (this.valueChipTemplateDirective) {
             this.valueChipTemplate = this.valueChipTemplateDirective.template;
@@ -1102,6 +1103,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         Promise.resolve().then(() => {
             super.ngAfterViewInit();
         });
+
     }
 
     /**

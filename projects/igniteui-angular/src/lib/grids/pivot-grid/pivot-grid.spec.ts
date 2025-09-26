@@ -46,10 +46,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
         let fixture: ComponentFixture<IgxPivotGridTestBaseComponent>;
 
         beforeEach(waitForAsync(() => {
-            getI18nManager().toggleEvents(false);
             fixture = TestBed.createComponent(IgxPivotGridTestBaseComponent);
             fixture.detectChanges();
-            getI18nManager().toggleEvents(true);
         }));
 
         it('should show empty template when there are no dimensions and values', () => {
