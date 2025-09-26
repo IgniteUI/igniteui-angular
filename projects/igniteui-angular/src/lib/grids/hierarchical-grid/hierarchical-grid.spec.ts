@@ -604,7 +604,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
         it('should update aria-activeDescendants when navigating around', () => {
             hierarchicalGrid.cellSelection = 'single';
-            expect(hierarchicalGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(hierarchicalGrid.id);
+            // aria-activedescendant on the tbody should not be defined unless a cell among it is active
+            expect(hierarchicalGrid.tbody.nativeElement.attributes['aria-activedescendant']).not.toBeDefined();
 
             let cellElem = (hierarchicalGrid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulatePointerOverElementEvent('pointerdown', cellElem.nativeElement);
@@ -616,13 +617,11 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             fixture.detectChanges();
 
             const childGrid = hierarchicalGrid.getChildGrids()[0];
-            expect(childGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(childGrid.id);
 
             cellElem = (childGrid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulatePointerOverElementEvent('pointerdown', cellElem.nativeElement);
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(hierarchicalGrid.id);
             expect(childGrid.tbody.nativeElement.attributes['aria-activedescendant'].value).toEqual(`${childGrid.id}_0_1`);
         });
 
@@ -667,6 +666,18 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
                 `Field "${rowIsland.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
             );
             jasmine.getEnv().allowRespy(false);
+        });
+
+        it('should calculate correct column headers width when rowSelection + expand indicators', () => {
+            hierarchicalGrid.rowSelection = 'multiple';
+            fixture.detectChanges();
+
+            const headerRowElement = hierarchicalGrid.nativeElement.querySelector("igx-grid-header-row");
+            const headerRowDiv = headerRowElement.querySelector(".igx-grid__tr");
+            const headerRowChildren = Array.from(headerRowDiv.children);
+
+            const elementsWidth = headerRowChildren.reduce((acc,el) => acc+(el as HTMLElement).offsetWidth, 0);
+            expect(elementsWidth).toEqual((headerRowDiv as HTMLElement).offsetWidth);
         });
     });
 
@@ -1690,7 +1701,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             UIInteractions.simulateClickAndSelectEvent(row.expander);
             fixture.detectChanges();
 
-            let childGrid = hierarchicalGrid.gridAPI.getChildGrids()[0];
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids()[0];
             const childRow = childGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             UIInteractions.simulateClickAndSelectEvent(childRow.expander);
             fixture.detectChanges();

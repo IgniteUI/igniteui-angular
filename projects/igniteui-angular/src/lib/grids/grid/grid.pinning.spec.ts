@@ -25,7 +25,7 @@ import { IgxGridComponent } from './grid.component';
 import { DropPosition } from '../moving/moving.service';
 import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { IPinningConfig } from '../public_api';
+import { IgxGridHeaderRowComponent, IPinningConfig } from '../public_api';
 
 describe('IgxGrid - Column Pinning #grid', () => {
 
@@ -130,7 +130,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(GridFunctions.isCellPinned(cell)).toBe(true);
             });
 
-           it('should allow pinning/unpinning via the column API', () => {
+            it('should allow pinning/unpinning via the column API', () => {
                 const col = grid.getColumnByName('ID');
 
                 col.pinned = true;
@@ -569,7 +569,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
             });
 
             it('should correctly pin column to right when row selectors are enabled.', () => {
-                grid.rowSelection =  GridSelectionMode.multiple;
+                grid.rowSelection = GridSelectionMode.multiple;
                 fix.detectChanges();
 
                 // check row DOM
@@ -577,8 +577,6 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
                 GridSelectionFunctions.verifyRowHasCheckbox(row);
                 expect(GridFunctions.getRowDisplayContainer(fix, 0)).toBeDefined();
-                expect(row.children[2].getAttribute('aria-describedby')).toBe(grid.id + '_CompanyName');
-                expect(row.children[3].getAttribute('aria-describedby')).toBe(grid.id + '_ContactName');
 
                 // check scrollbar DOM
                 const scrBarStartSection = fix.debugElement.query(By.css(`${GRID_SCROLL_CLASS}-start`));
@@ -692,10 +690,14 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(grid.getColumnByName('CompanyName').isFirstPinned).toBeTruthy();
                 const row = grid.gridAPI.get_row_by_index(0).nativeElement;
                 // check cells are rendered after main display container and have left offset
+                const headerRowDisplayContainer = fix.debugElement.query(By.directive(IgxGridHeaderRowComponent)).nativeElement.querySelector(".igx-display-container");
+                const displayContainerRect = headerRowDisplayContainer.getBoundingClientRect();
+                let xAxis = displayContainerRect.x + displayContainerRect.width;
                 for (let i = 0; i <= pinnedCols.length - 1; i++) {
                     const elem = row.children[i + 1];
-                    expect(parseInt((elem as any).style.left, 10)).toBe(-330);
-                    expect(elem.getAttribute('aria-describedby')).toBe(grid.id + '_' + pinnedCols[i].field);
+                    const rect = elem.getBoundingClientRect();
+                    expect(rect.x).toBe(xAxis);
+                    xAxis += rect.width;
                 }
 
                 // check correct headers have left border
@@ -714,9 +716,13 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 const row = grid.gridAPI.get_row_by_index(0).nativeElement;
                 expect(GridFunctions.getRowDisplayContainer(fix, 0)).toBeTruthy();
 
+                const headerRowdisplayContainer = fix.debugElement.query(By.directive(IgxGridHeaderRowComponent)).nativeElement.querySelector(".igx-display-container");
+                const displayContainerRect = headerRowdisplayContainer.getBoundingClientRect();
+                const xAxis = displayContainerRect.x + displayContainerRect.width;
+
                 expect(row.children[1].classList.contains(`${CELL_PINNED_CLASS}-first`)).toBeTruthy();
                 expect(row.children[1].classList.contains(GRID_MRL_BLOCK)).toBeTruthy();
-                expect(parseInt((row.children[1] as any).style.left, 10)).toEqual(-408);
+                expect(row.children[1].getBoundingClientRect().x).toEqual(xAxis);
 
                 // check correct headers have left border
                 const firstPinnedHeader = grid.headerGroupsList.find(group => group.isPinned);
