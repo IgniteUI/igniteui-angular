@@ -246,6 +246,9 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @HostListener('blur')
     public onBlur() {
         this.inputGroup.isFocused = false;
+        if (this.ngControl?.control) {
+            this.ngControl.control.markAsTouched();
+        }
         this.updateValidityState();
     }
     /** @hidden @internal */
