@@ -9,7 +9,7 @@ import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridSortingStrategy, IGridGroupingStrategy } from '../common/strategy';
-import { GridCellMergeMode, RowPinningPosition } from '../common/enums';
+import { GridCellMergeMode } from '../common/enums';
 import { IGridMergeStrategy } from '../../data-operations/merge-strategy';
 
 /**
@@ -107,7 +107,7 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
         if (colsToMerge.length === 0) {
             return collection;
         }
-        if (this.grid.hasPinnedRecords && !pinned && this.grid.pinning.rows !== RowPinningPosition.Bottom) {
+        if (!pinned && this.grid.isPinningToStart) {
             activeRowIndexes = activeRowIndexes.map(x => x - this.grid.pinnedRecordsCount);
         }
         activeRowIndexes = activeRowIndexes.filter((val, idx, arr) => arr.indexOf(val) === idx).filter(x => !isNaN(x));
