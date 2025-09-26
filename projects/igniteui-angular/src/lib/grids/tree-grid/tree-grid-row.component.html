@@ -57,8 +57,8 @@
     </div>
 </ng-template>
 
-<ng-template #pinnedCellsTemplate let-col let-columns="columns">
-    @for (col of columns | igxNotGrouped; track trackPinnedColumn(col)) {
+<ng-template #pinnedCellsTemplate let-col>
+    @for (col of pinnedColumns | igxNotGrouped; track trackPinnedColumn(col)) {
         @if (this.hasMergedCells) {
             <div [style.height.px]=" this.metaData?.cellMergeMeta.get(col.field)?.rowSpan > 1 ? getRowHeight() : null"
                  class="igx-grid__mrl-block"
@@ -98,6 +98,7 @@
         [style.min-width]="col.resolvedWidth"
         [style.max-width]="col.resolvedWidth"
         [style.flex-basis]="col.resolvedWidth"
+        [style.left]="col.rightPinnedOffset"
         [width]="col.getCellWidth()"
         [visibleColumnIndex]="col.visibleIndex"
         [value]="data | dataMapper:col.field:grid.pipeTrigger:data[col.field]:col.hasNestedPath"
@@ -135,6 +136,7 @@
         [style.min-width]="col.resolvedWidth"
         [style.max-width]="col.resolvedWidth"
         [style.flex-basis]="col.resolvedWidth"
+        [style.left]="col.rightPinnedOffset"
         [width]="col.getCellWidth()"
         [visibleColumnIndex]="col.visibleIndex"
         [value]="data | dataMapper:col.field:grid.pipeTrigger:data[col.field]:col.hasNestedPath"

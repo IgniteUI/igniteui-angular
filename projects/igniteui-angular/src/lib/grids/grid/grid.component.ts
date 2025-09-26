@@ -154,8 +154,8 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxGridDetailsPipe,
         IgxStringReplacePipe,
         IgxGridCellMergePipe,
-        IgxGridUnmergeActivePipe,
-        IgxScrollInertiaDirective
+        IgxScrollInertiaDirective,
+        IgxGridUnmergeActivePipe
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
