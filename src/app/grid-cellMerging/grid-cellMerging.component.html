@@ -50,9 +50,9 @@
             Value: {{val}},Index: {{cell.row.index}}
           </ng-template>
     </igx-column>
-    <igx-column field="ShipCountry" header="Ship Country" width="200px" [merge]="true" sortable="true">
+    <igx-column field="ShipCountry" header="Ship Country" [merge]="true" width="200px" sortable="true">
     </igx-column>
-    <igx-column field="OrderDate" header="Order Date" width="200px" [merge]="true" [groupable]="true" [dataType]="'date'" sortable="true">
+    <igx-column field="OrderDate" header="Order Date" width="200px"  [groupable]="true" [dataType]="'date'" sortable="true">
     </igx-column>
     <igx-column field="PostalCode" header="Postal Code" width="200px" >
     </igx-column>
@@ -70,8 +70,7 @@
     </igx-column>
     <igx-column field="Quantity" header="Quantity" width="150px" dataType="number">
     </igx-column>
-    <igx-paginator [perPage]="20">
-    </igx-paginator>
+
     <igx-action-strip>
         <igx-grid-pinning-actions></igx-grid-pinning-actions>
     </igx-action-strip>
