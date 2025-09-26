@@ -71,7 +71,7 @@ export class GridCellMergingComponent {
         const length = INVOICE_DATA.length;
         for (let i = 1; i <= 600_000; i++) {
             const rnd = Math.floor(Math.random() * length);
-            allData.push(INVOICE_DATA[rnd]);
+            allData.push(Object.assign({}, INVOICE_DATA[rnd]));
         }
 
         this.data = allData;
