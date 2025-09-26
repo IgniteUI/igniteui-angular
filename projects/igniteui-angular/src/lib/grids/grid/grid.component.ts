@@ -34,7 +34,7 @@ import { IGridGroupingStrategy } from '../common/strategy';
 import { IgxGridValidationService } from './grid-validation.service';
 import { IgxGridDetailsPipe } from './grid.details.pipe';
 import { IgxGridSummaryPipe } from './grid.summary.pipe';
-import { IgxGridGroupingPipe, IgxGridPagingPipe, IgxGridSortingPipe, IgxGridFilteringPipe, IgxGridCellMergePipe } from './grid.pipes';
+import { IgxGridGroupingPipe, IgxGridPagingPipe, IgxGridSortingPipe, IgxGridFilteringPipe, IgxGridCellMergePipe, IgxGridUnmergeActivePipe } from './grid.pipes';
 import { IgxSummaryDataPipe } from '../summaries/grid-root-summary.pipe';
 import { IgxGridTransactionPipe, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridAddRowPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe, IgxStringReplacePipe } from '../common/pipes';
 import { IgxGridColumnResizerComponent } from '../resizing/resizer.component';
@@ -154,6 +154,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxGridDetailsPipe,
         IgxStringReplacePipe,
         IgxGridCellMergePipe,
+        IgxGridUnmergeActivePipe,
         IgxScrollInertiaDirective
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
