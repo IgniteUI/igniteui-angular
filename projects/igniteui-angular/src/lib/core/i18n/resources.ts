@@ -81,10 +81,3 @@ export function getCurrentResourceStrings<T>(defaultEN: T, init = true) {
 export function changei18n(resourceStrings: IResourceStrings) {
     igxRegisterI18n(resourceStrings, getI18nManager().defaultLocale);
 }
-
-export function initi18n(locale: string) {
-    if (locale !== 'en-US') {
-        //Default for angular is en-US, so don't set it on the i18n manager, because can override any other locale set by the new API.
-        setCurrentI18n(locale);
-    }
-}

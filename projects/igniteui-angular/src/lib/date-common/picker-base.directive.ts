@@ -20,7 +20,6 @@ import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { getCurrentI18n, IResourceChangeEventArgs } from 'igniteui-i18n-core';
-import { initi18n } from '../core/i18n/resources';
 
 @Directive()
 export abstract class PickerBaseDirective implements IToggleView, EditorProvider, AfterViewInit, AfterContentChecked, OnDestroy {
@@ -361,8 +360,8 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     }
 
     protected initLocale() {
-        initi18n(this._localeId);
         this._defaultLocale = getCurrentI18n();
+        this._locale = this._localeId !== this._defaultLocale ? this._localeId : this._locale;
     }
 
     protected onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {

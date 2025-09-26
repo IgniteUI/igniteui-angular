@@ -33,7 +33,7 @@ import {
 import { DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, DateRangePickerFormatPipe, CustomDateRange } from './date-range-picker-inputs.common';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
-import { getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { PickerCalendarOrientation } from '../date-common/types';
 import { calendarRange, isDateInRanges } from '../calendar/common/helpers';
@@ -1272,7 +1272,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     protected override initLocale() {
         super.initLocale();
-        initi18n(this._localeId);
         onResourceChangeHandle(this._destroy$, this.onResourceChange, this);
     }
 

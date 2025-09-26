@@ -63,7 +63,7 @@ import {
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
-import { getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { PickerCalendarOrientation } from '../date-common/types';
 import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
@@ -1007,7 +1007,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     protected override initLocale() {
         super.initLocale();
-        initi18n(this._localeId);
         onResourceChangeHandle(this._destroy$, this.onResourceChange, this);
     }
 
