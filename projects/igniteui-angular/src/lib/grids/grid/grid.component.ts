@@ -1304,6 +1304,17 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
+     * @hidden
+     */
+    protected override onColumnsChanged(change: QueryList<IgxColumnComponent>) {
+        super.onColumnsChanged(change);
+
+        if (this.hasColumnLayouts && !(this.navigation instanceof IgxGridMRLNavigationService)) {
+            this._setupNavigationService();
+        }
+    }
+
+    /**
      * @hidden @internal
      */
     protected override scrollTo(row: any | number, column: any | number): void {
