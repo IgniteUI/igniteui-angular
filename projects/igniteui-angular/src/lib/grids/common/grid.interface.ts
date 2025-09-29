@@ -939,8 +939,6 @@ export interface GridType extends IGridDataBindable {
     /** The height of each row in the grid. Setting a constant height can solve problems with not showing all elements when scrolling */
     rowHeight: number;
     multiRowLayoutRowSize: number;
-    /** Minimal width for headers */
-    defaultHeaderGroupMinWidth: any;
     maxLevelHeaderDepth: number;
     defaultRowHeight: number;
     /** The default font size, calculated for each element */
@@ -1043,7 +1041,7 @@ export interface GridType extends IGridDataBindable {
     hasColumnGroups: boolean;
     /** @hidden @internal */
     hasEditableColumns: boolean;
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     /** Property, that provides a callback for loading unique column values on demand.
      * If this property is provided, the unique values it generates will be used by the Excel Style Filtering  */
     uniqueColumnValuesStrategy: (column: ColumnType, tree: FilteringExpressionsTree, done: (values: any[]) => void) => void;

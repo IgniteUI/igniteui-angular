@@ -667,6 +667,18 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             );
             jasmine.getEnv().allowRespy(false);
         });
+
+        it('should calculate correct column headers width when rowSelection + expand indicators', () => {
+            hierarchicalGrid.rowSelection = 'multiple';
+            fixture.detectChanges();
+
+            const headerRowElement = hierarchicalGrid.nativeElement.querySelector("igx-grid-header-row");
+            const headerRowDiv = headerRowElement.querySelector(".igx-grid__tr");
+            const headerRowChildren = Array.from(headerRowDiv.children);
+
+            const elementsWidth = headerRowChildren.reduce((acc,el) => acc+(el as HTMLElement).offsetWidth, 0);
+            expect(elementsWidth).toEqual((headerRowDiv as HTMLElement).offsetWidth);
+        });
     });
 
     describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
