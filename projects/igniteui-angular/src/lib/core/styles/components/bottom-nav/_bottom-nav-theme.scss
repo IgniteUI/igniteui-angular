@@ -6,13 +6,13 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin bottom-nav($theme) {
-    @include css-vars($theme);
+    @include css-vars($theme, 'igx-bottom-nav');
 
     $variant: map.get($theme, '_meta', 'theme');
     $menu-height: rem(56px);
     $item-min-width: rem(80px);
     $item-max-width: rem(168px);
-    $item-padding: 0 rem(12px, 16px);
+    $item-padding: 0 pad-inline(rem(12px, 16px));
 
     %igx-bottom-nav-panel {
         display: block;
@@ -115,7 +115,7 @@
         color: var-get($theme, 'icon-color');
 
         @if $variant != 'indigo' {
-            padding: 0 rem(8px);
+            padding: 0 pad-inline(rem(8px));
             height: rem(24px);
             transform: translateZ(0);
             transition: transform .15s $in-out-quad;

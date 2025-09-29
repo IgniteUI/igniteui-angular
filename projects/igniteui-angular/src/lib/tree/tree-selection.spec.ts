@@ -552,7 +552,9 @@ describe('IgxTree - Selection #treeView', () => {
         const selectionService = new IgxTreeSelectionService();
         const treeService = new IgxTreeService();
         const navService = new IgxTreeNavigationService(treeService, selectionService);
-        const tree = new IgxTreeComponent(navService, selectionService, treeService, null);
+        const mockPlatform = jasmine.createSpyObj('platform', ['isBrowser', 'isServer']);
+        mockPlatform.isBrowser = true;
+        const tree = new IgxTreeComponent(navService, selectionService, treeService, null, mockPlatform);
 
         beforeEach(() => {
             mockNodes = TreeTestFunctions.createNodeSpies(0, 5);

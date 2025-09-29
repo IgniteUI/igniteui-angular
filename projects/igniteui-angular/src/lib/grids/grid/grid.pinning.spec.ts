@@ -28,7 +28,7 @@ import { IgxGridComponent } from './grid.component';
 import { DropPosition } from '../moving/moving.service';
 import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { IPinningConfig } from '../public_api';
+import { IgxGridHeaderRowComponent, IPinningConfig } from '../public_api';
 
 describe('IgxGrid - Column Pinning #grid', () => {
 
@@ -134,7 +134,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(GridFunctions.isCellPinned(cell)).toBe(true);
             });
 
-           it('should allow pinning/unpinning via the column API', () => {
+            it('should allow pinning/unpinning via the column API', () => {
                 const col = grid.getColumnByName('ID');
 
                 col.pinned = true;
@@ -694,9 +694,14 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(grid.getColumnByName('CompanyName').isFirstPinned).toBeTruthy();
                 const row = grid.gridAPI.get_row_by_index(0).nativeElement;
                 // check cells are rendered after main display container and have left offset
+                const headerRowDisplayContainer = fix.debugElement.query(By.directive(IgxGridHeaderRowComponent)).nativeElement.querySelector(".igx-display-container");
+                const displayContainerRect = headerRowDisplayContainer.getBoundingClientRect();
+                let xAxis = displayContainerRect.x + displayContainerRect.width;
                 for (let i = 0; i <= pinnedCols.length - 1; i++) {
                     const elem = row.children[i + 1];
-                    expect(parseInt((elem as any).style.left, 10)).toBe(-330);
+                    const rect = elem.getBoundingClientRect();
+                    expect(rect.x).toBe(xAxis);
+                    xAxis += rect.width;
                 }
 
                 // check correct headers have left border
@@ -715,9 +720,13 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 const row = grid.gridAPI.get_row_by_index(0).nativeElement;
                 expect(GridFunctions.getRowDisplayContainer(fix, 0)).toBeTruthy();
 
+                const headerRowdisplayContainer = fix.debugElement.query(By.directive(IgxGridHeaderRowComponent)).nativeElement.querySelector(".igx-display-container");
+                const displayContainerRect = headerRowdisplayContainer.getBoundingClientRect();
+                const xAxis = displayContainerRect.x + displayContainerRect.width;
+
                 expect(row.children[1].classList.contains(`${CELL_PINNED_CLASS}-first`)).toBeTruthy();
                 expect(row.children[1].classList.contains(GRID_MRL_BLOCK)).toBeTruthy();
-                expect(parseInt((row.children[1] as any).style.left, 10)).toEqual(-408);
+                expect(row.children[1].getBoundingClientRect().x).toEqual(xAxis);
 
                 // check correct headers have left border
                 const firstPinnedHeader = grid.headerGroupsList.find(group => group.isPinned);
@@ -810,7 +819,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 .toEqual(grid.pinnedStartColumns.length + grid.unpinnedColumns.length + 1);
             expect(col.pinningPosition).toBe(ColumnPinningPosition.End);
 
-            let cell = grid.gridAPI.get_cell_by_index(0, 'ID');
+            const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
             expect(cell.visibleColumnIndex)
                 .toEqual(grid.pinnedStartColumns.length + grid.unpinnedColumns.length + 1);
             expect(GridFunctions.isCellPinned(cell)).toBe(true);
@@ -854,10 +863,10 @@ describe('IgxGrid - Column Pinning #grid', () => {
             expect(grid.unpinnedColumns[1].field).toEqual('ID');
             expect(grid.getColumnByName('ID').pinned).toBeFalsy();
 
-             // move 'ID' column to the left pinned area, before ContractName
-             grid.moveColumn(grid.getColumnByName('ID'), grid.getColumnByName('ContactName'), DropPosition.BeforeDropTarget);
-             tick();
-             fix.detectChanges();
+            // move 'ID' column to the left pinned area, before ContractName
+            grid.moveColumn(grid.getColumnByName('ID'), grid.getColumnByName('ContactName'), DropPosition.BeforeDropTarget);
+            tick();
+            fix.detectChanges();
 
             // verify column is pinned at the correct place
             expect(grid.pinnedStartColumns[0].field).toEqual('ID');
@@ -887,7 +896,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
             expect(cellFax.active).toBe(false);
             expect(cellCompanyName.active).toBe(true);
 
-             // navigate from left pinned area into unpinned and back
+            // navigate from left pinned area into unpinned and back
             grid.navigation.activeNode = { row: 0, column: 0 };
             fix.detectChanges();
             expect(grid.getCellByColumn(0, "ContactName").active).toBe(true);
@@ -938,25 +947,33 @@ describe('IgxGrid - Column Pinning #grid', () => {
             expect(grid.getColumnByName('Country').isFirstPinned).toBeTruthy();
             expect(grid.getColumnByName('ContactTitle').isLastPinned).toBeTruthy();
             const row = grid.gridAPI.get_row_by_index(0).nativeElement;
-            // check pinnedEnd cells are rendered after main display container and have left offset
-            for (let i = pinnedStart.length ; i <= pinnedStart.length + pinnedEnd.length - 1; i++) {
+            fix.detectChanges();
+            // check pinnedEnd cells are rendered after main display container
+            const displayContainerBoundingBox = row.querySelector('igx-display-container').getBoundingClientRect();
+            let initialStart = displayContainerBoundingBox.x + displayContainerBoundingBox.width;
+            for (let i = pinnedStart.length; i <= pinnedStart.length + pinnedEnd.length - 1; i++) {
                 const elem = row.children[i + 1];
-                expect(parseFloat((elem as any).style.left)).toBe(- (grid.pinnedEndWidth + grid.pinnedStartWidth));
+                const rect = elem.getBoundingClientRect();
+                expect(rect.x).toBe(initialStart);
+                initialStart += rect.width
             }
 
-            // check pinnedStart cells are rendered before main display container and have no left offset
-            for (let i = 0; i <= pinnedStart.length - 1; i++) {
+            // check pinnedStart cells are rendered before main display container
+            initialStart = displayContainerBoundingBox.x;
+            for (let i = pinnedStart.length - 1; i >= 0; i--) {
                 const elem = row.children[i];
-                expect((elem as any).style.left).toBe('');
+                const rect = elem.getBoundingClientRect();
+                expect(rect.x + rect.width).toBe(initialStart);
+                initialStart -= rect.width;
             }
 
             // check correct headers are pinned and in correct order.
             const pinnedHeaders = grid.headerGroupsList.filter(group => group.isPinned);
             expect(pinnedHeaders.length).toBe(10);
             expect(pinnedHeaders.map(x => x.column.header || x.column.field))
-            .toEqual(['General Information', 'CompanyName', 'Person Details',
-                 'ContactName', 'ContactTitle', 'Address Information',
-                  'Country', 'Region', 'City', 'Address']);
+                .toEqual(['General Information', 'CompanyName', 'Person Details',
+                    'ContactName', 'ContactTitle', 'Address Information',
+                    'Country', 'Region', 'City', 'Address']);
 
         });
 

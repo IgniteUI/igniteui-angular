@@ -124,7 +124,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     }
 
     public get hasMergedCells(): boolean {
-            return this.grid.columnsToMerge.length > 0;
+        return this.grid.columnsToMerge.length > 0;
     }
 
     /**
@@ -550,7 +550,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         const rowSpan = this.metaData?.cellMergeMeta?.get(field)?.rowSpan;
         if (rowSpan > 1) {
             return node ? (node.row >= this.index && node.row < this.index + rowSpan)
-             && node.column === visibleColumnIndex : false;
+                && node.column === visibleColumnIndex : false;
         }
         return node ? node.row === this.index && node.column === visibleColumnIndex : false;
     }
@@ -633,6 +633,9 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     }
 
     protected getMergeCellSpan(col: ColumnType) {
+        if ((this.grid as any).shouldResize) {
+            return null;
+        }
         const rowCount = this.metaData.cellMergeMeta.get(col.field).rowSpan;
         let sizeSpans = "";
         const isPinned = this.pinned && !this.disabled;
@@ -674,20 +677,23 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
             recData = rec.recordRef;
         }
 
-        if(this.grid.isTreeRow && this.grid.isTreeRow(recData)){
+        if (this.grid.isTreeRow && this.grid.isTreeRow(recData)) {
             recData = recData.data;
         }
         return this.grid.primaryKey ? recData[this.grid.primaryKey] : recData;
     }
 
     protected getRowHeight() {
+        if ((this.grid as any).shouldResize) {
+            return null;
+        }
         const isPinned = this.pinned && !this.disabled;
         const indexInData = this.grid.isRowPinningToTop && !isPinned ? this.index - this.grid.pinnedRecordsCount : this.index;
         if ((this.grid as any)._cdrRequests) {
             // recalc size if repaint is requested.
             this.grid.verticalScrollContainer.recalcUpdateSizes();
         }
-        const size = this.grid.verticalScrollContainer.getSizeAt(indexInData) - 1;
+        const size = this.grid.verticalScrollContainer.getSizeAt(indexInData);
         return size || this.grid.rowHeight;
     }
 

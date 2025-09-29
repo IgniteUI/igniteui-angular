@@ -146,6 +146,14 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
         };
     }
 
+
+    protected getHeaderWidthFromDimension() {
+        if (this.grid.hasHorizontalLayout) {
+            return this.parent.width === -1 ? 'fit-content' : this.width;
+        }
+        return this.grid.rowDimensionWidth(this.parent.rootDimension);
+    }
+
     private findRootDimension(field: string): IPivotDimension {
         const rows = this.grid.rowDimensions;
         let tempRow;

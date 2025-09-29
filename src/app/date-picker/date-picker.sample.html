@@ -3,11 +3,12 @@
     <igx-date-picker
         #dpAng
         [mode]="modeAngular"
-        type="box"
+        [type]="properties.type"
         [value]="properties.value"
         [displayFormat]="properties.displayFormat"
         [inputFormat]="properties.inputFormat"
         [required]="properties.required"
+        [readOnly]="properties.readonly"
         [disabled]="properties.disabled"
         [placeholder]="properties.placeholder"
         showWeekNumbers="true"

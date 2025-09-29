@@ -76,6 +76,21 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     public expressionsList: ExpressionUI[];
     public moreFiltersCount = 0;
 
+    @HostBinding('class.igx-grid-th--pinned')
+    public get pinnedCss() {
+        return this.column.pinned;
+    }
+
+    @HostBinding('class.igx-grid-th--pinned-last')
+    public get pinnedLastCss() {
+        return !this.column.grid.hasColumnLayouts ? this.column.isLastPinned : false;
+    }
+
+    @HostBinding('class.igx-grid-th--pinned-first')
+    public get pinnedFirstCSS() {
+        return !this.column.grid.hasColumnLayouts ? this.column.isFirstPinned : false;;
+    }
+
     private baseClass = 'igx-grid__filtering-cell-indicator';
 
     constructor(
