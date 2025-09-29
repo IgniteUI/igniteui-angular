@@ -110,7 +110,7 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
         if (this.grid.hasPinnedRecords && !pinned && this.grid.pinning.rows !== RowPinningPosition.Bottom) {
             activeRowIndexes = activeRowIndexes.map(x => x - this.grid.pinnedRecordsCount);
         }
-        activeRowIndexes = activeRowIndexes.filter((val, idx, arr) => arr.indexOf(val) === idx).filter(x => !isNaN(x));
+        activeRowIndexes = Array.from(new Set(activeRowIndexes)).filter(x => !isNaN(x));
         const rootsToUpdate = [];
         activeRowIndexes.forEach(index => {
             const target = collection[index];
@@ -124,7 +124,7 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
                 });
             }
         });
-        const uniqueRoots = rootsToUpdate.filter((val, idx, arr) => arr.indexOf(val) === idx);
+        const uniqueRoots =  Array.from(new Set(rootsToUpdate));
         if (uniqueRoots.length === 0) {
             // if nothing to update, return
             return collection;
