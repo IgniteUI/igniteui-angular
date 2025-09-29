@@ -1,7 +1,7 @@
-import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostListener, Inject, Injector,
-    Optional, Output, ViewChild
+    Optional, Output, ViewChild, DOCUMENT
 } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
@@ -424,15 +424,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public handleClear(event: Event): void {
-        if (this.disabled) {
-            return;
-        }
-
+    public clearInput(event: Event): void {
         const oldSelection = this.selection;
         this.clearSelection(true);
 
-        if(!this.collapsed){
+        if (!this.collapsed) {
             this.focusSearchInput(true);
         }
         event.stopPropagation();
@@ -444,6 +440,23 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.dropdown.focusedItem = null;
         this.composing = false;
         this.comboInput.focus();
+    }
+
+    /** @hidden @internal */
+    public handleClear(event: Event): void {
+        if (this.disabled) {
+            return;
+        }
+
+        this.clearInput(event);
+    }
+
+    /** @hidden @internal */
+    public handleClearKeyDown(event: KeyboardEvent): void {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            this.clearInput(event);
+        }
     }
 
     /** @hidden @internal */

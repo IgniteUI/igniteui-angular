@@ -10,6 +10,7 @@
         </p>
         @if (isVisible) {
             <igx-action-strip
+                [hidden]="false"
                 class="my-action-strip" #actionstrip
                 [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'"
             >

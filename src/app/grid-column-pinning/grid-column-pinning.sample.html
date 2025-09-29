@@ -21,7 +21,7 @@
                 }
                 @for (c of columns; track c) {
                     <igx-column [editable] = true [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned'
-                        [hidden]='c.hidden'>
+                        [hidden]='c.hidden' [pinningPosition]='c.pinningPosition'>
                     </igx-column>
                 }
             </igx-grid>

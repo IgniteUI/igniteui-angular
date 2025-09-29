@@ -20,7 +20,13 @@ export * from './lib/directives/filter/filter.directive';
 export * from './lib/directives/focus/focus.directive';
 export * from './lib/directives/focus-trap/focus-trap.directive';
 export {
-    IgxForOfContext, IgxForOfDirective, IForOfState, IgxGridForOfContext, IgxGridForOfDirective
+    IForOfDataChangeEventArgs,
+    IForOfDataChangingEventArgs,
+    IForOfState,
+    IgxForOfContext,
+    IgxForOfDirective,
+    IgxGridForOfContext,
+    IgxGridForOfDirective,
 } from './lib/directives/for-of/for_of.directive';
 export * from './lib/directives/button/icon-button.directive';
 export * from './lib/directives/layout/layout.directive';
@@ -46,6 +52,7 @@ export * from './lib/data-operations/filtering-expressions-tree';
 export * from './lib/data-operations/filtering-condition';
 export * from './lib/data-operations/filtering-state.interface';
 export * from './lib/data-operations/filtering-strategy';
+export * from './lib/data-operations/merge-strategy';
 export { ExpressionsTreeUtil } from './lib/data-operations/expressions-tree-util';
 export * from './lib/data-operations/groupby-expand-state.interface';
 export * from './lib/data-operations/groupby-record.interface';

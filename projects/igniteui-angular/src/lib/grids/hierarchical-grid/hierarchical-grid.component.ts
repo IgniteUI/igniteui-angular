@@ -35,7 +35,7 @@ import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { CellType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
+import { CellType, EntityType, FieldType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxHierarchicalGridRow } from '../grid-public-row';
@@ -50,7 +50,7 @@ import { IgxGridValidationService } from '../grid/grid-validation.service';
 import { IgxGridHierarchicalPipe, IgxGridHierarchicalPagingPipe } from './hierarchical-grid.pipes';
 import { IgxSummaryDataPipe } from '../summaries/grid-root-summary.pipe';
 import { IgxGridTransactionPipe, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridAddRowPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe, IgxStringReplacePipe } from '../common/pipes';
-import { IgxGridSortingPipe, IgxGridFilteringPipe } from '../grid/grid.pipes';
+import { IgxGridSortingPipe, IgxGridFilteringPipe, IgxGridCellMergePipe } from '../grid/grid.pipes';
 import { IgxGridColumnResizerComponent } from '../resizing/resizer.component';
 import { IgxRowEditTabStopDirective } from '../grid.rowEdit.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
@@ -66,6 +66,9 @@ import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxActionStripToken } from '../../action-strip/token';
+import { flatten } from '../../core/utils';
+import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { IgxScrollInertiaDirective } from '../../directives/scroll-inertia/scroll_inertia.directive';
 
 let NEXT_ID = 0;
 
@@ -348,7 +351,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         IgxSummaryDataPipe,
         IgxGridHierarchicalPipe,
         IgxGridHierarchicalPagingPipe,
-        IgxStringReplacePipe
+        IgxStringReplacePipe,
+        IgxGridCellMergePipe,
+        IgxScrollInertiaDirective
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -446,6 +451,17 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /** @hidden @internal */
     public override get actionStrip() {
         return this.parentIsland ? this.parentIsland.actionStrip : super.actionStrip;
+    }
+
+    public override get advancedFilteringExpressionsTree(): IFilteringExpressionsTree {
+        return super.advancedFilteringExpressionsTree;
+    }
+
+    public override set advancedFilteringExpressionsTree(value: IFilteringExpressionsTree) {
+        if (!this._hGridSchema) {
+            this._hGridSchema = this.generateSchema();
+        }
+        super.advancedFilteringExpressionsTree = value;
     }
 
     private _data;
@@ -559,6 +575,34 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public get expandChildren(): boolean {
         return this._defaultExpandState;
+    }
+
+    /* blazorSuppress */
+    /**
+     * Gets/Sets the schema for the hierarchical grid.
+     * This schema defines the structure and properties of the data displayed in the grid.
+     * @Input()
+     * @param {EntityType[]} entities - An array of EntityType objects representing the grid's schema.
+     * @remarks
+     * This property is required in remote data filtering scenarios.
+     * @example
+     * ```typescript
+     * const schema = this.grid.schema;
+     * this.grid.schema = [{ name: 'Products', fields: [...], childEntities: [...] }];
+     * ```
+     */
+    @Input()
+    public set schema(entities: EntityType[]) {
+        this._hGridSchema = entities;
+    }
+
+    /* blazorSuppress */
+    public get schema() {
+        if (!this._hGridSchema) {
+            this._hGridSchema = this.generateSchema();
+        }
+
+        return this._hGridSchema;
     }
 
     /**
@@ -907,7 +951,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    public isChildGridRecord(record: any): boolean {
+    public override isChildGridRecord(record: any): boolean {
         // Can be null when there is defined layout but no child data was found
         return record?.childGridsData !== undefined;
     }
@@ -955,13 +999,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             }
         } else {
             return {
-                $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
+                $implicit: this.isGhostRecord(rowData) || this.isRecordMerged(rowData) ? rowData.recordRef : rowData,
                 templateID: {
                     type: 'dataRow',
                     id: null
                 },
                 index: this.getDataViewIndex(rowIndex, pinned),
-                disabled: this.isGhostRecord(rowData)
+                disabled: this.isGhostRecord(rowData),
+                metaData: this.isRecordMerged(rowData) ? rowData : null
             };
         }
     }
@@ -1200,5 +1245,78 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             grid.highlightedRowID = null;
             grid.cdr.markForCheck();
         });
+    }
+
+    private generateSchema() {
+        const filterableFields = this.columns.filter((column) => !column.columnGroup && column.filterable);
+        let entities: EntityType[];
+
+        if(filterableFields.length !== 0) {
+            entities = [
+                {
+                    name: null,
+                    fields: filterableFields.map(f => ({
+                            field: f.field,
+                            dataType: f.dataType,
+                            header: f.header,
+                            editorOptions: f.editorOptions,
+                            filters: f.filters,
+                            pipeArgs: f.pipeArgs,
+                            defaultTimeFormat: f.defaultTimeFormat,
+                            defaultDateTimeFormat: f.defaultDateTimeFormat
+                        })) as FieldType[]
+                }
+            ];
+
+            entities[0].childEntities = this.childLayoutList.reduce((acc, rowIsland) => {
+                const childFirstRowData = this.data?.length > 0 && this.data[0][rowIsland.key]?.length > 0 ?
+                    this.data[0][rowIsland.key][0] : null;
+                return acc.concat(this.generateChildEntity(rowIsland, childFirstRowData));
+            }
+            , []);
+        }
+
+        return entities;
+    }
+
+    private generateChildEntity(rowIsland: IgxRowIslandComponent, firstRowData: any[]): EntityType {
+        const entityName = rowIsland.key;
+        let fields = [];
+        let childEntities;
+        if (!rowIsland.autoGenerate) {
+            fields = flatten(rowIsland.childColumns.toArray()).filter(col => col.field)
+                .map(f => ({ field: f.field, dataType: f.dataType })) as FieldType[];
+        } else if (firstRowData) {
+            const rowIslandFields = Object.keys(firstRowData).map(key => {
+                if (firstRowData[key] instanceof Array) {
+                    return null;
+                }
+
+                return {
+                    field: key,
+                    dataType: this.resolveDataTypes(firstRowData[key])
+                }
+            });
+            fields = rowIslandFields.filter(f => f !== null) as FieldType[];
+        }
+
+        const rowIslandChildEntities = rowIsland.childLayoutList.reduce((acc, childRowIsland) => {
+            if (!firstRowData) {
+                return null;
+            }
+            const childFirstRowData = firstRowData.length > 0 && firstRowData[childRowIsland.key]?.length > 0 ?
+                firstRowData[childRowIsland.key][0] : null;
+            return acc.concat(this.generateChildEntity(childRowIsland, childFirstRowData));
+        }, []);
+
+        if (rowIslandChildEntities?.length > 0) {
+            childEntities = rowIslandChildEntities;
+        }
+
+        return {
+            name: entityName,
+            fields: fields,
+            childEntities: childEntities
+        }
     }
 }

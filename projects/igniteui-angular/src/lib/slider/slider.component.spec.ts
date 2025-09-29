@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/f
 import { By, HammerModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DIR_DOCUMENT, IgxDirectionality } from '../services/direction/directionality';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxSliderType, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from './slider.common';
 import { IgxSliderComponent } from './slider.component';
@@ -32,8 +31,7 @@ interface FakeDoc {
 
 describe('IgxSlider', () => {
     let fakeDoc: FakeDoc;
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         fakeDoc = { body: {}, documentElement: {} };
 
         TestBed.configureTestingModule({

@@ -9,7 +9,6 @@ import { IgxDropDownItemComponent, ISelectionEventArgs } from '../drop-down/publ
 import { IgxHintDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../input-group/public_api';
 import { IgxSelectComponent, IgxSelectFooterDirective, IgxSelectHeaderDirective } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../services/public_api';
 import { addScrollDivToElement } from '../services/overlay/overlay.spec';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
@@ -83,9 +82,7 @@ describe('igxSelect', () => {
         expect(select.toggle).toHaveBeenCalledTimes(toggleCallCounter);
     };
 
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -427,6 +424,7 @@ describe('igxSelect', () => {
             expect(inputElement.nativeElement.getAttribute('aria-haspopup')).toEqual('listbox');
             expect(inputElement.nativeElement.getAttribute('aria-labelledby')).toEqual(labelID);
             expect(dropdownListElement.nativeElement.getAttribute('aria-labelledby')).toEqual(labelID);
+            expect(inputElement.nativeElement.getAttribute('aria-required')).toEqual('false');
             expect(inputElement.nativeElement.getAttribute('aria-owns')).toEqual(select.listId);
             expect(inputElement.nativeElement.getAttribute('aria-expanded')).toEqual('false');
             expect(toggleBtn.nativeElement.getAttribute('aria-hidden')).toEqual('true');
@@ -577,6 +575,7 @@ describe('igxSelect', () => {
             const dom = fix.debugElement;
             const selectComp = fix.componentInstance.select;
             const formGroup: UntypedFormGroup = fix.componentInstance.reactiveForm;
+            inputElement = dom.query(By.css('.' + CSS_CLASS_INPUT));
             let inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             let inputGroupInvalidClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_INVALID));
             // interaction test - expect actual asterisk
@@ -586,6 +585,7 @@ describe('igxSelect', () => {
             expect(asterisk).toBe('"*"');
             expect(inputGroupIsRequiredClass).toBeDefined();
             expect(inputGroupIsRequiredClass).not.toBeNull();
+            expect(inputElement.nativeElement.getAttribute('aria-required')).toEqual('true');
 
             // 2) check that input group's --invalid class is NOT applied
             expect(inputGroupInvalidClass).toBeNull();
@@ -607,11 +607,13 @@ describe('igxSelect', () => {
             inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             expect(inputGroupIsRequiredClass).not.toBeNull();
             expect(inputGroupIsRequiredClass).not.toBeUndefined();
+            expect(inputElement.nativeElement.getAttribute('aria-required')).toEqual('true');
 
             // 3) Check if the input group's --invalid and --required classes are removed when validator is dynamically cleared
             fix.componentInstance.removeValidators(formGroup);
             fix.detectChanges();
             tick();
+            expect(inputElement.nativeElement.getAttribute('aria-required')).toEqual('false');
 
             inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             const selectFormReference = fix.componentInstance.reactiveForm.controls.optionsSelect;
@@ -645,6 +647,7 @@ describe('igxSelect', () => {
             // Re-add all Validators
             fix.componentInstance.addValidators(formGroup);
             fix.detectChanges();
+            expect(inputElement.nativeElement.getAttribute('aria-required')).toEqual('true');
 
             inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             expect(inputGroupIsRequiredClass).toBeDefined();
@@ -653,24 +656,6 @@ describe('igxSelect', () => {
             // interaction test - expect actual asterisk
             asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
             expect(asterisk).toBe('"*"');
-
-            // 4) Should NOT remove asterisk, when remove validators on igxSelect with required HTML attribute set(edge case)
-            // set required HTML attribute
-            inputGroup.parent.nativeElement.setAttribute('required', '');
-            // Re-add all Validators
-            fix.componentInstance.addValidators(formGroup);
-            fix.detectChanges();
-            // update and clear validators
-            fix.componentInstance.removeValidators(formGroup);
-            fix.detectChanges();
-            tick();
-            // expect asterisk
-            asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
-            expect(asterisk).toBe('"*"');
-            inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
-            expect(inputGroupIsRequiredClass).toBeDefined();
-            expect(inputGroupIsRequiredClass).not.toBeNull();
-            expect(inputGroupIsRequiredClass).not.toBeUndefined();
         }));
 
         it('should update validity state when programmatically setting errors on reactive form controls', fakeAsync(() => {

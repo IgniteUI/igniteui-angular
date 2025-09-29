@@ -1,5 +1,5 @@
 import {
-    ChangeDetectorRef, Component, ElementRef, Inject, QueryList, OnDestroy, AfterViewInit, ContentChildren, Input, booleanAttribute
+    ChangeDetectorRef, Component, ElementRef, Inject, QueryList, OnDestroy, AfterViewInit, ContentChildren, Input, booleanAttribute, DOCUMENT
 } from '@angular/core';
 import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down.common';
@@ -10,7 +10,6 @@ import { IgxComboAPIService } from './combo.api';
 import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxComboItemComponent } from './combo-item.component';
-import { DOCUMENT } from '@angular/common';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 
 /** @hidden */
@@ -178,6 +177,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
                 this.handleSpace();
                 break;
             case DropDownActionKey.ESCAPE:
+            case DropDownActionKey.TAB:
                 this.close();
         }
     }

@@ -1,4 +1,3 @@
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { waitForAsync, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxTreeNavigationComponent, IgxTreeScrollComponent, IgxTreeSimpleComponent } from './tree-samples.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -11,14 +10,14 @@ import { IgxTreeService } from './tree.service';
 import { IgxTreeComponent } from './tree.component';
 import { IgxTree, IgxTreeNode, IgxTreeSelectionType } from './common';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
+import { PlatformUtil } from '../core/utils';
 
 describe('IgxTree - Navigation #treeView', () => {
-    configureTestSuite();
 
     describe('Navigation - UI Tests', () => {
         let fix;
         let tree: IgxTreeComponent;
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -782,7 +781,8 @@ describe('IgxTree - Navigation #treeView', () => {
                 spyOn(nav, 'update_disabled_cache');
                 spyOn(nav, 'update_visible_cache');
                 spyOn(nav, 'register');
-                const tree = new IgxTreeComponent(nav, mockSelectionService, mockTreeService, mockElementRef);
+                const mockPlatform = jasmine.createSpyObj('platform', ['isBrowser', 'isServer']);
+                const tree = new IgxTreeComponent(nav, mockSelectionService, mockTreeService, mockElementRef, mockPlatform);
                 tree.nodes = mockQuery;
                 expect(nav.register).toHaveBeenCalledWith(tree);
                 expect(nav.init_invisible_cache).not.toHaveBeenCalled();

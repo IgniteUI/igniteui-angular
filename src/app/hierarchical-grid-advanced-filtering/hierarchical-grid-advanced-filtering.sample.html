@@ -1,0 +1,15 @@
+<div class="hgrid-sample">
+    <h4 class="sample-title">Sample One</h4>
+    <igx-hierarchical-grid #hierarchicalGrid [data]="localData" [autoGenerate]="true" [allowAdvancedFiltering]="true">
+        <igx-grid-toolbar></igx-grid-toolbar>
+        <igx-row-island [key]="'Albums'" [autoGenerate]="true">
+            <igx-row-island [key]="'Songs'" [autoGenerate]="true">
+                <!-- <igx-column [field]="'Number'" [dataType]="'number'"></igx-column>
+                <igx-column [field]="'Title'" [dataType]="'string'"></igx-column>
+                <igx-column [field]="'Album'" [dataType]="'string'"></igx-column> -->
+            </igx-row-island>
+        </igx-row-island>
+        <igx-row-island [key]="'Tours'" [autoGenerate]="true">
+        </igx-row-island>
+    </igx-hierarchical-grid>
+</div>

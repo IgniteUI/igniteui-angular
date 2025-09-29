@@ -1,5 +1,5 @@
 import {
-    Directive, Input, ElementRef,
+    Directive, Input, ElementRef, DOCUMENT,
     Renderer2, Output, EventEmitter, Inject,
     LOCALE_ID, OnChanges, SimpleChanges, HostListener, OnInit, booleanAttribute
 } from '@angular/core';
@@ -7,7 +7,6 @@ import {
     ControlValueAccessor,
     Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from '@angular/forms';
-import { DOCUMENT } from '@angular/common';
 import { IgxMaskDirective } from '../mask/mask.directive';
 import { MaskParsingService } from '../mask/mask-parsing.service';
 import { isDate, PlatformUtil } from '../../core/utils';
@@ -229,7 +228,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     @Output()
     public validationFailed = new EventEmitter<IgxDateTimeEditorEventArgs>();
 
+
+    private readonly SCROLL_THRESHOLD = 50;
     private _inputFormat: string;
+    private _scrollAccumulator = 0;
     private _displayFormat: string;
     private _oldValue: Date;
     private _dateValue: Date;
@@ -314,10 +316,14 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         }
         event.preventDefault();
         event.stopPropagation();
-        if (event.deltaY > 0) {
-            this.decrement();
-        } else {
-            this.increment();
+        this._scrollAccumulator += event.deltaY;
+        if (Math.abs(this._scrollAccumulator) > this.SCROLL_THRESHOLD) {
+            if (this._scrollAccumulator > 0) {
+                this.decrement();
+            } else {
+                this.increment();
+            }
+            this._scrollAccumulator = 0;
         }
     }
 

@@ -6,6 +6,7 @@ const checkLeaksAvailable = typeof window.gc === 'function';
 const debug = false;
 function debugLog(...args) {
     if (debug) {
+        // eslint-disable-next-line no-console
         console.log(...args);
     }
 }
@@ -168,29 +169,4 @@ function setupJasmineCurrentTest() {
         });
         setupJasmineCurrentTestDone = true;
     }
-}
-
-// TODO: enable on re-run by selecting enable debug logging
-// https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/troubleshooting-workflows/enabling-debug-logging
-const shardLogging = false;
-if (shardLogging) {
-    const myReporter = {
-        suiteStarted: function(result) {
-            const id = new URLSearchParams(window.parent.location.search).get('id');
-            console.log(`[${id}] Suite started: ${result.fullName}`);
-        },
-        suiteDone: function(result) {
-            const id = new URLSearchParams(window.parent.location.search).get('id');
-            console.log(`[${id}] Suite: ${result.fullName} has ${result.status}`);
-            for (const expectation of result.failedExpectations) {
-                console.log('Suite ' + expectation.message);
-                console.log(expectation.stack);
-            }
-            var memory = (performance as any).memory;
-            console.log(`[${id}] totalJSHeapSize: ${memory['totalJSHeapSize']} usedJSHeapSize: ${memory['usedJSHeapSize']} jsHeapSizeLimit: ${memory['jsHeapSizeLimit']}`);
-            if (memory['totalJSHeapSize'] >= memory['jsHeapSizeLimit'] )
-                console.log( '--------------------Heap Size limit reached!!!-------------------');
-        },
-    };
-    jasmine.getEnv().addReporter(myReporter);
 }

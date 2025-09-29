@@ -17,7 +17,8 @@ import {
     Output,
     TemplateRef,
     ViewChild,
-    ViewRef
+    ViewRef,
+    DOCUMENT
 } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { PlatformUtil, formatDate, formatCurrency } from '../../../core/utils';
@@ -25,7 +26,7 @@ import { GridColumnDataType } from '../../../data-operations/data-util';
 import { Subscription } from 'rxjs';
 import { GridSelectionMode } from '../../common/enums';
 import { IgxFilterItem } from '../../../data-operations/filtering-strategy';
-import { formatNumber, formatPercent, getLocaleCurrencyCode, NgClass, DOCUMENT } from '@angular/common';
+import { formatNumber, formatPercent, getLocaleCurrencyCode, NgClass } from '@angular/common';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem, generateExpressionsList } from './common';
 import { ColumnType, GridType, IGX_GRID_BASE } from '../../common/grid.interface';

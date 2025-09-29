@@ -1,5 +1,5 @@
 import { QueryList } from '@angular/core';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxListItemComponent } from './list-item.component';
 import { IgxListPanState } from './list.common';
@@ -27,13 +27,13 @@ import {
     ListDirectivesComponent,
     ListWithSelectedItemComponent
 } from '../test-utils/list-components.spec';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
 
 describe('List', () => {
-    configureTestSuite(() => {
-        return TestBed.configureTestingModule({
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 CustomEmptyListComponent,
                 EmptyListComponent,
@@ -48,8 +48,8 @@ describe('List', () => {
                 ListDirectivesComponent,
                 ListWithSelectedItemComponent
             ]
-        });
-    });
+        }).compileComponents();
+    }));
 
     it('should initialize igx-list with item and header', () => {
         const fixture = TestBed.createComponent(ListWithHeaderComponent);

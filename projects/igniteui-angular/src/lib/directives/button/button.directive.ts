@@ -9,14 +9,13 @@ import {
     Renderer2,
     booleanAttribute,
 } from '@angular/core';
-import { mkenum } from '../../core/utils';
 import { IBaseEventArgs } from '../../core/utils';
 import { IgxBaseButtonType, IgxButtonBaseDirective } from './button-base';
 
-const IgxButtonType = /*@__PURE__*/mkenum({
+const IgxButtonType = {
     ...IgxBaseButtonType,
     FAB: 'fab'
-});
+} as const;
 
 /**
  * Determines the Button type.

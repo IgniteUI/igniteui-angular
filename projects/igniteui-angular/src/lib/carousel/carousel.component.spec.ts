@@ -6,18 +6,16 @@ import {
     ISlideEventArgs
 } from './carousel.component';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSlideComponent } from './slide.component';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { CarouselIndicatorsOrientation, CarouselAnimationType } from './enums';
 
 describe('Carousel', () => {
-    configureTestSuite();
     let fixture;
     let carousel: IgxCarouselComponent;
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -145,15 +143,27 @@ describe('Carousel', () => {
 
             carousel.next();
             let currentSlide = carousel.get(carousel.current);
-
             fixture.detectChanges();
             expect(carousel.get(1)).toBe(currentSlide);
 
             currentSlide = carousel.get(0);
             carousel.prev();
-
             fixture.detectChanges();
             expect(carousel.get(0)).toBe(currentSlide);
+
+            carousel.select(1);
+            fixture.detectChanges();
+            expect(carousel.get(1)).toBe(carousel.get(carousel.current));
+
+            // select a negative index -> active slide remains the same
+            carousel.select(-1);
+            fixture.detectChanges();
+            expect(carousel.get(1)).toBe(carousel.get(carousel.current));
+
+            // select a non-existent index -> active slide remains the same
+            carousel.select(carousel.slides.length);
+            fixture.detectChanges();
+            expect(carousel.get(1)).toBe(carousel.get(carousel.current));
         });
 
         it('emit events', () => {
@@ -746,6 +756,17 @@ describe('Carousel', () => {
 
             expect(carousel.get(1).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
             expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.PREVIOUS_SLIDE_CLASS)).toBeFalsy();
+        });
+
+        it('should not throw an error when playing an animation and destroying the component - #15976', () => {
+            expect(() => {
+                carousel.next();
+                carousel.ngOnDestroy();
+                fixture.detectChanges();
+            }).not.toThrow();
+
+            expect(carousel['enterAnimationPlayer']).toBe(null);
+            expect(carousel['leaveAnimationPlayer']).toBe(null);
         });
     });
 

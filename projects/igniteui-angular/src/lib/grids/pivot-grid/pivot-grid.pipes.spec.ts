@@ -1,5 +1,4 @@
 import { NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
 import { IPivotConfiguration } from './pivot-grid.interface';
@@ -18,7 +17,6 @@ describe('Pivot pipes #pivotGrid', () => {
     let pivotConfig: IPivotConfiguration;
     let cloneStrategy: IDataCloneStrategy;
 
-    configureTestSuite();
     beforeEach(() => {
         data = [
             {

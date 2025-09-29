@@ -8,7 +8,6 @@ import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import {
     IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
 } from '../input-group/public_api';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { PickerInteractionMode } from '../date-common/types';
 import { PlatformUtil } from '../core/utils';
 import { DatePart, IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
@@ -35,9 +34,11 @@ const CSS_CLASS_SECONDSLIST = '.igx-time-picker__secondsList';
 const CSS_CLASS_AMPMLIST = 'igx-time-picker__ampmList';
 const CSS_CLASS_SELECTED_ITEM = '.igx-time-picker__item--selected';
 const CSS_CLASS_HEADER_HOUR = '.igx-time-picker__header-hour';
+const CSS_CLASS_HEADER = '.igx-time-picker__header';
 const CSS_CLASS_OVERLAY_WRAPPER = 'igx-overlay__wrapper';
 const TIME_PICKER_TOGGLE_ICON = 'access_time';
 const TIME_PICKER_CLEAR_ICON = 'clear';
+const CSS_CLASS_TIME_PICKER_VERTICAL = '.igx-time-picker--vertical';
 
 describe('IgxTimePicker', () => {
     let timePicker: IgxTimePickerComponent;
@@ -466,7 +467,7 @@ describe('IgxTimePicker', () => {
     });
 
     describe('Interaction tests', () => {
-        let timePickerElement: DebugElement;
+        let timePickerElement: HTMLElement;
         let timePickerDebElement: DebugElement;
         let inputGroup: DebugElement;
         let hourColumn: DebugElement;
@@ -477,8 +478,7 @@ describe('IgxTimePicker', () => {
 
         describe('Dropdown/dialog mode', () => {
             let fixture: ComponentFixture<IgxTimePickerTestComponent>;
-            configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
                         FormsModule,
@@ -1133,8 +1133,7 @@ describe('IgxTimePicker', () => {
 
         describe('Rendering tests', () => {
             let fixture: ComponentFixture<IgxTimePickerTestComponent>;
-            configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [NoopAnimationsModule, IgxTimePickerTestComponent]
                 }).compileComponents();
@@ -1143,6 +1142,7 @@ describe('IgxTimePicker', () => {
                 fixture = TestBed.createComponent(IgxTimePickerTestComponent);
                 fixture.detectChanges();
                 timePicker = fixture.componentInstance.timePicker;
+                timePickerDebElement = fixture.debugElement.query(By.css(CSS_CLASS_TIMEPICKER));
                 timePickerElement = fixture.debugElement.query(By.css(CSS_CLASS_TIMEPICKER)).nativeElement;
                 inputGroup = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP}`));
                 hourColumn = fixture.debugElement.query(By.css(`.${CSS_CLASS_HOURLIST}`));
@@ -1573,12 +1573,49 @@ describe('IgxTimePicker', () => {
                 inputEl = fixture.nativeElement.querySelector(CSS_CLASS_INPUT);
                 expect(inputEl.placeholder).toEqual('sample placeholder');
             }));
+
+            it('should set headerOrientation prop in dialog mode', fakeAsync(() => {
+                timePicker.mode = PickerInteractionMode.Dialog;
+                timePicker.open();
+                tick();
+                fixture.detectChanges();
+                expect(timePicker.headerOrientation).toEqual('horizontal');
+                let dialogDivVertical = timePickerDebElement.query(By.css(CSS_CLASS_TIME_PICKER_VERTICAL));
+                expect(dialogDivVertical).toBeNull();
+
+                timePicker.close();
+                tick();
+                fixture.detectChanges();
+
+                timePicker.mode = PickerInteractionMode.Dialog;
+                timePicker.headerOrientation = 'vertical';
+                fixture.detectChanges();
+
+                timePicker.open();
+                tick();
+                fixture.detectChanges();
+
+                dialogDivVertical = timePickerDebElement.query(By.css(CSS_CLASS_TIME_PICKER_VERTICAL));
+                expect(dialogDivVertical).not.toBeNull();
+            }));
+
+            it('should hide the calendar header if hideHeader is true in dialog mode', fakeAsync(() => {
+                timePicker.mode = PickerInteractionMode.Dialog;
+                timePicker.hideHeader = true;
+                fixture.detectChanges();
+
+                timePicker.open();
+                tick();
+                fixture.detectChanges();
+
+                const header = fixture.debugElement.query(By.css(CSS_CLASS_HEADER));
+                expect(header).toBeNull();
+            }));
         });
 
         describe('Keyboard navigation', () => {
             let fixture: ComponentFixture<IgxTimePickerTestComponent>;
-            configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [NoopAnimationsModule, IgxTimePickerTestComponent]
                 }).compileComponents();
@@ -1663,8 +1700,7 @@ describe('IgxTimePicker', () => {
 
         describe('Projected elements', () => {
             let fixture: ComponentFixture<IgxTimePickerWithProjectionsComponent>;
-            configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [NoopAnimationsModule, IgxTimePickerWithProjectionsComponent]
                 }).compileComponents();
@@ -1762,10 +1798,9 @@ describe('IgxTimePicker', () => {
         });
 
         describe('FormControl integration', () => {
-            let fixture: ComponentFixture<IgxTimePickerInFormComponent |
-                IgxTimePickerReactiveFormComponent>;
-            configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            let fixture: ComponentFixture<IgxTimePickerInFormComponent | IgxTimePickerReactiveFormComponent>;
+
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,

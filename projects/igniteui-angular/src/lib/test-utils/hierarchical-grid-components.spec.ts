@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
 import { ColumnType, IPinningConfig, IgxAdvancedFilteringDialogComponent, IgxColumnComponent, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/public_api';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarchical-grid.component';
@@ -19,6 +19,7 @@ import { IgxCellHeaderTemplateDirective } from '../grids/columns/templates.direc
 import { IgxPaginatorDirective } from '../paginator/paginator-interfaces';
 
 @Component({
+    selector: 'igx-hierarchical-grid-test-base',
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [allowFiltering]="true" [rowEditable]="true" [pinning]='pinningConfig'
      [height]="'600px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'" [moving]="true">
@@ -93,6 +94,7 @@ export class IgxHierarchicalGridTestBaseComponent {
 }
 
 @Component({
+    selector: 'igx-hierarchical-grid-with-transaction-provider',
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [allowFiltering]="true" [rowEditable]="true" [pinning]='pinningConfig'
      [height]="'600px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'" [moving]="true">
@@ -444,7 +446,7 @@ export class IgxHierarchicalGridActionStripComponent extends IgxHierarchicalGrid
 
 @Component({
     template: `
-    <igx-hierarchical-grid #grid1 [data]="data" [height]="'300px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'">
+    <igx-hierarchical-grid #hierarchicalGrid [data]="data" [height]="'300px'" [width]="'700px'" [primaryKey]="'ID'">
         <igx-column field="ID" ></igx-column>
         <igx-column field="ChildLevels"></igx-column>
         <igx-column field="ProductName"></igx-column>
@@ -458,15 +460,21 @@ export class IgxHierarchicalGridActionStripComponent extends IgxHierarchicalGrid
                 <igx-column field="ProductName"></igx-column>
             </igx-row-island>
         </igx-row-island>
+        <ng-template #customCell igxCell let-cell="cell" let-val>
+            <span style="background-color: red;">val</span>
+            <br>
+            {{val}}
+        </ng-template>
     </igx-hierarchical-grid>
-    <igx-advanced-filtering-dialog [grid]="grid1">
+    <igx-advanced-filtering-dialog [grid]="hierarchicalGrid">
     </igx-advanced-filtering-dialog>`,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxAdvancedFilteringDialogComponent]
 })
 export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchicalGridTestBaseComponent {
-    // @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
-    // public hgrid: IgxHierarchicalGridComponent;
-
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public override hgrid: IgxHierarchicalGridComponent;
+    @ViewChild('customCell', { static: true })
+    public customCell!: TemplateRef<any>;
     public override data = SampleTestData.generateHGridData(5, 3);
 }
 
@@ -484,6 +492,9 @@ export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchic
             <igx-column field="LaunchDate" header="Launch Date" [dataType]="'date'"></igx-column>
             <igx-column field="BillboardReview" header="Billboard Review"></igx-column>
             <igx-column field="USBillboard200" header="US Billboard 200"></igx-column>
+            @if(shouldDisplayArtist) {
+                <igx-column field="Artist"></igx-column>
+            }
             <igx-row-island [key]="'Songs'" [allowFiltering]='true' [filterMode]="'excelStyleFilter'" [autoGenerate]="false">
                 <igx-column field="Number" header="No."></igx-column>
                 <igx-column field="Title"></igx-column>
@@ -510,6 +521,7 @@ export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchic
 export class IgxHierarchicalGridExportComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
     public data = SampleTestData.hierarchicalGridExportData();
+    public shouldDisplayArtist = false;
 }
 
 

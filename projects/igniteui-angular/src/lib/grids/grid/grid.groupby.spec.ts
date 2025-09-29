@@ -12,7 +12,6 @@ import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DataParent, SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
 import { GridSelectionFunctions, GridFunctions, GRID_SCROLL_CLASS } from '../../test-utils/grid-functions.spec';
@@ -34,8 +33,8 @@ describe('IgxGrid - GroupBy #grid', () => {
     const DISABLED_CHIP = 'igx-chip--disabled';
     const CHIP = 'igx-chip';
 
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 DefaultGridComponent,
@@ -49,7 +48,7 @@ describe('IgxGrid - GroupBy #grid', () => {
                 GridGroupByStateComponent,
                 MultiColumnHeadersWithGroupingComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     const checkGroups = (groupRows, expectedGroupOrder, grExpr?) => {
@@ -3268,7 +3267,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         // verify width is recalculated
         const indentation = fix.debugElement.query(By.css('.igx-grid__header-indentation'));
 
-        expect(grid.pinnedWidth).toEqual(parseInt(window.getComputedStyle(indentation.nativeElement).width, 10));
+        expect(grid.pinnedStartWidth).toEqual(parseInt(window.getComputedStyle(indentation.nativeElement).width, 10));
         expect(grid.unpinnedWidth).toEqual(400 - parseInt(window.getComputedStyle(indentation.nativeElement).width, 10) - grid.scrollSize);
 
         grid.clearGrouping();
@@ -3282,7 +3281,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
 
         expect(grid.calcHeight).toEqual(expectedHeight);
-        expect(grid.pinnedWidth).toEqual(0);
+        expect(grid.pinnedStartWidth).toEqual(0);
         const expectedWidth = parseInt(grid.width, 10) - grid.scrollSize;
         expect(grid.unpinnedWidth).toEqual(expectedWidth);
     }));
@@ -3821,6 +3820,32 @@ describe('IgxGrid - GroupBy #grid', () => {
         for (const record of grid.groupsRecords[1].records) {
             expect(record.ReleaseDate.getFullYear().toString()).toEqual(year);
         }
+    });
+
+    it('should be able to build groups with 100 000+ records', () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+
+        const data = [];
+        for (let i = 0; i < 1000000; i++) {
+          data.push({
+                Downloads: i,
+                ID: 1,
+                ProductName: 'Test'
+            });
+        }
+
+        fix.componentInstance.data = data;
+        fix.detectChanges();
+
+        grid.groupBy({
+            fieldName: 'ProductName',
+            dir: SortingDirection.Asc
+        });
+        fix.detectChanges();
+
+        const groupRows = grid.groupsRowList.toArray();
+        checkGroups(groupRows, ['Test']);
     });
 
     describe('GroupBy with state directive', () => {

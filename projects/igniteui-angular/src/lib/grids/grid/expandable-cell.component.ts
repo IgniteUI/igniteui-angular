@@ -8,11 +8,12 @@ import {
     NgZone,
     OnInit,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    DOCUMENT
 } from '@angular/core';
 import { IgxGridCellComponent } from '../cell.component';
 import { PlatformUtil } from '../../core/utils';
-import { DOCUMENT, NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe } from '@angular/common';
+import { NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe } from '@angular/common';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';

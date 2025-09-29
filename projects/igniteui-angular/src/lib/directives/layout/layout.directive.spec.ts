@@ -3,11 +3,8 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFlexDirective, IgxLayoutDirective } from './layout.directive';
 
-import { configureTestSuite } from '../../test-utils/configure-suite';
-
 describe('IgxLayoutDirective', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [TestFlexLayoutComponent]
         }).compileComponents();

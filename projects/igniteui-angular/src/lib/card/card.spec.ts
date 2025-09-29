@@ -12,13 +12,11 @@ import {
     IgxCardContentDirective,
 } from './card.component';
 
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 
 describe('Card', () => {
-    configureTestSuite();
     // TODO: Refactor card tests to reuse components
     const baseClass = 'igx-card';
 
@@ -62,7 +60,7 @@ describe('Card', () => {
         media: `${baseClass}__media`
     };
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 InitCardComponent,

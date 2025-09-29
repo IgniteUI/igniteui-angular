@@ -19,7 +19,7 @@ import { IgxGridCellComponent } from '../grids/cell.component';
 import { IgxPivotRowComponent } from '../grids/pivot-grid/pivot-row.component';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IgxRowDirective } from '../grids/row.directive';
-import { CellType, GridType, RowType } from '../grids/common/grid.interface';
+import { CellType, ColumnType, GridType, RowType } from '../grids/common/grid.interface';
 import { IgxTreeNodeComponent } from '../tree/tree-node/tree-node.component';
 import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxPivotGridComponent } from '../grids/pivot-grid/pivot-grid.component';
@@ -103,6 +103,21 @@ export const PAGER_CLASS = '.igx-page-nav';
 export const SAFE_DISPOSE_COMP_ID = 'root';
 
 export class GridFunctions {
+
+    public static verifyColumnMergedState(grid: GridType, col: ColumnType, state: any[]) {
+        const dataRows = grid.dataRowList.toArray();
+        let totalSpan = 0;
+        for (let index = 0; index < dataRows.length - 1; index++) {
+            const row = dataRows[index];
+            const cellValue = row.cells.toArray().find(x => x.column === col).value;
+            const rowSpan = row.metaData?.cellMergeMeta.get(col.field)?.rowSpan || 1;
+            const currState = state[index - totalSpan];
+            expect(cellValue).toEqual(currState.value);
+            expect(rowSpan).toEqual(currState.span);
+            totalSpan += (rowSpan - 1);
+            index += (rowSpan - 1);
+        }
+    }
 
     public static getRows(fix): DebugElement[] {
         const rows: DebugElement[] = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
@@ -273,6 +288,25 @@ export class GridFunctions {
         expect(header.nativeElement.classList.contains(ACTIVE_HEADER_CLASS)).toBe(focused);
     }
 
+    public static verifyPivotElementActiveDescendant(elem: DebugElement, id: string): void {
+        const activeDescendant = elem.nativeElement.getAttribute('aria-activedescendant');
+        expect(activeDescendant).toBe(id);
+    }
+
+    public static verifyHeaderActiveDescendant(headerRow: IgxGridHeaderRowComponent, id: string): void {
+        const headerRowElem = headerRow.nativeElement;
+        expect(headerRow.activeDescendant).toBe(id);
+        const activeDescendant = headerRowElem.getAttribute('aria-activedescendant');
+        expect(activeDescendant).toBe(id);
+    }
+
+    public static verifyGridContentActiveDescendant(gridContent: DebugElement, id: string): void {
+        const gridContentElem = gridContent.nativeElement;
+        expect(gridContent.componentInstance.activeDescendant).toBe(id);
+        const activeDescendant = gridContentElem.getAttribute('aria-activedescendant');
+        expect(activeDescendant).toBe(id);
+    }
+
     public static getCurrentCellFromGrid(grid, row, cell) {
         const gridRow = grid.rowList.toArray()[row];
         const gridCell = gridRow.cells.toArray()[cell];
@@ -315,8 +349,13 @@ export class GridFunctions {
         expect(tolerance).toBeLessThanOrEqual(1);
     }
 
-    public static verifyPinnedAreaWidth(grid: GridType, expectedWidth: number) {
-        const tolerance = Math.abs(expectedWidth - grid.pinnedWidth);
+    public static verifyPinnedStartAreaWidth(grid: GridType, expectedWidth: number) {
+        const tolerance = Math.abs(expectedWidth - grid.pinnedStartWidth);
+        expect(tolerance).toBeLessThanOrEqual(1);
+    }
+
+    public static verifyPinnedEndAreaWidth(grid: GridType, expectedWidth: number) {
+        const tolerance = Math.abs(expectedWidth - grid.pinnedEndWidth);
         expect(tolerance).toBeLessThanOrEqual(1);
     }
 
@@ -825,10 +864,10 @@ export class GridFunctions {
     public static clickPinIconInExcelStyleFiltering(fix: ComponentFixture<any>, isIconInHeader = true) {
         let pinUnpinIcon: any;
         if (isIconInHeader) {
-            const headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix);
-            const headerAreaPinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin"') !== -1);
-            const headerAreaUnpinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin"') !== -1);
-            pinUnpinIcon = headerAreaPinIcon ? headerAreaPinIcon : headerAreaUnpinIcon;
+            const headerIcons: DebugElement[] = GridFunctions.getExcelFilteringHeaderIconsDebugElements(fix);
+            const headerAreaPinIcon = headerIcons.find((buttonIcon: DebugElement) => buttonIcon.query(By.directive(IgxIconComponent)).componentInstance.name === "pin");
+            const headerAreaUnpinIcon = headerIcons.find((buttonIcon: DebugElement) => buttonIcon.query(By.directive(IgxIconComponent)).componentInstance.name === "unpin");
+            pinUnpinIcon = headerAreaPinIcon ? headerAreaPinIcon.nativeElement : headerAreaUnpinIcon.nativeElement;
         } else {
             const pinContainer = GridFunctions.getExcelFilteringPinContainer(fix);
             const unpinContainer = GridFunctions.getExcelFilteringUnpinContainer(fix);
@@ -1144,6 +1183,11 @@ export class GridFunctions {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         const headerArea = excelMenu.querySelector('.igx-excel-filter__menu-header');
         return Array.from(headerArea.querySelectorAll('.igx-icon-button'));
+    }
+
+    public static getExcelFilteringHeaderIconsDebugElements(fix: ComponentFixture<any>, menu = null) {
+        const headerArea = fix.debugElement.query(By.css('.igx-excel-filter__menu-header'));
+        return Array.from(headerArea.queryAll(By.css('.igx-icon-button')));
     }
 
     public static getExcelFilteringPinContainer(fix: ComponentFixture<any>, menu = null): HTMLElement {
@@ -1803,7 +1847,7 @@ export class GridSummaryFunctions {
 }
 export class GridSelectionFunctions {
     public static selectCellsRange =
-        async (fix, startCell, endCell, ctrl = false, shift = false)  => {
+        async (fix, startCell, endCell, ctrl = false, shift = false) => {
             UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement, shift, ctrl);
             fix.detectChanges();
             await wait();
@@ -1889,6 +1933,10 @@ export class GridSelectionFunctions {
         expect(selectedCellFromGrid.value).toEqual(cell.value);
         expect(selectedCellFromGrid.column.field).toMatch(cell.column.field);
         expect(selectedCellFromGrid.row.index).toEqual(cell.row.index);
+        // Check if the cell id is assigned as the active descendant of the grid content
+        const cellElement = cell.grid.gridAPI.get_cell_by_index(cell.row.index, cell.column.field).nativeElement;
+        const gridContent = GridFunctions.getGridContent(fix);
+        GridFunctions.verifyGridContentActiveDescendant(gridContent, cellElement.id);
     }
 
     public static verifyRowSelected(row, selected = true, hasCheckbox = true) {

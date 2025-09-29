@@ -4,7 +4,6 @@ import { FormsModule, UntypedFormBuilder, ReactiveFormsModule, Validators, Untyp
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent } from '../../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxLabelDirective } from '../label/label.directive';
 import { IgxSuffixDirective } from '../suffix/suffix.directive';
@@ -25,8 +24,7 @@ const INPUT_GROUP_VALID_CSS_CLASS = 'igx-input-group--valid';
 const INPUT_GROUP_INVALID_CSS_CLASS = 'igx-input-group--invalid';
 
 describe('IgxInput', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 InputComponent,
@@ -888,6 +886,27 @@ describe('IgxInput', () => {
         expect(inputGroupElement.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
 
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+    }));
+
+    it('should mark the reactive form control as touched when igxInput loses focus', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ReactiveFormComponent);
+        fixture.detectChanges();
+
+        const component = fixture.componentInstance;
+        const formControl = component.form.get('str');
+        const inputDebug = fixture.debugElement.query(By.css('input[formControlName="str"]'));
+        const input = inputDebug.nativeElement;
+
+        expect(formControl.touched).toBe(false);
+
+        input.dispatchEvent(new Event('focus'));
+        fixture.detectChanges();
+
+        input.dispatchEvent(new Event('blur'));
+        tick();
+        fixture.detectChanges();
+
+        expect(formControl.touched).toBe(true);
     }));
 });
 

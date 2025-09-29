@@ -7,23 +7,23 @@ import {
 } from "../../../igniteui-angular/src/public_api";
 import { IgxPaginatorComponent } from "../../../igniteui-angular/src/lib/paginator/paginator.component";
 import { IgxPaginatorToken } from "../../../igniteui-angular/src/lib/paginator/token";
-import { IgxActionStripComponent } from "../../../igniteui-angular/src/lib/action-strip/action-strip.component";
-import { IgxActionStripToken } from "../../../igniteui-angular/src/lib/action-strip/token";
-import { IgxGridEditingActionsComponent } from "../../../igniteui-angular/src/lib/action-strip/grid-actions/grid-editing-actions.component";
-import { IgxGridActionsBaseDirective } from "../../../igniteui-angular/src/lib/action-strip/grid-actions/grid-actions-base.directive";
-import { IgxGridPinningActionsComponent } from "../../../igniteui-angular/src/lib/action-strip/grid-actions/grid-pinning-actions.component";
-import { IgxColumnComponent } from "../../../igniteui-angular/src/lib/grids/columns/column.component";
-import { IgxColumnGroupComponent } from "../../../igniteui-angular/src/lib/grids/columns/column-group.component";
-import { IgxColumnLayoutComponent } from "../../../igniteui-angular/src/lib/grids/columns/column-layout.component";
 import { IgxGridToolbarTitleComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/common";
 import { IgxGridToolbarActionsComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/common";
 import { IgxGridToolbarAdvancedFilteringComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar-advanced-filtering.component";
 import { IgxGridToolbarComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component";
 import { IgxToolbarToken } from "../../../igniteui-angular/src/lib/grids/toolbar/token";
-import { IgxRowIslandComponent } from "../../../igniteui-angular/src/lib/grids/hierarchical-grid/row-island.component";
+import { IgxColumnComponent } from "../../../igniteui-angular/src/lib/grids/columns/column.component";
+import { IgxColumnGroupComponent } from "../../../igniteui-angular/src/lib/grids/columns/column-group.component";
+import { IgxColumnLayoutComponent } from "../../../igniteui-angular/src/lib/grids/columns/column-layout.component";
 import { IgxGridToolbarExporterComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar-exporter.component";
 import { IgxGridToolbarHidingComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component";
 import { IgxGridToolbarPinningComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component";
+import { IgxRowIslandComponent } from "../../../igniteui-angular/src/lib/grids/hierarchical-grid/row-island.component";
+import { IgxActionStripComponent } from "../../../igniteui-angular/src/lib/action-strip/action-strip.component";
+import { IgxActionStripToken } from "../../../igniteui-angular/src/lib/action-strip/token";
+import { IgxGridEditingActionsComponent } from "../../../igniteui-angular/src/lib/action-strip/grid-actions/grid-editing-actions.component";
+import { IgxGridActionsBaseDirective } from "../../../igniteui-angular/src/lib/action-strip/grid-actions/grid-actions-base.directive";
+import { IgxGridPinningActionsComponent } from "../../../igniteui-angular/src/lib/action-strip/grid-actions/grid-pinning-actions.component";
 import { IgxGridStateComponent } from "../lib/state.component";
 
 export const registerComponents = [
@@ -95,6 +95,7 @@ export var registerConfig = [
     ],
     numericProps: ["rowEnd", "colEnd", "rowStart", "colStart"],
     boolProps: [
+      "merge",
       "sortable",
       "selectable",
       "groupable",
@@ -158,6 +159,7 @@ export var registerConfig = [
       "expanded",
       "searchable",
       "hidden",
+      "merge",
       "sortable",
       "groupable",
       "editable",
@@ -213,6 +215,7 @@ export var registerConfig = [
       "collapsible",
       "expanded",
       "searchable",
+      "merge",
       "sortable",
       "groupable",
       "editable",
@@ -271,9 +274,10 @@ export var registerConfig = [
       { name: "virtualizationState" },
       { name: "nativeElement" },
       { name: "defaultRowHeight" },
-      { name: "defaultHeaderGroupMinWidth" },
       { name: "columns" },
       { name: "pinnedColumns" },
+      { name: "pinnedStartColumns" },
+      { name: "pinnedEndColumns" },
       { name: "pinnedRows" },
       { name: "unpinnedColumns" },
       { name: "visibleColumns" },
@@ -327,7 +331,8 @@ export var registerConfig = [
       "findPrev",
       "refreshSearch",
       "clearSearch",
-      "getPinnedWidth",
+      "getPinnedStartWidth",
+      "getPinnedEndWidth",
       "selectRows",
       "deselectRows",
       "selectAllRows",
@@ -447,7 +452,7 @@ export var registerConfig = [
   {
     component: IgxGridToolbarAdvancedFilteringComponent,
     selector: "igc-grid-toolbar-advanced-filtering",
-    parents: [IgxGridToolbarComponent],
+    parents: [IgxGridToolbarComponent, IgxGridToolbarActionsComponent],
     contentQueries: [],
     additionalProperties: [],
     methods: [],
@@ -472,7 +477,7 @@ export var registerConfig = [
   {
     component: IgxGridToolbarExporterComponent,
     selector: "igc-grid-toolbar-exporter",
-    parents: [IgxGridToolbarComponent],
+    parents: [IgxGridToolbarComponent, IgxGridToolbarActionsComponent],
     contentQueries: [],
     additionalProperties: [],
     methods: ["export"],
@@ -481,7 +486,7 @@ export var registerConfig = [
   {
     component: IgxGridToolbarHidingComponent,
     selector: "igc-grid-toolbar-hiding",
-    parents: [IgxGridToolbarComponent],
+    parents: [IgxGridToolbarComponent, IgxGridToolbarActionsComponent],
     contentQueries: [],
     additionalProperties: [],
     methods: ["checkAll", "uncheckAll"],
@@ -491,7 +496,7 @@ export var registerConfig = [
   {
     component: IgxGridToolbarPinningComponent,
     selector: "igc-grid-toolbar-pinning",
-    parents: [IgxGridToolbarComponent],
+    parents: [IgxGridToolbarComponent, IgxGridToolbarActionsComponent],
     contentQueries: [],
     additionalProperties: [],
     methods: ["checkAll", "uncheckAll"],
@@ -565,9 +570,10 @@ export var registerConfig = [
       { name: "virtualizationState" },
       { name: "nativeElement" },
       { name: "defaultRowHeight" },
-      { name: "defaultHeaderGroupMinWidth" },
       { name: "columns" },
       { name: "pinnedColumns" },
+      { name: "pinnedStartColumns" },
+      { name: "pinnedEndColumns" },
       { name: "pinnedRows" },
       { name: "unpinnedColumns" },
       { name: "visibleColumns" },
@@ -613,7 +619,8 @@ export var registerConfig = [
       "findPrev",
       "refreshSearch",
       "clearSearch",
-      "getPinnedWidth",
+      "getPinnedStartWidth",
+      "getPinnedEndWidth",
       "selectRows",
       "deselectRows",
       "selectAllRows",
@@ -746,8 +753,9 @@ export var registerConfig = [
       { name: "virtualizationState" },
       { name: "nativeElement" },
       { name: "defaultRowHeight" },
-      { name: "defaultHeaderGroupMinWidth" },
       { name: "columns" },
+      { name: "pinnedStartColumns" },
+      { name: "pinnedEndColumns" },
       { name: "visibleColumns" },
       { name: "dataView" },
     ],
@@ -780,6 +788,7 @@ export var registerConfig = [
       "clearFilter",
       "clearSort",
       "reflow",
+      "getPinnedEndWidth",
       "selectRows",
       "deselectRows",
       "selectAllRows",
@@ -870,8 +879,9 @@ export var registerConfig = [
       { name: "cdr" },
       { name: "nativeElement" },
       { name: "defaultRowHeight" },
-      { name: "defaultHeaderGroupMinWidth" },
       { name: "columns" },
+      { name: "pinnedStartColumns" },
+      { name: "pinnedEndColumns" },
       { name: "pinnedRows" },
     ],
     methods: [
@@ -908,7 +918,8 @@ export var registerConfig = [
       "findPrev",
       "refreshSearch",
       "clearSearch",
-      "getPinnedWidth",
+      "getPinnedStartWidth",
+      "getPinnedEndWidth",
       "selectRows",
       "deselectRows",
       "selectAllRows",
@@ -1019,9 +1030,10 @@ export var registerConfig = [
       { name: "virtualizationState" },
       { name: "nativeElement" },
       { name: "defaultRowHeight" },
-      { name: "defaultHeaderGroupMinWidth" },
       { name: "columns" },
       { name: "pinnedColumns" },
+      { name: "pinnedStartColumns" },
+      { name: "pinnedEndColumns" },
       { name: "pinnedRows" },
       { name: "unpinnedColumns" },
       { name: "visibleColumns" },
@@ -1069,7 +1081,8 @@ export var registerConfig = [
       "findPrev",
       "refreshSearch",
       "clearSearch",
-      "getPinnedWidth",
+      "getPinnedStartWidth",
+      "getPinnedEndWidth",
       "selectRows",
       "deselectRows",
       "selectAllRows",

@@ -33,7 +33,7 @@ import {
     IgxExcelStyleLoadingValuesTemplateDirective
 } from './filtering/excel-style/public_api';
 import { IgxGridFooterComponent } from './grid-footer/grid-footer.component';
-import { IgxExcelStyleHeaderIconDirective, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from './grid.directives';
+import { IgxExcelStyleHeaderIconDirective, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective, IgxGridEmptyTemplateDirective, IgxGridLoadingTemplateDirective } from './grid.directives';
 import {
     IgxGridHeaderComponent,
     IgxGridHeaderGroupComponent,
@@ -126,6 +126,8 @@ export const IGX_GRID_COMMON_DIRECTIVES = [
     IgxSortAscendingHeaderIconDirective,
     IgxSortDescendingHeaderIconDirective,
     IgxSortHeaderIconDirective,
+    IgxGridEmptyTemplateDirective,
+    IgxGridLoadingTemplateDirective,
     IgxDragIndicatorIconDirective,
     IgxRowDragGhostDirective,
     IgxGridStateDirective,

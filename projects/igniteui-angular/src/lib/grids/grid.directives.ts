@@ -155,6 +155,30 @@ export class IgxSortDescendingHeaderIconDirective {
     }
 }
 
+/** @hidden */
+@Directive({
+    selector: '[igxGridLoading]',
+    standalone: true
+})
+export class IgxGridLoadingTemplateDirective {
+    public static ngTemplateContextGuard(_directive: IgxGridLoadingTemplateDirective,
+        context: unknown): context is IgxGridTemplateContext {
+        return true
+    }
+}
+
+/** @hidden */
+@Directive({
+    selector: '[igxGridEmpty]',
+    standalone: true
+})
+export class IgxGridEmptyTemplateDirective {
+    public static ngTemplateContextGuard(_directive: IgxGridEmptyTemplateDirective,
+        context: unknown): context is IgxGridTemplateContext {
+        return true
+    }
+}
+
 /**
  * @hidden
  */

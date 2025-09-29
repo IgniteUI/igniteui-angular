@@ -1,6 +1,6 @@
-import { CellType, ColumnType, GridType, IGridValidationState, RowType, ValidationStatus } from './common/grid.interface';
-import { ISelectionNode } from './common/types';
-import { resolveNestedPath } from '../core/utils';
+import type { CellType, ColumnType, GridType, IGridValidationState, RowType, ValidationStatus } from './common/grid.interface';
+import type { ISelectionNode } from './common/types';
+import { columnFieldPath, resolveNestedPath } from '../core/utils';
 
 export class IgxGridCell implements CellType {
 
@@ -128,7 +128,7 @@ export class IgxGridCell implements CellType {
         // will return undefined for a column layout, because getCellByColumnVisibleIndex may return the column layout at that index.
         // getCellByColumnVisibleIndex is deprecated and will be removed in future version
         return this.column.field ?
-            this.column.hasNestedPath ? resolveNestedPath(this.row?.data, this.column.field) : this.row?.data[this.column.field]
+            this.column.hasNestedPath ? resolveNestedPath(this.row?.data, columnFieldPath(this.column.field)) : this.row?.data[this.column.field]
             : undefined;
     }
 

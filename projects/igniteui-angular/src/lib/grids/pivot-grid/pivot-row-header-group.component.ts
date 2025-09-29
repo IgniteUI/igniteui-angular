@@ -31,6 +31,13 @@ export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent
     @HostBinding('style.user-select')
     public userSelect = 'none';
 
+    /**
+     * @hidden
+     */
+    public get role(): string {
+        return 'columnheader';
+    }
+
     constructor(private cdRef: ChangeDetectorRef,
         @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
         private elementRef: ElementRef<HTMLElement>,
@@ -149,5 +156,12 @@ export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent
 
     public override get selectable(): boolean {
         return false;
+    }
+
+    protected getHeaderWidthFromDimension() {
+        if (this.grid.hasHorizontalLayout) {
+            return this.dimWidth === -1 ? 'fit-content' : this.width;
+        }
+        return this.grid.rowDimensionWidth(this.parent.rootDimension);
     }
 }

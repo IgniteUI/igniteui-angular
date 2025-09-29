@@ -1,5 +1,5 @@
 <igx-input-group #inputGroup [type]="type">
-    <input [displayValuePipe]="formatter ? displayValue : null" igxInput [igxDateTimeEditor]="inputFormat"
+    <input [igxReadOnlyInput]="readOnly" [displayValuePipe]="formatter ? displayValue : null" igxInput [igxDateTimeEditor]="inputFormat"
         type="text" [readonly]="!isDropdown || readOnly" [minValue]="minValue" [maxValue]="maxValue"
         [locale]="locale" [spinDelta]="itemsDelta" [spinLoop]="spinLoop" [placeholder]="placeholder"
         [disabled]="disabled" [displayFormat]="displayFormat" defaultFormatType="time"
@@ -62,7 +62,7 @@
 <div #toggleDirective="toggle" igxToggle role="dialog" class="igx-time-picker"
     [ngClass]="{'igx-time-picker--dropdown': isDropdown, 'igx-time-picker--vertical': isVertical && !isDropdown}">
     <div class="igx-time-picker__main">
-        @if (!isDropdown) {
+        @if (!this.isDropdown && !this.hideHeader) {
             <div class="igx-time-picker__header">
                 <h2 class="igx-time-picker__header-hour">
                     <span>{{ selectedDate | timeFormatPipe }}</span>

@@ -311,14 +311,14 @@ export class QueryBuilderFunctions {
         return outlet;
     }
 
-    public static getQueryBuilderSelectDropdown(queryBuilderElement: HTMLElement) {
+    public static getQueryBuilderSelectDropdown(queryBuilderElement: HTMLElement, index = 0) {
         const outlet = QueryBuilderFunctions.getQueryBuilderOutlet(queryBuilderElement);
-        const selectDropdown = outlet.querySelector(`.${QueryBuilderSelectors.DROP_DOWN_LIST_SCROLL}`);
+        const selectDropdown = outlet.querySelectorAll(`.${QueryBuilderSelectors.DROP_DOWN_LIST_SCROLL}`).item(index);
         return selectDropdown;
     }
 
-    public static getQueryBuilderSelectDropdownItems(queryBuilderElement: HTMLElement) {
-        const selectDropdown = QueryBuilderFunctions.getQueryBuilderSelectDropdown(queryBuilderElement);
+    public static getQueryBuilderSelectDropdownItems(queryBuilderElement: HTMLElement, index = 0) {
+        const selectDropdown = QueryBuilderFunctions.getQueryBuilderSelectDropdown(queryBuilderElement, index);
         const items = Array.from(selectDropdown.querySelectorAll('.igx-drop-down__item'));
         return items;
     }
@@ -626,20 +626,21 @@ export class QueryBuilderFunctions {
             switch (i) {
                 case 0: expect(element).toHaveClass('igx-input-group__input'); break;
                 case 1: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 2: expect(element).toHaveClass('igx-button');
+                case 2: expect(element).toHaveClass('igx-combo__toggle-button'); break;
+                case 3: expect(element).toHaveClass('igx-button');
                     expect(element.innerText).toContain('and'); break;
-                case 3: expect(element).toHaveClass('igx-chip'); break;
-                case 4: expect(element).toHaveClass('igx-icon'); break;
-                case 5: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 6: expect(element).toHaveClass('igx-chip'); break;
-                case 7: expect(element).toHaveClass('igx-icon'); break;
-                case 8: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 9: expect(element).toHaveClass('igx-chip'); break;
-                case 10: expect(element).toHaveClass('igx-icon'); break;
-                case 11: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 12: expect(element).toHaveClass('igx-button');
-                    expect(element.innerText).toContain('Condition'); break;
+                case 4: expect(element).toHaveClass('igx-chip'); break;
+                case 5: expect(element).toHaveClass('igx-icon'); break;
+                case 6: expect(element).toHaveClass('igx-chip__remove'); break;
+                case 7: expect(element).toHaveClass('igx-chip'); break;
+                case 8: expect(element).toHaveClass('igx-icon'); break;
+                case 9: expect(element).toHaveClass('igx-chip__remove'); break;
+                case 10: expect(element).toHaveClass('igx-chip'); break;
+                case 11: expect(element).toHaveClass('igx-icon'); break;
+                case 12: expect(element).toHaveClass('igx-chip__remove'); break;
                 case 13: expect(element).toHaveClass('igx-button');
+                    expect(element.innerText).toContain('Condition'); break;
+                case 14: expect(element).toHaveClass('igx-button');
                     expect(element.innerText).toContain('Group'); break;
             }
             i++;
@@ -841,13 +842,13 @@ export class QueryBuilderFunctions {
         fix.detectChanges();
     }
 
-    public static selectEntityAndClickInitialAddCondition(fix: ComponentFixture<any>, entityIndex: number, groupIndex = 0) {
-        QueryBuilderFunctions.selectEntityInEditModeExpression(fix, entityIndex);
+    public static selectEntityAndClickInitialAddCondition(fix: ComponentFixture<any>, entityIndex: number, level = 0) {
+        QueryBuilderFunctions.selectEntityInEditModeExpression(fix, entityIndex, level);
         tick(100);
         fix.detectChanges();
 
         // Click the initial 'Add Condition' button.
-        QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, groupIndex);
+        QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, level);
         tick(100);
         fix.detectChanges();
     }
@@ -950,8 +951,8 @@ export class QueryBuilderFunctions {
 
         spyOn(dragDir.ghostElement, 'dispatchEvent').and.callThrough();
 
-        let target = moveDown ? 350 : 0;
-        let shift = moveDown ? 1 : -1
+        const target = moveDown ? 350 : 0;
+        const shift = moveDown ? 1 : -1
         //Drag ghost up or down and check if drop ghost is rendered in the expected positions
         for (let i = moveDown ? 0 : 350; moveDown ? i <= target : i >= target; i += shift) {
             Y += moveDown ? 1 : -1;

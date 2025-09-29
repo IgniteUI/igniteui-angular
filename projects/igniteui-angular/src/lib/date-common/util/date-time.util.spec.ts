@@ -1,6 +1,8 @@
 import { DateTimeUtil } from './date-time.util';
 import { DatePart, DatePartInfo } from '../../directives/date-time-editor/date-time-editor.common';
 import { DataType } from '../../data-operations/data-util';
+import { registerLocaleData } from '@angular/common';
+import localeBg from "@angular/common/locales/bg";
 
 const reduceToDictionary = (parts: DatePartInfo[]) => parts.reduce((obj, x) => {
     obj[x.type] = x;
@@ -8,6 +10,7 @@ const reduceToDictionary = (parts: DatePartInfo[]) => parts.reduce((obj, x) => {
 }, {});
 
 describe(`DateTimeUtil Unit tests`, () => {
+    registerLocaleData(localeBg);
     describe('Date Time Parsing', () => {
         it('should correctly parse all date time parts (base)', () => {
             let result = DateTimeUtil.parseDateTimeFormat('dd/MM/yyyy HH:mm:ss:SS a');

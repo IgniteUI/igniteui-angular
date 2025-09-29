@@ -5,11 +5,9 @@ import { IgxIconService } from "./icon.service";
 import { IconFamily } from './types';
 import type { IconType } from './types';
 
-import { configureTestSuite } from "../test-utils/configure-suite";
 import { By } from "@angular/platform-browser";
 
 describe("Icon", () => {
-    configureTestSuite();
 
     describe("Component", () => {
         let fixture: ComponentFixture<IconTestComponent>;
@@ -32,11 +30,23 @@ describe("Icon", () => {
             el = debugElement.nativeElement;
         });
 
-        it("should instatiate with defaults", () => {
+        it("should instantiate with defaults", () => {
             fixture.detectChanges();
 
             expect(instance.getFamily).toBe("material");
             expect(instance.getActive).toBe(true);
+            expect(instance.ariaHidden).toBe(true);
+        });
+
+        it("should be able to set the aria-hidden attribute", () => {
+            fixture.detectChanges();
+
+            expect(el.getAttribute('aria-hidden')).toBe("true");
+
+            instance.ariaHidden = false;
+            fixture.detectChanges();
+
+            expect(el.getAttribute('aria-hidden')).toBe("false");
         });
 
         it("should set icon as inactive", () => {

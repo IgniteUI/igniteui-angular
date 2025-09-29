@@ -7,7 +7,6 @@ import { IgxPrefixDirective } from './../directives/prefix/prefix.directive';
 import { IgxLabelDirective } from './../directives/label/label.directive';
 import { IgxSuffixDirective } from './../directives/suffix/suffix.directive';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getComponentSize } from '../core/utils';
@@ -103,8 +102,7 @@ describe('IgxChip', () => {
     let fix: ComponentFixture<TestChipComponent | TestChipsLabelAndSuffixComponent>;
     let chipArea;
 
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [TestChipComponent, TestChipsLabelAndSuffixComponent]
         }).compileComponents();
@@ -142,6 +140,8 @@ describe('IgxChip', () => {
         it('should change chip variant', () => {
             const fixture = TestBed.createComponent(IgxChipComponent);
             const igxChip = fixture.componentInstance;
+            // For test fixture destroy
+            igxChip.id = "root1";
 
             igxChip.variant = 'danger';
 
@@ -370,6 +370,7 @@ describe('IgxChip', () => {
 
             expect(secondChipComp.selectedChanging.emit).not.toHaveBeenCalled();
             expect(secondChipComp.selectedChanged.emit).not.toHaveBeenCalled();
+            // console.log('id', secondChipComp.id);
         });
     });
 

@@ -15,7 +15,7 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular/build:application",
           "options": {
             "outputPath": {
               "base": "dist/igniteui-dev-demos"
@@ -82,7 +82,7 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular/build:dev-server",
           "options": {
             "buildTarget": "igniteui-dev-demos:build"
           },
@@ -97,13 +97,13 @@
           }
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "@angular/build:extract-i18n",
           "options": {
             "buildTarget": "igniteui-dev-demos:build"
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular/build:karma",
           "options": {
             "main": "src/test.ts",
             "polyfills": [
@@ -171,7 +171,7 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "builder": "@angular/build:ng-packagr",
           "options": {
             "tsConfig": "projects/igniteui-angular/tsconfig.lib.json",
             "project": "projects/igniteui-angular/ng-package.json"
@@ -184,13 +184,25 @@
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular/build:karma",
           "options": {
             "polyfills": [
               "zone.js",
               "zone.js/testing",
               "hammerjs"
             ],
+            "styles": [
+              "src/styles/styles.scss",
+              "projects/igniteui-angular/test.css"
+            ],
+            "assets": [
+              "projects/igniteui-angular/src/assets"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules"
+              ]
+            },
             "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
             "karmaConfig": "projects/igniteui-angular/karma.conf.js"
           }
@@ -201,7 +213,8 @@
             "lintFilePatterns": [
               "projects/igniteui-angular/**/*.ts",
               "projects/igniteui-angular/**/*.html"
-            ]
+            ],
+            "eslintConfig": "projects/igniteui-angular/eslint.config.mjs"
           }
         },
         "cypress-run": {
@@ -254,7 +267,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular/build:application",
           "options": {
             "outputPath": {
               "base": "dist/igniteui-angular-elements"
@@ -294,8 +307,8 @@
                 {
                   "type": "bundle",
                   "name": "styles",
-                  "maximumWarning": "450kb",
-                  "maximumError": "480kb"
+                  "maximumWarning": "500kb",
+                  "maximumError": "550kb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -311,7 +324,7 @@
               ],
               "outputHashing": "none",
               "optimization": true,
-              "externalDependencies": ["lit-html"]
+              "externalDependencies": ["lit"]
             },
             "development": {
               "optimization": false,
@@ -327,7 +340,7 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
               "buildTarget": "igniteui-angular-elements:build:production,dev-app"
@@ -339,16 +352,18 @@
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "@angular/build:extract-i18n",
           "options": {
             "buildTarget": "igniteui-angular-elements:build"
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular/build:karma",
           "options": {
             "main": "projects/igniteui-angular-elements/src/test.ts",
-            "polyfills": "projects/igniteui-angular-elements/src/polyfills.ts",
+            "polyfills":  [
+              "projects/igniteui-angular-elements/src/polyfills.ts"
+            ],
             "tsConfig": "projects/igniteui-angular-elements/tsconfig.spec.json",
             "karmaConfig": "projects/igniteui-angular-elements/karma.conf.js",
             "inlineStyleLanguage": "scss",
@@ -379,7 +394,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular/build:application",
           "options": {
             "outputPath": "dist/bundle-test",
             "index": "projects/bundle-test/src/index.html",
@@ -390,7 +405,8 @@
             "tsConfig": "projects/bundle-test/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "styles": [
-              "projects/bundle-test/src/styles.scss"
+              "projects/bundle-test/src/styles.scss",
+              "projects/igniteui-angular/test.css"
             ],
             "scripts": [],
             "stylePreprocessorOptions": {
@@ -430,7 +446,7 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
               "buildTarget": "bundle-test:build:production"
@@ -442,13 +458,13 @@
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "@angular/build:extract-i18n",
           "options": {
             "buildTarget": "bundle-test:build"
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular/build:karma",
           "options": {
             "polyfills": [
               "zone.js",
@@ -463,6 +479,97 @@
           }
         }
       }
+    },
+    "igniteui-angular-performance": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/igniteui-angular-performance",
+      "sourceRoot": "projects/igniteui-angular-performance/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "projects/igniteui-angular-performance/src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "projects/igniteui-angular-performance/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/igniteui-angular-performance/src/assets"
+            ],
+            "styles": [
+              "projects/igniteui-angular-performance/src/styles.scss"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["node_modules"]
+            }
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "igniteui-angular-performance:build:production"
+            },
+            "development": {
+              "buildTarget": "igniteui-angular-performance:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular/build:extract-i18n"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "projects/igniteui-angular-performance/tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/igniteui-angular-performance/public"
+              }
+            ],
+            "styles": [
+              "projects/igniteui-angular-performance/src/styles.scss"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {
@@ -474,6 +581,30 @@
     },
     "@angular-eslint/schematics:library": {
       "setParserOptionsProject": true
+    },
+    "@schematics/angular:component": {
+      "type": "component"
+    },
+    "@schematics/angular:directive": {
+      "type": "directive"
+    },
+    "@schematics/angular:service": {
+      "type": "service"
+    },
+    "@schematics/angular:guard": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:interceptor": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:module": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:pipe": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:resolver": {
+      "typeSeparator": "."
     }
   }
 }

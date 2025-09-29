@@ -1,4 +1,3 @@
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
@@ -10,7 +9,8 @@ import {
     IgxHierarchicalGridRowSelectionComponent,
     IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent,
     IgxHierarchicalGridCustomSelectorsComponent,
-    IgxHierarchicalGridRowSelectionNoTransactionsComponent
+    IgxHierarchicalGridRowSelectionNoTransactionsComponent,
+    IgxHierGridExternalAdvancedFilteringComponent
 } from '../../test-utils/hierarchical-grid-components.spec';
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode, Size } from '../common/enums';
@@ -26,9 +26,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
     let rowIsland2;
     const gridData = SampleTestData.generateHGridData(5, 3);
 
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -36,7 +34,8 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 IgxHierarchicalGridRowSelectionComponent,
                 IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent,
                 IgxHierarchicalGridCustomSelectorsComponent,
-                IgxHierarchicalGridRowSelectionNoTransactionsComponent
+                IgxHierarchicalGridRowSelectionNoTransactionsComponent,
+                IgxHierGridExternalAdvancedFilteringComponent,
             ]
         }).compileComponents();
     }))
@@ -79,12 +78,19 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(fCell.selected).toBeFalsy();
 
             // select parent cell
+            const parentSpy = spyOn<any>(hierarchicalGrid.selected, 'emit').and.callThrough();
             firstRow = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             fCell = firstRow.cells.toArray()[0];
             GridFunctions.focusCell(fix, fCell);
             fix.detectChanges();
             expect(fChildCell.selected).toBeFalsy();
             expect(fCell.selected).toBeTruthy();
+            expect(parentSpy).toHaveBeenCalledTimes(1);
+
+            GridFunctions.focusCell(fix, fCell);
+            fix.detectChanges();
+            expect(fCell.selected).toBeTruthy();
+            expect(parentSpy).toHaveBeenCalledTimes(1);
         });
 
         it('should be able to set cellSelection mode per grid', () => {
@@ -477,6 +483,30 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 0, 0, 2, 2);
         }));
 
+        it('Should not trigger range selection when CellTemplate is used and the user clicks on element inside it', () => {
+            fix = TestBed.createComponent(IgxHierGridExternalAdvancedFilteringComponent);
+            fix.detectChanges();
+
+            const component = fix.componentInstance;
+            hierarchicalGrid = fix.componentInstance.hgrid;
+
+            expect(component.customCell).toBeDefined();
+
+            const column = hierarchicalGrid.getColumnByName('ID');
+            column.bodyTemplate = component.customCell;
+            fix.detectChanges();
+
+            const selectionChangeSpy = spyOn<any>(hierarchicalGrid.rangeSelected, 'emit').and.callThrough();
+            const cell = hierarchicalGrid.gridAPI.get_cell_by_index(0, 'ID');
+            const cellElement = cell.nativeElement;
+            const span = cellElement.querySelector('span');
+
+            expect(span).not.toBeNull();
+
+            UIInteractions.simulateClickAndSelectEvent(span);
+            fix.detectChanges();
+            expect(selectionChangeSpy).not.toHaveBeenCalled();
+        });
     });
 
     describe('Row Selection', () => {

@@ -4,11 +4,8 @@ import { IgxListItemComponent } from '../../list/list-item.component';
 import { IgxListComponent } from '../../list/list.component';
 import { IgxFilterDirective, IgxFilterOptions, IgxFilterPipe } from './filter.directive';
 
-import { configureTestSuite } from '../../test-utils/configure-suite';
-
 describe('Filter', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [DeclarativeListTestComponent, DynamicListTestComponent],
             providers: [

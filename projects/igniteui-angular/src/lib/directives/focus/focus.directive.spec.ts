@@ -3,7 +3,6 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFocusDirective } from './focus.directive';
 
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { EditorProvider } from '../../core/edit-provider';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxDatePickerComponent } from '../../date-picker/public_api';
@@ -12,8 +11,7 @@ import { IgxRadioComponent } from '../../radio/radio.component';
 import { IgxSwitchComponent } from '../../switch/switch.component';
 
 describe('igxFocus', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

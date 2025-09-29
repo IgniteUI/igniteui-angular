@@ -51,6 +51,7 @@ import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
 import { ToastShowcaseSampleComponent } from './toast-showcase/toast-showcase.sample';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
 import { GridCellEditingComponent } from './grid-cellEditing/grid-cellEditing.component';
+import { GridCellMergingComponent } from './grid-cellMerging/grid-cellMerging.component';
 import { GridSampleComponent } from './grid/grid.sample';
 import { GridColumnMovingSampleComponent } from './grid-column-moving/grid-column-moving.sample';
 import { GridColumnSelectionSampleComponent } from './grid-column-selection/grid-column-selection.sample';
@@ -146,6 +147,7 @@ import { GridDockManagerSampleComponent } from './dockmanager-grid/dockmanager-g
 import { HoundComponent } from './hound/hound.component';
 import { LabelSampleComponent } from "./label/label.sample";
 import { GridRecreateSampleComponent } from './grid-re-create/grid-re-create.sample';
+import { HierarchicalGridAdvancedFilteringSampleComponent } from './hierarchical-grid-advanced-filtering/hierarchical-grid-advanced-filtering.sample';
 
 export const appRoutes: Routes = [
     {
@@ -419,6 +421,10 @@ export const appRoutes: Routes = [
         component: GridCellEditingComponent
     },
     {
+        path: 'gridCellMerging',
+        component: GridCellMergingComponent
+    },
+    {
         path: 'gridConditionalCellStyling',
         component: GridCellStylingSampleComponent
     },
@@ -616,6 +622,9 @@ export const appRoutes: Routes = [
     }, {
         path: 'hierarchicalGrid',
         component: HierarchicalGridSampleComponent
+    }, {
+        path: 'hierarchicalGridAdvancedFiltering',
+        component: HierarchicalGridAdvancedFilteringSampleComponent
     }, {
         path: 'hierarchicalGridRemote',
         component: HierarchicalGridRemoteSampleComponent
