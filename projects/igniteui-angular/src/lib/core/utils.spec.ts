@@ -301,10 +301,10 @@ describe('Utils', () => {
 
             it('should format string to dateTime using Intl', () => {
                 toggleIgxAngularLocalization(false);
-                expect(formatDate('2025-01-25T14:15:00', 'short', 'en-US', "Europe/Sofia")).toEqual('1/25/25, 2:15 PM');
-                expect(formatDate('2025-01-25T14:15:00', 'medium', 'en-US', "Europe/Sofia")).toEqual('Jan 25, 2025, 2:15:00 PM');
-                expect(formatDate('2025-01-25T14:15:00', 'long', 'en-US', "Europe/Sofia")).toEqual('January 25, 2025 at 2:15:00 PM GMT+2');
-                expect(formatDate('2025-01-25T14:15:00', 'full', 'en-US', "Europe/Sofia")).toEqual('Saturday, January 25, 2025 at 2:15:00 PM Eastern European Standard Time');
+                expect(formatDate('2025-01-25T14:15:00+02:00', 'short', 'en-US', "Europe/Sofia")).toEqual('1/25/25, 2:15 PM');
+                expect(formatDate('2025-01-25T14:15:00+02:00', 'medium', 'en-US', "Europe/Sofia")).toEqual('Jan 25, 2025, 2:15:00 PM');
+                expect(formatDate('2025-01-25T14:15:00+02:00', 'long', 'en-US', "Europe/Sofia")).toEqual('January 25, 2025 at 2:15:00 PM GMT+2');
+                expect(formatDate('2025-01-25T14:15:00+02:00', 'full', 'en-US', "Europe/Sofia")).toEqual('Saturday, January 25, 2025 at 2:15:00 PM Eastern European Standard Time');
                 toggleIgxAngularLocalization(true);
             });
 
@@ -325,10 +325,10 @@ describe('Utils', () => {
 
             it('should format string to time using Intl', () => {
                 toggleIgxAngularLocalization(false);
-                expect(formatDate('2025-01-25T14:15:00', 'shortTime', 'en-US', "Europe/Sofia")).toEqual('2:15 PM');
-                expect(formatDate('2025-01-25T14:15:00', 'mediumTime', 'en-US', "Europe/Sofia")).toEqual('2:15:00 PM');
-                expect(formatDate('2025-01-25T14:15:00', 'longTime', 'en-US', "Europe/Sofia")).toEqual('2:15:00 PM GMT+2');
-                expect(formatDate('2025-01-25T14:15:00', 'fullTime', 'en-US', "Europe/Sofia")).toEqual('2:15:00 PM Eastern European Standard Time');
+                expect(formatDate('2025-01-25T14:15:00+02:00', 'shortTime', 'en-US', "Europe/Sofia")).toEqual('2:15 PM');
+                expect(formatDate('2025-01-25T14:15:00+02:00', 'mediumTime', 'en-US', "Europe/Sofia")).toEqual('2:15:00 PM');
+                expect(formatDate('2025-01-25T14:15:00+02:00', 'longTime', 'en-US', "Europe/Sofia")).toEqual('2:15:00 PM GMT+2');
+                expect(formatDate('2025-01-25T14:15:00+02:00', 'fullTime', 'en-US', "Europe/Sofia")).toEqual('2:15:00 PM Eastern European Standard Time');
                 toggleIgxAngularLocalization(true);
             });
 
