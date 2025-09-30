@@ -84,11 +84,15 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
             decorator,
             ASTUtils.isClassDeclaration,
         );
-
+        // classDeclaration.body.body.indexOff(property);
 
         let isBoolean = isBooleanProperty(property/*, parserServices*/);
 
         if (!isBoolean) return;
+
+        const comments = context.sourceCode.getCommentsBefore(classDeclaration.decorators[0] ?? classDeclaration);
+        if (comments.some(x => x.value.includes('@hidden') || x.value.includes('@internal')))
+            return;
 
         const arg = decorator.expression.arguments[0];
         const hasTransform =
