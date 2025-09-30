@@ -129,7 +129,7 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
             // if nothing to update, return
             return collection;
         }
-        const result = cloneArray(collection) as any;
+        let result = cloneArray(collection) as any;
         uniqueRoots.forEach(x => {
             const index = result.indexOf(x);
             const colKeys = [...x.cellMergeMeta.keys()];
@@ -152,7 +152,7 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
                     this.grid);
 
             }
-            result.splice(index, res.length, ...res);
+            result = result.slice(0, index).concat(res, result.slice(index + res.length));
         });
 
 
