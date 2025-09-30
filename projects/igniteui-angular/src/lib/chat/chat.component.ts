@@ -70,6 +70,7 @@ export class IgxChatComponent implements OnInit, OnDestroy {
 
     private readonly _view = inject(ViewContainerRef);
     private readonly _templateViewRefs = new Map<TemplateRef<any>, Set<ViewRef>>();
+    private _oldTemplates: NgChatTemplates = {};
 
     protected readonly _mergedOptions = signal<IgcChatOptions>({});
     protected readonly _transformedTemplates = signal<ChatRenderers>({});
@@ -100,20 +101,21 @@ export class IgxChatComponent implements OnInit, OnDestroy {
 
     //#endregion
 
+    /** @internal */
     public ngOnInit(): void {
         IgcChatComponent.register();
     }
 
+    /** @internal */
     public ngOnDestroy(): void {
         for (const viewSet of this._templateViewRefs.values()) {
-            for (const viewRef of viewSet) {
-                viewRef.destroy();
-            }
+            viewSet.forEach(viewRef => viewRef.destroy());
         }
         this._templateViewRefs.clear();
     }
 
     constructor() {
+        // Templates changed - update transformed templates and viewRefs and merge with options
         effect(() => {
             const templates = this.templates();
             this._setTemplates(templates);
@@ -121,6 +123,7 @@ export class IgxChatComponent implements OnInit, OnDestroy {
             this._mergeOptions(untracked(() => this.options()));
         });
 
+        // Options changed - merge with current template state
         effect(() => {
             const options = this.options();
             this._mergeOptions(options);
@@ -140,7 +143,7 @@ export class IgxChatComponent implements OnInit, OnDestroy {
         const templateCopies: ChatRenderers = {};
         const newTemplateKeys = Object.keys(newTemplates) as Array<keyof NgChatTemplates>;
 
-        const oldTemplates = this.templates();
+        const oldTemplates = this._oldTemplates;
         const oldTemplateKeys = Object.keys(oldTemplates) as Array<keyof NgChatTemplates>;
 
         for (const key of oldTemplateKeys) {
@@ -157,9 +160,11 @@ export class IgxChatComponent implements OnInit, OnDestroy {
         }
 
         if (newTemplateKeys.length > 0) {
+            this._oldTemplates = {};
             for (const key of newTemplateKeys) {
                 const ref = newTemplates[key];
                 if (ref) {
+                    this._oldTemplates[key] = ref as any;
                     templateCopies[key] = this._createTemplateRenderer(ref);
                 }
             }
@@ -193,10 +198,10 @@ export class IgxChatComponent implements OnInit, OnDestroy {
                 angularContext = { $implicit: { instance: context.instance } };
             }
 
-            const node = this._view.createEmbeddedView(ref, angularContext);
-            viewSet.add(node);
+            const viewRef = this._view.createEmbeddedView(ref, angularContext);
+            viewSet.add(viewRef);
 
-            return node.rootNodes;
+            return viewRef.rootNodes;
         }
     }
 }
