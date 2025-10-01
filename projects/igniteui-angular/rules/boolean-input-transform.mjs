@@ -94,15 +94,7 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
         if (comments.some(x => x.value.includes('@hidden') || x.value.includes('@internal')))
             return;
 
-        const arg = decorator.expression.arguments[0];
-        const hasTransform =
-            arg &&
-            arg.type === 'ObjectExpression' &&
-            arg.properties.some(
-            (p) =>
-                p.key.name === 'transform' &&
-                p.value.name === 'booleanAttribute'
-            );
+        const hasTransform = ASTUtils.getDecoratorProperty(decorator, 'transform')?.value.name === 'booleanAttribute';
 
         if (hasTransform) return;
 
