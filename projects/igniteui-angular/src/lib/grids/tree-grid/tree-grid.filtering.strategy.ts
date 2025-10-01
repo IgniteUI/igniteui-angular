@@ -89,6 +89,10 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
         return Promise.resolve(items);
     }
 
+    protected override getFilteredData(column: ColumnType, tree: IFilteringExpressionsTree) {
+        return DataUtil.filterDataByExpressions(column.grid.flatData, tree, column.grid);
+    }
+
     private getHierarchicalFilterItems(records: ITreeGridRecord[], column: ColumnType, parent?: IgxFilterItem): IgxFilterItem[] {
         const pathParts = columnFieldPath(column.field);
         return records?.map(record => {
@@ -108,10 +112,6 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
             filterItem.children = this.getHierarchicalFilterItems(record.children, column, filterItem);
             return filterItem;
         });
-    }
-
-    protected override getRecord(item: any) {
-        return item.data;
     }
 }
 

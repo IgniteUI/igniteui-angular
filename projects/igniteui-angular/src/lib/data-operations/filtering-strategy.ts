@@ -133,13 +133,13 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy {
     public getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
         const applyFormatter = column.formatter && this.shouldFormatFilterValues(column);
 
-        const data = column.grid.gridAPI.filterDataByExpressions(tree);
+        const data = this.getFilteredData(column, tree);
 
         const pathParts = columnFieldPath(column.field)
         const seenFormattedFilterItems = new Map<any, IgxFilterItem>()
 
         for (let i = 0; i < data.length; ++i) {
-            const record = this.getRecord(data[i]);
+            const record = data[i]
             const rawValue = resolveNestedPath(record, pathParts);
             const formattedValue = applyFormatter ? column.formatter(rawValue, record) : rawValue;
             const { key, finalValue } = this.getFilterItemKeyValue(formattedValue, column);
@@ -156,6 +156,10 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy {
             [{ fieldName: 'value', dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase }], new IgxSorting())
 
         return Promise.resolve(filterItems);
+    }
+
+    protected getFilteredData(column: ColumnType, tree: IFilteringExpressionsTree) {
+        return column.grid.gridAPI.filterDataByExpressions(tree);
     }
 
     protected getFilterItemLabel(column: ColumnType, value: any, applyFormatter: boolean, data: any) {
@@ -212,10 +216,6 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy {
             finalValue = date;
         }
         return { key, finalValue };
-    }
-
-    protected getRecord(item: any) {
-        return item;
     }
 
     protected shouldFormatFilterValues(_column: ColumnType): boolean {
