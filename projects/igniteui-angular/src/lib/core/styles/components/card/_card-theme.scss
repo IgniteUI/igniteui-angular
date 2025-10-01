@@ -220,13 +220,8 @@
         display: flex;
         align-items: center;
         order: 1;
-        color: var-get($theme, 'actions-text-color');
         margin-inline-start: auto;
         gap: rem(8px);
-
-        [igxIconButton] {
-            color: var-get($theme, 'actions-text-color');
-        }
 
         &:empty {
             display: none;
@@ -239,13 +234,14 @@
         order: 0;
         gap: rem(8px);
 
-        [igxIconButton] {
-            color: var-get($theme, 'actions-text-color');
-        }
-
         &:empty {
             display: none;
         }
+    }
+
+    %igx-card-actions__start,
+    %igx-card-actions__end {
+        color: var-get($theme, 'actions-text-color');
     }
 
     %igx-card-actions__start--justify,
