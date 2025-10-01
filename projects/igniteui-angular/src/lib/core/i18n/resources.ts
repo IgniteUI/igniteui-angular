@@ -20,6 +20,8 @@ import {
     getI18nManager
 } from 'igniteui-i18n-core';
 
+export const DEFAULT_LOCALE = 'en-US';
+
 export interface IResourceStrings extends IGridResourceStrings, ITimePickerResourceStrings, ICalendarResourceStrings,
     ICarouselResourceStrings, IChipResourceStrings, IComboResourceStrings, IInputResourceStrings, IDatePickerResourceStrings,
     IDateRangePickerResourceStrings, IListResourceStrings, IPaginatorResourceStrings, ITreeResourceStrings,

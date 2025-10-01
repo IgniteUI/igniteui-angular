@@ -181,7 +181,7 @@ import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-ro
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { DEFAULT_LOCALE, getCurrentResourceStrings } from '../core/i18n/resources';
 import { isTree, recreateTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 import { getUUID } from './common/random';
 import { DefaultMergeStrategy, IGridMergeStrategy } from '../data-operations/merge-strategy';
@@ -8282,7 +8282,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     private initLocale() {
         this._defaultLocale = getCurrentI18n();
-        this._locale = this.localeId !== this._defaultLocale ? this.localeId : this._locale;
+        this._locale = this.localeId !== DEFAULT_LOCALE ? this.localeId : this._locale;
         onResourceChangeHandle(this.destroy$, this.onResourceChange, this);
     }
 

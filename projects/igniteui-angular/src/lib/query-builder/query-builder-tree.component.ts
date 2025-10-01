@@ -36,7 +36,7 @@ import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxSelectItemComponent } from '../select/select-item.component';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { DEFAULT_LOCALE, getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IComboSelectionChangingEventArgs, IgxComboComponent } from "../combo/combo.component";
 import { IgxComboHeaderDirective } from '../combo/public_api';
@@ -1723,7 +1723,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     private initLocale() {
         this._defaultLocale = getCurrentI18n();
-        this._locale = this._localeId !== this._defaultLocale ? this._localeId : this._locale;
+        this._locale = this._localeId !== DEFAULT_LOCALE ? this._localeId : this._locale;
         onResourceChangeHandle(this.destroy$, this.onResourceChange, this);
     }
 
