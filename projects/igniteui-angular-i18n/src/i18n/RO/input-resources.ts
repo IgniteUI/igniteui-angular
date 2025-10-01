@@ -1,10 +1,7 @@
-import { IInputResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { InputResourceStringsRO as AInputResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Romanian resource strings for IgxInput
  */
-export const InputResourceStringsRO = {
-    igx_input_upload_button: 'Încărcare fişier',
-    igx_input_file_placeholder: 'Niciun fișier ales'
-} satisfies MakeRequired<IInputResourceStrings>;
+export const InputResourceStringsRO = prefixResource(IGX_PREFIX, AInputResourceStrings);

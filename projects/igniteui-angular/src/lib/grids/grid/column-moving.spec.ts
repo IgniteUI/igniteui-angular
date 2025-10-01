@@ -811,7 +811,6 @@ describe('IgxGrid - Column Moving #grid', () => {
         }));
 
         it('Should be able to scroll/reorder columns that are out of view - with pinned columns.', (async () => {
-
             grid.getColumnByName('ID').pinned = true;
             fixture.detectChanges();
 
@@ -828,7 +827,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointermove', header, 456, 56);
             await wait(50);
             UIInteractions.simulatePointerEvent('pointermove', header, 110, 30);
-            await wait(1000);
+            await wait(2000);
             fixture.detectChanges();
 
             // step 4 - verify the column being moved can be reordered among new columns

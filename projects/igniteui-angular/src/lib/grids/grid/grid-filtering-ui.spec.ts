@@ -22,7 +22,6 @@ import { IgxBadgeComponent } from '../../badge/badge.component';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
-import { igxI18N } from '../../core/i18n/resources';
 import { DatePipe, registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import localeFr from '@angular/common/locales/fr';
@@ -50,12 +49,13 @@ import { GridSelectionMode, FilterMode, Size } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { FilteringStrategy, FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxInputGroupComponent } from '../../input-group/public_api';
-import { formatDate, getComponentSize } from '../../core/utils';
+import { getComponentSize } from '../../core/utils';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
 import { GridResourceStringsEN } from '../../core/i18n/grid-resources';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
 import { IgxTimePickerComponent } from '../../time-picker/time-picker.component';
+import { changei18n } from '../../core/i18n/resources';
 
 const DEBOUNCE_TIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
@@ -1206,10 +1206,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('Should correctly change resource strings for filter row using Changei18n.', fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringComponent);
-            const strings = GridResourceStringsEN;
+            const strings = Object.assign({}, GridResourceStringsEN);
             strings.igx_grid_filter = 'My filter';
             strings.igx_grid_filter_row_close = 'My close';
-            igxI18N.instance().changei18n(strings);
+            changei18n(strings);
             fix.detectChanges();
 
             const initialChips = GridFunctions.getFilteringChips(fix);
@@ -1227,7 +1227,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(close.nativeElement.childNodes[1].textContent.trim()).toBe('My close');
             expect(reset.nativeElement.childNodes[1].textContent.trim()).toBe('Reset');
 
-            igxI18N.instance().changei18n({
+            changei18n({
                 igx_grid_filter: 'Filter',
                 igx_grid_filter_row_close: 'Close'
             });

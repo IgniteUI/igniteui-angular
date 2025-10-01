@@ -1,10 +1,7 @@
-import { IInputResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { InputResourceStringsZHHANS as AInputResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Simplified Chinese (zh-Hans) resource strings for IgxInput
  */
-export const InputResourceStringsZHHANS = {
-    igx_input_upload_button: '上传文件',
-    igx_input_file_placeholder: '未选择文件'
-} satisfies MakeRequired<IInputResourceStrings>;
+export const InputResourceStringsZHHANS = prefixResource(IGX_PREFIX, AInputResourceStrings);
