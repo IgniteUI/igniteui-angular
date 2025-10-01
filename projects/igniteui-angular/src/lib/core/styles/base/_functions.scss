@@ -63,3 +63,12 @@
     }
     @return $items;
 }
+
+/// Prefixes a CSS selector with the given string.
+/// @access private
+/// @param {String} $prefix - The prefix to add.
+/// @param {String} $selector - The selector to be prefixed.
+/// @return {String} - The prefixed selector.
+@function prefix-selector($prefix, $selector) {
+    @return string.insert($selector, #{$prefix}-, 1);
+}

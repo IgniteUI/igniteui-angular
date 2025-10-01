@@ -11,7 +11,12 @@
 /// @requires ripple-theme
 /// @requires {mixin} ripple
 @mixin tabs($theme) {
-    @include css-vars($theme, 'igx-tabs');
+    $prefix: map.get($theme, '_meta', 'element-prefix');
+    $selectors: (
+        prefix-selector($prefix, 'tabs'),
+    );
+
+    @include css-vars($theme, $selectors);
 
     $variant: map.get($theme, '_meta', 'theme');
     $not-bootstrap-theme: $variant != 'bootstrap';

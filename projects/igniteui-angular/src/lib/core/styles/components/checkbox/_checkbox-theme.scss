@@ -7,7 +7,12 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin checkbox($theme) {
-    @include css-vars($theme, 'igx-checkbox');
+    $prefix: map.get($theme, '_meta', 'element-prefix');
+    $selectors: (
+        prefix-selector($prefix, 'checkbox'),
+    );
+
+    @include css-vars($theme, $selectors);
     $theme-variant: map.get($theme, '_meta', 'variant');
     $variant: map.get($theme, '_meta', 'theme');
     $material-theme: $variant == 'material';

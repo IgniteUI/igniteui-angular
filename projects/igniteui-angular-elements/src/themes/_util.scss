@@ -29,9 +29,9 @@ $elements-selector-prefix: 'igc';
     $prefix: 'ig';
     $result: $theme_schema;
 
-    @if map.has-key($theme_schema, "name") {
-        $name: map.get($theme_schema, "name");
-        $selector: map.get($theme_schema, "selector") or $name;
+    @if map.has-key($theme_schema, 'name') {
+        $name: map.get($theme_schema, 'name');
+        $element-prefix: map.get($theme_schema, '_meta', 'element-prefix');
         $modified: ();
 
         // @debug "name: #{$name}";
@@ -40,29 +40,54 @@ $elements-selector-prefix: 'igc';
             $name: list.nth(string.split($name, 'igx-'), -1);
             $name: '#{$elements-var-prefix}-#{$name}';
             // @debug "name after: #{$name}";
-            $modified: map.merge($modified, (name: $name));
+            $modified: map.merge(
+                $modified,
+                (
+                    name: $name,
+                )
+            );
         }
 
         // For exposed components also modify selector with updated element prefix:
-        @if list.index(vars.$allowed, map.get($theme_schema, "name")) {
-            // @debug "selector before: #{$selector}";
-            $selector: updateSelectors($selector);
-            // @debug "selector after: #{$selector}";
+        @if list.index(vars.$allowed, map.get($theme_schema, 'name')) {
+            // @debug "selector before: #{$element-prefix}";
+            $element-prefix: $elements-selector-prefix;
+            // @debug "selector after: #{$element-prefix}";
         }
 
-        $modified: map.merge($modified, (selector: $selector));
+        $modified: map.merge(
+            $modified,
+            (
+                _meta: map.merge(
+                    map.get($theme_schema, '_meta'),
+                    (
+                        'element-prefix': $element-prefix,
+                    )
+                ),
+            )
+        );
 
         @if map.has-key($theme_schema, 'themes') {
             $themes: map.get($theme_schema, 'themes');
             $newThemes: ();
             @each $name, $sub_schema in $themes {
-                $newThemes: map.set($newThemes, $name, updateElementName($sub_schema));
+                $newThemes: map.set(
+                    $newThemes,
+                    $name,
+                    updateElementName($sub_schema)
+                );
             }
-            $modified: map.merge($modified, (themes: $newThemes));
+            $modified: map.merge(
+                $modified,
+                (
+                    themes: $newThemes,
+                )
+            );
         }
 
         $result: map.merge($result, $modified);
     }
+
     @return $result;
 }
 
@@ -72,9 +97,9 @@ $elements-selector-prefix: 'igc';
 /// @return {String} - Updated selector(s) with `igc-` prefixed equivalents
 @function updateSelectors($selector) {
     $result: ();
-    $selectors: string.split($selector, ", ");
+    // $selectors: string.split($selector, ", ");
 
-    @each $sel in $selectors {
+    @each $sel in $selector {
         $result: list.append($result, $sel, comma);
 
         @if string.index($sel, 'igx-') == 1 {
@@ -84,7 +109,7 @@ $elements-selector-prefix: 'igc';
         }
     }
 
-    @return "#{$result}";
+    @return '#{$result}';
 }
 
 /// Generates an Ignite UI for Angular Elements global theme.
@@ -109,6 +134,6 @@ $elements-selector-prefix: 'igc';
         $palette: $palette,
         $exclude: $exclude,
         $schema: $schema,
-        $theme-handler: meta.get-function("updateElementName")
+        $theme-handler: meta.get-function('updateElementName')
     );
 }

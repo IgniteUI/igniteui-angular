@@ -5,7 +5,12 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin combo($theme) {
-    @include css-vars($theme, 'igx-combo, igx-simple-combo');
+    $prefix: map.get($theme, '_meta', 'element-prefix');
+    $selectors: (
+        prefix-selector($prefix, 'combo'),
+        prefix-selector($prefix, 'simple-combo'),
+    );
+    @include css-vars($theme, $selectors);
 
     $variant: map.get($theme, '_meta', 'theme');
 
