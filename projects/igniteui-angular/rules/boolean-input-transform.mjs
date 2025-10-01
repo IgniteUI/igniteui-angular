@@ -5,11 +5,11 @@ import { TypeFlags } from 'typescript';
 
 // export type Options = [
 //   {
-//     suffixes?: string[];
+//     prop?: string;
 //   },
 // ];
 
-// export type MessageIds = 'serviceSuffix';
+// export type MessageIds = 'missingTransform';
 
 export const RULE_NAME = 'boolean-input-transform';
 
@@ -48,6 +48,7 @@ function isBooleanProperty(property, parserServices) {
  * @returns {boolean}
  */
 function isBooleanType(node, parserServices) {
+    return false;
     const tsNode = parserServices.esTreeNodeToTSNodeMap.get(node);
     const checker = parserServices.program.getTypeChecker();
     const type = checker.getTypeAtLocation(tsNode);
@@ -84,7 +85,7 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
             decorator,
             ASTUtils.isClassDeclaration,
         );
-        // classDeclaration.body.body.indexOff(property);
+        // classDeclaration.body.body.indexOf(property);
 
         let isBoolean = isBooleanProperty(property/*, parserServices*/);
 
