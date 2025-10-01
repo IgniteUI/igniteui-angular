@@ -1,14 +1,11 @@
-import { DateRangePickerResourceStringsEN as ADateRangePickerResourceStrings } from 'igniteui-i18n-core';
-import { convertToIgxResource } from './resources';
+import {
+    type IDateRangePickerResourceStrings as IADateRangePickerResourceStrings,
+    type PrefixedResourceStrings,
+    DateRangePickerResourceStringsEN as ADateRangePickerResourceStrings,
+    IGX_PREFIX,
+    prefixResource
+} from 'igniteui-i18n-core';
 
-export interface IDateRangePickerResourceStrings {
-    igx_date_range_picker_date_separator?: string;
-    igx_date_range_picker_done_button?: string;
-    igx_date_range_picker_cancel_button?: string;
-    igx_date_range_picker_last7Days?: string;
-    igx_date_range_picker_currentMonth?: string;
-    igx_date_range_picker_last30Days?: string;
-    igx_date_range_picker_yearToDate?: string;
-}
+export type IDateRangePickerResourceStrings = PrefixedResourceStrings<IADateRangePickerResourceStrings, typeof IGX_PREFIX>;
 
-export const DateRangePickerResourceStringsEN: IDateRangePickerResourceStrings = convertToIgxResource(ADateRangePickerResourceStrings);
+export const DateRangePickerResourceStringsEN: IDateRangePickerResourceStrings = prefixResource(IGX_PREFIX, ADateRangePickerResourceStrings);

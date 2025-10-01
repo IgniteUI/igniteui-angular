@@ -1,7 +1,7 @@
-import { IChipResourceStrings, convertToIgxResource } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
 import { ChipResourceStringsPL as AChipResourceStrings } from 'igniteui-i18n-resources';
 
 /**
  * Polish resource strings for IgxChip
  */
-export const ChipResourceStringsPL: IChipResourceStrings = convertToIgxResource(AChipResourceStrings);
+export const ChipResourceStringsPL = prefixResource(IGX_PREFIX, AChipResourceStrings);

@@ -1,9 +1,11 @@
-import { TreeResourceStringsEN as ATreeResourceStrings } from 'igniteui-i18n-core';
-import { convertToIgxResource } from './resources';
+import {
+    type ITreeResourceStrings as IATreeResourceStrings,
+    type PrefixedResourceStrings,
+    IGX_PREFIX,
+    TreeResourceStringsEN as ATreeResourceStrings,
+    prefixResource
+} from 'igniteui-i18n-core';
 
-export interface ITreeResourceStrings {
-    igx_expand?: string;
-    igx_collapse?: string;
-}
+export type ITreeResourceStrings = PrefixedResourceStrings<IATreeResourceStrings, typeof IGX_PREFIX>;
 
-export const TreeResourceStringsEN: ITreeResourceStrings = convertToIgxResource(ATreeResourceStrings);
+export const TreeResourceStringsEN: ITreeResourceStrings = prefixResource(IGX_PREFIX, ATreeResourceStrings);

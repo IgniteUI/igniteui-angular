@@ -1,13 +1,11 @@
-import { PaginatorResourceStringsEN as APaginatorResourceStrings } from 'igniteui-i18n-core';
-import { convertToIgxResource } from './resources';
+import {
+    type IPaginatorResourceStrings as IAPaginatorResourceStrings,
+    type PrefixedResourceStrings,
+    IGX_PREFIX,
+    PaginatorResourceStringsEN as APaginatorResourceStrings,
+    prefixResource
+} from 'igniteui-i18n-core';
 
-export interface IPaginatorResourceStrings {
-    igx_paginator_label?: string;
-    igx_paginator_pager_text?: string;
-    igx_paginator_first_page_button_text?: string;
-    igx_paginator_previous_page_button_text?: string;
-    igx_paginator_last_page_button_text?: string;
-    igx_paginator_next_page_button_text?: string;
-}
+export type IPaginatorResourceStrings = PrefixedResourceStrings<IAPaginatorResourceStrings, typeof IGX_PREFIX>;
 
-export const PaginatorResourceStringsEN: IPaginatorResourceStrings = convertToIgxResource(APaginatorResourceStrings);
+export const PaginatorResourceStringsEN: IPaginatorResourceStrings = prefixResource(IGX_PREFIX, APaginatorResourceStrings);

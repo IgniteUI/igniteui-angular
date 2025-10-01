@@ -1,7 +1,7 @@
-import { IListResourceStrings, convertToIgxResource } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
 import { ListResourceStringsFR as AListResourceStrings } from 'igniteui-i18n-resources';
 
 /**
  * French resource strings for IgxList
  */
-export const ListResourceStringsFR: IListResourceStrings = convertToIgxResource(AListResourceStrings);
+export const ListResourceStringsFR = prefixResource(IGX_PREFIX, AListResourceStrings);

@@ -1,7 +1,7 @@
-import { IBannerResourceStrings, convertToIgxResource } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
 import { BannerResourceStringsPL as ABannerResourceStrings } from 'igniteui-i18n-resources';
 
 /**
  * Polish resource strings for IgxBanner
  */
-export const BannerResourceStringsPL: IBannerResourceStrings = convertToIgxResource(ABannerResourceStrings);
+export const BannerResourceStringsPL = prefixResource(IGX_PREFIX, ABannerResourceStrings);

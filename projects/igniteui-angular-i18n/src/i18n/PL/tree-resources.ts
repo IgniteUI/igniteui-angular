@@ -1,7 +1,7 @@
-import { ITreeResourceStrings, convertToIgxResource } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
 import { TreeResourceStringsPL as ATreeResourceStrings } from 'igniteui-i18n-resources';
 
 /**
  * Polish resource strings for IgxTree
  */
-export const TreeResourceStringsPL: ITreeResourceStrings = convertToIgxResource(ATreeResourceStrings);
+export const TreeResourceStringsPL = prefixResource(IGX_PREFIX, ATreeResourceStrings);

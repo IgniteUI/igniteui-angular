@@ -1,7 +1,7 @@
-import { IQueryBuilderResourceStrings, convertToIgxResource } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
 import { QueryBuilderResourceStringsPT as AQueryBuilderResourceStrings } from 'igniteui-i18n-resources';
 
 /**
  * Portuguese resource strings for IgxQueryBuilder
  */
-export const QueryBuilderResourceStringsPT: IQueryBuilderResourceStrings = convertToIgxResource(AQueryBuilderResourceStrings);
+export const QueryBuilderResourceStringsPT = prefixResource(IGX_PREFIX, AQueryBuilderResourceStrings);

@@ -1,11 +1,11 @@
-import { CarouselResourceStringsEN as ACarouselResourceStrings } from 'igniteui-i18n-core';
-import { convertToIgxResource } from './resources';
+import {
+    type ICarouselResourceStrings as IACarouselResourceStrings,
+    CarouselResourceStringsEN as ACarouselResourceStrings,
+    type PrefixedResourceStrings,
+    IGX_PREFIX,
+    prefixResource
+} from 'igniteui-i18n-core';
 
-export interface ICarouselResourceStrings {
-    igx_carousel_of?: string;
-    igx_carousel_slide?: string;
-    igx_carousel_previous_slide?: string;
-    igx_carousel_next_slide?: string;
-}
+export type ICarouselResourceStrings = PrefixedResourceStrings<IACarouselResourceStrings, typeof IGX_PREFIX>;
 
-export const CarouselResourceStringsEN: ICarouselResourceStrings = convertToIgxResource(ACarouselResourceStrings);
+export const CarouselResourceStringsEN: ICarouselResourceStrings = prefixResource(IGX_PREFIX, ACarouselResourceStrings);

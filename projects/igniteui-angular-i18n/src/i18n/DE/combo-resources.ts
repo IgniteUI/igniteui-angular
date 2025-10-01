@@ -1,7 +1,7 @@
-import { IComboResourceStrings, convertToIgxResource } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
 import { ComboResourceStringsDE as AComboResourceStrings } from 'igniteui-i18n-resources';
 
 /**
  * German resource strings for IgxCombo
  */
-export const ComboResourceStringsDE: IComboResourceStrings = convertToIgxResource(AComboResourceStrings);
+export const ComboResourceStringsDE = prefixResource(IGX_PREFIX, AComboResourceStrings);

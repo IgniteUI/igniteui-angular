@@ -1,7 +1,7 @@
-import { ICalendarResourceStrings, convertToIgxResource } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
 import { CalendarResourceStringsIT as ACalendarResourceStrings } from 'igniteui-i18n-resources';
 
 /**
  * Italian resource strings for IgxCalendar
  */
-export const CalendarResourceStringsIT: ICalendarResourceStrings = convertToIgxResource(ACalendarResourceStrings);
+export const CalendarResourceStringsIT = prefixResource(IGX_PREFIX, ACalendarResourceStrings);

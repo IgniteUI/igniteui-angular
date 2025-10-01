@@ -1,7 +1,7 @@
-import { IPaginatorResourceStrings, convertToIgxResource } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
 import { PaginatorResourceStringsNL as APaginatorResourceStrings } from 'igniteui-i18n-resources';
 
 /**
  * Dutch resource strings for IgxPaginator
  */
-export const PaginatorResourceStringsNL: IPaginatorResourceStrings = convertToIgxResource(APaginatorResourceStrings);
+export const PaginatorResourceStringsNL = prefixResource(IGX_PREFIX, APaginatorResourceStrings);

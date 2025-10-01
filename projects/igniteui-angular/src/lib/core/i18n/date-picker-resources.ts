@@ -1,9 +1,11 @@
-import { DatePickerResourceStringsEN as ADatePickerResourceStrings } from 'igniteui-i18n-core';
-import { convertToIgxResource } from './resources';
+import {
+    type IDatePickerResourceStrings as IADatePickerResourceStrings,
+    type PrefixedResourceStrings,
+    DatePickerResourceStringsEN as ADatePickerResourceStrings,
+    IGX_PREFIX,
+    prefixResource
+} from 'igniteui-i18n-core';
 
-export interface IDatePickerResourceStrings {
-    igx_date_picker_change_date?: string;
-    igx_date_picker_choose_date?: string;
-}
+export type IDatePickerResourceStrings = PrefixedResourceStrings<IADatePickerResourceStrings, typeof IGX_PREFIX>;
 
-export const DatePickerResourceStringsEN: IDatePickerResourceStrings = convertToIgxResource(ADatePickerResourceStrings);
+export const DatePickerResourceStringsEN: IDatePickerResourceStrings = prefixResource(IGX_PREFIX, ADatePickerResourceStrings);

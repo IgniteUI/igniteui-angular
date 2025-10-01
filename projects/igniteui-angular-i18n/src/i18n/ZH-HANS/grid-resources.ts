@@ -1,7 +1,7 @@
-import { IGridResourceStrings, convertToIgxResource } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
 import { GridResourceStringsZHHANS as AGridResourceStrings } from 'igniteui-i18n-resources';
 
 /**
  * Simplified Chinese (zh-Hans) resource strings for IgxGrid
  */
-export const GridResourceStringsZHHANS: IGridResourceStrings = convertToIgxResource(AGridResourceStrings);
+export const GridResourceStringsZHHANS = prefixResource(IGX_PREFIX, AGridResourceStrings);

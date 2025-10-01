@@ -1,7 +1,7 @@
-import { IGridResourceStrings, convertToIgxResource } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
 import { GridResourceStringsNB as AGridResourceStrings } from 'igniteui-i18n-resources';
 
 /**
  * Norwegian resource strings for IgxGrid
  */
-export const GridResourceStringsNB: IGridResourceStrings = convertToIgxResource(AGridResourceStrings);
+export const GridResourceStringsNB = prefixResource(IGX_PREFIX, AGridResourceStrings);

@@ -16,7 +16,6 @@ import { IBannerResourceStrings } from './banner-resources';
 import {
     getCurrentResourceStrings as getCurrentResourceStringsCore,
     IResourceStrings as IResourceStringsCore,
-    setCurrentI18n,
     getI18nManager
 } from 'igniteui-i18n-core';
 
@@ -39,15 +38,6 @@ function igxRegisterI18n(resourceStrings: IResourceStrings, locale: string) {
         genericResourceStrings[stringKey] = resourceStrings[key];
     }
     getI18nManager().registerI18n(genericResourceStrings, locale);
-}
-
-export function convertToIgxResource<T>(inObject: T) {
-    const result: any = {};
-    const memberNames = Object.getOwnPropertyNames(inObject);
-    for (const memberName of memberNames) {
-        result['igx_' + memberName] = inObject[memberName];
-    }
-    return result;
 }
 
 /** Get current resource strings based on default. Result is truncated result, containing only relevant locale strings. */

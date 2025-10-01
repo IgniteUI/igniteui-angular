@@ -1,7 +1,8 @@
-import { IActionStripResourceStrings, convertToIgxResource } from 'igniteui-angular';
+import { IActionStripResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
 import { ActionStripResourceStringsRO as AActionStripResourceStrings } from 'igniteui-i18n-resources';
 
 /**
  * Romanian resource strings for IgxActionStrip
  */
-export const ActionStripResourceStringsRO: IActionStripResourceStrings = convertToIgxResource(AActionStripResourceStrings);
+export const ActionStripResourceStringsRO = prefixResource(IGX_PREFIX, AActionStripResourceStrings);

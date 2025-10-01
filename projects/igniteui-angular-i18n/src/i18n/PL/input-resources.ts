@@ -1,7 +1,7 @@
-import { IInputResourceStrings, convertToIgxResource } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
 import { InputResourceStringsPL as AInputResourceStrings } from 'igniteui-i18n-resources';
 
 /**
  * Polish resource strings for IgxInput
  */
-export const InputResourceStringsPL: IInputResourceStrings = convertToIgxResource(AInputResourceStrings);
+export const InputResourceStringsPL = prefixResource(IGX_PREFIX, AInputResourceStrings);

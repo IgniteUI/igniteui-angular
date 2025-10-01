@@ -1,79 +1,11 @@
-import { QueryBuilderResourceStringsEN as AQueryBuilderResourceStrings } from 'igniteui-i18n-core';
-import { convertToIgxResource } from './resources';
+import {
+    type IQueryBuilderResourceStrings as IAQueryBuilderResourceStrings,
+    type PrefixedResourceStrings,
+    IGX_PREFIX,
+    QueryBuilderResourceStringsEN as AQueryBuilderResourceStrings,
+    prefixResource
+} from 'igniteui-i18n-core';
 
-export interface IQueryBuilderResourceStrings {
-    igx_query_builder_date_placeholder?: string;
-    igx_query_builder_time_placeholder?: string;
-    igx_query_builder_datetime_placeholder?: string;
-    igx_query_builder_filter_operator_and?: string;
-    igx_query_builder_filter_operator_or?: string;
-    igx_query_builder_filter_contains?: string;
-    igx_query_builder_filter_doesNotContain?: string;
-    igx_query_builder_filter_startsWith?: string;
-    igx_query_builder_filter_endsWith?: string;
-    igx_query_builder_filter_equals?: string;
-    igx_query_builder_filter_doesNotEqual?: string;
-    igx_query_builder_filter_empty?: string;
-    igx_query_builder_filter_notEmpty?: string;
-    igx_query_builder_filter_null?: string;
-    igx_query_builder_filter_notNull?: string;
-    igx_query_builder_filter_in?: string;
-    igx_query_builder_filter_notIn?: string;
-    igx_query_builder_filter_before?: string;
-    igx_query_builder_filter_after?: string;
-    igx_query_builder_filter_at?: string;
-    igx_query_builder_filter_not_at?: string;
-    igx_query_builder_filter_at_before?: string;
-    igx_query_builder_filter_at_after?: string;
-    igx_query_builder_filter_today?: string;
-    igx_query_builder_filter_yesterday?: string;
-    igx_query_builder_filter_thisMonth?: string;
-    igx_query_builder_filter_lastMonth?: string;
-    igx_query_builder_filter_nextMonth?: string;
-    igx_query_builder_filter_thisYear?: string;
-    igx_query_builder_filter_lastYear?: string;
-    igx_query_builder_filter_nextYear?: string;
-    igx_query_builder_filter_greaterThan?: string;
-    igx_query_builder_filter_lessThan?: string;
-    igx_query_builder_filter_greaterThanOrEqualTo?: string;
-    igx_query_builder_filter_lessThanOrEqualTo?: string;
-    igx_query_builder_filter_true?: string;
-    igx_query_builder_filter_false?: string;
-    igx_query_builder_filter_all?: string;
-    igx_query_builder_from_label?: string;
-    igx_query_builder_select_label?: string;
-    igx_query_builder_where_label?: string;
-    igx_query_builder_and_group?: string;
-    igx_query_builder_or_group?: string;
-    igx_query_builder_end_group?: string;
-    igx_query_builder_and_label?: string;
-    igx_query_builder_or_label?: string;
-    igx_query_builder_switch_group?: string;
-    igx_query_builder_add_condition?: string;
-    igx_query_builder_add_group?: string;
-    igx_query_builder_add_condition_root?: string;
-    igx_query_builder_add_group_root?: string;
-    igx_query_builder_ungroup?: string;
-    igx_query_builder_delete?: string;
-    igx_query_builder_delete_filters?: string;
-    igx_query_builder_initial_text?: string;
-    igx_query_builder_column_placeholder?: string;
-    igx_query_builder_condition_placeholder?: string;
-    igx_query_builder_value_placeholder?: string;
-    igx_query_builder_query_value_placeholder?: string;
-    igx_query_builder_all_fields?: string;
-    igx_query_builder_details?: string;
-    igx_query_builder_search?: string;
-    igx_query_builder_select_all?: string;
-    igx_query_builder_select_entity?: string;
-    igx_query_builder_select_return_field_single?: string;
-    igx_query_builder_select_return_fields?: string;
-    igx_query_builder_dialog_title?: string;
-    igx_query_builder_dialog_message?: string;
-    igx_query_builder_dialog_checkbox_text?: string;
-    igx_query_builder_dialog_cancel?: string;
-    igx_query_builder_dialog_confirm?: string;
-    igx_query_builder_drop_ghost_text?: string;
-}
+export type IQueryBuilderResourceStrings = PrefixedResourceStrings<IAQueryBuilderResourceStrings, typeof IGX_PREFIX>;
 
-export const QueryBuilderResourceStringsEN: IQueryBuilderResourceStrings = convertToIgxResource(AQueryBuilderResourceStrings);
+export const QueryBuilderResourceStringsEN: IQueryBuilderResourceStrings = prefixResource(IGX_PREFIX, AQueryBuilderResourceStrings);
