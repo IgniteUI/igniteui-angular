@@ -118,7 +118,13 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
 
         if (!isBoolean) return;
 
-        const comments = context.sourceCode.getCommentsBefore(classDeclaration.decorators[0] ?? classDeclaration);
+        // ignore hidden/internal properties
+        const propComments = context.sourceCode.getCommentsBefore(decorator).filter(x => x.type === 'Block');
+        if (propComments.some(x => x.value.includes('@hidden') || x.value.includes('@internal')))
+            return;
+
+        // ignore hidden/internal classes
+        const comments = context.sourceCode.getCommentsBefore(classDeclaration.decorators[0] ?? classDeclaration).filter(x => x.type === 'Block');
         if (comments.some(x => x.value.includes('@hidden') || x.value.includes('@internal')))
             return;
 
