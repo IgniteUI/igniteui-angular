@@ -10,12 +10,9 @@ $theme: $material;
 @include layer(base) {
     %h-actions {
         display: flex;
-        align-items: center; 
+        align-items: center;
         gap: rem(8px);
-
-        [igxIconButton] {
-            color: var-get($theme, 'actions-text-color');
-        }
+	    color: var-get($theme, 'actions-text-color');
 
         &:empty {
             display: none;
@@ -178,7 +175,6 @@ $theme: $material;
             @extend %h-actions;
 
             order: 1;
-            color: var-get($theme, 'actions-text-color');
             margin-inline-start: auto;
             gap: rem(8px);
 
