@@ -34,6 +34,7 @@ export class IgxExcelStyleClearFiltersComponent {
      */
     public clearFilter() {
         this.esf.grid.filteringService.clearFilter(this.esf.column.field);
+        this.esf.filterCleared.emit();
         this.selectAllFilterItems();
     }
 
