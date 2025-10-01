@@ -1,6 +1,6 @@
 import { ASTUtils, Selectors } from '@angular-eslint/utils';
 // import type { TSESTree } from '@typescript-eslint/utils';
-import { ESLintUtils } from '@typescript-eslint/utils';
+import { ESLintUtils, AST_NODE_TYPES } from '@typescript-eslint/utils';
 import { TypeFlags } from 'typescript';
 
 // export type Options = [
@@ -14,6 +14,29 @@ import { TypeFlags } from 'typescript';
 export const RULE_NAME = 'boolean-input-transform';
 
 /**
+ * Get the sibling accessor (getter/setter) of a property, if any.
+ * @param {import('@typescript-eslint/utils').TSESTree.ClassDeclaration} classDeclaration
+ * @param {import('@typescript-eslint/utils').TSESTree.PropertyDefinition | import('@typescript-eslint/utils').TSESTree.MethodDefinition} property
+ * @returns {import('@typescript-eslint/utils').TSESTree.MethodDefinition | undefined} sibling accessor or undefined
+ */
+function getSiblingProperty(classDeclaration, property) {
+    const members = classDeclaration.body.body;
+    const index = members.indexOf(property);
+    return [members[index - 1], members[index + 1]]
+        .filter(Boolean)
+        .find(sibling => isAccessor(sibling) && sibling.key.name === property.key.name);
+}
+
+/**
+ * Check if a property is a getter or setter.
+ * @param {import('@typescript-eslint/utils').TSESTree.PropertyDefinition | import('@typescript-eslint/utils').TSESTree.MethodDefinition} property
+ * @returns {property is import('@typescript-eslint/utils').TSESTree.MethodDefinition}
+ */
+function isAccessor(property) {
+    return property.type === AST_NODE_TYPES.MethodDefinition && (property.kind === 'get' || property.kind === 'set');
+}
+
+/**
  * Check if a property is of boolean type.
  * @param {import('@typescript-eslint/utils').TSESTree.PropertyDefinition | import('@typescript-eslint/utils').TSESTree.MethodDefinition} property
  * @param {import('@typescript-eslint/utils').ParserServicesWithTypeInformation} parserServices
@@ -23,9 +46,11 @@ function isBooleanProperty(property, parserServices) {
     let isBoolean = false;
     let typeAnnotation = null;
 
-    if (property.type === 'MethodDefinition' && (property.kind === 'get' || property.kind === 'set')) {
+    if (!property) return false;
+
+    if (isAccessor(property)) {
         // getter/setter
-        const typeAnnotation = property.value.returnType?.typeAnnotation || property.value.params[0]?.typeAnnotation?.typeAnnotation;
+        const typeAnnotation = property.value.returnType?.typeAnnotation || property.value.params[0]?.typeAnnotation?.typeAnnotation.type;
         isBoolean = typeAnnotation
             ? typeAnnotation === 'TSBooleanKeyword'
             : isBooleanType(property, parserServices);
@@ -87,7 +112,9 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
         );
         // classDeclaration.body.body.indexOf(property);
 
-        let isBoolean = isBooleanProperty(property/*, parserServices*/);
+        let isBoolean = isAccessor(property)
+            ? isBooleanProperty(property) || isBooleanProperty(getSiblingProperty(classDeclaration, property))
+            : isBooleanProperty(property/*, parserServices*/);
 
         if (!isBoolean) return;
 
