@@ -89,7 +89,7 @@
             margin-block: auto;
         }
 
-        > igx-avatar {
+        igx-avatar {
             --ig-size: #{if($variant == 'indigo', 3, 1)};
         }
 
