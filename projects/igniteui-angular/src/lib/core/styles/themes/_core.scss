@@ -91,7 +91,6 @@
     $enhanced-accessibility: false
 ) {
     @include color.configure-colors($enhanced-accessibility);
-    @include theming.configure-prefix('igx');
 
     // Angular hack for binding to [hidden] property
     // not working
