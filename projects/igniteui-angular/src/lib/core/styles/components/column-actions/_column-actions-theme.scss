@@ -5,11 +5,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin column-actions($theme) {
-    $prefix: map.get($theme, '_meta', 'element-prefix');
-    $selectors: (
-        prefix-selector($prefix, 'column-actions'),
-    );
-    @include css-vars($theme, $selectors);
+    @include css-vars($theme);
     $variant: map.get($theme, '_meta', 'theme');
 
     %column-actions-display {

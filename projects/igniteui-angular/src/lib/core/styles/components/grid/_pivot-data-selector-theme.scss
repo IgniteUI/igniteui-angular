@@ -28,6 +28,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
     ));
 }
 
@@ -35,12 +36,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin pivot-data-selector($theme) {
-    $prefix: map.get($theme, '_meta', 'element-prefix');
-    $selectors: (
-        prefix-selector($prefix, 'pivot-data-selector'),
-    );
-
-    @include css-vars($theme, $selectors);
+    @include css-vars($theme);
 
     $variant: map.get($theme, '_meta', 'theme');
 

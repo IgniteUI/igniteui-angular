@@ -8,13 +8,7 @@
 @mixin progress-circular($theme) {
     // Include rotate animation
     @include rotate-center();
-
-    $prefix: map.get($theme, '_meta', 'element-prefix');
-    $selectors: (
-        prefix-selector($prefix, 'circular-bar'),
-    );
-
-    @include css-vars($theme, $selectors);
+    @include css-vars($theme);
 
     $animation-direction: normal;
     $animation-direction-rtl: reverse;

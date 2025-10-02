@@ -18,23 +18,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} excel-filtering
 @mixin grid($theme) {
-    // We do this primarily for the benefit of Angular Elements.
-    // The element selector prefix (igx) is replaced with igc for Elements.
-    // The prefix is configured during the build step for Element styles.
-    // The prefix is otherwise configured in the core mixin by theming.configure-prefix('igx');
-    $prefix: map.get($theme, '_meta', 'element-prefix');
-
-    $selectors: (
-        prefix-selector($prefix, 'grid'),
-        prefix-selector($prefix, 'hierarchical-grid'),
-        prefix-selector($prefix, 'pivot-grid'),
-        prefix-selector($prefix, 'tree-grid'),
-        prefix-selector($prefix, 'advanced-filtering-dialog'),
-        prefix-selector($prefix, 'grid-excel-style-filtering'),
-        '.igx_excel-filter__secondary'
-    );
-
-    @include css-vars($theme, $selectors);
+    @include css-vars($theme);
     @include scale-in-ver-center();
 
     $variant: map.get($theme, '_meta', 'theme');
