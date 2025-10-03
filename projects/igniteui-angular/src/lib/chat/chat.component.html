@@ -1,0 +1,13 @@
+<igc-chat
+  [messages]="messages()"
+  [draftMessage]="draftMessage()"
+  [options]="_mergedOptions()"
+  (igcMessageCreated)="messageCreated.emit($event.detail)"
+  (igcAttachmentClick)="attachmentClick.emit($event.detail)"
+  (igcAttachmentDrag)="attachmentDrag.emit()"
+  (igcAttachmentDrop)="attachmentDrop.emit()"
+  (igcTypingChange)="typingChange.emit($event.detail)"
+  (igcInputFocus)="inputFocus.emit()"
+  (igcInputBlur)="inputBlur.emit()"
+  (igcInputChange)="inputChange.emit($event.detail)"
+></igc-chat>
