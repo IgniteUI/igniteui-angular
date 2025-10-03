@@ -8,8 +8,7 @@
 @mixin progress-circular($theme) {
     // Include rotate animation
     @include rotate-center();
-
-    @include css-vars($theme, 'igx-circular-bar');
+    @include css-vars($theme);
 
     $animation-direction: normal;
     $animation-direction-rtl: reverse;

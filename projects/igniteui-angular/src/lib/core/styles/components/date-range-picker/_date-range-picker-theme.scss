@@ -5,7 +5,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin date-range-picker($theme) {
-    @include css-vars($theme, 'igx-date-range-picker');
+    @include css-vars($theme);
 
     %igx-date-range-picker {
         display: flex;
