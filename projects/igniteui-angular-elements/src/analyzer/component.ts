@@ -1,6 +1,6 @@
 import * as ts from 'typescript';
 import type { ComponentMetadata, ContentQuery } from './types';
-import { asString, first, getDecoratorName, getDecorators, getProvidedAs, getSelector, getTypeExpressionIdentifier, isMethod, isOverride, isProperty, isPublic, isReadOnly } from './utils';
+import { asString, first, getDecoratorName, getDecorators, getProvidedAs, getSelector, getTypeExpressionIdentifier, hasDecoratorTransformValue, isMethod, isOverride, isProperty, isPublic, isReadOnly } from './utils';
 
 
 const isInput = (dec: ts.Decorator) => getDecoratorName(dec).includes('Input');
@@ -116,11 +116,16 @@ export class AnalyzerComponent {
     }
 
     /**
-     * Return all boolean `@Input` properties of the underlying component.
+     * Return boolean `@Input` properties of the underlying component that require transform.
      */
     private get booleanProperties() {
-        return this.inputProperties
-            .filter(prop => this.checker.getTypeAtLocation(prop.valueDeclaration!).getFlags() & ts.TypeFlags.Boolean);
+        const res = this.inputProperties
+            .filter(prop => this.checker.getTypeAtLocation(prop.valueDeclaration!).getFlags() & ts.TypeFlags.Boolean)
+            .filter(prop => {
+                const dec = getDecorators(first(prop.declarations as any)).find(isInput);
+                return !hasDecoratorTransformValue(dec,'booleanAttribute');
+            });
+        return res;
     }
 
     /**
