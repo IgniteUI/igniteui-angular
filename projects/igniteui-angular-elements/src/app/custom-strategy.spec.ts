@@ -49,14 +49,14 @@ describe('Elements: ', () => {
             gridEl.appendChild(columnEl);
 
             // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 4));
 
             const gridComponent = (await gridEl.ngElementStrategy[ComponentRefKey]).instance as IgxGridComponent;
             const columnComponent = (await columnEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
             expect(gridComponent.columnList.toArray()).toContain(columnComponent);
 
             columnEl.remove();
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY: DESTROY + QUERY */ * 3));
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY: DESTROY + QUERY */ * 4));
             expect(gridComponent.columnList.toArray()).toEqual([]);
         });
 
