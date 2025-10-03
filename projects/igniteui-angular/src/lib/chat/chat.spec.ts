@@ -1,15 +1,12 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
-import { IgxChatComponent } from './chat.component'
+import { IgxChatComponent, IgxChatMessageContextDirective, NgChatTemplates } from './chat.component'
 import { Component, signal, TemplateRef, viewChild } from '@angular/core';
-import type { IgcChatMessage } from 'igniteui-webcomponents';
+import type { IgcChatComponent, IgcChatMessage, IgcTextareaComponent } from 'igniteui-webcomponents';
 
 describe('Chat wrapper', () => {
-    function getShadowRoot(element: HTMLElement) {
-        return element.shadowRoot;
-    }
 
     let chatComponent: IgxChatComponent;
-    let chatElement: HTMLElement;
+    let chatElement: IgcChatComponent;
     let fixture: ComponentFixture<IgxChatComponent>;
 
     beforeEach(waitForAsync(() => {
@@ -21,7 +18,7 @@ describe('Chat wrapper', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(IgxChatComponent);
         chatComponent = fixture.componentInstance;
-        chatElement = (fixture.nativeElement as HTMLElement).querySelector('igc-chat');
+        chatElement = getChatElement(fixture);
         fixture.detectChanges();
     })
 
@@ -43,9 +40,10 @@ describe('Chat wrapper', () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
-        const messageElement = getShadowRoot(chatElement).querySelector<HTMLElement>('igc-chat-message');
+
+        const messageElement = getChatMessages(chatElement)[0];
         expect(messageElement).toBeDefined();
-        expect(getShadowRoot(messageElement).textContent.trim()).toEqual(chatComponent.messages()[0].text);
+        expect(getChatMessageDOM(messageElement).textContent.trim()).toEqual(chatComponent.messages()[0].text);
     });
 
     it('correct bindings for draft message', async () => {
@@ -54,29 +52,25 @@ describe('Chat wrapper', () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
-        const textarea = getShadowRoot(getShadowRoot(chatElement).querySelector('igc-chat-input')).querySelector('igc-textarea');
+        const textarea = getChatInput(chatElement);
         expect(textarea.value).toEqual(chatComponent.draftMessage().text);
     });
 });
 
 describe('Chat templates', () => {
-    function getShadowRoot(element: HTMLElement) {
-        return element.shadowRoot;
-    }
-
     let fixture: ComponentFixture<ChatTemplatesBed>;
-    let chatElement: HTMLElement;
+    let chatElement: IgcChatComponent;
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [IgxChatComponent, ChatTemplatesBed]
+            imports: [IgxChatComponent, IgxChatMessageContextDirective, ChatTemplatesBed]
         }).compileComponents();
     }));
 
     beforeEach(() => {
         fixture = TestBed.createComponent(ChatTemplatesBed);
         fixture.detectChanges();
-        chatElement = (fixture.nativeElement as HTMLElement).querySelector('igc-chat');
+        chatElement = getChatElement(fixture);
     });
 
     it('has correct initially bound template', async () => {
@@ -87,20 +81,49 @@ describe('Chat templates', () => {
         // This is so we don't explicitly invoke `viewRef.detectChanges()` inside the returned closure
         // from the wrapper's `_createTemplateRenderer` call.
         fixture.detectChanges();
-        expect(getShadowRoot(getShadowRoot(chatElement).querySelector('igc-chat-message')).textContent.trim())
+        expect(getChatMessageDOM(getChatMessages(chatElement)[0]).textContent.trim())
             .toEqual(`Your message: ${fixture.componentInstance.messages()[0].text}`);
     });
+});
+
+describe('Chat dynamic templates binding', () => {
+    let fixture: ComponentFixture<ChatDynamicTemplatesBed>;
+    let chatElement: IgcChatComponent;
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [IgxChatComponent, IgxChatMessageContextDirective, ChatDynamicTemplatesBed]
+        }).compileComponents();
+    }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(ChatDynamicTemplatesBed);
+        fixture.detectChanges();
+        chatElement = getChatElement(fixture);
+    });
+
+    it('supports late binding', async () => {
+        fixture.componentInstance.bindTemplates();
+        fixture.detectChanges();
+
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(getChatMessageDOM(getChatMessages(chatElement)[0]).textContent.trim())
+            .toEqual(`Your message: ${fixture.componentInstance.messages()[0].text}`);
+    });
+
 });
 
 
 @Component({
     template: `
         <igx-chat [messages]="messages()" [templates]="{messageContent: messageTemplate()}"/>
-        <ng-template #message let-message>
+        <ng-template igxChatMessageContext #message let-message>
             <h3>Your message: {{ message.text }}</h3>
         </ng-template>
     `,
-    imports: [IgxChatComponent]
+    imports: [IgxChatComponent, IgxChatMessageContextDirective]
 })
 class ChatTemplatesBed {
     public messages = signal<IgcChatMessage[]>([{
@@ -109,4 +132,46 @@ class ChatTemplatesBed {
         text: 'Hello world'
     }]);
     public messageTemplate = viewChild.required<TemplateRef<any>>('message');
+}
+
+@Component({
+    template: `
+        <igx-chat [messages]="messages()" [templates]="templates()" />
+        <ng-template igxChatMessageContext #message let-message>
+            <h3>Your message: {{ message.text }}</h3>
+        </ng-template>
+    `,
+    imports: [IgxChatComponent, IgxChatMessageContextDirective]
+})
+class ChatDynamicTemplatesBed {
+    public templates = signal<NgChatTemplates | null>(null);
+    public messages = signal<IgcChatMessage[]>([{
+        id: '1',
+        sender: 'user',
+        text: 'Hello world'
+    }]);
+    public messageTemplate = viewChild.required<TemplateRef<any>>('message');
+
+    public bindTemplates(): void {
+        this.templates.set({
+            messageContent: this.messageTemplate()
+        });
+    }
+}
+
+function getChatElement<T>(fixture: ComponentFixture<T>): IgcChatComponent {
+    const nativeElement = fixture.nativeElement as HTMLElement;
+    return nativeElement.querySelector('igc-chat');
+}
+
+function getChatInput(chat: IgcChatComponent): IgcTextareaComponent {
+    return chat.renderRoot.querySelector('igc-chat-input').shadowRoot.querySelector('igc-textarea');
+}
+
+function getChatMessages(chat: IgcChatComponent): HTMLElement[] {
+    return Array.from(chat.renderRoot.querySelectorAll('igc-chat-message'));
+}
+
+function getChatMessageDOM(message: HTMLElement) {
+    return message.shadowRoot;
 }

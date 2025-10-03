@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     CUSTOM_ELEMENTS_SCHEMA,
+    Directive,
     effect,
     inject,
     input,
@@ -59,11 +60,12 @@ export type NgChatTemplates = {
 
 export type NgChatOptions = Omit<IgcChatOptions, 'renderers'>;
 
+
 @Component({
     selector: 'igx-chat',
     changeDetection: ChangeDetectionStrategy.OnPush,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    templateUrl: './chat.component.html'
+    templateUrl: './chat.component.html',
 })
 export class IgxChatComponent implements OnInit, OnDestroy {
     //#region Internal state
@@ -118,15 +120,14 @@ export class IgxChatComponent implements OnInit, OnDestroy {
         // Templates changed - update transformed templates and viewRefs and merge with options
         effect(() => {
             const templates = this.templates();
-            this._setTemplates(templates);
-
+            this._setTemplates(templates ?? {});
             this._mergeOptions(untracked(() => this.options()));
         });
 
         // Options changed - merge with current template state
         effect(() => {
             const options = this.options();
-            this._mergeOptions(options);
+            this._mergeOptions(options ?? {});
         });
     }
 
@@ -203,5 +204,38 @@ export class IgxChatComponent implements OnInit, OnDestroy {
 
             return viewRef.rootNodes;
         }
+    }
+}
+
+export interface ChatTemplateContext<T> {
+    $implicit: T;
+}
+
+interface ChatInputContext {
+    $implicit: string;
+    attachments: IgcChatMessageAttachment[];
+}
+
+@Directive({ selector: '[igxChatMessageContext]' })
+export class IgxChatMessageContextDirective {
+
+    public static ngTemplateContextGuard(_: IgxChatMessageContextDirective, ctx: unknown): ctx is ChatTemplateContext<IgcChatMessage> {
+        return true;
+    }
+};
+
+@Directive({ selector: '[igxChatAttachmentContext]' })
+export class IgxChatAttachmentContextDirective {
+
+    public static ngTemplateContextGuard(_: IgxChatAttachmentContextDirective, ctx: unknown): ctx is ChatTemplateContext<IgcChatMessageAttachment> {
+        return true;
+    }
+}
+
+@Directive({ selector: '[igxChatInputContext]' })
+export class IgxChatInputContextDirective {
+
+    public static ngTemplateContextGuard(_: IgxChatInputContextDirective, ctx: unknown): ctx is ChatInputContext {
+        return true;
     }
 }
