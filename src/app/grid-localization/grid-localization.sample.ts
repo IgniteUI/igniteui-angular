@@ -35,7 +35,8 @@ import {
     IgxActionStripComponent
 } from 'igniteui-angular';
 import { setCurrentI18n, registerI18n, ResourceStringsEN, getDateFormatter } from 'igniteui-i18n-core';
-import { ResourceStringsBG, ResourceStringsDE, ResourceStringsES, ResourceStringsFR, ResourceStringsIT, ResourceStringsJA, ResourceStringsKO, ResourceStringsZHHANS, ResourceStringsZHHANT } from 'igniteui-i18n-resources';
+import { GridResourceStringsBG, ResourceStringsBG, ResourceStringsDE, ResourceStringsES, ResourceStringsFR, ResourceStringsIT, ResourceStringsJA, ResourceStringsKO, ResourceStringsZHHANS, ResourceStringsZHHANT } from 'igniteui-i18n-resources';
+import { toggleIgxAngularLocalization } from 'igniteui-angular/src/lib/core/i18n/resources';
 
 @Component({
     selector: 'app-grid-localization',
@@ -123,6 +124,7 @@ export class GridLocalizationSampleComponent implements OnInit {
         registerI18n(ResourceStringsZHHANS, 'zh-Hans');
         registerI18n(ResourceStringsZHHANT, 'zh-Hant');
 
+        toggleIgxAngularLocalization(false);
     }
 
     public updateLocale() {

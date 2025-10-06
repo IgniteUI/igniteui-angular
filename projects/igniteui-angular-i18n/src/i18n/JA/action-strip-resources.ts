@@ -4,5 +4,8 @@ import { ActionStripResourceStringsJA as AActionStripResourceStrings } from 'ign
 
 /**
  * Japanese resource strings for IgxActionStrip
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
 export const ActionStripResourceStringsJA = prefixResource(IGX_PREFIX, AActionStripResourceStrings);

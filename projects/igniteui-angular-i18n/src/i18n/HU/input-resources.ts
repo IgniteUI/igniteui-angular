@@ -3,5 +3,8 @@ import { InputResourceStringsHU as AInputResourceStrings } from 'igniteui-i18n-r
 
 /**
  * Hungarian resource strings for IgxInput
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
 export const InputResourceStringsHU = prefixResource(IGX_PREFIX, AInputResourceStrings);

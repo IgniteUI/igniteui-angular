@@ -3,5 +3,8 @@ import { InputResourceStringsPL as AInputResourceStrings } from 'igniteui-i18n-r
 
 /**
  * Polish resource strings for IgxInput
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
 export const InputResourceStringsPL = prefixResource(IGX_PREFIX, AInputResourceStrings);
