@@ -2063,7 +2063,7 @@
 
     %date-disabled-inactive {
         %date-inner {
-            color: var-get($theme, 'inactive-color');
+            color: var-get($theme, 'date-disabled-foreground');
             opacity: 1;
         }
     }
