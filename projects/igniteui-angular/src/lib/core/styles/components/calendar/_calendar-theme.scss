@@ -1774,17 +1774,27 @@
 
     %date-range-preview-weekend {
         %date-inner {
-            color: var-get($theme, 'weekend-color');
+            @if not $bootstrap-theme {
+                color: var-get($theme, 'weekend-color');
+            }
 
             &:hover {
-                color: var-get($theme, 'date-hover-foreground');
+                @if not $bootstrap-theme {
+                    color: var-get($theme, 'date-hover-foreground');
+                } @else {
+                    color: var-get($theme, 'date-selected-foreground');
+                }
             }
         }
     }
 
     %date-range-preview-weekend-active {
         %date-inner {
-            color: var-get($theme, 'date-focus-foreground');
+            @if not $bootstrap-theme {
+                color: var-get($theme, 'date-hover-foreground');
+            } @else {
+                color: var-get($theme, 'date-selected-foreground');
+            }
         }
     }
 
