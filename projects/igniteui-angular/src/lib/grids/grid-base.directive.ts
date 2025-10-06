@@ -31,7 +31,8 @@ import {
     ViewChild,
     ViewChildren,
     ViewContainerRef,
-    DOCUMENT
+    DOCUMENT,
+    inject
 } from '@angular/core';
 import { areEqualArrays, columnFieldPath, formatDate, resizeObservable } from '../core/utils';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
@@ -186,6 +187,7 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { isTree, recreateTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 import { getUUID } from './common/random';
 import { DefaultMergeStrategy, IGridMergeStrategy } from '../data-operations/merge-strategy';
+import { IgxGridSearchService } from './search.service';
 
 interface IMatchInfoCache {
     row: any;
@@ -3367,6 +3369,10 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _rowCount: number;
     private _cellMergeMode: GridCellMergeMode = GridCellMergeMode.onSort;
     private _columnsToMerge: IgxColumnComponent[] = [];
+    private _rebuildSearchCache = false;
+
+    private searchService = inject(IgxGridSearchService);
+
 
     /**
      * @hidden @internal
@@ -3771,6 +3777,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.navigation.grid = this as any;
         this.filteringService.grid = this as any;
         this.summaryService.grid = this as any;
+        this.searchService.grid = this as any;
     }
 
     /**
@@ -4135,6 +4142,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             this._shouldRecalcRowHeight = false;
             this.updateDefaultRowHeight();
         }
+        this._rebuildSearchCache = true;
         this.dataChanged.emit(event);
     }
 
@@ -6982,6 +6990,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.columnList.changes
             .pipe(takeUntil(this.destroy$))
             .subscribe((change: QueryList<IgxColumnComponent>) => {
+                this._rebuildSearchCache = true;
                 this.onColumnsChanged(change);
             });
     }
@@ -8068,68 +8077,82 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     private rebuildMatchCache() {
+
         this._lastSearchInfo.matchInfoCache = [];
 
-        const caseSensitive = this._lastSearchInfo.caseSensitive;
-        const exactMatch = this._lastSearchInfo.exactMatch;
-        const searchText = caseSensitive ? this._lastSearchInfo.searchText : this._lastSearchInfo.searchText.toLowerCase();
-        let data = this.filteredSortedData;
-        if (this.hasCellsToMerge) {
-            let indexes = this.activeRowIndexes;
-            if (this.page > 0) {
-                indexes = indexes.map(x => this.perPage * this.page + x);
-            }
+        // const caseSensitive = this._lastSearchInfo.caseSensitive;
+        // const exactMatch = this._lastSearchInfo.exactMatch;
+        // const searchText = caseSensitive ? this._lastSearchInfo.searchText : this._lastSearchInfo.searchText.toLowerCase();
 
-            data = DataUtil.merge(cloneArray(this.filteredSortedData), this.columnsToMerge, this.mergeStrategy, indexes, this);
-        }
-        const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
-        const columnsPathParts = columnItems.map(col => columnFieldPath(col.field));
+        // const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
+        // const columnsPathParts = columnItems.map(col => columnFieldPath(col.field));
 
-        data.forEach((dataRow, rowIndex) => {
-            const currentRowData = this.isRecordMerged(dataRow) ? dataRow.recordRef : dataRow;
-            columnItems.forEach((c, cid) => {
-                const pipeArgs = this.getColumnByName(c.field).pipeArgs;
-                const value = c.formatter ? c.formatter(resolveNestedPath(currentRowData, columnsPathParts[cid]), currentRowData) :
-                    c.dataType === 'number' ? formatNumber(resolveNestedPath(currentRowData, columnsPathParts[cid]) as number, this.locale, pipeArgs.digitsInfo) :
-                        c.dataType === 'date'
-                            ? formatDate(resolveNestedPath(currentRowData, columnsPathParts[cid]) as string, pipeArgs.format, this.locale, pipeArgs.timezone)
-                            : resolveNestedPath(currentRowData, columnsPathParts[cid]);
-                if (value !== undefined && value !== null && c.searchable) {
-                    let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
-                    const isMergePlaceHolder = this.isRecordMerged(dataRow) ? !!dataRow?.cellMergeMeta.get(c.field)?.root : false;
-                    if (exactMatch) {
-                        if (searchValue === searchText && !isMergePlaceHolder) {
-                            const mic: IMatchInfoCache = {
-                                row: currentRowData,
-                                column: c.field,
-                                index: 0,
-                                metadata: new Map<string, boolean>([['pinned', this.isRecordPinnedByIndex(rowIndex)]])
-                            };
+        // data.forEach((dataRow, rowIndex) => {
+        //     const currentRowData = this.isRecordMerged(dataRow) ? dataRow.recordRef : dataRow;
+        //     columnItems.forEach((c, cid) => {
+        //         const pipeArgs = this.getColumnByName(c.field).pipeArgs;
+        //         const value = c.formatter ? c.formatter(resolveNestedPath(currentRowData, columnsPathParts[cid]), currentRowData) :
+        //             c.dataType === 'number' ? formatNumber(resolveNestedPath(currentRowData, columnsPathParts[cid]) as number, this.locale, pipeArgs.digitsInfo) :
+        //                 c.dataType === 'date'
+        //                     ? formatDate(resolveNestedPath(currentRowData, columnsPathParts[cid]) as string, pipeArgs.format, this.locale, pipeArgs.timezone)
+        //                     : resolveNestedPath(currentRowData, columnsPathParts[cid]);
+        //         if (value !== undefined && value !== null && c.searchable) {
+        //             let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
+        //             const isMergePlaceHolder = this.isRecordMerged(dataRow) ? !!dataRow?.cellMergeMeta.get(c.field)?.root : false;
+        //             if (exactMatch) {
+        //                 if (searchValue === searchText && !isMergePlaceHolder) {
+        //                     const mic: IMatchInfoCache = {
+        //                         row: currentRowData,
+        //                         column: c.field,
+        //                         index: 0,
+        //                         metadata: new Map<string, boolean>([['pinned', this.isRecordPinnedByIndex(rowIndex)]])
+        //                     };
 
-                            this._lastSearchInfo.matchInfoCache.push(mic);
-                        }
-                    } else {
-                        let occurrenceIndex = 0;
-                        let searchIndex = searchValue.indexOf(searchText);
+        //                     this._lastSearchInfo.matchInfoCache.push(mic);
+        //                 }
+        //             } else {
+        //                 let occurrenceIndex = 0;
+        //                 let searchIndex = searchValue.indexOf(searchText);
 
-                        while (searchIndex !== -1 && !isMergePlaceHolder) {
-                            const mic: IMatchInfoCache = {
-                                row: currentRowData,
-                                column: c.field,
-                                index: occurrenceIndex++,
-                                metadata: new Map<string, boolean>([['pinned', this.isRecordPinnedByIndex(rowIndex)]])
-                            };
+        //                 while (searchIndex !== -1 && !isMergePlaceHolder) {
+        //                     const mic: IMatchInfoCache = {
+        //                         row: currentRowData,
+        //                         column: c.field,
+        //                         index: occurrenceIndex++,
+        //                         metadata: new Map<string, boolean>([['pinned', this.isRecordPinnedByIndex(rowIndex)]])
+        //                     };
 
-                            this._lastSearchInfo.matchInfoCache.push(mic);
+        //                     this._lastSearchInfo.matchInfoCache.push(mic);
 
-                            searchValue = searchValue.substring(searchIndex + searchText.length);
-                            searchIndex = searchValue.indexOf(searchText);
-                        }
-                    }
+        //                     searchValue = searchValue.substring(searchIndex + searchText.length);
+        //                     searchIndex = searchValue.indexOf(searchText);
+        //                 }
+        //             }
+        //         }
+        //     });
+        // });
+
+        if (this._rebuildSearchCache) {
+            const endBuilding = $$igcPerformance.startMeasure("buildCache", true);
+            let data = this.filteredSortedData;
+            if (this.hasCellsToMerge) {
+                let indexes = this.activeRowIndexes;
+                if (this.page > 0) {
+                    indexes = indexes.map(x => this.perPage * this.page + x);
                 }
-            });
-        });
 
+                data = DataUtil.merge(cloneArray(this.filteredSortedData), this.columnsToMerge, this.mergeStrategy, indexes, this);
+            }
+            this.searchService.buildCache(data, this.visibleColumns);
+            this._rebuildSearchCache = false;
+            endBuilding();
+        }
+
+        const endSearch = $$igcPerformance.startMeasure("searching", true);
+
+        const result = this.searchService.search(this._lastSearchInfo.searchText, this._lastSearchInfo.caseSensitive, this._lastSearchInfo.exactMatch);
+        this._lastSearchInfo.matchInfoCache = result;
+        endSearch()
         this._lastSearchInfo.matchCount = this._lastSearchInfo.matchInfoCache.length;
     }
 

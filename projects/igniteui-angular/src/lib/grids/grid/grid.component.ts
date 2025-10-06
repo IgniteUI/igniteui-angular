@@ -55,6 +55,7 @@ import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component'
 import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
 import { Observable, Subject } from 'rxjs';
 import { IgxScrollInertiaDirective } from '../../directives/scroll-inertia/scroll_inertia.directive';
+import { IgxGridSearchService } from '../search.service';
 
 let NEXT_ID = 0;
 
@@ -104,6 +105,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     providers: [
         IgxGridCRUDService,
         IgxGridNavigationService,
+        IgxGridSearchService,
         IgxGridSummaryService,
         IgxGridSelectionService,
         IgxGridValidationService,

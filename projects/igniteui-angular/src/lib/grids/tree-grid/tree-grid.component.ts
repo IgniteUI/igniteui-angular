@@ -85,6 +85,7 @@ import { IgxTextHighlightService } from '../../directives/text-highlight/text-hi
 import { IgxGridCellMergePipe } from '../grid/grid.pipes';
 import { DefaultTreeGridMergeStrategy, IGridMergeStrategy } from '../../data-operations/merge-strategy';
 import { IgxScrollInertiaDirective } from '../../directives/scroll-inertia/scroll_inertia.directive';
+import { IgxGridSearchService } from '../search.service';
 
 let NEXT_ID = 0;
 
@@ -134,7 +135,8 @@ let NEXT_ID = 0;
         IgxFilteringService,
         IgxColumnResizingService,
         IgxForOfSyncService,
-        IgxForOfScrollSyncService
+        IgxForOfScrollSyncService,
+        IgxGridSearchService
     ],
     imports: [
         NgClass,

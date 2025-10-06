@@ -69,6 +69,7 @@ import { IgxActionStripToken } from '../../action-strip/token';
 import { flatten } from '../../core/utils';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IgxScrollInertiaDirective } from '../../directives/scroll-inertia/scroll_inertia.directive';
+import { IgxGridSearchService } from '../search.service';
 
 let NEXT_ID = 0;
 
@@ -316,7 +317,8 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         IgxColumnResizingService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService,
-        IgxRowIslandAPIService
+        IgxRowIslandAPIService,
+        IgxGridSearchService
     ],
     imports: [
         NgClass,
