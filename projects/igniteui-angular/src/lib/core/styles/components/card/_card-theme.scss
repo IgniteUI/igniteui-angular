@@ -1,12 +1,11 @@
 @use 'sass:map';
 @use '../../base' as *;
 
-/// Card Component
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin card($theme) {
-    @include css-vars($theme, 'igx-card');
+    @include css-vars($theme);
     $variant: map.get($theme, '_meta', 'theme');
     $not-material-theme: $variant != 'material';
 
