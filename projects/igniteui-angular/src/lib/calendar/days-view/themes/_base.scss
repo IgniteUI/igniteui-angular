@@ -191,8 +191,28 @@ $theme: $material;
         @include m(weekend) {
             @include e(inner) {
                 color: var-get($theme, 'weekend-color');
+	            
+	            &:hover {
+		            color: var-get($theme, 'date-hover-foreground');
+	            }
             }
         }
+	    
+	    @include mx('weekend', 'range-preview') {
+		    @include e(inner) {
+			    color: var-get($theme, 'weekend-color');
+			    
+			    &:hover {
+				    color: var-get($theme, 'date-hover-foreground');
+			    }
+		    }
+	    }
+	    
+	    @include mx('weekend', 'range-preview', 'active') {
+		    @include e(inner) {
+			    color: var-get($theme, 'date-focus-foreground');
+		    }
+	    }
 
         @include m(week-number) {
             margin-inline-end: rem(4px);
