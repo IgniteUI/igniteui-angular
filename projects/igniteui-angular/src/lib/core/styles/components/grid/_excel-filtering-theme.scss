@@ -4,13 +4,8 @@
 @use '../button-group/button-group-theme' as *;
 @use '../tree/tree-theme' as *;
 
-////
-/// @group themes
-/// @access private
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
-
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The grid theme used to style the component.
 @mixin excel-filtering($theme) {
     $variant: map.get($theme, '_meta', 'variant');

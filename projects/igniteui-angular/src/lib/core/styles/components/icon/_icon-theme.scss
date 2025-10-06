@@ -1,7 +1,7 @@
+// stylelint-disable font-family-no-missing-generic-family-keyword
 @use 'sass:map';
 @use '../../base' as *;
 
-// stylelint-disable font-family-no-missing-generic-family-keyword
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
