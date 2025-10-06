@@ -183,6 +183,14 @@
             @extend %date-range-preview-inactive !optional;
         }
 
+        @include e(date, $mods: ('range-preview', 'weekend')) {
+            @extend %date-range-preview-weekend !optional;
+        }
+
+        @include e(date, $mods: ('range-preview', 'weekend', 'active')) {
+            @extend %date-range-preview-weekend-active !optional;
+        }
+
         @include e(date, $mods: ('range-preview', 'current')) {
             @extend %date-range-preview-current !optional;
         }

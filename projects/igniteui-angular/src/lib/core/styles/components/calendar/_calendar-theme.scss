@@ -1772,6 +1772,22 @@
         }
     }
 
+    %date-range-preview-weekend {
+        %date-inner {
+            color: var-get($theme, 'weekend-color');
+
+            &:hover {
+                color: var-get($theme, 'date-hover-foreground');
+            }
+        }
+    }
+
+    %date-range-preview-weekend-active {
+        %date-inner {
+            color: var-get($theme, 'date-focus-foreground');
+        }
+    }
+
     %date-range-preview-inactive {
         %date-inner {
             color: var-get($theme, 'inactive-color');
