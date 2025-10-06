@@ -13,7 +13,7 @@ export interface IMergeByResult {
  * Merge strategy interface.
  */
 export interface IGridMergeStrategy {
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     /**
      * Function that processes merging of the whole data per merged field.
      * Returns collection where object has reference to the original record and map of the cell merge metadata per field.
@@ -49,7 +49,7 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
         return this._instance || (this._instance = new this());
     }
 
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     public merge(
         data: any[],
         field: string,
@@ -90,7 +90,7 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
         return result;
     }
 
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     public comparer(prevRecord: any, record: any, field: string, isDate = false, isTime = false): boolean {
         const a = this.getFieldValue(prevRecord,field, isDate, isTime);
         const b = this.getFieldValue(record,field, isDate, isTime);
@@ -145,7 +145,7 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
 
 
 export class DefaultTreeGridMergeStrategy extends DefaultMergeStrategy {
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     public override comparer(prevRecord: any, record: any, field: string, isDate = false, isTime = false): boolean {
         const a = this.getFieldValue( prevRecord.data, field, isDate, isTime);
         const b = this.getFieldValue(record.data,field, isDate, isTime);
@@ -164,7 +164,7 @@ export class DefaultTreeGridMergeStrategy extends DefaultMergeStrategy {
 }
 
 export class ByLevelTreeGridMergeStrategy extends DefaultMergeStrategy {
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     public override comparer(prevRecord: any, record: any, field: string, isDate = false, isTime = false): boolean {
         const a = this.getFieldValue( prevRecord.data, field, isDate, isTime);
         const b = this.getFieldValue(record.data,field, isDate, isTime);
