@@ -477,6 +477,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         summaryService: IgxGridSummaryService,
         @Inject(LOCALE_ID) localeId: string,
         platform: PlatformUtil,
+        searchService: IgxGridSearchService,
         @Optional() @Inject(IgxGridTransaction) protected override _diTransactions?:
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
     ) {
@@ -501,6 +502,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             summaryService,
             localeId,
             platform,
+            searchService,
             _diTransactions,
         );
     }

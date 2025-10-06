@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ColumnType, GridType } from './common/grid.interface';
-import { GridColumnDataType } from 'igniteui-angular';
 import { columnFieldPath, formatDate, resolveNestedPath } from '../core/utils';
 import { formatNumber } from '@angular/common';
+import { GridColumnDataType } from '../data-operations/data-util';
 
 interface IMatchInfoCache {
     row: any;

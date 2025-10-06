@@ -104,6 +104,7 @@ import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.compon
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
 import { IgxPivotGridRow } from  '../grid-public-row';
+import { IgxGridSearchService } from '../search.service';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -159,7 +160,8 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
         IgxPivotGridNavigationService,
         IgxPivotColumnResizingService,
         IgxForOfSyncService,
-        IgxForOfScrollSyncService
+        IgxForOfScrollSyncService,
+        IgxGridSearchService
     ],
     imports: [
         NgClass,
@@ -1036,6 +1038,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         summaryService: IgxGridSummaryService,
         @Inject(LOCALE_ID) localeId: string,
         platform: PlatformUtil,
+        searchService: IgxGridSearchService,
         @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>
     ) {
         super(
@@ -1059,6 +1062,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             summaryService,
             localeId,
             platform,
+            searchService,
             _diTransactions);
     }
 

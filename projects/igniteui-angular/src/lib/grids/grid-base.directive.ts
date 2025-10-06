@@ -32,7 +32,6 @@ import {
     ViewChildren,
     ViewContainerRef,
     DOCUMENT,
-    inject
 } from '@angular/core';
 import { areEqualArrays, columnFieldPath, formatDate, resizeObservable } from '../core/utils';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
@@ -3371,9 +3370,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _columnsToMerge: IgxColumnComponent[] = [];
     private _rebuildSearchCache = false;
 
-    private searchService = inject(IgxGridSearchService);
-
-
     /**
      * @hidden @internal
      */
@@ -3566,6 +3562,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         public summaryService: IgxGridSummaryService,
         @Inject(LOCALE_ID) private localeId: string,
         protected platform: PlatformUtil,
+        private searchService: IgxGridSearchService,
         @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>,
     ) {
         this.locale = this.locale || this.localeId;

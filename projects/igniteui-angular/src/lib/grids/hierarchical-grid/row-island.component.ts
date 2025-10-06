@@ -50,6 +50,7 @@ import { IGridCreatedEventArgs } from './events';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
+import { IgxGridSearchService } from '../search.service';
 
 /* blazorCopyInheritedMembers */
 /* blazorElement */
@@ -393,7 +394,9 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         summaryService: IgxGridSummaryService,
         public rowIslandAPI: IgxRowIslandAPIService,
         @Inject(LOCALE_ID) localeId: string,
-        platform: PlatformUtil) {
+        platform: PlatformUtil,
+        searchService: IgxGridSearchService,
+        ) {
         super(
             validationService,
             selectionService,
@@ -414,7 +417,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             overlayService,
             summaryService,
             localeId,
-            platform
+            platform,
+            searchService
         );
     }
 
