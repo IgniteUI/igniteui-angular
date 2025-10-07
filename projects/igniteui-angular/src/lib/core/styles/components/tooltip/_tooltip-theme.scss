@@ -1,5 +1,6 @@
 @use 'sass:map';
 @use '../../base' as *;
+@use '../../../styles/themes/standalone' as *;
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
@@ -65,28 +66,28 @@
             display: none;
         }
     }
+}
 
-    /// Adds typography styles for the igx-tooltip component.
-    /// Uses custom typography.
-    /// @group typography
-    /// @param {Map} $categories [(tooltip-text: null] - The categories from the typographic scale used for type styles.
-    @mixin tooltip-typography(
-        $categories: (
-            tooltip-text: null,
-        )
-    ) {
-        $tooltip-text: map.get($categories, 'tooltip-text');
+/// Adds typography styles for the igx-tooltip component.
+/// Uses custom typography.
+/// @group typography
+/// @param {Map} $categories [(tooltip-text: null] - The categories from the typographic scale used for type styles.
+@mixin tooltip-typography(
+    $categories: (
+        tooltip-text: null,
+    )
+) {
+    $tooltip-text: map.get($categories, 'tooltip-text');
 
-        @if $tooltip-text {
-            %tooltip-display {
-                @include type-style($tooltip-text);
-            }
-        } @else {
-            %tooltip-display {
-                line-height: rem(16px);
-                font-size: rem(10px);
-                font-weight: 600;
-            }
+    @if $tooltip-text {
+        %tooltip-display {
+            @include type-style($tooltip-text);
+        }
+    } @else {
+        %tooltip-display {
+            line-height: rem(16px);
+            font-size: rem(10px);
+            font-weight: 600;
         }
     }
 }
