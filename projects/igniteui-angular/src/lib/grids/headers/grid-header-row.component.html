@@ -2,15 +2,15 @@
     [class.igx-grid__tr--mrl]="hasMRL">
 
     <!-- Column headers area -->
-    <div class="igx-grid__tr" role="row" [style.width.px]="width">
+    <div class="igx-grid__tr" role="row" [attr.aria-rowindex]="1" [style.width.px]="width">
 
         <!-- Left column moving area -->
-        @if (grid.moving && grid.columnInDrag && pinnedColumnCollection.length <= 0) {
-            <span id="left" class="igx-grid__scroll-on-drag-left" droppable="true" [style.left.px]="grid.pinnedWidth"
+        @if (grid.moving && grid.columnInDrag && pinnedStartColumnCollection.length <= 0) {
+            <span id="left" class="igx-grid__scroll-on-drag-left" droppable="true" [style.left.px]="grid.pinnedStartWidth"
                 [igxColumnMovingDrop]="headerContainer"></span>
         }
-        @if (grid.moving && grid.columnInDrag && pinnedColumnCollection.length > 0) {
-            <span id="left" class="igx-grid__scroll-on-drag-pinned" droppable="true" [style.left.px]="grid.pinnedWidth"
+        @if (grid.moving && grid.columnInDrag && pinnedStartColumnCollection.length > 0) {
+            <span id="left" class="igx-grid__scroll-on-drag-pinned" droppable="true" [style.left.px]="grid.pinnedStartWidth"
                 [igxColumnMovingDrop]="headerContainer"></span>
         }
 
@@ -61,14 +61,12 @@
         }
 
         <!-- Pinned columns collection from the start -->
-        @if (pinnedColumnCollection.length && grid.isPinningToStart) {
-            @for (column of pinnedColumnCollection | igxTopLevel; track trackPinnedColumn(column)) {
+        @if (pinnedStartColumnCollection.length) {
+            @for (column of pinnedStartColumnCollection | igxTopLevel; track trackPinnedColumn(column)) {
                 <igx-grid-header-group
                     [ngClass]="column.headerGroupClasses"
                     [ngStyle]="column.headerGroupStyles | igxHeaderGroupStyle:column:grid.pipeTrigger"
-                    [column]="column"
-                    [style.min-width]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                    [style.flex-basis]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL">
+                    [column]="column">
                 </igx-grid-header-group>
             }
         }
@@ -85,26 +83,30 @@
             <igx-grid-header-group
                 [ngClass]="column.headerGroupClasses"
                 [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger"
-                [column]="column"
-                [style.min-width]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                [style.flex-basis]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL">
+                [column]="column">
             </igx-grid-header-group>
         </ng-template>
 
         <!-- Pinned columns collection at the end -->
-        @if (pinnedColumnCollection.length && !grid.isPinningToStart) {
-            @for (column of pinnedColumnCollection | igxTopLevel; track trackPinnedColumn(column)) {
+        @if (pinnedEndColumnCollection.length) {
+            @for (column of pinnedEndColumnCollection | igxTopLevel; track trackPinnedColumn(column)) {
                 <igx-grid-header-group
                     [ngClass]="column.headerGroupClasses"
                     [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger"
-                    [column]="column"
-                    [style.min-width]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                    [style.flex-basis]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                    [style.left]="column.rightPinnedOffset">
+                    [column]="column">
                 </igx-grid-header-group>
             }
         }
     </div>
+
+    <!-- Render a hidden row of the leaf column headers for accessibility purposes -->
+    @if (grid.hasColumnGroups) {
+        <div role="row" style="width: 0; height: 0; position: absolute; top: -10000px;">
+            @for (column of visibleLeafColumns; track column.index) {
+                <div role="columnheader" [attr.aria-hidden]="isLeafHeaderAriaHidden">{{ column.header || column.field }}</div>
+            }
+        </div>
+    }
 
     <!-- Filter row area -->
     @if (grid.filteringService.isFilterRowVisible) {

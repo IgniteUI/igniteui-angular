@@ -1,31 +1,31 @@
+/* eslint-disable @typescript-eslint/explicit-member-accessibility */
 /**
  * COPIED from @angular/elements with some modified imports/content to contain code within a single file:
  *
- * Copyright (c) 2010-2022 Google LLC. http://angular.io/license
+ * Copyright Google LLC All Rights Reserved.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
   ApplicationRef,
-  ChangeDetectorRef,
   ComponentFactory,
   ComponentFactoryResolver,
   ComponentRef,
   EventEmitter,
   Injector,
   NgZone,
-  OnChanges,
-  SimpleChange,
-  SimpleChanges,
   Type,
+  ɵChangeDetectionScheduler as ChangeDetectionScheduler,
+  ɵNotificationSource as NotificationSource,
+  ɵViewRef as ViewRef,
+  ɵisViewDirty as isViewDirty,
+  ɵmarkForRefresh as markForRefresh,
+  OutputRef,
 } from '@angular/core';
 import {merge, Observable, ReplaySubject} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
+import {switchMap} from 'rxjs/operators';
 
 import {
   NgElementStrategy,
@@ -33,7 +33,7 @@ import {
   NgElementStrategyFactory,
 } from '@angular/elements';
 // import {extractProjectableNodes} from './extract-projectable-nodes';
-// import {isFunction, scheduler, strictEquals} from './utils';
+// import {scheduler} from './utils';
 
 /** Time in milliseconds to wait before destroying the component ref when disconnected. */
 const DESTROY_DELAY = 10;
@@ -45,14 +45,19 @@ const DESTROY_DELAY = 10;
 export class ComponentNgElementStrategyFactory implements NgElementStrategyFactory {
   componentFactory: ComponentFactory<any>;
 
+  inputMap = new Map<string, string>();
+
   constructor(component: Type<any>, injector: Injector) {
     this.componentFactory = injector
       .get(ComponentFactoryResolver)
       .resolveComponentFactory(component);
+    for (const input of this.componentFactory.inputs) {
+      this.inputMap.set(input.propName, input.templateName);
+    }
   }
 
   create(injector: Injector) {
-    return new ComponentNgElementStrategy(this.componentFactory, injector);
+    return new ComponentNgElementStrategy(this.componentFactory, injector, this.inputMap);
   }
 }
 
@@ -70,36 +75,11 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
   /** Reference to the component that was created on connect. */
   private componentRef: ComponentRef<any> | null = null;
 
-  /** Reference to the component view's `ChangeDetectorRef`. */
-  private viewChangeDetectorRef: ChangeDetectorRef | null = null;
-
-  /**
-   * Changes that have been made to component inputs since the last change detection run.
-   * (NOTE: These are only recorded if the component implements the `OnChanges` interface.)
-   */
-  private inputChanges: SimpleChanges | null = null;
-
-  /** Whether changes have been made to component inputs since the last change detection run. */
-  private hasInputChanges = false;
-
-  /** Whether the created component implements the `OnChanges` interface. */
-  private implementsOnChanges = false;
-
-  /** Whether a change detection has been scheduled to run on the component. */
-  private scheduledChangeDetectionFn: (() => void) | null = null;
-
   /** Callback function that when called will cancel a scheduled destruction on the component. */
   private scheduledDestroyFn: (() => void) | null = null;
 
   /** Initial input values that were set before the component was created. */
   private readonly initialInputValues = new Map<string, any>();
-
-  /**
-   * Set of component inputs that have not yet changed, i.e. for which `recordInputChange()` has not
-   * fired.
-   * (This helps detect the first change of an input, even if it is explicitly set to `undefined`.)
-   */
-  private readonly unchangedInputs: Set<string>;
 
   /** Service for setting zone context. */
   private readonly ngZone: NgZone;
@@ -107,14 +87,24 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
   /** The zone the element was created in or `null` if Zone.js is not loaded. */
   private readonly elementZone: Zone | null;
 
+  /**
+   * The `ApplicationRef` shared by all instances of this custom element (and potentially others).
+   */
+  private readonly appRef: ApplicationRef;
+
+  /**
+   * Angular's change detection scheduler, which works independently of zone.js.
+   */
+  private cdScheduler: ChangeDetectionScheduler;
+
   constructor(
     private componentFactory: ComponentFactory<any>,
     private injector: Injector,
+    private inputMap: Map<string, string>,
   ) {
-    this.unchangedInputs = new Set<string>(
-      this.componentFactory.inputs.map(({propName}) => propName),
-    );
-    this.ngZone = this.injector.get<NgZone>(NgZone);
+    this.ngZone = this.injector.get(NgZone);
+    this.appRef = this.injector.get(ApplicationRef);
+    this.cdScheduler = injector.get(ChangeDetectionScheduler);
     this.elementZone = typeof Zone === 'undefined' ? null : this.ngZone.run(() => Zone.current);
   }
 
@@ -155,7 +145,6 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
         if (this.componentRef !== null) {
           this.componentRef.destroy();
           this.componentRef = null;
-          this.viewChangeDetectorRef = null;
         }
       }, DESTROY_DELAY);
     });
@@ -179,36 +168,27 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
    * Sets the input value for the property. If the component has not yet been created, the value is
    * cached and set when the component is created.
    */
-  setInputValue(property: string, value: any, transform?: (value: any) => any): void {
+  setInputValue(property: string, value: any): void {
+    if (this.componentRef === null) {
+      this.initialInputValues.set(property, value);
+      return;
+    }
+
     this.runInZone(() => {
-      if (transform) {
-        value = transform.call(this.componentRef?.instance, value);
+      this.componentRef!.setInput(this.inputMap.get(property) ?? property, value);
+
+      // `setInput` won't mark the view dirty if the input didn't change from its previous value.
+      if (isViewDirty(this.componentRef!.hostView as ViewRef<unknown>)) {
+        // `setInput` will have marked the view dirty already, but also mark it for refresh. This
+        // guarantees the view will be checked even if the input is being set from within change
+        // detection. This provides backwards compatibility, since we used to unconditionally
+        // schedule change detection in addition to the current zone run.
+        markForRefresh(this.componentRef!.changeDetectorRef as ViewRef<unknown>);
+
+        // Notifying the scheduler with `NotificationSource.CustomElement` causes a `tick()` to be
+        // scheduled unconditionally, even if the scheduler is otherwise disabled.
+        this.cdScheduler.notify(NotificationSource.CustomElement);
       }
-
-      if (this.componentRef === null || !this.componentRef.instance) {
-        this.initialInputValues.set(property, value);
-        return;
-      }
-
-      // Ignore the value if it is strictly equal to the current value, except if it is `undefined`
-      // and this is the first change to the value (because an explicit `undefined` _is_ strictly
-      // equal to not having a value set at all, but we still need to record this as a change).
-      if (
-        strictEquals(value, this.getInputValue(property)) &&
-        !(value === undefined && this.unchangedInputs.has(property))
-      ) {
-        return;
-      }
-
-      // Record the changed value and update internal state to reflect the fact that this input has
-      // changed.
-      this.recordInputChange(property, value);
-      this.unchangedInputs.delete(property);
-      this.hasInputChanges = true;
-
-      // Update the component instance and schedule change detection.
-      this.componentRef.instance[property] = value;
-      this.scheduleDetectChanges();
     });
   }
 
@@ -223,28 +203,19 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
       this.componentFactory.ngContentSelectors,
     );
     this.componentRef = this.componentFactory.create(childInjector, projectableNodes, element);
-    this.viewChangeDetectorRef = this.componentRef.injector.get(ChangeDetectorRef);
-
-    this.implementsOnChanges = isFunction((this.componentRef.instance as OnChanges).ngOnChanges);
 
     this.initializeInputs();
     this.initializeOutputs(this.componentRef);
 
-    this.detectChanges();
-
-    const applicationRef = this.injector.get<ApplicationRef>(ApplicationRef);
-    applicationRef.attachView(this.componentRef.hostView);
+    this.appRef.attachView(this.componentRef.hostView);
+    this.componentRef.hostView.detectChanges();
   }
 
   /** Set any stored initial inputs on the component's properties. */
   protected initializeInputs(): void {
-    this.componentFactory.inputs.forEach(({propName, transform}) => {
-      if (this.initialInputValues.has(propName)) {
-        // Call `setInputValue()` now that the component has been instantiated to update its
-        // properties and fire `ngOnChanges()`.
-        this.setInputValue(propName, this.initialInputValues.get(propName), transform);
-      }
-    });
+    for (const [propName, value] of this.initialInputValues) {
+      this.setInputValue(propName, value);
+    }
 
     this.initialInputValues.clear();
   }
@@ -253,87 +224,15 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
   protected initializeOutputs(componentRef: ComponentRef<any>): void {
     const eventEmitters: Observable<NgElementStrategyEvent>[] = this.componentFactory.outputs.map(
       ({propName, templateName}) => {
-        const emitter: EventEmitter<any> = componentRef.instance[propName];
-        return emitter.pipe(map((value) => ({name: templateName, value})));
+        const emitter: EventEmitter<any> | OutputRef<any> = componentRef.instance[propName];
+        return new Observable((observer) => {
+          const sub = emitter.subscribe((value) => observer.next({name: templateName, value}));
+          return () => sub.unsubscribe();
+        });
       },
     );
 
     this.eventEmitters.next(eventEmitters);
-  }
-  /** Calls ngOnChanges with all the inputs that have changed since the last call. */
-  protected callNgOnChanges(componentRef: ComponentRef<any>): void {
-    if (!this.implementsOnChanges || this.inputChanges === null) {
-      return;
-    }
-
-    // Cache the changes and set inputChanges to null to capture any changes that might occur
-    // during ngOnChanges.
-    const inputChanges = this.inputChanges;
-    this.inputChanges = null;
-    (componentRef.instance as OnChanges).ngOnChanges(inputChanges);
-  }
-
-  /**
-   * Marks the component view for check, if necessary.
-   * (NOTE: This is required when the `ChangeDetectionStrategy` is set to `OnPush`.)
-   */
-  protected markViewForCheck(viewChangeDetectorRef: ChangeDetectorRef): void {
-    if (this.hasInputChanges) {
-      this.hasInputChanges = false;
-      viewChangeDetectorRef.markForCheck();
-    }
-  }
-
-  /**
-   * Schedules change detection to run on the component.
-   * Ignores subsequent calls if already scheduled.
-   */
-  protected scheduleDetectChanges(): void {
-    if (this.scheduledChangeDetectionFn) {
-      return;
-    }
-
-    this.scheduledChangeDetectionFn = scheduler.scheduleBeforeRender(() => {
-      this.scheduledChangeDetectionFn = null;
-      this.detectChanges();
-    });
-  }
-
-  /**
-   * Records input changes so that the component receives SimpleChanges in its onChanges function.
-   */
-  protected recordInputChange(property: string, currentValue: any): void {
-    // Do not record the change if the component does not implement `OnChanges`.
-    if (!this.implementsOnChanges) {
-      return;
-    }
-
-    if (this.inputChanges === null) {
-      this.inputChanges = {};
-    }
-
-    // If there already is a change, modify the current value to match but leave the values for
-    // `previousValue` and `isFirstChange`.
-    const pendingChange = this.inputChanges[property];
-    if (pendingChange) {
-      pendingChange.currentValue = currentValue;
-      return;
-    }
-
-    const isFirstChange = this.unchangedInputs.has(property);
-    const previousValue = isFirstChange ? undefined : this.getInputValue(property);
-    this.inputChanges[property] = new SimpleChange(previousValue, currentValue, isFirstChange);
-  }
-
-  /** Runs change detection on the component. */
-  protected detectChanges(): void {
-    if (this.componentRef === null) {
-      return;
-    }
-
-    this.callNgOnChanges(this.componentRef);
-    this.markViewForCheck(this.viewChangeDetectorRef!);
-    this.componentRef.changeDetectorRef.detectChanges();
   }
 
   /** Runs in the angular zone, if present. */
@@ -360,44 +259,7 @@ const scheduler = {
     const id = setTimeout(taskFn, delay);
     return () => clearTimeout(id);
   },
-
-  /**
-   * Schedule a callback to be called before the next render.
-   * (If `window.requestAnimationFrame()` is not available, use `scheduler.schedule()` instead.)
-   *
-   * Returns a function that when executed will cancel the scheduled function.
-   */
-  scheduleBeforeRender(taskFn: () => void): () => void {
-    // TODO(gkalpak): Implement a better way of accessing `requestAnimationFrame()`
-    //                (e.g. accounting for vendor prefix, SSR-compatibility, etc).
-    if (typeof window === 'undefined') {
-      // For SSR just schedule immediately.
-      return scheduler.schedule(taskFn, 0);
-    }
-
-    if (typeof window.requestAnimationFrame === 'undefined') {
-      const frameMs = 16;
-      return scheduler.schedule(taskFn, frameMs);
-    }
-
-    const id = window.requestAnimationFrame(taskFn);
-    return () => window.cancelAnimationFrame(id);
-  },
 };
-
-/**
- * Check whether the input is a function.
- */
-export function isFunction(value: any): value is Function {
-  return typeof value === 'function';
-}
-
-/**
- * Test two values for strict equality, accounting for the fact that `NaN !== NaN`.
- */
-export function strictEquals(value1: any, value2: any): boolean {
-  return value1 === value2 || (value1 !== value1 && value2 !== value2);
-}
 
 export function extractProjectableNodes(host: HTMLElement, ngContentSelectors: string[]): Node[][] {
   const nodes = host.childNodes;

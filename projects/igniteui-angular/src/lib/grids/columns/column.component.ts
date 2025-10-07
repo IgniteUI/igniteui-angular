@@ -56,7 +56,7 @@ import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPi
 import { isConstructor, PlatformUtil } from '../../core/utils';
 import { IgxGridCell } from '../grid-public-cell';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
-import { Size } from '../common/enums';
+import { ColumnPinningPosition, Size } from '../common/enums';
 import { ExpressionsTreeUtil } from '../../data-operations/expressions-tree-util';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
@@ -107,6 +107,31 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this._field;
     }
 
+    /**
+     * Sets/gets whether to merge cells in this column.
+     * ```html
+     * <igx-column [merge]="true"></igx-column>
+     * ```
+     *
+     */
+    @Input()
+    public get merge() {
+        return this._merge;
+    }
+
+    public set merge(value) {
+        if (this.grid.hasColumnLayouts) {
+            console.warn('Merging is not supported with multi-row layouts.');
+            return;
+        }
+        if (value !== this._merge) {
+            this._merge = value;
+            if (this.grid) {
+                this.grid.resetColumnCollections();
+                this.grid.notifyChanges();
+            }
+        }
+    }
 
     /**
      * @hidden @internal
@@ -968,8 +993,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     public get minWidthPx() {
         const gridAvailableSize = this.grid.calcWidth;
-        const isPercentageWidth = this.minWidth && typeof this.minWidth === 'string' && this.minWidth.indexOf('%') !== -1;
-        return isPercentageWidth ? parseFloat(this.minWidth) / 100 * gridAvailableSize : parseFloat(this.minWidth);
+        const minWidth = this.minWidth || this.defaultMinWidth;
+        const isPercentageWidth = minWidth && typeof minWidth === 'string' && minWidth.indexOf('%') !== -1;
+        return isPercentageWidth ? parseFloat(minWidth) / 100 * gridAvailableSize : parseFloat(minWidth);
     }
 
     /**
@@ -986,8 +1012,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     public get minWidthPercent() {
         const gridAvailableSize = this.grid.calcWidth;
-        const isPercentageWidth = this.minWidth && typeof this.minWidth === 'string' && this.minWidth.indexOf('%') !== -1;
-        return isPercentageWidth ? parseFloat(this.minWidth) : parseFloat(this.minWidth) / gridAvailableSize * 100;
+        const minWidth = this.minWidth || this.defaultMinWidth;
+        const isPercentageWidth = minWidth && typeof minWidth === 'string' && minWidth.indexOf('%') !== -1;
+        return isPercentageWidth ? parseFloat(minWidth) : parseFloat(minWidth) / gridAvailableSize * 100;
     }
 
 
@@ -1015,7 +1042,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         this.grid.notifyChanges(true);
     }
     public get minWidth(): string {
-        return !this._defaultMinWidth ? this.defaultMinWidth : this._defaultMinWidth;
+        return this._defaultMinWidth;
     }
 
     /** @hidden @internal **/
@@ -1037,6 +1064,28 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     public get index(): number {
         return (this.grid as any)._columns.indexOf(this);
+    }
+
+    /**
+     * Gets the pinning position of the column.
+     * ```typescript
+     * let pinningPosition = this.column.pinningPosition;
+     */
+    @WatchColumnChanges()
+    @Input()
+    public get pinningPosition(): ColumnPinningPosition {
+        const userSet = this._pinningPosition !== null && this._pinningPosition !== undefined;
+        return userSet ? this._pinningPosition : this.grid.pinning.columns;
+    }
+
+    /**
+     * Sets the pinning position of the column.
+     *```html
+     * <igx-column [pinningPosition]="1"></igx-column>
+     * ```
+     */
+    public set pinningPosition(value: ColumnPinningPosition) {
+        this._pinningPosition = value;
     }
 
     /**
@@ -1199,6 +1248,30 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public set sortStrategy(classRef: ISortingStrategy) {
         this._sortStrategy = classRef;
     }
+
+    /* blazorSuppress */
+    /**
+     * Gets the function that compares values for merging.
+     * ```typescript
+     * let mergingComparer = this.column.mergingComparer'
+     * ```
+     */
+    @Input()
+    public get mergingComparer(): (prevRecord: any, record: any, field: string) => boolean {
+        return this._mergingComparer;
+    }
+
+    /* blazorSuppress */
+    /**
+     * Sets a custom function to compare values for merging.
+     * ```typescript
+     * this.column.mergingComparer = (prevRecord: any, record: any, field: string) => { return prevRecord[field] === record[field]; }
+     * ```
+     */
+    public set mergingComparer(funcRef: (prevRecord: any, record: any, field: string) => boolean) {
+        this._mergingComparer = funcRef;
+    }
+
 
     /* blazorSuppress */
     /**
@@ -1485,7 +1558,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             return this._vIndex;
         }
         const unpinnedColumns = this.grid.unpinnedColumns.filter(c => !c.columnGroup);
-        const pinnedColumns = this.grid.pinnedColumns.filter(c => !c.columnGroup);
+        const pinnedStartColumns = this.grid.pinnedStartColumns.filter(c => !c.columnGroup);
+        const pinnedEndColumns = this.grid.pinnedEndColumns.filter(c => !c.columnGroup);
 
         let col = this;
         let vIndex = -1;
@@ -1500,15 +1574,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         if (!this.pinned) {
             const indexInCollection = unpinnedColumns.indexOf(col);
             vIndex = indexInCollection === -1 ?
-                -1 :
-                (this.grid.isPinningToStart ?
-                    pinnedColumns.length + indexInCollection :
-                    indexInCollection);
+                -1 : pinnedStartColumns.length + indexInCollection;
         } else {
-            const indexInCollection = pinnedColumns.indexOf(col);
-            vIndex = this.grid.isPinningToStart ?
+            const indexInCollection = this.pinningPosition === ColumnPinningPosition.Start ?
+            pinnedStartColumns.indexOf(col) : pinnedEndColumns.indexOf(col);
+            vIndex = this.pinningPosition === ColumnPinningPosition.Start ?
                 indexInCollection :
-                unpinnedColumns.length + indexInCollection;
+                pinnedStartColumns.length + unpinnedColumns.length + indexInCollection;
         }
         this._vIndex = vIndex;
         return vIndex;
@@ -1586,21 +1658,14 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /** @hidden @internal **/
     public get isLastPinned(): boolean {
-        return this.grid.isPinningToStart &&
-            this.grid.pinnedColumns[this.grid.pinnedColumns.length - 1] === this;
+        return this.pinningPosition === ColumnPinningPosition.Start &&
+            this.grid.pinnedStartColumns[this.grid.pinnedStartColumns.length - 1] === this;
     }
 
     /** @hidden @internal **/
     public get isFirstPinned(): boolean {
-        const pinnedCols = this.grid.pinnedColumns.filter(x => !x.columnGroup);
-        return !this.grid.isPinningToStart && pinnedCols[0] === this;
-    }
-
-    /** @hidden @internal **/
-    public get rightPinnedOffset(): string {
-        return this.pinned && !this.grid.isPinningToStart ?
-            - this.grid.pinnedWidth - this.grid.headerFeaturesWidth + 'px' :
-            null;
+        const pinnedCols = this.grid.pinnedEndColumns.filter(x => !x.columnGroup);
+        return this.pinningPosition === ColumnPinningPosition.End && pinnedCols[0] === this;
     }
 
     /** @hidden @internal **/
@@ -1792,6 +1857,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     protected _applySelectableClass = false;
 
     protected _vIndex = NaN;
+    protected _pinningPosition = null;
     /**
      * @hidden
      */
@@ -1840,6 +1906,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      */
     protected _groupingComparer: (a: any, b: any, currRec?: any, groupRec?: any) => number;
+
+    protected _mergingComparer: (prevRecord: any, record: any, field: string) => boolean;
     /**
      * @hidden
      */
@@ -1876,6 +1944,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      */
     protected _groupable = false;
+    /**
+     * @hidden
+     */
+    protected _merge = false;
     /**
      *  @hidden
      */
@@ -2185,20 +2257,19 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
 
     /**
-     * Pins the column at the provided index in the pinned area.
+     * Pins the column in the specified position at the provided index in that pinned area.
      * Defaults to index `0` if not provided, or to the initial index in the pinned area.
      * Returns `true` if the column is successfully pinned. Returns `false` if the column cannot be pinned.
      * Column cannot be pinned if:
      * - Is already pinned
      * - index argument is out of range
-     * - The pinned area exceeds 80% of the grid width
      * ```typescript
      * let success = this.column.pin();
      * ```
      *
      * @memberof IgxColumnComponent
      */
-    public pin(index?: number): boolean {
+    public pin(index?: number, pinningPosition?: ColumnPinningPosition): boolean {
         // TODO: Probably should the return type of the old functions
         // should be moved as a event parameter.
         const grid = (this.grid as any);
@@ -2207,11 +2278,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
 
         if (this.parent && !this.parent.pinned) {
-            return this.topLevelParent.pin(index);
+            return this.topLevelParent.pin(index, pinningPosition);
         }
-
-        const hasIndex = index !== undefined;
-        if (hasIndex && (index < 0 || index > grid.pinnedColumns.length)) {
+        const targetPinPosition = pinningPosition !== null && pinningPosition !== undefined ?  pinningPosition : this.pinningPosition;
+        const pinningVisibleCollection = targetPinPosition === ColumnPinningPosition.Start ?
+        grid.pinnedStartColumns : grid.pinnedEndColumns;
+        const pinningCollection = targetPinPosition === ColumnPinningPosition.Start ?
+        grid._pinnedStartColumns : grid._pinnedEndColumns;
+        const hasIndex = index !== undefined && index !== null;
+        if (hasIndex && (index < 0 || index > pinningVisibleCollection.length)) {
             return false;
         }
 
@@ -2219,7 +2294,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             return false;
         }
 
-        const rootPinnedCols = grid._pinnedColumns.filter((c) => c.level === 0);
+        const rootPinnedCols = pinningCollection.filter((c) => c.level === 0);
         index = hasIndex ? index : rootPinnedCols.length;
         const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: false, cancel: false };
         this.grid.columnPin.emit(args);
@@ -2231,14 +2306,20 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         this.grid.crudService.endEdit(false);
 
         this._pinned = true;
+        if (pinningPosition !== null && pinningPosition !== undefined) {
+            // if user has set some position in the params, overwrite the column's position.
+            this._pinningPosition = pinningPosition;
+        }
+
         this.pinnedChange.emit(this._pinned);
         // it is possible that index is the last position, so will need to find target column by [index-1]
-        const targetColumn = args.insertAtIndex === grid._pinnedColumns.length ?
-            grid._pinnedColumns[args.insertAtIndex - 1] : grid._pinnedColumns[args.insertAtIndex];
+        const targetColumn = args.insertAtIndex === pinningCollection.length ?
+        pinningCollection[args.insertAtIndex - 1] : pinningCollection[args.insertAtIndex];
 
-        if (grid._pinnedColumns.indexOf(this) === -1) {
+        if (pinningCollection.indexOf(this) === -1) {
             if (!grid.hasColumnGroups) {
-                grid._pinnedColumns.splice(args.insertAtIndex, 0, this);
+                pinningCollection.splice(args.insertAtIndex, 0, this);
+                grid._pinnedColumns = grid._pinnedStartColumns.concat(grid._pinnedEndColumns);
             } else {
                 // insert based only on root collection
                 if (this.level === 0) {
@@ -2252,6 +2333,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                     allPinned = allPinned.concat(group.allChildren);
                 });
                 grid._pinnedColumns = allPinned;
+                if (this.pinningPosition === ColumnPinningPosition.Start) {
+                    grid._pinnedStartColumns = allPinned;
+                } else {
+                    grid._pinnedEndColumns = allPinned;
+                }
             }
 
             if (grid._unpinnedColumns.indexOf(this) !== -1) {
@@ -2261,12 +2347,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
 
         if (hasIndex) {
-            index === grid._pinnedColumns.length - 1 ?
+            index === pinningCollection.length - 1 ?
                 grid._moveColumns(this, targetColumn, DropPosition.AfterDropTarget) : grid._moveColumns(this, targetColumn, DropPosition.BeforeDropTarget);
         }
 
         if (this.columnGroup) {
-            this.allChildren.forEach(child => child.pin());
+            this.allChildren.forEach(child => child.pin(null, targetPinPosition));
             grid.reinitPinStates();
         }
 
@@ -2302,7 +2388,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         if (this.parent && this.parent.pinned) {
             return this.topLevelParent.unpin(index);
         }
-        const hasIndex = index !== undefined;
+        const hasIndex = index !== undefined && index !== null;
         if (hasIndex && (index < 0 || index > grid._unpinnedColumns.length)) {
             return false;
         }
@@ -2336,6 +2422,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             grid._unpinnedColumns.splice(index, 0, this);
             if (grid._pinnedColumns.indexOf(this) !== -1) {
                 grid._pinnedColumns.splice(grid._pinnedColumns.indexOf(this), 1);
+            }
+            if (this.pinningPosition === ColumnPinningPosition.Start && grid._pinnedStartColumns.indexOf(this) !== -1) {
+                grid._pinnedStartColumns.splice(grid._pinnedStartColumns.indexOf(this), 1);
+            }
+            if (this.pinningPosition === ColumnPinningPosition.End && grid._pinnedEndColumns.indexOf(this) !== -1) {
+                grid._pinnedEndColumns.splice(grid._pinnedEndColumns.indexOf(this), 1);
             }
         }
 
@@ -2647,8 +2739,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             const currentCalcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
             this._calcWidth = this.getConstrainedSizePx(currentCalcWidth);
         } else {
-            const currentCalcWidth =  parseFloat(this.width);
-            this._calcWidth =this.getConstrainedSizePx(currentCalcWidth);
+            let possibleColumnWidth = '';
+            if (!this.widthSetByUser && this.userSetMinWidthPx && this.userSetMinWidthPx < this.grid.minColumnWidth) {
+                possibleColumnWidth = this.defaultWidth = this.grid.getPossibleColumnWidth(null, this.userSetMinWidthPx);
+            } else {
+                possibleColumnWidth = this.width;
+            }
+
+            const currentCalcWidth = parseFloat(possibleColumnWidth);
+            this._calcWidth = this.getConstrainedSizePx(currentCalcWidth);
         }
         this.calcPixelWidth = parseFloat(this._calcWidth);
     }

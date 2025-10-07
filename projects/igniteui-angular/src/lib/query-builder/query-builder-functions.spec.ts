@@ -626,20 +626,21 @@ export class QueryBuilderFunctions {
             switch (i) {
                 case 0: expect(element).toHaveClass('igx-input-group__input'); break;
                 case 1: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 2: expect(element).toHaveClass('igx-button');
+                case 2: expect(element).toHaveClass('igx-combo__toggle-button'); break;
+                case 3: expect(element).toHaveClass('igx-button');
                     expect(element.innerText).toContain('and'); break;
-                case 3: expect(element).toHaveClass('igx-chip'); break;
-                case 4: expect(element).toHaveClass('igx-icon'); break;
-                case 5: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 6: expect(element).toHaveClass('igx-chip'); break;
-                case 7: expect(element).toHaveClass('igx-icon'); break;
-                case 8: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 9: expect(element).toHaveClass('igx-chip'); break;
-                case 10: expect(element).toHaveClass('igx-icon'); break;
-                case 11: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 12: expect(element).toHaveClass('igx-button');
-                    expect(element.innerText).toContain('Condition'); break;
+                case 4: expect(element).toHaveClass('igx-chip'); break;
+                case 5: expect(element).toHaveClass('igx-icon'); break;
+                case 6: expect(element).toHaveClass('igx-chip__remove'); break;
+                case 7: expect(element).toHaveClass('igx-chip'); break;
+                case 8: expect(element).toHaveClass('igx-icon'); break;
+                case 9: expect(element).toHaveClass('igx-chip__remove'); break;
+                case 10: expect(element).toHaveClass('igx-chip'); break;
+                case 11: expect(element).toHaveClass('igx-icon'); break;
+                case 12: expect(element).toHaveClass('igx-chip__remove'); break;
                 case 13: expect(element).toHaveClass('igx-button');
+                    expect(element.innerText).toContain('Condition'); break;
+                case 14: expect(element).toHaveClass('igx-button');
                     expect(element.innerText).toContain('Group'); break;
             }
             i++;
@@ -950,8 +951,8 @@ export class QueryBuilderFunctions {
 
         spyOn(dragDir.ghostElement, 'dispatchEvent').and.callThrough();
 
-        let target = moveDown ? 350 : 0;
-        let shift = moveDown ? 1 : -1
+        const target = moveDown ? 350 : 0;
+        const shift = moveDown ? 1 : -1
         //Drag ghost up or down and check if drop ghost is rendered in the expected positions
         for (let i = moveDown ? 0 : 350; moveDown ? i <= target : i >= target; i += shift) {
             Y += moveDown ? 1 : -1;

@@ -2,11 +2,137 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 20.1.0
+## 21.0.0
 
 ### General
 - `IgxHierarchicalGrid`
     - **Deprecation** - `schema` input property has been deprecated and will be removed in a future version.
+
+## 20.1.0
+
+### New Features
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Introduced a new cell merging feature that allows you to configure and merge cells in a column based on same data or other custom condition, into a single cell.
+
+        It can be enabled on the individual columns:
+
+        ```html
+        <igx-column field="field" [merge]="true"></igx-column>
+        ```
+        The merging can be configured on the grid level to apply either:
+        - `onSort` - only when the column is sorted.
+        - `always` - always, regardless of data operations.
+
+        ```html
+        <igx-grid [cellMergeMode]="'always'">
+        </igx-grid>
+        ```
+
+        The default `cellMergeMode` is `onSort`.
+
+        The functionality can be modified by setting a custom `mergeStrategy` on the grid, in case some other merge conditions or logic is needed for a custom scenario.
+
+        It's possible also to set a `mergeComparer` on the individual columns, in case some custom handling is needed for a particular data field.
+
+    - Added ability to pin individual columns to a specific side (start or end of the grid), so that you can now have pinning from both sides. This can be done either declaratively by setting the `pinningPosition` property on the column:
+
+        ```html
+        <igx-column [field]="'Col1'" [pinned]='true' [pinningPosition]='pinningPosition'>
+        </igx-column>
+        ```
+
+        ```ts
+        public pinningPosition = ColumnPinningPosition.End;
+        ```
+
+        Or with the API, via optional parameter:
+
+        ```ts
+        grid.pinColumn('Col1', 0, ColumnPinningPosition.End);
+        grid.pinColumn('Col2', 0, ColumnPinningPosition.Start);
+        ```
+
+        If property `pinningPosition` is not set on a column, the column will default to the position specified on the grid's `pinning` options for `columns`.
+
+- `IgxCarousel`
+    - Added `select` method overload accepting index.
+    ```ts
+    this.carousel.select(2, Direction.NEXT);
+    ```
+
+- `IgxDateRangePicker`
+    - Now has a complete set of properties to customize the calendar:
+        - `headerOrientation`
+        - `orientation`
+        - `hideHeader`
+        - `activeDate`
+        - `disabledDates`
+        - `specialDates`
+
+    - As well as the following templates, available to customize the contents of the calendar header in `dialog` mode:
+        - `igxCalendarHeader`
+        - `igxCalendarHeaderTitle`
+        - `igxCalendarSubheader`
+
+    - Added new properties:
+      - `usePredefinedRanges` - Whether to render built-in predefined ranges 
+      - `customRanges` - Allows the user to provide custom ranges rendered as chips
+      - `resourceStrings` - Allows the user to provide set of resource strings 
+        
+    - **Behavioral Changes**
+        - Added cancel button to the dialog, allowing the user to cancel the selection. 
+        - The calendar is displayed with header in `dialog` mode by default.
+        - The picker remains open when typing (in two-inputs and `dropdown` mode).
+        - The calendar selection is updated with the typed value.
+        - The calendar view is updated as per the typed value.
+        - The picker displays a clear icon by default in single input mode.
+
+    - `IgxPredefinedRangesAreaComponent`
+        - Added new component for rendering the predefined or custom ranges inside the calendar of the `IgxDateRangePicker`
+
+- `IgxDatePicker`
+    - Similar to the `IgxDateRangePicker`, also completes the ability to customize the calendar by introducing the following
+    properties in addition to the existing ones:
+        - `hideHeader`
+        - `orientation`
+        - `activeDate`
+    - **Behavioral Changes**
+        - The calendar selection is updated with the typed value.
+        - The calendar view is updated as per the typed date value.
+
+- `IgxOverlay`
+    - Position Settings now accept a new optional `offset` input property of type `number`. Used to set the offset of the element from the target in pixels.
+
+- `IgxTooltip`
+    - The tooltip now remains open while interacting with it.
+
+- `IgxTooltipTarget`
+    - Introduced several new properties to enhance customization of tooltip content and behavior. Those include `positionSettings`, `hasArrow`, `sticky`, `closeButtonTemplate`. For detailed usage and examples, please refer to the Tooltip [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/tooltip/README.md).
+
+### General
+- `IgxDropDown` now exposes a `role` input property, allowing users to customize the role attribute based on the use case. The default is `listbox`.
+
+- `IgxTooltipTarget`
+    - **Behavioral Changes**
+        - The `showDelay` input property now defaults to `200`.
+        - The `hideDelay` input property now defaults to `300`.
+        - The `showTooltip` and `hideTooltip` methods do not take `showDelay`/`hideDelay` into account.
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
+  - **Sorting improvements**
+    - Improved sorting algorithm efficiency using Schwartzian transformation. This is a technique, also known as decorate-sort-undecorate, which avoids recomputing the sort keys by temporarily associating them with the original data records.
+    - Refactored sorting algorithms from recursive to iterative.
+  - **Groupby improvements**
+    - Refactored grouping algorithm from recursive to iterative.
+    - Optimized grouping operations.
+  
+## 20.0.6
+### General
+- `IgxSimpleCombo`
+    - Added `disableFiltering` to the `IgxSimpleCombo`, which enables/disables the filtering in the list. The default is `false`.
+- `IgxCombo`, `IgxSimpleCombo`
+    -  Removed deprecated `filteringOptions.filterable` option.
 
 ## 20.0.2
 
@@ -48,7 +174,6 @@ All notable changes for each version of this project will be documented in this 
     ```
 
 ## 19.2.0
-
 ### General
 - `IgxCarousel`
     - Removed deprecated property `keyboardSupport`.
@@ -93,24 +218,24 @@ All notable changes for each version of this project will be documented in this 
         - Added the `canCommit`, `commit` and `discard` public methods that allows the user to save/discard the current state of the expression tree.
         - Added option to template the search value input:
             ```
-            <ng-template igxQueryBuilderSearchValue 
+            <ng-template igxQueryBuilderSearchValue
                         let-searchValue
-                        let-selectedField = "selectedField" 
+                        let-selectedField = "selectedField"
                         let-selectedCondition = "selectedCondition"
                         let-defaultSearchValueTemplate = "defaultSearchValueTemplate">
                 @if (selectedField?.field === 'Id' && selectedCondition === 'equals'){
                     <input type="text" required [(ngModel)]="searchValue.value"/>
-                } @else {  
+                } @else {
                     <ng-container #defaultTemplate *ngTemplateOutlet="defaultSearchValueTemplate"></    ng-container>
                 }
-            </ng-template> 
+            </ng-template>
             ```
-        - **Behavioral Changes** 
+        - **Behavioral Changes**
         - Expression enters edit mode on single click, `Enter` or `Space`.
         - Selecting conditions inside the `IgxQueryBuilderComponent` is no longer supported. Grouping/ungrouping expressions is now achieved via the newly exposed Drag & Drop functionality.
         - Deleting multiple expressions through the context menu is no longer supported.
     - `IgxQueryBuilderHeaderComponent`
-        - **Behavioral Change** 
+        - **Behavioral Change**
         - Legend is no longer shown.
         - If the `title` input property is not set, by default it would be empty string.
         - **Deprecation**
@@ -192,9 +317,9 @@ All notable changes for each version of this project will be documented in this 
 
 ### Themes
 - **Breaking Change** `Palettes`
-    - All palette colors have been migrated to the [CSS relative colors syntax](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_colors/Relative_colors). This means that color consumed as CSS variables no longer need to be wrapped in an `hsl` function. 
+    - All palette colors have been migrated to the [CSS relative colors syntax](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_colors/Relative_colors). This means that color consumed as CSS variables no longer need to be wrapped in an `hsl` function.
 
-    Example: 
+    Example:
     ```css
     /* 18.1.x and before: */
     background: hsl(var(--ig-primary-600));
@@ -205,7 +330,7 @@ All notable changes for each version of this project will be documented in this 
 
     This change also opens up the door for declaring the base (500) variants of each color in CSS from any color, including other CSS variables, whereas before the Sass `palette` function was needed to generate color shades from a base color.
 
-    Example: 
+    Example:
     ```scss
     /* 18.1.x and before: */
     $my-palette: palette($primary: #09f, ...);
@@ -245,7 +370,7 @@ For Firefox users, we provide limited scrollbar styling options through the foll
     - `animationType` input property is now of type `CarouselAnimationType`. `HorizontalAnimationType` can also be used, however, to accommodate the new vertical mode, which supports vertical slide animations, it is recommended to use `CarouselAnimationType`.
 
     - **Behavioral Changes** - the `keyboardSupport` input property now defaults to `false`.
-    - **Deprecation** - the `keyboardSupport` input property has been deprecated and will be removed in a future version. Keyboard navigation with `ArrowLeft`, `ArrowRight`, `Home`, and `End` keys will be supported when focusing the indicators' container via ` Tab`/`Shift+Tab`. 
+    - **Deprecation** - the `keyboardSupport` input property has been deprecated and will be removed in a future version. Keyboard navigation with `ArrowLeft`, `ArrowRight`, `Home`, and `End` keys will be supported when focusing the indicators' container via ` Tab`/`Shift+Tab`.
 
 - `IgxCombo`:
     - **Breaking Change** The deprecated `filterable` property is replaced with `disableFiltering`.
