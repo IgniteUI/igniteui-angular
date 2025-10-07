@@ -40,7 +40,7 @@ export class IgxGridSearchService {
         this.data = data.map(dataRow => this.grid.isRecordMerged(dataRow) ? dataRow.recordRef : dataRow);
         this.data.forEach(record => {
             const value = this.columns.map(column => record[column.field]).join(" ");
-            this.cache.push(value.toLocaleLowerCase());
+            this.cache.push(value.toLowerCase());
         });
     }
 
@@ -50,12 +50,12 @@ export class IgxGridSearchService {
         const candidateIndexes = this.generateCandidates(query);
         const candidates = candidateIndexes.map((index: number) => this.data[index]);
 
-        const searchText = caseSensitive ? query : query.toLocaleLowerCase();
+        const searchText = caseSensitive ? query : query.toLowerCase();
         const columnsPathParts = this.columns.map(col => columnFieldPath(col.field));
         candidates.forEach((row: any, rowIndex: number) => {
             this.columns.forEach((column: ColumnType, columnIndex: number) => {
                 const value = this.resolveValue(column, row, columnsPathParts[columnIndex]);
-                const searchValue = caseSensitive ? String(value) : String(value).toLocaleLowerCase();
+                const searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
                 if (searchValue != null) { // not strict equality - checking for undefined as well
                     const isMergePlaceHolder = this.grid.isRecordMerged(row) ? !!row?.cellMergeMeta.get(column.field)?.root : false;
                     if (isMergePlaceHolder) {
@@ -91,7 +91,7 @@ export class IgxGridSearchService {
      * Generates potential row candidates where a query match might occur.
      */
     private generateCandidates(query: string) {
-        const queryLower = query.toLocaleLowerCase();
+        const queryLower = query.toLowerCase();
         const candidates = [];
         for (let i = 0; i < this.cache.length; i++) {
             if (this.cache[i].includes(queryLower)) {
