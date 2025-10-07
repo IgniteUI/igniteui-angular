@@ -23,7 +23,7 @@ import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component'
 import { IPivotDimension, IPivotDimensionData, IPivotGridGroupRecord } from './pivot-grid.interface';
 import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
 import { PivotUtil } from './pivot-util';
-import { IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe } from '../headers/pipes';
+import { IgxHeaderGroupStylePipe } from '../headers/pipes';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { NgClass, NgStyle } from '@angular/common';
 import { IMultiRowLayoutNode } from '../common/types';
@@ -40,7 +40,7 @@ import { IMultiRowLayoutNode } from '../common/types';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-row-dimension-content',
     templateUrl: './pivot-row-dimension-content.component.html',
-    imports: [IgxPivotRowDimensionHeaderGroupComponent, NgClass, NgStyle, IgxIconComponent, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
+    imports: [IgxPivotRowDimensionHeaderGroupComponent, NgClass, NgStyle, IgxIconComponent, IgxHeaderGroupStylePipe]
 })
 export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowComponent implements OnChanges {
     @HostBinding('style.grid-row-start')
@@ -169,13 +169,6 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
 
     public getLevel() {
         return this.grid.hasHorizontalLayout ? 0 : this.dimension.level;
-    }
-
-    protected getHeaderWidthFromDimension() {
-        if (this.grid.hasHorizontalLayout) {
-            return this.width === -1 ? 'fit-content' : this.width;
-        }
-        return this.grid.rowDimensionWidth(this.rootDimension);
     }
 
     protected extractFromDimensions() {
