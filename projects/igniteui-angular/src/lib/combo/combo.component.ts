@@ -41,6 +41,7 @@ import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navig
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxInputDirective } from '../directives/input/input.directive';
+import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
 
 /** Event emitted when an igx-combo's selection is changing */
 export interface IComboSelectionChangingEventArgs extends IBaseCancelableEventArgs {
@@ -133,6 +134,7 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
         IgxComboAddItemComponent,
         IgxButtonDirective,
         IgxRippleDirective,
+        IgxReadOnlyInputDirective,
         IgxComboFilteringPipe,
         IgxComboGroupingPipe
     ]

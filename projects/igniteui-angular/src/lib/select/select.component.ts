@@ -51,6 +51,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
+import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
 
 /** @hidden @internal */
 @Directive({
@@ -101,7 +102,12 @@ export class IgxSelectFooterDirective {
     ],
     styleUrls: ['../drop-down/drop-down.component.css', 'select.component.css'],
     encapsulation: ViewEncapsulation.None,
-    imports: [IgxInputGroupComponent, IgxInputDirective, IgxSelectItemNavigationDirective, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxToggleDirective]
+    styles: [`
+        :host {
+            display: block;
+        }
+    `],
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxSelectItemNavigationDirective, IgxSuffixDirective, IgxReadOnlyInputDirective, NgTemplateOutlet, IgxIconComponent, IgxToggleDirective]
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor,
     AfterContentInit, OnInit, AfterViewInit, OnDestroy, EditorProvider, AfterContentChecked {

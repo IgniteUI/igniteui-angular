@@ -5040,8 +5040,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify the results are with 'today' date.
             const filteredDate = SampleTestData.today;
-            const inputText = formatDate(filteredDate, column.pipeArgs.format, grid.locale);
-            expect((input as HTMLInputElement).value).toMatch(inputText);
+            const datePickerDebugEl = fix.debugElement.query(By.directive(IgxDatePickerComponent));
+            expect(datePickerDebugEl.componentInstance.value).toEqual(filteredDate);
 
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
@@ -5122,8 +5122,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify the results are with 'today' date.
             const filteredDate = SampleTestData.today;
-            const inputText = formatDate(filteredDate, column.pipeArgs.format, grid.locale);
-            expect((input as HTMLInputElement).value).toMatch(inputText);
+            const datePickerDebugEl = fix.debugElement.query(By.directive(IgxDatePickerComponent));
+            expect(datePickerDebugEl.componentInstance.value).toEqual(filteredDate);
 
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
@@ -5169,8 +5169,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify the results are with 'today' date.
             const filteredDate = SampleTestData.today;
-            const inputText = formatDate(filteredDate, column.pipeArgs.format, grid.locale);
-            expect((input as HTMLInputElement).value).toMatch(inputText);
+            const datePickerDebugEl = fix.debugElement.query(By.directive(IgxDatePickerComponent));
+            expect(datePickerDebugEl.componentInstance.value).toEqual(filteredDate);
 
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
@@ -5336,8 +5336,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify the results are with 'today' date.
             const filteredDate = SampleTestData.today;
-            const inputText = formatDate(filteredDate, column.pipeArgs.format, grid.locale);
-            expect((input as HTMLInputElement).value).toMatch(inputText);
+            const datePickerDebugEl = fix.debugElement.query(By.directive(IgxDatePickerComponent));
+            expect(datePickerDebugEl.componentInstance.value).toEqual(filteredDate);
 
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
@@ -5388,8 +5388,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify the results are with 'today' date.
             const filteredDate = SampleTestData.today;
-            const inputText = column.formatter(filteredDate, null);
-            expect((input as HTMLInputElement).value).toMatch(inputText);
+            const datePickerDebugEl = fix.debugElement.query(By.directive(IgxDatePickerComponent));
+            expect(datePickerDebugEl.componentInstance.value).toEqual(filteredDate);
 
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
