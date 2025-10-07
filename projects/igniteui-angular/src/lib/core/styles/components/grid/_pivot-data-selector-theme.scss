@@ -7,7 +7,8 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin pivot-data-selector($theme) {
-    @include css-vars($theme, 'igx-pivot-data-selector');
+    @include css-vars($theme);
+
     $variant: map.get($theme, '_meta', 'theme');
 
     $chip-height-material: (
