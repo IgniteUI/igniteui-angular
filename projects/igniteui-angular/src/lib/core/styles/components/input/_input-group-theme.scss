@@ -1200,6 +1200,18 @@
     }
 
     @if $variant == 'material' {
+        %textarea-group:not(%textarea-group--outlined) {
+            --textarea-box-padding: #{pad-block(rem(8px), rem(12px), rem(16px))};
+
+            &:has(%igx-input-group__notch:not(:empty)) {
+                --textarea-box-padding: #{pad-block(rem(16px), rem(20px), rem(24px))};
+            }
+
+            %form-group-textarea {
+                margin-block-end: rem(2px);
+            }
+        }
+
         %textarea-group:not(%suffixed) {
             %form-group-bundle-main {
                 grid-area: 1 / 2 / span 1 / span 3;
@@ -1240,9 +1252,6 @@
     }
 
     %form-group-textarea-group-bundle {
-        // 3 lines of text + top padding
-        --textarea-height: calc((#{$textarea-font} * 3) + #{$textarea-top-padding});
-        min-height: var(--textarea-height) !important;
         height: auto !important;
 
         %form-group-label {
@@ -1442,9 +1451,6 @@
     }
 
     %form-group-textarea {
-        --textarea-height: calc((#{$textarea-font} * 3) + #{$textarea-top-padding});
-
-        min-height: var(--textarea-height);
         height: auto;
         resize: vertical;
         overflow: hidden;
@@ -1452,8 +1458,6 @@
 
         @if $material-theme {
             padding: 0;
-            // to be fixed
-            inset-block-start: rem(-2px);
         }
     }
 
@@ -1466,13 +1470,17 @@
         }
 
         @if $material-theme {
-            padding-block-start: #{$material-box-top-padding};
+            padding-block-start: var(--textarea-box-padding);
         }
     }
 
     %textarea-group--outlined {
         %form-group-textarea-group-bundle-main {
             padding-block-start: #{$material-border-top-padding};
+        }
+
+        %form-group-textarea {
+            inset-block-start: rem(-2px);
         }
     }
 
@@ -1662,13 +1670,13 @@
         position: relative;
     }
 
-    // %form-group-helper-item--start {
-    //     justify-content: flex-start;
-    // }
+    %form-group-helper-item--start {
+        justify-content: flex-start;
+    }
 
-    // %form-group-helper-item--end {
-    //     justify-content: flex-end;
-    // }
+    %form-group-helper-item--end {
+        justify-content: flex-end;
+    }
 
     %form-group-helper-item--start,
     %form-group-helper-item--end {
