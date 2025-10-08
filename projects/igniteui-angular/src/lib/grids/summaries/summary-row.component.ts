@@ -110,6 +110,22 @@ export class IgxSummaryRowComponent implements DoCheck  {
         return this.grid.pinnedColumns;
     }
 
+
+    /**
+     * @hidden
+     */
+    public get pinnedStartColumns(): ColumnType[] {
+        return this.grid.pinnedStartColumns;
+    }
+
+
+    /**
+     * @hidden
+     */
+    public get pinnedEndColumns(): ColumnType[] {
+        return this.grid.pinnedEndColumns;
+    }
+
     /**
      * @hidden
      */
@@ -117,9 +133,10 @@ export class IgxSummaryRowComponent implements DoCheck  {
         return this.grid.unpinnedColumns;
     }
 
-    public getContext(row) {
+    public getContext(row, cols) {
         return {
-            $implicit: row
+            $implicit: row,
+            columns: cols
         };
     }
 

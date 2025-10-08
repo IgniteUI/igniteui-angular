@@ -1431,8 +1431,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
-            treeGrid.columnList.find(x => x.field === 'Age').pinned = true;
             treeGrid.pinning.columns = 1;
+            treeGrid.columnList.find(x => x.field === 'Age').pinned = true;
 
             fix.detectChanges();
             const rightMostGridPart = treeGrid.nativeElement.getBoundingClientRect().right;

@@ -50,7 +50,7 @@ import { IgxGridValidationService } from '../grid/grid-validation.service';
 import { IgxGridHierarchicalPipe, IgxGridHierarchicalPagingPipe } from './hierarchical-grid.pipes';
 import { IgxSummaryDataPipe } from '../summaries/grid-root-summary.pipe';
 import { IgxGridTransactionPipe, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridAddRowPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe, IgxStringReplacePipe } from '../common/pipes';
-import { IgxGridSortingPipe, IgxGridFilteringPipe } from '../grid/grid.pipes';
+import { IgxGridSortingPipe, IgxGridFilteringPipe, IgxGridCellMergePipe } from '../grid/grid.pipes';
 import { IgxGridColumnResizerComponent } from '../resizing/resizer.component';
 import { IgxRowEditTabStopDirective } from '../grid.rowEdit.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
@@ -68,6 +68,7 @@ import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component'
 import { IgxActionStripToken } from '../../action-strip/token';
 import { flatten } from '../../core/utils';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { IgxScrollInertiaDirective } from '../../directives/scroll-inertia/scroll_inertia.directive';
 
 let NEXT_ID = 0;
 
@@ -350,7 +351,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         IgxSummaryDataPipe,
         IgxGridHierarchicalPipe,
         IgxGridHierarchicalPagingPipe,
-        IgxStringReplacePipe
+        IgxStringReplacePipe,
+        IgxGridCellMergePipe,
+        IgxScrollInertiaDirective
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -942,7 +945,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    public isChildGridRecord(record: any): boolean {
+    public override isChildGridRecord(record: any): boolean {
         // Can be null when there is defined layout but no child data was found
         return record?.childGridsData !== undefined;
     }
@@ -986,13 +989,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             }
         } else {
             return {
-                $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
+                $implicit: this.isGhostRecord(rowData) || this.isRecordMerged(rowData) ? rowData.recordRef : rowData,
                 templateID: {
                     type: 'dataRow',
                     id: null
                 },
                 index: this.getDataViewIndex(rowIndex, pinned),
-                disabled: this.isGhostRecord(rowData)
+                disabled: this.isGhostRecord(rowData),
+                metaData: this.isRecordMerged(rowData) ? rowData : null
             };
         }
     }
@@ -1244,8 +1248,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                     fields: filterableFields.map(f => ({
                             field: f.field,
                             dataType: f.dataType,
-                        //  label: f.label,
-                        //  header: f.header,
+                            header: f.header,
                             editorOptions: f.editorOptions,
                             filters: f.filters,
                             pipeArgs: f.pipeArgs,
@@ -1256,7 +1259,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             ];
 
             entities[0].childEntities = this.childLayoutList.reduce((acc, rowIsland) => {
-                return acc.concat(this.generateChildEntity(rowIsland, this.data[0][rowIsland.key][0]));
+                const childFirstRowData = this.data?.length > 0 && this.data[0][rowIsland.key]?.length > 0 ?
+                    this.data[0][rowIsland.key][0] : null;
+                return acc.concat(this.generateChildEntity(rowIsland, childFirstRowData));
             }
             , []);
         }
@@ -1289,7 +1294,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             if (!firstRowData) {
                 return null;
             }
-            return acc.concat(this.generateChildEntity(childRowIsland, firstRowData[childRowIsland.key][0]));
+            const childFirstRowData = firstRowData.length > 0 && firstRowData[childRowIsland.key]?.length > 0 ?
+                firstRowData[childRowIsland.key][0] : null;
+            return acc.concat(this.generateChildEntity(childRowIsland, childFirstRowData));
         }, []);
 
         if (rowIslandChildEntities?.length > 0) {

@@ -13,7 +13,7 @@ import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringStrategy, IgxFilterItem } from '../data-operations/filtering-strategy';
-import { ISortingOptions, IgxExcelStyleHeaderIconDirective, IgxGridToolbarAdvancedFilteringComponent, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from '../grids/public_api';
+import { ColumnPinningPosition, ISortingOptions, IgxExcelStyleHeaderIconDirective, IgxGridToolbarAdvancedFilteringComponent, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from '../grids/public_api';
 import { IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective } from '../grids/grid.rowEdit.directive';
 import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
@@ -222,6 +222,27 @@ export class PinOnInitAndSelectionComponent extends GridWithSizeComponent {
 
     public cellSelected(event) {
         this.selectedCell = event.cell;
+    }
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(` [autoGenerate]="autoGenerate" [height]="height" [width]="width"`, `${EventSubscriptions.columnInit}`, ''),
+    imports: [IgxGridComponent]
+})
+export class PinOnBothSidesInitComponent extends GridWithSizeComponent {
+    public override data = SampleTestData.contactInfoDataFull();
+    public override width = '800px';
+    public override height = '300px';
+
+    public selectedCell;
+    public columnInit(column) {
+        if (column.field === 'CompanyName' || column.field === 'ContactName') {
+            column.pinned = true;
+        }
+        if (column.field === 'CompanyName') {
+            column.pinningPosition = ColumnPinningPosition.End;
+        }
+        column.width = '200px';
     }
 }
 
@@ -1407,11 +1428,18 @@ export class IgxGridRowEditingComponent extends BasicGridComponent {
         <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" [editable]="true" width="100px"></igx-column>
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="150px"></igx-column>
         <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="150px" [editable]="false"></igx-column>
+        <ng-template #customCell igxCell let-cell="cell" let-val>
+            <span style="background-color: red;">val</span>
+            <br>
+            {{val}}
+        </ng-template>
     </igx-grid>`,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class IgxGridRowEditingWithoutEditableColumnsComponent extends BasicGridComponent {
     public override data = SampleTestData.foodProductData();
+    @ViewChild('customCell', { static: true })
+    public customCell!: TemplateRef<any>;
 }
 
 @Component({
@@ -1435,7 +1463,7 @@ export class IgxGridRowEditingWithoutEditableColumnsComponent extends BasicGridC
                 </igx-column>
             </igx-column-group>
         }
-        @if (!columnGroupingFlag) {
+        @else {
             <igx-column field="Released" header="Released" [dataType]="'boolean'" [pinned]="pinnedFlag" [editable]="true" width="100px">
             </igx-column>
             <igx-column field="Category" header="Category" [dataType]="'string'" [editable]="true" [hidden]="hiddenFlag" width="150px">

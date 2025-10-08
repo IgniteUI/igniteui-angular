@@ -11,6 +11,7 @@ $theme: $base;
 
 @include layer(base) {
     @include b(igx-drop-down) {
+        --item-count: 6;
         --_search-input-inline-padding: #{pad-inline(rem(4px), rem(8px), rem(16px))};
         --_search-input-block-padding: #{pad-block(rem(8px))};
 
@@ -69,7 +70,7 @@ $theme: $base;
 
             position: relative;
             overflow: hidden;
-            max-height: calc(var(--size) * 10);
+            max-height: calc(var(--size) * var(--item-count));
 
             &:focus {
                 outline: transparent;

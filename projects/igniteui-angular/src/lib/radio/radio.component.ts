@@ -45,7 +45,6 @@ import { IgxRadioGroupDirective } from '../directives/radio/radio-group.directiv
 export class IgxRadioComponent
     extends CheckboxBaseDirective
     implements AfterViewInit, OnDestroy, ControlValueAccessor, EditorProvider {
-
     /** @hidden @internal */
     public blurRadio = new EventEmitter();
 

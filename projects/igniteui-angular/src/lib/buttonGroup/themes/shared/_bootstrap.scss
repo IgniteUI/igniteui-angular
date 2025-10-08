@@ -19,11 +19,6 @@ $_theme: $bootstrap;
     }
 
     @include e(item) {
-        &[igxButton] {
-            margin: 0;
-            border: none;
-        }
-
         &:active {
             @extend %item-overlay;
         }

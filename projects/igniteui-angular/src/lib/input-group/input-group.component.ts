@@ -15,7 +15,7 @@ import {
     booleanAttribute,
     inject,
     ViewEncapsulation,
-    DOCUMENT
+    DOCUMENT,
 } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
 import { PlatformUtil } from '../core/utils';
@@ -132,6 +132,18 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     private _filled = false;
     protected _theme: IgxTheme;
     private _resourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
+    private _readOnly: undefined | boolean;
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-input-group--readonly')
+    public get readOnly(): boolean {
+        return this._readOnly ?? (this.input?.nativeElement.readOnly || false);
+    }
+
+    /** @hidden @internal */
+    public set readOnly(value: boolean) {
+        this._readOnly = value;
+    }
 
     /** @hidden */
     @HostBinding('class.igx-input-group--valid')
@@ -358,6 +370,30 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     @HostBinding('class.igx-input-group--file')
     public get isFileType() {
         return this.input.type === 'file';
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-file-input')
+    public get isFileInput() {
+        return this.input.type === 'file';
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-file-input--filled')
+    public get isFileInputFilled() {
+        return this.isFileType && this.isFilled;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-file-input--focused')
+    public get isFileInputFocused() {
+        return this.isFileType && this.isFocused;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-file-input--disabled')
+    public get isFileInputDisabled() {
+        return this.isFileType && this.disabled;
     }
 
     /** @hidden @internal */

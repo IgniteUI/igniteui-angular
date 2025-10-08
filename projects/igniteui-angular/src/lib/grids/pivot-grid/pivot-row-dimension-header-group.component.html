@@ -14,9 +14,9 @@
         <span class="igx-grid-th__drop-indicator-left"></span>
     }
     <igx-pivot-row-dimension-header
-        role="columnheader"
+        [attr.role]="role"
         class="igx-grid-th--fw"
-        [id]="grid.id + '_' + column.field"
+        [id]="header ? grid.id + '_' + header.title : grid.id + '_' + column.field"
         [ngClass]="column.headerClasses"
         [ngStyle]="column.headerStyles | igxHeaderGroupStyle:column:grid.pipeTrigger"
         [igxColumnMovingDrag]="column"
@@ -26,6 +26,9 @@
         [igxColumnMovingDrop]="column"
         [column]="column"
         (keydown)="grid.navigation.headerNavigation($event)"
+        [style.min-width]="getHeaderWidthFromDimension()"
+        [style.width]="getHeaderWidthFromDimension()"
+        [style.flex-basis]="getHeaderWidthFromDimension()"
     >
     </igx-pivot-row-dimension-header>
     @if (!column.columnGroup && column.resizable) {

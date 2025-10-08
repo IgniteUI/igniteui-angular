@@ -644,6 +644,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         }
     }
 
+
     /**
      * Registers a radio button with this radio group.
      * This method is called by radio button components when they are created.

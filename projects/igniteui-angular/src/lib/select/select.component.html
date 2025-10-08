@@ -8,6 +8,7 @@
     <input #input class="input" type="text" igxInput [igxSelectItemNavigation]="this"
         [disabled]="disabled"
         readonly="true"
+        [igxReadOnlyInput]="false"
         [attr.placeholder]="this.placeholder"
         [value]="this.selectionValue"
         role="combobox"
@@ -27,7 +28,7 @@
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: this.collapsed}"></ng-container>
         }
         @if (!toggleIconTemplate) {
-            <igx-icon family="default" [name]="toggleIcon" [attr.aria-hidden]="true"></igx-icon>
+            <igx-icon family="default" [name]="toggleIcon"></igx-icon>
         }
     </igx-suffix>
     <ng-container ngProjectAs="igx-hint, [igxHint]" >

@@ -41,6 +41,7 @@ import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navig
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxInputDirective } from '../directives/input/input.directive';
+import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
 
 /** Event emitted when an igx-combo's selection is changing */
 export interface IComboSelectionChangingEventArgs extends IBaseCancelableEventArgs {
@@ -133,6 +134,7 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
         IgxComboAddItemComponent,
         IgxButtonDirective,
         IgxRippleDirective,
+        IgxReadOnlyInputDirective,
         IgxComboFilteringPipe,
         IgxComboGroupingPipe
     ]
@@ -146,16 +148,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     @Input({ transform: booleanAttribute })
     public autoFocusSearch = true;
 
-    /**
-     * Enables/disables filtering in the list. The default is `false`.
-     */
-    @Input({ transform: booleanAttribute })
-    public get disableFiltering(): boolean {
-        return this._disableFiltering || this.filteringOptions.filterable === false;
-    }
-    public set disableFiltering(value: boolean) {
-        this._disableFiltering = value;
-    }
 
     /**
      * Defines the placeholder value for the combo dropdown search field
@@ -202,7 +194,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     protected _prevInputValue = '';
 
     private _displayText: string;
-    private _disableFiltering = false;
 
     constructor(
         elementRef: ElementRef,
@@ -294,10 +285,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     /**
      * @hidden @internal
      */
-    public handleClearItems(event: Event): void {
-        if (this.disabled) {
-            return;
-        }
+    public clearInput(event: Event): void {
         this.deselectAllItems(true, event);
         if (this.collapsed) {
             this.getEditElement().focus();
@@ -305,6 +293,26 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             this.focusSearchInput(true);
         }
         event.stopPropagation();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public handleClearItems(event: Event): void {
+        if (this.disabled) {
+            return;
+        }
+        this.clearInput(event);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public handleClearKeyDown(eventArgs: KeyboardEvent) {
+        if (eventArgs.key === 'Enter' || eventArgs.key === ' ') {
+            eventArgs.preventDefault();
+            this.clearInput(eventArgs);
+        }
     }
 
     /**

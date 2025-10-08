@@ -51,6 +51,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
+import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
 
 /** @hidden @internal */
 @Directive({
@@ -101,7 +102,12 @@ export class IgxSelectFooterDirective {
     ],
     styleUrls: ['../drop-down/drop-down.component.css', 'select.component.css'],
     encapsulation: ViewEncapsulation.None,
-    imports: [IgxInputGroupComponent, IgxInputDirective, IgxSelectItemNavigationDirective, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxToggleDirective]
+    styles: [`
+        :host {
+            display: block;
+        }
+    `],
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxSelectItemNavigationDirective, IgxSuffixDirective, IgxReadOnlyInputDirective, NgTemplateOutlet, IgxIconComponent, IgxToggleDirective]
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor,
     AfterContentInit, OnInit, AfterViewInit, OnDestroy, EditorProvider, AfterContentChecked {
@@ -603,19 +609,25 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     protected manageRequiredAsterisk(): void {
         const hasRequiredHTMLAttribute = this.elementRef.nativeElement.hasAttribute('required');
-        if (this.ngControl && this.ngControl.control.validator) {
-            // Run the validation with empty object to check if required is enabled.
-            const error = this.ngControl.control.validator({} as AbstractControl);
-            this.inputGroup.isRequired = error && error.required;
-            this.cdr.markForCheck();
+        let isRequired = false;
 
-            // If validator is dynamically cleared and no required HTML attribute is set,
-            // reset label's required class(asterisk) and IgxInputState #6896
-        } else if (this.inputGroup.isRequired && this.ngControl && !this.ngControl.control.validator && !hasRequiredHTMLAttribute) {
-            this.input.valid = IgxInputState.INITIAL;
-            this.inputGroup.isRequired = false;
-            this.cdr.markForCheck();
+        if (this.ngControl && this.ngControl.control.validator) {
+            const error = this.ngControl.control.validator({} as AbstractControl);
+            isRequired = !!(error && error.required);
         }
+
+        this.inputGroup.isRequired = isRequired;
+
+        if (this.input?.nativeElement) {
+            this.input.nativeElement.setAttribute('aria-required', isRequired.toString());
+        }
+
+        // Handle validator removal case
+        if (!isRequired && !hasRequiredHTMLAttribute) {
+            this.input.valid = IgxInputState.INITIAL;
+        }
+
+        this.cdr.markForCheck();
     }
 
     private setSelection(item: IgxDropDownItemBaseDirective) {
