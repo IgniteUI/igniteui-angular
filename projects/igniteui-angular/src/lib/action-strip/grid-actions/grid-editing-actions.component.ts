@@ -147,7 +147,6 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         const context = this.strip.context;
         const grid = context.grid;
         grid.deleteRow(context.key);
-        this.grid.cdr.detectChanges();
         this.strip.hide();
     }
 
