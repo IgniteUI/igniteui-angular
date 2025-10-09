@@ -31,6 +31,22 @@ $_theme: $material;
             height: $date-size;
         }
     }
+	
+	@include mx('weekend', 'range-preview') {
+		@include e(inner) {
+			color: var-get($_theme, 'weekend-color');
+			
+			&:hover {
+				color: var-get($_theme, 'date-hover-foreground');
+			}
+		}
+	}
+	
+	@include mx('weekend', 'range-preview', 'active') {
+		@include e(inner) {
+			color: var-get($_theme, 'date-focus-foreground');
+		}
+	}
 
     @include m(selected) {
         @include e(inner) {
