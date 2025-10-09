@@ -320,9 +320,9 @@
             @extend %igx-grid__td--merged-hovered !optional;
         }
 
-        @include e(td, $m: editing) {
-            @extend %igx-grid__td--editing !optional;
-        }
+        // @include e(td, $m: editing) {
+        //     @extend %igx-grid__td--editing !optional;
+        // }
 
         @include e(td, $mods: (editing, valid)) {
             @extend %igx-grid__td--editing--valid !optional;
