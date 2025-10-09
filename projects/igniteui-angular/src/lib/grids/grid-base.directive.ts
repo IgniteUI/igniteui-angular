@@ -32,7 +32,7 @@ import {
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
-import { formatDate, resizeObservable } from '../core/utils';
+import { columnFieldPath, formatDate, resizeObservable } from '../core/utils';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
@@ -1808,6 +1808,15 @@ export abstract class IgxGridBaseDirective implements GridType,
     @HostBinding('class.igx-grid')
     protected baseClass = 'igx-grid';
 
+    @HostBinding('attr.aria-colcount')
+    protected get ariaColCount(): number {
+        return this.visibleColumns.length;
+    }
+
+    @HostBinding('attr.aria-rowcount')
+    protected get ariaRowCount(): number {
+        return this._rendered ? this._rowCount : null;
+    }
 
     /**
      * Gets/Sets the resource strings.
@@ -2734,13 +2743,10 @@ export abstract class IgxGridBaseDirective implements GridType,
     public get activeDescendant() {
         const activeElem = this.navigation.activeNode;
 
-        if (!activeElem || !Object.keys(activeElem).length) {
-            return this.id;
+        if (!activeElem || !Object.keys(activeElem).length || activeElem.row < 0) {
+            return null;
         }
-
-        return activeElem.row < 0 ?
-            `${this.id}_${activeElem.row}_${activeElem.mchCache.level}_${activeElem.column}` :
-            `${this.id}_${activeElem.row}_${activeElem.column}`;
+        return `${this.id}_${activeElem.row}_${activeElem.column}`;
     }
 
     /** @hidden @internal */
@@ -3269,6 +3275,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _gridSize: Size = Size.Large;
     private _defaultRowHeight = 50;
+    private _rowCount: number;
 
     /**
      * @hidden @internal
@@ -3680,24 +3687,24 @@ export abstract class IgxGridBaseDirective implements GridType,
             throttleTime(40, animationFrameScheduler, { leading: true, trailing: true }),
             destructor
         )
-        .subscribe(() => {
-            this.zone.run(() => {
-                // do not trigger reflow if element is detached.
-                if (this.nativeElement.isConnected) {
-                    if (this.shouldResize) {
-                        // resizing occurs due to the change of --ig-size css var
-                        this._gridSize = this.gridSize;
-                        this.updateDefaultRowHeight();
-                        this._autoSize = this.isPercentHeight && this.calcHeight !== this.getDataBasedBodyHeight();
-                        this.crudService.endEdit(false);
-                        if (this._summaryRowHeight === 0) {
-                            this.summaryService.summaryHeight = 0;
+            .subscribe(() => {
+                this.zone.run(() => {
+                    // do not trigger reflow if element is detached.
+                    if (this.nativeElement.isConnected) {
+                        if (this.shouldResize) {
+                            // resizing occurs due to the change of --ig-size css var
+                            this._gridSize = this.gridSize;
+                            this.updateDefaultRowHeight();
+                            this._autoSize = this.isPercentHeight && this.calcHeight !== this.getDataBasedBodyHeight();
+                            this.crudService.endEdit(false);
+                            if (this._summaryRowHeight === 0) {
+                                this.summaryService.summaryHeight = 0;
+                            }
                         }
+                        this.notifyChanges(true);
                     }
-                    this.notifyChanges(true);
-                }
+                });
             });
-        });
 
         this.pipeTriggerNotifier.pipe(takeUntil(this.destroy$)).subscribe(() => this.pipeTrigger++);
         this.columnMovingEnd.pipe(destructor).subscribe(() => this.crudService.endEdit(false));
@@ -3780,13 +3787,13 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         // notifier for column autosize requests
         this._autoSizeColumnsNotify.pipe(
-            throttleTime(0, animationFrameScheduler, { leading: false, trailing: true }),
+            throttleTime(0, this.platform.isBrowser ? animationFrameScheduler : undefined, { leading: false, trailing: true }),
             destructor
         )
-        .subscribe(() => {
-            this.autoSizeColumnsInView();
-            this._firstAutoResize = false;
-        });
+            .subscribe(() => {
+                this.autoSizeColumnsInView();
+                this._firstAutoResize = false;
+            });
     }
 
     /**
@@ -4090,6 +4097,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (this.hasColumnsToAutosize) {
                 this.autoSizeColumnsInView();
             }
+            this._calculateRowCount();
             this._rendered = true;
         });
         Promise.resolve().then(() => this.rendered.next(true));
@@ -5443,7 +5451,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public getPossibleColumnWidth(baseWidth: number = null) {
+    public getPossibleColumnWidth(baseWidth: number = null, minColumnWidth: number = null) {
         let computedWidth;
         if (baseWidth !== null) {
             computedWidth = baseWidth;
@@ -5472,7 +5480,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             visibleChildColumns.length - columnsWithSetWidths.length;
         const sumExistingWidths = columnsWithSetWidths
             .reduce((prev, curr) => {
-                const colInstance =  this.hasColumnLayouts ? curr.ref : curr;
+                const colInstance = this.hasColumnLayouts ? curr.ref : curr;
                 const colWidth = !colInstance.widthConstrained ? curr.width : colInstance.calcPixelWidth;
                 let widthValue = parseFloat(colWidth);
                 if (isNaN(widthValue)) {
@@ -5492,9 +5500,11 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
         computedWidth -= this.featureColumnsWidth();
 
+        const minColWidth = minColumnWidth || this.minColumnWidth;
+
         const columnWidth = !Number.isFinite(sumExistingWidths) ?
-            Math.max(computedWidth / columnsToSize, this.minColumnWidth) :
-            Math.max((computedWidth - sumExistingWidths) / columnsToSize, this.minColumnWidth);
+            Math.max(computedWidth / columnsToSize, minColWidth) :
+            Math.max((computedWidth - sumExistingWidths) / columnsToSize, minColWidth);
 
         return columnWidth + 'px';
     }
@@ -5524,7 +5534,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         let sum = 0;
         for (const col of fc) {
             if (col.level === 0) {
-                sum += parseInt(col.calcWidth, 10);
+                sum += parseFloat(col.calcWidth);
             }
         }
         if (this.isPinningToStart) {
@@ -6136,7 +6146,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public trackColumnChanges(_index, col) {
-        return col.field + col._calcWidth;
+        return col.field + col._calcWidth.toString();
     }
 
     /**
@@ -6265,7 +6275,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public hasHorizontalScroll() {
-        return this.totalWidth - this.unpinnedWidth > 0 && this.width !== null;
+        return Math.round(this.totalWidth - this.unpinnedWidth) > 0 && this.width !== null;
     }
 
     /**
@@ -6316,6 +6326,9 @@ export abstract class IgxGridBaseDirective implements GridType,
     // TODO: do not remove this, as it is used in rowEditTemplate, but mark is as internal and hidden
     /* blazorCSSuppress */
     public endEdit(commit = true, event?: Event): boolean {
+        if (!this.crudService.cellInEditMode && !this.crudService.rowInEditMode) {
+            return;
+        }
         const document = this.nativeElement?.getRootNode() as Document | ShadowRoot;
         const focusWithin = this.nativeElement?.contains(document.activeElement);
 
@@ -6729,6 +6742,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
+        this._calculateRowCount();
 
         this.columnList.changes
             .pipe(takeUntil(this.destroy$))
@@ -6738,7 +6752,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     protected getColumnList() {
-        return this.columnList.toArray();
+        return this.columnList.toArray().filter((col) => col.grid === this);
     }
 
     /**
@@ -6796,6 +6810,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             let removed = false;
             let pinning = false;
             diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                if (record.item.grid !== this) {
+                    return;
+                }
                 added = true;
                 if (record.item.pinned) {
                     this._pinnedColumns.push(record.item);
@@ -6805,12 +6822,15 @@ export abstract class IgxGridBaseDirective implements GridType,
                 }
             });
 
-            this.initColumns(this.columnList.toArray(), (col: IgxColumnComponent) => this.columnInit.emit(col));
+            this.initColumns(this.getColumnList(), (col: IgxColumnComponent) => this.columnInit.emit(col));
             if (pinning) {
                 this.initPinning();
             }
 
             diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent | IgxColumnGroupComponent>) => {
+                if (record.item.grid !== this) {
+                    return;
+                }
                 const isColumnGroup = record.item instanceof IgxColumnGroupComponent;
                 if (!isColumnGroup) {
                     // Clear Grouping
@@ -7296,7 +7316,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                         const key = this.type !== 'pivot' && headers ? col.header || col.field : col.field;
                         const rowData = source[row].ghostRecord ? source[row].recordRef : source[row];
                         const value = this.type === 'pivot' ? rowData.aggregationValues.get(col.field)
-                            : resolveNestedPath(rowData, col.field);
+                            : resolveNestedPath(rowData, columnFieldPath(col.field));
                         record[key] = formatters && col.formatter ? col.formatter(value, rowData) : value;
                         if (columnData) {
                             if (!record[key]) {
@@ -7808,15 +7828,16 @@ export abstract class IgxGridBaseDirective implements GridType,
         const searchText = caseSensitive ? this._lastSearchInfo.searchText : this._lastSearchInfo.searchText.toLowerCase();
         const data = this.filteredSortedData;
         const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
+        const columnsPathParts = columnItems.map(col => columnFieldPath(col.field));
 
         data.forEach((dataRow, rowIndex) => {
-            columnItems.forEach((c) => {
+            columnItems.forEach((c, cid) => {
                 const pipeArgs = this.getColumnByName(c.field).pipeArgs;
-                const value = c.formatter ? c.formatter(resolveNestedPath(dataRow, c.field), dataRow) :
-                    c.dataType === 'number' ? formatNumber(resolveNestedPath(dataRow, c.field), this.locale, pipeArgs.digitsInfo) :
+                const value = c.formatter ? c.formatter(resolveNestedPath(dataRow, columnsPathParts[cid]), dataRow) :
+                    c.dataType === 'number' ? formatNumber(resolveNestedPath(dataRow, columnsPathParts[cid]) as number, this.locale, pipeArgs.digitsInfo) :
                         c.dataType === 'date'
-                            ? formatDate(resolveNestedPath(dataRow, c.field), pipeArgs.format, this.locale, pipeArgs.timezone)
-                            : resolveNestedPath(dataRow, c.field);
+                            ? formatDate(resolveNestedPath(dataRow, columnsPathParts[cid]) as string, pipeArgs.format, this.locale, pipeArgs.timezone)
+                            : resolveNestedPath(dataRow, columnsPathParts[cid]);
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
 
@@ -7944,5 +7965,16 @@ export abstract class IgxGridBaseDirective implements GridType,
         } else {
             return recreateTreeFromFields(value, this._columns) as IFilteringExpressionsTree;
         }
+    }
+
+    private _calculateRowCount(): void {
+        if (this.verticalScrollContainer?.isRemote) {
+            this._rowCount = this.verticalScrollContainer.totalItemCount ?? 0;
+        } else if (this.paginator) {
+            this._rowCount = this.totalRecords ?? 0;
+        } else {
+            this._rowCount = this.verticalScrollContainer?.igxForOf?.length ?? 0;
+        }
+        this._rowCount += 1; // include header row
     }
 }

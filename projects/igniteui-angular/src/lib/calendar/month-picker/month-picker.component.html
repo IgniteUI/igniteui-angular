@@ -15,7 +15,7 @@
         tabindex="0"
         class="igx-calendar-picker__prev"
         role="button"
-        [attr.aria-label]="prevNavLabel((getPrevYearDate(viewDate) | date: 'YYYY'))"
+        [attr.aria-label]="prevNavLabel((getPrevYearDate(viewDate) | date: 'yyyy'))"
         data-action="prev"
         igxCalendarScrollPage
         (mousedown)="previousPage()"
@@ -32,7 +32,7 @@
         tabindex="0"
         class="igx-calendar-picker__next"
         role="button"
-        [attr.aria-label]="nextNavLabel((getNextYearDate(viewDate) | date: 'YYYY'))"
+        [attr.aria-label]="nextNavLabel((getNextYearDate(viewDate) | date: 'yyyy'))"
         data-action="next"
         igxCalendarScrollPage
         (mousedown)="nextPage()"

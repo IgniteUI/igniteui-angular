@@ -445,7 +445,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             case 'month':
                 return `${this.resourceStrings.igx_calendar_previous_month}, ${detail}`
             case 'year':
-                return this.resourceStrings.igx_calendar_previous_year.replace('{0}', '15');
+                return this.resourceStrings.igx_calendar_previous_year;
             case 'decade':
                 return this.resourceStrings.igx_calendar_previous_years.replace('{0}', '15');
         }
@@ -456,7 +456,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             case 'month':
                 return `${this.resourceStrings.igx_calendar_next_month}, ${detail}`
             case 'year':
-                return this.resourceStrings.igx_calendar_next_year.replace('{0}', '15');
+                return this.resourceStrings.igx_calendar_next_year;
             case 'decade':
                 return this.resourceStrings.igx_calendar_next_years.replace('{0}', '15');
         }

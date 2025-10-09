@@ -242,6 +242,10 @@
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
         position: relative;
+
+        .igx-display-container--scrollbar {
+            padding-inline-end: var(--vhelper-scrollbar-size);
+        }
     }
 
     %igx-drop-down__content {

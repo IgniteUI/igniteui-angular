@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { IgxSummaryResult } from './grid-summary';
+import type { IgxSummaryResult } from './grid-summary';
 import { DataUtil } from '../../data-operations/data-util';
-import { cloneArray, resolveNestedPath } from '../../core/utils';
-import { GridType, FlatGridType, TreeGridType } from '../common/grid.interface';
+import { cloneArray, columnFieldPath, resolveNestedPath } from '../../core/utils';
+import type { GridType, FlatGridType, TreeGridType } from '../common/grid.interface';
 
 /** @hidden */
 @Injectable()
@@ -28,7 +28,7 @@ export class IgxGridSummaryService {
         }
         if (!args) {
             this.summaryCacheMap.clear();
-            if (this.grid && this.grid.rootSummariesEnabled) {
+            if (this.grid?.rootSummariesEnabled) {
                 this.retriggerRootPipe++;
             }
             return;
@@ -123,10 +123,13 @@ export class IgxGridSummaryService {
             return rowSummaries;
         }
 
-        this.grid.columns.filter(col => col.hasSummary).forEach((column) => {
+        const columns = this.grid.columns.filter(col => col.hasSummary);
+        const columnPathParts = columns.map(col => columnFieldPath(col.field));
+
+        for (const [idx, column] of columns.entries()) {
             if (!rowSummaries.get(column.field)) {
                 let summaryResult = column.summaries.operate(
-                    data.map(r => resolveNestedPath(r, column.field)),
+                    data.map(r => resolveNestedPath(r, columnPathParts[idx])),
                     data,
                     column.field,
                     groupRecord,
@@ -140,7 +143,7 @@ export class IgxGridSummaryService {
 
                 rowSummaries.set(column.field, summaryResult);
             }
-        });
+        }
 
         return rowSummaries;
     }

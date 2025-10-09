@@ -199,6 +199,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     public override onClick() {
         if (!this.target.collapsed) {
             this.target.forceClose(this.mergedOverlaySettings);
+        } else if (this.target.toBeShown) {
+            clearTimeout(this.target.timeoutId);
+            this.target.toBeShown = false;
         }
     }
 
