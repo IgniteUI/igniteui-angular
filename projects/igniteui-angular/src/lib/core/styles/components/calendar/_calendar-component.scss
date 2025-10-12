@@ -474,6 +474,10 @@
             @extend %date-disabled-range !optional;
         }
 
+        @include e(date, $mods: ('disabled', 'range', 'inactive')) {
+            @extend %date-disabled-range-inactive !optional;
+        }
+
         @include e(date, $mods: ('disabled', 'range-preview')) {
             @extend %date-disabled-range-preview !optional;
         }
