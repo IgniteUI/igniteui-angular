@@ -236,6 +236,10 @@
         }
 
         @include e(date, $mods: ('range', 'selected', 'special', 'first', 'last')) {
+            @extend %date-range-selected-special-first-last !optional;
+        }
+
+        @include e(date, $mods: ('selected', 'special', 'first', 'last')) {
             @extend %date-selected-special-first-last !optional;
         }
 
