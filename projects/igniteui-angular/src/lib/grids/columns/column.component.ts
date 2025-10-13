@@ -393,6 +393,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 this.grid.summaryService.resetSummaryHeight();
                 this.grid.filteringService.refreshExpressions();
                 this.grid.filteringService.hideFilteringRowOnColumnVisibilityChange(this);
+                this.grid.refreshSearch();
                 this.grid.notifyChanges();
             }
         }

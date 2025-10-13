@@ -11,6 +11,25 @@ interface IMatchInfoCache {
     metadata: Map<string, boolean>;
 }
 
+interface FieldCache {
+    field: string;
+    value: string;
+    lowerValue: string;
+}
+
+/**
+ * Representing row cache for each data record.
+ * row - representing the data record
+ * fields - a cache containing all fields of a single row
+ * joinedLower - a concatenated string from all fields values used for fast pre-filter of the matched records
+ */
+interface RowCache {
+    row: any;
+    fields: FieldCache[];
+    joinedLower: string;
+}
+
+
 /**
  * A service that provides searching functionality within the grid.
  * @internal
@@ -21,84 +40,87 @@ export class IgxGridSearchService {
     /**
      * A cache representing each row field values concatenated. Used for a quick lookup whether a data row has the searched value.
      */
-    private cache: Array<string> = [];
+    private rowCache: Array<RowCache> = [];
 
-    private columns: Array<ColumnType> = [];
-
-    private data: Array<any> = [];
 
     public grid: GridType;
 
     /**
-     * Builds a cache that concatenates strings all lowercase. Even though, this might be incorrect for cases that there are formatters this would boost
-     * the first pass performance and the performance of building the cache.
-     * @example
-     * [{ProductName: "Peter", Age: 26, Country: "Portugal"}] -> peter 26 portugal
+     * Prepares and caches formatted, searchable data for all visible and searchable columns.
+     * Each row stores both original and lowercase versions of its formatted field values,
+     * plus a joined lowercase string for fast pre-filtering during search.
      */
     public buildCache(data: any[], columns: ColumnType[]) {
-        this.columns = columns.filter((column: ColumnType) => column.searchable && !column.columnGroup).sort((c1,c2) => c1.visibleIndex - c2.visibleIndex);
-        this.data = data.map(dataRow => this.grid.isRecordMerged(dataRow) ? dataRow.recordRef : dataRow);
-        this.data.forEach(record => {
-            const value = this.columns.map(column => record[column.field]).join(" ");
-            this.cache.push(value.toLowerCase());
-        });
-    }
-
-    public search(query: string, caseSensitive: boolean, exactMatch: boolean): Array<IMatchInfoCache> {
-        if (!query) return [];
-        const matchInfoCache = new Array<IMatchInfoCache>();
-        const candidateIndexes = this.generateCandidates(query);
-        const candidates = candidateIndexes.map((index: number) => this.data[index]);
-
-        const searchText = caseSensitive ? query : query.toLowerCase();
-        const columnsPathParts = this.columns.map(col => columnFieldPath(col.field));
-        candidates.forEach((row: any, rowIndex: number) => {
-            this.columns.forEach((column: ColumnType, columnIndex: number) => {
-                const value = this.resolveValue(column, row, columnsPathParts[columnIndex]);
-                const searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
-                if (searchValue != null) { // not strict equality - checking for undefined as well
-                    const isMergePlaceHolder = this.grid.isRecordMerged(row) ? !!row?.cellMergeMeta.get(column.field)?.root : false;
-                    if (isMergePlaceHolder) {
-                        return;
-                    }
-                    if (exactMatch && searchText === searchValue) {
-                        matchInfoCache.push({
-                            row: row,
-                            column: column.field,
-                            index: 0,
-                            metadata: new Map<string, boolean>([['pinned', (this.grid as any).isRecordPinnedByIndex(candidateIndexes[rowIndex])]])
-                        });
-                    } else if (!exactMatch){
-                        let occurrences = 0;
-                        let searchIndex = searchValue.indexOf(searchText);
-                        while (searchIndex !== -1) {
-                            matchInfoCache.push({
-                                row: row,
-                                column: column.field,
-                                index: occurrences++,
-                                metadata: new Map<string, boolean>([['pinned', (this.grid as any).isRecordPinnedByIndex(candidateIndexes[rowIndex])]])
-                            });
-                            searchIndex = searchValue.indexOf(searchText, searchIndex + searchText.length);
-                        }
-                    }
+        const searchableColumns = columns.filter((column: ColumnType) => column.searchable && !column.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
+        const columnsPathParts = searchableColumns.map(col => columnFieldPath(col.field));
+        this.rowCache = new Array<RowCache>(data.length);
+        for (let i = 0; i < data.length; i++) {
+            const record = this.grid.isRecordMerged(data[i]) ? data[i].recordRef : data[i];
+            const fields: Array<FieldCache> = [];
+            for (let j = 0; j < searchableColumns.length; j++) {
+                const column = searchableColumns[j];
+                const isMergePlaceHolder = this.grid.isRecordMerged(data[i]) ? !!data[i]?.cellMergeMeta.get(column.field)?.root : false;
+                if (isMergePlaceHolder) {
+                    continue;
                 }
-            });
-        });
-        return matchInfoCache;
+                const value = this.resolveValue(column, record, columnsPathParts[j]);
+                fields.push({
+                    field: column.field,
+                    value: String(value),
+                    lowerValue: String(value).toLowerCase()
+                });
+            }
+            this.rowCache[i] = {
+                row: record,
+                fields: fields,
+                joinedLower: fields.map(field => field.lowerValue).join(' ')
+            };
+        }
+
     }
 
     /**
-     * Generates potential row candidates where a query match might occur.
+     * Searches the cached data for all occurrences of the given query across searchable columns.
+     * Supports case-sensitive and exact-match modes, returning every substring occurrence
+     * with its corresponding row, column, and occurrence index.
      */
-    private generateCandidates(query: string) {
-        const queryLower = query.toLowerCase();
-        const candidates = [];
-        for (let i = 0; i < this.cache.length; i++) {
-            if (this.cache[i].includes(queryLower)) {
-                candidates.push(i);
+    public search(query: string, caseSensitive: boolean, exactMatch: boolean): Array<IMatchInfoCache> {
+        if (!query) return [];
+        const matchInfoCache = new Array<IMatchInfoCache>();
+        const searchText = caseSensitive ? query : query.toLowerCase();
+        for (let i = 0; i < this.rowCache.length; i++) {
+            const cacheRecord = this.rowCache[i];
+
+            if (!caseSensitive && !cacheRecord.joinedLower.includes(searchText)) {
+                // in case the search is case insensitive we can directly check the cache and pre-filter the records
+                continue;
+            }
+
+            for (const fieldCache of cacheRecord.fields) {
+                const value = caseSensitive ? fieldCache.value : fieldCache.lowerValue;
+                if (exactMatch && value === searchText) {
+                    matchInfoCache.push({
+                        row: cacheRecord.row,
+                        column: fieldCache.field,
+                        index: 0,
+                        metadata: new Map([['pinned', (this.grid as any).isRecordPinnedByIndex(i)]])
+                    });
+                } else if (!exactMatch) {
+                    let occurrences = 0;
+                    let searchIndex = value.indexOf(searchText);
+                    while (searchIndex !== -1) {
+                        matchInfoCache.push({
+                            row: cacheRecord.row,
+                            column: fieldCache.field,
+                            index: occurrences++,
+                            metadata: new Map([['pinned', (this.grid as any).isRecordPinnedByIndex(i)]])
+                        });
+                        searchIndex = value.indexOf(searchText, searchIndex + searchText.length);
+                    }
+                }
             }
         }
-        return candidates;
+        return matchInfoCache;
     }
 
     /**
