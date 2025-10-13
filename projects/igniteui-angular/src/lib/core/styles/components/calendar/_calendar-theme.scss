@@ -1153,18 +1153,13 @@
 
     %date-selected-current {
         %date-inner {
-            @if $variant != 'bootstrap' {
-                color: var-get($theme, 'date-selected-current-foreground');
-                background: var-get($theme, 'date-selected-current-background') ;
-            }
-
+            color: var-get($theme, 'date-selected-current-foreground');
+            background: var-get($theme, 'date-selected-current-background') ;
             border-color: var-get($theme, 'date-selected-current-border-color');
 
             &:hover {
-                @if $variant != 'bootstrap' {
-                    color: var-get($theme, 'date-selected-current-hover-foreground');
-                    background: var-get($theme, 'date-selected-current-hover-background');
-                }
+                color: var-get($theme, 'date-selected-current-hover-foreground');
+                background: var-get($theme, 'date-selected-current-hover-background');
                 border-color: var-get($theme, 'date-selected-current-hover-border-color');
             }
         }
@@ -1172,11 +1167,8 @@
 
     %date-selected-current-active {
         %date-inner {
-            @if $variant != 'bootstrap' {
-                color: var-get($theme, 'date-selected-current-focus-foreground');
-                background: var-get($theme, 'date-selected-current-focus-background');
-            }
-
+            color: var-get($theme, 'date-selected-current-focus-foreground');
+            background: var-get($theme, 'date-selected-current-focus-background');
             border-color: var-get($theme, 'date-selected-current-focus-border-color');
         }
     }
@@ -1560,12 +1552,8 @@
                 width: $date-inner-size;
                 height: $date-inner-size;
 
-                @if $variant != 'fluent'{
+                @if $variant != 'fluent' {
                     border-color: var-get($theme, 'date-selected-special-border-color');
-                }
-
-                @if $variant == 'bootstrap' {
-                    border-color: var-get($theme, 'date-selected-foreground');
                 }
             }
         }
@@ -1593,29 +1581,15 @@
         }
     }
 
-    %date-range-selected-special-first-last {
+    %date-selected-special-first-last {
         %date-inner {
             &::after {
-                @if $variant == 'material' {
-                    border-color: var-get($theme, 'date-selected-foreground');
-                }
-
-                @if $variant == 'bootstrap' {
+                @if $variant == 'material' or $variant == 'bootstrap' {
                     border-color: var-get($theme, 'date-selected-foreground');
                 }
 
                 @if $variant == 'indigo' {
                     border-color: var-get($theme, 'date-current-border-color');
-                }
-            }
-        }
-    }
-
-    %date-selected-special-first-last {
-        %date-inner {
-            &::after {
-                @if $variant == 'bootstrap' {
-                    border-color: var-get($theme, 'date-selected-foreground');
                 }
             }
         }
