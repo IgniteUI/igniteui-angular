@@ -6,6 +6,7 @@ import { ButtonSampleComponent } from './button/button.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
+import { ChatSampleComponent } from './chat/chat.sample';
 import { InputControlsSampleComponent } from './input-controls/input-controls.sample';
 import { ChipsSampleComponent } from './chips/chips.sample';
 import { CircularProgressSampleComponent } from './circular-progress-showcase/circular-progress-showcase.sample'
@@ -198,6 +199,10 @@ export const appRoutes: Routes = [
     {
         path: 'carousel',
         component: CarouselSampleComponent
+    },
+    {
+        path: 'chat',
+        component: ChatSampleComponent
     },
     {
         path: 'input-controls',
