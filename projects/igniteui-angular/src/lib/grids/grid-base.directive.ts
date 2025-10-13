@@ -6440,7 +6440,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     protected viewDetachHandler(args) {
-        if (this.actionStrip && args.view.rootNodes.find(x => x === this.actionStrip.context.element.nativeElement)) {
+        if (this.actionStrip && args.view.rootNodes.find(x => x === this.actionStrip.context?.element.nativeElement)) {
             this.actionStrip.hide();
         }
     }
