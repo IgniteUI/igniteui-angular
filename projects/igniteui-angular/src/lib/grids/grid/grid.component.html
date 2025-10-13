@@ -90,6 +90,7 @@
                 [igxTemplateOutletContext]="getContext(rowData, rowIndex)"
                 (cachedViewLoaded)="cachedViewLoaded($event)"
                 (viewCreated)="viewCreatedHandler($event)"
+                (beforeViewDetach)="viewDetachHandler($event)"
                 (viewMoved)="viewMovedHandler($event)">
             </ng-template>
         </ng-template>
