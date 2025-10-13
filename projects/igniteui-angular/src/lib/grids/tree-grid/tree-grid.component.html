@@ -88,6 +88,7 @@
             (dataChanging)="dataRebinding($event)" (dataChanged)="dataRebound($event)">
             <ng-template [igxTemplateOutlet]='isSummaryRow(rowData) ? summary_template : record_template'
                 [igxTemplateOutletContext]='getContext(rowData, rowIndex, false)'
+                (beforeViewDetach)="viewDetachHandler($event)"
                 (cachedViewLoaded)='cachedViewLoaded($event)'>
             </ng-template>
         </ng-template>
