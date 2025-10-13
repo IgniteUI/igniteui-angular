@@ -13,7 +13,7 @@ import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringStrategy, IgxFilterItem } from '../data-operations/filtering-strategy';
-import { ISortingOptions, IgxExcelStyleHeaderIconDirective, IgxGridToolbarAdvancedFilteringComponent, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from '../grids/public_api';
+import { ISortingOptions, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleHeaderIconDirective, IgxGridToolbarAdvancedFilteringComponent, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from '../grids/public_api';
 import { IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective } from '../grids/grid.rowEdit.directive';
 import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
@@ -2760,4 +2760,34 @@ export class ObjectCloneStrategy implements IDataCloneStrategy {
 })
 export class IgxGridRowEditingDefinedColumnsComponent extends BasicGridComponent {
     public override data = SampleTestData.foodProductData();
+}
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true">
+                <igx-grid-excel-style-filtering>
+                <igx-excel-style-filter-operations>
+                    <igx-excel-style-conditional-filter></igx-excel-style-conditional-filter>
+                </igx-excel-style-filter-operations>
+            </igx-grid-excel-style-filtering>
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
+            [filterable]="false" [resizable]="resizable"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            [filterable]="filterable" [resizable]="resizable" dataType="date">
+        </igx-column>
+        <igx-column width="100px" [field]="'ReleaseDateTime'" [header]="'ReleaseDateTime'" headerClasses="header-release-date-time"
+            [filterable]="filterable" [resizable]="resizable" dataType="dateTime">
+        </igx-column>
+        <igx-column width="100px" [field]="'ReleaseTime'" [header]="'ReleaseTime'" headerClasses="header-release-time"
+            [filterable]="filterable" [resizable]="resizable" dataType="time">
+        </igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
+            dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>`,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxExcelStyleConditionalFilterComponent, IgxGridExcelStyleFilteringComponent, IgxExcelStyleFilterOperationsTemplateDirective]
+})
+export class IgxGridConditionalFilteringComponent extends IgxGridFilteringComponent {
 }
