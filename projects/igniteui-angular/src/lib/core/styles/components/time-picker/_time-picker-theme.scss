@@ -26,6 +26,16 @@
     .igx-input-group {
         display: flex;
         flex-direction: column;
+
+        @if $variant == 'indigo' or $variant == 'bootstrap' {
+            [igxLabel] {
+                margin-block-end: rem(4px);
+            }
+        } @else if $variant == 'fluent' {
+            [igxLabel] {
+                margin-block-end: rem(5px);
+            }
+        }
     }
 
     %time-picker-display {
