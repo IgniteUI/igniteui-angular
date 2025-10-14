@@ -10,7 +10,7 @@
     $variant: map.get($theme, '_meta', 'theme');
 
     %igx-badge-display {
-        --size: var(--component-size, #{rem(22px)});
+        --size: var(--component-size, var(--ig-size-medium, #{rem(22px)}));
         --_badge-size: var(--size);
 
         display: inline-flex;
@@ -60,18 +60,38 @@
 
     %igx-badge--success {
         background: color($color: 'success');
+        color: white;
+
+        igx-icon {
+            color: white;
+        }
     }
 
     %igx-badge--info {
         background: color($color: 'info');
+        color: white;
+
+        igx-icon {
+            color: white;
+        }
     }
 
     %igx-badge--warn {
         background: color($color: 'warn');
+        color: white;
+
+        igx-icon {
+            color: white;
+        }
     }
 
     %igx-badge--error {
         background: color($color: 'error');
+        color: white;
+
+        igx-icon {
+            color: white;
+        }
     }
 
     %igx-badge--dot {
