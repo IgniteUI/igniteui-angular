@@ -7,8 +7,8 @@
                     [type]="properties.variant"
                     value="8"
                     [shape]="properties.shape"
-                    [size]="properties.size"
                     [outlined]="properties.outlined"
+                    [dot]="properties.dot"
                 ></igx-badge>
                 <span>With Value</span>
             </div>
@@ -16,8 +16,8 @@
                 <igx-badge
                     [type]="properties.variant"
                     [shape]="properties.shape"
-                    [size]="properties.size"
                     [outlined]="properties.outlined"
+                    [dot]="properties.dot"
                 >
                     <igx-icon>bluetooth</igx-icon>
                 </igx-badge>
@@ -28,8 +28,8 @@
                 <igx-badge
                     [type]="properties.variant"
                     [shape]="properties.shape"
-                    [size]="properties.size"
                     [outlined]="properties.outlined"
+                    [dot]="properties.dot"
                 >
                     <igx-icon>bluetooth</igx-icon>
                 </igx-badge>
@@ -37,35 +37,35 @@
             </div>
         </div>
 
-        <h3 class="sample-title">Size Variants</h3>
+        <h3 class="sample-title">Dot Badges</h3>
         <div class="badge-examples">
             <div class="badge-item">
-                <igx-badge type="info" value="5" size="small"></igx-badge>
-                <span>Small</span>
+                <igx-badge dot type="primary"></igx-badge>
+                <span>Primary Dot</span>
             </div>
             <div class="badge-item">
-                <igx-badge type="info" value="10" size="medium"></igx-badge>
-                <span>Medium</span>
+                <igx-badge dot type="info"></igx-badge>
+                <span>Info Dot</span>
             </div>
             <div class="badge-item">
-                <igx-badge type="info" value="99+" size="large"></igx-badge>
-                <span>Large</span>
-            </div>
-        </div>
-
-        <h3 class="sample-title">Dot Type</h3>
-        <div class="badge-examples">
-            <div class="badge-item">
-                <igx-badge type="dot"></igx-badge>
-                <span>Default Dot</span>
+                <igx-badge dot type="success"></igx-badge>
+                <span>Success Dot</span>
             </div>
             <div class="badge-item">
-                <igx-badge type="dot" outlined></igx-badge>
+                <igx-badge dot type="warning"></igx-badge>
+                <span>Warning Dot</span>
+            </div>
+            <div class="badge-item">
+                <igx-badge dot type="error"></igx-badge>
+                <span>Error Dot</span>
+            </div>
+            <div class="badge-item">
+                <igx-badge dot outlined type="success"></igx-badge>
                 <span>Outlined Dot</span>
             </div>
             <div class="badge-item avatar-sample">
                 <igx-avatar icon="face" shape="rounded"></igx-avatar>
-                <igx-badge type="dot"></igx-badge>
+                <igx-badge dot type="success"></igx-badge>
                 <span>Dot on Avatar</span>
             </div>
         </div>

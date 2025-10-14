@@ -11,20 +11,9 @@ export const IgxBadgeType = {
     INFO: 'info',
     SUCCESS: 'success',
     WARNING: 'warning',
-    ERROR: 'error',
-    DOT: 'dot'
+    ERROR: 'error'
 } as const;
 export type IgxBadgeType = (typeof IgxBadgeType)[keyof typeof IgxBadgeType];
-
-/**
- * Determines the igxBadge size
- */
-export const IgxBadgeSize = {
-    SMALL: 'small',
-    MEDIUM: 'medium',
-    LARGE: 'large'
-} as const;
-export type IgxBadgeSize = (typeof IgxBadgeSize)[keyof typeof IgxBadgeSize];
 /**
  * Badge provides visual notifications used to decorate avatars, menus, etc.
  *
@@ -73,7 +62,7 @@ export class IgxBadgeComponent {
     * Sets/gets the type of the badge.
     *
     * @remarks
-    * Allowed values are `primary`, `info`, `success`, `warning`, `error`, `dot`.
+    * Allowed values are `primary`, `info`, `success`, `warning`, `error`.
     * Providing an invalid value won't display a badge.
     *
     * @example
@@ -83,21 +72,6 @@ export class IgxBadgeComponent {
     */
     @Input()
     public type: string | IgxBadgeType = IgxBadgeType.PRIMARY;
-
-   /**
-    * Sets/gets the size of the badge.
-    *
-    * @remarks
-    * Allowed values are `small`, `medium`, `large`.
-    * Default value is `medium`.
-    *
-    * @example
-    * ```html
-    * <igx-badge size="large"></igx-badge>
-    * ```
-    */
-    @Input()
-    public size: string | IgxBadgeSize = IgxBadgeSize.MEDIUM;
 
    /**
     * Sets/gets the value to be displayed inside the badge.
@@ -210,6 +184,20 @@ export class IgxBadgeComponent {
     public outlined = false;
 
     /**
+     * Sets/gets whether the badge is displayed as a dot.
+     * When true, the badge will be rendered as a minimal 8px indicator without any content.
+     * Default value is `false`.
+     *
+     * @example
+     * ```html
+     * <igx-badge dot type="success"></igx-badge>
+     * ```
+     */
+    @Input({transform: booleanAttribute})
+    @HostBinding('class.igx-badge--dot')
+    public dot = false;
+
+    /**
      * Defines a human-readable, accessor, author-localized description for
      * the `type` and the `icon` or `value` of the element.
      *
@@ -244,17 +232,5 @@ export class IgxBadgeComponent {
     @HostBinding('class.igx-badge--error')
     public get errorClass() {
         return this.type === IgxBadgeType.ERROR;
-    }
-
-    @HostBinding('class.igx-badge--dot')
-    public get dotClass() {
-        return this.type === IgxBadgeType.DOT;
-    }
-
-    @HostBinding('style.--component-size')
-    protected get componentSize() {
-        if (this.size) {
-            return `var(--ig-size-${this.size})`;
-        }
     }
 }

@@ -13,8 +13,8 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
 | `id` | string | Unique identifier of the component. If not provided it will be automatically generated.|
-| `type` | string | Set the type of the badge to either `primary`, `info`, `success`, `warning`, `error`, or `dot`. This will change the background color of the badge according to the values set in the default theme. The `dot` type creates a minimal badge without any content. |
-| `size` | string | Set the size of the badge to either `small`, `medium`, or `large`. Default is `medium`. |
+| `type` | string | Set the type of the badge to either `primary`, `info`, `success`, `warning`, or `error`. This will change the background color of the badge according to the values set in the default theme. |
+| `dot` | boolean | Set whether the badge is displayed as a minimal dot indicator without any content. Default is `false`. |
 | `position` | string | Set the position of the badge relative to its parent container to either `top-right`, `top-left`, `bottom-right`, or `bottom-left`. |
 | `value` | string | Set the value to be displayed inside the badge. |
 | `icon` | string | Set an icon for the badge from the material icons set. Will not be displayed if `value` for the badge is already set. |
@@ -30,15 +30,17 @@ Using `igx-badge` with the `igx-avatar` component to show active status.
 </igx-avatar>
 ```
 
-Using `igx-badge` with different sizes.
+Using `igx-badge` as a dot indicator for notifications.
 ```html
-<igx-badge size="small" value="5"></igx-badge>
-<igx-badge size="medium" value="10"></igx-badge>
-<igx-badge size="large" value="99+"></igx-badge>
+<igx-badge dot type="success"></igx-badge>
+<igx-badge dot outlined type="error"></igx-badge>
 ```
 
-Using `igx-badge` as a dot indicator.
+Using different badge types.
 ```html
-<igx-badge type="dot"></igx-badge>
-<igx-badge type="dot" outlined></igx-badge>
+<igx-badge type="primary" value="1"></igx-badge>
+<igx-badge type="info" value="2"></igx-badge>
+<igx-badge type="success" value="3"></igx-badge>
+<igx-badge type="warning" value="4"></igx-badge>
+<igx-badge type="error" value="5"></igx-badge>
 ```

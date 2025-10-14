@@ -10,7 +10,7 @@
     $variant: map.get($theme, '_meta', 'theme');
 
     %igx-badge-display {
-        --size: var(--component-size, var(--ig-size-medium, #{rem(22px)}));
+        --size: var(--ig-size, #{rem(22px)});
         --_badge-size: var(--size);
 
         display: inline-flex;
