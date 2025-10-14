@@ -8,6 +8,7 @@ $_theme: $fluent;
 
 @include themed-block(igx-input-group, fluent) {
     --_bundle-template-rows: revert;
+    --_prefix-suffix-spacing: #{pad-inline(rem(8px), rem(10px), rem(14px))};
 
     row-gap: rem(5px);
 
@@ -29,7 +30,10 @@ $_theme: $fluent;
     }
 
     @include e(textarea) {
-        padding: rem(8px)
+        @include type-style(body-2);
+
+        padding-inline: pad-inline(rem(8px));
+        padding-block: pad-block(rem(6px), rem(10px), rem(14px)) 0;
     }
 
     @include e(file-input) {

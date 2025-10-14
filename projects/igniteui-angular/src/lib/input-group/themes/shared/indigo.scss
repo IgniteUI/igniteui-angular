@@ -12,7 +12,7 @@ $_theme: $indigo;
     --_bundle-template-rows: revert;
 
     igx-icon {
-        --size: var(--input-icon);
+        --size: #{sizable(rem(14px), rem(16px), rem(16px))};
     }
 
     row-gap: rem(4px);
@@ -64,11 +64,23 @@ $_theme: $indigo;
 
     @include m(textarea-group) {
         @include e(textarea) {
-            padding-block: rem(6px);
+            padding-block: pad-block(rem(4px), rem(6px), rem(8px)) 0;
         }
 
         @include e(bundle) {
             height: auto;
+        }
+    }
+
+    @include m(textarea-group, $not: (prefixed)) {
+        @include e(textarea) {
+            padding-inline-start: pad-inline(rem(2px), rem(4px), rem(6px));
+        }
+    }
+
+    @include m(textarea-group, $not: (suffixed)) {
+        @include e(textarea) {
+            padding-inline-end: pad-inline(rem(2px), rem(4px), rem(6px));
         }
     }
 
@@ -153,6 +165,10 @@ $_theme: $indigo;
         igx-icon {
             --size: #{rem(16px)};
         }
+    }
+
+    @include m(search) {
+        --_prefix-suffix-spacing: #{pad-inline(rem(6px), rem(8px), rem(10px))};
     }
 
     @include m(disabled) {

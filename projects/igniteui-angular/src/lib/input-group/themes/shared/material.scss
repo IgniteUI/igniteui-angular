@@ -7,7 +7,7 @@
 
 $_theme: $material;
 $transition-timing: .25s $out-cubic;
-$bundle-start-end-min-width: pad(rem(10px), rem(12px), rem(14px));
+$bundle-start-end-min-width: pad(rem(8px), rem(10px), rem(12px));
 $input-inline-padding: rem(4px);
 $input-top-spacing: rem(20px);
 $input-bottom-spacing: rem(6px);
@@ -80,7 +80,7 @@ $input-bottom-spacing: rem(6px);
     --_prefix-suffix-spacing: #{pad-inline(rem(12px), rem(14px), rem(16px))};
     --_bundle-template-rows: #{var-get($_theme, 'size')};
 
-    &:has([igxLabel], igx-label), {
+    &:has([igxLabel], igx-label) {
         --_input-top-spacing: #{$input-top-spacing};
         --_input-bottom-spacing: #{$input-bottom-spacing};
         --_label-row: 1;
@@ -124,6 +124,8 @@ $input-bottom-spacing: rem(6px);
 
     @include e(hint) {
         grid-row: var(--_hint-row);
+        min-height: rem(18px);
+        padding-inline: sizable(rem(12px), rem(14px), rem(16px));
     }
 
     @include m(base) {
@@ -331,7 +333,9 @@ $input-bottom-spacing: rem(6px);
         --_bundle-template-rows: auto;
 
         @include e(bundle-main) {
-            padding-block-start: $input-top-spacing;
+            --_input-top-spacing: #{sizable(rem(16px), rem(20px), rem(24px))};
+
+            padding-block-start: var(--_input-top-spacing);
         }
 
         @include e(textarea) {
@@ -354,6 +358,12 @@ $input-bottom-spacing: rem(6px);
     @include mx(box, textarea-group, ('not': (suffixed))) {
         @include e(textarea) {
             max-width: calc(100% - #{rem(1px)});
+        }
+    }
+
+    @include mx(border, textarea-group) {
+        @include e(bundle-main) {
+            --_input-top-spacing: #{sizable(rem(8px), rem(12px), rem(16px))};
         }
     }
 
@@ -843,11 +853,6 @@ $input-bottom-spacing: rem(6px);
         @include e(bundle-end) {
             grid-area: 1 / 5;
         }
-    }
-
-    @include e(hint) {
-        min-height: rem(18px);
-        padding-inline: sizable(rem(14px), rem(16px), rem(18px));
     }
 
     @include m(valid) {
