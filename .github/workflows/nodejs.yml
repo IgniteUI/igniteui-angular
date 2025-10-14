@@ -50,7 +50,7 @@ jobs:
             npm run test:schematics
             npm run test:i18n
         env:
-            NODE_OPTIONS: --max_old_space_size=4096 --no-experimental-strip-types
+            NODE_OPTIONS: --max_old_space_size=4096 ${{ matrix.node-version == '22.x' && '--no-experimental-strip-types' || '' }}
             TZ: America/New_York
       - name: Build i18n & validate output
         run: |
