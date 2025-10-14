@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxBadgeComponent, IgxBadgeType } from './badge.component';
+import { IgxBadgeComponent, IgxBadgeType, IgxBadgeSize } from './badge.component';
 
 describe('Badge', () => {
     beforeEach(waitForAsync(() => {
@@ -11,7 +11,9 @@ describe('Badge', () => {
                 InitBadgeWithDefaultsComponent,
                 InitBadgeWithIconComponent,
                 IgxBadgeComponent,
-                InitBadgeWithIconARIAComponent
+                InitBadgeWithIconARIAComponent,
+                InitBadgeWithSizeComponent,
+                InitBadgeWithDotTypeComponent
             ]
         }).compileComponents();
     }));
@@ -87,6 +89,33 @@ describe('Badge', () => {
         const container = fixture.nativeElement.querySelectorAll('.igx-badge')[0];
         expect(container.getAttribute('aria-roledescription')).toMatch(expectedDescription);
     });
+
+    it('Initializes badge with size', () => {
+        const fixture = TestBed.createComponent(InitBadgeWithSizeComponent);
+        fixture.detectChanges();
+        const badge = fixture.componentInstance.badge;
+        const domBadge = fixture.debugElement.query(By.css('igx-badge')).nativeElement;
+
+        expect(badge.size).toBe(IgxBadgeSize.LARGE);
+        expect(domBadge.style.getPropertyValue('--component-size')).toBe('var(--ig-size-large)');
+    });
+
+    it('Initializes badge with default size', () => {
+        const fixture = TestBed.createComponent(InitBadgeWithDefaultsComponent);
+        fixture.detectChanges();
+        const badge = fixture.componentInstance.badge;
+
+        expect(badge.size).toBe(IgxBadgeSize.MEDIUM);
+    });
+
+    it('Initializes badge with dot type', () => {
+        const fixture = TestBed.createComponent(InitBadgeWithDotTypeComponent);
+        fixture.detectChanges();
+        const badge = fixture.componentInstance.badge;
+
+        expect(badge.type).toBe(IgxBadgeType.DOT);
+        expect(fixture.debugElement.query(By.css('.igx-badge--dot'))).toBeTruthy();
+    });
 });
 
 @Component({
@@ -118,5 +147,21 @@ class InitBadgeWithIconComponent {
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithIconARIAComponent {
+    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
+}
+
+@Component({
+    template: `<igx-badge size="large" value="10"></igx-badge>`,
+    imports: [IgxBadgeComponent]
+})
+class InitBadgeWithSizeComponent {
+    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
+}
+
+@Component({
+    template: `<igx-badge type="dot"></igx-badge>`,
+    imports: [IgxBadgeComponent]
+})
+class InitBadgeWithDotTypeComponent {
     @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
 }
