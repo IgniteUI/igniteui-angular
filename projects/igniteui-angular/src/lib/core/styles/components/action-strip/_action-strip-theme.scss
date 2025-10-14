@@ -2,64 +2,6 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
-
-/// If only background color is specified, text/icon color will be assigned automatically to a contrasting color.
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-///
-/// @param {Color} $icon-color [null] - The color used for the actions icons.
-/// @param {Color} $background [null] - The color used for the action strip component content background.
-/// @param {Color} $actions-background [null] - The color used for the actions background.
-/// @param {Color} $delete-action [null] - The color used for the delete icon in action strip component.
-/// @param {List} $actions-border-radius [null] - The border radius used for actions container inside action strip component.
-///
-/// @example scss Change the background and icon colors in action strip
-///   $my-action-strip-theme: action-strip-theme($background: black);
-///   // Pass the theme to the css-vars() mixin
-///   @include css-vars($my-action-strip-theme);
-@function action-strip-theme(
-    $schema: $light-material-schema,
-
-    $background: null,
-    $actions-background: null,
-    $icon-color: null,
-    $delete-action: null,
-    $actions-border-radius: null,
-) {
-    $name: 'igx-action-strip';
-    $action-strip-schema: ();
-
-    @if map.has-key($schema, 'action-strip') {
-        $action-strip-schema: map.get($schema, 'action-strip');
-    } @else {
-        $action-strip-schema: $schema;
-    }
-
-    $theme: digest-schema($action-strip-schema);
-
-    @if not($icon-color) and $actions-background {
-        $icon-color: adaptive-contrast(var(--actions-background));
-    }
-
-    @if not($actions-border-radius) {
-        $actions-border-radius: map.get($theme, 'actions-border-radius');
-    }
-
-    @return extend($theme, (
-        name: $name,
-        background: $background,
-        actions-background: $actions-background,
-        icon-color: $icon-color,
-        delete-action: $delete-action,
-        actions-border-radius: $actions-border-radius,
-    ));
-}
-
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
