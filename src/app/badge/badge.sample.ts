@@ -47,8 +47,15 @@ export class BadgeSampleComponent {
         variant: {
             control: {
                 type: 'select',
-                options: ['default', 'info', 'success', 'warning', 'error'],
+                options: ['default', 'info', 'success', 'warning', 'error', 'dot'],
                 defaultValue: 'default'
+            }
+        },
+        size: {
+            control: {
+                type: 'button-group',
+                options: ['small', 'medium', 'large'],
+                defaultValue: 'medium'
             }
         },
         outlined: {
@@ -84,6 +91,7 @@ export class BadgeSampleComponent {
             success: 'success',
             warning: 'warning',
             error: 'danger',
+            dot: 'primary',
         })
     );
 
