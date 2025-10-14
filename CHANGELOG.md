@@ -2,7 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 21.0.0
+## 20.2.0
 
 ### General
 - `IgxHierarchicalGrid`

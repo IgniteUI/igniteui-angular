@@ -590,7 +590,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * const schema = this.grid.schema;
      * this.grid.schema = [{ name: 'Products', fields: [...], childEntities: [...] }];
      * ```
-     * @deprecated in version 21.0.0.
+     * @deprecated in version 20.2.0.
      */
     @Input()
     public set schema(entities: EntityType[]) {}
