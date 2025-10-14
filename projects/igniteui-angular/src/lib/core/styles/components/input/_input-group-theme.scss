@@ -1016,7 +1016,7 @@
     %form-group-display--search {
         %igx-input-group__notch--search,
         %form-group-bundle-main--search {
-            @if $variant != 'indigo' {
+            @if $variant == 'material' {
                 padding-inline: rem(4px);
             }
         }
@@ -1079,11 +1079,9 @@
     }
 
     %form-group-label {
-        padding-inline-end: rem(4px);
         backface-visibility: hidden;
         will-change: transform;
         transform-origin: top left;
-        margin-inline-start: pad-inline(0, rem(-2px), rem(-4px));
     }
 
     %form-group-label--border {
@@ -1632,6 +1630,7 @@
     %form-group-helper {
         --ig-caption-margin-top: #{$hint-spacing-block};
         --ig-caption-margin-bottom: 0;
+        --ig-body-2-margin-top: #{$hint-spacing-block};
 
         color: var-get($theme, 'helper-text-color');
         position: relative;
