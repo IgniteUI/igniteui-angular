@@ -6,8 +6,19 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin date-range-picker($theme) {
     @include css-vars($theme);
+    $variant: map.get($theme, '_meta', 'theme');
+
+    $label-height: map.get((
+        'material': 0,
+        'fluent': rem(21px),
+        'bootstrap': rem(28px),
+        'indigo': rem(19px),
+    ), $variant);
 
     %igx-date-range-picker {
+        @include sizable();
+        --input-group-size: #{map.get($theme, 'size')};
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
         display: flex;
 
         > igx-icon {
@@ -27,6 +38,8 @@
     igx-date-range-end,
     %igx-date-range-picker__start,
     %igx-date-range-picker__end {
+        --size: var(--input-group-size) !important;
+
         flex: 1 0 0%;
     }
 
@@ -35,6 +48,11 @@
         align-items: center;
         color: var-get($theme, 'label-color');
         margin: 0 rem(8px);
+        height: var(--input-group-size);
+
+        &.labeled-input {
+            transform: translateY($label-height);
+        }
     }
 
     %igx-date-range-picker-buttons {

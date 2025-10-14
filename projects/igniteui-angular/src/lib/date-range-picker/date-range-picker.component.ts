@@ -537,7 +537,9 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public get separatorClass(): string {
-        return 'igx-date-range-picker__label';
+        const classes = ['igx-date-range-picker__label'];
+        if (this.label) classes.push('labeled-input');
+        return classes.join(' ');
     }
 
     protected override get toggleContainer(): HTMLElement | undefined {
