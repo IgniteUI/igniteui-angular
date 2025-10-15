@@ -5,7 +5,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin grid-toolbar($theme) {
-    @include css-vars($theme, 'igx-grid-toolbar, .igx-grid-toolbar__dd-list');
+    @include css-vars($theme);
 
     $variant: map.get($theme, '_meta', 'theme');
     $bootstrap-theme: $variant == 'bootstrap';

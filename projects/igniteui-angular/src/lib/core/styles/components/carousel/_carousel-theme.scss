@@ -6,7 +6,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin carousel($theme) {
-    @include css-vars($theme, 'igx-carousel');
+    @include css-vars($theme);
     @include scale-in-center();
     @include scale-out-center();
 

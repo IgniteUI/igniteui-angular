@@ -3,12 +3,8 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-////
-
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 @function pivot-data-selector-theme(
     $schema: $light-material-schema,
@@ -28,6 +24,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
     ));
 }
 
@@ -35,7 +32,8 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin pivot-data-selector($theme) {
-    @include css-vars($theme, 'igx-pivot-data-selector');
+    @include css-vars($theme);
+
     $variant: map.get($theme, '_meta', 'theme');
 
     $chip-height-material: (
