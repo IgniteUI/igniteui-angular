@@ -706,7 +706,7 @@ describe('IgxTabs', () => {
             expect(document.activeElement).toBe(headerElements[3]);
         }));
 
-        it('should not navigate to an URL blocked by activate guard', fakeAsync(() => {
+        it('should allow tab selection for routing tabs regardless of router guard', fakeAsync(() => {
             fixture = TestBed.createComponent(TabsRoutingGuardTestComponent);
             tabsComp = fixture.componentInstance.tabs;
             fixture.detectChanges();
@@ -729,15 +729,18 @@ describe('IgxTabs', () => {
             expect(tabItems[0].selected).toBe(true);
             expect(tabItems[1].selected).toBe(false);
 
+            // Even when router guard blocks navigation, tab should still be selected
             fixture.ngZone.run(() => {
                 UIInteractions.simulateClickAndSelectEvent(headerElements[1]);
             });
             tick();
+            // Navigation blocked by guard, so URL stays the same
             expect(location.path()).toBe('/view1');
             fixture.detectChanges();
-            expect(tabsComp.selectedIndex).toBe(0);
-            expect(tabItems[0].selected).toBe(true);
-            expect(tabItems[1].selected).toBe(false);
+            // But tab selection should still work
+            expect(tabsComp.selectedIndex).toBe(1);
+            expect(tabItems[0].selected).toBe(false);
+            expect(tabItems[1].selected).toBe(true);
         }));
 
         it('should set auto activation mode by default and change selectedIndex on arrow keys', fakeAsync(() => {
@@ -865,6 +868,36 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             expect(tabsComp.selectedIndicator.nativeElement.style.visibility).toBe('hidden');
         });
+
+        it('should allow tab selection by clicking on tabs without content', fakeAsync(() => {
+            // Initially tab 1 (index 1) is selected
+            expect(tabsComp.selectedIndex).toBe(1);
+            expect(tabItems[1].selected).toBe(true);
+            expect(tabItems[0].selected).toBe(false);
+            expect(tabItems[2].selected).toBe(false);
+
+            // Click on tab 0 (no content)
+            headerElements[0].dispatchEvent(new Event('click', { bubbles: true }));
+            tick(200);
+            fixture.detectChanges();
+
+            // Should now be selected
+            expect(tabsComp.selectedIndex).toBe(0);
+            expect(tabItems[0].selected).toBe(true);
+            expect(tabItems[1].selected).toBe(false);
+            expect(tabItems[2].selected).toBe(false);
+
+            // Click on tab 2 (no content)
+            headerElements[2].dispatchEvent(new Event('click', { bubbles: true }));
+            tick(200);
+            fixture.detectChanges();
+
+            // Should now be selected
+            expect(tabsComp.selectedIndex).toBe(2);
+            expect(tabItems[2].selected).toBe(true);
+            expect(tabItems[0].selected).toBe(false);
+            expect(tabItems[1].selected).toBe(false);
+        }));
     });
 
     describe('Tabs-only Mode With Initial Selection Set on Tabs Component Tests', () => {
@@ -1059,7 +1092,7 @@ describe('IgxTabs', () => {
                 indexChangingSpy = spyOn(tabs.selectedIndexChanging, 'emit');
             }));
 
-            it('Validate the events are not fired on clicking tab headers before pressing enter/space key.', fakeAsync(() => {
+            it('Validate the events are fired on clicking tab headers for routing tabs.', fakeAsync(() => {
                 fixture.ngZone.run(() => router.initialNavigation());
                 tick();
                 expect(location.path()).toBe('/');
@@ -1069,15 +1102,7 @@ describe('IgxTabs', () => {
                 });
                 tick();
                 expect(location.path()).toBe('/view2');
-                expect(tabs.selectedIndex).toBe(-1);
-
-                expect(indexChangingSpy).not.toHaveBeenCalled();
-                expect(indexChangeSpy).not.toHaveBeenCalled();
-                expect(itemChangeSpy).not.toHaveBeenCalled();
-
-                headers[1].dispatchEvent(KEY_ENTER_EVENT);
-                tick(200);
-                fixture.detectChanges();
+                expect(tabs.selectedIndex).toBe(1);
 
                 expect(indexChangingSpy).toHaveBeenCalledWith({
                     owner: tabs,
