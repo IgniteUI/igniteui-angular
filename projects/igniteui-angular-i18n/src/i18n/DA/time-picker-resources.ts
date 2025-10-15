@@ -1,12 +1,10 @@
-import { ITimePickerResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { TimePickerResourceStringsDA as ATimePickerResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Danish resource strings for IgxTimePicker
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
-export const TimePickerResourceStringsDA = {
-    igx_time_picker_ok: 'OK',
-    igx_time_picker_cancel: 'Annuller',
-    igx_time_picker_change_time: 'Skift klokkeslæt',
-    igx_time_picker_choose_time: 'Vælg et klokkeslæt'
-} satisfies MakeRequired<ITimePickerResourceStrings>;
+export const TimePickerResourceStringsDA = prefixResource(IGX_PREFIX, ATimePickerResourceStrings);

@@ -1,14 +1,10 @@
-import { IComboResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { ComboResourceStringsCS as AComboResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  *  Czech resource strings for IgxCombo
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
-export const ComboResourceStringsCS = {
-    igx_combo_empty_message: 'Seznam je prázdný',
-    igx_combo_filter_search_placeholder: 'Zadejte hledaný výraz',
-    igx_combo_addCustomValues_placeholder: 'Přidat položku',
-    igx_combo_clearItems_placeholder: 'Vymazat výběr',
-    igx_combo_aria_label_options: 'Vybrané možnosti',
-    igx_combo_aria_label_no_options: 'Žádné možnosti nejsou vybrány'
-} satisfies MakeRequired<IComboResourceStrings>;
+export const ComboResourceStringsCS = prefixResource(IGX_PREFIX, AComboResourceStrings);

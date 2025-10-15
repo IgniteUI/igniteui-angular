@@ -1,14 +1,10 @@
-import { IPaginatorResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { PaginatorResourceStringsPL as APaginatorResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Polish resource strings for IgxPaginator
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
-export const PaginatorResourceStringsPL = {
-    igx_paginator_label: 'Liczba elementów na stronie',
-    igx_paginator_pager_text: 'z',
-    igx_paginator_first_page_button_text: 'Przejdź do pierwszej strony',
-    igx_paginator_previous_page_button_text: 'Poprzednia strona',
-    igx_paginator_last_page_button_text: 'Przejdź do ostatniej strony',
-    igx_paginator_next_page_button_text: 'Następna strona',
-} satisfies MakeRequired<IPaginatorResourceStrings>;
+export const PaginatorResourceStringsPL = prefixResource(IGX_PREFIX, APaginatorResourceStrings);

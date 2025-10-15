@@ -1,10 +1,10 @@
-import { IListResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { ListResourceStringsNL as AListResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Dutch resource strings for IgxList
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
-export const ListResourceStringsNL = {
-    igx_list_no_items: 'Er zijn geen items in de lijst.',
-    igx_list_loading: 'Gegevens van de server laden...'
-} satisfies MakeRequired<IListResourceStrings>;
+export const ListResourceStringsNL = prefixResource(IGX_PREFIX, AListResourceStrings);

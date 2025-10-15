@@ -38,6 +38,7 @@ import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
+import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
 
 /**
  *

@@ -5,7 +5,7 @@ import {
     Output,
     TemplateRef
 } from '@angular/core';
-import { getLocaleFirstDayOfWeek, NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
+import { NgTemplateOutlet, NgClass } from '@angular/common';
 import { Inject } from '@angular/core';
 import {
     Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding
@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { IgxChipComponent } from '../chips/chip.component';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
-import { PlatformUtil, trackByIdentity } from '../core/utils';
+import { onResourceChangeHandle, PlatformUtil, trackByIdentity } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
@@ -36,7 +36,7 @@ import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxSelectItemComponent } from '../select/select-item.component';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { DEFAULT_LOCALE, getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IComboSelectionChangingEventArgs, IgxComboComponent } from "../combo/combo.component";
 import { IgxComboHeaderDirective } from '../combo/public_api';
@@ -55,6 +55,8 @@ import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navig
 import { IgxQueryBuilderDragService } from './query-builder-drag.service';
 import { isTree } from '../data-operations/expressions-tree-util';
 import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, IgxFieldFormatterPipe } from './query-builder.common';
+import { getCurrentI18n, IResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { IgxDateFormatterPipe } from '../grids/common/pipes';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -68,7 +70,7 @@ const DEFAULT_CHIP_FOCUS_DELAY = 50;
     templateUrl: './query-builder-tree.component.html',
     host: { 'class': 'igx-query-builder-tree' },
     imports: [
-        DatePipe,
+        IgxDateFormatterPipe,
         FormsModule,
         IgxButtonDirective,
         IgxCheckboxComponent,
@@ -172,9 +174,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @Input()
     public set fields(fields: FieldType[]) {
         this._fields = fields;
-        
+
         this._fields = this._fields?.map(f => ({...f, filters: this.getFilters(f), pipeArgs: this.getPipeArgs(f) }));
-        
+
         if (!this._fields && this.isAdvancedFiltering()) {
             this._fields = this.entities[0].fields;
         }
@@ -209,7 +211,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     @Input()
     public get locale(): string {
-        return this._locale;
+        return this._locale || this._defaultLocale;
     }
 
     /**
@@ -218,12 +220,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public set locale(value: string) {
         this._locale = value;
-        // if value is invalid, set it back to _localeId
-        try {
-            getLocaleFirstDayOfWeek(this._locale);
-        } catch {
-            this._locale = this._localeId;
-        }
     }
 
     /**
@@ -239,7 +235,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * Returns the resource strings.
      */
     public get resourceStrings(): IQueryBuilderResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -473,8 +469,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _expandedExpressions: IFilteringExpression[] = [];
     private _fields: FieldType[];
     private _locale;
+    private _defaultLocale;
     private _entityNewValue: EntityType;
-    private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+    private _resourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 
     /**
      * Returns if the select entity dropdown at the root level is disabled after the initial selection.
@@ -545,7 +543,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         protected platform: PlatformUtil,
         private elRef: ElementRef,
         @Inject(LOCALE_ID) protected _localeId: string) {
-        this.locale = this.locale || this._localeId;
+        this.initLocale();
         this.dragService.register(this, elRef);
     }
 
@@ -560,7 +558,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.returnFieldSelectOverlaySettings.outlet = this.overlayOutlet;
         this.addExpressionDropDownOverlaySettings.outlet = this.overlayOutlet;
         this.groupContextMenuDropDownOverlaySettings.outlet = this.overlayOutlet;
-        
+
         if (this.isAdvancedFiltering() && this.entities?.length === 1) {
             this.selectedEntity = this.entities[0].name;
             if (this._selectedEntity.fields.find(f => f.field === this.expectedReturnField)) {
@@ -967,7 +965,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 this.selectedField.filters.condition(this.selectedCondition)?.isUnary
             );
     }
-    
+
     /**
      * @hidden @internal
      */
@@ -1530,7 +1528,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 DEFAULT_PIPE_TIME_FORMAT : field.dataType === DataType.DateTime ?
                     DEFAULT_PIPE_DATE_TIME_FORMAT : DEFAULT_PIPE_DATE_FORMAT;
         }
-        
+
         return pipeArgs;
     }
 
@@ -1721,6 +1719,17 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.rootGroup = null;
             this.currentGroup = null;
         }
+    }
+
+    private initLocale() {
+        this._defaultLocale = getCurrentI18n();
+        this._locale = this._localeId !== DEFAULT_LOCALE ? this._localeId : this._locale;
+        onResourceChangeHandle(this.destroy$, this.onResourceChange, this);
+    }
+
+    private onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
+        this._defaultLocale = args.detail.newLocale;
+        this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
     }
 
     /** rootGroup is recreated after clicking Apply, which sets new expressionTree and calls init()*/

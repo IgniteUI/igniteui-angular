@@ -1,12 +1,10 @@
-import { ICarouselResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { CarouselResourceStringsNB as ACarouselResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Norwegian resource strings for IgxCarousel
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
-export const CarouselResourceStringsNB = {
-    igx_carousel_of: 'av',
-    igx_carousel_slide: 'lysbilde',
-    igx_carousel_previous_slide: 'forrige lysbilde',
-    igx_carousel_next_slide: 'neste lysbilde'
-} satisfies MakeRequired<ICarouselResourceStrings>;
+export const CarouselResourceStringsNB = prefixResource(IGX_PREFIX, ACarouselResourceStrings);

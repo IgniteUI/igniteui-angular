@@ -9,7 +9,6 @@ import {
     Renderer2,
     ViewChild,
     ContentChild,
-    AfterViewInit,
     AfterContentInit,
     Directive,
     booleanAttribute,

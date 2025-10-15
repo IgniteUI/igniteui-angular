@@ -16,6 +16,9 @@ import { ActionStripResourceStringsDE } from './action-strip-resources';
 
 /**
  * German resource strings for all components
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
 export const IgxResourceStringsDE = {
     ...GridResourceStringsDE,
