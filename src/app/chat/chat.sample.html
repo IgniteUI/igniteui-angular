@@ -1,0 +1,7 @@
+<div>
+    <igx-chat [options]="options" [messages]="messages" [templates]="{ messageContent: renderer }"></igx-chat>
+    <ng-template #renderer let-message igxChatMessageContext>
+        {{ markdownRenderer()(message) }}
+        <!-- {{ message.text.toUpperCase() }} -->
+    </ng-template>
+</div>
