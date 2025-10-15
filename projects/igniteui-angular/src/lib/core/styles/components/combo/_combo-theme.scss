@@ -13,7 +13,7 @@
         'material': pad-inline(rem(4px), rem(8px), rem(16px)),
         'fluent': pad-inline(rem(2px), rem(4px), rem(8px)),
         'bootstrap': pad-inline(rem(4px), rem(8px), rem(16px)),
-        'indigo': pad-inline(rem(12px))
+        'indigo': pad-inline(rem(8px), rem(12px), rem(12px))
     ), $variant);
 
     $search-input-block-padding: map.get((
@@ -73,6 +73,16 @@
         igx-input-group {
             --theme: #{if($variant == 'indigo', 'indigo', 'material')};
             --ig-size: #{if($variant == 'indigo', 2, 1)};
+
+            @if $variant == 'bootstrap' or $variant == 'indigo' {
+                input {
+                    height: rem(28px);
+                }
+            } @else if $variant == 'fluent' {
+                input {
+                    height: rem(32px);
+                }
+            }
         }
     }
 
@@ -151,6 +161,18 @@
         %igx-combo__search {
             --igx-input-group-input-suffix-background: transparent;
             --igx-input-group-input-suffix-background--focused: transparent;
+
+            .igx-input-group__bundle::after {
+                border-block-end-color: var(--border-color);
+            }
+
+            .igx-input-group__bundle:hover::after {
+                border-block-end-color: #{if($variant == 'fluent', var(--hover-border-color), var(--border-color))};;
+            }
+
+            .igx-input-group--focused .igx-input-group__bundle::after {
+                border-block-end-color: var(--focused-bottom-line-color);
+            }
         }
     }
 
