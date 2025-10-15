@@ -49,6 +49,15 @@ export default [
 
             "no-debugger": "error",
         },
+    }, {
+        files: ["**/*.ts"],
+        ignores: ["**/*.spec.ts"],
+        rules: {
+            "no-restricted-syntax": ["error", {
+                selector: "CallExpression[arguments.length=0] MemberExpression[property.name='blur']",
+                message: "Avoid using `blur()` on focus-managed components without justification. Move focus elsewhere or disable check and provide reason.",
+            }],
+        },
     },
     ...compat.extends(
         "plugin:@angular-eslint/template/recommended",
