@@ -80,7 +80,7 @@ export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
     private getFocusableElements(element: Element) {
         return Array.from(element.querySelectorAll(
             'a[href], button, input, textarea, select, details,[tabindex]:not([tabindex="-1"])'
-        )).filter(el => !el.hasAttribute('disabled') && !el.getAttribute('aria-hidden'));
+        )).filter(el => !el.hasAttribute('disabled') && !el.closest('[aria-hidden="true"]'));
     }
 
     private getFocusedElement(): HTMLElement | null {
