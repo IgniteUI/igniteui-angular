@@ -46,7 +46,7 @@
         outline-style: none;
         transition: all .15s ease-in-out;
         background: var-get($theme, 'button-background');
-        box-shadow: var-get($theme, 'button-shadow');
+        box-shadow: var-get($theme, 'button-elevation');
         border: rem(1px) solid var-get($theme, 'button-border-color');
         border-radius: var(--nav-btn-border-radius);
 
@@ -167,7 +167,7 @@
         inset-inline-start: 50%;
         transform: translateX(-50%);
         background: var-get($theme, 'indicator-background');
-        box-shadow: var-get($theme, 'button-shadow');
+        box-shadow: var-get($theme, 'button-elevation');
         border-radius: var-get($theme, 'border-radius');
 
         [dir='rtl'] & {

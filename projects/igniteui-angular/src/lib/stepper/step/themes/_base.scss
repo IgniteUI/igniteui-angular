@@ -1,0 +1,537 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use '../../themes/light/tokens' as *;
+
+$theme: $material;
+
+@include layer(base) {
+    @include b(igx-step) {
+        $this: bem--selector-to-string(&);
+
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        align-content: center;
+        justify-content: center;
+
+        &:first-of-type {
+            @include e(header) {
+                &::before {
+                    visibility: hidden;
+                }
+            }
+        }
+
+        &:last-of-type {
+            @include e(header) {
+                &::after {
+                    visibility: hidden;
+                }
+            }
+
+            @include e(content-wrapper) {
+                &::before {
+                    display: none;
+                }
+            }
+        }
+
+        &:focus {
+            outline: none;
+
+            @include e(title) {
+                color: var-get($theme, 'title-focus-color');
+            }
+
+            @include e(subtitle) {
+                color: var-get($theme, 'subtitle-focus-color');
+            }
+
+            @include e(header) {
+                background: var-get($theme, 'step-focus-background');
+                color: var-get($theme, 'title-focus-color');
+            }
+        }
+
+        @include m(current, $not: ('horizontal')) {
+            @include e(content-wrapper) {
+                padding: rem(16px);
+            }
+        }
+
+        @include m(invalid) {
+            &:focus {
+                @include e(header) {
+                    background: var-get($theme, 'invalid-step-focus-background');
+                }
+
+                @include e(title) {
+                    color: var-get($theme, 'invalid-title-focus-color');
+                }
+
+                @include e(subtitle) {
+                    color: var-get($theme, 'invalid-subtitle-focus-color');
+                }
+            }
+        }
+
+        @include m(current) {
+            &:focus {
+                @include e(header) {
+                    background: var-get($theme, 'current-step-focus-background') !important;
+                }
+
+                @include e(title) {
+                    color: var-get($theme, 'current-title-focus-color');
+                }
+
+                @include e(subtitle) {
+                    color: var-get($theme, 'current-subtitle-focus-color');
+                }
+            }
+        }
+
+        @include e(title-wrapper) {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            min-width: rem(32px);
+
+            &:empty {
+                display: none;
+            }
+
+            > * {
+                display: block;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+        }
+
+        @include e(content-wrapper) {
+            @include type-style(body-2) {
+                margin-block: 0;
+            };
+
+            position: relative;
+
+            &::before {
+                content: '';
+                position: absolute;
+            }
+        }
+
+        @include m(completed) {
+            + #{$this} {
+                &::before {
+                    border-top-color: var-get($theme, 'complete-step-separator-color') !important;
+                    border-top-style: var-get($theme, 'complete-step-separator-style') !important;
+                }
+
+                #{elem($this, header)} {
+                    /* stylelint-disable max-nesting-depth */
+                    &::before {
+                        border-top-color: var-get($theme, 'complete-step-separator-color') !important;
+                        border-top-style: var-get($theme, 'complete-step-separator-style') !important;
+                    }
+                    /* stylelint-enable max-nesting-depth */
+                }
+            }
+
+            &:focus {
+                @include e(header) {
+                    background: var-get($theme, 'complete-step-focus-background');
+                }
+
+                @include e(title) {
+                    color: var-get($theme, 'complete-title-focus-color');
+                }
+
+                @include e(subtitle) {
+                    color: var-get($theme, 'complete-subtitle-focus-color');
+                }
+            }
+        }
+
+        @include m(simple) {
+            @include e(indicator) {
+                width: initial;
+                height: initial;
+
+                div > igx-icon,
+                div > igx-avatar,
+                div > igx-circular-bar {
+                    max-width: initial;
+                    max-height: initial;
+                }
+            }
+        }
+
+        @include m(horizontal) {
+            overflow: hidden;
+            flex-direction: row;
+            flex: 1;
+
+            &::before {
+                content: '';
+                width: auto;
+                flex: 1;
+                position: relative;
+                z-index: -1;
+            }
+
+            &:first-of-type {
+                flex-grow: 0;
+                min-width: max-content;
+
+                &::before {
+                    display: none;
+                }
+            }
+
+            @include e(title-wrapper) {
+                width: 100%;
+            }
+
+            @include e(header) {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+
+                &::before,
+                &::after {
+                    content: '';
+                    position: absolute;
+                    z-index: -1;
+                    flex: 1;
+                    min-width: rem(4px);
+                }
+
+                &::before {
+                    inset-inline-start: 0;
+                }
+
+                &::after {
+                    inset-inline-end: 0;
+                }
+            }
+
+            @include e(content) {
+                flex-grow: 1;
+
+                &:focus {
+                    outline: none;
+                }
+
+                &::before {
+                    display: none;
+                }
+            }
+        }
+
+        @include m(start) {
+            @include e(header) {
+                flex-direction: row;
+                align-items: center;
+            }
+
+            @include e(title-wrapper) {
+                order: -1;
+            }
+        }
+
+        @include mx(horizontal, start) {
+            &:first-of-type {
+                min-width: auto;
+            }
+        }
+
+        @include mx(horizontal, end) {
+            &:first-of-type {
+                flex-grow: initial;
+                min-width: auto;
+            }
+        }
+
+        @include m(end) {
+            @include e(header) {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+
+        @include m(top) {
+            @include e(title-wrapper) {
+                order: -1;
+            }
+        }
+
+        @include mx(horizontal, simple) {
+            text-align: center;
+
+            @include e(header) {
+                align-self: center;
+                height: auto;
+
+                &::before,
+                &::after {
+                    display: none;
+                }
+            }
+        }
+
+        @include mx(horizontal, ('not': 'simple')) {
+            @include e(header) {
+                min-width: rem(100px);
+            }
+        }
+
+        @include mx(horizontal, top) {
+            @include e(header) {
+                flex-direction: column;
+                justify-content: flex-end;
+            }
+
+            @include e(title-wrapper) {
+                text-align: center;
+            }
+        }
+
+        @include mx(horizontal, bottom) {
+            @include e(header) {
+                flex-direction: column;
+                justify-content: flex-start;
+            }
+
+            @include e(title-wrapper) {
+                text-align: center;
+            }
+        }
+
+        @include mx(horizontal, start) {
+            @include e(title-wrapper) {
+                text-align: end;
+            }
+
+            @include e(indicator) {
+                flex: 1 0 auto;
+            }
+
+            @include e(header) {
+                &::before,
+                &::after {
+                    display: none;
+                }
+            }
+        }
+
+        @include mx(horizontal, end) {
+            @include e(indicator) {
+                flex: 1 0 auto;
+            }
+
+            @include e(header) {
+                &::before,
+                &::after {
+                    display: none;
+                }
+            }
+        }
+
+        @include m(disabled) {
+            color: var-get($theme, 'disabled-title-color');
+            pointer-events: none;
+            cursor: default;
+
+            @include e(indicator) {
+                color: var-get($theme, 'disabled-indicator-color');
+                background: var-get($theme, 'disabled-indicator-background');
+            }
+
+            @include e(title) {
+                color: var-get($theme, 'disabled-title-color');
+            }
+
+            @include e(subtitle) {
+                color: var-get($theme, 'disabled-subtitle-color');
+            }
+        }
+    }
+
+    @include b(igx-step-header) {
+        display: flex;
+        padding: rem(8px);
+        position: relative;
+        line-height: normal;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: rem(8px);
+        cursor: pointer;
+        color: var-get($theme, 'title-color');
+        background: var-get($theme, 'step-background');
+        border-radius: var-get($theme, 'border-radius-step-header');
+        overflow: hidden;
+
+        @include e(indicator) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            font-size: rem(12px);
+            white-space: nowrap;
+            border-radius: var-get($theme, 'border-radius-indicator');
+            color: var-get($theme, 'indicator-color');
+            background: var-get($theme, 'indicator-background');
+        }
+
+        @include e(title) {
+            @include type-style(body-2) {
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+
+            color: var-get($theme, 'title-color');
+        }
+
+        @include e(subtitle) {
+            @include type-style(caption) {
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+
+            color: var-get($theme, 'subtitle-color');
+        }
+
+        &:hover {
+            background: var-get($theme, 'step-hover-background');
+
+            @include e(title) {
+                color: var-get($theme, 'title-hover-color');
+            }
+
+            @include e(subtitle) {
+                color: var-get($theme, 'subtitle-hover-color');
+            }
+        }
+
+        @include m(invalid) {
+            background: var-get($theme, 'invalid-step-background');
+            color: var-get($theme, 'invalid-title-color');
+
+            @include e(indicator) {
+                color: var-get($theme, 'invalid-indicator-color');
+                background: var-get($theme, 'invalid-indicator-background');
+            }
+
+            @include e(title) {
+                color: var-get($theme, 'invalid-title-color');
+            }
+
+            @include e(subtitle) {
+                color: var-get($theme, 'invalid-subtitle-color');
+            }
+
+            &:hover {
+                @include e(title) {
+                    color: var-get($theme, 'invalid-title-hover-color');
+                }
+
+                @include e(subtitle) {
+                    color: var-get($theme, 'invalid-subtitle-hover-color');
+                }
+            }
+        }
+
+        @include m(completed) {
+            background: var-get($theme, 'complete-step-background');
+
+            &::after {
+                border-top-color: var-get($theme, 'complete-step-separator-color') !important;
+                border-top-style: var-get($theme, 'complete-step-separator-style') !important;
+            }
+
+            @include e(indicator) {
+                color: var-get($theme, 'complete-indicator-color');
+                background: var-get($theme, 'complete-indicator-background');
+            }
+
+            @include e(title) {
+                color: var-get($theme, 'complete-title-color');
+            }
+
+            @include e(subtitle) {
+                color: var-get($theme, 'complete-subtitle-color');
+            }
+
+            &:hover {
+                background: var-get($theme, 'complete-step-hover-background');
+
+                @include e(title) {
+                    color: var-get($theme, 'complete-title-hover-color');
+                }
+
+                @include e(subtitle) {
+                    color: var-get($theme, 'complete-subtitle-hover-color');
+                }
+            }
+        }
+
+        @include m(current) {
+            background: var-get($theme, 'current-step-background') !important;
+            color: var-get($theme, 'current-title-color');
+
+            @include e(indicator) {
+                color: var-get($theme, 'current-indicator-color') !important;
+                background: var-get($theme, 'current-indicator-background') !important;
+            }
+
+            @include e(title) {
+                color: var-get($theme, 'current-title-color');
+
+                // TODO See if we need this in all themes
+                font-weight: 600;
+            }
+
+            @include e(indicator) {
+                color: var-get($theme, 'current-subtitle-color');
+            }
+
+            &:hover {
+                background: var-get($theme, 'current-step-hover-background') !important;
+
+                @include e(title) {
+                    color: var-get($theme, 'current-title-hover-color');
+                }
+
+                @include e(subtitle) {
+                    color: var-get($theme, 'current-subtitle-hover-color');
+                }
+            }
+        }
+
+        @include m(disabled) {
+            color: var-get($theme, 'disabled-title-color');
+            pointer-events: none;
+            cursor: default;
+
+            @include e(indicator) {
+                color: var-get($theme, 'disabled-indicator-color');
+                background: var-get($theme, 'disabled-indicator-background');
+            }
+
+            @include e(title) {
+                color: var-get($theme, 'disabled-title-color');
+            }
+
+            @include e(subtitle) {
+                color: var-get($theme, 'disabled-subtitle-color');
+            }
+        }
+    }
+}
