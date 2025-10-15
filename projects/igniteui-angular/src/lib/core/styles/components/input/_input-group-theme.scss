@@ -1665,6 +1665,7 @@
     %form-group-helper-item {
         @include line-clamp(2, true, true);
 
+        overflow-wrap: anywhere;
         align-items: center;
         position: relative;
     }
@@ -2035,8 +2036,6 @@
         color: var-get($theme, 'idle-secondary-color');
 
         @if $variant == 'fluent' {
-            --ig-subtitle-2-line-height: rem(16px);
-
             margin-block-end: rem(5px);
         } @else {
             margin-block-end: rem(4px);
