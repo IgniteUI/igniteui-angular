@@ -48,6 +48,10 @@
 
             &.input-has-hint {
                 align-self: center;
+
+                &:not(.input-has-label) {
+                    align-self: flex-start;
+                }
             }
         } @else {
             align-self: flex-start;
