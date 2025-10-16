@@ -134,7 +134,7 @@ $base-scale-size: (
             max-width: 100%;
             font-size: rem(16px);
             height: var-get($theme, 'size');
-            min-height: var-get($theme, 'size');
+            // min-height: var-get($theme, 'size');
             grid-column: 1 / -1;
         }
 

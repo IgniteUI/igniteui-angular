@@ -27,6 +27,8 @@ $_theme: $fluent;
         @include type-style(body-2);
 
         padding-inline: rem(8px);
+        padding-block: 0;
+        height: calc(var-get($_theme, 'size') - rem(2px));
     }
 
     @include e(textarea) {
@@ -83,6 +85,11 @@ $_theme: $fluent;
             // !important is needed, otherwise if the directive is set directly on the igx-icon
             // the icon overrides the display set by the prefix/suffix
             display: none !important;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            color: var(--igx-input-group-input-suffix-color--focused, var(--ig-gray-900));
         }
     }
 

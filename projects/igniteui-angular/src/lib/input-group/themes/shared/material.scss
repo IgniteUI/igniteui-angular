@@ -332,9 +332,13 @@ $input-bottom-spacing: rem(6px);
     @include m(textarea-group) {
         --_bundle-template-rows: auto;
 
-        @include e(bundle-main) {
-            --_input-top-spacing: #{sizable(rem(16px), rem(20px), rem(24px))};
+        --_input-top-spacing: #{sizable(rem(8px), rem(12px), rem(16px))};
 
+        &:has(label:not(:empty)) {
+            --_input-top-spacing: #{pad-block(rem(16px), rem(20px), rem(24px))};
+        }
+
+        @include e(bundle-main) {
             padding-block-start: var(--_input-top-spacing);
         }
 
@@ -351,7 +355,7 @@ $input-bottom-spacing: rem(6px);
         }
 
         @include e(textarea) {
-            padding-inline-end: rem(4px);
+            padding-inline-end: pad-inline(rem(12px), rem(14px), rem(16px));
         }
     }
 

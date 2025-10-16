@@ -40,6 +40,14 @@ $_theme: $indigo;
         }
     }
 
+    @include m(search) {
+        --_prefix-suffix-spacing: #{pad-inline(rem(6px), rem(8px), rem(10px))};
+
+        @include e(input) {
+            padding-inline: var(--_prefix-suffix-spacing);
+        }
+    }
+
     @include m(suffixed) {
         @include e(input) {
             padding-inline-end: 0;
@@ -56,6 +64,10 @@ $_theme: $indigo;
         @include type-style(body-2);
 
         caret-color: var-get($_theme, 'focused-bottom-line-color');
+
+        &::placeholder {
+            font-style: italic;
+        }
     }
 
     @include e(file-input) {
@@ -165,10 +177,6 @@ $_theme: $indigo;
         igx-icon {
             --size: #{rem(16px)};
         }
-    }
-
-    @include m(search) {
-        --_prefix-suffix-spacing: #{pad-inline(rem(6px), rem(8px), rem(10px))};
     }
 
     @include m(disabled) {
