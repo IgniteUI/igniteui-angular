@@ -134,7 +134,7 @@ $base-scale-size: (
             max-width: 100%;
             font-size: rem(16px);
             height: var-get($theme, 'size');
-            // min-height: var-get($theme, 'size');
+            min-height: var-get($theme, 'size');
             grid-column: 1 / -1;
         }
 
@@ -259,6 +259,7 @@ $base-scale-size: (
             position: relative;
             grid-row: var(--_hint-row);
             grid-column: 1 / -1;
+            overflow-wrap: anywhere;
 
             &:empty {
                 --_hint-row: 1;
