@@ -558,6 +558,31 @@ describe('IgxTooltip', () => {
             flush();
         }));
 
+        it('Should position relative to its target when having no close animation - #16288', fakeAsync(() => {
+            targetOne.positionSettings = targetTwo.positionSettings = {
+                openAnimation: undefined,
+                closeAnimation: undefined
+            };
+            fix.detectChanges();
+
+            hoverElement(buttonOne);
+            tick(targetOne.showDelay);
+
+            verifyTooltipVisibility(tooltipNativeElement, targetOne, true);
+            verifyTooltipPosition(tooltipNativeElement, buttonOne, true);
+
+            unhoverElement(buttonOne);
+
+            hoverElement(buttonTwo);
+            tick(targetTwo.showDelay);
+
+            // Tooltip is visible and positioned relative to buttonTwo
+            verifyTooltipVisibility(tooltipNativeElement, targetTwo, true);
+            verifyTooltipPosition(tooltipNativeElement, buttonTwo);
+            // Tooltip is NOT visible and positioned relative to buttonOne
+            verifyTooltipPosition(tooltipNativeElement, buttonOne, false);
+        }));
+
         it('Hovering first target briefly and then hovering second target leads to tooltip showing for second target', fakeAsync(() => {
             targetOne.showDelay = 600;
             fix.detectChanges();

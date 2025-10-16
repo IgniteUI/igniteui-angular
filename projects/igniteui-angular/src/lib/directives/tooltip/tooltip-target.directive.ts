@@ -559,8 +559,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     /**
      * Used when a single tooltip is used for multiple targets.
-     * If the tooltip is shown for one target and the user interacts with another target,
-     * the tooltip is instantly hidden for the first target.
      */
     private _checkTooltipForMultipleTargets(): void {
         if (!this.target.tooltipTarget) {
@@ -573,8 +571,10 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
                 this.target.tooltipTarget._removeCloseButtonFromTooltip();
             }
 
+            // If the tooltip is shown for one target and the user interacts with another target,
+            // the tooltip is instantly hidden for the first target.
             clearTimeout(this.target.timeoutId);
-            this.target.stopAnimations(true);
+            this.target.forceClose(this._mergedOverlaySettings);
 
             this.target.tooltipTarget = this;
             this._isForceClosed = true;
