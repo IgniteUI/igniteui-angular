@@ -205,7 +205,7 @@
         inset: 0;
         stroke: var-get($theme, 'tick-color');
         stroke-linecap: square;
-        stroke-width: $mark-stroke;
+        stroke-width: var-get($theme, 'tick-width');
         stroke-dasharray: $mark-length;
         stroke-dashoffset: $mark-length;
         fill: none;
