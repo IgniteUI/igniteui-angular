@@ -46,6 +46,9 @@
           type="text"
           [placeholder]="properties.placeholder"
         />
+        @if (properties.hint) {
+            <span igxHint>{{ properties.hint }}</span>
+        }
       </igx-date-range-start>
       <igx-date-range-end>
         <igx-picker-toggle igxPrefix>

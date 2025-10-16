@@ -8,13 +8,6 @@
     @include css-vars($theme);
     $variant: map.get($theme, '_meta', 'theme');
 
-    $label-height: map.get((
-        'material': 0,
-        'fluent': rem(21px),
-        'bootstrap': rem(28px),
-        'indigo': rem(19px),
-    ), $variant);
-
     %igx-date-range-picker {
         @include sizable();
         --input-group-size: #{map.get($theme, 'size')};
@@ -50,8 +43,14 @@
         margin: 0 rem(8px);
         height: var(--input-group-size);
 
-        &.labeled-input {
-            transform: translateY($label-height);
+        @if $variant != 'material' {
+            align-self: flex-end;
+
+            &.input-has-hint {
+                align-self: center;
+            }
+        } @else {
+            align-self: flex-start;
         }
     }
 
