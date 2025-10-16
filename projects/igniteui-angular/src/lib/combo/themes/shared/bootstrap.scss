@@ -8,22 +8,40 @@ $_theme: $bootstrap;
 @include themed-block(igx-combo, bootstrap) {
     @include e(search) {
         --igx-input-group-border-border-radius: 0;
-        --igx-input-group-border-color: transparent;
+
+        igx-input-group {
+            --size: #{rem(28px)};
+        }
 
         .igx-input-group--focused {
             .igx-input-group__bundle-start,
             .igx-input-group__bundle-end {
                 border-block-end-color: var(--focused-border-color);
+                border-block-end-width: rem(2px);
+            }
+
+            .igx-input-group__bundle-main {
+                border-block-end-width: rem(2px);
             }
         }
 
-        .igx-input-group__bundle-main {
-            border-inline-width: 0;
-            border-block-start-width: 0;
+        igx-input-group:not(.igx-input-group--prefixed),
+        igx-input-group:not(.igx-input-group--suffixed) {
+            .igx-input-group__bundle-main {
+                border-inline-width: 0;
+                border-block-start-width: 0;
+            }
+        }
+
+        igx-input-group.igx-input-group--suffixed {
+            .igx-input-group__bundle-end {
+                border-inline-end-width: 0;
+                border-block-start-width: 0;
+            }
         }
 
         .igx-input-group__input {
-            padding-inline-start: 0;
+            padding-inline: 0;
         }
 
         .igx-input-group--focused:not(.igx-input-group--file) .igx-input-group__bundle-main {

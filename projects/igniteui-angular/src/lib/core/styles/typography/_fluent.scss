@@ -62,7 +62,7 @@
     //     text: 'subtitle-2'
     // ));
     // @include column-actions-typography();
-    @include date-range-typography();
+    // @include date-range-typography();
     @include dialog-typography($categories: (
         title: 'h6',
         content: 'body-2'

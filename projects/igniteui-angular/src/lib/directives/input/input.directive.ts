@@ -301,6 +301,10 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         const elTag = this.nativeElement.tagName.toLowerCase();
         if (elTag === 'textarea') {
             this.isTextArea = true;
+
+            if (this.nativeElement.getAttribute('rows') === null) {
+                this.renderer.setAttribute(this.nativeElement, 'rows', '3');
+            }
         } else {
             this.isInput = true;
         }

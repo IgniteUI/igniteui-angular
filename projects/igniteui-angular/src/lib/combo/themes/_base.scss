@@ -63,11 +63,6 @@ $theme: $base;
                 position: relative;
             }
 
-            &:has(.igx-vhelper--vertical) {
-                display: grid;
-                grid-template-columns: 1fr auto;
-            }
-
             position: relative;
             overflow: hidden;
             max-height: calc(var(--size) * var(--item-count));
