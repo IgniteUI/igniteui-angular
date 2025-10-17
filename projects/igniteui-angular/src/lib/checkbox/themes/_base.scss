@@ -152,7 +152,7 @@ $_theme: $material;
             width: 100%;
             stroke: var-get($_theme, 'tick-color');
             stroke-linecap: square;
-            stroke-width: var(--mark-stroke);
+            stroke-width: var-get($_theme, 'tick-width');
             stroke-dasharray: var(--mark-length);
             stroke-dashoffset: var(--mark-length);
             fill: none;
