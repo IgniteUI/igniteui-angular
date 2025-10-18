@@ -1,9 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { 
-    IgxGridComponent, 
-    IgxColumnComponent, 
-    IgxPdfExporterService, 
+import {
+    IgxGridComponent,
+    IgxColumnComponent,
+    IgxPdfExporterService,
     IgxPdfExporterOptions,
     IgxTreeGridComponent,
     IgxHierarchicalGridComponent,
@@ -39,6 +39,8 @@ import {
     providers: [IgxPdfExporterService]
 })
 export class GridPdfExportSampleComponent {
+    private pdfExporter = inject(IgxPdfExporterService);
+
     @ViewChild('grid1', { static: true })
     public grid1: IgxGridComponent;
 
@@ -100,10 +102,7 @@ export class GridPdfExportSampleComponent {
     public pageSize = 'a4';
     public showTableBorders = true;
     public fontSize = 10;
-
     public pageSizes = ['a3', 'a4', 'a5', 'letter', 'legal'];
-
-    constructor(private pdfExporter: IgxPdfExporterService) {}
 
     public exportGrid() {
         const options = this.createExportOptions();

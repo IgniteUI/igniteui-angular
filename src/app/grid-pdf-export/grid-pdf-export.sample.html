@@ -8,7 +8,7 @@
     <!-- Export Configuration Panel -->
     <div class="config-panel">
         <h3>Export Options Configuration</h3>
-        
+
         <div class="config-row">
             <igx-input-group>
                 <label igxLabel>File Name</label>
@@ -17,24 +17,20 @@
         </div>
 
         <div class="config-row">
-            <igx-input-group>
+            <igx-select [(ngModel)]="pageOrientation">
                 <label igxLabel>Page Orientation</label>
-                <igx-select [(ngModel)]="pageOrientation">
-                    <igx-select-item value="portrait">Portrait</igx-select-item>
-                    <igx-select-item value="landscape">Landscape</igx-select-item>
-                </igx-select>
-            </igx-input-group>
+                <igx-select-item value="portrait">Portrait</igx-select-item>
+                <igx-select-item value="landscape">Landscape</igx-select-item>
+            </igx-select>
         </div>
 
         <div class="config-row">
-            <igx-input-group>
+            <igx-select [(ngModel)]="pageSize">
                 <label igxLabel>Page Size</label>
-                <igx-select [(ngModel)]="pageSize">
-                    @for (size of pageSizes; track size) {
-                        <igx-select-item [value]="size">{{ size.toUpperCase() }}</igx-select-item>
-                    }
-                </igx-select>
-            </igx-input-group>
+                @for (size of pageSizes; track size) {
+                    <igx-select-item [value]="size">{{ size.toUpperCase() }}</igx-select-item>
+                }
+            </igx-select>
         </div>
 
         <div class="config-row">
@@ -57,7 +53,7 @@
                 Export to PDF
             </button>
         </div>
-        
+
         <igx-grid #grid1 [data]="gridData" [autoGenerate]="false" height="400px" width="100%">
             <igx-column field="ID" header="ID" [width]="'80px'"></igx-column>
             <igx-column field="Name" header="Product Name" [width]="'200px'"></igx-column>
@@ -76,8 +72,8 @@
                 Export to PDF
             </button>
         </div>
-        
-        <igx-tree-grid #treeGrid [data]="treeGridData" [autoGenerate]="false" 
+
+        <igx-tree-grid #treeGrid [data]="treeGridData" [autoGenerate]="false"
                        primaryKey="ID" foreignKey="ParentID" height="400px" width="100%">
             <igx-column field="ID" header="ID" [width]="'100px'"></igx-column>
             <igx-column field="Name" header="Department Name" [width]="'300px'"></igx-column>
@@ -93,13 +89,13 @@
                 Export to PDF
             </button>
         </div>
-        
-        <igx-hierarchical-grid #hierarchicalGrid [data]="hierarchicalGridData" 
+
+        <igx-hierarchical-grid #hierarchicalGrid [data]="hierarchicalGridData"
                                [autoGenerate]="false" height="400px" width="100%">
             <igx-column field="ID" header="ID" [width]="'80px'"></igx-column>
             <igx-column field="CompanyName" header="Company" [width]="'250px'"></igx-column>
             <igx-column field="Revenue" header="Revenue" dataType="currency" [width]="'150px'"></igx-column>
-            
+
             <igx-row-island [key]="'Employees'" [autoGenerate]="false">
                 <igx-column field="ID" header="Employee ID" [width]="'120px'"></igx-column>
                 <igx-column field="Name" header="Name" [width]="'200px'"></igx-column>
@@ -117,7 +113,7 @@
             <li>The PDF will be downloaded with your configured settings</li>
             <li>Tree and Hierarchical grids will show indentation in the exported PDF</li>
         </ol>
-        
+
         <h4>Key Features:</h4>
         <ul>
             <li><strong>Direct API Usage:</strong> Uses IgxPdfExporterService.export() method directly</li>
