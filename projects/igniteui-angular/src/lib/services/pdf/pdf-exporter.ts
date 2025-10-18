@@ -116,6 +116,8 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             }
 
             // Calculate indentation for hierarchical records
+            // TreeGrid supports both hierarchical data and flat self-referencing data (with foreignKey)
+            // In both cases, the base exporter sets the level property on TreeGridRecord
             const isTreeGrid = record.type === 'TreeGridRecord';
             const isHierarchicalGrid = record.type === 'HierarchicalGridRecord';
             const indentLevel = (isTreeGrid || isHierarchicalGrid) ? (record.level || 0) : 0;
