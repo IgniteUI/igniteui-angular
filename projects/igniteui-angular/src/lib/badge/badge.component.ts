@@ -184,6 +184,20 @@ export class IgxBadgeComponent {
     public outlined = false;
 
     /**
+     * Sets/gets whether the badge is displayed as a dot.
+     * When true, the badge will be rendered as a minimal 8px indicator without any content.
+     * Default value is `false`.
+     *
+     * @example
+     * ```html
+     * <igx-badge dot type="success"></igx-badge>
+     * ```
+     */
+    @Input({transform: booleanAttribute})
+    @HostBinding('class.igx-badge--dot')
+    public dot = false;
+
+    /**
      * Defines a human-readable, accessor, author-localized description for
      * the `type` and the `icon` or `value` of the element.
      *

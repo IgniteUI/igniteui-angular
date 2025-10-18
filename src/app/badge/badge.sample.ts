@@ -56,6 +56,12 @@ export class BadgeSampleComponent {
                 type: 'boolean',
                 defaultValue: false
             }
+        },
+        dot: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
         }
     };
 
@@ -83,7 +89,7 @@ export class BadgeSampleComponent {
             info: 'info',
             success: 'success',
             warning: 'warning',
-            error: 'danger',
+            error: 'danger'
         })
     );
 
