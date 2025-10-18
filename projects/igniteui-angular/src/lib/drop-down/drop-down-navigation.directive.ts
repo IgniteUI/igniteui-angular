@@ -71,8 +71,10 @@ export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDi
                 if (navKeys.indexOf(key) === -1) { // If key has appropriate function in DD
                     return;
                 }
-                event.preventDefault();
-                event.stopPropagation();
+                if (key !== 'tab') { // Prevent default behavior for all keys except Tab
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
             } else { // If dropdown is closed, do nothing
                 return;
             }
