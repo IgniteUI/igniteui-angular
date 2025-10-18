@@ -85,22 +85,141 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         const rowHeight = 20;
         const headerHeight = 25;
         const indentSize = 15; // Indentation per level for hierarchical data
+        const childTableIndent = 30; // Indent for child tables
         
         let yPosition = margin;
 
         // Set font
         pdf.setFontSize(options.fontSize);
 
-        // Draw table headers
+        // Draw main table headers
+        this.drawTableHeaders(pdf, columns, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
+        yPosition += headerHeight;
+
+        // Draw data rows
+        pdf.setFont('helvetica', 'normal');
+
+        let i = 0;
+        while (i < data.length) {
+            const record = data[i];
+
+            // Skip hidden records (collapsed hierarchy)
+            if (record.hidden) {
+                i++;
+                continue;
+            }
+
+            // Check if we need a new page
+            if (yPosition + rowHeight > pageHeight - margin) {
+                pdf.addPage();
+                yPosition = margin;
+            }
+
+            // Calculate indentation for hierarchical records
+            const isTreeGrid = record.type === 'TreeGridRecord';
+            const isHierarchicalGrid = record.type === 'HierarchicalGridRecord';
+            const indentLevel = (isTreeGrid || isHierarchicalGrid) ? (record.level || 0) : 0;
+            const indent = indentLevel * indentSize;
+
+            // Draw parent row
+            this.drawDataRow(pdf, record, columns, margin, yPosition, columnWidth, rowHeight, indent, options);
+            yPosition += rowHeight;
+
+            // For hierarchical grids, check if this record has child records
+            if (isHierarchicalGrid) {
+                const childRecords = [];
+                let childOwner = null;
+                
+                // Collect all child records that belong to this parent
+                let j = i + 1;
+                while (j < data.length && data[j].owner !== DEFAULT_OWNER && data[j].level > record.level) {
+                    if (!data[j].hidden) {
+                        childRecords.push(data[j]);
+                        if (!childOwner) {
+                            childOwner = data[j].owner;
+                        }
+                    }
+                    j++;
+                }
+
+                // If there are child records, draw a child table
+                if (childRecords.length > 0 && childOwner) {
+                    const childColumns = this._ownersMap.get(childOwner)?.columns.filter(
+                        col => col.field && !col.skip && col.headerType === ExportHeaderType.ColumnHeader
+                    ) || [];
+
+                    if (childColumns.length > 0) {
+                        // Add some spacing before child table
+                        yPosition += 5;
+
+                        // Check if child table fits on current page
+                        const childTableHeight = headerHeight + (childRecords.length * rowHeight) + 10;
+                        if (yPosition + childTableHeight > pageHeight - margin) {
+                            pdf.addPage();
+                            yPosition = margin;
+                        }
+
+                        // Draw child table with indentation
+                        const childTableWidth = usableWidth - childTableIndent;
+                        const childColumnWidth = childTableWidth / childColumns.length;
+                        const childTableX = margin + childTableIndent;
+
+                        // Draw child table headers
+                        this.drawTableHeaders(pdf, childColumns, childTableX, yPosition, childColumnWidth, headerHeight, childTableWidth, options);
+                        yPosition += headerHeight;
+
+                        // Draw child table rows
+                        childRecords.forEach((childRecord) => {
+                            // Check if we need a new page
+                            if (yPosition + rowHeight > pageHeight - margin) {
+                                pdf.addPage();
+                                yPosition = margin;
+                                // Redraw headers on new page
+                                this.drawTableHeaders(pdf, childColumns, childTableX, yPosition, childColumnWidth, headerHeight, childTableWidth, options);
+                                yPosition += headerHeight;
+                            }
+
+                            this.drawDataRow(pdf, childRecord, childColumns, childTableX, yPosition, childColumnWidth, rowHeight, 0, options);
+                            yPosition += rowHeight;
+                        });
+
+                        // Add spacing after child table
+                        yPosition += 5;
+                    }
+
+                    // Skip the child records we just processed
+                    i = j - 1;
+                }
+            }
+
+            i++;
+        }
+
+        // Save the PDF
+        this.saveFile(pdf, options.fileName);
+        this.exportEnded.emit({ pdf });
+        done();
+    }
+
+    private drawTableHeaders(
+        pdf: jsPDF,
+        columns: any[],
+        xStart: number,
+        yPosition: number,
+        columnWidth: number,
+        headerHeight: number,
+        tableWidth: number,
+        options: IgxPdfExporterOptions
+    ): void {
         pdf.setFont('helvetica', 'bold');
         pdf.setFillColor(240, 240, 240);
         
         if (options.showTableBorders) {
-            pdf.rect(margin, yPosition, usableWidth, headerHeight, 'F');
+            pdf.rect(xStart, yPosition, tableWidth, headerHeight, 'F');
         }
 
         columns.forEach((col, index) => {
-            const xPosition = margin + (index * columnWidth);
+            const xPosition = xStart + (index * columnWidth);
             const headerText = col.header || col.field;
             
             if (options.showTableBorders) {
@@ -115,70 +234,54 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             pdf.text(headerText, textX, textY);
         });
 
-        yPosition += headerHeight;
-
-        // Draw data rows
         pdf.setFont('helvetica', 'normal');
+    }
 
-        data.forEach((record) => {
-            // Skip hidden records (collapsed hierarchy)
-            if (record.hidden) {
-                return;
+    private drawDataRow(
+        pdf: jsPDF,
+        record: IExportRecord,
+        columns: any[],
+        xStart: number,
+        yPosition: number,
+        columnWidth: number,
+        rowHeight: number,
+        indent: number,
+        options: IgxPdfExporterOptions
+    ): void {
+        columns.forEach((col, index) => {
+            const xPosition = xStart + (index * columnWidth);
+            let cellValue = record.data[col.field];
+            
+            // Convert value to string
+            if (cellValue === null || cellValue === undefined) {
+                cellValue = '';
+            } else if (cellValue instanceof Date) {
+                cellValue = cellValue.toLocaleDateString();
+            } else {
+                cellValue = String(cellValue);
             }
 
-            // Check if we need a new page
-            if (yPosition + rowHeight > pageHeight - margin) {
-                pdf.addPage();
-                yPosition = margin;
+            if (options.showTableBorders) {
+                pdf.rect(xPosition, yPosition, columnWidth, rowHeight);
             }
 
-            // Calculate indentation for hierarchical records
-            const isHierarchical = record.type === 'TreeGridRecord' || record.type === 'HierarchicalGridRecord';
-            const indentLevel = isHierarchical ? (record.level || 0) : 0;
-            const indent = indentLevel * indentSize;
-
-            columns.forEach((col, index) => {
-                const xPosition = margin + (index * columnWidth);
-                let cellValue = record.data[col.field];
-                
-                // Convert value to string
-                if (cellValue === null || cellValue === undefined) {
-                    cellValue = '';
-                } else if (cellValue instanceof Date) {
-                    cellValue = cellValue.toLocaleDateString();
-                } else {
-                    cellValue = String(cellValue);
+            // Apply indentation to the first column for hierarchical data
+            const textIndent = (index === 0) ? indent : 0;
+            
+            // Truncate text if it's too long, accounting for indentation
+            const maxTextWidth = columnWidth - 10 - textIndent;
+            let displayText = cellValue;
+            
+            if (pdf.getTextWidth(displayText) > maxTextWidth) {
+                while (pdf.getTextWidth(displayText + '...') > maxTextWidth && displayText.length > 0) {
+                    displayText = displayText.substring(0, displayText.length - 1);
                 }
+                displayText += '...';
+            }
 
-                if (options.showTableBorders) {
-                    pdf.rect(xPosition, yPosition, columnWidth, rowHeight);
-                }
-
-                // Apply indentation to the first column for hierarchical data
-                const textIndent = (index === 0 && isHierarchical) ? indent : 0;
-                
-                // Truncate text if it's too long, accounting for indentation
-                const maxTextWidth = columnWidth - 10 - textIndent;
-                let displayText = cellValue;
-                
-                if (pdf.getTextWidth(displayText) > maxTextWidth) {
-                    while (pdf.getTextWidth(displayText + '...') > maxTextWidth && displayText.length > 0) {
-                        displayText = displayText.substring(0, displayText.length - 1);
-                    }
-                    displayText += '...';
-                }
-
-                const textY = yPosition + rowHeight / 2 + options.fontSize / 3;
-                pdf.text(displayText, xPosition + 5 + textIndent, textY);
-            });
-
-            yPosition += rowHeight;
+            const textY = yPosition + rowHeight / 2 + options.fontSize / 3;
+            pdf.text(displayText, xPosition + 5 + textIndent, textY);
         });
-
-        // Save the PDF
-        this.saveFile(pdf, options.fileName);
-        this.exportEnded.emit({ pdf });
-        done();
     }
 
     private saveFile(pdf: jsPDF, fileName: string): void {
