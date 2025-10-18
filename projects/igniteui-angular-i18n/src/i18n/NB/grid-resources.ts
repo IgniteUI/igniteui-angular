@@ -142,6 +142,7 @@ export const GridResourceStringsNB = {
     igx_grid_toolbar_exporter_button_label: 'Eksporter',
     igx_grid_toolbar_exporter_excel_entry_text: 'Eksporter til Excel',
     igx_grid_toolbar_exporter_csv_entry_text: 'Eksporter til CSV',
+    igx_grid_toolbar_exporter_pdf_entry_text: 'Eksporter til PDF',
     igx_grid_snackbar_addrow_label: 'Rad lagt til',
     igx_grid_snackbar_addrow_actiontext: 'FORESTILLING',
     igx_grid_actions_edit_label: 'Redigere',

@@ -140,6 +140,7 @@ export const GridResourceStringsZHHANT = {
     igx_grid_toolbar_exporter_button_label: '匯出',
     igx_grid_toolbar_exporter_excel_entry_text: '匯出至 Excel',
     igx_grid_toolbar_exporter_csv_entry_text: '匯出至 CSV',
+    igx_grid_toolbar_exporter_pdf_entry_text: '匯出至 PDF',
     igx_grid_groupByArea_select_message: '選擇欄位名稱為 {0} 且值為 {1} 的群組中的所有行。',
     igx_grid_groupByArea_deselect_message: '取消選擇組中所有具有欄位名稱 {0} 和值 {1} 的行。',
     igx_grid_snackbar_addrow_label: '已新增行',

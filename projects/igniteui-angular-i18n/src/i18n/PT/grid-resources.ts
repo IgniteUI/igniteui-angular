@@ -142,6 +142,7 @@ export const GridResourceStringsPT = {
     igx_grid_toolbar_exporter_button_label: 'Exportar',
     igx_grid_toolbar_exporter_excel_entry_text: 'Exportar para Excel',
     igx_grid_toolbar_exporter_csv_entry_text: 'Exportar para CSV',
+    igx_grid_toolbar_exporter_pdf_entry_text: 'Exportar para PDF',
     igx_grid_snackbar_addrow_label: 'Linha adicionada',
     igx_grid_snackbar_addrow_actiontext: 'MOSTRAR',
     igx_grid_actions_edit_label: 'Editar',
