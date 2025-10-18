@@ -141,6 +141,7 @@ import { QueryBuilderComponent } from './query-builder/query-builder.sample';
 import { PivotGridStateSampleComponent } from './pivot-grid-state/pivot-grid-state.sample';
 import { GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
 import { GridExportComponent } from './grid-export/grid-export.sample';
+import { GridPdfExportSampleComponent } from './grid-pdf-export/grid-pdf-export.sample';
 import { DividerComponent } from './divider/divider.component';
 import { MonthPickerSampleComponent } from './month-picker/month-picker.sample';
 import { GridDockManagerSampleComponent } from './dockmanager-grid/dockmanager-grid.sample';
@@ -531,6 +532,10 @@ export const appRoutes: Routes = [
     {
         path: 'gridExport',
         component: GridExportComponent
+    },
+    {
+        path: 'gridPdfExport',
+        component: GridPdfExportSampleComponent
     },
     {
         path: 'buttonGroup',

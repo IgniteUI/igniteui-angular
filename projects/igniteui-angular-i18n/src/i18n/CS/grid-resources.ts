@@ -142,6 +142,7 @@ export const GridResourceStringsCS = {
     igx_grid_toolbar_exporter_button_label: 'Export',
     igx_grid_toolbar_exporter_excel_entry_text: 'Export ve formátu Excel',
     igx_grid_toolbar_exporter_csv_entry_text: 'Export ve formátu CSV',
+    igx_grid_toolbar_exporter_pdf_entry_text: 'Export ve formátu PDF',
     igx_grid_snackbar_addrow_label: 'Řádek přidán',
     igx_grid_snackbar_addrow_actiontext: 'UKÁZAT',
     igx_grid_actions_edit_label: 'Upravit',
