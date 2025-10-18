@@ -5,15 +5,15 @@ import { IgxExporterOptionsBase } from '../exporter-common/exporter-options-base
  */
 export class IgxPdfExporterOptions extends IgxExporterOptionsBase {
     /**
-     * Specifies the page orientation. (portrait or landscape, portrait by default)
+     * Specifies the page orientation. (portrait or landscape, landscape by default)
      * ```typescript
      * let pageOrientation = this.exportOptions.pageOrientation;
-     * this.exportOptions.pageOrientation = 'landscape';
+     * this.exportOptions.pageOrientation = 'portrait';
      * ```
      *
      * @memberof IgxPdfExporterOptions
      */
-    public pageOrientation: 'portrait' | 'landscape' = 'portrait';
+    public pageOrientation: 'portrait' | 'landscape' = 'landscape';
 
     /**
      * Specifies the page size. (a4, a3, letter, legal, etc., a4 by default)
