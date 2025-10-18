@@ -28,11 +28,6 @@ describe('PDF Grid Exporter', () => {
         spyOn(ExportUtilities as any, 'saveBlobToFile');
     });
 
-    afterEach(() => {
-        exporter.columnExporting.unsubscribe();
-        exporter.rowExporting.unsubscribe();
-    });
-
     it('should export grid as displayed.', (done) => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
