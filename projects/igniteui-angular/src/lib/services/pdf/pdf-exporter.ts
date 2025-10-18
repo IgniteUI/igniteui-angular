@@ -84,6 +84,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         const columnWidth = usableWidth / columns.length;
         const rowHeight = 20;
         const headerHeight = 25;
+        const indentSize = 15; // Indentation per level for hierarchical data
         
         let yPosition = margin;
 
@@ -120,11 +121,21 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         pdf.setFont('helvetica', 'normal');
 
         data.forEach((record) => {
+            // Skip hidden records (collapsed hierarchy)
+            if (record.hidden) {
+                return;
+            }
+
             // Check if we need a new page
             if (yPosition + rowHeight > pageHeight - margin) {
                 pdf.addPage();
                 yPosition = margin;
             }
+
+            // Calculate indentation for hierarchical records
+            const isHierarchical = record.type === 'TreeGridRecord' || record.type === 'HierarchicalGridRecord';
+            const indentLevel = isHierarchical ? (record.level || 0) : 0;
+            const indent = indentLevel * indentSize;
 
             columns.forEach((col, index) => {
                 const xPosition = margin + (index * columnWidth);
@@ -143,8 +154,11 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                     pdf.rect(xPosition, yPosition, columnWidth, rowHeight);
                 }
 
-                // Truncate text if it's too long
-                const maxTextWidth = columnWidth - 10;
+                // Apply indentation to the first column for hierarchical data
+                const textIndent = (index === 0 && isHierarchical) ? indent : 0;
+                
+                // Truncate text if it's too long, accounting for indentation
+                const maxTextWidth = columnWidth - 10 - textIndent;
                 let displayText = cellValue;
                 
                 if (pdf.getTextWidth(displayText) > maxTextWidth) {
@@ -155,7 +169,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 }
 
                 const textY = yPosition + rowHeight / 2 + options.fontSize / 3;
-                pdf.text(displayText, xPosition + 5, textY);
+                pdf.text(displayText, xPosition + 5 + textIndent, textY);
             });
 
             yPosition += rowHeight;
