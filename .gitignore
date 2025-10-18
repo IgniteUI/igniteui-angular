@@ -56,3 +56,5 @@ extras/docs/themes/sassdoc/sassdoc/*
 
 # Localization sources
 i18nRepo
+projects/igniteui-angular/node_modules/
+projects/igniteui-angular/package-lock.json
