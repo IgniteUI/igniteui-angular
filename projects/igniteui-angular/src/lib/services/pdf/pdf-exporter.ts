@@ -250,9 +250,32 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         indent: number,
         options: IgxPdfExporterOptions
     ): void {
+        const isSummaryRecord = record.type === 'SummaryRecord';
+        
         columns.forEach((col, index) => {
             const xPosition = xStart + (index * columnWidth);
             let cellValue = record.data[col.field];
+            
+            // Handle summary records - cellValue is an IgxSummaryResult object
+            if (isSummaryRecord && cellValue) {
+                // For summary records, the cellValue has label and value properties
+                // or it might be summaryResult property
+                if (cellValue.label !== undefined || cellValue.value !== undefined) {
+                    const label = cellValue.label?.toString() || '';
+                    const value = cellValue.value?.toString() || cellValue.summaryResult?.toString() || '';
+                    if (label && value) {
+                        cellValue = `${label}: ${value}`;
+                    } else if (label) {
+                        cellValue = label;
+                    } else if (value) {
+                        cellValue = value;
+                    } else {
+                        cellValue = '';
+                    }
+                } else if (cellValue.summaryResult !== undefined) {
+                    cellValue = cellValue.summaryResult;
+                }
+            }
             
             // Convert value to string
             if (cellValue === null || cellValue === undefined) {
