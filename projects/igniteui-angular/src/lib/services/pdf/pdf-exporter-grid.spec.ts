@@ -90,4 +90,159 @@ describe('PDF Grid Exporter', () => {
 
         exporter.export(grid, options);
     });
+
+    it('should export grid with landscape orientation', (done) => {
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        options.pageOrientation = 'landscape';
+        
+        exporter.exportEnded.pipe(first()).subscribe(() => {
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            done();
+        });
+
+        exporter.export(grid, options);
+    });
+
+    it('should export with table borders disabled', (done) => {
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        options.showTableBorders = false;
+        
+        exporter.exportEnded.pipe(first()).subscribe(() => {
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            done();
+        });
+
+        exporter.export(grid, options);
+    });
+
+    it('should export with custom font size', (done) => {
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        options.fontSize = 14;
+        
+        exporter.exportEnded.pipe(first()).subscribe(() => {
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            done();
+        });
+
+        exporter.export(grid, options);
+    });
+
+    it('should export with different page sizes', (done) => {
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        options.pageSize = 'letter';
+        
+        exporter.exportEnded.pipe(first()).subscribe(() => {
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            done();
+        });
+
+        exporter.export(grid, options);
+    });
+
+    it('should honor ignoreColumnsOrder option', (done) => {
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        options.ignoreColumnsOrder = true;
+        
+        exporter.exportEnded.pipe(first()).subscribe(() => {
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            done();
+        });
+
+        exporter.export(grid, options);
+    });
+
+    it('should honor ignoreFiltering option', (done) => {
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        options.ignoreFiltering = false;
+        
+        exporter.exportEnded.pipe(first()).subscribe(() => {
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            done();
+        });
+
+        exporter.export(grid, options);
+    });
+
+    it('should honor ignoreSorting option', (done) => {
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        options.ignoreSorting = false;
+        
+        exporter.exportEnded.pipe(first()).subscribe(() => {
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            done();
+        });
+
+        exporter.export(grid, options);
+    });
+
+    it('should emit exportStarted event when exporting grid', (done) => {
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        let exportStartedFired = false;
+
+        exporter.exportStarted.pipe(first()).subscribe(() => {
+            exportStartedFired = true;
+        });
+        
+        exporter.exportEnded.pipe(first()).subscribe(() => {
+            expect(exportStartedFired).toBe(true);
+            done();
+        });
+
+        exporter.export(grid, options);
+    });
+
+    it('should handle grid with multiple columns', (done) => {
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        
+        exporter.exportEnded.pipe(first()).subscribe(() => {
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            done();
+        });
+
+        exporter.export(grid, options);
+    });
+
+    it('should export with custom filename from options', (done) => {
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const customOptions = new IgxPdfExporterOptions('MyCustomGrid');
+        
+        exporter.exportEnded.pipe(first()).subscribe(() => {
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            const callArgs = (ExportUtilities.saveBlobToFile as jasmine.Spy).calls.mostRecent().args;
+            expect(callArgs[1]).toBe('MyCustomGrid');
+            done();
+        });
+
+        exporter.export(grid, customOptions);
+    });
 });
