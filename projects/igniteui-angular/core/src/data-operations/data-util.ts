@@ -8,8 +8,8 @@ import { IGroupingState } from './groupby-state.interface';
 import { cloneArray, mergeObjects } from '../core/utils';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/transaction/transaction';
 import { getHierarchy, isHierarchyMatch } from './operations';
-import { ColumnType, GridType } from '../grids/common/grid.interface';
-import { ITreeGridRecord } from '../grids/tree-grid/tree-grid.interfaces';
+import { ColumnType, GridType } from 'igniteui-angular/grids/common/grid.interface';
+import { ITreeGridRecord } from 'igniteui-angular/grids/tree-grid/tree-grid.interfaces';
 import { ISortingExpression } from './sorting-strategy';
 import {
     IGridSortingStrategy,
@@ -17,7 +17,7 @@ import {
     IgxDataRecordSorting,
     IgxSorting,
     IgxGrouping
-} from '../grids/common/strategy';
+} from 'igniteui-angular/grids/common/strategy';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IGroupingExpression } from './grouping-expression.interface';
 import { DefaultMergeStrategy, IGridMergeStrategy } from './merge-strategy';

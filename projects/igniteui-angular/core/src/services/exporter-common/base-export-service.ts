@@ -3,18 +3,18 @@ import { cloneArray, cloneValue, columnFieldPath, IBaseEventArgs, resolveNestedP
 import { GridColumnDataType, DataUtil } from '../../data-operations/data-util';
 import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
-import { ITreeGridRecord } from '../../grids/tree-grid/tree-grid.interfaces';
-import { TreeGridFilteringStrategy } from '../../grids/tree-grid/tree-grid.filtering.strategy';
+import { ITreeGridRecord } from 'igniteui-angular/grids/tree-grid/tree-grid.interfaces';
+import { TreeGridFilteringStrategy } from 'igniteui-angular/grids/tree-grid/tree-grid.filtering.strategy';
 import { IGroupingState } from '../../data-operations/groupby-state.interface';
 import { getHierarchy, isHierarchyMatch } from '../../data-operations/operations';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IFilteringState } from '../../data-operations/filtering-state.interface';
 import { DatePipe, FormatWidth, getLocaleCurrencyCode, getLocaleDateFormat, getLocaleDateTimeFormat } from '@angular/common';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
-import { ColumnType, GridType, IPathSegment } from '../../grids/common/grid.interface';
+import { ColumnType, GridType, IPathSegment } from 'igniteui-angular/grids/common/grid.interface';
 import { FilterUtil } from '../../data-operations/filtering-strategy';
-import { IgxSummaryResult } from '../../grids/summaries/grid-summary';
-import { GridSummaryCalculationMode } from '../../grids/common/enums';
+import { IgxSummaryResult } from 'igniteui-angular/grids/summaries/grid-summary';
+import { GridSummaryCalculationMode } from 'igniteui-angular/grids/common/enums';
 
 export enum ExportRecordType {
     GroupedRecord = 'GroupedRecord',

@@ -1,7 +1,7 @@
 
-import { ColumnType, PivotGridType } from '../grids/common/grid.interface';
-import { DEFAULT_PIVOT_KEYS, IPivotDimension, IPivotDimensionStrategy, IPivotGridRecord, IPivotKeys, IPivotValue, PivotDimensionType } from '../grids/pivot-grid/pivot-grid.interface';
-import { PivotUtil } from '../grids/pivot-grid/pivot-util';
+import { ColumnType, PivotGridType } from 'igniteui-angular/grids/common/grid.interface';
+import { DEFAULT_PIVOT_KEYS, IPivotDimension, IPivotDimensionStrategy, IPivotGridRecord, IPivotKeys, IPivotValue, PivotDimensionType } from 'igniteui-angular/grids/pivot-grid/pivot-grid.interface';
+import { PivotUtil } from 'igniteui-angular/grids/pivot-grid/pivot-util';
 import { FilteringStrategy, IgxFilterItem } from './filtering-strategy';
 import { cloneArray } from '../core/utils';
 import { IFilteringExpressionsTree } from './filtering-expressions-tree';

@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 import { IBaseEventArgs } from '../../core/utils';
 import { PickerInteractionMode } from '../../date-common/types';
-import { IgxButtonDirective } from '../../directives/button/button.directive';
-import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
+import { IgxButtonDirective } from 'igniteui-angular/directives/button/button.directive';
+import { IgxRippleDirective } from 'igniteui-angular/directives/ripple/ripple.directive';
 import { IgxPickerActionsDirective } from '../picker-icons.common';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
 import { IgxDividerDirective } from "../../directives/divider/divider.directive";

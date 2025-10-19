@@ -19,7 +19,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 
 import { fadeIn, fadeOut, IAnimationParams, scaleInHorLeft, scaleInHorRight, scaleInVerBottom, scaleInVerTop, scaleOutHorLeft, scaleOutHorRight, scaleOutVerBottom, scaleOutVerTop, slideInBottom, slideInTop, slideOutBottom, slideOutTop } from 'igniteui-angular/animations';
 import { PlatformUtil } from '../../core/utils';
-import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
+import { IgxOverlayOutletDirective } from 'igniteui-angular/directives/toggle/toggle.directive';
 import { IgxAngularAnimationService } from '../animation/angular-animation-service';
 import { AnimationService } from '../animation/animation';
 import { AutoPositionStrategy } from './position/auto-position-strategy';

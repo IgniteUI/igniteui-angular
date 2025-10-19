@@ -1,7 +1,7 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
 import { ComponentRef, ElementRef, Injector, NgZone } from '@angular/core';
 import { CancelableBrowserEventArgs, CancelableEventArgs, cloneValue, IBaseEventArgs } from '../../core/utils';
-import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
+import { IgxOverlayOutletDirective } from 'igniteui-angular/directives/toggle/toggle.directive';
 import { AnimationPlayer } from '../animation/animation';
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { IScrollStrategy } from './scroll';

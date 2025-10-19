@@ -1,4 +1,4 @@
-import { DatePart, DatePartInfo } from '../../directives/date-time-editor/date-time-editor.common';
+import { DatePart, DatePartInfo } from 'igniteui-angular/directives/date-time-editor/date-time-editor.common';
 import { formatDate, FormatWidth, getLocaleDateFormat } from '@angular/common';
 import { ValidationErrors } from '@angular/forms';
 import { isDate } from '../../core/utils';
