@@ -3,9 +3,12 @@ import { IgxGridComponent } from '../../grids/grid/grid.component';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxPdfExporterService } from './pdf-exporter';
 import { IgxPdfExporterOptions } from './pdf-exporter-options';
-import { GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
+import { GridIDNameJobTitleComponent, IgxGridFilteringComponent } from '../../test-utils/grid-samples.spec';
 import { first } from 'rxjs/operators';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { OneGroupThreeColsGridComponent, NestedColumnGroupsGridComponent } from '../../test-utils/grid-mch-sample.spec';
+import { IgxHierarchicalGridTestBaseComponent } from '../../test-utils/hierarchical-grid-components.spec';
+import { IgxTreeGridSortingComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 
 describe('PDF Grid Exporter', () => {
     let exporter: IgxPdfExporterService;
@@ -227,5 +230,131 @@ describe('PDF Grid Exporter', () => {
         });
 
         exporter.export(grid, customOptions);
+    });
+
+    it('should export grid with multi-column headers', (done) => {
+        TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                OneGroupThreeColsGridComponent
+            ]
+        }).compileComponents();
+
+        const fix = TestBed.createComponent(OneGroupThreeColsGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        exporter.exportEnded.pipe(first()).subscribe(() => {
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            done();
+        });
+
+        exporter.export(grid, options);
+    });
+
+    it('should export grid with nested multi-column headers', (done) => {
+        TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                NestedColumnGroupsGridComponent
+            ]
+        }).compileComponents();
+
+        const fix = TestBed.createComponent(NestedColumnGroupsGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        exporter.exportEnded.pipe(first()).subscribe(() => {
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            done();
+        });
+
+        exporter.export(grid, options);
+    });
+
+    it('should export grid with summaries', (done) => {
+        TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                IgxGridFilteringComponent
+            ]
+        }).compileComponents();
+
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        exporter.exportEnded.pipe(first()).subscribe(() => {
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            done();
+        });
+
+        exporter.export(grid, options);
+    });
+
+    it('should export hierarchical grid', (done) => {
+        TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                IgxHierarchicalGridTestBaseComponent
+            ]
+        }).compileComponents();
+
+        const fix = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.hgrid;
+
+        exporter.exportEnded.pipe(first()).subscribe(() => {
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            done();
+        });
+
+        exporter.export(grid, options);
+    });
+
+    it('should export tree grid with hierarchical data', (done) => {
+        TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                IgxTreeGridSortingComponent
+            ]
+        }).compileComponents();
+
+        const fix = TestBed.createComponent(IgxTreeGridSortingComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.treeGrid;
+
+        exporter.exportEnded.pipe(first()).subscribe(() => {
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            done();
+        });
+
+        exporter.export(grid, options);
+    });
+
+    it('should export tree grid with flat self-referencing data', (done) => {
+        TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                IgxTreeGridPrimaryForeignKeyComponent
+            ]
+        }).compileComponents();
+
+        const fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.treeGrid;
+
+        exporter.exportEnded.pipe(first()).subscribe(() => {
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            done();
+        });
+
+        exporter.export(grid, options);
     });
 });
