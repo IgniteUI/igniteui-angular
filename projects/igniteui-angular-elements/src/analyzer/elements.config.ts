@@ -481,7 +481,7 @@ export var registerConfig = [
     contentQueries: [],
     additionalProperties: [],
     methods: ["export"],
-    boolProps: ["exportCSV", "exportExcel"],
+    boolProps: ["exportCSV", "exportExcel", "exportPDF"],
   },
   {
     component: IgxGridToolbarHidingComponent,
