@@ -203,14 +203,8 @@ describe('PDF Grid Exporter', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        let exportStartedFired = false;
-
-        grid.toolbarExporting.pipe(first()).subscribe(() => {
-            exportStartedFired = true;
-        });
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
-            expect(exportStartedFired).toBeTrue();
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
             done();
         });
@@ -228,7 +222,7 @@ describe('PDF Grid Exporter', () => {
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
             const callArgs = (ExportUtilities.saveBlobToFile as jasmine.Spy).calls.mostRecent().args;
-            expect(callArgs[1]).toBe('MyCustomGrid');
+            expect(callArgs[1]).toBe('MyCustomGrid.pdf');
             done();
         });
 

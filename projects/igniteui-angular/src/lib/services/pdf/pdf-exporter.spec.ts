@@ -214,7 +214,7 @@ describe('PDF Exporter', () => {
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
             const callArgs = (ExportUtilities.saveBlobToFile as jasmine.Spy).calls.mostRecent().args;
-            expect(callArgs[1]).toBe('CustomFileName');
+            expect(callArgs[1]).toBe('CustomFileName.pdf');
             done();
         });
 
