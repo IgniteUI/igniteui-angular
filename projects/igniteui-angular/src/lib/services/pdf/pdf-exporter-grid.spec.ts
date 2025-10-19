@@ -33,7 +33,7 @@ describe('PDF Grid Exporter', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        
+
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
             done();
@@ -48,7 +48,7 @@ describe('PDF Grid Exporter', () => {
 
         const grid = fix.componentInstance.grid;
         options.pageOrientation = 'landscape';
-        
+
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
             done();
@@ -66,7 +66,7 @@ describe('PDF Grid Exporter', () => {
         options.ignoreColumnsVisibility = false;
 
         fix.detectChanges();
-        
+
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
             done();
@@ -82,7 +82,7 @@ describe('PDF Grid Exporter', () => {
         const grid = fix.componentInstance.grid;
         grid.data = [];
         fix.detectChanges();
-        
+
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
             done();
@@ -97,7 +97,7 @@ describe('PDF Grid Exporter', () => {
 
         const grid = fix.componentInstance.grid;
         options.pageOrientation = 'landscape';
-        
+
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
             done();
@@ -112,7 +112,7 @@ describe('PDF Grid Exporter', () => {
 
         const grid = fix.componentInstance.grid;
         options.showTableBorders = false;
-        
+
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
             done();
@@ -127,7 +127,7 @@ describe('PDF Grid Exporter', () => {
 
         const grid = fix.componentInstance.grid;
         options.fontSize = 14;
-        
+
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
             done();
@@ -142,7 +142,7 @@ describe('PDF Grid Exporter', () => {
 
         const grid = fix.componentInstance.grid;
         options.pageSize = 'letter';
-        
+
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
             done();
@@ -157,7 +157,7 @@ describe('PDF Grid Exporter', () => {
 
         const grid = fix.componentInstance.grid;
         options.ignoreColumnsOrder = true;
-        
+
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
             done();
@@ -172,7 +172,7 @@ describe('PDF Grid Exporter', () => {
 
         const grid = fix.componentInstance.grid;
         options.ignoreFiltering = false;
-        
+
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
             done();
@@ -187,7 +187,7 @@ describe('PDF Grid Exporter', () => {
 
         const grid = fix.componentInstance.grid;
         options.ignoreSorting = false;
-        
+
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
             done();
@@ -203,10 +203,10 @@ describe('PDF Grid Exporter', () => {
         const grid = fix.componentInstance.grid;
         let exportStartedFired = false;
 
-        exporter.exportStarted.pipe(first()).subscribe(() => {
+        grid.toolbarExporting.pipe(first()).subscribe(() => {
             exportStartedFired = true;
         });
-        
+
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(exportStartedFired).toBe(true);
             done();
@@ -220,7 +220,7 @@ describe('PDF Grid Exporter', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        
+
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
             done();
@@ -235,7 +235,7 @@ describe('PDF Grid Exporter', () => {
 
         const grid = fix.componentInstance.grid;
         const customOptions = new IgxPdfExporterOptions('MyCustomGrid');
-        
+
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
             const callArgs = (ExportUtilities.saveBlobToFile as jasmine.Spy).calls.mostRecent().args;

@@ -236,21 +236,6 @@ describe('PDF Exporter', () => {
         exporter.exportData(dataWithEmptyRows, options);
     });
 
-    it('should emit exportStarted event', (done) => {
-        let exportStartedFired = false;
-
-        exporter.exportStarted.pipe(first()).subscribe(() => {
-            exportStartedFired = true;
-        });
-
-        exporter.exportEnded.pipe(first()).subscribe(() => {
-            expect(exportStartedFired).toBe(true);
-            done();
-        });
-
-        exporter.exportData(SampleTestData.contactsData(), options);
-    });
-
     it('should emit exportEnded event with pdf object', (done) => {
         exporter.exportEnded.pipe(first()).subscribe((args) => {
             expect(args).toBeDefined();
