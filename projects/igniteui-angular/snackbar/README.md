@@ -1,0 +1,3 @@
+# snackbar
+
+Part of Ignite UI for Angular.
