@@ -89,7 +89,7 @@ import {
     IgxPageSizeSelectorComponent,
     IgxPaginatorContentDirective,
     IgxPaginatorDirective
-} from 'igniteui-angular/paginator';
+} from '../../paginator/public_api';
 
 /* NOTE: Tree grid directives collection for ease-of-use import in standalone components scenario */
 export const IGX_TREE_GRID_DIRECTIVES = [

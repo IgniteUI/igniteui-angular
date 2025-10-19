@@ -19,7 +19,7 @@ import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { fromEvent, noop, Subject, takeUntil } from 'rxjs';
 import { IgxRadioComponent } from '../../radio/radio.component';
 import { IgxDirectionality } from '../../services/direction/directionality';
-import { IChangeCheckboxEventArgs } from 'igniteui-angular/checkbox';
+import { IChangeCheckboxEventArgs } from '../../checkbox/public_api';
 
 /**
  * Determines the Radio Group alignment

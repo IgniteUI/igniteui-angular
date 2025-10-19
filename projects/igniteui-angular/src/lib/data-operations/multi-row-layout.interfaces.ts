@@ -1,4 +1,4 @@
-// import { IgxColumnComponent } from 'igniteui-angular/grids';
+// import { IgxColumnComponent } from '../grids';
 
 // export interface MRLColumnSizeInfo {
 //     ref: IgxColumnComponent;

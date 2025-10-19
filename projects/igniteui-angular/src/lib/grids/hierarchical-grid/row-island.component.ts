@@ -33,7 +33,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { IgxOverlayService } from 'igniteui-angular/core';
+import { IgxOverlayService } from '../../services/public_api';
 import { first, filter, takeUntil, pluck } from 'rxjs/operators';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ISearchInfo } from '../common/events';

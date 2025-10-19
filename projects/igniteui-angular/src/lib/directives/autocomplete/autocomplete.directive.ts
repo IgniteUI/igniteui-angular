@@ -25,12 +25,12 @@ import {
     IPositionStrategy,
     IScrollStrategy,
     OverlaySettings
-} from 'igniteui-angular/core';
+} from '../../services/public_api';
 import {
     IgxDropDownComponent
 } from '../../drop-down/drop-down.component';
 import { IgxDropDownItemNavigationDirective } from '../../drop-down/drop-down-navigation.directive';
-import { IgxInputGroupComponent } from 'igniteui-angular/input-group';
+import { IgxInputGroupComponent } from '../../input-group/public_api';
 import { IgxOverlayOutletDirective } from '../toggle/toggle.directive';
 import { ISelectionEventArgs } from '../../drop-down/drop-down.common';
 

@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import { ActionStripResourceStringsEN, IActionStripResourceStrings } from '../core/i18n/action-strip-resources';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
-import { CloseScrollStrategy, OverlaySettings } from 'igniteui-angular/core';
+import { CloseScrollStrategy, OverlaySettings } from '../services/public_api';
 import { IgxGridActionsBaseDirective } from './grid-actions/grid-actions-base.directive';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
 import { IgxIconComponent } from '../icon/icon.component';

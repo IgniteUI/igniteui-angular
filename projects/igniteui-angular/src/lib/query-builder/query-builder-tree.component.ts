@@ -28,7 +28,7 @@ import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive
 import { FieldType, EntityType } from '../grids/common/grid.interface';
 import { IgxSelectComponent } from '../select/select.component';
 import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../services/overlay/utilities';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, ConnectedPositioningStrategy } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { IgxTimePickerComponent } from '../time-picker/time-picker.component';
 import { IgxPickerToggleComponent, IgxPickerClearComponent } from '../date-common/picker-icons.common';
 import { IgxInputDirective } from '../directives/input/input.directive';
@@ -39,7 +39,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IComboSelectionChangingEventArgs, IgxComboComponent } from "../combo/combo.component";
-import { IgxComboHeaderDirective } from 'igniteui-angular/combo';
+import { IgxComboHeaderDirective } from '../combo/public_api';
 import { IgxCheckboxComponent } from "../checkbox/checkbox.component";
 import { IChangeCheckboxEventArgs } from '../checkbox/checkbox-base.directive';
 import { IgxDialogComponent } from "../dialog/dialog.component";

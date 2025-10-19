@@ -29,7 +29,7 @@ import {
 
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
-import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from 'igniteui-angular/input-group';
+import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
 import {
     IgxItemListDirective,
     IgxTimeItemDirective
@@ -51,7 +51,7 @@ import { IgxTextSelectionDirective } from '../directives/text-selection/text-sel
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { DatePart, DatePartDeltas } from 'igniteui-angular/directives';
+import { DatePart, DatePartDeltas } from '../directives/date-time-editor/public_api';
 import { PickerHeaderOrientation } from '../date-common/types';
 import { IgxPickerActionsDirective, IgxPickerClearComponent } from '../date-common/picker-icons.common';
 import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';

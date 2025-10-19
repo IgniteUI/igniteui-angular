@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { ContainerPositionStrategy, GlobalPositionStrategy, HorizontalAlignment,
-    PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
+    PositionSettings, VerticalAlignment } from '../services/public_api';
 import { IgxNotificationsDirective } from '../directives/notification/notifications.directive';
 import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 import { IgxButtonDirective } from '../directives/button/button.directive';

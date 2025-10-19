@@ -80,7 +80,7 @@ import {
     IgxPageSizeSelectorComponent,
     IgxPaginatorContentDirective,
     IgxPaginatorDirective
-} from 'igniteui-angular/paginator';
+} from '../../paginator/public_api';
 
 export * from './grid.component';
 
