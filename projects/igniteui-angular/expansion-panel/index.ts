@@ -1,1 +1,0 @@
-export * from '../src/lib/expansion-panel/public_api';

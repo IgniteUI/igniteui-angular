@@ -1,1 +1,0 @@
-export * from '../src/lib/slider/public_api';

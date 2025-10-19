@@ -1,1 +1,0 @@
-export * from '../src/lib/date-range-picker/public_api';

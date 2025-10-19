@@ -1,1 +1,0 @@
-export * from '../src/lib/avatar/public_api';

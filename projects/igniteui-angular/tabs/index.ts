@@ -1,1 +1,0 @@
-export * from '../src/lib/tabs/public_api';

@@ -1,1 +1,0 @@
-export * from '../src/lib/icon/public_api';

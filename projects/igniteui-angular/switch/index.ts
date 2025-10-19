@@ -1,1 +1,0 @@
-export * from '../src/lib/switch/public_api';
