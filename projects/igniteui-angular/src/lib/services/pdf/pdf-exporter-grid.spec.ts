@@ -307,6 +307,8 @@ describe('PDF Grid Exporter', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.hgrid;
+        grid.expandAll();
+        fix.detectChanges();
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
@@ -328,6 +330,8 @@ describe('PDF Grid Exporter', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.treeGrid;
+        grid.expandAll();
+        fix.detectChanges();
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
@@ -349,6 +353,8 @@ describe('PDF Grid Exporter', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.treeGrid;
+        grid.expandAll();
+        fix.detectChanges();
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
