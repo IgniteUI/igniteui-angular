@@ -49,15 +49,24 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
     protected exportDataImplementation(data: IExportRecord[], options: IgxPdfExporterOptions, done: () => void): void {
         const defaultOwner = this._ownersMap.get(DEFAULT_OWNER);
-        const columns = defaultOwner?.columns.filter(col => col.field && !col.skip && col.headerType === ExportHeaderType.ColumnHeader) || [];
+        
+        // Get all columns (including multi-column headers)
+        const allColumns = defaultOwner?.columns.filter(col => !col.skip) || [];
+        
+        // Get leaf columns (actual data columns)
+        const leafColumns = allColumns.filter(col => col.field && col.headerType === ExportHeaderType.ColumnHeader);
+        
+        // Check if we have multi-level headers
+        const maxLevel = defaultOwner?.maxLevel || 0;
+        const hasMultiColumnHeaders = maxLevel > 0 && allColumns.some(col => col.headerType === ExportHeaderType.MultiColumnHeader);
 
-        if (columns.length === 0 && data.length > 0) {
+        if (leafColumns.length === 0 && data.length > 0) {
             // If no columns are defined, use the keys from the first data record
             const firstDataElement = data[0];
             const keys = Object.keys(firstDataElement.data);
             
             keys.forEach((key) => {
-                columns.push({
+                leafColumns.push({
                     header: key,
                     field: key,
                     skip: false,
@@ -80,8 +89,8 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         const margin = 40;
         const usableWidth = pageWidth - (2 * margin);
         
-        // Calculate column widths
-        const columnWidth = usableWidth / columns.length;
+        // Calculate column widths based on leaf columns
+        const columnWidth = usableWidth / leafColumns.length;
         const rowHeight = 20;
         const headerHeight = 25;
         const indentSize = 15; // Indentation per level for hierarchical data
@@ -92,9 +101,14 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         // Set font
         pdf.setFontSize(options.fontSize);
 
-        // Draw main table headers
-        this.drawTableHeaders(pdf, columns, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
-        yPosition += headerHeight;
+        // Draw multi-level headers if present
+        if (hasMultiColumnHeaders) {
+            yPosition = this.drawMultiLevelHeaders(pdf, allColumns, maxLevel, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
+        } else {
+            // Draw simple single-level headers
+            this.drawTableHeaders(pdf, leafColumns, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
+            yPosition += headerHeight;
+        }
 
         // Draw data rows
         pdf.setFont('helvetica', 'normal');
@@ -113,6 +127,14 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             if (yPosition + rowHeight > pageHeight - margin) {
                 pdf.addPage();
                 yPosition = margin;
+                
+                // Redraw headers on new page
+                if (hasMultiColumnHeaders) {
+                    yPosition = this.drawMultiLevelHeaders(pdf, allColumns, maxLevel, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
+                } else {
+                    this.drawTableHeaders(pdf, leafColumns, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
+                    yPosition += headerHeight;
+                }
             }
 
             // Calculate indentation for hierarchical records
@@ -124,7 +146,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             const indent = indentLevel * indentSize;
 
             // Draw parent row
-            this.drawDataRow(pdf, record, columns, margin, yPosition, columnWidth, rowHeight, indent, options);
+            this.drawDataRow(pdf, record, leafColumns, margin, yPosition, columnWidth, rowHeight, indent, options);
             yPosition += rowHeight;
 
             // For hierarchical grids, check if this record has child records
@@ -201,6 +223,72 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         this.saveFile(pdf, options.fileName);
         this.exportEnded.emit({ pdf });
         done();
+    }
+
+    private drawMultiLevelHeaders(
+        pdf: jsPDF,
+        columns: any[],
+        maxLevel: number,
+        xStart: number,
+        yStart: number,
+        baseColumnWidth: number,
+        headerHeight: number,
+        tableWidth: number,
+        options: IgxPdfExporterOptions
+    ): number {
+        let yPosition = yStart;
+        pdf.setFont('helvetica', 'bold');
+
+        // Draw headers level by level (from top/parent to bottom/children)
+        for (let level = 0; level <= maxLevel; level++) {
+            // Get headers for this level
+            const headersForLevel = columns.filter(col => {
+                if (level === 0) {
+                    // For level 0, include multi-column headers at level 0 and leaf columns that span multiple levels
+                    return (col.level === 0 && col.headerType === ExportHeaderType.MultiColumnHeader) ||
+                           (col.level === 0 && col.headerType === ExportHeaderType.ColumnHeader);
+                } else {
+                    // For other levels, include headers at this level or leaf columns that need to span down
+                    return (col.level === level && col.headerType === ExportHeaderType.MultiColumnHeader) ||
+                           (col.level < level && col.headerType === ExportHeaderType.ColumnHeader);
+                }
+            }).filter(col => col.columnSpan > 0);
+
+            if (headersForLevel.length === 0) continue;
+
+            // Sort by startIndex to maintain order
+            headersForLevel.sort((a, b) => a.startIndex - b.startIndex);
+
+            // Draw background
+            pdf.setFillColor(240, 240, 240);
+            if (options.showTableBorders) {
+                pdf.rect(xStart, yPosition, tableWidth, headerHeight, 'F');
+            }
+
+            // Draw each header in this level
+            headersForLevel.forEach((col) => {
+                const colSpan = col.columnSpan || 1;
+                const width = baseColumnWidth * colSpan;
+                const xPosition = xStart + (col.startIndex * baseColumnWidth);
+
+                if (options.showTableBorders) {
+                    pdf.rect(xPosition, yPosition, width, headerHeight);
+                }
+
+                // Center text in cell
+                const headerText = col.header || col.field || '';
+                const textWidth = pdf.getTextWidth(headerText);
+                const textX = xPosition + (width - textWidth) / 2;
+                const textY = yPosition + headerHeight / 2 + options.fontSize / 3;
+
+                pdf.text(headerText, textX, textY);
+            });
+
+            yPosition += headerHeight;
+        }
+
+        pdf.setFont('helvetica', 'normal');
+        return yPosition;
     }
 
     private drawTableHeaders(
