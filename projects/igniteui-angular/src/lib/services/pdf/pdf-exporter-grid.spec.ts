@@ -1,14 +1,14 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { IgxGridComponent } from '../../grids/grid/grid.component';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxPdfExporterService } from './pdf-exporter';
 import { IgxPdfExporterOptions } from './pdf-exporter-options';
-import { GridIDNameJobTitleComponent, IgxGridFilteringComponent } from '../../test-utils/grid-samples.spec';
+import { GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
 import { first } from 'rxjs/operators';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { OneGroupThreeColsGridComponent, NestedColumnGroupsGridComponent } from '../../test-utils/grid-mch-sample.spec';
+import { NestedColumnGroupsGridComponent, ColumnGroupTestComponent } from '../../test-utils/grid-mch-sample.spec';
 import { IgxHierarchicalGridTestBaseComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxTreeGridSortingComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
+import { CustomSummariesComponent } from '../../grids/grid/grid-summary.spec';
 
 describe('PDF Grid Exporter', () => {
     let exporter: IgxPdfExporterService;
@@ -236,11 +236,11 @@ describe('PDF Grid Exporter', () => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
-                OneGroupThreeColsGridComponent
+                ColumnGroupTestComponent
             ]
         }).compileComponents();
 
-        const fix = TestBed.createComponent(OneGroupThreeColsGridComponent);
+        const fix = TestBed.createComponent(ColumnGroupTestComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
@@ -278,11 +278,11 @@ describe('PDF Grid Exporter', () => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
-                IgxGridFilteringComponent
+                CustomSummariesComponent
             ]
         }).compileComponents();
 
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const fix = TestBed.createComponent(CustomSummariesComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
