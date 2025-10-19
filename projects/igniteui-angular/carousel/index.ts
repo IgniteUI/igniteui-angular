@@ -1,0 +1,1 @@
+export * from '../src/lib/carousel/public_api';

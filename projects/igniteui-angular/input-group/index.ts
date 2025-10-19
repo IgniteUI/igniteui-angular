@@ -1,0 +1,1 @@
+export * from '../src/lib/input-group/public_api';

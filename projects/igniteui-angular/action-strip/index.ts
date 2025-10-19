@@ -1,0 +1,1 @@
+export * from '../src/lib/action-strip/public_api';
