@@ -86,7 +86,7 @@ import {
     IgxPaginatorContentDirective,
     IgxPaginatorDirective,
     IGX_PAGINATOR_DIRECTIVES
-} from '../../paginator/public_api';
+} from 'igniteui-angular/paginator';
 
 /* NOTE: Hierarchical grid directives collection for ease-of-use import in standalone components scenario */
 export const IGX_HIERARCHICAL_GRID_DIRECTIVES = [

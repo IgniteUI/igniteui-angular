@@ -1,5 +1,5 @@
 import { ElementRef } from '@angular/core';
-import { DatePartDeltas } from '../directives/date-time-editor/public_api';
+import { DatePartDeltas } from 'igniteui-angular/directives';
 
 /** @hidden */
 export const IGX_TIME_PICKER_COMPONENT = 'IgxTimePickerComponentToken';

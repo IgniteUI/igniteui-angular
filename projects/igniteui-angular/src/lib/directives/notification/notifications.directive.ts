@@ -1,6 +1,6 @@
 import { Directive, ElementRef, HostBinding, Input, OnDestroy, booleanAttribute } from '@angular/core';
 import { IToggleView } from '../../core/navigation';
-import { IPositionStrategy, OverlaySettings } from '../../services/public_api';
+import { IPositionStrategy, OverlaySettings } from 'igniteui-angular/core';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../toggle/toggle.directive';
 
 @Directive()

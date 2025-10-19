@@ -9,7 +9,7 @@ import {
     IgxCsvExporterService,
     IgxExcelExporterOptions,
     IgxExcelExporterService
-} from '../../services/public_api';
+} from 'igniteui-angular/core';
 import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
 import { GridType } from '../common/grid.interface';
 import { IgxToolbarToken } from './token';

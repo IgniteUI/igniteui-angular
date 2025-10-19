@@ -1,4 +1,4 @@
-import { OverlaySettings } from '../services/public_api';
+import { OverlaySettings } from 'igniteui-angular/core';
 
 /* csSuppress */
 /** @hidden @internal */

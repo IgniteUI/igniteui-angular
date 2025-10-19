@@ -1,7 +1,7 @@
 import { GridBaseAPIService } from '../api.service';
 import { GridColumnDataType, DataUtil } from '../../data-operations/data-util';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { HierarchicalTransaction, TransactionType, State } from '../../services/public_api';
+import { HierarchicalTransaction, TransactionType, State } from 'igniteui-angular/core';
 import { Injectable } from '@angular/core';
 import { cloneArray, mergeObjects } from '../../core/utils';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';

@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, Inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase } from './time-picker.common';
-import { DatePart } from '../directives/date-time-editor/public_api';
+import { DatePart } from 'igniteui-angular/directives';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 
 const ITEMS_COUNT = 7;

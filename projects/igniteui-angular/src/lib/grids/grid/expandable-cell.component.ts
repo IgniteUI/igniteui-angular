@@ -17,7 +17,7 @@ import { NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, Date
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
-import { IgxOverlayService } from '../../services/public_api';
+import { IgxOverlayService } from 'igniteui-angular/core';
 import { IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe } from '../common/pipes';
 import { IgxTooltipDirective } from '../../directives/tooltip/tooltip.directive';
 import { IgxTooltipTargetDirective } from '../../directives/tooltip/tooltip-target.directive';

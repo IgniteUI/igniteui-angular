@@ -37,7 +37,7 @@ import { IgxRowDirective } from './row.directive';
 import { ISearchInfo } from './common/events';
 import { IgxGridCell } from './grid-public-cell';
 import { ISelectionNode } from './common/types';
-import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService } from '../services/public_api';
+import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService } from 'igniteui-angular/core';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe } from './common/pipes';
 import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';

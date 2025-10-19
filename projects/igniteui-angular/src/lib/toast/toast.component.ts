@@ -18,7 +18,7 @@ import {
     VerticalAlignment,
     GlobalPositionStrategy,
     PositionSettings
-} from '../services/public_api';
+} from 'igniteui-angular/core';
 import { IgxNotificationsDirective } from '../directives/notification/notifications.directive';
 import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 import { useAnimation } from '@angular/animations';

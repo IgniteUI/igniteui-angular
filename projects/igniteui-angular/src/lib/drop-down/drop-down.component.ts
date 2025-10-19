@@ -31,7 +31,7 @@ import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { IgxForOfToken } from '../directives/for-of/for_of.directive';
 import { take } from 'rxjs/operators';
 import { OverlaySettings } from '../services/overlay/utilities';
-import { ConnectedPositioningStrategy } from '../services/public_api';
+import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
 
 /**
  * **Ignite UI for Angular DropDown** -
