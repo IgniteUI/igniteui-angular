@@ -196,7 +196,9 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
     });
 
-    it('should emit exportStarted event when exporting grid', (done) => {
+
+
+    it('should handle grid with multiple columns', (done) => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -208,20 +210,7 @@ describe('PDF Grid Exporter', () => {
         });
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
-            expect(exportStartedFired).toBe(true);
-            done();
-        });
-
-        exporter.export(grid, options);
-    });
-
-    it('should handle grid with multiple columns', (done) => {
-        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid;
-
-        exporter.exportEnded.pipe(first()).subscribe(() => {
+            expect(exportStartedFired).toBeTrue();
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
             done();
         });
