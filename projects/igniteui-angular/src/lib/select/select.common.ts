@@ -1,6 +1,6 @@
 import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 import { IgxDropDownBaseDirective } from '../drop-down/drop-down.base';
-import { IgxInputDirective } from '../input-group/public_api';
+import { IgxInputDirective } from 'igniteui-angular/input-group';
 import { OverlaySettings } from '../services/overlay/utilities';
 
 /** @hidden @internal */

@@ -35,8 +35,8 @@ import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxIconService } from '../icon/icon.service';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/inputGroupType';
-import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../input-group/public_api';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings } from '../services/public_api';
+import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings } from 'igniteui-angular/core';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboAPIService } from './combo.api';
 import {

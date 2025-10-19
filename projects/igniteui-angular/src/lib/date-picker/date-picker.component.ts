@@ -35,11 +35,11 @@ import {
 import {
     IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective,
      IFormattingViews, IFormattingOptions
-} from '../calendar/public_api';
+} from 'igniteui-angular/calendar';
 import { isDateInRanges } from '../calendar/common/helpers';
 import {
     IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupType, IgxInputState, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxSuffixDirective
-} from '../input-group/public_api';
+} from 'igniteui-angular/input-group';
 import { fromEvent, Subscription, noop, MonoTypeOperatorFunction } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
@@ -48,9 +48,9 @@ import { DatePickerResourceStringsEN, IDatePickerResourceStrings } from '../core
 import { IBaseCancelableBrowserEventArgs, isDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
-import { IgxPickerActionsDirective } from '../date-common/public_api';
+import { IgxPickerActionsDirective } from 'igniteui-angular/core';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { DatePart, DatePartDeltas, IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
+import { DatePart, DatePartDeltas, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
     AbsoluteScrollStrategy,
@@ -59,7 +59,7 @@ import {
     OverlayCancelableEventArgs,
     OverlayEventArgs,
     OverlaySettings
-} from '../services/public_api';
+} from 'igniteui-angular/core';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';

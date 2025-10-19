@@ -1,10 +1,10 @@
 import { Component, ContentChild, Pipe, PipeTransform, Directive } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { IgxInputDirective, IgxInputState } from '../input-group/public_api';
+import { IgxInputDirective, IgxInputState } from 'igniteui-angular/input-group';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputGroupBase } from '../input-group/input-group.common';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
+import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { isDate } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';

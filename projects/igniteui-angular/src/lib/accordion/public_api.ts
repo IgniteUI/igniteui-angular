@@ -12,7 +12,7 @@ export * from './accordion.component';
     IgxExpansionPanelDescriptionDirective,
     IgxExpansionPanelTitleDirective,
     IgxExpansionPanelIconDirective
-} from '../expansion-panel/public_api';
+} from 'igniteui-angular/expansion-panel';
 
 /* Accordion directives collection for ease-of-use import in standalone components scenario */
 export const IGX_ACCORDION_DIRECTIVES = [

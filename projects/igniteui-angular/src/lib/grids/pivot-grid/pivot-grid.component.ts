@@ -47,7 +47,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { PivotUtil } from './pivot-util';
 import { FilterMode, GridPagingMode, GridSummaryCalculationMode, GridSummaryPosition, Size } from '../common/enums';
 import { WatchChanges } from '../watch-changes';
-import { OverlaySettings } from '../../services/public_api';
+import { OverlaySettings } from 'igniteui-angular/core';
 import {
     IGridEditEventArgs,
     ICellPosition,
@@ -69,7 +69,7 @@ import { DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from '.
 import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective } from '../filtering/excel-style/excel-style-filtering.component';
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
 import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
-import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from '../../services/public_api';
+import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from 'igniteui-angular/core';
 import { cloneArray, PlatformUtil, resizeObservable } from '../../core/utils';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
 import { DataUtil, GridColumnDataType } from '../../data-operations/data-util';

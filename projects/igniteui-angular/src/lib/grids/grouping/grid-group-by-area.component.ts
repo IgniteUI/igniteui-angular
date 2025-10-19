@@ -3,7 +3,7 @@ import {
     ElementRef,
     Input,
 } from '@angular/core';
-import { IChipsAreaReorderEventArgs } from '../../chips/public_api';
+import { IChipsAreaReorderEventArgs } from 'igniteui-angular/chips';
 import { PlatformUtil } from '../../core/utils';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';

@@ -18,7 +18,7 @@ import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
 import { IgxIconService } from '../icon/icon.service';
-import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
+import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from 'igniteui-angular/input-group';
 import { IgxComboFilteringPipe, IgxComboGroupingPipe } from '../combo/combo.pipes';
 import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
 import { IgxIconComponent } from '../icon/icon.component';
