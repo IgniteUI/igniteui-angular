@@ -243,15 +243,19 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         for (let level = 0; level <= maxLevel; level++) {
             // Get headers for this level
             const headersForLevel = columns.filter(col => {
-                if (level === 0) {
-                    // For level 0, include multi-column headers at level 0 and leaf columns that span multiple levels
-                    return (col.level === 0 && col.headerType === ExportHeaderType.MultiColumnHeader) ||
-                           (col.level === 0 && col.headerType === ExportHeaderType.ColumnHeader);
-                } else {
-                    // For other levels, include headers at this level or leaf columns that need to span down
-                    return (col.level === level && col.headerType === ExportHeaderType.MultiColumnHeader) ||
-                           (col.level < level && col.headerType === ExportHeaderType.ColumnHeader);
+                // Include multi-column headers at this level
+                if (col.level === level && col.headerType === ExportHeaderType.MultiColumnHeader) {
+                    return true;
                 }
+                // Include leaf column headers at this level
+                if (col.level === level && col.headerType === ExportHeaderType.ColumnHeader) {
+                    return true;
+                }
+                // For levels > 0, include leaf columns from earlier levels that need to span down
+                if (level > 0 && col.level < level && col.headerType === ExportHeaderType.ColumnHeader) {
+                    return true;
+                }
+                return false;
             }).filter(col => col.columnSpan > 0);
 
             if (headersForLevel.length === 0) continue;
