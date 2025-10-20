@@ -54,11 +54,11 @@ type ChatTemplatesContextMap = {
     };
 };
 
-export type NgChatTemplates = {
+export type IgxChatTemplates = {
     [K in keyof ChatRenderers]?: TemplateRef<ChatTemplatesContextMap[K]>;
 };
 
-export type NgChatOptions = Omit<IgcChatOptions, 'renderers'>;
+export type IgxChatOptions = Omit<IgcChatOptions, 'renderers'>;
 
 
 @Component({
@@ -66,13 +66,18 @@ export type NgChatOptions = Omit<IgcChatOptions, 'renderers'>;
     changeDetection: ChangeDetectionStrategy.OnPush,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './chat.component.html',
+    styles: `
+        igc-chat {
+            --igc-chat-height: calc(100vh - 32px);
+        }
+    `
 })
 export class IgxChatComponent implements OnInit, OnDestroy {
     //#region Internal state
 
     private readonly _view = inject(ViewContainerRef);
     private readonly _templateViewRefs = new Map<TemplateRef<any>, Set<ViewRef>>();
-    private _oldTemplates: NgChatTemplates = {};
+    private _oldTemplates: IgxChatTemplates = {};
 
     protected readonly _mergedOptions = signal<IgcChatOptions>({});
     protected readonly _transformedTemplates = signal<ChatRenderers>({});
@@ -85,8 +90,8 @@ export class IgxChatComponent implements OnInit, OnDestroy {
     public readonly draftMessage = input<
         { text: string; attachments?: IgcChatMessageAttachment[] } | undefined
     >({ text: '' });
-    public readonly options = input<NgChatOptions>({});
-    public readonly templates = input<NgChatTemplates>({});
+    public readonly options = input<IgxChatOptions>({});
+    public readonly templates = input<IgxChatTemplates>({});
 
     //#endregion
 
@@ -131,7 +136,7 @@ export class IgxChatComponent implements OnInit, OnDestroy {
         });
     }
 
-    private _mergeOptions(options: NgChatOptions): void {
+    private _mergeOptions(options: IgxChatOptions): void {
         const transformedTemplates = this._transformedTemplates();
         const merged: IgcChatOptions = {
             ...options,
@@ -140,12 +145,12 @@ export class IgxChatComponent implements OnInit, OnDestroy {
         this._mergedOptions.set(merged);
     }
 
-    private _setTemplates(newTemplates: NgChatTemplates): void {
+    private _setTemplates(newTemplates: IgxChatTemplates): void {
         const templateCopies: ChatRenderers = {};
-        const newTemplateKeys = Object.keys(newTemplates) as Array<keyof NgChatTemplates>;
+        const newTemplateKeys = Object.keys(newTemplates) as Array<keyof IgxChatTemplates>;
 
         const oldTemplates = this._oldTemplates;
-        const oldTemplateKeys = Object.keys(oldTemplates) as Array<keyof NgChatTemplates>;
+        const oldTemplateKeys = Object.keys(oldTemplates) as Array<keyof IgxChatTemplates>;
 
         for (const key of oldTemplateKeys) {
             const oldRef = oldTemplates[key];
@@ -174,7 +179,7 @@ export class IgxChatComponent implements OnInit, OnDestroy {
         this._transformedTemplates.set(templateCopies);
     }
 
-    private _createTemplateRenderer<K extends keyof NgChatTemplates>(ref: NonNullable<NgChatTemplates[K]>) {
+    private _createTemplateRenderer<K extends keyof IgxChatTemplates>(ref: NonNullable<IgxChatTemplates[K]>) {
         type ChatContext = ExtractChatContext<NonNullable<ChatRenderers[K]>>;
 
         if (!this._templateViewRefs.has(ref)) {
@@ -239,3 +244,7 @@ export class IgxChatInputContextDirective {
         return true;
     }
 }
+
+export { MarkdownPipe } from './markdown-pipe';
+
+

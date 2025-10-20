@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
-import { IgxChatComponent, IgxChatMessageContextDirective, NgChatTemplates } from './chat.component'
+import { IgxChatComponent, IgxChatMessageContextDirective, type IgxChatTemplates } from './chat.component'
 import { Component, signal, TemplateRef, viewChild } from '@angular/core';
 import type { IgcChatComponent, IgcChatMessage, IgcTextareaComponent } from 'igniteui-webcomponents';
 
@@ -144,7 +144,7 @@ class ChatTemplatesBed {
     imports: [IgxChatComponent, IgxChatMessageContextDirective]
 })
 class ChatDynamicTemplatesBed {
-    public templates = signal<NgChatTemplates | null>(null);
+    public templates = signal<IgxChatTemplates | null>(null);
     public messages = signal<IgcChatMessage[]>([{
         id: '1',
         sender: 'user',
