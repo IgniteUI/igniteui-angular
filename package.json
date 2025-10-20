@@ -29,7 +29,7 @@
     "build:schematics": "gulp copySchematics && tsc --listEmittedFiles --project ./projects/igniteui-angular/schematics/tsconfig.json",
     "build:docs": "npm run build:typedoc:en:production && npm run build:sassdoc:en:production",
     "lint:lib": "ng lint && npm run lint:styles",
-    "lint:styles": "stylelint \"projects/igniteui-angular/src/lib/core/styles\"",
+    "lint:styles": "stylelint \"projects/igniteui-angular/core/src/core/styles\"",
     "serve:typedoc": "npx http-server ./dist/igniteui-angular/docs/typescript -o -p 3000",
     "serve:sassdoc": "npx http-server ./dist/igniteui-angular/docs/sass -o -p 3001",
     "build:typedoc:export": "node ./scripts/build-typedoc.mjs --jsonExport",
