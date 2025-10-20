@@ -202,6 +202,40 @@ $border-radius: var-get($_theme, 'border-border-radius');
         }
     }
 
+    @include m(readonly, $not: (file, disabled)) {
+        igx-prefix,
+        [igxPrefix],
+        igx-suffix,
+        [igxSuffix] {
+            background: var-get($_theme, 'border-disabled-background');
+        }
+
+        @include e(bundle-main) {
+            background: var-get($_theme, 'border-disabled-background');
+        }
+
+        @include e(textarea) {
+            background: var-get($_theme, 'border-disabled-background');
+        }
+    }
+
+    @include mx(invalid, readonly, ('not': (file, disabled))) {
+        @include e(hint) {
+            color: var-get($_theme, 'helper-text-color');
+        }
+
+        @include e(bundle-main) {
+            border-color: var-get($_theme, 'border-color');
+        }
+    }
+
+    @include mx(invalid, readonly, focused, ('not': (file, disabled))) {
+        @include e(bundle-main) {
+            border-color: var-get($_theme, 'focused-border-color');
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'focused-secondary-color');
+        }
+    }
+
     @include m(focused) {
         @include e(bundle-main) {
             transition: border .15s ease-out;
