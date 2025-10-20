@@ -159,10 +159,17 @@ export class IgxTreeGridWithNoScrollsComponent {
     `,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
-export class IgxTreeGridPrimaryForeignKeyComponent {
+export class IgxTreeGridPrimaryForeignKeyComponent implements OnInit {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
-    public data = SampleTestData.employeePrimaryForeignKeyTreeData();
+    public data = [];
     public paging = false;
+    public sortByName = false;
+
+    public ngOnInit(): void {
+        this.data = !this.sortByName
+                        ? SampleTestData.employeePrimaryForeignKeyTreeData()
+                        : SampleTestData.employeePrimaryForeignKeyTreeData().sort((a, b) => a.Name.localeCompare(b.Name));
+    }
 }
 
 @Component({
