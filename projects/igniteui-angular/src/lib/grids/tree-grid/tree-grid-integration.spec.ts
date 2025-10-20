@@ -199,11 +199,10 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         });
 
         it('should preserve the order of records on inner levels', () => {
+            fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.componentInstance.sortByName = true;
             fix.detectChanges();
-            treeGrid.columns[0].hidden = true;
-            treeGrid.columns[1].hidden = true;
-            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
 
             const expectedFlatData = [
                 {
