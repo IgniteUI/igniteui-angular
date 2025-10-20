@@ -1012,9 +1012,8 @@ $input-bottom-spacing: rem(6px);
             border-color: var-get($_theme, 'focused-border-color');
         }
 
-        // should be fixed
         @include e(notch) {
-            border-color: var-get($_theme, 'focused-border-color');
+            border-block-end-color: var-get($_theme, 'focused-border-color');
         }
 
         @include e(filler) {
