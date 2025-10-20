@@ -3718,7 +3718,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     protected getMergeCellOffset(rowData) {
         const index = rowData.dataIndex;
-        let offset = this.verticalScrollContainer.scrollPosition - this.verticalScrollContainer.getScrollForIndex(index);
+        let offset = this.verticalScrollContainer._virtScrollPosition - this.verticalScrollContainer.getScrollForIndex(index);
         if (this.hasPinnedRecords && this.isRowPinningToTop) {
             offset -= this.pinnedRowHeight;
         }
