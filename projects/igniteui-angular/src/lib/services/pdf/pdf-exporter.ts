@@ -279,8 +279,18 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                     pdf.rect(xPosition, yPosition, width, headerHeight);
                 }
 
-                // Center text in cell
-                const headerText = col.header || col.field || '';
+                // Center text in cell with truncation if needed
+                let headerText = col.header || col.field || '';
+                const maxTextWidth = width - 10; // Leave 5px padding on each side
+                
+                // Truncate text if it's too long
+                if (pdf.getTextWidth(headerText) > maxTextWidth) {
+                    while (pdf.getTextWidth(headerText + '...') > maxTextWidth && headerText.length > 0) {
+                        headerText = headerText.substring(0, headerText.length - 1);
+                    }
+                    headerText += '...';
+                }
+                
                 const textWidth = pdf.getTextWidth(headerText);
                 const textX = xPosition + (width - textWidth) / 2;
                 const textY = yPosition + headerHeight / 2 + options.fontSize / 3;
@@ -314,10 +324,19 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
         columns.forEach((col, index) => {
             const xPosition = xStart + (index * columnWidth);
-            const headerText = col.header || col.field;
+            let headerText = col.header || col.field;
             
             if (options.showTableBorders) {
                 pdf.rect(xPosition, yPosition, columnWidth, headerHeight);
+            }
+            
+            // Truncate text if it's too long
+            const maxTextWidth = columnWidth - 10; // Leave 5px padding on each side
+            if (pdf.getTextWidth(headerText) > maxTextWidth) {
+                while (pdf.getTextWidth(headerText + '...') > maxTextWidth && headerText.length > 0) {
+                    headerText = headerText.substring(0, headerText.length - 1);
+                }
+                headerText += '...';
             }
             
             // Center text in cell

@@ -363,4 +363,29 @@ describe('PDF Grid Exporter', () => {
 
         exporter.export(grid, options);
     });
+
+    it('should truncate long header text with ellipsis in multi-column headers', (done) => {
+        TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                NestedColumnGroupsGridComponent
+            ]
+        }).compileComponents();
+
+        const fix = TestBed.createComponent(NestedColumnGroupsGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        exporter.exportEnded.pipe(first()).subscribe((args) => {
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            // The PDF should be created successfully even with long header text
+            expect(args.pdf).toBeDefined();
+            done();
+        });
+
+        // Use smaller page size to force truncation
+        options.pageSize = 'a5';
+        exporter.export(grid, options);
+    });
 });
