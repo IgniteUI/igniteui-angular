@@ -193,9 +193,8 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
      */
     public forceClose(overlaySettings: OverlaySettings) {
         const info = this.overlayService.getOverlayById(this._overlayId);
-        const hasCloseAnimation = info ? info.closeAnimationPlayer : false;
 
-        if (hasCloseAnimation) {
+        if (info && info.closeAnimationPlayer) {
             info.closeAnimationPlayer.finish();
             info.closeAnimationPlayer.reset();
             info.closeAnimationPlayer = null;
