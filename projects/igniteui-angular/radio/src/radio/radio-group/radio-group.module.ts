@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { IgxRadioGroupDirective } from './radio-group.directive';
-import { IgxRadioComponent } from 'igniteui-angular/radio';
+import { IgxRadioComponent } from '../radio.component';
 
 /**
  * @hidden

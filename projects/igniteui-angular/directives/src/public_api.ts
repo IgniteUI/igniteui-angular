@@ -20,7 +20,9 @@ export {
 export * from './directives/button/icon-button.directive';
 export * from './directives/layout/layout.directive';
 export * from './directives/mask/mask.directive';
-export * from './directives/radio/public_api';
+// Note: Radio-group directive moved to radio entry point in v21.0.0
+// Users should now import from 'igniteui-angular/radio' instead
+export { IgxRadioGroupDirective, IChangeRadioEventArgs } from 'igniteui-angular/radio';
 export * from './directives/ripple/ripple.directive';
 export * from './directives/scroll-inertia/scroll_inertia.directive';
 export * from './directives/size/ig-size.directive';
@@ -50,7 +52,7 @@ export * from './directives/for-of/for_of.module';
 export * from './directives/form-control/form-control.module';
 export * from './directives/layout/layout.module';
 export * from './directives/mask/mask.module';
-export * from './directives/radio/radio-group.module';
+export { IgxRadioModule } from 'igniteui-angular/radio';
 export * from './directives/ripple/ripple.module';
 export * from './directives/scroll-inertia/scroll_inertia.module';
 export * from './directives/text-highlight/text-highlight.module';
