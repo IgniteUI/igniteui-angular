@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { fromEvent, noop, Subject, takeUntil } from 'rxjs';
-import { IgxRadioComponent } from '../../radio/radio.component';
+import { IgxRadioComponent } from 'igniteui-angular/radio';
 import { IgxDirectionality } from 'igniteui-angular/core';
 import { IBaseEventArgs } from 'igniteui-angular/core';
 

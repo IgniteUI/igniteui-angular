@@ -13,7 +13,7 @@ import { isDate, PlatformUtil } from 'igniteui-angular/core';
 import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-editor.common';
 import { noop } from 'rxjs';
 import { DatePartDeltas } from './date-time-editor.common';
-import { DateTimeUtil } from '../../date-common/util/date-time.util';
+import { DateTimeUtil } from 'igniteui-angular/core';
 
 /**
  * Date Time Editor provides a functionality to input, edit and format date and time.
