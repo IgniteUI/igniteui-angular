@@ -1,5 +1,5 @@
 import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Inject, Input, NgZone, Output, QueryList, booleanAttribute, forwardRef, DOCUMENT } from '@angular/core';
-import { DragDirection, IDragMoveEventArgs, IDragStartEventArgs, IgxDragDirective, IgxDragIgnoreDirective } from '../directives/drag-drop/drag-drop.directive';
+import { DragDirection, IDragMoveEventArgs, IDragStartEventArgs, IgxDragDirective, IgxDragIgnoreDirective } from 'igniteui-angular/directives';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 import { take } from 'rxjs';
 

@@ -1,6 +1,6 @@
 import { Component, HostBinding, Input } from '@angular/core';
-import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from 'igniteui-angular/core';
+import { getCurrentResourceStrings } from 'igniteui-angular/core';
 
 @Component({
     selector: 'igx-query-builder-header',

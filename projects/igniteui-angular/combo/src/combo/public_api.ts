@@ -1,7 +1,7 @@
-import { IgxHintDirective } from '../directives/hint/hint.directive';
-import { IgxLabelDirective } from '../directives/label/label.directive';
-import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
-import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+import { IgxHintDirective } from 'igniteui-angular/directives';
+import { IgxLabelDirective } from 'igniteui-angular/directives';
+import { IgxPrefixDirective } from 'igniteui-angular/directives';
+import { IgxSuffixDirective } from 'igniteui-angular/directives';
 import { IgxComboComponent } from './combo.component';
 import {
     IgxComboAddItemDirective,

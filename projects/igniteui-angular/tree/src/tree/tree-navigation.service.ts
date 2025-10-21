@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { IgxTree, IgxTreeNode, IgxTreeSelectionType } from './common';
-import { NAVIGATION_KEYS } from '../core/utils';
+import { NAVIGATION_KEYS } from 'igniteui-angular/core';
 import { IgxTreeService } from './tree.service';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { Subject } from 'rxjs';

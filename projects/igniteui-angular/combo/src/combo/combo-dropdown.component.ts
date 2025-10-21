@@ -8,9 +8,9 @@ import { DropDownActionKey } from '../drop-down/drop-down.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
-import { IgxSelectionAPIService } from '../core/selection';
+import { IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IgxComboItemComponent } from './combo-item.component';
-import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxToggleDirective } from 'igniteui-angular/directives';
 
 /** @hidden */
 @Component({

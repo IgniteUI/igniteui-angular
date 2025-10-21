@@ -9,13 +9,13 @@ import {
     IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
 } from '../input-group/public_api';
 import { PickerInteractionMode } from '../date-common/types';
-import { PlatformUtil } from '../core/utils';
-import { DatePart, IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
+import { PlatformUtil } from 'igniteui-angular/core';
+import { DatePart, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxItemListDirective, IgxTimeItemDirective } from './time-picker.directives';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-common/public_api';
 import { Subscription } from 'rxjs';
-import { HammerGesturesManager } from '../core/touch';
-import { HammerOptions } from '../core/touch-annotations';
+import { HammerGesturesManager } from 'igniteui-angular/core';
+import { HammerOptions } from 'igniteui-angular/core';
 import { registerLocaleData } from "@angular/common";
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";

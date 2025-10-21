@@ -4,9 +4,9 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSnackbarComponent } from './snackbar.component';
 import { useAnimation } from '@angular/animations';
-import { HorizontalAlignment, PositionSettings, VerticalAlignment } from '../services/public_api';
+import { HorizontalAlignment, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
 import { slideInLeft, slideInRight } from 'igniteui-angular/animations';
-import { IgxButtonDirective } from '../directives/button/button.directive';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
 
 describe('IgxSnackbar', () => {
     beforeEach(waitForAsync(() => {

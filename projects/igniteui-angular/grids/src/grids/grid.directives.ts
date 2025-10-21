@@ -1,5 +1,5 @@
 import { Directive, ElementRef, Renderer2, NgZone, HostBinding, TemplateRef } from '@angular/core';
-import { IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
+import { IgxDropDirective } from 'igniteui-angular/directives';
 import { IgxColumnMovingDragDirective } from './moving/moving.drag.directive';
 import { IgxGroupByAreaDirective } from './grouping/group-by-area.directive';
 import {

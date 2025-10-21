@@ -15,20 +15,20 @@ import {
     ElementRef,
     booleanAttribute
 } from '@angular/core';
-import { ActionStripResourceStringsEN, IActionStripResourceStrings } from '../core/i18n/action-strip-resources';
+import { ActionStripResourceStringsEN, IActionStripResourceStrings } from 'igniteui-angular/core';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { CloseScrollStrategy, OverlaySettings } from 'igniteui-angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions/grid-actions-base.directive';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
-import { IgxIconComponent } from '../icon/icon.component';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
-import { IgxToggleActionDirective } from '../directives/toggle/toggle.directive';
-import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
+import { IgxToggleActionDirective } from 'igniteui-angular/directives';
+import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { NgTemplateOutlet } from '@angular/common';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
-import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
+import { getCurrentResourceStrings } from 'igniteui-angular/core';
+import { IgxIconButtonDirective } from 'igniteui-angular/directives';
 import { IgxActionStripToken } from './token';
-import { trackByIdentity } from '../core/utils';
+import { trackByIdentity } from 'igniteui-angular/core';
 
 @Directive({
     selector: '[igxActionStripMenuItem]',

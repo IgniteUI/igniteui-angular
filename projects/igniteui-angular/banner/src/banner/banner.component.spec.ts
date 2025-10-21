@@ -3,7 +3,7 @@ import { TestBed, ComponentFixture, tick, fakeAsync, waitForAsync } from '@angul
 import { By } from '@angular/platform-browser';
 import { IgxBannerComponent } from './banner.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxIconComponent } from '../icon/icon.component';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxBannerActionsDirective } from './banner.directives';
 import { IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent } from '../card/card.component';
 import { IgxAvatarComponent } from '../avatar/avatar.component';

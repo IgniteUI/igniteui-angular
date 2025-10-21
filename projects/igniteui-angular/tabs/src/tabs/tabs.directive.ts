@@ -5,10 +5,10 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Direction, IgxCarouselComponentBase } from '../carousel/carousel-base';
-import { IBaseEventArgs } from '../core/utils';
-import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
-import { AnimationService } from '../services/animation/animation';
-import { IgxDirectionality } from '../services/direction/directionality';
+import { IBaseEventArgs } from 'igniteui-angular/core';
+import { IgxAngularAnimationService } from 'igniteui-angular/core';
+import { AnimationService } from 'igniteui-angular/core';
+import { IgxDirectionality } from 'igniteui-angular/core';
 import { IgxTabItemDirective } from './tab-item.directive';
 import { IgxTabContentBase, IgxTabsBase } from './tabs.base';
 

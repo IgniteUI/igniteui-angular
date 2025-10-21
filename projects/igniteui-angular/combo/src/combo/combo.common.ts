@@ -29,11 +29,11 @@ import { AbstractControl, ControlValueAccessor, NgControl } from '@angular/forms
 import { caseSensitive } from '@igniteui/material-icons-extended';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IgxSelectionAPIService } from '../core/selection';
-import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs, IBaseEventArgs, rem } from '../core/utils';
+import { IgxSelectionAPIService } from 'igniteui-angular/core';
+import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs, IBaseEventArgs, rem } from 'igniteui-angular/core';
 import { SortingDirection } from '../data-operations/sorting-strategy';
-import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { IgxIconService } from '../icon/icon.service';
+import { IForOfState, IgxForOfDirective } from 'igniteui-angular/directives';
+import { IgxIconService } from 'igniteui-angular/icon';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/inputGroupType';
 import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings } from 'igniteui-angular/core';
@@ -44,8 +44,8 @@ import {
     IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboHeaderItemDirective, IgxComboItemDirective, IgxComboToggleIconDirective
 } from './combo.directives';
 import { IComboItemAdditionEvent, IComboSearchInputEventArgs } from './public_api';
-import { ComboResourceStringsEN, IComboResourceStrings } from '../core/i18n/combo-resources';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { ComboResourceStringsEN, IComboResourceStrings } from 'igniteui-angular/core';
+import { getCurrentResourceStrings } from 'igniteui-angular/core';
 import { isEqual } from 'lodash-es';
 
 export const IGX_COMBO_COMPONENT = /*@__PURE__*/new InjectionToken<IgxComboBase>('IgxComboComponentToken');

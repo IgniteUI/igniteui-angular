@@ -9,8 +9,8 @@ import {
     ViewChild
 } from '@angular/core';
 
-import { normalizeURI } from '../core/utils';
-import { IgxIconComponent } from '../icon/icon.component';
+import { normalizeURI } from 'igniteui-angular/core';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 
 let NEXT_ID = 0;
 export const IgxAvatarSize = {

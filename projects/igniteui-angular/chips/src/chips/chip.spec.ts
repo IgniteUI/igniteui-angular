@@ -8,8 +8,8 @@ import { IgxLabelDirective } from './../directives/label/label.directive';
 import { IgxSuffixDirective } from './../directives/suffix/suffix.directive';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
-import { IgxIconComponent } from '../icon/icon.component';
-import { getComponentSize } from '../core/utils';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { getComponentSize } from 'igniteui-angular/core';
 
 @Component({
     template: `

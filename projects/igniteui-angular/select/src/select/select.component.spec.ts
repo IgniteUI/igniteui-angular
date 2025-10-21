@@ -9,11 +9,11 @@ import { IgxDropDownItemComponent, ISelectionEventArgs } from '../drop-down/publ
 import { IgxHintDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../input-group/public_api';
 import { IgxSelectComponent, IgxSelectFooterDirective, IgxSelectHeaderDirective } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
-import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../services/public_api';
-import { addScrollDivToElement } from '../services/overlay/overlay.spec';
+import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from 'igniteui-angular/core';
+import { addScrollDivToElement } from 'igniteui-angular/core';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
-import { IgxButtonDirective } from '../directives/button/button.directive';
-import { IgxIconComponent } from '../icon/icon.component';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputState } from './../directives/input/input.directive';
 import { IgxSelectGroupComponent } from './select-group.component';
 import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';

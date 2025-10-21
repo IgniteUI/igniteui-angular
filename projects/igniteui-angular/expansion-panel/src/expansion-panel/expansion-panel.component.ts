@@ -11,8 +11,8 @@ import {
     Output,
     booleanAttribute
 } from '@angular/core';
-import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
-import { AnimationService } from '../services/animation/animation';
+import { IgxAngularAnimationService } from 'igniteui-angular/core';
+import { AnimationService } from 'igniteui-angular/core';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
 import {

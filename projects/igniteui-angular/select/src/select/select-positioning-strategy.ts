@@ -1,9 +1,9 @@
-import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Util, ConnectedFit, Point  } from '../services/overlay/utilities';
-import { IPositionStrategy } from '../services/overlay/position';
+import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Util, ConnectedFit, Point  } from 'igniteui-angular/core';
+import { IPositionStrategy } from 'igniteui-angular/core';
 
 import { IgxSelectBase } from './select.common';
-import { BaseFitPositionStrategy } from '../services/overlay/position/base-fit-position-strategy';
-import { PlatformUtil } from '../core/utils';
+import { BaseFitPositionStrategy } from 'igniteui-angular/core';
+import { PlatformUtil } from 'igniteui-angular/core';
 import { Optional } from '@angular/core';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 

@@ -16,7 +16,7 @@ import { IgxPivotGridComponent } from './pivot-grid/pivot-grid.component';
 import { IPivotConfiguration, IPivotDimension } from './pivot-grid/pivot-grid.interface'
 import { PivotUtil } from './pivot-grid/pivot-util';
 import { IgxPivotDateDimension } from './pivot-grid/pivot-grid-dimensions';
-import { cloneArray, cloneValue } from '../core/utils';
+import { cloneArray, cloneValue } from 'igniteui-angular/core';
 import { IgxColumnLayoutComponent } from './columns/column-layout.component';
 import { recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 

@@ -6,7 +6,7 @@ import { IgxPaginatorComponent, IgxPaginatorContentDirective } from './paginator
 import { GridFunctions } from '../test-utils/grid-functions.spec';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { first } from 'rxjs/operators';
-import { IgxButtonDirective } from '../directives/button/button.directive';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
 
 describe('IgxPaginator with default settings', () => {
     beforeEach(waitForAsync(() => {

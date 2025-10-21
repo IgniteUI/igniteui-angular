@@ -14,10 +14,10 @@ import {
     OnDestroy,
     OnInit
 } from '@angular/core';
-import { HammerGesturesManager } from '../core/touch';
+import { HammerGesturesManager } from 'igniteui-angular/core';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
-import { HammerInput, HammerOptions } from '../core/touch-annotations';
+import { HammerInput, HammerOptions } from 'igniteui-angular/core';
 
 /** @hidden */
 @Directive({

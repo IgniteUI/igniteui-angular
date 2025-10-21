@@ -21,7 +21,7 @@ import {
     IgxProgressBarTextTemplateDirective,
     IgxProgressBarGradientDirective,
 } from './progressbar.common';
-import { IBaseEventArgs } from '../core/utils';
+import { IBaseEventArgs } from 'igniteui-angular/core';
 const ONE_PERCENT = 0.01;
 const MIN_VALUE = 0;
 

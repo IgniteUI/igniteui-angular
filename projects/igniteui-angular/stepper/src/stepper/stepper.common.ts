@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, TemplateRef } from '@angular/core';
-import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from 'igniteui-angular/core';
 import { IgxStepperComponent } from './stepper.component';
 import { IgxStepComponent } from './step/step.component';
 import {

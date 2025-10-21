@@ -10,7 +10,7 @@ import { IgxTreeService } from './tree.service';
 import { IgxTreeComponent } from './tree.component';
 import { IgxTree, IgxTreeNode, IgxTreeSelectionType } from './common';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
-import { PlatformUtil } from '../core/utils';
+import { PlatformUtil } from 'igniteui-angular/core';
 
 describe('IgxTree - Navigation #treeView', () => {
 

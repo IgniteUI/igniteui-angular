@@ -30,27 +30,27 @@ import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } f
 import { noop } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { EditorProvider } from '../core/edit-provider';
-import { IgxSelectionAPIService } from '../core/selection';
-import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
-import { IgxLabelDirective } from '../directives/label/label.directive';
+import { EditorProvider } from 'igniteui-angular/core';
+import { IgxSelectionAPIService } from 'igniteui-angular/core';
+import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from 'igniteui-angular/core';
+import { IgxLabelDirective } from 'igniteui-angular/directives';
 import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs, Navigate } from '../drop-down/drop-down.common';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
-import { AbsoluteScrollStrategy } from '../services/overlay/scroll/absolute-scroll-strategy';
-import { OverlaySettings } from '../services/overlay/utilities';
+import { AbsoluteScrollStrategy } from 'igniteui-angular/core';
+import { OverlaySettings } from 'igniteui-angular/core';
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { SelectPositioningStrategy } from './select-positioning-strategy';
 import { IgxSelectBase } from './select.common';
 import { IgxHintDirective, IgxInputGroupType, IgxPrefixDirective, IGX_INPUT_GROUP_TYPE } from 'igniteui-angular/input-group';
-import { ToggleViewCancelableEventArgs, ToggleViewEventArgs, IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { IgxOverlayService } from '../services/overlay/overlay';
-import { IgxIconComponent } from '../icon/icon.component';
-import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+import { ToggleViewCancelableEventArgs, ToggleViewEventArgs, IgxToggleDirective } from 'igniteui-angular/directives';
+import { IgxOverlayService } from 'igniteui-angular/core';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxSuffixDirective } from 'igniteui-angular/directives';
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
-import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
-import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
+import { IgxInputDirective, IgxInputState } from 'igniteui-angular/directives';
+import { IgxReadOnlyInputDirective } from 'igniteui-angular/directives';
 
 /** @hidden @internal */
 @Directive({

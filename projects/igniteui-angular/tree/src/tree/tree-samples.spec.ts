@@ -2,7 +2,7 @@ import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { IgxTreeComponent, IgxTreeExpandIndicatorDirective, IgxTreeNodeComponent, IgxTreeNodeLinkDirective } from './public_api';
 import { HIERARCHICAL_SAMPLE_DATA } from 'src/app/shared/sample-data';
 import { NgTemplateOutlet } from '@angular/common';
-import { IgxIconComponent } from '../icon/icon.component';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 
 @Component({
     template: `

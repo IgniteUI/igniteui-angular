@@ -1,6 +1,6 @@
 import { Directive, Input, OnDestroy, TemplateRef } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
-import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
+import { IgxDragDirective } from 'igniteui-angular/directives';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from './common/events';
 import { IgxGridEmptyTemplateContext, IgxGridRowDragGhostContext, RowType } from './common/grid.interface';
 

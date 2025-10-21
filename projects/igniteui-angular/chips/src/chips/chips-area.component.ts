@@ -21,10 +21,10 @@ import {
     IChipEnterDragAreaEventArgs,
     IBaseChipEventArgs
 } from './chip.component';
-import { IDropBaseEventArgs, IDragBaseEventArgs } from '../directives/drag-drop/drag-drop.directive';
+import { IDropBaseEventArgs, IDragBaseEventArgs } from 'igniteui-angular/directives';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { rem } from '../core/utils';
+import { rem } from 'igniteui-angular/core';
 
 export interface IBaseChipsAreaEventArgs {
     originalEvent: IDragBaseEventArgs | IDropBaseEventArgs | KeyboardEvent | MouseEvent | TouchEvent;

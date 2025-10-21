@@ -18,19 +18,19 @@ import {
     Inject,
     DOCUMENT
 } from '@angular/core';
-import { IgxToggleDirective, ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
+import { IgxToggleDirective, ToggleViewEventArgs } from 'igniteui-angular/directives';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownBaseDirective } from './drop-down.base';
 import { DropDownActionKey, Navigate } from './drop-down.common';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down.common';
 import { ISelectionEventArgs } from './drop-down.common';
-import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
-import { IgxSelectionAPIService } from '../core/selection';
+import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from 'igniteui-angular/core';
+import { IgxSelectionAPIService } from 'igniteui-angular/core';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
-import { IgxForOfToken } from '../directives/for-of/for_of.directive';
+import { IgxForOfToken } from 'igniteui-angular/directives';
 import { take } from 'rxjs/operators';
-import { OverlaySettings } from '../services/overlay/utilities';
+import { OverlaySettings } from 'igniteui-angular/core';
 import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
 
 /**

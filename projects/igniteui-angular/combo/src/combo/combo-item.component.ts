@@ -9,8 +9,8 @@ import {
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
 import { IGX_DROPDOWN_BASE, IDropDownBase, Navigate } from '../drop-down/drop-down.common';
 import { IgxComboAPIService } from './combo.api';
-import { IgxSelectionAPIService } from '../core/selection';
-import { rem } from '../core/utils';
+import { IgxSelectionAPIService } from 'igniteui-angular/core';
+import { rem } from 'igniteui-angular/core';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 
 /** @hidden */

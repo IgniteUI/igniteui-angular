@@ -1,4 +1,4 @@
-import { IBaseEventArgs } from '../core/utils';
+import { IBaseEventArgs } from 'igniteui-angular/core';
 
 /**
  * Provides information about date picker reference and its previously valid value

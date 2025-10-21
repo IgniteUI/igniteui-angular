@@ -14,14 +14,14 @@ import { fromEvent, merge, MonoTypeOperatorFunction, noop, Subscription } from '
 import { filter, takeUntil } from 'rxjs/operators';
 
 import { CalendarSelection, IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from 'igniteui-angular/calendar';
-import { DateRangeDescriptor, DateRangeType } from '../core/dates';
-import { DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } from '../core/i18n/date-range-picker-resources';
-import { clamp, IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from '../core/utils';
+import { DateRangeDescriptor, DateRangeType } from 'igniteui-angular/core';
+import { DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } from 'igniteui-angular/core';
+import { clamp, IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from 'igniteui-angular/core';
 import { IgxCalendarContainerComponent } from 'igniteui-angular/date-picker';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { IgxPickerActionsDirective } from '../date-common/picker-icons.common';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { IgxOverlayOutletDirective } from 'igniteui-angular/directives';
 import {
     IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState,
     IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxSuffixDirective
@@ -31,13 +31,13 @@ import {
     OverlaySettings, PositionSettings
 } from 'igniteui-angular/core';
 import { DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, DateRangePickerFormatPipe, CustomDateRange } from './date-range-picker-inputs.common';
-import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
-import { IgxIconComponent } from '../icon/icon.component';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { IgxPrefixDirective } from 'igniteui-angular/directives';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { getCurrentResourceStrings } from 'igniteui-angular/core';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { PickerCalendarOrientation } from '../date-common/types';
 import { calendarRange, isDateInRanges } from '../calendar/common/helpers';
-import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
+import { IgxReadOnlyInputDirective } from 'igniteui-angular/directives';
 
 const SingleInputDatesConcatenationString = ' - ';
 

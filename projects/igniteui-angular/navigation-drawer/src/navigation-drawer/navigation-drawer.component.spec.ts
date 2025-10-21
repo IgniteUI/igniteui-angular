@@ -3,10 +3,10 @@ import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
-import { IgxNavigationService } from '../core/navigation/nav.service';
-import { PlatformUtil } from '../core/utils';
+import { IgxNavigationService } from 'igniteui-angular/core';
+import { PlatformUtil } from 'igniteui-angular/core';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
-import { IgxLayoutModule } from '../directives/layout/layout.module';
+import { IgxLayoutModule } from 'igniteui-angular/directives';
 import { IgxNavbarModule } from '../navbar/navbar.module';
 import { IgxNavbarComponent } from '../navbar/navbar.component';
 

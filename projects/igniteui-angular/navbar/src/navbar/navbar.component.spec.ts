@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { IgxNavbarComponent, IgxNavbarTitleDirective, IgxNavbarActionDirective } from './navbar.component';
 
 import { wait } from '../test-utils/ui-interactions.spec';
-import { IgxIconComponent } from '../icon/icon.component';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 
 const LEFT_AREA_CSS_CLAS = '.igx-navbar__left';
 

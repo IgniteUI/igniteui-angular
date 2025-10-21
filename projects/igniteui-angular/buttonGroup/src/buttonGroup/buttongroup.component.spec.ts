@@ -3,8 +3,8 @@ import { TestBed, fakeAsync, flushMicrotasks, waitForAsync } from '@angular/core
 import { ButtonGroupAlignment, IgxButtonGroupComponent } from './buttonGroup.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { IgxButtonDirective } from '../directives/button/button.directive';
-import { IgxRadioGroupDirective } from '../directives/radio/radio-group.directive';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
+import { IgxRadioGroupDirective } from 'igniteui-angular/directives';
 import { IgxRadioComponent } from '../radio/radio.component';
 
 interface IButton {

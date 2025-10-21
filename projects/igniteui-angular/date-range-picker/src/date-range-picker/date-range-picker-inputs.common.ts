@@ -5,11 +5,11 @@ import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputGroupBase } from '../input-group/input-group.common';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
-import { isDate } from '../core/utils';
-import { IgxIconComponent } from '../icon/icon.component';
-import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
-import { IgxButtonDirective } from '../directives/button/button.directive';
-import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
+import { isDate } from 'igniteui-angular/core';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxSuffixDirective } from 'igniteui-angular/directives';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
+import { IgxPrefixDirective } from 'igniteui-angular/directives';
 import { NgTemplateOutlet, NgClass } from '@angular/common';
 
 /** Represents a range between two dates. */

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { first, throttleTime } from 'rxjs/operators';
-import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { IgxForOfDirective } from 'igniteui-angular/directives';
 import { GridType } from './common/grid.interface';
 import {
     NAVIGATION_KEYS,
@@ -11,7 +11,7 @@ import {
     HEADER_KEYS,
     ROW_ADD_KEYS,
     PlatformUtil
-} from '../core/utils';
+} from 'igniteui-angular/core';
 import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/enums';
 import { IActiveNodeChangeEventArgs } from './common/events';
 import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';

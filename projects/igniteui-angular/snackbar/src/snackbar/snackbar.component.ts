@@ -10,9 +10,9 @@ import {
 import { takeUntil } from 'rxjs/operators';
 import { ContainerPositionStrategy, GlobalPositionStrategy, HorizontalAlignment,
     PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
-import { IgxNotificationsDirective } from '../directives/notification/notifications.directive';
-import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
-import { IgxButtonDirective } from '../directives/button/button.directive';
+import { IgxNotificationsDirective } from 'igniteui-angular/directives';
+import { ToggleViewEventArgs } from 'igniteui-angular/directives';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
 let NEXT_ID = 0;

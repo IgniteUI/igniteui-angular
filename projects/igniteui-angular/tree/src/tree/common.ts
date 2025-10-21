@@ -1,5 +1,5 @@
 import { ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef } from '@angular/core';
-import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from 'igniteui-angular/core';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 
 // Component interfaces

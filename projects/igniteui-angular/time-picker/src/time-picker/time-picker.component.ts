@@ -28,7 +28,7 @@ import {
 } from '@angular/forms';
 
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
-import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
+import { IgxInputDirective, IgxInputState } from 'igniteui-angular/directives';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from 'igniteui-angular/input-group';
 import {
     IgxItemListDirective,
@@ -36,31 +36,31 @@ import {
 } from './time-picker.directives';
 import { Subscription, noop, fromEvent } from 'rxjs';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
-import { AbsoluteScrollStrategy } from '../services/overlay/scroll';
-import { AutoPositionStrategy } from '../services/overlay/position';
-import { OverlaySettings } from '../services/overlay/utilities';
+import { AbsoluteScrollStrategy } from 'igniteui-angular/core';
+import { AutoPositionStrategy } from 'igniteui-angular/core';
+import { OverlaySettings } from 'igniteui-angular/core';
 import { takeUntil } from 'rxjs/operators';
-import { IgxButtonDirective } from '../directives/button/button.directive';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
 
-import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-time-editor.directive';
-import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from '../core/i18n/time-picker-resources';
-import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs } from '../core/utils';
+import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
+import { IgxToggleDirective } from 'igniteui-angular/directives';
+import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from 'igniteui-angular/core';
+import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs } from 'igniteui-angular/core';
 import { PickerInteractionMode } from '../date-common/types';
-import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
-import { IgxLabelDirective } from '../directives/label/label.directive';
+import { IgxTextSelectionDirective } from 'igniteui-angular/directives';
+import { IgxLabelDirective } from 'igniteui-angular/directives';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { DatePart, DatePartDeltas } from 'igniteui-angular/directives';
 import { PickerHeaderOrientation } from '../date-common/types';
 import { IgxPickerActionsDirective, IgxPickerClearComponent } from '../date-common/picker-icons.common';
 import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';
-import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
-import { IgxIconComponent } from '../icon/icon.component';
-import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
-import { IgxDividerDirective } from '../directives/divider/divider.directive';
-import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
+import { IgxSuffixDirective } from 'igniteui-angular/directives';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxPrefixDirective } from 'igniteui-angular/directives';
+import { getCurrentResourceStrings } from 'igniteui-angular/core';
+import { IgxDividerDirective } from 'igniteui-angular/directives';
+import { IgxReadOnlyInputDirective } from 'igniteui-angular/directives';
 
 let NEXT_ID = 0;
 export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {

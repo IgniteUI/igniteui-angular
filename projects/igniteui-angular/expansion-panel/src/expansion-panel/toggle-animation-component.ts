@@ -3,8 +3,8 @@ import { Directive, ElementRef, EventEmitter, Inject, OnDestroy } from '@angular
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
-import { AnimationPlayer, AnimationService } from '../services/animation/animation';
+import { IgxAngularAnimationService } from 'igniteui-angular/core';
+import { AnimationPlayer, AnimationService } from 'igniteui-angular/core';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 
 /**@hidden @internal */

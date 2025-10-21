@@ -43,15 +43,15 @@ import {
 import { fromEvent, Subscription, noop, MonoTypeOperatorFunction } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
-import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
-import { DatePickerResourceStringsEN, IDatePickerResourceStrings } from '../core/i18n/date-picker-resources';
-import { IBaseCancelableBrowserEventArgs, isDate, PlatformUtil } from '../core/utils';
+import { DateRangeDescriptor, DateRangeType } from 'igniteui-angular/core';
+import { DatePickerResourceStringsEN, IDatePickerResourceStrings } from 'igniteui-angular/core';
+import { IBaseCancelableBrowserEventArgs, isDate, PlatformUtil } from 'igniteui-angular/core';
 import { IgxCalendarContainerComponent } from './calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { IgxPickerActionsDirective } from 'igniteui-angular/core';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { DatePart, DatePartDeltas, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
-import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { IgxOverlayOutletDirective } from 'igniteui-angular/directives';
 import {
     AbsoluteScrollStrategy,
     AutoPositionStrategy,
@@ -61,12 +61,12 @@ import {
     OverlaySettings
 } from 'igniteui-angular/core';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
-import { IgxIconComponent } from '../icon/icon.component';
-import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxTextSelectionDirective } from 'igniteui-angular/directives';
+import { getCurrentResourceStrings } from 'igniteui-angular/core';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { PickerCalendarOrientation } from '../date-common/types';
-import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
+import { IgxReadOnlyInputDirective } from 'igniteui-angular/directives';
 
 let NEXT_ID = 0;
 

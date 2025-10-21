@@ -16,8 +16,8 @@ import {
     IgxListBaseDirective
 } from './list.common';
 
-import { HammerGesturesManager } from '../core/touch';
-import { rem } from '../core/utils';
+import { HammerGesturesManager } from 'igniteui-angular/core';
+import { rem } from 'igniteui-angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
 /**

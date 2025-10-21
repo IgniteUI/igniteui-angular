@@ -33,22 +33,22 @@ import {
     ViewContainerRef,
     DOCUMENT
 } from '@angular/core';
-import { areEqualArrays, columnFieldPath, formatDate, resizeObservable } from '../core/utils';
+import { areEqualArrays, columnFieldPath, formatDate, resizeObservable } from 'igniteui-angular/core';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
-import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, PlatformUtil } from '../core/utils';
+import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, PlatformUtil } from 'igniteui-angular/core';
 import { DataUtil, GridColumnDataType } from '../data-operations/data-util';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { IForOfDataChangeEventArgs, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
-import { IgxTextHighlightService } from '../directives/text-highlight/text-highlight.service';
+import { IForOfDataChangeEventArgs, IgxGridForOfDirective } from 'igniteui-angular/directives';
+import { IgxTextHighlightService } from 'igniteui-angular/directives';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { IgxGridBodyDirective, RowEditPositionStrategy } from './grid.common';
 import type { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
 import { IgxToolbarToken } from './toolbar/token';
 import { IgxRowDirective } from './row.directive';
-import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxOverlayOutletDirective, IgxToggleDirective } from 'igniteui-angular/directives';
 import {
     FilteringExpressionsTree, IFilteringExpressionsTree, FilteringExpressionsTreeType
 } from '../data-operations/filtering-expressions-tree';
@@ -66,15 +66,15 @@ import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/base/grid-filtering-cell.component';
 import { WatchChanges } from './watch-changes';
 import { IgxGridHeaderGroupComponent } from './headers/grid-header-group.component';
-import { GridResourceStringsEN, IGridResourceStrings } from '../core/i18n/grid-resources';
+import { GridResourceStringsEN, IGridResourceStrings } from 'igniteui-angular/core';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { IgxEditRow, IgxCell } from './common/crud.service';
-import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
+import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from 'igniteui-angular/directives';
 import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-style/excel-style-search.component';
 import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
-import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
+import { CharSeparatedValueData } from 'igniteui-angular/core';
 import { IgxColumnResizingService } from './resizing/resizing.service';
 import { FilteringStrategy, IFilteringStrategy } from '../data-operations/filtering-strategy';
 import {
@@ -165,15 +165,15 @@ import type { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IgxPaginatorToken } from '../paginator/token';
 import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
-import { IgxFlatTransactionFactory, TRANSACTION_TYPE } from '../services/transaction/transaction-factory.service';
+import { IgxFlatTransactionFactory, TRANSACTION_TYPE } from 'igniteui-angular/core';
 import { ISortingOptions } from './columns/interfaces';
 import { GridSelectionRange, IgxGridTransaction } from './common/types';
-import { VerticalAlignment, HorizontalAlignment, PositionSettings, OverlaySettings } from '../services/overlay/utilities';
-import { IgxOverlayService } from '../services/overlay/overlay';
-import { ConnectedPositioningStrategy } from '../services/overlay/position/connected-positioning-strategy';
-import { ContainerPositionStrategy } from '../services/overlay/position/container-position-strategy';
-import { AbsoluteScrollStrategy } from '../services/overlay/scroll/absolute-scroll-strategy';
-import { Action, StateUpdateEvent, TransactionEventOrigin } from '../services/transaction/transaction';
+import { VerticalAlignment, HorizontalAlignment, PositionSettings, OverlaySettings } from 'igniteui-angular/core';
+import { IgxOverlayService } from 'igniteui-angular/core';
+import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
+import { ContainerPositionStrategy } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy } from 'igniteui-angular/core';
+import { Action, StateUpdateEvent, TransactionEventOrigin } from 'igniteui-angular/core';
 import { ISortingExpression } from '../data-operations/sorting-strategy';
 import { IGridSortingStrategy } from './common/strategy';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/excel-style-filtering.component';
@@ -182,7 +182,7 @@ import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-ro
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getCurrentResourceStrings } from 'igniteui-angular/core';
 import { isTree, recreateTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 import { getUUID } from './common/random';
 import { DefaultMergeStrategy, IGridMergeStrategy } from '../data-operations/merge-strategy';

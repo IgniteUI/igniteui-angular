@@ -1,6 +1,6 @@
 import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
 import { Directive, Input, HostBinding, HostListener, ElementRef, Optional, Inject, Output, EventEmitter, booleanAttribute, DoCheck } from '@angular/core';
-import { IgxSelectionAPIService } from '../core/selection';
+import { IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
 
 let NEXT_ID = 0;

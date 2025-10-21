@@ -6,12 +6,12 @@ import {
 
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { IgxSelectionAPIService } from '../core/selection';
-import { IBaseEventArgs, IBaseCancelableEventArgs, CancelableEventArgs } from '../core/utils';
-import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { IgxIconService } from '../icon/icon.service';
-import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
-import { IgxButtonDirective } from '../directives/button/button.directive';
+import { IgxSelectionAPIService } from 'igniteui-angular/core';
+import { IBaseEventArgs, IBaseCancelableEventArgs, CancelableEventArgs } from 'igniteui-angular/core';
+import { IgxForOfDirective } from 'igniteui-angular/directives';
+import { IgxIconService } from 'igniteui-angular/icon';
+import { IgxRippleDirective } from 'igniteui-angular/directives';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
@@ -19,13 +19,13 @@ import { IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
 import { IGX_COMBO_COMPONENT, IgxComboBaseDirective } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
-import { EditorProvider } from '../core/edit-provider';
+import { EditorProvider } from 'igniteui-angular/core';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from 'igniteui-angular/input-group';
 import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
-import { IgxIconComponent } from '../icon/icon.component';
-import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
-import { IgxInputDirective } from '../directives/input/input.directive';
-import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxSuffixDirective } from 'igniteui-angular/directives';
+import { IgxInputDirective } from 'igniteui-angular/directives';
+import { IgxReadOnlyInputDirective } from 'igniteui-angular/directives';
 
 /** Event emitted when an igx-combo's selection is changing */
 export interface IComboSelectionChangingEventArgs extends IBaseCancelableEventArgs {

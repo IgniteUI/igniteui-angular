@@ -11,19 +11,19 @@ import { IgxDatePickerComponent } from './date-picker.component';
 import {
     IgxOverlayService,
     OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings
-} from '../services/public_api';
+} from 'igniteui-angular/core';
 import { Component, DebugElement, ElementRef, EventEmitter, QueryList, Renderer2, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../date-common/types';
-import { DatePart } from '../directives/date-time-editor/date-time-editor.common';
-import { DateRangeDescriptor, DateRangeType } from '../core/dates';
-import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { DatePart } from 'igniteui-angular/directives';
+import { DateRangeDescriptor, DateRangeType } from 'igniteui-angular/core';
+import { IgxOverlayOutletDirective } from 'igniteui-angular/directives';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-common/public_api';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { registerLocaleData } from "@angular/common";
 import localeES from "@angular/common/locales/es";
 import localeBg from "@angular/common/locales/bg";
-import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
+import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
 

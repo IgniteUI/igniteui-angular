@@ -1,4 +1,4 @@
-import { IgxButtonDirective } from '../directives/button/button.directive';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxButtonGroupComponent } from './buttonGroup.component';
 
 export * from './buttonGroup.component';

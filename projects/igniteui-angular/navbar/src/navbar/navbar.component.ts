@@ -9,7 +9,7 @@ import {
     booleanAttribute
 } from '@angular/core';
 
-import { IgxIconComponent } from '../icon/icon.component';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 
 /**
  * IgxActionIcon is a container for the action nav icon of the IgxNavbar.

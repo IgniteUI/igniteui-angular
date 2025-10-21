@@ -1,6 +1,6 @@
-import { CancelableEventArgs, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs, IBaseEventArgs } from 'igniteui-angular/core';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
-import { IToggleView } from '../core/navigation/IToggleView';
+import { IToggleView } from 'igniteui-angular/core';
 import { EventEmitter, InjectionToken } from '@angular/core';
 
 /** @hidden */

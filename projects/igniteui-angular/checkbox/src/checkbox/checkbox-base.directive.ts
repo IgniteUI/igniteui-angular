@@ -17,14 +17,14 @@ import {
     AfterViewInit,
 } from '@angular/core';
 import { NgControl, Validators } from '@angular/forms';
-import { IBaseEventArgs, getComponentTheme } from '../core/utils';
+import { IBaseEventArgs, getComponentTheme } from 'igniteui-angular/core';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
     IgxTheme,
     THEME_TOKEN,
     ThemeToken,
-} from '../services/theme/theme.token';
+} from 'igniteui-angular/core';
 
 export const LabelPosition = {
     BEFORE: 'before',

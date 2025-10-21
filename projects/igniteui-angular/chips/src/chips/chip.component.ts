@@ -16,13 +16,13 @@ import {
     Inject,
     DOCUMENT
 } from '@angular/core';
-import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
-import { IBaseEventArgs } from '../core/utils';
-import { ChipResourceStringsEN, IChipResourceStrings } from '../core/i18n/chip-resources';
+import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from 'igniteui-angular/directives';
+import { IBaseEventArgs } from 'igniteui-angular/core';
+import { ChipResourceStringsEN, IChipResourceStrings } from 'igniteui-angular/core';
 import { Subject } from 'rxjs';
-import { IgxIconComponent } from '../icon/icon.component';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getCurrentResourceStrings } from 'igniteui-angular/core';
 import { Size } from '../grids/common/enums';
 
 export const IgxChipTypeVariant = {

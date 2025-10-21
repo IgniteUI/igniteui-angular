@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { IgxExpansionPanelIconDirective } from './expansion-panel.directives';
 import { IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase, IExpansionPanelCancelableEventArgs } from './expansion-panel.common';
-import { IgxIconComponent } from '../icon/icon.component';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 
 /**
  * @hidden

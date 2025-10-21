@@ -5,8 +5,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IDialogCancellableEventArgs, IDialogEventArgs, IgxDialogComponent } from './dialog.component';
 import { useAnimation } from '@angular/animations';
-import { PositionSettings, HorizontalAlignment, VerticalAlignment } from '../services/overlay/utilities';
-import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { PositionSettings, HorizontalAlignment, VerticalAlignment } from 'igniteui-angular/core';
+import { IgxToggleDirective } from 'igniteui-angular/directives';
 import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.directives';
 import { slideInTop, slideOutBottom } from 'igniteui-angular/animations';
 

@@ -27,19 +27,19 @@ import {
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CarouselResourceStringsEN, ICarouselResourceStrings } from '../core/i18n/carousel-resources';
-import { first, IBaseEventArgs, last, PlatformUtil } from '../core/utils';
-import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
-import { AnimationService } from '../services/animation/animation';
+import { CarouselResourceStringsEN, ICarouselResourceStrings } from 'igniteui-angular/core';
+import { first, IBaseEventArgs, last, PlatformUtil } from 'igniteui-angular/core';
+import { IgxAngularAnimationService } from 'igniteui-angular/core';
+import { AnimationService } from 'igniteui-angular/core';
 import { Direction, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
-import { IgxIconComponent } from '../icon/icon.component';
-import { IgxButtonDirective } from '../directives/button/button.directive';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
-import { HammerGesturesManager } from '../core/touch';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
+import { getCurrentResourceStrings } from 'igniteui-angular/core';
+import { HammerGesturesManager } from 'igniteui-angular/core';
 import { CarouselAnimationType, CarouselIndicatorsOrientation } from './enums';
-import { IgxDirectionality } from '../services/direction/directionality';
+import { IgxDirectionality } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 

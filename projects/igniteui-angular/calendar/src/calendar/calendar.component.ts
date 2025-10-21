@@ -29,7 +29,7 @@ import { IgxDaysViewComponent } from './days-view/days-view.component';
 import { interval } from 'rxjs';
 import { takeUntil, debounce, skipLast, switchMap } from 'rxjs/operators';
 import { IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar } from './months-view.pipe';
-import { IgxIconComponent } from '../icon/icon.component';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 import { areSameMonth, formatToParts, getClosestActiveDate, isDateInRanges } from './common/helpers';
 import { CalendarDay } from './common/model';
 import { IgxCalendarBaseDirective } from './calendar-base';

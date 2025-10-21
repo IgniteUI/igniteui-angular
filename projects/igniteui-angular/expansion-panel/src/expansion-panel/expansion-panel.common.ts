@@ -1,6 +1,6 @@
 import { Directive, ElementRef, EventEmitter, InjectionToken } from '@angular/core';
 import { AnimationReferenceMetadata } from '@angular/animations';
-import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
+import { CancelableEventArgs, IBaseEventArgs } from 'igniteui-angular/core';
 
 export interface IgxExpansionPanelBase {
     id: string;

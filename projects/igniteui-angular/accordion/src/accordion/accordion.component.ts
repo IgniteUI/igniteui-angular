@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ACCORDION_NAVIGATION_KEYS } from '../core/utils';
+import { ACCORDION_NAVIGATION_KEYS } from 'igniteui-angular/core';
 import {
     IExpansionPanelCancelableEventArgs,
     IExpansionPanelEventArgs, IgxExpansionPanelBase

@@ -1,14 +1,14 @@
 import { ChangeDetectorRef, Component, ContentChild, Directive, ElementRef, EventEmitter, Host, HostBinding, Input, Output, forwardRef } from '@angular/core';
 import { IPageCancellableEventArgs, IPageEventArgs } from './paginator-interfaces';
-import { IPaginatorResourceStrings, PaginatorResourceStringsEN } from '../core/i18n/paginator-resources';
-import { OverlaySettings } from '../services/overlay/utilities';
+import { IPaginatorResourceStrings, PaginatorResourceStringsEN } from 'igniteui-angular/core';
+import { OverlaySettings } from 'igniteui-angular/core';
 import { IgxSelectItemComponent } from '../select/select-item.component';
 import { FormsModule } from '@angular/forms';
 import { IgxSelectComponent } from '../select/select.component';
-import { IgxIconComponent } from '../icon/icon.component';
-import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
-import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxRippleDirective } from 'igniteui-angular/directives';
+import { getCurrentResourceStrings } from 'igniteui-angular/core';
+import { IgxIconButtonDirective } from 'igniteui-angular/directives';
 import { IgxPaginatorToken } from './token';
 
 @Directive({

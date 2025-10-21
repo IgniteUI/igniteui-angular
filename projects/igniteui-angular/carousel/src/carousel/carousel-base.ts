@@ -1,7 +1,7 @@
 import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
 import { ChangeDetectorRef, Directive, EventEmitter, Inject, OnDestroy } from '@angular/core';
-import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
-import { AnimationPlayer, AnimationService } from '../services/animation/animation';
+import { IgxAngularAnimationService } from 'igniteui-angular/core';
+import { AnimationPlayer, AnimationService } from 'igniteui-angular/core';
 import { fadeIn, slideInLeft } from 'igniteui-angular/animations';
 import { CarouselAnimationType } from './enums';
 

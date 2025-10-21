@@ -9,17 +9,17 @@ import {
     ViewChild
 } from '@angular/core';
 
-import { IgxIconComponent } from '../icon/icon.component';
-import { IToggleView } from '../core/navigation';
-import { IgxButtonDirective } from '../directives/button/button.directive';
-import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IToggleView } from 'igniteui-angular/core';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
+import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxBannerActionsDirective } from './banner.directives';
-import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
+import { CancelableEventArgs, IBaseEventArgs } from 'igniteui-angular/core';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 import { IgxExpansionPanelBodyComponent } from '../expansion-panel/expansion-panel-body.component';
 import { IgxExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
-import { BannerResourceStringsEN, IBannerResourceStrings } from '../core/i18n/banner-resources';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { BannerResourceStringsEN, IBannerResourceStrings } from 'igniteui-angular/core';
+import { getCurrentResourceStrings } from 'igniteui-angular/core';
 
 export interface BannerEventArgs extends IBaseEventArgs {
     event?: Event;

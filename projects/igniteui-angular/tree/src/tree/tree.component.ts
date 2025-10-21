@@ -29,7 +29,7 @@ import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
-import { PlatformUtil, resizeObservable } from '../core/utils';
+import { PlatformUtil, resizeObservable } from 'igniteui-angular/core';
 
 /**
  * @hidden @internal

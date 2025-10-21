@@ -3,13 +3,13 @@ import {
     Component, Input, ViewChild, ElementRef, OnDestroy, HostBinding
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
+import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from 'igniteui-angular/core';
 import { IExpressionTree } from '../data-operations/filtering-expressions-tree';
-import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { IgxOverlayOutletDirective } from 'igniteui-angular/directives';
 import { EntityType, FieldType } from '../grids/common/grid.interface';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getCurrentResourceStrings } from 'igniteui-angular/core';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
-import { IgxIconService } from '../icon/icon.service';
+import { IgxIconService } from 'igniteui-angular/icon';
 import { editor } from '@igniteui/material-icons-extended';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 import { recreateTree } from '../data-operations/expressions-tree-util';

@@ -1,7 +1,7 @@
 import { Directive } from '@angular/core';
 import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
-import { VerticalAlignment, PositionSettings, Point } from '../services/overlay/utilities';
-import { IgxForOfSyncService } from '../directives/for-of/for_of.sync.service';
+import { VerticalAlignment, PositionSettings, Point } from 'igniteui-angular/core';
+import { IgxForOfSyncService } from 'igniteui-angular/directives';
 import { scaleInVerBottom, scaleInVerTop } from 'igniteui-angular/animations';
 
 

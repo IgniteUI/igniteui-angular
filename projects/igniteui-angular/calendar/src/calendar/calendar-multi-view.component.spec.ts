@@ -6,7 +6,7 @@ import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { ymd } from '../test-utils/helper-utils.spec';
 import { IgxCalendarComponent } from './public_api';
 import { IgxDatePickerComponent } from '../date-picker/public_api';
-import { DateRangeType } from '../core/dates';
+import { DateRangeType } from 'igniteui-angular/core';
 import { HelperTestFunctions } from '../test-utils/calendar-helper-utils';
 
 describe('Multi-View Calendar - ', () => {

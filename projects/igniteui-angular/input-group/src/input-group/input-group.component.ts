@@ -13,22 +13,22 @@ import {
     DOCUMENT,
     AfterContentChecked
 } from '@angular/core';
-import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
-import { PlatformUtil, getComponentTheme } from '../core/utils';
-import { IgxButtonDirective } from '../directives/button/button.directive';
-import { IgxHintDirective } from '../directives/hint/hint.directive';
+import { IInputResourceStrings, InputResourceStringsEN } from 'igniteui-angular/core';
+import { PlatformUtil, getComponentTheme } from 'igniteui-angular/core';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
+import { IgxHintDirective } from 'igniteui-angular/directives';
 import {
     IgxInputDirective,
     IgxInputState
-} from '../directives/input/input.directive';
-import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
-import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+} from 'igniteui-angular/directives';
+import { IgxPrefixDirective } from 'igniteui-angular/directives';
+import { IgxSuffixDirective } from 'igniteui-angular/directives';
 
 import { IgxInputGroupBase } from './input-group.common';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
-import { IgxIconComponent } from '../icon/icon.component';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
-import { IgxTheme, THEME_TOKEN, ThemeToken } from '../services/theme/theme.token';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { getCurrentResourceStrings } from 'igniteui-angular/core';
+import { IgxTheme, THEME_TOKEN, ThemeToken } from 'igniteui-angular/core';
 
 @Component({
     selector: 'igx-input-group',

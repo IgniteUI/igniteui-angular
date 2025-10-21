@@ -10,8 +10,8 @@ import { takeUntil } from 'rxjs/operators';
 import { IgxCarouselComponentBase } from '../carousel/carousel-base';
 
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
-import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
-import { AnimationService } from '../services/animation/animation';
+import { IgxAngularAnimationService } from 'igniteui-angular/core';
+import { AnimationService } from 'igniteui-angular/core';
 import { IgxStepComponent } from './step/step.component';
 import {
     IgxStepper, IgxStepperOrientation, IgxStepperTitlePosition, IgxStepType,

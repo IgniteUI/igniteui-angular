@@ -15,12 +15,12 @@ import {
     booleanAttribute
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { IgxButtonDirective } from '../directives/button/button.directive';
-import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
+import { IgxRippleDirective } from 'igniteui-angular/directives';
 
 import { takeUntil } from 'rxjs/operators';
-import { IBaseEventArgs } from '../core/utils';
-import { IgxIconComponent } from '../icon/icon.component';
+import { IBaseEventArgs } from 'igniteui-angular/core';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 
 /**
  * Determines the Button Group alignment

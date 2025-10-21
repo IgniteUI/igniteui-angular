@@ -11,7 +11,7 @@ import {
     Output
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
-import { IgxNavigationService } from '../core/navigation';
+import { IgxNavigationService } from 'igniteui-angular/core';
 import {
     IgxOverlayService,
     HorizontalAlignment,
@@ -19,8 +19,8 @@ import {
     GlobalPositionStrategy,
     PositionSettings
 } from 'igniteui-angular/core';
-import { IgxNotificationsDirective } from '../directives/notification/notifications.directive';
-import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
+import { IgxNotificationsDirective } from 'igniteui-angular/directives';
+import { ToggleViewEventArgs } from 'igniteui-angular/directives';
 import { useAnimation } from '@angular/animations';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 

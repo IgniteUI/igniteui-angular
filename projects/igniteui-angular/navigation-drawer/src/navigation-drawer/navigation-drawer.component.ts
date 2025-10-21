@@ -19,12 +19,12 @@ import {
 } from '@angular/core';
 import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
-import { IgxNavigationService, IToggleView } from '../core/navigation';
-import { HammerGesturesManager } from '../core/touch';
+import { IgxNavigationService, IToggleView } from 'igniteui-angular/core';
+import { HammerGesturesManager } from 'igniteui-angular/core';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective, IgxNavDrawerItemDirective } from './navigation-drawer.directives';
-import { PlatformUtil } from '../core/utils';
+import { PlatformUtil } from 'igniteui-angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { HammerInput } from '../core/touch-annotations';
+import { HammerInput } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 /**

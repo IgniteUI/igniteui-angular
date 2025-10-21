@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { cloneArray, reverseMapper, mergeObjects } from '../core/utils';
+import { cloneArray, reverseMapper, mergeObjects } from 'igniteui-angular/core';
 import { DataUtil, GridColumnDataType } from '../data-operations/data-util';
 import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
-import { Transaction, TransactionType, State } from '../services/transaction/transaction';
+import { Transaction, TransactionType, State } from 'igniteui-angular/core';
 import { IgxCell, IgxGridCRUDService, IgxEditRow } from './common/crud.service';
 import { CellType, ColumnType, GridServiceType, GridType, RowType } from './common/grid.interface';
 import { IGridEditEventArgs, IPinRowEventArgs, IRowToggleEventArgs } from './common/events';

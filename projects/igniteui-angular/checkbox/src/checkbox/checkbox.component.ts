@@ -5,10 +5,10 @@ import {
     AfterViewInit,
     booleanAttribute,
 } from '@angular/core';
-import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
+import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { CheckboxBaseDirective } from './checkbox-base.directive';
 import { ControlValueAccessor } from '@angular/forms';
-import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
+import { EditorProvider, EDITOR_PROVIDER } from 'igniteui-angular/core';
 
 /**
  * Allows users to make a binary choice for a certain condition.

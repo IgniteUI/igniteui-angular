@@ -1,6 +1,6 @@
 
 import { Directive, ElementRef, HostBinding, HostListener } from '@angular/core';
-import { PlatformUtil } from '../core/utils';
+import { PlatformUtil } from 'igniteui-angular/core';
 import { IgxTabItemDirective } from './tab-item.directive';
 import { IgxTabHeaderBase, IgxTabsBase } from './tabs.base';
 

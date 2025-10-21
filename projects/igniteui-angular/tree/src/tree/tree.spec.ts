@@ -4,14 +4,14 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { AnimationService } from '../services/animation/animation';
+import { AnimationService } from 'igniteui-angular/core';
 import { TreeTestFunctions } from './tree-functions.spec';
 import { IgxTreeNavigationService } from './tree-navigation.service';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeComponent } from './tree.component';
 import { IgxTreeService } from './tree.service';
-import { PlatformUtil } from '../core/utils';
+import { PlatformUtil } from 'igniteui-angular/core';
 
 const TREE_ROOT_CLASS = 'igx-tree__root';
 const NODE_TAG = 'igx-tree-node';

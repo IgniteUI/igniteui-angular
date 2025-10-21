@@ -1,5 +1,5 @@
 import { Directive, TemplateRef } from '@angular/core';
-import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
+import { CancelableEventArgs, IBaseEventArgs } from 'igniteui-angular/core';
 
 export interface IPageEventArgs extends IBaseEventArgs {
     previous: number;

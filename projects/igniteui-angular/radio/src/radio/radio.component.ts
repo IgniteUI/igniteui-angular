@@ -10,10 +10,10 @@ import {
     inject
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
-import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
+import { EditorProvider, EDITOR_PROVIDER } from 'igniteui-angular/core';
+import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { CheckboxBaseDirective } from '../checkbox/checkbox-base.directive';
-import { IgxRadioGroupDirective } from '../directives/radio/radio-group.directive';
+import { IgxRadioGroupDirective } from 'igniteui-angular/directives';
 
 /**
  * **Ignite UI for Angular Radio Button** -

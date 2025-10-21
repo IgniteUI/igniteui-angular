@@ -14,14 +14,14 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IgxNavigationService, IToggleView } from '../core/navigation';
-import { IgxButtonType, IgxButtonDirective } from '../directives/button/button.directive';
-import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
-import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxNavigationService, IToggleView } from 'igniteui-angular/core';
+import { IgxButtonType, IgxButtonDirective } from 'igniteui-angular/directives';
+import { IgxRippleDirective } from 'igniteui-angular/directives';
+import { IgxToggleDirective } from 'igniteui-angular/directives';
 import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSettings } from 'igniteui-angular/core';
-import { IgxFocusDirective } from '../directives/focus/focus.directive';
-import { IgxFocusTrapDirective } from '../directives/focus-trap/focus-trap.directive';
-import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
+import { IgxFocusDirective } from 'igniteui-angular/directives';
+import { IgxFocusTrapDirective } from 'igniteui-angular/directives';
+import { CancelableEventArgs, IBaseEventArgs } from 'igniteui-angular/core';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
 let DIALOG_ID = 0;
