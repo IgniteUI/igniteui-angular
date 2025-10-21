@@ -6,7 +6,7 @@
     "start": "ng serve --open --hmr",
     "start:elements": "ng serve --project igniteui-angular-elements",
     "start:performance": "ng serve --project igniteui-angular-performance",
-    "build": "npm run build:lib && npm run build:elements && npm run build:migrations && npm run build:schematics && npm run build:i18n",
+    "build": "npm run build:lib && npm run build:elements && npm run build:schematics && npm run build:migrations && npm run build:i18n",
     "test": "ng test igniteui-angular",
     "lint": "ng lint",
     "e2e": "ng e2e",
