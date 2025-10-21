@@ -8,7 +8,7 @@
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
         @for (c of columns; track c) {
-            <igx-column width='auto' [sortable]="true" [filterable]="true" [resizable]="true" [field]="c.field" [header]="c.field">
+            <igx-column width='auto' [editable]="true" [sortable]="true" [filterable]="true" [resizable]="true" [field]="c.field" [header]="c.field">
             </igx-column>
         }
     </igx-grid>

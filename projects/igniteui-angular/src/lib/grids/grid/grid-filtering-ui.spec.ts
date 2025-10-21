@@ -44,7 +44,8 @@ import {
     IgxGridExternalESFTemplateComponent,
     IgxGridDatesFilteringComponent,
     LoadOnDemandFilterStrategy,
-    IgxGridFilteringNumericComponent
+    IgxGridFilteringNumericComponent,
+    IgxGridConditionalFilteringComponent
 } from '../../test-utils/grid-samples.spec';
 import { GridSelectionMode, FilterMode, Size } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
@@ -7082,6 +7083,27 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.filteredData.length).toEqual(2);
         }));
 
+    });
+
+    describe('IgxGrid - Conditional Filter', () => {
+        let fix: ComponentFixture<IgxGridConditionalFilteringComponent>;
+        let grid: IgxGridComponent;
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridConditionalFilteringComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+            grid.filterMode = FilterMode.excelStyleFilter;
+            fix.detectChanges();
+        }));
+
+        it('Should not throw console error on opening the drop-down.', async () => {
+            spyOn(console, 'error');
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
+            fix.detectChanges();
+            await wait(100);
+
+            expect(console.error).not.toHaveBeenCalled();
+        });
     });
 });
 
