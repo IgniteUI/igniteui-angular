@@ -326,28 +326,28 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
             // Check if this child record has its own children (next level in hierarchy)
             const childRecordIndex = allData.indexOf(childRecord);
-            const grandchildRecords: IExportRecord[] = [];
-            let grandchildOwner: string | null = null;
+            const grandchildrenByOwner = new Map<string, IExportRecord[]>();
             
             if (childRecordIndex >= 0 && childRecordIndex + 1 < allData.length) {
-                // Look for grandchildren
+                // Look for grandchildren and group them by owner (each owner represents a different child island)
                 let k = childRecordIndex + 1;
 
-                // Collect all grandchildren that belong to this child
+                // Collect all grandchildren that belong to this child, grouped by owner
                 while (k < allData.length && allData[k].level > childRecord.level) {
                     // Only include direct children (next level)
                     if (allData[k].level === childRecord.level + 1 && !allData[k].hidden) {
-                        grandchildRecords.push(allData[k]);
-                        if (!grandchildOwner) {
-                            grandchildOwner = allData[k].owner.toString();
+                        const owner = allData[k].owner.toString();
+                        if (!grandchildrenByOwner.has(owner)) {
+                            grandchildrenByOwner.set(owner, []);
                         }
+                        grandchildrenByOwner.get(owner)!.push(allData[k]);
                     }
                     k++;
                 }
             }
 
-            // If this child has grandchildren, render them as a nested child table
-            if (grandchildRecords.length > 0 && grandchildOwner) {
+            // If this child has grandchildren, render them as nested child tables (one per owner/island)
+            if (grandchildrenByOwner.size > 0) {
                 // Check if we need a new page for parent row
                 if (yPosition + rowHeight > pageHeight - margin) {
                     pdf.addPage();
@@ -361,21 +361,23 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 this.drawDataRow(pdf, childRecord, childColumns, childTableX, yPosition, childColumnWidth, rowHeight, 0, options);
                 yPosition += rowHeight;
 
-                // Recursively draw grandchildren as a nested child table
-                yPosition = this.drawHierarchicalChildren(
-                    pdf,
-                    allData,
-                    grandchildRecords,
-                    grandchildOwner,
-                    yPosition,
-                    margin,
-                    indentPerLevel + 30, // Increase indentation for next level
-                    usableWidth,
-                    pageHeight,
-                    headerHeight,
-                    rowHeight,
-                    options
-                );
+                // Recursively draw each island's grandchildren as a separate nested child table
+                for (const [grandchildOwner, grandchildRecords] of grandchildrenByOwner) {
+                    yPosition = this.drawHierarchicalChildren(
+                        pdf,
+                        allData,
+                        grandchildRecords,
+                        grandchildOwner,
+                        yPosition,
+                        margin,
+                        indentPerLevel + 30, // Increase indentation for next level
+                        usableWidth,
+                        pageHeight,
+                        headerHeight,
+                        rowHeight,
+                        options
+                    );
+                }
             } else {
                 // No grandchildren, just draw this child as a regular row
                 // Check if we need a new page
