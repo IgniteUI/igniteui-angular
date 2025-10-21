@@ -33,6 +33,7 @@ export * from './services/public_api';
 // Date common
 export { PickerInteractionMode } from './date-common/types';
 export { DatePart, DatePartInfo, DatePartDeltas } from './date-common/date-parts';
+export { DateTimeUtil } from './date-common/util/date-time.util';
 
 // Performance service
 export * from './performance.service';

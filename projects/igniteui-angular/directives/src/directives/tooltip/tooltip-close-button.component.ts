@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, HostListener, Input, TemplateRef } from '@angular/core';
-import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 import { CommonModule } from '@angular/common';
 
 @Component({

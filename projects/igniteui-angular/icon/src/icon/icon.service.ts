@@ -2,11 +2,10 @@ import { DestroyRef, Inject, Injectable, Optional, SecurityContext, DOCUMENT } f
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { HttpClient } from "@angular/common/http";
 import { Observable, Subject } from "rxjs";
-import { PlatformUtil } from "../core/utils";
+import { PlatformUtil, IgxTheme, THEME_TOKEN, ThemeToken } from "igniteui-angular/core";
 import { iconReferences } from './icon.references'
 import { IconFamily, IconMeta, FamilyMeta } from "./types";
 import type { IconType, IconReference } from './types';
-import { IgxTheme, THEME_TOKEN, ThemeToken } from "../services/theme/theme.token";
 import { IndigoIcons } from "./icons.indigo";
 
 /**

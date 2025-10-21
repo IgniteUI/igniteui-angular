@@ -1,4 +1,7 @@
 // Export services
+export * from './animation/angular-animation-player';
+export * from './animation/angular-animation-service';
+export * from './animation/animation';
 export * from './csv/csv-exporter';
 export * from './csv/csv-exporter-options';
 export * from './excel/excel-exporter';

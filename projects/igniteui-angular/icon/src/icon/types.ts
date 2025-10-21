@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
-import { IgxTheme } from "../services/theme/theme.token";
+import { IgxTheme } from "igniteui-angular/core";
 
 // Exported internal types
 export type IconThemeKey = IgxTheme | 'default';
