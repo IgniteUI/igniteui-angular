@@ -1,4 +1,4 @@
-import { ColumnType } from 'igniteui-angular/grids/common/grid.interface';
+import { ColumnType } from 'igniteui-angular/grids';
 import { ISortingExpression } from './sorting-strategy';
 
 /**

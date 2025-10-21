@@ -1,5 +1,5 @@
 import { columnFieldPath, parseDate, resolveNestedPath } from '../core/utils';
-import { GridType } from 'igniteui-angular/grids/common/grid.interface';
+import { GridType } from 'igniteui-angular/grids';
 
 
 

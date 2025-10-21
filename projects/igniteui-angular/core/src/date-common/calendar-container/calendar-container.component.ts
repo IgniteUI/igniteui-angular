@@ -8,11 +8,10 @@ import {
 } from '@angular/core';
 import { IBaseEventArgs } from '../../core/utils';
 import { PickerInteractionMode } from '../../date-common/types';
-import { IgxButtonDirective } from 'igniteui-angular/directives/button/button.directive';
-import { IgxRippleDirective } from 'igniteui-angular/directives/ripple/ripple.directive';
+import { IgxButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxPickerActionsDirective } from '../picker-icons.common';
-import { IgxCalendarComponent } from '../../calendar/calendar.component';
-import { IgxDividerDirective } from "../../directives/divider/divider.directive";
+import { IgxCalendarComponent } from 'igniteui-angular/calendar';
+import { IgxDividerDirective } from 'igniteui-angular/directives';
 import { CustomDateRange, DateRange } from '../../date-range-picker/date-range-picker-inputs.common';
 import { IDateRangePickerResourceStrings } from '../../core/i18n/date-range-picker-resources';
 import { IgxPredefinedRangesAreaComponent } from '../../date-range-picker/predefined-ranges/predefined-ranges-area.component';

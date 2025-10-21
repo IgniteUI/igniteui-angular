@@ -1,7 +1,7 @@
 import { parseDate } from '../core/utils';
-import { PivotGridType } from 'igniteui-angular/grids/common/grid.interface';
-import { IPivotGridRecord } from 'igniteui-angular/grids/pivot-grid/pivot-grid.interface';
-import { PivotUtil } from 'igniteui-angular/grids/pivot-grid/pivot-util';
+import { PivotGridType } from 'igniteui-angular/grids';
+import { IPivotGridRecord } from 'igniteui-angular/grids';
+import { PivotUtil } from 'igniteui-angular/grids';
 import { GridColumnDataType } from './data-util';
 import { DefaultSortingStrategy, SortingDirection } from './sorting-strategy';
 

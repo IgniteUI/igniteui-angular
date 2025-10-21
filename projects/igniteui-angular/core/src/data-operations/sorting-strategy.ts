@@ -1,6 +1,6 @@
 import type { KeyOfOrString } from '../core/types';
 import { IBaseEventArgs } from '../core/utils';
-import { GridType } from 'igniteui-angular/grids/common/grid.interface';
+import { GridType } from 'igniteui-angular/grids';
 
 /* mustCoerceToInt */
 export enum SortingDirection {
