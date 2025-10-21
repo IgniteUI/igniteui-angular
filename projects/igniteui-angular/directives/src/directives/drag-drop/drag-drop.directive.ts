@@ -24,7 +24,7 @@ import {
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Subject } from 'rxjs';
 import { takeUntil, throttle } from 'rxjs/operators';
-import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
+import { IBaseEventArgs, PlatformUtil } from 'igniteui-angular/core';
 import { IDropStrategy, IgxDefaultDropStrategy } from './drag-drop.strategy';
 
 enum DragScrollDirection {

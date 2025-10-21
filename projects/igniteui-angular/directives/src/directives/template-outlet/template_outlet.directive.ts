@@ -3,7 +3,7 @@ import {
     SimpleChange, SimpleChanges, TemplateRef, ViewContainerRef, NgZone, Output, EventEmitter
 } from '@angular/core';
 
-import { IBaseEventArgs } from '../../core/utils';
+import { IBaseEventArgs } from 'igniteui-angular/core';
 
 /**
  * @hidden

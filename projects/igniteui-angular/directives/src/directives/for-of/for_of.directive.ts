@@ -32,8 +32,8 @@ import { VirtualHelperComponent } from './virtual.helper.component';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from './for_of.sync.service';
 import { Subject } from 'rxjs';
 import { takeUntil, filter, throttleTime, first } from 'rxjs/operators';
-import { getResizeObserver } from '../../core/utils';
-import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
+import { getResizeObserver } from 'igniteui-angular/core';
+import { IBaseEventArgs, PlatformUtil } from 'igniteui-angular/core';
 import { VirtualHelperBaseDirective } from './base.helper.component';
 
 const MAX_PERF_SCROLL_DIFF = 4;

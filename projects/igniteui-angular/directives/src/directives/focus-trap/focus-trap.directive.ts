@@ -1,7 +1,7 @@
 import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, booleanAttribute } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { PlatformUtil } from '../../core/utils';
+import { PlatformUtil } from 'igniteui-angular/core';
 
 @Directive({
     selector: '[igxFocusTrap]',

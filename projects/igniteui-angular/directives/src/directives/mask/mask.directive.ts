@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MaskParsingService, MaskOptions, parseMask } from './mask-parsing.service';
-import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
+import { IBaseEventArgs, PlatformUtil } from 'igniteui-angular/core';
 import { noop } from 'rxjs';
 
 @Directive({

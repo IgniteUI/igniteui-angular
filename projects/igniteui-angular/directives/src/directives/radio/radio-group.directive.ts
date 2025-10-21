@@ -18,7 +18,7 @@ import {
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { fromEvent, noop, Subject, takeUntil } from 'rxjs';
 import { IgxRadioComponent } from '../../radio/radio.component';
-import { IgxDirectionality } from '../../services/direction/directionality';
+import { IgxDirectionality } from 'igniteui-angular/core';
 import { IBaseEventArgs } from 'igniteui-angular/core';
 
 // Stub interface to avoid circular dependency with checkbox

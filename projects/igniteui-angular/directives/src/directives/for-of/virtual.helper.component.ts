@@ -2,7 +2,7 @@ import { Component, ElementRef, HostBinding, Input, ViewChild, ViewContainerRef,
     ChangeDetectorRef, OnDestroy, OnInit, Inject, NgZone} from '@angular/core';
 import { VirtualHelperBaseDirective } from './base.helper.component';
 import { DOCUMENT } from '@angular/common';
-import { PlatformUtil } from '../../core/utils';
+import { PlatformUtil } from 'igniteui-angular/core';
 
 @Component({
     selector: 'igx-virtual-helper',

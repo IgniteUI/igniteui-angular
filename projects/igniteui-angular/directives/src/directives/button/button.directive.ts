@@ -9,7 +9,7 @@ import {
     Renderer2,
     booleanAttribute,
 } from '@angular/core';
-import { IBaseEventArgs } from '../../core/utils';
+import { IBaseEventArgs } from 'igniteui-angular/core';
 import { IgxBaseButtonType, IgxButtonBaseDirective } from './button-base';
 
 const IgxButtonType = {

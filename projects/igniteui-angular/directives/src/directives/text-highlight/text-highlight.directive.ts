@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { compareMaps } from '../../core/utils';
+import { compareMaps } from 'igniteui-angular/core';
 import { IgxTextHighlightService } from './text-highlight.service';
 
 export interface IBaseSearchInfo {

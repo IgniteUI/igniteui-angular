@@ -10,7 +10,7 @@ import {
     inject,
     afterRenderEffect,
 } from '@angular/core';
-import { PlatformUtil } from '../../core/utils';
+import { PlatformUtil } from 'igniteui-angular/core';
 
 export const IgxBaseButtonType = {
     Flat: 'flat',

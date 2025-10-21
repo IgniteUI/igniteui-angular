@@ -1,6 +1,6 @@
-import { first } from '../../core/utils';
-import { AutoPositionStrategy } from '../../services/overlay/position/auto-position-strategy';
-import { ConnectedFit, HorizontalAlignment, Point, PositionSettings, Size, VerticalAlignment } from '../../services/overlay/utilities';
+import { first } from 'igniteui-angular/core';
+import { AutoPositionStrategy } from 'igniteui-angular/core';
+import { ConnectedFit, HorizontalAlignment, Point, PositionSettings, Size, VerticalAlignment } from 'igniteui-angular/core';
 import { useAnimation } from '@angular/animations';
 import { fadeOut, scaleInCenter } from 'igniteui-angular/animations';
 

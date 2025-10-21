@@ -12,24 +12,28 @@ import {
     Optional,
     Output
 } from '@angular/core';
-import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
-import { CancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from '../../core/utils';
-import { ConnectedPositioningStrategy } from '../../services/overlay/position/connected-positioning-strategy';
+import { AbsoluteScrollStrategy } from 'igniteui-angular/core';
+import { CancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from 'igniteui-angular/core';
+import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
 import { filter, first, takeUntil } from 'rxjs/operators';
-import { IgxNavigationService, IToggleView } from '../../core/navigation';
-import { IgxOverlayService } from '../../services/overlay/overlay';
-import { IPositionStrategy } from '../../services/overlay/position/IPositionStrategy';
-import { OffsetMode, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings } from '../../services/overlay/utilities';
+import { IgxNavigationService, IToggleView } from 'igniteui-angular/core';
+import { IgxOverlayService } from 'igniteui-angular/core';
+import { IPositionStrategy } from 'igniteui-angular/core';
+import { OffsetMode, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings } from 'igniteui-angular/core';
 import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
 
 export interface ToggleViewEventArgs extends IBaseEventArgs {
     /** Id of the toggle view */
     id: string;
+    /** Provides reference to the owner component (from IBaseEventArgs) */
+    owner?: any;
     /* blazorSuppress */
     event?: Event;
 }
 
-export interface ToggleViewCancelableEventArgs extends ToggleViewEventArgs, CancelableBrowserEventArgs { }
+export interface ToggleViewCancelableEventArgs extends ToggleViewEventArgs, CancelableBrowserEventArgs {
+    cancel: boolean;
+}
 
 @Directive({
     exportAs: 'toggle',

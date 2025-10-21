@@ -2,8 +2,8 @@ import {
     Directive, ElementRef, Input, ChangeDetectorRef, Optional, HostBinding, Inject,
     OnDestroy, inject, DOCUMENT, HostListener,
 } from '@angular/core';
-import { IgxOverlayService } from '../../services/overlay/overlay';
-import { IgxNavigationService } from '../../core/navigation';
+import { IgxOverlayService } from 'igniteui-angular/core';
+import { IgxNavigationService } from 'igniteui-angular/core';
 import { IgxToggleDirective } from '../toggle/toggle.directive';
 import { IgxTooltipTargetDirective } from './tooltip-target.directive';
 import { Subject, takeUntil } from 'rxjs';

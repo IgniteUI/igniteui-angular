@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { IgxMaskDirective } from '../mask/mask.directive';
 import { MaskParsingService } from '../mask/mask-parsing.service';
-import { isDate, PlatformUtil } from '../../core/utils';
+import { isDate, PlatformUtil } from 'igniteui-angular/core';
 import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-editor.common';
 import { noop } from 'rxjs';
 import { DatePartDeltas } from './date-time-editor.common';

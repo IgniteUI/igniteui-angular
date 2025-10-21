@@ -18,7 +18,7 @@ import {
 import { NgModel, FormControlName } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CancelableEventArgs, IBaseEventArgs } from '../../core/utils';
+import { CancelableEventArgs, IBaseEventArgs } from 'igniteui-angular/core';
 import {
     AbsoluteScrollStrategy,
     AutoPositionStrategy,

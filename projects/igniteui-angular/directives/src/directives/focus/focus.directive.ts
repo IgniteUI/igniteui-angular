@@ -1,6 +1,6 @@
 import { Directive, ElementRef, Input, Optional, Inject, Self, booleanAttribute } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { EditorProvider, EDITOR_PROVIDER } from '../../core/edit-provider';
+import { EditorProvider, EDITOR_PROVIDER } from 'igniteui-angular/core';
 
 @Directive({
     exportAs: 'igxFocus',

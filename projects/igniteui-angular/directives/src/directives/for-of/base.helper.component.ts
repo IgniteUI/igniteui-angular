@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
-import { resizeObservable, PlatformUtil } from '../../core/utils';
+import { resizeObservable, PlatformUtil } from 'igniteui-angular/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 
 @Directive({
