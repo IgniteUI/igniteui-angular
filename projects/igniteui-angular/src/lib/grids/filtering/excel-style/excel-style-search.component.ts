@@ -76,7 +76,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     @ViewChild('input', { read: IgxInputDirective, static: true })
     public searchInput: IgxInputDirective;
 
-    @ViewChild('cancelButton', {read: IgxButtonDirective, static: true })
+    @ViewChild('cancelButton', { read: IgxButtonDirective, static: true })
     protected cancelButton: IgxButtonDirective;
 
     /**
@@ -203,7 +203,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     protected activeDescendant = '';
 
     private _id = `igx-excel-style-search-${NEXT_ID++}`;
-    private _isLoading;
+    private _isLoading = true;
     private _addToCurrentFilterItem: FilterListItem;
     private _selectAllItem: FilterListItem;
     private _hierarchicalSelectedItems: FilterListItem[];
@@ -250,6 +250,10 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 this.refreshSize();
                 this.searchInput.nativeElement.focus();
             });
+        });
+
+        esf.filterCleared.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.clearInput();
         });
     }
 
@@ -396,7 +400,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         return `${this.id}-item-${index}`;
     }
 
-    protected setActiveDescendant() : void  {
+    protected setActiveDescendant(): void {
         this.activeDescendant = this.focusedItem?.id || '';
     }
 
@@ -585,20 +589,38 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                     blanksItem = selectedItems[blanksItemIndex];
                     selectedItems.splice(blanksItemIndex, 1);
                 }
+                let searchVal;
+                switch (this.esf.column.dataType) {
+                    case GridColumnDataType.Date:
+                        searchVal = new Set(selectedItems.map(d => d.value.toDateString()));
+                        break;
+                    case GridColumnDataType.DateTime:
+                        searchVal = new Set(selectedItems.map(d => d.value.toISOString()));
+                        break;
+                    case GridColumnDataType.Time:
+                        searchVal = new Set(selectedItems.map(e => e.value.toLocaleTimeString()));
+                        break;
+                    case GridColumnDataType.String:
+                        if (this.esf.column.filteringIgnoreCase) {
+                            const selectedValues = new Set(selectedItems.map(item => item.value.toLowerCase()));
+                            searchVal = new Set();
+
+                            this.esf.grid.data.forEach(item => {
+                                if (typeof item[this.esf.column.field] === "string" && selectedValues.has(item[this.esf.column.field]?.toLowerCase())) {
+                                    searchVal.add(item[this.esf.column.field]);
+                                }
+                            });
+                            break;
+                        }
+                    default:
+                        searchVal = new Set(selectedItems.map(e => e.value))
+                }
                 filterTree.filteringOperands.push({
                     condition: this.createCondition('in'),
                     conditionName: 'in',
                     fieldName: this.esf.column.field,
                     ignoreCase: this.esf.column.filteringIgnoreCase,
-                    searchVal: new Set(
-                        this.esf.column.dataType === GridColumnDataType.Date ?
-                            selectedItems.map(d => d.value.toDateString()) :
-                        this.esf.column.dataType === GridColumnDataType.DateTime ?
-                            selectedItems.map(d => d.value.toISOString()) :
-                        this.esf.column.dataType === GridColumnDataType.Time ?
-                            selectedItems.map(e => e.value.toLocaleTimeString()) :
-                            selectedItems.map(e => e.value)
-                    )
+                    searchVal
                 });
 
                 if (blanksItem) {
@@ -628,12 +650,12 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         if (event) {
             const key = event.key.toLowerCase();
             const navKeys = ['space', 'spacebar', ' ',
-            'arrowup', 'up', 'arrowdown', 'down', 'home', 'end'];
-                if (navKeys.indexOf(key) === -1) { // If key has appropriate function in DD
-                    return;
-                }
-                event.preventDefault();
-                event.stopPropagation();
+                'arrowup', 'up', 'arrowdown', 'down', 'home', 'end'];
+            if (navKeys.indexOf(key) === -1) { // If key has appropriate function in DD
+                return;
+            }
+            event.preventDefault();
+            event.stopPropagation();
             switch (key) {
                 case 'arrowup':
                 case 'up':
@@ -827,9 +849,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         const direction = index > (this.focusedItem ? this.focusedItem.index : -1) ? Navigate.Down : Navigate.Up;
         const scrollRequired = this.isIndexOutOfBounds(index, direction);
         this.focusedItem = {
-           id: this.getItemId(index),
-           index: index,
-           checked: this.virtDir.igxForOf[index].isSelected
+            id: this.getItemId(index),
+            index: index,
+            checked: this.virtDir.igxForOf[index].isSelected
         };
         if (scrollRequired) {
             this.virtDir.scrollTo(index);
