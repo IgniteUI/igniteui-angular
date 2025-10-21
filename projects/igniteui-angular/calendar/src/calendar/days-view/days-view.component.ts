@@ -18,9 +18,8 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TitleCasePipe } from '@angular/common';
 import { CalendarSelection, ScrollDirection } from '../../calendar/calendar';
 import { IgxDayItemComponent } from './day-item.component';
-import { DateRangeType } from '../../core/dates';
+import { DateRangeType, PlatformUtil, intoChunks } from 'igniteui-angular/core';
 import { IgxCalendarBaseDirective } from '../calendar-base';
-import { PlatformUtil, intoChunks } from '../../core/utils';
 import { IViewChangingEventArgs } from './days-view.interface';
 import {
     areSameMonth,

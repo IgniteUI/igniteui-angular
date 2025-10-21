@@ -17,7 +17,7 @@ import { CalendarSelection, IgxCalendarComponent, IgxCalendarHeaderTemplateDirec
 import { DateRangeDescriptor, DateRangeType } from '../core/dates';
 import { DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } from '../core/i18n/date-range-picker-resources';
 import { clamp, IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from '../core/utils';
-import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
+import { IgxCalendarContainerComponent } from 'igniteui-angular/date-picker';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { IgxPickerActionsDirective } from '../date-common/picker-icons.common';
 import { DateTimeUtil } from '../date-common/util/date-time.util';

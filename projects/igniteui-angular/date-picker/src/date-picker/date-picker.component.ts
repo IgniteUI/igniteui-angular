@@ -46,7 +46,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 import { DatePickerResourceStringsEN, IDatePickerResourceStrings } from '../core/i18n/date-picker-resources';
 import { IBaseCancelableBrowserEventArgs, isDate, PlatformUtil } from '../core/utils';
-import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
+import { IgxCalendarContainerComponent } from './calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { IgxPickerActionsDirective } from 'igniteui-angular/core';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
