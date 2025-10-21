@@ -26,11 +26,11 @@ import {
     IScrollStrategy,
     OverlaySettings
 } from 'igniteui-angular/core';
-import {
-    IgxDropDownComponent, IgxDropDownItemNavigationDirective, ISelectionEventArgs
-} from 'igniteui-angular/drop-down';
+import { IgxDropDownComponent } from '../drop-down.component';
+import { IgxDropDownItemNavigationDirective } from '../drop-down-navigation.directive';
 import type { IgxInputGroupComponent } from './input-group-stub';
-import { IgxOverlayOutletDirective } from '../toggle/toggle.directive';
+import { IgxOverlayOutletDirective } from 'igniteui-angular/directives';
+import { ISelectionEventArgs } from '../drop-down.common';
 
 /**
  * Interface that encapsulates onItemSelection event arguments - new value and cancel selection.

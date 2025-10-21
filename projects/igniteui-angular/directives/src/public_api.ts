@@ -1,5 +1,6 @@
 // Directives
-export * from './directives/autocomplete/autocomplete.directive';
+// Note: Autocomplete moved to drop-down entry point. Re-exported here for backwards compatibility.
+export { IgxAutocompleteDirective } from 'igniteui-angular/drop-down';
 export * from './directives/button/button.directive';
 export * from './directives/divider/divider.directive';
 export * from './directives/drag-drop/public_api';
