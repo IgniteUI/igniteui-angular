@@ -9,6 +9,7 @@ import { NestedColumnGroupsGridComponent, ColumnGroupTestComponent, BlueWhaleGri
 import { IgxHierarchicalGridTestBaseComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxTreeGridSortingComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { CustomSummariesComponent } from '../../grids/grid/grid-summary.spec';
+import { IgxHierarchicalGridComponent } from '../../grids/hierarchical-grid/public_api';
 
 describe('PDF Grid Exporter', () => {
     let exporter: IgxPdfExporterService;
@@ -307,7 +308,10 @@ describe('PDF Grid Exporter', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.hgrid;
-        grid.expandAll();
+        grid.expandChildren = true;
+        grid.getChildGrids().forEach((childGrid: IgxHierarchicalGridComponent) => {
+            childGrid.expandChildren = true;
+        });
         fix.detectChanges();
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
