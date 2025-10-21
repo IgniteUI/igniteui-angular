@@ -324,24 +324,13 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         while (childIndex < childRecords.length) {
             const childRecord = childRecords[childIndex];
 
-            // Check if we need a new page
-            if (yPosition + rowHeight > pageHeight - margin) {
-                pdf.addPage();
-                yPosition = margin;
-                // Redraw headers on new page
-                this.drawTableHeaders(pdf, childColumns, childTableX, yPosition, childColumnWidth, headerHeight, childTableWidth, options);
-                yPosition += headerHeight;
-            }
-
-            this.drawDataRow(pdf, childRecord, childColumns, childTableX, yPosition, childColumnWidth, rowHeight, 0, options);
-            yPosition += rowHeight;
-
             // Check if this child record has its own children (next level in hierarchy)
             const childRecordIndex = allData.indexOf(childRecord);
+            const grandchildRecords: IExportRecord[] = [];
+            let grandchildOwner: string | null = null;
+            
             if (childRecordIndex >= 0 && childRecordIndex + 1 < allData.length) {
                 // Look for grandchildren
-                const grandchildRecords: IExportRecord[] = [];
-                let grandchildOwner: string | null = null;
                 let k = childRecordIndex + 1;
 
                 // Collect all grandchildren that belong to this child
@@ -355,24 +344,51 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                     }
                     k++;
                 }
+            }
 
-                // Recursively draw grandchildren if they exist
-                if (grandchildRecords.length > 0 && grandchildOwner) {
-                    yPosition = this.drawHierarchicalChildren(
-                        pdf,
-                        allData,
-                        grandchildRecords,
-                        grandchildOwner,
-                        yPosition,
-                        margin,
-                        indentPerLevel + 30, // Increase indentation for next level
-                        usableWidth,
-                        pageHeight,
-                        headerHeight,
-                        rowHeight,
-                        options
-                    );
+            // If this child has grandchildren, render them as a nested child table
+            if (grandchildRecords.length > 0 && grandchildOwner) {
+                // Check if we need a new page for parent row
+                if (yPosition + rowHeight > pageHeight - margin) {
+                    pdf.addPage();
+                    yPosition = margin;
+                    // Redraw headers on new page
+                    this.drawTableHeaders(pdf, childColumns, childTableX, yPosition, childColumnWidth, headerHeight, childTableWidth, options);
+                    yPosition += headerHeight;
                 }
+
+                // Draw the parent row (child record)
+                this.drawDataRow(pdf, childRecord, childColumns, childTableX, yPosition, childColumnWidth, rowHeight, 0, options);
+                yPosition += rowHeight;
+
+                // Recursively draw grandchildren as a nested child table
+                yPosition = this.drawHierarchicalChildren(
+                    pdf,
+                    allData,
+                    grandchildRecords,
+                    grandchildOwner,
+                    yPosition,
+                    margin,
+                    indentPerLevel + 30, // Increase indentation for next level
+                    usableWidth,
+                    pageHeight,
+                    headerHeight,
+                    rowHeight,
+                    options
+                );
+            } else {
+                // No grandchildren, just draw this child as a regular row
+                // Check if we need a new page
+                if (yPosition + rowHeight > pageHeight - margin) {
+                    pdf.addPage();
+                    yPosition = margin;
+                    // Redraw headers on new page
+                    this.drawTableHeaders(pdf, childColumns, childTableX, yPosition, childColumnWidth, headerHeight, childTableWidth, options);
+                    yPosition += headerHeight;
+                }
+
+                this.drawDataRow(pdf, childRecord, childColumns, childTableX, yPosition, childColumnWidth, rowHeight, 0, options);
+                yPosition += rowHeight;
             }
 
             childIndex++;
