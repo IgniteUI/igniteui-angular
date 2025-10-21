@@ -19,7 +19,14 @@ import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { fromEvent, noop, Subject, takeUntil } from 'rxjs';
 import { IgxRadioComponent } from '../../radio/radio.component';
 import { IgxDirectionality } from '../../services/direction/directionality';
-import { IChangeCheckboxEventArgs } from 'igniteui-angular/checkbox';
+import { IBaseEventArgs } from 'igniteui-angular/core';
+
+// Stub interface to avoid circular dependency with checkbox
+// Full implementation is in igniteui-angular/checkbox
+export interface IChangeCheckboxEventArgs extends IBaseEventArgs {
+    checked: boolean;
+    value?: any;
+}
 
 /**
  * Determines the Radio Group alignment
