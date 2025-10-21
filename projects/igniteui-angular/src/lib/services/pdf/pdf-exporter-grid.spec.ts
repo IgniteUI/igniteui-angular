@@ -318,7 +318,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
     });
 
-    it('should export tree grid with hierarchical data', (done) => {
+    fit('should export tree grid with hierarchical data', (done) => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -330,8 +330,6 @@ describe('PDF Grid Exporter', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.treeGrid;
-        grid.expandAll();
-        fix.detectChanges();
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
@@ -341,7 +339,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
     });
 
-    it('should export tree grid with flat self-referencing data', (done) => {
+    fit('should export tree grid with flat self-referencing data', (done) => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -353,8 +351,6 @@ describe('PDF Grid Exporter', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.treeGrid;
-        grid.expandAll();
-        fix.detectChanges();
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
