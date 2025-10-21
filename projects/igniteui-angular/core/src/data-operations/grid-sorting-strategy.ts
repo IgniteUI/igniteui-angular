@@ -1,12 +1,12 @@
-import { cloneArray, columnFieldPath, parseDate, resolveNestedPath } from '../../core/utils';
-import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
-import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
-import { IGroupingState } from '../../data-operations/groupby-state.interface';
-import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
-import { IGroupByResult } from '../../data-operations/grouping-result.interface';
-import { getHierarchy, isHierarchyMatch } from '../../data-operations/operations';
-import { DefaultSortingStrategy, ISortingExpression } from '../../data-operations/sorting-strategy';
-import { GridType } from './grid.interface';
+import { cloneArray, columnFieldPath, parseDate, resolveNestedPath } from '../core/utils';
+import { IGroupByExpandState } from './groupby-expand-state.interface';
+import { IGroupByRecord } from './groupby-record.interface';
+import { IGroupingState } from './groupby-state.interface';
+import { IGroupingExpression } from './grouping-expression.interface';
+import { IGroupByResult } from './grouping-result.interface';
+import { getHierarchy, isHierarchyMatch } from './operations';
+import { DefaultSortingStrategy, ISortingExpression } from './sorting-strategy';
+import type { GridType } from 'igniteui-angular/grids';
 
 const DATE_TYPE = 'date';
 const TIME_TYPE = 'time';

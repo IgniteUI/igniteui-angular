@@ -6,7 +6,7 @@ import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { TransactionType } from 'igniteui-angular/core';
 import { IgxAddRow } from '../common/crud.service';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
-import { IGridSortingStrategy } from '../common/strategy';
+import { IGridSortingStrategy } from 'igniteui-angular/core';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 
 /**

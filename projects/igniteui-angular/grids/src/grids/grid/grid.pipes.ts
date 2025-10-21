@@ -8,7 +8,7 @@ import { IGroupingExpression } from '../../data-operations/grouping-expression.i
 import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
-import { IGridSortingStrategy, IGridGroupingStrategy } from '../common/strategy';
+import { IGridSortingStrategy, IGridGroupingStrategy } from 'igniteui-angular/core';
 import { GridCellMergeMode, RowPinningPosition } from '../common/enums';
 import { IGridMergeStrategy } from '../../data-operations/merge-strategy';
 

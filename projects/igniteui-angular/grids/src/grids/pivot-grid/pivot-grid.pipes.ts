@@ -11,7 +11,7 @@ import {
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { GridBaseAPIService } from '../api.service';
 import { GridType, IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
-import { IGridSortingStrategy } from '../common/strategy';
+import { IGridSortingStrategy } from 'igniteui-angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotGridColumn, IPivotGridGroupRecord, IPivotGridHorizontalGroup, IPivotGridRecord, IPivotKeys, IPivotValue } from './pivot-grid.interface';
 import { PivotSortUtil } from './pivot-sort-util';

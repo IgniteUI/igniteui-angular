@@ -17,7 +17,7 @@ import {
     IgxDataRecordSorting,
     IgxSorting,
     IgxGrouping
-} from 'igniteui-angular/grids';
+} from './grid-sorting-strategy';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IGroupingExpression } from './grouping-expression.interface';
 import { DefaultMergeStrategy, IGridMergeStrategy } from './merge-strategy';

@@ -21,6 +21,7 @@ export * from './data-operations/groupby-record.interface';
 export * from './data-operations/groupby-state.interface';
 export * from './data-operations/grouping-expression.interface';
 export * from './data-operations/sorting-strategy';
+export * from './data-operations/grid-sorting-strategy';
 export * from './data-operations/paging-state.interface';
 export * from './data-operations/data-util';
 

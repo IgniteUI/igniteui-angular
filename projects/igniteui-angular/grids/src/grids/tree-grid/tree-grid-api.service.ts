@@ -8,7 +8,7 @@ import { IFilteringExpressionsTree } from '../../data-operations/filtering-expre
 import { TreeGridFilteringStrategy } from './tree-grid.filtering.strategy';
 import { ColumnType, GridType } from '../common/grid.interface';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
-import { IgxDataRecordSorting } from '../common/strategy';
+import { IgxDataRecordSorting } from 'igniteui-angular/core';
 import { FilterUtil } from '../../data-operations/filtering-strategy';
 
 @Injectable()

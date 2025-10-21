@@ -8,7 +8,7 @@ import { formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/com
 import type { IFilteringState } from './filtering-state.interface';
 import { isTree } from './expressions-tree-util';
 import type { IgxHierarchicalGridComponent } from 'igniteui-angular/grids';
-import { IgxSorting } from 'igniteui-angular/grids';
+import { IgxSorting } from './grid-sorting-strategy';
 
 const DateType = 'date';
 const DateTimeType = 'dateTime';

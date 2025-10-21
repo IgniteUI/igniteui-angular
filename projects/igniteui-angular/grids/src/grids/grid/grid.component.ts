@@ -30,7 +30,7 @@ import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../grid-public-row';
 import { IgxGridCell } from '../grid-public-cell';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
-import { IGridGroupingStrategy } from '../common/strategy';
+import { IGridGroupingStrategy } from 'igniteui-angular/core';
 import { IgxGridValidationService } from './grid-validation.service';
 import { IgxGridDetailsPipe } from './grid.details.pipe';
 import { IgxGridSummaryPipe } from './grid.summary.pipe';

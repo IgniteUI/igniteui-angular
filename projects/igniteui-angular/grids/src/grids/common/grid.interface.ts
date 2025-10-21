@@ -31,7 +31,7 @@ import { IgxFilteringOperand } from '../../data-operations/filtering-condition';
 import { IColumnEditorOptions, IColumnPipeArgs, IFieldEditorOptions, IFieldPipeArgs, ISortingOptions, MRLResizeColumnInfo } from '../columns/interfaces';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { ISortingExpression, ISortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
-import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
+import { IGridGroupingStrategy, IGridSortingStrategy } from 'igniteui-angular/core';
 import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { OverlaySettings } from '../../services/overlay/utilities';
 import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange, PivotDimensionType, IPivotUISettings } from '../pivot-grid/pivot-grid.interface';
