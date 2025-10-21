@@ -167,8 +167,8 @@ describe('IgxGrid - Validation #grid', () => {
             cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
             //min length should be 4
             GridFunctions.verifyCellValid(cell, false);
-            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
-            expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
+            const errorMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(errorMessage).toEqual(' Entry should be at least 4 character(s) long ');
         });
 
         it('should mark invalid cell with igx-grid__td--invalid class and show the related error cell template when the field contains "."', () => {
@@ -186,8 +186,8 @@ describe('IgxGrid - Validation #grid', () => {
             cell = grid.gridAPI.get_cell_by_visible_index(1, 4);
             //min length should be 4
             GridFunctions.verifyCellValid(cell, false);
-            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
-            expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
+            const errorMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(errorMessage).toEqual(' Entry should be at least 4 character(s) long ');
         });
 
         it('should show the error message on error icon hover and when the invalid cell becomes active.', fakeAsync(() => {
@@ -204,8 +204,8 @@ describe('IgxGrid - Validation #grid', () => {
             //min length should be 4
             GridFunctions.verifyCellValid(cell, false);
             GridSelectionFunctions.verifyCellActive(cell, true);
-            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
-            expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
+            const errorMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(errorMessage).toEqual(' Entry should be at least 4 character(s) long ');
 
             const overlayService = TestBed.inject(IgxOverlayService);
             const info = overlayService.getOverlayById(cell.errorTooltip.first.overlayId);
@@ -390,8 +390,8 @@ describe('IgxGrid - Validation #grid', () => {
             cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
             //bob cannot be the name
             GridFunctions.verifyCellValid(cell, false);
-            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
-            expect(erorrMessage).toEqual(' This name is forbidden. ');
+            const errorMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(errorMessage).toEqual(' This name is forbidden. ');
 
             cell.editMode = true;
             cell.update('test');
@@ -425,8 +425,8 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, false);
-            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
-            expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
+            const errorMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(errorMessage).toEqual(' Entry should be at least 4 character(s) long ');
         });
 
         it('should trigger validation on change when using custom editor bound via editValue.', () => {
@@ -444,8 +444,8 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, false);
-            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
-            expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
+            const errorMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(errorMessage).toEqual(' Entry should be at least 4 character(s) long ');
         });
 
         it('should trigger validation on blur when using custom editor bound via editValue.', () => {
@@ -472,8 +472,8 @@ describe('IgxGrid - Validation #grid', () => {
             grid.crudService.endEdit(true);
             fixture.detectChanges();
             GridFunctions.verifyCellValid(cell, false);
-            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
-            expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
+            const errorMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(errorMessage).toEqual(' Entry should be at least 4 character(s) long ');
         });
     });
 
