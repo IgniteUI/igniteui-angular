@@ -1,11 +1,11 @@
-import { columnFieldPath, parseDate, resolveNestedPath } from '../../core/utils';
-import { DataUtil } from '../../data-operations/data-util';
-import { FilteringExpressionsTree, type IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { BaseFilteringStrategy, type IgxFilterItem } from '../../data-operations/filtering-strategy';
-import { SortingDirection } from '../../data-operations/sorting-strategy';
-import type { ColumnType, GridType } from '../common/grid.interface';
-import type { IgxTreeGridAPIService } from './tree-grid-api.service';
-import type { ITreeGridRecord } from './tree-grid.interfaces';
+import { columnFieldPath, parseDate, resolveNestedPath } from '../core/utils';
+import { DataUtil } from './data-util';
+import { FilteringExpressionsTree, type IFilteringExpressionsTree } from './filtering-expressions-tree';
+import { BaseFilteringStrategy, type IgxFilterItem } from './filtering-strategy';
+import { SortingDirection } from './sorting-strategy';
+import type { ColumnType, GridType } from 'igniteui-angular/grids';
+import type { IgxTreeGridAPIService } from 'igniteui-angular/grids';
+import type { ITreeGridRecord } from 'igniteui-angular/grids';
 
 export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
 

@@ -4,7 +4,7 @@ import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../../data-
 import { IFilteringState } from '../../data-operations/filtering-state.interface';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
-import { TreeGridFilteringStrategy } from './tree-grid.filtering.strategy';
+import { TreeGridFilteringStrategy } from 'igniteui-angular/core';
 
 /** @hidden */
 @Pipe({

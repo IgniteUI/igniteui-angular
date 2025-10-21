@@ -5,7 +5,7 @@ import { HierarchicalTransaction, TransactionType, State } from 'igniteui-angula
 import { Injectable } from '@angular/core';
 import { cloneArray, mergeObjects } from '../../core/utils';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { TreeGridFilteringStrategy } from './tree-grid.filtering.strategy';
+import { TreeGridFilteringStrategy } from 'igniteui-angular/core';
 import { ColumnType, GridType } from '../common/grid.interface';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IgxDataRecordSorting } from 'igniteui-angular/core';

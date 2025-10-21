@@ -58,7 +58,7 @@ import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { HierarchicalTransactionService } from '../../services/transaction/hierarchical-transaction';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { IgxGridTransaction } from '../common/types';
-import { TreeGridFilteringStrategy } from './tree-grid.filtering.strategy';
+import { TreeGridFilteringStrategy } from 'igniteui-angular/core';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
 import { IgxTreeGridSummaryPipe } from './tree-grid.summary.pipe';
 import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';

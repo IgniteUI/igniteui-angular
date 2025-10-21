@@ -4,7 +4,7 @@ import { IgxTreeGridGroupingPipe } from './tree-grid.grouping.pipe';
 
 export * from './tree-grid.component';
 export * from './tree-grid.interfaces';
-export * from './tree-grid.filtering.strategy';
+export * from 'igniteui-angular/core';
 export * from './tree-grid.grouping.pipe';
 export * from '../grouping/tree-grid-group-by-area.component';
 export * from './tree-grid.grouping.pipe';

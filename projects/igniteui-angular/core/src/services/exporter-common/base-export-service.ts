@@ -4,7 +4,7 @@ import { GridColumnDataType, DataUtil } from '../../data-operations/data-util';
 import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
 import type { ITreeGridRecord, ColumnType, GridType, IPathSegment, IgxSummaryResult, GridSummaryCalculationMode } from 'igniteui-angular/grids';
-import { TreeGridFilteringStrategy } from 'igniteui-angular/grids';
+import { TreeGridFilteringStrategy } from '../data-operations/tree-grid-filtering-strategy';
 import { IGroupingState } from '../../data-operations/groupby-state.interface';
 import { getHierarchy, isHierarchyMatch } from '../../data-operations/operations';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
