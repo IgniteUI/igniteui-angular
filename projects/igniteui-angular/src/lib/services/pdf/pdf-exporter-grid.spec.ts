@@ -5,7 +5,7 @@ import { IgxPdfExporterOptions } from './pdf-exporter-options';
 import { GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
 import { first } from 'rxjs/operators';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { NestedColumnGroupsGridComponent, ColumnGroupTestComponent } from '../../test-utils/grid-mch-sample.spec';
+import { NestedColumnGroupsGridComponent, ColumnGroupTestComponent, BlueWhaleGridComponent } from '../../test-utils/grid-mch-sample.spec';
 import { IgxHierarchicalGridTestBaseComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxTreeGridSortingComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { CustomSummariesComponent } from '../../grids/grid/grid-summary.spec';
@@ -368,11 +368,11 @@ describe('PDF Grid Exporter', () => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
-                NestedColumnGroupsGridComponent
+                BlueWhaleGridComponent
             ]
         }).compileComponents();
 
-        const fix = TestBed.createComponent(NestedColumnGroupsGridComponent);
+        const fix = TestBed.createComponent(BlueWhaleGridComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;

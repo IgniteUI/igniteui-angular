@@ -643,7 +643,7 @@ export abstract class IgxBaseExporter {
         const columnFields = this._ownersMap.get(grid).columns.map(col => col.field);
 
         for (const entry of records) {
-            const expansionStateVal = grid.expansionStates.has(entry) ? grid.expansionStates.get(entry) : false;
+            const expansionStateVal = grid.expansionStates.has(entry) ? grid.expansionStates.get(entry) : grid.getDefaultExpandState(entry);
 
             const dataWithoutChildren = Object.keys(entry)
                 .filter(k => columnFields.includes(k))
