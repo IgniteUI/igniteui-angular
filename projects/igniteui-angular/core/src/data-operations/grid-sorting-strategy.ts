@@ -6,7 +6,7 @@ import { IGroupingExpression } from './grouping-expression.interface';
 import { IGroupByResult } from './grouping-result.interface';
 import { getHierarchy, isHierarchyMatch } from './operations';
 import { DefaultSortingStrategy, ISortingExpression } from './sorting-strategy';
-import type { GridType } from 'igniteui-angular/grids';
+import type { GridType } from './grid-types-stub';
 
 const DATE_TYPE = 'date';
 const TIME_TYPE = 'time';

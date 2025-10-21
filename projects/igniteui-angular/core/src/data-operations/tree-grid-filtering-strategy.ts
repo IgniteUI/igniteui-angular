@@ -3,9 +3,9 @@ import { DataUtil } from './data-util';
 import { FilteringExpressionsTree, type IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { BaseFilteringStrategy, type IgxFilterItem } from './filtering-strategy';
 import { SortingDirection } from './sorting-strategy';
-import type { ColumnType, GridType } from 'igniteui-angular/grids';
-import type { IgxTreeGridAPIService } from 'igniteui-angular/grids';
-import type { ITreeGridRecord } from 'igniteui-angular/grids';
+import type { ColumnType, GridType } from './grid-types-stub';
+import type { IgxTreeGridAPIService } from './grid-types-stub';
+import type { ITreeGridRecord } from './grid-types-stub';
 
 export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
 

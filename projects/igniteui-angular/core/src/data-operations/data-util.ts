@@ -8,8 +8,8 @@ import { IGroupingState } from './groupby-state.interface';
 import { cloneArray, mergeObjects } from '../core/utils';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/transaction/transaction';
 import { getHierarchy, isHierarchyMatch } from './operations';
-import type { ColumnType, GridType } from 'igniteui-angular/grids';
-import type { ITreeGridRecord } from 'igniteui-angular/grids';
+import type { ColumnType, GridType } from './grid-types-stub';
+import type { ITreeGridRecord } from './grid-types-stub';
 import { ISortingExpression } from './sorting-strategy';
 import {
     IGridSortingStrategy,

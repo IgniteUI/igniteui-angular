@@ -1,5 +1,4 @@
 // Export services
-export * from '../directives/text-highlight/text-highlight.service';
 export * from './csv/csv-exporter';
 export * from './csv/csv-exporter-options';
 export * from './excel/excel-exporter';

@@ -3,8 +3,9 @@ import { cloneArray, cloneValue, columnFieldPath, IBaseEventArgs, resolveNestedP
 import { GridColumnDataType, DataUtil } from '../../data-operations/data-util';
 import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
-import type { ITreeGridRecord, ColumnType, GridType, IPathSegment, IgxSummaryResult, GridSummaryCalculationMode } from 'igniteui-angular/grids';
-import { TreeGridFilteringStrategy } from '../data-operations/tree-grid-filtering-strategy';
+import type { ITreeGridRecord, ColumnType, GridType, IPathSegment, IgxSummaryResult } from '../../data-operations/grid-types-stub';
+import { GridSummaryCalculationMode } from '../../data-operations/grid-types-stub';
+import { TreeGridFilteringStrategy } from '../../data-operations/tree-grid-filtering-strategy';
 import { IGroupingState } from '../../data-operations/groupby-state.interface';
 import { getHierarchy, isHierarchyMatch } from '../../data-operations/operations';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
@@ -273,7 +274,7 @@ export abstract class IgxBaseExporter {
         }
 
         this.summaries = this.prepareSummaries(grid);
-        this._setChildSummaries = this.summaries.size > 1 && grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly;
+        this._setChildSummaries = this.summaries.size > 1 && grid.summaryCalculationMode !== GridSummaryCalculationMode.RootLevelOnly;
 
         this.addLevelColumns();
         this.prepareData(grid);
@@ -574,7 +575,7 @@ export abstract class IgxBaseExporter {
             }
         }
 
-        if (this.summaries.size > 0 && grid.summaryCalculationMode !== GridSummaryCalculationMode.childLevelsOnly) {
+        if (this.summaries.size > 0 && grid.summaryCalculationMode !== GridSummaryCalculationMode.ChildLevelsOnly) {
             setSummaryOwner ?
                 this.setSummaries(GRID_ROOT_SUMMARY, 0, false, grid) :
                 this.setSummaries(GRID_ROOT_SUMMARY);
@@ -681,10 +682,10 @@ export abstract class IgxBaseExporter {
             const summaryCacheMap = grid.summaryService.summaryCacheMap;
 
             switch (grid.summaryCalculationMode) {
-                case GridSummaryCalculationMode.childLevelsOnly:
+                case GridSummaryCalculationMode.ChildLevelsOnly:
                     summaryCacheMap.delete(GRID_ROOT_SUMMARY);
                     break;
-                case GridSummaryCalculationMode.rootLevelOnly:
+                case GridSummaryCalculationMode.RootLevelOnly:
                     for (const k of summaryCacheMap.keys()) {
                         if (k !== GRID_ROOT_SUMMARY) {
                             summaryCacheMap.delete(k);
