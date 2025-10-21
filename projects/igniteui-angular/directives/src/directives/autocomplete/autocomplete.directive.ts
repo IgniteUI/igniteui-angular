@@ -30,7 +30,7 @@ import {
     IgxDropDownComponent
 } from '../../drop-down/drop-down.component';
 import { IgxDropDownItemNavigationDirective } from '../../drop-down/drop-down-navigation.directive';
-import type { IgxInputGroupComponent } from 'igniteui-angular/input-group';
+import type { IgxInputGroupComponent } from './input-group-stub';
 import { IgxOverlayOutletDirective } from '../toggle/toggle.directive';
 import { ISelectionEventArgs } from '../../drop-down/drop-down.common';
 
