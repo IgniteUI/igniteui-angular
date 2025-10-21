@@ -49,13 +49,13 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
     protected exportDataImplementation(data: IExportRecord[], options: IgxPdfExporterOptions, done: () => void): void {
         const defaultOwner = this._ownersMap.get(DEFAULT_OWNER);
-        
+
         // Get all columns (including multi-column headers)
         const allColumns = defaultOwner?.columns.filter(col => !col.skip) || [];
-        
+
         // Get leaf columns (actual data columns)
         const leafColumns = allColumns.filter(col => col.field && col.headerType === ExportHeaderType.ColumnHeader);
-        
+
         // Check if we have multi-level headers
         const maxLevel = defaultOwner?.maxLevel || 0;
         const hasMultiColumnHeaders = maxLevel > 0 && allColumns.some(col => col.headerType === ExportHeaderType.MultiColumnHeader);
@@ -64,7 +64,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             // If no columns are defined, use the keys from the first data record
             const firstDataElement = data[0];
             const keys = Object.keys(firstDataElement.data);
-            
+
             keys.forEach((key) => {
                 leafColumns.push({
                     header: key,
@@ -88,14 +88,14 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         const pageHeight = pdf.internal.pageSize.getHeight();
         const margin = 40;
         const usableWidth = pageWidth - (2 * margin);
-        
+
         // Calculate column widths based on leaf columns
         const columnWidth = usableWidth / leafColumns.length;
         const rowHeight = 20;
         const headerHeight = 25;
         const indentSize = 15; // Indentation per level for hierarchical data
         const childTableIndent = 30; // Indent for child tables
-        
+
         let yPosition = margin;
 
         // Set font
@@ -127,7 +127,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             if (yPosition + rowHeight > pageHeight - margin) {
                 pdf.addPage();
                 yPosition = margin;
-                
+
                 // Redraw headers on new page
                 if (hasMultiColumnHeaders) {
                     yPosition = this.drawMultiLevelHeaders(pdf, allColumns, maxLevel, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
@@ -153,7 +153,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             if (isHierarchicalGrid) {
                 const childRecords = [];
                 let childOwner = null;
-                
+
                 // Collect only direct child records (next level) that belong to this parent
                 let j = i + 1;
                 while (j < data.length && data[j].owner !== DEFAULT_OWNER && data[j].level > record.level) {
@@ -170,17 +170,17 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 // If there are child records, draw a child table
                 if (childRecords.length > 0 && childOwner) {
                     yPosition = this.drawHierarchicalChildren(
-                        pdf, 
-                        data, 
-                        childRecords, 
-                        childOwner, 
-                        yPosition, 
-                        margin, 
-                        childTableIndent, 
-                        usableWidth, 
-                        pageHeight, 
-                        headerHeight, 
-                        rowHeight, 
+                        pdf,
+                        data,
+                        childRecords,
+                        childOwner,
+                        yPosition,
+                        margin,
+                        childTableIndent,
+                        usableWidth,
+                        pageHeight,
+                        headerHeight,
+                        rowHeight,
                         options
                     );
 
@@ -255,7 +255,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 // Center text in cell with truncation if needed
                 let headerText = col.header || col.field || '';
                 const maxTextWidth = width - 10; // Leave 5px padding on each side
-                
+
                 // Truncate text if it's too long
                 if (pdf.getTextWidth(headerText) > maxTextWidth) {
                     while (pdf.getTextWidth(headerText + '...') > maxTextWidth && headerText.length > 0) {
@@ -263,7 +263,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                     }
                     headerText += '...';
                 }
-                
+
                 const textWidth = pdf.getTextWidth(headerText);
                 const textX = xPosition + (width - textWidth) / 2;
                 const textY = yPosition + headerHeight / 2 + options.fontSize / 3;
@@ -323,7 +323,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         let childIndex = 0;
         while (childIndex < childRecords.length) {
             const childRecord = childRecords[childIndex];
-            
+
             // Check if we need a new page
             if (yPosition + rowHeight > pageHeight - margin) {
                 pdf.addPage();
@@ -350,7 +350,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                     if (allData[k].level === childRecord.level + 1 && !allData[k].hidden) {
                         grandchildRecords.push(allData[k]);
                         if (!grandchildOwner) {
-                            grandchildOwner = allData[k].owner;
+                            grandchildOwner = allData[k].owner.toString();
                         }
                     }
                     k++;
@@ -396,7 +396,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
     ): void {
         pdf.setFont('helvetica', 'bold');
         pdf.setFillColor(240, 240, 240);
-        
+
         if (options.showTableBorders) {
             pdf.rect(xStart, yPosition, tableWidth, headerHeight, 'F');
         }
@@ -404,11 +404,11 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         columns.forEach((col, index) => {
             const xPosition = xStart + (index * columnWidth);
             let headerText = col.header || col.field;
-            
+
             if (options.showTableBorders) {
                 pdf.rect(xPosition, yPosition, columnWidth, headerHeight);
             }
-            
+
             // Truncate text if it's too long
             const maxTextWidth = columnWidth - 10; // Leave 5px padding on each side
             if (pdf.getTextWidth(headerText) > maxTextWidth) {
@@ -417,12 +417,12 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 }
                 headerText += '...';
             }
-            
+
             // Center text in cell
             const textWidth = pdf.getTextWidth(headerText);
             const textX = xPosition + (columnWidth - textWidth) / 2;
             const textY = yPosition + headerHeight / 2 + options.fontSize / 3;
-            
+
             pdf.text(headerText, textX, textY);
         });
 
@@ -441,11 +441,11 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         options: IgxPdfExporterOptions
     ): void {
         const isSummaryRecord = record.type === 'SummaryRecord';
-        
+
         columns.forEach((col, index) => {
             const xPosition = xStart + (index * columnWidth);
             let cellValue = record.data[col.field];
-            
+
             // Handle summary records - cellValue is an IgxSummaryResult object
             if (isSummaryRecord && cellValue) {
                 // For summary records, the cellValue has label and value properties
@@ -466,7 +466,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                     cellValue = cellValue.summaryResult;
                 }
             }
-            
+
             // Convert value to string
             if (cellValue === null || cellValue === undefined) {
                 cellValue = '';
@@ -482,11 +482,11 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
             // Apply indentation to the first column for hierarchical data
             const textIndent = (index === 0) ? indent : 0;
-            
+
             // Truncate text if it's too long, accounting for indentation
             const maxTextWidth = columnWidth - 10 - textIndent;
             let displayText = cellValue;
-            
+
             if (pdf.getTextWidth(displayText) > maxTextWidth) {
                 while (pdf.getTextWidth(displayText + '...') > maxTextWidth && displayText.length > 0) {
                     displayText = displayText.substring(0, displayText.length - 1);
