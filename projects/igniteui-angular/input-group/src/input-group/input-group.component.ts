@@ -16,13 +16,13 @@ import {
 import { IInputResourceStrings, InputResourceStringsEN } from 'igniteui-angular/core';
 import { PlatformUtil, getComponentTheme } from 'igniteui-angular/core';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
-import { IgxHintDirective } from 'igniteui-angular/directives';
+import { IgxHintDirective } from './directives-hint/hint.directive';
 import {
     IgxInputDirective,
     IgxInputState
-} from 'igniteui-angular/directives';
-import { IgxPrefixDirective } from 'igniteui-angular/directives';
-import { IgxSuffixDirective } from 'igniteui-angular/directives';
+} from './directives-input/input.directive';
+import { IgxPrefixDirective } from './directives-prefix/prefix.directive';
+import { IgxSuffixDirective } from './directives-suffix/suffix.directive';
 
 import { IgxInputGroupBase } from './input-group.common';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
