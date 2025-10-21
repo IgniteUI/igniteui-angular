@@ -20,7 +20,7 @@ import {
     TouchedChangeEvent
 } from '@angular/forms';
 import { filter, Subscription } from 'rxjs';
-import { IgxInputGroupBase } from '../../input-group/input-group.common';
+import { IgxInputGroupBase } from '../input-group.common';
 
 const nativeValidationAttributes = [
     'required',

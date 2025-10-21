@@ -2,7 +2,7 @@ import { Component, ViewChild, ViewChildren, QueryList, DebugElement } from '@an
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, UntypedFormBuilder, ReactiveFormsModule, Validators, UntypedFormControl, UntypedFormGroup, FormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { IgxInputGroupComponent } from '../../input-group/input-group.component';
+import { IgxInputGroupComponent } from '../input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxLabelDirective } from '../label/label.directive';

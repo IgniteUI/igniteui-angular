@@ -30,6 +30,16 @@ export * from './directives/tooltip/public_api';
 export * from './directives/date-time-editor/public_api';
 export * from './directives/form-control/form-control.directive';
 
+// Re-export input-related directives from input-group for backwards compatibility
+export {
+    IgxHintDirective,
+    IgxInputDirective,
+    IgxLabelDirective,
+    IgxPrefixDirective,
+    IgxSuffixDirective,
+    IgxReadonlyInputDirective
+} from 'igniteui-angular/input-group';
+
 // Directive modules for backwards compatibility
 export * from './directives/autocomplete/autocomplete.module';
 export * from './directives/button/button.module';

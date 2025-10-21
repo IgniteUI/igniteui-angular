@@ -1,16 +1,18 @@
-import { IgxHintDirective } from 'igniteui-angular/directives';
-import { IgxInputDirective } from 'igniteui-angular/directives';
-import { IgxLabelDirective } from 'igniteui-angular/directives';
-import { IgxPrefixDirective } from 'igniteui-angular/directives';
-import { IgxSuffixDirective } from 'igniteui-angular/directives';
+import { IgxHintDirective } from './directives-hint/hint.directive';
+import { IgxInputDirective } from './directives-input/input.directive';
+import { IgxLabelDirective } from './directives-label/label.directive';
+import { IgxPrefixDirective } from './directives-prefix/prefix.directive';
+import { IgxSuffixDirective } from './directives-suffix/suffix.directive';
 import { IgxInputGroupComponent } from './input-group.component';
 
 export * from './input-group.component';
-export * from 'igniteui-angular/directives';
-export * from 'igniteui-angular/directives';
-export * from 'igniteui-angular/directives';
-export * from 'igniteui-angular/directives';
-export * from 'igniteui-angular/directives';
+export * from './input-group.common';
+export * from './directives-hint/hint.directive';
+export * from './directives-input/input.directive';
+export * from './directives-input/read-only-input.directive';
+export * from './directives-label/label.directive';
+export * from './directives-prefix/prefix.directive';
+export * from './directives-suffix/suffix.directive';
 export * from './inputGroupType';
 
 /* NOTE: Input group directives collection for ease-of-use import in standalone components scenario */

@@ -1,5 +1,5 @@
 import { Directive, effect, inject, input } from '@angular/core';
-import { IgxInputGroupComponent } from '../../input-group/input-group.component';
+import { IgxInputGroupComponent } from '../input-group.component';
 
 @Directive({
     selector: '[igxReadOnlyInput]',
