@@ -7,7 +7,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin radio($theme) {
-    @include css-vars($theme, 'igx-radio');
+    @include css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
     $theme-variant: map.get($theme, '_meta', 'variant');
