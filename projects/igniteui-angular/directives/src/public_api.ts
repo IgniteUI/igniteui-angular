@@ -22,7 +22,7 @@ export * from './directives/layout/layout.directive';
 export * from './directives/mask/mask.directive';
 // Note: Radio-group directive moved to radio entry point in v21.0.0
 // Users should now import from 'igniteui-angular/radio' instead
-export { IgxRadioGroupDirective, IChangeRadioEventArgs } from 'igniteui-angular/radio';
+// export { IgxRadioGroupDirective, IChangeRadioEventArgs } from 'igniteui-angular/radio';
 export * from './directives/ripple/ripple.directive';
 export * from './directives/scroll-inertia/scroll_inertia.directive';
 export * from './directives/size/ig-size.directive';
@@ -34,13 +34,12 @@ export * from './directives/tooltip/public_api';
 export * from './directives/date-time-editor/public_api';
 export * from './directives/form-control/form-control.directive';
 
-// NOTE: Input-related directives (IgxHintDirective, IgxInputDirective, IgxLabelDirective, 
-// IgxPrefixDirective, IgxSuffixDirective, IgxReadonlyInputDirective) have been moved 
+// NOTE: Input-related directives (IgxHintDirective, IgxInputDirective, IgxLabelDirective,
+// IgxPrefixDirective, IgxSuffixDirective, IgxReadonlyInputDirective) have been moved
 // to igniteui-angular/input-group entry point.
 // Import them from 'igniteui-angular/input-group' instead of 'igniteui-angular/directives'
 
 // Directive modules for backwards compatibility
-export * from './directives/autocomplete/autocomplete.module';
 export * from './directives/button/button.module';
 export * from './directives/date-time-editor/date-time-editor.module';
 export * from './directives/divider/divider.module';
@@ -52,7 +51,7 @@ export * from './directives/for-of/for_of.module';
 export * from './directives/form-control/form-control.module';
 export * from './directives/layout/layout.module';
 export * from './directives/mask/mask.module';
-export { IgxRadioModule } from 'igniteui-angular/radio';
+// export { IgxRadioModule } from 'igniteui-angular/radio';
 export * from './directives/ripple/ripple.module';
 export * from './directives/scroll-inertia/scroll_inertia.module';
 export * from './directives/text-highlight/text-highlight.module';

@@ -405,8 +405,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
         let errors = {};
         const value = DateTimeUtil.isValidDate(control.value) ? control.value : DateTimeUtil.parseIsoDate(control.value);
-        const minValueDate = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
-        const maxValueDate = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
+        const minValueDate = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : this.parseDate(this.minValue.toString());
+        const maxValueDate = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue.toString());
         if (minValueDate || maxValueDate) {
             errors = DateTimeUtil.validateMinMax(value,
                 minValueDate, maxValueDate,
@@ -602,8 +602,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         }
 
         let errors = {};
-        const minValueDate = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
-        const maxValueDate = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
+        const minValueDate = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : this.parseDate(this.minValue.toString());
+        const maxValueDate = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue.toString());
         if (minValueDate || maxValueDate) {
             errors = DateTimeUtil.validateMinMax(value,
                 this.minValue, this.maxValue,
@@ -618,6 +618,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
             return null;
         }
         const newDate = new Date(this.dateValue.getTime());
+        let formatPart;
+        let amPmFromMask;
         switch (datePart) {
             case DatePart.Date:
                 DateTimeUtil.spinDate(delta, newDate, this.spinLoop);
@@ -641,8 +643,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
                 DateTimeUtil.spinFractionalSeconds(delta, newDate, this.spinLoop);
                 break;
             case DatePart.AmPm:
-                const formatPart = this._inputDateParts.find(dp => dp.type === DatePart.AmPm);
-                const amPmFromMask = this.inputValue.substring(formatPart.start, formatPart.end);
+                formatPart = this._inputDateParts.find(dp => dp.type === DatePart.AmPm);
+                amPmFromMask = this.inputValue.substring(formatPart.start, formatPart.end);
                 return DateTimeUtil.spinAmPm(newDate, this.dateValue, amPmFromMask);
         }
 
