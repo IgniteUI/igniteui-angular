@@ -154,10 +154,11 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 const childRecords = [];
                 let childOwner = null;
                 
-                // Collect all child records that belong to this parent
+                // Collect only direct child records (next level) that belong to this parent
                 let j = i + 1;
                 while (j < data.length && data[j].owner !== DEFAULT_OWNER && data[j].level > record.level) {
-                    if (!data[j].hidden) {
+                    // Only include direct children (one level deeper)
+                    if (data[j].level === record.level + 1 && !data[j].hidden) {
                         childRecords.push(data[j]);
                         if (!childOwner) {
                             childOwner = data[j].owner;
@@ -168,48 +169,20 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
                 // If there are child records, draw a child table
                 if (childRecords.length > 0 && childOwner) {
-                    const childColumns = this._ownersMap.get(childOwner)?.columns.filter(
-                        col => col.field && !col.skip && col.headerType === ExportHeaderType.ColumnHeader
-                    ) || [];
-
-                    if (childColumns.length > 0) {
-                        // Add some spacing before child table
-                        yPosition += 5;
-
-                        // Check if child table fits on current page
-                        const childTableHeight = headerHeight + (childRecords.length * rowHeight) + 10;
-                        if (yPosition + childTableHeight > pageHeight - margin) {
-                            pdf.addPage();
-                            yPosition = margin;
-                        }
-
-                        // Draw child table with indentation
-                        const childTableWidth = usableWidth - childTableIndent;
-                        const childColumnWidth = childTableWidth / childColumns.length;
-                        const childTableX = margin + childTableIndent;
-
-                        // Draw child table headers
-                        this.drawTableHeaders(pdf, childColumns, childTableX, yPosition, childColumnWidth, headerHeight, childTableWidth, options);
-                        yPosition += headerHeight;
-
-                        // Draw child table rows
-                        childRecords.forEach((childRecord) => {
-                            // Check if we need a new page
-                            if (yPosition + rowHeight > pageHeight - margin) {
-                                pdf.addPage();
-                                yPosition = margin;
-                                // Redraw headers on new page
-                                this.drawTableHeaders(pdf, childColumns, childTableX, yPosition, childColumnWidth, headerHeight, childTableWidth, options);
-                                yPosition += headerHeight;
-                            }
-
-                            this.drawDataRow(pdf, childRecord, childColumns, childTableX, yPosition, childColumnWidth, rowHeight, 0, options);
-                            yPosition += rowHeight;
-                        });
-
-                        // Add spacing after child table
-                        yPosition += 5;
-                    }
+                    yPosition = this.drawHierarchicalChildren(
+                        pdf, 
+                        data, 
+                        childRecords, 
+                        childOwner, 
+                        yPosition, 
+                        margin, 
+                        childTableIndent, 
+                        usableWidth, 
+                        pageHeight, 
+                        headerHeight, 
+                        rowHeight, 
+                        options
+                    );
 
                     // Skip the child records we just processed
                     i = j - 1;
@@ -302,6 +275,112 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         }
 
         pdf.setFont('helvetica', 'normal');
+        return yPosition;
+    }
+
+    private drawHierarchicalChildren(
+        pdf: jsPDF,
+        allData: IExportRecord[],
+        childRecords: IExportRecord[],
+        childOwner: string,
+        yPosition: number,
+        margin: number,
+        indentPerLevel: number,
+        usableWidth: number,
+        pageHeight: number,
+        headerHeight: number,
+        rowHeight: number,
+        options: IgxPdfExporterOptions
+    ): number {
+        const childColumns = this._ownersMap.get(childOwner)?.columns.filter(
+            col => col.field && !col.skip && col.headerType === ExportHeaderType.ColumnHeader
+        ) || [];
+
+        if (childColumns.length === 0) {
+            return yPosition;
+        }
+
+        // Add some spacing before child table
+        yPosition += 5;
+
+        // Check if child table fits on current page
+        const childTableHeight = headerHeight + (childRecords.length * rowHeight) + 10;
+        if (yPosition + childTableHeight > pageHeight - margin) {
+            pdf.addPage();
+            yPosition = margin;
+        }
+
+        // Draw child table with indentation
+        const childTableWidth = usableWidth - indentPerLevel;
+        const childColumnWidth = childTableWidth / childColumns.length;
+        const childTableX = margin + indentPerLevel;
+
+        // Draw child table headers
+        this.drawTableHeaders(pdf, childColumns, childTableX, yPosition, childColumnWidth, headerHeight, childTableWidth, options);
+        yPosition += headerHeight;
+
+        // Process each child record
+        let childIndex = 0;
+        while (childIndex < childRecords.length) {
+            const childRecord = childRecords[childIndex];
+            
+            // Check if we need a new page
+            if (yPosition + rowHeight > pageHeight - margin) {
+                pdf.addPage();
+                yPosition = margin;
+                // Redraw headers on new page
+                this.drawTableHeaders(pdf, childColumns, childTableX, yPosition, childColumnWidth, headerHeight, childTableWidth, options);
+                yPosition += headerHeight;
+            }
+
+            this.drawDataRow(pdf, childRecord, childColumns, childTableX, yPosition, childColumnWidth, rowHeight, 0, options);
+            yPosition += rowHeight;
+
+            // Check if this child record has its own children (next level in hierarchy)
+            const childRecordIndex = allData.indexOf(childRecord);
+            if (childRecordIndex >= 0 && childRecordIndex + 1 < allData.length) {
+                // Look for grandchildren
+                const grandchildRecords: IExportRecord[] = [];
+                let grandchildOwner: string | null = null;
+                let k = childRecordIndex + 1;
+
+                // Collect all grandchildren that belong to this child
+                while (k < allData.length && allData[k].level > childRecord.level) {
+                    // Only include direct children (next level)
+                    if (allData[k].level === childRecord.level + 1 && !allData[k].hidden) {
+                        grandchildRecords.push(allData[k]);
+                        if (!grandchildOwner) {
+                            grandchildOwner = allData[k].owner;
+                        }
+                    }
+                    k++;
+                }
+
+                // Recursively draw grandchildren if they exist
+                if (grandchildRecords.length > 0 && grandchildOwner) {
+                    yPosition = this.drawHierarchicalChildren(
+                        pdf,
+                        allData,
+                        grandchildRecords,
+                        grandchildOwner,
+                        yPosition,
+                        margin,
+                        indentPerLevel + 30, // Increase indentation for next level
+                        usableWidth,
+                        pageHeight,
+                        headerHeight,
+                        rowHeight,
+                        options
+                    );
+                }
+            }
+
+            childIndex++;
+        }
+
+        // Add spacing after child table
+        yPosition += 5;
+
         return yPosition;
     }
 
