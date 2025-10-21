@@ -1,4 +1,4 @@
-import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-sort-strategy';
+import { DefaultPivotSortingStrategy } from '../common/pivot-sort-strategy';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IPivotDimension } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';

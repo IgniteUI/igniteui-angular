@@ -1,4 +1,4 @@
-import { NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
+import { NoopPivotDimensionsStrategy } from '../common/pivot-strategy';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
 import { IPivotConfiguration } from './pivot-grid.interface';

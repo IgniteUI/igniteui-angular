@@ -3,7 +3,8 @@ import { cloneArray, cloneValue, columnFieldPath, IBaseEventArgs, resolveNestedP
 import { GridColumnDataType, DataUtil } from '../../data-operations/data-util';
 import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
-import { ITreeGridRecord, TreeGridFilteringStrategy, ColumnType, GridType, IPathSegment, IgxSummaryResult, GridSummaryCalculationMode } from 'igniteui-angular/grids';
+import type { ITreeGridRecord, ColumnType, GridType, IPathSegment, IgxSummaryResult, GridSummaryCalculationMode } from 'igniteui-angular/grids';
+import { TreeGridFilteringStrategy } from 'igniteui-angular/grids';
 import { IGroupingState } from '../../data-operations/groupby-state.interface';
 import { getHierarchy, isHierarchyMatch } from '../../data-operations/operations';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';

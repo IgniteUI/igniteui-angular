@@ -8,8 +8,8 @@ export * from './pivot-grid-aggregate';
 export * from './pivot-grid-dimensions';
 export * from './pivot-data-selector.component';
 export * from './pivot-grid.directives';
-export * from '../../data-operations/pivot-strategy';
-export * from '../../data-operations/pivot-sort-strategy';
+export * from '../common/pivot-strategy';
+export * from '../common/pivot-sort-strategy';
 
 /* Imports that cannot be resolved from IGX_GRID_COMMON_DIRECTIVES spread
     NOTE: Do not remove! Issue: https://github.com/IgniteUI/igniteui-angular/issues/13310

@@ -3,7 +3,7 @@ import { first, takeUntil } from 'rxjs/operators';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { DimensionValuesFilteringStrategy } from '../../data-operations/pivot-strategy';
+import { DimensionValuesFilteringStrategy } from '../common/pivot-strategy';
 import { ColumnType } from '../common/grid.interface';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxPivotGridComponent } from './pivot-grid.component';

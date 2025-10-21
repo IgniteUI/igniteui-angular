@@ -65,7 +65,7 @@ import {
 } from '../common/events';
 import { IgxGridRowComponent } from '../grid/grid-row.component';
 import { DropPosition } from '../moving/moving.service';
-import { DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
+import { DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from '../common/pivot-strategy';
 import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective } from '../filtering/excel-style/excel-style-filtering.component';
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
 import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';

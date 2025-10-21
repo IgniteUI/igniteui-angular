@@ -2,12 +2,12 @@ import { Inject, Pipe, PipeTransform } from '@angular/core';
 import { cloneArray, columnFieldPath, resolveNestedPath } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { DefaultPivotGridRecordSortingStrategy } from '../../data-operations/pivot-sort-strategy';
+import { DefaultPivotGridRecordSortingStrategy } from '../common/pivot-sort-strategy';
 import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import {
     DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
     PivotRowDimensionsStrategy
-} from '../../data-operations/pivot-strategy';
+} from '../common/pivot-strategy';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { GridBaseAPIService } from '../api.service';
 import { GridType, IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';

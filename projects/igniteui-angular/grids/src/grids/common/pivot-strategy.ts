@@ -1,11 +1,11 @@
 
-import { ColumnType, PivotGridType } from 'igniteui-angular/grids';
-import { DEFAULT_PIVOT_KEYS, IPivotDimension, IPivotDimensionStrategy, IPivotGridRecord, IPivotKeys, IPivotValue, PivotDimensionType } from 'igniteui-angular/grids';
-import { PivotUtil } from 'igniteui-angular/grids';
-import { FilteringStrategy, IgxFilterItem } from './filtering-strategy';
-import { cloneArray } from '../core/utils';
-import { IFilteringExpressionsTree } from './filtering-expressions-tree';
-import { IDataCloneStrategy } from './data-clone-strategy';
+import type { ColumnType, PivotGridType } from '../grid.interface';
+import type { DEFAULT_PIVOT_KEYS, IPivotDimension, IPivotDimensionStrategy, IPivotGridRecord, IPivotKeys, IPivotValue, PivotDimensionType } from '../pivot-grid/pivot-grid.interface';
+import { PivotUtil } from '../pivot-grid/pivot-util';
+import { FilteringStrategy, IgxFilterItem } from 'igniteui-angular/core';
+import { cloneArray } from 'igniteui-angular/core';
+import { IFilteringExpressionsTree } from 'igniteui-angular/core';
+import { IDataCloneStrategy } from 'igniteui-angular/core';
 
 /* csSuppress */
 export class NoopPivotDimensionsStrategy implements IPivotDimensionStrategy {

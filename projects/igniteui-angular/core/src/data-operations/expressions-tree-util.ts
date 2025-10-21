@@ -1,5 +1,5 @@
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { EntityType, FieldType } from 'igniteui-angular/grids';
+import type { EntityType, FieldType } from 'igniteui-angular/grids';
 import { GridColumnDataType } from './data-util';
 import { IFilteringOperation, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from './filtering-condition';
 import { IFilteringExpression } from './filtering-expression.interface';
