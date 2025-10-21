@@ -322,7 +322,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
     });
 
-    fit('should export tree grid with hierarchical data', (done) => {
+    it('should export tree grid with hierarchical data', (done) => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -343,7 +343,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
     });
 
-    fit('should export tree grid with flat self-referencing data', (done) => {
+    it('should export tree grid with flat self-referencing data', (done) => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
