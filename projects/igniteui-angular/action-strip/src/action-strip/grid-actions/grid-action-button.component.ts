@@ -1,7 +1,7 @@
 import { Component, Input, TemplateRef, ViewChild, Output, EventEmitter, ElementRef, booleanAttribute } from '@angular/core';
-import { IgxIconComponent } from '../../icon/icon.component';
-import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
-import { IgxIconButtonDirective } from '../../directives/button/icon-button.directive';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxRippleDirective } from 'igniteui-angular/directives';
+import { IgxIconButtonDirective } from 'igniteui-angular/directives';
 
 /* blazorElement */
 /* wcElementTag: igc-grid-action-button */
