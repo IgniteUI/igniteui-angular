@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { IgxChipComponent } from '../../chips/chip.component';
 import { DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } from '../../core/i18n/date-range-picker-resources';
 import { DateRange, CustomDateRange} from '.././date-range-picker-inputs.common';
@@ -11,7 +11,7 @@ type PredefinedRangeKey = 'last7Days' | 'currentMonth' | 'last30Days' | 'yearToD
 @Component({
   selector: 'igx-predefined-ranges-area',
   standalone: true,
-  imports: [CommonModule, IgxChipComponent],
+  imports: [IgxChipComponent],
   templateUrl: './predefined-ranges-area-component.html',
   styles: [`
     :host { display:block; }
