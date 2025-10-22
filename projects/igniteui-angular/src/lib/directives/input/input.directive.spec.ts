@@ -908,6 +908,22 @@ describe('IgxInput', () => {
 
         expect(formControl.touched).toBe(true);
     }));
+
+    it('should update validity when control is marked as touched', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ReactiveFormComponent);
+        fixture.detectChanges();
+
+        const component = fixture.componentInstance;
+        const igxInput = component.strIgxInput;
+
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+
+        component.markAllAsTouched();
+        tick();
+        fixture.detectChanges();
+
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+    }));
 });
 
 @Component({
@@ -1200,6 +1216,12 @@ class ReactiveFormComponent {
 
         this.textareaControl.markAsTouched();
         this.textareaControl.updateValueAndValidity();
+    }
+
+    public markAllAsTouched() {
+        if (!this.form.valid) {
+            this.form.markAllAsTouched();
+        }
     }
 }
 
