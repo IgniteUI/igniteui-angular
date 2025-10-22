@@ -153,7 +153,9 @@ export class IgxBadgeComponent {
     /** @hidden @internal */
     @HostBinding('class.igx-badge--square')
     public get _squareShape(): boolean {
-        return this.shape === 'square';
+        if (!this.dot) {
+            return this.shape === 'square';
+        }
     }
 
     /**
