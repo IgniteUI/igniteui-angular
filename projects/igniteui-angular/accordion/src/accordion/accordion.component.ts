@@ -8,9 +8,9 @@ import { ACCORDION_NAVIGATION_KEYS } from 'igniteui-angular/core';
 import {
     IExpansionPanelCancelableEventArgs,
     IExpansionPanelEventArgs, IgxExpansionPanelBase
-} from '../expansion-panel/expansion-panel.common';
-import { IgxExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
-import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
+} from 'igniteui-angular/expansion-panel';
+import { IgxExpansionPanelComponent } from 'igniteui-angular/expansion-panel';
+import { ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
 
 export interface IAccordionEventArgs extends IExpansionPanelEventArgs {
     owner: IgxAccordionComponent;
