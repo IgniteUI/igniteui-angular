@@ -6,13 +6,13 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin snackbar($theme) {
-    @include css-vars($theme, 'igx-snackbar');
+    @include css-vars($theme);
     @include fade-in();
 
     $variant: map.get($theme, '_meta', 'theme');
 
     $snackbar-min-height: rem(48px);
-    $snackbar-padding: rem(7px) rem(24px);
+    $snackbar-padding: pad-block(rem(7px)) pad-inline(rem(24px));
 
     %igx-snackbar-display {
         position: relative;
@@ -41,7 +41,7 @@
         }
 
         @if $variant == 'indigo' {
-            padding: rem(4px) rem(16px);
+            padding: pad-block(rem(4px)) pad-inline(rem(16px));
             min-height: rem(36px);
 
             [igxButton] {
