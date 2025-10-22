@@ -617,6 +617,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             // let cellDebug;
             UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent, false, true);
             await wait(DEBOUNCETIME);
@@ -977,11 +979,11 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             const keyDonwSpy = spyOn(grid.gridKeydown, 'emit');
-            const detectChangesSpy = spyOn(grid.cdr, 'detectChanges').and.callThrough();
 
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
             fix.detectChanges();
 
+            const detectChangesSpy = spyOn(grid.cdr, 'detectChanges').and.callThrough();
             const cellElem = fix.debugElement.query(By.css(CELL_CLASS));
             const input = cellElem.query(By.css('input'));
 
