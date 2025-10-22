@@ -1,8 +1,9 @@
 import {
     Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener,
-    Input, EventEmitter, booleanAttribute, TemplateRef, ComponentRef, Renderer2, OnChanges, SimpleChanges,
+    Input, EventEmitter, booleanAttribute, TemplateRef, ComponentRef, Renderer2,
     EnvironmentInjector,
     createComponent,
+    AfterViewInit,
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -45,7 +46,7 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
     selector: '[igxTooltipTarget]',
     standalone: true
 })
-export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnChanges, OnInit, OnDestroy {
+export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Gets/sets the amount of milliseconds that should pass before showing the tooltip.
      *
@@ -101,7 +102,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     @Input()
     public set hasArrow(value: boolean) {
-        if (this.target) {
+        if (this.target && this.target.arrow) {
             this.target.arrow.style.display = value ? '' : 'none';
         }
         this._hasArrow = value;
@@ -397,16 +398,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }
     }
 
-
-    /**
-     * @hidden
-     */
-    public ngOnChanges(changes: SimpleChanges): void {
-        if (changes['hasArrow']) {
-            this.target.arrow.style.display = changes['hasArrow'].currentValue ? '' : 'none';
-        }
-    }
-
     /**
      * @hidden
      */
@@ -431,6 +422,15 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         });
 
         this.nativeElement.addEventListener('touchstart', this.onTouchStart = this.onTouchStart.bind(this), { passive: true });
+    }
+
+    /**
+     * @hidden
+     */
+    public ngAfterViewInit(): void {
+        if (this.target && this.target.arrow) {
+            this.target.arrow.style.display = this.hasArrow ? '' : 'none';
+        }
     }
 
     /**
@@ -559,8 +559,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     /**
      * Used when a single tooltip is used for multiple targets.
-     * If the tooltip is shown for one target and the user interacts with another target,
-     * the tooltip is instantly hidden for the first target.
      */
     private _checkTooltipForMultipleTargets(): void {
         if (!this.target.tooltipTarget) {
@@ -573,8 +571,10 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
                 this.target.tooltipTarget._removeCloseButtonFromTooltip();
             }
 
+            // If the tooltip is shown for one target and the user interacts with another target,
+            // the tooltip is instantly hidden for the first target.
             clearTimeout(this.target.timeoutId);
-            this.target.stopAnimations(true);
+            this.target.forceClose(this._mergedOverlaySettings);
 
             this.target.tooltipTarget = this;
             this._isForceClosed = true;
