@@ -151,40 +151,57 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
             // For hierarchical grids, check if this record has child records
             if (isHierarchicalGrid) {
-                const childRecords = [];
-                let childOwner = null;
+                const allDescendants = [];
 
-                // Collect only direct child records (next level) that belong to this parent
+                // Collect all descendant records (children, grandchildren, etc.) that belong to this parent
+                // Child records have a different owner (island object) than the parent
                 let j = i + 1;
-                while (j < data.length && data[j].owner !== DEFAULT_OWNER && data[j].level > record.level) {
-                    // Only include direct children (one level deeper)
-                    if (data[j].level === record.level + 1 && !data[j].hidden) {
-                        childRecords.push(data[j]);
-                        if (!childOwner) {
-                            childOwner = data[j].owner;
-                        }
+                while (j < data.length && data[j].level > record.level) {
+                    // Include all descendants (any level deeper)
+                    if (!data[j].hidden) {
+                        allDescendants.push(data[j]);
                     }
                     j++;
                 }
 
-                // If there are child records, draw a child table
-                if (childRecords.length > 0 && childOwner) {
-                    yPosition = this.drawHierarchicalChildren(
-                        pdf,
-                        data,
-                        childRecords,
-                        childOwner,
-                        yPosition,
-                        margin,
-                        childTableIndent,
-                        usableWidth,
-                        pageHeight,
-                        headerHeight,
-                        rowHeight,
-                        options
-                    );
+                // If there are descendant records, draw child table(s)
+                if (allDescendants.length > 0) {
+                    // Group descendants by owner to separate different child grids
+                    // Owner is the actual island object, not a string
+                    // Only collect DIRECT children (one level deeper) for initial grouping
+                    const directDescendantsByOwner = new Map<any, IExportRecord[]>();
 
-                    // Skip the child records we just processed
+                    for (const desc of allDescendants) {
+                        // Only include records that are exactly one level deeper (direct children)
+                        if (desc.level === record.level + 1) {
+                            const owner = desc.owner;
+                            if (!directDescendantsByOwner.has(owner)) {
+                                directDescendantsByOwner.set(owner, []);
+                            }
+                            directDescendantsByOwner.get(owner)!.push(desc);
+                        }
+                    }
+
+                    // Draw each child grid separately with its direct children only
+                    for (const [owner, directChildren] of directDescendantsByOwner) {
+                        yPosition = this.drawHierarchicalChildren(
+                            pdf,
+                            data,
+                            allDescendants, // Pass all descendants so grandchildren can be found
+                            directChildren,
+                            owner,
+                            yPosition,
+                            margin,
+                            childTableIndent,
+                            usableWidth,
+                            pageHeight,
+                            headerHeight,
+                            rowHeight,
+                            options
+                        );
+                    }
+
+                    // Skip the descendant records we just processed
                     i = j - 1;
                 }
             }
@@ -281,8 +298,9 @@ export class IgxPdfExporterService extends IgxBaseExporter {
     private drawHierarchicalChildren(
         pdf: jsPDF,
         allData: IExportRecord[],
-        childRecords: IExportRecord[],
-        childOwner: string,
+        allDescendants: IExportRecord[], // All descendants to search for grandchildren
+        childRecords: IExportRecord[], // Direct children to render at this level
+        childOwner: any, // Owner is the island object, not a string
         yPosition: number,
         margin: number,
         indentPerLevel: number,
@@ -292,6 +310,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         rowHeight: number,
         options: IgxPdfExporterOptions
     ): number {
+        // Get columns for this child owner (owner is the island object)
         const childColumns = this._ownersMap.get(childOwner)?.columns.filter(
             col => col.field && !col.skip && col.headerType === ExportHeaderType.ColumnHeader
         ) || [];
@@ -300,74 +319,81 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             return yPosition;
         }
 
+        // Filter out header records - they should not be rendered as data rows
+        const dataRecords = childRecords.filter(r => r.type !== 'HeaderRecord');
+
+        if (dataRecords.length === 0) {
+            return yPosition;
+        }
+
         // Add some spacing before child table
         yPosition += 5;
-
-        // Check if child table fits on current page
-        const childTableHeight = headerHeight + (childRecords.length * rowHeight) + 10;
-        if (yPosition + childTableHeight > pageHeight - margin) {
-            pdf.addPage();
-            yPosition = margin;
-        }
 
         // Draw child table with indentation
         const childTableWidth = usableWidth - indentPerLevel;
         const childColumnWidth = childTableWidth / childColumns.length;
         const childTableX = margin + indentPerLevel;
 
+        // Check if we need a new page for headers
+        if (yPosition + headerHeight > pageHeight - margin) {
+            pdf.addPage();
+            yPosition = margin;
+        }
+
         // Draw child table headers
         this.drawTableHeaders(pdf, childColumns, childTableX, yPosition, childColumnWidth, headerHeight, childTableWidth, options);
         yPosition += headerHeight;
 
-        // Process each child record
-        let childIndex = 0;
-        while (childIndex < childRecords.length) {
-            const childRecord = childRecords[childIndex];
+        // Find the minimum level in these records (direct children of parent)
+        const minLevel = Math.min(...dataRecords.map(r => r.level));
 
-            // Check if this child record has its own children (next level in hierarchy)
-            const childRecordIndex = allData.indexOf(childRecord);
-            const grandchildrenByOwner = new Map<string, IExportRecord[]>();
-            
-            if (childRecordIndex >= 0 && childRecordIndex + 1 < allData.length) {
-                // Look for grandchildren and group them by owner (each owner represents a different child island)
-                let k = childRecordIndex + 1;
+        // Process each record at the minimum level (direct children)
+        const directChildren = dataRecords.filter(r => r.level === minLevel);
 
-                // Collect all grandchildren that belong to this child, grouped by owner
-                while (k < allData.length && allData[k].level > childRecord.level) {
-                    // Only include direct children (next level)
-                    if (allData[k].level === childRecord.level + 1 && !allData[k].hidden) {
-                        const owner = allData[k].owner.toString();
-                        if (!grandchildrenByOwner.has(owner)) {
-                            grandchildrenByOwner.set(owner, []);
-                        }
-                        grandchildrenByOwner.get(owner)!.push(allData[k]);
-                    }
-                    k++;
-                }
+        for (const childRecord of directChildren) {
+            // Check if we need a new page
+            if (yPosition + rowHeight > pageHeight - margin) {
+                pdf.addPage();
+                yPosition = margin;
+                // Redraw headers on new page
+                this.drawTableHeaders(pdf, childColumns, childTableX, yPosition, childColumnWidth, headerHeight, childTableWidth, options);
+                yPosition += headerHeight;
             }
 
-            // If this child has grandchildren, render them as nested child tables (one per owner/island)
-            if (grandchildrenByOwner.size > 0) {
-                // Check if we need a new page for parent row
-                if (yPosition + rowHeight > pageHeight - margin) {
-                    pdf.addPage();
-                    yPosition = margin;
-                    // Redraw headers on new page
-                    this.drawTableHeaders(pdf, childColumns, childTableX, yPosition, childColumnWidth, headerHeight, childTableWidth, options);
-                    yPosition += headerHeight;
+            // Draw the child record
+            this.drawDataRow(pdf, childRecord, childColumns, childTableX, yPosition, childColumnWidth, rowHeight, 0, options);
+            yPosition += rowHeight;
+
+            // Check if this child has grandchildren (deeper levels in different child grids)
+            // Look for grandchildren in allDescendants that are direct descendants of this childRecord
+            const grandchildrenForThisRecord = allDescendants.filter(r =>
+                r.level === childRecord.level + 1 && r.type !== 'HeaderRecord'
+            );
+
+            if (grandchildrenForThisRecord.length > 0) {
+                // Group grandchildren by their owner (different child islands under this record)
+                const grandchildrenByOwner = new Map<any, IExportRecord[]>();
+
+                for (const gc of grandchildrenForThisRecord) {
+                    // Use the actual owner object
+                    const gcOwner = gc.owner;
+                    // Only include grandchildren that have a different owner (separate child grid)
+                    if (gcOwner !== childOwner) {
+                        if (!grandchildrenByOwner.has(gcOwner)) {
+                            grandchildrenByOwner.set(gcOwner, []);
+                        }
+                        grandchildrenByOwner.get(gcOwner)!.push(gc);
+                    }
                 }
 
-                // Draw the parent row (child record)
-                this.drawDataRow(pdf, childRecord, childColumns, childTableX, yPosition, childColumnWidth, rowHeight, 0, options);
-                yPosition += rowHeight;
-
-                // Recursively draw each island's grandchildren as a separate nested child table
-                for (const [grandchildOwner, grandchildRecords] of grandchildrenByOwner) {
+                // Recursively draw each grandchild owner's records with increased indentation
+                for (const [gcOwner, directGrandchildren] of grandchildrenByOwner) {
                     yPosition = this.drawHierarchicalChildren(
                         pdf,
                         allData,
-                        grandchildRecords,
-                        grandchildOwner,
+                        allDescendants, // Pass all descendants so great-grandchildren can be found
+                        directGrandchildren, // Direct grandchildren to render
+                        gcOwner,
                         yPosition,
                         margin,
                         indentPerLevel + 30, // Increase indentation for next level
@@ -378,22 +404,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                         options
                     );
                 }
-            } else {
-                // No grandchildren, just draw this child as a regular row
-                // Check if we need a new page
-                if (yPosition + rowHeight > pageHeight - margin) {
-                    pdf.addPage();
-                    yPosition = margin;
-                    // Redraw headers on new page
-                    this.drawTableHeaders(pdf, childColumns, childTableX, yPosition, childColumnWidth, headerHeight, childTableWidth, options);
-                    yPosition += headerHeight;
-                }
-
-                this.drawDataRow(pdf, childRecord, childColumns, childTableX, yPosition, childColumnWidth, rowHeight, 0, options);
-                yPosition += rowHeight;
             }
-
-            childIndex++;
         }
 
         // Add spacing after child table
