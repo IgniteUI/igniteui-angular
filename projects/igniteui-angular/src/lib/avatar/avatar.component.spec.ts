@@ -3,10 +3,7 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxAvatarComponent, IgxAvatarType, IgxAvatarSize } from './avatar.component';
 
-import { configureTestSuite } from '../test-utils/configure-suite';
-
 describe('Avatar', () => {
-    configureTestSuite();
     const baseClass = 'igx-avatar';
 
     const classes = {
@@ -20,7 +17,7 @@ describe('Avatar', () => {
         icon: `${baseClass}--icon`
     };
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 InitAvatarComponent,

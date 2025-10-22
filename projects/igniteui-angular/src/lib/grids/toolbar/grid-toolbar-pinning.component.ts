@@ -17,7 +17,7 @@ import { AsyncPipe } from '@angular/common';
  *
  *
  * @igxModule IgxGridToolbarModule
- * @igxParent IgxGridToolbarComponent
+ * @igxParent IgxGridToolbarComponent, IgxGridToolbarActionsComponent
  *
  * @example
  * ```html

@@ -7,7 +7,6 @@ import { take } from 'rxjs/operators';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxInputDirective, IgxInputGroupComponent } from '../input-group/public_api';
 import { Direction } from '../services/direction/directionality';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxStepComponent } from './step/step.component';
 import {
@@ -52,7 +51,7 @@ const getStepperPositions = (): string[] => {
     return positions;
 };
 
-const testAnimationBehvior = (
+const testAnimationBehavior = (
     val: any,
     fix: ComponentFixture<IgxStepperSampleTestComponent>,
     isHorAnimTypeInvalidTest: boolean
@@ -75,11 +74,10 @@ const testAnimationBehvior = (
 };
 
 describe('Rendering Tests', () => {
-    configureTestSuite();
     let fix: ComponentFixture<IgxStepperSampleTestComponent>;
     let stepper: IgxStepperComponent;
 
-    beforeAll(
+    beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
@@ -329,6 +327,14 @@ describe('Rendering Tests', () => {
     });
 
     describe('Appearance', () => {
+        beforeAll(() => {
+            jasmine.getEnv().allowRespy(true);
+        });
+
+        afterAll(() => {
+            jasmine.getEnv().allowRespy(false);
+        });
+
         it('should apply the appropriate class to a stepper in horizontal mode', () => {
             stepper.orientation = IgxStepperOrientation.Horizontal;
             fix.detectChanges();
@@ -572,7 +578,7 @@ describe('Rendering Tests', () => {
 
             for (const val of numericTestValues) {
                 fix.componentInstance.animationDuration = val as any;
-                testAnimationBehvior(val, fix, false);
+                testAnimationBehavior(val, fix, false);
             }
 
             const fallbackToDefaultValues = [-1, 0, null, undefined, 'sampleString', [], {}];
@@ -581,7 +587,7 @@ describe('Rendering Tests', () => {
                 fix.detectChanges();
                 expect(stepper.animationDuration)
                     .toBe((stepper as any)._defaultAnimationDuration);
-                testAnimationBehvior(val, fix, false);
+                testAnimationBehavior(val, fix, false);
             }
 
             fix.componentInstance.animationDuration = 300;
@@ -591,13 +597,13 @@ describe('Rendering Tests', () => {
             const horAnimTypeValidValues = ['slide', 'fade', 'none'];
             for (const val of horAnimTypeValidValues) {
                 fix.componentInstance.horizontalAnimationType = val as any;
-                testAnimationBehvior(val, fix, false);
+                testAnimationBehavior(val, fix, false);
             }
 
             const horAnimTypeTestValues = ['sampleString', null, undefined, 0, [], {}];
             for (const val of horAnimTypeTestValues) {
                 fix.componentInstance.horizontalAnimationType = val as any;
-                testAnimationBehvior(val, fix, true);
+                testAnimationBehavior(val, fix, true);
             }
 
             stepper.orientation = IgxStepperOrientation.Vertical;
@@ -606,7 +612,7 @@ describe('Rendering Tests', () => {
             const vertAnimTypeTestValues = ['fade', 'grow', 'none', 'sampleString', null, undefined, 0, [], {}];
             for (const val of vertAnimTypeTestValues) {
                 fix.componentInstance.verticalAnimationType = val as any;
-                testAnimationBehvior(val, fix, false);
+                testAnimationBehavior(val, fix, false);
             }
         }));
 
@@ -712,7 +718,7 @@ describe('Rendering Tests', () => {
         it('should properly collapse the previously active step in horizontal orientation and animation type \'fade\'', fakeAsync(() => {
             stepper.orientation = IgxStepperOrientation.Horizontal;
             stepper.horizontalAnimationType = 'fade';
-            testAnimationBehvior('fade', fix, false);
+            testAnimationBehavior('fade', fix, false);
         }));
     });
 
@@ -917,7 +923,6 @@ describe('Rendering Tests', () => {
 });
 
 describe('Stepper service unit tests', () => {
-    configureTestSuite();
 
     let stepperService: IgxStepperService;
     let mockElement: any;
@@ -930,6 +935,14 @@ describe('Stepper service unit tests', () => {
 
     let steps: IgxStepComponent[] = [];
     let stepper: IgxStepperComponent;
+
+    beforeAll(() => {
+        jasmine.getEnv().allowRespy(true);
+    });
+
+    afterAll(() => {
+        jasmine.getEnv().allowRespy(false);
+    });
 
     beforeEach(() => {
         mockElement = {

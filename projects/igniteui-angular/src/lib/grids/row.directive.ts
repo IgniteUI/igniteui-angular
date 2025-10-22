@@ -21,7 +21,7 @@ import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { TransactionType } from '../services/transaction/transaction';
 import { IgxGridSelectionService } from './selection/selection.service';
-import { IgxAddRow, IgxEditRow } from './common/crud.service';
+import { IgxEditRow } from './common/crud.service';
 import { CellType, ColumnType, GridType, IGX_GRID_BASE } from './common/grid.interface';
 import { mergeWith } from 'lodash-es';
 import { Subject } from 'rxjs';
@@ -44,6 +44,12 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      */
     @HostBinding('attr.role')
     public role = 'row';
+
+    /**
+     * @hidden
+     */
+    @Input()
+    public metaData: any;
 
     /**
      *  The data passed to the row component.
@@ -117,6 +123,10 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         return this.grid.isRecordPinned(this.data);
     }
 
+    public get hasMergedCells(): boolean {
+        return this.grid.columnsToMerge.length > 0;
+    }
+
     /**
      * Gets the expanded state of the row.
      * ```typescript
@@ -140,7 +150,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
 
     public get addRowUI(): any {
         return !!this.grid.crudService.row &&
-            this.grid.crudService.row.getClassName() === IgxAddRow.name &&
+            this.grid.crudService.row.isAddRow &&
             this.grid.crudService.row.id === this.key;
     }
 
@@ -245,6 +255,20 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      */
     public get pinnedColumns(): ColumnType[] {
         return this.grid.pinnedColumns;
+    }
+
+    /**
+     * @hidden
+     */
+    public get pinnedStartColumns(): ColumnType[] {
+        return this.grid.pinnedStartColumns;
+    }
+
+    /**
+    * @hidden
+    */
+    public get pinnedEndColumns(): ColumnType[] {
+        return this.grid.pinnedEndColumns;
     }
 
     /**
@@ -387,6 +411,14 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      */
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
+        if (this.hasMergedCells && this.metaData?.cellMergeMeta) {
+            const targetRowIndex = this.grid.navigation.activeNode.row;
+            if (targetRowIndex != this.index) {
+                const row = this.grid.rowList.toArray().find(x => x.index === targetRowIndex);
+                row.onClick(event);
+                return;
+            }
+        }
         this.grid.rowClick.emit({
             row: this,
             event
@@ -431,6 +463,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         if (this.grid.actionStrip) {
             this.grid.actionStrip.show(this);
         }
+        this.grid.hoverIndex = this.index;
     }
 
     /**
@@ -442,6 +475,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         if (this.grid.actionStrip && this.grid.actionStrip.hideOnRowLeave) {
             this.grid.actionStrip.hide();
         }
+        this.grid.hoverIndex = null;
     }
 
     /**
@@ -512,6 +546,12 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
 
     public isCellActive(visibleColumnIndex) {
         const node = this.grid.navigation.activeNode;
+        const field = this.grid.visibleColumns[visibleColumnIndex]?.field;
+        const rowSpan = this.metaData?.cellMergeMeta?.get(field)?.rowSpan;
+        if (rowSpan > 1) {
+            return node ? (node.row >= this.index && node.row < this.index + rowSpan)
+                && node.column === visibleColumnIndex : false;
+        }
         return node ? node.row === this.index && node.column === visibleColumnIndex : false;
     }
 
@@ -560,8 +600,8 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-    public shouldDisplayPinnedChip(visibleColumnIndex: number): boolean {
-        return this.pinned && this.disabled && visibleColumnIndex === 0;
+    public shouldDisplayPinnedChip(col: ColumnType): boolean {
+        return this.pinned && this.disabled && col.visibleIndex === 0 && !this.metaData?.cellMergeMeta?.get(col.field)?.root;
     }
 
     /**
@@ -590,6 +630,71 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     public animationEndHandler() {
         this.triggerAddAnimationClass = false;
         this.addAnimationEnd.emit(this);
+    }
+
+    protected getMergeCellSpan(col: ColumnType) {
+        if ((this.grid as any).shouldResize) {
+            return null;
+        }
+        const rowCount = this.metaData.cellMergeMeta.get(col.field).rowSpan;
+        let sizeSpans = "";
+        const isPinned = this.pinned && !this.disabled;
+        const indexInData = this.grid.isRowPinningToTop && !isPinned ? this.index - this.grid.pinnedRecordsCount : this.index;
+        for (let index = indexInData; index < indexInData + rowCount; index++) {
+            const size = this.grid.verticalScrollContainer.getSizeAt(index);
+            sizeSpans += size + 'px ';
+        }
+        return `${sizeSpans}`;
+    }
+
+    protected isSelectionRoot(col: ColumnType) {
+        const mergeMeta = this.metaData?.cellMergeMeta;
+        const rowCount = mergeMeta?.get(col.field)?.rowSpan;
+        if (mergeMeta && rowCount > 1) {
+            const isPinned = this.pinned && !this.disabled;
+            const indexInData = this.grid.isRowPinningToTop && !isPinned ? this.index - this.grid.pinnedRecordsCount : this.index;
+            const range = isPinned ? this.grid.pinnedDataView.slice(indexInData, indexInData + rowCount) : this.grid.verticalScrollContainer.igxForOf.slice(indexInData, indexInData + rowCount);
+            const inRange = range.filter(x => this.selectionService.isRowSelected(this.extractRecordKey(x))).length > 0;
+            return inRange;
+        }
+        return false;
+    }
+
+    protected isHoveredRoot(col: ColumnType) {
+        const mergeMeta = this.metaData?.cellMergeMeta;
+        const rowCount = mergeMeta?.get(col.field)?.rowSpan;
+        if (mergeMeta && rowCount > 1 && this.grid.hoverIndex !== null && this.grid.hoverIndex !== undefined) {
+            const indexInData = this.index;
+            const hoveredIndex = this.grid.hoverIndex;
+            return indexInData <= hoveredIndex && indexInData + rowCount > hoveredIndex;
+        }
+        return false;
+    }
+
+    protected extractRecordKey(rec: any) {
+        let recData = rec;
+        if (this.grid.isRecordMerged(recData)) {
+            recData = rec.recordRef;
+        }
+
+        if (this.grid.isTreeRow && this.grid.isTreeRow(recData)) {
+            recData = recData.data;
+        }
+        return this.grid.primaryKey ? recData[this.grid.primaryKey] : recData;
+    }
+
+    protected getRowHeight() {
+        if ((this.grid as any).shouldResize) {
+            return null;
+        }
+        const isPinned = this.pinned && !this.disabled;
+        const indexInData = this.grid.isRowPinningToTop && !isPinned ? this.index - this.grid.pinnedRecordsCount : this.index;
+        if ((this.grid as any)._cdrRequests) {
+            // recalc size if repaint is requested.
+            this.grid.verticalScrollContainer.recalcUpdateSizes();
+        }
+        const size = this.grid.verticalScrollContainer.getSizeAt(indexInData);
+        return size || this.grid.rowHeight;
     }
 
     /**

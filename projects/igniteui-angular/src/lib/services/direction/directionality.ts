@@ -1,5 +1,4 @@
-import { Injectable, Inject, InjectionToken, inject } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { Injectable, Inject, InjectionToken, inject, DOCUMENT } from '@angular/core';
 
 /**
  * @hidden

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
 import { ITooltipHideEventArgs, ITooltipShowEventArgs, IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
 import { IgxToggleActionDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
@@ -6,11 +6,14 @@ import { IgxToggleActionDirective, IgxToggleDirective } from '../directives/togg
 @Component({
     template: `
     <div class="dummyDiv">dummy div for touch tests</div>
-    <button [igxTooltipTarget]="tooltipRef" [tooltip]="'Infragistics Inc. HQ'"
-            (tooltipShow)="showing($event)" (tooltipHide)="hiding($event)"
-            style="margin: 200px">
-        Hover me
-    </button>
+
+    @if (showButton) {
+        <button [igxTooltipTarget]="tooltipRef" [tooltip]="'Infragistics Inc. HQ'"
+                (tooltipShow)="showing($event)" (tooltipHide)="hiding($event)"
+                style="margin: 200px">
+            Hover me
+        </button>
+    }
     <div igxTooltip #tooltipRef="tooltip">
         Hello, I am a tooltip!
     </div>
@@ -19,9 +22,10 @@ import { IgxToggleActionDirective, IgxToggleDirective } from '../directives/togg
 })
 export class IgxTooltipSingleTargetComponent {
     @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
-    @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
+    @ViewChild(IgxTooltipTargetDirective, { static: false }) public tooltipTarget: IgxTooltipTargetDirective;
     public cancelShowing = false;
     public cancelHiding = false;
+    public showButton = true;
 
     public showing(args: ITooltipShowEventArgs) {
         if (this.cancelShowing) {
@@ -38,6 +42,8 @@ export class IgxTooltipSingleTargetComponent {
 
 @Component({
     template: `
+    <div class="dummyDiv">dummy div for touch tests</div>
+
     <button class="buttonOne" #targetOne="tooltipTarget" [igxTooltipTarget]="tooltipRef" style="margin: 100px">
         Target One
     </button>
@@ -49,13 +55,51 @@ export class IgxTooltipSingleTargetComponent {
     <div igxTooltip #tooltipRef="tooltip">
         Hello, I am a tooltip!
     </div>
+
+    <ng-template #customClose>
+        <div class="my-close-btn">Custom Close Button</div>
+    </ng-template>
+
+    <ng-template #secondCustomClose>
+        <div class="my-second-close-btn">Second Custom Close Button</div>
+    </ng-template>
     `,
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
 export class IgxTooltipMultipleTargetsComponent {
-    @ViewChild('targetOne', { read: IgxTooltipTargetDirective, static: true }) public targetOne: IgxTooltipDirective;
+    @ViewChild('targetOne', { read: IgxTooltipTargetDirective, static: true }) public targetOne: IgxTooltipTargetDirective;
     @ViewChild('targetTwo', { read: IgxTooltipTargetDirective, static: true }) public targetTwo: IgxTooltipTargetDirective;
     @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
+    @ViewChild('customClose', { static: true }) public customCloseTemplate: TemplateRef<any>;
+    @ViewChild('secondCustomClose', { static: true }) public secondCustomCloseTemplate: TemplateRef<any>;
+}
+
+@Component({
+    template: `
+    <div class="dummyDiv">dummy div for touch tests</div>
+
+    <button class="buttonOne" #targetOne="tooltipTarget" [igxTooltipTarget]="tooltipRef1" style="margin: 100px">
+        Target One
+    </button>
+
+    <button class="buttonTwo" #targetTwo="tooltipTarget" [igxTooltipTarget]="tooltipRef2" style="margin: 100px">
+        Target Two
+    </button>
+
+    <div igxTooltip #tooltipRef1="tooltip">
+        Hello, I am tooltip 1!
+    </div>
+    <div igxTooltip #tooltipRef2="tooltip">
+        Hello, I am tooltip 2!
+    </div>
+    `,
+    imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
+})
+export class IgxTooltipMultipleTooltipsComponent {
+    @ViewChild('targetOne', { read: IgxTooltipTargetDirective, static: true }) public targetOne: IgxTooltipTargetDirective;
+    @ViewChild('targetTwo', { read: IgxTooltipTargetDirective, static: true }) public targetTwo: IgxTooltipTargetDirective;
+    @ViewChild('tooltipRef1', { read: IgxTooltipDirective, static: true }) public tooltipOne: IgxTooltipDirective;
+    @ViewChild('tooltipRef2', { read: IgxTooltipDirective, static: true }) public tooltipTwo: IgxTooltipDirective;
 }
 
 
@@ -85,4 +129,23 @@ export class IgxTooltipWithToggleActionComponent {
     @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
     @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
     @ViewChild(IgxToggleDirective, { static: true }) public toggleDir: IgxToggleDirective;
+}
+
+@Component({
+    template: `
+    <button [igxTooltipTarget]="tooltipRef" [sticky]="true" [closeButtonTemplate]="customClose">
+        Options
+    </button>
+
+    <ng-template #customClose>
+            <button class="my-close-btn">Close Me</button>
+    </ng-template>
+
+    <div #tooltipRef="tooltip" igxTooltip>Test</div>
+    `,
+    imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
+})
+export class IgxTooltipWithCloseButtonComponent {
+    @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
+    @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
 }

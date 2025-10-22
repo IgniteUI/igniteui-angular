@@ -1,5 +1,5 @@
 import { DebugElement } from "@angular/core";
-import { fakeAsync, TestBed } from "@angular/core/testing";
+import { fakeAsync, TestBed, waitForAsync } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { IgxCheckboxComponent } from "../../checkbox/checkbox.component";
@@ -7,7 +7,6 @@ import { SortingDirection } from "../../data-operations/sorting-strategy";
 import { IgxExpansionPanelHeaderComponent } from '../../expansion-panel/expansion-panel-header.component';
 import { IgxExpansionPanelComponent } from '../../expansion-panel/expansion-panel.component';
 import { IgxInputDirective } from "../../input-group/public_api";
-import { configureTestSuite } from "../../test-utils/configure-suite";
 import { IgxPivotGridTestBaseComponent } from "../../test-utils/pivot-grid-samples.spec";
 import { UIInteractions, wait } from "../../test-utils/ui-interactions.spec";
 import { PivotGridType } from "../common/grid.interface";
@@ -22,11 +21,13 @@ import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 describe("Pivot data selector", () => {
 
-    configureTestSuite(() => {
-        return TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, IgxPivotDataSelectorComponent],
-        });
-    });
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule, IgxPivotDataSelectorComponent
+            ]
+        }).compileComponents();
+    }));
 
     it("should initialize standalone before a grid is set ", () => {
         const fixture = TestBed.createComponent(IgxPivotDataSelectorComponent);
@@ -41,14 +42,14 @@ describe("Pivot data selector integration", () => {
     let selector: IgxPivotDataSelectorComponent;
     let pivotItems: (IPivotDimension | IPivotValue)[];
 
-    configureTestSuite(() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxPivotGridTestBaseComponent
             ]
-        });
-    });
+        }).compileComponents();
+    }));
 
     beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(IgxPivotGridTestBaseComponent);

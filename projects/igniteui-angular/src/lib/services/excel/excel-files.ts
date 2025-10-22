@@ -632,7 +632,7 @@ export class WorksheetFile implements IExcelFile {
         for (const currentCol of headersForLevel) {
             const spanLength = isVertical ? currentCol.rowSpan : currentCol.columnSpan;
 
-            if (currentCol.level === i && currentCol.headerType !== ExportHeaderType.PivotMergedHeader) {
+            if (currentCol.level === i) {
                 let columnCoordinate;
                 const column = isVertical
                     ? this.rowIndex
@@ -644,7 +644,10 @@ export class WorksheetFile implements IExcelFile {
                 if (currentCol.headerType === ExportHeaderType.PivotRowHeader) {
                     rowCoordinate = startValue + 1;
                 }
-                const columnValue = dictionary.saveValue(currentCol.header, true, false);
+
+                const columnValue = currentCol.headerType === ExportHeaderType.PivotMergedHeader ? 
+                                        dictionary.saveValue(currentCol.field, true, true) :
+                                        dictionary.saveValue(currentCol.header, true, false);
 
                 columnCoordinate = (currentCol.field === GRID_LEVEL_COL
                     ? ExcelStrings.getExcelColumn(worksheetData.columnCount + 1)

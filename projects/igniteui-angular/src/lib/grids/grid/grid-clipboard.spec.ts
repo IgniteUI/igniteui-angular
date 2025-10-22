@@ -1,8 +1,7 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridClipboardComponent } from '../../test-utils/grid-samples.spec';
 import { CancelableEventArgs } from '../../core/utils';
 import { take } from 'rxjs/operators';
@@ -14,10 +13,12 @@ describe('IgxGrid - Clipboard #grid', () => {
 
     let fix: ComponentFixture<IgxGridClipboardComponent>;
     let grid: IgxGridComponent;
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
-            imports: [IgxGridClipboardComponent, NoopAnimationsModule]
-        });
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                IgxGridClipboardComponent, NoopAnimationsModule
+            ]
+        }).compileComponents();
     }));
 
     beforeEach(() => {
@@ -35,7 +36,7 @@ describe('IgxGrid - Clipboard #grid', () => {
         const eventData = dispatchCopyEventOnGridBody(fix);
         expect(copySpy).toHaveBeenCalledTimes(1);
         expect(eventData).
-             
+
             toEqual('ProductNameHeader\tDownloads\tReleased\r\n** Ignite UI for JavaScript **\t254\tfalse\r\n** NetAdvantage **\t127\ttrue\r\n');
     });
 

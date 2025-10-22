@@ -53,30 +53,44 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
         return primaryKey ? rowData[primaryKey] : rowData;
     }
 
-    private hierarchizeFlatData(collection: any[], primaryKey: string, foreignKey: string,
-        map: Map<any, ITreeGridRecord>, flatData: any[]):
-        ITreeGridRecord[] {
-        const result: ITreeGridRecord[] = [];
-        const missingParentRecords: ITreeGridRecord[] = [];
+    /**
+     * Converts a flat array of data into a hierarchical (tree) structure,
+     * preserving the original order of the records among siblings.
+     *
+     * It uses a two-pass approach:
+     * 1. Creates all ITreeGridRecord objects and populates the Map for quick lookup.
+     * 2. Links the records by iterating again, ensuring children are added to
+     * their parent's children array in the order they appeared in the
+     * original collection.
+     *
+     * @param collection The flat array of data to be hierarchized. This is the array whose order should be preserved.
+     * @param primaryKey The name of the property in the data objects that serves as the unique identifier (e.g., 'id').
+     * @param foreignKey The name of the property in the data objects that links to the parent's primary key (e.g., 'parentId').
+     * @param map A pre-existing Map object (key: primaryKey value, value: ITreeGridRecord) used to store and quickly look up all created records.
+     * @param flatData The original flat data array. Used for passing to the setIndentationLevels method (not directly used for hierarchy building).
+     * @returns An array of ITreeGridRecord objects representing the root nodes of the hierarchy, ordered as they appeared in the original collection.
+     */
+    private hierarchizeFlatData(
+        collection: any[],
+        primaryKey: string,
+        foreignKey: string,
+        map: Map<any, ITreeGridRecord>,
+        flatData: any[]
+    ): ITreeGridRecord[] {
         collection.forEach(row => {
             const record: ITreeGridRecord = {
                 key: this.getRowID(primaryKey, row),
                 data: row,
                 children: []
             };
-            const parent = map.get(row[foreignKey]);
-            if (parent) {
-                record.parent = parent;
-                parent.children.push(record);
-            } else {
-                missingParentRecords.push(record);
-            }
-
             map.set(row[primaryKey], record);
         });
 
-        missingParentRecords.forEach(record => {
-            const parent = map.get(record.data[foreignKey]);
+        const result: ITreeGridRecord[] = [];
+        collection.forEach(row => {
+            const record: ITreeGridRecord = map.get(row[primaryKey])!;
+            const parent = map.get(row[foreignKey]);
+
             if (parent) {
                 record.parent = parent;
                 parent.children.push(record);
@@ -202,7 +216,7 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
         if (!expressions.length) {
             result = hierarchicalData;
         } else {
-            result = DataUtil.treeGridSort(hierarchicalData, expressions, sorting, null, this.grid);
+            result = DataUtil.treeGridSort(hierarchicalData, expressions, sorting, this.grid);
         }
 
         const filteredSortedData = [];
@@ -331,7 +345,7 @@ export class IgxTreeGridAddRowPipe implements PipeTransform {
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any, isPinned = false, _pipeTrigger: number) {
-        if (!this.grid.rowEditable || !this.grid.crudService.row || this.grid.crudService.row.getClassName() !== IgxAddRow.name ||
+        if (!this.grid.rowEditable || !this.grid.crudService.row || !this.grid.crudService.row.isAddRow ||
             !this.grid.gridAPI.crudService.addRowParent || isPinned !== this.grid.gridAPI.crudService.addRowParent.isPinned) {
             return collection;
         }

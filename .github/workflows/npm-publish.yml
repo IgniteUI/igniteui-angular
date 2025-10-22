@@ -1,4 +1,6 @@
 name: Npm.js deploy
+permissions:
+  contents: read
 
 on:
   release:

@@ -1,5 +1,5 @@
 import { ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef } from '@angular/core';
-import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, mkenum } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 
 // Component interfaces
@@ -99,11 +99,11 @@ export interface ITreeNodeToggledEventArgs extends IBaseEventArgs {
 }
 
 // Enums
-export const IgxTreeSelectionType = /*@__PURE__*/mkenum({
+export const IgxTreeSelectionType = {
     None: 'None',
     BiState: 'BiState',
     Cascading: 'Cascading'
-});
+} as const;
 export type IgxTreeSelectionType = (typeof IgxTreeSelectionType)[keyof typeof IgxTreeSelectionType];
 
 // Token

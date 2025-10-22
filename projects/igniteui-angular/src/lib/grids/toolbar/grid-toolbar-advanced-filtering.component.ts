@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { IgxToolbarToken } from './token';
 import { OverlaySettings } from '../../services/overlay/utilities';
 import { IgxIconComponent } from '../../icon/icon.component';
@@ -18,7 +18,7 @@ import { isTree } from '../../data-operations/expressions-tree-util';
  *
  *
  * @igxModule IgxGridToolbarModule
- * @igxParent IgxGridToolbarComponent
+ * @igxParent IgxGridToolbarComponent, IgxGridToolbarActionsComponent
  *
  * @example
  * ```html

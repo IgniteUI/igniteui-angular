@@ -3,15 +3,13 @@ import { By } from '@angular/platform-browser';
 import { ViewChild, Component } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from './paginator.component';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { first } from 'rxjs/operators';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 
 describe('IgxPaginator with default settings', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, DefaultPaginatorComponent]
         }).compileComponents();
@@ -236,8 +234,7 @@ describe('IgxPaginator with default settings', () => {
 });
 
 describe('IgxPaginator with custom settings', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, CustomizedPaginatorComponent]
         }).compileComponents();

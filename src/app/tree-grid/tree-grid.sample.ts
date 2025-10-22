@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.component';
-import { IgxButtonGroupComponent, IgxTreeGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxPaginatorComponent, IgxSwitchComponent, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxDropDownItemComponent, GridSelectionMode, TreeGridFilteringStrategy, IgxExcelExporterService, IgxCsvExporterService, IgxExcelExporterOptions, IgxCsvExporterOptions, CsvFileTypes } from 'igniteui-angular';
+import { IgxButtonGroupComponent, IgxTreeGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxPaginatorComponent, IgxSwitchComponent, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxDropDownItemComponent, GridSelectionMode, TreeGridFilteringStrategy, IgxExcelExporterService, IgxCsvExporterService, IgxExcelExporterOptions, IgxCsvExporterOptions, CsvFileTypes, IgxColumnComponent, ColumnPinningPosition } from 'igniteui-angular';
 
 
 @Component({
@@ -34,6 +34,18 @@ export class TreeGridSampleComponent implements OnInit {
 
     constructor(private excelExporterService: IgxExcelExporterService, private csvExporterService: IgxCsvExporterService) {
 
+    }
+
+    public columnInit(e: IgxColumnComponent) {
+        if(e.field === 'ID') {
+            e.pinningPosition = ColumnPinningPosition.End;
+            e.pinned = true;
+        }
+
+        if(e.field === 'CompanyName') {
+            e.pinningPosition = ColumnPinningPosition.Start;
+            e.pinned = true;
+        }
     }
 
     public ngOnInit(): void {

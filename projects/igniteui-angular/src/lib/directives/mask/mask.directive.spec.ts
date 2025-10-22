@@ -3,7 +3,6 @@ import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { IgxMaskDirective } from './mask.directive';
 
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { Replaced } from './mask-parsing.service';
 import { By } from '@angular/platform-browser';
@@ -11,9 +10,8 @@ import { IgxInputGroupComponent } from '../../input-group/input-group.component'
 import { IgxInputDirective } from '../input/input.directive';
 
 describe('igxMask', () => {
-    configureTestSuite();
     // TODO: Refactor tests to reuse components
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 AlphanumSpaceMaskComponent,

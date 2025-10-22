@@ -2,17 +2,15 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridSortingComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxTreeGrid - Sorting #tGrid', () => {
-    configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxTreeGridSortingComponent]
         }).compileComponents();
@@ -28,12 +26,15 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
         it('should sort descending all treeGrid levels by column name through API', () => {
             treeGrid.sort({ fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: false,
                 strategy: DefaultSortingStrategy.instance() });
+            const nameHeaderCell = GridFunctions.getColumnHeader('Name', fix);
+
             fix.detectChanges();
 
             // Verify first level records are desc sorted
             expect(treeGrid.getCellByColumn(0, 'Name').value).toEqual('Yang Wang');
             expect(treeGrid.getCellByColumn(1, 'Name').value).toEqual('John Winchester');
             expect(treeGrid.getCellByColumn(8, 'Name').value).toEqual('Ana Sanders');
+            expect(nameHeaderCell.attributes['aria-sort']).toEqual('descending');
 
             // Verify second level records are desc sorted
             expect(treeGrid.getCellByColumn(2, 'Name').value).toEqual('Thomas Hardy');
@@ -207,6 +208,7 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
             expect(treeGrid.getCellByColumn(0, 'Name').value).toEqual('Yang Wang');
             expect(treeGrid.getCellByColumn(1, 'Name').value).toEqual('John Winchester');
             expect(treeGrid.getCellByColumn(8, 'Name').value).toEqual('Ana Sanders');
+            expect(header.attributes['aria-sort']).toEqual('descending');
 
             // Verify second level records are desc sorted
             expect(treeGrid.getCellByColumn(2, 'Name').value).toEqual('Thomas Hardy');
@@ -228,6 +230,7 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
             expect(treeGrid.getCellByColumn(0, 'Age').value).toEqual(42);
             expect(treeGrid.getCellByColumn(2, 'Age').value).toEqual(55);
             expect(treeGrid.getCellByColumn(9, 'Age').value).toEqual(61);
+            expect(header.attributes['aria-sort']).toEqual('ascending');
 
             // Verify second level records are asc sorted
             expect(treeGrid.getCellByColumn(3, 'Age').value).toEqual(29);

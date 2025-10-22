@@ -28,6 +28,8 @@ export let gridsubscriptions: Subscription [] = [];
 export const setupGridScrollDetection = (fixture: ComponentFixture<any>, grid: GridType) => {
     gridsubscriptions.push(grid.verticalScrollContainer.chunkLoad.subscribe(() => fixture.detectChanges()));
     gridsubscriptions.push(grid.parentVirtDir.chunkLoad.subscribe(() => fixture.detectChanges()));
+    gridsubscriptions.push(grid.activeNodeChange.subscribe(() => grid.cdr.detectChanges()));
+    gridsubscriptions.push(grid.selected.subscribe(() => grid.cdr.detectChanges()));
 };
 
 export const setupHierarchicalGridScrollDetection = (fixture: ComponentFixture<any>, hierarchicalGrid: IgxHierarchicalGridComponent) => {
@@ -90,4 +92,30 @@ export class TestNgZone extends NgZone {
     public simulateOnStable(): void {
         this.onStable.emit(null);
     }
+}
+
+/* eslint-disable no-console */
+// TODO: enable on re-run by selecting enable debug logging
+// https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/troubleshooting-workflows/enabling-debug-logging
+const shardLogging = false;
+if (shardLogging) {
+    const myReporter = {
+        suiteStarted: function(result) {
+            const id = new URLSearchParams(window.parent.location.search).get('id');
+            console.log(`[${id}] Suite started: ${result.fullName}`);
+        },
+        suiteDone: function(result) {
+            const id = new URLSearchParams(window.parent.location.search).get('id');
+            console.log(`[${id}] Suite: ${result.fullName} has ${result.status}`);
+            for (const expectation of result.failedExpectations) {
+                console.log('Suite ' + expectation.message);
+                console.log(expectation.stack);
+            }
+            var memory = (performance as any).memory;
+            console.log(`[${id}] totalJSHeapSize: ${memory['totalJSHeapSize']} usedJSHeapSize: ${memory['usedJSHeapSize']} jsHeapSizeLimit: ${memory['jsHeapSizeLimit']}`);
+            if (memory['totalJSHeapSize'] >= memory['jsHeapSizeLimit'] )
+                console.log( '--------------------Heap Size limit reached!!!-------------------');
+        },
+    };
+    jasmine.getEnv().addReporter(myReporter);
 }

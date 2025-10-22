@@ -1,4 +1,3 @@
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild, DebugElement } from '@angular/core';
 import { SplitterType, IgxSplitterComponent, ISplitterBarResizeEventArgs } from './splitter.component';
@@ -6,19 +5,19 @@ import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 
-
 const SPLITTERBAR_CLASS = 'igx-splitter-bar';
 const SPLITTERBAR_DIV_CLASS = '.igx-splitter-bar';
 const SPLITTER_BAR_VERTICAL_CLASS = 'igx-splitter-bar--vertical';
 const COLLAPSIBLE_CLASS = 'igx-splitter-bar--collapsible';
 
 describe('IgxSplitter', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => TestBed.configureTestingModule({
-    imports: [
-        SplitterTestComponent
-    ]
-}).compileComponents()));
+    beforeEach(waitForAsync(() =>
+        TestBed.configureTestingModule({
+            imports: [
+                SplitterTestComponent
+            ]
+        }).compileComponents()
+    ));
     let fixture: ComponentFixture<SplitterTestComponent>;
     let splitter: IgxSplitterComponent;
 
@@ -34,7 +33,7 @@ describe('IgxSplitter', () => {
         const secondPane = splitter.panes.toArray()[1].element;
         expect(firstPane.textContent.trim()).toBe('Pane 1');
         expect(secondPane.textContent.trim()).toBe('Pane 2');
-
+        fixture.detectChanges();
         const splitterBar = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).nativeElement;
         expect(firstPane.style.order).toBe('0');
         expect(splitterBar.style.order).toBe('1');
@@ -323,11 +322,17 @@ describe('IgxSplitter', () => {
 
         expect(splitterBarComponent.style.transform).not.toBe('translate3d(0px, 0px, 0px)');
     });
+
+    it('should render correctly panes created dynamically using @for', () => {
+        fixture = TestBed.createComponent(SplitterForOfPanesComponent);
+        fixture.detectChanges();
+        splitter = fixture.componentInstance.splitter;
+        expect(splitter.panes.length).toBe(3);
+    });
 });
 
 describe('IgxSplitter pane toggle', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => TestBed.configureTestingModule({
         imports: [
             SplitterTogglePaneComponent
         ]
@@ -338,6 +343,7 @@ describe('IgxSplitter pane toggle', () => {
         fixture = TestBed.createComponent(SplitterTogglePaneComponent);
         fixture.detectChanges();
         splitter = fixture.componentInstance.splitter;
+        fixture.detectChanges();
     }));
 
     it('should collapse/expand panes', () => {
@@ -430,8 +436,7 @@ describe('IgxSplitter pane toggle', () => {
 });
 
 describe('IgxSplitter pane collapse', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => TestBed.configureTestingModule({
         imports: [
             SplitterCollapsedPaneComponent
         ]
@@ -463,12 +468,13 @@ describe('IgxSplitter pane collapse', () => {
 });
 
 describe('IgxSplitter resizing with minSize and browser window is shrinked', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => TestBed.configureTestingModule({
-        imports: [
-            SplitterMinSiezComponent
-        ]
-    }).compileComponents()));
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                SplitterMinSiezComponent
+            ]
+        }).compileComponents();
+    }));
 
     let fixture; let splitter;
     beforeEach(waitForAsync(() => {
@@ -484,27 +490,22 @@ describe('IgxSplitter resizing with minSize and browser window is shrinked', () 
         const minSize = parseInt(pane1.minSize);
         spyOn(splitter, 'onMoveEnd').and.callThrough();
 
-        pane1.size = (splitter.getTotalSize() - parseInt(pane2.size)) + 'px';
-        fixture.detectChanges();
-
         splitterBarComponent.moveStart.emit(pane1);
         fixture.detectChanges();
         splitterBarComponent.movingEnd.emit(splitter.getTotalSize() -minSize);
         fixture.detectChanges();
 
         splitter.elementRef.nativeElement.style.width = '500px';
-        pane2.size = (splitter.getTotalSize() - minSize) + 'px';
         fixture.detectChanges();
 
         splitterBarComponent.moveStart.emit(pane1);
         fixture.detectChanges();
-        splitterBarComponent.movingEnd.emit(-400);
+        splitterBarComponent.movingEnd.emit(-200);
         fixture.detectChanges();
 
-        const isFullSize = pane1.size === '100%' || pane1.size === (splitter.getTotalSize() + 'px');
-
         expect(splitter.onMoveEnd).toHaveBeenCalled();
-        expect(isFullSize).toBeTruthy();
+        expect(pane1.size).toEqual('80%');
+        expect(pane2.size).toEqual('100px');
     });
 });
 
@@ -602,4 +603,20 @@ export class SplitterTogglePaneComponent extends SplitterTestComponent {
     imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
 })
 export class SplitterCollapsedPaneComponent extends SplitterTestComponent {
+}
+
+@Component({
+    template: `
+<igx-splitter>
+    @for (number of numbers; track number) {
+    <igx-splitter-pane>
+      <p>{{ number }}</p>
+    </igx-splitter-pane>
+    }
+  </igx-splitter>
+    `,
+    imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
+})
+export class SplitterForOfPanesComponent extends SplitterTestComponent {
+    public numbers = [1, 2, 3];
 }

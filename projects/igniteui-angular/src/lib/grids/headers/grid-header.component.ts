@@ -55,12 +55,81 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     @ViewChild('sortIconContainer', { read: ElementRef })
     protected sortIconContainer: ElementRef;
 
+    @HostBinding('class.igx-grid-th--pinned')
+    public get pinnedCss() {
+        return this.isPinned;
+    }
+
+    @HostBinding('class.igx-grid-th--pinned-last')
+    public get pinnedLastCss() {
+        return this.isLastPinned;
+    }
+
+    @HostBinding('class.igx-grid-th--pinned-first')
+    public get pinnedFirstCSS() {
+        return this.isFirstPinned;
+    }
+
+    /**
+     * Gets whether the header group is stored in the last column in the pinned area.
+     */
+    public get isLastPinned(): boolean {
+        return !this.grid.hasColumnLayouts ? this.column.isLastPinned : false;
+    }
+
+    /**
+     * Gets whether the header group is stored in the first column of the right pinned area.
+     */
+    public get isFirstPinned(): boolean {
+        return !this.grid.hasColumnLayouts ? this.column.isFirstPinned : false;
+    }
+
+    /**
+     * Gets whether the header group is stored in a pinned column.
+     *
+     * @memberof IgxGridHeaderGroupComponent
+     */
+    public get isPinned(): boolean {
+        return this.column.pinned;
+    }
+    /**
+     * @hidden
+     */
+    @Input()
+    @HostBinding('attr.id')
+    public id: string;
+
     /**
      * Returns the `aria-selected` of the header.
      */
     @HostBinding('attr.aria-selected')
     public get ariaSelected(): boolean {
         return this.column.selected;
+    }
+
+    /**
+     * Returns the `aria-sort` of the header.
+     */
+    @HostBinding('attr.aria-sort')
+    public get ariaSort() {
+        return this.sortDirection === SortingDirection.Asc ? 'ascending'
+            : this.sortDirection === SortingDirection.Desc ? 'descending' : null;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-colindex')
+    public get ariaColIndx() {
+        return this.column.index + 1;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-rowindex')
+    public get ariaRowIndx() {
+        return 1;
     }
 
     @HostBinding('class.igx-grid-th')
@@ -268,7 +337,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     }
 
     protected isAdvancedFilterApplied() {
-        if(!this.grid.advancedFilteringExpressionsTree) {
+        if (!this.grid.advancedFilteringExpressionsTree) {
             return false;
         }
         return !!ExpressionsTreeUtil.find(this.grid.advancedFilteringExpressionsTree, this.column.field);

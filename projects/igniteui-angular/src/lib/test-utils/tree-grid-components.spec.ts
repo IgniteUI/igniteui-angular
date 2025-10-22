@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
 import { IgxTreeGridComponent } from '../grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
 import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult, IPinningConfig, IgxColumnComponent } from '../grids/public_api';
@@ -159,10 +159,17 @@ export class IgxTreeGridWithNoScrollsComponent {
     `,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
-export class IgxTreeGridPrimaryForeignKeyComponent {
+export class IgxTreeGridPrimaryForeignKeyComponent implements OnInit {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
-    public data = SampleTestData.employeePrimaryForeignKeyTreeData();
+    public data = [];
     public paging = false;
+    public sortByName = false;
+
+    public ngOnInit(): void {
+        this.data = !this.sortByName
+                        ? SampleTestData.employeePrimaryForeignKeyTreeData()
+                        : SampleTestData.employeePrimaryForeignKeyTreeData().sort((a, b) => a.Name.localeCompare(b.Name));
+    }
 }
 
 @Component({
@@ -191,6 +198,11 @@ export class IgxTreeGridExpandingComponent {
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
         <igx-column [field]="'Age'" dataType="number"></igx-column>
         <igx-paginator [perPage]="10"></igx-paginator>
+        <ng-template #customCell igxCell let-cell="cell" let-val>
+            <span style="background-color: red;">val</span>
+            <br>
+            {{val}}
+        </ng-template>
     </igx-tree-grid>
     `,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent]
@@ -198,6 +210,8 @@ export class IgxTreeGridExpandingComponent {
 export class IgxTreeGridCellSelectionComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeData();
+    @ViewChild('customCell', { static: true })
+    public customCell!: TemplateRef<any>;
 }
 
 @Component({

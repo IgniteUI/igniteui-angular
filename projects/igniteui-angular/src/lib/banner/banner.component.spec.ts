@@ -3,7 +3,6 @@ import { TestBed, ComponentFixture, tick, fakeAsync, waitForAsync } from '@angul
 import { By } from '@angular/platform-browser';
 import { IgxBannerComponent } from './banner.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxBannerActionsDirective } from './banner.directives';
 import { IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent } from '../card/card.component';
@@ -24,8 +23,7 @@ describe('igxBanner', () => {
     let bannerTextElement: DebugElement = null;
     let bannerActionsElement: DebugElement = null;
 
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -469,13 +467,12 @@ describe('igxBanner', () => {
             const banner = fixture.componentInstance.banner;
             const panel = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             expect(panel).not.toBeNull();
-            expect(panel.attributes.getNamedItem('ng-reflect-collapsed').nodeValue).toEqual('true');
+            expect(panel.attributes.getNamedItem('aria-expanded').nodeValue).toEqual('false');
             expect(panel.childElementCount).toEqual(0);
 
             banner.open();
             tick();
             fixture.detectChanges();
-            expect(panel.attributes.getNamedItem('ng-reflect-collapsed').nodeValue).toEqual('false');
             expect(panel.childElementCount).toEqual(1);
 
             const panelBody = panel.children[0];

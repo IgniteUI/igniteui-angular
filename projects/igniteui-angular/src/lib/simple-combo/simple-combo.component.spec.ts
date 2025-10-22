@@ -12,7 +12,6 @@ import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxInputState, IgxLabelDirective } from '../input-group/public_api';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, ConnectedPositioningStrategy } from '../services/public_api';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxSimpleComboComponent, ISimpleComboSelectionChangingEventArgs } from './public_api';
 import { IgxGridComponent } from '../grids/grid/grid.component';
@@ -37,12 +36,10 @@ const CSS_CLASS_COMBO_INPUTGROUP = 'igx-input-group__input';
 const CSS_CLASS_INPUTGROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
-const CSS_CLASS_ITEM = 'igx-drop-down__item';
-const CSS_CLASS_HEADER_ITEM = 'igx-drop-down__header';
 const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const defaultDropdownItemHeight = 40;
-const defaultDropdownItemMaxHeight = 400;
+const defaultDropdownItemMaxHeight = 240;
 
 describe('IgxSimpleCombo', () => {
     let fixture: ComponentFixture<any>;
@@ -50,8 +47,6 @@ describe('IgxSimpleCombo', () => {
     let input: DebugElement;
     let reactiveForm: NgForm;
     let reactiveControl: any;
-
-    configureTestSuite();
 
     describe('Unit tests: ', () => {
         const data = ['Item1', 'Item2', 'Item3', 'Item4', 'Item5', 'Item6', 'Item7'];
@@ -77,6 +72,11 @@ describe('IgxSimpleCombo', () => {
         mockSelection.get.and.returnValue(new Set([]));
         const platformUtil = null;
         const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
+        jasmine.getEnv().allowRespy(true);
+
+        afterAll(() => {
+            jasmine.getEnv().allowRespy(false);
+        });
 
         it('should properly call dropdown methods on toggle', () => {
             combo = new IgxSimpleComboComponent(
@@ -532,6 +532,7 @@ describe('IgxSimpleCombo', () => {
         });
 
         it('should delete the selection on destroy', () => {
+            jasmine.getEnv().allowRespy(true);
             const selectionService = new IgxSelectionAPIService();
             const comboClearSpy = spyOn(mockComboService, 'clear');
             const selectionDeleteSpy = spyOn(selectionService, 'delete');
@@ -548,11 +549,12 @@ describe('IgxSimpleCombo', () => {
             combo.ngOnDestroy();
             expect(comboClearSpy).toHaveBeenCalled();
             expect(selectionDeleteSpy).toHaveBeenCalled();
+            jasmine.getEnv().allowRespy(false);
         });
     });
 
     describe('Initialization and rendering tests: ', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -617,9 +619,10 @@ describe('IgxSimpleCombo', () => {
             expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
             expect(input.nativeElement.getAttribute('aria-controls')).toEqual(combo.dropdown.listId);
             expect(input.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
+            expect(input.nativeElement.getAttribute('aria-label')).toEqual('No options selected');
 
-            const dropdown = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_DROPDOWN}`));
-            expect(dropdown.nativeElement.getAttribute('ng-reflect-labelled-by')).toEqual(combo.placeholder);
+            const dropdownListBox = fixture.debugElement.query(By.css(`[role='listbox']`));
+            expect(dropdownListBox.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
 
             combo.open();
             tick();
@@ -632,6 +635,10 @@ describe('IgxSimpleCombo', () => {
             tick();
             fixture.detectChanges();
             expect(list.nativeElement.getAttribute('aria-activedescendant')).toEqual(combo.dropdown.focusedItem.id);
+
+            combo.select('Illinois');
+            fixture.detectChanges();
+            expect(input.nativeElement.getAttribute('aria-label')).toEqual('Selected options');
         }));
         it('should render aria-expanded attribute properly', fakeAsync(() => {
             expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
@@ -713,9 +720,9 @@ describe('IgxSimpleCombo', () => {
             expect(focusedItem_1.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
 
             // Change focus
-            dropdown.navigateItem(6);
+            dropdown.navigateItem(5);
             fixture.detectChanges();
-            const focusedItem_2 = dropdownItems[5];
+            const focusedItem_2 = dropdownItems[4];
             expect(focusedItem_2.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
             expect(focusedItem_1.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
         });
@@ -938,7 +945,7 @@ describe('IgxSimpleCombo', () => {
     });
 
     describe('Binding tests: ', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -1106,7 +1113,7 @@ describe('IgxSimpleCombo', () => {
 
     describe('Keyboard navigation and interactions', () => {
         let dropdown: IgxComboDropDownComponent;
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -1191,6 +1198,17 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection).toBeDefined()
         });
 
+        it('should close the dropdown list on pressing Tab key', fakeAsync(() => {
+            combo.open();
+            fixture.detectChanges();
+
+            const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+            UIInteractions.triggerEventHandlerKeyDown('Tab', dropdownContent);
+            tick();
+            fixture.detectChanges();
+            expect(combo.collapsed).toBeTruthy();
+        }));
+
         it('should clear the selection on tab/blur if the search text does not match any value', () => {
             // allowCustomValues does not matter
             combo.select(combo.data[2][combo.valueKey]);
@@ -1228,6 +1246,60 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             expect(combo.selection).toBeDefined()
             expect(combo.displayValue).toEqual('Wisconsin');
+        });
+
+        it('should toggle combo dropdown on Enter of the focused toggle icon', fakeAsync(() => {
+            spyOn(combo, 'toggle').and.callThrough();
+            const toggleBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_TOGGLEBUTTON}`));
+
+            UIInteractions.triggerEventHandlerKeyDown('Enter', toggleBtn);
+            tick();
+            fixture.detectChanges();
+            expect(combo.toggle).toHaveBeenCalledTimes(1);
+            expect(combo.collapsed).toEqual(false);
+
+            UIInteractions.triggerEventHandlerKeyDown('Enter', toggleBtn);
+            tick();
+            fixture.detectChanges();
+            expect(combo.toggle).toHaveBeenCalledTimes(2);
+            expect(combo.collapsed).toEqual(true);
+        }));
+
+        it('should clear the selection on Enter of the focused clear icon', () => {
+            combo.select(combo.data[2][combo.valueKey]);
+            fixture.detectChanges();
+            expect(combo.selection).toBeDefined()
+            expect(input.nativeElement.value).toEqual('Massachusetts');
+
+            const clearBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            UIInteractions.triggerEventHandlerKeyDown('Enter', clearBtn);
+            fixture.detectChanges();
+            expect(input.nativeElement.value.length).toEqual(0);
+            expect(combo.selection).not.toBeDefined();
+        });
+
+        it('should not filter the data when disableFiltering is true', () => {
+            combo.disableFiltering = true;
+            fixture.detectChanges();
+            combo.focusSearchInput();
+
+            UIInteractions.simulateTyping('con', input);
+            expect(combo.comboInput.value).toEqual('con');
+            fixture.detectChanges();
+
+            expect(combo.filteredData.length).toEqual(combo.data.length);
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+
+            combo.disableFiltering = false;
+            fixture.detectChanges();
+            combo.focusSearchInput();
+            combo.comboInput.value = '';
+            fixture.detectChanges();
+            UIInteractions.simulateTyping('con', input);
+            expect(combo.comboInput.value).toEqual('con');
+            fixture.detectChanges();
+            expect(combo.filteredData.length).toEqual(2);
         });
 
         it('should display the AddItem button when allowCustomValues is true and there is a partial match', fakeAsync(() => {
@@ -1915,8 +1987,6 @@ describe('IgxSimpleCombo', () => {
         });
 
         it('should not change selection when selectionChanging event is canceled', () => {
-            spyOn(combo.selectionChanging, 'emit').and.callThrough();
-
             fixture.detectChanges();
 
             combo.select('Connecticut');
@@ -1952,7 +2022,6 @@ describe('IgxSimpleCombo', () => {
 
 
         it('should preserved the input value of the combo when selectionChanging event is canceled', () => {
-            spyOn(combo.selectionChanging, 'emit').and.callThrough();
             fixture.detectChanges();
 
             const comboInput = fixture.debugElement.query(By.css(`.igx-input-group__input`));
@@ -2144,7 +2213,7 @@ describe('IgxSimpleCombo', () => {
     describe('Form control tests: ', () => {
         describe('Template form tests: ', () => {
             let inputGroupRequired: DebugElement;
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
@@ -2403,7 +2472,7 @@ describe('IgxSimpleCombo', () => {
             }));
         });
         describe('Reactive form tests: ', () => {
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
@@ -2695,7 +2764,7 @@ describe('IgxSimpleCombo', () => {
     });
 
     describe('Selection tests: ', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -2829,7 +2898,7 @@ describe('IgxSimpleCombo', () => {
     describe('Integration', () => {
         let grid: IgxGridComponent;
 
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,

@@ -1,7 +1,6 @@
 import { TestBed, inject, waitForAsync } from '@angular/core/testing';
-import { Component } from '@angular/core';
+import { Component, DOCUMENT } from '@angular/core';
 import { IgxDirectionality, DIR_DOCUMENT } from './directionality';
-import { DOCUMENT } from '@angular/common';
 
 interface FakeDoc {
     body: { dir?: string };
@@ -10,10 +9,10 @@ interface FakeDoc {
 
 describe('IgxDirectionality', () => {
     describe('DI', () => {
-        beforeAll(waitForAsync(() =>
+        beforeEach(waitForAsync(() =>
             TestBed.configureTestingModule({
-    imports: [InjectsIgxDirectionalityComponent]
-}).compileComponents()
+                imports: [InjectsIgxDirectionalityComponent]
+            }).compileComponents()
         ));
 
         it('should inject the document through the injectionToken properly', () => {

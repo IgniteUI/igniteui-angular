@@ -20,7 +20,7 @@ import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-
 import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { GridSelectionMode } from '../common/enums';
 import { PlatformUtil } from '../../core/utils';
-import { IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe } from './pipes';
+import { IgxHeaderGroupStylePipe } from './pipes';
 import { IgxResizeHandleDirective } from '../resizing/resize-handle.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
@@ -36,7 +36,7 @@ const Z_INDEX = 9999;
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-header-group',
     templateUrl: './grid-header-group.component.html',
-    imports: [NgClass, NgStyle, IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxIconComponent, NgTemplateOutlet, IgxGridHeaderComponent, IgxGridFilteringCellComponent, IgxResizeHandleDirective, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
+    imports: [NgClass, NgStyle, IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxIconComponent, NgTemplateOutlet, IgxGridHeaderComponent, IgxGridFilteringCellComponent, IgxResizeHandleDirective, IgxHeaderGroupStylePipe]
 })
 export class IgxGridHeaderGroupComponent implements DoCheck {
 
@@ -60,7 +60,11 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         return this.column.colStart;
     }
 
-    @HostBinding('attr.id')
+    @HostBinding('class.igx-grid-th--pinned')
+    public get pinnedCss() {
+        return this.column.pinned;
+    }
+
     public get headerID() {
         return `${this.grid.id}_-1_${this.column.level}_${this.column.visibleIndex}`;
     }
@@ -122,21 +126,6 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         public filteringService: IgxFilteringService,
         protected platform: PlatformUtil) { }
 
-    @HostBinding('class.igx-grid-th--pinned')
-    public get pinnedCss() {
-        return this.isPinned;
-    }
-
-    @HostBinding('class.igx-grid-th--pinned-last')
-    public get pinnedLastCss() {
-        return this.isLastPinned;
-    }
-
-    @HostBinding('class.igx-grid-th--pinned-first')
-    public get pinnedFirstCSS() {
-        return this.isFirstPinned;
-    }
-
     @HostBinding('class.igx-grid__drag-col-header')
     public get headerDragCss() {
         return this.isHeaderDragged;
@@ -156,6 +145,13 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
             return null;
         }
         return Z_INDEX - this.grid.pinnedColumns.indexOf(this.column);
+    }
+
+    /**
+     * @hidden
+     */
+    public get ariaHidden(): boolean {
+        return this.grid.hasColumnGroups && (this.column.hidden || this.grid.navigation.activeNode.row !== -1);
     }
 
     /**

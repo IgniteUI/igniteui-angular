@@ -4,7 +4,6 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
@@ -22,9 +21,7 @@ const CELL_BLOCK = `.${GRID_MRL_BLOCK}`;
 describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     let fix: ComponentFixture<ColumnLayoutTestComponent>;
 
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, ColumnLayoutTestComponent]
         }).compileComponents();
@@ -293,8 +290,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp');
                 fix.detectChanges();
 
-                expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
-                expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
+                const selectedCell = fix.componentInstance.selectedCell;
+                expect(selectedCell.value).toEqual(fix.componentInstance.data[0].City);
+                expect(selectedCell.column.field).toMatch('City');
+                const cell = fix.componentInstance.grid.gridAPI.get_cell_by_index(selectedCell.row.index, selectedCell.column.field);
+                GridFunctions.verifyGridContentActiveDescendant(GridFunctions.getGridContent(fix), cell.nativeElement.id);
             });
 
             it('should navigate up correctly', () => {
@@ -797,15 +797,20 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 // check correct cell has focus
-                const cell2 = grid.getCellByColumn(0, 'ID');
+                let cell2 = grid.getCellByColumn(0, 'ID');
                 expect(cell2.active).toBe(true);
+                let cellElement = fix.componentInstance.grid.gridAPI.get_cell_by_index(cell2.row.index, cell2.column.field).nativeElement;
+                GridFunctions.verifyGridContentActiveDescendant(GridFunctions.getGridContent(fix), cellElement.id);
 
                 // arrow right
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
                 fix.detectChanges();
 
                 // check correct cell has focus
-                expect(grid.getCellByColumn(0, 'Address').active).toBe(true);
+                cell2 = grid.getCellByColumn(0, 'Address');
+                expect(cell2.active).toBe(true);
+                cellElement = fix.componentInstance.grid.gridAPI.get_cell_by_index(cell2.row.index, cell2.column.field).nativeElement;
+                GridFunctions.verifyGridContentActiveDescendant(GridFunctions.getGridContent(fix), cellElement.id);
             });
         });
 
@@ -1917,6 +1922,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 // check next cell is active and is fully in view
                 cell = grid.gridAPI.get_cell_by_index(2, 'Phone');
                 expect(cell.active).toBe(true);
+                GridFunctions.verifyGridContentActiveDescendant(GridFunctions.getGridContent(fix), cell.nativeElement.id);
                 expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(50);
                 let diff = grid.gridAPI.get_cell_by_index(2, 'Phone')
                     .nativeElement.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom;
@@ -1935,6 +1941,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 // check next cell is active and is fully in view
                 cell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
                 expect(cell.active).toBe(true);
+                GridFunctions.verifyGridContentActiveDescendant(GridFunctions.getGridContent(fix), cell.nativeElement.id);
                 expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(0);
                 diff = grid.gridAPI.get_cell_by_index(0, 'ContactName')
                     .nativeElement.getBoundingClientRect().top - grid.tbody.nativeElement.getBoundingClientRect().top;
@@ -1953,6 +1960,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 // check next cell is active and is fully in view
                 cell = grid.gridAPI.get_cell_by_index(2, 'Address');
                 expect(cell.active).toBe(true);
+                GridFunctions.verifyGridContentActiveDescendant(GridFunctions.getGridContent(fix), cell.nativeElement.id);
                 expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(50);
                 diff = grid.gridAPI.get_cell_by_index(2, 'Address')
                     .nativeElement.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom;
@@ -2183,7 +2191,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const firstUnpinnedCell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
                 expect(firstUnpinnedCell.active).toBe(true);
                 const diff = firstUnpinnedCell.nativeElement.getBoundingClientRect().left -
-                    grid.pinnedWidth - grid.tbody.nativeElement.getBoundingClientRect().left;
+                    grid.pinnedStartWidth - grid.tbody.nativeElement.getBoundingClientRect().left;
                 expect(diff).toBe(0);
 
                 // TODO: Rest of the test needs to be finished

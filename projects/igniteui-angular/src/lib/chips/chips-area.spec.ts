@@ -3,7 +3,6 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxPrefixDirective } from './public_api';
@@ -102,16 +101,14 @@ class TestChipReorderComponent {
 
 
 describe('IgxChipsArea ', () => {
-    configureTestSuite();
     const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
-    const CHIP_SELECT_ICON = 'igx-chip__select';
     const CHIP_AREA_CLASS = 'igx-chip-area';
 
     let fix;
     let chipArea: IgxChipsAreaComponent;
     let chipAreaElement;
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 TestChipComponent,

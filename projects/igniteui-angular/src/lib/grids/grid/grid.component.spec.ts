@@ -15,17 +15,16 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { BasicGridComponent } from '../../test-utils/grid-base-components.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
-import { configureTestSuite, skipLeakCheck } from '../../test-utils/configure-suite';
 import { GridSelectionMode, Size } from '../common/enums';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from '../../tabs/tabs/public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
-import { GRID_SCROLL_CLASS } from '../../test-utils/grid-functions.spec';
+import { GRID_SCROLL_CLASS, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { AsyncPipe } from '@angular/common';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../../paginator/paginator.component';
-import { IGridRowEventArgs, IgxColumnGroupComponent, IgxGridFooterComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
+import { IGridRowEventArgs, IgxColumnGroupComponent, IgxGridEmptyTemplateDirective, IgxGridFooterComponent, IgxGridLoadingTemplateDirective, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
 import { getComponentSize } from '../../core/utils';
 import { setElementSize, ymd } from '../../test-utils/helper-utils.spec';
 
@@ -37,10 +36,8 @@ describe('IgxGrid Component Tests #grid', () => {
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid-thead';
 
-    configureTestSuite({ checkLeaks: true });
-
     describe('IgxGrid - input properties', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -583,9 +580,9 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
         }));
 
-        it('should allow applying custom loading indicator', fakeAsync(() => {
+        it('should allow applying custom empty and loading indicator', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridRemoteOnDemandComponent);
-            fixture.componentInstance.instance.loadingGridTemplate = fixture.componentInstance.customTemplate;
+            fixture.componentInstance.customLoading = true;
             fixture.detectChanges();
             tick(16);
 
@@ -593,6 +590,18 @@ describe('IgxGrid Component Tests #grid', () => {
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
             const gridHead = fixture.debugElement.query(By.css(THEAD_CLASS));
 
+            grid.isLoading = false;
+            tick();
+            fixture.detectChanges();
+            expect(gridBody.nativeElement.textContent).toEqual('No Data 😢');
+            grid.isLoading = true;
+            tick();
+            fixture.detectChanges();
+            expect(gridBody.nativeElement.textContent).toEqual('Loading 🔃');
+
+            grid.loadingGridTemplate = fixture.componentInstance.customTemplate;
+            grid.markForCheck();
+            fixture.detectChanges();
             expect(gridBody.nativeElement.textContent).toEqual('Loading...');
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
@@ -676,6 +685,7 @@ describe('IgxGrid Component Tests #grid', () => {
         });
 
         it('should throw a warning when primaryKey is set to a non-existing data field', () => {
+            jasmine.getEnv().allowRespy(true);
             const warnSpy = spyOn(console, 'warn');
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             const grid = fixture.componentInstance.grid;
@@ -703,11 +713,12 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(console.warn).toHaveBeenCalledWith(
                 `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
             );
+            jasmine.getEnv().allowRespy(false);
         });
     });
 
     describe('IgxGrid - virtualization tests', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -840,7 +851,7 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - default rendering for rows and columns', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -1501,8 +1512,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(fix.componentInstance.grid.calcHeight).toBeGreaterThan(fix.componentInstance.grid.renderedRowHeight * 10);
         }));
 
-        it('should render correct columns if after scrolling right container size changes so that all columns become visible.',
-            skipLeakCheck(async () => {
+        it('should render correct columns if after scrolling right container size changes so that all columns become visible.', async () => {
                 const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
                 fix.detectChanges();
                 const grid = fix.componentInstance.grid;
@@ -1523,9 +1533,8 @@ describe('IgxGrid Component Tests #grid', () => {
                 expect(headers.length).toEqual(5);
                 for (let i = 0; i < headers.length; i++) {
                     expect(headers[i].context.column.field).toEqual(grid.columnList.get(i).field);
-                    // Note: We use skipLeakCheck because using `headers[i].context` messes up memory leak detection
                 }
-            }));
+            });
 
         it('Should render date and number values based on default formatting', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridFormattingComponent);
@@ -1879,9 +1888,12 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(hScroll.nativeElement.hidden).toBe(true);
 
             for (let i = 0; i < grid.columnList.length; i++) {
-                const header = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[i];
+                const header = fix.debugElement.queryAll(By.css('igx-grid-header'))[i];
                 const cell = fix.debugElement.queryAll(By.css('igx-grid-cell'))[i];
-                expect(header.nativeElement.offsetWidth).toEqual(cell.nativeElement.offsetWidth);
+                const headerStyle = document.defaultView.getComputedStyle(header.nativeElement);
+                const paddingsAndBorders = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
+            parseFloat(headerStyle.borderRightWidth);
+                expect(header.nativeElement.offsetWidth).toEqual(Math.max(cell.nativeElement.offsetWidth, paddingsAndBorders));
                 expect(Number.isInteger(header.nativeElement.offsetWidth)).toBe(true);
             }
         });
@@ -2007,17 +2019,43 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.columns[1].field).toBe('firstName');
             expect(grid.columns[2].field).toBe('lastName');
         }));
+
+        it('should set correct aria attributes related to total rows/cols count and indexes', async () => {
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.componentInstance.initColumnsRows(80, 20);
+            fix.detectChanges();
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const gridHeader = GridFunctions.getGridHeader(grid);
+            const headerRowElement = gridHeader.nativeElement.querySelector('[role="row"]');
+
+            grid.navigateTo(50, 16);
+            fix.detectChanges();
+            await wait();
+            fix.detectChanges();
+
+            expect(headerRowElement.getAttribute('aria-rowindex')).toBe('1');
+            expect(grid.nativeElement.getAttribute('aria-rowcount')).toBe('81');
+            expect(grid.nativeElement.getAttribute('aria-colcount')).toBe('20');
+
+            const cell = grid.gridAPI.get_cell_by_index(50, 'col16');
+            // The following attributes indicate to assistive technologies which portions
+            // of the content are displayed in case not all are rendered,
+            // such as with the built-in virtualization of the grid. 1-based index.
+            expect(cell.nativeElement.getAttribute('aria-rowindex')).toBe('52');
+            expect(cell.nativeElement.getAttribute('aria-colindex')).toBe('17');
+        });
     });
 
     describe('IgxGrid - min/max width constraints rules', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxGridDefaultRenderingComponent
                 ]
-            })
-                .compileComponents();
+            }).compileComponents();
         }));
 
         describe('min/max in px', () => {
@@ -2271,15 +2309,14 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - API methods', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxGridDefaultRenderingComponent,
                     IgxGridWrappedInContComponent
                 ]
-            })
-            .compileComponents();
+            }).compileComponents();
         }));
 
         it(`When edit a cell onto filtered data through grid method, the row should
@@ -2534,7 +2571,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
         // note: it leaks when grid.groupBy() is executed because template-outlet doesn't destroy the viewrefs
         // to be addressed in a separate PR
-        it(`Verify that getRowByIndex and RowType API returns correct data`, skipLeakCheck(() => {
+        it(`Verify that getRowByIndex and RowType API returns correct data`, () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(35, 5);
             fix.detectChanges();
@@ -2693,7 +2730,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(thirdRow instanceof IgxGroupByRow).toBe(true);
             expect(thirdRow.index).toBe(2);
             expect(thirdRow.viewIndex).toBe(7);
-        }));
+        });
 
         it('Verify that getRowByIndex returns correct data when paging is enabled', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
@@ -2742,14 +2779,13 @@ describe('IgxGrid Component Tests #grid', () => {
     describe('IgxGrid - Integration with other Igx Controls', () => {
         let fix;
 
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxGridInsideIgxTabsComponent
                 ]
-            })
-            .compileComponents();
+            }).compileComponents();
         }));
 
         beforeEach(waitForAsync(() => {
@@ -2904,14 +2940,13 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - footer section', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxGridWithCustomFooterComponent
                 ]
-            })
-            .compileComponents();
+            }).compileComponents();
         }));
 
         it('should be able to display custom content', () => {
@@ -2931,14 +2966,13 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - with custom pagination template', () => {
 
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxGridWithCustomPaginationTemplateComponent
                 ]
-            })
-            .compileComponents();
+            }).compileComponents();
         }));
 
         it('should have access to grid context', fakeAsync(() => {
@@ -2967,14 +3001,13 @@ describe('IgxGrid Component Tests #grid', () => {
         const MAX_FOCUS = 120;
         let observer: MutationObserver;
 
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxGridPerformanceComponent
                 ]
-            })
-            .compileComponents();
+            }).compileComponents();
         }));
 
         afterEach(() => {
@@ -3158,15 +3191,14 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('Setting null data', () => {
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxGridNoDataComponent,
                     IgxGridTestComponent
                 ]
-            })
-            .compileComponents();
+            }).compileComponents();
         }));
 
         it('should not throw error when data is null', () => {
@@ -3622,6 +3654,10 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
 @Component({
     template: `
         <igx-grid [data]="data | async" (dataPreLoad)="dataLoading($event)" [isLoading]="true" [autoGenerate]="true" [height]="'600px'">
+            <span *igxGridEmpty>No Data 😢</span>
+            @if (customLoading) {
+                <ng-template igxGridLoading>Loading 🔃</ng-template>
+            }
         </igx-grid>
 
         <ng-template #customTemplate>
@@ -3629,7 +3665,7 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
         </ng-template>
     `,
     providers: [LocalService],
-    imports: [IgxGridComponent, AsyncPipe]
+    imports: [IgxGridComponent, IgxGridEmptyTemplateDirective, IgxGridLoadingTemplateDirective, AsyncPipe]
 })
 export class IgxGridRemoteOnDemandComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3637,6 +3673,7 @@ export class IgxGridRemoteOnDemandComponent {
     @ViewChild('customTemplate', { read: TemplateRef, static: true })
     public customTemplate: TemplateRef<any>;
     public data;
+    public customLoading = false;
     constructor(private localService: LocalService, public cdr: ChangeDetectorRef) { }
 
     public bind() {

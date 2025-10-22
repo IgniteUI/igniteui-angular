@@ -1,4 +1,4 @@
-import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -6,7 +6,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators'
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import { IgxTooltipTargetDirective } from '../../directives/tooltip/tooltip-target.directive';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import {
     IgxGridCustomEditorsComponent,
@@ -18,11 +17,12 @@ import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IGridFormGroupCreatedEventArgs } from '../common/grid.interface';
 import { IgxTreeGridComponent } from '../tree-grid/tree-grid.component';
 import { IgxGridComponent } from './grid.component';
+import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService, VerticalAlignment } from '../../services/public_api';
 
 describe('IgxGrid - Validation #grid', () => {
 
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridValidationTestBaseComponent,
@@ -30,7 +30,7 @@ describe('IgxGrid - Validation #grid', () => {
                 IgxGridCustomEditorsComponent,
                 IgxTreeGridValidationTestComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('Basic Validation - ', () => {
@@ -167,8 +167,27 @@ describe('IgxGrid - Validation #grid', () => {
             cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
             //min length should be 4
             GridFunctions.verifyCellValid(cell, false);
-            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
-            expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
+            const errorMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(errorMessage).toEqual(' Entry should be at least 4 character(s) long ');
+        });
+
+        it('should mark invalid cell with igx-grid__td--invalid class and show the related error cell template when the field contains "."', () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            // add new column
+            fixture.componentInstance.columns.push({ field: 'New.Column', dataType: 'string' });
+            fixture.detectChanges();
+            expect(grid.columns.length).toBe(5);
+
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 4);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            cell.update('asd');
+            fixture.detectChanges();
+
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 4);
+            //min length should be 4
+            GridFunctions.verifyCellValid(cell, false);
+            const errorMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(errorMessage).toEqual(' Entry should be at least 4 character(s) long ');
         });
 
         it('should show the error message on error icon hover and when the invalid cell becomes active.', fakeAsync(() => {
@@ -185,8 +204,20 @@ describe('IgxGrid - Validation #grid', () => {
             //min length should be 4
             GridFunctions.verifyCellValid(cell, false);
             GridSelectionFunctions.verifyCellActive(cell, true);
-            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
-            expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
+            const errorMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(errorMessage).toEqual(' Entry should be at least 4 character(s) long ');
+
+            const overlayService = TestBed.inject(IgxOverlayService);
+            const info = overlayService.getOverlayById(cell.errorTooltip.first.overlayId);
+            const positionSettings = info.settings.positionStrategy.settings;
+
+            expect(info.settings.positionStrategy instanceof AutoPositionStrategy).toBe(true);
+            expect(positionSettings.horizontalStartPoint).toEqual(HorizontalAlignment.Center);
+            expect(positionSettings.horizontalDirection).toEqual(HorizontalAlignment.Center);
+            expect(positionSettings.verticalStartPoint).toEqual(VerticalAlignment.Bottom);
+            expect(positionSettings.verticalDirection).toEqual(VerticalAlignment.Bottom);
+            expect(positionSettings.openAnimation.options.params).toEqual({ duration: '150ms' });
+            expect(positionSettings.closeAnimation.options.params).toEqual({ duration: '75ms' });
 
             cell.errorTooltip.first.close();
             tick();
@@ -359,8 +390,8 @@ describe('IgxGrid - Validation #grid', () => {
             cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
             //bob cannot be the name
             GridFunctions.verifyCellValid(cell, false);
-            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
-            expect(erorrMessage).toEqual(' This name is forbidden. ');
+            const errorMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(errorMessage).toEqual(' This name is forbidden. ');
 
             cell.editMode = true;
             cell.update('test');
@@ -394,8 +425,8 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, false);
-            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
-            expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
+            const errorMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(errorMessage).toEqual(' Entry should be at least 4 character(s) long ');
         });
 
         it('should trigger validation on change when using custom editor bound via editValue.', () => {
@@ -413,8 +444,8 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, false);
-            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
-            expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
+            const errorMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(errorMessage).toEqual(' Entry should be at least 4 character(s) long ');
         });
 
         it('should trigger validation on blur when using custom editor bound via editValue.', () => {
@@ -441,8 +472,8 @@ describe('IgxGrid - Validation #grid', () => {
             grid.crudService.endEdit(true);
             fixture.detectChanges();
             GridFunctions.verifyCellValid(cell, false);
-            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
-            expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
+            const errorMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(errorMessage).toEqual(' Entry should be at least 4 character(s) long ');
         });
     });
 

@@ -1,4 +1,3 @@
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, ViewChild, DebugElement} from '@angular/core';
@@ -11,7 +10,6 @@ import { clearGridSubs, setupHierarchicalGridScrollDetection } from '../../test-
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from '../cell.component';
 import { IGridCellEventArgs, IgxColumnComponent, IPathSegment } from '../public_api';
-import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 
 const DEBOUNCE_TIME = 50;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
@@ -22,9 +20,8 @@ describe('IgxHierarchicalGrid Navigation', () => {
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let baseHGridContent: DebugElement;
     const defaultTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-    configureTestSuite();
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

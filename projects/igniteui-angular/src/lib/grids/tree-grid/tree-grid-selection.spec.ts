@@ -19,7 +19,6 @@ import {
     TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS
 } from '../../test-utils/tree-grid-functions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxActionStripComponent } from '../../action-strip/public_api';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
@@ -32,7 +31,6 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxGridCell } from '../public_api';
 
 describe('IgxTreeGrid - Selection #tGrid', () => {
-    configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
     let actionStrip: IgxActionStripComponent;
@@ -42,7 +40,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         const endEvent = new AnimationEvent('animationend');
         animationElem.dispatchEvent(endEvent);
     };
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -965,6 +963,27 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expect(treeGrid.selectedCells.length).toBe(1);
             expect(treeGrid.selectedCells[0] instanceof IgxGridCell).toBe(true);
             expect(treeGrid.selectedCells[0].value).toBe(19);
+        });
+
+        it('Should not trigger range selection when CellTemplate is used and the user clicks on element inside it', () => {
+            const component = fix.componentInstance;
+
+            expect(component.customCell).toBeDefined();
+
+            const column = treeGrid.getColumnByName('ID');
+            column.bodyTemplate = component.customCell;
+            fix.detectChanges();
+
+            const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
+            const cell = treeGrid.gridAPI.get_cell_by_index(0, 'ID');
+            const cellElement = cell.nativeElement;
+            const span = cellElement.querySelector('span');
+
+            expect(span).not.toBeNull();
+
+            UIInteractions.simulateClickAndSelectEvent(span);
+            fix.detectChanges();
+            expect(selectionChangeSpy).not.toHaveBeenCalled();
         });
     });
 

@@ -1,12 +1,11 @@
 
-import { Component, ViewChild } from '@angular/core';
+import { Component, DebugElement, ViewChild } from '@angular/core';
 import { TestBed, ComponentFixture, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
 import { ExpansionPanelHeaderIconPosition, IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
 import { IgxGridComponent } from '../grids/grid/public_api';
 import { IgxExpansionPanelDescriptionDirective, IgxExpansionPanelIconDirective, IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { By } from '@angular/platform-browser';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxListComponent } from '../list/list.component';
@@ -33,8 +32,7 @@ const enum IconPositionClass {
 }
 
 describe('igxExpansionPanel', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -49,7 +47,6 @@ describe('igxExpansionPanel', () => {
 
 
     describe('General tests: ', () => {
-        // configureTestSuite();
         it('Should initialize the expansion panel component properly', () => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
@@ -294,13 +291,12 @@ describe('igxExpansionPanel', () => {
     });
 
     describe('Expansion tests: ', () => {
-        // configureTestSuite();
         const verifyPanelExpansionState = (
             collapsed: boolean,
             panel: IgxExpansionPanelComponent,
             panelContainer: any,
             panelHeader: HTMLElement,
-            button: HTMLElement,
+            button: DebugElement,
             timesCollapsed = 0,
             timesExpanded = 0) => {
             expect(panel.collapsed).toEqual(collapsed);
@@ -309,7 +305,7 @@ describe('igxExpansionPanel', () => {
             expect(panelHeader.classList.contains(CSS_CLASS_HEADER_EXPANDED)).toEqual(!collapsed);
             if (button.children.length > 1) {
                 const iconName = collapsed ? 'expand_more' : 'expand_less';
-                expect(button.getAttribute('ng-reflect-icon-name')).toMatch(iconName);
+                expect(button.componentInstance.iconName).toMatch(iconName);
             }
             if (collapsed) {
                 expect(panelContainer.lastElementChild.nodeName).toEqual('IGX-EXPANSION-PANEL-HEADER');
@@ -330,7 +326,7 @@ describe('igxExpansionPanel', () => {
             const header = fixture.componentInstance.header;
             const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
-            const button = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_ICON) as HTMLElement;
+            const button = fixture.debugElement.query(By.css('.' + CSS_CLASS_PANEL_ICON)) as DebugElement;
 
             let timesCollapsed = 0;
             let timesExpanded = 0;
@@ -391,7 +387,7 @@ describe('igxExpansionPanel', () => {
             const header = fixture.componentInstance.header;
             const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
-            let button = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_ICON) as HTMLElement;
+            let button = fixture.debugElement.query(By.css('.' + CSS_CLASS_PANEL_ICON)) as DebugElement;
 
             let timesCollapsed = 0;
             let timesExpanded = 0;
@@ -400,7 +396,7 @@ describe('igxExpansionPanel', () => {
             spyOn(header.interaction, 'emit');
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
-            button.click();
+            button.nativeElement.click()
             tick();
             fixture.detectChanges();
             tick();
@@ -408,7 +404,7 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(1);
 
-            button.click();
+            button.nativeElement.click()
             tick();
             fixture.detectChanges();
             tick();
@@ -416,7 +412,7 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(2);
 
-            button.click();
+            button.nativeElement.click()
             tick();
             fixture.detectChanges();
             tick();
@@ -430,8 +426,8 @@ describe('igxExpansionPanel', () => {
             fixture.detectChanges();
             tick();
 
-            button = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_ICON) as HTMLElement;
-            button.click();
+            button = fixture.debugElement.query(By.css('.' + CSS_CLASS_PANEL_ICON)) as DebugElement;
+            button.nativeElement.click()
             tick();
             fixture.detectChanges();
             tick();
@@ -439,7 +435,7 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(4);
 
-            button.click();
+            button.nativeElement.click()
             tick();
             fixture.detectChanges();
             tick();
@@ -447,7 +443,7 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(5);
 
-            button.click();
+            button.nativeElement.click()
             tick();
             fixture.detectChanges();
             tick();
@@ -461,7 +457,7 @@ describe('igxExpansionPanel', () => {
             const panel = fixture.componentInstance.expansionPanel;
             const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
-            const button = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_ICON) as HTMLElement;
+            const button = fixture.debugElement.query(By.css('.' + CSS_CLASS_PANEL_ICON)) as DebugElement;
             spyOn(panel.contentCollapsed, 'emit').and.callThrough();
             spyOn(panel.contentExpanded, 'emit').and.callThrough();
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
@@ -490,7 +486,7 @@ describe('igxExpansionPanel', () => {
             const panel = fixture.componentInstance.expansionPanel;
             const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
-            const button = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_ICON) as HTMLElement;
+            const button = fixture.debugElement.query(By.css('.' + CSS_CLASS_PANEL_ICON)) as DebugElement;
 
             let timesCollapsed = 0;
             let timesExpanded = 0;
@@ -532,7 +528,7 @@ describe('igxExpansionPanel', () => {
             const panel = fixture.componentInstance.expansionPanel;
             const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
-            const button = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_ICON) as HTMLElement;
+            const button = fixture.debugElement.query(By.css('.' + CSS_CLASS_PANEL_ICON)) as DebugElement;
 
             let timesCollapsed = 0;
             let timesExpanded = 0;
@@ -579,7 +575,7 @@ describe('igxExpansionPanel', () => {
             const header = fixture.componentInstance.header;
             const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
-            const button = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_ICON) as HTMLElement;
+            const button = fixture.debugElement.query(By.css('.' + CSS_CLASS_PANEL_ICON)) as DebugElement;
 
             let timesCollapsed = 0;
             let timesExpanded = 0;
@@ -692,7 +688,7 @@ describe('igxExpansionPanel', () => {
             const header = fixture.componentInstance.header;
             const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
-            const button = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_ICON) as HTMLElement;
+            const button = fixture.debugElement.query(By.css('.' + CSS_CLASS_PANEL_ICON)) as DebugElement;
 
             let timesCollapsed = 0;
             let timesExpanded = 0;
@@ -716,7 +712,7 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(1);
 
-            button.click();
+            button.nativeElement.click()
             tick();
             fixture.detectChanges();
             tick();
@@ -767,7 +763,7 @@ describe('igxExpansionPanel', () => {
             const header = fixture.componentInstance.header;
             const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
-            const button = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_ICON) as HTMLElement;
+            const button = fixture.debugElement.query(By.css('.' + CSS_CLASS_PANEL_ICON)) as DebugElement;
             const headerButton = panelHeader.querySelector('div [role = \'button\']');
 
             let timesCollapsed = 0;
@@ -796,7 +792,7 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(0);
 
-            button.click();
+            button.nativeElement.click()
             tick();
             fixture.detectChanges();
             tick();
@@ -825,7 +821,7 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(0);
 
-            button.click();
+            button.nativeElement.click()
             tick();
             fixture.detectChanges();
             tick();
@@ -966,7 +962,6 @@ describe('igxExpansionPanel', () => {
     });
 
     describe('Aria tests', () => {
-        // configureTestSuite();
         it('Should properly apply default aria properties', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
@@ -1089,7 +1084,6 @@ describe('igxExpansionPanel', () => {
     });
 
     describe('Rendering tests: ', () => {
-        // configureTestSuite();
         it('Should apply all appropriate classes on combo initialization', fakeAsync(() => {
             const fixture: ComponentFixture<IgxExpansionPanelSampleComponent> = TestBed.createComponent(IgxExpansionPanelSampleComponent);
             fixture.detectChanges();
@@ -1195,9 +1189,6 @@ describe('igxExpansionPanel', () => {
             expect(grid.attributes.getNamedItem('role').nodeValue).toEqual('grid');
             expect(grid.attributes.getNamedItem('id').nodeValue).toEqual(fixture.componentInstance.grid1.id);
             expect(grid.attributes.getNamedItem('tabindex').nodeValue).toEqual('0');
-            expect(grid.attributes.getNamedItem('ng-reflect-auto-generate').nodeValue).toEqual('true');
-            expect(grid.attributes.getNamedItem('ng-reflect-width').nodeValue).toEqual(fixture.componentInstance.width);
-            expect(grid.attributes.getNamedItem('ng-reflect-height').nodeValue).toEqual(fixture.componentInstance.height);
             expect(grid.childElementCount).toEqual(6);
         }));
         it('Should apply all appropriate classes on combo initialization_image + text content', fakeAsync(() => {

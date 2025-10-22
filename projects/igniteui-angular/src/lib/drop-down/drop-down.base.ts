@@ -1,14 +1,14 @@
 import {
     Input, HostBinding, ElementRef, QueryList, Output, EventEmitter, ChangeDetectorRef, Directive,
     OnInit,
-    Inject
+    Inject,
+    DOCUMENT
 } from '@angular/core';
 
 import { Navigate, ISelectionEventArgs } from './drop-down.common';
 import { IDropDownList } from './drop-down.common';
 import { DropDownActionKey } from './drop-down.common';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
-import { DOCUMENT } from '@angular/common';
 
 let NEXT_ID = 0;
 
@@ -163,6 +163,16 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
     }
 
     /**
+     * @hidden @internal
+     * Gets the id of the focused item during dropdown navigation.
+     * This is used to update the `aria-activedescendant` attribute of
+     * the IgxDropDownNavigationDirective host element.
+     */
+    public get activeDescendant (): string {
+        return this.focusedItem ? this.focusedItem.id : null;
+    }
+
+    /**
      * @hidden
      * @internal
      */
@@ -196,6 +206,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
                 this.selectItem(this.focusedItem, event);
                 break;
             case DropDownActionKey.ESCAPE:
+            case DropDownActionKey.TAB:
         }
     }
 

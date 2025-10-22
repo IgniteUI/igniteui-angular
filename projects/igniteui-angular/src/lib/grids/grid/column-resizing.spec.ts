@@ -1,5 +1,5 @@
 import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../../calendar/public_api';
@@ -8,11 +8,10 @@ import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersComponent } from '../../test-utils/grid-samples.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective } from '../columns/templates.directive';
 import { IgxAvatarComponent } from '../../avatar/avatar.component';
-import { IColumnResizeEventArgs, IgxColumnComponent } from '../public_api';
+import { IColumnResizeEventArgs, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent } from '../public_api';
 import { Size } from "../common/enums";
 import { setElementSize } from '../../test-utils/helper-utils.spec';
 import { IgxColumnResizerDirective } from '../resizing/resizer.directive';
@@ -21,8 +20,8 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
 
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 MultiColumnHeadersComponent,
                 NoopAnimationsModule,
@@ -30,10 +29,11 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
                 GridFeaturesComponent,
                 LargePinnedColGridComponent,
                 NullColumnsComponent,
+                MinWidthColumnsComponent,
                 ColGridComponent,
                 ColPercentageGridComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('Base tests: ', () => {
@@ -584,10 +584,12 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         it('should autosize column with % width programmatically.', fakeAsync(() => {
             grid.height = null;
             fixture.detectChanges();
-            expect(grid.columnList.get(0).width).toBe('25%');
-            grid.columnList.get(0).autosize();
+            const col = grid.columnList.get(0);
+            expect(col.width).toBe('25%');
+            col.autosize();
             fixture.detectChanges();
-            expect(grid.columnList.get(0).width).toBe('31%');
+            const calcPercent = (col.getHeaderCellWidths().width + col.getHeaderCellWidths().padding) / grid.calcWidth * 100;
+            expect(grid.columnList.get(0).width).toBe(calcPercent + '%');
         }));
 
         it('should autosize column with % width on double click.', fakeAsync(() => {
@@ -599,7 +601,9 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             UIInteractions.simulateMouseEvent('dblclick', headerResArea, 0, 0);
             tick(200);
             fixture.detectChanges();
-            expect(grid.columnList.get(0).width).toBe('31%');
+            const col = grid.columnList.get(0);
+            const calcPercent = (col.getHeaderCellWidths().width + col.getHeaderCellWidths().padding) / grid.calcWidth * 100;
+            expect(col.width).toBe(calcPercent + '%');
         }));
     });
 
@@ -857,9 +861,9 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(filteringCells[1].nativeElement.getBoundingClientRect().width).toBe(50);
             expect(filteringCells[2].nativeElement.getBoundingClientRect().width).toBe(49);
 
-            expect(headerGroups[0].nativeElement.getBoundingClientRect().width).toBe(48);
+            expect(headerGroups[0].nativeElement.getBoundingClientRect().width).toBe(49);
             expect(headerGroups[1].nativeElement.getBoundingClientRect().width).toBe(50);
-            expect(headerGroups[2].nativeElement.getBoundingClientRect().width).toBe(48);
+            expect(headerGroups[2].nativeElement.getBoundingClientRect().width).toBe(49);
         });
 
         it('should size headers correctly when column width is in %.', () => {
@@ -899,6 +903,77 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(headers[headers.length - 1].nativeElement.innerText).toEqual("ReleaseDate");
             expect(firstRowCells.length).toEqual(11);
         }));
+
+        it('should use user-provided `minWidth` as default min column width to size columns - #16057.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(MinWidthColumnsComponent);
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid;
+
+            expect(grid.columnList.get(0).width).toEqual('130px');
+            expect(grid.columnList.get(1).width).toEqual('90px');
+            expect(grid.columnList.get(2).width).toEqual('90px');
+            expect(grid.columnList.get(3).width).toEqual('90px');
+        }));
+    });
+
+    describe('Resizer tests: ', () => {
+        let fixture: ComponentFixture<any>;
+        let grid: IgxGridComponent;
+
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(ResizableColumnsWithToolbarComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+        }));
+
+        it('should align the resizer top with the grid header top', fakeAsync(() => {
+            grid.nativeElement.style.marginTop = '40px';
+            fixture.detectChanges();
+            const headers = GridFunctions.getColumnHeaders(fixture);
+            const headerResArea = GridFunctions.getHeaderResizeArea(headers[0]).nativeElement;
+
+            const headerRectTop = headerResArea.getBoundingClientRect().top;
+
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 15);
+            tick(200);
+            fixture.detectChanges();
+
+            const resizer = GridFunctions.getResizer(fixture).nativeElement;
+            expect(resizer).toBeDefined();
+
+            const resizerRectTop = resizer.getBoundingClientRect().top;
+            UIInteractions.simulateMouseEvent('mousemove', resizer, 250, 15);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, 250, 15);
+            fixture.detectChanges();
+
+
+            expect(Math.abs(resizerRectTop - headerRectTop)).toBeLessThanOrEqual(1);
+        }));
+
+        it('should align the resizer top with the grid header top when grid is scaled', fakeAsync(() => {
+            grid.nativeElement.style.transform = 'scale(0.6)';
+            fixture.detectChanges();
+
+            const headers = GridFunctions.getColumnHeaders(fixture);
+            const headerResArea = GridFunctions.getHeaderResizeArea(headers[1]).nativeElement;
+            const headerRectTop = headerResArea.getBoundingClientRect().top;
+
+            // Trigger resize to show resizer
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 153, 0);
+            tick(200);
+            fixture.detectChanges();
+
+            const resizer = GridFunctions.getResizer(fixture).nativeElement;
+            expect(resizer).toBeDefined();
+
+            const resizerRectTop = resizer.getBoundingClientRect().top;
+
+            UIInteractions.simulateMouseEvent('mouseup', resizer, 200, 5);
+            fixture.detectChanges();
+
+            expect(Math.abs(resizerRectTop - headerRectTop)).toBeLessThanOrEqual(1);
+        }));
     });
 });
 
@@ -907,6 +982,18 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ResizableColumnsComponent {
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+
+    public data = SampleTestData.personIDNameRegionData();
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(`width="500px" height="300px"`, ``,
+        '<igx-grid-toolbar><igx-grid-toolbar-title>Grid Toolbar</igx-grid-toolbar-title></igx-grid-toolbar>' +
+        ColumnDefinitions.resizableThreeOfFour),
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent]
+})
+export class ResizableColumnsWithToolbarComponent {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 
     public data = SampleTestData.personIDNameRegionData();
@@ -982,6 +1069,23 @@ export class NullColumnsComponent implements OnInit {
             { field: 'Fax', resizable: true }
         ];
 
+        this.data = SampleTestData.contactInfoData();
+    }
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(`width="400px" height="200px"`, ``, `<igx-column [field]="'ID'" [width]="'130px'" [resizable]="true"></igx-column>
+        <igx-column [field]="'CompanyName'" [minWidth]="'50px'" [resizable]="true"></igx-column>
+        <igx-column [field]="'ContactName'" [minWidth]="'50px'" [resizable]="true"></igx-column>
+        <igx-column [field]="'ContactTitle'" [minWidth]="'50px'" [resizable]="true"></igx-column>`),
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class MinWidthColumnsComponent implements OnInit {
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+
+    public data = [];
+
+    public ngOnInit(): void {
         this.data = SampleTestData.contactInfoData();
     }
 }

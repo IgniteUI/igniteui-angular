@@ -16,9 +16,10 @@ import {
 import {
     AbstractControl,
     NgControl,
-    NgModel
+    NgModel,
+    TouchedChangeEvent
 } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { filter, Subscription } from 'rxjs';
 import { IgxInputGroupBase } from '../../input-group/input-group.common';
 
 const nativeValidationAttributes = [
@@ -100,6 +101,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     private _valid = IgxInputState.INITIAL;
     private _statusChanges$: Subscription;
     private _valueChanges$: Subscription;
+    private _touchedChanges$: Subscription;
     private _fileNames: string;
     private _disabled = false;
 
@@ -227,6 +229,9 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @HostListener('blur')
     public onBlur() {
         this.inputGroup.isFocused = false;
+        if (this.ngControl?.control) {
+            this.ngControl.control.markAsTouched();
+        }
         this.updateValidityState();
     }
     /** @hidden @internal */
@@ -310,6 +315,14 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             this._valueChanges$ = this.ngControl.valueChanges.subscribe(
                 this.onValueChanged.bind(this)
             );
+
+            if (this.ngControl.control) {
+                this._touchedChanges$ = this.ngControl.control.events
+                    .pipe(filter(e => e instanceof TouchedChangeEvent))
+                    .subscribe(
+                        this.updateValidityState.bind(this)
+                    );
+            }
         }
 
         this.cdr.detectChanges();
@@ -322,6 +335,10 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
         if (this._valueChanges$) {
             this._valueChanges$.unsubscribe();
+        }
+
+        if (this._touchedChanges$) {
+            this._touchedChanges$.unsubscribe();
         }
     }
     /**

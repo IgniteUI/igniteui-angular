@@ -1,10 +1,16 @@
 import {
-    Directive, ElementRef, Input, ChangeDetectorRef, Optional, HostBinding, Inject
+    Directive, ElementRef, Input, ChangeDetectorRef, Optional, HostBinding, Inject,
+    OnDestroy, inject, DOCUMENT, HostListener,
+    Renderer2,
+    AfterViewInit,
 } from '@angular/core';
 import { IgxOverlayService } from '../../services/overlay/overlay';
-import { OverlaySettings } from '../../services/public_api';
+import { OverlaySettings } from '../../services/overlay/utilities';
 import { IgxNavigationService } from '../../core/navigation';
 import { IgxToggleDirective } from '../toggle/toggle.directive';
+import { IgxTooltipTargetDirective } from './tooltip-target.directive';
+import { Subject, takeUntil } from 'rxjs';
+import { PlatformUtil } from '../../core/utils';
 
 let NEXT_ID = 0;
 /**
@@ -26,7 +32,7 @@ let NEXT_ID = 0;
     selector: '[igxTooltip]',
     standalone: true
 })
-export class IgxTooltipDirective extends IgxToggleDirective {
+export class IgxTooltipDirective extends IgxToggleDirective implements AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
@@ -81,8 +87,23 @@ export class IgxTooltipDirective extends IgxToggleDirective {
      * ```
      */
     @HostBinding('attr.role')
+    @Input()
+    public set role(value: "tooltip" | "status"){
+        this._role = value;
+    }
     public get role() {
-        return 'tooltip';
+        return this._role;
+    }
+
+    /**
+     * Get the arrow element of the tooltip.
+     *
+     * ```typescript
+     * let tooltipArrow = this.tooltip.arrow;
+     * ```
+     */
+    public get arrow(): HTMLElement {
+        return this._arrowEl;
     }
 
     /**
@@ -92,15 +113,15 @@ export class IgxTooltipDirective extends IgxToggleDirective {
 
     /**
      * @hidden
-     * Returns whether close time out has started
      */
-    public toBeHidden = false;
+    public tooltipTarget: IgxTooltipTargetDirective;
 
-    /**
-     * @hidden
-     * Returns whether open time out has started
-     */
-    public toBeShown = false;
+    private _arrowEl: HTMLElement;
+    private _role: 'tooltip' | 'status' = 'tooltip';
+    private _destroy$ = new Subject<boolean>();
+    private _document = inject(DOCUMENT);
+    private _renderer = inject(Renderer2);
+    private _platformUtil = inject(PlatformUtil);
 
     /** @hidden */
     constructor(
@@ -110,40 +131,83 @@ export class IgxTooltipDirective extends IgxToggleDirective {
         @Optional() navigationService: IgxNavigationService) {
         // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
         super(elementRef, cdr, overlayService, navigationService);
+
+        this.onDocumentTouchStart = this.onDocumentTouchStart.bind(this);
+        this.opening.pipe(takeUntil(this._destroy$)).subscribe(() => {
+            this._document.addEventListener('touchstart', this.onDocumentTouchStart, { passive: true });
+        });
+        this.closed.pipe(takeUntil(this._destroy$)).subscribe(() => {
+            this._document.removeEventListener('touchstart', this.onDocumentTouchStart);
+        });
     }
 
-    /**
-     * If there is open animation in progress this method will finish is.
-     * If there is no open animation in progress this method will open the toggle with no animation.
-     *
-     * @param overlaySettings setting to use for opening the toggle
-     */
-    protected forceOpen(overlaySettings?: OverlaySettings) {
-        const info = this.overlayService.getOverlayById(this._overlayId);
-        const hasOpenAnimation = info ? info.openAnimationPlayer : false;
-        if (hasOpenAnimation) {
-            info.openAnimationPlayer.finish();
-            info.openAnimationPlayer.reset();
-            info.openAnimationPlayer = null;
-        } else if (this.collapsed) {
-            const animation = overlaySettings.positionStrategy.settings.openAnimation;
-            overlaySettings.positionStrategy.settings.openAnimation = null;
-            this.open(overlaySettings);
-            overlaySettings.positionStrategy.settings.openAnimation = animation;
+    /** @hidden */
+    public ngAfterViewInit(): void {
+        if (this._platformUtil.isBrowser) {
+            this._createArrow();
+        }
+    }
+
+    /** @hidden */
+    public override ngOnDestroy() {
+        super.ngOnDestroy();
+
+        this._document.removeEventListener('touchstart', this.onDocumentTouchStart);
+        this._destroy$.next(true);
+        this._destroy$.complete();
+
+        if (this.arrow) {
+            this._removeArrow();
         }
     }
 
     /**
-     * If there is close animation in progress this method will finish is.
-     * If there is no close animation in progress this method will close the toggle with no animation.
-     *
-     * @param overlaySettings settings to use for closing the toggle
+     * @hidden
      */
-    protected forceClose(overlaySettings?: OverlaySettings) {
-        const info = this.overlayService.getOverlayById(this._overlayId);
-        const hasCloseAnimation = info ? info.closeAnimationPlayer : false;
+    @HostListener('mouseenter')
+    public onMouseEnter() {
+        this.tooltipTarget?.onMouseEnter();
+    }
 
-        if (hasCloseAnimation) {
+    /**
+     * @hidden
+     */
+    @HostListener('mouseleave')
+    public onMouseLeave() {
+        this.tooltipTarget?.onMouseLeave();
+    }
+
+    /**
+     * If there is an animation in progress, this method will reset it to its initial state.
+     * Allows hovering over the tooltip while an open/close animation is running.
+     * Stops the animation and immediately shows the tooltip.
+     *
+     * @hidden
+     */
+    public stopAnimations(): void {
+        const info = this.overlayService.getOverlayById(this._overlayId);
+
+        if (!info) return;
+
+        if (info.openAnimationPlayer) {
+            info.openAnimationPlayer.reset();
+        }
+        if (info.closeAnimationPlayer) {
+            info.closeAnimationPlayer.reset();
+        }
+    }
+
+    /**
+     * If there is a close animation in progress, this method will end it.
+     * If there is no close animation in progress, this method will close the tooltip with no animation.
+     *
+     * @param overlaySettings settings to use for closing the tooltip
+     * @hidden
+     */
+    public forceClose(overlaySettings: OverlaySettings) {
+        const info = this.overlayService.getOverlayById(this._overlayId);
+
+        if (info && info.closeAnimationPlayer) {
             info.closeAnimationPlayer.finish();
             info.closeAnimationPlayer.reset();
             info.closeAnimationPlayer = null;
@@ -153,5 +217,21 @@ export class IgxTooltipDirective extends IgxToggleDirective {
             this.close();
             overlaySettings.positionStrategy.settings.closeAnimation = animation;
         }
+    }
+
+    private _createArrow(): void {
+        this._arrowEl = this._renderer.createElement('span');
+        this._renderer.setStyle(this._arrowEl, 'position', 'absolute');
+        this._renderer.setAttribute(this._arrowEl, 'data-arrow', 'true');
+        this._renderer.appendChild(this.element, this._arrowEl);
+    }
+
+    private _removeArrow(): void {
+        this._arrowEl.remove();
+        this._arrowEl = null;
+    }
+
+    private onDocumentTouchStart(event) {
+        this.tooltipTarget?.onDocumentTouchStart(event);
     }
 }

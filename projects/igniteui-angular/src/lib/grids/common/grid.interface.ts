@@ -1,4 +1,4 @@
-import { ColumnPinningPosition, FilterMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition, GridValidationTrigger, RowPinningPosition, Size } from './enums';
+import { ColumnPinningPosition, FilterMode, GridCellMergeMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition, GridValidationTrigger, RowPinningPosition, Size } from './enums';
 import {
     ISearchInfo, IGridCellEventArgs, IRowSelectionEventArgs, IColumnSelectionEventArgs,
     IPinColumnCancellableEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs,
@@ -38,6 +38,7 @@ import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IP
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { FormControl, FormGroup, ValidationErrors } from '@angular/forms';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
+import { IGridMergeStrategy } from '../../data-operations/merge-strategy';
 
 export const IGX_GRID_BASE = /*@__PURE__*/new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = /*@__PURE__*/new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
@@ -295,19 +296,63 @@ export interface RowType {
      */
     unpin?: () => void;
 }
-
+/**
+ * Describes a field that can be used in the Grid and QueryBuilder components.
+ */
 export interface FieldType {
+    /**
+     * Display label for the field.
+     */
     label?: string;
+
+    /**
+     * The internal field name, used in expressions and queries.
+     */
     field: string;
+
+    /**
+     * Optional column header for UI display purposes.
+     */
     header?: string;
+
+    /**
+     * The data type of the field.
+     */
     /* alternateType: GridColumnDataType */
     dataType: DataType;
+
+    /**
+     * Options for the editor associated with this field.
+     */
     editorOptions?: IFieldEditorOptions;
+
+    /**
+     * Optional filtering operands that apply to this field.
+     */
     filters?: IgxFilteringOperand;
+
+    /**
+     * Optional arguments for any pipe applied to the field.
+     */
     pipeArgs?: IFieldPipeArgs;
+
+    /**
+     * Default time format for Date/Time fields.
+     */
     defaultTimeFormat?: string;
+
+    /**
+     * Default date/time format for Date/Time fields.
+     */
     defaultDateTimeFormat?: string;
 
+    /**
+     * Optional formatter function to transform the value before display.
+     *
+     * @param value - The value of the field.
+     * @param rowData - Optional row data that contains this field.
+     * @returns The formatted value.
+     */
     formatter?(value: any, rowData?: any): any;
 }
 
@@ -335,6 +380,7 @@ export interface ColumnType extends FieldType {
     /** @hidden @internal */
     headerCell: any;
     validators: any[];
+    mergingComparer: (prevRecord: any, record: any, field: string) => boolean;
 
     /**
      * The template reference for the custom header of the column
@@ -453,6 +499,7 @@ export interface ColumnType extends FieldType {
     pinned: boolean;
     /** Indicates if the column is currently expanded or collapsed. If the value is true, the column is expanded */
     expanded: boolean;
+    merge: boolean;
     /** Indicates if the column is currently selected. If the value is true, the column is selected */
     selected: boolean;
     /** Indicates if the column can be selected. If the value is true, the column can be selected */
@@ -520,7 +567,7 @@ export interface ColumnType extends FieldType {
     toggleVisibility(value?: boolean): void;
     populateVisibleIndexes?(): void;
     /** Pins the column at the specified index (if not already pinned). */
-    pin(index?: number): boolean;
+    pin(index?: number, pinningPosition?: ColumnPinningPosition): boolean;
     /** Unpins the column at the specified index (if not already unpinned). */
     unpin(index?: number): boolean;
 }
@@ -690,6 +737,8 @@ export interface GridServiceType {
 export interface GridType extends IGridDataBindable {
     /** Represents the locale of the grid: `USD`, `EUR`, `GBP`, `CNY`, `JPY`, etc. */
     locale: string;
+    cellMergeMode: GridCellMergeMode;
+    mergeStrategy: IGridMergeStrategy;
     resourceStrings: IGridResourceStrings;
     /* blazorSuppress */
     /** Represents the native HTML element itself */
@@ -710,6 +759,8 @@ export interface GridType extends IGridDataBindable {
     pipeTrigger: number;
     summaryPipeTrigger: number;
     /** @hidden @internal */
+    columnsToMerge: ColumnType[],
+    /** @hidden @internal */
     groupablePipeTrigger: number;
     filteringPipeTrigger: number;
     /** @hidden @internal */
@@ -723,6 +774,8 @@ export interface GridType extends IGridDataBindable {
     isColumnWidthSum: boolean;
     /** @hidden @internal */
     minColumnWidth: number;
+    /** @hidden @internal */
+    hoverIndex?: number;
     /** Strategy, used for cloning the provided data. The type has one method, that takes any type of data */
     dataCloneStrategy: IDataCloneStrategy;
 
@@ -776,13 +829,13 @@ export interface GridType extends IGridDataBindable {
     isRowSelectable: boolean;
     /** Indicates whether the selectors of the rows are visible */
     showRowSelectors: boolean;
-    /** Indicates whether the grid's element is pinned to the start of the grid */
-    isPinningToStart: boolean;
     /** Indicates if the column of the grid is in drag mode */
     columnInDrag: any;
     /** @hidden @internal */
-    /** The width of pinned element */
-    pinnedWidth: number;
+    /** The width of pinned element for pinning at start. */
+    pinnedStartWidth: number;
+    /** The width of pinned element for pinning at end. */
+    pinnedEndWidth: number;
     /** @hidden @internal */
     /** The width of unpinned element */
     unpinnedWidth: number;
@@ -886,8 +939,6 @@ export interface GridType extends IGridDataBindable {
     /** The height of each row in the grid. Setting a constant height can solve problems with not showing all elements when scrolling */
     rowHeight: number;
     multiRowLayoutRowSize: number;
-    /** Minimal width for headers */
-    defaultHeaderGroupMinWidth: any;
     maxLevelHeaderDepth: number;
     defaultRowHeight: number;
     /** The default font size, calculated for each element */
@@ -917,6 +968,10 @@ export interface GridType extends IGridDataBindable {
     unpinnedColumns: ColumnType[];
     /** An array of columns, but it counts only the ones that are pinned */
     pinnedColumns: ColumnType[];
+    /** An array of columns, but it counts only the ones that are pinned to the start. */
+    pinnedStartColumns: ColumnType[];
+    /** An array of columns, but it counts only the ones that are pinned to the end. */
+    pinnedEndColumns: ColumnType[];
     /** represents an array of the headers of the columns */
     /** @hidden @internal */
     headerCellList: any[];
@@ -986,7 +1041,7 @@ export interface GridType extends IGridDataBindable {
     hasColumnGroups: boolean;
     /** @hidden @internal */
     hasEditableColumns: boolean;
-    /* blazorSuppress */
+    /* blazorCSSuppress */
     /** Property, that provides a callback for loading unique column values on demand.
      * If this property is provided, the unique values it generates will be used by the Excel Style Filtering  */
     uniqueColumnValuesStrategy: (column: ColumnType, tree: FilteringExpressionsTree, done: (values: any[]) => void) => void;
@@ -1156,7 +1211,7 @@ export interface GridType extends IGridDataBindable {
     refreshSearch(): void;
     getDefaultExpandState(record: any): boolean;
     trackColumnChanges(index: number, column: any): any;
-    getPossibleColumnWidth(): string;
+    getPossibleColumnWidth(baseWidth?: number, minColumnWidth?: number): string;
     resetHorizontalVirtualization(): void;
     hasVerticalScroll(): boolean;
     getVisibleContentHeight(): number;
@@ -1180,6 +1235,7 @@ export interface GridType extends IGridDataBindable {
     getEmptyRecordObjectFor(inRow: RowType): any;
     isSummaryRow(rec: any): boolean;
     isRecordPinned(rec: any): boolean;
+    isRecordMerged(rec: any): boolean;
     getInitialPinnedIndex(rec: any): number;
     isRecordPinnedByViewIndex(rowIndex: number): boolean;
     isColumnGrouped(fieldName: string): boolean;
@@ -1492,10 +1548,24 @@ export interface IClipboardOptions {
 }
 
 /**
- * An interface describing entity
+ * Describes an entity in the QueryBuilder.
+ * An entity represents a logical grouping of fields and can have nested child entities.
  */
 export interface EntityType {
+    /**
+     * The name of the entity.
+     * Typically used as an identifier in expressions.
+     */
     name: string;
+
+    /**
+     * The list of fields that belong to this entity.
+     */
     fields: FieldType[];
+
+    /**
+     * Optional child entities.
+     * This allows building hierarchical or nested query structures.
+     */
     childEntities?: EntityType[];
 }

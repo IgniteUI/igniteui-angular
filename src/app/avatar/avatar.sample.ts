@@ -4,7 +4,6 @@ import {
     IgxIconComponent,
     IgSizeDirective,
 } from 'igniteui-angular';
-import { CommonModule } from '@angular/common';
 import {
     defineComponents,
     IgcAvatarComponent,
@@ -30,10 +29,9 @@ defineComponents(IgcAvatarComponent, IgcIconComponent);
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
     imports: [
-        CommonModule,
         IgxAvatarComponent,
         IgxIconComponent,
-        IgSizeDirective,
+        IgSizeDirective
     ],
 })
 export class AvatarSampleComponent {

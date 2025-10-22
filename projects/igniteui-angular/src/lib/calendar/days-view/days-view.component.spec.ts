@@ -1,6 +1,5 @@
 import { Component, DebugElement, ViewChild } from "@angular/core";
 import { IgxDaysViewComponent } from "./days-view.component";
-import { configureTestSuite } from "../../test-utils/configure-suite";
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { UIInteractions } from "../../test-utils/ui-interactions.spec";
@@ -11,10 +10,9 @@ import { ScrollDirection } from "../calendar";
 const TODAY = new Date(2024, 6, 12);
 
 describe("Days View Component", () => {
-    configureTestSuite();
     const baseClass = "igx-days-view";
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [InitDaysViewComponent],
         }).compileComponents();

@@ -13,7 +13,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';
 import { HierarchicalTransaction, TransactionType } from '../../services/public_api';
@@ -28,11 +27,10 @@ const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-handle';
 
 describe('IgxTreeGrid - Integration #tGrid', () => {
-    configureTestSuite();
     let fix: ComponentFixture<any>;
     let treeGrid: IgxTreeGridComponent;
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -81,7 +79,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
     });
 
     describe('Child Collection', () => {
-        // configureTestSuite();
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
@@ -201,6 +198,73 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid = fix.componentInstance.treeGrid;
         });
 
+        it('should preserve the order of records on inner levels', () => {
+            fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
+            fix.componentInstance.sortByName = true;
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+
+            const expectedFlatData = [
+                {
+                    "ID": 1,
+                    "ParentID": -1,
+                    "Name": "Casey Houston",
+                    "JobTitle": "Vice President",
+                    "Age": 32
+                },
+                {
+                    "ID": 2,
+                    "ParentID": 1,
+                    "Name": "Gilberto Todd",
+                    "JobTitle": "Director",
+                    "Age": 41
+                },
+                {
+                    "ID": 7,
+                    "ParentID": 2,
+                    "Name": "Debra Morton",
+                    "JobTitle": "Associate Software Developer",
+                    "Age": 35
+                },
+                {
+                    "ID": 3,
+                    "ParentID": 2,
+                    "Name": "Tanya Bennett",
+                    "JobTitle": "Director",
+                    "Age": 29
+                },
+                {
+                    "ID": 4,
+                    "ParentID": 1,
+                    "Name": "Jack Simon",
+                    "JobTitle": "Software Developer",
+                    "Age": 33
+                },
+                {
+                    "ID": 10,
+                    "ParentID": -1,
+                    "Name": "Eduardo Ramirez",
+                    "JobTitle": "Manager",
+                    "Age": 53
+                },
+                {
+                    "ID": 9,
+                    "ParentID": 10,
+                    "Name": "Leslie Hansen",
+                    "JobTitle": "Associate Software Developer",
+                    "Age": 44
+                },
+                {
+                    "ID": 6,
+                    "ParentID": -1,
+                    "Name": "Erma Walsh",
+                    "JobTitle": "CEO",
+                    "Age": 52
+                },
+            ]
+            expect(treeGrid.flatData).toEqual(expectedFlatData);
+        });
+
         it('should transform a non-tree column into a tree column when pinning it', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
 
@@ -259,6 +323,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
 
             treeGrid.moving = true;
+            fix.detectChanges();
 
             const header = TreeGridFunctions.getHeaderCell(fix, 'ID').nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 50);
@@ -1433,8 +1498,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
-            treeGrid.columnList.find(x => x.field === 'Age').pinned = true;
             treeGrid.pinning.columns = 1;
+            treeGrid.columnList.find(x => x.field === 'Age').pinned = true;
 
             fix.detectChanges();
             const rightMostGridPart = treeGrid.nativeElement.getBoundingClientRect().right;

@@ -2,7 +2,6 @@ import { TestBed, fakeAsync } from "@angular/core/testing";
 import { IconFamily, IconMeta } from "./types";
 import { IgxIconService } from './icon.service';
 
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { Component, inject } from "@angular/core";
@@ -11,7 +10,6 @@ import { By } from "@angular/platform-browser";
 import { IgxTheme, THEME_TOKEN, ThemeToken } from "igniteui-angular";
 
 describe("Icon Service", () => {
-    configureTestSuite();
     const FAMILY: IconFamily = {
         name: "awesome",
         meta: { className: "my-awesome-icons", type: "font" },

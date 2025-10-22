@@ -4,79 +4,6 @@
 @use 'sass:list';
 @use '../../../base/index' as *;
 @use 'igniteui-theming/sass/animations' as *;
-@use '../../../themes/schemas' as *;
-
-////
-/// @group themes
-/// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
-
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Color} $track-color [null] - The main track color.
-/// @param {Color} $fill-color-default [null] - The track default fill color.
-/// @param {Color} $fill-color-danger [null] - The track danger fill color.
-/// @param {Color} $fill-color-warning [null] - The track warning fill color.
-/// @param {Color} $fill-color-info [null] - The track info fill color.
-/// @param {Color} $fill-color-success [null] - The track success fill color.
-/// @param {Color} $stripes-color [null] - The track stripes color.
-/// @param {Color} $text-color [null] - The track value text color.
-/// @param {List} $track-border-radius [null] - The border radius fraction, between 0 - 8 to be used fot the progress bar track
-/// @param {Number} $track-height [null] - The linear progress track height.
-/// @param {Number} $strip-size [null] - The linear progress bar strip width.
-/// @requires $light-material-schema
-/// @example scss Change the stripes color
-///   $my-progress-linear-theme: progress-linear-theme(
-///     $stripes-color: orange
-///   );
-///   // Pass the theme to the css-vars() mixin
-///   @include css-vars($my-progress-linear-theme);
-@function progress-linear-theme(
-    $schema: $light-material-schema,
-    $track-color: null,
-    $fill-color-default: null,
-    $fill-color-danger: null,
-    $fill-color-warning: null,
-    $fill-color-info: null,
-    $fill-color-success: null,
-    $stripes-color: null,
-    $text-color: null,
-    $track-border-radius: null,
-    $track-height: null,
-    $strip-size: null
-) {
-    $name: 'igx-linear-bar';
-    $linear-bar-schema: ();
-
-    $linear-bar-schema: if(map.has-key($schema, 'linear-bar'), map.get($schema, 'linear-bar'), $schema);
-
-    $theme: digest-schema($linear-bar-schema);
-    $meta: map.get($theme, '_meta');
-
-    @if not($track-border-radius) {
-        $track-border-radius: map.get($theme, 'track-border-radius');
-    }
-
-    @return extend($theme, (
-        name: $name,
-        track-color: $track-color,
-        fill-color-default: $fill-color-default,
-        fill-color-danger: $fill-color-danger,
-        fill-color-warning: $fill-color-warning,
-        fill-color-info: $fill-color-info,
-        fill-color-success: $fill-color-success,
-        stripes-color: $stripes-color,
-        text-color: $text-color,
-        track-border-radius: $track-border-radius,
-        track-height: $track-height,
-        strip-size: $strip-size,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
-    ));
-}
 
 @mixin striped-gradient($variant: default, $gradient-orientation, $stripe-color) {
     $fill-color-default: if($variant == 'indigo', transparent, $stripe-color);
@@ -127,7 +54,7 @@ $easing-curves: (
 @mixin progress-linear($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     %display-linear {
         position: relative;

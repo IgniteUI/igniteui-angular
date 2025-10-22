@@ -3,14 +3,6 @@
 @use '../button-group/button-group-component' as *;
 @use '../button-group/button-group-theme' as *;
 @use '../tree/tree-theme' as *;
-@use '../../themes/schemas' as *;
-
-////
-/// @group themes
-/// @access private
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
@@ -226,7 +218,7 @@
         align-items: center;
 
         @if $variant == 'indigo' {
-            padding: rem(16px) rem(16px) sizable(rem(8px), rem(12px), rem(16px));
+            padding: pad-block(rem(16px)) pad-inline(rem(16px)) pad-block(sizable(rem(8px), rem(12px), rem(16px)));
         } @else {
             padding: pad(rem(4px), rem(8px), rem(16px));
         }
@@ -308,7 +300,7 @@
         }
 
         igx-icon {
-            --component-size: #{if($variant == 'indigo', 2, var(--grid-size))};
+            --component-size: #{if($variant == 'indigo', 2, 1)};
 
             display: initial;
             width: var(--size) !important;
@@ -509,7 +501,7 @@
                     display: flex;
                     flex-direction: column;
                     gap: inherit;
-                    padding: rem(8px);
+                    padding: pad(rem(8px));
                 }
             } @else  {
                 margin-inline: calc(sizable(rem(-4px), rem(-8px), rem(-16px)) * -1);
@@ -722,11 +714,11 @@
     %grid-excel-menu__secondary-footer {
         --ig-size: 2;
 
-        padding-inline: if($variant != 'bootstrap', rem(24px), rem(16px));
-        padding-block-end: if($variant != 'bootstrap', rem(24px), rem(16px));
+        padding-inline: pad-inline(if($variant != 'bootstrap', rem(24px), rem(16px)));
+        padding-block-end: pad-block(if($variant != 'bootstrap', rem(24px), rem(16px)));
 
         @if $bootstrap-theme {
-            padding-block-start: rem(16px);
+            padding-block-start: pad-block(rem(16px));
             border-top: rem(1px) solid color($color: 'gray', $variant: 300);
         }
 

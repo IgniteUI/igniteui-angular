@@ -5,10 +5,10 @@ import { IPagingState, PagingError } from './paging-state.interface';
 import { IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
-import { mergeObjects, mkenum } from '../core/utils';
+import { cloneArray, mergeObjects } from '../core/utils';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/transaction/transaction';
 import { getHierarchy, isHierarchyMatch } from './operations';
-import { GridType } from '../grids/common/grid.interface';
+import { ColumnType, GridType } from '../grids/common/grid.interface';
 import { ITreeGridRecord } from '../grids/tree-grid/tree-grid.interfaces';
 import { ISortingExpression } from './sorting-strategy';
 import {
@@ -20,11 +20,14 @@ import {
 } from '../grids/common/strategy';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IGroupingExpression } from './grouping-expression.interface';
+import { DefaultMergeStrategy, IGridMergeStrategy } from './merge-strategy';
+import { IFilteringExpressionsTree } from './filtering-expressions-tree';
+import { FilteringStrategy, FilterUtil } from './filtering-strategy';
 
 /**
  * @hidden
  */
- export const DataType = /*@__PURE__*/mkenum({
+export const DataType = {
     String: 'string',
     Number: 'number',
     Boolean: 'boolean',
@@ -34,7 +37,7 @@ import { IGroupingExpression } from './grouping-expression.interface';
     Currency: 'currency',
     Percent: 'percent',
     Image: 'image'
-});
+} as const;
 export type DataType = (typeof DataType)[keyof typeof DataType];
 
 /**
@@ -55,19 +58,44 @@ export class DataUtil {
     public static treeGridSort(hierarchicalData: ITreeGridRecord[],
         expressions: ISortingExpression[],
         sorting: IGridSortingStrategy = new IgxDataRecordSorting(),
-        parent?: ITreeGridRecord,
         grid?: GridType): ITreeGridRecord[] {
-        let res: ITreeGridRecord[] = [];
-        hierarchicalData.forEach((hr: ITreeGridRecord) => {
-            const rec: ITreeGridRecord = DataUtil.cloneTreeGridRecord(hr);
-            rec.parent = parent;
-            if (rec.children) {
-                rec.children = DataUtil.treeGridSort(rec.children, expressions, sorting, rec, grid);
-            }
-            res.push(rec);
-        });
+        const res: ITreeGridRecord[] = [];
+        const stack: {
+            original: ITreeGridRecord[];
+            parent?: ITreeGridRecord;
+            result: ITreeGridRecord[];
+        }[] = [];
 
-        res = DataUtil.sort(res, expressions, sorting, grid);
+        stack.push({ original: hierarchicalData, parent: null, result: res });
+
+        while (stack.length > 0) {
+            const { original, parent, result } = stack.pop()!;
+
+            const clonedRecords: ITreeGridRecord[] = [];
+
+            for (const treeRecord of original) {
+                const rec: ITreeGridRecord = DataUtil.cloneTreeGridRecord(treeRecord);
+                rec.parent = parent;
+                clonedRecords.push(rec);
+
+                // If it has children, process them later
+                if (rec.children && rec.children.length > 0) {
+                    const childClones: ITreeGridRecord[] = [];
+                    rec.children = childClones;
+                    stack.push({
+                        original: treeRecord.children,
+                        parent: rec,
+                        result: childClones
+                    });
+                }
+            }
+
+            // Sort the clonedRecords before assigning to the result
+            const sorted = DataUtil.sort(clonedRecords, expressions, sorting, grid);
+            for (const item of sorted) {
+                result.push(item);
+            }
+        }
 
         return res;
     }
@@ -88,6 +116,25 @@ export class DataUtil {
         groupsRecords: any[] = [], fullResult: IGroupByResult = { data: [], metadata: [] }): IGroupByResult {
         groupsRecords.splice(0, groupsRecords.length);
         return grouping.groupBy(data, state, grid, groupsRecords, fullResult);
+    }
+
+    public static merge<T>(data: T[], columns: ColumnType[], strategy: IGridMergeStrategy = new DefaultMergeStrategy(), activeRowIndexes = [], grid: GridType = null,
+    ): any[] {
+        const result = [];
+        for (const col of columns) {
+            const isDate = col?.dataType === 'date' || col?.dataType === 'dateTime';
+            const isTime = col?.dataType === 'time' || col?.dataType === 'dateTime';
+            strategy.merge(
+                data,
+                col.field,
+                col.mergingComparer,
+                result,
+                activeRowIndexes,
+                isDate,
+                isTime,
+                grid);
+        }
+        return result;
     }
 
     public static page<T>(data: T[], state: IPagingState, dataLength?: number): T[] {
@@ -231,6 +278,15 @@ export class DataUtil {
         }
 
         return value;
+    }
+
+    public static filterDataByExpressions(data: any[], expressionsTree: IFilteringExpressionsTree, grid: GridType): any {
+        if (expressionsTree.filteringOperands.length) {
+            const state = { expressionsTree, strategy: FilteringStrategy.instance() };
+            data = FilterUtil.filter(cloneArray(data), state, grid);
+        }
+
+        return data;
     }
 
     private static findParentFromPath(data: any[], primaryKey: any, childDataKey: any, path: any[]): any {
