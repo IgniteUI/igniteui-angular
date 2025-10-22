@@ -22,6 +22,8 @@ export interface IAccordionCancelableEventArgs extends IExpansionPanelCancelable
     owner: IgxAccordionComponent;
     /** Provides a reference to the `IgxExpansionPanelComponent` which is currently expanding/collapsing. */
     panel: IgxExpansionPanelBase;
+    /** Enables canceling the expansion/collapse operation. */
+    cancel: boolean;
 }
 
 let NEXT_ID = 0;
