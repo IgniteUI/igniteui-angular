@@ -1,8 +1,8 @@
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
 import { Directive, Input, AfterViewInit, QueryList, ViewChildren, IterableDiffers, booleanAttribute } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
-import { IgxRowDirective } from '../../grids/row.directive';
-import { IgxIconService } from '../../icon/icon.service';
+import { IgxIconService } from 'igniteui-angular/icon';
+import { IgxRowDirective } from 'igniteui-angular/grids';
 
 /* blazorElement */
 /* contentParent: ActionStrip */

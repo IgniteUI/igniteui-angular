@@ -16,6 +16,7 @@ export {
     IgxForOfDirective,
     IgxGridForOfContext,
     IgxGridForOfDirective,
+    IgxForOfToken
 } from './directives/for-of/for_of.directive';
 export * from './directives/button/icon-button.directive';
 export * from './directives/layout/layout.directive';

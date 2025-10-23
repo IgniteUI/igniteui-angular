@@ -37,3 +37,21 @@ export { DateTimeUtil } from './date-common/util/date-time.util';
 
 // Performance service
 export * from './performance.service';
+
+// i18n
+export * from './core/i18n/action-strip-resources';
+export * from './core/i18n/banner-resources';
+export * from './core/i18n/calendar-resources';
+export * from './core/i18n/carousel-resources';
+export * from './core/i18n/chip-resources';
+export * from './core/i18n/combo-resources';
+export * from './core/i18n/date-picker-resources';
+export * from './core/i18n/date-range-picker-resources';
+export * from './core/i18n/grid-resources';
+export * from './core/i18n/input-resources';
+export * from './core/i18n/list-resources';
+export * from './core/i18n/paginator-resources';
+export * from './core/i18n/query-builder-resources';
+export * from './core/i18n/resources';
+export * from './core/i18n/time-picker-resources';
+export * from './core/i18n/tree-resources';

@@ -1,5 +1,4 @@
-import { IgxPrefixDirective } from 'igniteui-angular/directives';
-import { IgxSuffixDirective } from 'igniteui-angular/directives';
+import { IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
 
