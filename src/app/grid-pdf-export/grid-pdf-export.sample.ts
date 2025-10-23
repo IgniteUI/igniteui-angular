@@ -14,7 +14,8 @@ import {
     IgxSelectItemComponent,
     IgxInputGroupComponent,
     IgxLabelDirective,
-    IgxInputDirective
+    IgxInputDirective,
+    IgxColumnGroupComponent
 } from 'igniteui-angular';
 
 @Component({
@@ -24,6 +25,7 @@ import {
     imports: [
         IgxGridComponent,
         IgxColumnComponent,
+        IgxColumnGroupComponent,
         IgxTreeGridComponent,
         IgxHierarchicalGridComponent,
         IgxRowIslandComponent,
@@ -59,7 +61,11 @@ export class GridPdfExportSampleComponent {
         { ID: 5, Name: 'Product E', Category: 'Clothing', Price: 79.99, InStock: true, LaunchDate: new Date(2023, 4, 12) },
         { ID: 6, Name: 'Product F', Category: 'Electronics', Price: 899.99, InStock: false, LaunchDate: new Date(2023, 5, 8) },
         { ID: 7, Name: 'Product G', Category: 'Books', Price: 24.99, InStock: true, LaunchDate: new Date(2023, 6, 22) },
-        { ID: 8, Name: 'Product H', Category: 'Clothing', Price: 39.99, InStock: true, LaunchDate: new Date(2023, 7, 18) }
+        { ID: 8, Name: 'Product H', Category: 'Clothing', Price: 39.99, InStock: true, LaunchDate: new Date(2023, 7, 18) },
+        { ID: 9, Name: 'Product I', Category: 'Electronics', Price: 1299.99, InStock: true, LaunchDate: new Date(2023, 8, 5) },
+        { ID: 10, Name: 'Product J', Category: 'Books', Price: 34.99, InStock: true, LaunchDate: new Date(2023, 9, 14) },
+        { ID: 11, Name: 'Product K', Category: 'Clothing', Price: 89.99, InStock: false, LaunchDate: new Date(2023, 10, 3) },
+        { ID: 12, Name: 'Product L', Category: 'Electronics', Price: 449.99, InStock: true, LaunchDate: new Date(2023, 11, 1) }
     ];
 
     // Tree Grid data
@@ -71,7 +77,11 @@ export class GridPdfExportSampleComponent {
         { ID: 5, ParentID: -1, Name: 'Furniture', Budget: 3000 },
         { ID: 6, ParentID: 5, Name: 'Chairs', Budget: 800 },
         { ID: 7, ParentID: 5, Name: 'Desks', Budget: 1200 },
-        { ID: 8, ParentID: 5, Name: 'Cabinets', Budget: 1000 }
+        { ID: 8, ParentID: 5, Name: 'Cabinets', Budget: 1000 },
+        { ID: 9, ParentID: -1, Name: 'Office Supplies', Budget: 2500 },
+        { ID: 10, ParentID: 9, Name: 'Paper Products', Budget: 600 },
+        { ID: 11, ParentID: 9, Name: 'Writing Instruments', Budget: 400 },
+        { ID: 12, ParentID: 9, Name: 'Storage Solutions', Budget: 1500 }
     ];
 
     // Hierarchical Grid data
@@ -82,7 +92,8 @@ export class GridPdfExportSampleComponent {
             Revenue: 1000000,
             Employees: [
                 { ID: 1, Name: 'John Doe', Position: 'Manager', Salary: 80000 },
-                { ID: 2, Name: 'Jane Smith', Position: 'Developer', Salary: 70000 }
+                { ID: 2, Name: 'Jane Smith', Position: 'Developer', Salary: 70000 },
+                { ID: 3, Name: 'Mike Wilson', Position: 'Developer', Salary: 72000 }
             ]
         },
         {
@@ -90,8 +101,20 @@ export class GridPdfExportSampleComponent {
             CompanyName: 'Company B',
             Revenue: 2000000,
             Employees: [
-                { ID: 3, Name: 'Bob Johnson', Position: 'CEO', Salary: 150000 },
-                { ID: 4, Name: 'Alice Brown', Position: 'Designer', Salary: 65000 }
+                { ID: 4, Name: 'Bob Johnson', Position: 'CEO', Salary: 150000 },
+                { ID: 5, Name: 'Alice Brown', Position: 'Designer', Salary: 65000 },
+                { ID: 6, Name: 'Carol Davis', Position: 'Developer', Salary: 75000 }
+            ]
+        },
+        {
+            ID: 3,
+            CompanyName: 'Company C',
+            Revenue: 1500000,
+            Employees: [
+                { ID: 7, Name: 'David Lee', Position: 'Manager', Salary: 85000 },
+                { ID: 8, Name: 'Emma Taylor', Position: 'Analyst', Salary: 68000 },
+                { ID: 9, Name: 'Frank Martinez', Position: 'Developer', Salary: 73000 },
+                { ID: 10, Name: 'Grace Anderson', Position: 'Designer', Salary: 67000 }
             ]
         }
     ];
