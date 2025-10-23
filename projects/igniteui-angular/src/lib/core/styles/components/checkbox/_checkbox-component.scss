@@ -14,6 +14,10 @@
         @extend %cbx-display !optional;
 
         &:hover {
+            @include e(label) {
+                @extend %cbx-label--hover !optional;
+            }
+
             @include e(ripple) {
                 @extend %cbx-ripple--hover !optional;
             }
@@ -77,12 +81,6 @@
 
             @include e(composite-mark) {
                 @extend %cbx-composite-mark-indigo !optional;
-            }
-
-            @include e(label) {
-                &:hover {
-                    @extend %cbx-label--hover !optional;
-                }
             }
         }
 
