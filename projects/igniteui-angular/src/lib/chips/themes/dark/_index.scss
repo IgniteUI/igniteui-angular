@@ -1,0 +1,7 @@
+@use 'sass:meta';
+@use 'tokens';
+@use 'styles/themes/standalone' as *;
+@use 'indigo';
+
+$tokens: meta.module-variables(tokens);
+@include themes(igx-chip, $tokens, dark);
