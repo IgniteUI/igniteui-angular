@@ -72,7 +72,7 @@
     "dependencies": {
         "@igniteui/material-icons-extended": "^3.1.0",
         "fflate": "^0.8.1",
-        "igniteui-theming": "^21.0.2",
+        "igniteui-theming": "^22.0.0",
         "igniteui-trial-watermark": "^3.1.0",
         "jspdf": "^3.0.2",
         "lodash-es": "^4.17.21",
