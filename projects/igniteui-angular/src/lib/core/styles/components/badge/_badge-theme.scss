@@ -71,6 +71,10 @@
     %igx-badge--warn {
         background: color($color: 'warn');
         color: contrast-color($color: 'warn', $variant: 500);
+
+        igx-icon {
+            color: contrast-color($color: 'warn', $variant: 500);
+        }
     }
 
     %igx-badge--error {
