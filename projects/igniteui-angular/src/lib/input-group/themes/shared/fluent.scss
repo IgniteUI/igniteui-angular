@@ -93,6 +93,55 @@ $_theme: $fluent;
         }
     }
 
+    @include m(readonly, $not: (file)) {
+        igx-prefix,
+        [igxPrefix],
+        igx-suffix,
+        [igxSuffix] {
+            background: transparent;
+        }
+
+        @include e(bundle) {
+            &:hover:not(:focus-within) {
+                border-color: var-get($_theme, 'border-color');
+            }
+        }
+    }
+
+    @include mx(readonly, search) {
+        igx-prefix,
+        [igxPrefix],
+        igx-suffix,
+        [igxSuffix] {
+            color: var(--igx-input-group-disabled-text-color, var(--ig-gray-500));
+        }
+    }
+
+    @include mx(readonly, search, focused) {
+        igx-suffix,
+        [igxSuffix] {
+            color: var(--igx-input-group-input-suffix-color--focused, var(--ig-gray-900));
+        }
+    }
+
+    @include mx(invalid, readonly, ('not': (file, disabled))) {
+        @include e(bundle) {
+            border-color: var-get($_theme, 'border-color');
+        }
+
+        @include e(hint) {
+            color: var-get($_theme, 'helper-text-color');
+        }
+    }
+
+    @include mx(invalid, readonly, focused, ('not': (file, disabled))) {
+        @include e(bundle) {
+            &::after {
+                border-color: var-get($_theme, 'focused-border-color');
+            }
+        }
+    }
+
     @include m(invalid) {
         @include e(label) {
             &::after {

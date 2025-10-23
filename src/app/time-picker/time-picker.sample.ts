@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, DestroyRef, inject, TemplateRef, ViewChild, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxTimePickerComponent,
@@ -13,21 +13,52 @@ import {
     IgxPrefixDirective,
     IgxIconComponent,
     IgxPickerClearComponent,
-    IgxSuffixDirective
+    IgxSuffixDirective,
+    IgxLabelDirective,
+    IgSizeDirective,
+    PickerInteractionMode,
+    IgxSwitchComponent
 } from 'igniteui-angular';
+import {
+    PropertyPanelConfig,
+    PropertyChangeService,
+    Properties,
+} from '../properties-panel/property-change.service';
 
 @Component({
     selector: 'app-time-picker-sample',
     styleUrls: ['time-picker.sample.scss'],
     templateUrl: 'time-picker.sample.html',
-    imports: [IgxTimePickerComponent, FormsModule, IgxHintDirective, IgxButtonDirective, IgxPickerActionsDirective, IgxPickerToggleComponent, IgxPrefixDirective, IgxIconComponent, IgxPickerClearComponent, IgxSuffixDirective]
+    imports: [
+        IgxTimePickerComponent,
+        FormsModule,
+        IgxHintDirective,
+        IgxButtonDirective,
+        IgxPickerActionsDirective,
+        IgxPickerToggleComponent,
+        IgxPrefixDirective,
+        IgxIconComponent,
+        IgxPickerClearComponent,
+        IgxSuffixDirective,
+        IgxLabelDirective,
+        IgSizeDirective,
+        IgxSwitchComponent
+    ]
 })
-export class TimePickerSampleComponent {
+export class TimePickerSampleComponent implements OnInit {
     @ViewChild('tp', { read: IgxTimePickerComponent, static: true })
     public tp: IgxTimePickerComponent;
 
     @ViewChild('target')
     public target: IgxInputDirective;
+
+    @ViewChild('customControls', { static: true })
+    public customControlsTemplate!: TemplateRef<any>;
+
+    public hasSuffix = false;
+    public hasPrefix = false;
+    public hasLabel = false;
+    public hasHint = false;
 
     public itemsDelta = { hours: 1, minutes: 15, seconds: 20 };
     public format = 'hh:mm:ss:SS a';
@@ -48,6 +79,91 @@ export class TimePickerSampleComponent {
         closeOnOutsideClick: true,
         positionStrategy: new AutoPositionStrategy()
     };
+
+    public panelConfig: PropertyPanelConfig = {
+        size: {
+            control: {
+                type: 'button-group',
+                options: ['small', 'medium', 'large'],
+                defaultValue: 'medium',
+            }
+        },
+        mode: {
+            control: {
+                type: 'button-group',
+                options: [
+                    { label: 'dialog', value: PickerInteractionMode.Dialog},
+                    { label: 'dropdown', value: PickerInteractionMode.DropDown}
+                ],
+                defaultValue: 'dropdown'
+            }
+        },
+        type: {
+            control: {
+                type: 'button-group',
+                options: ['box', 'border', 'line'],
+                defaultValue: 'box'
+            }
+        },
+        readonly: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        disabled: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        value: {
+            control: {
+                type: 'time'
+            }
+        },
+        placeholder: {
+            control: {
+                type: 'text',
+                defaultValue: 'hh:mm'
+            }
+        },
+        displayFormat: {
+            label: 'Display Format',
+            control: {
+                type: 'text'
+            }
+        },
+        inputFormat: {
+            label: 'Input Format',
+            control: {
+                type: 'text'
+            }
+        }
+    }
+
+    public properties: Properties;
+    private propertyChangeService = inject(PropertyChangeService);
+    private destroyRef = inject(DestroyRef);
+
+    constructor() {
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
+
+        const propertyChange =
+            this.propertyChangeService.propertyChanges.subscribe(
+                (properties) => {
+                    this.properties = properties;
+                }
+            );
+
+        this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
+    }
+
+    public ngOnInit() {
+        this.propertyChangeService.setCustomControls(
+            this.customControlsTemplate
+        );
+    }
 
     public change() {
         this.isRequired = !this.isRequired;

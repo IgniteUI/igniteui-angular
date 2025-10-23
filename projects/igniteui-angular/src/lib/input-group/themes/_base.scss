@@ -350,6 +350,48 @@ $base-scale-size: (
             }
         }
 
+        @include m(readonly, $not: (file, disabled)) {
+            igx-prefix,
+            [igxPrefix],
+            igx-suffix,
+            [igxSuffix] {
+                color: var-get($theme, 'disabled-text-color');
+            }
+
+            @include e(input) {
+                &:hover {
+                    cursor: default;
+                    color: var-get($theme, 'filled-text-color');
+                }
+
+                &:hover:not(:focus-within) {
+                    &::placeholder {
+                        color: var-get($theme, 'placeholder-color');
+                    }
+                }
+            }
+
+            @include e(textarea) {
+                &:hover {
+                    cursor: default;
+                    color: var-get($theme, 'filled-text-color');
+                }
+
+                &:hover:not(:focus-within) {
+                    &::placeholder {
+                        color: var-get($theme, 'placeholder-color');
+                    }
+                }
+            }
+        }
+
+        @include mx(readonly, focused, ('not': (file))) {
+            igx-suffix,
+            [igxSuffix] {
+                color: var-get($theme, 'disabled-text-color');
+            }
+        }
+
         @include m(required) {
             @include e(label) {
                 &::after {

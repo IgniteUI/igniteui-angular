@@ -118,6 +118,23 @@ $_theme: $indigo;
         }
     }
 
+    @include m(readonly, $not: (file, disabled)) {
+        @include e(bundle) {
+            border-block-end-color: var-get($_theme, 'disabled-text-color');
+
+            &:hover:not(:focus-within) {
+                background: unset;
+                border-block-end-color: var-get($_theme, 'disabled-text-color');
+            }
+        }
+    }
+
+    @include mx(readonly, focused, ('not': (file, disabled))) {
+        @include e(bundle) {
+            border-block-end-color: var-get($_theme, 'focused-bottom-line-color');
+        }
+    }
+
     @include m(focused) {
         @include e(bundle) {
             background: var-get($_theme, 'box-background-hover');
