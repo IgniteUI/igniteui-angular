@@ -21,6 +21,8 @@ $theme: $material;
         }
 
         @include e(label) {
+            @include type-style(caption);
+
             display: flex;
             align-items: center;
             color: var-get($theme, 'label-color');
