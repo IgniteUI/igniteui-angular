@@ -9,6 +9,7 @@
     "@types/hammerjs",
     "hammerjs",
     "fflate",
+    "jspdf",
     "igniteui-trial-watermark",
     "lodash-es",
     "@igniteui/material-icons-extended",
