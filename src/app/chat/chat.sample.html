@@ -1,0 +1,5 @@
+<igx-chat [options]="options()" [messages]="messages()" [templates]="templates()" />
+
+<ng-template #renderer let-message igxChatMessageContext>
+    <div [innerHTML]="message.text | fromMarkdown | async"></div>
+</ng-template>
