@@ -648,6 +648,8 @@ $input-bottom-spacing: rem(6px);
 
         @include e(label) {
             color: var-get($_theme, 'focused-secondary-color');
+            translate: 0 var(--_label-translate-top);
+            align-self: start;
         }
 
         @include e(bundle-start) {
@@ -686,13 +688,6 @@ $input-bottom-spacing: rem(6px);
 
         @include e(upload) {
             border-color: var-get($_theme, 'focused-border-color');
-        }
-    }
-
-    @include mx(border, focused) {
-        @include e(label) {
-            translate: 0 var(--_label-translate-top);
-            align-self: start;
         }
     }
 
@@ -942,6 +937,103 @@ $input-bottom-spacing: rem(6px);
 
     @include e(textarea) {
         @include type-style(subtitle-1);
+    }
+
+    @include m(readonly, $not: (file)) {
+        @include e(bundle) {
+            &:hover::before {
+                border-block-end-color: var-get($_theme, 'idle-bottom-line-color');
+            }
+        }
+    }
+
+    @include mx(readonly, box, ('not': (file, disabled))) {
+        &:hover:not(:focus-within) {
+            @include e(bundle) {
+                background: var-get($_theme, 'box-background-focus');
+            }
+        }
+    }
+
+    @include mx(readonly, border, ('not': (file, focused))) {
+        &:hover {
+            @include e(bundle-start) {
+                border-color: var-get($_theme, 'border-color');
+            }
+
+            @include e(bundle-end) {
+                border-color: var-get($_theme, 'border-color');
+            }
+
+            @include e(notch) {
+                border-color: var-get($_theme, 'border-color');
+            }
+
+            @include e(filler) {
+                border-color: var-get($_theme, 'border-color');
+            }
+        }
+    }
+
+    @include mx(invalid, readonly, ('not': (file, disabled))) {
+        @include e(label) {
+            color: var-get($_theme, 'idle-secondary-color');
+        }
+
+        @include e(hint) {
+            color: var-get($_theme, 'helper-text-color');
+        }
+
+        @include e(bundle) {
+            &::before {
+                border-block-end-color: var-get($_theme, 'idle-bottom-line-color');
+            }
+        }
+    }
+
+    @include mx(invalid, readonly, focused, ('not': (file, disabled))) {
+        @include e(label) {
+            color: var-get($_theme, 'focused-secondary-color');
+        }
+
+        @include e(bundle) {
+            &::after {
+                background: var-get($_theme, 'focused-bottom-line-color');
+            }
+        }
+    }
+
+    @include mx(border, invalid, readonly, focused, ('not': (file, disabled))) {
+        @include e(bundle-start) {
+            border-color: var-get($_theme, 'focused-border-color');
+        }
+
+        @include e(bundle-end) {
+            border-color: var-get($_theme, 'focused-border-color');
+        }
+
+        @include e(notch) {
+            border-block-end-color: var-get($_theme, 'focused-border-color');
+        }
+
+        @include e(filler) {
+            border-color: var-get($_theme, 'focused-border-color');
+        }
+    }
+
+    @include mx(readonly, search) {
+        @include e(bundle) {
+            &:hover:not(:focus-within) {
+                box-shadow: var-get($_theme, 'search-resting-elevation');
+            }
+        }
+    }
+
+    @include mx(readonly, search, focused) {
+        igx-suffix,
+        [igxSuffix] {
+            color: var-get($_theme, 'disabled-text-color');
+        }
     }
 
     @include m(filled) {
