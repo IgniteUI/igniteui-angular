@@ -92,7 +92,7 @@ class User {
     public options = signal<IgxChatOptions>({
         disableAutoScroll: false,
         disableInputAttachments: false,
-        suggestions: [`It's there. Thanks.`, `It's not there.`],
+        suggestions: [`It works. Thanks.`, `It doesn't work.`],
         inputPlaceholder: 'Type your message here...',
         headerText: 'Customer Support',
     });
