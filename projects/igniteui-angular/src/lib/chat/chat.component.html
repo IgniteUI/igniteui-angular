@@ -10,4 +10,6 @@
   (igcInputFocus)="inputFocus.emit()"
   (igcInputBlur)="inputBlur.emit()"
   (igcInputChange)="inputChange.emit($event.detail)"
-></igc-chat>
+>
+    <ng-content></ng-content>
+</igc-chat>
