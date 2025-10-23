@@ -5,6 +5,7 @@ import {
     AfterViewInit,
 } from '@angular/core';
 import { IgxOverlayService } from '../../services/overlay/overlay';
+import { OverlaySettings } from '../../services/overlay/utilities';
 import { IgxNavigationService } from '../../core/navigation';
 import { IgxToggleDirective } from '../toggle/toggle.directive';
 import { IgxTooltipTargetDirective } from './tooltip-target.directive';
@@ -178,29 +179,43 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
 
     /**
      * If there is an animation in progress, this method will reset it to its initial state.
-     * Optional `force` parameter that ends the animation.
+     * Allows hovering over the tooltip while an open/close animation is running.
+     * Stops the animation and immediately shows the tooltip.
      *
      * @hidden
-     * @param force if set to `true`, the animation will be ended.
      */
-    public stopAnimations(force: boolean = false): void {
+    public stopAnimations(): void {
         const info = this.overlayService.getOverlayById(this._overlayId);
 
         if (!info) return;
 
         if (info.openAnimationPlayer) {
             info.openAnimationPlayer.reset();
-            if (force) {
-                info.openAnimationPlayer.finish();
-                info.openAnimationPlayer = null;
-            }
         }
         if (info.closeAnimationPlayer) {
             info.closeAnimationPlayer.reset();
-            if (force) {
-                info.closeAnimationPlayer.finish();
-                info.closeAnimationPlayer = null;
-            }
+        }
+    }
+
+    /**
+     * If there is a close animation in progress, this method will end it.
+     * If there is no close animation in progress, this method will close the tooltip with no animation.
+     *
+     * @param overlaySettings settings to use for closing the tooltip
+     * @hidden
+     */
+    public forceClose(overlaySettings: OverlaySettings) {
+        const info = this.overlayService.getOverlayById(this._overlayId);
+
+        if (info && info.closeAnimationPlayer) {
+            info.closeAnimationPlayer.finish();
+            info.closeAnimationPlayer.reset();
+            info.closeAnimationPlayer = null;
+        } else if (!this.collapsed) {
+            const animation = overlaySettings.positionStrategy.settings.closeAnimation;
+            overlaySettings.positionStrategy.settings.closeAnimation = null;
+            this.close();
+            overlaySettings.positionStrategy.settings.closeAnimation = animation;
         }
     }
 
