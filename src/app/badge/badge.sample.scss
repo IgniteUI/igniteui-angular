@@ -2,9 +2,8 @@
 
 .wrapper {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 48px;
-    padding: 24px;
+    gap: rem(48px);
+    padding: rem(24px);
 }
 
 .badges {
@@ -14,19 +13,14 @@
     gap: 24px;
 }
 
-.sample-title {
-    margin: 16px 0 8px 0;
-    font-size: 18px;
-    font-weight: 600;
-}
-
 .badge-examples {
     display: flex;
     flex-wrap: wrap;
-    gap: 32px;
+    gap: rem(32px);
     align-items: center;
-    padding: 16px;
-    background: color($color: 'surface', $variant: 700);
+    padding: rem(16px);
+    background: color($color: 'gray', $variant: 100);
+    border-radius: rem(8px);
 }
 
 .badge-item {
@@ -46,9 +40,15 @@
     align-items: center;
     position: relative;
 
+    igx-avatar {
+        anchor-name: --avatar;
+    }
+
     igx-badge {
         position: absolute;
-        top: -4px;
-        right: -4px;
+        position-anchor: --avatar;
+        bottom: anchor(--avatar top);
+        left: anchor(right);
+        transform: translate(-75%, 75%);
     }
 }
