@@ -11,7 +11,8 @@ describe('Badge', () => {
                 InitBadgeWithDefaultsComponent,
                 InitBadgeWithIconComponent,
                 IgxBadgeComponent,
-                InitBadgeWithIconARIAComponent
+                InitBadgeWithIconARIAComponent,
+                InitBadgeWithDotComponent
             ]
         }).compileComponents();
     }));
@@ -87,6 +88,26 @@ describe('Badge', () => {
         const container = fixture.nativeElement.querySelectorAll('.igx-badge')[0];
         expect(container.getAttribute('aria-roledescription')).toMatch(expectedDescription);
     });
+
+    it('Initializes badge with dot property', () => {
+        const fixture = TestBed.createComponent(InitBadgeWithDotComponent);
+        fixture.detectChanges();
+        const badge = fixture.componentInstance.badge;
+
+        expect(badge.dot).toBeTruthy();
+        expect(fixture.debugElement.query(By.css('.igx-badge--dot'))).toBeTruthy();
+    });
+
+    it('Initializes success badge as dot', () => {
+        const fixture = TestBed.createComponent(InitBadgeWithDotComponent);
+        fixture.detectChanges();
+        const badge = fixture.componentInstance.badge;
+
+        expect(badge.type).toBe(IgxBadgeType.SUCCESS);
+        expect(badge.dot).toBeTruthy();
+        expect(fixture.debugElement.query(By.css('.igx-badge--dot'))).toBeTruthy();
+        expect(fixture.debugElement.query(By.css('.igx-badge--success'))).toBeTruthy();
+    });
 });
 
 @Component({
@@ -118,5 +139,13 @@ class InitBadgeWithIconComponent {
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithIconARIAComponent {
+    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
+}
+
+@Component({
+    template: `<igx-badge dot type="success"></igx-badge>`,
+    imports: [IgxBadgeComponent]
+})
+class InitBadgeWithDotComponent {
     @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
 }
