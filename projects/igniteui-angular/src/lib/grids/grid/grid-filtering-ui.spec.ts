@@ -16,7 +16,7 @@ import {
 import { IgxDatePickerComponent } from '../../date-picker/date-picker.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
-import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
+import { IgxGridFilteringRowComponent, INPUT_DEBOUNCE_TIME } from '../filtering/base/grid-filtering-row.component';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxBadgeComponent } from '../../badge/badge.component';
 import { IgxIconComponent } from '../../icon/icon.component';
@@ -51,7 +51,7 @@ import { GridSelectionMode, FilterMode, Size } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { FilteringStrategy, FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxInputGroupComponent } from '../../input-group/public_api';
-import { formatDate, getComponentSize } from '../../core/utils';
+import { getComponentSize } from '../../core/utils';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
 import { GridResourceStringsEN } from '../../core/i18n/grid-resources';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
@@ -87,6 +87,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         const today = SampleTestData.today;
 
         beforeEach(fakeAsync(() => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: INPUT_DEBOUNCE_TIME, useValue: 0 }]
+            });
             fix = TestBed.createComponent(IgxGridFilteringComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -154,6 +157,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // ends with
             GridFunctions.openFilterDDAndSelectCondition(fix, 3);
             GridFunctions.typeValueInFilterRowInput('script', fix, input);
+            tick();
+            fix.detectChanges();
 
             expect(grid.rowList.length).toEqual(2);
             verifyFilterRowUI(input, close, reset, false);
@@ -161,6 +166,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // does not contain
             GridFunctions.openFilterDDAndSelectCondition(fix, 1);
             GridFunctions.typeValueInFilterRowInput('script', fix, input);
+            tick();
+            fix.detectChanges();
 
             verifyFilterRowUI(input, close, reset, false);
             expect(grid.rowList.length).toEqual(6);
@@ -224,6 +231,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // does not equal
             GridFunctions.openFilterDDAndSelectCondition(fix, 1);
             GridFunctions.typeValueInFilterRowInput(100, fix, input);
+            tick();
+            fix.detectChanges();
 
             expect(grid.rowList.length).toEqual(7);
             verifyFilterRowUI(input, close, reset, false);
@@ -236,6 +245,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // greater than or equal to
             GridFunctions.openFilterDDAndSelectCondition(fix, 4);
             GridFunctions.typeValueInFilterRowInput(254, fix, input);
+            tick();
+            fix.detectChanges();
+
 
             expect(grid.rowList.length).toEqual(3);
             verifyFilterRowUI(input, close, reset, false);
@@ -474,8 +486,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.clickFilterCellChipUI(fix, 'ReleaseDateTime');
 
             let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            let inputDirectiveInstance  = filterUIRow.query(By.directive(IgxDateTimeEditorDirective))
-                                                            .injector.get(IgxDateTimeEditorDirective);
+            let inputDirectiveInstance = filterUIRow.query(By.directive(IgxDateTimeEditorDirective))
+                .injector.get(IgxDateTimeEditorDirective);
             expect(inputDirectiveInstance.inputFormat).toMatch('dd-MM-yyyy');
             expect(inputDirectiveInstance.displayFormat).toMatch('yyyy-dd-MM');
 
@@ -508,8 +520,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            let dateTimeEditor  = filterUIRow.query(By.directive(IgxDateTimeEditorDirective))
-                                                            .injector.get(IgxDateTimeEditorDirective);
+            let dateTimeEditor = filterUIRow.query(By.directive(IgxDateTimeEditorDirective))
+                .injector.get(IgxDateTimeEditorDirective);
             expect(dateTimeEditor.inputFormat).toMatch('yyyy--dd--MM');
             expect(dateTimeEditor.displayFormat).toMatch('yyyy--dd--MM');
 
@@ -519,7 +531,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             dateTimeEditor = filterUIRow.query(By.directive(IgxDateTimeEditorDirective))
-                                                .injector.get(IgxDateTimeEditorDirective);
+                .injector.get(IgxDateTimeEditorDirective);
             // since 'shortTime' is numeric, input format will include its numeric parts
             expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch('hh:mm tt');
             expect(dateTimeEditor.displayFormat).toMatch('shortTime');
@@ -536,6 +548,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const close = filterUIRow.queryAll(By.css('button'))[1];
 
             GridFunctions.typeValueInFilterRowInput('a', fix, input);
+            tick();
+            fix.detectChanges();
 
             expect(grid.rowList.length).toEqual(1);
             expect(grid.getCellByColumn(0, 'AnotherField').value).toMatch('custom');
@@ -626,6 +640,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
             GridFunctions.typeValueInFilterRowInput(filterValue, fix);
+            tick();
+            fix.detectChanges();
 
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             const filterChip = filterUIRow.query(By.directive(IgxChipComponent));
@@ -645,6 +661,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(16); // onConditionsChanged rAF
 
             GridFunctions.typeValueInFilterRowInput(filterValue, fix);
+            tick();
+            fix.detectChanges();
 
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             const filterChip = filterUIRow.query(By.directive(IgxChipComponent));
@@ -652,8 +670,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(filterChip.componentInstance.selected).toBeTruthy();
 
             grid.nativeElement.focus();
-            fix.detectChanges();
             tick(100);
+            fix.detectChanges();
 
             expect(filterChip.componentInstance.selected).toBeFalsy();
         }));
@@ -1000,21 +1018,29 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Set input and confirm
             GridFunctions.typeValueInFilterRowInput('-1', fix);
+            tick();
+            fix.detectChanges();
 
             expect(input.componentInstance.value).toEqual('-1');
             expect(grid.rowList.length).toEqual(1);
 
             GridFunctions.typeValueInFilterRowInput('0', fix);
+            tick();
+            fix.detectChanges();
 
             expect(input.componentInstance.value).toEqual('0');
             expect(grid.rowList.length).toEqual(0);
 
             GridFunctions.typeValueInFilterRowInput('-0.5', fix);
+            tick();
+            fix.detectChanges();
 
             expect(input.componentInstance.value).toEqual('-0.5');
             expect(grid.rowList.length).toEqual(1);
 
             GridFunctions.typeValueInFilterRowInput('', fix);
+            tick();
+            fix.detectChanges();
 
             expect(input.componentInstance.value).toEqual(null);
             expect(grid.rowList.length).toEqual(3);
@@ -1039,6 +1065,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Set input and confirm
             GridFunctions.typeValueInFilterRowInput('a', fix, input);
+            tick();
+            fix.detectChanges();
 
             // Check a chip is created after input and is marked as selected.
             const filterChip = filteringRow.query(By.directive(IgxChipComponent));
@@ -1672,6 +1700,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Type 'ang' in the filter row input.
             GridFunctions.typeValueInFilterRowInput('ang', fix);
+            tick();
+            fix.detectChanges();
 
             // Verify chip is selected (in edit mode).
             const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
@@ -1694,6 +1724,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Type 'ang' in the filter row input.
             GridFunctions.typeValueInFilterRowInput('ang', fix);
+            tick();
+            fix.detectChanges();
 
             // Verify chip is selected (in edit mode).
             const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
@@ -1739,7 +1771,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
                 filterUIRow = grid.theadRow.filterRow;
                 expect(filterUIRow).toBeUndefined();
-        }));
+            }));
 
         it('Should navigate to first cell of grid when pressing \'Tab\' on the last filterCell chip.', fakeAsync(() => {
             pending('Should be fixed with headers navigation');
@@ -2350,7 +2382,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             const prefix = GridFunctions.getFilterRowPrefix(fix).nativeElement;
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight' , prefix);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', prefix);
             fix.detectChanges();
 
             expect(console.error).not.toHaveBeenCalled();
@@ -2362,6 +2394,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         let grid: IgxGridComponent;
 
         beforeEach(fakeAsync(() => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: INPUT_DEBOUNCE_TIME, useValue: 0 }]
+            });
             fix = TestBed.createComponent(IgxGridFilteringComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -2436,10 +2471,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Add first chip.
             GridFunctions.typeValueInFilterRowInput('a', fix);
-            tick(100);
+            tick();
+            fix.detectChanges();
 
             grid.getColumnByName('ProductName').hidden = true;
-            tick(100);
+            tick();
             fix.detectChanges();
 
             // Check that the filterRow is closed
@@ -4374,7 +4410,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(displayContainerRect.height > listHeight + itemHeight && displayContainerRect.height < listHeight + (itemHeight * 2)).toBe(true, 'incorrect search display container height');
             // Verify rendered list items count.
             const listItems = displayContainer.querySelectorAll('igx-list-item');
-            expect(listItems.length).toBe(Math.ceil(listHeight / itemHeight ) + 1, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(Math.ceil(listHeight / itemHeight) + 1, 'incorrect rendered list items count');
         }));
 
         it('should correctly display all items in search list after filtering it', (async () => {
@@ -5204,7 +5240,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(200);
 
             const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
-                                    .injector.get(IgxDateTimeEditorDirective);
+                .injector.get(IgxDateTimeEditorDirective);
             expect(dateTimeEditor.inputFormat).toMatch(column.editorOptions.dateTimeFormat);
             expect(dateTimeEditor.displayFormat).toMatch(column.pipeArgs.format);
         }));
@@ -5230,7 +5266,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(200);
 
             const dateTimeEditorDirective = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
-                                                            .injector.get(IgxDateTimeEditorDirective);
+                .injector.get(IgxDateTimeEditorDirective);
             expect(dateTimeEditorDirective.inputFormat.normalize('NFKC')).toMatch('dd-MM-yyyy');
             expect(dateTimeEditorDirective.displayFormat.normalize('NFKC')).toMatch('dd-MM-yyyy');
         }));
@@ -5253,7 +5289,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(200);
 
             const dateTimeEditorDirective = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
-                                            .injector.get(IgxDateTimeEditorDirective);
+                .injector.get(IgxDateTimeEditorDirective);
             expect(dateTimeEditorDirective.locale).toMatch(grid.locale);
         }));
 
@@ -5273,7 +5309,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(200);
 
             const dateTimeEditorDirective = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
-                                            .injector.get(IgxDateTimeEditorDirective);
+                .injector.get(IgxDateTimeEditorDirective);
             expect(dateTimeEditorDirective.inputFormat).toMatch(column.editorOptions.dateTimeFormat);
             expect(dateTimeEditorDirective.displayFormat).toMatch(column.pipeArgs.format);
         }));
@@ -5294,7 +5330,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(200);
 
             const dateTimeEditorDirective = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
-                                            .injector.get(IgxDateTimeEditorDirective);
+                .injector.get(IgxDateTimeEditorDirective);
             expect(dateTimeEditorDirective.inputFormat).toMatch(column.pipeArgs.format);
             expect(dateTimeEditorDirective.displayFormat).toMatch(column.pipeArgs.format);
         }));
@@ -5613,7 +5649,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix));
             expect(checkboxes[0].indeterminate).toBeTrue();
             expect(checkboxes[1].checked).toBeFalse();
-            const listItemsCheckboxes = checkboxes.slice(2, checkboxes.length-1);
+            const listItemsCheckboxes = checkboxes.slice(2, checkboxes.length - 1);
             for (const checkboxItem of listItemsCheckboxes) {
                 ControlsFunction.verifyCheckboxState(checkboxItem.parentElement);
             }
@@ -7115,7 +7151,8 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
             imports: [
                 NoopAnimationsModule,
                 CustomFilteringStrategyComponent
-            ]
+            ],
+            providers: [{ provide: INPUT_DEBOUNCE_TIME, useValue: 0 }]
         }).compileComponents();
     }));
 
@@ -7136,13 +7173,12 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
 
     it('Should be able to override getFieldValue method', fakeAsync(() => {
         GridFunctions.clickFilterCellChipUI(fix, 'Name'); // Name column contains nested object as a value
-        tick(150);
         fix.detectChanges();
 
         GridFunctions.typeValueInFilterRowInput('ca', fix);
-        tick(DEBOUNCE_TIME);
+        tick();
+        fix.detectChanges();
         GridFunctions.submitFilterRowInput(fix);
-        tick(DEBOUNCE_TIME);
         fix.detectChanges();
 
         expect(grid.filteredData).toEqual([]);
@@ -7154,13 +7190,12 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
         grid.filterStrategy = fix.componentInstance.strategy;
         fix.detectChanges();
         GridFunctions.clickFilterCellChipUI(fix, 'Name'); // Name column contains nested object as a value
-        tick(150);
         fix.detectChanges();
 
         GridFunctions.typeValueInFilterRowInput('ca', fix);
-        tick(DEBOUNCE_TIME);
+        tick();
+        fix.detectChanges();
         GridFunctions.submitFilterRowInput(fix);
-        tick(DEBOUNCE_TIME);
         fix.detectChanges();
 
         expect(grid.filteredData).toEqual(
