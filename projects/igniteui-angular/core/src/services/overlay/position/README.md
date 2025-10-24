@@ -79,4 +79,4 @@ import {AutoPositionStrategy, GlobalPositionStrategy, ConnectedPositioningStrate
 |verticalStartPoint  | VerticalAlignment           | Target's starting point                             |
 |openAnimation       | AnimationReferenceMetadata  | Animation applied while overlay opens               |
 |closeAnimation      | AnimationReferenceMetadata  | Animation applied while overlay closes              |
-|minSize             | Size                        | The size up to which element could be reduced       |
+|minSize             | ElementDimensions           | The size up to which element could be reduced       |

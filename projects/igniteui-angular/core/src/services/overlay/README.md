@@ -82,7 +82,7 @@ this.overlay.show(component, overlaySettings);
 |verticalStartPoint  | VerticalAlignment                       | Target's starting point                             |
 |openAnimation       | AnimationMetadata | AnimationMetadata[] | Animation applied while overlay opens               |
 |closeAnimation      | AnimationMetadata | AnimationMetadata[] | Animation applied while overlay closes              |
-|minSize             | Size        | The size up to which element may shrink when shown in elastic position strategy |
+|minSize             | ElementDimensions                       | The size up to which element may shrink when shown in elastic position strategy |
 
 ###### OverlayCreateSettings extends OverlaySettings
 

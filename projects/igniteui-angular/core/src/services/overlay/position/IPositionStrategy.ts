@@ -1,4 +1,4 @@
-import { PositionSettings, Size, Point } from './../utilities';
+import { ElementDimensions, PositionSettings, Point } from './../utilities';
 
 /**
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay-position)
@@ -23,7 +23,7 @@ export interface IPositionStrategy {
      * settings.positionStrategy.position(content, size, document, true);
      * ```
      */
-     position(contentElement: HTMLElement, size?: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void;
+     position(contentElement: HTMLElement, size?: ElementDimensions, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void;
 
     /**
      * Clone the strategy instance.

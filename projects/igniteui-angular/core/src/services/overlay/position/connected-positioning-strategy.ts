@@ -1,10 +1,10 @@
 import { scaleInVerTop, scaleOutVerTop } from 'igniteui-angular/animations';
 import { ConnectedFit } from '../utilities';
 import {
+  ElementDimensions,
   HorizontalAlignment,
   Point,
   PositionSettings,
-  Size,
   Util,
   VerticalAlignment
 } from './../utilities';
@@ -46,7 +46,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
    * settings.positionStrategy.position(content, size, document, true);
    * ```
    */
-  public position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
+  public position(contentElement: HTMLElement, size: ElementDimensions, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
     const rects = this.calculateElementRectangles(contentElement, target);
     this.setStyle(contentElement, rects.targetRect, rects.elementRect, {});
   }
