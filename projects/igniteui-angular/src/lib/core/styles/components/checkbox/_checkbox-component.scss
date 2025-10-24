@@ -22,6 +22,10 @@
                 @extend %cbx-ripple--hover !optional;
             }
 
+            @include e(composite) {
+                @extend %cbx-composite--hover !optional;
+            }
+
             @include e(composite-mark) {
                 @extend %cbx-composite-mark--fluent !optional;
             }
@@ -64,21 +68,7 @@
             @extend %cbx-ripple !optional;
         }
 
-        @include m(bootstrap) {
-            @include e(composite) {
-                &:hover {
-                    @extend %cbx-composite--hover !optional;
-                }
-            }
-        }
-
         @include m(indigo) {
-            @include e(composite) {
-                &:hover {
-                    @extend %cbx-composite--hover !optional;
-                }
-            }
-
             @include e(composite-mark) {
                 @extend %cbx-composite-mark-indigo !optional;
             }
@@ -247,11 +237,19 @@
                 @include e(composite) {
                     @extend %cbx-composite--x--hover !optional;
                 }
+
+                @include e(composite-mark) {
+                    @extend %cbx-composite-mark--in--fluent !optional;
+                }
             }
         }
 
         @include mx(material, disabled, indeterminate) {
-            @extend %igx-checkbox--disabled-indeterminate-material !optional;
+            @extend %igx-checkbox--disabled-indeterminate !optional;
+        }
+
+        @include mx(bootstrap, disabled, indeterminate) {
+            @extend %igx-checkbox--disabled-indeterminate !optional;
         }
 
         @include mx(fluent, disabled, indeterminate) {

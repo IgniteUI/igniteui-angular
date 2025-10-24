@@ -122,7 +122,9 @@
     }
 
     %cbx-composite--hover {
-        border-color: var-get($theme, 'empty-color-hover');
+        @if $variant == 'bootstrap' or $variant == 'indigo' {
+            border-color: var-get($theme, 'empty-color-hover');
+        }
     }
 
     %cbx-composite--x {
@@ -175,6 +177,7 @@
     %cbx-composite--x--disabled {
         @if $variant == 'material' or $variant == 'fluent' {
             background: var-get($theme, 'disabled-color');
+            border-color: var-get($theme, 'disabled-color');
         }
 
         @if $variant == 'indigo' or $variant == 'bootstrap' {
@@ -262,7 +265,7 @@
     }
 
     %igx-checkbox--disabled-indeterminate-indigo {
-        @extend %igx-checkbox--indeterminate-indigo;
+        @extend %igx-checkbox--disabled-indeterminate;
 
         %cbx-composite-mark {
             rect {
@@ -307,7 +310,7 @@
         }
 
         %cbx-composite--x--disabled {
-            background: transparent;
+            border-color: var-get($theme, 'disabled-color');
 
             &::before {
                 background: var-get($theme, 'disabled-color');
@@ -315,7 +318,7 @@
         }
     }
 
-    %igx-checkbox--disabled-indeterminate-material {
+    %igx-checkbox--disabled-indeterminate {
         %cbx-composite--x--disabled {
             border-color: var-get($theme, 'disabled-indeterminate-color');
             background: var-get($theme, 'disabled-indeterminate-color');
