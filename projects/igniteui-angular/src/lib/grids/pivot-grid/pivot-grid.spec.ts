@@ -2083,7 +2083,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(pivotGrid.values.map(x => x.enabled)).toEqual([true, true]);
             });
 
-            it('should auto-generate pivot config and parse date fields from timestamp values', () => {
+            it('should auto-generate pivot config and detect date fields from timestamp values', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 pivotGrid.pivotConfiguration = undefined;
                 pivotGrid.autoGenerateConfig = true;
@@ -2105,27 +2105,28 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(pivotGrid.pivotConfiguration.rows.map(x => x.memberName)).toEqual(['AllPeriods']);
                 expect(pivotGrid.pivotConfiguration.rows.map(x => x.enabled)).toEqual([true]);
                 
-                // Verify the timestamp was converted to a Date object
-                expect(pivotGrid.data[0].Date instanceof Date).toBe(true);
-                expect(pivotGrid.data[0].Date.getTime()).toBe(TEST_TIMESTAMP);
+                // Verify the timestamp is still in its original format (not pre-parsed)
+                // IgxPivotDateDimension will handle parsing on-demand
+                expect(pivotGrid.data[0].Date).toBe(TEST_TIMESTAMP);
                 
                 // values should be UnitPrice and UnitsSold (not Date)
                 expect(pivotGrid.values.length).toEqual(2);
                 expect(pivotGrid.values.map(x => x.member)).toEqual(['UnitPrice', 'UnitsSold']);
             });
 
-            it('should auto-generate pivot config and parse date fields from ISO date strings', () => {
+            it('should auto-generate pivot config and detect date fields from ISO date strings', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 pivotGrid.pivotConfiguration = undefined;
                 pivotGrid.autoGenerateConfig = true;
                 
                 // Test with ISO date string
+                const TEST_DATE_STRING = '2008-06-20';
                 pivotGrid.data = [{
                     ProductCategory: 'Clothing', 
                     UnitPrice: 12.81, 
                     SellerName: 'Stanley',
                     Country: 'Bulgaria', 
-                    Date: '2008-06-20', 
+                    Date: TEST_DATE_STRING, 
                     UnitsSold: 282
                 }];
                 fixture.detectChanges();
@@ -2135,25 +2136,24 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(pivotGrid.pivotConfiguration.rows.map(x => x.memberName)).toEqual(['AllPeriods']);
                 expect(pivotGrid.pivotConfiguration.rows.map(x => x.enabled)).toEqual([true]);
                 
-                // Verify the date string was converted to a Date object
-                expect(pivotGrid.data[0].Date instanceof Date).toBe(true);
-                expect(pivotGrid.data[0].Date.getFullYear()).toBe(2008);
-                expect(pivotGrid.data[0].Date.getMonth()).toBe(5); // June is month 5 (0-indexed)
-                expect(pivotGrid.data[0].Date.getDate()).toBe(20);
+                // Verify the date string is still in its original format (not pre-parsed)
+                // IgxPivotDateDimension will handle parsing on-demand
+                expect(pivotGrid.data[0].Date).toBe(TEST_DATE_STRING);
             });
 
-            it('should auto-generate pivot config and parse date fields from US format date strings', () => {
+            it('should auto-generate pivot config and detect date fields from US format date strings', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 pivotGrid.pivotConfiguration = undefined;
                 pivotGrid.autoGenerateConfig = true;
                 
                 // Test with US format date string (MM/DD/YYYY)
+                const TEST_US_DATE_STRING = '10/24/2025';
                 pivotGrid.data = [{
                     ProductCategory: 'Clothing', 
                     UnitPrice: 12.81, 
                     SellerName: 'Stanley',
                     Country: 'Bulgaria', 
-                    Date: '10/24/2025', 
+                    Date: TEST_US_DATE_STRING, 
                     UnitsSold: 282
                 }];
                 fixture.detectChanges();
@@ -2163,11 +2163,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(pivotGrid.pivotConfiguration.rows.map(x => x.memberName)).toEqual(['AllPeriods']);
                 expect(pivotGrid.pivotConfiguration.rows.map(x => x.enabled)).toEqual([true]);
                 
-                // Verify the date string was converted to a Date object
-                expect(pivotGrid.data[0].Date instanceof Date).toBe(true);
-                expect(pivotGrid.data[0].Date.getFullYear()).toBe(2025);
-                expect(pivotGrid.data[0].Date.getMonth()).toBe(9); // October is month 9 (0-indexed)
-                expect(pivotGrid.data[0].Date.getDate()).toBe(24);
+                // Verify the date string is still in its original format (not pre-parsed)
+                // IgxPivotDateDimension will handle parsing on-demand
+                expect(pivotGrid.data[0].Date).toBe(TEST_US_DATE_STRING);
             });
 
             it('should handle multiple date fields and enable only the first one', () => {
@@ -2196,9 +2194,10 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(rowDimensions[0].enabled).toBe(true);
                 expect(rowDimensions[1].enabled).toBe(false);
                 
-                // Verify both date values were parsed
-                expect(pivotGrid.data[0].StartDate instanceof Date).toBe(true);
-                expect(pivotGrid.data[0].EndDate instanceof Date).toBe(true);
+                // Verify date values remain in their original format (not pre-parsed)
+                // IgxPivotDateDimension will handle parsing on-demand
+                expect(pivotGrid.data[0].StartDate).toBe(TEST_START_TIMESTAMP);
+                expect(pivotGrid.data[0].EndDate).toBe(TEST_END_DATE_STRING);
             });
 
             it('should not treat regular numbers as timestamps', () => {
