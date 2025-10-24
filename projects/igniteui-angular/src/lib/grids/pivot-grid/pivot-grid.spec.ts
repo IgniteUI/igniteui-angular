@@ -2083,6 +2083,149 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(pivotGrid.values.map(x => x.enabled)).toEqual([true, true]);
             });
 
+            it('should auto-generate pivot config and detect date fields from timestamp values', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                pivotGrid.pivotConfiguration = undefined;
+                pivotGrid.autoGenerateConfig = true;
+                
+                // Test with timestamp (milliseconds since epoch)
+                const TEST_TIMESTAMP = 1577829600000; // 2020-01-01 00:00:00 UTC
+                pivotGrid.data = [{
+                    ProductCategory: 'Clothing', 
+                    UnitPrice: 12.81, 
+                    SellerName: 'Stanley',
+                    Country: 'Bulgaria', 
+                    Date: TEST_TIMESTAMP, 
+                    UnitsSold: 282
+                }];
+                fixture.detectChanges();
+
+                // Verify date field is detected and config is generated
+                expect(pivotGrid.allDimensions.length).toEqual(4);
+                expect(pivotGrid.pivotConfiguration.rows.map(x => x.memberName)).toEqual(['AllPeriods']);
+                expect(pivotGrid.pivotConfiguration.rows.map(x => x.enabled)).toEqual([true]);
+                
+                // Verify the timestamp is still in its original format (not pre-parsed)
+                // IgxPivotDateDimension will handle parsing on-demand
+                expect(pivotGrid.data[0].Date).toBe(TEST_TIMESTAMP);
+                
+                // values should be UnitPrice and UnitsSold (not Date)
+                expect(pivotGrid.values.length).toEqual(2);
+                expect(pivotGrid.values.map(x => x.member)).toEqual(['UnitPrice', 'UnitsSold']);
+            });
+
+            it('should auto-generate pivot config and detect date fields from ISO date strings', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                pivotGrid.pivotConfiguration = undefined;
+                pivotGrid.autoGenerateConfig = true;
+                
+                // Test with ISO date string
+                const TEST_DATE_STRING = '2008-06-20';
+                pivotGrid.data = [{
+                    ProductCategory: 'Clothing', 
+                    UnitPrice: 12.81, 
+                    SellerName: 'Stanley',
+                    Country: 'Bulgaria', 
+                    Date: TEST_DATE_STRING, 
+                    UnitsSold: 282
+                }];
+                fixture.detectChanges();
+
+                // Verify date field is detected and config is generated
+                expect(pivotGrid.allDimensions.length).toEqual(4);
+                expect(pivotGrid.pivotConfiguration.rows.map(x => x.memberName)).toEqual(['AllPeriods']);
+                expect(pivotGrid.pivotConfiguration.rows.map(x => x.enabled)).toEqual([true]);
+                
+                // Verify the date string is still in its original format (not pre-parsed)
+                // IgxPivotDateDimension will handle parsing on-demand
+                expect(pivotGrid.data[0].Date).toBe(TEST_DATE_STRING);
+            });
+
+            it('should auto-generate pivot config and detect date fields from US format date strings', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                pivotGrid.pivotConfiguration = undefined;
+                pivotGrid.autoGenerateConfig = true;
+                
+                // Test with US format date string (MM/DD/YYYY)
+                const TEST_US_DATE_STRING = '10/24/2025';
+                pivotGrid.data = [{
+                    ProductCategory: 'Clothing', 
+                    UnitPrice: 12.81, 
+                    SellerName: 'Stanley',
+                    Country: 'Bulgaria', 
+                    Date: TEST_US_DATE_STRING, 
+                    UnitsSold: 282
+                }];
+                fixture.detectChanges();
+
+                // Verify date field is detected and config is generated
+                expect(pivotGrid.allDimensions.length).toEqual(4);
+                expect(pivotGrid.pivotConfiguration.rows.map(x => x.memberName)).toEqual(['AllPeriods']);
+                expect(pivotGrid.pivotConfiguration.rows.map(x => x.enabled)).toEqual([true]);
+                
+                // Verify the date string is still in its original format (not pre-parsed)
+                // IgxPivotDateDimension will handle parsing on-demand
+                expect(pivotGrid.data[0].Date).toBe(TEST_US_DATE_STRING);
+            });
+
+            it('should handle multiple date fields and enable only the first one', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                pivotGrid.pivotConfiguration = undefined;
+                pivotGrid.autoGenerateConfig = true;
+                
+                // Test with multiple date fields
+                const TEST_START_TIMESTAMP = 1577829600000; // 2020-01-01
+                const TEST_END_DATE_STRING = '2020-12-31';
+                pivotGrid.data = [{
+                    ProductCategory: 'Clothing', 
+                    StartDate: TEST_START_TIMESTAMP, // timestamp
+                    EndDate: TEST_END_DATE_STRING, // date string
+                    UnitPrice: 12.81, 
+                    UnitsSold: 282
+                }];
+                fixture.detectChanges();
+
+                // Verify both date fields are detected
+                const rowDimensions = pivotGrid.pivotConfiguration.rows;
+                expect(rowDimensions.length).toEqual(2);
+                expect(rowDimensions.map(x => x.memberName)).toEqual(['AllPeriods', 'AllPeriods']);
+                
+                // Only the first date should be enabled by default
+                expect(rowDimensions[0].enabled).toBe(true);
+                expect(rowDimensions[1].enabled).toBe(false);
+                
+                // Verify date values remain in their original format (not pre-parsed)
+                // IgxPivotDateDimension will handle parsing on-demand
+                expect(pivotGrid.data[0].StartDate).toBe(TEST_START_TIMESTAMP);
+                expect(pivotGrid.data[0].EndDate).toBe(TEST_END_DATE_STRING);
+            });
+
+            it('should not treat regular numbers as timestamps', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                pivotGrid.pivotConfiguration = undefined;
+                pivotGrid.autoGenerateConfig = true;
+                
+                // Test with regular small numbers that should not be timestamps
+                pivotGrid.data = [{
+                    ProductCategory: 'Clothing', 
+                    Quantity: 100,  // Regular number, not a timestamp
+                    Year: 2020,     // Year number, not a timestamp
+                    UnitPrice: 12.81
+                }];
+                fixture.detectChanges();
+
+                // Verify no date fields were detected (all should be in values or columns)
+                expect(pivotGrid.pivotConfiguration.rows.length).toEqual(0);
+                
+                // Numbers should be treated as values
+                expect(pivotGrid.values.length).toEqual(3);
+                expect(pivotGrid.values.map(x => x.member).sort()).toEqual(['Quantity', 'Year', 'UnitPrice'].sort());
+                
+                // Verify values were not converted
+                expect(pivotGrid.data[0].Quantity).toBe(100);
+                expect(pivotGrid.data[0].Year).toBe(2020);
+            });
+
             it('should allow creating  IgxPivotDateDimension with no base dimension and setting it later.', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 const dateDimension = new IgxPivotDateDimension();
