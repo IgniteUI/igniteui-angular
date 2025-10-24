@@ -1229,7 +1229,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             event.stopPropagation();
             this.close();
         }
-        if (event.key === "Tab") {
+        if (event.key === 'Tab') {
             this.close();
         }
     }

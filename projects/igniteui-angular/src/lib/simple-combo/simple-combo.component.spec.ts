@@ -1239,7 +1239,7 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('Escape', dropdownContent);
-            tick()
+            tick();
             fixture.detectChanges();
 
             expect(combo.collapsed).toBeTruthy();
