@@ -291,6 +291,14 @@
                 z-index: 1;
             }
         }
+
+        &:hover {
+            %cbx-composite {
+                &::before {
+                    background: var-get($theme, 'fill-color-hover');
+                }
+            }
+        }
     }
 
     %igx-checkbox--disabled-indeterminate-fluent {
@@ -458,11 +466,11 @@
     }
 
     %cbx-ripple--hover-checked {
-        background: var-get($theme, 'fill-color');
+        background: var-get($theme, 'fill-color-hover');
     }
 
     %cbx-ripple--hover-invalid {
-        background: var-get($theme, 'error-color');
+        background: var-get($theme, 'error-color-hover');
     }
 
     %igx-checkbox--focused-indigo {
@@ -542,6 +550,10 @@
 
     %cbx-ripple--focused-checked {
         background: var-get($theme, 'fill-color');
+    }
+
+    %cbx-ripple--focused--hover-checked {
+        background: var-get($theme, 'fill-color-hover');
     }
 
     %cbx-ripple--focused-invalid {

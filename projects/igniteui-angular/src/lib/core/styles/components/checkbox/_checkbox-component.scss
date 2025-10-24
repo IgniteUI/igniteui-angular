@@ -110,6 +110,10 @@
                 @include e(composite-mark) {
                     @extend %cbx-composite-mark--invalid--fluent !optional;
                 }
+
+                @include e(label) {
+                    @extend %cbx-label--invalid !optional;
+                }
             }
 
             &:active {
@@ -180,6 +184,12 @@
         @include mx(focused, invalid) {
             @include e(ripple) {
                 @extend %cbx-ripple--focused-invalid !optional;
+            }
+
+            &:hover {
+                @include e(ripple) {
+                    @extend %cbx-ripple--hover-invalid !optional;
+                }
             }
         }
 
@@ -321,6 +331,21 @@
             @include e(ripple) {
                 @extend %cbx-ripple--focused !optional;
                 @extend %cbx-ripple--focused-checked !optional;
+            }
+
+            &:hover {
+                @include e(ripple) {
+                    @extend %cbx-ripple--focused !optional;
+                    @extend %cbx-ripple--focused--hover-checked !optional;
+                }
+            }
+        }
+
+        @include mx(focused, invalid, checked) {
+            &:hover {
+                @include e(ripple) {
+                    @extend %cbx-ripple--hover-invalid !optional;
+                }
             }
         }
 
