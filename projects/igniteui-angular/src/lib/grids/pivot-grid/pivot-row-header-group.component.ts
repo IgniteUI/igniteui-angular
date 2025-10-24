@@ -159,9 +159,6 @@ export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent
     }
 
     protected getHeaderWidthFromDimension() {
-        if (this.grid.hasHorizontalLayout) {
-            return this.dimWidth === -1 ? 'fit-content' : this.width;
-        }
-        return this.grid.rowDimensionWidth(this.parent.rootDimension);
+        return this.grid.hasHorizontalLayout && this.dimWidth === -1 ? 'fit-content' : null;
     }
 }
