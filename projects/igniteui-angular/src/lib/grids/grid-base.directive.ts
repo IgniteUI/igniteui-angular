@@ -7382,15 +7382,78 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public resolveDataTypes(rec) {
         if (typeof rec === 'number') {
+            // Check if number is a valid timestamp (milliseconds since epoch)
+            if (this.isValidTimestamp(rec)) {
+                return GridColumnDataType.Date;
+            }
             return GridColumnDataType.Number;
         } else if (typeof rec === 'boolean') {
             return GridColumnDataType.Boolean;
         } else if (typeof rec === 'object' && rec instanceof Date) {
             return GridColumnDataType.Date;
-        } else if (typeof rec === 'string' && (/\.(gif|jpe?g|tiff?|png|webp|bmp)$/i).test(rec)) {
-            return GridColumnDataType.Image;
+        } else if (typeof rec === 'string') {
+            if ((/\.(gif|jpe?g|tiff?|png|webp|bmp)$/i).test(rec)) {
+                return GridColumnDataType.Image;
+            }
+            // Check if string is a valid date string
+            if (this.isValidDateString(rec)) {
+                return GridColumnDataType.Date;
+            }
         }
         return GridColumnDataType.String;
+    }
+
+    /**
+     * @hidden
+     * Checks if a number is a valid timestamp (milliseconds since epoch)
+     */
+    private isValidTimestamp(value: number): boolean {
+        // Timestamps should be positive integers
+        if (!Number.isInteger(value) || value <= 0) {
+            return false;
+        }
+        // Reasonable timestamp range: from 1970 to year 2100
+        // Min: 0 (Jan 1, 1970)
+        // Max: 4102444800000 (Jan 1, 2100)
+        const MIN_TIMESTAMP = 0;
+        const MAX_TIMESTAMP = 4102444800000;
+        if (value < MIN_TIMESTAMP || value > MAX_TIMESTAMP) {
+            return false;
+        }
+        // Check if it's in milliseconds range (10+ digits) to avoid false positives with regular numbers
+        // Timestamps after year 2001 have at least 10 digits
+        if (value < 1000000000000) { // Less than 10 digits in milliseconds
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @hidden
+     * Checks if a string represents a valid date
+     */
+    private isValidDateString(value: string): boolean {
+        // Empty strings are not dates
+        if (!value || value.trim().length === 0) {
+            return false;
+        }
+        // Try to parse the string as a date
+        const parsedDate = new Date(value);
+        // Check if the date is valid (not NaN) and the string looks like a date
+        if (isNaN(parsedDate.getTime())) {
+            return false;
+        }
+        // Additional check: ensure the string contains date-like patterns
+        // to avoid false positives with strings like "2020" which could be just a year or a number string
+        const datePatterns = [
+            /^\d{4}-\d{2}-\d{2}/, // ISO format: YYYY-MM-DD
+            /^\d{2}\/\d{2}\/\d{4}/, // US format: MM/DD/YYYY
+            /^\d{4}\/\d{2}\/\d{2}/, // Alternative: YYYY/MM/DD
+            /^\d{2}-\d{2}-\d{4}/, // Alternative: DD-MM-YYYY or MM-DD-YYYY
+            /^\d{1,2}\/\d{1,2}\/\d{2,4}/, // Flexible: M/D/YY or M/D/YYYY
+            /^\w{3}\s+\d{1,2},?\s+\d{4}/, // Text month: Jan 1, 2020 or Jan 1 2020
+        ];
+        return datePatterns.some(pattern => pattern.test(value.trim()));
     }
 
     /**

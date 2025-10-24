@@ -2401,7 +2401,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const columnDimensions: IPivotDimension[] = [];
         const rowDimensions: IPivotDimension[] = [];
         const values: IPivotValue[] = [];
+        const dateFields: string[] = [];
         let isFirstDate = true;
+        
         fields.forEach((field) => {
             const dataType = this.resolveDataTypes(data[0][field]);
             switch (dataType) {
@@ -2423,6 +2425,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                     }
                 case "date":
                     {
+                        dateFields.push(field);
                         const dimension: IPivotDimension = new IgxPivotDateDimension(
                             {
                                 memberName: field,
@@ -2445,12 +2448,51 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 }
             }
         });
+        
+        // Parse date-like values (timestamps and date strings) into Date objects
+        if (dateFields.length > 0) {
+            this.parseDateFields(data, dateFields);
+        }
+        
         const config: IPivotConfiguration = {
             columns: columnDimensions,
             rows: rowDimensions,
             values: values
         };
         this.pivotConfiguration = config;
+    }
+
+    /**
+     * @hidden
+     * Parses date-like values (timestamps and date strings) in the data into Date objects
+     */
+    private parseDateFields(data: any[], dateFields: string[]): void {
+        if (!data || data.length === 0) {
+            return;
+        }
+        
+        for (const record of data) {
+            for (const field of dateFields) {
+                const value = record[field];
+                // Skip if already a Date object or null/undefined
+                if (!value || value instanceof Date) {
+                    continue;
+                }
+                
+                // Convert timestamp or date string to Date object
+                if (typeof value === 'number' || typeof value === 'string') {
+                    try {
+                        const parsedDate = new Date(value);
+                        if (!isNaN(parsedDate.getTime())) {
+                            record[field] = parsedDate;
+                        }
+                    } catch (e) {
+                        // If parsing fails, leave the original value
+                        console.warn(`Failed to parse date value for field '${field}':`, value);
+                    }
+                }
+            }
+        }
     }
 
     protected createColumnForDimension(value: any, data: any, parent: ColumnType, isGroup: boolean) {
