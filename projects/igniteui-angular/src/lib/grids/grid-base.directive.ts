@@ -7420,9 +7420,10 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (value < MIN_TIMESTAMP || value > MAX_TIMESTAMP) {
             return false;
         }
-        // Check if it's in milliseconds range (10+ digits) to avoid false positives with regular numbers
-        // Timestamps after year 2001 have at least 10 digits
-        if (value < 1000000000000) { // Less than 10 digits in milliseconds
+        // Check if it's in milliseconds range (13 digits) to avoid false positives with regular numbers
+        // Timestamps from year 2001 onwards have 13 digits: 1000000000000 = September 9, 2001
+        const MIN_TIMESTAMP_MILLISECONDS = 1000000000000;
+        if (value < MIN_TIMESTAMP_MILLISECONDS) {
             return false;
         }
         return true;

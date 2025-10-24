@@ -2089,13 +2089,13 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 pivotGrid.autoGenerateConfig = true;
                 
                 // Test with timestamp (milliseconds since epoch)
-                const timestamp = 1577829600000; // 2020-01-01 00:00:00 UTC
+                const TEST_TIMESTAMP = 1577829600000; // 2020-01-01 00:00:00 UTC
                 pivotGrid.data = [{
                     ProductCategory: 'Clothing', 
                     UnitPrice: 12.81, 
                     SellerName: 'Stanley',
                     Country: 'Bulgaria', 
-                    Date: timestamp, 
+                    Date: TEST_TIMESTAMP, 
                     UnitsSold: 282
                 }];
                 fixture.detectChanges();
@@ -2107,7 +2107,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 
                 // Verify the timestamp was converted to a Date object
                 expect(pivotGrid.data[0].Date instanceof Date).toBe(true);
-                expect(pivotGrid.data[0].Date.getTime()).toBe(timestamp);
+                expect(pivotGrid.data[0].Date.getTime()).toBe(TEST_TIMESTAMP);
                 
                 // values should be UnitPrice and UnitsSold (not Date)
                 expect(pivotGrid.values.length).toEqual(2);
@@ -2176,10 +2176,12 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 pivotGrid.autoGenerateConfig = true;
                 
                 // Test with multiple date fields
+                const TEST_START_TIMESTAMP = 1577829600000; // 2020-01-01
+                const TEST_END_DATE_STRING = '2020-12-31';
                 pivotGrid.data = [{
                     ProductCategory: 'Clothing', 
-                    StartDate: 1577829600000, // timestamp
-                    EndDate: '2020-12-31', // date string
+                    StartDate: TEST_START_TIMESTAMP, // timestamp
+                    EndDate: TEST_END_DATE_STRING, // date string
                     UnitPrice: 12.81, 
                     UnitsSold: 282
                 }];
