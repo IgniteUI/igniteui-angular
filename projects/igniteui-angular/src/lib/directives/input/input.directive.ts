@@ -104,6 +104,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     private _touchedChanges$: Subscription;
     private _fileNames: string;
     private _disabled = false;
+    private _externalValidate: () => IgxInputState = null;
 
     constructor(
         public inputGroup: IgxInputGroupBase,
@@ -195,6 +196,20 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @Input({ transform: booleanAttribute })
     public set required(value: boolean) {
         this.nativeElement.required = this.inputGroup.isRequired = value;
+    }
+
+    /**
+     * @hidden @internal
+     * Sets a function to validate the input externally.
+     * This function should return an `IgxInputState` value.
+    */
+    @Input()
+    public set externalValidate(fn: () => IgxInputState) {
+        this._externalValidate = fn;
+    }
+
+    public get externalValidate(): () => IgxInputState {
+        return this._externalValidate;
     }
 
     /**
@@ -384,7 +399,9 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * @internal
      */
     protected updateValidityState() {
-        if (this.ngControl) {
+        if (this._externalValidate) {
+            this._valid = this._externalValidate();
+        } else if (this.ngControl) {
             if (!this.disabled && this.isTouchedOrDirty) {
                 if (this.hasValidators) {
                     // Run the validation with empty object to check if required is enabled.
