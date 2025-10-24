@@ -131,27 +131,17 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
         }
         let result = cloneArray(collection) as any;
         uniqueRoots.forEach(x => {
-            const index = result.indexOf(x);
+            const index = collection.indexOf(x);
             const colKeys = [...x.cellMergeMeta.keys()];
             const cols = colsToMerge.filter(col => colKeys.indexOf(col.field) !== -1);
-            let res = [];
+            let data = [];
             for (const col of cols) {
 
                 let childData = x.cellMergeMeta.get(col.field).childRecords;
                 const childRecs = childData.map(rec => rec.recordRef);
-                const isDate = col?.dataType === 'date' || col?.dataType === 'dateTime';
-                const isTime = col?.dataType === 'time' || col?.dataType === 'dateTime';
-                res = this.grid.mergeStrategy.merge(
-                    [x.recordRef, ...childRecs],
-                    col.field,
-                    col.mergingComparer,
-                    res,
-                    activeRowIndexes.map(ri => ri - index),
-                    isDate,
-                    isTime,
-                    this.grid);
-
+                data = data.concat([x.recordRef, ...childRecs]);
             }
+            const res = DataUtil.merge(Array.from(new Set(data)), cols, this.grid.mergeStrategy, activeRowIndexes.map(ri => ri - index), this.grid);
             result = result.slice(0, index).concat(res, result.slice(index + res.length));
         });
 
