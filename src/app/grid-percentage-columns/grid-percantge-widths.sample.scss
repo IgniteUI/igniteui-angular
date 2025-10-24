@@ -7,3 +7,12 @@ igx-card {
     text-transform: uppercase;
     margin: 0.7rem 0 0.3rem;
 }
+
+::ng-deep igx-grid-cell {
+    border-right: 1px solid lightgray;
+    padding: 0 7px !important;
+  }
+
+  ::ng-deep igx-grid-header {
+    padding: 0 7px !important;
+}
