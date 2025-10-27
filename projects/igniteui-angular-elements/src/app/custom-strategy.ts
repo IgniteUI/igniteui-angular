@@ -126,6 +126,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                     parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
                     parentAnchor = parentComponentRef?.instance.anchor;
                 }
+
             } else if ((parent as any)?.__componentRef) {
                 this.angularParent = (parent as any).__componentRef;
                 parentInjector = this.angularParent.injector;
