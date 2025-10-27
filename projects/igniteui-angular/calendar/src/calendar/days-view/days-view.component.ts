@@ -13,12 +13,30 @@ import {
     ElementRef,
     ChangeDetectorRef,
     ChangeDetectionStrategy,
+    inject,
+    DestroyRef,
+    AfterContentChecked
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TitleCasePipe } from '@angular/common';
 import { CalendarSelection, ScrollDirection } from '../../calendar/calendar';
 import { IgxDayItemComponent } from './day-item.component';
-import { CalendarDay, DateRangeType, PlatformUtil, areSameMonth, generateMonth, getClosestActiveDate, getNextActiveDate, getPreviousActiveDate, intoChunks, isDateInRanges } from 'igniteui-angular/core';
+import {
+    CalendarDay,
+    DateRangeType,
+    PlatformUtil,
+    areSameMonth,
+    generateMonth,
+    getClosestActiveDate,
+    getNextActiveDate,
+    getPreviousActiveDate,
+    intoChunks,
+    isDateInRanges,
+    getComponentTheme,
+    IgxTheme,
+    THEME_TOKEN,
+    ThemeToken
+} from 'igniteui-angular/core';
 import { IgxCalendarBaseDirective } from '../calendar-base';
 import { IViewChangingEventArgs } from './days-view.interface';
 
@@ -37,7 +55,7 @@ let NEXT_ID = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [IgxDayItemComponent, TitleCasePipe]
 })
-export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
+export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements AfterContentChecked {
     #standalone = true;
 
     /**
@@ -187,6 +205,33 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     private _hideTrailingDays: boolean;
     private _showActiveDay: boolean;
 
+    private _destroyRef = inject(DestroyRef);
+    private _theme: IgxTheme;
+
+    @HostBinding('class.igx-days-view')
+    public defaultClass = true;
+
+    // Theme-specific classes
+    @HostBinding('class.igx-days-view--material')
+    protected get isMaterial(): boolean {
+        return this._theme === 'material';
+    }
+
+    @HostBinding('class.igx-days-view--fluent')
+    protected get isFluent(): boolean {
+        return this._theme === 'fluent';
+    }
+
+    @HostBinding('class.igx-days-view--bootstrap')
+    protected get isBootstrap(): boolean {
+        return this._theme === 'bootstrap';
+    }
+
+    @HostBinding('class.igx-days-view--indigo')
+    protected get isIndigo(): boolean {
+        return this._theme === 'indigo';
+    }
+
     /**
      * @hidden
      */
@@ -195,8 +240,37 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
         @Inject(LOCALE_ID) _localeId: string,
         protected el: ElementRef,
         public override cdr: ChangeDetectorRef,
+        @Inject(THEME_TOKEN) private themeToken: ThemeToken
+
     ) {
         super(platform, _localeId, null, cdr);
+
+        this._theme = this.themeToken.theme;
+
+        const themeChange = this.themeToken.onChange((theme) => {
+            if (this._theme !== theme) {
+                this._theme = theme;
+                this.cdr.detectChanges();
+            }
+        });
+
+        this._destroyRef.onDestroy(() => themeChange.unsubscribe());
+    }
+
+    private setComponentTheme() {
+        // allow DOM theme override (same pattern as input-group)
+        if (!this.themeToken.preferToken) {
+            const theme = getComponentTheme(this.el.nativeElement);
+
+            if (theme && theme !== this._theme) {
+                this._theme = theme;
+                this.cdr.markForCheck();
+            }
+        }
+    }
+
+    public ngAfterContentChecked() {
+        this.setComponentTheme();
     }
 
     /**
