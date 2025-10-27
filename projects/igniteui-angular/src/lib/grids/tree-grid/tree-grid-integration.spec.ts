@@ -198,6 +198,73 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid = fix.componentInstance.treeGrid;
         });
 
+        it('should preserve the order of records on inner levels', () => {
+            fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
+            fix.componentInstance.sortByName = true;
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+
+            const expectedFlatData = [
+                {
+                    "ID": 1,
+                    "ParentID": -1,
+                    "Name": "Casey Houston",
+                    "JobTitle": "Vice President",
+                    "Age": 32
+                },
+                {
+                    "ID": 2,
+                    "ParentID": 1,
+                    "Name": "Gilberto Todd",
+                    "JobTitle": "Director",
+                    "Age": 41
+                },
+                {
+                    "ID": 7,
+                    "ParentID": 2,
+                    "Name": "Debra Morton",
+                    "JobTitle": "Associate Software Developer",
+                    "Age": 35
+                },
+                {
+                    "ID": 3,
+                    "ParentID": 2,
+                    "Name": "Tanya Bennett",
+                    "JobTitle": "Director",
+                    "Age": 29
+                },
+                {
+                    "ID": 4,
+                    "ParentID": 1,
+                    "Name": "Jack Simon",
+                    "JobTitle": "Software Developer",
+                    "Age": 33
+                },
+                {
+                    "ID": 10,
+                    "ParentID": -1,
+                    "Name": "Eduardo Ramirez",
+                    "JobTitle": "Manager",
+                    "Age": 53
+                },
+                {
+                    "ID": 9,
+                    "ParentID": 10,
+                    "Name": "Leslie Hansen",
+                    "JobTitle": "Associate Software Developer",
+                    "Age": 44
+                },
+                {
+                    "ID": 6,
+                    "ParentID": -1,
+                    "Name": "Erma Walsh",
+                    "JobTitle": "CEO",
+                    "Age": 52
+                },
+            ]
+            expect(treeGrid.flatData).toEqual(expectedFlatData);
+        });
+
         it('should transform a non-tree column into a tree column when pinning it', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
 
@@ -1431,8 +1498,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
-            treeGrid.columnList.find(x => x.field === 'Age').pinned = true;
             treeGrid.pinning.columns = 1;
+            treeGrid.columnList.find(x => x.field === 'Age').pinned = true;
 
             fix.detectChanges();
             const rightMostGridPart = treeGrid.nativeElement.getBoundingClientRect().right;

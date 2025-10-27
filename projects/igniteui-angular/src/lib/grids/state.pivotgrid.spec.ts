@@ -228,7 +228,7 @@ describe('IgxPivotGridState #pivotGrid :', () => {
         pivotGrid.rowSelection = 'single';
         const state = fixture.componentInstance.state;
         expect(state).toBeDefined('IgxGridState directive is initialized');
-        const headerRow = fixture.nativeElement.querySelector('igx-pivot-row-dimension-content');
+        const headerRow = fixture.nativeElement.querySelectorAll('igx-pivot-row-dimension-content')[2];
         const header = headerRow.querySelector('igx-pivot-row-dimension-header');
         header.click();
         fixture.detectChanges();

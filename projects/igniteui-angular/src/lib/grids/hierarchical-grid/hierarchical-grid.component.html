@@ -51,7 +51,8 @@
                 | gridRowPinning:id:true:pipeTrigger
                 | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
                 | gridSort:sortingExpressions:[]:sortStrategy:id:pipeTrigger:true
-                | gridCellMerge:columnsToMerge:cellMergeMode:mergeStrategy:activeRowIndexes:true:pipeTrigger; as pinnedData
+                | gridCellMerge:columnsToMerge:cellMergeMode:mergeStrategy:pipeTrigger
+                | gridUnmergeActive:columnsToMerge:activeRowIndexes:true:pipeTrigger; as pinnedData
             ) {
                 @if (pinnedData.length > 0) {
                     <div #pinContainer class="igx-grid__tr--pinned"
@@ -76,14 +77,15 @@
         | gridHierarchical:expansionStates:id:primaryKey:childLayoutKeys:pipeTrigger
         | gridAddRow:false:pipeTrigger
         | gridRowPinning:id:false:pipeTrigger
-        | gridCellMerge:columnsToMerge:cellMergeMode:mergeStrategy:activeRowIndexes:false:pipeTrigger"
+        | gridCellMerge:columnsToMerge:cellMergeMode:mergeStrategy:pipeTrigger
+        | gridUnmergeActive:columnsToMerge:activeRowIndexes:false:pipeTrigger"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]="verticalScroll"
             [igxForContainerSize]="calcHeight" [igxForItemSize]="renderedRowHeight" [igxForTrackBy]="trackChanges"
             #verticalScrollContainer (chunkPreload)="dataLoading($event)" (dataChanging)="dataRebinding($event)" (dataChanged)="dataRebound($event)">
             <ng-template
                 [igxTemplateOutlet]="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) ? child_record_template : hierarchical_record_template))"
                 [igxTemplateOutletContext]="getContext(rowData, rowIndex, false)" (viewCreated)="viewCreatedHandler($event)"
-                (viewMoved)="viewMovedHandler($event)" (cachedViewLoaded)="cachedViewLoaded($event)">
+                (viewMoved)="viewMovedHandler($event)" (cachedViewLoaded)="cachedViewLoaded($event)" (beforeViewDetach)="viewDetachHandler($event)">
             </ng-template>
             <!-- <ng-container *igxTemplateOutlet="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template)); context: getContext(rowData)"></ng-container> -->
         </ng-template>

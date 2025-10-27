@@ -861,9 +861,9 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(filteringCells[1].nativeElement.getBoundingClientRect().width).toBe(50);
             expect(filteringCells[2].nativeElement.getBoundingClientRect().width).toBe(49);
 
-            expect(headerGroups[0].nativeElement.getBoundingClientRect().width).toBe(48);
+            expect(headerGroups[0].nativeElement.getBoundingClientRect().width).toBe(49);
             expect(headerGroups[1].nativeElement.getBoundingClientRect().width).toBe(50);
-            expect(headerGroups[2].nativeElement.getBoundingClientRect().width).toBe(48);
+            expect(headerGroups[2].nativeElement.getBoundingClientRect().width).toBe(49);
         });
 
         it('should size headers correctly when column width is in %.', () => {

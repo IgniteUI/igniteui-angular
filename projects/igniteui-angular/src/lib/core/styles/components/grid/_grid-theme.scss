@@ -18,8 +18,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} excel-filtering
 @mixin grid($theme) {
-    @include css-vars($theme, 'igx-grid, igx-hierarchical-grid, igx-pivot-grid, igx-tree-grid, igx-advanced-filtering-dialog, igx-grid-excel-style-filtering, .igx-excel-filter__secondary');
-
+    @include css-vars($theme);
     @include scale-in-ver-center();
 
     $variant: map.get($theme, '_meta', 'theme');
@@ -719,6 +718,9 @@
     %grid-display-container-tr {
         width: 100%;
         overflow: visible;
+        flex: 1;
+        // needed to override the min-width of the column headers
+        min-width: 0;
     }
 
     %grid-mrl-block {
@@ -927,7 +929,7 @@
         }
 
         padding-block: 0;
-        flex: 1 0 auto;
+        flex: 0 0 auto;
         background: inherit;
         z-index: 4;
         cursor: move;

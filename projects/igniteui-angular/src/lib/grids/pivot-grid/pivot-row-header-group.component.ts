@@ -157,4 +157,8 @@ export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent
     public override get selectable(): boolean {
         return false;
     }
+
+    protected getHeaderWidthFromDimension() {
+        return this.grid.hasHorizontalLayout && this.dimWidth === -1 ? 'fit-content' : null;
+    }
 }
