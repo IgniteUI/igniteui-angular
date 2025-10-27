@@ -2022,7 +2022,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     protected getPivotRowHeaderContentWidth(headerGroup: IgxPivotRowHeaderGroupComponent) {
-        const headerSizes = this.getHeaderCellWidth(headerGroup.header.refInstance.nativeElement);
+        const headerSizes = this.getHeaderCellWidth(headerGroup.nativeElement);
         return headerSizes.width + headerSizes.padding;
     }
 
