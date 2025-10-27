@@ -5,7 +5,7 @@ import { IGroupingState } from '../../data-operations/groupby-state.interface';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { IGroupByResult } from '../../data-operations/grouping-result.interface';
 import { getHierarchy, isHierarchyMatch } from '../../data-operations/operations';
-import { DefaultSortingStrategy, ISortingExpression } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { GridType } from './grid.interface';
 
 const DATE_TYPE = 'date';
@@ -229,7 +229,11 @@ export class IgxSorting implements IGridSortingStrategy {
         const isDate = column?.dataType === DATE_TYPE || column?.dataType === DATE_TIME_TYPE;
         const isTime = column?.dataType === TIME_TYPE || column?.dataType === DATE_TIME_TYPE;
         const isString = column?.dataType === STRING_TYPE;
-        data = expr.strategy.sort(data, expr.fieldName, expr.dir, expr.ignoreCase, this.getFieldValue, isDate, isTime, grid);
+        if (expr.dir === SortingDirection.None) {
+            data = this.sortDataRecursive(data, expressions, expressionIndex + 1, grid);
+        } else {
+            data = expr.strategy.sort(data, expr.fieldName, expr.dir, expr.ignoreCase, this.getFieldValue, isDate, isTime, grid);
+        }
         if (expressionIndex === exprsLen - 1) {
             return data;
         }
