@@ -18,6 +18,10 @@
                 @extend %cbx-label--hover !optional;
             }
 
+            @include e(label, $m: before) {
+                 @extend %cbx-label--hover !optional;
+            }
+
             @include e(ripple) {
                 @extend %cbx-ripple--hover !optional;
             }
@@ -87,6 +91,10 @@
                 @extend %cbx-label--invalid !optional;
             }
 
+            @include e(label, $m: before) {
+                @extend %cbx-label--invalid !optional;
+            }
+
             &:hover {
                 @include e(ripple) {
                     @extend %cbx-ripple--hover !optional;
@@ -102,6 +110,10 @@
                 }
 
                 @include e(label) {
+                    @extend %cbx-label--invalid !optional;
+                }
+
+                @include e(label, $m: before) {
                     @extend %cbx-label--invalid !optional;
                 }
             }
