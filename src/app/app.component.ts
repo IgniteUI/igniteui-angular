@@ -477,6 +477,11 @@ export class AppComponent implements OnInit {
             name: 'List Performance'
         },
         {
+            link: '/localization',
+            icon: 'translate',
+            name: 'Localization'
+        },
+        {
             link: '/monthPicker',
             icon: 'event',
             name: 'Month Picker',

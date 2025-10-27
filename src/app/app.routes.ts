@@ -128,6 +128,7 @@ import { TreeShowcaseSampleComponent } from './tree-showcase/tree-showcase.sampl
 import { GridColumnTypesSampleComponent } from './grid-column-types/grid-column-types.sample';
 import { AccordionSampleComponent } from './accordion/accordion.sample';
 import { GridLocalizationSampleComponent } from './grid-localization/grid-localization.sample';
+import { LocalizationSampleComponent } from './localization/localization.sample';
 import { TreeGridGroupBySampleComponent } from './tree-grid-groupby/tree-grid-groupby.sample';
 import { PaginationSampleComponent } from './pagination/pagination.component';
 import { GridCellAPISampleComponent } from './grid-cell-api/grid-cell-api.sample';
@@ -714,5 +715,9 @@ export const appRoutes: Routes = [
     {
         path: 'labelDirective',
         component: LabelSampleComponent
+    },
+    {
+        path: 'localization',
+        component: LocalizationSampleComponent
     }
 ];
