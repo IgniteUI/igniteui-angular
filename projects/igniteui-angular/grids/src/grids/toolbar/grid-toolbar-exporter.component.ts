@@ -10,13 +10,10 @@ import {
     IgxExcelExporterOptions,
     IgxExcelExporterService
 } from 'igniteui-angular/core';
-import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
 import { GridType } from '../common/grid.interface';
 import { IgxToolbarToken } from './token';
-import { IgxIconComponent } from '../../icon/icon.component';
-import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
-import { IgxButtonDirective } from '../../directives/button/button.directive';
-
+import { IgxButtonDirective, IgxRippleDirective, IgxToggleDirective } from 'igniteui-angular/directives';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 
 export type IgxExporterOptions = IgxCsvExporterOptions | IgxExcelExporterOptions;
 

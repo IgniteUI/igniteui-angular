@@ -17,13 +17,12 @@ import {
     DOCUMENT
 } from '@angular/core';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from 'igniteui-angular/directives';
-import { IBaseEventArgs } from 'igniteui-angular/core';
+import { IBaseEventArgs, Size } from 'igniteui-angular/core';
 import { ChipResourceStringsEN, IChipResourceStrings } from 'igniteui-angular/core';
 import { Subject } from 'rxjs';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { getCurrentResourceStrings } from 'igniteui-angular/core';
-import { Size } from '../grids/common/enums';
 
 export const IgxChipTypeVariant = {
     PRIMARY: 'primary',

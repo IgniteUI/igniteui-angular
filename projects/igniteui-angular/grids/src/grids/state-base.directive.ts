@@ -1,24 +1,16 @@
 import { Directive, Optional, Input, Host, ViewContainerRef, Inject, createComponent, EnvironmentInjector, Injector } from '@angular/core';
-import { IExpressionTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
-import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
-import { IPagingState } from '../data-operations/paging-state.interface';
-import { GridColumnDataType } from '../data-operations/data-util';
-import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
-import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IgxGridComponent } from './grid/grid.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { GridSelectionRange } from './common/types';
-import { ISortingExpression } from '../data-operations/sorting-strategy';
 import { ColumnType, FieldType, GridType, IGX_GRID_BASE, IPinningConfig } from './common/grid.interface';
 import { IgxPivotGridComponent } from './pivot-grid/pivot-grid.component';
 import { IPivotConfiguration, IPivotDimension } from './pivot-grid/pivot-grid.interface'
 import { PivotUtil } from './pivot-grid/pivot-util';
 import { IgxPivotDateDimension } from './pivot-grid/pivot-grid-dimensions';
-import { cloneArray, cloneValue } from 'igniteui-angular/core';
+import { cloneArray, cloneValue, GridColumnDataType, IExpressionTree, IFilteringExpressionsTree, IGroupByExpandState, IGroupingExpression, IGroupingState, IPagingState, ISortingExpression, recreateTreeFromFields } from 'igniteui-angular/core';
 import { IgxColumnLayoutComponent } from './columns/column-layout.component';
-import { recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 
 export interface IGridState {
     columns?: IColumnState[];

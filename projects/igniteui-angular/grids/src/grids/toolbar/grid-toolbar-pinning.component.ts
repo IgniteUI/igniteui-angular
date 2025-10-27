@@ -2,10 +2,9 @@ import { Component, ViewChild } from '@angular/core';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 import { IgxColumnPinningDirective } from '../column-actions/column-pinning.directive';
 import { BaseToolbarColumnActionsDirective } from './grid-toolbar.base';
-import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
-import { IgxIconComponent } from '../../icon/icon.component';
-import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { AsyncPipe } from '@angular/common';
+import { IgxButtonDirective, IgxToggleDirective } from 'igniteui-angular/directives';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 
 /* blazorElement */
 /* wcElementTag: igc-grid-toolbar-pinning */
