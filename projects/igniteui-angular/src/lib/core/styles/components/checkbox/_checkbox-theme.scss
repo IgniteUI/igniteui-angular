@@ -265,7 +265,7 @@
     }
 
     %igx-checkbox--disabled-indeterminate-indigo {
-        @extend %igx-checkbox--disabled-indeterminate;
+        @extend %cbx-composite--x--disabled;
 
         %cbx-composite-mark {
             rect {
@@ -320,10 +320,7 @@
 
     %igx-checkbox--disabled-indeterminate {
         %cbx-composite--x--disabled {
-            @if $variant != 'indigo' {
-                border-color: var-get($theme, 'disabled-indeterminate-color');
-            }
-
+            border-color: var-get($theme, 'disabled-indeterminate-color');
             background: var-get($theme, 'disabled-indeterminate-color');
         }
     }
