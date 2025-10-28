@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { IGX_GRID_ACTION_STRIP_DIRECTIVES } from './public_api';
+import { IGX_ACTION_STRIP_DIRECTIVES } from './public_api';
 
 /**
  * @hidden
@@ -7,10 +7,10 @@ import { IGX_GRID_ACTION_STRIP_DIRECTIVES } from './public_api';
  */
 @NgModule({
     imports: [
-        ...IGX_GRID_ACTION_STRIP_DIRECTIVES
+        ...IGX_ACTION_STRIP_DIRECTIVES
     ],
     exports: [
-        ...IGX_GRID_ACTION_STRIP_DIRECTIVES
+        ...IGX_ACTION_STRIP_DIRECTIVES
     ],
 })
 export class IgxActionStripModule { }

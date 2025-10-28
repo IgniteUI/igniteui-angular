@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxActionStripComponent } from '../action-strip.component';
+import { IgxActionStripComponent } from '../../../../action-strip/src/action-strip/action-strip.component';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from '../../grids/grid/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';

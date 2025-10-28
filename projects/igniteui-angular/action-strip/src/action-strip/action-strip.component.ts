@@ -18,7 +18,7 @@ import {
 
 
 import { ActionStripResourceStringsEN, CloseScrollStrategy, getCurrentResourceStrings, IActionStripResourceStrings, OverlaySettings } from 'igniteui-angular/core';
-import { IgxGridActionsBaseDirective } from './grid-actions/grid-actions-base.directive';
+import { IgxGridActionsBaseDirective } from '../../../grids/src/grids/grid-actions/grid-actions-base.directive';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxToggleActionDirective } from 'igniteui-angular/directives';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
