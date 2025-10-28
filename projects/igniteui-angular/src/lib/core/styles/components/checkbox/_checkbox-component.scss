@@ -269,7 +269,9 @@
         }
 
         @include mx(indigo, disabled, indeterminate) {
-            @extend %igx-checkbox--disabled-indeterminate-indigo !optional;
+            @include e(composite) {
+                @extend %igx-checkbox--disabled-indeterminate-indigo !optional;
+            }
         }
 
         @include mx(indigo, focused, indeterminate) {
