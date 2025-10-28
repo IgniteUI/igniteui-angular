@@ -2,7 +2,13 @@ import { IgxGridActionButtonComponent } from './grid-action-button.component';
 import { Directive, Input, AfterViewInit, QueryList, ViewChildren, IterableDiffers, booleanAttribute } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
 import { IgxIconService } from 'igniteui-angular/icon';
-import { IgxRowDirective } from 'igniteui-angular/grids';
+
+// Stub interface to avoid circular dependency with grids
+// The actual IgxRowDirective is imported at runtime
+interface IgxRowDirectiveStub {
+    grid?: any;
+    inEditMode?: boolean;
+}
 
 /* blazorElement */
 /* contentParent: ActionStrip */
@@ -73,7 +79,9 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
      * @internal
      * @param context
      */
-    protected isRow(context): context is IgxRowDirective {
-        return context && context instanceof IgxRowDirective;
+    protected isRow(context): context is IgxRowDirectiveStub {
+        // Check if context has grid property and constructor name contains 'Row'
+        // This avoids importing IgxRowDirective directly which would create circular dependency
+        return context && context.grid && context.constructor.name.includes('Row');
     }
 }

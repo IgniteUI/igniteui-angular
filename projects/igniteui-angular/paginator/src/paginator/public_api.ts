@@ -3,6 +3,7 @@ import { IgxPageNavigationComponent, IgxPageSizeSelectorComponent, IgxPaginatorC
 
 export * from './paginator.component';
 export * from './paginator-interfaces';
+export { IgxPaginatorToken } from './token';
 
 /* NOTE: Paginator directives collection for ease-of-use import in standalone components scenario */
 export const IGX_PAGINATOR_DIRECTIVES = [

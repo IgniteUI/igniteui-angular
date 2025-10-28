@@ -56,9 +56,12 @@ import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxButtonDirective, IgxForOfScrollSyncService, IgxForOfSyncService, IgxGridForOfDirective, IgxOverlayOutletDirective, IgxRippleDirective, IgxScrollInertiaDirective, IgxTemplateOutletDirective, IgxToggleDirective } from 'igniteui-angular/directives';
-import { IgxCircularProgressBarComponent, IgxSnackbarComponent, IgxIconComponent, IFilteringExpressionsTree, flatten } from 'igniteui-angular';
-import { IgxActionStripToken } from 'igniteui-angular/action-strip/src/action-strip/token';
-import { IgxPaginatorToken } from 'igniteui-angular/paginator/src/paginator/token';
+import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
+import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IFilteringExpressionsTree, flatten } from 'igniteui-angular/core';
+import { IgxActionStripToken } from 'igniteui-angular/action-strip';
+import { IgxPaginatorToken } from 'igniteui-angular/paginator';
 
 let NEXT_ID = 0;
 

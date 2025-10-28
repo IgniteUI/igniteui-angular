@@ -9,6 +9,7 @@ export { IgxGridEditingActionsComponent } from './grid-actions/grid-editing-acti
 export { IgxGridPinningActionsComponent } from './grid-actions/grid-pinning-actions.component';
 export { IgxActionStripComponent, IgxActionStripMenuItemDirective } from './action-strip.component';
 export { IgxGridActionButtonComponent } from './grid-actions/grid-action-button.component';
+export { IgxActionStripToken } from './token';
 
 /* Action-strip outside of grid directives collection for ease-of-use import in standalone components scenario */
 export const IGX_ACTION_STRIP_DIRECTIVES = [
