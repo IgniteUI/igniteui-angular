@@ -131,8 +131,8 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
         }
 
         // collect full range of data to unmerge
-        const dataToUnmerge = new Set();
         let startIndex;
+        let endIndex;
         uniqueRoots.forEach(x => {
             const index = collection.indexOf(x);
             if (!startIndex) {
@@ -140,18 +140,21 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
             } else {
                 startIndex = Math.min(startIndex, index);
             }
-            dataToUnmerge.add(x.recordRef);
             const colKeys = [...x.cellMergeMeta.keys()];
             const cols = colsToMerge.filter(col => colKeys.indexOf(col.field) !== -1);
             for (const col of cols) {
                 const childData = x.cellMergeMeta.get(col.field).childRecords;
                 const childRecs = childData.map(rec => rec.recordRef);
-                childRecs.forEach(child => dataToUnmerge.add(child));
+                if (!endIndex) {
+                    endIndex = index + childRecs.length;
+                } else {
+                    endIndex = Math.max(endIndex, index + childRecs.length + 1);
+                }
             }
         });
-
+        const dataToUnmerge = collection.slice(startIndex, endIndex).map(x => x.recordRef);
         // unmerge data where active row index breaks merge groups
-        const res = DataUtil.merge(Array.from(dataToUnmerge), colsToMerge, this.grid.mergeStrategy, activeRowIndexes.map(ri => ri - startIndex), this.grid);
+        const res = DataUtil.merge(dataToUnmerge, colsToMerge, this.grid.mergeStrategy, activeRowIndexes.map(ri => ri - startIndex), this.grid);
         collection = collection.slice(0, startIndex).concat(res, collection.slice(startIndex + res.length));
         return collection;
     }
