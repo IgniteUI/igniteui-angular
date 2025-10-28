@@ -17,7 +17,6 @@ import {
     ViewChild,
     ViewChildren
 } from '@angular/core';
-import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxGridForOfDirective } from 'igniteui-angular/directives';
 import { TransactionType } from 'igniteui-angular/core';
 import { IgxGridSelectionService } from './selection/selection.service';
@@ -27,6 +26,7 @@ import { mergeWith } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { trackByIdentity } from 'igniteui-angular/core';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 
 @Directive({
     selector: '[igxRowBaseComponent]',
