@@ -1,8 +1,7 @@
-import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Util, ConnectedFit, Point  } from 'igniteui-angular/core';
+import { ElementDimensions, VerticalAlignment, HorizontalAlignment, PositionSettings, Util, ConnectedFit, Point, BaseFitPositionStrategy  } from 'igniteui-angular/core';
 import { IPositionStrategy } from 'igniteui-angular/core';
 
 import { IgxSelectBase } from './select.common';
-import { BaseFitPositionStrategy } from 'igniteui-angular/core';
 import { PlatformUtil } from 'igniteui-angular/core';
 import { Optional } from '@angular/core';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
@@ -41,7 +40,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
      * ```
      */
     public override position(contentElement: HTMLElement,
-                    size: Size,
+                    size: ElementDimensions,
                     document?: Document,
                     initialCall?: boolean,
                     target?: Point | HTMLElement): void {

@@ -32,6 +32,7 @@ import {
     IgxExcelStyleFilterOperationsTemplateDirective,
     IgxExcelStyleLoadingValuesTemplateDirective
 } from './filtering/excel-style/public_api';
+import { IgxGridActionButtonComponent, IgxGridActionsBaseDirective, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent } from './grid-actions/public_api';
 import { IgxGridFooterComponent } from './grid-footer/grid-footer.component';
 import { IgxExcelStyleHeaderIconDirective, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective, IgxGridEmptyTemplateDirective, IgxGridLoadingTemplateDirective } from './grid.directives';
 import {
@@ -179,5 +180,10 @@ export const IGX_GRID_COMMON_DIRECTIVES = [
     IgxExcelStyleSearchComponent,
     IgxExcelStyleColumnOperationsTemplateDirective,
     IgxExcelStyleFilterOperationsTemplateDirective,
-    IgxExcelStyleLoadingValuesTemplateDirective
+    IgxExcelStyleLoadingValuesTemplateDirective,
+    // IGX_GRID_ACTION_STRIP_DIRECTIVES:
+    IgxGridPinningActionsComponent,
+    IgxGridEditingActionsComponent,
+    IgxGridActionsBaseDirective,
+    IgxGridActionButtonComponent
 ] as const;

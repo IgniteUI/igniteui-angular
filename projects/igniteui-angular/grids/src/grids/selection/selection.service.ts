@@ -1,7 +1,5 @@
 import { EventEmitter, Injectable, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
-import { PlatformUtil } from '../../core/utils';
-import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IRowSelectionEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
 import {
@@ -14,6 +12,7 @@ import {
     SelectionState
 } from '../common/types';
 import { PivotUtil } from '../pivot-grid/pivot-util';
+import { FilteringExpressionsTree, PlatformUtil } from 'igniteui-angular/core';
 
 
 @Injectable()

@@ -12,7 +12,7 @@ import { IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
 import { IgxTreeGridEditActionsComponent } from '../../test-utils/tree-grid-components.spec';
 import { IgxGridEditingActionsComponent } from './grid-editing-actions.component';
 import { IgxGridPinningActionsComponent } from './grid-pinning-actions.component';
-import { IgxActionStripComponent } from '../action-strip.component';
+import { IgxActionStripComponent } from '../../../../action-strip/src/action-strip/action-strip.component';
 import { IRowDataCancelableEventArgs, IgxColumnComponent } from '../../grids/public_api';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';

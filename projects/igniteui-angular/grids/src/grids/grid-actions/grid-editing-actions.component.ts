@@ -1,8 +1,8 @@
 import { Component, HostBinding, Input, booleanAttribute } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
-import { showMessage } from '../../core/utils';
 import { addRow, addChild } from '@igniteui/material-icons-extended';
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
+import { showMessage } from 'igniteui-angular/core';
 
 
 /* blazorElement */

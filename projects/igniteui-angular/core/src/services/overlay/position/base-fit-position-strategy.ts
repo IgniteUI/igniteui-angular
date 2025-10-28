@@ -1,8 +1,8 @@
-import { ConnectedFit, HorizontalAlignment, Point, PositionSettings, Size, Util, VerticalAlignment } from '../utilities';
+import { ConnectedFit, ElementDimensions, HorizontalAlignment, Point, PositionSettings, Util, VerticalAlignment } from '../utilities';
 import { ConnectedPositioningStrategy } from './connected-positioning-strategy';
 
 export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrategy {
-    protected _initialSize: Size;
+    protected _initialSize: ElementDimensions;
     protected _initialSettings: PositionSettings;
 
     /**
@@ -18,7 +18,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
      * ```
      */
     public override position(
-        contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
+        contentElement: HTMLElement, size: ElementDimensions, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
         const rects = super.calculateElementRectangles(contentElement, target);
         const connectedFit: ConnectedFit = {};
         if (initialCall) {

@@ -1,6 +1,7 @@
 // Core utilities
 export * from './core/navigation';
 export * from './core/dates';
+export * from './core/enums';
 export * from './core/utils';
 export * from './core/types';
 export * from './core/selection';
@@ -16,7 +17,7 @@ export * from './data-operations/filtering-state.interface';
 export * from './data-operations/filtering-strategy';
 export { TreeGridFilteringStrategy } from './data-operations/tree-grid-filtering-strategy';
 export * from './data-operations/merge-strategy';
-export { ExpressionsTreeUtil } from './data-operations/expressions-tree-util';
+export * from './data-operations/expressions-tree-util';
 export * from './data-operations/groupby-expand-state.interface';
 export * from './data-operations/groupby-record.interface';
 export * from './data-operations/groupby-state.interface';

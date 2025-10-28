@@ -10,7 +10,7 @@
         <igx-grid-action-button [asMenuItem]="asMenuItems" iconName="add_child" iconSet="default" [labelText]="grid.resourceStrings.igx_grid_actions_add_child_label" (actionClick)="addRowHandler($event, true)"></igx-grid-action-button>
     }
     @if (!disabled && deleteRow) {
-        <igx-grid-action-button class="igx-action-strip__delete" classNames='igx-action-strip__menu-item--danger' [asMenuItem]="asMenuItems" iconName="delete" [labelText]="grid.resourceStrings.igx_grid_actions_delete_label" (actionClick)="deleteRowHandler($event)"></igx-grid-action-button>
+        <igx-grid-action-button class="igx-action-strip__delete" classNames="igx-action-strip__menu-item--danger" [asMenuItem]="asMenuItems" iconName="delete" [labelText]="grid.resourceStrings.igx_grid_actions_delete_label" (actionClick)="deleteRowHandler($event)"></igx-grid-action-button>
     }
 }
 
