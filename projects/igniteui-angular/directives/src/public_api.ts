@@ -18,6 +18,7 @@ export {
     IgxGridForOfDirective,
     IgxForOfToken
 } from './directives/for-of/for_of.directive';
+export { IgxForOfSyncService, IgxForOfScrollSyncService } from './directives/for-of/for_of.sync.service';
 export * from './directives/button/icon-button.directive';
 export * from './directives/layout/layout.directive';
 export * from './directives/mask/mask.directive';
