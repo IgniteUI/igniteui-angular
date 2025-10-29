@@ -38,7 +38,7 @@ end();
 const performanceMeasures: PerformanceEntryList = performanceService.getMeasures(name?);
 ```
 
-- Gets list of `PerformanceMeasure` entries`. If a name is provided, it returns only the measures with that name.
+- Gets list of `PerformanceMeasure` entries. If a name is provided, it returns only the measures with that name.
 
 ```ts
 performanceService.clearMeasures(name?);
