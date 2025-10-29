@@ -82,6 +82,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         // set componentRef to non-null to prevent DOM moves from re-initializing
         // TODO: Fail handling or cancellation needed?
         (this as any).componentRef = {};
+        const contentChildrenTags = Array.from(element.children).filter(x => this._componentFactory.ngContentSelectors.some(sel => x.matches(sel))).map(x => x.tagName.toLocaleLowerCase());
 
         // const toBeOrphanedChildren = Array.from(element.children).filter(x => !this._componentFactory.ngContentSelectors.some(sel => x.matches(sel)));
         // for (const iterator of toBeOrphanedChildren) {
@@ -165,6 +166,15 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
         // TODO(D.P.): Temporary maintain pre-check for ngAfterViewInit handling on _init flag w/ ngDoCheck interaction of row island
         (this as any).componentRef.changeDetectorRef.detectChanges();
+
+        // check if there are any content children associated with a content query collection.
+        // if no, then just emit the event, otherwise we wait for the collection to be updated in updateQuery.
+        const contentChildrenTypes = this.config.filter(x => contentChildrenTags.indexOf(x.selector) !== -1).map(x => x.provideAs ?? x.component);
+        const contentQueryChildrenCollection = componentConfig.contentQueries.filter(x => contentChildrenTypes.includes(x.childType));
+        if (contentQueryChildrenCollection.length === 0) {
+            // no content children, emit event immediately, since there's nothing to be attached.
+            (this as any).componentRef?.instance?.childrenAttached?.emit();
+        }
 
         if (parentAnchor && parentInjector) {
             // attempt to attach the newly created ViewRef to the parents's instead of the App global
@@ -330,6 +340,10 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             const list = (this as any).componentRef.instance[query.property] as QueryList<any>;
             list.reset(childRefs);
             list.notifyOnChanges();
+        }
+        if (this.schedule.size === 0) {
+            // children are attached and collections are updated, emit event.
+            (this as any).componentRef?.instance?.childrenAttached?.emit();
         }
     }
 
