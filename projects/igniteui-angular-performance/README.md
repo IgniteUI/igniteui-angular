@@ -10,7 +10,7 @@ npm run start:performance
 
 ## Using the performance service
 
-The performance service is intended to be used as a injectable service inside a component that would be measured. In order to inject it add a private property in the component:
+The performance service is intended to be used as an injectable service inside a component that would be measured. In order to inject it add a private property in the component:
 
 ```ts
 private performanceService = inject(PerformanceService);
