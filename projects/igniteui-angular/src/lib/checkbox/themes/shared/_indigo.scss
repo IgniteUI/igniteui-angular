@@ -139,6 +139,13 @@ $_theme: $indigo;
         }
     }
 
+    @include mx(focused, invalid, indeterminate) {
+        @include e(composite) {
+            box-shadow: 0 0 0 rem(3px)
+                var-get($_theme, 'focus-outline-color-error');
+        }
+    }
+
     @include mx(focused, indeterminate) {
         @include e(composite) {
             border-radius: var-get($_theme, 'border-radius');
