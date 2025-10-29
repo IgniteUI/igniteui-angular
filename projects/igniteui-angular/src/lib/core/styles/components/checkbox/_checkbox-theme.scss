@@ -1,3 +1,4 @@
+/* stylelint-disable max-nesting-depth */
 @use 'sass:map';
 @use 'sass:math';
 @use '../../base' as *;
@@ -7,7 +8,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin checkbox($theme) {
-    @include css-vars($theme, 'igx-checkbox');
+    @include css-vars($theme);
     $theme-variant: map.get($theme, '_meta', 'variant');
     $variant: map.get($theme, '_meta', 'theme');
     $material-theme: $variant == 'material';
@@ -49,13 +50,6 @@
         'indigo': rem(8px),
     ), $variant);
 
-    $mark-stroke: map.get((
-        'material': 3,
-        'fluent': 1,
-        'bootstrap': 3,
-        'indigo': 3,
-    ), $variant);
-
     $mark-offset: map.get((
         'material': 0,
         'fluent': -1px,
@@ -64,7 +58,7 @@
     ), $variant);
 
     $mark-length: 24;
-    $mark-x-factor: math.div($mark-stroke, $mark-length);
+    $mark-x-factor: calc(#{var-get($theme, 'tick-width')} / $mark-length);
 
     $ripple-size: rem(40px);
     $ripple-radius: math.div($ripple-size, 2);
@@ -205,7 +199,7 @@
         inset: 0;
         stroke: var-get($theme, 'tick-color');
         stroke-linecap: square;
-        stroke-width: $mark-stroke;
+        stroke-width: var-get($theme, 'tick-width');
         stroke-dasharray: $mark-length;
         stroke-dashoffset: $mark-length;
         fill: none;
@@ -366,7 +360,7 @@
     %cbx-composite-mark--in {
         stroke-dashoffset: 41; /* length of path - adjacent line length */
         opacity: 1;
-        transform: rotate(45deg) translateX(-#{$mark-x-factor}em);
+        transform: rotate(45deg) translateX(calc(#{$mark-x-factor} * -1em));
     }
 
     %cbx-composite-mark--fluent {
