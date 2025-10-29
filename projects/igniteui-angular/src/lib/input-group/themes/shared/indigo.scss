@@ -17,6 +17,18 @@ $_theme: $indigo;
 
     row-gap: rem(4px);
 
+    &:hover {
+        @include e(toggle-button) {
+            color: var(--toggle-button-foreground-focus);
+            background: var(--toggle-button-background-focus);
+        }
+
+        @include e(clear-button) {
+            color: var(--clear-button-foreground-focus);
+            background: var(--clear-button-background-focus);
+        }
+    }
+
     @include e(clear-icon) {
         &:focus {
             color: contrast-color($color: 'primary', $variant: 600);
@@ -208,6 +220,18 @@ $_theme: $indigo;
         &:hover {
             @include e(bundle) {
                 background: var-get($_theme, 'box-disabled-background');
+            }
+
+            @include e(toggle-button) {
+                cursor: default;
+                color: var(--toggle-button-foreground-disabled);
+                background: var(--toggle-button-background-disabled);
+            }
+
+            @include e(clear-button) {
+                cursor: default;
+                color: var-get($_theme, 'disabled-text-color');
+                background: var-get($_theme, 'border-disabled-background');
             }
         }
     }
