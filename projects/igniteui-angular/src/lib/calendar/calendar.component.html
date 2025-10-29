@@ -192,23 +192,25 @@
     (focus)="this.onWrapperFocus($event)"
     (blur)="this.onWrapperBlur($event)"
     >
-    <caption id="calendar-desc" tabindex="-1" class="igx-calendar__aria-off-screen">
-        @if (selection === 'multi') {
-            {{ monthsViewNumber && monthsViewNumber > 1 ?
-            resourceStrings.igx_calendar_multi_selection.replace('{0}', monthsViewNumber.toString()) :
-            resourceStrings.igx_calendar_singular_multi_selection}}
+    <div id="calendar-desc" tabindex="-1" class="igx-calendar__aria-off-screen">
+        @switch (selection) {
+            @case ('multi') {
+                {{ monthsViewNumber && monthsViewNumber > 1 ?
+                resourceStrings.igx_calendar_multi_selection.replace('{0}', monthsViewNumber.toString()) :
+                resourceStrings.igx_calendar_singular_multi_selection}}
+            }
+            @case ('range') {
+                {{ monthsViewNumber && monthsViewNumber > 1 ?
+                resourceStrings.igx_calendar_range_selection.replace('{0}', monthsViewNumber.toString()) :
+                resourceStrings.igx_calendar_singular_range_selection}}
+            }
+            @default {
+                {{ monthsViewNumber && monthsViewNumber > 1 ?
+                resourceStrings.igx_calendar_single_selection.replace('{0}', monthsViewNumber.toString()) :
+                resourceStrings.igx_calendar_singular_single_selection}}
+            }
         }
-        @if (selection === 'range') {
-            {{ monthsViewNumber && monthsViewNumber > 1 ?
-            resourceStrings.igx_calendar_range_selection.replace('{0}', monthsViewNumber.toString()) :
-            resourceStrings.igx_calendar_singular_range_selection}}
-        }
-        @if (selection === 'single') {
-            {{ monthsViewNumber && monthsViewNumber > 1 ?
-            resourceStrings.igx_calendar_single_selection.replace('{0}', monthsViewNumber.toString()) :
-            resourceStrings.igx_calendar_singular_single_selection}}
-        }
-    </caption>
+    </div>
     <section
         class="igx-calendar__pickers"
         [class.igx-calendar__pickers--days]="isDefaultView"
