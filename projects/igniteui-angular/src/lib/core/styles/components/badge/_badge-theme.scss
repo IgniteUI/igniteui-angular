@@ -6,7 +6,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin badge($theme) {
     @include css-vars($theme);
-
+    $theme-variant: map.get($theme, '_meta', 'variant');
     $variant: map.get($theme, '_meta', 'theme');
 
     %igx-badge-display {
@@ -70,10 +70,25 @@
 
     %igx-badge--warn {
         background: color($color: 'warn');
-        color: contrast-color($color: 'warn', $variant: 500);
 
-        igx-icon {
+        @if $variant == 'indigo' and $theme-variant == 'light' {
+            color: color($color: 'gray', $variant: 900);
+
+            igx-icon {
+                color: color($color: 'gray', $variant: 900);
+            }
+        } @else if $variant == 'indigo' and $theme-variant == 'dark' {
+            color: color($color: 'gray', $variant: 50);
+
+            igx-icon {
+                color: color($color: 'gray', $variant: 50);
+            }
+        } @else {
             color: contrast-color($color: 'warn', $variant: 500);
+
+            igx-icon {
+                color: contrast-color($color: 'warn', $variant: 500);
+            }
         }
     }
 
