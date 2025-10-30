@@ -1,9 +1,11 @@
 import { IActionStripResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { ActionStripResourceStringsJA as AActionStripResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Japanese resource strings for IgxActionStrip
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
-export const ActionStripResourceStringsJA = {
-    igx_action_strip_button_more_title: 'その他'
-} satisfies MakeRequired<IActionStripResourceStrings>;
+export const ActionStripResourceStringsJA = prefixResource(IGX_PREFIX, AActionStripResourceStrings);

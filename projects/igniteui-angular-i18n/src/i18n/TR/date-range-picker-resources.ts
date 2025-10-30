@@ -1,15 +1,10 @@
-import { IDateRangePickerResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { DateRangePickerResourceStringsTR as ADateRangePickerResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Turkish resource strings for IgxDateRangePicker
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
-export const DateRangePickerResourceStringsTR = {
-    igx_date_range_picker_date_separator: '-',
-    igx_date_range_picker_done_button: 'Bitti',
-    igx_date_range_picker_cancel_button: 'İptal',
-    igx_date_range_picker_last7Days: 'Son 7 gün',
-    igx_date_range_picker_currentMonth: 'Geçerli ay',
-    igx_date_range_picker_last30Days: 'Son 30 gün',
-    igx_date_range_picker_yearToDate: 'Yılbaşı itibarıyla',
-} satisfies MakeRequired<IDateRangePickerResourceStrings>;
+export const DateRangePickerResourceStringsTR = prefixResource(IGX_PREFIX, ADateRangePickerResourceStrings);

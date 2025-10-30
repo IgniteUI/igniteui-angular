@@ -1,15 +1,11 @@
 
-import { IPaginatorResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { PaginatorResourceStringsCS as APaginatorResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Czech resource strings for IgxPaginator
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
-export const PaginatorResourceStringsCS = {
-    igx_paginator_label: 'Položek na stráncee',
-    igx_paginator_pager_text: 'z',
-    igx_paginator_first_page_button_text: 'Přejít na první stránku',
-    igx_paginator_previous_page_button_text: 'Předchozí stránka',
-    igx_paginator_last_page_button_text: 'Přejít na poslední stránku',
-    igx_paginator_next_page_button_text: 'Další strana',
-} satisfies MakeRequired<IPaginatorResourceStrings>;
+export const PaginatorResourceStringsCS = prefixResource(IGX_PREFIX, APaginatorResourceStrings);

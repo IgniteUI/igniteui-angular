@@ -28,7 +28,7 @@ import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-br
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CarouselResourceStringsEN, ICarouselResourceStrings } from '../core/i18n/carousel-resources';
-import { first, IBaseEventArgs, last, PlatformUtil } from '../core/utils';
+import { first, IBaseEventArgs, last, onResourceChangeHandle, PlatformUtil } from '../core/utils';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationService } from '../services/animation/animation';
 import { Direction, IgxCarouselComponentBase } from './carousel-base';
@@ -405,7 +405,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     protected override currentItem: IgxSlideComponent;
     protected override previousItem: IgxSlideComponent;
     private _interval: number;
-    private _resourceStrings = getCurrentResourceStrings(CarouselResourceStringsEN);
+    private _resourceStrings: ICarouselResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(CarouselResourceStringsEN);
     private lastInterval: any;
     private playing: boolean;
     private destroyed: boolean;
@@ -427,7 +428,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ICarouselResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /** @hidden */
@@ -576,6 +577,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     ) {
         super(animationService, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
+        onResourceChangeHandle(this.destroy$, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(CarouselResourceStringsEN, false);
+        }, this);
     }
 
     /** @hidden */

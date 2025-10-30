@@ -1,10 +1,10 @@
-import { ITreeResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { TreeResourceStringsZHHANT as ATreeResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Traditional Chinese (zh-Hant) resource strings for IgxTree
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
-export const TreeResourceStringsZHHANT = {
-    igx_expand: '展開',
-    igx_collapse: '摺疊'
-} satisfies MakeRequired<ITreeResourceStrings>;
+export const TreeResourceStringsZHHANT = prefixResource(IGX_PREFIX, ATreeResourceStrings);

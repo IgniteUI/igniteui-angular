@@ -1,10 +1,10 @@
-import { IDatePickerResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { DatePickerResourceStringsNL as ADatePickerResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Dutch resource strings for IgxDatePicker
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
-export const DatePickerResourceStringsNL = {
-    igx_date_picker_change_date: 'Datum wijzigen',
-    igx_date_picker_choose_date: 'Datum kiezen'
-} satisfies MakeRequired<IDatePickerResourceStrings>;
+export const DatePickerResourceStringsNL = prefixResource(IGX_PREFIX, ADatePickerResourceStrings);

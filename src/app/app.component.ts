@@ -8,12 +8,14 @@ import {
 } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { IgxNavigationDrawerComponent, IgxIconService, IgxRippleDirective, IGX_NAVIGATION_DRAWER_DIRECTIVES } from 'igniteui-angular';
+import { IgxNavigationDrawerComponent, IgxIconService, IgxRippleDirective, IGX_NAVIGATION_DRAWER_DIRECTIVES, registerI18n } from 'igniteui-angular';
 import { DocumentDirection, PageHeaderComponent } from './pageHeading/pageHeading.component';
 import { IgxIconComponent } from '../../projects/igniteui-angular/src/lib/icon/icon.component';
 import { CommonModule } from '@angular/common';
 import { PropertiesPanelComponent } from './properties-panel/properties-panel.component';
 import { PropertyChangeService } from './properties-panel/property-change.service';
+import { ResourceStringsBG, ResourceStringsDE, ResourceStringsES, ResourceStringsFR, ResourceStringsIT, ResourceStringsJA, ResourceStringsKO, ResourceStringsZHHANS, ResourceStringsZHHANT } from 'igniteui-i18n-resources';
+import { ResourceStringsEN } from 'igniteui-i18n-core';
 
 @Component({
     selector: 'app-root',
@@ -29,7 +31,7 @@ import { PropertyChangeService } from './properties-panel/property-change.servic
         PageHeaderComponent,
         RouterOutlet,
         IgxRippleDirective,
-        PropertiesPanelComponent
+        PropertiesPanelComponent,
     ]
 })
 export class AppComponent implements OnInit {
@@ -775,5 +777,17 @@ export class AppComponent implements OnInit {
         this.iconService.addSvgIcon('fa-breeze', '../assets/images/card/icons/breeze.svg', 'fa-solid');
         this.iconService.addSvgIcon('rain', '../assets/images/card/icons/rain.svg', 'weather-icons');
         this.iconService.addSvgIcon('breeze', '../assets/images/card/icons/breeze.svg', 'weather-icons');
+
+        registerI18n(ResourceStringsBG, 'bg');
+        registerI18n(ResourceStringsEN, 'en');
+        registerI18n(ResourceStringsDE, 'de');
+        registerI18n(ResourceStringsES, 'es');
+        registerI18n(ResourceStringsFR, 'fr');
+        registerI18n(ResourceStringsIT, 'it');
+        registerI18n(ResourceStringsJA, 'ja');
+        registerI18n(ResourceStringsKO, 'ko');
+        registerI18n(ResourceStringsZHHANS, 'zh-Hans');
+        registerI18n(ResourceStringsZHHANT, 'zh-Hant');
     }
+
 }

@@ -1,10 +1,10 @@
-import { IInputResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { InputResourceStringsFR as AInputResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * French resource strings for IgxInput
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
-export const InputResourceStringsFR = {
-    igx_input_upload_button: 'Charger un fichier',
-    igx_input_file_placeholder: 'Aucun fichier sélectionné'
-} satisfies MakeRequired<IInputResourceStrings>;
+export const InputResourceStringsFR = prefixResource(IGX_PREFIX, AInputResourceStrings);

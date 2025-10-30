@@ -1,10 +1,10 @@
-import { IListResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { ListResourceStringsKO as AListResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Korean resource strings for IgxList
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
-export const ListResourceStringsKO = {
-    igx_list_no_items: '목록에 항목이 없습니다.',
-    igx_list_loading: '서버에서 데이터를로드하는 중...'
-} satisfies MakeRequired<IListResourceStrings>;
+export const ListResourceStringsKO = prefixResource(IGX_PREFIX, AListResourceStrings);

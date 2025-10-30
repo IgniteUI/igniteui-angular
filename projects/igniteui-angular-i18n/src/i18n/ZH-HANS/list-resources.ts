@@ -1,10 +1,10 @@
-import { IListResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { ListResourceStringsZHHANS as AListResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Simplified Chinese (zh-Hans) resource strings for IgxList
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
-export const ListResourceStringsZHHANS = {
-    igx_list_no_items: '列表中没有任何项。',
-    igx_list_loading: '正在从服务器加载数据...'
-} satisfies MakeRequired<IListResourceStrings>;
+export const ListResourceStringsZHHANS = prefixResource(IGX_PREFIX, AListResourceStrings);

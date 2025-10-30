@@ -1,15 +1,10 @@
-import { IDateRangePickerResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { DateRangePickerResourceStringsHU as ADateRangePickerResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Hungarian resource strings for IgxDateRangePicker
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
-export const DateRangePickerResourceStringsHU = {
-    igx_date_range_picker_date_separator: '-',
-    igx_date_range_picker_done_button: 'Kész',
-    igx_date_range_picker_cancel_button: 'Mégse',
-    igx_date_range_picker_last7Days: 'Az elmúlt 7 nap',
-    igx_date_range_picker_currentMonth: 'Aktuális hónap',
-    igx_date_range_picker_last30Days: 'Az elmúlt 30 nap',
-    igx_date_range_picker_yearToDate: 'Év elejétől napjainkig',
-} satisfies MakeRequired<IDateRangePickerResourceStrings>;
+export const DateRangePickerResourceStringsHU = prefixResource(IGX_PREFIX, ADateRangePickerResourceStrings);

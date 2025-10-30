@@ -1,12 +1,10 @@
-import { ICarouselResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { CarouselResourceStringsZHHANT as ACarouselResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Traditional Chinese (zh-Hant) resource strings for IgxCarousel
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
-export const CarouselResourceStringsZHHANT = {
-    igx_carousel_of: '的',
-    igx_carousel_slide: '投影片',
-    igx_carousel_previous_slide: '上一張投影片',
-    igx_carousel_next_slide: '下一張投影片'
-} satisfies MakeRequired<ICarouselResourceStrings>;
+export const CarouselResourceStringsZHHANT = prefixResource(IGX_PREFIX, ACarouselResourceStrings);

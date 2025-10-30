@@ -1,15 +1,10 @@
-import { IDateRangePickerResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { DateRangePickerResourceStringsBG as ADateRangePickerResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Bulgarian resource strings for IgxDateRangePicker
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
-export const DateRangePickerResourceStringsBG = {
-    igx_date_range_picker_date_separator: 'до',
-    igx_date_range_picker_done_button: 'Завърши',
-    igx_date_range_picker_cancel_button: 'Отмени',
-    igx_date_range_picker_last7Days: 'Последните 7 дни',
-    igx_date_range_picker_currentMonth: 'Текущ месец',
-    igx_date_range_picker_last30Days: 'Последните 30 дни',
-    igx_date_range_picker_yearToDate: 'От началото на годината'
-} satisfies MakeRequired<IDateRangePickerResourceStrings>;
+export const DateRangePickerResourceStringsBG = prefixResource(IGX_PREFIX, ADateRangePickerResourceStrings);
