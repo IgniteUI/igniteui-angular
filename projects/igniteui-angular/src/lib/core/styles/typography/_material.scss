@@ -35,7 +35,7 @@
 @use '../components/input/file-input-theme' as *;
 
 @mixin typography() {
-    @include badge-typography();
+    // @include badge-typography();
     // @include banner-typography();
     // @include bottom-nav-typography();
     @include button-typography();

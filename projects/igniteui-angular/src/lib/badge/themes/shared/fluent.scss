@@ -5,19 +5,18 @@
 @use 'styles/themes/standalone' as *;
 @use '../light/tokens' as *;
 
-$_theme: $bootstrap;
+$_theme: $fluent;
 
-@include themed-block(igx-badge, bootstrap) {
+@include themed-block(igx-badge, fluent) {
     @include m(success) {
         background: color($color: 'success', $variant: 500);
     }
 
     @include m(info) {
-        background: color($color: 'info', $variant: 500);
+        background: color($color: 'info', $variant: 700);
     }
 
     @include m(error) {
         background: color($color: 'error', $variant: 500);
-        color: contrast-color($color: 'error', $variant: 100);
     }
 }

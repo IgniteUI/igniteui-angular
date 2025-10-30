@@ -1,43 +1,90 @@
 <div class="wrapper">
     <div class="badges">
         <h3 class="sample-title">Angular Badge</h3>
-        <igx-badge
-            [type]="properties.variant"
-            value="8"
-            [shape]="properties.shape"
-            [outlined]="properties.outlined"
-        ></igx-badge>
-        <div class="avatar-sample">
-            <igx-avatar icon="face" shape="rounded"></igx-avatar>
-            <igx-badge
-                [type]="properties.variant"
-                [shape]="properties.shape"
-                [outlined]="properties.outlined"
-            >
-                <igx-icon>bluetooth</igx-icon>
-            </igx-badge>
+        <div class="badge-examples" [igSize]="properties.size">
+            <div class="badge-item">
+                <igx-badge
+                    [type]="properties.variant"
+                    value="8"
+                    [shape]="properties.shape"
+                    [outlined]="properties.outlined"
+                ></igx-badge>
+                <span>With Value</span>
+            </div>
+            <div class="badge-item">
+                <igx-badge
+                    [type]="properties.variant"
+                    [shape]="properties.shape"
+                    [outlined]="properties.outlined"
+                >
+                    <igx-icon>bluetooth</igx-icon>
+                </igx-badge>
+                <span>With Icon</span>
+            </div>
+            <div class="badge-item avatar-sample">
+                <igx-avatar icon="face" shape="rounded"></igx-avatar>
+                <igx-badge
+                    [type]="properties.variant"
+                    [shape]="properties.shape"
+                    [outlined]="properties.outlined"
+                >
+                    <igx-icon>bluetooth</igx-icon>
+                </igx-badge>
+                <span>On Avatar</span>
+            </div>
         </div>
-    </div>
 
-    <div class="badges">
-        <h3 class="sample-title">WC Badge</h3>
-        <igc-badge
-            [variant]="wcVariant"
-            [shape]="properties.shape"
-            [outlined]="properties.outlined"
-            ><span>8</span></igc-badge
-        >
-        <div class="avatar-sample">
-            <igc-avatar shape="rounded"
-                ><igc-icon name="face"></igc-icon
-            ></igc-avatar>
-            <igc-badge
-                [variant]="wcVariant"
-                [shape]="properties.shape"
-                [outlined]="properties.outlined"
-            >
-                <igc-icon name="bluetooth"></igc-icon>
-            </igc-badge>
+        <h3 class="sample-title">Dot Type Badges</h3>
+        <div class="badge-examples" [igSize]="properties.size">
+            <div class="badge-item">
+                <igx-badge dot type="primary" [outlined]="properties.outlined" [shape]="properties.shape"></igx-badge>
+                <span>Primary Dot</span>
+            </div>
+            <div class="badge-item">
+                <igx-badge dot type="info" [outlined]="properties.outlined"></igx-badge>
+                <span>Info Dot</span>
+            </div>
+            <div class="badge-item">
+                <igx-badge dot type="success" [outlined]="properties.outlined"></igx-badge>
+                <span>Success Dot</span>
+            </div>
+            <div class="badge-item">
+                <igx-badge dot type="warning" [outlined]="properties.outlined"></igx-badge>
+                <span>Warning Dot</span>
+            </div>
+            <div class="badge-item">
+                <igx-badge dot type="error" [outlined]="properties.outlined"></igx-badge>
+                <span>Error Dot</span>
+            </div>
+            <div class="badge-item avatar-sample">
+                <igx-avatar icon="face" shape="rounded"></igx-avatar>
+                <igx-badge dot type="success" [outlined]="properties.outlined"></igx-badge>
+                <span>Dot on Avatar</span>
+            </div>
+        </div>
+
+        <h3 class="sample-title">Type Variants</h3>
+        <div class="badge-examples">
+            <div class="badge-item">
+                <igx-badge type="primary" value="1" [outlined]="properties.outlined" [shape]="properties.shape"></igx-badge>
+                <span>Primary</span>
+            </div>
+            <div class="badge-item">
+                <igx-badge type="info" value="2" [outlined]="properties.outlined" [shape]="properties.shape"></igx-badge>
+                <span>Info</span>
+            </div>
+            <div class="badge-item">
+                <igx-badge type="success" value="3" [outlined]="properties.outlined" [shape]="properties.shape"></igx-badge>
+                <span>Success</span>
+            </div>
+            <div class="badge-item">
+                <igx-badge type="warning" value="4" [outlined]="properties.outlined" [shape]="properties.shape"></igx-badge>
+                <span>Warning</span>
+            </div>
+            <div class="badge-item">
+                <igx-badge type="error" value="5" [outlined]="properties.outlined" [shape]="properties.shape"></igx-badge>
+                <span>Error</span>
+            </div>
         </div>
     </div>
 </div>
