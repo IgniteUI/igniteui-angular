@@ -147,16 +147,12 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
                     const unmergedRec = unmergedData[i];
                     const origRecord = result[index + i];
                     if (unmergedRec.cellMergeMeta?.get(col.field)) {
-                        // deep clone of object, since we don't want to pollute the original fully merged collection.
+                        // clone of object, since we don't want to pollute the original fully merged collection.
                         const objCopy = {
                             recordRef: origRecord.recordRef,
                             ghostRecord: origRecord.ghostRecord,
-                            cellMergeMeta: new Map<string, IMergeByResult>()
+                            cellMergeMeta: new Map<string, IMergeByResult>(origRecord.cellMergeMeta.entries())
                         };
-                        // deep clone of inner map
-                        for (const [key, value] of origRecord.cellMergeMeta) {
-                            objCopy.cellMergeMeta.set(key, structuredClone(value));
-                        }
                         // update copy with new meta from unmerged data record, but just for this column
                         objCopy.cellMergeMeta?.set(col.field, unmergedRec.cellMergeMeta.get(col.field));
                         result[index + i] = objCopy;
