@@ -59,7 +59,9 @@
     ));
     @include chip-typography();
     @include column-actions-typography();
-    @include date-range-typography();
+    @include date-range-typography($categories: (
+        label: 'body-1',
+    ));
     @include dialog-typography($categories: (
         title: 'h5',
         content: 'body-1'
