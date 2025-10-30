@@ -122,7 +122,9 @@
     }
 
     %cbx-composite--hover {
-        border-color: var-get($theme, 'empty-color-hover');
+        @if $variant == 'bootstrap' or $variant == 'indigo' {
+            border-color: var-get($theme, 'empty-color-hover');
+        }
     }
 
     %cbx-composite--x {
@@ -175,6 +177,7 @@
     %cbx-composite--x--disabled {
         @if $variant == 'material' or $variant == 'fluent' {
             background: var-get($theme, 'disabled-color');
+            border-color: var-get($theme, 'disabled-color');
         }
 
         @if $variant == 'indigo' or $variant == 'bootstrap' {
@@ -262,7 +265,7 @@
     }
 
     %igx-checkbox--disabled-indeterminate-indigo {
-        @extend %igx-checkbox--indeterminate-indigo;
+        @extend %cbx-composite--x--disabled;
 
         %cbx-composite-mark {
             rect {
@@ -291,6 +294,14 @@
                 z-index: 1;
             }
         }
+
+        &:hover {
+            %cbx-composite {
+                &::before {
+                    background: var-get($theme, 'fill-color-hover');
+                }
+            }
+        }
     }
 
     %igx-checkbox--disabled-indeterminate-fluent {
@@ -299,7 +310,7 @@
         }
 
         %cbx-composite--x--disabled {
-            background: transparent;
+            border-color: var-get($theme, 'disabled-color');
 
             &::before {
                 background: var-get($theme, 'disabled-color');
@@ -307,7 +318,7 @@
         }
     }
 
-    %igx-checkbox--disabled-indeterminate-material {
+    %igx-checkbox--disabled-indeterminate {
         %cbx-composite--x--disabled {
             border-color: var-get($theme, 'disabled-indeterminate-color');
             background: var-get($theme, 'disabled-indeterminate-color');
@@ -458,11 +469,11 @@
     }
 
     %cbx-ripple--hover-checked {
-        background: var-get($theme, 'fill-color');
+        background: var-get($theme, 'fill-color-hover');
     }
 
     %cbx-ripple--hover-invalid {
-        background: var-get($theme, 'error-color');
+        background: var-get($theme, 'error-color-hover');
     }
 
     %igx-checkbox--focused-indigo {
@@ -542,6 +553,10 @@
 
     %cbx-ripple--focused-checked {
         background: var-get($theme, 'fill-color');
+    }
+
+    %cbx-ripple--focused--hover-checked {
+        background: var-get($theme, 'fill-color-hover');
     }
 
     %cbx-ripple--focused-invalid {
