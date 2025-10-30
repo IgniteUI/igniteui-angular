@@ -96,13 +96,7 @@
         display: inline-flex;
         width: max-content;
         align-items: center;
-
-        @if $indigo-theme {
-            min-height: calc(100% - #{rem(1px)}) !important;
-        } @else {
-            min-height: 100% !important;
-        }
-
+        min-height: 100% !important;
         transition: color $transition-timing, background $transition-timing;
 
         &:not(:empty) {
@@ -155,12 +149,30 @@
         [igxPrefix] {
             @extend %form-group-prefix;
             outline-style: none;
+
+            &:first-child {
+                @if $variant == 'fluent' {
+                    border-start-start-radius: calc(var-get($theme, 'border-border-radius') - var(--_fluent-input-border-size));
+                    border-end-start-radius: calc(var-get($theme, 'border-border-radius') - var(--_fluent-input-border-size));
+                } @else if $variant == "indigo" {
+                    border-start-start-radius: var-get($theme, 'box-border-radius');
+                }
+            }
         }
 
         igx-suffix,
         [igxSuffix] {
             @extend %form-group-suffix;
             outline-style: none;
+
+            &:last-child {
+                @if $variant == 'fluent' {
+                    border-start-end-radius: calc(var-get($theme, 'border-border-radius') - var(--_fluent-input-border-size));
+                    border-end-end-radius: calc(var-get($theme, 'border-border-radius') - var(--_fluent-input-border-size));
+                } @else if $variant == "indigo" {
+                    border-start-end-radius: var-get($theme, 'box-border-radius');
+                }
+            }
         }
 
         input,
@@ -1500,7 +1512,7 @@
             align-self: end;
             transform: scaleX(0);
             transform-origin: center;
-            background: var-get($theme, 'focused-secondary-color');
+            background: var-get($theme, 'focused-bottom-line-color');
             z-index: 1;
         }
     }
@@ -2084,23 +2096,6 @@
         button {
             border-radius: 0;
             height: 100%;
-        }
-    }
-
-    .igx-input-group--fluent [igxPrefix],
-    .igx-input-group--fluent igx-prefix {
-        &:first-child {
-            [igxButton]::after,
-            button::after {
-                border: {
-                    start: {
-                        start-radius: var-get($theme, 'border-border-radius');
-                    };
-                    end: {
-                        start-radius: var-get($theme, 'border-border-radius');
-                    };
-                }
-            }
         }
     }
 
