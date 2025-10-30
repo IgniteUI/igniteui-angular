@@ -210,6 +210,12 @@
             color: var-get($theme, 'clear-button-foreground-focus');
             background: var-get($theme, 'clear-button-background-focus');
         }
+
+        &%form-group-bundle--border {
+            %igx-combo__toggle-button {
+                background: var-get($theme, 'toggle-button-background-focus--border');
+            }
+        }
     }
 
     @if $variant == 'indigo' {
