@@ -25,6 +25,7 @@ import {
     type ChatAttachmentRenderContext,
     type ChatInputRenderContext,
     type ChatMessageRenderContext,
+    type IgcChatMessageReaction,
 } from 'igniteui-webcomponents';
 
 type ChatContextUnion =
@@ -98,6 +99,7 @@ export class IgxChatComponent implements OnInit, OnDestroy {
     //#region Outputs
 
     public readonly messageCreated = output<IgcChatMessage>();
+    public readonly messageReact = output<IgcChatMessageReaction>();
     public readonly attachmentClick = output<IgcChatMessageAttachment>();
     public readonly attachmentDrag = output<void>();
     public readonly attachmentDrop = output<void>();

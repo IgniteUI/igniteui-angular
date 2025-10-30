@@ -108,4 +108,8 @@ class User {
             }
         });
     }
+
+    public onMessageReact(event: any) {
+        console.log(event);
+    }
 }

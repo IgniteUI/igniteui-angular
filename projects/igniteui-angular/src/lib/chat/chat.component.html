@@ -3,6 +3,7 @@
   [draftMessage]="draftMessage()"
   [options]="_mergedOptions()"
   (igcMessageCreated)="messageCreated.emit($event.detail)"
+  (igcMessageReact)="messageReact.emit($event.detail)"
   (igcAttachmentClick)="attachmentClick.emit($event.detail)"
   (igcAttachmentDrag)="attachmentDrag.emit()"
   (igcAttachmentDrop)="attachmentDrop.emit()"
@@ -10,4 +11,6 @@
   (igcInputFocus)="inputFocus.emit()"
   (igcInputBlur)="inputBlur.emit()"
   (igcInputChange)="inputChange.emit($event.detail)"
-></igc-chat>
+>
+    <ng-content></ng-content>
+</igc-chat>
