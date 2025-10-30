@@ -10,7 +10,7 @@ import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridSortingStrategy, IGridGroupingStrategy } from '../common/strategy';
 import { GridCellMergeMode, RowPinningPosition } from '../common/enums';
-import { IGridMergeStrategy } from '../../data-operations/merge-strategy';
+import { IGridMergeStrategy, IMergeByResult } from '../../data-operations/merge-strategy';
 
 /**
  * @hidden
@@ -130,33 +130,44 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
             return collection;
         }
 
-        // collect full range of data to unmerge
-        let startIndex;
-        let endIndex;
+        let result = cloneArray(collection) as any;
         uniqueRoots.forEach(x => {
             const index = collection.indexOf(x);
-            if (!startIndex) {
-                startIndex = index;
-            } else {
-                startIndex = Math.min(startIndex, index);
-            }
             const colKeys = [...x.cellMergeMeta.keys()];
             const cols = colsToMerge.filter(col => colKeys.indexOf(col.field) !== -1);
             for (const col of cols) {
                 const childData = x.cellMergeMeta.get(col.field).childRecords;
                 const childRecs = childData.map(rec => rec.recordRef);
-                if (!endIndex) {
-                    endIndex = index + childRecs.length;
-                } else {
-                    endIndex = Math.max(endIndex, index + childRecs.length + 1);
+                if(childRecs.length === 0) {
+                    // nothing to unmerge
+                    continue;
+                }
+                const unmergedData = DataUtil.merge([x.recordRef, ...childRecs], [col], this.grid.mergeStrategy, activeRowIndexes.map(ri => ri - index), this.grid);
+                for (let i = 0; i < unmergedData.length; i++) {
+                    const unmergedRec = unmergedData[i];
+                    const origRecord = result[index + i];
+                    if (unmergedRec.cellMergeMeta?.get(col.field)) {
+                        // deep clone of object, since we don't want to pollute the original fully merged collection.
+                        const objCopy = {
+                            recordRef: origRecord.recordRef,
+                            ghostRecord: origRecord.ghostRecord,
+                            cellMergeMeta: new Map<string, IMergeByResult>()
+                        };
+                        // deep clone of inner map
+                        for (const [key, value] of origRecord.cellMergeMeta) {
+                            objCopy.cellMergeMeta.set(key, structuredClone(value));
+                        }
+                        // update copy with new meta from unmerged data record, but just for this column
+                        objCopy.cellMergeMeta?.set(col.field, unmergedRec.cellMergeMeta.get(col.field));
+                        result[index + i] = objCopy;
+                    } else {
+                        // this is the unmerged record, with no merge metadata
+                        result[index + i] = unmergedRec;
+                    }
                 }
             }
         });
-        const dataToUnmerge = collection.slice(startIndex, endIndex).map(x => x.recordRef);
-        // unmerge data where active row index breaks merge groups
-        const res = DataUtil.merge(dataToUnmerge, colsToMerge, this.grid.mergeStrategy, activeRowIndexes.map(ri => ri - startIndex), this.grid);
-        collection = collection.slice(0, startIndex).concat(res, collection.slice(startIndex + res.length));
-        return collection;
+        return result;
     }
 }
 
