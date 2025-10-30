@@ -152,7 +152,9 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
 
 		if (this.platform.isActivationKey(event)) {
             this.viewDate = date;
-            this.wrapper.nativeElement.focus();
+            if (this.platform.isBrowser && this.wrapper?.nativeElement) {
+                this.wrapper.nativeElement.focus();
+            }
 		}
 	}
 
@@ -188,9 +190,13 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
     public override activeViewDecade() {
         super.activeViewDecade();
 
-        requestAnimationFrame(() => {
-            this.dacadeView.el.nativeElement.focus();
-        });
+        if (this.platform.isBrowser) {
+            requestAnimationFrame(() => {
+                if (this.dacadeView?.el?.nativeElement) {
+                    this.dacadeView.el.nativeElement.focus();
+                }
+            });
+        }
     }
 
     /**
@@ -221,7 +227,9 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
         );
 
         this.activeView = IgxCalendarView.Year;
-        this.wrapper.nativeElement.focus();
+        if (this.platform.isBrowser && this.wrapper?.nativeElement) {
+            this.wrapper.nativeElement.focus();
+        }
     }
 
     /**
@@ -279,7 +287,9 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
     @HostListener('mousedown', ['$event'])
     protected onMouseDown(event: MouseEvent) {
         event.stopPropagation();
-        this.wrapper.nativeElement.focus();
+        if (this.platform.isBrowser && this.wrapper?.nativeElement) {
+            this.wrapper.nativeElement.focus();
+        }
     }
 
     private _showActiveDay: boolean;
