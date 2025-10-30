@@ -141,6 +141,6 @@ export class GridLocalizationSampleComponent implements OnInit {
 
     public onButtonClick() {
         console.log("Old: " + formatDate(new Date("10/10/1993"), this.inputValue, this.locale));
-        console.log("New: " + getDateFormatter().formatDateCustomFormat(new Date("10/10/1993"), this.locale, this.inputValue));
+        console.log("New: " + getDateFormatter().formatDateCustomFormat(new Date("10/10/1993"), this.inputValue, { locale:  this.locale }));
     }
 }

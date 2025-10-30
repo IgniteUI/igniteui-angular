@@ -723,7 +723,7 @@ export function formatDate(value: Date | string | number | null | undefined, for
         } else if (format?.includes('Time')) {
             timeStyle = format.replace('Time', '');
         } else if (format) {
-            return getDateFormatter().formatDateCustomFormat(value, locale, format, false, timezone);
+            return getDateFormatter().formatDateCustomFormat(value, format, { locale, timezone });
         }
         const options: Intl.DateTimeFormatOptions = {
             dateStyle,
