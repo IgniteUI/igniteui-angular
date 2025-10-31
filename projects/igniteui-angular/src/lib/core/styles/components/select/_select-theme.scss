@@ -5,7 +5,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin select($theme) {
-    @include css-vars($theme, 'igx-select');
+    @include css-vars($theme);
     $variant: map.get($theme, '_meta', 'theme');
 
     %igx-select {
@@ -46,7 +46,7 @@
     }
 
     .igx-input-group.igx-input-group--focused:not(.igx-input-group--box) {
-        @if $variant != 'fluent' and $variant != 'material' {
+        @if $variant == 'material' {
             %igx-select__toggle-button {
                 background: var-get($theme, 'toggle-button-background-focus--border');
             }

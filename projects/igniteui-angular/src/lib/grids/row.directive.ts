@@ -492,6 +492,10 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      * @internal
      */
     public ngOnDestroy() {
+        // if action strip is shown here but row is about to be destroyed, hide it.
+        if (this.grid.actionStrip && this.grid.actionStrip.context === this) {
+            this.grid.actionStrip.hide();
+        }
         this.destroy$.next(true);
         this.destroy$.complete();
     }
