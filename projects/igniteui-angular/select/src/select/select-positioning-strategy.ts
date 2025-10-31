@@ -1,4 +1,4 @@
-import { ElementDimensions, VerticalAlignment, HorizontalAlignment, PositionSettings, Util, ConnectedFit, Point, BaseFitPositionStrategy  } from 'igniteui-angular/core';
+import { ElementDimensions, VerticalAlignment, HorizontalAlignment, PositionSettings, ConnectedFit, Point, BaseFitPositionStrategy, Util  } from 'igniteui-angular/core';
 import { IPositionStrategy } from 'igniteui-angular/core';
 
 import { IgxSelectBase } from './select.common';

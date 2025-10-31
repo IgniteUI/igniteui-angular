@@ -35,6 +35,7 @@ export * from './directives/toggle/toggle.directive';
 export * from './directives/tooltip/public_api';
 export * from './directives/date-time-editor/public_api';
 export * from './directives/form-control/form-control.directive';
+export * from './directives/notification/notifications.directive';
 
 // NOTE: Input-related directives (IgxHintDirective, IgxInputDirective, IgxLabelDirective,
 // IgxPrefixDirective, IgxSuffixDirective, IgxReadonlyInputDirective) have been moved

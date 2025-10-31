@@ -1,5 +1,5 @@
-import { IgxDropDownItemComponent } from './../drop-down/drop-down-item.component';
 import { Component, Input } from '@angular/core';
+import { IgxDropDownItemComponent } from 'igniteui-angular/drop-down';
 
 @Component({
     selector: 'igx-select-item',

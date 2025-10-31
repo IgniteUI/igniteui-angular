@@ -7,6 +7,7 @@ export * from './core/types';
 export * from './core/selection';
 export * from './core/edit-provider';
 export * from './core/touch';
+export * from './core/touch-annotations';
 
 // Date common
 export * from './date-common/public_api';

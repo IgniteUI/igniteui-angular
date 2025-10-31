@@ -4,6 +4,7 @@ import { IgxDropDownItemNavigationDirective } from './drop-down-navigation.direc
 import { IgxDropDownComponent } from './drop-down.component';
 
 export * from './drop-down.component';
+export * from './drop-down.base';
 export * from './drop-down-item.base';
 export * from './drop-down.common'
 export * from './drop-down-item.component';

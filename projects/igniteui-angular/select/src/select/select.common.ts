@@ -1,7 +1,6 @@
-import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
-import { IgxDropDownBaseDirective } from '../drop-down/drop-down.base';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
 import { OverlaySettings } from 'igniteui-angular/core';
+import { IgxDropDownBaseDirective, IgxDropDownItemBaseDirective } from 'igniteui-angular/drop-down';
 
 /** @hidden @internal */
 export interface IgxSelectBase extends IgxDropDownBaseDirective {

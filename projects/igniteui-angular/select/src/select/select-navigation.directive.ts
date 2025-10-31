@@ -1,8 +1,8 @@
-import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
 import { Directive, Input, OnDestroy } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
 import { IgxSelectItemComponent } from './select-item.component';
 import { IgxSelectBase } from './select.common';
+import { IgxDropDownItemNavigationDirective } from 'igniteui-angular/drop-down';
 
 /** @hidden @internal */
 @Directive({
