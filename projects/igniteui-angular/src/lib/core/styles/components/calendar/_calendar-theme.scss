@@ -769,23 +769,6 @@
             cursor: pointer;
         }
 
-        &::after {
-            content: '';
-            position: absolute;
-            z-index: 0;
-            border: $border-size solid transparent;
-            border-radius: calc(var-get($theme, 'date-special-border-radius') - $border-size);
-
-            @if $variant == 'fluent' {
-                width: $date-inner-size;
-                height: $date-inner-size;
-            } @else {
-                // By default initial size of the inner element is the same as the date size
-                width: $date-size;
-                height: $date-size;
-            }
-        }
-
         &%date-inner-week-number {
             min-width: auto;
             width: $date-size;
@@ -794,10 +777,6 @@
 
             // This is not an actual date and should not change it's border when changing the date border
             border-color: var-get($theme, 'week-number-background');
-
-            &::after {
-                display: none !important;
-            }
 
             &::before {
                 content: '';
@@ -862,12 +841,37 @@
 
     %date-selected-special {
         %date-inner {
+            color:  var-get($theme, 'date-selected-special-foreground');
+
+            @if $variant != 'fluent' {
+                background: var-get($theme, 'date-selected-special-background');
+            }
+
+
             &::after {
+                width: $date-inner-size;
+                height: $date-inner-size;
+
+                @if $variant == 'fluent' {
+                    background: var-get($theme, 'date-selected-special-background');
+                }
+
                 border-color: var-get($theme, 'date-selected-special-border-color');
             }
 
             &:hover {
+                color:  var-get($theme, 'date-selected-special-hover-foreground');
+
+                @if $variant != 'fluent' {
+                    background: var-get($theme, 'date-selected-special-hover-background');
+                }
+
                 &::after {
+
+                    @if $variant == 'fluent' {
+                        background: var-get($theme, 'date-selected-special-hover-background');
+                    }
+
                     border-color: var-get($theme, 'date-selected-special-hover-border-color');
                 }
             }
@@ -876,10 +880,18 @@
 
     %date-selected-special-active {
         %date-inner {
+            color:  var-get($theme, 'date-selected-special-focus-foreground');
+
+            @if $variant != 'fluent' {
+                background: var-get($theme, 'date-selected-special-focus-background');
+            }
+
             &::after {
-                @if $variant != 'fluent' {
-                    border-color: var-get($theme, 'date-selected-special-focus-border-color');
+                @if $variant == 'fluent' {
+                    background: var-get($theme, 'date-selected-special-focus-background');
                 }
+
+                border-color: var-get($theme, 'date-selected-special-focus-border-color');
             }
         }
     }
@@ -900,39 +912,25 @@
 
     %date-selected-special-range {
         %date-inner {
-            color: var-get($theme, 'date-special-range-foreground');
-            background: var-get($theme, 'date-special-range-background');
+            @if $variant != 'fluent' {
+                color: var-get($theme, 'date-special-range-foreground');
+                background: var-get($theme, 'date-special-range-background');
+            }
 
             &:hover {
-                color: var-get($theme, 'date-special-hover-foreground');
-                background: var-get($theme, 'date-special-range-hover-background');
+                @if $variant != 'fluent' {
+                    color: var-get($theme, 'date-special-range-hover-foreground');
+                    background: var-get($theme, 'date-special-range-hover-background');
+                }
 
-                @if $variant == 'indigo' {
-                    // stylelint-disable-next-line
-                    &::after {
-                        border-color: var-get($theme, 'date-special-hover-border-color');
-                    }
+                &::after {
+                    border-color: var-get($theme, 'date-special-range-hover-border-color');
                 }
             }
 
-            @if $variant == 'material' {
+            @if $variant != 'fluent' {
                 &::after {
                     border-color: var-get($theme, 'date-special-range-border-color');
-                }
-
-                &:hover {
-                    //color: var-get($theme, 'date-special-hover-foreground');
-
-                    // stylelint-disable-next-line
-                    &::after {
-                        border-color: var-get($theme, 'date-special-hover-border-color');
-                    }
-                }
-            }
-
-            @if $variant == 'bootstrap' or $variant == 'indigo' {
-                &::after {
-                    border-color: var-get($theme, 'date-special-border-color');
                 }
             }
         }
@@ -952,11 +950,13 @@
 
     %date-selected-special-range-active {
         %date-inner {
-            color: var-get($theme, 'date-special-focus-foreground');
-            background: var-get($theme, 'date-special-range-focus-background');
+            @if $variant != 'fluent' {
+                color: var-get($theme, 'date-special-range-focus-foreground');
+                background: var-get($theme, 'date-special-range-focus-background');
+            }
 
             &::after {
-                border-color: var-get($theme, 'date-special-hover-border-color');
+                border-color: var-get($theme, 'date-special-range-focus-border-color');
             }
         }
     }
@@ -964,17 +964,19 @@
     %date-current {
         %date-inner {
             color: var-get($theme, 'date-current-foreground');
-            border-color: var-get($theme, 'date-current-border-color');
+
 
             @if $variant != 'fluent' {
                 background: var-get($theme, 'date-current-background');
+                border-color: var-get($theme, 'date-current-border-color');
+                border-radius: var-get($theme, 'date-current-border-radius');
             }
 
             &:hover {
                 color: var-get($theme, 'date-current-hover-foreground');
-                border-color: var-get($theme, 'date-current-hover-border-color');
 
                 @if $variant != 'fluent' {
+                    border-color: var-get($theme, 'date-current-hover-border-color');
                     background: var-get($theme, 'date-current-hover-background');
                 }
             }
@@ -988,10 +990,18 @@
                     height: $date-inner-size;
                     border-radius: calc(var-get($theme, 'date-current-border-radius') - ($border-size * 2));
                     background: var-get($theme, 'date-current-background');
+                    border: $border-size solid var-get($theme, 'date-current-border-color');
                 }
 
                 &::after {
                     border-radius: calc(var-get($theme, 'date-current-border-radius') - $border-size);
+                }
+
+                &:hover {
+                    &::before {
+                        background: var-get($theme, 'date-current-hover-background');
+                        border-color: var-get($theme, 'date-current-hover-border-color');
+                    }
                 }
             }
 
@@ -1000,6 +1010,98 @@
                     width: $date-size;
                     height: $date-size;
                 }
+            }
+        }
+    }
+
+    %date-selected-current-first,
+    %date-selected-current-last,
+    %date-selected-current-first-last,
+    %date-selected-special-first,
+    %date-selected-special-last,
+    %date-selected-special-first-last {
+        @if $variant == 'material' or $variant == 'bootstrap' {
+            %date-inner {
+                color: var-get($theme, 'date-selected-foreground');
+                background: var-get($theme, 'date-selected-background');
+
+                &:hover {
+                    color: var-get($theme, 'date-selected-hover-foreground');
+                    background: var-get($theme, 'date-selected-hover-background');
+                }
+            }
+        }
+    }
+
+    %date-selected-current-first,
+    %date-selected-current-last,
+    %date-selected-current-first-last {
+        @if $variant == 'material' or $variant == 'bootstrap' {
+            %date-inner {
+                border-color: var-get($theme, 'date-current-border-color');
+
+                &:hover {
+                    border-color: var-get($theme, 'date-current-hover-border-color');
+                }
+            }
+        }
+    }
+
+    %date-selected-current-first-last {
+        @if $variant == 'fluent' {
+            %date-inner {
+                color: var-get($theme, 'date-current-foreground');
+
+                &::before {
+                    background: var-get($theme, 'date-current-background');
+                    border-color: var-get($theme, 'date-current-border-color');
+                }
+
+                &:hover {
+                    color: var-get($theme, 'date-current-foreground');
+
+                    &::before {
+                        background: var-get($theme, 'date-current-background');
+                        border-color: var-get($theme, 'date-current-hover-border-color');
+                    }
+                }
+            }
+        }
+    }
+
+    %date-selected-current-first-last-active {
+       @if $variant == 'fluent' {
+           %date-inner {
+               color: var-get($theme, 'date-current-foreground');
+
+               &::before {
+                   background: var-get($theme, 'date-current-background');
+                   border-color: var-get($theme, 'date-current-focus-border-color');
+               }
+           }
+       }
+    }
+
+    %date-selected-current-first-active,
+    %date-selected-current-last-active,
+    %date-selected-current-first-last-active,
+    %date-selected-special-first-active,
+    %date-selected-special-last-active,
+    %date-selected-special-first-last-active {
+        @if $variant == 'material' or $variant == 'bootstrap' {
+            %date-inner {
+                color: var-get($theme, 'date-selected-focus-foreground');
+                background: var-get($theme, 'date-selected-focus-background');
+            }
+        }
+    }
+
+    %date-selected-current-first-active,
+    %date-selected-current-last-active,
+    %date-selected-current-first-last-active, {
+        @if $variant == 'material' or $variant == 'bootstrap' {
+            %date-inner {
+                border-color: var-get($theme, 'date-current-focus-border-color');
             }
         }
     }
@@ -1013,8 +1115,16 @@
     %date-current-active {
         %date-inner {
             color: var-get($theme, 'date-current-focus-foreground');
-            background: var-get($theme, 'date-current-focus-background');
-            border-color: var-get($theme, 'date-current-focus-border-color');
+
+            @if $variant != 'fluent' {
+                background: var-get($theme, 'date-current-focus-background');
+                border-color: var-get($theme, 'date-current-focus-border-color');
+            } @else {
+                &::before {
+                    background: var-get($theme, 'date-current-focus-background');
+                    border-color: var-get($theme, 'date-current-focus-border-color');
+                }
+            }
         }
     }
 
@@ -1028,27 +1138,87 @@
 
     %date-special {
         %date-inner {
+            color: var-get($theme, 'date-special-foreground');
+
             @if $variant == 'indigo' {
                 font-weight: 700;
             }
 
-            color: var-get($theme, 'date-special-foreground');
-            background: var-get($theme, 'date-special-background');
+            @if $variant != 'fluent' {
+                background: var-get($theme, 'date-special-background');
+                border-radius: var-get($theme, 'date-special-border-radius');
+            }
 
             &::after {
-                border-color: var-get($theme, 'date-special-border-color');
+                content: '';
+                position: absolute;
+                border: $border-size solid var-get($theme, 'date-special-border-color');
 
-                @if $variant == 'bootstrap' or $variant == 'fluent'  {
+                @if $variant == 'fluent' {
+                    background: var-get($theme, 'date-special-background');
+                    border-radius: var-get($theme, 'date-special-border-radius');
+                    width: $date-inner-size;
+                    height: $date-inner-size;
+                    z-index: -1;
+                } @else {
+                    z-index: 0;
+                    width: $date-size;
+                    height: $date-size;
+                    border-radius: calc(var-get($theme, 'date-special-border-radius') - $border-size);
+                }
+
+                @if $variant == 'bootstrap' {
                     border-radius: calc(var-get($theme, 'date-special-border-radius') - ($border-size * 2));
                 }
             }
 
             &:hover {
                 color: var-get($theme, 'date-special-hover-foreground');
-                background: var-get($theme, 'date-special-hover-background');
+
+                @if $variant != 'fluent' {
+                    background: var-get($theme, 'date-special-hover-background');
+                }
 
                 &::after {
                     border-color: var-get($theme, 'date-special-hover-border-color');
+
+                    @if $variant == 'fluent' {
+                        background: var-get($theme, 'date-special-hover-background');
+                    }
+                }
+            }
+        }
+    }
+
+    %date-special-range {
+        %date-inner {
+            color: var-get($theme, 'date-special-range-foreground');
+
+            @if $variant != 'fluent' {
+                background: var-get($theme, 'date-special-range-background');
+            }
+
+            &::after {
+                border-color: var-get($theme, 'date-special-range-border-color');
+
+                @if $variant == 'fluent' {
+                    background: var-get($theme, 'date-special-range-background');
+                }
+            }
+
+            &:hover {
+                color: var-get($theme, 'date-special-range-hover-foreground');
+
+                @if $variant != 'fluent' {
+                    background: var-get($theme, 'date-special-range-hover-background');
+                }
+
+                &::after {
+                    border-color: var-get($theme, 'date-special-range-hover-border-color');
+
+                    @if $variant == 'fluent' {
+                        background: var-get($theme, 'date-special-range-hover-background');
+                    }
                 }
             }
         }
@@ -1056,20 +1226,126 @@
 
     %date-special-active {
         %date-inner {
-            background: var-get($theme, 'date-special-focus-background');
             color: var-get($theme, 'date-special-focus-foreground');
 
+            @if $variant != 'fluent' {
+                background: var-get($theme, 'date-special-focus-background');
+            }
+
             &::after {
-                border-color: var-get($theme, 'date-special-hover-border-color');
+                @if $variant == 'fluent' {
+                    background: var-get($theme, 'date-special-focus-background');
+                }
+
+                border-color: var-get($theme, 'date-special-focus-border-color');
             }
         }
     }
 
+    %date-special-range-active {
+        %date-inner {
+            color: var-get($theme, 'date-special-range-focus-foreground');
+
+            @if $variant != 'fluent' {
+                background: var-get($theme, 'date-special-range-focus-background');
+            }
+
+            &::after {
+                @if $variant == 'fluent' {
+                    background: var-get($theme, 'date-special-range-focus-background');
+                }
+
+                border-color: var-get($theme, 'date-special-range-focus-border-color');
+            }
+        }
+    }
+
+
+    @if $variant == 'fluent' {
+        // Revert hover and focus styles for special and special current dates in range preview
+        // They have to look the same as idle special/current dates, so no :hover or :focus styles in range preview
+        %date-special-range-preview {
+            %date-inner {
+                color: var-get($theme, 'date-special-foreground');
+
+                &::after {
+                    background: var-get($theme, 'date-special-background');
+                    border-color: var-get($theme, 'date-special-border-color');
+                }
+
+                &:hover {
+                    color: var-get($theme, 'date-special-foreground');
+                    background: transparent;
+
+                    &::after {
+                        background: var-get($theme, 'date-special-background');
+                        border-color: var-get($theme, 'date-special-border-color');
+                    }
+                }
+            }
+        }
+
+        %date-special-range-preview-active {
+            %date-inner {
+                color: var-get($theme, 'date-special-foreground');
+                background: transparent;
+
+                &::after {
+                    background: var-get($theme, 'date-special-background');
+                    border-color: var-get($theme, 'date-special-border-color');
+                }
+            }
+        }
+
+        %date-special-current-range-preview {
+            %date-inner {
+                color: var-get($theme, 'date-current-foreground');
+
+                &::after {
+                    background: var-get($theme, 'date-current-background');
+                    border-color: var-get($theme, 'date-current-foreground');
+                }
+
+                &:hover {
+                    color: var-get($theme, 'date-current-foreground');
+                    background: transparent;
+
+                    &::after {
+                        background: var-get($theme, 'date-current-background');
+                        border-color: var-get($theme, 'date-current-foreground');
+                    }
+                }
+            }
+        }
+
+        %date-special-current-range-preview-active {
+            %date-inner {
+                color: var-get($theme, 'date-current-foreground');
+                background: transparent;
+
+                &::after {
+                    background: var-get($theme, 'date-current-background');
+                    border-color: var-get($theme, 'date-current-foreground');
+                }
+            }
+        }
+    }
+
+
     %date-special-current {
         %date-inner {
-            @if $variant == 'material' or $variant == 'indigo' {
-                &:hover {
-                    color: var-get($theme, 'date-special-hover-foreground');
+            @if $variant != 'fluent' {
+                border-radius: var-get($theme, 'date-current-border-radius');
+            }
+
+            &::after {
+                border-radius: var-get($theme, 'date-current-border-radius');
+            }
+
+            @if $variant == 'material' {
+                &::after {
+                    width: $date-inner-size;
+                    height: $date-inner-size;
                 }
             }
 
@@ -1092,6 +1368,7 @@
                 color: var-get($theme, 'date-current-foreground');
 
                 &::after {
+                    background: var-get($theme, 'date-current-background');
                     border-color: var-get($theme, 'date-current-foreground');
                     width: sizable(rem(22px), rem(24px), rem(28px));
                     height: sizable(rem(22px), rem(24px), rem(28px));
@@ -1119,9 +1396,32 @@
         }
     }
 
+    @if $variant == 'fluent' {
+        %date-special-current-selected {
+            %date-inner {
+                &::after {
+                    border-color: var-get($theme, 'date-selected-current-foreground');
+                    background: var-get($theme, 'date-selected-current-background');
+                }
+
+                &:hover {
+                    &::after {
+                        border-color: var-get($theme, 'date-selected-current-hover-foreground');
+                        background: var-get($theme, 'date-selected-current-hover-background');
+                    }
+                }
+            }
+        }
+    }
+
     %date-special-current-selected-active {
         %date-inner {
             &::after {
+                @if $variant == 'fluent' {
+                    border-color: var-get($theme, 'date-selected-current-focus-foreground');
+                    background: var-get($theme, 'date-selected-current-focus-background');
+                }
+
                 @if $variant != 'fluent' {
                     border-color: var-get($theme, 'date-selected-special-border-color');
                 }
@@ -1143,6 +1443,74 @@
         }
     }
 
+    %date-selected-first-last {
+        @if $variant == 'fluent' {
+            %date-inner {
+                border-color: var-get($theme, 'date-range-preview-border-color');
+
+                &:hover {
+                    border-color: var-get($theme, 'date-range-preview-border-color');
+                }
+            }
+        }
+    }
+
+    %date-selected-first-last-active {
+        @if $variant == 'fluent' {
+            %date-inner {
+                border-color: var-get($theme, 'date-range-preview-border-color');
+            }
+        }
+    }
+
+    %date-selected-first-last-not-special-currnet {
+        @if $variant == 'fluent' {
+            %date-inner {
+                color: var-get($theme, 'content-foreground');
+
+                &:hover {
+                    color: var-get($theme, 'content-foreground');
+                }
+            }
+        }
+    }
+
+    %date-selected-first-last-active-not-special-currnet {
+        @if $variant == 'fluent' {
+            %date-inner {
+                color: var-get($theme, 'content-foreground');
+
+                &:hover {
+                    color: var-get($theme, 'content-foreground');
+                }
+            }
+        }
+    }
+
+    %date-selected-weekend-first-last-not-special-currnet {
+        @if $variant == 'fluent' {
+            %date-inner {
+                color: var-get($theme, 'weekend-color');
+
+                &:hover {
+                    color: var-get($theme, 'weekend-color');
+                }
+            }
+        }
+    }
+
+    %date-selected-weekend-first-last-active-not-special-currnet {
+        @if $variant == 'fluent' {
+            %date-inner {
+                color: var-get($theme, 'weekend-color');
+
+                &:hover {
+                    color: var-get($theme, 'weekend-color');
+                }
+            }
+        }
+    }
+
     %date-selected-active {
         %date-inner {
             color: var-get($theme, 'date-selected-focus-foreground');
@@ -1154,13 +1522,32 @@
     %date-selected-current {
         %date-inner {
             color: var-get($theme, 'date-selected-current-foreground');
-            background: var-get($theme, 'date-selected-current-background') ;
-            border-color: var-get($theme, 'date-selected-current-border-color');
+
 
             &:hover {
                 color: var-get($theme, 'date-selected-current-hover-foreground');
-                background: var-get($theme, 'date-selected-current-hover-background');
-                border-color: var-get($theme, 'date-selected-current-hover-border-color');
+            }
+
+            @if $variant != 'fluent' {
+                background: var-get($theme, 'date-selected-current-background') ;
+                border-color: var-get($theme, 'date-selected-current-border-color');
+
+                &:hover {
+                    background: var-get($theme, 'date-selected-current-hover-background');
+                    border-color: var-get($theme, 'date-selected-current-hover-border-color');
+                }
+            } @else  {
+                &::before {
+                    background: var-get($theme, 'date-selected-current-background') ;
+                    border-color: var-get($theme, 'date-selected-current-border-color');
+                }
+
+                &:hover {
+                    &::before {
+                        background: var-get($theme, 'date-selected-current-hover-background');
+                        border-color: var-get($theme, 'date-selected-current-hover-border-color');
+                    }
+                }
             }
         }
     }
@@ -1168,8 +1555,17 @@
     %date-selected-current-active {
         %date-inner {
             color: var-get($theme, 'date-selected-current-focus-foreground');
-            background: var-get($theme, 'date-selected-current-focus-background');
-            border-color: var-get($theme, 'date-selected-current-focus-border-color');
+
+            @if $variant != 'fluent' {
+                background: var-get($theme, 'date-selected-current-focus-background');
+                border-color: var-get($theme, 'date-selected-current-focus-border-color');
+            } @else {
+                &::before {
+                    color: var-get($theme, 'date-selected-current-focus-foreground');
+                    background: var-get($theme, 'date-selected-current-focus-background');
+                    border-color: var-get($theme, 'date-selected-current-focus-border-color');
+                }
+            }
         }
     }
 
@@ -1198,32 +1594,36 @@
         }
     }
 
-    @if $variant == 'fluent' {
-        %date-selected-current-special {
-            %date-inner {
-                &::after {
-                    border-color: var-get($theme, 'date-selected-current-background');
-                }
-            }
-        }
-    }
+    //@if $variant == 'fluent' {
+    //    %date-selected-current-special {
+    //        %date-inner {
+    //            &::after {
+    //                border-color: var-get($theme, 'date-selected-current-background');
+    //            }
+    //        }
+    //    }
+    //}
 
     %date-inactive {
         cursor: default;
 
         %date-inner {
             color: var-get($theme, 'inactive-color');
+            border-color: transparent;
 
             &:hover {
-                color: var-get($theme, 'inactive-color');
+                color: var-get($theme, 'date-hover-foreground');
+                border-color: transparent;
             }
         }
     }
 
-    %date-inactive-special {
-        %date-inner {
-            &::after {
-                border-color: transparent;
+    @if $variant == 'fluent' {
+        %date-inactive-range-preview {
+            %date-inner {
+                &:hover {
+                    color: var-get($theme, 'inactive-color');
+                }
             }
         }
     }
@@ -1231,35 +1631,38 @@
     %date-selected-current-range {
         %date-inner {
             color: var-get($theme, 'date-selected-current-range-foreground');
-            background: var-get($theme, 'date-selected-current-range-background');
+
+            @if $variant != 'fluent' {
+                background: var-get($theme, 'date-selected-current-range-background');
+            }
+
+            @if $variant == 'fluent' {
+                &::before {
+                    background: var-get($theme, 'date-selected-current-range-background');
+                }
+            }
 
             @if $variant == 'material' or $variant == 'bootstrap'  {
                 border-color: var-get($theme, 'date-selected-current-border-color');
             }
 
-            @if $variant == 'indigo' {
-                border-color: transparent;
-
-                &::after {
-                    border-color: var-get($theme, 'date-current-border-color');
-                }
-            }
 
             &:hover {
                 color: var-get($theme, 'date-selected-current-range-hover-foreground');
-                background: var-get($theme, 'date-selected-current-range-hover-background');
+
+
+                @if $variant != 'fluent' {
+                    background: var-get($theme, 'date-selected-current-range-hover-background');
+                }
+
+                @if $variant == 'fluent' {
+                    &::before {
+                        background: var-get($theme, 'date-selected-current-range-hover-background');
+                    }
+                }
 
                 @if $variant == 'material' or $variant == 'bootstrap' {
                     border-color: var-get($theme, 'date-selected-current-hover-border-color');
-                }
-
-                @if $variant == 'indigo' {
-                    border-color: transparent;
-
-                    // stylelint-disable-next-line
-                    &::after {
-                        border-color: var-get($theme, 'date-current-hover-border-color');
-                    }
                 }
             }
         }
@@ -1268,18 +1671,19 @@
     %date-selected-current-range-active {
         %date-inner {
             color: var-get($theme, 'date-selected-current-range-focus-foreground');
-            background: var-get($theme, 'date-selected-current-range-focus-background');
+
+            @if $variant != 'fluent' {
+                background: var-get($theme, 'date-selected-current-range-focus-background');
+            }
+
+            @if $variant == 'fluent' {
+                &::before {
+                    background: var-get($theme, 'date-selected-current-range-focus-background');
+                }
+            }
 
             @if $variant == 'material' or $variant == 'bootstrap' {
                 border-color: var-get($theme, 'date-selected-current-focus-border-color');
-            }
-
-            @if $variant == 'indigo' {
-                border-color: transparent;
-
-                &::after {
-                    border-color: var-get($theme, 'date-current-focus-border-color');
-                }
             }
         }
     }
@@ -1303,33 +1707,37 @@
     }
 
     %date-selected-current-range-special {
+        @if $variant == 'fluent' {
+            %date-inner {
+                &::after {
+                    background: var-get($theme, 'date-selected-current-range-background');
+                }
+
+                &:hover {
+                    &::after {
+                        background: var-get($theme, 'date-selected-current-range-hover-background');
+                    }
+                }
+            }
+        }
+    }
+
+    %date-selected-current-range-special-active {
+        @if $variant == 'fluent' {
+            %date-inner {
+                &::after {
+                    background: var-get($theme, 'date-selected-current-range-focus-background');
+                }
+            }
+        }
+    }
+
+    %date-selected-current-range-special-not-first-last {
         %date-inner {
             @if $variant != 'fluent' {
                 color: var-get($theme, 'date-special-range-foreground');
             } @else {
                 color: var-get($theme, 'date-selected-current-range-foreground');
-            }
-
-            @if $variant == 'indigo' {
-                border-color: var-get($theme, 'date-current-border-color');
-            }
-
-            &:hover {
-                @if $variant == 'fluent' {
-                    color: var-get($theme, 'date-selected-current-range-foreground');
-                } @else {
-                    color: var-get($theme, 'date-special-hover-foreground');
-
-                    // stylelint-disable-next-line
-                    &::after {
-                        border-color: var-get($theme, 'date-special-hover-border-color');
-                    }
-                }
-
-                @if $variant == 'indigo' {
-                    background: var-get($theme, 'date-selected-current-range-hover-background');
-                    border-color: var-get($theme, 'date-current-hover-border-color');
-                }
             }
 
             &::after {
@@ -1347,7 +1755,7 @@
                 }
 
                 @if $variant == 'fluent' {
-                    border-color: var-get($theme, 'date-current-foreground');
+                    border-color: var-get($theme, 'date-selected-current-foreground');
                 }
 
                 @if $variant == 'material' or $variant == 'bootstrap' {
@@ -1358,14 +1766,50 @@
                     border-color: var-get($theme, 'date-special-range-border-color');
                 }
             }
+
+            &:hover {
+                @if $variant == 'fluent' {
+                    color: var-get($theme, 'date-selected-current-range-foreground');
+
+                    &::after {
+                        border-color: var-get($theme, 'date-selected-current-hover-foreground');
+                    }
+
+                } @else {
+                    color: var-get($theme, 'date-special-hover-foreground');
+
+                    // stylelint-disable-next-line
+                    &::after {
+                        border-color: var-get($theme, 'date-special-hover-border-color');
+                    }
+                }
+
+                @if $variant == 'indigo' {
+                    background: var-get($theme, 'date-selected-current-range-hover-background');
+                    border-color: var-get($theme, 'date-current-hover-border-color');
+                }
+
+                @if $variant == 'material' or $variant == 'bootstrap' {
+
+                    // stylelint-disable-next-line
+                    &::after {
+                        border-color: var-get($theme, 'date-special-range-hover-border-color');
+                    }
+                }
+            }
         }
     }
 
-    %date-selected-current-range-special-active:not(%date-selected-current-range-special-first),
-    %date-selected-current-range-special-active:not(%date-selected-current-range-special-last) {
+    %date-selected-current-range-special-active-not-first-last {
         %date-inner {
             @if not $bootstrap-theme and not $variant == 'fluent' {
                 color: var-get($theme, 'date-special-focus-foreground');
+            }
+
+            @if $variant == 'fluent' {
+                &::after {
+                    border-color: var-get($theme, 'date-selected-current-focus-foreground');
+                }
             }
 
             @if $variant == 'indigo' {
@@ -1374,6 +1818,13 @@
 
                 &::after {
                     border-color: var-get($theme, 'date-special-hover-border-color');
+                }
+            }
+
+            @if $variant == 'material' {
+                // stylelint-disable-next-line
+                &::after {
+                    border-color: var-get($theme, 'date-special-range-focus-border-color');
                 }
             }
         }
@@ -1446,17 +1897,68 @@
         }
     }
 
-    %date-range-selected-active-first {
-        %date-inner {
-            color: var-get($theme, 'date-selected-focus-foreground');
-            background: var-get($theme, 'date-selected-focus-background');
+    %date-range-selected-special {
+        @if $variant == 'fluent' {
+            %date-inner {
+                &:hover {
+                    color: var-get($theme, 'date-special-range-hover-foreground');
+
+                    &::after {
+                        background: var-get($theme, 'date-special-range-hover-background');
+                        border-color: var-get($theme, 'date-special-range-hover-border-color');
+                    }
+                }
+            }
         }
     }
 
+    %date-range-selected-special-active {
+        @if $variant == 'fluent' {
+            %date-inner {
+                color: var-get($theme, 'date-special-range-focus-foreground');
+
+                &::after {
+                    background: var-get($theme, 'date-special-range-focus-background');
+                    border-color: var-get($theme, 'date-special-range-focus-border-color');
+                }
+            }
+        }
+    }
+
+    %date-range-selected-special-current {
+        %date-inner {
+            &::after {
+                border-color: var-get($theme, 'date-selected-current-foreground');
+            }
+
+            &:hover {
+                &::after {
+                    border-color: var-get($theme, 'date-selected-current-hover-foreground');
+                }
+            }
+        }
+    }
+
+    %date-range-selected-special-current-active {
+        %date-inner {
+            &::after {
+                border-color: var-get($theme, 'date-selected-current-focus-foreground');
+            }
+        }
+    }
+
+    %date-range-selected-active-first,
     %date-range-selected-active-last {
         %date-inner {
-            color: var-get($theme, 'date-selected-focus-foreground');
-            background: var-get($theme, 'date-selected-focus-background');
+            @if $variant != 'fluent' {
+                color: var-get($theme, 'date-selected-focus-foreground');
+                background: var-get($theme, 'date-selected-focus-background');
+            }
+
+            @if $variant == 'fluent' {
+                color: var-get($theme, 'date-selected-range-focus-foreground');
+                background: var-get($theme, 'date-selected-range-focus-background');
+            }
         }
     }
 
@@ -1471,9 +1973,16 @@
 
             @if $variant == 'fluent' {
                 height: 100%;
+                border-radius: var-get($theme, 'date-range-border-radius');
             } @else {
                 height: $date-height;
             }
+        }
+    }
+
+    %date-range-not-first-last-current-special {
+        %date-inner {
+            border-color: transparent;
         }
     }
 
@@ -1484,8 +1993,7 @@
 
     %date-range-selected-first,
     %date-range-selected-last {
-        background: transparent;
-        border-block-color: transparent;
+        z-index: 0;
 
         @if $variant == 'fluent' {
             %date-inner {
@@ -1498,15 +2006,12 @@
             }
         }
 
-        z-index: 0;
-
         &::after {
             position: absolute;
             content: '';
             z-index: -1;
             color: var-get($theme, 'date-selected-foreground');
             background: var-get($theme, 'date-selected-range-background');
-            border-block: $border-size solid transparent;
         }
 
         &::before {
@@ -1515,6 +2020,12 @@
             height: $date-size;
             width: $date-size;
         }
+    }
+
+    %date-range-first,
+    %date-range-last {
+        background: transparent;
+        border-block-color: transparent;
     }
 
     %date-range-selected-first-disabled,
@@ -1536,6 +2047,10 @@
     %date-range-selected-special-first,
     %date-range-selected-special-last {
         %date-inner {
+            @if $variant == 'fluent' {
+               color: var-get($theme, 'date-special-range-foreground');
+            }
+
             &::after {
                 width: $date-inner-size;
                 height: $date-inner-size;
@@ -1569,42 +2084,27 @@
         }
     }
 
-    %date-selected-special-first-last {
-        %date-inner {
-            &::after {
-                @if $variant == 'material' or $variant == 'bootstrap' {
-                    border-color: var-get($theme, 'date-selected-foreground');
-                }
-
-                @if $variant == 'indigo' {
-                    border-color: var-get($theme, 'date-current-border-color');
-                }
-            }
-        }
-    }
-
-    %date-range-selected-first {
-        %date-inner {
-            color: var-get($theme, 'date-selected-foreground');
-            background: var-get($theme, 'date-selected-background');
-            border-radius: var-get($theme, 'date-range-border-radius');
-
-            &:hover {
-                color: var-get($theme, 'date-selected-hover-foreground');
-                background: var-get($theme, 'date-selected-hover-background');
-            }
-        }
-    }
-
+    %date-range-selected-first,
     %date-range-selected-last {
         %date-inner {
-            color: var-get($theme, 'date-selected-foreground');
-            background: var-get($theme, 'date-selected-background');
-            border-radius: var-get($theme, 'date-range-border-radius');
+            @if $variant != 'fluent' {
+                color: var-get($theme, 'date-selected-foreground');
+                background: var-get($theme, 'date-selected-background');
 
-            &:hover {
-                color: var-get($theme, 'date-selected-hover-foreground');
-                background: var-get($theme, 'date-selected-hover-background');
+                &:hover {
+                    color: var-get($theme, 'date-selected-hover-foreground');
+                    background: var-get($theme, 'date-selected-hover-background');
+                }
+            }
+
+            @if $variant == 'fluent' {
+                color: var-get($theme, 'date-selected-range-foreground');
+                background: var-get($theme, 'date-selected-range-background');
+
+                &:hover {
+                    color: var-get($theme, 'date-selected-range-hover-foreground');
+                    background: var-get($theme, 'date-selected-range-hover-background');
+                }
             }
         }
     }
@@ -1634,6 +2134,54 @@
         }
     }
 
+    %date-first,
+    %date-last {
+        %date-inner {
+            border-radius: var-get($theme, 'date-range-border-radius');
+        }
+    }
+
+    %date-first-special,
+    %date-last-special {
+        %date-inner {
+            @if $variant != 'fluent' {
+                border-radius: var-get($theme, 'date-special-border-radius');
+            }
+
+            &::after {
+                border-radius: var-get($theme, 'date-special-border-radius');
+            }
+        }
+    }
+
+    %date-first-current,
+    %date-last-current {
+        %date-inner {
+            @if $variant != 'fluent' {
+                border-radius: var-get($theme, 'date-current-border-radius');
+            }
+
+            &::after {
+                border-radius: var-get($theme, 'date-current-border-radius');
+            }
+        }
+    }
+
+    %date-first-current,
+    %date-first-special-current,
+    %date-last-current,
+    %date-last-special-current {
+        %date-inner {
+            @if $variant != 'fluent' {
+                border-radius: var-get($theme, 'date-current-border-radius');
+            }
+
+            &::after {
+                border-radius: var-get($theme, 'date-current-border-radius');
+            }
+        }
+    }
+
     %date-range-selected {
         &::after {
             border-block: $border-size solid var-get($theme, 'date-range-border-color');
@@ -1644,7 +2192,7 @@
                 border-color: transparent !important;
             }
 
-            @if $variant != 'fluent' and $variant != 'indigo' {
+            @if $variant == 'bootstrap' {
                 border-inline-color: transparent;
             }
 
@@ -1693,8 +2241,8 @@
 
         %date-range-selected-first {
             %date-inner {
-                border-start-end-radius: var-get($theme, 'date-border-radius');
-                border-end-end-radius: var-get($theme, 'date-border-radius');
+                border-start-end-radius: var-get($theme, 'date-range-border-radius');
+                border-end-end-radius: var-get($theme, 'date-range-border-radius');
             }
 
             &::before {
@@ -1706,8 +2254,8 @@
 
         %date-range-selected-last {
             %date-inner {
-                border-start-start-radius: var-get($theme, 'date-border-radius');
-                border-end-start-radius: var-get($theme, 'date-border-radius');
+                border-start-start-radius: var-get($theme, 'date-range-border-radius');
+                border-end-start-radius: var-get($theme, 'date-range-border-radius');
             }
 
             &::before {
@@ -1760,31 +2308,69 @@
         }
 
         %date-inner {
-            color: var-get($theme, 'date-selected-range-foreground');
+            @if $variant == 'fluent' {
+                border-color: transparent;
+            }
 
             &:hover {
-                @if not $bootstrap-theme {
-                    color: var-get($theme, 'date-selected-range-hover-foreground');
-                } @else {
+                @if $variant == 'fluent' {
+                    color: var-get($theme, 'content-foreground');
+                    background: transparent;
+                    border-color: transparent;
+                }
+
+                @if $bootstrap-theme {
                     color: var-get($theme, 'date-selected-foreground');
                 }
             }
         }
     }
 
-    %date-range-preview-inactive {
+    %date-range-preview-active {
         %date-inner {
-            color: var-get($theme, 'inactive-color');
+            @if $variant == 'fluent' {
+                color: var-get($theme, 'content-foreground');
+                background: transparent;
+            }
+        }
+    }
+
+    %date-range-preview-weekend {
+        %date-inner {
+            &:hover {
+                color: var-get($theme, 'weekend-color');
+            }
+        }
+    }
+
+    %date-range-preview-weekend-active {
+        %date-inner {
+            @if $variant == 'fluent' {
+                color: var-get($theme, 'weekend-color');
+                background: transparent;
+            }
         }
     }
 
     %date-range-preview-current {
         %date-inner {
-            color: var-get($theme, 'date-selected-current-range-foreground');
-
-            @if $variant == 'bootstrap' {
+            @if $variant == 'bootstrap'  {
                 color: var-get($theme, 'date-selected-current-range-foreground');
                 background: var-get($theme, 'date-selected-current-range-background');
+            }
+
+            @if $variant == 'fluent'  {
+                &:hover {
+                    color: var-get($theme, 'date-current-hover-foreground');
+                }
+            }
+        }
+    }
+
+    %date-range-preview-current-active {
+        %date-inner {
+            @if $variant == 'fluent'  {
+                color: var-get($theme, 'date-current-focus-foreground');
             }
         }
     }
@@ -1795,13 +2381,13 @@
         }
     }
 
-    @if $variant == 'fluent' {
-        %date-range-preview-special-current {
-            %date-inner {
-                color: var-get($theme, 'date-selected-current-range-foreground');
-            }
-        }
-    }
+    //@if $variant == 'fluent' {
+    //    %date-range-preview-special-current {
+    //        %date-inner {
+    //            color: var-get($theme, 'date-selected-current-range-foreground');
+    //        }
+    //    }
+    //}
 
     %date-first-preview,
     %date-last-preview {
@@ -1847,7 +2433,9 @@
     %date-first-preview-selected,
     %date-last-preview-selected {
         %date-inner {
-            color: var-get($theme, 'date-selected-foreground');
+            @if $variant != 'fluent' {
+                color: var-get($theme, 'date-selected-foreground');
+            }
         }
     }
 
@@ -1877,24 +2465,13 @@
         }
     }
 
-    %date-first-preview-special {
+    %date-first-preview-special,
+    %date-last-preview-special {
         %date-inner {
             &::after {
-                @if $variant == 'material' or $variant == 'bootstrap' {
+                @if $variant == 'bootstrap' {
                     width: var-get($theme, 'inner-size');
                     height: var-get($theme, 'inner-size');
-                    border-color: var-get($theme, 'date-selected-foreground');
-                }
-            }
-
-            &:hover {
-                &::after {
-                    /* stylelint-disable-next-line */
-                    @if $variant == 'material' {
-                        width: $date-size;
-                        height: $date-size;
-                        border-color: var-get($theme, 'date-special-border-color');
-                    }
                 }
             }
         }
@@ -1925,29 +2502,6 @@
         }
     }
 
-    %date-last-preview-special {
-        %date-inner {
-            &::after {
-                @if $variant == 'material' or $variant == 'bootstrap' {
-                    width: var-get($theme, 'inner-size');
-                    height: var-get($theme, 'inner-size');
-                    border-color: var-get($theme, 'date-selected-foreground');
-                }
-            }
-
-            &:hover {
-                &::after {
-                    /* stylelint-disable-next-line */
-                    @if $variant == 'material' {
-                        width: $date-size;
-                        height: $date-size;
-                        border-color: var-get($theme, 'date-special-border-color');
-                    }
-                }
-            }
-        }
-    }
-
     %date-first-preview-special-current,
     %date-last-preview-special-current {
         %date-inner {
@@ -1970,7 +2524,6 @@
                 @if $variant == 'material' {
                     width: $date-size;
                     height: $date-size;
-                    border-color: var-get($theme, 'date-special-border-color');
                 }
             }
         }
@@ -1983,7 +2536,6 @@
                 @if $variant == 'material' {
                     width: $date-inner-size;
                     height: $date-inner-size;
-                    border-color: var-get($theme, 'date-selected-foreground');
                 }
             }
         }
@@ -2004,7 +2556,9 @@
     %date-disabled {
         pointer-events: none;
         cursor: not-allowed;
+    }
 
+    %only-date-disabled {
         %date-inner {
             color: var-get($theme, 'date-disabled-foreground');
         }
@@ -2013,10 +2567,6 @@
     %date-disabled-range {
         %date-inner {
             color: var-get($theme, 'date-disabled-range-foreground');
-
-            @if $variant == 'fluent' {
-                opacity: .38;
-            }
         }
     }
 
@@ -2037,14 +2587,19 @@
 
     %date-disabled-inactive {
         %date-inner {
-            color: var-get($theme, 'inactive-color');
             opacity: 1;
+        }
+    }
+
+    %date-disabled-current {
+        %date-inner {
+            color: var-get($theme, 'date-current-foreground');
+            opacity: .38;
         }
     }
 
     %date-disabled-special {
         %date-inner {
-            color: var-get($theme, 'date-special-foreground');
             opacity: .38;
         }
     }
@@ -2054,13 +2609,6 @@
             @if $variant == 'fluent' {
                 color: var-get($theme, 'date-selected-foreground');
             }
-        }
-    }
-
-    %date-disabled-current {
-        %date-inner {
-            color: var-get($theme, 'date-current-foreground');
-            opacity: .38;
         }
     }
 
