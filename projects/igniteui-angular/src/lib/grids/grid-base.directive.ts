@@ -5632,7 +5632,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this.hasCellsToMerge) {
             return this.rowHeight;
         }
-        return this.rowHeight + 1;
+        return this.rowHeight;
     }
 
     /**
@@ -8142,8 +8142,9 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     protected updateDefaultRowHeight() {
         if (this.dataRowList.length > 0 && this.dataRowList.first.cells && this.dataRowList.first.cells.length > 0) {
-            const height = parseFloat(this.document.defaultView.getComputedStyle(this.dataRowList.first.cells.first.nativeElement)?.getPropertyValue('height'));
+            const height = parseFloat(this.document.defaultView.getComputedStyle(this.dataRowList.first.nativeElement)?.getPropertyValue('height'));
             if (height) {
+                console.log(height);
                 this._defaultRowHeight = height;
             } else {
                 this._shouldRecalcRowHeight = true;
