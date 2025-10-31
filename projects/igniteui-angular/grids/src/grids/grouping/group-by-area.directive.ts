@@ -12,11 +12,9 @@ import {
     ViewChildren
 } from '@angular/core';
 import { IChipsAreaReorderEventArgs, IgxChipComponent } from 'igniteui-angular/chips';
-import { PlatformUtil } from '../../core/utils';
-import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
-import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { FlatGridType, GridType } from '../common/grid.interface';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
+import { IGroupingExpression, PlatformUtil, SortingDirection } from 'igniteui-angular/core';
 
 /**
  * An internal component representing a base group-by drop area.

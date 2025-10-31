@@ -1,4 +1,4 @@
-import { NgTemplateOutlet, NgClass } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectorRef,
     Component,

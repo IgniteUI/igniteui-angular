@@ -20,10 +20,6 @@ import {
     booleanAttribute
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
-import { ITreeResourceStrings, TreeResourceStringsEN } from '../../core/i18n/tree-resources';
-import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
-import { IgxAngularAnimationService } from '../../services/animation/angular-animation-service';
-import { AnimationService } from '../../services/animation/animation';
 import {
     IgxTree,
     IgxTreeNode,
@@ -35,11 +31,12 @@ import {
 import { IgxTreeNavigationService } from '../tree-navigation.service';
 import { IgxTreeSelectionService } from '../tree-selection.service';
 import { IgxTreeService } from '../tree.service';
-import { IgxCircularProgressBarComponent } from '../../progressbar/progressbar.component';
-import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
-import { IgxIconComponent } from '../../icon/icon.component';
 import { NgTemplateOutlet, NgClass } from '@angular/common';
-import { getCurrentResourceStrings } from '../../core/i18n/resources';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
+import { ToggleAnimationPlayer, ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
+import { AnimationService, getCurrentResourceStrings, IgxAngularAnimationService, ITreeResourceStrings, TreeResourceStringsEN } from 'igniteui-angular/core';
 
 // TODO: Implement aria functionality
 /**

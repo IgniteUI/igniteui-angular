@@ -2,13 +2,11 @@ import { Component, DoCheck, EventEmitter, HostBinding, Inject, Input, IterableD
 import { ColumnDisplayOrder } from '../common/enums';
 import { ColumnType, GridType } from '../common/grid.interface';
 import { IColumnToggledEventArgs } from '../common/events';
-import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
-import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
-import { IgxButtonDirective } from '../../directives/button/button.directive';
-import { IgxInputDirective } from '../../directives/input/input.directive';
 import { FormsModule } from '@angular/forms';
-import { IgxInputGroupComponent } from '../../input-group/input-group.component';
+import { IgxInputDirective, IgxInputGroupComponent } from 'igniteui-angular/input-group';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { IgxButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 
 let NEXT_ID = 0;
 /**

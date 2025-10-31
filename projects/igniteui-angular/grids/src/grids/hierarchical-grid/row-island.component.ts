@@ -33,23 +33,19 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { IgxOverlayService } from 'igniteui-angular/core';
+import { IgxFlatTransactionFactory, IgxOverlayService, PlatformUtil } from 'igniteui-angular/core';
 import { first, filter, takeUntil, pluck } from 'rxjs/operators';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ISearchInfo } from '../common/events';
 import { IgxRowIslandAPIService } from './row-island-api.service';
-import { PlatformUtil } from '../../core/utils';
-import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { GridType, IGX_GRID_SERVICE_BASE, IgxGridPaginatorTemplateContext } from '../common/grid.interface';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
-import { IgxActionStripToken } from '../../action-strip/token';
-import { IgxPaginatorDirective } from '../../paginator/paginator-interfaces';
-import { IgxFlatTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IGridCreatedEventArgs } from './events';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
-import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
-import { IgxPaginatorComponent } from '../../paginator/paginator.component';
+import { IgxPaginatorComponent, IgxPaginatorDirective } from 'igniteui-angular/paginator';
+import { IgxActionStripToken } from 'igniteui-angular/action-strip';
+import { IForOfState, IgxTextHighlightService } from 'igniteui-angular/directives';
 
 /* blazorCopyInheritedMembers */
 /* blazorElement */

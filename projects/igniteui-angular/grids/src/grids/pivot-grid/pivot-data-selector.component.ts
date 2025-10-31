@@ -10,17 +10,6 @@ import {
     booleanAttribute
 } from "@angular/core";
 import { first } from "rxjs/operators";
-import { SortingDirection } from "../../data-operations/sorting-strategy";
-import { IDragBaseEventArgs, IDragGhostBaseEventArgs, IDragMoveEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective, IgxDragDirective, IgxDragHandleDirective } from "../../directives/drag-drop/drag-drop.directive";
-import { ISelectionEventArgs } from "../../drop-down/drop-down.common";
-import { IgxDropDownComponent } from "../../drop-down/drop-down.component";
-import {
-    AbsoluteScrollStrategy,
-    AutoPositionStrategy,
-    OverlaySettings,
-    PositionSettings,
-    VerticalAlignment
-} from "../../services/public_api";
 import { ColumnType, PivotGridType } from "../common/grid.interface";
 import {
     IPivotAggregator,
@@ -30,24 +19,17 @@ import {
 } from "./pivot-grid.interface";
 import { PivotUtil } from './pivot-util';
 import { IgxFilterPivotItemsPipe } from "./pivot-grid.pipes";
-import { IgxDropDownItemComponent } from "../../drop-down/drop-down-item.component";
-import { IgxDropDownItemNavigationDirective } from "../../drop-down/drop-down-navigation.directive";
-import { IgxExpansionPanelBodyComponent } from "../../expansion-panel/expansion-panel-body.component";
-import { IgxChipComponent } from "../../chips/chip.component";
-import { IgxExpansionPanelTitleDirective } from "../../expansion-panel/expansion-panel.directives";
-import { IgxExpansionPanelHeaderComponent } from "../../expansion-panel/expansion-panel-header.component";
-import { IgxExpansionPanelComponent } from "../../expansion-panel/expansion-panel.component";
-import { IgxAccordionComponent } from "../../accordion/accordion.component";
-import { IgxCheckboxComponent } from "../../checkbox/checkbox.component";
-import { IgxListItemComponent } from "../../list/list-item.component";
-import { IgxListComponent } from "../../list/list.component";
-import { IgxInputDirective } from "../../directives/input/input.directive";
-import { IgxPrefixDirective } from "../../directives/prefix/prefix.directive";
-import { IgxIconComponent } from "../../icon/icon.component";
-import { IgxInputGroupComponent } from "../../input-group/input-group.component";
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
-import { Size } from '../common/enums';
-import { GridColumnDataType } from '../../data-operations/data-util';
+import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective } from 'igniteui-angular/input-group';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxListComponent, IgxListItemComponent } from 'igniteui-angular/list';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { IgxAccordionComponent } from 'igniteui-angular/accordion';
+import { IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective } from 'igniteui-angular/expansion-panel';
+import { IDragBaseEventArgs, IDragGhostBaseEventArgs, IDragMoveEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDragDirective, IgxDragHandleDirective, IgxDropDirective } from 'igniteui-angular/directives';
+import { IgxChipComponent } from 'igniteui-angular/chips';
+import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, ISelectionEventArgs } from 'igniteui-angular/drop-down';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings, PositionSettings, Size, SortingDirection, VerticalAlignment } from 'igniteui-angular/core';
 
 interface IDataSelectorPanel {
     name: string;

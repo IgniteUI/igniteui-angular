@@ -8,25 +8,14 @@ import {
     ViewChild
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
-import { GridColumnDataType, DataUtil } from '../../../data-operations/data-util';
-import { IFilteringOperation } from '../../../data-operations/filtering-condition';
-import { IBaseEventArgs, PlatformUtil } from '../../../core/utils';
-import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
-import { IgxSelectComponent } from '../../../select/select.component';
-import { IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.directive';
 import { ExpressionUI } from './common';
 import { ColumnType } from '../../common/grid.interface';
-import { OverlaySettings } from '../../../services/overlay/utilities';
-import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll/absolute-scroll-strategy';
-import { ConnectedPositioningStrategy } from '../../../services/overlay/position/connected-positioning-strategy';
-import { IgxButtonDirective } from '../../../directives/button/button.directive';
-import { IgxInputDirective } from '../../../directives/input/input.directive';
-import { IgxInputGroupComponent } from '../../../input-group/input-group.component';
-import { IgxSelectItemComponent } from '../../../select/select-item.component';
-import { IgxIconComponent } from '../../../icon/icon.component';
-import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive';
-import { IgxIconButtonDirective } from '../../../directives/button/icon-button.directive';
+import { AbsoluteScrollStrategy, ConnectedPositioningStrategy, DataUtil, FilteringLogic, GridColumnDataType, IBaseEventArgs, IFilteringOperation, OverlaySettings, PlatformUtil } from 'igniteui-angular/core';
+import { IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular/select';
+import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective } from 'igniteui-angular/input-group';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxButtonDirective, IgxIconButtonDirective, IgxOverlayOutletDirective } from 'igniteui-angular/directives';
+import { IgxButtonGroupComponent } from 'igniteui-angular/buttonGroup';
 
 /**
  * @hidden

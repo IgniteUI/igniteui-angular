@@ -13,11 +13,11 @@ import { IgxRowDirective } from '../row.directive';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
 import { GridType } from '../common/grid.interface';
 import { IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridCellStyleClassesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe } from '../common/pipes';
-import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
-import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxRowDragDirective } from '../row-drag.directive';
-import { IgxIconComponent } from '../../icon/icon.component';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxGridForOfDirective } from 'igniteui-angular/directives';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

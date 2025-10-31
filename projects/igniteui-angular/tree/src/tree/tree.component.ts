@@ -19,7 +19,6 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
 
-import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 import {
     IGX_TREE_COMPONENT, IgxTreeSelectionType, IgxTree, ITreeNodeToggledEventArgs,
     ITreeNodeTogglingEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxTreeSearchResolver
@@ -30,6 +29,7 @@ import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 import { PlatformUtil, resizeObservable } from 'igniteui-angular/core';
+import { ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
 
 /**
  * @hidden @internal

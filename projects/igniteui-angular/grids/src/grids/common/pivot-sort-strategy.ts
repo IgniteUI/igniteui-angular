@@ -1,9 +1,9 @@
 import { parseDate } from 'igniteui-angular/core';
-import type { PivotGridType } from '../grid.interface';
 import type { IPivotGridRecord } from '../pivot-grid/pivot-grid.interface';
 import { PivotUtil } from '../pivot-grid/pivot-util';
 import { GridColumnDataType } from 'igniteui-angular/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
+import type { PivotGridType } from './grid.interface';
 
 export class DefaultPivotGridRecordSortingStrategy extends DefaultSortingStrategy {
     protected static override _instance: DefaultPivotGridRecordSortingStrategy = null;

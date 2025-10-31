@@ -9,37 +9,22 @@ import {
     HostBinding,
     Input
 } from '@angular/core';
-import { IgxInputDirective } from '../../../directives/input/input.directive';
-import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
-import { FilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
-import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
-import { GridColumnDataType } from '../../../data-operations/data-util';
-import {
-    IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
-    IgxStringFilteringOperand, IgxDateTimeFilteringOperand, IgxTimeFilteringOperand
-} from '../../../data-operations/filtering-condition';
 import { Subject } from 'rxjs';
 import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { takeUntil } from 'rxjs/operators';
-import { cloneHierarchicalArray, PlatformUtil } from '../../../core/utils';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ActiveElement, ExpressionUI, FilterListItem } from './common';
-import { IgxButtonDirective } from '../../../directives/button/button.directive';
-import { IgxCircularProgressBarComponent } from '../../../progressbar/progressbar.component';
-import { IgxTreeNodeComponent } from '../../../tree/tree-node/tree-node.component';
-import { IgxTreeComponent } from '../../../tree/tree.component';
-import { IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective } from '../../../list/list.common';
-import { IgxListItemComponent } from '../../../list/list-item.component';
-import { IgxListComponent } from '../../../list/list.component';
-import { IgxSuffixDirective } from '../../../directives/suffix/suffix.directive';
 import { NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive';
-import { IgxIconComponent } from '../../../icon/icon.component';
-import { IgxInputGroupComponent } from '../../../input-group/input-group.component';
-import { ITreeNodeSelectionEvent } from '../../../tree/common';
-import { Navigate } from '../../../drop-down/drop-down.common';
-import { Size } from '../../common/enums';
+import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective, IgxListComponent, IgxListItemComponent } from 'igniteui-angular/list';
+import { IgxButtonDirective, IgxForOfDirective } from 'igniteui-angular/directives';
+import { IgxTreeComponent, IgxTreeNodeComponent, ITreeNodeSelectionEvent } from 'igniteui-angular/tree';
+import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
+import { cloneHierarchicalArray, FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, PlatformUtil, Size } from 'igniteui-angular/core';
+import { Navigate } from 'igniteui-angular/drop-down';
+
 @Directive({
     selector: '[igxExcelStyleLoading]',
     standalone: true

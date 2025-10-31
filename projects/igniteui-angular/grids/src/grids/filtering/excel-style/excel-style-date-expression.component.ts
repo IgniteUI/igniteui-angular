@@ -1,21 +1,15 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
-import { IgxInputDirective } from '../../../directives/input/input.directive';
-import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
 import { getLocaleFirstDayOfWeek } from "@angular/common";
-import { IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.directive';
-import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
-import { IgxButtonDirective } from '../../../directives/button/button.directive';
-import { IgxDateTimeEditorDirective } from '../../../directives/date-time-editor/date-time-editor.directive';
 import { FormsModule } from '@angular/forms';
-import { IgxInputGroupComponent } from '../../../input-group/input-group.component';
-import { IgxPickerToggleComponent, IgxPickerClearComponent } from '../../../date-common/picker-icons.common';
-import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
-import { IgxSelectItemComponent } from '../../../select/select-item.component';
-import { IgxIconComponent } from '../../../icon/icon.component';
-import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive';
-import { IgxSelectComponent } from '../../../select/select.component';
-import { IgxIconButtonDirective } from '../../../directives/button/icon-button.directive';
+import { IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular/select';
+import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective } from 'igniteui-angular/input-group';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
+import { IgxPickerClearComponent, IgxPickerToggleComponent } from 'igniteui-angular/core';
+import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
+import { IgxButtonDirective, IgxDateTimeEditorDirective, IgxIconButtonDirective, IgxOverlayOutletDirective } from 'igniteui-angular/directives';
+import { IgxButtonGroupComponent } from 'igniteui-angular/buttonGroup';
 
 /**
  * @hidden

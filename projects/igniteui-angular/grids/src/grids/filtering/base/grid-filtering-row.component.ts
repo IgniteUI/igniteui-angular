@@ -14,38 +14,20 @@ import {
     HostListener,
     OnDestroy
 } from '@angular/core';
-import { GridColumnDataType, DataUtil } from '../../../data-operations/data-util';
-import { IgxDropDownComponent } from '../../../drop-down/drop-down.component';
-import { IFilteringOperation } from '../../../data-operations/filtering-condition';
-import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
-import { HorizontalAlignment, VerticalAlignment, OverlaySettings } from '../../../services/overlay/utilities';
-import { ConnectedPositioningStrategy } from '../../../services/overlay/position/connected-positioning-strategy';
-import { IgxDropDownItemComponent } from '../../../drop-down/drop-down-item.component';
-import { ISelectionEventArgs } from '../../../drop-down/drop-down.common';
 import { IgxFilteringService } from '../grid-filtering.service';
-import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll';
-import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
-import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
-import { isEqual, PlatformUtil } from '../../../core/utils';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ExpressionUI } from '../excel-style/common';
 import { ColumnType } from '../../common/grid.interface';
-import { IgxRippleDirective } from '../../../directives/ripple/ripple.directive';
-import { IgxChipComponent, IBaseChipEventArgs } from '../../../chips/chip.component';
-import { IgxChipsAreaComponent } from '../../../chips/chips-area.component';
-import { IgxButtonDirective } from '../../../directives/button/button.directive';
-import { IgxDateTimeEditorDirective } from '../../../directives/date-time-editor/date-time-editor.directive';
-import { IgxPickerToggleComponent, IgxPickerClearComponent } from '../../../date-common/picker-icons.common';
-import { IgxSuffixDirective } from '../../../directives/suffix/suffix.directive';
-import { IgxInputDirective } from '../../../directives/input/input.directive';
-import { IgxDropDownItemNavigationDirective } from '../../../drop-down/drop-down-navigation.directive';
-import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive';
-import { IgxInputGroupComponent } from '../../../input-group/input-group.component';
-import { IgxIconComponent } from '../../../icon/icon.component';
 import { NgTemplateOutlet, NgClass } from '@angular/common';
-import { IgxIconButtonDirective } from '../../../directives/button/icon-button.directive';
-import { Size } from '../../common/enums';
+import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, ISelectionEventArgs } from 'igniteui-angular/drop-down';
+import { IBaseChipEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
+import { AbsoluteScrollStrategy, ConnectedPositioningStrategy, DataUtil, FilteringLogic, GridColumnDataType, HorizontalAlignment, IFilteringExpression, IFilteringOperation, IgxPickerClearComponent, IgxPickerToggleComponent, isEqual, OverlaySettings, PlatformUtil, Size, VerticalAlignment } from 'igniteui-angular/core';
+import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
+import { IgxButtonDirective, IgxDateTimeEditorDirective, IgxIconButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 
 /**
  * @hidden
@@ -54,7 +36,28 @@ import { Size } from '../../common/enums';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-filtering-row',
     templateUrl: './grid-filtering-row.component.html',
-    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxInputGroupComponent, IgxPrefixDirective, IgxDropDownItemNavigationDirective, IgxInputDirective, IgxSuffixDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, IgxButtonDirective, NgClass, IgxRippleDirective, IgxIconButtonDirective]
+    imports: [
+        IgxDropDownComponent,
+        IgxDropDownItemComponent,
+        IgxChipsAreaComponent,
+        IgxChipComponent,
+        IgxIconComponent,
+        IgxInputGroupComponent,
+        IgxPrefixDirective,
+        IgxDropDownItemNavigationDirective,
+        IgxInputDirective,
+        IgxSuffixDirective,
+        IgxDatePickerComponent,
+        IgxPickerToggleComponent,
+        IgxPickerClearComponent,
+        IgxTimePickerComponent,
+        IgxDateTimeEditorDirective,
+        NgTemplateOutlet,
+        IgxButtonDirective,
+        NgClass,
+        IgxRippleDirective,
+        IgxIconButtonDirective
+    ]
 })
 export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     @Input()

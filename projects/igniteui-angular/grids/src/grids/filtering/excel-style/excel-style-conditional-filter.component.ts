@@ -1,21 +1,12 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { GridColumnDataType } from '../../../data-operations/data-util';
-import { IFilteringOperation } from '../../../data-operations/filtering-condition';
-import { IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.component';
-import { PlatformUtil } from '../../../core/utils';
 import { BaseFilteringComponent } from './base-filtering.component';
-import { AutoPositionStrategy } from '../../../services/overlay/position/auto-position-strategy';
-import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll/absolute-scroll-strategy';
-import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../../../services/overlay/utilities';
-import { IgxDropDownItemComponent } from '../../../drop-down/drop-down-item.component';
-import { IgxDropDownComponent } from '../../../drop-down/drop-down.component';
-import { IgxIconComponent } from '../../../icon/icon.component';
-import { IgxDropDownItemNavigationDirective } from '../../../drop-down/drop-down-navigation.directive';
 import { NgClass } from '@angular/common';
-import { ISelectionEventArgs } from '../../../drop-down/drop-down.common';
+import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, ISelectionEventArgs } from 'igniteui-angular/drop-down';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, GridColumnDataType, HorizontalAlignment, IFilteringExpression, IFilteringOperation, OverlaySettings, PlatformUtil, VerticalAlignment } from 'igniteui-angular/core';
 
 
 /**

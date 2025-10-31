@@ -3,10 +3,10 @@ import { IgxRowDirective } from '../row.directive';
 import { IgxGridNotGroupedPipe, IgxGridTopLevelColumns, IgxGridCellStylesPipe, IgxGridCellStyleClassesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe } from '../common/pipes';
 import { IgxGridExpandableCellComponent } from './expandable-cell.component';
 import { IgxGridCellComponent } from '../cell.component';
-import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
-import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxRowDragDirective } from '../row-drag.directive';
 import { NgTemplateOutlet, NgStyle, NgClass } from '@angular/common';
+import { IgxGridForOfDirective } from 'igniteui-angular/directives';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 
 /* blazorIndirectRender */
 /* blazorElement */

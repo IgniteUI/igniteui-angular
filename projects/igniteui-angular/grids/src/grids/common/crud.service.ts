@@ -3,9 +3,8 @@ import { first } from 'rxjs/operators';
 import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs } from '../common/events';
 import { GridType, RowType } from './grid.interface';
 import { Subject } from 'rxjs';
-import { copyDescriptors, isEqual, isDate } from '../../core/utils';
 import { FormGroup } from '@angular/forms';
-import { DateTimeUtil } from '../../date-common/util/date-time.util';
+import { copyDescriptors, DateTimeUtil, isDate, isEqual } from 'igniteui-angular/core';
 
 export class IgxEditRow {
     public transactionState: any;

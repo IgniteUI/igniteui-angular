@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { PlatformUtil } from '../../../core/utils';
 import { BaseFilteringComponent } from './base-filtering.component';
-import { IgxIconComponent } from '../../../icon/icon.component';
 import { NgClass } from '@angular/common';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { PlatformUtil } from 'igniteui-angular/core';
 
 /**
  * A component used for presenting Excel style clear filters UI.

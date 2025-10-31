@@ -1,4 +1,4 @@
-import { ColumnPinningPosition, FilterMode, GridCellMergeMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition, GridValidationTrigger, RowPinningPosition, Size } from './enums';
+import { ColumnPinningPosition, FilterMode, GridCellMergeMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition, GridValidationTrigger, RowPinningPosition } from './enums';
 import {
     ISearchInfo, IGridCellEventArgs, IRowSelectionEventArgs, IColumnSelectionEventArgs,
     IPinColumnCancellableEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs,
@@ -11,34 +11,19 @@ import {
     IGridContextMenuEventArgs
 } from '../common/events';
 import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef, ViewContainerRef } from '@angular/core';
-import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IGridResourceStrings } from '../../core/i18n/grid-resources';
-import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
-import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
-import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
-import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { IgxCell, IgxEditRow } from './crud.service';
 import { GridSelectionRange } from './types';
-import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
-import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { DropPosition, IgxColumnMovingService } from '../moving/moving.service';
-import { IgxOverlayOutletDirective, IgxToggleDirective } from '../../directives/toggle/toggle.directive';
 import { Observable, Subject } from 'rxjs';
 import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
-import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
-import { DataType, GridColumnDataType } from '../../data-operations/data-util';
-import { IgxFilteringOperand } from '../../data-operations/filtering-condition';
 import { IColumnEditorOptions, IColumnPipeArgs, IFieldEditorOptions, IFieldPipeArgs, ISortingOptions, MRLResizeColumnInfo } from '../columns/interfaces';
 import { IgxSummaryResult } from '../summaries/grid-summary';
-import { ISortingExpression, ISortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
-import { IGridGroupingStrategy, IGridSortingStrategy } from 'igniteui-angular/core';
-import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
-import { OverlaySettings } from '../../services/overlay/utilities';
+import { FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringStrategy, IGridGroupingStrategy, IGridMergeStrategy, IGridResourceStrings, IGridSortingStrategy, IGroupByExpandState, IGroupByRecord, IGroupingExpression, IgxFilteringOperand, ISortingExpression, ISortingStrategy, OverlaySettings, Size, SortingDirection, State, Transaction, TransactionService } from 'igniteui-angular/core';
 import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange, PivotDimensionType, IPivotUISettings } from '../pivot-grid/pivot-grid.interface';
-import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { FormControl, FormGroup, ValidationErrors } from '@angular/forms';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
-import { IGridMergeStrategy } from '../../data-operations/merge-strategy';
+import { IForOfState, IgxGridForOfDirective, IgxOverlayOutletDirective, IgxToggleDirective } from 'igniteui-angular/directives';
+import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 
 export const IGX_GRID_BASE = /*@__PURE__*/new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = /*@__PURE__*/new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
@@ -319,7 +304,7 @@ export interface FieldType {
      * The data type of the field.
      */
     /* alternateType: GridColumnDataType */
-    dataType: DataType;
+    dataType: GridColumnDataType;
 
     /**
      * Options for the editor associated with this field.

@@ -19,13 +19,13 @@ import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { GridSelectionMode } from '../common/enums';
-import { PlatformUtil } from '../../core/utils';
 import { IgxHeaderGroupStylePipe } from './pipes';
 import { IgxResizeHandleDirective } from '../resizing/resize-handle.directive';
-import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { PlatformUtil } from 'igniteui-angular/core';
 
 const Z_INDEX = 9999;
 

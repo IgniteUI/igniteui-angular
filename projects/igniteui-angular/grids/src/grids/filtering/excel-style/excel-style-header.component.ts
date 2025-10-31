@@ -1,8 +1,8 @@
 import { Component, Input, booleanAttribute } from '@angular/core';
 import { BaseFilteringComponent } from './base-filtering.component';
-import { IgxIconComponent } from '../../../icon/icon.component';
 import { NgClass } from '@angular/common';
-import { IgxIconButtonDirective } from '../../../directives/button/icon-button.directive';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxIconButtonDirective } from 'igniteui-angular/directives';
 
 /**
  * A component used for presenting Excel style header UI.

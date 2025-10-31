@@ -5,12 +5,12 @@ import {
     HostBinding,
     ChangeDetectorRef
 } from '@angular/core';
-import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { BaseFilteringComponent } from './base-filtering.component';
-import { IgxIconComponent } from '../../../icon/icon.component';
-import { IgxButtonDirective } from '../../../directives/button/button.directive';
+import { IgxButtonGroupComponent } from 'igniteui-angular/buttonGroup';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 
 /**
  * A component used for presenting Excel style column sorting UI.

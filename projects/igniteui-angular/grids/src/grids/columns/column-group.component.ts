@@ -12,7 +12,7 @@ import {
 import { takeUntil } from 'rxjs/operators';
 
 import { IgxColumnComponent } from './column.component';
-import { flatten } from '../../core/utils';
+import { flatten } from 'igniteui-angular/core';
 import { CellType, ColumnType, IgxColumnTemplateContext } from '../common/grid.interface';
 
 /* blazorElement */

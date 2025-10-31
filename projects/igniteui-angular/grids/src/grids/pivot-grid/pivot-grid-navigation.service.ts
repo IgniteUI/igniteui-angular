@@ -1,13 +1,12 @@
 import { IActiveNode, IgxGridNavigationService } from '../grid-navigation.service';
 import { Injectable } from '@angular/core';
 import { IgxPivotGridComponent } from './pivot-grid.component';
-import { HEADER_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS } from '../../core/utils';
 import { PivotUtil } from './pivot-util';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
 import { IMultiRowLayoutNode } from '../public_api';
-import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { take, timeout } from 'rxjs/operators';
 import { IPivotDimension, IPivotGridRecord, PivotSummaryPosition } from './pivot-grid.interface';
+import { HEADER_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SortingDirection } from 'igniteui-angular/core';
 
 @Injectable()
 export class IgxPivotGridNavigationService extends IgxGridNavigationService {

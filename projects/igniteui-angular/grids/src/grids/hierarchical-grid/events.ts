@@ -1,4 +1,4 @@
-import { IBaseEventArgs } from '../../core/utils';
+import { IBaseEventArgs } from 'igniteui-angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
 

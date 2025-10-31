@@ -2,25 +2,19 @@ import {
     Injectable,
     OnDestroy,
 } from '@angular/core';
-import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { Subject } from 'rxjs';
 import { takeUntil, first } from 'rxjs/operators';
-import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { IColumnResizeEventArgs, IFilteringEventArgs } from '../common/events';
-import { OverlayCancelableEventArgs, OverlayEventArgs, OverlaySettings, VerticalAlignment } from '../../services/overlay/utilities';
-import { IgxOverlayService } from '../../services/overlay/overlay';
 import { useAnimation } from '@angular/animations';
-import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
-import { IgxIconService } from '../../icon/icon.service';
 import { editor, pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { ExpressionUI, generateExpressionsList } from './excel-style/common';
 import { ColumnType, GridType } from '../common/grid.interface';
-import { formatDate } from '../../core/utils';
 import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 import { fadeIn } from 'igniteui-angular/animations';
-import { ExpressionsTreeUtil, isTree } from '../../data-operations/expressions-tree-util';
+import { AbsoluteScrollStrategy, ExpressionsTreeUtil, FilteringExpressionsTree, FilteringLogic, formatDate, IFilteringExpression, IFilteringExpressionsTree, IFilteringOperation, IgxOverlayService, isTree, OverlayCancelableEventArgs, OverlayEventArgs, OverlaySettings, VerticalAlignment } from 'igniteui-angular/core';
+import { IgxIconService } from 'igniteui-angular/icon';
+import { IForOfState } from 'igniteui-angular/directives';
+
 
 /**
  * @hidden

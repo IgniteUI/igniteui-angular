@@ -1,16 +1,7 @@
 import { Inject, Pipe, PipeTransform } from '@angular/core';
-import { cloneArray } from '../../core/utils';
-import { DataUtil } from '../../data-operations/data-util';
-import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
-import { IGroupByResult } from '../../data-operations/grouping-result.interface';
-import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
-import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { ISortingExpression } from '../../data-operations/sorting-strategy';
-import { IGridSortingStrategy, IGridGroupingStrategy } from 'igniteui-angular/core';
+import { IGridSortingStrategy, IGridGroupingStrategy, cloneArray, DataUtil, FilteringExpressionsTree, FilterUtil, IFilteringExpressionsTree, IFilteringStrategy, IGridMergeStrategy, IGroupByExpandState, IGroupingExpression, ISortingExpression, IGroupByResult } from 'igniteui-angular/core';
 import { GridCellMergeMode, RowPinningPosition } from '../common/enums';
-import { IGridMergeStrategy } from '../../data-operations/merge-strategy';
 
 /**
  * @hidden

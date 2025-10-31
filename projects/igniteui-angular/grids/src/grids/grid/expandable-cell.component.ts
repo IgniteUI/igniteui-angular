@@ -12,28 +12,19 @@ import {
     DOCUMENT
 } from '@angular/core';
 import { IgxGridCellComponent } from '../cell.component';
-import { PlatformUtil } from '../../core/utils';
 import { NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe } from '@angular/common';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { HammerGesturesManager } from '../../core/touch';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
-import { IgxOverlayService } from 'igniteui-angular/core';
+import { HammerGesturesManager, IgxOverlayService, PlatformUtil } from 'igniteui-angular/core';
 import { IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe } from '../common/pipes';
-import { IgxTooltipDirective } from '../../directives/tooltip/tooltip.directive';
-import { IgxTooltipTargetDirective } from '../../directives/tooltip/tooltip-target.directive';
-import { IgxSuffixDirective } from '../../directives/suffix/suffix.directive';
-import { IgxPrefixDirective } from '../../directives/prefix/prefix.directive';
-import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
-import { IgxTimePickerComponent } from '../../time-picker/time-picker.component';
-import { IgxDatePickerComponent } from '../../date-picker/date-picker.component';
-import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
-import { IgxFocusDirective } from '../../directives/focus/focus.directive';
-import { IgxInputDirective } from '../../directives/input/input.directive';
-import { IgxInputGroupComponent } from '../../input-group/input-group.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IgxIconComponent } from '../../icon/icon.component';
-import { IgxTextHighlightDirective } from '../../directives/text-highlight/text-highlight.directive';
-import { IgxChipComponent } from '../../chips/chip.component';
+import { IgxChipComponent } from 'igniteui-angular/chips';
+import { IgxDateTimeEditorDirective, IgxFocusDirective, IgxTextHighlightDirective, IgxTooltipDirective, IgxTooltipTargetDirective } from 'igniteui-angular/directives';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
+import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

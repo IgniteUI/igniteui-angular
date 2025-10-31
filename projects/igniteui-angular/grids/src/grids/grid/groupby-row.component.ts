@@ -16,18 +16,17 @@ import { NgTemplateOutlet, DecimalPipe, DatePipe, getLocaleCurrencyCode, Percent
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
-import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
-import { GridColumnDataType } from '../../data-operations/data-util';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridRowComponent } from './grid-row.component';
 import { GridSelectionMode } from '../common/enums';
 import { ISelectionNode } from '../common/types';
-import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
-import { IgxBadgeComponent } from '../../badge/badge.component';
-import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxColumnFormatterPipe } from '../common/pipes';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxBadgeComponent } from 'igniteui-angular/badge';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { GridColumnDataType, IGroupByRecord } from 'igniteui-angular/core';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

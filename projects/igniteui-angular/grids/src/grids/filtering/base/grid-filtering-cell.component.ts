@@ -11,17 +11,15 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import { IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { IgxFilteringService } from '../grid-filtering.service';
 import { ExpressionUI } from '../excel-style/common';
-import { IgxChipsAreaComponent } from '../../../chips/chips-area.component';
-import { IBaseChipEventArgs, IgxChipComponent } from '../../../chips/chip.component';
 import { ColumnType } from '../../common/grid.interface';
-import { IgxBadgeComponent } from '../../../badge/badge.component';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive';
-import { IgxIconComponent } from '../../../icon/icon.component';
-import { Size } from '../../common/enums';
+import { IBaseChipEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxPrefixDirective } from 'igniteui-angular/input-group';
+import { IgxBadgeComponent } from 'igniteui-angular/badge';
+import { IFilteringExpression, Size } from 'igniteui-angular/core';
 
 /**
  * @hidden

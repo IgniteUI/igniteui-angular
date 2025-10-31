@@ -1,10 +1,9 @@
 import { Pipe, PipeTransform, Inject } from '@angular/core';
-import { DataUtil } from '../../data-operations/data-util';
-import { cloneArray, columnFieldPath, resolveNestedPath } from '../../core/utils';
 import { GridType, IGX_GRID_BASE, RowType } from './grid.interface';
 import { IgxAddRow } from './crud.service';
 import { IgxSummaryOperand, IgxSummaryResult } from '../summaries/grid-summary';
 import { IgxGridRow } from '../grid-public-row';
+import { cloneArray, columnFieldPath, DataUtil, resolveNestedPath } from 'igniteui-angular/core';
 
 interface GridStyleCSSProperty {
     [prop: string]: any;

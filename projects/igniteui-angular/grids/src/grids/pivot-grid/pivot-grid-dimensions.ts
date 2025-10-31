@@ -1,6 +1,4 @@
-import { GridResourceStringsEN, IGridResourceStrings } from '../../core/i18n/grid-resources';
-import { getCurrentResourceStrings } from '../../core/i18n/resources';
-import { GridColumnDataType } from '../../data-operations/data-util';
+import { getCurrentResourceStrings, GridColumnDataType, GridResourceStringsEN, IGridResourceStrings } from 'igniteui-angular/core';
 import { IPivotDimension } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
 

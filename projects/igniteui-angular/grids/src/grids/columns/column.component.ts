@@ -20,19 +20,7 @@ import {
 } from '@angular/core';
 import { notifyChanges } from '../watch-changes';
 import { WatchColumnChanges } from '../watch-changes';
-import { GridColumnDataType } from '../../data-operations/data-util';
-import {
-    IgxFilteringOperand,
-    IgxBooleanFilteringOperand,
-    IgxNumberFilteringOperand,
-    IgxDateFilteringOperand,
-    IgxStringFilteringOperand,
-    IgxDateTimeFilteringOperand,
-    IgxTimeFilteringOperand
-} from '../../data-operations/filtering-condition';
-import { ISortingStrategy, DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxRowDirective } from '../row.directive';
-import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { CellType, ColumnType, GridType, IgxCellTemplateContext, IgxColumnTemplateContext, IgxSummaryTemplateContext, IGX_GRID_BASE } from '../common/grid.interface';
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
@@ -53,11 +41,10 @@ import {
 import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs, IColumnEditorOptions } from './interfaces';
 import { DropPosition } from '../moving/moving.service';
 import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
-import { isConstructor, PlatformUtil } from '../../core/utils';
 import { IgxGridCell } from '../grid-public-cell';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
-import { ColumnPinningPosition, Size } from '../common/enums';
-import { ExpressionsTreeUtil } from '../../data-operations/expressions-tree-util';
+import { ColumnPinningPosition } from '../common/enums';
+import { DefaultSortingStrategy, ExpressionsTreeUtil, FilteringExpressionsTree, GridColumnDataType, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, isConstructor, ISortingStrategy, PlatformUtil, Size } from 'igniteui-angular/core';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_TIME_FORMAT = 'mediumTime';

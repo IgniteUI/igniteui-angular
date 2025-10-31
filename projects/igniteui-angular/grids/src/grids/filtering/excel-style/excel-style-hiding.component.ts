@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BaseFilteringComponent } from './base-filtering.component';
-import { IgxIconComponent } from '../../../icon/icon.component';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 
 /**
  * A component used for presenting Excel style column hiding UI.

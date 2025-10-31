@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Directive, ElementRef, EventEmitter } from '@angular/core';
-import { PlatformUtil } from '../../../core/utils';
-import { IgxOverlayService } from '../../../services/overlay/overlay';
 import { ExpressionUI, FilterListItem } from './common';
+import { IgxOverlayService, PlatformUtil } from 'igniteui-angular/core';
 
 
 

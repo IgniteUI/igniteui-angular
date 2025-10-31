@@ -1,5 +1,5 @@
-import { AutoPositionStrategy } from '../../../services/overlay/position/auto-position-strategy';
-import { ConnectedFit } from '../../../services/overlay/utilities';
+import { AutoPositionStrategy, ConnectedFit } from 'igniteui-angular/core';
+
 
 /** @hidden */
 export class ExcelStylePositionStrategy extends AutoPositionStrategy {

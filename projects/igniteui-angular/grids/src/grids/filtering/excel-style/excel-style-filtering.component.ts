@@ -20,18 +20,12 @@ import {
     ViewRef,
     DOCUMENT
 } from '@angular/core';
-import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
-import { PlatformUtil, formatDate, formatCurrency } from '../../../core/utils';
-import { GridColumnDataType } from '../../../data-operations/data-util';
 import { Subscription } from 'rxjs';
 import { GridSelectionMode } from '../../common/enums';
-import { IgxFilterItem } from '../../../data-operations/filtering-strategy';
-import { formatNumber, formatPercent, getLocaleCurrencyCode, NgClass } from '@angular/common';
+import { formatCurrency, formatDate, formatNumber, formatPercent, getLocaleCurrencyCode, NgClass } from '@angular/common';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem, generateExpressionsList } from './common';
 import { ColumnType, GridType, IGX_GRID_BASE } from '../../common/grid.interface';
-import { IgxOverlayService } from '../../../services/overlay/overlay';
-import { SortingDirection } from '../../../data-operations/sorting-strategy';
 import { IgxExcelStyleSearchComponent } from './excel-style-search.component';
 import { IgxExcelStyleConditionalFilterComponent } from './excel-style-conditional-filter.component';
 import { IgxExcelStyleClearFiltersComponent } from './excel-style-clear-filters.component';
@@ -41,7 +35,7 @@ import { IgxExcelStylePinningComponent } from './excel-style-pinning.component';
 import { IgxExcelStyleMovingComponent } from './excel-style-moving.component';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { IgxExcelStyleHeaderComponent } from './excel-style-header.component';
-import { isTree } from '../../../data-operations/expressions-tree-util';
+import { FilteringExpressionsTree, GridColumnDataType, IFilteringExpressionsTree, IgxFilterItem, IgxOverlayService, isTree, PlatformUtil, SortingDirection } from 'igniteui-angular/core';
 
 @Directive({
     selector: 'igx-excel-style-column-operations,[igxExcelStyleColumnOperations]',

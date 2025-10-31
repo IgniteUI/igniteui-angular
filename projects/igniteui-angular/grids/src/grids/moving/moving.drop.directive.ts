@@ -3,11 +3,8 @@ import { DropPosition, IgxColumnMovingService } from './moving.service';
 import { Subject, interval, animationFrameScheduler } from 'rxjs';
 import { IgxColumnMovingDragDirective } from './moving.drag.directive';
 import { takeUntil } from 'rxjs/operators';
-import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
-import { IgxForOfDirective, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { ColumnType } from '../common/grid.interface';
-// import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
-
+import { IgxDropDirective, IgxForOfDirective, IgxGridForOfDirective } from 'igniteui-angular/directives';
 
 @Directive({
     selector: '[igxColumnMovingDrop]',

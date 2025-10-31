@@ -1,11 +1,7 @@
 import { GridBaseAPIService } from '../api.service';
-import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
-import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
-import { DataUtil } from '../../data-operations/data-util';
-import { cloneArray } from '../../core/utils';
-import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { Injectable } from '@angular/core';
 import { GridServiceType, GridType } from '../common/grid.interface';
+import { cloneArray, DataUtil, IGroupByExpandState, IGroupByRecord, IGroupingExpression } from 'igniteui-angular/core';
 
 @Injectable()
 export class IgxGridAPIService extends GridBaseAPIService<GridType> implements GridServiceType {

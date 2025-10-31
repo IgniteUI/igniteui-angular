@@ -13,7 +13,7 @@ export {
     IgxExpansionPanelTitleDirective
 } from './expansion-panel.directives';
 export { ExpansionPanelHeaderIconPosition } from './expansion-panel-header.component';
-export { ToggleAnimationSettings } from './toggle-animation-component';
+export { ToggleAnimationSettings, ToggleAnimationPlayer } from './toggle-animation-component';
 
 /* NOTE: Expansion panel directives collection for ease-of-use import in standalone components scenario */
 export const IGX_EXPANSION_PANEL_DIRECTIVES = [

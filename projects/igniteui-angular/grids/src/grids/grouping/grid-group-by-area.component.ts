@@ -3,19 +3,15 @@ import {
     ElementRef,
     Input,
 } from '@angular/core';
-import { IChipsAreaReorderEventArgs } from 'igniteui-angular/chips';
-import { PlatformUtil } from '../../core/utils';
-import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
-import { ISortingExpression } from '../../data-operations/sorting-strategy';
+import { IChipsAreaReorderEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
 import { FlatGridType } from '../common/grid.interface';
 import { IgxGroupByAreaDirective, IgxGroupByMetaPipe } from './group-by-area.directive';
-import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { IgxGroupAreaDropDirective } from '../grid.directives';
-import { IgxSuffixDirective } from '../../directives/suffix/suffix.directive';
-import { IgxIconComponent } from '../../icon/icon.component';
-import { IgxChipComponent } from '../../chips/chip.component';
 import { NgTemplateOutlet } from '@angular/common';
-import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IgxDropDirective } from 'igniteui-angular/directives';
+import { IGroupingExpression, ISortingExpression, PlatformUtil } from 'igniteui-angular/core';
 
 /**
  * An internal component representing the group-by drop area for the igx-grid component.

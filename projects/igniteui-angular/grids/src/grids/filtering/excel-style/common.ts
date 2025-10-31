@@ -1,6 +1,4 @@
-import { isTree } from '../../../data-operations/expressions-tree-util';
-import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
-import { IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
+import { FilteringLogic, IFilteringExpression, IFilteringExpressionsTree, isTree } from 'igniteui-angular/core';
 import { getUUID } from '../../common/random';
 
 /**

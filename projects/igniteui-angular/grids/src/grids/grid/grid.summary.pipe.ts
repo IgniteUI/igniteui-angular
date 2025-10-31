@@ -1,9 +1,8 @@
 import { Inject, Pipe, PipeTransform } from '@angular/core';
 import { ISummaryRecord } from '../summaries/grid-summary';
-import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
-import { IGroupByResult } from '../../data-operations/grouping-result.interface';
 import { GridSummaryCalculationMode, GridSummaryPosition } from '../common/enums';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
+import { IGroupByRecord, IGroupByResult } from 'igniteui-angular/core';
 
 /** @hidden */
 interface ISkipRecord { skip?: boolean }

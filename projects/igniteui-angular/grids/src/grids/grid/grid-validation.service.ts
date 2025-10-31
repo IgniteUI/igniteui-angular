@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { columnFieldPath, resolveNestedPath } from '../../core/utils';
 import type { ColumnType, GridType, IFieldValidationState, IGridFormGroupCreatedEventArgs, IRecordValidationState, ValidationStatus } from '../common/grid.interface';
+import { columnFieldPath, resolveNestedPath } from 'igniteui-angular/core';
 
 @Injectable()
 export class IgxGridValidationService {
@@ -64,7 +64,7 @@ export class IgxGridValidationService {
         formGroup.addControl(column.field, control);
         control.setValue(value);
     }
-    
+
     /**
      * @hidden
      * @internal

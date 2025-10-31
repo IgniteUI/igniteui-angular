@@ -1,5 +1,5 @@
+import { WEEKDAYS } from 'igniteui-angular/calendar';
 import { ColumnType } from '../common/grid.interface';
-import { WEEKDAYS } from "../../calendar/calendar";
 
 /**
  * @hidden
@@ -48,7 +48,7 @@ export interface IFieldPipeArgs {
 }
 
 // D.P. Can't use `export type IColumnPipeArgs = IFieldPipeArgs` because TypeScripts Compiler API optimizes it away completely
- 
+
 export interface IColumnPipeArgs extends IFieldPipeArgs {}
 
 export interface IFieldEditorOptions {

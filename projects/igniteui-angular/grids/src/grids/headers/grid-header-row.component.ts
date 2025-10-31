@@ -12,8 +12,6 @@ import {
     ViewChildren,
     booleanAttribute
 } from '@angular/core';
-import { flatten, trackByIdentity } from '../../core/utils';
-import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { ColumnType, GridType, IgxHeadSelectorTemplateContext } from '../common/grid.interface';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
@@ -21,9 +19,11 @@ import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxHeaderGroupStylePipe } from './pipes';
 import { IgxGridTopLevelColumns } from '../common/pipes';
-import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
+import { IgxGridForOfDirective } from 'igniteui-angular/directives';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { flatten, trackByIdentity } from 'igniteui-angular/core';
 
 /**
  *
