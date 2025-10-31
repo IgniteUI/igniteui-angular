@@ -15,7 +15,10 @@ import {
     Injector,
     PipeTransform,
     ChangeDetectorRef,
-    LOCALE_ID, Optional, ContentChildren, QueryList, HostListener, booleanAttribute
+    LOCALE_ID,
+    Optional,
+    HostListener,
+    booleanAttribute
 } from '@angular/core';
 import {
     ControlValueAccessor,
@@ -53,13 +56,13 @@ import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { DatePart, DatePartDeltas } from '../directives/date-time-editor/public_api';
 import { PickerHeaderOrientation } from '../date-common/types';
-import { IgxPickerActionsDirective, IgxPickerClearComponent } from '../date-common/picker-icons.common';
+import { IgxPickerActionsDirective } from '../date-common/picker-icons.common';
 import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
-import { IgxDividerDirective } from '../directives/divider/divider.directive';
+import { IgxDividerComponent } from '../directives/divider/divider.component';
 import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
 
 let NEXT_ID = 0;
@@ -92,7 +95,25 @@ export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
             display: block;
         }`
     ],
-    imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxTextSelectionDirective, IgxPrefixDirective, IgxIconComponent, IgxSuffixDirective, IgxButtonDirective, IgxToggleDirective, NgClass, IgxItemListDirective, IgxTimeItemDirective, NgTemplateOutlet, TimeFormatPipe, TimeItemPipe, IgxDividerDirective, IgxReadOnlyInputDirective]
+    imports: [
+        IgxInputGroupComponent,
+        IgxInputDirective,
+        IgxDateTimeEditorDirective,
+        IgxTextSelectionDirective,
+        IgxPrefixDirective,
+        IgxIconComponent,
+        IgxSuffixDirective,
+        IgxButtonDirective,
+        IgxToggleDirective,
+        NgClass,
+        IgxItemListDirective,
+        IgxTimeItemDirective,
+        NgTemplateOutlet,
+        TimeFormatPipe,
+        TimeItemPipe,
+        IgxDividerComponent,
+        IgxReadOnlyInputDirective
+    ]
 })
 export class IgxTimePickerComponent extends PickerBaseDirective
     implements
