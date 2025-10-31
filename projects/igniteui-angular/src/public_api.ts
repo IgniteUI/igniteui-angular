@@ -202,4 +202,3 @@ export * from './lib/toast/toast.module';
 export * from './lib/tree/tree.module';
 
 export * from './lib/chat/chat.component';
-export { MarkdownPipe } from './lib/chat/markdown-pipe';

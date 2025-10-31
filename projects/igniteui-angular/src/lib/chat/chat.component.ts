@@ -246,7 +246,3 @@ export class IgxChatInputContextDirective {
         return true;
     }
 }
-
-export { MarkdownPipe } from './markdown-pipe';
-
-
