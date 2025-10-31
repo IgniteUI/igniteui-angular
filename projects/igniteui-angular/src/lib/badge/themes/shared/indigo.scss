@@ -1,13 +1,39 @@
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/themes/functions' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
 @use 'styles/themes/standalone' as *;
 @use '../light/tokens' as *;
 
 @include themed-block(igx-badge, indigo) {
-    --igx-icon-size: #{rem(12px)};
+    --igx-icon-size: #{sizable(rem(8px), rem(10px), rem(12px))};
 
-    @include type-style(button) {
-        margin: 0;
+    @include type-style('button', false) {
+        font-size: sizable(rem(9px), rem(10px), var(--ig-button-font-size));
+        line-height: sizable(rem(12px), rem(14px), var(--ig-button-line-height));
+    }
+
+    @include e(value) {
+        padding-inline: pad-inline(rem(4px), rem(6px), rem(6px));
+    }
+
+    @include m(success) {
+        background: color($color: 'success', $variant: 700);
+    }
+
+    @include m(info) {
+        background: color($color: 'info', $variant: 500);
+    }
+
+    @include m(error) {
+        background: color($color: 'error', $variant: 500);
+    }
+
+    @include m(warning) {
+        color: color($color: 'gray', $variant: 900);
+
+        igx-icon {
+            color: color($color: 'gray', $variant: 900);
+        }
     }
 }

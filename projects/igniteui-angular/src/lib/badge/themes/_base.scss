@@ -9,9 +9,13 @@ $theme: $material;
 
 @include layer(base) {
     @include b(igx-badge) {
-        --size: #{rem(22px)};
-        --_badge-size: var(--size);
-        --igx-icon-size: calc(var(--_badge-size) / 2);
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+        --badge-size: var(--component-size);
+        --_badge-size: #{var-get($theme, 'size')};
+
+        --igx-icon-size: #{sizable(rem(12px), rem(14px), rem(16px))};
         --igx-icon-color: #{var-get($theme, 'icon-color')};
 
         display: inline-flex;
@@ -24,38 +28,58 @@ $theme: $material;
         border-radius: calc(var(--size) / 2);
         box-shadow: var-get($theme, 'elevation');
         overflow: hidden;
-
-        @include type-style(caption) {
-            margin: 0;
-        }
+        font-size: sizable(var(--ig-caption-font-size), var(--ig-body-2-font-size), var(--ig-body-2-font-size));
+        font-weight: sizable(var(--ig-caption-font-weight), var(--ig-body-2-font-weight), var(--ig-body-2-font-weight));
+        line-height: sizable(var(--ig-caption-line-height), var(--ig-body-2-line-height), var(--ig-body-2-line-height));
+        letter-spacing: sizable(var(--ig-caption-letter-spacing), var(--ig-body-2-letter-spacing), var(--ig-body-2-letter-spacing));
+        text-transform: sizable(var(--ig-caption-text-transform), var(--ig-body-2-text-transform), var(--ig-body-2-text-transform));
 
         @include e(value) {
             white-space: nowrap;
-            padding-inline: rem(4px);
+            padding-inline: pad-inline(rem(4px), rem(6px), rem(8px));
         }
 
         @include m(info) {
-            background: color($color: 'info');
+            background: color($color: 'info', $variant: 800);
         }
 
         @include m(success) {
-            background: color($color: 'success');
+            background: color($color: 'success', $variant: 900);
         }
 
         @include m(warning) {
             background: color($color: 'warn');
+            color: contrast-color($color: 'warn', $variant: 500);
+
+            igx-icon {
+                color: contrast-color($color: 'warn', $variant: 500);
+            }
         }
 
         @include m(error) {
-            background: color($color: 'error');
+            background: color($color: 'error', $variant: 700);
+            color: contrast-color($color: 'error', $variant: 900);
         }
 
         @include m(outlined) {
-            box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'border-color');
+            box-shadow: 0 0 0 rem(2px) var-get($theme, 'border-color');
         }
 
         @include m(square) {
             border-radius: var-get($theme, 'border-radius');
+        }
+
+        @include m(dot) {
+            --_dot-size: #{var-get($theme, 'dot-size')};
+
+            min-width: var(--_dot-size);
+            min-height: var(--_dot-size);
+            padding: 0;
+
+            igx-icon,
+            > * {
+                display: none;
+            }
         }
 
         @include m(hidden) {
