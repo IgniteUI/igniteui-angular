@@ -271,8 +271,11 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     protected _differ: IterableDiffer<T> | null = null;
     protected _trackByFn: TrackByFunction<T>;
     protected individualSizeCache: number[] = [];
+    /**
+     * @hidden
+     */
     /** Internal track for scroll top that is being virtualized */
-    protected _virtScrollPosition = 0;
+    public _virtScrollPosition = 0;
     /** If the next onScroll event is triggered due to internal setting of scrollTop */
     protected _bScrollInternal = false;
     // End properties related to virtual height handling
