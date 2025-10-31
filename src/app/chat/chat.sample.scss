@@ -1,0 +1,20 @@
+.cards-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(340px, 1fr));
+    justify-items: center;
+    padding-block-start: 2rem;
+    gap: 1rem;
+}
+
+#igniteui-demo-app .sample-title {
+    margin-bottom: 0;
+    justify-self: center;
+}
+
+#igniteui-demo-app .sample-wrapper {
+    height: auto;
+}
+
+#igniteui-demo-app .content {
+    padding-bottom: 1rem;
+}

@@ -1,0 +1,8 @@
+<igx-chat [options]="options()" [messages]="messages()" [templates]="templates()" (messageReact)="onMessageReact($event)">
+    <span slot="prefix">Prefix</span>
+    <span slot="actions">Actions</span>
+</igx-chat>
+
+<ng-template #renderer let-message igxChatMessageContext>
+    <div [innerHTML]="message.text | fromMarkdown | async"></div>
+</ng-template>
