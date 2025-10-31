@@ -140,6 +140,7 @@ export const GridResourceStringsDE = {
     igx_grid_toolbar_exporter_button_label: 'Exportiere',
     igx_grid_toolbar_exporter_excel_entry_text: 'Exportiere als Excel',
     igx_grid_toolbar_exporter_csv_entry_text: 'Exportiere als CSV',
+    igx_grid_toolbar_exporter_pdf_entry_text: 'Exportiere als PDF',
     igx_grid_groupByArea_select_message: 'Wähle alle Reihen der Gruppe aus mit Feldnamen {0} und Wert {1}.',
     igx_grid_groupByArea_deselect_message: 'Wähle alle Reihen der Gruppe ab mit Feldnamen {0} und Wert {1}.',
     igx_grid_snackbar_addrow_label: 'Reihe hinzugefügt',
