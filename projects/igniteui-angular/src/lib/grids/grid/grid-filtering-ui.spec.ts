@@ -44,7 +44,8 @@ import {
     IgxGridExternalESFTemplateComponent,
     IgxGridDatesFilteringComponent,
     LoadOnDemandFilterStrategy,
-    IgxGridFilteringNumericComponent
+    IgxGridFilteringNumericComponent,
+    IgxGridConditionalFilteringComponent
 } from '../../test-utils/grid-samples.spec';
 import { GridSelectionMode, FilterMode, Size } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
@@ -6579,9 +6580,15 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Scroll the search list to the bottom.
             let scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
+            expect(scrollbar.scrollTop).toBe(0);
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems[0].innerText).toBe('Select All');
+
             scrollbar.scrollTop = 3000;
             await wait();
             fix.detectChanges();
+            expect(listItems[0].innerText).not.toBe('Select All');
+            expect(scrollbar.scrollTop).toBeGreaterThan(300);
 
             // Select another column
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
@@ -6589,17 +6596,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Update scrollbar
-            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
-            await wait();
-            fix.detectChanges();
-
-            // Get the display container and its parent and verify that the display container is at start
-            const displayContainer = searchComponent.querySelector('igx-display-container');
-            const displayContainerRect = displayContainer.getBoundingClientRect();
-            const parentContainerRect = displayContainer.parentElement.getBoundingClientRect();
-
-            expect(displayContainerRect.top - parentContainerRect.top <= 1).toBe(true, 'search scrollbar did not reset');
+            expect(scrollbar.scrollTop).toBe(0, 'search scrollbar did not reset');
         });
     });
 
@@ -7082,6 +7080,27 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.filteredData.length).toEqual(2);
         }));
 
+    });
+
+    describe('IgxGrid - Conditional Filter', () => {
+        let fix: ComponentFixture<IgxGridConditionalFilteringComponent>;
+        let grid: IgxGridComponent;
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridConditionalFilteringComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+            grid.filterMode = FilterMode.excelStyleFilter;
+            fix.detectChanges();
+        }));
+
+        it('Should not throw console error on opening the drop-down.', async () => {
+            spyOn(console, 'error');
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
+            fix.detectChanges();
+            await wait(100);
+
+            expect(console.error).not.toHaveBeenCalled();
+        });
     });
 });
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { first } from 'rxjs/operators';
+import { first, throttleTime } from 'rxjs/operators';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridType } from './common/grid.interface';
 import {
@@ -17,6 +17,7 @@ import { IActiveNodeChangeEventArgs } from './common/events';
 import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
 import { IMultiRowLayoutNode } from './common/types';
 import { SortingDirection } from '../data-operations/sorting-strategy';
+import { animationFrameScheduler, Subject } from 'rxjs';
 export interface ColumnGroupsCache {
     level: number;
     visibleIndex: number;
@@ -37,6 +38,7 @@ export class IgxGridNavigationService {
     public _activeNode: IActiveNode = {} as IActiveNode;
     public lastActiveNode: IActiveNode = {} as IActiveNode;
     protected pendingNavigation = false;
+    protected keydownNotify = new Subject<KeyboardEvent>();
 
     public get activeNode() {
         return this._activeNode;
@@ -46,7 +48,15 @@ export class IgxGridNavigationService {
         this._activeNode = value;
     }
 
-    constructor(protected platform: PlatformUtil) { }
+    constructor(protected platform: PlatformUtil) {
+        this.keydownNotify.pipe(
+            throttleTime(30, animationFrameScheduler),
+        )
+        .subscribe((event: KeyboardEvent) => {
+            this.dispatchEvent(event);
+        });
+
+     }
 
     public handleNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
@@ -60,7 +70,7 @@ export class IgxGridNavigationService {
             event.preventDefault();
         }
         if (event.repeat) {
-            setTimeout(() => this.dispatchEvent(event), 1);
+            this.keydownNotify.next(event);
         } else {
             this.dispatchEvent(event);
         }
@@ -96,10 +106,8 @@ export class IgxGridNavigationService {
             event.preventDefault();
             this.navigateInBody(position.rowIndex, position.colIndex, (obj) => {
                 obj.target.activate(event);
-                this.grid.cdr.detectChanges();
             });
         }
-        this.grid.cdr.detectChanges();
     }
 
     public summaryNav(event: KeyboardEvent) {
@@ -145,7 +153,6 @@ export class IgxGridNavigationService {
                 this.grid.clearCellSelection();
                 this.grid.navigateTo(this.activeNode.row, this.activeNode.column, (obj) => {
                     obj.target?.activate(event);
-                    this.grid.cdr.detectChanges();
                 });
             } else {
                 if (hasLastActiveNode && !this.grid.selectionService.selected(this.lastActiveNode)) {
@@ -598,7 +605,6 @@ export class IgxGridNavigationService {
 
         this.navigateInBody(next.rowIndex, next.visibleColumnIndex, (obj) => {
             obj.target.activate(event);
-            this.grid.cdr.detectChanges();
         });
     }
 

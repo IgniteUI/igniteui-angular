@@ -35,9 +35,7 @@
 @use '../components/input/file-input-theme' as *;
 
 @mixin typography($type-scale) {
-    // @include badge-typography($categories: (
-    //     text: 'button',
-    // ));
+    // @include badge-typography($theme: 'indigo');
     // @include banner-typography();
     // @include bottom-nav-typography();
     @include button-typography();

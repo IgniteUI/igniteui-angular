@@ -91,7 +91,7 @@ export class BadgeSampleComponent {
             info: 'info',
             success: 'success',
             warning: 'warning',
-            error: 'danger',
+            error: 'danger'
         })
     );
 
