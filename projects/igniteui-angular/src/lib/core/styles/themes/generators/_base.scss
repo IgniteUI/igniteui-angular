@@ -693,16 +693,16 @@
         @include tooltip($tooltip-theme-map);
     }
 
-    @if is-used('igx-time-picker', $exclude) {
-        $time-picker-theme-map: time-picker-theme(
-            $schema: $schema,
-        );
-        $time-picker-theme-map: meta.call(
-            $theme-handler,
-            $time-picker-theme-map
-        );
-        @include time-picker($time-picker-theme-map);
-    }
+    // @if is-used('igx-time-picker', $exclude) {
+    //     $time-picker-theme-map: time-picker-theme(
+    //         $schema: $schema,
+    //     );
+    //     $time-picker-theme-map: meta.call(
+    //         $theme-handler,
+    //         $time-picker-theme-map
+    //     );
+    //     @include time-picker($time-picker-theme-map);
+    // }
 
     //@if is-used('igx-tree', $exclude) {
     //    $tree-theme-map: tree-theme(
