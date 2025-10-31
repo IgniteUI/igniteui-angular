@@ -37,38 +37,6 @@
 
 .avatar-sample {
     display: flex;
-    flex-wrap: wrap;
-    gap: rem(32px);
-    align-items: center;
-    position: relative;
-
-    igx-avatar {
-        anchor-name: --avatar;
-    }
-
-    igx-badge {
-        position: absolute;
-        position-anchor: --avatar;
-        bottom: anchor(--avatar top);
-        left: anchor(right);
-        transform: translate(-75%, 75%);
-    }
-}
-
-.badge-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    position: relative;
-
-    span {
-        font-size: 14px;
-    }
-}
-
-.avatar-sample {
-    display: flex;
     align-items: center;
     position: relative;
 
