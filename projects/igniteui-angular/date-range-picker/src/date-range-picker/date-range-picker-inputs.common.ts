@@ -10,7 +10,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxSuffixDirective } from 'igniteui-angular/directives';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxPrefixDirective } from 'igniteui-angular/directives';
-import { NgTemplateOutlet, NgClass } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 
 /** Represents a range between two dates. */
 export interface DateRange {
