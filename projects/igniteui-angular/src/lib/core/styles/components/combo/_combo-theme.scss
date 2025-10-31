@@ -210,12 +210,24 @@
             color: var-get($theme, 'clear-button-foreground-focus');
             background: var-get($theme, 'clear-button-background-focus');
         }
+
+        &%form-group-bundle--border {
+            %igx-combo__toggle-button {
+                background: var-get($theme, 'toggle-button-background-focus--border');
+            }
+        }
     }
 
     @if $variant == 'indigo' {
         %form-group-bundle:not(%form-group-bundle--disabled):hover {
             %igx-combo__toggle-button {
                 color: var-get($theme, 'toggle-button-foreground-focus');
+                background: var-get($theme, 'toggle-button-background-focus');
+            }
+
+            %igx-combo__clear-button {
+                color: var-get($theme, 'clear-button-foreground-focus');
+                background: var-get($theme, 'clear-button-background-focus');
             }
         }
     }
@@ -223,6 +235,14 @@
     .igx-input-group--filled {
         %igx-combo__toggle-button {
             color: var-get($theme, 'toggle-button-foreground-filled');
+        }
+
+        @if $variant == 'material' {
+            &.igx-input-group--focused {
+                %igx-combo__toggle-button {
+                    color: var-get($theme, 'toggle-button-foreground-filled');
+                }
+            }
         }
     }
 
@@ -254,14 +274,6 @@
         }
     }
 
-    //.igx-input-group:not(.igx-input-group--box) {
-    //    %igx-combo__toggle-button:focus {
-    //        @if $variant == 'material' {
-    //            background: var-get($theme, 'toggle-button-background-focus--border');
-    //        }
-    //    }
-    //}
-
     .igx-input-group--disabled {
         %igx-combo__toggle-button {
             background: var-get($theme, 'toggle-button-background-disabled') !important;
@@ -271,14 +283,6 @@
         %igx-combo__clear-button {
             @if $variant == 'bootstrap' {
                 border-inline-end: 0;
-            }
-        }
-    }
-
-    %form-group-bundle {
-        &:hover {
-            %igx-combo__clear-button {
-                color: inherit;
             }
         }
     }
