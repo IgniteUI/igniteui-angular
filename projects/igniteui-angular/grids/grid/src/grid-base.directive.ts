@@ -5598,7 +5598,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this.hasCellsToMerge) {
             return this.rowHeight;
         }
-        return this.rowHeight + 1;
+        return this.rowHeight;
     }
 
     /**
@@ -8106,6 +8106,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
             const height = parseFloat(this.document.defaultView.getComputedStyle(targetCell.nativeElement)?.getPropertyValue('height'));
             if (height) {
+                console.log(height);
                 this._defaultRowHeight = height;
             } else {
                 this._shouldRecalcRowHeight = true;

@@ -415,7 +415,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     }
 
     public isScrollable() {
-        return this.scrollComponent.size > parseInt(this.igxForContainerSize, 10);
+        return this.scrollComponent.size > parseFloat(this.igxForContainerSize);
     }
 
     protected get embeddedViewNodes() {
@@ -583,8 +583,8 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
         const containerSize = 'igxForContainerSize';
         if (containerSize in changes && !changes[containerSize].firstChange && this.igxForOf) {
-            const prevSize = parseInt(changes[containerSize].previousValue, 10);
-            const newSize = parseInt(changes[containerSize].currentValue, 10);
+            const prevSize = parseFloat(changes[containerSize].previousValue);
+            const newSize = parseFloat(changes[containerSize].currentValue);
             this._recalcOnContainerChange({prevSize, newSize});
         }
     }
@@ -641,7 +641,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             return false;
         }
         const originalVirtScrollTop = this._virtScrollPosition;
-        const containerSize = parseInt(this.igxForContainerSize, 10);
+        const containerSize = parseFloat(this.igxForContainerSize);
         const maxVirtScrollTop = this._virtSize - containerSize;
 
         this._bScrollInternal = true;
@@ -692,7 +692,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         if (index < 0 || index > (this.isRemote ? this.totalItemCount : this.igxForOf.length) - 1) {
             return;
         }
-        const containerSize = parseInt(this.igxForContainerSize, 10);
+        const containerSize = parseFloat(this.igxForContainerSize);
         const isPrevItem = index < this.state.startIndex || this.scrollPosition > this.sizesCache[index];
         let nextScroll = isPrevItem ? this.sizesCache[index] : this.sizesCache[index + 1] - containerSize;
         if (nextScroll < 0) {
@@ -717,7 +717,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      */
     public scrollNext() {
         const scr = Math.abs(Math.ceil(this.scrollPosition));
-        const endIndex = this.getIndexAt(scr + parseInt(this.igxForContainerSize, 10), this.sizesCache);
+        const endIndex = this.getIndexAt(scr + parseFloat(this.igxForContainerSize), this.sizesCache);
         this.scrollTo(endIndex);
     }
 
@@ -740,7 +740,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * ```
      */
     public scrollNextPage() {
-        this.addScroll(parseInt(this.igxForContainerSize, 10));
+        this.addScroll(parseFloat(this.igxForContainerSize));
     }
 
     /**
@@ -751,7 +751,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * ```
      */
     public scrollPrevPage() {
-        const containerSize = (parseInt(this.igxForContainerSize, 10));
+        const containerSize = (parseFloat(this.igxForContainerSize));
         this.addScroll(-containerSize);
     }
 
@@ -774,7 +774,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             // fisrt item is not fully in view
             startIndex++;
         }
-        const endIndex = this.getIndexAt(this.scrollPosition + parseInt(this.igxForContainerSize, 10), this.sizesCache);
+        const endIndex = this.getIndexAt(this.scrollPosition + parseFloat(this.igxForContainerSize), this.sizesCache);
         return endIndex - startIndex;
     }
 
@@ -813,7 +813,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * ```
      */
     public getScrollForIndex(index: number, bottom?: boolean) {
-        const containerSize = parseInt(this.igxForContainerSize, 10);
+        const containerSize = parseFloat(this.igxForContainerSize);
         const scroll = bottom ? Math.max(0, this.sizesCache[index + 1] - containerSize) : this.sizesCache[index];
         return scroll;
     }
@@ -837,7 +837,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         const targetNode = index >= this.state.startIndex && index <= this.state.startIndex + this.state.chunkSize ?
             this.embeddedViewNodes[index - this.state.startIndex] : null;
         const rowHeight = this.getSizeAt(index);
-        const containerSize = parseInt(this.igxForContainerSize, 10);
+        const containerSize = parseFloat(this.igxForContainerSize);
         const containerOffset = -(this.scrollPosition - this.sizesCache[this.state.startIndex]);
         const endTopOffset = targetNode ? targetNode.offsetTop + rowHeight + containerOffset : containerSize + rowHeight;
         return !targetNode || targetNode.offsetTop < Math.abs(containerOffset)
@@ -897,7 +897,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             }
             const scrToBottom = this._isScrolledToBottom && !this.dc.instance.notVirtual;
             if (scrToBottom && !this._isAtBottomIndex) {
-                const containerSize = parseInt(this.igxForContainerSize, 10);
+                const containerSize = parseFloat(this.igxForContainerSize);
                 const maxVirtScrollTop = this._virtSize - containerSize;
                 this._bScrollInternal = true;
                 this._virtScrollPosition = maxVirtScrollTop;
@@ -946,7 +946,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      */
     protected onScroll(event) {
         /* in certain situations this may be called when no scrollbar is visible */
-        if (!parseInt(this.scrollComponent.nativeElement.style.height, 10)) {
+        if (!parseFloat(this.scrollComponent.nativeElement.style.height)) {
             return;
         }
         this.scrollComponent.scrollAmount = event.target.scrollTop;
@@ -1153,7 +1153,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     protected onHScroll(event) {
         /* in certain situations this may be called when no scrollbar is visible */
         const firstScrollChild = this.scrollComponent.nativeElement.children.item(0) as HTMLElement;
-        if (!parseInt(firstScrollChild.style.width, 10)) {
+        if (!parseFloat(firstScrollChild.style.width)) {
             return;
         }
         this.scrollComponent.scrollAmount = event.target.scrollLeft;
@@ -1326,7 +1326,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         let maxLength = 0;
         const arr = [];
         let sum = 0;
-        const availableSize = parseInt(this.igxForContainerSize, 10);
+        const availableSize = parseFloat(this.igxForContainerSize);
         if (!availableSize) {
             return 0;
         }
@@ -1356,7 +1356,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
                         const prevItem = this.igxForOf[prevIndex];
                         const prevSize = dimension === 'height' ?
                             this.individualSizeCache[prevIndex] :
-                            parseInt(prevItem[dimension], 10);
+                            parseFloat(prevItem[dimension]);
                         sum = arr.reduce(reducer, prevSize);
                         arr.unshift(prevItem);
                         length = arr.length;
@@ -1403,8 +1403,8 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
         const scrollable = containerSizeInfo ? this.scrollComponent.size > containerSizeInfo.prevSize : this.isScrollable();
         if (this.igxForScrollOrientation === 'horizontal') {
-            const totalWidth = parseInt(this.igxForContainerSize, 10) > 0 ? this._calcSize() : 0;
-            if (totalWidth <= parseInt(this.igxForContainerSize, 10)) {
+            const totalWidth = parseFloat(this.igxForContainerSize) > 0 ? this._calcSize() : 0;
+            if (totalWidth <= parseFloat(this.igxForContainerSize)) {
                 this.resetScrollPosition();
             }
             this.scrollComponent.nativeElement.style.width = this.igxForContainerSize + 'px';
@@ -1412,10 +1412,10 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
         if (this.igxForScrollOrientation === 'vertical') {
             const totalHeight = this._calcSize();
-            if (totalHeight <= parseInt(this.igxForContainerSize, 10)) {
+            if (totalHeight <= parseFloat(this.igxForContainerSize)) {
                 this.resetScrollPosition();
             }
-            this.scrollComponent.nativeElement.style.height = parseInt(this.igxForContainerSize, 10) + 'px';
+            this.scrollComponent.nativeElement.style.height = parseFloat(this.igxForContainerSize) + 'px';
             this.scrollComponent.size = totalHeight;
         }
         if (scrollable !== this.isScrollable()) {
@@ -1512,7 +1512,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     }
 
     protected _calcVirtualScrollPosition(scrollPosition: number) {
-        const containerSize = parseInt(this.igxForContainerSize, 10);
+        const containerSize = parseFloat(this.igxForContainerSize);
         const maxRealScrollPosition = this.scrollComponent.size - containerSize;
         const realPercentScrolled = maxRealScrollPosition !== 0 ? scrollPosition / maxRealScrollPosition : 0;
         const maxVirtScroll = this._virtSize - containerSize;
@@ -1521,7 +1521,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
     protected _getItemSize(item, dimension: string): number {
         const dim = item ? item[dimension] : null;
-        return typeof dim === 'number' ? dim : parseInt(this.igxForItemSize, 10) || 0;
+        return typeof dim === 'number' ? dim : parseFloat(this.igxForItemSize) || 0;
     }
 
     protected _updateScrollOffset() {
@@ -1545,7 +1545,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         // should update scroll top/left according to change so that same startIndex is in view
         if (Math.abs(sizeDiff) > 0 && this.scrollPosition > 0) {
             const offset = this.igxForScrollOrientation === 'horizontal' ?
-                parseInt(this.dc.instance._viewContainer.element.nativeElement.style.left, 10) :
+                parseFloat(this.dc.instance._viewContainer.element.nativeElement.style.left) :
                 Number(this.dc.instance._viewContainer.element.nativeElement.style.transform?.match(/translateY\((-?\d+\.?\d*)px\)/)?.[1]);
             const newSize = this.sizesCache[this.state.startIndex] - offset;
             this.scrollPosition = newSize;
@@ -1706,8 +1706,8 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         }
         const containerSize = 'igxForContainerSize';
         if (containerSize in changes && !changes[containerSize].firstChange && this.igxForOf) {
-            const prevSize = parseInt(changes[containerSize].previousValue, 10);
-            const newSize = parseInt(changes[containerSize].currentValue, 10);
+            const prevSize = parseFloat(changes[containerSize].previousValue);
+            const newSize = parseFloat(changes[containerSize].currentValue);
             this._recalcOnContainerChange({prevSize, newSize});
         }
     }
@@ -1781,7 +1781,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
     public override onHScroll(scrollAmount) {
         /* in certain situations this may be called when no scrollbar is visible */
         const firstScrollChild = this.scrollComponent.nativeElement.children.item(0) as HTMLElement;
-        if (!this.scrollComponent || !parseInt(firstScrollChild.style.width, 10)) {
+        if (!this.scrollComponent || !parseFloat(firstScrollChild.style.width)) {
             return;
         }
         this.scrollComponent.scrollAmount = scrollAmount;
@@ -1807,7 +1807,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
                 size = item.height;
             }
         } else {
-            size = parseInt(item[dimension], 10) || 0;
+            size = parseFloat(item[dimension]) || 0;
         }
         return size;
     }
