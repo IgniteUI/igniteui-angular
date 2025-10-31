@@ -9,7 +9,6 @@ import {
     QueryList,
     ViewChild,
     TemplateRef,
-    AfterContentInit,
     ChangeDetectorRef,
     AfterViewInit,
     ElementRef,
@@ -18,13 +17,12 @@ import {
 
 
 import { ActionStripResourceStringsEN, CloseScrollStrategy, getCurrentResourceStrings, IActionStripResourceStrings, OverlaySettings } from 'igniteui-angular/core';
-import { IgxGridActionsBaseDirective } from '../../../grids/src/grids/grid-actions/grid-actions-base.directive';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxToggleActionDirective } from 'igniteui-angular/directives';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { NgTemplateOutlet } from '@angular/common';
 import { IgxIconButtonDirective } from 'igniteui-angular/directives';
-import { IgxActionStripToken } from './token';
+import { IgxActionStripToken, IgxActionStripActionsToken } from './token';
 import { trackByIdentity } from 'igniteui-angular/core';
 import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective } from 'igniteui-angular/drop-down';
 
@@ -83,7 +81,7 @@ export class IgxActionStripMenuItemDirective {
     ],
     providers: [{ provide: IgxActionStripToken, useExisting: IgxActionStripComponent }]
 })
-export class IgxActionStripComponent implements IgxActionStripToken, AfterContentInit, AfterViewInit {
+export class IgxActionStripComponent implements IgxActionStripToken, AfterViewInit {
 
     /* blazorSuppress */
     /**
@@ -119,8 +117,8 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
      * @hidden
      * @internal
      */
-    @ContentChildren(IgxGridActionsBaseDirective)
-    public actionButtons: QueryList<IgxGridActionsBaseDirective>;
+    @ContentChildren(IgxActionStripActionsToken as any)
+    public actionButtons: QueryList<IgxActionStripActionsToken>;
 
     /**
      * Gets/Sets the visibility of the Action Strip.
@@ -229,21 +227,6 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
      */
     @HostBinding('class.igx-action-strip')
     protected hostClass = 'igx-action-strip';
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public ngAfterContentInit() {
-        this.actionButtons.forEach(button => {
-            button.strip = this;
-        });
-        this.actionButtons.changes.subscribe(() => {
-            this.actionButtons.forEach(button => {
-                button.strip = this;
-            });
-        });
-    }
 
     /**
      * @hidden

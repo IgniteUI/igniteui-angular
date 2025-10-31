@@ -2,20 +2,17 @@ import {
     ChangeDetectorRef, Component, ElementRef, Inject, QueryList, OnDestroy, AfterViewInit, ContentChildren, Input, booleanAttribute, DOCUMENT
 } from '@angular/core';
 import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
-import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down.common';
-import { IgxDropDownComponent } from '../drop-down/drop-down.component';
-import { DropDownActionKey } from '../drop-down/drop-down.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
-import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 import { IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxToggleDirective } from 'igniteui-angular/directives';
+import { DropDownActionKey, IDropDownBase, IGX_DROPDOWN_BASE, IgxDropDownComponent, IgxDropDownItemBaseDirective } from 'igniteui-angular/drop-down';
 
 /** @hidden */
 @Component({
     selector: 'igx-combo-drop-down',
-    templateUrl: '../drop-down/drop-down.component.html',
+    templateUrl: '../../../drop-down/src/drop-down/drop-down.component.html',
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxComboDropDownComponent }],
     imports: [IgxToggleDirective]
 })

@@ -15,12 +15,11 @@ import { NG_VALUE_ACCESSOR } from "@angular/forms";
 import { IgxMonthsViewComponent } from "../months-view/months-view.component";
 import { IgxYearsViewComponent } from "../years-view/years-view.component";
 import { IgxDaysViewComponent } from "../days-view/days-view.component";
-import { IgxIconComponent } from "../../icon/icon.component";
 import { IgxCalendarView } from "../calendar";
-import { CalendarDay } from "../common/model";
 import { IgxCalendarBaseDirective } from "../calendar-base";
 import { KeyboardNavigationService } from "../calendar.services";
-import { formatToParts } from "../common/helpers";
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { CalendarDay, formatToParts } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 @Component({

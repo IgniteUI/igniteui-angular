@@ -1,18 +1,6 @@
-import {
-    IgxComboAddItemDirective,
-    IgxComboClearIconDirective,
-    IgxComboEmptyDirective,
-    IgxComboFooterDirective,
-    IgxComboHeaderDirective,
-    IgxComboHeaderItemDirective,
-    IgxComboItemDirective,
-    IgxComboToggleIconDirective
-} from '../combo/combo.directives';
-import { IgxHintDirective } from 'igniteui-angular/directives';
-import { IgxLabelDirective } from 'igniteui-angular/directives';
-import { IgxPrefixDirective } from 'igniteui-angular/directives';
-import { IgxSuffixDirective } from 'igniteui-angular/directives';
+import { IgxHintDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxSimpleComboComponent } from './simple-combo.component';
+import { IgxComboAddItemDirective, IgxComboClearIconDirective, IgxComboEmptyDirective, IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboHeaderItemDirective, IgxComboItemDirective, IgxComboToggleIconDirective } from 'igniteui-angular/combo';
 
 export * from './simple-combo.component';
 

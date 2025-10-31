@@ -1,6 +1,6 @@
 import type { KeyOfOrString } from '../core/types';
 import { IBaseEventArgs } from '../core/utils';
-import type { GridType } from './grid-types-stub';
+import type { GridType } from './grid-types';
 
 /* mustCoerceToInt */
 export enum SortingDirection {

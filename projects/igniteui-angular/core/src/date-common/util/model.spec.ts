@@ -1,6 +1,6 @@
+import { DateRangeType } from '../../core/dates/dateRange';
 import { calendarRange, isDateInRanges } from "./helpers";
 import { CalendarDay } from "./model";
-import { DateRangeType } from "./types";
 
 export function first<T>(arr: T[]) {
     return arr.at(0) as T;

@@ -2,10 +2,10 @@ import { Component, DebugElement, ViewChild } from "@angular/core";
 import { IgxDaysViewComponent } from "./days-view.component";
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { UIInteractions } from "../../test-utils/ui-interactions.spec";
-import { CalendarDay } from "../common/model";
 import { DateRangeDescriptor, DateRangeType } from 'igniteui-webcomponents';
 import { ScrollDirection } from "../calendar";
+import { CalendarDay } from 'igniteui-angular/core';
+import { UIInteractions } from '../../../../core/src/test-utils/ui-interactions.spec';
 
 const TODAY = new Date(2024, 6, 12);
 

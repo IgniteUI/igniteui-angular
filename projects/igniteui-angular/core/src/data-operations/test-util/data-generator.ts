@@ -1,4 +1,4 @@
-import { GridColumnDataType } from '../data-util';
+import { GridColumnDataType } from '../grid-types';
 
 /**
  * @hidden

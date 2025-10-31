@@ -93,3 +93,19 @@ export enum GridSummaryCalculationMode {
     ChildLevelsOnly = 1,
     RootLevelOnly = 2
 }
+
+/**
+ * @hidden
+ */
+export const GridColumnDataType = {
+    String: 'string',
+    Number: 'number',
+    Boolean: 'boolean',
+    Date: 'date',
+    DateTime: 'dateTime',
+    Time: 'time',
+    Currency: 'currency',
+    Percent: 'percent',
+    Image: 'image'
+} as const;
+export type GridColumnDataType = (typeof GridColumnDataType)[keyof typeof GridColumnDataType];

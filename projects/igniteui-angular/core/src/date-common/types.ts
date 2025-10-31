@@ -21,3 +21,16 @@ export const PickerInteractionMode = {
     Dialog: 'dialog'
 } as const;
 export type PickerInteractionMode = (typeof PickerInteractionMode)[keyof typeof PickerInteractionMode];
+
+export type WeekDays =
+  | 'sunday'
+  | 'monday'
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday';
+
+export interface IgcCalendarBaseEventMap {
+  igcChange: CustomEvent<Date | Date[]>;
+}

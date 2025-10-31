@@ -1,13 +1,13 @@
 import { FilteringLogic, type IFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, type IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { resolveNestedPath, parseDate, formatDate, formatCurrency, columnFieldPath } from '../core/utils';
-import type { ColumnType, EntityType, GridType } from './grid-types-stub';
-import { DataUtil, GridColumnDataType } from './data-util';
+import { GridColumnDataType, type ColumnType, type EntityType, type GridType } from './grid-types';
+import { DataUtil } from './data-util';
 import { SortingDirection } from './sorting-strategy';
 import { formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
 import type { IFilteringState } from './filtering-state.interface';
 import { isTree } from './expressions-tree-util';
-import type { IgxHierarchicalGridComponent } from './grid-types-stub';
+import type { IgxHierarchicalGridComponent } from './grid-types';
 import { IgxSorting } from './grid-sorting-strategy';
 
 const DateType = 'date';

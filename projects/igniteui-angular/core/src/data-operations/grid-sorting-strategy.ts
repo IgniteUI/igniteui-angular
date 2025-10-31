@@ -6,7 +6,7 @@ import { IGroupingExpression } from './grouping-expression.interface';
 import { IGroupByResult } from './grouping-result.interface';
 import { getHierarchy, isHierarchyMatch } from './operations';
 import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from './sorting-strategy';
-import type { GridType } from './grid-types-stub';
+import type { GridType } from './grid-types';
 
 const DATE_TYPE = 'date';
 const TIME_TYPE = 'time';

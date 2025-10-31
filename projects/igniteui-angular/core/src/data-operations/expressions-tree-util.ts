@@ -1,9 +1,9 @@
-import { DateTimeUtil } from '../date-common/util/date-time.util';
-import type { EntityType, FieldType } from './grid-types-stub';
-import { GridColumnDataType } from './data-util';
+import type { EntityType, FieldType } from './grid-types';
+import { GridColumnDataType } from './grid-types';
 import { IFilteringOperation, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from './filtering-condition';
 import { IFilteringExpression } from './filtering-expression.interface';
 import { IExpressionTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
+import { DateTimeUtil } from '../date-common/public_api';
 
 export class ExpressionsTreeUtil {
     /**

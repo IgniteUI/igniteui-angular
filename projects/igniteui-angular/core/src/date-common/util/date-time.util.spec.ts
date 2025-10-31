@@ -1,8 +1,8 @@
 import { DateTimeUtil } from './date-time.util';
-import { DatePart, DatePartInfo } from '../../directives/date-time-editor/date-time-editor.common';
-import { DataType } from '../../data-operations/data-util';
+import { GridColumnDataType } from '../../data-operations/grid-types';
 import { registerLocaleData } from '@angular/common';
 import localeBg from "@angular/common/locales/bg";
+import { DatePart, DatePartInfo } from '../date-parts';
 
 const reduceToDictionary = (parts: DatePartInfo[]) => parts.reduce((obj, x) => {
     obj[x.type] = x;
@@ -238,24 +238,24 @@ describe(`DateTimeUtil Unit tests`, () => {
     });
 
     it('should properly build input formats based on locale for dateTime data type ', () => {
-        let result = DateTimeUtil.getDefaultInputFormat('en-US', DataType.DateTime);
+        let result = DateTimeUtil.getDefaultInputFormat('en-US', GridColumnDataType.DateTime);
         expect(result.normalize('NFKC')).toEqual('MM/dd/yyyy, hh:mm:ss tt');
 
-        result = DateTimeUtil.getDefaultInputFormat('bg-BG', DataType.DateTime);
+        result = DateTimeUtil.getDefaultInputFormat('bg-BG', GridColumnDataType.DateTime);
         expect(result.normalize('NFKC')).toEqual('dd.MM.yyyy г., HH:mm:ss');
 
-        result = DateTimeUtil.getDefaultInputFormat('fr-FR', DataType.DateTime);
+        result = DateTimeUtil.getDefaultInputFormat('fr-FR', GridColumnDataType.DateTime);
         expect(result).toEqual('dd/MM/yyyy HH:mm:ss');
     });
 
     it('should properly build input formats based on locale for time data type ', () => {
-        let result = DateTimeUtil.getDefaultInputFormat('en-US', DataType.Time);
+        let result = DateTimeUtil.getDefaultInputFormat('en-US', GridColumnDataType.Time);
         expect(result.normalize('NFKC')).toEqual('hh:mm tt');
 
-        result = DateTimeUtil.getDefaultInputFormat('bg-BG', DataType.Time);
+        result = DateTimeUtil.getDefaultInputFormat('bg-BG', GridColumnDataType.Time);
         expect(result.normalize('NFKC')).toEqual('HH:mm');
 
-        result = DateTimeUtil.getDefaultInputFormat('fr-FR', DataType.Time);
+        result = DateTimeUtil.getDefaultInputFormat('fr-FR', GridColumnDataType.Time);
         expect(result).toEqual('HH:mm');
     });
 

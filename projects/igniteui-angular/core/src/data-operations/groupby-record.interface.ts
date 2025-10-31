@@ -1,4 +1,4 @@
-import type { ColumnType } from './grid-types-stub';
+import type { ColumnType } from './grid-types';
 import { ISortingExpression } from './sorting-strategy';
 
 /**

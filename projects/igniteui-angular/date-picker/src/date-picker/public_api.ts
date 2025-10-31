@@ -1,10 +1,7 @@
-import { IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from '../calendar/calendar.directives';
-import { IgxPickerActionsDirective, IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-common/picker-icons.common';
-import { IgxHintDirective } from 'igniteui-angular/directives';
-import { IgxLabelDirective } from 'igniteui-angular/directives';
-import { IgxPrefixDirective } from 'igniteui-angular/directives';
-import { IgxSuffixDirective } from 'igniteui-angular/directives';
+import { IgxPickerActionsDirective, IgxPickerClearComponent, IgxPickerToggleComponent } from 'igniteui-angular/core';
 import { IgxDatePickerComponent } from './date-picker.component';
+import { IgxHintDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IgxCalendarHeaderTemplateDirective, IgxCalendarSubheaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective } from 'igniteui-angular/calendar';
 
 export * from './date-picker.common';
 export * from './date-picker.component';

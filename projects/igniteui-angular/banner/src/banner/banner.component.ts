@@ -10,16 +10,17 @@ import {
 } from '@angular/core';
 
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { IToggleView } from 'igniteui-angular/core';
-import { IgxButtonDirective } from 'igniteui-angular/directives';
-import { IgxRippleDirective } from 'igniteui-angular/directives';
+import { IgxButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxBannerActionsDirective } from './banner.directives';
-import { CancelableEventArgs, IBaseEventArgs } from 'igniteui-angular/core';
-import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
-import { IgxExpansionPanelBodyComponent } from '../expansion-panel/expansion-panel-body.component';
-import { IgxExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
-import { BannerResourceStringsEN, IBannerResourceStrings } from 'igniteui-angular/core';
-import { getCurrentResourceStrings } from 'igniteui-angular/core';
+import {
+    CancelableEventArgs,
+    IBaseEventArgs,
+    BannerResourceStringsEN,
+    IBannerResourceStrings,
+    getCurrentResourceStrings,
+    IToggleView
+} from 'igniteui-angular/core';
+import { IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
 
 export interface BannerEventArgs extends IBaseEventArgs {
     event?: Event;

@@ -1,8 +1,6 @@
 import { Component, Input, Output, EventEmitter, HostBinding, ElementRef, booleanAttribute, ChangeDetectionStrategy } from '@angular/core';
 import { CalendarSelection } from '../calendar';
-import { DateRangeDescriptor } from 'igniteui-angular/core';
-import { CalendarDay } from '../common/model'
-import { areSameMonth, isNextMonth, isPreviousMonth, isDateInRanges } from '../common/helpers';
+import { areSameMonth, CalendarDay, DateRangeDescriptor, isDateInRanges, isNextMonth, isPreviousMonth } from 'igniteui-angular/core';
 
 /**
  * @hidden

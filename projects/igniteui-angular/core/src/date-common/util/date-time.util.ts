@@ -2,7 +2,7 @@ import { DatePart, DatePartInfo } from '../date-parts';
 import { formatDate, FormatWidth, getLocaleDateFormat } from '@angular/common';
 import { ValidationErrors } from '@angular/forms';
 import { isDate } from '../../core/utils';
-import { DataType } from '../../data-operations/data-util';
+import { GridColumnDataType } from '../../data-operations/grid-types';
 
 /** @hidden */
 const enum FormatDesc {
@@ -248,7 +248,7 @@ export abstract class DateTimeUtil {
     }
 
     /** Builds a date-time editor's default input format based on provided locale settings and data type. */
-    public static getDefaultInputFormat(locale: string, dataType: DataType = DataType.Date): string {
+    public static getDefaultInputFormat(locale: string, dataType: GridColumnDataType = GridColumnDataType.Date): string {
         locale = locale || DateTimeUtil.DEFAULT_LOCALE;
         if (!Intl || !Intl.DateTimeFormat || !Intl.DateTimeFormat.prototype.formatToParts) {
             // TODO: fallback with Intl.format for IE?
@@ -727,7 +727,7 @@ export abstract class DateTimeUtil {
         }
     }
 
-    private static getFormatOptions(dataType: DataType) {
+    private static getFormatOptions(dataType: GridColumnDataType) {
         const dateOptions = {
             day: FormatDesc.TwoDigits,
             month: FormatDesc.TwoDigits,
@@ -738,11 +738,11 @@ export abstract class DateTimeUtil {
             minute: FormatDesc.TwoDigits
         };
         switch (dataType) {
-            case DataType.Date:
+            case GridColumnDataType.Date:
                 return dateOptions;
-            case DataType.Time:
+            case GridColumnDataType.Time:
                 return timeOptions;
-            case DataType.DateTime:
+            case GridColumnDataType.DateTime:
                 return {
                     ...dateOptions,
                     ...timeOptions,
@@ -753,7 +753,7 @@ export abstract class DateTimeUtil {
         }
     }
 
-    private static getDefaultLocaleMask(locale: string, dataType: DataType = DataType.Date) {
+    private static getDefaultLocaleMask(locale: string, dataType: GridColumnDataType = GridColumnDataType.Date) {
         const options = DateTimeUtil.getFormatOptions(dataType);
         const formatter = new Intl.DateTimeFormat(locale, options);
         const formatToParts = formatter.formatToParts(new Date());

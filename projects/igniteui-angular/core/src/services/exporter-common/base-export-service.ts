@@ -1,10 +1,10 @@
 import { EventEmitter } from '@angular/core';
 import { cloneArray, cloneValue, columnFieldPath, IBaseEventArgs, resolveNestedPath, yieldingLoop } from '../../core/utils';
-import { GridColumnDataType, DataUtil } from '../../data-operations/data-util';
+import { DataUtil } from '../../data-operations/data-util';
 import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
-import type { ITreeGridRecord, ColumnType, GridType, IPathSegment, IgxSummaryResult } from '../../data-operations/grid-types-stub';
-import { GridSummaryCalculationMode } from '../../data-operations/grid-types-stub';
+import type { ITreeGridRecord, ColumnType, GridType, IPathSegment, IgxSummaryResult, GridColumnDataType } from '../../data-operations/grid-types';
+import { GridSummaryCalculationMode } from '../../data-operations/grid-types';
 import { TreeGridFilteringStrategy } from '../../data-operations/tree-grid-filtering-strategy';
 import { IGroupingState } from '../../data-operations/groupby-state.interface';
 import { getHierarchy, isHierarchyMatch } from '../../data-operations/operations';

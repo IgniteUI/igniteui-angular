@@ -6,25 +6,16 @@ import {
 import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 
-import { IgxComboAddItemComponent } from '../combo/combo-add-item.component';
-import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
-import { IgxComboItemComponent } from '../combo/combo-item.component';
-import { IgxComboAPIService } from '../combo/combo.api';
-import { IgxComboBaseDirective, IGX_COMBO_COMPONENT } from '../combo/combo.common';
-import { IgxSelectionAPIService } from 'igniteui-angular/core';
-import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from 'igniteui-angular/core';
+import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil, IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxForOfDirective } from 'igniteui-angular/directives';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxTextSelectionDirective } from 'igniteui-angular/directives';
 import { IgxIconService } from 'igniteui-angular/icon';
-import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from 'igniteui-angular/input-group';
-import { IgxComboFilteringPipe, IgxComboGroupingPipe } from '../combo/combo.pipes';
-import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
+import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { IgxSuffixDirective } from 'igniteui-angular/directives';
-import { IgxInputDirective } from 'igniteui-angular/directives';
-import { IgxInputGroupComponent } from '../input-group/input-group.component';
+import { IGX_COMBO_COMPONENT, IgxComboAddItemComponent, IgxComboAPIService, IgxComboBaseDirective, IgxComboDropDownComponent, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboItemComponent } from 'igniteui-angular/combo';
+import { IgxDropDownItemNavigationDirective } from 'igniteui-angular/drop-down';
 
 /** Emitted when an igx-simple-combo's selection is changing.  */
 export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventArgs, IBaseEventArgs {

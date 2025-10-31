@@ -18,10 +18,8 @@ import {
     IgxCalendarMonthDirective,
     IgxCalendarYearDirective,
 } from "../calendar.directives";
-import { CalendarDay, DayInterval } from "../common/model";
-import { getNextActiveDate, isDateInRanges } from "./helpers";
-import { DateRangeType } from "../../core/dates";
-import { isDate } from "../../core/utils";
+import { CalendarDay, DateRangeType, DayInterval, getNextActiveDate, isDate, isDateInRanges } from 'igniteui-angular/core';
+
 
 export enum Direction {
     NEXT = 1,

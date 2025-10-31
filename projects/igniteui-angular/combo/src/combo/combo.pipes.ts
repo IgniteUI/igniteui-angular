@@ -1,6 +1,6 @@
 import { Inject, Pipe, PipeTransform } from '@angular/core';
-import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IComboFilteringOptions, IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
+import { SortingDirection } from 'igniteui-angular/core';
 
 /** @hidden */
 @Pipe({

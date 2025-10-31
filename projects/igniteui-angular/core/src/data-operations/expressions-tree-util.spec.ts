@@ -1,8 +1,8 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { recreateTree, recreateTreeFromFields } from './expressions-tree-util';
-import { EntityType, FieldType } from '../grids/common/grid.interface';
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from './filtering-condition';
+import type { EntityType, FieldType } from './grid-types';
 
 function serialize(value: unknown, pretty = false) {
     return pretty ? JSON.stringify(value, undefined, ' ') : JSON.stringify(value)

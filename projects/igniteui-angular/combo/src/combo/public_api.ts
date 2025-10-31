@@ -1,7 +1,4 @@
-import { IgxHintDirective } from 'igniteui-angular/directives';
-import { IgxLabelDirective } from 'igniteui-angular/directives';
-import { IgxPrefixDirective } from 'igniteui-angular/directives';
-import { IgxSuffixDirective } from 'igniteui-angular/directives';
+import { IgxHintDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxComboComponent } from './combo.component';
 import {
     IgxComboAddItemDirective,
@@ -14,9 +11,14 @@ import {
     IgxComboToggleIconDirective
 } from './combo.directives';
 
-export { IComboFilteringOptions } from './combo.common';
+export * from './combo.api';
+export * from './combo.common';
 export * from './combo.component';
 export * from './combo.directives';
+export * from './combo.pipes';
+export * from './combo-add-item.component';
+export * from './combo-dropdown.component'
+export * from './combo-item.component';
 export { comboIgnoreDiacriticsFilter } from './combo.pipes';
 
 /* NOTE: Combo directives collection for ease-of-use import in standalone components scenario */

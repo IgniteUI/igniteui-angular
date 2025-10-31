@@ -1,4 +1,4 @@
-import { isDate } from "../../core/utils";
+import { isDate } from '../../core/utils';
 
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 export type DayParameter = CalendarDay | Date;

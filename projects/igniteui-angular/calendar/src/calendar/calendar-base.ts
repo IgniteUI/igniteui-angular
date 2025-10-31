@@ -1,16 +1,22 @@
 import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID, HostListener, booleanAttribute, ViewChildren, QueryList, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { WEEKDAYS, IFormattingOptions, IFormattingViews, IViewDateChangeEventArgs, ScrollDirection, IgxCalendarView, CalendarSelection } from './calendar';
 import { ControlValueAccessor } from '@angular/forms';
-import { DateRangeDescriptor } from 'igniteui-angular/core';
 import { noop, Subject } from 'rxjs';
-import { isDate, isEqual, PlatformUtil } from 'igniteui-angular/core';
-import { CalendarResourceStringsEN, ICalendarResourceStrings } from 'igniteui-angular/core';
-import { DateTimeUtil } from '../date-common/util/date-time.util';
+import {
+    isDate,
+    isEqual,
+    PlatformUtil,
+    DateRangeDescriptor,
+    DateTimeUtil,
+    CalendarResourceStringsEN,
+    ICalendarResourceStrings,
+    getCurrentResourceStrings,
+    CalendarDay,
+    getYearRange,
+    isDateInRanges
+} from 'igniteui-angular/core';
 import { getLocaleFirstDayOfWeek } from "@angular/common";
-import { getCurrentResourceStrings } from 'igniteui-angular/core';
 import { KeyboardNavigationService } from './calendar.services';
-import { getYearRange, isDateInRanges } from './common/helpers';
-import { CalendarDay } from './common/model';
 
 /** @hidden @internal */
 @Directive({

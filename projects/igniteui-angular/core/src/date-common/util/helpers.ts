@@ -5,8 +5,8 @@ import {
     daysInWeek,
     toCalendarDay,
 } from "./model";
-import { DateRangeDescriptor, DateRangeType } from "./types";
-import { first, last, modulo } from "../../core/utils";
+import { DateRangeDescriptor, DateRangeType } from '../../core/dates';
+import { first, last, modulo } from '../../core/utils';
 
 interface IFormattedParts {
     value: string;

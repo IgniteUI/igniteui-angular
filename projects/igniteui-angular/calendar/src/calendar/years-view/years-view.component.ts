@@ -11,9 +11,8 @@ import {
     DAY_INTERVAL_TOKEN,
 } from "../common/calendar-view.directive";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { CalendarDay } from "../common/model";
-import type { DayInterval } from "../common/model";
-import { calendarRange } from "../common/helpers";
+import { CalendarDay, calendarRange } from 'igniteui-angular/core';
+import type { DayInterval } from 'igniteui-angular/core';
 
 @Component({
     providers: [

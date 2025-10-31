@@ -1,8 +1,5 @@
 import { columnFieldPath, parseDate, resolveNestedPath } from '../core/utils';
-import type { GridType } from './grid-types-stub';
-
-
-
+import type { GridType } from './grid-types';
 
 export interface IMergeByResult {
     rowSpan: number;

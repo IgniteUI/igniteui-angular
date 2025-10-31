@@ -8,6 +8,9 @@ export * from './core/selection';
 export * from './core/edit-provider';
 export * from './core/touch';
 
+// Date common
+export * from './date-common/public_api';
+
 // Data operations
 export * from './data-operations/data-clone-strategy';
 export * from './data-operations/filtering-expression.interface';
@@ -26,15 +29,10 @@ export * from './data-operations/sorting-strategy';
 export * from './data-operations/grid-sorting-strategy';
 export * from './data-operations/paging-state.interface';
 export * from './data-operations/data-util';
-export * from './data-operations/grid-types-stub';
+export * from './data-operations/grid-types';
 
 // Services
 export * from './services/public_api';
-
-// Date common
-export { PickerInteractionMode } from './date-common/types';
-export { DatePart, DatePartInfo, DatePartDeltas } from './date-common/date-parts';
-export { DateTimeUtil } from './date-common/util/date-time.util';
 
 // Performance service
 export * from './performance.service';

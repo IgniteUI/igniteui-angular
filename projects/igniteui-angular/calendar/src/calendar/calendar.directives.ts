@@ -21,8 +21,7 @@ import {
 } from '@angular/core';
 import { fromEvent, Subject, interval } from 'rxjs';
 import { takeUntil, debounce, tap } from 'rxjs/operators';
-import { PlatformUtil } from 'igniteui-angular/core';
-import { CalendarDay } from './common/model';
+import { CalendarDay, PlatformUtil } from 'igniteui-angular/core';
 
 export const IGX_CALENDAR_VIEW_ITEM =
     new InjectionToken<IgxCalendarMonthDirective | IgxCalendarYearDirective>('IgxCalendarViewItem');

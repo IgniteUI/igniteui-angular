@@ -7,20 +7,11 @@ import { getLocaleFirstDayOfWeek } from "@angular/common";
 
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
-import { EditorProvider } from '../core/edit-provider';
-import { IToggleView } from '../core/navigation';
-import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
-import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
-import { OverlaySettings } from '../services/overlay/utilities';
-import { IgxPickerClearComponent, IgxPickerToggleComponent } from './picker-icons.common';
-import { PickerHeaderOrientation, PickerInteractionMode } from './types';
-import { WEEKDAYS } from '../calendar/calendar';
-import { DateRange } from '../date-range-picker/date-range-picker-inputs.common';
-import { IGX_INPUT_GROUP_TYPE, IgxInputGroupType } from '../input-group/inputGroupType';
-import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
-import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
-import { IgxInputGroupComponent } from '../input-group/input-group.component';
+import { WEEKDAYS } from 'igniteui-angular/calendar';
+import { IGX_INPUT_GROUP_TYPE, IgxInputGroupComponent, IgxInputGroupType, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { DateRange } from 'igniteui-angular/date-range-picker';
+import { EditorProvider, IBaseCancelableBrowserEventArgs, IBaseEventArgs, IgxPickerClearComponent, IgxPickerToggleComponent, IToggleView, OverlaySettings, PickerHeaderOrientation, PickerInteractionMode } from 'igniteui-angular/core';
+import { IgxOverlayOutletDirective } from 'igniteui-angular/directives';
 
 @Directive()
 export abstract class PickerBaseDirective implements IToggleView, EditorProvider, AfterViewInit, AfterContentChecked, OnDestroy {

@@ -4,6 +4,7 @@ export * from './animation/angular-animation-service';
 export * from './animation/animation';
 export * from './csv/csv-exporter';
 export * from './csv/csv-exporter-options';
+export * from './direction/directionality';
 export * from './excel/excel-exporter';
 export * from './excel/excel-exporter-options';
 export * from './exporter-common/base-export-service';

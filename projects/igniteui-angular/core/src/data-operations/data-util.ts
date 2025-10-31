@@ -8,8 +8,7 @@ import { IGroupingState } from './groupby-state.interface';
 import { cloneArray, mergeObjects } from '../core/utils';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/transaction/transaction';
 import { getHierarchy, isHierarchyMatch } from './operations';
-import type { ColumnType, GridType } from './grid-types-stub';
-import type { ITreeGridRecord } from './grid-types-stub';
+import type { ColumnType, GridType, ITreeGridRecord } from './grid-types';
 import { ISortingExpression } from './sorting-strategy';
 import {
     IGridSortingStrategy,
@@ -23,28 +22,7 @@ import { IGroupingExpression } from './grouping-expression.interface';
 import { DefaultMergeStrategy, IGridMergeStrategy } from './merge-strategy';
 import { IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { FilteringStrategy, FilterUtil } from './filtering-strategy';
-
-/**
- * @hidden
- */
-export const DataType = {
-    String: 'string',
-    Number: 'number',
-    Boolean: 'boolean',
-    Date: 'date',
-    DateTime: 'dateTime',
-    Time: 'time',
-    Currency: 'currency',
-    Percent: 'percent',
-    Image: 'image'
-} as const;
-export type DataType = (typeof DataType)[keyof typeof DataType];
-
-/**
- * @hidden
- */
-export const GridColumnDataType = DataType;
-export type GridColumnDataType = (typeof GridColumnDataType)[keyof typeof GridColumnDataType];
+import { GridColumnDataType } from './grid-types';
 
 /**
  * @hidden
