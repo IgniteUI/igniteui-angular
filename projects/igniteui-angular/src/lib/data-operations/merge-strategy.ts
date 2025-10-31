@@ -60,7 +60,7 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
         isDate = false,
         isTime = false,
         grid?: GridType
-    ) {
+    ): any[] {
         let prev = null;
         let index = 0;
         for (const rec of data) {
@@ -94,8 +94,8 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
 
     /* blazorCSSuppress */
     public comparer(prevRecord: any, record: any, field: string, isDate = false, isTime = false): boolean {
-        const a = this.getFieldValue(prevRecord,field, isDate, isTime);
-        const b = this.getFieldValue(record,field, isDate, isTime);
+        const a = this.getFieldValue(prevRecord, field, isDate, isTime);
+        const b = this.getFieldValue(record, field, isDate, isTime);
         const an = (a === null || a === undefined);
         const bn = (b === null || b === undefined);
         if (an) {
@@ -149,8 +149,8 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
 export class DefaultTreeGridMergeStrategy extends DefaultMergeStrategy {
     /* blazorCSSuppress */
     public override comparer(prevRecord: any, record: any, field: string, isDate = false, isTime = false): boolean {
-        const a = this.getFieldValue( prevRecord.data, field, isDate, isTime);
-        const b = this.getFieldValue(record.data,field, isDate, isTime);
+        const a = this.getFieldValue(prevRecord.data, field, isDate, isTime);
+        const b = this.getFieldValue(record.data, field, isDate, isTime);
         const an = (a === null || a === undefined);
         const bn = (b === null || b === undefined);
         if (an) {
@@ -168,8 +168,8 @@ export class DefaultTreeGridMergeStrategy extends DefaultMergeStrategy {
 export class ByLevelTreeGridMergeStrategy extends DefaultMergeStrategy {
     /* blazorCSSuppress */
     public override comparer(prevRecord: any, record: any, field: string, isDate = false, isTime = false): boolean {
-        const a = this.getFieldValue( prevRecord.data, field, isDate, isTime);
-        const b = this.getFieldValue(record.data,field, isDate, isTime);
+        const a = this.getFieldValue(prevRecord.data, field, isDate, isTime);
+        const b = this.getFieldValue(record.data, field, isDate, isTime);
         const levelA = prevRecord.level;
         const levelB = record.level;
         const an = (a === null || a === undefined);
