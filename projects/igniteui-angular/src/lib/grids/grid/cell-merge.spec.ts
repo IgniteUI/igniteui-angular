@@ -451,8 +451,10 @@ describe('IgxGrid - Cell merging #grid', () => {
 
                 UIInteractions.simulateClickAndSelectEvent(row1.cells.toArray()[1].nativeElement);
                 await wait(1);
+                (grid as any)._activeRowIndexes = null;
                 fix.detectChanges();
 
+                expect((grid as any).activeRowIndexes).toEqual([0, 0]);
                 GridFunctions.verifyColumnMergedState(grid, col, [
                     { value: 'Ignite UI for JavaScript', span: 1 },
                     { value: 'Ignite UI for JavaScript', span: 1 },
@@ -548,8 +550,10 @@ describe('IgxGrid - Cell merging #grid', () => {
                 const row1 = grid.rowList.toArray()[0];
                 UIInteractions.simulateClickAndSelectEvent(row1.cells.toArray()[1].nativeElement);
                 await wait(1);
+                (grid as any)._activeRowIndexes = null;
                 fix.detectChanges();
 
+                expect((grid as any).activeRowIndexes).toEqual([0, 0]);
                 GridFunctions.verifyColumnMergedState(grid, col1, [
                     { value: 'Ignite UI for JavaScript', span: 1 },
                     { value: 'Ignite UI for JavaScript', span: 1 },
@@ -586,8 +590,10 @@ describe('IgxGrid - Cell merging #grid', () => {
                 const row2 = grid.rowList.toArray()[1];
                 UIInteractions.simulateClickAndSelectEvent(row2.cells.toArray()[1].nativeElement);
                 await wait(1);
+                (grid as any)._activeRowIndexes = null;
                 fix.detectChanges();
 
+                expect((grid as any).activeRowIndexes).toEqual([1, 1]);
                 GridFunctions.verifyColumnMergedState(grid, col1, [
                     { value: 'Ignite UI for JavaScript', span: 1 },
                     { value: 'Ignite UI for JavaScript', span: 1 },
@@ -627,8 +633,10 @@ describe('IgxGrid - Cell merging #grid', () => {
                 const row3 = grid.rowList.toArray()[2];
                 UIInteractions.simulateClickAndSelectEvent(row3.cells.toArray()[1].nativeElement);
                 await wait(1);
+                (grid as any)._activeRowIndexes = null;
                 fix.detectChanges();
 
+                expect((grid as any).activeRowIndexes).toEqual([2, 2]);
                 GridFunctions.verifyColumnMergedState(grid, col1, [
                     { value: 'Ignite UI for JavaScript', span: 2 },
                     { value: 'Ignite UI for Angular', span: 1 },
