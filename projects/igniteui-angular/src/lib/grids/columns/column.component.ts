@@ -1066,6 +1066,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return (this.grid as any)._columns.indexOf(this);
     }
 
+    /* mustCoerceToInt */
     /**
      * Gets the pinning position of the column.
      * ```typescript
