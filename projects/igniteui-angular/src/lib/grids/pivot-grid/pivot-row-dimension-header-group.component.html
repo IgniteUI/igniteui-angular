@@ -26,6 +26,8 @@
         [igxColumnMovingDrop]="column"
         [column]="column"
         (keydown)="grid.navigation.headerNavigation($event)"
+        [style.min-width]="getHeaderWidthFromDimension()"
+        [style.width]="getHeaderWidthFromDimension()"
     >
     </igx-pivot-row-dimension-header>
     @if (!column.columnGroup && column.resizable) {

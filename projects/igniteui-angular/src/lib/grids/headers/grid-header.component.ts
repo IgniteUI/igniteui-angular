@@ -55,6 +55,43 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     @ViewChild('sortIconContainer', { read: ElementRef })
     protected sortIconContainer: ElementRef;
 
+    @HostBinding('class.igx-grid-th--pinned')
+    public get pinnedCss() {
+        return this.isPinned;
+    }
+
+    @HostBinding('class.igx-grid-th--pinned-last')
+    public get pinnedLastCss() {
+        return this.isLastPinned;
+    }
+
+    @HostBinding('class.igx-grid-th--pinned-first')
+    public get pinnedFirstCSS() {
+        return this.isFirstPinned;
+    }
+
+    /**
+     * Gets whether the header group is stored in the last column in the pinned area.
+     */
+    public get isLastPinned(): boolean {
+        return !this.grid.hasColumnLayouts ? this.column.isLastPinned : false;
+    }
+
+    /**
+     * Gets whether the header group is stored in the first column of the right pinned area.
+     */
+    public get isFirstPinned(): boolean {
+        return !this.grid.hasColumnLayouts ? this.column.isFirstPinned : false;
+    }
+
+    /**
+     * Gets whether the header group is stored in a pinned column.
+     *
+     * @memberof IgxGridHeaderGroupComponent
+     */
+    public get isPinned(): boolean {
+        return this.column.pinned;
+    }
     /**
      * @hidden
      */
@@ -76,7 +113,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     @HostBinding('attr.aria-sort')
     public get ariaSort() {
         return this.sortDirection === SortingDirection.Asc ? 'ascending'
-                : this.sortDirection === SortingDirection.Desc ? 'descending' : null;
+            : this.sortDirection === SortingDirection.Desc ? 'descending' : null;
     }
 
     /**
@@ -300,7 +337,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     }
 
     protected isAdvancedFilterApplied() {
-        if(!this.grid.advancedFilteringExpressionsTree) {
+        if (!this.grid.advancedFilteringExpressionsTree) {
             return false;
         }
         return !!ExpressionsTreeUtil.find(this.grid.advancedFilteringExpressionsTree, this.column.field);
