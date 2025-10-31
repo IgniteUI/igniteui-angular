@@ -68,12 +68,13 @@ export function getCurrentResourceStrings<T>(defaultEN: T, init = true) {
 
 /**
  * Change resource strings for all components globally. The locale is not taken into account and this method should be called when the locale is changed.
- *
- * Note:  This is an old implementation that uses outdated API for resource management.
- * We recommend using the new 'registerI18n' and 'setCurrentI18n' API. It uses the resources from 'igniteui-i18n-resources' as well.
  */
 export function changei18n(resourceStrings: IResourceStrings) {
     igxRegisterI18n(resourceStrings, getI18nManager().defaultLocale);
+}
+
+export function registerI18n(resourceStrings: IResourceStrings, locale?: string) {
+    igxRegisterI18n(resourceStrings, locale);
 }
 
 const angularLocalizationProp = Symbol.for('igx.i18n.angularLocalization');

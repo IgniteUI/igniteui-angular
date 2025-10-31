@@ -14,8 +14,7 @@ import { IgxIconComponent } from '../../projects/igniteui-angular/src/lib/icon/i
 import { CommonModule } from '@angular/common';
 import { PropertiesPanelComponent } from './properties-panel/properties-panel.component';
 import { PropertyChangeService } from './properties-panel/property-change.service';
-import { ResourceStringsBG, ResourceStringsDE, ResourceStringsES, ResourceStringsFR, ResourceStringsIT, ResourceStringsJA, ResourceStringsKO, ResourceStringsZHHANS, ResourceStringsZHHANT } from 'igniteui-i18n-resources';
-import { ResourceStringsEN } from 'igniteui-i18n-core';
+import { IgxResourceStringsBG, IgxResourceStringsDE, IgxResourceStringsES, IgxResourceStringsFR, IgxResourceStringsIT, IgxResourceStringsJA, IgxResourceStringsKO, IgxResourceStringsZHHANS, IgxResourceStringsZHHANT } from 'igniteui-angular-i18n';
 
 @Component({
     selector: 'app-root',
@@ -778,16 +777,15 @@ export class AppComponent implements OnInit {
         this.iconService.addSvgIcon('rain', '../assets/images/card/icons/rain.svg', 'weather-icons');
         this.iconService.addSvgIcon('breeze', '../assets/images/card/icons/breeze.svg', 'weather-icons');
 
-        registerI18n(ResourceStringsBG, 'bg');
-        registerI18n(ResourceStringsEN, 'en');
-        registerI18n(ResourceStringsDE, 'de');
-        registerI18n(ResourceStringsES, 'es');
-        registerI18n(ResourceStringsFR, 'fr');
-        registerI18n(ResourceStringsIT, 'it');
-        registerI18n(ResourceStringsJA, 'ja');
-        registerI18n(ResourceStringsKO, 'ko');
-        registerI18n(ResourceStringsZHHANS, 'zh-Hans');
-        registerI18n(ResourceStringsZHHANT, 'zh-Hant');
+        registerI18n(IgxResourceStringsBG, 'bg');
+        registerI18n(IgxResourceStringsDE, 'de');
+        registerI18n(IgxResourceStringsES, 'es');
+        registerI18n(IgxResourceStringsFR, 'fr');
+        registerI18n(IgxResourceStringsIT, 'it');
+        registerI18n(IgxResourceStringsJA, 'ja');
+        registerI18n(IgxResourceStringsKO, 'ko');
+        registerI18n(IgxResourceStringsZHHANS, 'zh-Hans');
+        registerI18n(IgxResourceStringsZHHANT, 'zh-Hant');
     }
 
 }
