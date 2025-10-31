@@ -1,27 +1,10 @@
 import { Component, ContentChild, Pipe, PipeTransform, Directive } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { IgxInputDirective, IgxInputState } from 'igniteui-angular/input-group';
-import { IgxInputGroupComponent } from '../input-group/input-group.component';
-import { IgxInputGroupBase } from '../input-group/input-group.common';
-import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
-import { isDate } from 'igniteui-angular/core';
+import { IgxInputDirective, IgxInputGroupBase, IgxInputGroupComponent, IgxInputState, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IgxButtonDirective, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
+import { isDate, DateRange, DateTimeUtil } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { IgxSuffixDirective } from 'igniteui-angular/directives';
-import { IgxButtonDirective } from 'igniteui-angular/directives';
-import { IgxPrefixDirective } from 'igniteui-angular/directives';
 import { NgTemplateOutlet } from '@angular/common';
-
-/** Represents a range between two dates. */
-export interface DateRange {
-    start: Date | string;
-    end: Date | string;
-}
-/** Represents a range between two dates and a label used for predefined and custom date ranges. */
-export interface CustomDateRange {
-    label: string;
-    dateRange: DateRange;
-}
 
 /** @hidden @internal */
 @Pipe({
@@ -126,7 +109,7 @@ export class IgxDateRangeInputsBaseComponent extends IgxInputGroupComponent {
  */
 @Component({
     selector: 'igx-date-range-start',
-    templateUrl: '../input-group/input-group.component.html',
+    templateUrl: '../../../input-group/src/input-group/input-group.component.html',
     providers: [
         { provide: IgxInputGroupBase, useExisting: IgxDateRangeStartComponent },
         { provide: IgxDateRangeInputsBaseComponent, useExisting: IgxDateRangeStartComponent }
@@ -161,7 +144,7 @@ export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent 
  */
 @Component({
     selector: 'igx-date-range-end',
-    templateUrl: '../input-group/input-group.component.html',
+    templateUrl: '../../../input-group/src/input-group/input-group.component.html',
     providers: [
         { provide: IgxInputGroupBase, useExisting: IgxDateRangeEndComponent },
         { provide: IgxDateRangeInputsBaseComponent, useExisting: IgxDateRangeEndComponent }

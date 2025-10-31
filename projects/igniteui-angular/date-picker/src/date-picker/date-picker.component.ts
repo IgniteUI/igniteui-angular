@@ -43,8 +43,7 @@ import {
 import { fromEvent, Subscription, noop, MonoTypeOperatorFunction } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
-import { IgxCalendarContainerComponent } from './calendar-container/calendar-container.component';
-import { DatePart, DatePartDeltas, IgxDateTimeEditorDirective, IgxOverlayOutletDirective, IgxTextSelectionDirective } from 'igniteui-angular/directives';
+import { IgxDateTimeEditorDirective, IgxOverlayOutletDirective, IgxTextSelectionDirective } from 'igniteui-angular/directives';
 import {
     AbsoluteScrollStrategy,
     AutoPositionStrategy,
@@ -62,12 +61,16 @@ import {
     PlatformUtil,
     getCurrentResourceStrings,
     PickerCalendarOrientation,
-    DateTimeUtil
+    DateTimeUtil,
+    DatePartDeltas,
+    DatePart,
+    isDateInRanges
 } from 'igniteui-angular/core';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { PickerBaseDirective } from './picker-base.directive';
+import { IgxCalendarContainerComponent } from './calendar-container/calendar-container.component';
 
 let NEXT_ID = 0;
 

@@ -14,30 +14,43 @@ import { fromEvent, merge, MonoTypeOperatorFunction, noop, Subscription } from '
 import { filter, takeUntil } from 'rxjs/operators';
 
 import { CalendarSelection, IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from 'igniteui-angular/calendar';
-import { DateRangeDescriptor, DateRangeType } from 'igniteui-angular/core';
-import { DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } from 'igniteui-angular/core';
-import { clamp, IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from 'igniteui-angular/core';
-import { IgxCalendarContainerComponent } from 'igniteui-angular/date-picker';
-import { PickerBaseDirective } from '../date-common/picker-base.directive';
-import { IgxPickerActionsDirective } from '../date-common/picker-icons.common';
-import { DateTimeUtil } from '../date-common/util/date-time.util';
+import {
+    DateRangeDescriptor,
+    DateRangeType,
+    DateRangePickerResourceStringsEN,
+    IDateRangePickerResourceStrings,
+    clamp,
+    IBaseCancelableBrowserEventArgs,
+    isDate,
+    parseDate,
+    PlatformUtil,
+    getCurrentResourceStrings,
+    AutoPositionStrategy,
+    IgxOverlayService,
+    OverlayCancelableEventArgs,
+    OverlayEventArgs,
+    OverlaySettings,
+    PositionSettings,
+    calendarRange,
+    CustomDateRange,
+    DateRange,
+    DateTimeUtil,
+    IgxPickerActionsDirective,
+    isDateInRanges,
+    PickerCalendarOrientation
+} from 'igniteui-angular/core';
+import { IgxCalendarContainerComponent } from '../date-picker/calendar-container/calendar-container.component';
+import { PickerBaseDirective } from '../date-picker/picker-base.directive';
 import { IgxOverlayOutletDirective } from 'igniteui-angular/directives';
 import {
     IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState,
-    IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxSuffixDirective
+    IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxSuffixDirective,
+    IgxPrefixDirective,
+    IgxReadOnlyInputDirective
 } from 'igniteui-angular/input-group';
-import {
-    AutoPositionStrategy, IgxOverlayService, OverlayCancelableEventArgs, OverlayEventArgs,
-    OverlaySettings, PositionSettings
-} from 'igniteui-angular/core';
-import { DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, DateRangePickerFormatPipe, CustomDateRange } from './date-range-picker-inputs.common';
-import { IgxPrefixDirective } from 'igniteui-angular/directives';
+import { IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, DateRangePickerFormatPipe } from './date-range-picker-inputs.common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { getCurrentResourceStrings } from 'igniteui-angular/core';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
-import { PickerCalendarOrientation } from '../date-common/types';
-import { calendarRange, isDateInRanges } from '../calendar/common/helpers';
-import { IgxReadOnlyInputDirective } from 'igniteui-angular/directives';
 
 const SingleInputDatesConcatenationString = ' - ';
 

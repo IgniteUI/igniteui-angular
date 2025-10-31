@@ -9,8 +9,7 @@ import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { WEEKDAYS } from 'igniteui-angular/calendar';
 import { IGX_INPUT_GROUP_TYPE, IgxInputGroupComponent, IgxInputGroupType, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
-import { DateRange } from 'igniteui-angular/date-range-picker';
-import { EditorProvider, IBaseCancelableBrowserEventArgs, IBaseEventArgs, IgxPickerClearComponent, IgxPickerToggleComponent, IToggleView, OverlaySettings, PickerHeaderOrientation, PickerInteractionMode } from 'igniteui-angular/core';
+import { DateRange, EditorProvider, IBaseCancelableBrowserEventArgs, IBaseEventArgs, IgxPickerClearComponent, IgxPickerToggleComponent, IToggleView, OverlaySettings, PickerHeaderOrientation, PickerInteractionMode } from 'igniteui-angular/core';
 import { IgxOverlayOutletDirective } from 'igniteui-angular/directives';
 
 @Directive()

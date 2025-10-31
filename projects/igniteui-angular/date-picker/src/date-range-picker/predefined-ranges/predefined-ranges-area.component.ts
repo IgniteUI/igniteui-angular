@@ -1,9 +1,7 @@
 import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IgxChipComponent } from '../../chips/chip.component';
-import { DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } from '../../core/i18n/date-range-picker-resources';
-import { DateRange, CustomDateRange} from '.././date-range-picker-inputs.common';
-import { CalendarDay } from '../../calendar/common/model';
+import { IgxChipComponent } from 'igniteui-angular/chips';
+import { CalendarDay, CustomDateRange, DateRange, DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } from 'igniteui-angular/core';
 
 
 type PredefinedRangeKey = 'last7Days' | 'currentMonth' | 'last30Days' | 'yearToDate';

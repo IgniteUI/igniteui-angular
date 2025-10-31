@@ -3,6 +3,3 @@ export interface IgxDateTimeEditorEventArgs {
     newValue?: Date;
     readonly userInput: string;
 }
-
-// Re-export from core to maintain backwards compatibility
-export { DatePart, DatePartInfo, DatePartDeltas } from 'igniteui-angular/core';
