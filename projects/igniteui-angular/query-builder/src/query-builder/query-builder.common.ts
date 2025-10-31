@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
+import { FilteringLogic, IFilteringExpression } from 'igniteui-angular/core';
 
 @Pipe({
     name: 'fieldFormatter',

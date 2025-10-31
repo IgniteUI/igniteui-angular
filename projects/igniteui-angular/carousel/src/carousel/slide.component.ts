@@ -1,6 +1,6 @@
-import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, AfterContentChecked, booleanAttribute, Inject } from '@angular/core';
+import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, AfterContentChecked, booleanAttribute } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Direction, IgxSlideComponentBase } from './carousel-base';
+import { IgxCarouselDirection, IgxSlideComponentBase } from './carousel-base';
 
 /**
  * A slide component that usually holds an image and/or a caption text.
@@ -42,7 +42,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      *
      * @memberOf IgxSlideComponent
      */
-    @Input() public direction: Direction;
+    @Input() public direction: IgxCarouselDirection;
 
     @Input()
     public total: number;

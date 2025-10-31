@@ -12,48 +12,69 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { IgxChipComponent } from '../chips/chip.component';
-import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from 'igniteui-angular/core';
-import { PlatformUtil, trackByIdentity } from 'igniteui-angular/core';
-import { DataType, DataUtil } from '../data-operations/data-util';
-import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from '../data-operations/filtering-condition';
-import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
-import { FilteringExpressionsTree, IExpressionTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
-import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
+import { IgxChipComponent } from 'igniteui-angular/chips';
+import {
+    IQueryBuilderResourceStrings,
+    QueryBuilderResourceStringsEN,
+    PlatformUtil,
+    trackByIdentity,
+    GridColumnDataType as DataType,
+    DataUtil,
+    IgxBooleanFilteringOperand,
+    IgxDateFilteringOperand,
+    IgxDateTimeFilteringOperand,
+    IgxNumberFilteringOperand,
+    IgxStringFilteringOperand,
+    IgxTimeFilteringOperand,
+    FilteringLogic,
+    IFilteringExpression,
+    FilteringExpressionsTree,
+    IExpressionTree,
+    IFilteringExpressionsTree,
+    FieldType,
+    EntityType,
+    HorizontalAlignment,
+    OverlaySettings,
+    VerticalAlignment,
+    AbsoluteScrollStrategy,
+    AutoPositionStrategy,
+    CloseScrollStrategy,
+    ConnectedPositioningStrategy,
+    IgxPickerToggleComponent,
+    IgxPickerClearComponent,
+    getCurrentResourceStrings,
+    isTree
+} from 'igniteui-angular/core';
+import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 
-import { IgxButtonDirective } from 'igniteui-angular/directives';
-import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
-
-import { IgxOverlayOutletDirective } from 'igniteui-angular/directives';
-import { FieldType, EntityType } from '../grids/common/grid.interface';
-import { IgxSelectComponent } from '../select/select.component';
-import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from 'igniteui-angular/core';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, ConnectedPositioningStrategy } from 'igniteui-angular/core';
-import { IgxTimePickerComponent } from '../time-picker/time-picker.component';
-import { IgxPickerToggleComponent, IgxPickerClearComponent } from '../date-common/picker-icons.common';
-import { IgxInputDirective } from 'igniteui-angular/directives';
-import { IgxInputGroupComponent } from '../input-group/input-group.component';
-import { IgxSelectItemComponent } from '../select/select-item.component';
-import { IgxPrefixDirective } from 'igniteui-angular/directives';
+import {
+    IgxButtonDirective,
+    IgxDateTimeEditorDirective,
+    IgxOverlayOutletDirective,
+    IgxIconButtonDirective,
+    IgxTooltipDirective,
+    IgxTooltipTargetDirective,
+    IgxDragIgnoreDirective,
+    IgxDropDirective
+} from 'igniteui-angular/directives';
+import { IgxSelectComponent } from 'igniteui-angular/select';
+import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
+import { IgxInputGroupComponent, IgxInputDirective, IgxPrefixDirective } from 'igniteui-angular/input-group';
+import { IgxSelectItemComponent } from 'igniteui-angular/select';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { getCurrentResourceStrings } from 'igniteui-angular/core';
-import { IgxIconButtonDirective } from 'igniteui-angular/directives';
-import { IComboSelectionChangingEventArgs, IgxComboComponent } from "../combo/combo.component";
-import { IgxComboHeaderDirective } from 'igniteui-angular/combo';
-import { IgxCheckboxComponent } from "../checkbox/checkbox.component";
-import { IChangeCheckboxEventArgs } from '../checkbox/checkbox-base.directive';
-import { IgxDialogComponent } from "../dialog/dialog.component";
-import { ISelectionEventArgs } from '../drop-down/drop-down.common';
-import { IgxTooltipDirective } from 'igniteui-angular/directives';
-import { IgxTooltipTargetDirective } from 'igniteui-angular/directives';
+import { IComboSelectionChangingEventArgs, IgxComboComponent, IgxComboHeaderDirective } from 'igniteui-angular/combo';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { IChangeCheckboxEventArgs } from 'igniteui-angular/checkbox';
+import { IgxDialogComponent } from 'igniteui-angular/dialog';
+import {
+    ISelectionEventArgs,
+    IgxDropDownComponent,
+    IgxDropDownItemComponent,
+    IgxDropDownItemNavigationDirective
+} from 'igniteui-angular/drop-down';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 import { IgxQueryBuilderComponent } from './query-builder.component';
-import { IgxDragIgnoreDirective, IgxDropDirective } from 'igniteui-angular/directives';
-import { IgxDropDownComponent } from '../drop-down/drop-down.component';
-import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
-import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
 import { IgxQueryBuilderDragService } from './query-builder-drag.service';
-import { isTree } from '../data-operations/expressions-tree-util';
 import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, IgxFieldFormatterPipe } from './query-builder.common';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
@@ -172,9 +193,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @Input()
     public set fields(fields: FieldType[]) {
         this._fields = fields;
-        
+
         this._fields = this._fields?.map(f => ({...f, filters: this.getFilters(f), pipeArgs: this.getPipeArgs(f) }));
-        
+
         if (!this._fields && this.isAdvancedFiltering()) {
             this._fields = this.entities[0].fields;
         }
@@ -560,7 +581,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.returnFieldSelectOverlaySettings.outlet = this.overlayOutlet;
         this.addExpressionDropDownOverlaySettings.outlet = this.overlayOutlet;
         this.groupContextMenuDropDownOverlaySettings.outlet = this.overlayOutlet;
-        
+
         if (this.isAdvancedFiltering() && this.entities?.length === 1) {
             this.selectedEntity = this.entities[0].name;
             if (this._selectedEntity.fields.find(f => f.field === this.expectedReturnField)) {
@@ -619,7 +640,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public onEntityChangeCancel() {
         this.entityChangeDialog.close();
-        this.entitySelect.close();
+        // entitySelect will close automatically
         this._entityNewValue = null;
     }
 
@@ -646,7 +667,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (this._expressionTree) {
             this._expressionTree.entity = this._entityNewValue.name;
 
-            this._expressionTree.returnFields = this.fields.length === this._selectedReturnFields.length ? ['*'] : this._selectedReturnFields;
+            const returnFields = Array.isArray(this._selectedReturnFields) ? this._selectedReturnFields : [this._selectedReturnFields];
+            this._expressionTree.returnFields = this.fields.length === returnFields.length ? ['*'] : returnFields;
 
             this._expressionTree.filteringOperands = [];
 
@@ -664,7 +686,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.searchValue.value = null;
 
         this.entityChangeDialog.close();
-        this.entitySelect.close();
+        // entitySelect will close automatically
 
         this._entityNewValue = null;
         this.innerQueryNewExpressionTree = null;
@@ -967,7 +989,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 this.selectedField.filters.condition(this.selectedCondition)?.isUnary
             );
     }
-    
+
     /**
      * @hidden @internal
      */
@@ -1188,23 +1210,23 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this._editedExpression = expressionItem;
         this.cdr.detectChanges();
 
-        this.entitySelectOverlaySettings.target = this.entitySelect.element;
-        this.entitySelectOverlaySettings.excludeFromOutsideClick = [this.entitySelect.element as HTMLElement];
+        this.entitySelectOverlaySettings.target = this.entitySelect.getEditElement();
+        this.entitySelectOverlaySettings.excludeFromOutsideClick = [this.entitySelect.getEditElement() as HTMLElement];
         this.entitySelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
 
         if (this.returnFieldSelect) {
-            this.returnFieldSelectOverlaySettings.target = this.returnFieldSelect.element;
-            this.returnFieldSelectOverlaySettings.excludeFromOutsideClick = [this.returnFieldSelect.element as HTMLElement];
+            this.returnFieldSelectOverlaySettings.target = this.returnFieldSelect.getEditElement();
+            this.returnFieldSelectOverlaySettings.excludeFromOutsideClick = [this.returnFieldSelect.getEditElement() as HTMLElement];
             this.returnFieldSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
         }
         if (this.fieldSelect) {
-            this.fieldSelectOverlaySettings.target = this.fieldSelect.element;
-            this.fieldSelectOverlaySettings.excludeFromOutsideClick = [this.fieldSelect.element as HTMLElement];
+            this.fieldSelectOverlaySettings.target = this.fieldSelect.getEditElement();
+            this.fieldSelectOverlaySettings.excludeFromOutsideClick = [this.fieldSelect.getEditElement() as HTMLElement];
             this.fieldSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
         }
         if (this.conditionSelect) {
-            this.conditionSelectOverlaySettings.target = this.conditionSelect.element;
-            this.conditionSelectOverlaySettings.excludeFromOutsideClick = [this.conditionSelect.element as HTMLElement];
+            this.conditionSelectOverlaySettings.target = this.conditionSelect.getEditElement();
+            this.conditionSelectOverlaySettings.excludeFromOutsideClick = [this.conditionSelect.getEditElement() as HTMLElement];
             this.conditionSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
         }
 
@@ -1226,7 +1248,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public onConditionSelectChanging(event: ISelectionEventArgs) {
         event.cancel = true;
         this.selectedCondition = event.newSelection.value;
-        this.conditionSelect.close();
+        // conditionSelect will close automatically
         this.cdr.detectChanges();
     }
 
@@ -1530,7 +1552,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 DEFAULT_PIPE_TIME_FORMAT : field.dataType === DataType.DateTime ?
                     DEFAULT_PIPE_DATE_TIME_FORMAT : DEFAULT_PIPE_DATE_FORMAT;
         }
-        
+
         return pipeArgs;
     }
 

@@ -2,7 +2,7 @@ import { filter, fromEvent, sampleTime, Subscription } from 'rxjs';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { ElementRef, Injectable } from '@angular/core';
 import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, QueryBuilderSelectors } from './query-builder.common';
-import { IgxChipComponent } from '../chips/chip.component';
+import { IgxChipComponent } from 'igniteui-angular/chips';
 
 const DEFAULT_SET_Z_INDEX_DELAY = 10;
 const Z_INDEX_TO_SET = 10010; //overlay z-index is 10005
@@ -51,11 +51,11 @@ export class IgxQueryBuilderDragService {
     }
 
     /** When chip is picked up for dragging
-     * 
+     *
      * @param sourceDragElement The HTML element of the chip that's been dragged
      * @param sourceExpressionItem The expressionItem of the chip that's been dragged
      * @param isKeyboardDrag If it's a mouse drag or keyboard reorder
-     * 
+     *
     */
     public onMoveStart(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem, isKeyboardDrag: boolean): void {
         this.resetDragAndDrop(true);
@@ -116,7 +116,7 @@ export class IgxQueryBuilderDragService {
         this.renderDropGhostChip(appendUnder);
     }
 
-    /** When mouse drag moves in a div's drop area 
+    /** When mouse drag moves in a div's drop area
      * @param targetDragElement The HTML element of the drop area chip that's been dragged to
      * @param targetExpressionItem The expressionItem of the drop area chip that's been dragged to
     */
@@ -128,7 +128,7 @@ export class IgxQueryBuilderDragService {
         }
     }
 
-    /** When mouse drag moves in a chip's drop area 
+    /** When mouse drag moves in a chip's drop area
      * @param targetDragElement The HTML element of the drop area chip that's been dragged to
     */
     public onChipOver(targetDragElement: HTMLElement): void {
@@ -158,7 +158,7 @@ export class IgxQueryBuilderDragService {
         }
     }
 
-    /** When dragged chip is let go in div's drop area 
+    /** When dragged chip is let go in div's drop area
      * @param targetExpressionItem The expressionItem of the drop area chip that's been dragged to
     */
     public onDivDropped(targetExpressionItem: ExpressionItem) {
@@ -187,7 +187,7 @@ export class IgxQueryBuilderDragService {
         this._queryBuilderTreeComponent.exitEditAddMode();
     }
 
-    /** When mouse drag moves in a AND/OR drop area 
+    /** When mouse drag moves in a AND/OR drop area
      * @param targetDragElement The HTML element of the drop area chip that's been dragged to
      * @param targetExpressionItem The expressionItem of the drop area chip that's been dragged to
     */
@@ -199,15 +199,15 @@ export class IgxQueryBuilderDragService {
         let newTargetExpressionItem;
 
         if (this.ghostInLowerPart(targetDragElement) || !targetExpressionItem.parent) {
-            //if ghost is in lower part of the AND/OR (or it's the main group) => drop as first child of that group    
-            //accounting for the fact that the drop ghost might already be there as first child        
+            //if ghost is in lower part of the AND/OR (or it's the main group) => drop as first child of that group
+            //accounting for the fact that the drop ghost might already be there as first child
             if (targetExpressionItem.children[0] !== this.dropGhostExpression) {
                 newTargetExpressionItem = targetExpressionItem.children[0];
             } else {
                 newTargetExpressionItem = targetExpressionItem.children[1];
             }
         } else {
-            //if ghost is in upper part => drop before the group starts             
+            //if ghost is in upper part => drop before the group starts
             newTargetExpressionItem = targetExpressionItem;
         }
 
@@ -218,7 +218,7 @@ export class IgxQueryBuilderDragService {
         }
     }
 
-    /** When mouse drag moves in 'Add condition' button's drop area 
+    /** When mouse drag moves in 'Add condition' button's drop area
      * @param addConditionElement The Add condition button HTML Element
      * @param rootGroup The root group of the query tree
     */
@@ -233,10 +233,10 @@ export class IgxQueryBuilderDragService {
     }
 
     /** When chip's drag indicator is focused
-     * 
+     *
      * @param sourceDragElement The HTML element of the chip that's been dragged
      * @param sourceExpressionItem The expressionItem of the chip that's been dragged
-     * 
+     *
     */
     public onChipDragIndicatorFocus(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem) {
         //if drag is not underway, already
@@ -319,7 +319,7 @@ export class IgxQueryBuilderDragService {
         if (!this.isKeyboardDrag && this.getDragGhostElement && (!this._ghostChipMousemoveSubscription$ || this._ghostChipMousemoveSubscription$?.closed === true)) {
             const mouseMoves = fromEvent<MouseEvent>(this.getDragGhostElement, 'mousemove');
 
-            //When mouse moves and there is a drop ghost => trigger onChipLeave to check if the drop ghost has to be removed 
+            //When mouse moves and there is a drop ghost => trigger onChipLeave to check if the drop ghost has to be removed
             //effectively solving the case when mouse leaves the QB and a drop ghost is still in place
             this._ghostChipMousemoveSubscription$ = mouseMoves.pipe(sampleTime(100)).subscribe(() => {
                 if (this.getDropGhostElement) {

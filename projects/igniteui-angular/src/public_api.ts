@@ -38,7 +38,6 @@ export * from 'igniteui-angular/chips';
 export * from 'igniteui-angular/combo';
 export * from 'igniteui-angular/simple-combo';
 export * from 'igniteui-angular/date-picker';
-export * from 'igniteui-angular/date-range-picker';
 export * from 'igniteui-angular/dialog';
 export * from 'igniteui-angular/drop-down';
 export * from 'igniteui-angular/expansion-panel';

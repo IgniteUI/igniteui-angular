@@ -5,7 +5,7 @@ import { AnimationPlayer, AnimationService } from 'igniteui-angular/core';
 import { fadeIn, slideInLeft } from 'igniteui-angular/animations';
 import { CarouselAnimationType } from './enums';
 
-export enum Direction { NONE, NEXT, PREV }
+export enum IgxCarouselDirection { NONE, NEXT, PREV }
 
 export interface CarouselAnimationSettings {
     enterAnimation: AnimationReferenceMetadata;
@@ -14,7 +14,7 @@ export interface CarouselAnimationSettings {
 
 /** @hidden */
 export interface IgxSlideComponentBase {
-    direction: Direction;
+    direction: IgxCarouselDirection;
     previous: boolean;
 }
 

@@ -3,16 +3,20 @@ import {
     Component, Input, ViewChild, ElementRef, OnDestroy, HostBinding
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from 'igniteui-angular/core';
-import { IExpressionTree } from '../data-operations/filtering-expressions-tree';
+import {
+    EntityType,
+    FieldType,
+    IExpressionTree,
+    IQueryBuilderResourceStrings,
+    QueryBuilderResourceStringsEN,
+    recreateTree,
+    getCurrentResourceStrings
+} from 'igniteui-angular/core';
 import { IgxOverlayOutletDirective } from 'igniteui-angular/directives';
-import { EntityType, FieldType } from '../grids/common/grid.interface';
-import { getCurrentResourceStrings } from 'igniteui-angular/core';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { IgxIconService } from 'igniteui-angular/icon';
 import { editor } from '@igniteui/material-icons-extended';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
-import { recreateTree } from '../data-operations/expressions-tree-util';
 
 /**
  * A component used for operating with complex filters by creating or editing conditions

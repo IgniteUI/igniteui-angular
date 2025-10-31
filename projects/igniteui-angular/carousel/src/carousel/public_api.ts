@@ -2,7 +2,7 @@ import { IgxCarouselComponent } from './carousel.component';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
 
-export { Direction, CarouselAnimationSettings } from './carousel-base';
+export { IgxCarouselDirection, CarouselAnimationSettings } from './carousel-base';
 export * from './carousel.component';
 export * from './slide.component';
 export * from './carousel.directives';

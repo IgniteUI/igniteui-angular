@@ -1,7 +1,4 @@
-import { IgxHintDirective } from 'igniteui-angular/directives';
-import { IgxLabelDirective } from 'igniteui-angular/directives';
-import { IgxPrefixDirective } from 'igniteui-angular/directives';
-import { IgxSuffixDirective } from 'igniteui-angular/directives';
+import { IgxHintDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxSelectGroupComponent } from './select-group.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { IgxSelectComponent, IgxSelectFooterDirective, IgxSelectHeaderDirective, IgxSelectToggleIconDirective } from './select.component';
