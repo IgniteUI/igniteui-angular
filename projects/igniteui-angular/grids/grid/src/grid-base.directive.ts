@@ -8106,7 +8106,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
             const height = parseFloat(this.document.defaultView.getComputedStyle(targetCell.nativeElement)?.getPropertyValue('height'));
             if (height) {
-                console.log(height);
                 this._defaultRowHeight = height;
             } else {
                 this._shouldRecalcRowHeight = true;
