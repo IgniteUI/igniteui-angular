@@ -35,10 +35,6 @@ $_theme: $indigo;
         @include type-style(body-2);
         transition: color 0.2s $ease-out-quad;
         transition-delay: var(--_transition-delay);
-
-        &:hover {
-            color: var-get($_theme, 'label-color-hover');
-        }
     }
 
     @include e(label) {
@@ -63,18 +59,26 @@ $_theme: $indigo;
     }
 
     @include m(invalid) {
-        &:hover {
-            @include e(composite) {
-                border-color: var-get($_theme, 'error-color-hover');
-            }
-        }
-
         @include e(label) {
             color: var-get($_theme, 'label-color');
         }
 
         @include e(label, $m: before) {
             color: var-get($_theme, 'label-color');
+        }
+
+        &:hover {
+            @include e(composite) {
+                border-color: var-get($_theme, 'error-color-hover');
+            }
+
+            @include e(label) {
+                color: var-get($_theme, 'label-color-hover');
+            }
+
+            @include e(label, $m: before) {
+                color: var-get($_theme, 'label-color-hover');
+            }
         }
     }
 
@@ -132,6 +136,13 @@ $_theme: $indigo;
             @include e(composite) {
                 background: var-get($_theme, 'error-color-hover');
             }
+        }
+    }
+
+    @include mx(focused, invalid, indeterminate) {
+        @include e(composite) {
+            box-shadow: 0 0 0 rem(3px)
+                var-get($_theme, 'focus-outline-color-error');
         }
     }
 
