@@ -6,6 +6,8 @@ import getArgs from "./get-args.mjs";
 const product = "ignite-ui-angular";
 const { localize, jsonExport, jsonImport } = getArgs();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const toPosix = (p) => p.split(path.sep).join(path.posix.sep);
+
 const DEST = path.join.bind(
     null,
     path.resolve(__dirname, "../dist/igniteui-angular/docs"),
@@ -39,8 +41,8 @@ function entryPoints() {
  * The output directory for the static site or json generation.
  */
 const OUT_DIR = jsonExport
-    ? DEST("/typescript-exported/igniteui-angular.json")
-    : DEST("/typescript");
+    ? toPosix(DEST("/typescript-exported/igniteui-angular.json"))
+    : toPosix(DEST("/typescript"));
 
 /*
  * The Typedoc configuration object.
@@ -62,6 +64,8 @@ const CONFIG = {
     name: "Ignite UI for Angular",
     readme: "none",
     out: OUT_DIR,
+    router: "structure",
+    logLevel: "Verbose",
     tsconfig: path.resolve(__dirname, "../tsconfig.typedoc.json"),
 };
 
