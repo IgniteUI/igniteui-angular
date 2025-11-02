@@ -61,23 +61,23 @@
     %tabs-header {
         overflow: hidden;
         flex: 0 0 auto;
-        background: var-get($theme, 'item-background');
         z-index: 1;
 
-	    @if $bootstrap-theme {
-		    position: relative;
+      @if $bootstrap-theme {
+        position: relative;
+        background: var-get($theme, 'item-background');
 
-		    &::after {
-			    content: '';
-			    position: absolute;
-			    bottom: 0;
-			    inset-inline-start: 0;
-			    width: 100%;
-			    height: rem(1px);
-			    background: var-get($theme, 'border-color');
-			    z-index: 0;
-		    }
-	    }
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          inset-inline-start: 0;
+          width: 100%;
+          height: rem(1px);
+          background: var-get($theme, 'border-color');
+          z-index: 0;
+        }
+      }
     }
 
     %tabs-header-content {
@@ -204,6 +204,7 @@
         @if $not-bootstrap-theme {
             transition: all .3s $tabs-animation-function;
             border: rem(1px) solid var-get($theme, 'border-color');
+            border-radius: var-get($theme, 'border-radius');
 
             &:hover,
             &:focus {
