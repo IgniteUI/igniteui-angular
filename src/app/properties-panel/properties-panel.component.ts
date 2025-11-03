@@ -26,10 +26,8 @@ import {
     IgxDatePickerComponent,
     IgxTimePickerComponent,
     IgxDateTimeEditorModule,
-    IgxDateRangePickerComponent,
-    ISelectionEventArgs
+    IgxDateRangePickerComponent
 } from 'igniteui-angular';
-import { setCurrentI18n } from 'igniteui-i18n-core';
 
 @Component({
     selector: 'app-properties-panel',
@@ -135,9 +133,5 @@ export class PropertiesPanelComponent {
         return labels.length > 0
             ? labels
             : options.map((option) => option.label || option.toString());
-    }
-
-    protected updateLocale(event: ISelectionEventArgs) {
-        setCurrentI18n(event.newSelection.value);
     }
 }
