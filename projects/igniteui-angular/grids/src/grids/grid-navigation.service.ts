@@ -10,14 +10,15 @@ import {
     HORIZONTAL_NAV_KEYS,
     HEADER_KEYS,
     ROW_ADD_KEYS,
-    PlatformUtil
+    PlatformUtil,
+    SortingDirection
 } from 'igniteui-angular/core';
 import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/enums';
 import { IActiveNodeChangeEventArgs } from './common/events';
 import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
 import { IMultiRowLayoutNode } from './common/types';
-import { SortingDirection } from '../data-operations/sorting-strategy';
 import { animationFrameScheduler, Subject } from 'rxjs';
+
 export interface ColumnGroupsCache {
     level: number;
     visibleIndex: number;

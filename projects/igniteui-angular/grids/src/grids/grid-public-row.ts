@@ -1,4 +1,3 @@
-import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IgxEditRow } from './common/crud.service';
 import { GridSummaryCalculationMode, GridSummaryPosition } from './common/enums';
 import { IgxGridCell } from './grid-public-cell';
@@ -8,6 +7,7 @@ import { IgxPivotGridComponent } from './pivot-grid/pivot-grid.component';
 import { PivotUtil } from './pivot-grid/pivot-util';
 import { mergeWith } from 'lodash-es';
 import { CellType, GridServiceType, GridType, IGridValidationState, RowType, ValidationStatus } from './common/grid.interface';
+import { IGroupByRecord } from 'igniteui-angular/core';
 
 abstract class BaseRow implements RowType {
     public index: number;

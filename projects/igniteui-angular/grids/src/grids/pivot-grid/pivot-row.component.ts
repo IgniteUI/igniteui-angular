@@ -6,6 +6,7 @@ import {
     forwardRef,
     HostBinding, Inject, Input, ViewContainerRef
 } from '@angular/core';
+import { NgClass, NgStyle } from '@angular/common';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxRowDirective } from '../row.directive';
@@ -14,10 +15,9 @@ import { IPivotGridColumn, IPivotGridRecord } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
 import { IgxPivotGridCellStyleClassesPipe } from './pivot-grid.pipes';
 import { IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe } from '../common/pipes';
-import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
-import { NgClass, NgStyle } from '@angular/common';
 import { IgxGridCellComponent } from '../cell.component';
-import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
+import { IgxGridForOfDirective } from 'igniteui-angular/directives';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -2,12 +2,12 @@ import { Component, forwardRef, Input, ViewChildren, QueryList, HostBinding, DoC
 import { IgxRowDirective } from '../row.directive';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridCellStyleClassesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe } from '../common/pipes';
-import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxTreeGridCellComponent } from './tree-cell.component';
 import { IgxGridCellComponent } from '../cell.component';
-import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxRowDragDirective } from '../row-drag.directive';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
+import { IgxGridForOfDirective } from 'igniteui-angular/directives';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

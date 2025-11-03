@@ -1,10 +1,5 @@
-import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
-import { DataUtil, GridColumnDataType } from '../../data-operations/data-util';
-import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
-import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { ISortingExpression } from '../../data-operations/sorting-strategy';
-import { ColumnType, PivotGridType } from '../common/grid.interface';
-import { IGridSortingStrategy, IgxSorting } from 'igniteui-angular/core';
+import { PivotGridType } from '../common/grid.interface';
+import { DataUtil, FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IDataCloneStrategy, IGridSortingStrategy, IgxSorting, ISortingExpression } from 'igniteui-angular/core';
 import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
 import { IPivotAggregator, IPivotConfiguration, IPivotDimension, IPivotGridRecord, IPivotKeys, IPivotValue, PivotDimensionType, PivotSummaryPosition } from './pivot-grid.interface';
 

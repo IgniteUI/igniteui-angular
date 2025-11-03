@@ -3,6 +3,7 @@
 // Users should now import from 'igniteui-angular/drop-down' instead
 // Removed re-export to avoid circular dependency
 export * from './directives/button/button.directive';
+export * from './directives/checkbox/checkbox-base.directive';
 export * from './directives/divider/divider.directive';
 export * from './directives/drag-drop/public_api';
 export * from './directives/filter/filter.directive';

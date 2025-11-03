@@ -3,11 +3,10 @@ import {
     IgxSummaryOperand,
     IgxSummaryResult
 } from './grid-summary';
-import { GridColumnDataType } from '../../data-operations/data-util';
 import { formatCurrency, formatDate, formatNumber, formatPercent, getLocaleCurrencyCode, getLocaleCurrencySymbol, NgTemplateOutlet } from '@angular/common';
 import { ISelectionNode } from '../common/types';
 import { ColumnType } from '../common/grid.interface';
-import { trackByIdentity } from '../../core/utils';
+import { GridColumnDataType, trackByIdentity } from 'igniteui-angular/core';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

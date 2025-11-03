@@ -21,7 +21,7 @@ import {
 import { CalendarDay, DateRangeType, DayInterval, getNextActiveDate, isDate, isDateInRanges } from 'igniteui-angular/core';
 
 
-export enum Direction {
+export enum IgxCalendarNavDirection {
     NEXT = 1,
     PREV = -1,
 }
@@ -184,7 +184,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      */
     @HostListener("keydown.arrowdown", ["$event"])
     public onKeydownArrowDown(event: KeyboardEvent) {
-        this.navigateTo(event, Direction.NEXT, 3);
+        this.navigateTo(event, IgxCalendarNavDirection.NEXT, 3);
     }
 
     /**
@@ -192,7 +192,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      */
     @HostListener("keydown.arrowup", ["$event"])
     public onKeydownArrowUp(event: KeyboardEvent) {
-        this.navigateTo(event, Direction.PREV, 3);
+        this.navigateTo(event, IgxCalendarNavDirection.PREV, 3);
     }
 
     /**
@@ -200,7 +200,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      */
     @HostListener("keydown.arrowright", ["$event"])
     public onKeydownArrowRight(event: KeyboardEvent) {
-        this.navigateTo(event, Direction.NEXT, 1);
+        this.navigateTo(event, IgxCalendarNavDirection.NEXT, 1);
     }
 
     /**
@@ -208,7 +208,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      */
     @HostListener("keydown.arrowleft", ["$event"])
     public onKeydownArrowLeft(event: KeyboardEvent) {
-        this.navigateTo(event, Direction.PREV, 1);
+        this.navigateTo(event, IgxCalendarNavDirection.PREV, 1);
     }
 
     /**
@@ -300,7 +300,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      */
     protected navigateTo(
         event: KeyboardEvent,
-        direction: Direction,
+        direction: IgxCalendarNavDirection,
         delta: number,
     ) {
         event.preventDefault();

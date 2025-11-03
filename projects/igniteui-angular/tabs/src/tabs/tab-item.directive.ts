@@ -1,6 +1,6 @@
 import { ContentChild, Directive, EventEmitter, Input, Output, TemplateRef, ViewChild, booleanAttribute } from '@angular/core';
-import { Direction, IgxSlideComponentBase } from '../carousel/carousel-base';
 import { IgxTabHeaderBase, IgxTabItemBase, IgxTabContentBase, IgxTabsBase } from './tabs.base';
+import { IgxCarouselDirection, IgxSlideComponentBase } from 'igniteui-angular/carousel';
 
 @Directive()
 export abstract class IgxTabItemDirective implements IgxTabItemBase, IgxSlideComponentBase {
@@ -34,7 +34,7 @@ export abstract class IgxTabItemDirective implements IgxTabItemBase, IgxSlideCom
     public disabled = false;
 
     /** @hidden */
-    public direction = Direction.NONE;
+    public direction = IgxCarouselDirection.NONE;
     /** @hidden */
     public previous: boolean;
 

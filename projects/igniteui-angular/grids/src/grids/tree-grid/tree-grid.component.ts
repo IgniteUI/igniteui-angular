@@ -30,20 +30,11 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowDataCancelableEventArgs, IRowDataEventArgs, IRowToggleEventArgs } from '../common/events';
-import {
-    HierarchicalTransaction,
-    HierarchicalState,
-    TransactionType,
-    TransactionEventOrigin,
-    StateUpdateEvent
-} from '../../services/transaction/transaction';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { mergeObjects, PlatformUtil } from '../../core/utils';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
-import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { CellType, GridServiceType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -53,12 +44,9 @@ import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
 import { IgxGridCell } from '../grid-public-cell';
-import { IgxHierarchicalTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { HierarchicalTransactionService } from '../../services/transaction/hierarchical-transaction';
-import { IgxOverlayService } from '../../services/overlay/overlay';
 import { IgxGridTransaction } from '../common/types';
-import { TreeGridFilteringStrategy } from 'igniteui-angular/core';
+import { DefaultTreeGridMergeStrategy, HierarchicalState, HierarchicalTransaction, HierarchicalTransactionService, IGridMergeStrategy, IgxHierarchicalTransactionFactory, IgxOverlayService, mergeObjects, PlatformUtil, StateUpdateEvent, TransactionEventOrigin, TransactionType, TreeGridFilteringStrategy } from 'igniteui-angular/core';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
 import { IgxTreeGridSummaryPipe } from './tree-grid.summary.pipe';
 import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
@@ -66,25 +54,18 @@ import { IgxTreeGridHierarchizingPipe, IgxTreeGridFlatteningPipe, IgxTreeGridSor
 import { IgxSummaryDataPipe } from '../summaries/grid-root-summary.pipe';
 import { IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe, IgxStringReplacePipe } from '../common/pipes';
 import { IgxGridColumnResizerComponent } from '../resizing/resizer.component';
-import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxRowEditTabStopDirective } from '../grid.rowEdit.directive';
-import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
-import { IgxButtonDirective } from '../../directives/button/button.directive';
-import { IgxSnackbarComponent } from '../../snackbar/snackbar.component';
-import { IgxCircularProgressBarComponent } from '../../progressbar/progressbar.component';
-import { IgxOverlayOutletDirective, IgxToggleDirective } from '../../directives/toggle/toggle.directive';
 import { IgxSummaryRowComponent } from '../summaries/summary-row.component';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
-import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
-import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
 import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
-import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
 import { IgxGridCellMergePipe, IgxGridUnmergeActivePipe } from '../grid/grid.pipes';
-import { DefaultTreeGridMergeStrategy, IGridMergeStrategy } from '../../data-operations/merge-strategy';
-import { IgxScrollInertiaDirective } from '../../directives/scroll-inertia/scroll_inertia.directive';
+import { IgxButtonDirective, IgxForOfScrollSyncService, IgxForOfSyncService, IgxGridForOfDirective, IgxOverlayOutletDirective, IgxRippleDirective, IgxScrollInertiaDirective, IgxTemplateOutletDirective, IgxTextHighlightService, IgxToggleDirective } from 'igniteui-angular/directives';
+import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
+import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 
 let NEXT_ID = 0;
 

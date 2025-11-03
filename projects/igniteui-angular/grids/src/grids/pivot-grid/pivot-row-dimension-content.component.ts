@@ -17,6 +17,8 @@ import {
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
+import { NgClass, NgStyle } from '@angular/common';
+
 import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
@@ -24,9 +26,8 @@ import { IPivotDimension, IPivotDimensionData, IPivotGridGroupRecord } from './p
 import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
 import { PivotUtil } from './pivot-util';
 import { IgxHeaderGroupStylePipe } from '../headers/pipes';
-import { IgxIconComponent } from '../../icon/icon.component';
-import { NgClass, NgStyle } from '@angular/common';
 import { IMultiRowLayoutNode } from '../common/types';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 
 /**
  *

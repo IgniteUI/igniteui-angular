@@ -1,16 +1,24 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { cloneArray, reverseMapper, mergeObjects } from 'igniteui-angular/core';
-import { DataUtil, GridColumnDataType } from '../data-operations/data-util';
-import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
-import { Transaction, TransactionType, State } from 'igniteui-angular/core';
+import {
+    cloneArray,
+    reverseMapper,
+    mergeObjects,
+    Transaction,
+    TransactionType,
+    State,
+    DataUtil,
+    FilterUtil,
+    GridColumnDataType,
+    IFilteringExpressionsTree,
+    IGroupingExpression,
+    ISortingExpression,
+    SortingDirection
+} from 'igniteui-angular/core';
 import { IgxCell, IgxGridCRUDService, IgxEditRow } from './common/crud.service';
 import { CellType, ColumnType, GridServiceType, GridType, RowType } from './common/grid.interface';
 import { IGridEditEventArgs, IPinRowEventArgs, IRowToggleEventArgs } from './common/events';
 import { IgxColumnMovingService } from './moving/moving.service';
-import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
-import { ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
-import { FilterUtil } from '../data-operations/filtering-strategy';
 
 /**
  * @hidden

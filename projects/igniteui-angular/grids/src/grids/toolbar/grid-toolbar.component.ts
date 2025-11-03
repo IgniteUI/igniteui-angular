@@ -9,14 +9,14 @@ import {
     booleanAttribute
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { IgxIconService } from '../../icon/icon.service';
 import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { IgxGridToolbarActionsComponent } from './common';
 import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
 import { IgxToolbarToken } from './token';
-import { IgxLinearProgressBarComponent } from '../../progressbar/progressbar.component';
 import { IgxGridToolbarAdvancedFilteringComponent } from './grid-toolbar-advanced-filtering.component';
 import { NgTemplateOutlet } from '@angular/common';
+import { IgxLinearProgressBarComponent } from 'igniteui-angular/progressbar';
+import { IgxIconService } from 'igniteui-angular/icon';
 
 /* blazorElement */
 /* mustUseNGParentAnchor */

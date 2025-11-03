@@ -1,22 +1,16 @@
 import { Inject, Pipe, PipeTransform } from '@angular/core';
-import { cloneArray, columnFieldPath, resolveNestedPath } from '../../core/utils';
-import { DataUtil } from '../../data-operations/data-util';
-import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { DefaultPivotGridRecordSortingStrategy } from '../common/pivot-sort-strategy';
-import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import {
     DimensionValuesFilteringStrategy, PivotColumnDimensionsStrategy,
     PivotRowDimensionsStrategy
 } from '../common/pivot-strategy';
-import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { GridBaseAPIService } from '../api.service';
 import { GridType, IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
-import { IGridSortingStrategy } from 'igniteui-angular/core';
+import { cloneArray, columnFieldPath, DataUtil, FilteringExpressionsTree, FilterUtil, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringStrategy, IGridSortingStrategy, ISortingExpression, resolveNestedPath } from 'igniteui-angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotGridColumn, IPivotGridGroupRecord, IPivotGridHorizontalGroup, IPivotGridRecord, IPivotKeys, IPivotValue } from './pivot-grid.interface';
 import { PivotSortUtil } from './pivot-sort-util';
 import { PivotUtil } from './pivot-util';
-import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 
 /**
  * @hidden

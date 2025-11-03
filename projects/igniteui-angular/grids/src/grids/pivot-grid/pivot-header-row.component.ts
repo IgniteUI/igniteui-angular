@@ -12,13 +12,9 @@ import {
     ViewChildren,
     HostBinding
 } from '@angular/core';
-import { IBaseChipEventArgs, IgxChipComponent } from '../../chips/chip.component';
-import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
-import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
-import { ISelectionEventArgs } from '../../drop-down/drop-down.common';
-import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
+import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
+
+import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings, PositionSettings, SortingDirection, VerticalAlignment } from 'igniteui-angular/core';
 import { ColumnType, IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
@@ -29,15 +25,13 @@ import { IgxGridTopLevelColumns } from '../common/pipes';
 import { IgxHeaderGroupStylePipe } from '../headers/pipes';
 import { IgxExcelStyleSearchComponent } from '../filtering/excel-style/excel-style-search.component';
 import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective } from '../filtering/excel-style/excel-style-filtering.component';
-import { IgxDropDownItemComponent } from '../../drop-down/drop-down-item.component';
-import { IgxDropDownItemNavigationDirective } from '../../drop-down/drop-down-navigation.directive';
-import { IgxSuffixDirective } from '../../directives/suffix/suffix.directive';
-import { IgxBadgeComponent } from '../../badge/badge.component';
-import { IgxPrefixDirective } from '../../directives/prefix/prefix.directive';
-import { IgxIconComponent } from '../../icon/icon.component';
-import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
-import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
+import { IgxDropDirective, IgxGridForOfDirective } from 'igniteui-angular/directives';
+import { IBaseChipEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IgxBadgeComponent } from 'igniteui-angular/badge';
+import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, ISelectionEventArgs } from 'igniteui-angular/drop-down';
 
 /**
  *

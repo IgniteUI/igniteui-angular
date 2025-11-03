@@ -1,13 +1,8 @@
 import { Inject, Pipe, PipeTransform } from '@angular/core';
-import { cloneArray, cloneHierarchicalArray } from '../../core/utils';
-import { DataUtil } from '../../data-operations/data-util';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
-import { TransactionType } from 'igniteui-angular/core';
+import { cloneArray, cloneHierarchicalArray, DataUtil, IGroupingExpression, ISortingExpression, TransactionType, IGridSortingStrategy } from 'igniteui-angular/core';
 import { IgxAddRow } from '../common/crud.service';
-import { ISortingExpression } from '../../data-operations/sorting-strategy';
-import { IGridSortingStrategy } from 'igniteui-angular/core';
-import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 
 /**
  * @hidden

@@ -4,7 +4,6 @@ import { IgxTreeGridGroupingPipe } from './tree-grid.grouping.pipe';
 
 export * from './tree-grid.component';
 export * from './tree-grid.interfaces';
-export * from 'igniteui-angular/core';
 export * from './tree-grid.grouping.pipe';
 export * from '../grouping/tree-grid-group-by-area.component';
 export * from './tree-grid.grouping.pipe';
@@ -12,7 +11,7 @@ export * from './tree-grid.grouping.pipe';
 /* Imports that cannot be resolved from IGX_GRID_COMMON_DIRECTIVES spread
     NOTE: Do not remove! Issue: https://github.com/IgniteUI/igniteui-angular/issues/13310
 */
- 
+
 import {
     IgxRowDirective,
     IgxRowEditTextDirective,

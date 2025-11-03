@@ -1,11 +1,8 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { IgxToolbarToken } from './token';
-import { OverlaySettings } from '../../services/overlay/utilities';
-import { IgxIconComponent } from '../../icon/icon.component';
-import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
-import { IgxButtonDirective } from '../../directives/button/button.directive';
-import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { isTree } from '../../data-operations/expressions-tree-util';
+import { IgxButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IFilteringExpressionsTree, isTree, OverlaySettings } from 'igniteui-angular/core';
 
 /* blazorElement */
 /* wcElementTag: igc-grid-toolbar-advanced-filtering */

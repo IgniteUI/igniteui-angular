@@ -4,13 +4,10 @@ import {
     Input, OnDestroy, Output, QueryList, booleanAttribute
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Direction, IgxCarouselComponentBase } from '../carousel/carousel-base';
-import { IBaseEventArgs } from 'igniteui-angular/core';
-import { IgxAngularAnimationService } from 'igniteui-angular/core';
-import { AnimationService } from 'igniteui-angular/core';
-import { IgxDirectionality } from 'igniteui-angular/core';
+import { IBaseEventArgs, IgxAngularAnimationService, AnimationService, IgxDirectionality } from 'igniteui-angular/core';
 import { IgxTabItemDirective } from './tab-item.directive';
 import { IgxTabContentBase, IgxTabsBase } from './tabs.base';
+import { IgxCarouselComponentBase, IgxCarouselDirection } from 'igniteui-angular/carousel';
 
 export interface ITabsBaseEventArgs extends IBaseEventArgs {
     readonly owner: IgxTabsDirective;
@@ -294,7 +291,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
             !this.currentItem.selected) {
             item.direction = (!this.dir.rtl && this._selectedIndex > oldSelectedIndex) ||
                 (this.dir.rtl && this._selectedIndex < oldSelectedIndex)
-                ? Direction.NEXT : Direction.PREV;
+                ? IgxCarouselDirection.NEXT : IgxCarouselDirection.PREV;
 
             if (this.previousItem && this.previousItem.previous) {
                 this.previousItem.previous = false;

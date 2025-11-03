@@ -6,9 +6,8 @@ import {
     booleanAttribute
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { IgxRippleDirective } from 'igniteui-angular/directives';
+import { CheckboxBaseDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 import { EditorProvider, EDITOR_PROVIDER } from 'igniteui-angular/core';
-import { CheckboxBaseDirective } from '../checkbox/checkbox-base.directive';
 
 /**
  *

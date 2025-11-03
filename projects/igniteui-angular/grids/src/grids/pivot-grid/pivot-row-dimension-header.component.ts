@@ -6,11 +6,11 @@ import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
 import { SortingIndexPipe } from '../headers/pipes';
 import { NgTemplateOutlet, NgClass } from '@angular/common';
-import { IgxIconComponent } from '../../icon/icon.component';
-import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { takeUntil } from 'rxjs/operators';
 import { PivotRowLayoutType } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { ISortingExpression, SortingDirection } from 'igniteui-angular/core';
 
 /**
  * @hidden

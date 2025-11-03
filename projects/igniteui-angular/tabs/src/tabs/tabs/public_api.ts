@@ -1,5 +1,4 @@
-import { IgxPrefixDirective } from '../../directives/prefix/prefix.directive';
-import { IgxSuffixDirective } from '../../directives/suffix/suffix.directive';
+import { IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxTabContentComponent } from './tab-content.component';
 import { IgxTabHeaderComponent } from './tab-header.component';
 import { IgxTabItemComponent } from './tab-item.component';

@@ -1,5 +1,5 @@
+import { ISortingExpression, SortingDirection } from 'igniteui-angular/core';
 import { DefaultPivotSortingStrategy } from '../common/pivot-sort-strategy';
-import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IPivotDimension } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
 

@@ -1,7 +1,4 @@
-import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
-import { GridColumnDataType } from '../../data-operations/data-util';
-import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { GridColumnDataType, IDataCloneStrategy, IFilteringExpressionsTree, SortingDirection } from 'igniteui-angular/core';
 import { ColumnType } from '../common/grid.interface';
 
 

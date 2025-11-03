@@ -1,9 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { formatDate } from '../../core/utils';
-import { GridColumnDataType } from '../../data-operations/data-util';
-import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { GridType } from '../common/grid.interface';
-import { IgxSorting } from 'igniteui-angular/core';
+import { formatDate, GridColumnDataType, IGroupingExpression, IgxSorting } from 'igniteui-angular/core';
 
 const HIDDEN_FIELD_NAME = '_Igx_Hidden_Data_';
 

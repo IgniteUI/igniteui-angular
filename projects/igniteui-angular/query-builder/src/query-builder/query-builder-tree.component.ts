@@ -63,8 +63,7 @@ import { IgxInputGroupComponent, IgxInputDirective, IgxPrefixDirective } from 'i
 import { IgxSelectItemComponent } from 'igniteui-angular/select';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IComboSelectionChangingEventArgs, IgxComboComponent, IgxComboHeaderDirective } from 'igniteui-angular/combo';
-import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
-import { IChangeCheckboxEventArgs } from 'igniteui-angular/checkbox';
+import { IgxCheckboxComponent, IChangeCheckboxEventArgs } from 'igniteui-angular/checkbox';
 import { IgxDialogComponent } from 'igniteui-angular/dialog';
 import {
     ISelectionEventArgs,

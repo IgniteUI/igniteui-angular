@@ -3,9 +3,7 @@ import { IgxTabItemDirective } from '../tab-item.directive';
 import { IgxTabHeaderDirective } from '../tab-header.directive';
 import { IgxTabHeaderBase } from '../tabs.base';
 import { IgxTabsComponent } from './tabs.component';
-import { getResizeObserver } from '../../core/utils';
-import { PlatformUtil } from '../../core/utils';
-import { IgxDirectionality } from '../../services/direction/directionality';
+import { getResizeObserver, IgxDirectionality, PlatformUtil } from 'igniteui-angular/core';
 
 @Component({
     selector: 'igx-tab-header',

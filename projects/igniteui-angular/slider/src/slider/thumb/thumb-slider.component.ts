@@ -14,8 +14,8 @@ import {
 import { takeUntil } from 'rxjs/operators';
 import { SliderHandle } from '../slider.common';
 import { Subject } from 'rxjs';
-import { IgxDirectionality } from '../../services/direction/directionality';
 import { NgClass } from '@angular/common';
+import { IgxDirectionality } from 'igniteui-angular/core';
 
 /**
  * @hidden

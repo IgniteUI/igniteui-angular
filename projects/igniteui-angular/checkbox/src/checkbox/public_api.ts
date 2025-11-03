@@ -1,2 +1,2 @@
-export { LabelPosition, IChangeCheckboxEventArgs } from "./checkbox-base.directive";
+export { LabelPosition, IChangeCheckboxEventArgs } from "igniteui-angular/directives";
 export * from "./checkbox.component";

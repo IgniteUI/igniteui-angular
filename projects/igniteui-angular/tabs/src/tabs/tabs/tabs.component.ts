@@ -1,14 +1,10 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, Inject, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
-import { getResizeObserver, PlatformUtil } from '../../core/utils';
-import { IgxAngularAnimationService } from '../../services/animation/angular-animation-service';
-import { AnimationService } from '../../services/animation/animation';
-import { IgxDirectionality } from '../../services/direction/directionality';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { IgxIconComponent } from '../../icon/icon.component';
-import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
-import { IgxIconButtonDirective } from '../../directives/button/icon-button.directive';
+import { IgxIconButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { AnimationService, getResizeObserver, IgxAngularAnimationService, IgxDirectionality, PlatformUtil } from 'igniteui-angular/core';
 
 export const IgxTabsAlignment = {
     start: 'start',

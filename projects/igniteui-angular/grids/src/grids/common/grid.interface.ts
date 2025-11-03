@@ -22,8 +22,8 @@ import { FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IDataClon
 import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange, PivotDimensionType, IPivotUISettings } from '../pivot-grid/pivot-grid.interface';
 import { FormControl, FormGroup, ValidationErrors } from '@angular/forms';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
-import { IForOfState, IgxGridForOfDirective, IgxOverlayOutletDirective, IgxToggleDirective } from 'igniteui-angular/directives';
-import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
+import type { IForOfState, IgxGridForOfDirective, IgxOverlayOutletDirective, IgxToggleDirective } from 'igniteui-angular/directives';
+import type { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 
 export const IGX_GRID_BASE = /*@__PURE__*/new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = /*@__PURE__*/new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');

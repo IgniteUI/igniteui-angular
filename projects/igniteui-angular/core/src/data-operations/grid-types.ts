@@ -44,8 +44,8 @@ export interface FieldType {
  * Stub type for ITreeGridRecord - minimal interface for typing in core
  */
 export interface ITreeGridRecord {
-    key?: any;
-    data?: any;
+    key: any;
+    data: any;
     children?: ITreeGridRecord[];
     parent?: ITreeGridRecord;
     [key: string]: any;

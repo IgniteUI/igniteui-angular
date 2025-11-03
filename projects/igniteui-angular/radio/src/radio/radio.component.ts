@@ -11,8 +11,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { EditorProvider, EDITOR_PROVIDER } from 'igniteui-angular/core';
-import { IgxRippleDirective } from 'igniteui-angular/directives';
-import { CheckboxBaseDirective } from '../checkbox/checkbox-base.directive';
+import { CheckboxBaseDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxRadioGroupDirective } from './radio-group/radio-group.directive';
 
 /**

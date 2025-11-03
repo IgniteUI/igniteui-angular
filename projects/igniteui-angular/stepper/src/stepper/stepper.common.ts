@@ -6,9 +6,8 @@ import {
     IgxStepActiveIndicatorDirective, IgxStepCompletedIndicatorDirective, IgxStepContentDirective,
     IgxStepIndicatorDirective, IgxStepInvalidIndicatorDirective
 } from './stepper.directive';
-import { Direction, IgxCarouselComponentBase } from '../carousel/carousel-base';
-import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
-import { CarouselAnimationType } from '../carousel/enums';
+import { ToggleAnimationPlayer, ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
+import { CarouselAnimationType, IgxCarouselComponentBase, IgxCarouselDirection } from 'igniteui-angular/carousel';
 
 // Component interfaces
 export interface IgxStepper extends IgxCarouselComponentBase {
@@ -72,7 +71,7 @@ export interface IgxStep extends ToggleAnimationPlayer {
     /** @hidden @internal */
     titlePositionTop: string;
     /** @hidden @internal */
-    direction: Direction;
+    direction: IgxCarouselDirection;
     /** @hidden @internal */
     isAccessible: boolean;
     /** @hidden @internal */

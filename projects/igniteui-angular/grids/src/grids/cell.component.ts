@@ -26,34 +26,39 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { first, takeUntil, takeWhile } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
-import { IgxTextHighlightDirective } from 'igniteui-angular/directives';
-import { formatCurrency, formatDate, PlatformUtil } from 'igniteui-angular/core';
+import {
+    formatCurrency,
+    formatDate,
+    PlatformUtil,
+    AutoPositionStrategy,
+    HorizontalAlignment,
+    IgxOverlayService,
+    GridColumnDataType
+} from 'igniteui-angular/core';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { HammerGesturesManager } from 'igniteui-angular/core';
 import { GridSelectionMode } from './common/enums';
 import { CellType, ColumnType, GridType, IgxCellTemplateContext, IGX_GRID_BASE, RowType } from './common/grid.interface';
-import { GridColumnDataType } from '../data-operations/data-util';
 import { IgxRowDirective } from './row.directive';
 import { ISearchInfo } from './common/events';
 import { IgxGridCell } from './grid-public-cell';
 import { ISelectionNode } from './common/types';
-import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe } from './common/pipes';
-import { IgxTooltipDirective } from 'igniteui-angular/directives';
-import { IgxTooltipTargetDirective } from 'igniteui-angular/directives';
-import { IgxSuffixDirective } from 'igniteui-angular/directives';
-import { IgxPrefixDirective } from 'igniteui-angular/directives';
-import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
-import { IgxTimePickerComponent } from '../time-picker/time-picker.component';
-import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
-import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
-import { IgxTextSelectionDirective } from 'igniteui-angular/directives';
-import { IgxFocusDirective } from 'igniteui-angular/directives';
-import { IgxInputDirective } from 'igniteui-angular/directives';
-import { IgxInputGroupComponent } from '../input-group/input-group.component';
-import { IgxChipComponent } from '../chips/chip.component';
+import {
+    IgxTooltipDirective,
+    IgxTooltipTargetDirective,
+    IgxDateTimeEditorDirective,
+    IgxTextSelectionDirective,
+    IgxFocusDirective,
+    IgxTextHighlightDirective
+ } from 'igniteui-angular/directives';
 import { fadeOut, scaleInCenter } from 'igniteui-angular/animations';
+import { IgxChipComponent } from 'igniteui-angular/chips';
+import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
+import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 
 /**
  * Providing reference to `IgxGridCellComponent`:

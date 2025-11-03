@@ -1,6 +1,6 @@
-import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
+import { IGroupByRecord } from 'igniteui-angular/core';
 
-/* tsPlainInterface */
+/* tsPlainInterface *
 /* marshalByValue */
 export interface ISummaryExpression {
     fieldName: string;

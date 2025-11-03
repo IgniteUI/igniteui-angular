@@ -11,14 +11,13 @@ import {
     DoCheck,
     Inject
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { IgxSummaryResult } from './grid-summary';
 import { IgxSummaryCellComponent } from './summary-cell.component';
-import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
-import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { IgxGridNotGroupedPipe } from '../common/pipes';
-import { NgTemplateOutlet } from '@angular/common';
-import { trackByIdentity } from '../../core/utils';
+import { IgxForOfSyncService, IgxGridForOfDirective } from 'igniteui-angular/directives';
+import { trackByIdentity } from 'igniteui-angular/core';
 
 
 @Component({
