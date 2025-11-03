@@ -100,16 +100,11 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxTreeModule', 'tree'],
 ]);
 
-// Core exports that stay in core
-const CORE_EXPORTS = new Set([
-    'DisplayDensity',
-    'Size',
-    'OverlaySettings',
-    'PositionSettings',
-    'ConnectedPositioningStrategy',
-    'AbsoluteScrollStrategy',
-    'CancelableEventArgs',
-    'IBaseEventArgs',
+// Type renames (old name -> new name and entry point)
+const TYPE_RENAMES = new Map<string, { newName: string, entryPoint: string }>([
+    ['Direction', { newName: 'IgxCarouselDirection', entryPoint: 'carousel' }],
+    ['Size', { newName: 'ElementDimensions', entryPoint: 'core' }],
+    ['IChangeCheckboxEventArgs', { newName: 'IChangeRadioEventArgs', entryPoint: 'radio' }],
 ]);
 
 function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.SourceFile): { start: number, end: number, replacement: string } | null {
@@ -141,12 +136,23 @@ function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.Sou
         const name = element.name.text;
         const alias = element.propertyName?.text;
         const importName = alias || name;
-        const fullImport = alias ? `${alias} as ${name}` : name;
+        let actualImportName = importName;
+        
+        // Check if this is a renamed type
+        if (TYPE_RENAMES.has(importName)) {
+            const rename = TYPE_RENAMES.get(importName)!;
+            actualImportName = rename.newName;
+        }
+        
+        const fullImport = alias ? `${actualImportName} as ${name}` : actualImportName;
 
         // Determine target entry point
         let targetEntryPoint = 'core'; // Default to core
         
-        if (ENTRY_POINT_MAP.has(importName)) {
+        // Check if it's a renamed type first
+        if (TYPE_RENAMES.has(importName)) {
+            targetEntryPoint = TYPE_RENAMES.get(importName)!.entryPoint;
+        } else if (ENTRY_POINT_MAP.has(importName)) {
             targetEntryPoint = ENTRY_POINT_MAP.get(importName)!;
         }
 
@@ -180,13 +186,56 @@ function migrateFile(filePath: string, content: string): string {
 
     const changes: { start: number, end: number, replacement: string }[] = [];
 
+    // Track which old type names are imported in this file
+    const importedOldTypes = new Set<string>();
+
     function visit(node: ts.Node) {
         if (ts.isImportDeclaration(node)) {
             const change = migrateImportDeclaration(node, sourceFile);
             if (change) {
                 changes.push(change);
+                
+                // Track old type names that were imported
+                const moduleSpecifier = node.moduleSpecifier;
+                if (ts.isStringLiteral(moduleSpecifier) && moduleSpecifier.text === 'igniteui-angular') {
+                    const importClause = node.importClause;
+                    if (importClause?.namedBindings && ts.isNamedImports(importClause.namedBindings)) {
+                        for (const element of importClause.namedBindings.elements) {
+                            const importName = element.propertyName?.text || element.name.text;
+                            if (TYPE_RENAMES.has(importName)) {
+                                importedOldTypes.add(importName);
+                            }
+                        }
+                    }
+                }
             }
         }
+        // Rename type references in the code (but only if not aliased in import)
+        else if (ts.isIdentifier(node) && importedOldTypes.has(node.text)) {
+            const oldName = node.text;
+            const rename = TYPE_RENAMES.get(oldName)!;
+            
+            // Check if this identifier is part of an import statement
+            // We don't want to rename it there as we already handled it
+            let isInImport = false;
+            let parent = node.parent;
+            while (parent) {
+                if (ts.isImportDeclaration(parent)) {
+                    isInImport = true;
+                    break;
+                }
+                parent = parent.parent;
+            }
+            
+            if (!isInImport) {
+                changes.push({
+                    start: node.getStart(sourceFile),
+                    end: node.getEnd(),
+                    replacement: rename.newName
+                });
+            }
+        }
+        
         ts.forEachChild(node, visit);
     }
 
@@ -245,4 +294,8 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info('  - Input directives moved to igniteui-angular/input-group');
     context.logger.info('  - IgxAutocompleteDirective moved to igniteui-angular/drop-down');
     context.logger.info('  - IgxRadioGroupDirective moved to igniteui-angular/radio');
+    context.logger.info('Type renames:');
+    context.logger.info('  - Direction → IgxCarouselDirection');
+    context.logger.info('  - Size → ElementDimensions');
+    context.logger.info('  - IChangeCheckboxEventArgs → IChangeRadioEventArgs');
 };

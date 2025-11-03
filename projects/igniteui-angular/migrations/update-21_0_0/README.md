@@ -10,20 +10,30 @@ Ignite UI for Angular v21.0.0 introduces multiple entry points for better tree-s
 
 ### Breaking Changes
 
+#### 1. Entry Point Changes
+
 The following directives have been moved to new entry points:
 
-1. **Input Directives** → `igniteui-angular/input-group`
+**Input Directives** → `igniteui-angular/input-group`
    - `IgxInputDirective`
    - `IgxLabelDirective`
    - `IgxHintDirective`
    - `IgxPrefixDirective`
    - `IgxSuffixDirective`
 
-2. **Autocomplete** → `igniteui-angular/drop-down`
+**Autocomplete** → `igniteui-angular/drop-down`
    - `IgxAutocompleteDirective`
 
-3. **Radio Group** → `igniteui-angular/radio`
+**Radio Group** → `igniteui-angular/radio`
    - `IgxRadioGroupDirective`
+
+#### 2. Type Renames
+
+The following types have been renamed to avoid conflicts:
+
+- `Direction` → `IgxCarouselDirection` (carousel)
+- `Size` → `ElementDimensions` (overlay service)
+- `IChangeCheckboxEventArgs` → `IChangeRadioEventArgs` (radio)
 
 ### Example
 
@@ -32,7 +42,8 @@ The following directives have been moved to new entry points:
 import { 
     IgxGridComponent, 
     IgxInputDirective, 
-    DisplayDensity 
+    DisplayDensity,
+    Direction 
 } from 'igniteui-angular';
 ```
 
@@ -41,10 +52,11 @@ import {
 import { DisplayDensity } from 'igniteui-angular/core';
 import { IgxGridComponent } from 'igniteui-angular/grids';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
+import { IgxCarouselDirection } from 'igniteui-angular/carousel';
 ```
 
 ### Note
 
-The migration script will automatically update your imports. No manual changes are required.
+The migration script will automatically update your imports and rename types. No manual changes are required.
 
 The main `igniteui-angular` package still exports everything for backwards compatibility, but using specific entry points is recommended for optimal bundle sizes.
