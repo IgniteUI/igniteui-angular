@@ -8,96 +8,420 @@ import * as ts from 'typescript';
 
 const version = '21.0.0';
 
-// Entry point mapping for components
+// Comprehensive entry point mapping for ALL exports from all 42 entry points
 const ENTRY_POINT_MAP = new Map<string, string>([
-    // Components
+    // Core - Services, Utilities, Types, Enums
+    ['IgxOverlayService', 'core'],
+    ['IgxNavigationService', 'core'],
+    ['IgxFocusTrapDirective', 'core'],
+    ['IgxToggleDirective', 'core'],
+    ['IgxRippleDirective', 'core'],
+    ['IgxDragDirective', 'core'],
+    ['IgxDropDirective', 'core'],
+    ['DisplayDensity', 'core'],
+    ['DisplayDensityToken', 'core'],
+    ['DisplayDensityBase', 'core'],
+    ['IDisplayDensityOptions', 'core'],
+    ['OverlaySettings', 'core'],
+    ['PositionSettings', 'core'],
+    ['ScrollStrategy', 'core'],
+    ['GlobalPositionStrategy', 'core'],
+    ['AutoPositionStrategy', 'core'],
+    ['ConnectedPositioningStrategy', 'core'],
+    ['ElasticPositionStrategy', 'core'],
+    ['AbsoluteScrollStrategy', 'core'],
+    ['BlockScrollStrategy', 'core'],
+    ['CloseScrollStrategy', 'core'],
+    ['NoOpScrollStrategy', 'core'],
+    ['HorizontalAlignment', 'core'],
+    ['VerticalAlignment', 'core'],
+    ['PositionStrategy', 'core'],
+    ['OverlayEventArgs', 'core'],
+    ['OverlayCancelableEventArgs', 'core'],
+    ['OverlayClosingEventArgs', 'core'],
+    ['OverlayAnimationEventArgs', 'core'],
+    ['ElementDimensions', 'core'], // Renamed from Size
+    ['OffsetMode', 'core'],
+    ['ConnectedFit', 'core'],
+    ['IFilteringExpressionsTree', 'core'],
+    ['IFilteringExpression', 'core'],
+    ['FilteringLogic', 'core'],
+    ['IFilteringOperation', 'core'],
+    ['ISortingExpression', 'core'],
+    ['SortingDirection', 'core'],
+    ['IGroupingExpression', 'core'],
+    ['IGroupByExpandState', 'core'],
+    ['IPagingState', 'core'],
+    ['PagingError', 'core'],
+    ['DataUtil', 'core'],
+    ['DatePart', 'core'],
+    ['DatePartInfo', 'core'],
+    ['DatePickerUtil', 'core'],
+    ['IBaseCancelableBrowserEventArgs', 'core'],
+    ['IBaseCancelableEventArgs', 'core'],
+    ['IBaseEventArgs', 'core'],
+    ['ICancelableBrowserEventArgs', 'core'],
+    ['ICancelableEventArgs', 'core'],
+    ['PlatformUtil', 'core'],
+    ['Transaction', 'core'],
+    ['TransactionType', 'core'],
+    ['IgxTransactionService', 'core'],
+    ['State', 'core'],
+    
+    // Accordion
     ['IgxAccordionComponent', 'accordion'],
     ['IgxAccordionModule', 'accordion'],
+    ['IgxExpansionPanelHeaderComponent', 'accordion'],
+    ['IgxExpansionPanelBodyComponent', 'accordion'],
+    ['IgxExpansionPanelTitleDirective', 'accordion'],
+    ['IgxExpansionPanelDescriptionDirective', 'accordion'],
+    ['IgxExpansionPanelIconDirective', 'accordion'],
+    ['IAccordionEventArgs', 'accordion'],
+    ['IAccordionCancelableEventArgs', 'accordion'],
+    
+    // Action Strip
     ['IgxActionStripComponent', 'action-strip'],
     ['IgxActionStripModule', 'action-strip'],
+    ['IgxGridActionButtonComponent', 'action-strip'],
+    ['IgxGridActionsBaseDirective', 'action-strip'],
+    ['IgxGridEditingActionsComponent', 'action-strip'],
+    ['IgxGridPinningActionsComponent', 'action-strip'],
+    
+    // Avatar
     ['IgxAvatarComponent', 'avatar'],
     ['IgxAvatarModule', 'avatar'],
+    ['AvatarType', 'avatar'],
+    ['IgxAvatarSize', 'avatar'],
+    ['IgxAvatarShape', 'avatar'],
+    
+    // Badge
     ['IgxBadgeComponent', 'badge'],
     ['IgxBadgeModule', 'badge'],
+    ['BadgeType', 'badge'],
+    ['IgxBadgeVariant', 'badge'],
+    
+    // Banner
     ['IgxBannerComponent', 'banner'],
     ['IgxBannerModule', 'banner'],
+    ['IgxBannerActionsDirective', 'banner'],
+    ['IBannerEventArgs', 'banner'],
+    ['IBannerCancelEventArgs', 'banner'],
+    
+    // Button Group
     ['IgxButtonGroupComponent', 'buttonGroup'],
     ['IgxButtonGroupModule', 'buttonGroup'],
+    ['IgxButtonDirective', 'buttonGroup'],
+    ['IgxIconButtonDirective', 'buttonGroup'],
+    ['IButtonGroupEventArgs', 'buttonGroup'],
+    
+    // Calendar
     ['IgxCalendarComponent', 'calendar'],
     ['IgxCalendarModule', 'calendar'],
+    ['IgxDaysViewComponent', 'calendar'],
+    ['IgxMonthsViewComponent', 'calendar'],
+    ['IgxYearsViewComponent', 'calendar'],
+    ['IgxMonthPickerComponent', 'calendar'],
+    ['CalendarSelection', 'calendar'],
+    ['ICalendarDate', 'calendar'],
+    ['ICalendarViewChangingEventArgs', 'calendar'],
+    ['WeekDays', 'calendar'],
+    
+    // Card
     ['IgxCardComponent', 'card'],
     ['IgxCardModule', 'card'],
+    ['IgxCardHeaderComponent', 'card'],
+    ['IgxCardMediaDirective', 'card'],
+    ['IgxCardContentDirective', 'card'],
+    ['IgxCardActionsComponent', 'card'],
+    ['IgxCardHeaderTitleDirective', 'card'],
+    ['IgxCardHeaderSubtitleDirective', 'card'],
+    ['IgxCardThumbnailDirective', 'card'],
+    ['IgxCardType', 'card'],
+    
+    // Carousel
     ['IgxCarouselComponent', 'carousel'],
     ['IgxCarouselModule', 'carousel'],
+    ['IgxSlideComponent', 'carousel'],
+    ['IgxCarouselDirection', 'carousel'], // Renamed from Direction
+    ['ISlideEventArgs', 'carousel'],
+    ['ISlideCarouselBaseEventArgs', 'carousel'],
+    ['CarouselAnimationType', 'carousel'],
+    ['CarouselIndicatorsOrientation', 'carousel'],
+    
+    // Checkbox
     ['IgxCheckboxComponent', 'checkbox'],
     ['IgxCheckboxModule', 'checkbox'],
+    ['IChangeCheckboxEventArgs', 'checkbox'],
+    ['LabelPosition', 'checkbox'],
+    
+    // Chips
     ['IgxChipsComponent', 'chips'],
     ['IgxChipsModule', 'chips'],
+    ['IgxChipComponent', 'chips'],
+    ['IgxChipsAreaComponent', 'chips'],
+    ['IBaseChipEventArgs', 'chips'],
+    ['IChipClickEventArgs', 'chips'],
+    ['IChipKeyDownEventArgs', 'chips'],
+    ['IChipEnterDragAreaEventArgs', 'chips'],
+    ['IChipSelectEventArgs', 'chips'],
+    
+    // Combo
     ['IgxComboComponent', 'combo'],
     ['IgxComboModule', 'combo'],
+    ['IComboSelectionChangingEventArgs', 'combo'],
+    ['IComboItemAdditionEvent', 'combo'],
+    ['IComboSearchInputEventArgs', 'combo'],
+    ['IgxComboState', 'combo'],
+    
+    // Date Picker
     ['IgxDatePickerComponent', 'date-picker'],
     ['IgxDatePickerModule', 'date-picker'],
+    ['InteractionMode', 'date-picker'],
+    ['IDatePickerCancelEventArgs', 'date-picker'],
+    ['IDatePickerDisabledDateEventArgs', 'date-picker'],
+    ['IDatePickerValidationFailedEventArgs', 'date-picker'],
+    
+    // Date Range Picker
     ['IgxDateRangePickerComponent', 'date-range-picker'],
     ['IgxDateRangePickerModule', 'date-range-picker'],
+    ['DateRangeType', 'date-range-picker'],
+    ['DateRangeDescriptor', 'date-range-picker'],
+    ['IDateRangePickerCancelEventArgs', 'date-range-picker'],
+    
+    // Dialog
     ['IgxDialogComponent', 'dialog'],
     ['IgxDialogModule', 'dialog'],
+    ['IgxDialogActionsDirective', 'dialog'],
+    ['IgxDialogTitleDirective', 'dialog'],
+    ['IDialogEventArgs', 'dialog'],
+    ['IDialogCancelEventArgs', 'dialog'],
+    
+    // Drop Down
     ['IgxDropDownComponent', 'drop-down'],
     ['IgxDropDownModule', 'drop-down'],
-    ['IgxAutocompleteDirective', 'drop-down'], // Breaking change
+    ['IgxDropDownItemComponent', 'drop-down'],
+    ['IgxDropDownGroupComponent', 'drop-down'],
+    ['IgxDropDownItemBaseDirective', 'drop-down'],
+    ['IgxAutocompleteDirective', 'drop-down'], // Breaking change - moved from directives
+    ['ISelectionEventArgs', 'drop-down'],
+    ['IDropDownNavigationDirective', 'drop-down'],
+    
+    // Expansion Panel
     ['IgxExpansionPanelComponent', 'expansion-panel'],
     ['IgxExpansionPanelModule', 'expansion-panel'],
+    ['IgxExpansionPanelBase', 'expansion-panel'],
+    ['IExpansionPanelEventArgs', 'expansion-panel'],
+    ['IExpansionPanelCancelableEventArgs', 'expansion-panel'],
+    ['ToggleAnimationSettings', 'expansion-panel'],
+    
+    // Grids - Components, Services, Types
     ['IgxGridComponent', 'grids'],
     ['IgxTreeGridComponent', 'grids'],
     ['IgxHierarchicalGridComponent', 'grids'],
     ['IgxPivotGridComponent', 'grids'],
     ['IgxGridModule', 'grids'],
+    ['IgxTreeGridModule', 'grids'],
+    ['IgxHierarchicalGridModule', 'grids'],
+    ['IgxPivotGridModule', 'grids'],
+    ['IgxColumnComponent', 'grids'],
+    ['IgxColumnGroupComponent', 'grids'],
+    ['IgxRowDirective', 'grids'],
+    ['IgxCellComponent', 'grids'],
+    ['IgxGridCellComponent', 'grids'],
+    ['IgxGridHeaderComponent', 'grids'],
+    ['IgxGridToolbarComponent', 'grids'],
+    ['IgxGridToolbarActionsComponent', 'grids'],
+    ['IgxGridToolbarAdvancedFilteringComponent', 'grids'],
+    ['IgxGridToolbarExporterComponent', 'grids'],
+    ['IgxGridToolbarHidingComponent', 'grids'],
+    ['IgxGridToolbarPinningComponent', 'grids'],
+    ['IgxGridToolbarTitleComponent', 'grids'],
+    ['GridBaseAPIService', 'grids'],
+    ['IgxGridAPIService', 'grids'],
+    ['IgxTreeGridAPIService', 'grids'],
+    ['IgxHierarchicalGridAPIService', 'grids'],
+    ['IgxGridSelectionService', 'grids'],
+    ['IgxGridNavigationService', 'grids'],
+    ['IgxGridCRUDService', 'grids'],
+    ['IgxGridSummaryService', 'grids'],
+    ['IgxFilteringService', 'grids'],
+    ['IGridCellEventArgs', 'grids'],
+    ['IGridEditEventArgs', 'grids'],
+    ['IRowDataEventArgs', 'grids'],
+    ['IRowSelectionEventArgs', 'grids'],
+    ['ICellPosition', 'grids'],
+    ['IColumnResizeEventArgs', 'grids'],
+    ['IColumnMovingEventArgs', 'grids'],
+    ['IColumnMovingEndEventArgs', 'grids'],
+    ['IColumnMovingStartEventArgs', 'grids'],
+    ['IGridKeydownEventArgs', 'grids'],
+    ['IRowDragEndEventArgs', 'grids'],
+    ['IRowDragStartEventArgs', 'grids'],
+    ['GridSelectionMode', 'grids'],
+    ['FilterMode', 'grids'],
+    ['GridSummaryCalculationMode', 'grids'],
+    ['GridSummaryPosition', 'grids'],
+    ['RowPinningPosition', 'grids'],
+    ['ColumnPinningPosition', 'grids'],
+    ['GridInstanceType', 'grids'],
+    ['Size', 'grids'],
+    ['SortingIndexFilteringStrategy', 'grids'],
+    ['IgxGridEditingActions', 'grids'], // Grid actions moved to grids
+    ['IgxGridPinningActions', 'grids'], // Grid actions moved to grids
+    
+    // Icon
     ['IgxIconComponent', 'icon'],
     ['IgxIconModule', 'icon'],
+    ['IgxIconService', 'icon'],
+    ['IconMeta', 'icon'],
+    
+    // Input Group
     ['IgxInputGroupComponent', 'input-group'],
     ['IgxInputGroupModule', 'input-group'],
-    ['IgxInputDirective', 'input-group'], // Breaking change
-    ['IgxLabelDirective', 'input-group'], // Breaking change
-    ['IgxHintDirective', 'input-group'], // Breaking change
-    ['IgxPrefixDirective', 'input-group'], // Breaking change
-    ['IgxSuffixDirective', 'input-group'], // Breaking change
+    ['IgxInputDirective', 'input-group'], // Breaking change - moved from directives
+    ['IgxLabelDirective', 'input-group'], // Breaking change - moved from directives
+    ['IgxHintDirective', 'input-group'], // Breaking change - moved from directives
+    ['IgxPrefixDirective', 'input-group'], // Breaking change - moved from directives
+    ['IgxSuffixDirective', 'input-group'], // Breaking change - moved from directives
+    ['IgxInputState', 'input-group'],
+    ['IgxInputGroupType', 'input-group'],
+    
+    // List
     ['IgxListComponent', 'list'],
     ['IgxListModule', 'list'],
+    ['IgxListItemComponent', 'list'],
+    ['IgxListHeaderComponent', 'list'],
+    ['IListItemClickEventArgs', 'list'],
+    ['IgxListPanState', 'list'],
+    
+    // Navbar
     ['IgxNavbarComponent', 'navbar'],
     ['IgxNavbarModule', 'navbar'],
+    ['IgxNavbarActionDirective', 'navbar'],
+    ['IgxNavbarTitleDirective', 'navbar'],
+    
+    // Navigation Drawer
     ['IgxNavigationDrawerComponent', 'navigation-drawer'],
     ['IgxNavigationDrawerModule', 'navigation-drawer'],
+    ['IgxNavigationDrawerItemComponent', 'navigation-drawer'],
+    ['INavigationDrawerEventArgs', 'navigation-drawer'],
+    ['IgxNavDrawerMode', 'navigation-drawer'],
+    
+    // Paginator
     ['IgxPaginatorComponent', 'paginator'],
     ['IgxPaginatorModule', 'paginator'],
+    ['IPageEventArgs', 'paginator'],
+    ['IPageCancelableEventArgs', 'paginator'],
+    
+    // Progressbar
     ['IgxCircularProgressBarComponent', 'progressbar'],
     ['IgxLinearProgressBarComponent', 'progressbar'],
     ['IgxProgressBarModule', 'progressbar'],
+    ['IgxProgressType', 'progressbar'],
+    ['IgxTextAlign', 'progressbar'],
+    ['IgxProgressBarGradientMode', 'progressbar'],
+    
+    // Query Builder
     ['IgxQueryBuilderComponent', 'query-builder'],
     ['IgxQueryBuilderModule', 'query-builder'],
+    ['IExpressionGroup', 'query-builder'],
+    
+    // Radio
     ['IgxRadioComponent', 'radio'],
     ['IgxRadioModule', 'radio'],
-    ['IgxRadioGroupDirective', 'radio'], // Breaking change
+    ['IgxRadioGroupDirective', 'radio'], // Breaking change - moved from directives
+    ['IChangeRadioEventArgs', 'radio'], // Renamed from IChangeCheckboxEventArgs
+    
+    // Select
     ['IgxSelectComponent', 'select'],
     ['IgxSelectModule', 'select'],
+    ['IgxSelectItemComponent', 'select'],
+    ['IgxSelectHeaderDirective', 'select'],
+    ['IgxSelectFooterDirective', 'select'],
+    ['IgxSelectToggleIconDirective', 'select'],
+    ['ISelectionChangedEventArgs', 'select'],
+    
+    // Simple Combo
     ['IgxSimpleComboComponent', 'simple-combo'],
     ['IgxSimpleComboModule', 'simple-combo'],
+    
+    // Slider
     ['IgxSliderComponent', 'slider'],
     ['IgxSliderModule', 'slider'],
+    ['ISliderValueChangeEventArgs', 'slider'],
+    ['IRangeSliderValue', 'slider'],
+    ['SliderType', 'slider'],
+    ['IgxSliderType', 'slider'],
+    
+    // Snackbar
     ['IgxSnackbarComponent', 'snackbar'],
     ['IgxSnackbarModule', 'snackbar'],
+    
+    // Splitter
     ['IgxSplitterComponent', 'splitter'],
     ['IgxSplitterModule', 'splitter'],
+    ['IgxSplitterPaneComponent', 'splitter'],
+    ['ISplitterEventArgs', 'splitter'],
+    ['SplitterType', 'splitter'],
+    
+    // Stepper
     ['IgxStepperComponent', 'stepper'],
     ['IgxStepperModule', 'stepper'],
+    ['IgxStepComponent', 'stepper'],
+    ['IStepChangingEventArgs', 'stepper'],
+    ['IStepChangedEventArgs', 'stepper'],
+    ['IgxStepperOrientation', 'stepper'],
+    ['IgxStepType', 'stepper'],
+    
+    // Switch
     ['IgxSwitchComponent', 'switch'],
     ['IgxSwitchModule', 'switch'],
+    
+    // Tabs
     ['IgxTabsComponent', 'tabs'],
     ['IgxTabsModule', 'tabs'],
+    ['IgxTabItemComponent', 'tabs'],
+    ['IgxTabHeaderComponent', 'tabs'],
+    ['IgxTabContentComponent', 'tabs'],
+    ['IgxTabsGroupComponent', 'tabs'],
+    ['ITabsSelectedItemChangeEventArgs', 'tabs'],
+    ['IgxTabsType', 'tabs'],
+    
+    // Time Picker
     ['IgxTimePickerComponent', 'time-picker'],
     ['IgxTimePickerModule', 'time-picker'],
+    ['IgxTimePickerActionsDirective', 'time-picker'],
+    ['IgxHourItemDirective', 'time-picker'],
+    ['IgxMinuteItemDirective', 'time-picker'],
+    ['IgxAmPmItemDirective', 'time-picker'],
+    ['IgxItemListDirective', 'time-picker'],
+    
+    // Toast
     ['IgxToastComponent', 'toast'],
     ['IgxToastModule', 'toast'],
+    ['IgxToastPosition', 'toast'],
+    
+    // Tree
     ['IgxTreeComponent', 'tree'],
     ['IgxTreeModule', 'tree'],
+    ['IgxTreeNodeComponent', 'tree'],
+    ['ITreeNodeSelectionEvent', 'tree'],
+    ['ITreeNodeTogglingEventArgs', 'tree'],
+    ['IgxTreeSelectionType', 'tree'],
+    
+    // Directives (re-exports from other entry points)
+    ['IgxForOfDirective', 'directives'],
+    ['IgxTemplateOutletDirective', 'directives'],
+    ['IgxTextSelectionDirective', 'directives'],
+    ['IgxTextHighlightDirective', 'directives'],
+    ['IgxDateTimeEditorDirective', 'directives'],
+    ['IgxMaskDirective', 'directives'],
+    ['IgxDividerDirective', 'directives'],
+    ['IgxFilterDirective', 'directives'],
+    ['IgxButtonDirective', 'directives'],
+    ['IgxToggleActionDirective', 'directives'],
+    ['IgxLayoutDirective', 'directives'],
+    ['IgxFlexDirective', 'directives'],
 ]);
 
 // Type renames (old name -> new name and entry point)
