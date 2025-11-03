@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, ComponentFixture, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from '../../services/public_api';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from '../../services/public_api';
 import { IgxGridComponent } from './public_api';
 import { GridFunctions } from "../../test-utils/grid-functions.spec";
 import { By } from "@angular/platform-browser";
@@ -205,6 +205,16 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
 
             expect(defaultFiltSettings).not.toEqual(instance.advancedFiltAction.overlaySettings);
             expect(defaultExportSettings).not.toEqual(instance.exporterAction.overlaySettings);
+        });
+
+        it('should use AutoPositionStrategy for toolbar action dropdowns by default', () => {
+            const hidingSettings = instance.hidingAction.overlaySettings;
+            const pinningSettings = instance.pinningAction.overlaySettings;
+            const exporterSettings = instance.exporterAction.overlaySettings;
+
+            expect(hidingSettings.positionStrategy instanceof AutoPositionStrategy).toBe(true);
+            expect(pinningSettings.positionStrategy instanceof AutoPositionStrategy).toBe(true);
+            expect(exporterSettings.positionStrategy instanceof AutoPositionStrategy).toBe(true);
         });
 
         it('should initialize input property columnsAreaMaxHeight properly', fakeAsync(() => {
