@@ -82,12 +82,17 @@ import {
     isTree,
     recreateTree,
     recreateTreeFromFields,
-    Size
+    Size,
+    ColumnPinningPosition,
+    ColumnType,
+    EntityType,
+    ISortingOptions,
+    ISummaryExpression,
+    GridSummaryCalculationMode
 } from 'igniteui-angular/core';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
-import { ISummaryExpression } from './summaries/grid-summary';
 import { IgxGridBodyDirective, RowEditPositionStrategy } from './grid.common';
 import type { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
 import { IgxToolbarToken } from './toolbar/token';
@@ -131,9 +136,7 @@ import {
     GridKeydownTargetType,
     GridSelectionMode,
     GridSummaryPosition,
-    GridSummaryCalculationMode,
     FilterMode,
-    ColumnPinningPosition,
     RowPinningPosition,
     GridPagingMode,
     GridValidationTrigger,
@@ -174,7 +177,6 @@ import {
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import {
-    ColumnType,
     GridServiceType,
     GridType,
     IGridFormGroupCreatedEventArgs,
@@ -193,8 +195,7 @@ import {
     ISizeInfo,
     RowType,
     IPinningConfig,
-    IClipboardOptions,
-    EntityType
+    IClipboardOptions
 } from './common/grid.interface';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
@@ -205,7 +206,6 @@ import { IgxGridRowComponent } from './grid/grid-row.component';
 import { IgxPaginatorToken, type IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
-import { ISortingOptions } from './columns/interfaces';
 import { GridSelectionRange, IgxGridTransaction } from './common/types';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/excel-style-filtering.component';
 import { IgxGridHeaderComponent } from './headers/grid-header.component';

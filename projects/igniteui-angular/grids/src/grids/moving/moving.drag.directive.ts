@@ -2,9 +2,8 @@ import { Directive, OnDestroy, Input, ElementRef, ViewContainerRef, NgZone, Chan
 import { Subscription, fromEvent } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxColumnMovingService } from './moving.service';
-import { ColumnType } from '../common/grid.interface';
 import { IgxDragDirective } from 'igniteui-angular/directives';
-import { PlatformUtil } from 'igniteui-angular/core';
+import { ColumnType, PlatformUtil } from 'igniteui-angular/core';
 
 /**
  * @hidden

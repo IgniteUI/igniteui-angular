@@ -1,7 +1,7 @@
 import { FilteringLogic, type IFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, type IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { resolveNestedPath, parseDate, formatDate, formatCurrency, columnFieldPath } from '../core/utils';
-import { GridColumnDataType, type ColumnType, type EntityType, type GridType } from './grid-types';
+import { GridColumnDataType, type ColumnType, type EntityType, type GridTypeBase } from './grid-types';
 import { DataUtil } from './data-util';
 import { SortingDirection } from './sorting-strategy';
 import { formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
@@ -15,7 +15,7 @@ const DateTimeType = 'dateTime';
 const TimeType = 'time';
 
 export class FilterUtil {
-    public static filter<T>(data: T[], state: IFilteringState, grid?: GridType): T[] {
+    public static filter<T>(data: T[], state: IFilteringState, grid?: GridTypeBase): T[] {
         if (!state.strategy) {
             state.strategy = new FilteringStrategy();
         }
@@ -25,7 +25,7 @@ export class FilterUtil {
 
 export interface IFilteringStrategy {
     filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree,
-        grid?: GridType): any[];
+        grid?: GridTypeBase): any[];
     /* csSuppress */
     getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]>;
 }
@@ -40,7 +40,7 @@ export interface IgxFilterItem {
 /* csSuppress */
 export abstract class BaseFilteringStrategy implements IFilteringStrategy {
     // protected
-    public findMatchByExpression(rec: any, expr: IFilteringExpression, isDate?: boolean, isTime?: boolean, grid?: GridType): boolean {
+    public findMatchByExpression(rec: any, expr: IFilteringExpression, isDate?: boolean, isTime?: boolean, grid?: GridTypeBase): boolean {
         if (expr.searchTree) {
             const records = rec[expr.searchTree.entity];
             const shouldMatchRecords = expr.conditionName === 'inQuery';
@@ -66,7 +66,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy {
     }
 
     // protected
-    public matchRecord(rec: any, expressions: IFilteringExpressionsTree | IFilteringExpression, grid?: GridType, entity?: string): boolean {
+    public matchRecord(rec: any, expressions: IFilteringExpressionsTree | IFilteringExpression, grid?: GridTypeBase, entity?: string): boolean {
         if (expressions) {
             if (isTree(expressions)) {
                 const expressionsTree = expressions;
@@ -223,9 +223,9 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy {
     }
 
     public abstract filter(data: any[], expressionsTree: IFilteringExpressionsTree,
-        advancedExpressionsTree?: IFilteringExpressionsTree, grid?: GridType): any[];
+        advancedExpressionsTree?: IFilteringExpressionsTree, grid?: GridTypeBase): any[];
 
-    protected abstract getFieldValue(rec: any, fieldName: string, isDate?: boolean, isTime?: boolean, grid?: GridType): any;
+    protected abstract getFieldValue(rec: any, fieldName: string, isDate?: boolean, isTime?: boolean, grid?: GridTypeBase): any;
 }
 
 /* csSuppress */
@@ -254,7 +254,7 @@ export class FilteringStrategy extends BaseFilteringStrategy {
     }
 
     public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree: IFilteringExpressionsTree,
-        grid: GridType): T[] {
+        grid: GridTypeBase): T[] {
 
 
         if ((FilteringExpressionsTree.empty(expressionsTree) && FilteringExpressionsTree.empty(advancedExpressionsTree))) {
@@ -264,7 +264,7 @@ export class FilteringStrategy extends BaseFilteringStrategy {
         return data.filter(record => this.matchRecord(record, expressionsTree, grid) && this.matchRecord(record, advancedExpressionsTree, grid));
     }
 
-    protected getFieldValue(rec: any, fieldName: string, isDate = false, isTime = false, grid?: GridType): any {
+    protected getFieldValue(rec: any, fieldName: string, isDate = false, isTime = false, grid?: GridTypeBase): any {
         const column = grid?.getColumnByName(fieldName);
         let value = resolveNestedPath(rec, columnFieldPath(fieldName));
 

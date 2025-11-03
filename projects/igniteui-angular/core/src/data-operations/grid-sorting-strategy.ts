@@ -6,7 +6,7 @@ import { IGroupingExpression } from './grouping-expression.interface';
 import { IGroupByResult } from './grouping-result.interface';
 import { getHierarchy, isHierarchyMatch } from './operations';
 import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from './sorting-strategy';
-import type { GridType } from './grid-types';
+import type { GridTypeBase } from './grid-types';
 
 const DATE_TYPE = 'date';
 const TIME_TYPE = 'time';
@@ -25,7 +25,7 @@ export interface IGridSortingStrategy {
     * `grid`: (Optional) The instance of the grid where the sorting is applied.
     * Returns a new array with the data sorted according to the sorting expressions.
     */
-    sort(data: any[], expressions: ISortingExpression[], grid?: GridType): any[];
+    sort(data: any[], expressions: ISortingExpression[], grid?: GridTypeBase): any[];
 }
 
 /**
@@ -87,7 +87,7 @@ export class IgxSorting implements IGridSortingStrategy {
    * `grid`: (Optional) The instance of the grid where the sorting is applied.
    * Returns a new array with the data sorted according to the sorting expressions.
    */
-    public sort(data: any[], expressions: ISortingExpression[], grid?: GridType): any[] {
+    public sort(data: any[], expressions: ISortingExpression[], grid?: GridTypeBase): any[] {
         return this.sortData(data, expressions, grid);
     }
 
@@ -123,7 +123,7 @@ export class IgxSorting implements IGridSortingStrategy {
     private sortData<T>(
         data: T[],
         expressions: ISortingExpression[],
-        grid: GridType
+        grid: GridTypeBase
     ): T[] {
         const sortingExpressions = this.prepareExpressions(expressions, grid);
 
@@ -138,7 +138,7 @@ export class IgxSorting implements IGridSortingStrategy {
         return data;
     }
 
-    private prepareExpressions(expressions: ISortingExpression[], grid: GridType): IGridInternalSortingExpression[] {
+    private prepareExpressions(expressions: ISortingExpression[], grid: GridTypeBase): IGridInternalSortingExpression[] {
         const multipleSortingExpressions: IGridInternalSortingExpression[] = [];
         for (const expr of expressions) {
             if (expr.dir === SortingDirection.None) {
@@ -186,7 +186,7 @@ export class IgxGrouping extends IgxSorting implements IGridGroupingStrategy {
     protected groupData(
         data: any[],
         state: IGroupingState,
-        grid: GridType = null,
+        grid: GridTypeBase = null,
         groupsRecords: any[] = [],
         fullResult: IGroupByResult
     ): IGroupByResult {

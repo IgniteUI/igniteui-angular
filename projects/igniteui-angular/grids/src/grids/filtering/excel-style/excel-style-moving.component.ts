@@ -1,10 +1,9 @@
 import { Component, HostBinding } from '@angular/core';
-import { ColumnType } from '../../common/grid.interface';
 import { BaseFilteringComponent } from './base-filtering.component';
-import { ColumnPinningPosition } from '../../common/enums';
 import { IgxButtonGroupComponent } from 'igniteui-angular/buttonGroup';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
+import { ColumnPinningPosition, ColumnType } from 'igniteui-angular/core';
 
 /**
  * A component used for presenting Excel style column moving UI.

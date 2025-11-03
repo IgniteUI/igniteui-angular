@@ -22,19 +22,6 @@ export const GridSummaryPosition = {
 export type GridSummaryPosition = (typeof GridSummaryPosition)[keyof typeof GridSummaryPosition];
 
 /**
- * Enumeration representing different calculation modes for grid summaries.
- * - rootLevelOnly: Summaries are calculated only for the root level.
- * - childLevelsOnly: Summaries are calculated only for child levels.
- * - rootAndChildLevels: Default value; Summaries are calculated for both root and child levels.
- */
-export const GridSummaryCalculationMode = {
-    rootLevelOnly: 'rootLevelOnly',
-    childLevelsOnly: 'childLevelsOnly',
-    rootAndChildLevels: 'rootAndChildLevels'
-} as const;
-export type GridSummaryCalculationMode = (typeof GridSummaryCalculationMode)[keyof typeof GridSummaryCalculationMode];
-
-/**
  * Type representing the triggers for grid cell validation.
  * - 'change': Validation is triggered when the cell value changes.
  * - 'blur': Validation is triggered when the cell loses focus.
@@ -92,17 +79,6 @@ export const ColumnDisplayOrder = {
     DisplayOrder: 'DisplayOrder'
 } as const;
 export type ColumnDisplayOrder = (typeof ColumnDisplayOrder)[keyof typeof ColumnDisplayOrder];
-
-/* mustCoerceToInt */
-/**
- * Enumeration representing the possible positions for pinning columns.
- * - Start: Columns are pinned to the start of the grid.
- * - End: Columns are pinned to the end of the grid.
- */
-export enum ColumnPinningPosition {
-    Start,
-    End
-}
 
 /* mustCoerceToInt */
 /**

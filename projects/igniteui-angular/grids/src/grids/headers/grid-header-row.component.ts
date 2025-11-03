@@ -12,7 +12,7 @@ import {
     ViewChildren,
     booleanAttribute
 } from '@angular/core';
-import { ColumnType, GridType, IgxHeadSelectorTemplateContext } from '../common/grid.interface';
+import { GridType, IgxHeadSelectorTemplateContext } from '../common/grid.interface';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
@@ -23,7 +23,7 @@ import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 import { IgxGridForOfDirective } from 'igniteui-angular/directives';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
-import { flatten, trackByIdentity } from 'igniteui-angular/core';
+import { ColumnType, flatten, trackByIdentity } from 'igniteui-angular/core';
 
 /**
  *

@@ -13,12 +13,11 @@ import { IgxFilteringService } from '../grid-filtering.service';
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
 import { ExpressionUI } from './common';
-import { ColumnType } from '../../common/grid.interface';
 import { NgClass } from '@angular/common';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { IgxButtonDirective, IgxToggleDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, FilteringLogic, GridColumnDataType, HorizontalAlignment, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxOverlayService, IgxStringFilteringOperand, IgxTimeFilteringOperand, OverlaySettings, PlatformUtil, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, ColumnType, FilteringLogic, GridColumnDataType, HorizontalAlignment, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxOverlayService, IgxStringFilteringOperand, IgxTimeFilteringOperand, OverlaySettings, PlatformUtil, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
 
 /**
  * @hidden

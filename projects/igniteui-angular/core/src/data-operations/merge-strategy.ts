@@ -1,5 +1,5 @@
 import { columnFieldPath, parseDate, resolveNestedPath } from '../core/utils';
-import type { GridType } from './grid-types';
+import type { GridTypeBase } from './grid-types';
 
 export interface IMergeByResult {
     rowSpan: number;
@@ -32,7 +32,7 @@ export interface IGridMergeStrategy {
         /* (Optional) Indicates if the field is of type Time. */
         isTime?: boolean,
         /* (Optional) Reference to the grid */
-        grid?: GridType
+        grid?: GridTypeBase
     ) => any[];
     /**
      * Function that compares values for merging. Returns true if same, false if different.
@@ -56,7 +56,7 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
         activeRowIndexes: number[],
         isDate = false,
         isTime = false,
-        grid?: GridType
+        grid?: GridTypeBase
     ) {
         let prev = null;
         let index = 0;

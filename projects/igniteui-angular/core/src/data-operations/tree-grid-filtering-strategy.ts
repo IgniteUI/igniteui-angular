@@ -3,7 +3,7 @@ import { DataUtil } from './data-util';
 import { FilteringExpressionsTree, type IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { BaseFilteringStrategy, type IgxFilterItem } from './filtering-strategy';
 import { SortingDirection } from './sorting-strategy';
-import type { ColumnType, GridType, IgxTreeGridAPIService, ITreeGridRecord } from './grid-types';
+import type { ColumnType, GridTypeBase, IgxTreeGridAPIService, ITreeGridRecord } from './grid-types';
 
 export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
 
@@ -12,11 +12,11 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
     }
 
     public filter(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
-        advancedExpressionsTree?: IFilteringExpressionsTree, grid?: GridType): ITreeGridRecord[] {
+        advancedExpressionsTree?: IFilteringExpressionsTree, grid?: GridTypeBase): ITreeGridRecord[] {
         return this.filterImpl(data, expressionsTree, advancedExpressionsTree, undefined, grid);
     }
 
-    protected getFieldValue(rec: any, fieldName: string, isDate = false, isTime = false, grid?: GridType): any {
+    protected getFieldValue(rec: any, fieldName: string, isDate = false, isTime = false, grid?: GridTypeBase): any {
         const column = grid?.getColumnByName(fieldName);
         const hierarchicalRecord = rec as ITreeGridRecord;
         let value = this.isHierarchicalFilterField(fieldName) ?
@@ -39,7 +39,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
     }
 
     private filterImpl(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
-        advancedExpressionsTree: IFilteringExpressionsTree, parent: ITreeGridRecord, grid?: GridType): ITreeGridRecord[] {
+        advancedExpressionsTree: IFilteringExpressionsTree, parent: ITreeGridRecord, grid?: GridTypeBase): ITreeGridRecord[] {
         let i: number;
         let rec: ITreeGridRecord;
         const len = data.length;
@@ -131,12 +131,12 @@ export class TreeGridFormattedValuesFilteringStrategy extends TreeGridFilteringS
 
 export class TreeGridMatchingRecordsOnlyFilteringStrategy extends TreeGridFilteringStrategy {
     public override filter(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
-        advancedExpressionsTree?: IFilteringExpressionsTree, grid?: GridType): ITreeGridRecord[] {
+        advancedExpressionsTree?: IFilteringExpressionsTree, grid?: GridTypeBase): ITreeGridRecord[] {
         return this.filterImplementation(data, expressionsTree, advancedExpressionsTree, undefined, grid);
     }
 
     private filterImplementation(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
-        advancedExpressionsTree: IFilteringExpressionsTree, parent: ITreeGridRecord, grid?: GridType): ITreeGridRecord[] {
+        advancedExpressionsTree: IFilteringExpressionsTree, parent: ITreeGridRecord, grid?: GridTypeBase): ITreeGridRecord[] {
         let i: number;
         let rec: ITreeGridRecord;
         const len = data.length;

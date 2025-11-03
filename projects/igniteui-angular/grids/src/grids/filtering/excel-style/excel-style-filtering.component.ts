@@ -25,7 +25,7 @@ import { GridSelectionMode } from '../../common/enums';
 import { formatCurrency, formatDate, formatNumber, formatPercent, getLocaleCurrencyCode, NgClass } from '@angular/common';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem, generateExpressionsList } from './common';
-import { ColumnType, GridType, IGX_GRID_BASE } from '../../common/grid.interface';
+import { IGX_GRID_BASE } from '../../common/grid.interface';
 import { IgxExcelStyleSearchComponent } from './excel-style-search.component';
 import { IgxExcelStyleConditionalFilterComponent } from './excel-style-conditional-filter.component';
 import { IgxExcelStyleClearFiltersComponent } from './excel-style-clear-filters.component';
@@ -35,7 +35,7 @@ import { IgxExcelStylePinningComponent } from './excel-style-pinning.component';
 import { IgxExcelStyleMovingComponent } from './excel-style-moving.component';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { IgxExcelStyleHeaderComponent } from './excel-style-header.component';
-import { FilteringExpressionsTree, GridColumnDataType, IFilteringExpressionsTree, IgxFilterItem, IgxOverlayService, isTree, PlatformUtil, SortingDirection } from 'igniteui-angular/core';
+import { ColumnType, FilteringExpressionsTree, GridColumnDataType, GridTypeBase, IFilteringExpressionsTree, IgxFilterItem, IgxOverlayService, isTree, PlatformUtil, SortingDirection } from 'igniteui-angular/core';
 
 @Directive({
     selector: 'igx-excel-style-column-operations,[igxExcelStyleColumnOperations]',
@@ -272,7 +272,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     /**
      * @hidden @internal
      */
-    public get grid(): GridType {
+    public get grid(): GridTypeBase {
         return this.column?.grid ?? this.gridAPI;
     }
 
@@ -282,7 +282,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         platform: PlatformUtil,
         @Inject(DOCUMENT)
         private document: any,
-        @Host() @Optional() @Inject(IGX_GRID_BASE) protected gridAPI?: GridType,
+        @Host() @Optional() @Inject(IGX_GRID_BASE) protected gridAPI?: GridTypeBase,
     ) {
         super(cdr, element, platform);
     }

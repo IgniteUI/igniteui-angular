@@ -12,8 +12,8 @@ import {
 import { takeUntil } from 'rxjs/operators';
 
 import { IgxColumnComponent } from './column.component';
-import { flatten } from 'igniteui-angular/core';
-import { CellType, ColumnType, IgxColumnTemplateContext } from '../common/grid.interface';
+import { ColumnType, flatten } from 'igniteui-angular/core';
+import { CellType, IgxColumnTemplateContext } from '../common/grid.interface';
 
 /* blazorElement */
 /* omitModule */

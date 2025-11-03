@@ -1,40 +1,4 @@
-import { IGroupByRecord } from 'igniteui-angular/core';
-
-/* tsPlainInterface *
-/* marshalByValue */
-export interface ISummaryExpression {
-    fieldName: string;
-    /* blazorCSSuppress */
-    customSummary?: any;
-}
-
-/* tsPlainInterface */
-/* marshalByValue */
-export interface IgxSummaryResult {
-    key: string;
-    label: string;
-    /* blazorAlternateName: Result */
-    summaryResult: any;
-    /**
-     * Apply default formatting based on the grid column type.
-     * ```typescript
-     * const result: IgxSummaryResult = {
-     *   key: 'key',
-     *   label: 'label',
-     *   defaultFormatting: true
-     * }
-     * ```
-     *
-     * @memberof IgxSummaryResult
-     */
-    defaultFormatting?: boolean;
-}
-
-export interface ISummaryRecord {
-    summaries: Map<string, IgxSummaryResult[]>;
-    max?: number;
-    cellIndentation?: number;
-}
+import { IGroupByRecord, IgxSummaryResult } from 'igniteui-angular/core';
 
 const clear = (el) => el === 0 || Boolean(el);
 const first = (arr) => arr[0];

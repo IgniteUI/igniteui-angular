@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import type { IgxSummaryResult } from './grid-summary';
 import type { GridType, FlatGridType, TreeGridType } from '../common/grid.interface';
-import { cloneArray, columnFieldPath, DataUtil, resolveNestedPath } from 'igniteui-angular/core';
+import { cloneArray, columnFieldPath, DataUtil, type IgxSummaryResult, resolveNestedPath } from 'igniteui-angular/core';
 
 /** @hidden */
 @Injectable()

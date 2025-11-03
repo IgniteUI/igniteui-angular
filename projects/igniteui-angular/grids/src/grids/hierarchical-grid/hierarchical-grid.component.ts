@@ -32,7 +32,7 @@ import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-naviga
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
 import { takeUntil } from 'rxjs/operators';
-import { CellType, EntityType, FieldType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
+import { CellType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxHierarchicalGridRow } from '../grid-public-row';
@@ -59,7 +59,7 @@ import { IgxButtonDirective, IgxForOfScrollSyncService, IgxForOfSyncService, Igx
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { IFilteringExpressionsTree, flatten } from 'igniteui-angular/core';
+import { EntityType, FieldType, IFilteringExpressionsTree, flatten } from 'igniteui-angular/core';
 import { IgxActionStripToken } from 'igniteui-angular/action-strip';
 import { IgxPaginatorToken } from 'igniteui-angular/paginator';
 

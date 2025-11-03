@@ -18,10 +18,10 @@ import {
     ViewChildren
 } from '@angular/core';
 import { IgxGridForOfDirective } from 'igniteui-angular/directives';
-import { TransactionType } from 'igniteui-angular/core';
+import { ColumnType, TransactionType } from 'igniteui-angular/core';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { IgxEditRow } from './common/crud.service';
-import { CellType, ColumnType, GridType, IGX_GRID_BASE } from './common/grid.interface';
+import { CellType, GridType, IGX_GRID_BASE } from './common/grid.interface';
 import { mergeWith } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

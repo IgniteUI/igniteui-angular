@@ -9,8 +9,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ExpressionUI } from './common';
-import { ColumnType } from '../../common/grid.interface';
-import { AbsoluteScrollStrategy, ConnectedPositioningStrategy, DataUtil, FilteringLogic, GridColumnDataType, IBaseEventArgs, IFilteringOperation, OverlaySettings, PlatformUtil } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, ColumnType, ConnectedPositioningStrategy, DataUtil, FilteringLogic, GridColumnDataType, IBaseEventArgs, IFilteringOperation, OverlaySettings, PlatformUtil } from 'igniteui-angular/core';
 import { IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular/select';
 import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective } from 'igniteui-angular/input-group';
 import { IgxIconComponent } from 'igniteui-angular/icon';

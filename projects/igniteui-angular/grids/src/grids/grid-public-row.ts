@@ -1,13 +1,12 @@
 import { IgxEditRow } from './common/crud.service';
-import { GridSummaryCalculationMode, GridSummaryPosition } from './common/enums';
+import { GridSummaryPosition } from './common/enums';
 import { IgxGridCell } from './grid-public-cell';
-import { IgxSummaryResult } from './summaries/grid-summary';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
 import { IgxPivotGridComponent } from './pivot-grid/pivot-grid.component';
 import { PivotUtil } from './pivot-grid/pivot-util';
 import { mergeWith } from 'lodash-es';
 import { CellType, GridServiceType, GridType, IGridValidationState, RowType, ValidationStatus } from './common/grid.interface';
-import { IGroupByRecord } from 'igniteui-angular/core';
+import { GridSummaryCalculationMode, IGroupByRecord, IgxSummaryResult } from 'igniteui-angular/core';
 
 abstract class BaseRow implements RowType {
     public index: number;

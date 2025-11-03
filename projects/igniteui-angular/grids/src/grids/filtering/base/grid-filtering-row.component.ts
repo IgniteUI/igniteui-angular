@@ -18,14 +18,13 @@ import { IgxFilteringService } from '../grid-filtering.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ExpressionUI } from '../excel-style/common';
-import { ColumnType } from '../../common/grid.interface';
 import { NgTemplateOutlet, NgClass } from '@angular/common';
 import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, ISelectionEventArgs } from 'igniteui-angular/drop-down';
 import { IBaseChipEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
-import { AbsoluteScrollStrategy, ConnectedPositioningStrategy, DataUtil, FilteringLogic, GridColumnDataType, HorizontalAlignment, IFilteringExpression, IFilteringOperation, IgxPickerClearComponent, IgxPickerToggleComponent, isEqual, OverlaySettings, PlatformUtil, Size, VerticalAlignment } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, ColumnType, ConnectedPositioningStrategy, DataUtil, FilteringLogic, GridColumnDataType, HorizontalAlignment, IFilteringExpression, IFilteringOperation, IgxPickerClearComponent, IgxPickerToggleComponent, isEqual, OverlaySettings, PlatformUtil, Size, VerticalAlignment } from 'igniteui-angular/core';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 import { IgxButtonDirective, IgxDateTimeEditorDirective, IgxIconButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 

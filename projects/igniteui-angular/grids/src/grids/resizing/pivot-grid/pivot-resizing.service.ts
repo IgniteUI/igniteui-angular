@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ColumnType } from '../../common/grid.interface';
 import { PivotRowHeaderGroupType } from '../../pivot-grid/pivot-grid.interface';
 import { IgxColumnResizingService } from '../resizing.service';
+import { ColumnType } from 'igniteui-angular/core';
 
 
 /**

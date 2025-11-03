@@ -12,3 +12,18 @@ export const Size = {
     Large: '3'
 } as const;
 export type Size = (typeof Size)[keyof typeof Size];
+
+
+/** * @hidden @internal
+ *
+ * Enumeration representing the days of the week.
+ */
+export enum WEEKDAYS {
+    SUNDAY,
+    MONDAY,
+    TUESDAY,
+    WEDNESDAY,
+    THURSDAY,
+    FRIDAY,
+    SATURDAY
+}

@@ -3,12 +3,12 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IActiveNode } from '../../grid-navigation.service';
-import { EntityType, FieldType, GridType } from '../../common/grid.interface';
+import { GridType } from '../../common/grid.interface';
 import { NgClass } from '@angular/common';
 import { IgxHierarchicalGridComponent } from '../../hierarchical-grid/hierarchical-grid.component';
 import { IDragStartEventArgs, IgxButtonDirective, IgxDragDirective, IgxDragHandleDirective } from 'igniteui-angular/directives';
 import { IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent } from 'igniteui-angular/query-builder';
-import { getCurrentResourceStrings, GridResourceStringsEN, IFilteringExpressionsTree, IgxOverlayService, PlatformUtil, QueryBuilderResourceStringsEN } from 'igniteui-angular/core';
+import { EntityType, FieldType, getCurrentResourceStrings, GridResourceStringsEN, IFilteringExpressionsTree, IgxOverlayService, PlatformUtil, QueryBuilderResourceStringsEN } from 'igniteui-angular/core';
 
 /**
  * A component used for presenting advanced filtering UI for a Grid.

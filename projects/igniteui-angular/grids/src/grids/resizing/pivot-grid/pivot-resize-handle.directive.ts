@@ -4,10 +4,10 @@ import {
     Input,
     NgZone
 } from '@angular/core';
-import { ColumnType } from '../../common/grid.interface';
 import { PivotRowHeaderGroupType } from '../../pivot-grid/pivot-grid.interface';
 import { IgxPivotColumnResizingService } from './pivot-resizing.service'
 import { IgxResizeHandleDirective } from '../resize-handle.directive';
+import { ColumnType } from 'igniteui-angular/core';
 
 /**
  * @hidden

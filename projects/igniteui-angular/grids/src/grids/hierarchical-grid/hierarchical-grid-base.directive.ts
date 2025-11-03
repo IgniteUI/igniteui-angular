@@ -27,13 +27,13 @@ import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-naviga
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { GridType, IGX_GRID_SERVICE_BASE, IPathSegment } from '../common/grid.interface';
+import { GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxGridTransaction } from '../common/types';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
-import { IgxFlatTransactionFactory, IgxOverlayService, IgxTransactionService, PlatformUtil, State, Transaction, TransactionService } from 'igniteui-angular/core';
+import { IgxFlatTransactionFactory, IgxOverlayService, IgxTransactionService, IPathSegment, PlatformUtil, State, Transaction, TransactionService } from 'igniteui-angular/core';
 import { IForOfState, IgxTextHighlightService } from 'igniteui-angular/directives';
 
 export const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();

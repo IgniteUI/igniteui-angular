@@ -14,8 +14,8 @@ import {
 } from '@angular/core';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
-import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings, PositionSettings, SortingDirection, VerticalAlignment } from 'igniteui-angular/core';
-import { ColumnType, IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, ColumnType, OverlaySettings, PositionSettings, SortingDirection, VerticalAlignment } from 'igniteui-angular/core';
+import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { DropPosition } from '../moving/moving.service';

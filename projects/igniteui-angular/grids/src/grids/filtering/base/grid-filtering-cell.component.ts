@@ -13,13 +13,12 @@ import {
 } from '@angular/core';
 import { IgxFilteringService } from '../grid-filtering.service';
 import { ExpressionUI } from '../excel-style/common';
-import { ColumnType } from '../../common/grid.interface';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { IBaseChipEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxPrefixDirective } from 'igniteui-angular/input-group';
 import { IgxBadgeComponent } from 'igniteui-angular/badge';
-import { IFilteringExpression, Size } from 'igniteui-angular/core';
+import { ColumnType, IFilteringExpression, Size } from 'igniteui-angular/core';
 
 /**
  * @hidden

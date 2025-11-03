@@ -1,6 +1,6 @@
 import type { KeyOfOrString } from '../core/types';
 import { IBaseEventArgs } from '../core/utils';
-import type { GridType } from './grid-types';
+import type { GridTypeBase } from './grid-types';
 
 /* mustCoerceToInt */
 export enum SortingDirection {
@@ -29,7 +29,7 @@ export interface ISortingStrategy {
         valueResolver: (obj: any, key: string, isDate?: boolean) => any,
         isDate?: boolean,
         isTime?: boolean,
-        grid?: GridType
+        grid?: GridTypeBase
     ) => any[];
 }
 
@@ -169,7 +169,7 @@ export class FormattedValuesSortingStrategy extends DefaultSortingStrategy {
         valueResolver: (obj: any, key: string, isDate?: boolean) => any,
         isDate?: boolean,
         isTime?: boolean,
-        grid?: GridType
+        grid?: GridTypeBase
     ) {
         const key = fieldName;
         const reverse = (dir === SortingDirection.Desc ? -1 : 1);
@@ -186,7 +186,7 @@ export class FormattedValuesSortingStrategy extends DefaultSortingStrategy {
         valueResolver: (obj: any, key: string, isDate?: boolean, isTime?: boolean) => any,
         isDate: boolean,
         isTime: boolean,
-        grid?: GridType
+        grid?: GridTypeBase
     ) {
         let a = valueResolver.call(this, obj1, key, isDate, isTime);
         let b = valueResolver.call(this, obj2, key, isDate, isTime);

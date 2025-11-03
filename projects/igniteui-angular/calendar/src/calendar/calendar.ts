@@ -94,16 +94,6 @@ export interface IFormattingViews {
     year?: boolean;
 }
 
-export enum WEEKDAYS {
-    SUNDAY,
-    MONDAY,
-    TUESDAY,
-    WEDNESDAY,
-    THURSDAY,
-    FRIDAY,
-    SATURDAY
-}
-
 export class Calendar {
     public timedelta(date: Date, interval: string, units: number): Date {
         const ret = new Date(date);

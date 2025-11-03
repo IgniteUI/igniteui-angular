@@ -1,6 +1,6 @@
-import type { CellType, ColumnType, GridType, IGridValidationState, RowType, ValidationStatus } from './common/grid.interface';
+import type { CellType, GridType, IGridValidationState, RowType, ValidationStatus } from './common/grid.interface';
 import type { ISelectionNode } from './common/types';
-import { columnFieldPath, resolveNestedPath } from 'igniteui-angular/core';
+import { columnFieldPath, type ColumnType, resolveNestedPath } from 'igniteui-angular/core';
 
 export class IgxGridCell implements CellType {
 
@@ -13,7 +13,6 @@ export class IgxGridCell implements CellType {
     private _row: RowType;
     private _rowIndex: number;
     private _column: ColumnType;
-    private _columnField: string;
 
     /**
      * @hidden

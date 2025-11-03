@@ -1,5 +1,4 @@
-import { GridColumnDataType, IDataCloneStrategy, IFilteringExpressionsTree, SortingDirection } from 'igniteui-angular/core';
-import { ColumnType } from '../common/grid.interface';
+import { ColumnType, GridColumnDataType, IDataCloneStrategy, IFilteringExpressionsTree, SortingDirection } from 'igniteui-angular/core';
 
 
 /**

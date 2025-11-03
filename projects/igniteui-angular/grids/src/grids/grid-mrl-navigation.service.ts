@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { IgxGridNavigationService } from './grid-navigation.service';
-import { HORIZONTAL_NAV_KEYS, HEADER_KEYS } from 'igniteui-angular/core';
+import { HORIZONTAL_NAV_KEYS, HEADER_KEYS, ColumnType } from 'igniteui-angular/core';
 import { GridKeydownTargetType } from './common/enums';
-import { ColumnType } from './common/grid.interface';
 
 /** @hidden */
 @Injectable()

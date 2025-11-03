@@ -8,10 +8,10 @@ import { IColumnResizeEventArgs, IFilteringEventArgs } from '../common/events';
 import { useAnimation } from '@angular/animations';
 import { editor, pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { ExpressionUI, generateExpressionsList } from './excel-style/common';
-import { ColumnType, GridType } from '../common/grid.interface';
+import { GridType } from '../common/grid.interface';
 import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 import { fadeIn } from 'igniteui-angular/animations';
-import { AbsoluteScrollStrategy, ExpressionsTreeUtil, FilteringExpressionsTree, FilteringLogic, formatDate, IFilteringExpression, IFilteringExpressionsTree, IFilteringOperation, IgxOverlayService, isTree, OverlayCancelableEventArgs, OverlayEventArgs, OverlaySettings, VerticalAlignment } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, ColumnType, ExpressionsTreeUtil, FilteringExpressionsTree, FilteringLogic, formatDate, IFilteringExpression, IFilteringExpressionsTree, IFilteringOperation, IgxOverlayService, isTree, OverlayCancelableEventArgs, OverlayEventArgs, OverlaySettings, VerticalAlignment } from 'igniteui-angular/core';
 import { IgxIconService } from 'igniteui-angular/icon';
 import { IForOfState } from 'igniteui-angular/directives';
 

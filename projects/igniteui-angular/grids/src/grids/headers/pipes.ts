@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ColumnType } from '../common/grid.interface';
-import { ISortingExpression } from 'igniteui-angular/core';
+import { ColumnType, ISortingExpression } from 'igniteui-angular/core';
 
 
 @Pipe({

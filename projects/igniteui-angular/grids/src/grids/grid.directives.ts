@@ -3,13 +3,13 @@ import { IgxDropDirective } from 'igniteui-angular/directives';
 import { IgxColumnMovingDragDirective } from './moving/moving.drag.directive';
 import { IgxGroupByAreaDirective } from './grouping/group-by-area.directive';
 import {
-    ColumnType,
     IgxGridMasterDetailContext,
     IgxGroupByRowTemplateContext,
     IgxGridHeaderTemplateContext,
     IgxGridRowTemplateContext,
     IgxGridTemplateContext
 } from './common/grid.interface';
+import { ColumnType } from 'igniteui-angular/core';
 
 /**
  * @hidden

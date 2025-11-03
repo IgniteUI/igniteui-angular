@@ -1,8 +1,9 @@
 import { IgxRowIslandComponent } from './row-island.component';
 import { Subject } from 'rxjs';
-import { GridType, IPathSegment } from '../common/grid.interface';
+import { GridType } from '../common/grid.interface';
 import { Injectable } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
+import { IPathSegment } from 'igniteui-angular/core';
 
 @Injectable()
 export class IgxHierarchicalGridAPIService extends GridBaseAPIService<GridType> {

@@ -1,6 +1,6 @@
 import { Inject, Pipe, PipeTransform } from '@angular/core';
-import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
-import { IGridSortingStrategy, IGridGroupingStrategy, cloneArray, DataUtil, FilteringExpressionsTree, FilterUtil, IFilteringExpressionsTree, IFilteringStrategy, IGridMergeStrategy, IGroupByExpandState, IGroupingExpression, ISortingExpression, IGroupByResult } from 'igniteui-angular/core';
+import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
+import { IGridSortingStrategy, IGridGroupingStrategy, cloneArray, DataUtil, FilteringExpressionsTree, FilterUtil, IFilteringExpressionsTree, IFilteringStrategy, IGridMergeStrategy, IGroupByExpandState, IGroupingExpression, ISortingExpression, IGroupByResult, ColumnType } from 'igniteui-angular/core';
 import { GridCellMergeMode, RowPinningPosition } from '../common/enums';
 
 /**

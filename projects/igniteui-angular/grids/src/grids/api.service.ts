@@ -13,10 +13,11 @@ import {
     IFilteringExpressionsTree,
     IGroupingExpression,
     ISortingExpression,
-    SortingDirection
+    SortingDirection,
+    ColumnType
 } from 'igniteui-angular/core';
 import { IgxCell, IgxGridCRUDService, IgxEditRow } from './common/crud.service';
-import { CellType, ColumnType, GridServiceType, GridType, RowType } from './common/grid.interface';
+import { CellType, GridServiceType, GridType, RowType } from './common/grid.interface';
 import { IGridEditEventArgs, IPinRowEventArgs, IRowToggleEventArgs } from './common/events';
 import { IgxColumnMovingService } from './moving/moving.service';
 

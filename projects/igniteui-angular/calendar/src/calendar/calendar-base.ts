@@ -1,5 +1,5 @@
 import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID, HostListener, booleanAttribute, ViewChildren, QueryList, ElementRef, ChangeDetectorRef } from '@angular/core';
-import { WEEKDAYS, IFormattingOptions, IFormattingViews, IViewDateChangeEventArgs, ScrollDirection, IgxCalendarView, CalendarSelection } from './calendar';
+import { IFormattingOptions, IFormattingViews, IViewDateChangeEventArgs, ScrollDirection, IgxCalendarView, CalendarSelection } from './calendar';
 import { ControlValueAccessor } from '@angular/forms';
 import { noop, Subject } from 'rxjs';
 import {
@@ -13,7 +13,8 @@ import {
     getCurrentResourceStrings,
     CalendarDay,
     getYearRange,
-    isDateInRanges
+    isDateInRanges,
+    WEEKDAYS
 } from 'igniteui-angular/core';
 import { getLocaleFirstDayOfWeek } from "@angular/common";
 import { KeyboardNavigationService } from './calendar.services';

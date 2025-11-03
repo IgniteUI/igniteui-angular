@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { first, takeUntil } from 'rxjs/operators';
 import { DimensionValuesFilteringStrategy } from '../common/pivot-strategy';
-import { ColumnType } from '../common/grid.interface';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxPivotGridComponent } from './pivot-grid.component';
 import { PivotUtil } from './pivot-util';
-import { FilteringExpressionsTree, FilteringLogic, IFilteringExpressionsTree, IFilteringOperation } from 'igniteui-angular/core';
+import { ColumnType, FilteringExpressionsTree, FilteringLogic, IFilteringExpressionsTree, IFilteringOperation } from 'igniteui-angular/core';
 
 @Injectable()
 export class IgxPivotFilteringService extends IgxFilteringService {

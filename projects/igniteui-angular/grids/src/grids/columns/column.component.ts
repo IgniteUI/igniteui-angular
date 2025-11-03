@@ -21,13 +21,12 @@ import {
 import { notifyChanges } from '../watch-changes';
 import { WatchColumnChanges } from '../watch-changes';
 import { IgxRowDirective } from '../row.directive';
-import { CellType, ColumnType, GridType, IgxCellTemplateContext, IgxColumnTemplateContext, IgxSummaryTemplateContext, IGX_GRID_BASE } from '../common/grid.interface';
+import { CellType, GridType, IgxCellTemplateContext, IgxColumnTemplateContext, IgxSummaryTemplateContext, IGX_GRID_BASE } from '../common/grid.interface';
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import {
-    IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand,
-    IgxSummaryResult, IgxTimeSummaryOperand
+    IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand, IgxTimeSummaryOperand
 } from '../summaries/grid-summary';
 import {
     IgxCellTemplateDirective,
@@ -38,13 +37,11 @@ import {
     IgxSummaryTemplateDirective,
     IgxCellValidationErrorDirective
 } from './templates.directive';
-import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs, IColumnEditorOptions } from './interfaces';
 import { DropPosition } from '../moving/moving.service';
 import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
 import { IgxGridCell } from '../grid-public-cell';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
-import { ColumnPinningPosition } from '../common/enums';
-import { DefaultSortingStrategy, ExpressionsTreeUtil, FilteringExpressionsTree, GridColumnDataType, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, isConstructor, ISortingStrategy, PlatformUtil, Size } from 'igniteui-angular/core';
+import { ColumnPinningPosition, ColumnType, DefaultSortingStrategy, ExpressionsTreeUtil, FilteringExpressionsTree, GridColumnDataType, IColumnEditorOptions, IColumnPipeArgs, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxSummaryResult, IgxTimeFilteringOperand, isConstructor, ISortingStrategy, MRLColumnSizeInfo, MRLResizeColumnInfo, PlatformUtil, Size } from 'igniteui-angular/core';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_TIME_FORMAT = 'mediumTime';

@@ -14,12 +14,12 @@ import {
 } from '@angular/core';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { Subject } from 'rxjs';
-import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
+import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { GridSelectionMode } from '../common/enums';
 import { SortingIndexPipe } from './pipes';
 import { NgTemplateOutlet, NgClass } from '@angular/common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { ExpressionsTreeUtil, GridColumnDataType, SortingDirection } from 'igniteui-angular/core';
+import { ColumnType, ExpressionsTreeUtil, GridColumnDataType, SortingDirection } from 'igniteui-angular/core';
 
 /**
  * @hidden

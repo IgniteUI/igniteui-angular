@@ -8,7 +8,7 @@ import { IGroupingState } from './groupby-state.interface';
 import { cloneArray, mergeObjects } from '../core/utils';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/transaction/transaction';
 import { getHierarchy, isHierarchyMatch } from './operations';
-import type { ColumnType, GridType, ITreeGridRecord } from './grid-types';
+import type { ColumnType, GridTypeBase, ITreeGridRecord } from './grid-types';
 import { ISortingExpression } from './sorting-strategy';
 import {
     IGridSortingStrategy,
@@ -29,14 +29,14 @@ import { GridColumnDataType } from './grid-types';
  */
 export class DataUtil {
     public static sort<T>(data: T[], expressions: ISortingExpression[], sorting: IGridSortingStrategy = new IgxSorting(),
-        grid?: GridType): T[] {
+        grid?: GridTypeBase): T[] {
         return sorting.sort(data, expressions, grid);
     }
 
     public static treeGridSort(hierarchicalData: ITreeGridRecord[],
         expressions: ISortingExpression[],
         sorting: IGridSortingStrategy = new IgxDataRecordSorting(),
-        grid?: GridType): ITreeGridRecord[] {
+        grid?: GridTypeBase): ITreeGridRecord[] {
         const res: ITreeGridRecord[] = [];
         const stack: {
             original: ITreeGridRecord[];
@@ -90,13 +90,13 @@ export class DataUtil {
         return rec;
     }
 
-    public static group<T>(data: T[], state: IGroupingState, grouping: IGridGroupingStrategy = new IgxGrouping(), grid: GridType = null,
+    public static group<T>(data: T[], state: IGroupingState, grouping: IGridGroupingStrategy = new IgxGrouping(), grid: GridTypeBase = null,
         groupsRecords: any[] = [], fullResult: IGroupByResult = { data: [], metadata: [] }): IGroupByResult {
         groupsRecords.splice(0, groupsRecords.length);
         return grouping.groupBy(data, state, grid, groupsRecords, fullResult);
     }
 
-    public static merge<T>(data: T[], columns: ColumnType[], strategy: IGridMergeStrategy = new DefaultMergeStrategy(), activeRowIndexes = [], grid: GridType = null,
+    public static merge<T>(data: T[], columns: ColumnType[], strategy: IGridMergeStrategy = new DefaultMergeStrategy(), activeRowIndexes = [], grid: GridTypeBase = null,
     ): any[] {
         const result = [];
         for (const col of columns) {
@@ -258,7 +258,7 @@ export class DataUtil {
         return value;
     }
 
-    public static filterDataByExpressions(data: any[], expressionsTree: IFilteringExpressionsTree, grid: GridType): any {
+    public static filterDataByExpressions(data: any[], expressionsTree: IFilteringExpressionsTree, grid: GridTypeBase): any {
         if (expressionsTree.filteringOperands.length) {
             const state = { expressionsTree, strategy: FilteringStrategy.instance() };
             data = FilterUtil.filter(cloneArray(data), state, grid);

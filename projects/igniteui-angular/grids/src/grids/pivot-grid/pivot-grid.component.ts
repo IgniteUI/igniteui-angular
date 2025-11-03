@@ -36,7 +36,7 @@ import { first, take, takeUntil } from 'rxjs/operators';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { ColumnType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, IgxColumnTemplateContext, PivotGridType, RowType } from '../common/grid.interface';
+import { GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, IgxColumnTemplateContext, PivotGridType, RowType } from '../common/grid.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType, IPivotUISettings, PivotRowLayoutType, PivotSummaryPosition } from './pivot-grid.interface';
@@ -44,9 +44,9 @@ import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { PivotUtil } from './pivot-util';
-import { FilterMode, GridPagingMode, GridSummaryCalculationMode, GridSummaryPosition } from '../common/enums';
+import { FilterMode, GridPagingMode, GridSummaryPosition } from '../common/enums';
 import { WatchChanges } from '../watch-changes';
-import { cloneArray, DataUtil, DefaultDataCloneStrategy, GridColumnDataType, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringOperation, IFilteringStrategy, ISortingExpression, OverlaySettings, PlatformUtil, resizeObservable, Size, SortingDirection } from 'igniteui-angular/core';
+import { cloneArray, ColumnType, DataUtil, DefaultDataCloneStrategy, GridColumnDataType, GridSummaryCalculationMode, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringOperation, IFilteringStrategy, ISortingExpression, OverlaySettings, PlatformUtil, resizeObservable, Size, SortingDirection } from 'igniteui-angular/core';
 import {
     IGridEditEventArgs,
     ICellPosition,

@@ -9,8 +9,8 @@ import {
 } from '@angular/core';
 import { Subject, fromEvent } from 'rxjs';
 import { debounceTime, map, takeUntil } from 'rxjs/operators';
-import { ColumnType } from '../common/grid.interface';
 import { IgxColumnResizingService } from './resizing.service';
+import { ColumnType } from 'igniteui-angular/core';
 
 
 /**

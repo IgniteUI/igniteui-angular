@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ColumnType } from '../common/grid.interface';
+import { ColumnType } from 'igniteui-angular/core';
 
 /* mustCoerceToInt */
 /**

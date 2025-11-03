@@ -1,12 +1,13 @@
 import { Component, DoCheck, EventEmitter, HostBinding, Inject, Input, IterableDiffer, IterableDiffers, Output, Pipe, PipeTransform, QueryList, ViewChildren, booleanAttribute, forwardRef } from '@angular/core';
 import { ColumnDisplayOrder } from '../common/enums';
-import { ColumnType, GridType } from '../common/grid.interface';
+import { GridType } from '../common/grid.interface';
 import { IColumnToggledEventArgs } from '../common/events';
 import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
 import { FormsModule } from '@angular/forms';
 import { IgxInputDirective, IgxInputGroupComponent } from 'igniteui-angular/input-group';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
+import { ColumnType } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 /**

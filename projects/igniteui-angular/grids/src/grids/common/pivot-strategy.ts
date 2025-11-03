@@ -1,8 +1,8 @@
 
-import type { ColumnType, PivotGridType } from './grid.interface';
+import type { PivotGridType } from './grid.interface';
 import { DEFAULT_PIVOT_KEYS, IPivotDimension, IPivotDimensionStrategy, IPivotGridRecord, IPivotKeys, IPivotValue, PivotDimensionType } from '../pivot-grid/pivot-grid.interface';
 import { PivotUtil } from '../pivot-grid/pivot-util';
-import { FilteringStrategy, IgxFilterItem } from 'igniteui-angular/core';
+import { type ColumnType, FilteringStrategy, IgxFilterItem } from 'igniteui-angular/core';
 import { cloneArray } from 'igniteui-angular/core';
 import { IFilteringExpressionsTree } from 'igniteui-angular/core';
 import { IDataCloneStrategy } from 'igniteui-angular/core';

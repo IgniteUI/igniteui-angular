@@ -1,12 +1,10 @@
 import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef, TemplateRef, booleanAttribute } from '@angular/core';
 import {
-    IgxSummaryOperand,
-    IgxSummaryResult
+    IgxSummaryOperand
 } from './grid-summary';
 import { formatCurrency, formatDate, formatNumber, formatPercent, getLocaleCurrencyCode, getLocaleCurrencySymbol, NgTemplateOutlet } from '@angular/common';
 import { ISelectionNode } from '../common/types';
-import { ColumnType } from '../common/grid.interface';
-import { GridColumnDataType, trackByIdentity } from 'igniteui-angular/core';
+import { ColumnType, GridColumnDataType, IgxSummaryResult, trackByIdentity } from 'igniteui-angular/core';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
