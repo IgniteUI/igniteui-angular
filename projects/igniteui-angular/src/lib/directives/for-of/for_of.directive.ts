@@ -1469,15 +1469,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     }
 
     protected _updateScrollOffset() {
-        let scrollOffset = 0;
-        let currentScroll = this.scrollPosition;
-        if (this._virtRatio !== 1) {
-            this._calcVirtualScrollPosition(this.scrollPosition);
-            currentScroll = this._virtScrollPosition;
-        }
-        const scroll = this.scrollComponent.nativeElement;
-        scrollOffset = scroll && this.scrollComponent.size ?
-        currentScroll - this.sizesCache[this.state.startIndex] : 0;
+        const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
         const dir = this.igxForScrollOrientation === 'horizontal' ? 'left' : 'top';
         this.dc.instance._viewContainer.element.nativeElement.style[dir] = -(scrollOffset) + 'px';
     }
