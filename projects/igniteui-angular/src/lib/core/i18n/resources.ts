@@ -14,7 +14,6 @@ import { IQueryBuilderResourceStrings } from './query-builder-resources';
 import { IComboResourceStrings } from './combo-resources';
 import { IBannerResourceStrings } from './banner-resources';
 import {
-    getCurrentResourceStrings as getCurrentResourceStringsCore,
     IResourceStrings as IResourceStringsCore,
     getI18nManager
 } from 'igniteui-i18n-core';
@@ -41,14 +40,14 @@ function igxRegisterI18n(resourceStrings: IResourceStrings, locale: string) {
 }
 
 /** Get current resource strings based on default. Result is truncated result, containing only relevant locale strings. */
-export function getCurrentResourceStrings<T>(defaultEN: T, init = true) {
+export function getCurrentResourceStrings<T>(defaultEN: T, init = true, locale?: string) {
     const igxResourceStringKeys = Object.keys(defaultEN);
     if (init) {
         igxRegisterI18n(defaultEN, getI18nManager().defaultLocale);
     }
 
     // Append back `igx_` prefix for compatibility with older versions.
-    const resourceStrings = getCurrentResourceStringsCore();
+    const resourceStrings = getI18nManager().getCurrentResourceStrings(locale);
     const normalizedResourceStrings: T = {} as T;
     const resourceStringsKeys = Object.keys(resourceStrings);
     for (const igxKey of igxResourceStringKeys) {
