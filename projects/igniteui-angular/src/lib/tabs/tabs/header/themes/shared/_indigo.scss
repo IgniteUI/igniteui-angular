@@ -17,6 +17,7 @@ $_theme: $indigo;
 
         transition: all .3s $tabs-animation-function;
         border: rem(1px) solid var-get($_theme, 'border-color');
+        border-radius: var-get($_theme, 'border-radius');
 
         border-top: rem(1px) solid transparent;
         border-inline: none;
