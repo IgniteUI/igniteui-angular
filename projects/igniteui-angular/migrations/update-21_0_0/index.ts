@@ -209,9 +209,8 @@ function migrateFile(filePath: string, content: string): string {
                     }
                 }
             }
-        }
-        // Rename type references in the code (but only if not aliased in import)
-        else if (ts.isIdentifier(node) && importedOldTypes.has(node.text)) {
+        } else if (ts.isIdentifier(node) && importedOldTypes.has(node.text)) {
+            // Rename type references in the code (but only if not aliased in import)
             const oldName = node.text;
             const rename = TYPE_RENAMES.get(oldName)!;
 
