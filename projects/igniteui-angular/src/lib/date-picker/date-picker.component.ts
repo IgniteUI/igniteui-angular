@@ -45,7 +45,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 import { DatePickerResourceStringsEN, IDatePickerResourceStrings } from '../core/i18n/date-picker-resources';
-import { IBaseCancelableBrowserEventArgs, isDate, onResourceChangeHandle, PlatformUtil } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, isDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { IgxPickerActionsDirective } from '../date-common/public_api';
@@ -67,7 +67,6 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { PickerCalendarOrientation } from '../date-common/types';
 import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
-import { IResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
 
@@ -1005,13 +1004,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         componentInstance.todaySelection.pipe(takeUntil(this._destroy$)).subscribe(() => this.selectToday());
     }
 
-    protected override initLocale() {
-        super.initLocale();
-        onResourceChangeHandle(this._destroy$, this.onResourceChange, this);
-    }
-
-    protected override onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
-        super.onResourceChange(args);
-        this._resourceStrings = getCurrentResourceStrings(DatePickerResourceStringsEN, false);
+    protected override updateResources(): void {
+        this._resourceStrings = getCurrentResourceStrings(DatePickerResourceStringsEN, false, this._locale);
     }
 }

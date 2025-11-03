@@ -220,6 +220,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public set locale(value: string) {
         this._locale = value;
+        this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false, this._locale);
     }
 
     /**
@@ -1729,7 +1730,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     private onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
         this._defaultLocale = args.detail.newLocale;
-        this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
+        if (!this._locale) {
+            this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
+        }
     }
 
     /** rootGroup is recreated after clicking Apply, which sets new expressionTree and calls init()*/

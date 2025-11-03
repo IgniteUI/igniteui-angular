@@ -313,6 +313,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         this._locale = value;
         // changing locale runtime needs to update the `weekStart` too
         this._localeWeekStart = getLocaleFirstDayOfWeek(this._locale);
+        this._defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false, this._locale);
     }
 
     /**
@@ -1027,7 +1028,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
     private onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
         this._defaultLocale = args.detail.newLocale;
-        this._defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false);
+        if (!this._locale) {
+            this._defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false);
+        }
         this._localeWeekStart = getLocaleFirstDayOfWeek(this.locale);
     }
 }

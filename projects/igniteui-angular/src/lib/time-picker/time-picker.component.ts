@@ -45,7 +45,7 @@ import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-time-editor.directive';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from '../core/i18n/time-picker-resources';
-import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs, onResourceChangeHandle } from '../core/utils';
+import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { PickerInteractionMode } from '../date-common/types';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
@@ -53,7 +53,7 @@ import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { DatePart, DatePartDeltas } from '../directives/date-time-editor/public_api';
 import { PickerHeaderOrientation } from '../date-common/types';
-import { IgxPickerActionsDirective, IgxPickerClearComponent } from '../date-common/picker-icons.common';
+import { IgxPickerActionsDirective } from '../date-common/picker-icons.common';
 import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
@@ -609,9 +609,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         private cdr: ChangeDetectorRef,
     ) {
         super(element, _localeId, _inputGroupType);
-        onResourceChangeHandle(this._destroy$, () => {
-            this._defaultResourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN, false);
-        }, this);
     }
 
     /** @hidden @internal */
@@ -1079,6 +1076,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         if (this._inputGroup && this._inputGroup.isRequired !== this.required) {
             this._inputGroup.isRequired = this.required;
         }
+    }
+
+    protected override updateResources() {
+        this._defaultResourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN, false, this._locale);
     }
 
     private get isTouchedOrDirty(): boolean {

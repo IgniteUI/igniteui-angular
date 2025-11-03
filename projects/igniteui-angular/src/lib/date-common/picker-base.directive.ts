@@ -8,7 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { EditorProvider } from '../core/edit-provider';
 import { IToggleView } from '../core/navigation';
-import { getLocaleFirstDayOfWeek, IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
+import { getLocaleFirstDayOfWeek, IBaseCancelableBrowserEventArgs, IBaseEventArgs, onResourceChangeHandle } from '../core/utils';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { OverlaySettings } from '../services/overlay/utilities';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from './picker-icons.common';
@@ -143,6 +143,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      */
     public set locale(value: string) {
         this._locale = value;
+        this.updateResources();
     }
 
     /**
@@ -363,11 +364,15 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     protected initLocale() {
         this._defaultLocale = getCurrentI18n();
         this._locale = this._localeId !== DEFAULT_LOCALE ? this._localeId : this._locale;
+        onResourceChangeHandle(this._destroy$, this.onResourceChange, this);
     }
 
     protected onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
         this._defaultLocale = args.detail.newLocale;
+        this.updateResources();
     }
+
+    protected updateResources() { }
 
     public abstract select(value: Date | DateRange | string): void;
     public abstract open(settings?: OverlaySettings): void;

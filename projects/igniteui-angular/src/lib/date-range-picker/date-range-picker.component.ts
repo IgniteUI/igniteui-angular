@@ -16,7 +16,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { CalendarSelection, IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from '../calendar/public_api';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates';
 import { DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } from '../core/i18n/date-range-picker-resources';
-import { clamp, IBaseCancelableBrowserEventArgs, isDate, onResourceChangeHandle, parseDate, PlatformUtil } from '../core/utils';
+import { clamp, IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { IgxPickerActionsDirective } from '../date-common/picker-icons.common';
@@ -475,6 +475,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      */
     public override set locale(value: string) {
         this._locale = value;
+        this.updateResources();
         if (this.hasProjectedInputs) {
             this.updateInputLocale();
             this.updateDisplayFormat();
@@ -1270,18 +1271,16 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         });
     }
 
-    protected override initLocale() {
-        super.initLocale();
-        onResourceChangeHandle(this._destroy$, this.onResourceChange, this);
-    }
-
     protected override onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
         super.onResourceChange(args);
-        this._defaultResourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN, false);
         if (this.hasProjectedInputs) {
             this.updateInputLocale();
             this.updateDisplayFormat();
         }
+    }
+
+    protected override updateResources(): void {
+        this._defaultResourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN, false, this._locale);
     }
 
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {
