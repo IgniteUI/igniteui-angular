@@ -870,7 +870,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
                 const maxVirtScrollTop = this._virtSize - containerSize;
                 this._bScrollInternal = true;
                 this._virtScrollPosition = maxVirtScrollTop;
-                this.scrollPosition = maxVirtScrollTop;
+                this.scrollPosition = maxVirtScrollTop / this._virtRatio;
                 return;
             }
             if (this._adjustToIndex) {
@@ -1469,7 +1469,16 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     }
 
     protected _updateScrollOffset() {
-        const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
+        let scrollOffset = 0;
+        let currentScroll = this.scrollPosition;
+        if (this._virtRatio !== 1) {
+            this._calcVirtualScrollPosition(this.scrollPosition);
+            scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
+        } else {
+            const scroll = this.scrollComponent.nativeElement;
+            scrollOffset = scroll && this.scrollComponent.size ?
+            currentScroll - this.sizesCache[this.state.startIndex] : 0;
+        }
         const dir = this.igxForScrollOrientation === 'horizontal' ? 'left' : 'top';
         this.dc.instance._viewContainer.element.nativeElement.style[dir] = -(scrollOffset) + 'px';
     }
