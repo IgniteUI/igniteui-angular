@@ -8,7 +8,7 @@ import {
     Output,
     booleanAttribute,
     inject,
-    afterRenderEffect,
+    AfterViewInit,
 } from '@angular/core';
 import { PlatformUtil } from 'igniteui-angular/core';
 
@@ -20,8 +20,9 @@ export const IgxBaseButtonType = {
 
 
 @Directive()
-export abstract class IgxButtonBaseDirective {
+export abstract class IgxButtonBaseDirective implements AfterViewInit{
     private _platformUtil = inject(PlatformUtil);
+    private _viewInit = false;
 
     /**
      * Emitted when the button is clicked.
@@ -101,15 +102,16 @@ export abstract class IgxButtonBaseDirective {
         // In SSR there is no paint, so there’s no visual rendering or transitions to suppress.
         // Fix style flickering https://github.com/IgniteUI/igniteui-angular/issues/14759
         if (this._platformUtil.isBrowser) {
-            afterRenderEffect({
-                write: () => {
-                    this.element.nativeElement.style.setProperty('--_init-transition', '0s');
-                },
-                read: () => {
-                    requestAnimationFrame(() => {
-                        this.element.nativeElement.style.removeProperty('--_init-transition');
-                    });
-                }
+            this.element.nativeElement.style.setProperty('--_init-transition', '0s');
+        }
+    }
+
+    public ngAfterViewInit(): void {
+        if (this._platformUtil.isBrowser && !this._viewInit) {
+            this._viewInit = true;
+
+            requestAnimationFrame(() => {
+                this.element.nativeElement.style.removeProperty('--_init-transition');
             });
         }
     }

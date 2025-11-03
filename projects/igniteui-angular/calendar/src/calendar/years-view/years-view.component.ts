@@ -4,6 +4,7 @@ import {
     HostBinding,
     ElementRef,
     Inject,
+    inject,
 } from "@angular/core";
 import { IgxCalendarYearDirective } from "../calendar.directives";
 import {
@@ -11,8 +12,7 @@ import {
     DAY_INTERVAL_TOKEN,
 } from "../common/calendar-view.directive";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { CalendarDay, calendarRange } from 'igniteui-angular/core';
-import type { DayInterval } from 'igniteui-angular/core';
+import { CalendarDay, calendarRange, PlatformUtil, type DayInterval } from 'igniteui-angular/core';
 
 @Component({
     providers: [
@@ -32,6 +32,7 @@ import type { DayInterval } from 'igniteui-angular/core';
 })
 export class IgxYearsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
     #standalone = true;
+    private platform = inject(PlatformUtil);
 
     /**
      * The default css class applied to the component.
@@ -157,7 +158,7 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements C
      * @hidden
      */
     protected onMouseDown() {
-        if (this.tabIndex !== -1) {
+        if (this.tabIndex !== -1 && this.platform.isBrowser && this.el?.nativeElement) {
             this.el.nativeElement.focus();
         }
     }

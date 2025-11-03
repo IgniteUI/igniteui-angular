@@ -5,6 +5,7 @@ import {
     ElementRef,
     booleanAttribute,
     Inject,
+    inject,
 } from "@angular/core";
 import { IgxCalendarMonthDirective } from "../calendar.directives";
 import { TitleCasePipe } from "@angular/common";
@@ -13,7 +14,7 @@ import {
     DAY_INTERVAL_TOKEN,
 } from "../common/calendar-view.directive";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { CalendarDay, calendarRange, DayInterval } from 'igniteui-angular/core';
+import { CalendarDay, calendarRange, DayInterval, PlatformUtil } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 
@@ -35,6 +36,7 @@ let NEXT_ID = 0;
 })
 export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
     #standalone = true;
+    private platform = inject(PlatformUtil);
 
     /**
      * Sets/gets the `id` of the months view.
@@ -137,7 +139,7 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      * @hidden
      */
     protected onMouseDown() {
-        if (this.tabIndex !== -1) {
+        if (this.tabIndex !== -1 && this.platform.isBrowser && this.el?.nativeElement) {
             this.el.nativeElement.focus();
         }
     }
