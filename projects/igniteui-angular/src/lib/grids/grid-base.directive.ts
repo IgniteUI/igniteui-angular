@@ -8255,7 +8255,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             const rec = this.verticalScrollContainer.igxForOf[startIndex];
             if (rec && rec.cellMergeMeta) {
                 this.columnsToMerge.forEach((col) => {
-                    const root = rec.cellMergeMeta.get(col.field).root;
+                    const root = rec.cellMergeMeta?.get(col.field)?.root;
                     if (root) {
                         data.push({ record: root, index: root.index, dataIndex: root.index });
                     }
