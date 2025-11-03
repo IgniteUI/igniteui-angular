@@ -1,6 +1,6 @@
 import { Injectable, ElementRef, NgZone, inject } from "@angular/core";
 import { EventManager } from "@angular/platform-browser";
-import { PlatformUtil } from "../core/utils";
+import { PlatformUtil } from 'igniteui-angular/core';
 
 @Injectable()
 export class KeyboardNavigationService {
