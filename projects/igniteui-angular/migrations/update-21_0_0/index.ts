@@ -1,10 +1,10 @@
 import type {
+    FileVisitor,
     Rule,
     SchematicContext,
     Tree
 } from '@angular-devkit/schematics';
 import * as ts from 'typescript';
-import * as path from 'path';
 
 const version = '21.0.0';
 
@@ -114,7 +114,7 @@ function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.Sou
     }
 
     const importPath = moduleSpecifier.text;
-    
+
     // Only process igniteui-angular imports (not already using entry points)
     if (importPath !== 'igniteui-angular') {
         return null;
@@ -131,24 +131,24 @@ function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.Sou
 
     // Group imports by entry point
     const entryPointGroups = new Map<string, string[]>();
-    
+
     for (const element of importClause.namedBindings.elements) {
         const name = element.name.text;
         const alias = element.propertyName?.text;
         const importName = alias || name;
         let actualImportName = importName;
-        
+
         // Check if this is a renamed type
         if (TYPE_RENAMES.has(importName)) {
             const rename = TYPE_RENAMES.get(importName)!;
             actualImportName = rename.newName;
         }
-        
+
         const fullImport = alias ? `${actualImportName} as ${name}` : actualImportName;
 
         // Determine target entry point
         let targetEntryPoint = 'core'; // Default to core
-        
+
         // Check if it's a renamed type first
         if (TYPE_RENAMES.has(importName)) {
             targetEntryPoint = TYPE_RENAMES.get(importName)!.entryPoint;
@@ -194,7 +194,7 @@ function migrateFile(filePath: string, content: string): string {
             const change = migrateImportDeclaration(node, sourceFile);
             if (change) {
                 changes.push(change);
-                
+
                 // Track old type names that were imported
                 const moduleSpecifier = node.moduleSpecifier;
                 if (ts.isStringLiteral(moduleSpecifier) && moduleSpecifier.text === 'igniteui-angular') {
@@ -214,7 +214,7 @@ function migrateFile(filePath: string, content: string): string {
         else if (ts.isIdentifier(node) && importedOldTypes.has(node.text)) {
             const oldName = node.text;
             const rename = TYPE_RENAMES.get(oldName)!;
-            
+
             // Check if this identifier is part of an import statement
             // We don't want to rename it there as we already handled it
             let isInImport = false;
@@ -226,7 +226,7 @@ function migrateFile(filePath: string, content: string): string {
                 }
                 parent = parent.parent;
             }
-            
+
             if (!isInImport) {
                 changes.push({
                     start: node.getStart(sourceFile),
@@ -235,7 +235,7 @@ function migrateFile(filePath: string, content: string): string {
                 });
             }
         }
-        
+
         ts.forEachChild(node, visit);
     }
 
@@ -243,7 +243,7 @@ function migrateFile(filePath: string, content: string): string {
 
     // Apply changes in reverse order to maintain positions
     changes.sort((a, b) => b.start - a.start);
-    
+
     let result = content;
     for (const change of changes) {
         result = result.substring(0, change.start) + change.replacement + result.substring(change.end);
@@ -273,14 +273,14 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
         }
 
         const originalContent = content.toString();
-        
+
         // Check if file has igniteui-angular imports
         if (!originalContent.includes("from 'igniteui-angular'") && !originalContent.includes('from "igniteui-angular"')) {
             return;
         }
 
         const migratedContent = migrateFile(filePath, originalContent);
-        
+
         if (migratedContent !== originalContent) {
             host.overwrite(filePath, migratedContent);
             context.logger.info(`  ✓ Migrated ${filePath}`);
@@ -288,7 +288,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     };
 
     host.visit(visit);
-    
+
     context.logger.info('Migration complete!');
     context.logger.info('Breaking changes:');
     context.logger.info('  - Input directives moved to igniteui-angular/input-group');
