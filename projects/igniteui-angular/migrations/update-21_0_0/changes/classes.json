@@ -1,0 +1,17 @@
+{
+    "$schema": "../../common/schema/class.schema.json",
+    "changes": [
+        {
+            "name": "Direction",
+            "replaceWith": "IgxCarouselDirection"
+        },
+        {
+            "name": "Size",
+            "replaceWith": "ElementDimensions"
+        },
+        {
+            "name": "IChangeCheckboxEventArgs",
+            "replaceWith": "IChangeRadioEventArgs"
+        }
+    ]
+}
