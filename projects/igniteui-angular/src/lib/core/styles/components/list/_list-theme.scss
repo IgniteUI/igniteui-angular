@@ -229,7 +229,8 @@
             display: none;
         }
 
-        > * {
+        > *,
+        & [class^='igx']  {
             --component-size: #{if($variant == 'indigo', 2, var(--list-size))};
         }
 
