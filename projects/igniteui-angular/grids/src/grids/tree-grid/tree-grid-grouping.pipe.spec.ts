@@ -1,6 +1,6 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { DefaultSortingStrategy } from 'igniteui-angular';
+import { DefaultSortingStrategy } from 'igniteui-angular/core';;
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';

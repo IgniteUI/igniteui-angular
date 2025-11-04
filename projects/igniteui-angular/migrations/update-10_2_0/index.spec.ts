@@ -36,7 +36,8 @@ describe('Update 10.2.0', () => {
         appTree.create(
             '/testSrc/appPrefix/component/expansion-test.component.ts',
             `import { Component, ViewChild } from '@angular/core';
-import { IExpansionPanelEventArgs, IgxExpansionPanelComponent } from 'igniteui-angular';
+import { IExpansionPanelEventArgs } from 'igniteui-angular/core';
+import { IgxExpansionPanelComponent } from 'igniteui-angular/expansion-panel';;
 
 @Component({
     selector: 'app-expansion-test',
@@ -56,7 +57,8 @@ export class ExpansionTestComponent {
         const tree = await schematicRunner
             .runSchematic('migration-17', {}, appTree);
         const expectedContent =  `import { Component, ViewChild } from '@angular/core';
-import { IExpansionPanelEventArgs, IgxExpansionPanelComponent } from 'igniteui-angular';
+import { IExpansionPanelEventArgs } from 'igniteui-angular/core';
+import { IgxExpansionPanelComponent } from 'igniteui-angular/expansion-panel';;
 
 @Component({
     selector: 'app-expansion-test',

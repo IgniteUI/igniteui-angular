@@ -20,7 +20,7 @@ describe(`Update to ${version}`, () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts',
             `import { Component, ViewChild } from '@angular/core';
-        import { CarouselAnimationType } from 'igniteui-angular';
+        import { CarouselAnimationType } from 'igniteui-angular/core';;
 
         @Component({
             selector: 'animationType',
@@ -35,7 +35,7 @@ describe(`Update to ${version}`, () => {
             .runSchematic(migrationName, {}, appTree);
 
         const expectedContent = `import { Component, ViewChild } from '@angular/core';
-        import { HorizontalAnimationType } from 'igniteui-angular';
+        import { HorizontalAnimationType } from 'igniteui-angular/core';;
 
         @Component({
             selector: 'animationType',
@@ -56,7 +56,7 @@ describe(`Update to ${version}`, () => {
 
     it('should rename IgxComboComponent selectedItems() to selection', async () => {
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
-        `import { IgxComboComponent } from 'igniteui-angular';
+        `import { IgxComboComponent } from 'igniteui-angular/combo';;
         export class MyClass {
             public combo: IgxComboComponent;
             public ngAfterViewInit() {
@@ -69,7 +69,7 @@ describe(`Update to ${version}`, () => {
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.ts')
         ).toEqual(
-        `import { IgxComboComponent } from 'igniteui-angular';
+        `import { IgxComboComponent } from 'igniteui-angular/combo';;
         export class MyClass {
             public combo: IgxComboComponent;
             public ngAfterViewInit() {
@@ -125,7 +125,7 @@ import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AppComponent } from "./app.component";
-import { IgxCsvExporterService, IgxExcelExporterService } from "igniteui-angular";
+import { IgxCsvExporterService, IgxExcelExporterService } from 'igniteui-angular/core';;
 import { ExcelExportComponent } from "./services/export-excel/excel-export.component";
 
 @NgModule({
@@ -160,7 +160,7 @@ import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AppComponent } from "./app.component";
-import { IgxCsvExporterService, IgxExcelExporterService } from "igniteui-angular";
+import { IgxCsvExporterService, IgxExcelExporterService } from 'igniteui-angular/core';;
 import { ExcelExportComponent } from "./services/export-excel/excel-export.component";
 
 @NgModule({
@@ -187,7 +187,7 @@ export class AppModule {}
     it('Should properly rename rowData property to data', async () => {
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
-        import { IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
+        import { IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular/grids';;
         export class MyClass {
             @ViewChild(IgxGridComponent, { read: IgxGridComponent })
             public grid: IgxGridComponent;
@@ -220,7 +220,7 @@ export class AppModule {}
             tree.readContent('/testSrc/appPrefix/component/test.component.ts')
         ).toEqual(
         `
-        import { IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
+        import { IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular/grids';;
         export class MyClass {
             @ViewChild(IgxGridComponent, { read: IgxGridComponent })
             public grid: IgxGridComponent;
@@ -251,7 +251,7 @@ export class AppModule {}
     it('Should properly rename columnsCollection property to columns', async () => {
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
-        import { IgxGridComponent } from 'igniteui-angular';
+        import { IgxGridComponent } from 'igniteui-angular/grids';;
         export class MyClass {
             @ViewChild(IgxGridComponent, { read: IgxGridComponent })
             public grid1: IgxGridComponent;
@@ -268,7 +268,7 @@ export class AppModule {}
             tree.readContent('/testSrc/appPrefix/component/test.component.ts')
         ).toEqual(
         `
-        import { IgxGridComponent } from 'igniteui-angular';
+        import { IgxGridComponent } from 'igniteui-angular/grids';;
         export class MyClass {
             @ViewChild(IgxGridComponent, { read: IgxGridComponent })
             public grid1: IgxGridComponent;
@@ -283,7 +283,7 @@ export class AppModule {}
     it('Should properly rename columnsCollection property to columns - treeGrid', async () => {
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
-        import { IgxTreeGridComponent } from 'igniteui-angular';
+        import { IgxTreeGridComponent } from 'igniteui-angular/grids';;
         export class MyClass {
             @ViewChild(IgxTreeGridComponent, { read: IgxTreeGridComponent })
             public tGrid1: IgxTreeGridComponent;
@@ -303,7 +303,7 @@ export class AppModule {}
             tree.readContent('/testSrc/appPrefix/component/test.component.ts')
         ).toEqual(
         `
-        import { IgxTreeGridComponent } from 'igniteui-angular';
+        import { IgxTreeGridComponent } from 'igniteui-angular/grids';;
         export class MyClass {
             @ViewChild(IgxTreeGridComponent, { read: IgxTreeGridComponent })
             public tGrid1: IgxTreeGridComponent;

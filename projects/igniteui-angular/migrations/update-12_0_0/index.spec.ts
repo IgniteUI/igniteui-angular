@@ -1410,7 +1410,7 @@ igx-bottom-nav-header {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts',
             `import { Component } from '@angular/core';
-import { InteractionMode } from 'igniteui-angular';
+import { InteractionMode } from 'igniteui-angular/date-picker';;
 
 @Component({
     selector: 'pickers-mode',
@@ -1426,7 +1426,7 @@ export class PickerModeComponent {
             .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         const expectedContent = `import { Component } from '@angular/core';
-import { PickerInteractionMode } from 'igniteui-angular';
+import { PickerInteractionMode } from 'igniteui-angular/core';;
 
 @Component({
     selector: 'pickers-mode',
@@ -1448,8 +1448,8 @@ export class PickerModeComponent {
     it('Should update row component types with RowType', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/rows.component.ts', `
-import { IgxGridComponent, IgxGridRowComponent, IgxHierarchicalRowComponent,
-    IgxTreeGridRowComponent, IgxGridGroupByRowComponent, RowPinningPosition } from 'igniteui-angular';
+import { IgxGridComponent } from 'igniteui-angular/grids';
+import { IgxGridRowComponent, IgxHierarchicalRowComponent, IgxTreeGridRowComponent, IgxGridGroupByRowComponent, RowPinningPosition } from 'igniteui-angular/core';;
 export class HGridMultiRowDragComponent {
     public onDropAllowed(args: IDropDroppedEventArgs)
         const hierRow: IgxHierarchicalRowComponent = args.dragData;
@@ -1471,8 +1471,8 @@ export class HGridMultiRowDragComponent {
 
         expect(tree.readContent('/testSrc/appPrefix/component/rows.component.ts'))
             .toEqual(`
-import { IgxGridComponent, RowType,
-    RowPinningPosition } from 'igniteui-angular';
+import { IgxGridComponent } from 'igniteui-angular/grids';
+import { RowType, RowPinningPosition } from 'igniteui-angular/core';;
 export class HGridMultiRowDragComponent {
     public onDropAllowed(args: IDropDroppedEventArgs)
         const hierRow: RowType = args.dragData;
@@ -1515,7 +1515,7 @@ export class HGridMultiRowDragComponent {
     it('Should update toast output subscriptions', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/toast.component.ts', `
-import { IgxToastComponent } from 'igniteui-angular';
+import { IgxToastComponent } from 'igniteui-angular/toast';;
 import { Component, OnInit, ViewChild } from '@angular/core';
 export class SimpleComponent {
     @ViewChild('toast', { static: true })
@@ -1534,7 +1534,7 @@ export class SimpleComponent {
 
         expect(tree.readContent('/testSrc/appPrefix/component/toast.component.ts'))
             .toEqual(`
-import { IgxToastComponent } from 'igniteui-angular';
+import { IgxToastComponent } from 'igniteui-angular/toast';;
 import { Component, OnInit, ViewChild } from '@angular/core';
 export class SimpleComponent {
     @ViewChild('toast', { static: true })
@@ -1555,7 +1555,8 @@ export class SimpleComponent {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts',
             `import { Component, ViewChild } from '@angular/core';
-        import { IgxColumnComponent, DataType } from 'igniteui-angular';
+        import { IgxColumnComponent } from 'igniteui-angular/grids';
+import { DataType } from 'igniteui-angular/core';;
 
         @Component({
             selector: 'column-dataType',
@@ -1570,7 +1571,8 @@ export class SimpleComponent {
             .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         const expectedContent = `import { Component, ViewChild } from '@angular/core';
-        import { IgxColumnComponent, GridColumnDataType } from 'igniteui-angular';
+        import { IgxColumnComponent } from 'igniteui-angular/grids';
+import { GridColumnDataType } from 'igniteui-angular/core';;
 
         @Component({
             selector: 'column-dataType',
@@ -1787,7 +1789,7 @@ export class SimpleComponent {
     it('Should properly rename InteractionMode to PickerInteractionMode', async () => {
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
             `
-        import { InteractionMode } from 'igniteui-angular';
+        import { InteractionMode } from 'igniteui-angular/date-picker';;
         export class MyClass {
             public interactionMode: InteractionMode = InteractionMode.Dialog;
         }
@@ -1800,7 +1802,7 @@ export class SimpleComponent {
             tree.readContent('/testSrc/appPrefix/component/test.component.ts')
         ).toEqual(
             `
-        import { PickerInteractionMode } from 'igniteui-angular';
+        import { PickerInteractionMode } from 'igniteui-angular/core';;
         export class MyClass {
             public interactionMode: PickerInteractionMode = PickerInteractionMode.Dialog;
         }

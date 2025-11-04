@@ -187,9 +187,7 @@ describe(`Update to ${version}`, () => {
             `/testSrc/appPrefix/component/test.component.ts`,
             `
 import { Component } from '@angular/core';
-import {
-    IgxHierarchicalGridComponent
-} from 'igniteui-angular';
+import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids';;
 @Component({
     selector: 'test.component',
     templateUrl: 'test.component.html',
@@ -221,9 +219,7 @@ export class TestComponent {
             ).toEqual(
                 `
 import { Component } from '@angular/core';
-import {
-    IgxHierarchicalGridComponent
-} from 'igniteui-angular';
+import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids';;
 @Component({
     selector: 'test.component',
     templateUrl: 'test.component.html',

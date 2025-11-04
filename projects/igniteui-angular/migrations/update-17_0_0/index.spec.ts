@@ -194,7 +194,7 @@ describe(`Update to ${version}`, () => {
     it('Should properly rename newSelection and oldSelection property to newValue and oldValue in Combo', async () => {
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
-        import { IgxComboComponent, IComboSelectionChangingEventArgs } from 'igniteui-angular';
+        import { IgxComboComponent, IComboSelectionChangingEventArgs } from 'igniteui-angular/combo';;
         export class MyClass {
             public handleSelectionChanging(e: IComboSelectionChangingEventArgs) {
                 const newSelection = e.newSelection;
@@ -209,7 +209,7 @@ describe(`Update to ${version}`, () => {
             tree.readContent('/testSrc/appPrefix/component/test.component.ts')
         ).toEqual(
         `
-        import { IgxComboComponent, IComboSelectionChangingEventArgs } from 'igniteui-angular';
+        import { IgxComboComponent, IComboSelectionChangingEventArgs } from 'igniteui-angular/combo';;
         export class MyClass {
             public handleSelectionChanging(e: IComboSelectionChangingEventArgs) {
                 const newSelection = e.newValue;
@@ -223,7 +223,7 @@ describe(`Update to ${version}`, () => {
     it('Should properly rename newSelection and oldSelection property to newValue and oldValue SimpleCombo', async () => {
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
-        import { ISimpleComboSelectionChangingEventArgs } from 'igniteui-angular';
+        import { ISimpleComboSelectionChangingEventArgs } from 'igniteui-angular/core';;
         export class MyClass {
             public handleSelectionChanging(e: ISimpleComboSelectionChangingEventArgs) {
                 const newSelection = e.newSelection;
@@ -238,7 +238,7 @@ describe(`Update to ${version}`, () => {
             tree.readContent('/testSrc/appPrefix/component/test.component.ts')
         ).toEqual(
         `
-        import { ISimpleComboSelectionChangingEventArgs } from 'igniteui-angular';
+        import { ISimpleComboSelectionChangingEventArgs } from 'igniteui-angular/core';;
         export class MyClass {
             public handleSelectionChanging(e: ISimpleComboSelectionChangingEventArgs) {
                 const newSelection = e.newValue;

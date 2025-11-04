@@ -19,7 +19,7 @@ describe(`Update to ${version}`, () => {
         appTree.create(
             '/testSrc/appPrefix/component/grid-test.component.ts',
             `import { Component } from '@angular/core';
-    import { IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent } from 'igniteui-angular';
+    import { IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent } from 'igniteui-angular/grids';;
 
     @Component({
         selector: 'app-grid-test',
@@ -43,7 +43,7 @@ describe(`Update to ${version}`, () => {
 
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
         const expectedContent = `import { Component } from '@angular/core';
-    import { IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent } from 'igniteui-angular';
+    import { IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent } from 'igniteui-angular/grids';;
 
     @Component({
         selector: 'app-grid-test',

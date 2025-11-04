@@ -8,7 +8,7 @@ import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { DebugElement } from '@angular/core';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
-import { PivotRowLayoutType } from 'igniteui-angular';
+import { PivotRowLayoutType } from 'igniteui-angular/core';;
 
 const DEBOUNCE_TIME = 250;
 const PIVOT_TBODY_CSS_CLASS = '.igx-grid__tbody';

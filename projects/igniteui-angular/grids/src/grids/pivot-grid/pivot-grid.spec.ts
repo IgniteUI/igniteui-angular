@@ -1,7 +1,9 @@
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IGridCellEventArgs, IgxGridCell, IgxIconComponent, IgxPivotGridComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+import { FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IGridCellEventArgs, IgxGridCell, IgxStringFilteringOperand } from 'igniteui-angular/core';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxPivotGridComponent } from 'igniteui-angular/grids';;
 import { IgxChipComponent } from '../../chips/chip.component';
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { DefaultPivotSortingStrategy } from '../common/pivot-sort-strategy';

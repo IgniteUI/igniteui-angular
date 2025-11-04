@@ -31,7 +31,7 @@ describe('Update 10.1.0', () => {
 
     it('should update IgxActionIconDirective to IgxNavbarActionDirective', async () => {
         appTree.create('/testSrc/appPrefix/component/custom.component.ts',
-            `import { IgxActionIconDirective } from 'igniteui-angular';
+            `import { IgxActionIconDirective } from 'igniteui-angular/core';;
             export class TestNavbar {
             @ViewChild(IgxActionIconDirective, { read: IgxActionIconDirective })
             private actionIcon: IgxActionIconDirective; }`);
@@ -40,7 +40,7 @@ describe('Update 10.1.0', () => {
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.ts'))
             .toEqual(
-            `import { IgxNavbarActionDirective } from 'igniteui-angular';
+            `import { IgxNavbarActionDirective } from 'igniteui-angular/navbar';;
             export class TestNavbar {
             @ViewChild(IgxNavbarActionDirective, { read: IgxNavbarActionDirective })
             private actionIcon: IgxNavbarActionDirective; }`);
@@ -49,8 +49,9 @@ describe('Update 10.1.0', () => {
     it('should update DropPosition.None', async () => {
         const origFileContent =
             `import { Component, Injectable, ViewChild } from "@angular/core";` +
-            `import { IgxGridComponent, DropPosition } from "igniteui-angular";` +
-            `import { IgxColumnComponent } from "igniteui-angular";\r\n` +
+            `import { IgxGridComponent } from 'igniteui-angular/grids';
+import { DropPosition } from 'igniteui-angular/core';;` +
+            `import { IgxColumnComponent } from 'igniteui-angular/grids';;\r\n` +
             `@Component({` +
             `    providers: [RemoteService]` +
             `})` +
@@ -64,8 +65,9 @@ describe('Update 10.1.0', () => {
             `}`;
         const expectedFileContent =
             `import { Component, Injectable, ViewChild } from "@angular/core";` +
-            `import { IgxGridComponent, DropPosition } from "igniteui-angular";` +
-            `import { IgxColumnComponent } from "igniteui-angular";\r\n` +
+            `import { IgxGridComponent } from 'igniteui-angular/grids';
+import { DropPosition } from 'igniteui-angular/core';;` +
+            `import { IgxColumnComponent } from 'igniteui-angular/grids';;\r\n` +
             `@Component({` +
             `    providers: [RemoteService]` +
             `})` +

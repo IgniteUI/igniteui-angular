@@ -6,7 +6,7 @@ import { CalendarDay } from '../../calendar/common/model';
 import { CustomDateRange } from '../date-range-picker-inputs.common';
 import { IDateRangePickerResourceStrings } from '../../core/i18n/date-range-picker-resources';
 import { IgxChipComponent } from '../../chips/chip.component';
-import { IgxChipsModule } from 'igniteui-angular';
+import { IgxChipsModule } from 'igniteui-angular/chips';;
 import { Component, ViewChild } from '@angular/core';
 
 describe('IgxPredefinedRangesAreaComponent', () => {

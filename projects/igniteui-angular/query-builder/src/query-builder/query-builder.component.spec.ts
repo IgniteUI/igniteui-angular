@@ -1,5 +1,11 @@
 import { waitForAsync, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
-import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxChipComponent, IgxComboComponent, IgxDateFilteringOperand, IgxIconComponent, IgxInputGroupComponent, IgxNumberFilteringOperand, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxQueryBuilderSearchValueTemplateDirective, IgxSelectComponent } from 'igniteui-angular';
+import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxDateFilteringOperand, IgxNumberFilteringOperand, IgxQueryBuilderHeaderComponent, IgxQueryBuilderSearchValueTemplateDirective } from 'igniteui-angular/core';
+import { IgxChipComponent } from 'igniteui-angular/chips';
+import { IgxComboComponent } from 'igniteui-angular/combo';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxInputGroupComponent } from 'igniteui-angular/input-group';
+import { IgxQueryBuilderComponent } from 'igniteui-angular/query-builder';
+import { IgxSelectComponent } from 'igniteui-angular/select';;
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';

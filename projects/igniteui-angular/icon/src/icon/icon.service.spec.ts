@@ -7,7 +7,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { Component, inject } from "@angular/core";
 import { IgxIconComponent } from "./icon.component";
 import { By } from "@angular/platform-browser";
-import { IgxTheme, THEME_TOKEN, ThemeToken } from "igniteui-angular";
+import { IgxTheme, THEME_TOKEN, ThemeToken } from 'igniteui-angular/core';;
 
 describe("Icon Service", () => {
     const FAMILY: IconFamily = {

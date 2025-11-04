@@ -14,28 +14,32 @@ describe('Update 9.0.0', () => {
     it('should update base class names.', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts',
-            `import { IgxDropDownBase, IgxDropDownItemBase, IgxGridBaseComponent,
-                IgxRowComponent, IgxHierarchicalGridBaseComponent } from 'igniteui-angular';
+            `import { IgxDropDownBase, IgxDropDownItemBase, IgxGridBaseComponent, IgxRowComponent, IgxHierarchicalGridBaseComponent } from 'igniteui-angular/core';;
             `);
 
         const tree = await schematicRunner.runSchematic('migration-13', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
             .toEqual(
-            `import { IgxDropDownBaseDirective, IgxDropDownItemBaseDirective, IgxGridBaseDirective,
-                IgxRowDirective, IgxHierarchicalGridBaseDirective } from 'igniteui-angular';
+            `import { IgxDropDownBaseDirective, IgxDropDownItemBaseDirective, IgxGridBaseDirective, IgxHierarchicalGridBaseDirective } from 'igniteui-angular/core';
+import { IgxRowDirective } from 'igniteui-angular/grids';;
             `);
     });
 
     it('should update Enum names.', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/enum.component.ts',
-            `import { AvatarType, Size, Type, SliderType } from 'igniteui-angular';
+            `import { AvatarType } from 'igniteui-angular/avatar';
+import { Size, SliderType } from 'igniteui-angular/core';
+import { Type } from 'igniteui-angular/badge';;
             `);
 
         const tree = await schematicRunner.runSchematic('migration-13', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/enum.component.ts'))
             .toEqual(
-            `import { IgxAvatarType, IgxAvatarSize, IgxBadgeType, IgxSliderType } from 'igniteui-angular';
+            `import { IgxAvatarType } from 'igniteui-angular/core';
+import { IgxAvatarSize } from 'igniteui-angular/avatar';
+import { IgxBadgeType } from 'igniteui-angular/badge';
+import { IgxSliderType } from 'igniteui-angular/slider';;
             `);
     });
 

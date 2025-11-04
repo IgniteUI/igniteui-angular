@@ -1,7 +1,9 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrategy, GridCellMergeMode, GridColumnDataType, GridTypeBase, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent, IgxPaginatorComponent, IgxStringFilteringOperand, Size, SortingDirection } from 'igniteui-angular';
+import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrategy, GridCellMergeMode, GridColumnDataType, GridTypeBase, IgxStringFilteringOperand, Size, SortingDirection } from 'igniteui-angular/core';
+import { IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular/grids';
+import { IgxPaginatorComponent } from 'igniteui-angular/paginator';;
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { By } from '@angular/platform-browser';
