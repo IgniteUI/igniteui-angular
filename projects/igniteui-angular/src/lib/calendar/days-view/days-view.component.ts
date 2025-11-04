@@ -352,7 +352,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
             });
         }
 
-        if (this.tabIndex !== -1) {
+        if (this.tabIndex !== -1 && this.platform.isBrowser && this.el?.nativeElement) {
             this.el.nativeElement.focus();
         }
 
