@@ -2003,6 +2003,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     public set locale(value: string) {
         if (value !== this._locale) {
             this._locale = value;
+            this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false, this._locale);
             this._currencyPositionLeft = undefined;
             this.summaryService.clearSummaryCache();
             this.pipeTrigger++;
@@ -8273,7 +8274,9 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     private onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
         this._defaultLocale = args.detail.newLocale;
-        this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false);
+        if (!this._locale) {
+            this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false);
+        }
         // Reset currency position because of new locale.
         this._currencyPositionLeft = undefined;
         if (!this._init) {
