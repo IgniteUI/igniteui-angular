@@ -496,7 +496,7 @@ describe(`Update to ${version}`, () => {
         appTree.create(
             '/testSrc/appPrefix/component/expansion-test.component.ts',
             `import { Component, ViewChild } from '@angular/core';
-import { BannerEventArgs, BannerCancelEventArgs } from 'igniteui-angular/core';;
+import { BannerEventArgs, BannerCancelEventArgs } from 'igniteui-angular';
 
 @Component({
 selector: 'app-banner-test',
@@ -516,7 +516,7 @@ public onBannerOpened(event: BannerEventArgs) {
         );
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
         const expectedContent =  `import { Component, ViewChild } from '@angular/core';
-import { BannerEventArgs, BannerCancelEventArgs } from 'igniteui-angular/core';;
+import { BannerEventArgs, BannerCancelEventArgs } from 'igniteui-angular';
 
 @Component({
 selector: 'app-banner-test',

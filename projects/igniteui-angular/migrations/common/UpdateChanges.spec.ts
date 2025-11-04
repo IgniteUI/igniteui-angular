@@ -276,7 +276,7 @@ describe('UpdateChanges', () => {
         spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
 
         const fileContent =
-            `import { igxClass, igxClass2 } from 'igniteui-angular/core';; export class Test { prop: igxClass; prop2: igxClass2; }`;
+            `import { igxClass, igxClass2 } from "igniteui-angular"; export class Test { prop: igxClass; prop2: igxClass2; }`;
         appTree.create('test.component.ts', fileContent);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
@@ -286,7 +286,7 @@ describe('UpdateChanges', () => {
 
         update.applyChanges();
         expect(appTree.readContent('test.component.ts')).toEqual(
-            `import { igxReplace, igxSecond } from 'igniteui-angular/core';; export class Test { prop: igxReplace; prop2: igxSecond; }`);
+            `import { igxReplace, igxSecond } from "igniteui-angular"; export class Test { prop: igxReplace; prop2: igxSecond; }`);
 
         done();
     });
@@ -312,7 +312,7 @@ describe('UpdateChanges', () => {
         spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
 
         const fileContent =
-            `import { igxClass, igxClass2 } from 'igniteui-angular/core';; export class Test { prop: igxClass; prop2: igxClass2; }`;
+            `import { igxClass, igxClass2 } from "igniteui-angular"; export class Test { prop: igxClass; prop2: igxClass2; }`;
         appTree.create('test.component.ts', fileContent);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
@@ -322,7 +322,7 @@ describe('UpdateChanges', () => {
 
         update.applyChanges();
         expect(appTree.readContent('test.component.ts')).toEqual(
-            `import { igxReplace } from 'igniteui-angular/core';; export class Test { prop: igxReplace; prop2: igxReplace; }`);
+            `import { igxReplace } from "igniteui-angular"; export class Test { prop: igxReplace; prop2: igxReplace; }`);
 
         done();
     });
@@ -354,14 +354,13 @@ describe('UpdateChanges', () => {
 
         const fileContent =
             `import { Component, Injectable, ViewChild } from "@angular/core";` +
-            `import { IgxGridComponent } from 'igniteui-angular/grids';;` +
-            `import { IgxColumnComponent } from 'igniteui-angular/grids';
-import { IgxProvided, STRING_FILTERS } from 'igniteui-angular/core';;\r\n` +
-            `import { ` +
-            `    IgxCsvExporterService, ` +
-            `    IgxExcelExporterOptions, ` +
+            `import { IgxGridComponent } from "igniteui-angular";` +
+            `import { IgxColumnComponent, IgxProvided, STRING_FILTERS} from "igniteui-angular";\r\n` +
+            `import {` +
+            `    IgxCsvExporterService,` +
+            `    IgxExcelExporterOptions,` +
             `    IgxExporterOptionsBase` +
-            ` } from 'igniteui-angular/core';;\r\n` +
+            `} from "igniteui-angular";\r\n` +
             `@Component({` +
             `    providers: [IgxProvided, RemoteService]` +
             `})` +
@@ -393,13 +392,13 @@ import { IgxProvided, STRING_FILTERS } from 'igniteui-angular/core';;\r\n` +
         update.applyChanges();
         expect(appTree.readContent('test.component.ts')).toEqual(
             `import { Component, Injectable, ViewChild } from "@angular/core";` +
-            `import { IgxGridReplace } from 'igniteui-angular/core';;` +
-            `import { IgxColumnReplace, IgxProvidedReplace, REPLACED_CONST } from 'igniteui-angular/core';;\r\n` +
-            `import { ` +
-            `    Injected, ` +
-            `    IgxNewable, ` +
+            `import { IgxGridReplace } from "igniteui-angular";` +
+            `import { IgxColumnReplace, IgxProvidedReplace, REPLACED_CONST} from "igniteui-angular";\r\n` +
+            `import {` +
+            `    Injected,` +
+            `    IgxNewable,` +
             `    ReturnType` +
-            ` } from 'igniteui-angular/core';;\r\n` +
+            `} from "igniteui-angular";\r\n` +
             `@Component({` +
             `    providers: [IgxProvidedReplace, RemoteService]` +
             `})` +
@@ -476,8 +475,8 @@ import { IgxProvided, STRING_FILTERS } from 'igniteui-angular/core';;\r\n` +
         spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
 
         let fileContent =
-`import { Size, Type as someThg } from 'igniteui-angular/core';;
-import { IgxService, IgxDiffService as eDiffService, Calendar as Calendar } from 'igniteui-angular/core';;
+`import { Size, Type as someThg } from "igniteui-angular";
+import { IgxService, IgxDiffService as eDiffService, Calendar as Calendar } from 'igniteui-angular';
 import { Type } from "@angular/core";
 export class Test {
     prop: Type;
@@ -497,8 +496,8 @@ export class Test {
 
         update.applyChanges();
         let expectedFileContent =
-`import { IgxSize, IgxType as someThg } from 'igniteui-angular/core';;
-import { IgxService1, IgxNewDiffService as eDiffService, CalendarActual as Calendar } from 'igniteui-angular/core';;
+`import { IgxSize, IgxType as someThg } from "igniteui-angular";
+import { IgxService1, IgxNewDiffService as eDiffService, CalendarActual as Calendar } from 'igniteui-angular';
 import { Type } from "@angular/core";
 export class Test {
     prop: Type;
@@ -943,7 +942,7 @@ export class AppModule { }`);
 
             const fileContent =
 `import { Component } from '@angular/core';
-import { IgxGridComponent, IGridKeydownEventArgs } from 'igniteui-angular/grids';;
+import { IgxGridComponent, IGridKeydownEventArgs } from 'igniteui-angular';
 @Component({
   selector: 'app-custom-grid',
   template: ''
@@ -958,7 +957,7 @@ export class CustomGridComponent {
             appTree.create('test.component.ts', fileContent);
             const expectedFileContent =
 `import { Component } from '@angular/core';
-import { IgxGridComponent, IGridKeydownEventArgs } from 'igniteui-angular/grids';;
+import { IgxGridComponent, IGridKeydownEventArgs } from 'igniteui-angular';
 @Component({
   selector: 'app-custom-grid',
   template: ''

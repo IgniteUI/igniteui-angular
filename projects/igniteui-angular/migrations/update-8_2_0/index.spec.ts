@@ -72,8 +72,8 @@ describe('Update 8.2.0', () => {
     it('should update igxDrag and igxDrop event argument interfaces', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts',
-            `import { IgxDragDirective, IgxDropDirective } from 'igniteui-angular/directives';
-import { IgxDropEnterEventArgs, IgxDropLeaveEventArgs, IgxDropEventArgs } from 'igniteui-angular/core';;
+            `import { IgxDragDirective, IgxDropDirective, IgxDropEnterEventArgs,
+                IgxDropLeaveEventArgs, IgxDropEventArgs } from 'igniteui-angular';
 
             export class DragDropSampleComponent {
                 public onEnterHandler(event: IgxDropEnterEventArgs) {}
@@ -85,8 +85,8 @@ import { IgxDropEnterEventArgs, IgxDropLeaveEventArgs, IgxDropEventArgs } from '
             // V.S. 18th May 2021: No longer leave duplicate imports in post-migration file
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
             .toEqual(
-            `import { IgxDragDirective, IgxDropDirective } from 'igniteui-angular/directives';
-import { IDropBaseEventArgs, IDropDroppedEventArgs } from 'igniteui-angular/core';;
+            `import { IgxDragDirective, IgxDropDirective, IDropBaseEventArgs,
+                IDropDroppedEventArgs } from 'igniteui-angular';
 
             export class DragDropSampleComponent {
                 public onEnterHandler(event: IDropBaseEventArgs) {}

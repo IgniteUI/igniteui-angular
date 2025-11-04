@@ -231,7 +231,7 @@ describe(`Update to ${version}`, () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts',
             `import { Component, ViewChild } from '@angular/core';
-        import { IgxGridToolbarTitleDirective, IgxGridToolbarComponent, IgxGridToolbarActionsDirective } from 'igniteui-angular/core';;
+        import { IgxGridToolbarTitleDirective, IgxGridToolbarComponent, IgxGridToolbarActionsDirective } from 'igniteui-angular';
 
         @Component({
             selector: 'test-component',
@@ -250,7 +250,7 @@ describe(`Update to ${version}`, () => {
             .runSchematic(migrationName, {}, appTree);
 
         const expectedContent = `import { Component, ViewChild } from '@angular/core';
-        import { IgxGridToolbarTitleComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent } from 'igniteui-angular/core';;
+        import { IgxGridToolbarTitleComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent } from 'igniteui-angular';
 
         @Component({
             selector: 'test-component',

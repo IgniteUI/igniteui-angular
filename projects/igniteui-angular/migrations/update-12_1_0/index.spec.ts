@@ -20,7 +20,7 @@ describe(`Update to ${version}`, () => {
         appTree.create(
             '/testSrc/appPrefix/service/test.component.ts', `
 import { Component, OnInit } from '@angular/core';
-import { IgxOverlayService } from 'igniteui-angular/core';;
+import { IgxOverlayService } from 'igniteui-angular';
 export class SimpleComponent implements OnInit {
     constructor(@Inject(IgxOverlayService) protected overlayService: IgxOverlayService){}
 
@@ -38,7 +38,7 @@ export class SimpleComponent implements OnInit {
         expect(tree.readContent('/testSrc/appPrefix/service/test.component.ts'))
             .toEqual(`
 import { Component, OnInit } from '@angular/core';
-import { IgxOverlayService } from 'igniteui-angular/core';;
+import { IgxOverlayService } from 'igniteui-angular';
 export class SimpleComponent implements OnInit {
     constructor(@Inject(IgxOverlayService) protected overlayService: IgxOverlayService){}
 
@@ -57,7 +57,7 @@ export class SimpleComponent implements OnInit {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts', `
 import { Component, OnInit } from '@angular/core';
-import { IgxBannerComponent } from 'igniteui-angular/banner';;
+import { IgxBannerComponent } from 'igniteui-angular';
 export class TestComponent implements OnInit {
     @ViewChild(IgxBannerComponent)
     public banner: IgxBannerComponent
@@ -74,7 +74,7 @@ export class TestComponent implements OnInit {
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
             .toEqual(`
 import { Component, OnInit } from '@angular/core';
-import { IgxBannerComponent } from 'igniteui-angular/banner';;
+import { IgxBannerComponent } from 'igniteui-angular';
 export class TestComponent implements OnInit {
     @ViewChild(IgxBannerComponent)
     public banner: IgxBannerComponent
@@ -117,7 +117,7 @@ export class TestComponent implements OnInit {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts', `
 import { Component, OnInit } from '@angular/core';
-import { IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent } from 'igniteui-angular/expansion-panel';;
+import { IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent } from 'igniteui-angular';
 export class TestComponent implements OnInit {
     @ViewChild(IgxExpansionPanelComponent)
     public panel: IgxExpansionPanelComponent
@@ -136,7 +136,7 @@ export class TestComponent implements OnInit {
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
             .toEqual(`
 import { Component, OnInit } from '@angular/core';
-import { IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent } from 'igniteui-angular/expansion-panel';;
+import { IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent } from 'igniteui-angular';
 export class TestComponent implements OnInit {
     @ViewChild(IgxExpansionPanelComponent)
     public panel: IgxExpansionPanelComponent
@@ -167,7 +167,7 @@ export class TestComponent implements OnInit {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts', `
 import { Component, OnInit } from '@angular/core';
-import { IgxMaskDirective } from 'igniteui-angular/directives';;
+import { IgxMaskDirective } from 'igniteui-angular';
 export class TestComponent implements OnInit {
     @ViewChild(IgxMaskDirective)
     public mask: IgxMaskDirective
@@ -181,7 +181,7 @@ export class TestComponent implements OnInit {
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
             .toEqual(`
 import { Component, OnInit } from '@angular/core';
-import { IgxMaskDirective } from 'igniteui-angular/directives';;
+import { IgxMaskDirective } from 'igniteui-angular';
 export class TestComponent implements OnInit {
     @ViewChild(IgxMaskDirective)
     public mask: IgxMaskDirective
@@ -549,8 +549,8 @@ export class TestComponent implements OnInit {
     it('Should update cell component types with CellType', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/cells.component.ts', `
-        import { IgxGridComponent, IgxGridCellComponent } from 'igniteui-angular/grids';
-import { IgxHierarchicalGridCellComponent, IgxTreeGridCellComponent, IgxGridExpandableCellComponent } from 'igniteui-angular/core';;
+        import { IgxGridComponent, IgxGridCellComponent, IgxHierarchicalGridCellComponent,
+            IgxTreeGridCellComponent, IgxGridExpandableCellComponent } from 'igniteui-angular';
         export class HGridMultiRowDragComponent {
             public onDropAllowed(args: IDropDroppedEventArgs)
                 const hierRow: RowType = args.dragData;
@@ -572,8 +572,7 @@ import { IgxHierarchicalGridCellComponent, IgxTreeGridCellComponent, IgxGridExpa
 
             expect(tree.readContent('/testSrc/appPrefix/component/cells.component.ts'))
                 .toEqual(`
-        import { IgxGridComponent } from 'igniteui-angular/grids';
-import { CellType } from 'igniteui-angular/core';;
+        import { IgxGridComponent, CellType } from 'igniteui-angular';
         export class HGridMultiRowDragComponent {
             public onDropAllowed(args: IDropDroppedEventArgs)
                 const hierRow: RowType = args.dragData;
@@ -597,8 +596,7 @@ import { CellType } from 'igniteui-angular/core';;
     it('Should add a comment for the deprecated IgxGridTransactionToken', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/transaction.component.ts', `
-        import { IgxGridComponent } from 'igniteui-angular/grids';
-import { IgxGridTransaction, IgxTransactionService } from 'igniteui-angular/core';;
+        import { IgxGridComponent, IgxGridTransaction, IgxTransactionService } from 'igniteui-angular';
         @Component({
             template: '',
             providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }]
@@ -611,8 +609,7 @@ import { IgxGridTransaction, IgxTransactionService } from 'igniteui-angular/core
 
         expect(tree.readContent('/testSrc/appPrefix/component/transaction.component.ts'))
             .toEqual(`
-        import { IgxGridComponent } from 'igniteui-angular/grids';
-import { IgxGridTransaction, IgxTransactionService } from 'igniteui-angular/core';;
+        import { IgxGridComponent, IgxGridTransaction, IgxTransactionService } from 'igniteui-angular';
         @Component({
             template: '',
             providers: [/* Injection token 'IgxGridTransaction' has been deprecated. Please refer to the update guide for more details. */
@@ -627,8 +624,7 @@ import { IgxGridTransaction, IgxTransactionService } from 'igniteui-angular/core
     it('Should add a comment for the deprecated IgxGridTransactionToken, multiple providers', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/transaction.component.ts', `
-        import { IgxGridComponent } from 'igniteui-angular/grids';
-import { IgxGridTransaction, IgxTransactionService } from 'igniteui-angular/core';;
+        import { IgxGridComponent, IgxGridTransaction, IgxTransactionService } from 'igniteui-angular';
         @Component({
             template: '',
             providers: [
@@ -645,8 +641,7 @@ import { IgxGridTransaction, IgxTransactionService } from 'igniteui-angular/core
 
         expect(tree.readContent('/testSrc/appPrefix/component/transaction.component.ts'))
             .toEqual(`
-        import { IgxGridComponent } from 'igniteui-angular/grids';
-import { IgxGridTransaction, IgxTransactionService } from 'igniteui-angular/core';;
+        import { IgxGridComponent, IgxGridTransaction, IgxTransactionService } from 'igniteui-angular';
         @Component({
             template: '',
             providers: [
@@ -665,7 +660,7 @@ import { IgxGridTransaction, IgxTransactionService } from 'igniteui-angular/core
     it('Should properly rename IComboSelectionChangeEventArgs to IComboSelectionChangingEventArgs',  async () => {
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
-        import { IComboSelectionChangeEventArgs } from 'igniteui-angular/core';;
+        import { IComboSelectionChangeEventArgs } from 'igniteui-angular';
         export class MyClass {
             public eventArgs: IComboSelectionChangeEventArgs;
         }
@@ -678,7 +673,7 @@ import { IgxGridTransaction, IgxTransactionService } from 'igniteui-angular/core
             tree.readContent('/testSrc/appPrefix/component/test.component.ts')
         ).toEqual(
         `
-        import { IComboSelectionChangingEventArgs } from 'igniteui-angular/combo';;
+        import { IComboSelectionChangingEventArgs } from 'igniteui-angular';
         export class MyClass {
             public eventArgs: IComboSelectionChangingEventArgs;
         }
@@ -689,7 +684,7 @@ import { IgxGridTransaction, IgxTransactionService } from 'igniteui-angular/core
     it('Should properly rename AutocompleteItemSelectionEventArgs to AutocompleteSelectionChangingEventArgs',  async () => {
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
-        import { AutocompleteItemSelectionEventArgs } from 'igniteui-angular/core';;
+        import { AutocompleteItemSelectionEventArgs } from 'igniteui-angular';
         export class MyClass {
             public eventArgs: AutocompleteItemSelectionEventArgs;
         }
@@ -702,7 +697,7 @@ import { IgxGridTransaction, IgxTransactionService } from 'igniteui-angular/core
             tree.readContent('/testSrc/appPrefix/component/test.component.ts')
         ).toEqual(
         `
-        import { AutocompleteSelectionChangingEventArgs } from 'igniteui-angular/core';;
+        import { AutocompleteSelectionChangingEventArgs } from 'igniteui-angular';
         export class MyClass {
             public eventArgs: AutocompleteSelectionChangingEventArgs;
         }

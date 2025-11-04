@@ -44,7 +44,7 @@ describe('Update to 11.1.0', () => {
         appTree.create(
             '/testSrc/appPrefix/component/icon-test.component.ts',
             `import { Component, ViewChild } from '@angular/core';
-import { IgxIconModule, IgxIconComponent } from 'igniteui-angular/icon';;
+import { IgxIconModule, IgxIconComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-icon-test',
@@ -72,7 +72,7 @@ export class IconTestComponent {
             .runSchematic('migration-19', {}, appTree);
 
         const expectedContent = `import { Component, ViewChild } from '@angular/core';
-import { IgxIconModule, IgxIconComponent } from 'igniteui-angular/icon';;
+import { IgxIconModule, IgxIconComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-icon-test',
@@ -107,7 +107,7 @@ export class IconTestComponent {
         appTree.create(
             '/testSrc/appPrefix/component/icon-test.component.ts',
             `import { Component } from '@angular/core';
-import { IgxIconService } from 'igniteui-angular/icon';;
+import { IgxIconService } from 'igniteui-angular';
 
 @Component({
     selector: 'app-icon-test',
@@ -132,7 +132,7 @@ export class IconTestComponent {
             .runSchematic('migration-19', {}, appTree);
 
         const expectedContent = `import { Component } from '@angular/core';
-import { IgxIconService } from 'igniteui-angular/icon';;
+import { IgxIconService } from 'igniteui-angular';
 
 @Component({
     selector: 'app-icon-test',
@@ -304,7 +304,7 @@ export class IconTestComponent {
         appTree.create(
             '/testSrc/appPrefix/component/excel-export.component.ts',
 `import { Component } from '@angular/core';
-import { IgxExcelExporterService } from 'igniteui-angular/core';;
+import { IgxExcelExporterService } from "igniteui-angular";
 
 @Component({
     selector: "app-excel-export",
@@ -329,7 +329,7 @@ export class ExcelExportComponent {
 
         const expectedContent =
 `import { Component } from '@angular/core';
-import { IgxExcelExporterService } from 'igniteui-angular/core';;
+import { IgxExcelExporterService } from "igniteui-angular";
 
 @Component({
     selector: "app-excel-export",
@@ -360,7 +360,7 @@ export class ExcelExportComponent {
         appTree.create(
             '/testSrc/appPrefix/component/csv-export.component.ts',
 `import { Component } from '@angular/core';
-import { IgxCsvExporterService } from 'igniteui-angular/core';;
+import { IgxCsvExporterService } from "igniteui-angular";
 
 @Component({
     selector: "app-csv-export",
@@ -385,7 +385,7 @@ export class CsvExportComponent {
 
         const expectedContent =
 `import { Component } from '@angular/core';
-import { IgxCsvExporterService } from 'igniteui-angular/core';;
+import { IgxCsvExporterService } from "igniteui-angular";
 
 @Component({
     selector: "app-csv-export",
@@ -598,7 +598,7 @@ export class CsvExportComponent {
         appTree.create(
             '/testSrc/appPrefix/component/excel-export.component.ts',
 `import { Component } from '@angular/core';
-import { IgxExcelExporterService } from 'igniteui-angular/core';;
+import { IgxExcelExporterService } from "igniteui-angular";
 
 @Component({
     selector: "app-excel-export",
@@ -624,7 +624,7 @@ export class ExcelExportComponent {
 
         const expectedContent =
 `import { Component } from '@angular/core';
-import { IgxExcelExporterService } from 'igniteui-angular/core';;
+import { IgxExcelExporterService } from "igniteui-angular";
 
 @Component({
     selector: "app-excel-export",
@@ -656,7 +656,7 @@ export class ExcelExportComponent {
         appTree.create(
             '/testSrc/appPrefix/component/csv-export.component.ts',
 `import { Component } from '@angular/core';
-import { IgxCsvExporterService } from 'igniteui-angular/core';;
+import { IgxCsvExporterService } from "igniteui-angular";
 
 @Component({
     selector: "app-csv-export",
@@ -682,7 +682,7 @@ export class CsvExportComponent {
 
         const expectedContent =
 `import { Component } from '@angular/core';
-import { IgxCsvExporterService } from 'igniteui-angular/core';;
+import { IgxCsvExporterService } from "igniteui-angular";
 
 @Component({
     selector: "app-csv-export",

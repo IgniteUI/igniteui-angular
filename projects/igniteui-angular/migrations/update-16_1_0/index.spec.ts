@@ -19,7 +19,7 @@ describe(`Update to ${version}`, () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts',
             `import { Component, ViewChild } from '@angular/core';
-        import { IgxStepSubTitleDirective } from 'igniteui-angular/core';;
+        import { IgxStepSubTitleDirective } from 'igniteui-angular';
 
         @Component({
             selector: 'test-component',
@@ -35,7 +35,7 @@ describe(`Update to ${version}`, () => {
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         const expectedContent = `import { Component, ViewChild } from '@angular/core';
-        import { IgxStepSubtitleDirective } from 'igniteui-angular/core';;
+        import { IgxStepSubtitleDirective } from 'igniteui-angular';
 
         @Component({
             selector: 'test-component',
@@ -77,8 +77,7 @@ describe(`Update to ${version}`, () => {
     it('Should properly rename value property to displayValue and selection to value', async () => {
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
-        import { IgxComboComponent } from 'igniteui-angular/combo';
-import { IgxSimpleComboComponent } from 'igniteui-angular/simple-combo';;
+        import { IgxComboComponent, IgxSimpleComboComponent } from 'igniteui-angular';
         export class MyClass {
             @ViewChild(IgxComboComponent, { read: IgxComboComponent })
             public combo: IgxComboComponent;
@@ -99,8 +98,7 @@ import { IgxSimpleComboComponent } from 'igniteui-angular/simple-combo';;
             tree.readContent('/testSrc/appPrefix/component/test.component.ts')
         ).toEqual(
         `
-        import { IgxComboComponent } from 'igniteui-angular/combo';
-import { IgxSimpleComboComponent } from 'igniteui-angular/simple-combo';;
+        import { IgxComboComponent, IgxSimpleComboComponent } from 'igniteui-angular';
         export class MyClass {
             @ViewChild(IgxComboComponent, { read: IgxComboComponent })
             public combo: IgxComboComponent;

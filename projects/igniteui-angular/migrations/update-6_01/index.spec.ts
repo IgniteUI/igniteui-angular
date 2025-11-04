@@ -20,18 +20,18 @@ describe('Update 6.0.1', () => {
         );
         appTree.create(
             '/testSrc/appPrefix/app.module.ts',
-            `;` +
+            `import { } from 'igniteui-angular';` +
             `import { IgxGridModule, IgxGridAPIService } from 'igniteui-angular/grid';`
         );
         const tree = await schematicRunner.runSchematic('migration-02', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts')).toEqual(
-            `import { IgxGridComponent } from 'igniteui-angular/grids';;` +
-            `import { IgxCsvExporterService } from 'igniteui-angular/core';;` +
-            `import { IgxButtonDirective } from 'igniteui-angular/directives';;`
+            `import { IgxGridComponent } from 'igniteui-angular';` +
+            `import { IgxCsvExporterService } from 'igniteui-angular';` +
+            `import { IgxButtonDirective } from   'igniteui-angular';`
         );
         expect(tree.readContent('/testSrc/appPrefix/app.module.ts')).toEqual(
-            `;` +
-            `import { IgxGridModule, IgxGridAPIService } from 'igniteui-angular/grids';;`
+            `import { } from 'igniteui-angular';` +
+            `import { IgxGridModule, IgxGridAPIService } from 'igniteui-angular';`
         );
     });
 });

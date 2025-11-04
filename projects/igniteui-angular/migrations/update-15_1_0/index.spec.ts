@@ -58,7 +58,7 @@ describe(`Update to ${version}`, () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts',
             `import { Component, ViewChild } from '@angular/core';
-        import { IgxCarouselComponent } from 'igniteui-angular/carousel';;
+        import { IgxCarouselComponent } from 'igniteui-angular';
 
         @Component({
             selector: 'appPrefix-component',
@@ -80,7 +80,7 @@ describe(`Update to ${version}`, () => {
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: true }, appTree);
 
         const expectedContent = `import { Component, ViewChild } from '@angular/core';
-        import { IgxCarouselComponent } from 'igniteui-angular/carousel';;
+        import { IgxCarouselComponent } from 'igniteui-angular';
 
         @Component({
             selector: 'appPrefix-component',

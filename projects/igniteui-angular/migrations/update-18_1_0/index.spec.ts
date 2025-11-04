@@ -96,7 +96,7 @@ describe(`Update to ${version}`, () => {
         appTree.create(
             '/testSrc/appPrefix/component/column-test.component.ts',
             `import { Component } from '@angular/core';
-import { IgxColumnGroupComponent, ColumnType } from 'igniteui-angular/grids';;
+import { IgxColumnGroupComponent, ColumnType } from 'igniteui-angular';
 
 @Component({
     selector: 'app-columns-test',
@@ -114,7 +114,7 @@ export class ColumnsTestComponent {
         );
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
         const expectedContent =  `import { Component } from '@angular/core';
-import { IgxColumnGroupComponent, ColumnType } from 'igniteui-angular/grids';;
+import { IgxColumnGroupComponent, ColumnType } from 'igniteui-angular';
 
 @Component({
     selector: 'app-columns-test',
@@ -139,7 +139,7 @@ export class ColumnsTestComponent {
         appTree.create(
             '/testSrc/appPrefix/component/paginator-test.component.ts',
             `import { Component } from '@angular/core';
-import { IgxPaginatorComponent } from 'igniteui-angular/paginator';;
+import { IgxPaginatorComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-paginator-test',
@@ -155,7 +155,7 @@ export class PaginatorTestComponent {
         );
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
         const expectedContent =  `import { Component } from '@angular/core';
-import { IgxPaginatorComponent } from 'igniteui-angular/paginator';;
+import { IgxPaginatorComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-paginator-test',
