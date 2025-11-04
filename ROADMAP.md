@@ -7,7 +7,7 @@
 2. AI Chat UI component [#16094](https://github.com/IgniteUI/igniteui-angular/issues/16094)
 3. PDF Export feature on Angular Data Grid, Tree Grid, Hierarchical Grid and Pivot Grid [#5696](https://github.com/IgniteUI/igniteui-angular/issues/5696)
 4. Multiple entry points library refactoring for code splitting support [#16325](https://github.com/IgniteUI/igniteui-angular/issues/16325)
-5. Grids filtering performance improvments
+5. Grids filtering performance improvements
 
 ## Going down the road
 
