@@ -17,12 +17,12 @@ import {
     DOCUMENT
 } from '@angular/core';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
-import { IBaseEventArgs, onResourceChangeHandle } from '../core/utils';
+import { IBaseEventArgs } from '../core/utils';
 import { ChipResourceStringsEN, IChipResourceStrings } from '../core/i18n/chip-resources';
 import { Subject } from 'rxjs';
 import { IgxIconComponent } from '../icon/icon.component';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getCurrentResourceStrings, onResourceChangeHandle } from '../core/i18n/resources';
 import { Size } from '../grids/common/enums';
 
 export const IgxChipTypeVariant = {

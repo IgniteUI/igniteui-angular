@@ -61,6 +61,7 @@ import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxDividerDirective } from '../directives/divider/divider.directive';
 import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
+import { BaseFormatter, I18N_FORMATTER } from '../core/i18n/formatters/formatter-base';
 
 let NEXT_ID = 0;
 export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
@@ -603,12 +604,13 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     constructor(
         element: ElementRef,
         @Inject(LOCALE_ID) _localeId: string,
+        @Inject(I18N_FORMATTER) _i18nFormatter: BaseFormatter,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
         private _injector: Injector,
         private platform: PlatformUtil,
         private cdr: ChangeDetectorRef,
     ) {
-        super(element, _localeId, _inputGroupType);
+        super(element, _localeId, _i18nFormatter, _inputGroupType);
     }
 
     /** @hidden @internal */

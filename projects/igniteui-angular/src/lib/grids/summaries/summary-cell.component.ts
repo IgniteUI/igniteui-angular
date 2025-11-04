@@ -6,8 +6,9 @@ import {
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { NgTemplateOutlet } from '@angular/common';
 import { ISelectionNode } from '../common/types';
-import { ColumnType } from '../common/grid.interface';
-import { formatCurrency, formatDate, formatNumber, formatPercent, getCurrencyCode, trackByIdentity } from '../../core/utils';
+import { ColumnType, GridType } from '../common/grid.interface';
+import { trackByIdentity } from '../../core/utils';
+import { BaseFormatter } from '../../core/i18n/formatters/formatter-base';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -101,15 +102,22 @@ export class IgxSummaryCellComponent {
     /**
      * @hidden
      */
-    public get grid() {
-        return (this.column.grid as any);
+    public get grid(): GridType {
+        return this.column.grid;
+    }
+
+    /**
+     * @hidden
+     */
+    public get i18nFormatter(): BaseFormatter {
+        return this.grid.i18nFormatter;
     }
 
     /**
      * @hidden @internal
      */
     public get currencyCode(): string {
-        return getCurrencyCode(this.locale, this.column.pipeArgs.currencyCode);
+        return this.i18nFormatter.getCurrencyCode(this.locale, this.column.pipeArgs.currencyCode);
     }
 
     /** cached single summary res after filter resets collection */
@@ -135,21 +143,21 @@ export class IgxSummaryCellComponent {
         const locale = this.locale;
 
         if (summary.key === 'count') {
-            return formatNumber(summary.summaryResult, locale)
+            return this.i18nFormatter.formatNumber(summary.summaryResult, locale)
         }
 
         if (summary.defaultFormatting) {
             switch (this.column.dataType) {
                 case GridColumnDataType.Number:
-                    return formatNumber(summary.summaryResult, locale, args.digitsInfo);
+                    return this.i18nFormatter.formatNumber(summary.summaryResult, locale, args.digitsInfo);
                 case GridColumnDataType.Date:
                 case GridColumnDataType.DateTime:
                 case GridColumnDataType.Time:
-                    return formatDate(summary.summaryResult, args.format, locale, args.timezone);
+                    return this.i18nFormatter.formatDate(summary.summaryResult, args.format, locale, args.timezone);
                 case GridColumnDataType.Currency:
-                    return formatCurrency(summary.summaryResult, locale, args.display, this.currencyCode, args.digitsInfo);
+                    return this.i18nFormatter.formatCurrency(summary.summaryResult, locale, args.display, this.currencyCode, args.digitsInfo);
                 case GridColumnDataType.Percent:
-                    return formatPercent(summary.summaryResult, locale, args.digitsInfo);
+                    return this.i18nFormatter.formatPercent(summary.summaryResult, locale, args.digitsInfo);
             }
         }
         return summary.summaryResult;

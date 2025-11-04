@@ -1,6 +1,6 @@
 import { FilteringLogic, type IFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, type IFilteringExpressionsTree } from './filtering-expressions-tree';
-import { resolveNestedPath, parseDate, formatDate, formatCurrency, columnFieldPath, formatNumber, formatPercent, getCurrencyCode } from '../core/utils';
+import { resolveNestedPath, parseDate, columnFieldPath } from '../core/utils';
 import type { ColumnType, EntityType, GridType } from '../grids/common/grid.interface';
 import { DataUtil, GridColumnDataType } from './data-util';
 import { SortingDirection } from './sorting-strategy';
@@ -171,19 +171,20 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy {
 
         const { display, format, digitsInfo, currencyCode, timezone } = column.pipeArgs;
         const locale = column.grid.locale;
+        const i18nFormatter = column.grid.i18nFormatter;
 
         switch (column.dataType) {
             case GridColumnDataType.Date:
             case GridColumnDataType.DateTime:
             case GridColumnDataType.Time:
-                return formatDate(value, format, locale, timezone);
+                return i18nFormatter.formatDate(value, format, locale, timezone);
             case GridColumnDataType.Currency: {
-                const currencyCodeFinal = getCurrencyCode(locale, currencyCode);
-                return formatCurrency(value, locale, display, currencyCodeFinal, digitsInfo); }
+                const currencyCodeFinal = i18nFormatter.getCurrencyCode(locale, currencyCode);
+                return i18nFormatter.formatCurrency(value, locale, display, currencyCodeFinal, digitsInfo); }
             case GridColumnDataType.Number:
-                return formatNumber(value, locale, digitsInfo);
+                return i18nFormatter.formatNumber(value, locale, digitsInfo);
             case GridColumnDataType.Percent:
-                return formatPercent(value, locale, digitsInfo);
+                return i18nFormatter.formatPercent(value, locale, digitsInfo);
             default:
                 return value;
         }

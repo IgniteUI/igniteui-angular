@@ -27,7 +27,7 @@ import { first, takeUntil, takeWhile } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { formatCurrency, formatDate, formatPercent, getCurrencyCode, getCurrencySymbol, PlatformUtil } from '../core/utils';
+import { PlatformUtil } from '../core/utils';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { HammerGesturesManager } from '../core/touch';
 import { GridSelectionMode } from './common/enums';
@@ -416,16 +416,17 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
         const args = this.column.pipeArgs;
         const locale = this.grid.locale;
+        const i18nFormatter = this.grid.i18nFormatter;
 
         switch (this.column.dataType) {
             case GridColumnDataType.Percent:
-                return formatPercent(this.value, locale, args.digitsInfo);
+                return i18nFormatter.formatPercent(this.value, locale, args.digitsInfo);
             case GridColumnDataType.Currency:
-                return formatCurrency(this.value, locale, args.display, this.currencyCode, args.digitsInfo);
+                return i18nFormatter.formatCurrency(this.value, locale, args.display, this.currencyCode, args.digitsInfo);
             case GridColumnDataType.Date:
             case GridColumnDataType.DateTime:
             case GridColumnDataType.Time:
-                return formatDate(this.value, args.format, locale, args.timezone);
+                return i18nFormatter.formatDate(this.value, args.format, locale, args.timezone);
         }
         return this.value;
     }
@@ -814,12 +815,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /** @hidden @internal */
     public get currencyCode(): string {
-        return getCurrencyCode(this.grid.locale, this.column.pipeArgs.currencyCode);
+        return this.grid.i18nFormatter.getCurrencyCode(this.grid.locale, this.column.pipeArgs.currencyCode);
     }
 
     /** @hidden @internal */
     public get currencyCodeSymbol(): string {
-        return getCurrencySymbol(this.currencyCode, this.grid.locale);
+        return this.grid.i18nFormatter.getCurrencySymbol(this.currencyCode, this.grid.locale);
     }
 
     protected _lastSearchInfo: ISearchInfo;

@@ -39,6 +39,7 @@ import { PickerCalendarOrientation } from '../date-common/types';
 import { calendarRange, isDateInRanges } from '../calendar/common/helpers';
 import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
 import { IResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { BaseFormatter, I18N_FORMATTER } from '../core/i18n/formatters/formatter-base';
 
 const SingleInputDatesConcatenationString = ' - ';
 
@@ -612,8 +613,9 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         private _injector: Injector,
         private _cdr: ChangeDetectorRef,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
+        @Inject(I18N_FORMATTER) _i18nFormatter: BaseFormatter,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
-        super(element, _localeId, _inputGroupType);
+        super(element, _localeId, _i18nFormatter, _inputGroupType);
         this.initLocale();
     }
 

@@ -8,7 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { EditorProvider } from '../core/edit-provider';
 import { IToggleView } from '../core/navigation';
-import { getLocaleFirstDayOfWeek, IBaseCancelableBrowserEventArgs, IBaseEventArgs, onResourceChangeHandle } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { OverlaySettings } from '../services/overlay/utilities';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from './picker-icons.common';
@@ -20,7 +20,8 @@ import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { getCurrentI18n, IResourceChangeEventArgs } from 'igniteui-i18n-core';
-import { DEFAULT_LOCALE } from '../core/i18n/resources';
+import { DEFAULT_LOCALE, onResourceChangeHandle } from '../core/i18n/resources';
+import { BaseFormatter, I18N_FORMATTER } from '../core/i18n/formatters/formatter-base';
 
 @Directive()
 export abstract class PickerBaseDirective implements IToggleView, EditorProvider, AfterViewInit, AfterContentChecked, OnDestroy {
@@ -153,7 +154,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      */
     @Input()
     public get weekStart(): WEEKDAYS | number {
-        return this._weekStart ?? getLocaleFirstDayOfWeek(this.locale);
+        return this._weekStart ?? this.i18nFormatter.getLocaleFirstDayOfWeek(this.locale);
     }
 
     /**
@@ -315,6 +316,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
 
     constructor(public element: ElementRef,
         @Inject(LOCALE_ID) protected _localeId: string,
+        @Inject(I18N_FORMATTER) protected i18nFormatter: BaseFormatter,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
         this.initLocale();
     }

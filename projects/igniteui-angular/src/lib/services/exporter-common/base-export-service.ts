@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { cloneArray, cloneValue, columnFieldPath, formatDate, getCurrencyCode, IBaseEventArgs, resolveNestedPath, yieldingLoop } from '../../core/utils';
+import { cloneArray, cloneValue, columnFieldPath, IBaseEventArgs, resolveNestedPath, yieldingLoop } from '../../core/utils';
 import { GridColumnDataType, DataUtil } from '../../data-operations/data-util';
 import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
@@ -15,6 +15,7 @@ import { ColumnType, GridType, IPathSegment } from '../../grids/common/grid.inte
 import { FilterUtil } from '../../data-operations/filtering-strategy';
 import { IgxSummaryResult } from '../../grids/summaries/grid-summary';
 import { GridSummaryCalculationMode } from '../../grids/common/enums';
+import { BaseFormatter } from '../../core/i18n/formatters/formatter-base';
 
 export enum ExportRecordType {
     GroupedRecord = 'GroupedRecord',
@@ -226,6 +227,7 @@ export abstract class IgxBaseExporter {
     private pivotGridRowDimensionsMap: Map<string, string>;
     private pivotGridKeyValueMap = new Map<string, string>();
     private ownerGrid: any;
+    private i18nFormatter: BaseFormatter;
 
     /* alternateName: exportGrid */
     /**
@@ -244,6 +246,7 @@ export abstract class IgxBaseExporter {
         this.options = options;
         this.locale = grid.locale;
         this.ownerGrid = grid;
+        this.i18nFormatter = grid.i18nFormatter;
         let columns = grid.columns;
 
         if (this.options.ignoreMultiColumnHeaders) {
@@ -1057,7 +1060,7 @@ export abstract class IgxBaseExporter {
             if (isDate) {
                 const timeZoneOffset = recordVal.getTimezoneOffset() * 60000;
                 const isoString = (new Date(recordVal - timeZoneOffset)).toISOString();
-                recordVal = formatDate(isoString, 'mediumDate', grid.locale);
+                recordVal = this.i18nFormatter.formatDate(isoString, 'mediumDate', grid.locale);
             }
 
             const groupExpressionName = record.column && record.column.header ?
@@ -1161,7 +1164,7 @@ export abstract class IgxBaseExporter {
             };
 
             if (column.dataType === 'currency') {
-                columnInfo.currencyCode = getCurrencyCode(this.locale, column.pipeArgs.currencyCode);;
+                columnInfo.currencyCode = this.i18nFormatter.getCurrencyCode(this.locale, column.pipeArgs.currencyCode);;
 
                 columnInfo.displayFormat = column.pipeArgs.display
                     ? column.pipeArgs.display

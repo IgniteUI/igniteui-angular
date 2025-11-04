@@ -28,7 +28,7 @@ import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-br
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CarouselResourceStringsEN, ICarouselResourceStrings } from '../core/i18n/carousel-resources';
-import { first, IBaseEventArgs, last, onResourceChangeHandle, PlatformUtil } from '../core/utils';
+import { first, IBaseEventArgs, last, PlatformUtil } from '../core/utils';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationService } from '../services/animation/animation';
 import { Direction, IgxCarouselComponentBase } from './carousel-base';
@@ -36,7 +36,7 @@ import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarou
 import { IgxSlideComponent } from './slide.component';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxButtonDirective } from '../directives/button/button.directive';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getCurrentResourceStrings, onResourceChangeHandle } from '../core/i18n/resources';
 import { HammerGesturesManager } from '../core/touch';
 import { CarouselAnimationType, CarouselIndicatorsOrientation } from './enums';
 import { IgxDirectionality } from '../services/direction/directionality';

@@ -37,7 +37,6 @@ import {
     IgxActionStripComponent
 } from 'igniteui-angular';
 import { getDateFormatter } from 'igniteui-i18n-core';
-import { toggleIgxAngularLocalization } from 'igniteui-angular/src/lib/core/i18n/resources';
 
 @Component({
     selector: 'app-grid-localization',
@@ -122,8 +121,6 @@ export class GridLocalizationSampleComponent implements OnInit {
         registerI18n(IgxResourceStringsKO, 'ko');
         registerI18n(IgxResourceStringsZHHANS, 'zh-Hans');
         registerI18n(IgxResourceStringsZHHANT, 'zh-Hant');
-
-        toggleIgxAngularLocalization(false);
     }
 
     public updateLocale() {

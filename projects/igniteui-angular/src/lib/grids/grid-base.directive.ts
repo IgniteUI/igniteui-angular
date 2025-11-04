@@ -32,7 +32,7 @@ import {
     ViewContainerRef,
     DOCUMENT
 } from '@angular/core';
-import { areEqualArrays, columnFieldPath, formatDate, formatNumber, onResourceChangeHandle, resizeObservable } from '../core/utils';
+import { areEqualArrays, columnFieldPath, resizeObservable } from '../core/utils';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
@@ -181,11 +181,12 @@ import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-ro
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
-import { DEFAULT_LOCALE, getCurrentResourceStrings } from '../core/i18n/resources';
+import { DEFAULT_LOCALE, getCurrentResourceStrings, onResourceChangeHandle } from '../core/i18n/resources';
 import { isTree, recreateTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 import { getUUID } from './common/random';
 import { DefaultMergeStrategy, IGridMergeStrategy } from '../data-operations/merge-strategy';
 import { getCurrentI18n, getNumberFormatter, IResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { BaseFormatter, I18N_FORMATTER } from '../core/i18n/formatters/formatter-base';
 
 interface IMatchInfoCache {
     row: any;
@@ -3561,6 +3562,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         /** @hidden @internal */
         public summaryService: IgxGridSummaryService,
         @Inject(LOCALE_ID) private localeId: string,
+        @Inject(I18N_FORMATTER) public i18nFormatter: BaseFormatter,
         protected platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>,
     ) {
@@ -8099,9 +8101,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             columnItems.forEach((c, cid) => {
                 const pipeArgs = this.getColumnByName(c.field).pipeArgs;
                 const value = c.formatter ? c.formatter(resolveNestedPath(currentRowData, columnsPathParts[cid]), currentRowData) :
-                    c.dataType === 'number' ? formatNumber(resolveNestedPath(currentRowData, columnsPathParts[cid]) as number, this.locale, pipeArgs.digitsInfo) :
+                    c.dataType === 'number' ? this.i18nFormatter.formatNumber(resolveNestedPath(currentRowData, columnsPathParts[cid]) as number, this.locale, pipeArgs.digitsInfo) :
                         c.dataType === 'date'
-                            ? formatDate(resolveNestedPath(currentRowData, columnsPathParts[cid]) as string, pipeArgs.format, this.locale, pipeArgs.timezone)
+                            ? this.i18nFormatter.formatDate(resolveNestedPath(currentRowData, columnsPathParts[cid]) as string, pipeArgs.format, this.locale, pipeArgs.timezone)
                             : resolveNestedPath(currentRowData, columnsPathParts[cid]);
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();

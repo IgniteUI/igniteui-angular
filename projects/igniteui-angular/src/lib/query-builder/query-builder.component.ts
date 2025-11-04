@@ -7,13 +7,12 @@ import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../
 import { IExpressionTree } from '../data-operations/filtering-expressions-tree';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { EntityType, FieldType } from '../grids/common/grid.interface';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getCurrentResourceStrings, onResourceChangeHandle } from '../core/i18n/resources';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { IgxIconService } from '../icon/icon.service';
 import { editor } from '@igniteui/material-icons-extended';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 import { recreateTree } from '../data-operations/expressions-tree-util';
-import { onResourceChangeHandle } from '../core/utils';
 
 /**
  * A component used for operating with complex filters by creating or editing conditions

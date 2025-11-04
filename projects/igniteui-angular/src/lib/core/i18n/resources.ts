@@ -14,9 +14,12 @@ import { IQueryBuilderResourceStrings } from './query-builder-resources';
 import { IComboResourceStrings } from './combo-resources';
 import { IBannerResourceStrings } from './banner-resources';
 import {
+    IResourceChangeEventArgs,
     IResourceStrings as IResourceStringsCore,
     getI18nManager
 } from 'igniteui-i18n-core';
+import { Subject } from 'rxjs/internal/Subject';
+import { DestroyRef, ɵR3Injector as R3Injector } from '@angular/core';
 
 export const DEFAULT_LOCALE = 'en-US';
 
@@ -66,6 +69,29 @@ export function getCurrentResourceStrings<T>(defaultEN: T, init = true, locale?:
 }
 
 /**
+ * Bind to the i18n manager's onResourceChange event
+ * @param destroyObj Object responsible for signaling destruction of the handling object
+ * @param context Reference to the object's this context
+ */
+export function onResourceChangeHandle(destroyObj: Subject<any> | DestroyRef, callback: (event?: CustomEvent<IResourceChangeEventArgs>) => void, context: any) {
+    const onResourceChangeHandler = callback.bind(context);
+    getI18nManager().addEventListener("onResourceChange", onResourceChangeHandler);
+
+    // Handle removal of listener on context destroy
+    const removeHandler = () => {
+        getI18nManager().removeEventListener("onResourceChange", onResourceChangeHandler);
+    }
+    if (destroyObj instanceof DestroyRef || destroyObj instanceof R3Injector) {
+        // R3Injector is for tests only
+        destroyObj.onDestroy(() => removeHandler());
+    } else if (destroyObj) {
+        destroyObj.subscribe({
+            complete: () => removeHandler()
+        });
+    }
+}
+
+/**
  * Change resource strings for all components globally. The locale is not taken into account and this method should be called when the locale is changed.
  */
 export function changei18n(resourceStrings: IResourceStrings) {
@@ -74,23 +100,4 @@ export function changei18n(resourceStrings: IResourceStrings) {
 
 export function registerI18n(resourceStrings: IResourceStrings, locale?: string) {
     igxRegisterI18n(resourceStrings, locale);
-}
-
-const angularLocalizationProp = Symbol.for('igx.i18n.angularLocalization');
-
-/** Toggle Angular's localization and formatting in favor of the new Intl implementation.
- * @enable If should be enabled(true) or disabled(false). True by default.
- * @returns If is now enabled or disabled.
- */
-export function toggleIgxAngularLocalization(enable?: boolean): boolean {
-  globalThis[angularLocalizationProp] = enable != null ? enable : !globalThis[angularLocalizationProp];
-  return globalThis[angularLocalizationProp];
-}
-
-/** Get if the Angular's localization and formatting is enabled. It is true by default. */
-export function isIgxAngularLocalizationEnabled(): boolean {
-    if (globalThis[angularLocalizationProp] == null) {
-        globalThis[angularLocalizationProp] = true;
-    }
-    return globalThis[angularLocalizationProp];
 }

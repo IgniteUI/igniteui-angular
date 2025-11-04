@@ -14,7 +14,7 @@ import {
     AfterContentChecked
 } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
-import { PlatformUtil, getComponentTheme, onResourceChangeHandle } from '../core/utils';
+import { PlatformUtil, getComponentTheme } from '../core/utils';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import {
@@ -27,7 +27,7 @@ import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxInputGroupBase } from './input-group.common';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
 import { IgxIconComponent } from '../icon/icon.component';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getCurrentResourceStrings, onResourceChangeHandle } from '../core/i18n/resources';
 import { IgxTheme, THEME_TOKEN, ThemeToken } from '../services/theme/theme.token';
 
 @Component({

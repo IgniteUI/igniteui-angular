@@ -5,7 +5,7 @@ import { IgxOverlayService } from '../../../services/overlay/overlay';
 import { IDragStartEventArgs, IgxDragDirective, IgxDragHandleDirective } from '../../../directives/drag-drop/drag-drop.directive';
 import { Subject } from 'rxjs';
 import { IActiveNode } from '../../grid-navigation.service';
-import { onResourceChangeHandle, PlatformUtil } from '../../../core/utils';
+import { PlatformUtil } from '../../../core/utils';
 import { EntityType, FieldType, GridType } from '../../common/grid.interface';
 import { IgxQueryBuilderComponent } from '../../../query-builder/query-builder.component';
 import { GridResourceStringsEN } from '../../../core/i18n/grid-resources';
@@ -13,7 +13,7 @@ import { IFilteringExpressionsTree } from '../../../data-operations/filtering-ex
 import { IgxButtonDirective } from '../../../directives/button/button.directive';
 import { IgxQueryBuilderHeaderComponent } from '../../../query-builder/query-builder-header.component';
 import { NgClass } from '@angular/common';
-import { getCurrentResourceStrings } from '../../../core/i18n/resources';
+import { getCurrentResourceStrings, onResourceChangeHandle } from '../../../core/i18n/resources';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../../../core/i18n/query-builder-resources';
 import { IgxHierarchicalGridComponent } from '../../hierarchical-grid/hierarchical-grid.component';
 

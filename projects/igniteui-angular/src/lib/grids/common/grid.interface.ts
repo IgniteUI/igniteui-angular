@@ -809,6 +809,8 @@ export interface GridType extends IGridDataBindable {
     crudService: any;
     /** @hidden @internal */
     summaryService: any;
+    /** @hidden @internal */
+    i18nFormatter: any;
 
 
 
