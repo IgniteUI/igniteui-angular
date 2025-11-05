@@ -411,7 +411,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * @hidden
      */
     public onHide() : void {
-        if (this.tooltipDisabled) {
+        if (this.tooltipDisabled || this.target.collapsed) {
             return;
         }
 
