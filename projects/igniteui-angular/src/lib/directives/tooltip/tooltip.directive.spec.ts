@@ -529,7 +529,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
             const maxWidth = getComputedStyle(tooltipNativeElement).maxWidth;
-            expect(maxWidth).toBe('none');
+            expect(maxWidth).toBe('initial');
         }));
     });
 
