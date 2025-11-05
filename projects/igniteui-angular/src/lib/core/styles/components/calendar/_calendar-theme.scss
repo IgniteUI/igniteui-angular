@@ -551,9 +551,8 @@
                     content: '';
                     position: absolute;
                     background: var-get($theme, 'week-number-background');
-                    border-inline: rem(1px) solid var-get($theme, 'week-number-background');
-                    inset-block-start: 100%;
-                    height: calc(#{$date-view-row-gap} + #{rem(if($variant == 'indigo', 0px, 2px))});
+                    inset-block-start: calc(100% + #{$border-size});
+                    height: $date-view-row-gap;
                     width: $date-size;
                 }
             }
@@ -775,15 +774,18 @@
             color: var-get($theme, 'week-number-foreground');
             background: var-get($theme, 'week-number-background');
 
-            // This is not an actual date and should not change it's border when changing the date border
-            border-color: var-get($theme, 'week-number-background');
-
             &::before {
                 content: '';
                 position: absolute;
                 background: var-get($theme, 'week-number-background');
-                inset-block-start: 100%;
-                height: calc(#{$date-view-row-gap} + #{rem(if($variant == 'indigo', 0, 2px))});
+
+                @if $variant != 'indigo' {
+                    inset-block-start: calc(100% + #{$border-size});
+                } @else {
+                    inset-block-start: 100%;
+                }
+
+                height: $date-view-row-gap;
                 width: $date-size;
             }
         }
@@ -1707,6 +1709,10 @@
                 background: var-get($theme, 'date-selected-current-range-background');
             }
 
+            @if $variant == 'indigo' {
+                border-color: var-get($theme, 'date-selected-current-border-color');
+            }
+
             @if $variant == 'fluent' {
                 &::before {
                     background: var-get($theme, 'date-selected-current-range-background');
@@ -1720,6 +1726,9 @@
             &:hover {
                 color: var-get($theme, 'date-selected-current-range-hover-foreground');
 
+                @if $variant == 'indigo' {
+                    border-color: var-get($theme, 'date-selected-current-hover-border-color');
+                }
 
                 @if $variant != 'fluent' {
                     background: var-get($theme, 'date-selected-current-range-hover-background');
@@ -1743,6 +1752,10 @@
         %date-inner {
             color: var-get($theme, 'date-selected-current-range-focus-foreground');
 
+            @if $variant == 'indigo' {
+                border-color: var-get($theme, 'date-selected-current-focus-border-color');
+            }
+
             @if $variant != 'fluent' {
                 background: var-get($theme, 'date-selected-current-range-focus-background');
             }
@@ -1759,7 +1772,7 @@
         }
     }
 
-    @if $variant == 'bootstrap' {
+    @if $variant == 'bootstrap' or $variant == 'indigo' {
         %date-selected-current-range-not-first-last {
             %date-inner {
                 border-color: var-get($theme, 'date-current-border-color');
@@ -1773,6 +1786,24 @@
         %date-selected-current-range-active-not-first-last {
             %date-inner {
                 border-color: var-get($theme, 'date-current-focus-border-color');
+            }
+        }
+    }
+
+    @if $variant == 'indigo' {
+        %date-selected-current-range-not-first-last {
+            %date-inner {
+                color: var-get($theme, 'date-current-foreground');
+
+                &:hover {
+                    color: var-get($theme, 'date-current-hover-foreground');
+                }
+            }
+        }
+
+        %date-selected-current-range-active-not-first-last {
+            %date-inner {
+               color: var-get($theme, 'date-current-focus-foreground');
             }
         }
     }
@@ -1961,6 +1992,7 @@
             %date-inner {
                 color: var-get($theme, 'date-selected-foreground');
                 background: var-get($theme, 'date-selected-background');
+                border-color: var-get($theme, 'date-selected-current-border-color');
 
                 &::after {
                     width: calc($date-inner-size - #{rem(4px)});
@@ -1971,6 +2003,7 @@
                 &:hover {
                     color: var-get($theme, 'date-selected-hover-foreground');
                     background: var-get($theme, 'date-selected-hover-background');
+                    border-color: var-get($theme, 'date-selected-current-hover-border-color');
 
                     // stylelint-disable-next-line
                     &::after {
@@ -1987,6 +2020,7 @@
             %date-inner {
                 color: var-get($theme, 'date-selected-focus-foreground') !important;
                 background: var-get($theme, 'date-selected-focus-background') !important;
+                border-color: var-get($theme, 'date-selected-current-focus-border-color');
 
                 &::after {
                     width: calc($date-inner-size - #{rem(4px)});
@@ -2608,7 +2642,9 @@
         }
 
         %date-inner {
-            border-color: var-get($theme, 'date-selected-focus-border-color');
+            @if $variant != 'indigo' {
+                border-color: var-get($theme, 'date-selected-focus-border-color');
+            }
         }
 
         @if $variant == 'bootstrap' {
@@ -2670,6 +2706,26 @@
         %date-last-preview-current-active {
             %date-inner {
                 border-color: var-get($theme, 'date-selected-current-focus-border-color');
+            }
+        }
+    }
+
+    @if $variant == 'material' {
+        %date-first-preview-current,
+        %date-last-preview-current {
+            %date-inner {
+                border-color: var-get($theme, 'date-current-border-color');
+
+                &:hover {
+                    border-color: var-get($theme, 'date-current-hover-border-color');
+                }
+            }
+        }
+
+        %date-first-preview-current-active,
+        %date-last-preview-current-active {
+            %date-inner {
+                border-color: var-get($theme, 'date-current-focus-border-color');
             }
         }
     }
