@@ -245,11 +245,9 @@ export class IgxSplitterComponent implements AfterContentInit {
         let [ paneSize, siblingSize ] = this.calcNewSizes(delta);
 
         if (paneSize + siblingSize > this.getTotalSize() && delta < 0) {
-            paneSize = this.getTotalSize();
-            siblingSize = 0;
-        } else if(paneSize + siblingSize > this.getTotalSize() && delta > 0) {
-            paneSize = 0;
-            siblingSize = this.getTotalSize();
+            siblingSize = this.getTotalSize() - paneSize;
+        } else if (paneSize + siblingSize > this.getTotalSize() && delta > 0) {
+            paneSize = this.getTotalSize() - siblingSize;
         }
 
         if (this.pane.isPercentageSize) {
