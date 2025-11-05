@@ -3324,7 +3324,8 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _gridSize: ɵSize = ɵSize.Large;
-    private _defaultRowHeight = 51;
+    private _defaultRowHeight = 50;
+    private _borderSize = 1;
     private _rowCount: number;
     private _cellMergeMode: GridCellMergeMode = GridCellMergeMode.onSort;
     private _columnsToMerge: IgxColumnComponent[] = [];
@@ -5586,7 +5587,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     protected get defaultTargetBodyHeight(): number {
         const allItems = this.dataLength;
-        return this.renderedRowHeight * Math.min(this._defaultTargetRecordNumber,
+        return this.renderedActualRowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paginator ? Math.min(allItems, this.paginator.perPage) : allItems);
     }
 
@@ -5595,7 +5596,10 @@ export abstract class IgxGridBaseDirective implements GridType,
      * The rowHeight input is bound to min-height css prop of rows that adds a 1px border in all cases
      */
     public get renderedRowHeight(): number {
-        return this.rowHeight;
+        if (this.hasCellsToMerge) {
+            return this.rowHeight;
+        }
+        return this.rowHeight + this._borderSize;
     }
 
     /**
@@ -7822,6 +7826,10 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.gridScroll.emit(args);
     }
 
+    protected get renderedActualRowHeight() {
+        return this.rowHeight + this._borderSize;
+    }
+
     private executeCallback(rowIndex, visibleColIndex = -1, cb: (args: any) => void = null) {
         if (!cb) {
             return;
@@ -8097,6 +8105,13 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this._defaultRowHeight = height;
             } else {
                 this._shouldRecalcRowHeight = true;
+            }
+
+            const rowStyles = this.document.defaultView.getComputedStyle(this.dataRowList.first.nativeElement);
+
+            const border = rowStyles.borderBottomWidth ? parseFloat(rowStyles.borderBottomWidth) : 1;
+            if (border) {
+                this._borderSize = border;
             }
         }
     }
