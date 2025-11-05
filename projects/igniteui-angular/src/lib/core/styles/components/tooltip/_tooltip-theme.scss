@@ -36,7 +36,7 @@
         }
     }
 
-    .igx-tooltip:has(> :not([data-arrow]):not(igx-tooltip-close-button)) {
+    .igx-tooltip:has(> :not([data-arrow], igx-tooltip-close-button)) {
         --igx-tooltip-max-width: none;
     }
 
