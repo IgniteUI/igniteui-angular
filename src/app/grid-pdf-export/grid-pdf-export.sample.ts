@@ -15,7 +15,9 @@ import {
     IgxInputGroupComponent,
     IgxLabelDirective,
     IgxInputDirective,
-    IgxColumnGroupComponent
+    IgxColumnGroupComponent,
+    IgxPivotGridComponent,
+    IgxPivotDataSelectorComponent
 } from 'igniteui-angular';
 
 @Component({
@@ -28,6 +30,8 @@ import {
         IgxColumnGroupComponent,
         IgxTreeGridComponent,
         IgxHierarchicalGridComponent,
+        IgxPivotGridComponent,
+        IgxPivotDataSelectorComponent,
         IgxRowIslandComponent,
         IgxButtonDirective,
         IgxSwitchComponent,
@@ -51,6 +55,9 @@ export class GridPdfExportSampleComponent {
 
     @ViewChild('hierarchicalGrid', { static: true })
     public hierarchicalGrid: IgxHierarchicalGridComponent;
+
+    @ViewChild('pivotGrid', { static: true })
+    public pivotGrid: IgxPivotGridComponent;
 
     // Grid data
     public gridData = [
@@ -119,6 +126,33 @@ export class GridPdfExportSampleComponent {
         }
     ];
 
+    public pivotGridData = [
+        {
+            ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+            Country: 'Bulgaria', City: 'Sofia', Date: '01/01/2021', UnitsSold: 282
+        },
+        {
+            ProductCategory: 'Clothing', UnitPrice: 49.57, SellerName: 'Elisa',
+            Country: 'USA', City: 'New York', Date: '01/05/2019', UnitsSold: 296
+        },
+        {
+            ProductCategory: 'Bikes', UnitPrice: 3.56, SellerName: 'Lydia',
+            Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '01/06/2020', UnitsSold: 68
+        },
+        {
+            ProductCategory: 'Accessories', UnitPrice: 85.58, SellerName: 'David',
+            Country: 'USA', City: 'New York', Date: '04/07/2021', UnitsSold: 293
+        },
+        {
+            ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John',
+            Country: 'USA', City: 'New York', Date: '12/08/2021', UnitsSold: 240
+        },
+        {
+            ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
+            Country: 'Uruguay', City: 'Ciudad de la Costa', Date: '05/12/2020', UnitsSold: 456
+        }
+    ];
+
     // Export options
     public fileName = 'GridExport';
     public pageOrientation: 'portrait' | 'landscape' = 'landscape';
@@ -142,6 +176,12 @@ export class GridPdfExportSampleComponent {
         const options = this.createExportOptions();
         options.fileName = `HierarchicalGrid_${this.fileName}`;
         this.pdfExporter.export(this.hierarchicalGrid, options);
+    }
+
+    public exportPivotGrid() {
+        const options = this.createExportOptions();
+        options.fileName = `PivotGrid_${this.fileName}`;
+        this.pdfExporter.export(this.pivotGrid, options);
     }
 
     private createExportOptions(): IgxPdfExporterOptions {

@@ -128,14 +128,11 @@
             </button>
         </div>
 
-        <igx-pivot-grid #pivotGrid [data]="pivotGridData" [autoGenerate]="false" height="500px" width="100%">
-            <igx-pivot-configuration>
-                <igx-pivot-row pivotKeys='["Product", "Region"]'></igx-pivot-row>
-                <igx-pivot-column pivotKeys='["Quarter"]'></igx-pivot-column>
-                <igx-pivot-value field="Sales" aggregate="sum" displayName="Total Sales"></igx-pivot-value>
-                <igx-pivot-value field="Units" aggregate="sum" displayName="Total Units"></igx-pivot-value>
-            </igx-pivot-configuration>
-        </igx-pivot-grid>
+        <div style="display: flex">
+            <igx-pivot-grid #pivotGrid [data]="pivotGridData" [autoGenerateConfig]="true" height="850px" width="80%">
+            </igx-pivot-grid>
+            <igx-pivot-data-selector [grid]="pivotGrid"></igx-pivot-data-selector>
+        </div>
     </div>
 
     <div class="info-section">
