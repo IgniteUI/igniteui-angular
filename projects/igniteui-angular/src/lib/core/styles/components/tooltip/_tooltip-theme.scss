@@ -23,7 +23,7 @@
         gap: rem(8px);
         min-height: rem(24px);
         min-width: rem(24px);
-        max-width: 200px;
+        max-width: var(--igx-tooltip-max-width, 200px);
         width: fit-content;
 
         igx-icon {
@@ -34,6 +34,10 @@
             display: flex;
             cursor: default;
         }
+    }
+
+    .igx-tooltip:has(> :not([data-arrow]):not(igx-tooltip-close-button)) {
+        --igx-tooltip-max-width: none;
     }
 
     %arrow--top {
