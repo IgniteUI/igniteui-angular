@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { jsPDF } from 'jspdf';
-import { DEFAULT_OWNER, ExportHeaderType, IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
+import { DEFAULT_OWNER, ExportHeaderType, ExportRecordType, IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxPdfExporterOptions } from './pdf-exporter-options';
 import { IBaseEventArgs } from '../../core/utils';
@@ -60,6 +60,9 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         const maxLevel = defaultOwner?.maxLevel || 0;
         const hasMultiColumnHeaders = maxLevel > 0 && allColumns.some(col => col.headerType === ExportHeaderType.MultiColumnHeader);
 
+        // Check if this is a pivot grid export
+        const isPivotGrid = data.length > 0 && data[0].type === ExportRecordType.PivotGridRecord;
+
         if (leafColumns.length === 0 && data.length > 0) {
             // If no columns are defined, use the keys from the first data record
             const firstDataElement = data[0];
@@ -90,7 +93,9 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         const usableWidth = pageWidth - (2 * margin);
 
         // Calculate column widths based on leaf columns
-        const columnWidth = usableWidth / leafColumns.length;
+        // For pivot grids, include filter fields (row dimensions) in the column count
+        const totalColumns = isPivotGrid ? leafColumns.length + this.pivotGridFilterFieldsCount : leafColumns.length;
+        const columnWidth = usableWidth / totalColumns;
         const rowHeight = 20;
         const headerHeight = 25;
         const indentSize = 15; // Indentation per level for hierarchical data
