@@ -3363,7 +3363,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _gridSize: Size = Size.Large;
-    private _defaultRowHeight = 50;
+    private _defaultRowHeight = 51;
     private _rowCount: number;
     private _cellMergeMode: GridCellMergeMode = GridCellMergeMode.onSort;
     private _columnsToMerge: IgxColumnComponent[] = [];
@@ -5620,7 +5620,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     protected get defaultTargetBodyHeight(): number {
         const allItems = this.dataLength;
-        return this.renderedActualRowHeight * Math.min(this._defaultTargetRecordNumber,
+        return this.renderedRowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paginator ? Math.min(allItems, this.paginator.perPage) : allItems);
     }
 
@@ -5629,9 +5629,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * The rowHeight input is bound to min-height css prop of rows that adds a 1px border in all cases
      */
     public get renderedRowHeight(): number {
-        if (this.hasCellsToMerge) {
-            return this.rowHeight;
-        }
         return this.rowHeight;
     }
 
@@ -7868,15 +7865,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
         const args: IGridScrollEventArgs = { direction: 'horizontal', event, scrollPosition: this.headerContainer.scrollPosition };
         this.gridScroll.emit(args);
-    }
-
-    protected get renderedActualRowHeight() {
-        let border = 1;
-        if (this.rowList.toArray().length > 0) {
-            const rowStyles = this.document.defaultView.getComputedStyle(this.rowList.first.nativeElement);
-            border = rowStyles.borderBottomWidth ? Math.ceil(parseFloat(rowStyles.borderBottomWidth)) : border;
-        }
-        return this.rowHeight + border;
     }
 
     private executeCallback(rowIndex, visibleColIndex = -1, cb: (args: any) => void = null) {
