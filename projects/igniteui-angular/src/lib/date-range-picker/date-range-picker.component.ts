@@ -16,7 +16,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { CalendarSelection, IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from '../calendar/public_api';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates';
 import { DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } from '../core/i18n/date-range-picker-resources';
-import { clamp, IBaseCancelableBrowserEventArgs, isDate, onResourceChangeHandle, parseDate, PlatformUtil } from '../core/utils';
+import { clamp, IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { IgxPickerActionsDirective } from '../date-common/picker-icons.common';
@@ -33,11 +33,13 @@ import {
 import { DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, DateRangePickerFormatPipe, CustomDateRange } from './date-range-picker-inputs.common';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
-import { getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { PickerCalendarOrientation } from '../date-common/types';
 import { calendarRange, isDateInRanges } from '../calendar/common/helpers';
+import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
 import { IResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { BaseFormatter, I18N_FORMATTER } from '../core/i18n/formatters/formatter-base';
 
 const SingleInputDatesConcatenationString = ' - ';
 
@@ -77,6 +79,7 @@ const SingleInputDatesConcatenationString = ' - ';
         IgxInputDirective,
         IgxPrefixDirective,
         IgxSuffixDirective,
+        IgxReadOnlyInputDirective,
         DateRangePickerFormatPipe
     ]
 })
@@ -352,6 +355,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     @Input({ transform: booleanAttribute })
     public showWeekNumbers = false;
 
+    /** @hidden @internal */
+    @Input({ transform: booleanAttribute })
+    public readOnly = false;
+
     /**
      * Emitted when the picker's value changes. Used for two-way binding.
      *
@@ -469,6 +476,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      */
     public override set locale(value: string) {
         this._locale = value;
+        this.updateResources();
         if (this.hasProjectedInputs) {
             this.updateInputLocale();
             this.updateDisplayFormat();
@@ -605,8 +613,9 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         private _injector: Injector,
         private _cdr: ChangeDetectorRef,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
+        @Inject(I18N_FORMATTER) _i18nFormatter: BaseFormatter,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
-        super(element, _localeId, _inputGroupType);
+        super(element, _localeId, _i18nFormatter, _inputGroupType);
         this.initLocale();
     }
 
@@ -639,7 +648,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```
      */
     public open(overlaySettings?: OverlaySettings): void {
-        if (!this.collapsed || this.disabled) {
+        if (!this.collapsed || this.disabled || this.readOnly) {
             return;
         }
 
@@ -1264,19 +1273,16 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         });
     }
 
-    protected override initLocale() {
-        super.initLocale();
-        initi18n(this._localeId);
-        onResourceChangeHandle(this._destroy$, this.onResourceChange, this);
-    }
-
     protected override onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
         super.onResourceChange(args);
-        this._defaultResourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN, false);
         if (this.hasProjectedInputs) {
             this.updateInputLocale();
             this.updateDisplayFormat();
         }
+    }
+
+    protected override updateResources(): void {
+        this._defaultResourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN, false, this._locale);
     }
 
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {

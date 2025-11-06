@@ -82,9 +82,10 @@ import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
-import { IgxGridCellMergePipe } from '../grid/grid.pipes';
+import { IgxGridCellMergePipe, IgxGridUnmergeActivePipe } from '../grid/grid.pipes';
 import { DefaultTreeGridMergeStrategy, IGridMergeStrategy } from '../../data-operations/merge-strategy';
 import { IgxScrollInertiaDirective } from '../../directives/scroll-inertia/scroll_inertia.directive';
+import { BaseFormatter, I18N_FORMATTER } from '../../core/i18n/formatters/formatter-base';
 
 let NEXT_ID = 0;
 
@@ -173,7 +174,8 @@ let NEXT_ID = 0;
         IgxTreeGridAddRowPipe,
         IgxStringReplacePipe,
         IgxGridCellMergePipe,
-        IgxScrollInertiaDirective
+        IgxScrollInertiaDirective,
+        IgxGridUnmergeActivePipe
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -474,6 +476,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
         @Inject(LOCALE_ID) localeId: string,
+        @Inject(I18N_FORMATTER) i18nFormatter: BaseFormatter,
         platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected override _diTransactions?:
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
@@ -498,6 +501,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             overlayService,
             summaryService,
             localeId,
+            i18nFormatter,
             platform,
             _diTransactions,
         );

@@ -27,10 +27,10 @@ import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navig
 import { IgxToggleActionDirective } from '../directives/toggle/toggle.directive';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { NgTemplateOutlet } from '@angular/common';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getCurrentResourceStrings, onResourceChangeHandle } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IgxActionStripToken } from './token';
-import { onResourceChangeHandle, trackByIdentity } from '../core/utils';
+import { trackByIdentity } from '../core/utils';
 
 @Directive({
     selector: '[igxActionStripMenuItem]',

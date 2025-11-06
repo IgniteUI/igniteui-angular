@@ -1,3 +1,4 @@
+/* stylelint-disable max-nesting-depth */
 @use 'sass:map';
 @use 'sass:math';
 @use '../../base' as *;
@@ -49,13 +50,6 @@
         'indigo': rem(8px),
     ), $variant);
 
-    $mark-stroke: map.get((
-        'material': 3,
-        'fluent': 1,
-        'bootstrap': 3,
-        'indigo': 3,
-    ), $variant);
-
     $mark-offset: map.get((
         'material': 0,
         'fluent': -1px,
@@ -64,7 +58,7 @@
     ), $variant);
 
     $mark-length: 24;
-    $mark-x-factor: math.div($mark-stroke, $mark-length);
+    $mark-x-factor: calc(#{var-get($theme, 'tick-width')} / $mark-length);
 
     $ripple-size: rem(40px);
     $ripple-radius: math.div($ripple-size, 2);
@@ -99,7 +93,7 @@
         height: $size;
 
         @if $variant == 'material' {
-            padding: rem(20px);
+            padding: pad(rem(20px));
         }
 
         //ripple color
@@ -128,7 +122,9 @@
     }
 
     %cbx-composite--hover {
-        border-color: var-get($theme, 'empty-color-hover');
+        @if $variant == 'bootstrap' or $variant == 'indigo' {
+            border-color: var-get($theme, 'empty-color-hover');
+        }
     }
 
     %cbx-composite--x {
@@ -181,6 +177,7 @@
     %cbx-composite--x--disabled {
         @if $variant == 'material' or $variant == 'fluent' {
             background: var-get($theme, 'disabled-color');
+            border-color: var-get($theme, 'disabled-color');
         }
 
         @if $variant == 'indigo' or $variant == 'bootstrap' {
@@ -205,7 +202,7 @@
         inset: 0;
         stroke: var-get($theme, 'tick-color');
         stroke-linecap: square;
-        stroke-width: $mark-stroke;
+        stroke-width: var-get($theme, 'tick-width');
         stroke-dasharray: $mark-length;
         stroke-dashoffset: $mark-length;
         fill: none;
@@ -268,7 +265,7 @@
     }
 
     %igx-checkbox--disabled-indeterminate-indigo {
-        @extend %igx-checkbox--indeterminate-indigo;
+        @extend %cbx-composite--x--disabled;
 
         %cbx-composite-mark {
             rect {
@@ -297,6 +294,14 @@
                 z-index: 1;
             }
         }
+
+        &:hover {
+            %cbx-composite {
+                &::before {
+                    background: var-get($theme, 'fill-color-hover');
+                }
+            }
+        }
     }
 
     %igx-checkbox--disabled-indeterminate-fluent {
@@ -305,7 +310,7 @@
         }
 
         %cbx-composite--x--disabled {
-            background: transparent;
+            border-color: var-get($theme, 'disabled-color');
 
             &::before {
                 background: var-get($theme, 'disabled-color');
@@ -313,7 +318,7 @@
         }
     }
 
-    %igx-checkbox--disabled-indeterminate-material {
+    %igx-checkbox--disabled-indeterminate {
         %cbx-composite--x--disabled {
             border-color: var-get($theme, 'disabled-indeterminate-color');
             background: var-get($theme, 'disabled-indeterminate-color');
@@ -366,7 +371,7 @@
     %cbx-composite-mark--in {
         stroke-dashoffset: 41; /* length of path - adjacent line length */
         opacity: 1;
-        transform: rotate(45deg) translateX(-#{$mark-x-factor}em);
+        transform: rotate(45deg) translateX(calc(#{$mark-x-factor} * -1em));
     }
 
     %cbx-composite-mark--fluent {
@@ -464,11 +469,11 @@
     }
 
     %cbx-ripple--hover-checked {
-        background: var-get($theme, 'fill-color');
+        background: var-get($theme, 'fill-color-hover');
     }
 
     %cbx-ripple--hover-invalid {
-        background: var-get($theme, 'error-color');
+        background: var-get($theme, 'error-color-hover');
     }
 
     %igx-checkbox--focused-indigo {
@@ -548,6 +553,10 @@
 
     %cbx-ripple--focused-checked {
         background: var-get($theme, 'fill-color');
+    }
+
+    %cbx-ripple--focused--hover-checked {
+        background: var-get($theme, 'fill-color-hover');
     }
 
     %cbx-ripple--focused-invalid {

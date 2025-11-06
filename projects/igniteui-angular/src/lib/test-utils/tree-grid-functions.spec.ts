@@ -207,7 +207,7 @@ export class TreeGridFunctions {
     /**
      * Verifies that the specified column is the tree column, that contains the tree cells, when there are multi column headers.
      */
-    public static verifyTreeColumnInMultiColHeaders(fix, expectedTreeColumnKey, expectedColumnsCount) {
+    public static verifyTreeColumnInMultiColHeaders(fix, _expectedTreeColumnKey, expectedColumnsCount) {
         const headersDOM = TreeGridFunctions.sortElementsHorizontally(fix.debugElement.queryAll(By.css('igx-grid-header')));
         const leftMostHeaders = headersDOM.filter(x =>
             x.nativeElement.getBoundingClientRect().left === headersDOM[0].nativeElement.getBoundingClientRect().left);

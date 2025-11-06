@@ -23,8 +23,9 @@ import {
 import { CalendarDay, DayInterval } from "../common/model";
 import { getNextActiveDate, isDateInRanges } from "./helpers";
 import { DateRangeType } from "../../core/dates";
-import { isDate, onResourceChangeHandle } from "../../core/utils";
+import { isDate } from "../../core/utils";
 import { getCurrentI18n, getDateFormatter, IResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { onResourceChangeHandle } from '../../core/i18n/resources';
 
 export enum Direction {
     NEXT = 1,

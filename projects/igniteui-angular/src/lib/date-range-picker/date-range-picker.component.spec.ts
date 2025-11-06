@@ -26,6 +26,7 @@ import { registerLocaleData } from "@angular/common";
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
 import { CalendarDay } from '../calendar/common/model';
+import { BaseFormatter } from '../core/i18n/formatters/formatter-base';
 
 // The number of milliseconds in one day
 const DEBOUNCE_TIME = 16;
@@ -65,6 +66,7 @@ describe('IgxDateRangePicker', () => {
         let mockDaysView: any;
         let mockAnimationService: AnimationService;
         let mockCdr: any;
+        let mockI18nFormatter: BaseFormatter;
         const elementRef = { nativeElement: null };
         const platform = {} as any;
         const mockNgControl = jasmine.createSpyObj('NgControl',
@@ -93,6 +95,7 @@ describe('IgxDateRangePicker', () => {
             mockCdr = jasmine.createSpyObj('ChangeDetectorRef', {
                 detectChanges: () => { }
             });
+            mockI18nFormatter = new BaseFormatter();
             mockAnimationBuilder = {
                 build: (a: AnimationMetadata | AnimationMetadata[]) => ({
                     create: (e: any, opt?: AnimationOptions) => ({
@@ -137,7 +140,7 @@ describe('IgxDateRangePicker', () => {
             overlay = new IgxOverlayService(
                 mockApplicationRef, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
             mockCalendar = TestBed.runInInjectionContext(() => {
-                return new IgxCalendarComponent(platform, 'en');
+                return new IgxCalendarComponent(platform, 'en', mockI18nFormatter);
             });
 
             mockDaysView = {
@@ -251,7 +254,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should disable calendar dates when min and/or max values as dates are provided', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, mockCdr, overlay);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, mockCdr, overlay, mockI18nFormatter);
             dateRange.ngOnInit();
 
             spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
@@ -721,7 +724,6 @@ describe('IgxDateRangePicker', () => {
                     doneBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[1];
                     cancelBtn = document.getElementsByClassName(CSS_CLASS_DIALOG_BUTTON)[0];
                     expect(doneBtn.textContent.trim()).toEqual('Close');
-                    console.log(cancelBtn.textContent.trim());
                 }));
 
                 it('should emit open/close events - open/close methods', fakeAsync(() => {
@@ -1720,8 +1722,6 @@ describe('IgxDateRangePicker', () => {
 
                     const predefinedArea = document.querySelector('igx-predefined-ranges-area');
                     const chips = document.querySelectorAll('igx-chip');
-
-                    console.log(predefinedArea);
 
                     expect(predefinedArea).toBeNull();
                     expect(chips.length).toEqual(0);

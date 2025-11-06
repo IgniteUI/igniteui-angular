@@ -24,6 +24,7 @@ import { registerLocaleData } from "@angular/common";
 import localeES from "@angular/common/locales/es";
 import localeBg from "@angular/common/locales/bg";
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
+import { BaseFormatter } from '../core/i18n/formatters/formatter-base';
 
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
 
@@ -844,6 +845,7 @@ describe('IgxDatePicker', () => {
         let mockDateEditor: any;
         let mockCalendar: Partial<IgxCalendarComponent>;
         let mockInputDirective: any;
+        let mockI18nFormatter: BaseFormatter;
         const viewsContainerRef = {} as any;
         const mockOverlayId = '1';
         const today = new Date();
@@ -1016,7 +1018,8 @@ describe('IgxDatePicker', () => {
                 },
                 focus: () => { }
             };
-            datePicker = new IgxDatePickerComponent(elementRef, 'en-US', overlay, mockInjector, renderer2, null, mockCdr);
+            mockI18nFormatter = new BaseFormatter();
+            datePicker = new IgxDatePickerComponent(elementRef, 'en-US', mockI18nFormatter, overlay, mockInjector, renderer2, null, mockCdr);
             (datePicker as any).inputGroup = mockInputGroup;
             (datePicker as any).inputDirective = mockInputDirective;
             (datePicker as any).dateTimeEditor = mockDateEditor;

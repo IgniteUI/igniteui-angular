@@ -1,14 +1,24 @@
-import { getCurrentResourceStrings, getI18nManager, registerI18n, setCurrentI18n } from 'igniteui-i18n-core';
+import { getCurrentResourceStrings, getI18nManager, IResourceStrings, registerI18n, setCurrentI18n } from 'igniteui-i18n-core';
 import { ActionStripResourceStringsEN } from './action-strip-resources';
 import { BannerResourceStringsEN } from './banner-resources';
 import { changei18n, getCurrentResourceStrings as igxGetCurrentResourceStrings } from './resources';
 import { ActionStripResourceStringsBG } from 'projects/igniteui-angular-i18n/src/i18n/BG/action-strip-resources';
 import { BannerResourceStringsBG, ResourceStringsBG } from 'igniteui-i18n-resources';
+import { IResourceCategories } from 'node_modules/igniteui-i18n-core/i18n-manager.interfaces';
 
 describe('i18n', () => {
     beforeEach(() => {
         // Clear manager state between tests.
-        getI18nManager()['_resourcesMap'] = new Map([[getI18nManager().currentLocale, {}]]);
+        (getI18nManager() as any)._resourcesMap = new Map<string, IResourceCategories>([
+            [
+                'en',
+                {
+                    default: 'US',
+                    scripts: new Map<string, IResourceStrings>(),
+                    regions: new Map<string, IResourceStrings>([['US', {}]]),
+                },
+            ],
+        ]);
     });
 
     describe('old public API', () => {
@@ -95,6 +105,8 @@ describe('i18n', () => {
             expect(igxGetCurrentResourceStrings(ActionStripResourceStringsEN, false)).toEqual({
                 igx_action_strip_button_more_title: 'Още'
             });
+
+            setCurrentI18n('en-US');
         })
 
         it('should return default strings if locale is changed using new API, but its missing resources', () => {
@@ -108,6 +120,8 @@ describe('i18n', () => {
             expect(igxGetCurrentResourceStrings(ActionStripResourceStringsEN, false)).toEqual({
                 igx_action_strip_button_more_title: 'More'
             });
+
+            setCurrentI18n('en-US');
         });
 
         it('should return default strings if locale is changed using new API, but its missing resources for this particular component', () => {
@@ -122,6 +136,8 @@ describe('i18n', () => {
             expect(igxGetCurrentResourceStrings(ActionStripResourceStringsEN, false)).toEqual({
                 igx_action_strip_button_more_title: 'More'
             });
+
+            setCurrentI18n('en-US');
         });
     });
 });

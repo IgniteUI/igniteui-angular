@@ -93,13 +93,6 @@ export class DatePickerSampleComponent {
     );
 
     public panelConfig: PropertyPanelConfig = {
-        locale: {
-            control: {
-                type: 'locale',
-                options: ['HI', 'BG', 'EN', 'DE', 'ES', 'FR', 'IT', 'JA', 'KO', 'zh-Hans', 'zh-Hant'],
-                defaultValue: 'EN',
-            }
-        },
         size: {
             control: {
                 type: 'button-group',
@@ -114,7 +107,20 @@ export class DatePickerSampleComponent {
                 defaultValue: 'dropdown'
             }
         },
+        type: {
+            control: {
+                type: 'button-group',
+                options: ['box', 'border', 'line'],
+                defaultValue: 'box'
+            }
+        },
         required: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        readonly: {
             control: {
                 type: 'boolean',
                 defaultValue: false

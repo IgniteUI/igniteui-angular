@@ -45,7 +45,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 import { DatePickerResourceStringsEN, IDatePickerResourceStrings } from '../core/i18n/date-picker-resources';
-import { IBaseCancelableBrowserEventArgs, isDate, onResourceChangeHandle, PlatformUtil } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, isDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { IgxPickerActionsDirective } from '../date-common/public_api';
@@ -63,10 +63,11 @@ import {
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
-import { getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
+import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { PickerCalendarOrientation } from '../date-common/types';
-import { IResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
+import { BaseFormatter, I18N_FORMATTER } from '../core/i18n/formatters/formatter-base';
 
 let NEXT_ID = 0;
 
@@ -95,6 +96,7 @@ let NEXT_ID = 0;
         IgxPrefixDirective,
         IgxIconComponent,
         IgxInputDirective,
+        IgxReadOnlyInputDirective,
         IgxDateTimeEditorDirective,
         IgxTextSelectionDirective,
         IgxSuffixDirective
@@ -518,13 +520,14 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     constructor(element: ElementRef<HTMLElement>,
         @Inject(LOCALE_ID) _localeId: string,
+        @Inject(I18N_FORMATTER) _i18nFormatter: BaseFormatter,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
         private _injector: Injector,
         private _renderer: Renderer2,
         private platform: PlatformUtil,
         private cdr: ChangeDetectorRef,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
-        super(element, _localeId, _inputGroupType);
+        super(element, _localeId,_i18nFormatter, _inputGroupType);
         this.initLocale();
     }
 
@@ -580,7 +583,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```
      */
     public open(settings?: OverlaySettings): void {
-        if (!this.collapsed || this.disabled) {
+        if (!this.collapsed || this.disabled || this.readOnly) {
             return;
         }
 
@@ -678,7 +681,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```
      */
     public clear(): void {
-        if (!this.disabled) {
+        if (!this.disabled || !this.readOnly) {
             this._calendar?.deselectDate();
             this.dateTimeEditor.clear();
         }
@@ -1003,14 +1006,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         componentInstance.todaySelection.pipe(takeUntil(this._destroy$)).subscribe(() => this.selectToday());
     }
 
-    protected override initLocale() {
-        super.initLocale();
-        initi18n(this._localeId);
-        onResourceChangeHandle(this._destroy$, this.onResourceChange, this);
-    }
-
-    protected override onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
-        super.onResourceChange(args);
-        this._resourceStrings = getCurrentResourceStrings(DatePickerResourceStringsEN, false);
+    protected override updateResources(): void {
+        this._resourceStrings = getCurrentResourceStrings(DatePickerResourceStringsEN, false, this._locale);
     }
 }

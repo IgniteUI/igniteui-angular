@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input, ViewChild } from '@angular/core';
 import { IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
@@ -15,7 +15,8 @@ import { IgxIconComponent } from '../../../icon/icon.component';
 import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive';
 import { IgxSelectComponent } from '../../../select/select.component';
 import { IgxIconButtonDirective } from '../../../directives/button/icon-button.directive';
-import { getLocaleFirstDayOfWeek } from '../../../core/utils';
+import { PlatformUtil } from '../../../core/utils';
+import { I18N_FORMATTER, BaseFormatter} from '../../../core/i18n/formatters/formatter-base';
 
 /**
  * @hidden
@@ -54,6 +55,12 @@ export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultEx
     }
 
     public get weekStart(): number {
-        return getLocaleFirstDayOfWeek(this.grid.locale);
+        return this.i18nFormatter.getLocaleFirstDayOfWeek(this.grid.locale);
+    }
+
+    constructor(cdr: ChangeDetectorRef,
+        @Inject(I18N_FORMATTER) protected i18nFormatter: BaseFormatter,
+        platform: PlatformUtil) {
+        super(cdr, platform);
     }
 }

@@ -1,7 +1,10 @@
-import { IPaginatorResourceStrings, convertToIgxResource } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
 import { PaginatorResourceStringsZHHANS as APaginatorResourceStrings } from 'igniteui-i18n-resources';
 
 /**
  * Simplified Chinese (zh-Hans) resource strings for IgxPaginator
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
-export const PaginatorResourceStringsZHHANS: IPaginatorResourceStrings = convertToIgxResource(APaginatorResourceStrings);
+export const PaginatorResourceStringsZHHANS = prefixResource(IGX_PREFIX, APaginatorResourceStrings);

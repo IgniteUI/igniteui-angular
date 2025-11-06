@@ -9,7 +9,7 @@ import { takeUntil, first } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { IColumnResizeEventArgs, IFilteringEventArgs } from '../common/events';
-import { OverlayCancelableEventArgs, OverlaySettings, VerticalAlignment } from '../../services/overlay/utilities';
+import { OverlayCancelableEventArgs, OverlayEventArgs, OverlaySettings, VerticalAlignment } from '../../services/overlay/utilities';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { useAnimation } from '@angular/animations';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
@@ -17,7 +17,6 @@ import { IgxIconService } from '../../icon/icon.service';
 import { editor, pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { ExpressionUI, generateExpressionsList } from './excel-style/common';
 import { ColumnType, GridType } from '../common/grid.interface';
-import { formatDate } from '../../core/utils';
 import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 import { fadeIn } from 'igniteui-angular/animations';
 import { ExpressionsTreeUtil, isTree } from '../../data-operations/expressions-tree-util';
@@ -85,6 +84,12 @@ export class IgxFilteringService implements OnDestroy {
                 }
                 this.lastActiveNode = this.grid.navigation.activeNode;
             });
+
+        this._overlayService.opened.pipe(first(overlay => overlay.id === id), takeUntil(this.destroy$)).subscribe((event: OverlayEventArgs) => {
+            if (event.componentRef) {
+                event.componentRef.instance.populateData();
+            }
+        });
 
         this._overlayService.closed
             .pipe(
@@ -321,10 +326,10 @@ export class IgxFilteringService implements OnDestroy {
     public registerSVGIcons(): void {
         const editorIcons = editor as any[];
         editorIcons.forEach(icon => {
-            this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons');
+            this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons', true);
         });
-        this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
-        this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
+        this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons', true);
+        this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons', true);
     }
 
     /**
@@ -467,7 +472,7 @@ export class IgxFilteringService implements OnDestroy {
                 return formatter(expression.searchVal, undefined);
             }
             const pipeArgs = column.pipeArgs;
-            return formatDate(expression.searchVal, pipeArgs.format, this.grid.locale);
+            return this.grid.i18nFormatter.formatDate(expression.searchVal, pipeArgs.format, this.grid.locale);
         } else {
             return expression.searchVal;
         }

@@ -3,14 +3,15 @@ import { WEEKDAYS, IFormattingOptions, IFormattingViews, IViewDateChangeEventArg
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
 import { noop, Subject } from 'rxjs';
-import { getLocaleFirstDayOfWeek, isDate, isEqual, onResourceChangeHandle, PlatformUtil } from '../core/utils';
+import { isDate, isEqual, PlatformUtil } from '../core/utils';
 import { CalendarResourceStringsEN, ICalendarResourceStrings } from '../core/i18n/calendar-resources';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
+import { DEFAULT_LOCALE, getCurrentResourceStrings, onResourceChangeHandle } from '../core/i18n/resources';
 import { KeyboardNavigationService } from './calendar.services';
 import { getYearRange, isDateInRanges } from './common/helpers';
 import { CalendarDay } from './common/model';
 import { getCurrentI18n, getDateFormatter, IResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { BaseFormatter, I18N_FORMATTER } from '../core/i18n/formatters/formatter-base';
 
 /** @hidden @internal */
 @Directive({
@@ -312,7 +313,8 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     public set locale(value: string) {
         this._locale = value;
         // changing locale runtime needs to update the `weekStart` too
-        this._localeWeekStart = getLocaleFirstDayOfWeek(this._locale);
+        this._localeWeekStart = this.i18nFormatter.getLocaleFirstDayOfWeek(this._locale);
+        this._defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false, this._locale);
     }
 
     /**
@@ -661,8 +663,8 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     constructor(
         protected platform: PlatformUtil,
-        @Inject(LOCALE_ID)
-        protected _localeId: string,
+        @Inject(LOCALE_ID) protected _localeId: string,
+        @Inject(I18N_FORMATTER) protected i18nFormatter: BaseFormatter,
         protected keyboardNavigation?: KeyboardNavigationService,
         protected cdr?: ChangeDetectorRef,
     ) {
@@ -1019,15 +1021,17 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     private initLocale() {
-        initi18n(this._localeId);
         this._defaultLocale = getCurrentI18n();
-        this._localeWeekStart = getLocaleFirstDayOfWeek(this.locale);
+        this._locale = this._localeId !== DEFAULT_LOCALE ? this._localeId : this._locale;
+        this._localeWeekStart = this.i18nFormatter.getLocaleFirstDayOfWeek(this.locale);
         onResourceChangeHandle(this._destroyRef, this.onResourceChange, this);
     }
 
     private onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
         this._defaultLocale = args.detail.newLocale;
-        this._defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false);
-        this._localeWeekStart = getLocaleFirstDayOfWeek(this.locale);
+        if (!this._locale) {
+            this._defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false);
+        }
+        this._localeWeekStart = this.i18nFormatter.getLocaleFirstDayOfWeek(this.locale);
     }
 }

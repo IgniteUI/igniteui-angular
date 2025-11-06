@@ -13,7 +13,7 @@ import { IgxPivotDateDimension } from 'projects/igniteui-angular/src/lib/grids/p
 import { PivotDimensionType } from 'projects/igniteui-angular/src/lib/grids/pivot-grid/pivot-grid.interface';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxTimeSummaryOperand } from 'projects/igniteui-angular/src/lib/grids/summaries/grid-summary';
 import { HorizontalAlignment, VerticalAlignment } from 'projects/igniteui-angular/src/lib/services/overlay/utilities';
-import { ByLevelTreeGridMergeStrategy } from 'projects/igniteui-angular/src/lib/data-operations/merge-strategy';
+import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultTreeGridMergeStrategy } from 'projects/igniteui-angular/src/lib/data-operations/merge-strategy';
 
 /** Export Public API, TODO: reorganize, Generate all w/ renames? */
 export {
@@ -36,6 +36,8 @@ export {
 
     NoopSortingStrategy as IgcNoopSortingStrategy,
     NoopFilteringStrategy as IgcNoopFilteringStrategy,
+    DefaultMergeStrategy as IgcDefaultMergeStrategy,
+    DefaultTreeGridMergeStrategy as IgcDefaultTreeGridMergeStrategy,
     ByLevelTreeGridMergeStrategy as IgcByLevelTreeGridMergeStrategy,
 
     // Pivot API
@@ -60,6 +62,4 @@ export {
     // i18n
     registerI18n,
     setCurrentI18n,
-    getCurrentI18n,
-    getCurrentResourceStrings
 }

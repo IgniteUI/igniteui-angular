@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { IgxChipComponent } from '../chips/chip.component';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
-import { onResourceChangeHandle, PlatformUtil, trackByIdentity } from '../core/utils';
+import { PlatformUtil, trackByIdentity } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
@@ -36,7 +36,7 @@ import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxSelectItemComponent } from '../select/select-item.component';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
-import { getCurrentResourceStrings, initi18n } from '../core/i18n/resources';
+import { DEFAULT_LOCALE, getCurrentResourceStrings, onResourceChangeHandle } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IComboSelectionChangingEventArgs, IgxComboComponent } from "../combo/combo.component";
 import { IgxComboHeaderDirective } from '../combo/public_api';
@@ -220,6 +220,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public set locale(value: string) {
         this._locale = value;
+        this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false, this._locale);
     }
 
     /**
@@ -1722,14 +1723,16 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     private initLocale() {
-        initi18n(this._localeId);
         this._defaultLocale = getCurrentI18n();
+        this._locale = this._localeId !== DEFAULT_LOCALE ? this._localeId : this._locale;
         onResourceChangeHandle(this.destroy$, this.onResourceChange, this);
     }
 
     private onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
         this._defaultLocale = args.detail.newLocale;
-        this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
+        if (!this._locale) {
+            this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
+        }
     }
 
     /** rootGroup is recreated after clicking Apply, which sets new expressionTree and calls init()*/

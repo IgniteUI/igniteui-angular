@@ -40,6 +40,7 @@ import { State, Transaction, TransactionService } from '../../services/transacti
 import { IgxGridTransaction } from '../common/types';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
+import { BaseFormatter, I18N_FORMATTER } from '../../core/i18n/formatters/formatter-base';
 
 export const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();
 
@@ -172,6 +173,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
         @Inject(LOCALE_ID) localeId: string,
+        @Inject(I18N_FORMATTER) i18nFormatter: BaseFormatter,
         platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>,
     ) {
@@ -195,6 +197,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             overlayService,
             summaryService,
             localeId,
+            i18nFormatter,
             platform,
             _diTransactions,
         );

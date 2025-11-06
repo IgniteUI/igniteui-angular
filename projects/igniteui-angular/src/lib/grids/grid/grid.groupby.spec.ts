@@ -3844,7 +3844,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         });
         fix.detectChanges();
 
-        let groupRows = grid.groupsRowList.toArray();
+        const groupRows = grid.groupsRowList.toArray();
         checkGroups(groupRows, ['Test']);
     });
 

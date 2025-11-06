@@ -6,7 +6,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin navdrawer($theme) {
-    @include css-vars($theme);
+   @include css-vars($theme);
 
     $variant: map.get($theme, '_meta', 'theme');
     $drawer-icon-size: rem(24px);
@@ -19,10 +19,10 @@
     ), $variant);
 
     $item-padding: map.get((
-        'material': rem(12px) rem(8px),
-        'fluent': rem(10px) rem(8px),
-        'bootstrap': rem(8px) rem(16px),
-        'indigo': rem(8px) rem(16px),
+        'material': pad-block(rem(12px)) pad-inline(rem(8px)),
+        'fluent': pad-block(rem(10px)) pad-inline(rem(8px)),
+        'bootstrap': pad-block(rem(8px)) pad-inline(rem(16px)),
+        'indigo': pad-block(rem(8px)) pad-inline(rem(16px)),
     ), $variant);
 
     $item-gap: map.get((

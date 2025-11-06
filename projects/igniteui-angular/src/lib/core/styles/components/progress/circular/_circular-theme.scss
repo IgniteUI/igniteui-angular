@@ -8,7 +8,6 @@
 @mixin progress-circular($theme) {
     // Include rotate animation
     @include rotate-center();
-
     @include css-vars($theme);
 
     $animation-direction: normal;

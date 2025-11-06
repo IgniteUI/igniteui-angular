@@ -30,12 +30,13 @@ import {
     IgxGridToolbarTitleComponent,
     IgxPaginatorComponent,
     changei18n,
+    registerI18n,
+    setCurrentI18n,
     IgxGridPinningActionsComponent,
     IgxGridEditingActionsComponent,
     IgxActionStripComponent
 } from 'igniteui-angular';
-import { setCurrentI18n, registerI18n, ResourceStringsEN, getDateFormatter } from 'igniteui-i18n-core';
-import { ResourceStringsBG, ResourceStringsDE, ResourceStringsES, ResourceStringsFR, ResourceStringsIT, ResourceStringsJA, ResourceStringsKO, ResourceStringsZHHANS, ResourceStringsZHHANT } from 'igniteui-i18n-resources';
+import { getDateFormatter } from 'igniteui-i18n-core';
 
 @Component({
     selector: 'app-grid-localization',
@@ -100,7 +101,6 @@ export class GridLocalizationSampleComponent implements OnInit {
 
         // Old way by Angular
         // registerLocaleData(localeBG);
-        // registerLocaleData(localeEN);
         // registerLocaleData(localeDE);
         // registerLocaleData(localeES);
         // registerLocaleData(localeFR);
@@ -112,17 +112,15 @@ export class GridLocalizationSampleComponent implements OnInit {
         // registerLocaleData(localeHI);
 
         // New API
-        registerI18n(ResourceStringsBG, 'bg');
-        registerI18n(ResourceStringsEN, 'en');
-        registerI18n(ResourceStringsDE, 'de');
-        registerI18n(ResourceStringsES, 'es');
-        registerI18n(ResourceStringsFR, 'fr');
-        registerI18n(ResourceStringsIT, 'it');
-        registerI18n(ResourceStringsJA, 'ja');
-        registerI18n(ResourceStringsKO, 'ko');
-        registerI18n(ResourceStringsZHHANS, 'zh-Hans');
-        registerI18n(ResourceStringsZHHANT, 'zh-Hant');
-
+        registerI18n(IgxResourceStringsBG, 'bg');
+        registerI18n(IgxResourceStringsDE, 'de');
+        registerI18n(IgxResourceStringsES, 'es');
+        registerI18n(IgxResourceStringsFR, 'fr');
+        registerI18n(IgxResourceStringsIT, 'it');
+        registerI18n(IgxResourceStringsJA, 'ja');
+        registerI18n(IgxResourceStringsKO, 'ko');
+        registerI18n(IgxResourceStringsZHHANS, 'zh-Hans');
+        registerI18n(IgxResourceStringsZHHANT, 'zh-Hant');
     }
 
     public updateLocale() {
@@ -139,6 +137,6 @@ export class GridLocalizationSampleComponent implements OnInit {
 
     public onButtonClick() {
         console.log("Old: " + formatDate(new Date("10/10/1993"), this.inputValue, this.locale));
-        console.log("New: " + getDateFormatter().formatDateCustomFormat(new Date("10/10/1993"), this.locale, this.inputValue));
+        console.log("New: " + getDateFormatter().formatDateCustomFormat(new Date("10/10/1993"), this.inputValue, { locale:  this.locale }));
     }
 }

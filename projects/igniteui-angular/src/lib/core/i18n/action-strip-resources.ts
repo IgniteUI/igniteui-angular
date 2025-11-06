@@ -1,8 +1,11 @@
-import { ActionStripResourceStringsEN as AActionStripResourceStrings } from 'igniteui-i18n-core';
-import { convertToIgxResource } from './resources';
+import {
+    type IActionStripResourceStrings as IAActionStripResourceStrings,
+    type PrefixedResourceStrings,
+    ActionStripResourceStringsEN as AActionStripResourceStrings,
+    IGX_PREFIX,
+    prefixResource
+} from 'igniteui-i18n-core';
 
-export interface IActionStripResourceStrings {
-    igx_action_strip_button_more_title?: string;
-}
+export type IActionStripResourceStrings = PrefixedResourceStrings<IAActionStripResourceStrings, typeof IGX_PREFIX>;
 
-export const ActionStripResourceStringsEN: IActionStripResourceStrings = convertToIgxResource(AActionStripResourceStrings);
+export const ActionStripResourceStringsEN: IActionStripResourceStrings = prefixResource(IGX_PREFIX, AActionStripResourceStrings);

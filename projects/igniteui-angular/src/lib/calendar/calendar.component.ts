@@ -440,7 +440,9 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
     @HostListener('mousedown', ['$event'])
     protected onMouseDown(event: MouseEvent) {
         event.stopPropagation();
-        this.wrapper.nativeElement.focus();
+        if (this.platform.isBrowser && this.wrapper?.nativeElement) {
+            this.wrapper.nativeElement.focus();
+        }
     }
 
     private _showActiveDay: boolean;
@@ -846,7 +848,9 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 
 		if (this.platform.isActivationKey(event)) {
             this.viewDate = date;
-            this.wrapper.nativeElement.focus();
+            if (this.platform.isBrowser && this.wrapper?.nativeElement) {
+                this.wrapper.nativeElement.focus();
+            }
 		}
 	}
 
@@ -855,6 +859,10 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * @internal
 	 */
     public onYearsViewClick(event: MouseEvent) {
+        if (!this.platform.isBrowser) {
+            return;
+        }
+
         const path = event.composed ? event.composedPath() : [event.target];
         const years = this.dacadeView.viewItems.toArray();
         const validTarget = years.some(year => path.includes(year.nativeElement));
@@ -1002,7 +1010,9 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
             this.activeViewIdx = activeViewIdx;
             this.viewDate = date;
 
-            this.wrapper.nativeElement.focus();
+            if (this.platform.isBrowser && this.wrapper?.nativeElement) {
+                this.wrapper.nativeElement.focus();
+            }
 		}
 	}
 

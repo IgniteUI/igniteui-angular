@@ -1,9 +1,11 @@
-import { ChipResourceStringsEN as AChipResourceStrings } from 'igniteui-i18n-core';
-import { convertToIgxResource } from './resources';
+import {
+    type IChipResourceStrings as IAChipResourceStrings,
+    type PrefixedResourceStrings,
+    ChipResourceStringsEN as AChipResourceStrings,
+    IGX_PREFIX,
+    prefixResource
+} from 'igniteui-i18n-core';
 
-export interface IChipResourceStrings {
-    igx_chip_remove?: string;
-    igx_chip_select?: string;
-}
+export type IChipResourceStrings = PrefixedResourceStrings<IAChipResourceStrings, typeof IGX_PREFIX>;
 
-export const ChipResourceStringsEN: IChipResourceStrings = convertToIgxResource(AChipResourceStrings);
+export const ChipResourceStringsEN: IChipResourceStrings = prefixResource(IGX_PREFIX, AChipResourceStrings);

@@ -1,8 +1,11 @@
-import { BannerResourceStringsEN as ABannerResourceStrings } from 'igniteui-i18n-core';
-import { convertToIgxResource } from './resources';
+import {
+    type IBannerResourceStrings as IABannerResourceStrings,
+    type PrefixedResourceStrings,
+    BannerResourceStringsEN as ABannerResourceStrings,
+    IGX_PREFIX,
+    prefixResource
+} from 'igniteui-i18n-core';
 
-export interface IBannerResourceStrings {
-    igx_banner_button_dismiss?: string;
-}
+export type IBannerResourceStrings = PrefixedResourceStrings<IABannerResourceStrings, typeof IGX_PREFIX>;
 
-export const BannerResourceStringsEN: IBannerResourceStrings = convertToIgxResource(ABannerResourceStrings);
+export const BannerResourceStringsEN: IBannerResourceStrings = prefixResource(IGX_PREFIX, ABannerResourceStrings);

@@ -7,7 +7,7 @@
 
 // Used to configure color accessibility for charts
 @use 'igniteui-theming/sass/color/functions' as color;
-@use 'igniteui-theming/sass/themes/mixins' as theming;
+@use 'igniteui-theming/sass/themes' as theming;
 
 // Common components
 @use '../components/_common/igx-control';

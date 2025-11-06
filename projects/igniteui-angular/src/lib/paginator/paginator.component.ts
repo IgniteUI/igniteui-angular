@@ -7,10 +7,9 @@ import { FormsModule } from '@angular/forms';
 import { IgxSelectComponent } from '../select/select.component';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getCurrentResourceStrings, onResourceChangeHandle } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IgxPaginatorToken } from './token';
-import { onResourceChangeHandle } from '../core/utils';
 
 @Directive({
     selector: '[igxPaginatorContent],igx-paginator-content',

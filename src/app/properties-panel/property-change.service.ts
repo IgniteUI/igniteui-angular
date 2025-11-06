@@ -14,8 +14,7 @@ export type ControlType =
     'date' |
     'time' |
     'date-time' |
-    'date-range' |
-    'locale';
+    'date-range';
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type PropertyPanelConfig = {

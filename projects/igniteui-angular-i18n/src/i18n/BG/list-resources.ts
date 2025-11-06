@@ -1,7 +1,10 @@
-import { IListResourceStrings, convertToIgxResource } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
 import { ListResourceStringsBG as AListResourceStrings } from 'igniteui-i18n-resources';
 
 /**
  * Bulgarian resource strings for IgxList
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
-export const ListResourceStringsBG: IListResourceStrings = convertToIgxResource(AListResourceStrings);
+export const ListResourceStringsBG = prefixResource(IGX_PREFIX, AListResourceStrings);

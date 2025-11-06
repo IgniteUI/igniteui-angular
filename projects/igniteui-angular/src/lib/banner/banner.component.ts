@@ -16,12 +16,12 @@ import { IToggleView } from '../core/navigation';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IgxBannerActionsDirective } from './banner.directives';
-import { CancelableEventArgs, IBaseEventArgs, onResourceChangeHandle } from '../core/utils';
+import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 import { IgxExpansionPanelBodyComponent } from '../expansion-panel/expansion-panel-body.component';
 import { IgxExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
 import { BannerResourceStringsEN, IBannerResourceStrings } from '../core/i18n/banner-resources';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getCurrentResourceStrings, onResourceChangeHandle } from '../core/i18n/resources';
 
 export interface BannerEventArgs extends IBaseEventArgs {
     event?: Event;

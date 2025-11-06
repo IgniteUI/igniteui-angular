@@ -14,11 +14,14 @@ import { IQueryBuilderResourceStrings } from './query-builder-resources';
 import { IComboResourceStrings } from './combo-resources';
 import { IBannerResourceStrings } from './banner-resources';
 import {
-    getCurrentResourceStrings as getCurrentResourceStringsCore,
+    IResourceChangeEventArgs,
     IResourceStrings as IResourceStringsCore,
-    setCurrentI18n,
     getI18nManager
 } from 'igniteui-i18n-core';
+import { Subject } from 'rxjs/internal/Subject';
+import { DestroyRef, ɵR3Injector as R3Injector } from '@angular/core';
+
+export const DEFAULT_LOCALE = 'en-US';
 
 export interface IResourceStrings extends IGridResourceStrings, ITimePickerResourceStrings, ICalendarResourceStrings,
     ICarouselResourceStrings, IChipResourceStrings, IComboResourceStrings, IInputResourceStrings, IDatePickerResourceStrings,
@@ -39,24 +42,15 @@ function igxRegisterI18n(resourceStrings: IResourceStrings, locale: string) {
     getI18nManager().registerI18n(genericResourceStrings, locale);
 }
 
-export function convertToIgxResource<T>(inObject: T) {
-    const result: any = {};
-    const memberNames = Object.getOwnPropertyNames(inObject);
-    for (const memberName of memberNames) {
-        result['igx_' + memberName] = inObject[memberName];
-    }
-    return result;
-}
-
 /** Get current resource strings based on default. Result is truncated result, containing only relevant locale strings. */
-export function getCurrentResourceStrings<T>(defaultEN: T, init = true) {
+export function getCurrentResourceStrings<T>(defaultEN: T, init = true, locale?: string) {
     const igxResourceStringKeys = Object.keys(defaultEN);
     if (init) {
         igxRegisterI18n(defaultEN, getI18nManager().defaultLocale);
     }
 
     // Append back `igx_` prefix for compatibility with older versions.
-    const resourceStrings = getCurrentResourceStringsCore();
+    const resourceStrings = getI18nManager().getCurrentResourceStrings(locale);
     const normalizedResourceStrings: T = {} as T;
     const resourceStringsKeys = Object.keys(resourceStrings);
     for (const igxKey of igxResourceStringKeys) {
@@ -75,16 +69,35 @@ export function getCurrentResourceStrings<T>(defaultEN: T, init = true) {
 }
 
 /**
+ * Bind to the i18n manager's onResourceChange event
+ * @param destroyObj Object responsible for signaling destruction of the handling object
+ * @param context Reference to the object's this context
+ */
+export function onResourceChangeHandle(destroyObj: Subject<any> | DestroyRef, callback: (event?: CustomEvent<IResourceChangeEventArgs>) => void, context: any) {
+    const onResourceChangeHandler = callback.bind(context);
+    getI18nManager().addEventListener("onResourceChange", onResourceChangeHandler);
+
+    // Handle removal of listener on context destroy
+    const removeHandler = () => {
+        getI18nManager().removeEventListener("onResourceChange", onResourceChangeHandler);
+    }
+    if (destroyObj instanceof DestroyRef || destroyObj instanceof R3Injector) {
+        // R3Injector is for tests only
+        destroyObj.onDestroy(() => removeHandler());
+    } else if (destroyObj) {
+        destroyObj.subscribe({
+            complete: () => removeHandler()
+        });
+    }
+}
+
+/**
  * Change resource strings for all components globally. The locale is not taken into account and this method should be called when the locale is changed.
- * @deprecated Please use the new `registerI18n` and `setCurrentI18n` methods instead.
  */
 export function changei18n(resourceStrings: IResourceStrings) {
     igxRegisterI18n(resourceStrings, getI18nManager().defaultLocale);
 }
 
-export function initi18n(locale: string) {
-    if (locale !== 'en-US') {
-        //Default for angular is en-US, so don't set it on the i18n manager, because can override any other locale set by the new API.
-        setCurrentI18n(locale);
-    }
+export function registerI18n(resourceStrings: IResourceStrings, locale?: string) {
+    igxRegisterI18n(resourceStrings, locale);
 }

@@ -887,6 +887,43 @@ describe('IgxInput', () => {
 
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
     }));
+
+    it('should mark the reactive form control as touched when igxInput loses focus', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ReactiveFormComponent);
+        fixture.detectChanges();
+
+        const component = fixture.componentInstance;
+        const formControl = component.form.get('str');
+        const inputDebug = fixture.debugElement.query(By.css('input[formControlName="str"]'));
+        const input = inputDebug.nativeElement;
+
+        expect(formControl.touched).toBe(false);
+
+        input.dispatchEvent(new Event('focus'));
+        fixture.detectChanges();
+
+        input.dispatchEvent(new Event('blur'));
+        tick();
+        fixture.detectChanges();
+
+        expect(formControl.touched).toBe(true);
+    }));
+
+    it('should update validity when control is marked as touched', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ReactiveFormComponent);
+        fixture.detectChanges();
+
+        const component = fixture.componentInstance;
+        const igxInput = component.strIgxInput;
+
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+
+        component.markAllAsTouched();
+        tick();
+        fixture.detectChanges();
+
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+    }));
 });
 
 @Component({
@@ -1179,6 +1216,12 @@ class ReactiveFormComponent {
 
         this.textareaControl.markAsTouched();
         this.textareaControl.updateValueAndValidity();
+    }
+
+    public markAllAsTouched() {
+        if (!this.form.valid) {
+            this.form.markAllAsTouched();
+        }
     }
 }
 

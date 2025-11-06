@@ -39,8 +39,7 @@ import { IgxCircularProgressBarComponent } from '../../progressbar/progressbar.c
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { NgTemplateOutlet, NgClass } from '@angular/common';
-import { getCurrentResourceStrings } from '../../core/i18n/resources';
-import { onResourceChangeHandle } from '../../core/utils';
+import { getCurrentResourceStrings, onResourceChangeHandle } from '../../core/i18n/resources';
 
 // TODO: Implement aria functionality
 /**

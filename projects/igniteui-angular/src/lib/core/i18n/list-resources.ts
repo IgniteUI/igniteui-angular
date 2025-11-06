@@ -1,9 +1,11 @@
-import { ListResourceStringsEN as AListResourceStrings } from 'igniteui-i18n-core';
-import { convertToIgxResource } from './resources';
+import {
+    type IListResourceStrings as IAListResourceStrings,
+    type PrefixedResourceStrings,
+    ListResourceStringsEN as AListResourceStrings,
+    IGX_PREFIX,
+    prefixResource
+} from 'igniteui-i18n-core';
 
-export interface IListResourceStrings {
-    igx_list_no_items?: string;
-    igx_list_loading?: string;
-}
+export type IListResourceStrings = PrefixedResourceStrings<IAListResourceStrings, typeof IGX_PREFIX>;
 
-export const ListResourceStringsEN: IListResourceStrings = convertToIgxResource(AListResourceStrings);
+export const ListResourceStringsEN: IListResourceStrings = prefixResource(IGX_PREFIX, AListResourceStrings);

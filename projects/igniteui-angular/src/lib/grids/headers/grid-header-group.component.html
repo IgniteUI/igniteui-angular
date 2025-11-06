@@ -65,6 +65,8 @@
         (click)="groupClicked($event)"
         (pointerenter)="onPinterEnter()"
         (pointerleave)="onPointerLeave()"
+        [style.max-width]="column.resolvedWidth"
+        [style.flex-basis]="column.resolvedWidth"
         >
         @if (column.collapsible) {
             <div class="igx-grid-th__expander" (pointerdown)="onPointerDownIndicator($event)" (click)="toggleExpandState($event)">
@@ -83,9 +85,7 @@
                     <igx-grid-header-group class="igx-grid-thead__subgroup"
                         [ngClass]="child.headerGroupClasses"
                         [ngStyle]="child.headerGroupStyles | igxHeaderGroupStyle:child:grid.pipeTrigger"
-                        [column]="child"
-                        [style.min-width]="child.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:grid.hasColumnLayouts"
-                        [style.flex-basis]="child.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:grid.hasColumnLayouts">
+                        [column]="child">
                     </igx-grid-header-group>
                 }
             }
@@ -111,12 +111,13 @@
         [ghostHost]="grid.outlet.nativeElement"
         [attr.droppable]="true"
         (pointerdown)="activate()"
+        [style.width]="column.resolvedWidth"
         [igxColumnMovingDrop]="column"
         [column]="column"
     >
     </igx-grid-header>
     @if (grid.allowFiltering && grid.filterMode === 'quickFilter') {
-        <igx-grid-filtering-cell [column]="column" [attr.draggable]="false"></igx-grid-filtering-cell>
+        <igx-grid-filtering-cell [column]="column" [attr.draggable]="false" [style.width]="column.resolvedWidth"></igx-grid-filtering-cell>
     }
     @if (!column.columnGroup && column.resizable) {
         <span class="igx-grid-th__resize-handle"

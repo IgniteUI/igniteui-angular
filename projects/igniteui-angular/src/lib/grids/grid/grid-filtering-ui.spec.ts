@@ -43,13 +43,14 @@ import {
     IgxGridExternalESFTemplateComponent,
     IgxGridDatesFilteringComponent,
     LoadOnDemandFilterStrategy,
-    IgxGridFilteringNumericComponent
+    IgxGridFilteringNumericComponent,
+    IgxGridConditionalFilteringComponent
 } from '../../test-utils/grid-samples.spec';
 import { GridSelectionMode, FilterMode, Size } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { FilteringStrategy, FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxInputGroupComponent } from '../../input-group/public_api';
-import { formatDate, getComponentSize } from '../../core/utils';
+import { getComponentSize } from '../../core/utils';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
 import { GridResourceStringsEN } from '../../core/i18n/grid-resources';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
@@ -1206,7 +1207,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('Should correctly change resource strings for filter row using Changei18n.', fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringComponent);
-            const strings = GridResourceStringsEN;
+            const strings = Object.assign({}, GridResourceStringsEN);
             strings.igx_grid_filter = 'My filter';
             strings.igx_grid_filter_row_close = 'My close';
             changei18n(strings);
@@ -5040,8 +5041,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify the results are with 'today' date.
             const filteredDate = SampleTestData.today;
-            const inputText = formatDate(filteredDate, column.pipeArgs.format, grid.locale);
-            expect((input as HTMLInputElement).value).toMatch(inputText);
+            const datePickerDebugEl = fix.debugElement.query(By.directive(IgxDatePickerComponent));
+            expect(datePickerDebugEl.componentInstance.value).toEqual(filteredDate);
 
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
@@ -5122,8 +5123,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify the results are with 'today' date.
             const filteredDate = SampleTestData.today;
-            const inputText = formatDate(filteredDate, column.pipeArgs.format, grid.locale);
-            expect((input as HTMLInputElement).value).toMatch(inputText);
+            const datePickerDebugEl = fix.debugElement.query(By.directive(IgxDatePickerComponent));
+            expect(datePickerDebugEl.componentInstance.value).toEqual(filteredDate);
 
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
@@ -5169,8 +5170,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify the results are with 'today' date.
             const filteredDate = SampleTestData.today;
-            const inputText = formatDate(filteredDate, column.pipeArgs.format, grid.locale);
-            expect((input as HTMLInputElement).value).toMatch(inputText);
+            const datePickerDebugEl = fix.debugElement.query(By.directive(IgxDatePickerComponent));
+            expect(datePickerDebugEl.componentInstance.value).toEqual(filteredDate);
 
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
@@ -5336,8 +5337,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify the results are with 'today' date.
             const filteredDate = SampleTestData.today;
-            const inputText = formatDate(filteredDate, column.pipeArgs.format, grid.locale);
-            expect((input as HTMLInputElement).value).toMatch(inputText);
+            const datePickerDebugEl = fix.debugElement.query(By.directive(IgxDatePickerComponent));
+            expect(datePickerDebugEl.componentInstance.value).toEqual(filteredDate);
 
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
@@ -5388,8 +5389,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify the results are with 'today' date.
             const filteredDate = SampleTestData.today;
-            const inputText = column.formatter(filteredDate, null);
-            expect((input as HTMLInputElement).value).toMatch(inputText);
+            const datePickerDebugEl = fix.debugElement.query(By.directive(IgxDatePickerComponent));
+            expect(datePickerDebugEl.componentInstance.value).toEqual(filteredDate);
 
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
@@ -6579,9 +6580,15 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Scroll the search list to the bottom.
             let scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
+            expect(scrollbar.scrollTop).toBe(0);
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems[0].innerText).toBe('Select All');
+
             scrollbar.scrollTop = 3000;
             await wait();
             fix.detectChanges();
+            expect(listItems[0].innerText).not.toBe('Select All');
+            expect(scrollbar.scrollTop).toBeGreaterThan(300);
 
             // Select another column
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
@@ -6589,17 +6596,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Update scrollbar
-            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
-            await wait();
-            fix.detectChanges();
-
-            // Get the display container and its parent and verify that the display container is at start
-            const displayContainer = searchComponent.querySelector('igx-display-container');
-            const displayContainerRect = displayContainer.getBoundingClientRect();
-            const parentContainerRect = displayContainer.parentElement.getBoundingClientRect();
-
-            expect(displayContainerRect.top - parentContainerRect.top <= 1).toBe(true, 'search scrollbar did not reset');
+            expect(scrollbar.scrollTop).toBe(0, 'search scrollbar did not reset');
         });
     });
 
@@ -7082,6 +7080,27 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.filteredData.length).toEqual(2);
         }));
 
+    });
+
+    describe('IgxGrid - Conditional Filter', () => {
+        let fix: ComponentFixture<IgxGridConditionalFilteringComponent>;
+        let grid: IgxGridComponent;
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridConditionalFilteringComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+            grid.filterMode = FilterMode.excelStyleFilter;
+            fix.detectChanges();
+        }));
+
+        it('Should not throw console error on opening the drop-down.', async () => {
+            spyOn(console, 'error');
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
+            fix.detectChanges();
+            await wait(100);
+
+            expect(console.error).not.toHaveBeenCalled();
+        });
     });
 });
 

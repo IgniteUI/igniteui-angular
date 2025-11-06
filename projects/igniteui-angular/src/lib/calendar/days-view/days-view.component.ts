@@ -32,6 +32,7 @@ import {
 } from "../common/helpers";
 import { CalendarDay } from '../common/model';
 import { getDateFormatter } from 'igniteui-i18n-core';
+import { BaseFormatter, I18N_FORMATTER } from '../../core/i18n/formatters/formatter-base';
 
 let NEXT_ID = 0;
 
@@ -204,10 +205,11 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     constructor(
         platform: PlatformUtil,
         @Inject(LOCALE_ID) _localeId: string,
+        @Inject(I18N_FORMATTER) _i18nFormatter: BaseFormatter,
         protected el: ElementRef,
         public override cdr: ChangeDetectorRef,
     ) {
-        super(platform, _localeId, null, cdr);
+        super(platform, _localeId, _i18nFormatter, null, cdr);
     }
 
     /**
@@ -350,7 +352,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
             });
         }
 
-        if (this.tabIndex !== -1) {
+        if (this.tabIndex !== -1 && this.platform.isBrowser && this.el?.nativeElement) {
             this.el.nativeElement.focus();
         }
 

@@ -70,7 +70,7 @@ import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTempl
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
 import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
 import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from '../../services/public_api';
-import { cloneArray, onResourceChangeHandle, PlatformUtil, resizeObservable } from '../../core/utils';
+import { cloneArray, PlatformUtil, resizeObservable } from '../../core/utils';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
 import { DataUtil, GridColumnDataType } from '../../data-operations/data-util';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
@@ -104,6 +104,8 @@ import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.compon
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
 import { IgxPivotGridRow } from  '../grid-public-row';
+import { BaseFormatter, I18N_FORMATTER } from '../../core/i18n/formatters/formatter-base';
+import { onResourceChangeHandle } from '../../core/i18n/resources';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -1035,6 +1037,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
         @Inject(LOCALE_ID) localeId: string,
+        @Inject(I18N_FORMATTER) i18nFormatter: BaseFormatter,
         platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>
     ) {
@@ -1058,12 +1061,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             overlayService,
             summaryService,
             localeId,
+            i18nFormatter,
             platform,
             _diTransactions);
-        onResourceChangeHandle(this.destroy$, () => {
-            // Since the columns are kinda static, due to assigning DisplayName on init, they need to be regenerated.
-            this.setupColumns();
-        }, this);
     }
 
     /**
@@ -1086,6 +1086,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 this.generateConfig();
             }
             this.setupColumns();
+            // Bind to onResourceChange after the columns have initialized the first time to avoid premature initialization.
+            onResourceChangeHandle(this.destroy$, () => {
+                // Since the columns are kinda static, due to assigning DisplayName on init, they need to be regenerated.
+                this.setupColumns();
+            }, this);
         });
         if (this.valueChipTemplateDirective) {
             this.valueChipTemplate = this.valueChipTemplateDirective.template;
@@ -1102,6 +1107,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         Promise.resolve().then(() => {
             super.ngAfterViewInit();
         });
+
     }
 
     /**
@@ -1168,6 +1174,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         options.outlet = this.outlet;
         if (dropdown) {
             dropdown.initialize(column, this.overlayService);
+            dropdown.populateData();
             if (shouldReatach) {
                 const id = this.overlayService.attach(dropdown.element, options);
                 dropdown.overlayComponentId = id;
@@ -2025,7 +2032,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     protected getPivotRowHeaderContentWidth(headerGroup: IgxPivotRowHeaderGroupComponent) {
-        const headerSizes = this.getHeaderCellWidth(headerGroup.header.refInstance.nativeElement);
+        const headerSizes = this.getHeaderCellWidth(headerGroup.nativeElement);
         return headerSizes.width + headerSizes.padding;
     }
 
@@ -2223,6 +2230,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             ref.instance.resizable = this.rowDimensionResizing;
             ref.instance.sortable = dim.sortable === undefined ? true : dim.sortable;
             ref.instance.width = this.rowDimensionWidth(dim);
+            ref.instance.filteringIgnoreCase = false;
             ref.changeDetectorRef.detectChanges();
             columns.push(ref.instance);
         });

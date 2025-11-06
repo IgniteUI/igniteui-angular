@@ -1,7 +1,10 @@
-import { IDateRangePickerResourceStrings, convertToIgxResource } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
 import { DateRangePickerResourceStringsDE as ADateRangePickerResourceStrings } from 'igniteui-i18n-resources';
 
 /**
  * German resource strings for IgxDateRangePicker
+ * 
+ * Note:  This is an old implementation that uses outdated API for resource management.
+ * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
-export const DateRangePickerResourceStringsDE: IDateRangePickerResourceStrings = convertToIgxResource(ADateRangePickerResourceStrings);
+export const DateRangePickerResourceStringsDE = prefixResource(IGX_PREFIX, ADateRangePickerResourceStrings);

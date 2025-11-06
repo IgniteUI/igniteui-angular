@@ -1,7 +1,6 @@
 import { Component, DestroyRef, HostBinding, inject, Input } from '@angular/core';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
-import { onResourceChangeHandle } from '../core/utils';
+import { getCurrentResourceStrings, onResourceChangeHandle } from '../core/i18n/resources';
 
 @Component({
     selector: 'igx-query-builder-header',

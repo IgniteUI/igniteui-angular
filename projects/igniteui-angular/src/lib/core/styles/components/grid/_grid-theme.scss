@@ -19,7 +19,6 @@
 /// @requires {mixin} excel-filtering
 @mixin grid($theme) {
     @include css-vars($theme);
-
     @include scale-in-ver-center();
 
     $variant: map.get($theme, '_meta', 'theme');
@@ -719,6 +718,9 @@
     %grid-display-container-tr {
         width: 100%;
         overflow: visible;
+        flex: 1;
+        // needed to override the min-width of the column headers
+        min-width: 0;
     }
 
     %grid-mrl-block {
@@ -902,8 +904,18 @@
                 map.get($grid-cell-padding-inline, 'cosy'),
                 map.get($grid-cell-padding-inline, 'comfortable')
             );
+            min-height: sizable(
+                    rem(32px),
+                    rem(40px),
+                    rem(50px)
+                );
         } @else {
             padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+            min-height: sizable(
+                    rem(32px),
+                    rem(40px),
+                    rem(48px)
+                );
 
             igx-icon {
                 opacity: if($theme-variant == 'light', .75, .85);
@@ -917,7 +929,7 @@
         }
 
         padding-block: 0;
-        flex: 1 0 auto;
+        flex: 0 0 auto;
         background: inherit;
         z-index: 4;
         cursor: move;
@@ -2736,6 +2748,19 @@
     %igx-grid__tr-action {
         &:last-of-type {
             border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+            @if $variant != 'indigo' {
+                min-height: sizable(
+                    rem(32px),
+                    rem(40px),
+                    rem(50px)
+                );
+            } @else {
+                min-height: sizable(
+                    rem(32px),
+                    rem(40px),
+                    rem(48px)
+                );
+            }
         }
     }
 
