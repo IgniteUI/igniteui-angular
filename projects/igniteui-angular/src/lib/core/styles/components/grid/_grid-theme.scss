@@ -1000,7 +1000,7 @@
         }
 
         %igx-icon--error {
-            @if $variant == 'fluent' and $theme-variant == 'light' {
+            @if $variant == 'fluent' and $theme-variant == 'light' or $variant == 'material' and $theme-variant == 'light' {
                 color: color($color: 'gray', $variant: 600);
             } @else {
                 color: color($color: 'gray', $variant: 500);
