@@ -1,8 +1,9 @@
 import { DatePart, DatePartInfo } from '../../directives/date-time-editor/date-time-editor.common';
 import { ValidationErrors } from '@angular/forms';
-import { formatDate, getLocaleDateFormat, isDate } from '../../core/utils';
+import { isDate } from '../../core/utils';
 import { DataType } from '../../data-operations/data-util';
 import { getDateFormatter } from 'igniteui-i18n-core';
+import { BaseFormatter } from '../../core/i18n/formatters/formatter-base';
 
 /** @hidden */
 const enum FormatDesc {
@@ -253,15 +254,6 @@ export abstract class DateTimeUtil {
         return getDateFormatter().getLocaleDateTimeFormat(locale, true, DateTimeUtil.getFormatOptions(dataType));
     }
 
-
-    /**
-     * Returns the date format based on a provided locale.
-     * Supports Angular's DatePipe format options such as `shortDate`, `longDate`.
-     */
-    public static getLocaleDateFormat(locale: string, displayFormat?: string): string {
-        return getLocaleDateFormat(locale, displayFormat);
-    }
-
     /** Determines if a given character is `d/M/y` or `h/m/s`. */
     public static isDateOrTimeChar(char: string): boolean {
         return DATE_CHARS.indexOf(char) !== -1 || TIME_CHARS.indexOf(char) !== -1;
@@ -490,7 +482,7 @@ export abstract class DateTimeUtil {
         return false;
     }
 
-    public static isFormatNumeric(locale: string, inputFormat: string): boolean {
+    public static isFormatNumeric(locale: string, inputFormat: string, formatter: BaseFormatter): boolean {
         const dateParts = DateTimeUtil.parseDateTimeFormat(inputFormat);
         if (predefinedNonNumericFormats.has(inputFormat) || dateParts.every(p => p.type === DatePart.Literal)) {
             return false;
@@ -499,7 +491,7 @@ export abstract class DateTimeUtil {
             if (dateParts[i].type === DatePart.AmPm || dateParts[i].type === DatePart.Literal) {
                 continue;
             }
-            const transformedValue = formatDate(new Date(), dateParts[i].format, locale);
+            const transformedValue = formatter.formatDate(new Date(), dateParts[i].format, locale);
             // check if the transformed date/time part contains any kind of letter from any language
             if (/\p{L}+/gu.test(transformedValue)) {
                 return false;
@@ -515,7 +507,7 @@ export abstract class DateTimeUtil {
      *   for the corresponding numeric date parts
      * - otherwise, return an empty string
      */
-    public static getNumericInputFormat(locale: string, format: string): string {
+    public static getNumericInputFormat(locale: string, format: string, formatter: BaseFormatter): string {
         let resultFormat = '';
         if (!format) {
             return resultFormat;
@@ -523,7 +515,7 @@ export abstract class DateTimeUtil {
         if (predefinedNumericFormats.has(format)) {
             resultFormat = DateTimeUtil.getLocaleInputFormatFromParts(locale, predefinedNumericFormats.get(format));
 
-        } else if (DateTimeUtil.isFormatNumeric(locale, format)) {
+        } else if (DateTimeUtil.isFormatNumeric(locale, format, formatter)) {
             resultFormat = format;
         }
         return resultFormat;

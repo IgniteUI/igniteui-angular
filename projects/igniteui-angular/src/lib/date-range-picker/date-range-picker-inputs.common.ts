@@ -1,16 +1,17 @@
-import { Component, ContentChild, Pipe, PipeTransform, Directive } from '@angular/core';
+import { Component, ContentChild, Pipe, PipeTransform, Directive, Inject, inject } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { IgxInputDirective, IgxInputState } from '../input-group/public_api';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputGroupBase } from '../input-group/input-group.common';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
-import { formatDate, isDate } from '../core/utils';
+import { isDate } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { NgTemplateOutlet } from '@angular/common';
+import { BaseFormatter, I18N_FORMATTER } from '../core/i18n/formatters/formatter-base';
 
 /** Represents a range between two dates. */
 export interface DateRange {
@@ -29,6 +30,8 @@ export interface CustomDateRange {
     standalone: true
 })
 export class DateRangePickerFormatPipe implements PipeTransform {
+    private i18nFormatter = inject(I18N_FORMATTER);
+
     public transform(values: DateRange, appliedFormat?: string,
         locale?: string, formatter?: (_: DateRange) => string): string {
         if (!values || !values.start && !values.end) {
@@ -44,8 +47,8 @@ export class DateRangePickerFormatPipe implements PipeTransform {
         if (!isDate(end)) {
             end = DateTimeUtil.parseIsoDate(end);
         }
-        const startDate = appliedFormat ? formatDate(start, appliedFormat, locale || 'en') : start?.toLocaleDateString();
-        const endDate = appliedFormat ? formatDate(end, appliedFormat, locale || 'en') : end?.toLocaleDateString();
+        const startDate = appliedFormat ? this.i18nFormatter.formatDate(start, appliedFormat, locale || 'en') : start?.toLocaleDateString();
+        const endDate = appliedFormat ? this.i18nFormatter.formatDate(end, appliedFormat, locale || 'en') : end?.toLocaleDateString();
         let formatted;
         if (start) {
             formatted = `${startDate} - `;
