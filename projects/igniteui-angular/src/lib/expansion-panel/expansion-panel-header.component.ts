@@ -244,7 +244,7 @@ export class IgxExpansionPanelHeaderComponent {
     }
 
     /** @hidden @internal */
-    @HostListener('keydown.Alt.ArrowDown', ['$event'])
+    @HostListener('keydown.alt.arrowdown', ['$event'])
     public openPanel(event: KeyboardEvent) {
         if (event.altKey) {
             const eventArgs: IExpansionPanelCancelableEventArgs = { event, owner: this.panel, cancel: false };
@@ -257,7 +257,7 @@ export class IgxExpansionPanelHeaderComponent {
     }
 
     /** @hidden @internal */
-    @HostListener('keydown.Alt.ArrowUp', ['$event'])
+    @HostListener('keydown.alt.arrowup', ['$event'])
     public closePanel(event: KeyboardEvent) {
         if (event.altKey) {
             const eventArgs: IExpansionPanelCancelableEventArgs = { event, owner: this.panel, cancel: false };

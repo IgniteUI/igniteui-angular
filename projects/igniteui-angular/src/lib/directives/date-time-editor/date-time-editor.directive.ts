@@ -505,7 +505,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
 
     /** @hidden @internal */
-    public override onBlur(value: string): void {
+    public override onBlur(event: FocusEvent): void {
         this._focused = false;
         if (!this.inputIsComplete() && this.inputValue !== this.emptyMask) {
             this.updateValue(this.parseDate(this.inputValue));
@@ -518,7 +518,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
             return;
         }
 
-        super.onBlur(value);
+        super.onBlur(event);
     }
 
     // the date editor sets its own inputFormat as its placeholder if none is provided

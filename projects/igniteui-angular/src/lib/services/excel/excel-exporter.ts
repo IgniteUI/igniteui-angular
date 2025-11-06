@@ -146,7 +146,12 @@ export class IgxExcelExporterService extends IgxBaseExporter {
     }
 
     private saveFile(data: Uint8Array, fileName: string): void {
-        const blob = new Blob([data], {
+        // Create a new ArrayBuffer to ensure compatibility with Blob constructor
+        const arrayBuffer = new ArrayBuffer(data.byteLength);
+        const view = new Uint8Array(arrayBuffer);
+        view.set(data);
+        
+        const blob = new Blob([arrayBuffer], {
             type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         });
 

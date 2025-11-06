@@ -638,7 +638,9 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
         // OnTouched callback
         mask.onFocus();
         expect(mockNgControl.registerOnTouchedCb).not.toHaveBeenCalled();
-        mask.onBlur('');
+        const mockBlur = new FocusEvent('blur') as FocusEvent & { target: { value: string } };
+        mockBlur.target.value = '';
+        mask.onBlur(mockBlur);
         expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
     });
 });

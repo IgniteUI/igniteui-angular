@@ -1126,7 +1126,7 @@ export class IgxSliderComponent implements
     }
 
     @HostListener('pointerdown', ['$event'])
-    private onPointerDown($event: PointerEvent) {
+    protected onPointerDown($event: PointerEvent) {
         this.findClosestThumb($event);
 
         if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
@@ -1148,7 +1148,7 @@ export class IgxSliderComponent implements
     }
 
     @HostListener('pointerup', ['$event'])
-    private onPointerUp($event: PointerEvent) {
+    protected onPointerUp($event: PointerEvent) {
         if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
             return;
         }
