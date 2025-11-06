@@ -2,8 +2,8 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxCalendarComponent } from '../../calendar/public_api';
-import { IgxButtonDirective } from '../../directives/button/button.directive';
+import { IgxCalendarComponent } from '../../../calendar/src/public_api';
+import { IgxButtonDirective } from '../../../directives/button/button.directive';
 import { IgxPickerActionsDirective } from '../picker-icons.common';
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 

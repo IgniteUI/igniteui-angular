@@ -1,5 +1,5 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { IgxGridComponent } from '../../grids/grid/grid.component';
+import { IgxGridComponent } from '../../../grids/src/grid/grid.component';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { TestMethods } from '../exporter-common/test-methods.spec';
@@ -26,15 +26,15 @@ import {
     GridCustomSummaryWithUndefinedZeroAndValidNumberComponent,
     GridCustomSummaryWithUndefinedAndNullComponent,
     GridCustomSummaryWithDateComponent
-} from '../../test-utils/grid-samples.spec';
-import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+} from '../../../core/src/test-utils/grid-samples.spec';
+import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridSummariesKeyComponent } from '../../test-utils/tree-grid-components.spec';
-import { IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
+import { IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridSummariesKeyComponent } from '../../../core/src/test-utils/tree-grid-components.spec';
+import { IgxTreeGridComponent } from '../../../grids/src/tree-grid/public_api';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
@@ -43,12 +43,12 @@ import { IgxHierarchicalGridExportComponent,
          IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
          IgxHierarchicalGridMultiColumnHeadersExportComponent,
          IgxHierarchicalGridSummariesExportComponent
-} from '../../test-utils/hierarchical-grid-components.spec';
-import { IgxHierarchicalGridComponent } from '../../grids/hierarchical-grid/public_api';
-import { IgxHierarchicalRowComponent } from '../../grids/hierarchical-grid/hierarchical-row.component';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent, SALES_DATA } from '../../test-utils/pivot-grid-samples.spec';
-import { IgxPivotGridComponent, IgxPivotNumericAggregate, PivotRowLayoutType } from '../../grids/pivot-grid/public_api';
+} from '../../../core/src/test-utils/hierarchical-grid-components.spec';
+import { IgxHierarchicalGridComponent } from '../../../grids/src/hierarchical-grid/public_api';
+import { IgxHierarchicalRowComponent } from '../../../grids/src/hierarchical-grid/hierarchical-row.component';
+import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent, SALES_DATA } from '../../../core/src/test-utils/pivot-grid-samples.spec';
+import { IgxPivotGridComponent, IgxPivotNumericAggregate, PivotRowLayoutType } from '../../../grids/src/pivot-grid/public_api';
 
 describe('Excel Exporter', () => {
     let exporter: IgxExcelExporterService;

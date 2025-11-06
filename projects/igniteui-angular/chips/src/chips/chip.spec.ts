@@ -6,7 +6,7 @@ import { IgxChipsAreaComponent } from './chips-area.component';
 import { IgxPrefixDirective } from './../directives/prefix/prefix.directive';
 import { IgxLabelDirective } from './../directives/label/label.directive';
 import { IgxSuffixDirective } from './../directives/suffix/suffix.directive';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { getComponentSize } from 'igniteui-angular/core';

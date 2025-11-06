@@ -24,7 +24,7 @@ import {
     weekDay,
     WEEKDAYS,
 } from "./public_api";
-import { UIInteractions } from "../test-utils/ui-interactions.spec";
+import { UIInteractions } from "../../../core/src/test-utils/ui-interactions.spec";
 import {
     DateRangeDescriptor,
     DateRangeType,

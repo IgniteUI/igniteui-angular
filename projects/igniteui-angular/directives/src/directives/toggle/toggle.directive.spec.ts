@@ -7,7 +7,7 @@ import {
     IgxOverlayService, OverlaySettings, ConnectedPositioningStrategy,
     AbsoluteScrollStrategy, AutoPositionStrategy, HorizontalAlignment
 } from '../../services/public_api';
-import { CancelableEventArgs } from '../../core/utils';
+import { CancelableEventArgs } from '../../../core/utils';
 
 import { first } from 'rxjs/operators';
 import { OffsetMode } from '../../services/overlay/utilities';

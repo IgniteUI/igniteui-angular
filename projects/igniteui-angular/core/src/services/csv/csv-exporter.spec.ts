@@ -2,7 +2,7 @@ import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxCsvExporterService } from './csv-exporter';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
-import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 
 describe('CSV exporter', () => {

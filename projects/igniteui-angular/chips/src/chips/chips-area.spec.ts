@@ -3,7 +3,7 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
-import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
+import { wait, UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxPrefixDirective } from './public_api';
 

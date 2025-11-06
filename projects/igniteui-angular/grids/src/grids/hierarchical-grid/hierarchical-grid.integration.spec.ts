@@ -2,7 +2,7 @@ import { TestBed, tick, fakeAsync, ComponentFixture, waitForAsync } from '@angul
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
@@ -14,13 +14,13 @@ import {
     IgxHierarchicalGridTestInputPaginatorComponent,
     IgxHierarchicalGridTestInputToolbarComponent,
     IgxHierarchicalGridWithTransactionProviderComponent
-} from '../../test-utils/hierarchical-grid-components.spec';
-import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
-import { HierarchicalGridFunctions } from '../../test-utils/hierarchical-grid-functions.spec';
+} from '../../../core/src/test-utils/hierarchical-grid-components.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { HierarchicalGridFunctions } from '../../../core/src/test-utils/hierarchical-grid-functions.spec';
 import { GridSelectionMode, ColumnPinningPosition, RowPinningPosition, Size } from '../common/enums';
-import { IgxPaginatorComponent } from '../../paginator/paginator.component';
-import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { setElementSize } from '../../test-utils/helper-utils.spec';
+import { IgxPaginatorComponent } from '../../../paginator/src/paginator.component';
+import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
+import { setElementSize } from '../../../core/src/test-utils/helper-utils.spec';
 
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
     let fixture: ComponentFixture<IgxHierarchicalGridTestBaseComponent>;

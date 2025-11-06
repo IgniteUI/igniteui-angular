@@ -14,11 +14,11 @@ import {
     TabsTest2Component, TabsTestBug4420Component, TabsTestComponent, TabsTestCustomStylesComponent,
     TabsTestHtmlAttributesComponent, TabsTestSelectedTabComponent, TabsWithPrefixSuffixTestComponent,
     TemplatedTabsTestComponent
-} from '../../test-utils/tabs-components.spec';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+} from '../../../core/src/test-utils/tabs-components.spec';
+import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
 import { IgxTabContentComponent } from './tab-content.component';
-import { RoutingTestGuard } from '../../test-utils/routing-test-guard.spec';
-import { RoutingView1Component, RoutingView2Component, RoutingView3Component, RoutingView4Component, RoutingView5Component } from '../../test-utils/routing-view-components.spec';
+import { RoutingTestGuard } from '../../../core/src/test-utils/routing-test-guard.spec';
+import { RoutingView1Component, RoutingView2Component, RoutingView3Component, RoutingView4Component, RoutingView5Component } from '../../../core/src/test-utils/routing-view-components.spec';
 
 const KEY_RIGHT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true });
 const KEY_LEFT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true });

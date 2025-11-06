@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 import {  NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxGridComponent } from './grid.component';
-import { IgxChipComponent } from '../../chips/public_api';
+import { IgxChipComponent } from '../../../chips/src/public_api';
 import {
     IgxStringFilteringOperand,
     IgxNumberFilteringOperand,
@@ -13,9 +13,9 @@ import {
     IgxDateTimeFilteringOperand
 } from '../../data-operations/filtering-condition';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
-import { IgxGridFilteringComponent, CustomFilter, IgxGridFilteringBindingComponent } from '../../test-utils/grid-samples.spec';
+import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
+import { GridFunctions, GridSummaryFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { IgxGridFilteringComponent, CustomFilter, IgxGridFilteringBindingComponent } from '../../../core/src/test-utils/grid-samples.spec';
 import { NoopFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { ExpressionUI } from '../filtering/excel-style/common';
 

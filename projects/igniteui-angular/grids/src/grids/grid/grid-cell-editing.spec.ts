@@ -2,15 +2,15 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import {
     CellEditingTestComponent, CellEditingScrollTestComponent,
     SelectionWithTransactionsComponent,
     ColumnEditablePropertyTestComponent,
     CellEditingCustomEditorTestComponent
-} from '../../test-utils/grid-samples.spec';
+} from '../../../core/src/test-utils/grid-samples.spec';
 import { DebugElement } from '@angular/core';
 import { first, takeUntil } from 'rxjs/operators';
 import { Subject, fromEvent } from 'rxjs';

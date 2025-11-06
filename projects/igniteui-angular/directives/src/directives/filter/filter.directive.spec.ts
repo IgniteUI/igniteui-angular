@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixtureAutoDetect, TestBed, waitForAsync } from '@angular/core/testing';
-import { IgxListItemComponent } from '../../list/list-item.component';
-import { IgxListComponent } from '../../list/list.component';
+import { IgxListItemComponent } from '../../../list/src/list-item.component';
+import { IgxListComponent } from '../../../list/src/list.component';
 import { IgxFilterDirective, IgxFilterOptions, IgxFilterPipe } from './filter.directive';
 
 describe('Filter', () => {

@@ -7,10 +7,10 @@ import {
     IgxTreeGridSummariesTransactionsComponent,
     IgxTreeGridSummariesScrollingComponent,
     IgxTreeGridSummariesKeyScroliingComponent
-} from '../../test-utils/tree-grid-components.spec';
-import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
-import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { GridSummaryFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
+} from '../../../core/src/test-utils/tree-grid-components.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../../core/src/test-utils/helper-utils.spec';
+import { wait, UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
+import { GridSummaryFunctions, GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';

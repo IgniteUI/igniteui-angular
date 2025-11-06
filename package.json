@@ -90,7 +90,7 @@
     "@angular-eslint/schematics": "^20.4.0",
     "@angular-eslint/template-parser": "^20.4.0",
     "@angular/build": "^20.3.6",
-    "@angular/cli": "^20.3.6",
+    "@angular/cli": "^20.3.9",
     "@angular/compiler-cli": "^20.3.6",
     "@angular/language-service": "^20.3.6",
     "@angularclass/hmr": "^3.0.0",

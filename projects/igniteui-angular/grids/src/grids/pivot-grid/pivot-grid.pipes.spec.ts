@@ -3,7 +3,7 @@ import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from './pivot-grid-aggregate';
 import { IPivotConfiguration } from './pivot-grid.interface';
 import { IgxPivotAutoTransform, IgxPivotColumnPipe, IgxPivotRowExpansionPipe, IgxPivotRowPipe } from './pivot-grid.pipes';
-import { PivotGridFunctions } from '../../test-utils/pivot-grid-functions.spec';
+import { PivotGridFunctions } from '../../../core/src/test-utils/pivot-grid-functions.spec';
 import { DATA } from 'src/app/shared/pivot-data';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 

@@ -3,24 +3,24 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGridCreatedEventArgs } from './public_api';
 import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, QueryList } from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../public_api';
 import { GridSelectionMode, Size } from '../common/enums';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from '../cell.component';
-import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxIconComponent } from '../../../icon/src/icon.component';
 import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/excel-style-filtering.component';
 import { IgxExcelStyleHeaderComponent } from '../filtering/excel-style/excel-style-header.component';
 import { IgxExcelStyleSortingComponent } from '../filtering/excel-style/excel-style-sorting.component';
 import { IgxExcelStyleSearchComponent } from '../filtering/excel-style/excel-style-search.component';
 import { IgxCellHeaderTemplateDirective } from '../columns/templates.directive';
 import { CellType, ColumnType, IGridCellEventArgs, IgxColumnComponent, IgxColumnGroupComponent, IgxRowEditActionsDirective, IgxRowEditTextDirective } from '../public_api';
-import { getComponentSize } from '../../core/utils';
-import { setElementSize } from '../../test-utils/helper-utils.spec';
+import { getComponentSize } from '../../../core/utils';
+import { setElementSize } from '../../../core/src/test-utils/helper-utils.spec';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
 

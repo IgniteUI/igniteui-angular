@@ -2,10 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, flushMicrotasks, waitForAsync } from '@angular/core/testing';
 import { ButtonGroupAlignment, IgxButtonGroupComponent } from './buttonGroup.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { IgxButtonDirective } from 'igniteui-angular/directives';
-import { IgxRadioGroupDirective } from 'igniteui-angular/directives';
-import { IgxRadioComponent } from '../radio/radio.component';
+import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
+import { IgxButtonDirective } from 'igniteui-angular/radio';
+import { IgxRadioGroupDirective } from 'igniteui-angular/radio';
+import { IgxRadioComponent } from '../../../radio/src/radio/radio.component';
 
 interface IButton {
     type?: string;

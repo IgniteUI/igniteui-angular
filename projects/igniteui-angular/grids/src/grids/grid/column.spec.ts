@@ -6,8 +6,8 @@ import localeFr from '@angular/common/locales/fr';
 import localeJa from '@angular/common/locales/ja';
 
 import { IgxGridComponent } from './grid.component';
-import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
-import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { GridTemplateStrings, ColumnDefinitions } from '../../../core/src/test-utils/template-strings.spec';
+import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
 import {
     ColumnHiddenFromMarkupComponent,
     ColumnCellFormatterComponent,
@@ -16,18 +16,18 @@ import {
     IgxGridCurrencyColumnComponent,
     IgxGridPercentColumnComponent,
     IgxGridDateTimeColumnComponent
-} from '../../test-utils/grid-samples.spec';
+} from '../../../core/src/test-utils/grid-samples.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
-import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
+import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
+import { GridFunctions, GridSummaryFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { IgxDateTimeEditorDirective } from '../../../directives/date-time-editor/date-time-editor.directive';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { IgxColumnComponent } from '../public_api';
-import { IgxButtonDirective } from '../../directives/button/button.directive';
+import { IgxButtonDirective } from '../../../directives/button/button.directive';
 import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxSummaryTemplateDirective } from '../columns/templates.directive';
-import { IgxInputDirective } from '../../input-group/public_api';
+import { IgxInputDirective } from '../../../input-group/src/public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 
 describe('IgxGrid - Column properties #grid', () => {

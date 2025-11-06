@@ -4,11 +4,11 @@ import { Component, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { By } from '@angular/platform-browser';
-import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { wait } from '../../test-utils/ui-interactions.spec';
+import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
+import { wait } from '../../../core/src/test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { ICellPosition } from '../common/events';
-import { GridFunctions, GRID_MRL_BLOCK } from '../../test-utils/grid-functions.spec';
+import { GridFunctions, GRID_MRL_BLOCK } from '../../../core/src/test-utils/grid-functions.spec';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 

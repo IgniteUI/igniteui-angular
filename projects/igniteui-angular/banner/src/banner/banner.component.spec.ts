@@ -5,8 +5,8 @@ import { IgxBannerComponent } from './banner.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxBannerActionsDirective } from './banner.directives';
-import { IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent } from '../card/card.component';
-import { IgxAvatarComponent } from '../avatar/avatar.component';
+import { IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent } from '../../../card/src/card/card.component';
+import { IgxAvatarComponent } from '../../../avatar/src/avatar/avatar.component';
 
 const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';
 const CSS_CLASS_EXPANSION_PANEL_BODY = 'igx-expansion-panel__body';

@@ -8,25 +8,25 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../columns/column.component';
-import { IForOfState } from '../../directives/for-of/for_of.directive';
+import { IForOfState } from '../../../directives/for-of/for_of.directive';
 import { GridColumnDataType } from '../../data-operations/data-util';
-import { GridTemplateStrings } from '../../test-utils/template-strings.spec';
-import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { BasicGridComponent } from '../../test-utils/grid-base-components.spec';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { GridTemplateStrings } from '../../../core/src/test-utils/template-strings.spec';
+import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
+import { BasicGridComponent } from '../../../core/src/test-utils/grid-base-components.spec';
+import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { GridSelectionMode, Size } from '../common/enums';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
-import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from '../../tabs/tabs/public_api';
+import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from '../../../tabs/src/tabs/public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
-import { GRID_SCROLL_CLASS, GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GRID_SCROLL_CLASS, GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { AsyncPipe } from '@angular/common';
-import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../../paginator/paginator.component';
+import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../../../paginator/src/paginator.component';
 import { IGridRowEventArgs, IgxColumnGroupComponent, IgxGridEmptyTemplateDirective, IgxGridFooterComponent, IgxGridLoadingTemplateDirective, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
-import { getComponentSize } from '../../core/utils';
-import { setElementSize, ymd } from '../../test-utils/helper-utils.spec';
+import { getComponentSize } from '../../../core/utils';
+import { setElementSize, ymd } from '../../../core/src/test-utils/helper-utils.spec';
 
 
 describe('IgxGrid Component Tests #grid', () => {

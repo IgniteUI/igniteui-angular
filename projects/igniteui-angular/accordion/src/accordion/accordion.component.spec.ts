@@ -3,8 +3,8 @@ import { Component, ViewChild } from '@angular/core';
 import { waitForAsync, TestBed, fakeAsync, ComponentFixture, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective } from '../expansion-panel/public_api';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective } from '../../../expansion-panel/src/public_api';
+import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
 import { IAccordionCancelableEventArgs, IAccordionEventArgs, IgxAccordionComponent } from './accordion.component';
 import { slideInLeft, slideOutRight } from 'igniteui-angular/animations';
 

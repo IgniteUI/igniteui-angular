@@ -8,8 +8,8 @@ import { By } from '@angular/platform-browser';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
-import { GridSummaryFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
-import { wait } from '../../test-utils/ui-interactions.spec';
+import { GridSummaryFunctions, GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { wait } from '../../../core/src/test-utils/ui-interactions.spec';
 import { DropPosition } from '../moving/moving.service';
 import { OneGroupOneColGridComponent, OneGroupThreeColsGridComponent,
     BlueWhaleGridComponent, ColumnGroupTestComponent, ColumnGroupFourLevelTestComponent,
@@ -18,7 +18,7 @@ import { OneGroupOneColGridComponent, OneGroupThreeColsGridComponent,
     OneColPerGroupGridComponent, NestedColumnGroupsGridComponent,
     DynamicGridComponent, NestedColGroupsWithTemplatesGridComponent,
     DynamicColGroupsGridComponent,
-    ColumnGroupHiddenInTemplateComponent} from '../../test-utils/grid-mch-sample.spec';
+    ColumnGroupHiddenInTemplateComponent} from '../../../core/src/test-utils/grid-mch-sample.spec';
 import { CellType } from '../common/grid.interface';
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid-th__title';

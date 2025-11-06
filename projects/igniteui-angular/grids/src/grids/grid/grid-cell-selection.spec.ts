@@ -7,13 +7,13 @@ import {
     CellSelectionNoneComponent,
     CellSelectionSingleComponent,
     IgxGridRowEditingWithoutEditableColumnsComponent
-} from '../../test-utils/grid-samples.spec';
+} from '../../../core/src/test-utils/grid-samples.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../../core/src/test-utils/helper-utils.spec';
 import { GridSelectionMode } from '../common/enums';
 
-import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSelectionFunctions, GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { DebugElement } from '@angular/core';
 import { DropPosition } from '../moving/moving.service';

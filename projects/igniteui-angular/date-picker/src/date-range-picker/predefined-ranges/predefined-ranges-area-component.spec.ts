@@ -2,10 +2,10 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { IgxPredefinedRangesAreaComponent } from './predefined-ranges-area.component';
-import { CalendarDay } from '../../calendar/common/model';
+import { CalendarDay } from '../../../calendar/src/common/model';
 import { CustomDateRange } from '../date-range-picker-inputs.common';
-import { IDateRangePickerResourceStrings } from '../../core/i18n/date-range-picker-resources';
-import { IgxChipComponent } from '../../chips/chip.component';
+import { IDateRangePickerResourceStrings } from '../../../core/i18n/date-range-picker-resources';
+import { IgxChipComponent } from '../../../chips/src/chip.component';
 import { IgxChipsModule } from 'igniteui-angular/chips';;
 import { Component, ViewChild } from '@angular/core';
 

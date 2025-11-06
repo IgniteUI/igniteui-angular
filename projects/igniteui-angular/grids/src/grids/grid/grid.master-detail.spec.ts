@@ -2,19 +2,19 @@ import { Component, ViewChild, OnInit, DebugElement, QueryList, TemplateRef, Con
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { UIInteractions, wait, waitForActiveNodeChange } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait, waitForActiveNodeChange } from '../../../core/src/test-utils/ui-interactions.spec';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './grid-row.component';
-import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
+import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { IgxGridExpandableCellComponent } from './expandable-cell.component';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxInputDirective, IgxInputGroupComponent } from '../../input-group/public_api';
+import { IgxInputDirective, IgxInputGroupComponent } from '../../../input-group/src/public_api';
 import { GridSummaryCalculationMode, GridSummaryPosition, GridSelectionMode } from '../common/enums';
-import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
-import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { IgxCheckboxComponent } from '../../../checkbox/src/checkbox.component';
+import { clearGridSubs, setupGridScrollDetection } from '../../../core/src/test-utils/helper-utils.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { IgxPaginatorComponent } from '../../paginator/paginator.component';
+import { IgxPaginatorComponent } from '../../../paginator/src/paginator.component';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { CellType, IgxColumnComponent, IgxGridDetailTemplateDirective } from '../public_api';
 

@@ -1,4 +1,4 @@
-import { DateRangeType } from '../../core/dates/dateRange';
+import { DateRangeType } from '../../../core/dates/dateRange';
 import { calendarRange, isDateInRanges } from "./helpers";
 import { CalendarDay } from "./model";
 

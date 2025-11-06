@@ -1,7 +1,7 @@
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxBooleanFilteringOperand } from '../../data-operations/filtering-condition';
 import {
     RowSelectionComponent,
@@ -10,9 +10,9 @@ import {
     RowSelectionWithoutPrimaryKeyComponent,
     SelectionWithTransactionsComponent,
     GridCustomSelectorsComponent
-} from '../../test-utils/grid-samples.spec';
-import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
-import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+} from '../../../core/src/test-utils/grid-samples.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
 import { GridSelectionMode } from '../common/enums';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';

@@ -1,10 +1,10 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxTreeGridSortingComponent } from '../../test-utils/tree-grid-components.spec';
-import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
+import { IgxTreeGridSortingComponent } from '../../../core/src/test-utils/tree-grid-components.spec';
+import { TreeGridFunctions } from '../../../core/src/test-utils/tree-grid-functions.spec';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 
 describe('IgxTreeGrid - Sorting #tGrid', () => {
     let fix;

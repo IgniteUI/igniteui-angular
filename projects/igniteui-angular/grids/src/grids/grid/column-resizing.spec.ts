@@ -2,18 +2,18 @@ import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Calendar } from '../../calendar/public_api';
+import { Calendar } from '../../../calendar/src/public_api';
 import { IgxGridComponent } from './grid.component';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
-import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { MultiColumnHeadersComponent } from '../../test-utils/grid-samples.spec';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
+import { GridTemplateStrings, ColumnDefinitions } from '../../../core/src/test-utils/template-strings.spec';
+import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
+import { MultiColumnHeadersComponent } from '../../../core/src/test-utils/grid-samples.spec';
+import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective } from '../columns/templates.directive';
-import { IgxAvatarComponent } from '../../avatar/avatar.component';
+import { IgxAvatarComponent } from '../../../avatar/src/avatar.component';
 import { IColumnResizeEventArgs, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent } from '../public_api';
 import { Size } from "../common/enums";
-import { setElementSize } from '../../test-utils/helper-utils.spec';
+import { setElementSize } from '../../../core/src/test-utils/helper-utils.spec';
 import { IgxColumnResizerDirective } from '../resizing/resizer.directive';
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {

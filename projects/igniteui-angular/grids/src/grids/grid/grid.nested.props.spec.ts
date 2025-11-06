@@ -2,11 +2,11 @@ import { TestBed, ComponentFixture, fakeAsync, waitForAsync } from '@angular/cor
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { cloneArray, columnFieldPath, resolveNestedPath } from '../../core/utils';
+import { cloneArray, columnFieldPath, resolveNestedPath } from '../../../core/utils';
 import { Component, DebugElement, ViewChild } from '@angular/core';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { IgxComboComponent } from '../../combo/public_api';
+import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
+import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { IgxComboComponent } from '../../../combo/src/public_api';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IGridEditEventArgs, IgxColumnComponent } from '../public_api';
 import { IgxCellEditorTemplateDirective, IgxCellTemplateDirective } from '../columns/templates.directive';

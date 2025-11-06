@@ -1,9 +1,9 @@
 import { TestBed, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestBaseComponent } from '../../test-utils/pivot-grid-samples.spec';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestBaseComponent } from '../../../core/src/test-utils/pivot-grid-samples.spec';
+import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
 import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { DebugElement } from '@angular/core';

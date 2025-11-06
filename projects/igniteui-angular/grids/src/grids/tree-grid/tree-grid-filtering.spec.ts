@@ -2,15 +2,15 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridComponent } from './public_api';
-import { IgxTreeGridFilteringComponent, IgxTreeGridFilteringESFTemplatesComponent, IgxTreeGridFilteringRowEditingComponent } from '../../test-utils/tree-grid-components.spec';
-import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
+import { IgxTreeGridFilteringComponent, IgxTreeGridFilteringESFTemplatesComponent, IgxTreeGridFilteringRowEditingComponent } from '../../../core/src/test-utils/tree-grid-components.spec';
+import { TreeGridFunctions } from '../../../core/src/test-utils/tree-grid-functions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../data-operations/filtering-condition';
 import { FilteringStrategy } from '../../data-operations/filtering-strategy';
 import { TreeGridFilteringStrategy, TreeGridFormattedValuesFilteringStrategy, TreeGridMatchingRecordsOnlyFilteringStrategy } from './tree-grid.filtering.strategy';
 import { FilterMode } from '../common/enums';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
+import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
 import { By } from '@angular/platform-browser';
 import { GridColumnDataType } from '../../data-operations/data-util';
 

@@ -5,7 +5,7 @@ import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand, Ig
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxChipComponent } from 'igniteui-angular/chips';;
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
 import { QueryBuilderSelectors } from './query-builder.common';
 
 export const SampleEntities = [

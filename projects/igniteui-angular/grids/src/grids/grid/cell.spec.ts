@@ -2,14 +2,14 @@ import { Component, ViewChild, OnInit, NgZone, DebugElement } from '@angular/cor
 import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { HammerGesturesManager } from '../../core/touch';
-import { PlatformUtil } from '../../core/utils';
+import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
+import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
+import { HammerGesturesManager } from '../../../core/touch';
+import { PlatformUtil } from '../../../core/utils';
 import { VirtualGridComponent, NoScrollsComponent,
-    NoColumnWidthGridComponent, IgxGridDateTimeColumnComponent } from '../../test-utils/grid-samples.spec';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { TestNgZone } from '../../test-utils/helper-utils.spec';
+    NoColumnWidthGridComponent, IgxGridDateTimeColumnComponent } from '../../../core/src/test-utils/grid-samples.spec';
+import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { TestNgZone } from '../../../core/src/test-utils/helper-utils.spec';
 import { CellType } from '../common/grid.interface';
 import { IGridCellEventArgs, IgxColumnComponent } from '../public_api';
 

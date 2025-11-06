@@ -1,8 +1,8 @@
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ProductsComponent, ColumnSelectionGroupTestComponent } from '../../test-utils/grid-samples.spec';
-import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
+import { ProductsComponent, ColumnSelectionGroupTestComponent } from '../../../core/src/test-utils/grid-samples.spec';
+import { GridSelectionFunctions, GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IColumnSelectionEventArgs } from '../common/events';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';

@@ -8,10 +8,10 @@ import {
     IgxTreeGridRowEditingTransactionComponent,
     IgxTreeGridRowEditingHierarchicalDSTransactionComponent,
     IgxTreeGridRowPinningComponent
-} from '../../test-utils/tree-grid-components.spec';
+} from '../../../core/src/test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { TreeGridFunctions } from '../../../core/src/test-utils/tree-grid-functions.spec';
+import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';

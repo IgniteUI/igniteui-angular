@@ -4,13 +4,13 @@ import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveForm
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTimePickerComponent, IgxTimePickerValidationFailedEventArgs } from './time-picker.component';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
 import {
     IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
 } from '../input-group/public_api';
 import { PickerInteractionMode } from '../date-common/types';
 import { PlatformUtil } from 'igniteui-angular/core';
-import { DatePart, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
+import { DatePart, IgxDateTimeEditorDirective } from 'igniteui-angular/radio';
 import { IgxItemListDirective, IgxTimeItemDirective } from './time-picker.directives';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-common/public_api';
 import { Subscription } from 'rxjs';

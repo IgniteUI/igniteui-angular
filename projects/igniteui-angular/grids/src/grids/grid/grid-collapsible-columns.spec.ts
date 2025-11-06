@@ -5,9 +5,9 @@ import {
     CollapsibleColumnGroupTestComponent,
     CollapsibleGroupsTemplatesTestComponent,
     CollapsibleGroupsDynamicColComponent
-} from '../../test-utils/grid-samples.spec';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+} from '../../../core/src/test-utils/grid-samples.spec';
+import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
 import { DropPosition } from '../moving/moving.service';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';

@@ -3,10 +3,10 @@ import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { IgxMaskDirective } from './mask.directive';
 
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
 import { Replaced } from './mask-parsing.service';
 import { By } from '@angular/platform-browser';
-import { IgxInputGroupComponent } from '../../input-group/input-group.component';
+import { IgxInputGroupComponent } from '../../../input-group/src/input-group.component';
 import { IgxInputDirective } from '../input/input.directive';
 
 describe('igxMask', () => {

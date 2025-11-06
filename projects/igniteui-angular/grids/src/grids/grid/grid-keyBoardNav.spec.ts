@@ -3,15 +3,15 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IGridCellEventArgs, IActiveNodeChangeEventArgs } from '../common/events';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../../core/src/test-utils/helper-utils.spec';
 import {
     VirtualGridComponent,
     NoScrollsComponent,
     IgxGridGroupByComponent
-} from '../../test-utils/grid-samples.spec';
+} from '../../../core/src/test-utils/grid-samples.spec';
 
-import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { DebugElement, QueryList } from '@angular/core';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { CellType } from '../common/grid.interface';
