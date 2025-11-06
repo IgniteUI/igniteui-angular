@@ -1,11 +1,11 @@
-import {
-    type IInputResourceStrings as IAInputResourceStrings,
-    type PrefixedResourceStrings,
-    InputResourceStringsEN as AInputResourceStrings,
-    IGX_PREFIX,
-    prefixResource
-} from 'igniteui-i18n-core';
+import { FileInputResourceStringsEN } from 'igniteui-i18n-core';
 
-export type IInputResourceStrings = PrefixedResourceStrings<IAInputResourceStrings, typeof IGX_PREFIX>;
+export interface IInputResourceStrings {
+    igx_input_upload_button?: string;
+    igx_input_file_placeholder?: string;
+};
 
-export const InputResourceStringsEN: IInputResourceStrings = prefixResource(IGX_PREFIX, AInputResourceStrings);
+export const InputResourceStringsEN: IInputResourceStrings = {
+    igx_input_upload_button: FileInputResourceStringsEN.file_input_upload_button,
+    igx_input_file_placeholder: FileInputResourceStringsEN.file_input_placeholder
+};

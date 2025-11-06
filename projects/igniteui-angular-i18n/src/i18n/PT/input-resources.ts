@@ -1,10 +1,12 @@
-import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
-import { InputResourceStringsPT as AInputResourceStrings } from 'igniteui-i18n-resources';
+import { FileInputResourceStringsPT as AInputResourceStrings } from 'igniteui-i18n-resources';
 
 /**
  * Portuguese resource strings for IgxInput
- * 
+ *
  * Note:  This is an old implementation that uses outdated API for resource management.
  * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
-export const InputResourceStringsPT = prefixResource(IGX_PREFIX, AInputResourceStrings);
+export const InputResourceStringsPT = {
+    igx_input_upload_button: AInputResourceStrings.file_input_upload_button,
+    igx_input_file_placeholder: AInputResourceStrings.file_input_placeholder
+};
