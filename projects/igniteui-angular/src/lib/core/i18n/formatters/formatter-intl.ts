@@ -74,11 +74,8 @@ export class IntlFormatter extends BaseFormatter {
         return this.formatNumberGeneric(value, "currency", locale, digitsInfo, currencyCode, display);
     }
 
-    public override getCurrencyCode(locale: string, overrideCode?: string): string {
-        if (overrideCode) {
-            return overrideCode;
-        }
-        return 'USD';
+    public override getCurrencyCode(_locale: string, overrideCode?: string): string {
+        return overrideCode ?? 'USD';
     }
 
     public override getCurrencySymbol(currencyCode: string, locale?: string, currencyDisplay: keyof Intl.NumberFormatOptionsCurrencyDisplayRegistry = "symbol"): string {

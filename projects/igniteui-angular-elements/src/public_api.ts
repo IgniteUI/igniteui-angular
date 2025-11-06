@@ -62,6 +62,4 @@ export {
     // i18n
     registerI18n,
     setCurrentI18n,
-    getCurrentI18n,
-    getCurrentResourceStrings
 }

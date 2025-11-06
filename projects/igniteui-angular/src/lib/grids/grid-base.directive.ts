@@ -3562,6 +3562,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         /** @hidden @internal */
         public summaryService: IgxGridSummaryService,
         @Inject(LOCALE_ID) private localeId: string,
+        /** @hidden @internal */
         @Inject(I18N_FORMATTER) public i18nFormatter: BaseFormatter,
         protected platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>,
