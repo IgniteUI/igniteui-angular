@@ -5,31 +5,6 @@
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
-/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-@function pivot-data-selector-theme(
-    $schema: $light-material-schema,
-    $background: null
-) {
-    $name: 'igx-pivot-data-selector';
-    $selector: '.igx-pivot-data-selector';
-    $pivot-data-selector-schema: ();
-
-    @if map.has-key($schema, 'pivot-data-selector') {
-        $pivot-data-selector-schema: map.get($schema, 'pivot-data-selector');
-    } @else {
-        $pivot-data-selector-schema: $schema;
-    }
-
-    $theme: digest-schema($pivot-data-selector-schema);
-
-    @return extend($theme, (
-        name: $name,
-        selector: $selector,
-    ));
-}
-
-/// @deprecated Use the `css-vars` mixin instead.
-/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin pivot-data-selector($theme) {
     @include css-vars($theme);
