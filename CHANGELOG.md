@@ -3,6 +3,20 @@
 All notable changes for each version of this project will be documented in this file.
 
 
+## 20.2.0
+
+### New Features
+
+- `IgxTooltipTarget`
+    - Added new properties:
+      - `showTriggers` - Which event triggers will show the tooltip. Expects a comma-separated string of different event triggers. Defaults to `pointerenter`.
+      - `hideTriggers` - Which event triggers will hide the tooltip. Expects a comma-separated string of different event triggers. Defaults to `pointerleave` and `click`.
+
+      ```html
+      <igx-icon [igxTooltipTarget]="tooltipRef" [showTriggers]="'click,focus'" [hideTriggers]="'keypress,blur'">info</igx-icon>
+      <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+      ```
+
 ## 20.1.0
 
 ### New Features

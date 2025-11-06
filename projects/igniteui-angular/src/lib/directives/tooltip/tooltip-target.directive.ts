@@ -235,7 +235,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     /**
      * Which event triggers will show the tooltip.
-     * Expects a comma separate string of different event triggers.
+     * Expects a comma-separated string of different event triggers.
      * Defaults to `pointerenter`.
      * ```html
      * <igx-icon [igxTooltipTarget]="tooltipRef" [showTriggers]="'click,focus'">info</igx-icon>
@@ -255,7 +255,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     /**
      * Which event triggers will hide the tooltip.
-     * Expects a comma separate string of different event triggers.
+     * Expects a comma-separated string of different event triggers.
      * Defaults to `pointerleave` and `click`.
      * ```html
      * <igx-icon [igxTooltipTarget]="tooltipRef" [hideTriggers]="'keypress,blur'">info</igx-icon>
