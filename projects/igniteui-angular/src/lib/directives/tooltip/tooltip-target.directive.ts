@@ -410,7 +410,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * @hidden
      */
-    public onHide() : void {
+    public onHide(): void {
         if (this.tooltipDisabled || this.target.collapsed) {
             return;
         }
@@ -506,8 +506,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
 
     private removeEventListeners(): void {
-      this._abortController.abort();
-      this._abortController = new AbortController();
+        this._abortController.abort();
+        this._abortController = new AbortController();
     }
 
     private _checkOutletAndOutsideClick(): void {
