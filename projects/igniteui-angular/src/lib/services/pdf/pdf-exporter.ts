@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { jsPDF } from 'jspdf';
-import { DEFAULT_OWNER, ExportHeaderType, ExportRecordType, IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
+import { DEFAULT_OWNER, ExportHeaderType, ExportRecordType, GRID_LEVEL_COL, IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxPdfExporterOptions } from './pdf-exporter-options';
 import { IBaseEventArgs } from '../../core/utils';
@@ -48,24 +48,55 @@ export class IgxPdfExporterService extends IgxBaseExporter {
     public override exportEnded = new EventEmitter<IPdfExportEndedEventArgs>();
 
     protected exportDataImplementation(data: IExportRecord[], options: IgxPdfExporterOptions, done: () => void): void {
+        const firstDataElement = data[0];
+        const _isHierarchicalGrid = firstDataElement?.type === ExportRecordType.HierarchicalGridRecord;
+        const isPivotGrid = firstDataElement?.type === ExportRecordType.PivotGridRecord;
+
         const defaultOwner = this._ownersMap.get(DEFAULT_OWNER);
 
         // Get all columns (including multi-column headers)
         const allColumns = defaultOwner?.columns.filter(col => !col.skip) || [];
 
-        // Get leaf columns (actual data columns)
-        const leafColumns = allColumns.filter(col => col.field && col.headerType === ExportHeaderType.ColumnHeader);
+        // Extract pivot grid row dimension fields (these are in the data, rendered as row headers)
+        // For pivot grids, the row dimension fields appear in each record's data
+        const rowDimensionFields: string[] = [];
+        const rowDimensionHeaders: string[] = [];
+        if (isPivotGrid && defaultOwner) {
+            // First, get PivotRowHeader columns - these are the dimension names (like "City", "ContactTitle")
+            const pivotRowHeaders = allColumns.filter(col => col.headerType === ExportHeaderType.PivotRowHeader);
+            
+            // Get row dimension VALUE columns - these contain the actual data values
+            const rowHeaderCols = allColumns.filter(col =>
+                col.headerType === ExportHeaderType.RowHeader ||
+                col.headerType === ExportHeaderType.MultiRowHeader ||
+                col.headerType === ExportHeaderType.PivotMergedHeader
+            );
+            
+            // Use PivotRowHeader names as column headers
+            rowDimensionHeaders.push(...pivotRowHeaders.map(col => col.header || col.field).filter(h => h));
+            
+            // Extract the field names from VALUE columns - these are the keys in the record data
+            rowDimensionFields.push(...rowHeaderCols.map(col => col.field).filter(f => f));
+        }
+
+        // Get leaf columns (actual data columns), excluding GRID_LEVEL_COL and row dimension fields
+        // For pivot grids, we need to exclude row dimension fields since they're rendered separately
+        const leafColumns = allColumns.filter(col => {
+            if (col.field === GRID_LEVEL_COL) return false;
+            if (col.headerType !== ExportHeaderType.ColumnHeader) return false;
+            // For pivot grids, exclude row dimension fields from regular columns
+            if (isPivotGrid && rowDimensionFields.includes(col.field)) return false;
+            return true;
+        });
 
         // Check if we have multi-level headers
         const maxLevel = defaultOwner?.maxLevel || 0;
+        const maxRowLevel = defaultOwner?.maxRowLevel || 0;
         const hasMultiColumnHeaders = maxLevel > 0 && allColumns.some(col => col.headerType === ExportHeaderType.MultiColumnHeader);
+        const hasMultiRowHeaders = maxRowLevel > 0 && rowDimensionFields.length > 0;
 
-        // Check if this is a pivot grid export
-        const isPivotGrid = data.length > 0 && data[0].type === ExportRecordType.PivotGridRecord;
-
-        if (leafColumns.length === 0 && data.length > 0) {
+        if (leafColumns.length === 0 && data.length > 0 && firstDataElement) {
             // If no columns are defined, use the keys from the first data record
-            const firstDataElement = data[0];
             const keys = Object.keys(firstDataElement.data);
 
             keys.forEach((key) => {
@@ -92,13 +123,14 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         const margin = 40;
         const usableWidth = pageWidth - (2 * margin);
 
-        // Calculate column widths based on leaf columns
-        // For pivot grids, include filter fields (row dimensions) in the column count
-        const totalColumns = isPivotGrid ? leafColumns.length + this.pivotGridFilterFieldsCount : leafColumns.length;
-        const columnWidth = usableWidth / totalColumns;
+        // Calculate column widths
+        // For pivot grids with row dimensions, we need space for both row dimension columns and data columns
+        const rowDimensionColumnCount = isPivotGrid && hasMultiRowHeaders ? rowDimensionHeaders.length : 0;
+        const totalColumns = rowDimensionColumnCount + leafColumns.length;
+        const columnWidth = usableWidth / (totalColumns > 0 ? totalColumns : 1);
         const rowHeight = 20;
         const headerHeight = 25;
-        const indentSize = 15; // Indentation per level for hierarchical data
+        const indentSize = 15; // Indentation per level for hierarchical data (visual indent in first column)
         const childTableIndent = 30; // Indent for child tables
 
         let yPosition = margin;
@@ -107,11 +139,23 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         pdf.setFontSize(options.fontSize);
 
         // Draw multi-level headers if present
-        if (hasMultiColumnHeaders) {
-            yPosition = this.drawMultiLevelHeaders(pdf, allColumns, maxLevel, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
+        if (hasMultiColumnHeaders || hasMultiRowHeaders) {
+            yPosition = this.drawMultiLevelHeaders(
+                pdf, 
+                allColumns, 
+                rowDimensionHeaders,
+                maxLevel, 
+                maxRowLevel,
+                margin, 
+                yPosition, 
+                columnWidth, 
+                headerHeight, 
+                usableWidth, 
+                options
+            );
         } else {
             // Draw simple single-level headers
-            this.drawTableHeaders(pdf, leafColumns, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
+            this.drawTableHeaders(pdf, leafColumns, rowDimensionHeaders, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
             yPosition += headerHeight;
         }
 
@@ -134,10 +178,22 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 yPosition = margin;
 
                 // Redraw headers on new page
-                if (hasMultiColumnHeaders) {
-                    yPosition = this.drawMultiLevelHeaders(pdf, allColumns, maxLevel, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
+                if (hasMultiColumnHeaders || hasMultiRowHeaders) {
+                    yPosition = this.drawMultiLevelHeaders(
+                        pdf, 
+                        allColumns, 
+                        rowDimensionHeaders,
+                        maxLevel, 
+                        maxRowLevel,
+                        margin, 
+                        yPosition, 
+                        columnWidth, 
+                        headerHeight, 
+                        usableWidth, 
+                        options
+                    );
                 } else {
-                    this.drawTableHeaders(pdf, leafColumns, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
+                    this.drawTableHeaders(pdf, leafColumns, rowDimensionHeaders, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
                     yPosition += headerHeight;
                 }
             }
@@ -146,16 +202,19 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             // TreeGrid supports both hierarchical data and flat self-referencing data (with foreignKey)
             // In both cases, the base exporter sets the level property on TreeGridRecord
             const isTreeGrid = record.type === 'TreeGridRecord';
-            const isHierarchicalGrid = record.type === 'HierarchicalGridRecord';
-            const indentLevel = (isTreeGrid || isHierarchicalGrid) ? (record.level || 0) : 0;
+            const recordIsHierarchicalGrid = record.type === 'HierarchicalGridRecord';
+            
+            // For tree grids, indentation is visual (in the first column text)
+            // For hierarchical grids, we don't use indentation (level determines column offset instead)
+            const indentLevel = isTreeGrid ? (record.level || 0) : 0;
             const indent = indentLevel * indentSize;
 
             // Draw parent row
-            this.drawDataRow(pdf, record, leafColumns, margin, yPosition, columnWidth, rowHeight, indent, options);
+            this.drawDataRow(pdf, record, leafColumns, rowDimensionFields, margin, yPosition, columnWidth, rowHeight, indent, options);
             yPosition += rowHeight;
 
             // For hierarchical grids, check if this record has child records
-            if (isHierarchicalGrid) {
+            if (recordIsHierarchicalGrid) {
                 const allDescendants = [];
 
                 // Collect all descendant records (children, grandchildren, etc.) that belong to this parent
@@ -223,7 +282,9 @@ export class IgxPdfExporterService extends IgxBaseExporter {
     private drawMultiLevelHeaders(
         pdf: jsPDF,
         columns: any[],
+        rowDimensionHeaders: string[],
         maxLevel: number,
+        maxRowLevel: number,
         xStart: number,
         yStart: number,
         baseColumnWidth: number,
@@ -234,10 +295,55 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         let yPosition = yStart;
         pdf.setFont('helvetica', 'bold');
 
-        // Draw headers level by level (from top/parent to bottom/children)
+        // First, draw row dimension header labels (for pivot grids) if present
+        if (maxRowLevel > 0 && rowDimensionHeaders.length > 0) {
+            // Draw background
+            pdf.setFillColor(240, 240, 240);
+            
+            rowDimensionHeaders.forEach((headerText, index) => {
+                const width = baseColumnWidth;
+                const height = headerHeight;
+                const xPosition = xStart + (index * baseColumnWidth);
+                
+                if (options.showTableBorders) {
+                    pdf.rect(xPosition, yPosition, width, height, 'F');
+                    pdf.rect(xPosition, yPosition, width, height);
+                }
+
+                // Center text in cell
+                let displayText = headerText || '';
+                const maxTextWidth = width - 10;
+
+                if (pdf.getTextWidth(displayText) > maxTextWidth) {
+                    while (pdf.getTextWidth(displayText + '...') > maxTextWidth && displayText.length > 0) {
+                        displayText = displayText.substring(0, displayText.length - 1);
+                    }
+                    displayText += '...';
+                }
+
+                const textWidth = pdf.getTextWidth(displayText);
+                const textX = xPosition + (width - textWidth) / 2;
+                const textY = yPosition + height / 2 + options.fontSize / 3;
+
+                pdf.text(displayText, textX, textY);
+            });
+        }
+
+        // Filter out row header types and GRID_LEVEL_COL from column rendering
+        const columnHeaders = columns.filter(col =>
+            col.headerType !== ExportHeaderType.PivotRowHeader &&
+            col.headerType !== ExportHeaderType.RowHeader &&
+            col.headerType !== ExportHeaderType.MultiRowHeader &&
+            col.headerType !== ExportHeaderType.PivotMergedHeader &&
+            col.field !== GRID_LEVEL_COL
+        );
+
+        const rowDimensionOffset = rowDimensionHeaders.length * baseColumnWidth;
+
+        // Draw column headers level by level (from top/parent to bottom/children)
         for (let level = 0; level <= maxLevel; level++) {
             // Get headers for this level
-            const headersForLevel = columns.filter(col => {
+            const headersForLevel = columnHeaders.filter(col => {
                 // Include multi-column headers at this level
                 if (col.level === level && col.headerType === ExportHeaderType.MultiColumnHeader) {
                     return true;
@@ -261,14 +367,14 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             // Draw background
             pdf.setFillColor(240, 240, 240);
             if (options.showTableBorders) {
-                pdf.rect(xStart, yPosition, tableWidth, headerHeight, 'F');
+                pdf.rect(xStart + rowDimensionOffset, yPosition, tableWidth - rowDimensionOffset, headerHeight, 'F');
             }
 
             // Draw each header in this level
             headersForLevel.forEach((col) => {
                 const colSpan = col.columnSpan || 1;
                 const width = baseColumnWidth * colSpan;
-                const xPosition = xStart + (col.startIndex * baseColumnWidth);
+                const xPosition = xStart + rowDimensionOffset + (col.startIndex * baseColumnWidth);
 
                 if (options.showTableBorders) {
                     pdf.rect(xPosition, yPosition, width, headerHeight);
@@ -316,8 +422,9 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         options: IgxPdfExporterOptions
     ): number {
         // Get columns for this child owner (owner is the island object)
+        // Exclude GRID_LEVEL_COL from child columns
         const childColumns = this._ownersMap.get(childOwner)?.columns.filter(
-            col => col.field && !col.skip && col.headerType === ExportHeaderType.ColumnHeader
+            col => col.field && col.field !== GRID_LEVEL_COL && !col.skip && col.headerType === ExportHeaderType.ColumnHeader
         ) || [];
 
         if (childColumns.length === 0) {
@@ -346,7 +453,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         }
 
         // Draw child table headers
-        this.drawTableHeaders(pdf, childColumns, childTableX, yPosition, childColumnWidth, headerHeight, childTableWidth, options);
+        this.drawTableHeaders(pdf, childColumns, [], childTableX, yPosition, childColumnWidth, headerHeight, childTableWidth, options);
         yPosition += headerHeight;
 
         // Find the minimum level in these records (direct children of parent)
@@ -361,12 +468,12 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 pdf.addPage();
                 yPosition = margin;
                 // Redraw headers on new page
-                this.drawTableHeaders(pdf, childColumns, childTableX, yPosition, childColumnWidth, headerHeight, childTableWidth, options);
+                this.drawTableHeaders(pdf, childColumns, [], childTableX, yPosition, childColumnWidth, headerHeight, childTableWidth, options);
                 yPosition += headerHeight;
             }
 
             // Draw the child record
-            this.drawDataRow(pdf, childRecord, childColumns, childTableX, yPosition, childColumnWidth, rowHeight, 0, options);
+            this.drawDataRow(pdf, childRecord, childColumns, [], childTableX, yPosition, childColumnWidth, rowHeight, 0, options);
             yPosition += rowHeight;
 
             // Check if this child has grandchildren (deeper levels in different child grids)
@@ -421,6 +528,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
     private drawTableHeaders(
         pdf: jsPDF,
         columns: any[],
+        rowDimensionHeaders: string[],
         xStart: number,
         yPosition: number,
         columnWidth: number,
@@ -435,8 +543,42 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             pdf.rect(xStart, yPosition, tableWidth, headerHeight, 'F');
         }
 
-        columns.forEach((col, index) => {
+        // Draw row dimension headers first (for pivot grids)
+        rowDimensionHeaders.forEach((headerText, index) => {
             const xPosition = xStart + (index * columnWidth);
+            let displayText = headerText;
+
+            if (options.showTableBorders) {
+                pdf.rect(xPosition, yPosition, columnWidth, headerHeight);
+            }
+
+            // Truncate text if it's too long
+            const maxTextWidth = columnWidth - 10;
+            if (pdf.getTextWidth(displayText) > maxTextWidth) {
+                while (pdf.getTextWidth(displayText + '...') > maxTextWidth && displayText.length > 0) {
+                    displayText = displayText.substring(0, displayText.length - 1);
+                }
+                displayText += '...';
+            }
+
+            // Center text in cell
+            const textWidth = pdf.getTextWidth(displayText);
+            const textX = xPosition + (columnWidth - textWidth) / 2;
+            const textY = yPosition + headerHeight / 2 + options.fontSize / 3;
+
+            pdf.text(displayText, textX, textY);
+        });
+
+        const rowDimensionOffset = rowDimensionHeaders.length * columnWidth;
+
+        // Draw data column headers
+        columns.forEach((col, index) => {
+            // Skip GRID_LEVEL_COL - it shouldn't be rendered
+            if (col.field === GRID_LEVEL_COL) {
+                return;
+            }
+
+            const xPosition = xStart + rowDimensionOffset + (index * columnWidth);
             let headerText = col.header || col.field;
 
             if (options.showTableBorders) {
@@ -467,6 +609,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         pdf: jsPDF,
         record: IExportRecord,
         columns: any[],
+        rowDimensionFields: string[],
         xStart: number,
         yPosition: number,
         columnWidth: number,
@@ -476,8 +619,50 @@ export class IgxPdfExporterService extends IgxBaseExporter {
     ): void {
         const isSummaryRecord = record.type === 'SummaryRecord';
 
-        columns.forEach((col, index) => {
+        // Draw row dimension cells first (for pivot grids)
+        // These are actual data values from the record, not column headers
+        rowDimensionFields.forEach((fieldName, index) => {
             const xPosition = xStart + (index * columnWidth);
+            let cellValue = record.data[fieldName];
+
+            // Convert value to string
+            if (cellValue === null || cellValue === undefined) {
+                cellValue = '';
+            } else if (cellValue instanceof Date) {
+                cellValue = cellValue.toLocaleDateString();
+            } else {
+                cellValue = String(cellValue);
+            }
+
+            if (options.showTableBorders) {
+                pdf.rect(xPosition, yPosition, columnWidth, rowHeight);
+            }
+
+            // Truncate text if it's too long
+            const maxTextWidth = columnWidth - 10;
+            let displayText = cellValue;
+
+            if (pdf.getTextWidth(displayText) > maxTextWidth) {
+                while (pdf.getTextWidth(displayText + '...') > maxTextWidth && displayText.length > 0) {
+                    displayText = displayText.substring(0, displayText.length - 1);
+                }
+                displayText += '...';
+            }
+
+            const textY = yPosition + rowHeight / 2 + options.fontSize / 3;
+            pdf.text(displayText, xPosition + 5, textY);
+        });
+
+        const rowDimensionOffset = rowDimensionFields.length * columnWidth;
+
+        // Draw data columns
+        columns.forEach((col, index) => {
+            // Skip GRID_LEVEL_COL - it's an internal column
+            if (col.field === GRID_LEVEL_COL) {
+                return;
+            }
+
+            const xPosition = xStart + rowDimensionOffset + (index * columnWidth);
             let cellValue = record.data[col.field];
 
             // Handle summary records - cellValue is an IgxSummaryResult object
