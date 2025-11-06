@@ -12,6 +12,7 @@ import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { ViewEncapsulation } from '@angular/core';
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
+import { BaseFormatter } from '../../core/i18n/formatters/formatter-base';
 
 describe('IgxDateTimeEditor', () => {
     let dateTimeEditor: IgxDateTimeEditorDirective;
@@ -26,7 +27,15 @@ describe('IgxDateTimeEditor', () => {
         let inputDate: string;
         const initializeDateTimeEditor = (_control?: NgControl) => {
             // const injector = { get: () => control };
-            dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, null, DOCUMENT, locale);
+            dateTimeEditor = new IgxDateTimeEditorDirective(
+                renderer2,
+                elementRef,
+                maskParsingService,
+                null,
+                DOCUMENT,
+                locale,
+                new BaseFormatter()
+            );
             dateTimeEditor.inputFormat = inputFormat;
             dateTimeEditor.ngOnInit();
 
