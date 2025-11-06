@@ -9,12 +9,12 @@ import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
 import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { GridSummaryFunctions } from '../../../core/src/test-utils/grid-functions.spec';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
 import { IgxPaginatorComponent } from '../../../paginator/src/paginator.component';
 import { wait, UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../../core/src/test-utils/helper-utils.spec';
 import { GridRowConditionalStylingComponent } from '../../../core/src/test-utils/grid-base-components.spec';
-import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { CellType, IPinRowEventArgs, IPinningConfig, IgxColumnComponent } from '../public_api';
 

@@ -15,11 +15,11 @@ import {
 import { clearGridSubs, setupGridScrollDetection, ymd } from '../../../core/src/test-utils/helper-utils.spec';
 import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
 import { GridSummaryCalculationMode } from '../common/enums';
-import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
 import { DropPosition } from '../moving/moving.service';
 import { DatePipe } from '@angular/common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { IColumnPipeArgs, IgxColumnComponent, IgxDateSummaryOperand, IgxGridRow, IgxGroupByRow, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult, IgxSummaryRow } from '../public_api';
 
 describe('IgxGrid - Summaries #grid', () => {

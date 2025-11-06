@@ -4,15 +4,15 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridFilteringComponent, IgxTreeGridFilteringESFTemplatesComponent, IgxTreeGridFilteringRowEditingComponent } from '../../../core/src/test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../../core/src/test-utils/tree-grid-functions.spec';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../data-operations/filtering-condition';
-import { FilteringStrategy } from '../../data-operations/filtering-strategy';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
+import { FilteringStrategy } from '../../../core/src/data-operations/filtering-strategy';
 import { TreeGridFilteringStrategy, TreeGridFormattedValuesFilteringStrategy, TreeGridMatchingRecordsOnlyFilteringStrategy } from './tree-grid.filtering.strategy';
 import { FilterMode } from '../common/enums';
 import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
 import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
 import { By } from '@angular/platform-browser';
-import { GridColumnDataType } from '../../data-operations/data-util';
+import { GridColumnDataType } from '../../../core/src/data-operations/data-util';
 
 const IGX_CHECKBOX_LABEL = '.igx-checkbox__label';
 

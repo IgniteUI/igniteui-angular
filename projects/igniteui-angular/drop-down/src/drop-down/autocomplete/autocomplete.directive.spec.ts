@@ -10,7 +10,7 @@ import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigati
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { ConnectedPositioningStrategy, VerticalAlignment, HorizontalAlignment } from '../../services/public_api';
 import { IgxRippleDirective } from '../ripple/ripple.directive';
-import { IgxIconComponent } from '../../../icon/src/icon.component';
+import { IgxIconComponent } from '../../../icon/src/icon/icon.component';
 
 const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
 const CSS_CLASS_DROPDOWNLIST_SCROLL = 'igx-drop-down__list-scroll';

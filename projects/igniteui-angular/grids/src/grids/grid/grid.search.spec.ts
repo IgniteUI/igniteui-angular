@@ -5,11 +5,11 @@ import { BasicGridSearchComponent } from '../../../core/src/test-utils/grid-base
 import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
 import { GridWithAvatarComponent, GroupableGridSearchComponent, ScrollableGridSearchComponent } from '../../../core/src/test-utils/grid-samples.spec';
 import { IForOfState } from '../../../directives/for-of/for_of.directive';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
+import { IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
+import { DefaultSortingStrategy, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { wait, UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { GridColumnDataType } from '../../data-operations/data-util';
+import { GridColumnDataType } from '../../../core/src/data-operations/data-util';
 import { clearGridSubs, setupGridScrollDetection } from '../../../core/src/test-utils/helper-utils.spec';
 import { IgxTextHighlightDirective } from '../../../directives/text-highlight/text-highlight.directive';
 import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';

@@ -18,16 +18,16 @@ import {
     ROW_EDITING_BANNER_OVERLAY_CLASS,
     TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS
 } from '../../../core/src/test-utils/tree-grid-functions.spec';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
 import { wait, UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
 import { IgxActionStripComponent } from '../../../action-strip/src/public_api';
 import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { By } from '@angular/platform-browser';
-import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
+import { FilteringExpressionsTree } from '../../../core/src/data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../../../core/src/data-operations/filtering-expression.interface';
 import { IRowSelectionEventArgs } from '../common/events';
-import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { IgxGridCell } from '../public_api';
 
 describe('IgxTreeGrid - Selection #tGrid', () => {

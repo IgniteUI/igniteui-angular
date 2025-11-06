@@ -1,6 +1,6 @@
-import { Calendar } from '../calendar/calendar';
-import { cloneValue } from '../core/utils';
-import { ValueData } from '../services/excel/test-data.service.spec';
+import { Calendar } from '../calendar/src/calendar/calendar';
+import { cloneValue } from '../core/src/core/utils';
+import { ValueData } from '../core/src/services/excel/test-data.service.spec';
 import { ymd } from './helper-utils.spec';
 
 export class SampleTestData {

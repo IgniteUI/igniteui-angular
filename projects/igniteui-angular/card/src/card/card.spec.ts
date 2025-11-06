@@ -12,9 +12,9 @@ import {
     IgxCardContentDirective,
 } from './card.component';
 
-import { IgxButtonDirective } from 'igniteui-angular/radio';
+import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { IgxIconButtonDirective } from 'igniteui-angular/radio';
+import { IgxIconButtonDirective } from '../../../directives/src/directives/button/icon-button.directive';
 
 describe('Card', () => {
     // TODO: Refactor card tests to reuse components

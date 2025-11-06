@@ -5,10 +5,10 @@ import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spe
 import {
     IgxNumberFilteringOperand,
     IgxStringFilteringOperand
-} from '../../data-operations/filtering-condition';
+} from '../../../core/src/data-operations/filtering-condition';
 import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
-import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
+import { FilteringExpressionsTree } from '../../../core/src/data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../../../core/src/data-operations/filtering-expression.interface';
 import {
     IgxGridAdvancedFilteringColumnGroupComponent,
     IgxGridAdvancedFilteringComponent,
@@ -18,7 +18,7 @@ import {
     IgxGridAdvancedFilteringSerializedTreeComponent,
     IgxGridAdvancedFilteringWithToolbarComponent
 } from '../../../core/src/test-utils/grid-samples.spec';
-import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { FormattedValuesFilteringStrategy } from '../../../core/src/data-operations/filtering-strategy';
 import { IgxHierarchicalGridExportComponent, IgxHierarchicalGridTestBaseComponent, IgxHierGridExternalAdvancedFilteringComponent } from '../../../core/src/test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
 import { IFilteringEventArgs, IgxGridToolbarAdvancedFilteringComponent } from '../public_api';

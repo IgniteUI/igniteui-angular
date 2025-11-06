@@ -12,7 +12,7 @@ import {
 } from '../../../core/src/test-utils/tree-grid-components.spec';
 import { wait } from '../../../core/src/test-utils/ui-interactions.spec';
 import { GridSelectionMode, Size } from '../common/enums';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
 import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
 import { SAFE_DISPOSE_COMP_ID } from '../../../core/src/test-utils/grid-functions.spec';
 import { setElementSize } from '../../../core/src/test-utils/helper-utils.spec';

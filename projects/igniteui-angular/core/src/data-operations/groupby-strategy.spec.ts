@@ -1,4 +1,4 @@
-import { IgxGrouping } from '../grids/common/strategy';
+import { IgxGrouping } from '../../../grids/src/grids/common/strategy';
 import { IGroupByRecord } from './groupby-record.interface';
 import { DefaultSortingStrategy, SortingDirection } from './sorting-strategy';
 import { DataGenerator } from './test-util/data-generator';

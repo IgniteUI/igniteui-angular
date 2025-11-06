@@ -3,11 +3,11 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
-import { IgxPrefixDirective } from './../directives/prefix/prefix.directive';
-import { IgxLabelDirective } from './../directives/label/label.directive';
-import { IgxSuffixDirective } from './../directives/suffix/suffix.directive';
-import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
-import { ControlsFunction } from '../test-utils/controls-functions.spec';
+import { IgxPrefixDirective } from '../../../input-group/src/public_api';
+import { IgxLabelDirective } from '../../../input-group/src/public_api';
+import { IgxSuffixDirective } from '../../../input-group/src/public_api';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { getComponentSize } from 'igniteui-angular/core';
 

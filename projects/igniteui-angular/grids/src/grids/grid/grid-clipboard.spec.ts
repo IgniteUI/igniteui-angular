@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
 import { IgxGridClipboardComponent } from '../../../core/src/test-utils/grid-samples.spec';
-import { CancelableEventArgs } from '../../../core/utils';
+import { CancelableEventArgs } from '../../../core/src/core/utils';
 import { take } from 'rxjs/operators';
 import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';

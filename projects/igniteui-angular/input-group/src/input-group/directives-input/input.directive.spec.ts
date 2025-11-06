@@ -7,7 +7,7 @@ import { IgxInputDirective, IgxInputState } from './input.directive';
 import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
 import { IgxLabelDirective } from '../label/label.directive';
 import { IgxSuffixDirective } from '../suffix/suffix.directive';
-import { IgxIconComponent } from '../../../icon/src/icon.component';
+import { IgxIconComponent } from '../../../icon/src/icon/icon.component';
 import { IgxMaskDirective } from '../mask/mask.directive';
 
 const INPUT_CSS_CLASS = 'igx-input-group__input';

@@ -18,12 +18,12 @@ import {
     IgxGridDateTimeColumnComponent
 } from '../../../core/src/test-utils/grid-samples.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { IgxDateTimeEditorDirective } from '../../../directives/date-time-editor/date-time-editor.directive';
-import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { GridColumnDataType } from '../../data-operations/data-util';
+import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
+import { GridColumnDataType } from '../../../core/src/data-operations/data-util';
 import { IgxColumnComponent } from '../public_api';
 import { IgxButtonDirective } from '../../../directives/button/button.directive';
 import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxSummaryTemplateDirective } from '../columns/templates.directive';

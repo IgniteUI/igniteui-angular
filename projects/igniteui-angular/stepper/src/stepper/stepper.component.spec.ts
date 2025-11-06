@@ -5,9 +5,9 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { IgxInputDirective, IgxInputGroupComponent } from '../input-group/public_api';
+import { IgxInputDirective, IgxInputGroupComponent } from '../../../input-group/src/public_api';
 import { Direction } from 'igniteui-angular/core';
-import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxStepComponent } from './step/step.component';
 import {
     HorizontalAnimationType,

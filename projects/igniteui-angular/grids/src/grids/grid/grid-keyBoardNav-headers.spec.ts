@@ -12,9 +12,9 @@ import {
 import { GridFunctions, GridSelectionFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { GridSelectionMode, FilterMode } from '../common/enums';
 import { IActiveNodeChangeEventArgs } from '../common/events';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
-import { ISortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
+import { ISortingStrategy, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 
 const DEBOUNCETIME = 30;
 

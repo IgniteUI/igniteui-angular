@@ -9,7 +9,7 @@ import {
 import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
 import { DropPosition } from '../moving/moving.service';
-import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 
 describe('IgxGrid - multi-column headers #grid', () => {

@@ -14,7 +14,7 @@ import {
 import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
 import { IgxGridComponent } from './grid.component';
 import { GridSelectionFunctions, GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
-import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { ColumnType, IgxColumnComponent } from '../public_api';
 
 describe('IgxGrid - Column Moving #grid', () => {

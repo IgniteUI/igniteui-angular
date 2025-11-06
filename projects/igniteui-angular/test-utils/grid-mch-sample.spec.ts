@@ -1,9 +1,9 @@
 import { Component, TemplateRef, ViewChild, OnInit } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
-import { IgxColumnComponent } from '../grids/columns/column.component';
-import { IgxGridComponent } from '../grids/grid/public_api';
-import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
-import { IgxCellHeaderTemplateDirective } from '../grids/columns/templates.directive';
+import { IgxColumnComponent } from '../grids/src/grids/columns/column.component';
+import { IgxGridComponent } from '../grids/src/grids/grid/public_api';
+import { IgxColumnGroupComponent } from '../grids/src/grids/columns/column-group.component';
+import { IgxCellHeaderTemplateDirective } from '../grids/src/grids/columns/templates.directive';
 
 @Component({
     template: `

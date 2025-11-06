@@ -13,7 +13,7 @@ import {
     IgxDragHandleDirective,
     IgxDragIgnoreDirective
 } from './drag-drop.directive';
-import { IgxIconComponent } from '../../../icon/src/icon.component';
+import { IgxIconComponent } from '../../../icon/src/icon/icon.component';
 
 describe('General igxDrag/igxDrop', () => {
     let fix: ComponentFixture<TestDragDropComponent>;

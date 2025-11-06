@@ -22,16 +22,16 @@ import {
     IViewDateChangeEventArgs,
     monthRange,
     weekDay,
-    WEEKDAYS,
 } from "./public_api";
-import { UIInteractions } from "../../../core/src/test-utils/ui-interactions.spec";
+import { UIInteractions } from "../../../test-utils/ui-interactions.spec";
 import {
     DateRangeDescriptor,
     DateRangeType,
-} from "../core/dates/dateRange";
+} from "../../../core/src/core/dates/dateRange";
 
 import { IgxDayItemComponent } from "./days-view/day-item.component";
-import { HelperTestFunctions } from "../test-utils/calendar-helper-utils";
+import { HelperTestFunctions } from "../../../test-utils/calendar-helper-utils";
+import { WEEKDAYS } from "../../../core/src/core/enums";
 
 describe("IgxCalendar - ", () => {
     registerLocaleData(localeFr);

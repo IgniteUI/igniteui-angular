@@ -10,12 +10,12 @@ import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IBaseCancelableBrowserEventArgs } from 'igniteui-angular/core';
-import { SortingDirection } from '../data-operations/sorting-strategy';
-import { IForOfState } from 'igniteui-angular/radio';
-import { IgxInputState } from 'igniteui-angular/radio';
-import { IgxLabelDirective } from '../input-group/public_api';
+import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
+import { IForOfState } from '../../../directives/src/directives/for-of/for_of.directive';
+import { IgxInputState } from '../../../input-group/src/public_api';
+import { IgxLabelDirective } from '../../../input-group/src/public_api';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from 'igniteui-angular/core';
-import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboItemComponent } from './combo-item.component';
@@ -25,7 +25,7 @@ import {
 } from './combo.component';
 import { IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective } from './combo.directives';
 import { IgxComboFilteringPipe, comboIgnoreDiacriticsFilter } from './combo.pipes';
-import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
+import { IgxDropDownItemBaseDirective } from '../../../drop-down/src/drop-down/drop-down-item.base';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';

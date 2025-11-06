@@ -2,7 +2,7 @@ import { IgxActionStripComponent, IgxActionStripMenuItemDirective } from './acti
 import { Component, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { wait } from '../../../core/src/test-utils/ui-interactions.spec';
+import { wait } from '../../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 

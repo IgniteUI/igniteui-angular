@@ -17,7 +17,7 @@ import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spe
 import { IGridFormGroupCreatedEventArgs } from '../common/grid.interface';
 import { IgxTreeGridComponent } from '../tree-grid/tree-grid.component';
 import { IgxGridComponent } from './grid.component';
-import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService, VerticalAlignment } from '../../services/public_api';
+import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService, VerticalAlignment } from '../../../core/src/services/public_api';
 
 describe('IgxGrid - Validation #grid', () => {
 

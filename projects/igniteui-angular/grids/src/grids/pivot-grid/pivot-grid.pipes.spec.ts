@@ -5,7 +5,7 @@ import { IPivotConfiguration } from './pivot-grid.interface';
 import { IgxPivotAutoTransform, IgxPivotColumnPipe, IgxPivotRowExpansionPipe, IgxPivotRowPipe } from './pivot-grid.pipes';
 import { PivotGridFunctions } from '../../../core/src/test-utils/pivot-grid-functions.spec';
 import { DATA } from 'src/app/shared/pivot-data';
-import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
+import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../../../core/src/data-operations/data-clone-strategy';
 
 describe('Pivot pipes #pivotGrid', () => {
     let rowPipe: IgxPivotRowPipe;

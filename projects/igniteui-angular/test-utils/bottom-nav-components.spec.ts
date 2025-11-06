@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { IgxIconComponent } from '../icon/icon.component';
-import { IgxBottomNavComponent, IgxBottomNavContentComponent, IgxBottomNavHeaderComponent, IgxBottomNavItemComponent } from '../tabs/bottom-nav/public_api';
-import { IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective } from '../tabs/tabs/tabs.directives';
+import { IgxIconComponent } from '../icon/src/icon/icon.component';
+import { IgxBottomNavComponent, IgxBottomNavContentComponent, IgxBottomNavHeaderComponent, IgxBottomNavItemComponent } from '../tabs/src/tabs/bottom-nav/public_api';
+import { IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective } from '../tabs/src/tabs/tabs/tabs.directives';
 
 @Component({
     template: `

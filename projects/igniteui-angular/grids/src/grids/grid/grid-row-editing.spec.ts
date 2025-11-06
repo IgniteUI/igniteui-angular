@@ -6,9 +6,9 @@ import { IgxGridComponent } from './grid.component';
 import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
 import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
-import { TransactionType, Transaction } from '../../services/public_api';
-import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
+import { TransactionType, Transaction } from '../../../core/src/services/public_api';
+import { DefaultSortingStrategy, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { clearGridSubs, setElementSize, setupGridScrollDetection } from '../../../core/src/test-utils/helper-utils.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import {
@@ -24,7 +24,7 @@ import {
 } from '../../../core/src/test-utils/grid-samples.spec';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { DefaultDataCloneStrategy } from '../../data-operations/data-clone-strategy';
+import { DefaultDataCloneStrategy } from '../../../core/src/data-operations/data-clone-strategy';
 import { CellType, RowType } from '../public_api';
 import { Size } from "../common/enums";
 

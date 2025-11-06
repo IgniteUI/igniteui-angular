@@ -1,5 +1,5 @@
 import { first } from 'rxjs/operators';
-import { HorizontalAlignment, VerticalAlignment, Point } from '../services/public_api';
+import { HorizontalAlignment, VerticalAlignment, Point } from '../core/src/services/public_api';
 import { DebugElement } from '@angular/core';
 
 export const wait = (ms = 0) => new Promise(resolve => setTimeout(resolve, ms));

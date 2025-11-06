@@ -15,7 +15,7 @@ import { IgxGridPinningActionsComponent } from './grid-pinning-actions.component
 import { IgxActionStripComponent } from '../../../../action-strip/src/action-strip/action-strip.component';
 import { IRowDataCancelableEventArgs, IgxColumnComponent } from '../../grids/public_api';
 import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
-import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 
 describe('igxGridEditingActions #grid ', () => {
     let fixture;

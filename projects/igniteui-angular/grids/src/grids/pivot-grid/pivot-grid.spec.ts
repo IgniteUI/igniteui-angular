@@ -8,7 +8,7 @@ import { IgxChipComponent } from '../../../chips/src/chip.component';
 import { IgxChipsAreaComponent } from '../../../chips/src/chips-area.component';
 import { DefaultPivotSortingStrategy } from '../common/pivot-sort-strategy';
 import { DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from '../common/pivot-strategy';
-import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
+import { ISortingExpression, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { GridFunctions, GridSelectionFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { PivotGridFunctions } from '../../../core/src/test-utils/pivot-grid-functions.spec';
 import { IgxPivotGridFlexContainerComponent, IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponent, IgxTotalSaleAggregate } from '../../../core/src/test-utils/pivot-grid-samples.spec';

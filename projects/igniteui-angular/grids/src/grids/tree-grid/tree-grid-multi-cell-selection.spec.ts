@@ -6,7 +6,7 @@ import {
     IgxTreeGridSelectionWithTransactionComponent,
     IgxTreeGridFKeySelectionWithTransactionComponent
 } from '../../../core/src/test-utils/tree-grid-components.spec';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
 import { clearGridSubs, setupGridScrollDetection } from '../../../core/src/test-utils/helper-utils.spec';
 import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
 import { GridSelectionFunctions, GridSummaryFunctions, GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';

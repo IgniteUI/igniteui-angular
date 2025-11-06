@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { wait } from '../../../core/src/test-utils/ui-interactions.spec';
+import { wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
 import { IgxNavigationService } from 'igniteui-angular/core';
 import { PlatformUtil } from 'igniteui-angular/core';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
-import { IgxLayoutModule } from 'igniteui-angular/radio';
+import { IgxLayoutModule } from '../../../directives/src/directives/layout/layout.directive';
 import { IgxNavbarModule } from '../navbar/navbar.module';
 import { IgxNavbarComponent } from '../navbar/navbar.component';
 

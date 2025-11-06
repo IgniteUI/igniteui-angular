@@ -1,7 +1,7 @@
 ﻿import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
 import { ColumnPinningPosition, GridSelectionMode } from '../common/enums';
 import { wait, UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
 import {
@@ -27,7 +27,7 @@ import {
 import { IgxGridComponent } from './grid.component';
 import { DropPosition } from '../moving/moving.service';
 import { clearGridSubs, setupGridScrollDetection } from '../../../core/src/test-utils/helper-utils.spec';
-import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { IgxGridHeaderRowComponent, IPinningConfig } from '../public_api';
 
 describe('IgxGrid - Column Pinning #grid', () => {

@@ -12,9 +12,9 @@ import { IgxActionStripComponent } from '../../../action-strip/src/action-strip.
 import { DefaultGridMasterDetailComponent } from './grid.master-detail.spec';
 import { ColumnLayoutTestComponent } from './grid.multi-row-layout.spec';
 import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
-import { TransactionType } from '../../services/public_api';
+import { IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
+import { DefaultSortingStrategy, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
+import { TransactionType } from '../../../core/src/services/public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';

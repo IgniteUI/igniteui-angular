@@ -5,7 +5,7 @@ import { IgxGridComponent } from './public_api';
 import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
 import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
 import { HammerGesturesManager } from '../../../core/touch';
-import { PlatformUtil } from '../../../core/utils';
+import { PlatformUtil } from '../../../core/src/core/utils';
 import { VirtualGridComponent, NoScrollsComponent,
     NoColumnWidthGridComponent, IgxGridDateTimeColumnComponent } from '../../../core/src/test-utils/grid-samples.spec';
 import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';

@@ -5,18 +5,18 @@ import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, 
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { IgxDropDownItemComponent, ISelectionEventArgs } from '../drop-down/public_api';
-import { IgxHintDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../input-group/public_api';
+import { IgxDropDownItemComponent, ISelectionEventArgs } from '../../../drop-down/src/drop-down/public_api';
+import { IgxHintDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { IgxSelectComponent, IgxSelectFooterDirective, IgxSelectHeaderDirective } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from 'igniteui-angular/core';
 import { addScrollDivToElement } from 'igniteui-angular/core';
-import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
-import { IgxButtonDirective } from 'igniteui-angular/radio';
+import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputState } from './../directives/input/input.directive';
 import { IgxSelectGroupComponent } from './select-group.component';
-import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
+import { IgxDropDownItemBaseDirective } from '../../../drop-down/src/drop-down/drop-down-item.base';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';

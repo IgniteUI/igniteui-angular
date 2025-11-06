@@ -18,7 +18,7 @@ import {
     IgxBooleanFilteringOperand
 } from './filtering-condition';
 import { IPagingState, PagingError } from './paging-state.interface';
-import { SampleTestData } from '../test-utils/sample-test-data.spec';
+import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/public_api';
 import { DefaultDataCloneStrategy } from './data-clone-strategy';
 

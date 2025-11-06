@@ -9,7 +9,7 @@ import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec'
 import { GridSelectionMode, ColumnDisplayOrder } from '../common/enums';
 import { ControlsFunction } from '../../../core/src/test-utils/controls-functions.spec';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
-import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 
 describe('Column Hiding UI #grid', () => {
 

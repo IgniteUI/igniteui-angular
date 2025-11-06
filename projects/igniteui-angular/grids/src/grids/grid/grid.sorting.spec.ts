@@ -1,6 +1,6 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
-import { DefaultSortingStrategy, FormattedValuesSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, FormattedValuesSortingStrategy, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { GridDeclaredColumnsComponent, SortByParityComponent, GridWithPrimaryKeyComponent, SortByAnotherColumnComponent, SortOnInitComponent, IgxGridFormattedValuesSortingComponent } from '../../../core/src/test-utils/grid-samples.spec';

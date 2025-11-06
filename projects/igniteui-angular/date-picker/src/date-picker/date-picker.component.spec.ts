@@ -1,12 +1,12 @@
 import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import {
     IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
-} from '../input-group/public_api';
-import { IFormattingViews, IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, WEEKDAYS } from '../calendar/public_api';
-import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
+} from '../../../input-group/src/public_api';
+import { IFormattingViews, IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, WEEKDAYS } from '../../../calendar/src/public_api';
+import { IgxCalendarContainerComponent } from '../../../core/src/date-common/calendar-container/calendar-container.component';
 import { IgxDatePickerComponent } from './date-picker.component';
 import {
     IgxOverlayService,
@@ -14,16 +14,16 @@ import {
 } from 'igniteui-angular/core';
 import { Component, DebugElement, ElementRef, EventEmitter, QueryList, Renderer2, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../date-common/types';
-import { DatePart } from 'igniteui-angular/radio';
+import { PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../../../core/src/date-common/types';
+import { DatePart } from '../../../core/src/date-common/public_api';
 import { DateRangeDescriptor, DateRangeType } from 'igniteui-angular/core';
-import { IgxOverlayOutletDirective } from 'igniteui-angular/radio';
-import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-common/public_api';
-import { DateTimeUtil } from '../date-common/util/date-time.util';
+import { IgxOverlayOutletDirective } from '../../../directives/src/directives/toggle/toggle.directive';
+import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../../../core/src/date-common/public_api';
+import { DateTimeUtil } from '../../../core/src/date-common/util/date-time.util';
 import { registerLocaleData } from "@angular/common";
 import localeES from "@angular/common/locales/es";
 import localeBg from "@angular/common/locales/bg";
-import { IgxDateTimeEditorDirective } from 'igniteui-angular/radio';
+import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
 
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
 

@@ -1,7 +1,7 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
-import { ITooltipHideEventArgs, ITooltipShowEventArgs, IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
-import { IgxToggleActionDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxTooltipDirective } from '../directives/src/directives/tooltip/tooltip.directive';
+import { ITooltipHideEventArgs, ITooltipShowEventArgs, IgxTooltipTargetDirective } from '../directives/src/directives/tooltip/tooltip-target.directive';
+import { IgxToggleActionDirective, IgxToggleDirective } from '../directives/src/directives/toggle/toggle.directive';
 
 @Component({
     template: `

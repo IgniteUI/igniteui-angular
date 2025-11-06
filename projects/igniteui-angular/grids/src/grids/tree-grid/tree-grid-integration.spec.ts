@@ -13,13 +13,13 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TreeGridFunctions } from '../../../core/src/test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
-import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';
-import { HierarchicalTransaction, TransactionType } from '../../services/public_api';
+import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
+import { IgxHierarchicalTransactionService } from '../../../core/src/services/transaction/igx-hierarchical-transaction';
+import { HierarchicalTransaction, TransactionType } from '../../../core/src/services/public_api';
 import { DropPosition } from '../moving/moving.service';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IgxGridTransaction } from '../common/types';
-import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { CellType, IgxTreeGridRow } from '../public_api';
 
 const CSS_CLASS_BANNER = 'igx-banner';

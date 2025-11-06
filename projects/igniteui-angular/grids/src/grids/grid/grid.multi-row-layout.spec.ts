@@ -6,7 +6,7 @@ import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { By } from '@angular/platform-browser';
 import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
 import { wait } from '../../../core/src/test-utils/ui-interactions.spec';
-import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { ICellPosition } from '../common/events';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../../core/src/test-utils/grid-functions.spec';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';

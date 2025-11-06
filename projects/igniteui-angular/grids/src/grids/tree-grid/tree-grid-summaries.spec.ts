@@ -11,7 +11,7 @@ import {
 import { clearGridSubs, setupGridScrollDetection } from '../../../core/src/test-utils/helper-utils.spec';
 import { wait, UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
 import { GridSummaryFunctions, GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
-import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxNumberFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';

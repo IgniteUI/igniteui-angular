@@ -7,9 +7,9 @@ import { wait, UIInteractions } from '../../../core/src/test-utils/ui-interactio
 import { By } from '@angular/platform-browser';
 import { first, delay } from 'rxjs/operators';
 import { setupHierarchicalGridScrollDetection, clearGridSubs } from '../../../core/src/test-utils/helper-utils.spec';
-import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { FilteringExpressionsTree } from '../../../core/src/data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../../../core/src/data-operations/filtering-expression.interface';
+import { IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
 import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { HierarchicalGridFunctions } from '../../../core/src/test-utils/hierarchical-grid-functions.spec';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';

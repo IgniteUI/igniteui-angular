@@ -1,22 +1,22 @@
 import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
-import { ColumnType, IPinningConfig, IgxAdvancedFilteringDialogComponent, IgxColumnComponent, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/public_api';
-import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarchical-grid.component';
-import { IgxRowIslandComponent } from '../grids/hierarchical-grid/row-island.component';
-import { ColumnPinningPosition, RowPinningPosition } from '../grids/common/enums';
+import { ColumnType, IPinningConfig, IgxAdvancedFilteringDialogComponent, IgxColumnComponent, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/src/grids/public_api';
+import { IgxHierarchicalGridComponent } from '../grids/src/grids/hierarchical-grid/hierarchical-grid.component';
+import { IgxRowIslandComponent } from '../grids/src/grids/hierarchical-grid/row-island.component';
+import { ColumnPinningPosition, RowPinningPosition } from '../grids/src/grids/common/enums';
 import { IgxActionStripComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent } from '../action-strip/public_api';
 import { HIERARCHICAL_SAMPLE_DATA, HIERARCHICAL_SAMPLE_DATA_SHORT } from 'src/app/shared/sample-data';
-import { IgxHierarchicalTransactionServiceFactory } from '../grids/hierarchical-grid/hierarchical-grid-base.directive';
-import { IgxGridToolbarComponent } from '../grids/toolbar/grid-toolbar.component';
-import { IgxButtonDirective } from '../directives/button/button.directive';
-import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
-import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../paginator/paginator.component';
-import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
-import { IgxIconComponent } from '../icon/icon.component';
-import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from '../grids/selection/row-selectors';
-import { IgxGridToolbarDirective } from '../grids/toolbar/common';
-import { IgxCellHeaderTemplateDirective } from '../grids/columns/templates.directive';
-import { IgxPaginatorDirective } from '../paginator/paginator-interfaces';
+import { IgxHierarchicalTransactionServiceFactory } from '../grids/src/grids/hierarchical-grid/hierarchical-grid-base.directive';
+import { IgxGridToolbarComponent } from '../grids/src/grids/toolbar/grid-toolbar.component';
+import { IgxButtonDirective } from '../directives/src/directives/button/button.directive';
+import { IgxCheckboxComponent } from '../checkbox/src/checkbox/checkbox.component';
+import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../paginator/src/paginator/paginator.component';
+import { IgxColumnGroupComponent } from '../grids/src/grids/columns/column-group.component';
+import { IgxIconComponent } from '../icon/src/icon/icon.component';
+import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from '../grids/src/grids/selection/row-selectors';
+import { IgxGridToolbarDirective } from '../grids/src/grids/toolbar/common';
+import { IgxCellHeaderTemplateDirective } from '../grids/src/grids/columns/templates.directive';
+import { IgxPaginatorDirective } from '../paginator/src/paginator/paginator-interfaces';
 
 @Component({
     selector: 'igx-hierarchical-grid-test-base',

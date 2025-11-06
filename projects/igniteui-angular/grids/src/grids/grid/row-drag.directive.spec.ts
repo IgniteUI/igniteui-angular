@@ -5,23 +5,23 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
 import { DataParent, SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
-import { Point } from '../../services/public_api';
+import { Point } from '../../../core/src/services/public_api';
 
 import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxDragIndicatorIconDirective, IgxRowDragDirective, IgxRowDragGhostDirective } from '../row-drag.directive';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../common/events';
 import { IgxDropDirective } from '../../../directives/drag-drop/drag-drop.directive';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
 import { IgxTreeGridComponent } from '../tree-grid/public_api';
 import { GridSelectionMode } from '../common/enums';
 import { CellType, GridType, RowType } from '../common/grid.interface';
-import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { IgxRowDirective } from '../row.directive';
 import { NgStyle } from '@angular/common';
-import { IgxIconComponent } from '../../../icon/src/icon.component';
+import { IgxIconComponent } from '../../../icon/src/icon/icon.component';
 
 const DEBOUNCE_TIME = 50;
 const CSS_CLASS_DRAG_INDICATOR = '.igx-grid__drag-indicator';

@@ -12,23 +12,23 @@ import {
     IgxStringFilteringOperand,
     IgxDateTimeFilteringOperand,
     IgxTimeFilteringOperand
-} from '../../data-operations/filtering-condition';
+} from '../../../core/src/data-operations/filtering-condition';
 import { IgxDatePickerComponent } from '../../../date-picker/src/date-picker.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
 import { GridFunctions, GridSelectionFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { IgxBadgeComponent } from '../../../badge/src/badge.component';
-import { IgxIconComponent } from '../../../icon/src/icon.component';
-import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
+import { IgxIconComponent } from '../../../icon/src/icon/icon.component';
+import { DefaultSortingStrategy, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { igxI18N } from '../../../core/i18n/resources';
 import { DatePipe, registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import localeFr from '@angular/common/locales/fr';
 import localeBg from '@angular/common/locales/bg';
-import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
+import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../core/src/data-operations/filtering-expressions-tree';
+import { FilteringLogic, IFilteringExpression } from '../../../core/src/data-operations/filtering-expression.interface';
 import { IgxChipComponent } from '../../../chips/src/chip.component';
 import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
 import {
@@ -49,9 +49,9 @@ import {
 } from '../../../core/src/test-utils/grid-samples.spec';
 import { GridSelectionMode, FilterMode, Size } from '../common/enums';
 import { ControlsFunction } from '../../../core/src/test-utils/controls-functions.spec';
-import { FilteringStrategy, FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { FilteringStrategy, FormattedValuesFilteringStrategy } from '../../../core/src/data-operations/filtering-strategy';
 import { IgxInputGroupComponent } from '../../../input-group/src/public_api';
-import { formatDate, getComponentSize } from '../../../core/utils';
+import { formatDate, getComponentSize } from '../../../core/src/core/utils';
 import { IgxCalendarComponent } from '../../../calendar/src/calendar.component';
 import { GridResourceStringsEN } from '../../../core/i18n/grid-resources';
 import { setElementSize } from '../../../core/src/test-utils/helper-utils.spec';

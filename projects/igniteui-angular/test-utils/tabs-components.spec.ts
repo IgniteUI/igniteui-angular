@@ -1,11 +1,11 @@
 import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { IgxButtonDirective } from '../directives/button/button.directive';
-import { IgxToggleActionDirective } from '../directives/toggle/toggle.directive';
-import { IgxDropDownComponent } from '../drop-down/drop-down.component';
-import { IgxIconComponent } from '../icon/icon.component';
-import { IgxPrefixDirective, IgxSuffixDirective } from '../input-group/public_api';
-import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxTabItemComponent, IgxTabsComponent } from '../tabs/tabs/public_api';
+import { IgxButtonDirective } from '../directives/src/directives/button/button.directive';
+import { IgxToggleActionDirective } from '../directives/src/directives/toggle/toggle.directive';
+import { IgxDropDownComponent } from '../drop-down/src/drop-down/drop-down.component';
+import { IgxIconComponent } from '../icon/src/icon/icon.component';
+import { IgxPrefixDirective, IgxSuffixDirective } from '../input-group/src/public_api';
+import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxTabItemComponent, IgxTabsComponent } from '../tabs/src/tabs/tabs/public_api';
 import { SampleTestData } from './sample-test-data.spec';
 
 @Component({

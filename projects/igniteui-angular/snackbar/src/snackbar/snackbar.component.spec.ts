@@ -6,7 +6,7 @@ import { IgxSnackbarComponent } from './snackbar.component';
 import { useAnimation } from '@angular/animations';
 import { HorizontalAlignment, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
 import { slideInLeft, slideInRight } from 'igniteui-angular/animations';
-import { IgxButtonDirective } from 'igniteui-angular/radio';
+import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 
 describe('IgxSnackbar', () => {
     beforeEach(waitForAsync(() => {

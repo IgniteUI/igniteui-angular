@@ -6,7 +6,7 @@ import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
 import { wait, UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../../core/src/test-utils/helper-utils.spec';
-import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../../core/src/test-utils/grid-functions.spec';
 import { CellType } from '../common/grid.interface';

@@ -5,7 +5,7 @@ import { ProductsComponent, ColumnSelectionGroupTestComponent } from '../../../c
 import { GridSelectionFunctions, GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IColumnSelectionEventArgs } from '../common/events';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
 import { GridSelectionMode } from '../common/enums';
 
 const SELECTED_COLUMN_CLASS = 'igx-grid-th--selected';

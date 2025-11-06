@@ -2,7 +2,7 @@ import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angul
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { wait, UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxBooleanFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxBooleanFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
 import {
     RowSelectionComponent,
     SelectionWithScrollsComponent,
@@ -14,9 +14,9 @@ import {
 import { GridFunctions, GridSelectionFunctions } from '../../../core/src/test-utils/grid-functions.spec';
 import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
 import { GridSelectionMode } from '../common/enums';
-import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
-import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { FilteringExpressionsTree } from '../../../core/src/data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../../../core/src/data-operations/filtering-expression.interface';
+import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { IRowSelectionEventArgs } from '../public_api';
 
 const DEBOUNCETIME = 30;

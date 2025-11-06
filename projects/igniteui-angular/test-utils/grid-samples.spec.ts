@@ -1,7 +1,7 @@
 import { Component, TemplateRef, ViewChild, Input, AfterViewInit, QueryList, ViewChildren, OnInit } from '@angular/core';
 
-import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/summaries/grid-summary';
-import { IGridCellEventArgs } from '../grids/common/events';
+import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/src/grids/summaries/grid-summary';
+import { IGridCellEventArgs } from '../grids/src/grids/common/events';
 import {
     BasicGridComponent, BasicGridSearchComponent, GridAutoGenerateComponent,
     GridWithSizeComponent, PagingComponent
@@ -9,39 +9,39 @@ import {
 import { IGridSelection } from './grid-interfaces.spec';
 import { SampleTestData, DataParent } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions, TemplateDefinitions, ExternalTemplateDefinitions } from './template-strings.spec';
-import { IgxColumnComponent } from '../grids/columns/column.component';
-import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
-import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
-import { FilteringStrategy, IgxFilterItem } from '../data-operations/filtering-strategy';
-import { ColumnPinningPosition, ISortingOptions, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleHeaderIconDirective, IgxGridToolbarAdvancedFilteringComponent, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from '../grids/public_api';
-import { IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective } from '../grids/grid.rowEdit.directive';
-import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/excel-style-filtering.component';
-import { FilteringLogic } from '../data-operations/filtering-expression.interface';
-import { FormattedValuesSortingStrategy, ISortingStrategy, SortingDirection } from '../data-operations/sorting-strategy';
+import { IgxColumnComponent } from '../grids/src/grids/columns/column.component';
+import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../core/src/data-operations/filtering-condition';
+import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../core/src/data-operations/filtering-expressions-tree';
+import { FilteringStrategy, IgxFilterItem } from '../core/src/data-operations/filtering-strategy';
+import { ColumnPinningPosition, ISortingOptions, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleHeaderIconDirective, IgxGridToolbarAdvancedFilteringComponent, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from '../grids/src/grids/public_api';
+import { IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective } from '../grids/src/grids/grid.rowEdit.directive';
+import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from '../grids/src/grids/filtering/excel-style/excel-style-filtering.component';
+import { FilteringLogic } from '../core/src/data-operations/filtering-expression.interface';
+import { FormattedValuesSortingStrategy, ISortingStrategy, SortingDirection } from '../core/src/data-operations/sorting-strategy';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
-import { IDataCloneStrategy } from '../data-operations/data-clone-strategy';
-import { IgxColumnLayoutComponent } from '../grids/columns/column-layout.component';
-import { IgxPaginatorComponent } from '../paginator/paginator.component';
-import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
-import { IgxIconComponent } from '../icon/icon.component';
-import { IgxExcelStyleMovingComponent } from '../grids/filtering/excel-style/excel-style-moving.component';
-import { IgxExcelStylePinningComponent } from '../grids/filtering/excel-style/excel-style-pinning.component';
-import { IgxExcelStyleSearchComponent } from '../grids/filtering/excel-style/excel-style-search.component';
-import { IgxExcelStyleSelectingComponent } from '../grids/filtering/excel-style/excel-style-selecting.component';
-import { IgxInputGroupComponent } from '../input-group/input-group.component';
-import { IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective } from '../input-group/public_api';
-import { IgxGridToolbarComponent } from '../grids/toolbar/grid-toolbar.component';
-import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
-import { IgxGridToolbarActionsComponent } from '../grids/toolbar/common';
-import { IgxGridToolbarHidingComponent } from '../grids/toolbar/grid-toolbar-hiding.component';
-import { IgxButtonDirective } from '../directives/button/button.directive';
+import { IDataCloneStrategy } from '../core/src/data-operations/data-clone-strategy';
+import { IgxColumnLayoutComponent } from '../grids/src/grids/columns/column-layout.component';
+import { IgxPaginatorComponent } from '../paginator/src/paginator/paginator.component';
+import { IgxColumnGroupComponent } from '../grids/src/grids/columns/column-group.component';
+import { IgxIconComponent } from '../icon/src/icon/icon.component';
+import { IgxExcelStyleMovingComponent } from '../grids/src/grids/filtering/excel-style/excel-style-moving.component';
+import { IgxExcelStylePinningComponent } from '../grids/src/grids/filtering/excel-style/excel-style-pinning.component';
+import { IgxExcelStyleSearchComponent } from '../grids/src/grids/filtering/excel-style/excel-style-search.component';
+import { IgxExcelStyleSelectingComponent } from '../grids/src/grids/filtering/excel-style/excel-style-selecting.component';
+import { IgxInputGroupComponent } from '../../../input-group/src/input-group.component';
+import { IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective } from '../input-group/src/public_api';
+import { IgxGridToolbarComponent } from '../grids/src/grids/toolbar/grid-toolbar.component';
+import { IgxCheckboxComponent } from '../checkbox/src/checkbox/checkbox.component';
+import { IgxGridToolbarActionsComponent } from '../grids/src/grids/toolbar/common';
+import { IgxGridToolbarHidingComponent } from '../grids/src/grids/toolbar/grid-toolbar-hiding.component';
+import { IgxButtonDirective } from '../directives/src/directives/button/button.directive';
 import { IgxGridEditingActionsComponent } from '../action-strip/grid-actions/grid-editing-actions.component';
-import { IgxCellEditorTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxFilterCellTemplateDirective } from '../grids/columns/templates.directive';
-import { IgxGroupByRowSelectorDirective, IgxHeadSelectorDirective, IgxRowSelectorDirective } from '../grids/selection/row-selectors';
-import { CellType, ColumnType, IgxAdvancedFilteringDialogComponent } from '../grids/public_api';
-import { IgxGridComponent } from '../grids/grid/public_api';
-import { OverlaySettings } from '../services/public_api';
-import { IgxFocusDirective } from '../directives/focus/focus.directive';
+import { IgxCellEditorTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxFilterCellTemplateDirective } from '../grids/src/grids/columns/templates.directive';
+import { IgxGroupByRowSelectorDirective, IgxHeadSelectorDirective, IgxRowSelectorDirective } from '../grids/src/grids/selection/row-selectors';
+import { CellType, ColumnType, IgxAdvancedFilteringDialogComponent } from '../grids/src/grids/public_api';
+import { IgxGridComponent } from '../grids/src/grids/grid/public_api';
+import { OverlaySettings } from '../core/src/services/public_api';
+import { IgxFocusDirective } from '../directives/src/directives/focus/focus.directive';
 
 @Component({
     template: GridTemplateStrings.declareGrid('', '', `<igx-column field="ID" [hidden]="true"></igx-column>`),

@@ -1,4 +1,4 @@
-import { IPivotGridRecord } from '../grids/pivot-grid/pivot-grid.interface';
+import { IPivotGridRecord } from '../grids/src/grids/pivot-grid/pivot-grid.interface';
 
 export class PivotGridFunctions {
 

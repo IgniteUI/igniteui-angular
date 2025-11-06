@@ -1,20 +1,20 @@
 import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
-import { IgxTreeGridComponent } from '../grids/tree-grid/tree-grid.component';
+import { IgxTreeGridComponent } from '../grids/src/grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
-import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult, IPinningConfig, IgxColumnComponent } from '../grids/public_api';
+import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult, IPinningConfig, IgxColumnComponent } from '../grids/src/grids/public_api';
 import { IgxActionStripComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent } from '../action-strip/public_api';
-import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
-import { IgxTreeGridGroupByAreaComponent } from '../grids/grouping/tree-grid-group-by-area.component';
-import { IgxPaginatorComponent } from '../paginator/paginator.component';
-import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from '../grids/selection/row-selectors';
-import { IgxIconComponent } from '../icon/icon.component';
-import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleSearchComponent, IgxExcelStyleSortingComponent, IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/public_api';
-import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
-import { GridSummaryCalculationMode, RowPinningPosition } from '../grids/common/enums';
-import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
-import { IgxExcelStyleHeaderIconDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../grids/public_api';
-import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
-import { IgxTreeGridGroupingPipe } from '../grids/tree-grid/tree-grid.grouping.pipe';
+import { IGroupingExpression } from '../core/src/data-operations/grouping-expression.interface';
+import { IgxTreeGridGroupByAreaComponent } from '../grids/src/grids/grouping/tree-grid-group-by-area.component';
+import { IgxPaginatorComponent } from '../paginator/src/paginator/paginator.component';
+import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from '../grids/src/grids/selection/row-selectors';
+import { IgxIconComponent } from '../icon/src/icon/icon.component';
+import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleSearchComponent, IgxExcelStyleSortingComponent, IgxGridExcelStyleFilteringComponent } from '../grids/src/grids/filtering/excel-style/public_api';
+import { IgxColumnGroupComponent } from '../grids/src/grids/columns/column-group.component';
+import { GridSummaryCalculationMode, RowPinningPosition } from '../grids/src/grids/common/enums';
+import { IgxCheckboxComponent } from '../checkbox/src/checkbox/checkbox.component';
+import { IgxExcelStyleHeaderIconDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../grids/src/grids/public_api';
+import { DefaultSortingStrategy } from '../core/src/data-operations/sorting-strategy';
+import { IgxTreeGridGroupingPipe } from '../grids/src/grids/tree-grid/tree-grid.grouping.pipe';
 
 @Component({
     template: `

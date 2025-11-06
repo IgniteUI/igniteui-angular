@@ -4,7 +4,7 @@ import { PagingComponent, RemotePagingComponent } from '../../../core/src/test-u
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { wait } from '../../../core/src/test-utils/ui-interactions.spec';
-import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxNumberFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
 import { GridFunctions, PAGER_CLASS } from '../../../core/src/test-utils/grid-functions.spec';
 import { ControlsFunction, BUTTON_DISABLED_CLASS } from '../../../core/src/test-utils/controls-functions.spec';
 

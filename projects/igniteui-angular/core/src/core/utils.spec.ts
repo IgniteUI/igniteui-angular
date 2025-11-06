@@ -1,5 +1,5 @@
 import { cloneValue, isObject, isDate } from './utils';
-import { SampleTestData } from '../test-utils/sample-test-data.spec';
+import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 
 describe('Utils', () => {
     const complexObject = {

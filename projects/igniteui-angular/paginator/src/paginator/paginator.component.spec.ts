@@ -3,10 +3,10 @@ import { By } from '@angular/platform-browser';
 import { ViewChild, Component } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from './paginator.component';
-import { GridFunctions } from '../test-utils/grid-functions.spec';
-import { ControlsFunction } from '../test-utils/controls-functions.spec';
+import { GridFunctions } from '../../../test-utils/grid-functions.spec';
+import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { first } from 'rxjs/operators';
-import { IgxButtonDirective } from 'igniteui-angular/radio';
+import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 
 describe('IgxPaginator with default settings', () => {
     beforeEach(waitForAsync(() => {

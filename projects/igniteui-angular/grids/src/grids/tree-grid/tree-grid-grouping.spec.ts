@@ -5,7 +5,7 @@ import { IgxTreeGridGroupByAreaTestComponent, IgxTreeGridGroupingComponent } fro
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
 import { TreeGridFunctions } from '../../../core/src/test-utils/tree-grid-functions.spec';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy } from '../../../core/src/data-operations/sorting-strategy';
 
 describe('IgxTreeGrid', () => {
 
