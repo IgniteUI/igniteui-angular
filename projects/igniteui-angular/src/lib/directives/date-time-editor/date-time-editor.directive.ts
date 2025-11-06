@@ -14,6 +14,7 @@ import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-
 import { noop } from 'rxjs';
 import { DatePartDeltas } from './date-time-editor.common';
 import { DateTimeUtil } from '../../date-common/util/date-time.util';
+import { BaseFormatter, I18N_FORMATTER } from '../../core/i18n/formatters/formatter-base';
 
 /**
  * Date Time Editor provides a functionality to input, edit and format date and time.
@@ -139,7 +140,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
 
     public get displayFormat(): string {
-        return this._displayFormat || this.inputFormat;
+        return this._displayFormat || this._inputFormat ||  this._i18nFormatter.getLocaleDateFormat(this.locale, 'short');
     }
 
     /**
@@ -303,7 +304,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         maskParser: MaskParsingService,
         platform: PlatformUtil,
         @Inject(DOCUMENT) private _document: any,
-        @Inject(LOCALE_ID) private _locale: any) {
+        @Inject(LOCALE_ID) private _locale: any,
+        @Inject(I18N_FORMATTER) private _i18nFormatter: BaseFormatter,) {
         super(elementRef, maskParser, renderer, platform);
         this.document = this._document as Document;
         this.locale = this.locale || this._locale;
@@ -526,7 +528,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     protected override setPlaceholder(_value: string): void { }
 
     private updateDefaultFormat(): void {
-        this._defaultInputFormat = DateTimeUtil.getNumericInputFormat(this.locale, this._displayFormat)
+        this._defaultInputFormat = DateTimeUtil.getNumericInputFormat(this.locale, this._displayFormat, this._i18nFormatter)
                                 || DateTimeUtil.getDefaultInputFormat(this.locale, this.defaultFormatType);
         this.setMask(this.inputFormat);
     }
@@ -549,7 +551,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
             }
             const format = this.displayFormat || this.inputFormat;
             if (format) {
-                this.inputValue = DateTimeUtil.formatDate(this.dateValue, format.replace('tt', 'aa'), this.locale);
+                this.inputValue = this._i18nFormatter.formatDate(this.dateValue, format.replace('tt', 'aa'), this.locale);
             } else {
                 this.inputValue = this.dateValue.toLocaleString();
             }
