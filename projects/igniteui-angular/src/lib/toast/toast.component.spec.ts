@@ -4,6 +4,7 @@ import {
     ComponentFixture,
     flushMicrotasks,
     fakeAsync,
+        flush
 } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -81,6 +82,7 @@ describe('IgxToast', () => {
     it('positionSettings passed in the open method should be applied', () => {
         const positions = secondPositionSettings;
         toast.open("New Message", positions);
+        flush();
         fixture.detectChanges();
         expect(toast.positionSettings.horizontalDirection).toBe(-0.5);
         expect(toast.positionSettings.verticalDirection).toBe(-0.5);

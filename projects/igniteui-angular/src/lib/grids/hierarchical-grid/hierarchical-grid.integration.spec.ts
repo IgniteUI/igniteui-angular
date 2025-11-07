@@ -767,6 +767,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             // // Instead of clicking we can just toggle the checkbox
             // toolbar.columnHidingUI.columnItems.toArray()[2].toggle();
+            flush();
             // fixture.detectChanges();
 
             // And it should hide the column of the child grid
@@ -792,6 +793,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             // Instead of clicking we can just toggle the checkbox
             // toolbar.columnPinningUI.columnItems.toArray()[1].toggle();
+            flush();
             fixture.detectChanges();
 
             // Check pinned state

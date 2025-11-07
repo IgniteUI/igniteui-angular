@@ -3,6 +3,7 @@ import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleActionDirective, IgxToggleDirective, IgxOverlayOutletDirective } from './toggle.directive';
+import { waitForToggleOpen } from '../../test-utils/toggle-helpers.spec';
 import {
     IgxOverlayService, OverlaySettings, ConnectedPositioningStrategy,
     AbsoluteScrollStrategy, AutoPositionStrategy, HorizontalAlignment
@@ -61,7 +62,7 @@ describe('IgxToggle', () => {
         expect(divEl.classList.contains(TOGGLER_CLASS)).toBeTruthy();
     });
 
-    it('should emit \'opening\' and \'opened\' events', fakeAsync(() => {
+    it('should emit \'opening\' and \'opened\' events', async () => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
         fixture.detectChanges();
 
@@ -69,12 +70,12 @@ describe('IgxToggle', () => {
         spyOn(toggle.opening, 'emit');
         spyOn(toggle.opened, 'emit');
         toggle.open();
-        tick();
+        await fixture.whenRenderingDone();
         fixture.detectChanges();
 
         expect(toggle.opening.emit).toHaveBeenCalled();
         expect(toggle.opened.emit).toHaveBeenCalled();
-    }));
+    });
 
     it('should emit \'appended\' event', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
@@ -83,6 +84,7 @@ describe('IgxToggle', () => {
         const toggle = fixture.componentInstance.toggle;
         spyOn(toggle.appended, 'emit');
         toggle.open();
+        TestBed.flushEffects();
         tick();
         fixture.detectChanges();
 
@@ -92,6 +94,7 @@ describe('IgxToggle', () => {
         tick();
         fixture.detectChanges();
         toggle.open();
+        TestBed.flushEffects();
         tick();
         fixture.detectChanges();
 
@@ -104,6 +107,7 @@ describe('IgxToggle', () => {
 
         const toggle = fixture.componentInstance.toggle;
         fixture.componentInstance.toggle.open();
+        TestBed.flushEffects();
         tick();
         fixture.detectChanges();
 
@@ -127,6 +131,7 @@ describe('IgxToggle', () => {
         spyOn(toggle.closed, 'emit');
 
         toggle.open();
+        TestBed.flushEffects();
         tick();
         expect(toggle.opened.emit).toHaveBeenCalledTimes(1);
         expect(toggle.collapsed).toBe(false);
@@ -136,6 +141,7 @@ describe('IgxToggle', () => {
         expect(toggle.collapsed).toBe(true);
 
         toggle.open();
+        TestBed.flushEffects();
         tick();
         expect(toggle.opened.emit).toHaveBeenCalledTimes(2);
         const otherId = overlay.attach(fixture.componentInstance.other);
@@ -170,6 +176,7 @@ describe('IgxToggle', () => {
         const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
         fixture.detectChanges();
         fixture.componentInstance.toggle.open();
+        TestBed.flushEffects();
         tick();
 
         const divEl = fixture.debugElement.query(By.directive(IgxToggleDirective)).nativeElement;
@@ -292,6 +299,7 @@ describe('IgxToggle', () => {
         toggle.closing.pipe(first()).subscribe((e: CancelableEventArgs) => e.cancel = cancelClosing);
 
         toggle.open();
+        TestBed.flushEffects();
         fixture.detectChanges();
         tick();
 
@@ -315,6 +323,7 @@ describe('IgxToggle', () => {
 
         toggle.opening.subscribe((e: CancelableEventArgs) => e.cancel = true);
         toggle.open();
+        TestBed.flushEffects();
         fixture.detectChanges();
         tick();
 
@@ -429,6 +438,7 @@ describe('IgxToggle', () => {
         spyOn(toggle.opening, 'emit');
         spyOn(toggle.opened, 'emit');
         toggle.open();
+        TestBed.flushEffects();
         tick();
         fixture.detectChanges();
 
@@ -436,6 +446,7 @@ describe('IgxToggle', () => {
         expect(toggle.opened.emit).toHaveBeenCalledTimes(1);
 
         toggle.open();
+        TestBed.flushEffects();
         tick();
         fixture.detectChanges();
 
@@ -451,6 +462,7 @@ describe('IgxToggle', () => {
         spyOn(toggle.opening, 'emit');
         spyOn(toggle.opened, 'emit');
         toggle.open();
+        TestBed.flushEffects();
         tick();
         fixture.detectChanges();
 
@@ -487,6 +499,7 @@ describe('IgxToggle', () => {
         spyOn(toggle.closed, 'emit').and.callThrough();
 
         toggle.open();
+        TestBed.flushEffects();
         tick();
         fixture.detectChanges();
         expect(toggle.opening.emit).toHaveBeenCalledTimes(1);
