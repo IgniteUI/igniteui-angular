@@ -206,7 +206,6 @@ describe('igxSelect', () => {
             expect(select.collapsed).toBeTruthy();
 
             select.toggle();
-            tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
 
@@ -220,7 +219,6 @@ describe('igxSelect', () => {
             spyOn(select.selectionChanging, 'emit');
             select.items[1].selected = true;
             select.open();
-            tick();
             fixture.detectChanges();
             const selectedItemEl = selectList.children[1];
             expect(select.collapsed).toBeFalsy();
@@ -230,7 +228,6 @@ describe('igxSelect', () => {
             expect(select.collapsed).toBeTruthy();
 
             select.open();
-            tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
             selectedItemEl.nativeElement.click();
@@ -259,7 +256,6 @@ describe('igxSelect', () => {
             expect(select.collapsed).toBeTruthy();
 
             select.open();
-            tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
 
@@ -269,7 +265,6 @@ describe('igxSelect', () => {
             expect(select.collapsed).toBeTruthy();
 
             select.toggle();
-            tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
 
@@ -487,7 +482,6 @@ describe('igxSelect', () => {
             const dummyInput = fixture.componentInstance.dummyInput.nativeElement;
             expect(select.collapsed).toBeTruthy();
             select.toggle();
-            tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
 
@@ -1646,7 +1640,6 @@ describe('igxSelect', () => {
             expect(select.collapsed).toBeTruthy();
 
             select.toggle();
-            tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
 
@@ -1656,7 +1649,6 @@ describe('igxSelect', () => {
             expect(select.collapsed).toBeTruthy();
 
             select.toggle();
-            tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
             inputElement.triggerEventHandler('keydown', tabKeyEvent);
@@ -1963,7 +1955,6 @@ describe('igxSelect', () => {
 
         it('should filter and navigate through items on character key navigation when dropdown is opened', fakeAsync(() => {
             select.open();
-            tick();
             fixture.detectChanges();
 
             const filteredItemsInxs = fixture.componentInstance.filterCities('pa');
@@ -1983,7 +1974,6 @@ describe('igxSelect', () => {
 
         it('Character key navigation when dropdown is opened should be case insensitive', fakeAsync(() => {
             select.open();
-            tick();
             fixture.detectChanges();
 
             const filteredItemsInxs = fixture.componentInstance.filterCities('l');
@@ -2003,7 +1993,6 @@ describe('igxSelect', () => {
 
         it('Character key navigation when dropdown is opened should wrap selection', fakeAsync(() => {
             select.open();
-            tick();
             fixture.detectChanges();
 
             const filteredItemsInxs = fixture.componentInstance.filterCities('l');
@@ -2039,7 +2028,6 @@ describe('igxSelect', () => {
                 'Östringen'];
             fixture.detectChanges();
             select.open();
-            tick();
             fixture.detectChanges();
 
             // German characters

@@ -340,7 +340,6 @@ describe('IgxToggle', () => {
 
         button = fixture.componentInstance.button2.nativeElement;
         button.click();
-        tick();
         fixture.detectChanges();
 
         toggle = fixture.debugElement.query(By.css('#toggle2'));

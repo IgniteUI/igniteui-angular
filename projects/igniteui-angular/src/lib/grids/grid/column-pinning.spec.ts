@@ -1,6 +1,6 @@
 
 import { DebugElement } from '@angular/core';
-import { TestBed, waitForAsync, ComponentFixture , tick } from '@angular/core/testing';
+import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import {
@@ -253,7 +253,6 @@ describe('Column Pinning UI #grid', () => {
 
             const pinningUIButton = GridFunctions.getColumnPinningButton(fix);
             pinningUIButton.click();
-            tick();
             fix.detectChanges();
 
             expect(GridFunctions.getOverlay(fix).querySelectorAll('igx-checkbox').length).toEqual(5);
@@ -262,7 +261,6 @@ describe('Column Pinning UI #grid', () => {
             fix.detectChanges();
 
             pinningUIButton.click();
-            tick();
             fix.detectChanges();
 
             expect(GridFunctions.getOverlay(fix).querySelectorAll('igx-checkbox').length).toEqual(4);

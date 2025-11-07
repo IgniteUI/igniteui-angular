@@ -816,7 +816,6 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, true, false);
       const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, true) as HTMLElement;
       input.click();
-      tick();
       fix.detectChanges();
 
       // Click on 'today' item in calendar.
@@ -1018,7 +1017,6 @@ describe('IgxQueryBuilder', () => {
 
         const closeBtn = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
         closeBtn.click();
-        tick();
         fix.detectChanges();
       }
     }));
@@ -1388,7 +1386,6 @@ describe('IgxQueryBuilder', () => {
       const confirmButton = Array.from(dialogOutlet.querySelectorAll('button'))[1];
       expect(confirmButton.innerText).toEqual('Confirm');
       confirmButton.click();
-      tick();
       fix.detectChanges();
 
       QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
@@ -1686,7 +1683,6 @@ describe('IgxQueryBuilder', () => {
       // Click on the 'commit' button
       const commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
       commitBtn.click();
-      tick();
       fix.detectChanges();
       tick(100);
       fix.detectChanges();
@@ -1701,7 +1697,6 @@ describe('IgxQueryBuilder', () => {
       // Click on the 'discard' button
       const closeBtn = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
       closeBtn.click();
-      tick();
       fix.detectChanges();
       tick(100);
       fix.detectChanges();
@@ -1728,7 +1723,6 @@ describe('IgxQueryBuilder', () => {
       // Click on the 'commit' button
       const commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
       commitBtn.click();
-      tick();
       fix.detectChanges();
       tick(100);
       fix.detectChanges();
@@ -1759,7 +1753,6 @@ describe('IgxQueryBuilder', () => {
       // Click on the 'commit' button
       const commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
       commitBtn.click();
-      tick();
       fix.detectChanges();
       tick(300);
       fix.detectChanges();
@@ -1786,7 +1779,6 @@ describe('IgxQueryBuilder', () => {
       // Click on the 'close' button
       const closeBtn = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
       closeBtn.click();
-      tick();
       fix.detectChanges();
       tick(300);
       fix.detectChanges();
@@ -2398,7 +2390,6 @@ describe('IgxQueryBuilder', () => {
       // Add new expression
       const btn = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fixture, 0)[0] as HTMLElement;
       btn.click();
-      tick();
       fixture.detectChanges();
 
       // Populate edit inputs.

@@ -1669,7 +1669,6 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             // hide column
             GridFunctions.getColumnHidingButton(fix).click();
-            tick();
             fix.detectChanges();
             const columnChooser = GridFunctions.getColumnHidingElement(fix);
 

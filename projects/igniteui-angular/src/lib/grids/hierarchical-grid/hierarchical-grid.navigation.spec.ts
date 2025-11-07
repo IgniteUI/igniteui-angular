@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync , tick } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, ViewChild, DebugElement} from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
@@ -220,7 +220,6 @@ describe('IgxHierarchicalGrid Navigation', () => {
             fixture.detectChanges();
 
             childGrid.dataRowList.toArray()[4].expander.nativeElement.click();
-            tick();
             fixture.detectChanges();
             await wait();
 

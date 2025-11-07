@@ -552,7 +552,6 @@ describe('IgxGrid - Row Adding #grid', () => {
 
             const doneButtonElement = GridFunctions.getRowEditingDoneButton(fixture);
             doneButtonElement.click();
-            tick();
             fixture.detectChanges();
 
             newRow = grid.gridAPI.get_row_by_index(1);
@@ -573,7 +572,6 @@ describe('IgxGrid - Row Adding #grid', () => {
 
             const cancelButtonElement = GridFunctions.getRowEditingCancelButton(fixture);
             cancelButtonElement.click();
-            tick();
             fixture.detectChanges();
             await wait(100);
             fixture.detectChanges();
@@ -637,7 +635,6 @@ describe('IgxGrid - Row Adding #grid', () => {
 
             const cancelButtonElement = GridFunctions.getRowEditingCancelButton(fixture);
             cancelButtonElement.click();
-            tick();
             fixture.detectChanges();
             await wait(100);
             fixture.detectChanges();

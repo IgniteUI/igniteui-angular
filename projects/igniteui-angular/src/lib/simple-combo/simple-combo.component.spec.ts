@@ -653,7 +653,6 @@ describe('IgxSimpleCombo', () => {
         }));
         it('should render placeholder values for inputs properly', () => {
             combo.toggle();
-            tick();
             fixture.detectChanges();
             expect(combo.collapsed).toBeFalsy();
             expect(combo.placeholder).toEqual('Location');
@@ -1182,7 +1181,6 @@ describe('IgxSimpleCombo', () => {
 
         it('should select an item from the dropdown list with the Space key without closing it', () => {
             combo.open();
-            tick();
             fixture.detectChanges();
 
             const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
@@ -1202,7 +1200,6 @@ describe('IgxSimpleCombo', () => {
 
         it('should close the dropdown list on pressing Tab key', fakeAsync(() => {
             combo.open();
-            tick();
             fixture.detectChanges();
 
             const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
@@ -1309,7 +1306,6 @@ describe('IgxSimpleCombo', () => {
             fixture.componentInstance.allowCustomValues = true;
             fixture.detectChanges();
             combo.open();
-            tick();
             fixture.detectChanges();
             UIInteractions.setInputElementValue(input.nativeElement, 'Massachuset');
             fixture.detectChanges();
@@ -1335,7 +1331,6 @@ describe('IgxSimpleCombo', () => {
             UIInteractions.setInputElementValue(input.nativeElement, 'MassachusettsL');
             fixture.detectChanges();
             combo.open();
-            tick();
             fixture.detectChanges();
             const addItemButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_ADDBUTTON}`));
             expect(addItemButton).toBeDefined();
@@ -1396,7 +1391,6 @@ describe('IgxSimpleCombo', () => {
 
         it('should close the dropdown with Alt + ArrowUp', fakeAsync(() => {
             combo.open();
-            tick();
             fixture.detectChanges();
             spyOn(combo, 'close').and.callThrough();
 
@@ -1837,7 +1831,6 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
 
             combo.open();
-            tick();
             fixture.detectChanges();
             expect(combo.collapsed).toEqual(false);
             expect(combo.overlaySettings.positionStrategy.settings.verticalDirection).toBe(-1);
@@ -1881,7 +1874,6 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
 
             dropdown.toggle();
-            tick();
             fixture.detectChanges();
 
             UIInteractions.simulateTyping('Ohio ', input);
@@ -2445,7 +2437,6 @@ describe('IgxSimpleCombo', () => {
                 let model;
 
                 combo.open();
-                tick();
                 fixture.detectChanges();
                 const item2 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[3];
                 item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
@@ -2741,7 +2732,6 @@ describe('IgxSimpleCombo', () => {
                 input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
 
                 combo.open();
-                tick();
                 fixture.detectChanges();
                 const item2 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[3];
                 item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
