@@ -575,50 +575,63 @@ function migrateFile(filePath: string, content: string): string {
     return result;
 }
 
-export default (): Rule => async (host: Tree, context: SchematicContext) => {
+interface MigrationOptions {
+    migrateImports?: boolean;
+}
+
+export default (options: MigrationOptions = {}): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
-    context.logger.info('Migrating imports to new entry points...');
+    
+    const shouldMigrateImports = options.migrateImports !== false; // Default to true if not specified
+    
+    if (shouldMigrateImports) {
+        context.logger.info('Migrating imports to new entry points...');
 
-    const visit: FileVisitor = (filePath) => {
-        // Only process TypeScript files
-        if (!filePath.endsWith('.ts')) {
-            return;
-        }
+        const visit: FileVisitor = (filePath) => {
+            // Only process TypeScript files
+            if (!filePath.endsWith('.ts')) {
+                return;
+            }
 
-        // Skip node_modules and dist
-        if (filePath.includes('node_modules') || filePath.includes('dist')) {
-            return;
-        }
+            // Skip node_modules and dist
+            if (filePath.includes('node_modules') || filePath.includes('dist')) {
+                return;
+            }
 
-        const content = host.read(filePath);
-        if (!content) {
-            return;
-        }
+            const content = host.read(filePath);
+            if (!content) {
+                return;
+            }
 
-        const originalContent = content.toString();
+            const originalContent = content.toString();
 
-        // Check if file has igniteui-angular imports
-        if (!originalContent.includes("from 'igniteui-angular'") && !originalContent.includes('from "igniteui-angular"')) {
-            return;
-        }
+            // Check if file has igniteui-angular imports
+            if (!originalContent.includes("from 'igniteui-angular'") && !originalContent.includes('from "igniteui-angular"')) {
+                return;
+            }
 
-        const migratedContent = migrateFile(filePath, originalContent);
+            const migratedContent = migrateFile(filePath, originalContent);
 
-        if (migratedContent !== originalContent) {
-            host.overwrite(filePath, migratedContent);
-            context.logger.info(`  ✓ Migrated ${filePath}`);
-        }
-    };
+            if (migratedContent !== originalContent) {
+                host.overwrite(filePath, migratedContent);
+                context.logger.info(`  ✓ Migrated ${filePath}`);
+            }
+        };
 
-    host.visit(visit);
+        host.visit(visit);
 
-    context.logger.info('Migration complete!');
-    context.logger.info('Breaking changes:');
-    context.logger.info('  - Input directives moved to igniteui-angular/input-group');
-    context.logger.info('  - IgxAutocompleteDirective moved to igniteui-angular/drop-down');
-    context.logger.info('  - IgxRadioGroupDirective moved to igniteui-angular/radio');
-    context.logger.info('Type renames:');
-    context.logger.info('  - Direction → IgxCarouselDirection');
-    context.logger.info('  - Size → ElementDimensions');
-    context.logger.info('  - IChangeCheckboxEventArgs → IChangeRadioEventArgs');
+        context.logger.info('Migration complete!');
+        context.logger.info('Breaking changes:');
+        context.logger.info('  - Input directives moved to igniteui-angular/input-group');
+        context.logger.info('  - IgxAutocompleteDirective moved to igniteui-angular/drop-down');
+        context.logger.info('  - IgxRadioGroupDirective moved to igniteui-angular/radio');
+        context.logger.info('Type renames:');
+        context.logger.info('  - Direction → IgxCarouselDirection');
+        context.logger.info('  - Size → ElementDimensions');
+        context.logger.info('  - IChangeCheckboxEventArgs → IChangeRadioEventArgs');
+    } else {
+        context.logger.info('Skipping import migration. You can continue using the main entry point.');
+        context.logger.info('Note: The library now supports granular entry points for better tree-shaking.');
+        context.logger.info('To migrate later, run: ng update igniteui-angular --migrate-only --from=20.1.0 --to=21.0.0');
+    }
 };
