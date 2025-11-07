@@ -454,10 +454,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return this.parentIsland ? this.parentIsland.actionStrip : super.actionStrip;
     }
 
+    /** @hidden @internal */
     public override get advancedFilteringExpressionsTree(): IFilteringExpressionsTree {
         return super.advancedFilteringExpressionsTree;
     }
-
+    /** @hidden @internal */
     public override set advancedFilteringExpressionsTree(value: IFilteringExpressionsTree) {
         if (!this._hGridSchema) {
             this._hGridSchema = this.generateSchema();
