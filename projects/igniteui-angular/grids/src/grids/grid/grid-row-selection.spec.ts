@@ -1,8 +1,8 @@
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { wait, UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxBooleanFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
+import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxBooleanFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
 import {
     RowSelectionComponent,
     SelectionWithScrollsComponent,
@@ -10,13 +10,13 @@ import {
     RowSelectionWithoutPrimaryKeyComponent,
     SelectionWithTransactionsComponent,
     GridCustomSelectorsComponent
-} from '../../../core/src/test-utils/grid-samples.spec';
-import { GridFunctions, GridSelectionFunctions } from '../../../core/src/test-utils/grid-functions.spec';
-import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
+} from '../../../../test-utils/grid-samples.spec.ts';
+import { GridFunctions, GridSelectionFunctions } from '../../../../test-utils/grid-functions.spec.ts';
+import { SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
 import { GridSelectionMode } from '../common/enums';
-import { FilteringExpressionsTree } from '../../../core/src/data-operations/filtering-expressions-tree';
-import { FilteringLogic } from '../../../core/src/data-operations/filtering-expression.interface';
-import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
+import { FilteringExpressionsTree } from '../../../../core/src/data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../../../../core/src/data-operations/filtering-expression.interface';
+import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
 import { IRowSelectionEventArgs } from '../public_api';
 
 const DEBOUNCETIME = 30;

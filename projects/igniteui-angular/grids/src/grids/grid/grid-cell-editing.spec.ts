@@ -2,19 +2,19 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
-import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
-import { IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
-import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec.ts';
+import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
+import { GridFunctions } from '../../../../test-utils/grid-functions.spec.ts';
 import {
     CellEditingTestComponent, CellEditingScrollTestComponent,
     SelectionWithTransactionsComponent,
     ColumnEditablePropertyTestComponent,
     CellEditingCustomEditorTestComponent
-} from '../../../core/src/test-utils/grid-samples.spec';
+} from '../../../../test-utils/grid-samples.spec.ts';
 import { DebugElement } from '@angular/core';
 import { first, takeUntil } from 'rxjs/operators';
 import { Subject, fromEvent } from 'rxjs';
-import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
+import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
 import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxColumnComponent } from '../public_api';
 
 const DEBOUNCE_TIME = 30;

@@ -2,13 +2,13 @@
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
+import { SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
 import { ViewChild, Component, DebugElement } from '@angular/core';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
-import { wait, UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
-import { DefaultSortingStrategy, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
-import { GridFunctions, GRID_MRL_BLOCK } from '../../../core/src/test-utils/grid-functions.spec';
-import { ControlsFunction } from '../../../core/src/test-utils/controls-functions.spec';
+import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
+import { DefaultSortingStrategy, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
+import { GridFunctions, GRID_MRL_BLOCK } from '../../../../test-utils/grid-functions.spec.ts';
+import { ControlsFunction } from '../../../../test-utils/controls-functions.spec.ts';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridToolbarComponent } from '../toolbar/grid-toolbar.component';
 import { IgxGridToolbarActionsComponent } from '../toolbar/common';

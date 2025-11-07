@@ -12,7 +12,7 @@ import { IBaseCancelableBrowserEventArgs } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputState, IgxLabelDirective } from '../../../input-group/src/public_api';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, ConnectedPositioningStrategy } from 'igniteui-angular/core';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec.ts';
 import { IgxSimpleComboComponent, ISimpleComboSelectionChangingEventArgs } from './public_api';
 import { IgxGridComponent } from '../../../grids/src/grids/grid/grid.component';
 import { IGX_GRID_DIRECTIVES } from '../../../grids/src/grids/grid/public_api';

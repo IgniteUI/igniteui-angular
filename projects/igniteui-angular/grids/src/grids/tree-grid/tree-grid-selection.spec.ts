@@ -10,24 +10,24 @@ import {
     IgxTreeGridCascadingSelectionComponent,
     IgxTreeGridCascadingSelectionTransactionComponent,
     IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent
-} from '../../../core/src/test-utils/tree-grid-components.spec';
+} from '../../../../test-utils/tree-grid-components.spec.ts';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     TreeGridFunctions,
     TREE_ROW_SELECTION_CSS_CLASS,
     ROW_EDITING_BANNER_OVERLAY_CLASS,
     TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS
-} from '../../../core/src/test-utils/tree-grid-functions.spec';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
-import { wait, UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
+} from '../../../../test-utils/tree-grid-functions.spec.ts';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
+import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
 import { IgxActionStripComponent } from '../../../action-strip/src/public_api';
-import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { GridFunctions } from '../../../../test-utils/grid-functions.spec.ts';
 import { GridSelectionMode } from '../common/enums';
 import { By } from '@angular/platform-browser';
-import { FilteringExpressionsTree } from '../../../core/src/data-operations/filtering-expressions-tree';
-import { FilteringLogic } from '../../../core/src/data-operations/filtering-expression.interface';
+import { FilteringExpressionsTree } from '../../../../core/src/data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../../../../core/src/data-operations/filtering-expression.interface';
 import { IRowSelectionEventArgs } from '../common/events';
-import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
+import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
 import { IgxGridCell } from '../public_api';
 
 describe('IgxTreeGrid - Selection #tGrid', () => {

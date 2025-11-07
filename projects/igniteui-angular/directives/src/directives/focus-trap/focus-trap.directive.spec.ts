@@ -4,8 +4,8 @@ import { By } from '@angular/platform-browser';
 import { IgxFocusTrapDirective } from './focus-trap.directive';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
-import { IgxTimePickerComponent } from '../../../time-picker/src/time-picker.component';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
+import { IgxTimePickerComponent } from '../../../../time-picker/src/time-picker/time-picker.component';
 
 describe('igxFocusTrap', () => {
     beforeEach(waitForAsync(() => {

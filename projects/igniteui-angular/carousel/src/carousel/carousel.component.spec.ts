@@ -5,11 +5,11 @@ import {
     IgxCarouselComponent,
     ISlideEventArgs
 } from './carousel.component';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSlideComponent } from './slide.component';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { CarouselIndicatorsOrientation, CarouselAnimationType } from './enums';
+import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec.ts';
 
 describe('Carousel', () => {
     let fixture;

@@ -2,8 +2,8 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxHierarchicalGridComponent } from './public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxActionStripComponent } from '../../../action-strip/src/public_api';
-import { IgxHierarchicalGridActionStripComponent } from '../../../core/src/test-utils/hierarchical-grid-components.spec';
-import { wait } from '../../../core/src/test-utils/ui-interactions.spec';
+import { IgxHierarchicalGridActionStripComponent } from '../../../../test-utils/hierarchical-grid-components.spec.ts';
+import { wait } from '../../../../test-utils/ui-interactions.spec.ts';
 import { By } from '@angular/platform-browser';
 
 describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {

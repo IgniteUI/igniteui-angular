@@ -2,12 +2,12 @@ import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angul
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
-import { IgxGridClipboardComponent } from '../../../core/src/test-utils/grid-samples.spec';
-import { CancelableEventArgs } from '../../../core/src/core/utils';
+import { IgxGridClipboardComponent } from '../../../../test-utils/grid-samples.spec.ts';
+import { CancelableEventArgs } from '../../../../core/src/core/utils';
 import { take } from 'rxjs/operators';
-import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { GridFunctions } from '../../../../test-utils/grid-functions.spec.ts';
 import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
-import { IgxInputDirective } from '../../../input-group/src/public_api';
+import { IgxInputDirective } from '../../../../input-group/src/public_api';
 
 describe('IgxGrid - Clipboard #grid', () => {
 

@@ -5,11 +5,11 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { By } from '@angular/platform-browser';
-import { DefaultSortingStrategy, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
-import { IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
+import { DefaultSortingStrategy, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
+import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
-import { GridSummaryFunctions, GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
-import { wait } from '../../../core/src/test-utils/ui-interactions.spec';
+import { GridSummaryFunctions, GridFunctions } from '../../../../test-utils/grid-functions.spec.ts';
+import { wait } from '../../../../test-utils/ui-interactions.spec.ts';
 import { DropPosition } from '../moving/moving.service';
 import { OneGroupOneColGridComponent, OneGroupThreeColsGridComponent,
     BlueWhaleGridComponent, ColumnGroupTestComponent, ColumnGroupFourLevelTestComponent,
@@ -18,7 +18,7 @@ import { OneGroupOneColGridComponent, OneGroupThreeColsGridComponent,
     OneColPerGroupGridComponent, NestedColumnGroupsGridComponent,
     DynamicGridComponent, NestedColGroupsWithTemplatesGridComponent,
     DynamicColGroupsGridComponent,
-    ColumnGroupHiddenInTemplateComponent} from '../../../core/src/test-utils/grid-mch-sample.spec';
+    ColumnGroupHiddenInTemplateComponent} from '../../../../test-utils/grid-mch-sample.spec.ts';
 import { CellType } from '../common/grid.interface';
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid-th__title';

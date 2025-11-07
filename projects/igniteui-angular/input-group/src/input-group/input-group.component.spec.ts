@@ -2,7 +2,7 @@ import { Component, ViewChild, ElementRef, Inject } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent } from './input-group.component';
-import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
 import { IgxInputDirective } from '../public_api';
 import { IgxPrefixDirective, IgxSuffixDirective } from '../chips/public_api';
 import { IGX_INPUT_GROUP_TYPE, IgxInputGroupType } from './inputGroupType';

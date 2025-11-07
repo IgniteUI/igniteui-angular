@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first, take } from 'rxjs/operators';
 import { NoopPivotDimensionsStrategy } from '../../../core/src/data-operations/pivot-strategy';
-import { IgxPivotGridPersistanceComponent } from '../../../test-utils/pivot-grid-samples.spec';
+import { IgxPivotGridPersistanceComponent } from '../../../../test-utils/pivot-grid-samples.spec.ts';
 import { IgxPivotNumericAggregate } from './pivot-grid/pivot-grid-aggregate';
 import { IgxPivotDateDimension } from './pivot-grid/pivot-grid-dimensions';
 import { IPivotDimension, IPivotGridRecord } from './pivot-grid/pivot-grid.interface';

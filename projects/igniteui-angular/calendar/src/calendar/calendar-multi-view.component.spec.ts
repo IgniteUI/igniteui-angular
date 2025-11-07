@@ -2,12 +2,12 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
-import { ymd } from '../../../test-utils/helper-utils.spec';
 import { IgxCalendarComponent } from './public_api';
 import { IgxDatePickerComponent } from '../../../date-picker/src/public_api';
 import { DateRangeType } from 'igniteui-angular/core';
-import { HelperTestFunctions } from '../../../test-utils/calendar-helper-utils';
+import { HelperTestFunctions } from 'igniteui-angular/test-utils/calendar-helper-utils';
+import { ymd } from 'igniteui-angular/test-utils/helper-utils.spec';
+import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 
 describe('Multi-View Calendar - ', () => {
     let fixture: ComponentFixture<any>

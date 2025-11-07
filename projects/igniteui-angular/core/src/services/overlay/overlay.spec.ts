@@ -12,13 +12,13 @@ import {
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first } from 'rxjs/operators';
-import { IgxAvatarComponent } from '../../../avatar/src/avatar.component';
-import { IgxCalendarComponent } from '../../../calendar/src/public_api';
-import { IgxCalendarContainerComponent } from '../../date-common/calendar-container/calendar-container.component';
-import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
+import { IgxAvatarComponent } from '../../../../avatar/src/avatar/avatar.component';
+import { IgxCalendarComponent } from '../../../../calendar/src/public_api';
+import { IgxCalendarContainerComponent } from '../../../../date-picker/src/date-picker/calendar-container/calendar-container.component';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
 import { IgxAngularAnimationService } from '../animation/angular-animation-service';
 import { AnimationService } from '../animation/animation';
-import { IgxOverlayOutletDirective, IgxToggleDirective } from './../../directives/toggle/toggle.directive';
+import { IgxOverlayOutletDirective, IgxToggleDirective } from '../../../../directives/src/directives/toggle/toggle.directive';
 import { IgxOverlayService } from './overlay';
 import { ContainerPositionStrategy } from './position';
 import { AutoPositionStrategy } from './position/auto-position-strategy';

@@ -1,7 +1,7 @@
 import { waitForAsync, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxTreeNavigationComponent, IgxTreeScrollComponent, IgxTreeSimpleComponent } from './tree-samples.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec.ts';
 import { IgxTreeNavigationService } from './tree-navigation.service';
 import { ElementRef, EventEmitter } from '@angular/core';
 import { IgxTreeSelectionService } from './tree-selection.service';

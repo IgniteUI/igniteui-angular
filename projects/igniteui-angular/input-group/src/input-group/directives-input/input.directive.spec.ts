@@ -4,10 +4,10 @@ import { FormsModule, UntypedFormBuilder, ReactiveFormsModule, Validators, Untyp
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent } from '../input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
-import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
 import { IgxLabelDirective } from '../label/label.directive';
 import { IgxSuffixDirective } from '../suffix/suffix.directive';
-import { IgxIconComponent } from '../../../icon/src/icon/icon.component';
+import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
 import { IgxMaskDirective } from '../mask/mask.directive';
 
 const INPUT_CSS_CLASS = 'igx-input-group__input';

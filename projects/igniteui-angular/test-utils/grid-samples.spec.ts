@@ -28,7 +28,7 @@ import { IgxExcelStyleMovingComponent } from '../grids/src/grids/filtering/excel
 import { IgxExcelStylePinningComponent } from '../grids/src/grids/filtering/excel-style/excel-style-pinning.component';
 import { IgxExcelStyleSearchComponent } from '../grids/src/grids/filtering/excel-style/excel-style-search.component';
 import { IgxExcelStyleSelectingComponent } from '../grids/src/grids/filtering/excel-style/excel-style-selecting.component';
-import { IgxInputGroupComponent } from '../../../input-group/src/input-group.component';
+import { IgxInputGroupComponent } from '../../../input-group/src/input-group/input-group.component';
 import { IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective } from '../input-group/src/public_api';
 import { IgxGridToolbarComponent } from '../grids/src/grids/toolbar/grid-toolbar.component';
 import { IgxCheckboxComponent } from '../checkbox/src/checkbox/checkbox.component';

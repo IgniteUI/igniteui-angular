@@ -3,23 +3,23 @@ import { fakeAsync, TestBed, tick, ComponentFixture, flush, waitForAsync } from 
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { wait, UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
-import { GridFunctions, GridSummaryFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
+import { GridFunctions, GridSummaryFunctions } from '../../../../test-utils/grid-functions.spec.ts';
 import {
     ProductsComponent,
     SummaryColumnComponent,
     FilteringComponent,
     SummariesGroupByComponent,
     SummariesGroupByTransactionsComponent
-} from '../../../core/src/test-utils/grid-samples.spec';
-import { clearGridSubs, setupGridScrollDetection, ymd } from '../../../core/src/test-utils/helper-utils.spec';
-import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
+} from '../../../../test-utils/grid-samples.spec.ts';
+import { clearGridSubs, setupGridScrollDetection, ymd } from '../../../../test-utils/helper-utils.spec.ts';
+import { SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
 import { GridSummaryCalculationMode } from '../common/enums';
-import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
+import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
 import { DropPosition } from '../moving/moving.service';
 import { DatePipe } from '@angular/common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
+import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
 import { IColumnPipeArgs, IgxColumnComponent, IgxDateSummaryOperand, IgxGridRow, IgxGroupByRow, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult, IgxSummaryRow } from '../public_api';
 
 describe('IgxGrid - Summaries #grid', () => {

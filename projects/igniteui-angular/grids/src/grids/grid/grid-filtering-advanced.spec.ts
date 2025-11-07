@@ -1,14 +1,14 @@
 import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
 import {
     IgxNumberFilteringOperand,
     IgxStringFilteringOperand
-} from '../../../core/src/data-operations/filtering-condition';
-import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
-import { FilteringExpressionsTree } from '../../../core/src/data-operations/filtering-expressions-tree';
-import { FilteringLogic } from '../../../core/src/data-operations/filtering-expression.interface';
+} from '../../../../core/src/data-operations/filtering-condition';
+import { GridFunctions } from '../../../../test-utils/grid-functions.spec.ts';
+import { FilteringExpressionsTree } from '../../../../core/src/data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../../../../core/src/data-operations/filtering-expression.interface';
 import {
     IgxGridAdvancedFilteringColumnGroupComponent,
     IgxGridAdvancedFilteringComponent,
@@ -17,18 +17,18 @@ import {
     IgxGridAdvancedFilteringDynamicColumnsComponent,
     IgxGridAdvancedFilteringSerializedTreeComponent,
     IgxGridAdvancedFilteringWithToolbarComponent
-} from '../../../core/src/test-utils/grid-samples.spec';
-import { FormattedValuesFilteringStrategy } from '../../../core/src/data-operations/filtering-strategy';
-import { IgxHierarchicalGridExportComponent, IgxHierarchicalGridTestBaseComponent, IgxHierGridExternalAdvancedFilteringComponent } from '../../../core/src/test-utils/hierarchical-grid-components.spec';
+} from '../../../../test-utils/grid-samples.spec.ts';
+import { FormattedValuesFilteringStrategy } from '../../../../core/src/data-operations/filtering-strategy';
+import { IgxHierarchicalGridExportComponent, IgxHierarchicalGridTestBaseComponent, IgxHierGridExternalAdvancedFilteringComponent } from '../../../../test-utils/hierarchical-grid-components.spec.ts';
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
 import { IFilteringEventArgs, IgxGridToolbarAdvancedFilteringComponent } from '../public_api';
-import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
-import { QueryBuilderFunctions } from '../../../query-builder/src/query-builder-functions.spec';
+import { SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
+import { QueryBuilderFunctions } from '../../../query-builder/src/query-builder/query-builder-functions.spec.ts';
 import { By } from '@angular/platform-browser';
-import { IgxDateTimeEditorDirective } from '../../../directives/date-time-editor/date-time-editor.directive';
-import { QueryBuilderSelectors } from '../../../query-builder/src/query-builder.common';
+import { IgxDateTimeEditorDirective } from '../../../../directives/src/directives/date-time-editor/date-time-editor.directive';
+import { QueryBuilderSelectors } from '../../../query-builder/src/query-builder/query-builder.common';
 import { IgxHGridRemoteOnDemandComponent, IgxHierarchicalGridMissingChildDataComponent } from '../hierarchical-grid/hierarchical-grid.spec';
-import { IGridResourceStrings } from '../../../core/i18n/grid-resources';
+import { IGridResourceStrings } from '../../../../core/src/core/i18n/grid-resources';
 
 describe('IgxGrid - Advanced Filtering #grid - ', () => {
     beforeEach(waitForAsync(() => {

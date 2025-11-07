@@ -15,7 +15,6 @@ import { IForOfState } from '../../../directives/src/directives/for-of/for_of.di
 import { IgxInputState } from '../../../input-group/src/public_api';
 import { IgxLabelDirective } from '../../../input-group/src/public_api';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from 'igniteui-angular/core';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboItemComponent } from './combo-item.component';
@@ -26,6 +25,7 @@ import {
 import { IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective } from './combo.directives';
 import { IgxComboFilteringPipe, comboIgnoreDiacriticsFilter } from './combo.pipes';
 import { IgxDropDownItemBaseDirective } from '../../../drop-down/src/drop-down/drop-down-item.base';
+import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec.ts';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';

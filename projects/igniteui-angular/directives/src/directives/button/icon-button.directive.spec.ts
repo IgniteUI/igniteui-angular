@@ -4,7 +4,7 @@ import { Component, ViewChild } from '@angular/core';
 import { IgxIconButtonDirective } from './icon-button.directive';
 import { IgxRippleDirective } from '../ripple/ripple.directive';
 import { By } from '@angular/platform-browser';
-import { IgxIconComponent } from '../../../icon/src/icon/icon.component';
+import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
 
 describe('IgxIconButton', () => {
 

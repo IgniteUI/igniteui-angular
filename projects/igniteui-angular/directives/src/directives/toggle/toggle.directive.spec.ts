@@ -6,11 +6,11 @@ import { IgxToggleActionDirective, IgxToggleDirective, IgxOverlayOutletDirective
 import {
     IgxOverlayService, OverlaySettings, ConnectedPositioningStrategy,
     AbsoluteScrollStrategy, AutoPositionStrategy, HorizontalAlignment
-} from '../../services/public_api';
-import { CancelableEventArgs } from '../../../core/utils';
+} from '../../../../core/src/services/public_api';
+import { CancelableEventArgs } from '../../../../core/src/core/utils';
 
 import { first } from 'rxjs/operators';
-import { OffsetMode } from '../../services/overlay/utilities';
+import { OffsetMode } from '../../../../core/src/services/overlay/utilities';
 
 describe('IgxToggle', () => {
     const HIDDEN_TOGGLER_CLASS = 'igx-toggle--hidden';

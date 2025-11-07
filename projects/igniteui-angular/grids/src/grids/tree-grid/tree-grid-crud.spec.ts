@@ -2,13 +2,13 @@
 import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxTreeGridComponent } from './public_api';
-import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../../core/src/test-utils/tree-grid-components.spec';
-import { TreeGridFunctions } from '../../../core/src/test-utils/tree-grid-functions.spec';
+import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../../../test-utils/tree-grid-components.spec.ts';
+import { TreeGridFunctions } from '../../../../test-utils/tree-grid-functions.spec.ts';
 import { first } from 'rxjs/operators';
-import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
 import { DropPosition } from '../moving/moving.service';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { GridFunctions } from '../../../../test-utils/grid-functions.spec.ts';
 import { DebugElement } from '@angular/core';
 
 const CELL_CSS_CLASS = '.igx-grid__td';

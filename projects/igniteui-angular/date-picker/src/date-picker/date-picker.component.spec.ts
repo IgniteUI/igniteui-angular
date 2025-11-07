@@ -1,12 +1,12 @@
 import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
 import {
     IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
 } from '../../../input-group/src/public_api';
 import { IFormattingViews, IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, WEEKDAYS } from '../../../calendar/src/public_api';
-import { IgxCalendarContainerComponent } from '../../../core/src/date-common/calendar-container/calendar-container.component';
+import { IgxCalendarContainerComponent } from './calendar-container/calendar-container.component';
 import { IgxDatePickerComponent } from './date-picker.component';
 import {
     IgxOverlayService,

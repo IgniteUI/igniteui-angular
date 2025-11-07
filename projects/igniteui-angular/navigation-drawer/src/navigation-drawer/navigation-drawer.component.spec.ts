@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { wait } from '../../../test-utils/ui-interactions.spec';
+import { wait } from '../../../../test-utils/ui-interactions.spec.ts';
 import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
 import { IgxNavigationService } from 'igniteui-angular/core';
 import { PlatformUtil } from 'igniteui-angular/core';

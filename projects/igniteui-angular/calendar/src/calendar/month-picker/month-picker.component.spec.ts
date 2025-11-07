@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
 import { IgxMonthPickerComponent } from './month-picker.component';
 import { IFormattingOptions, IgxCalendarView } from '../calendar';
 

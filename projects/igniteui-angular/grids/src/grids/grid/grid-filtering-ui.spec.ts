@@ -2,9 +2,9 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxInputDirective } from '../../../directives/input/input.directive';
+import { IgxInputDirective } from '../../../../directives/src/directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
-import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec.ts';
 import {
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
@@ -12,25 +12,25 @@ import {
     IgxStringFilteringOperand,
     IgxDateTimeFilteringOperand,
     IgxTimeFilteringOperand
-} from '../../../core/src/data-operations/filtering-condition';
-import { IgxDatePickerComponent } from '../../../date-picker/src/date-picker.component';
+} from '../../../../core/src/data-operations/filtering-condition';
+import { IgxDatePickerComponent } from '../../../../date-picker/src/date-picker/date-picker.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
-import { GridFunctions, GridSelectionFunctions } from '../../../core/src/test-utils/grid-functions.spec';
-import { IgxBadgeComponent } from '../../../badge/src/badge.component';
-import { IgxIconComponent } from '../../../icon/src/icon/icon.component';
-import { DefaultSortingStrategy, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
+import { GridFunctions, GridSelectionFunctions } from '../../../../test-utils/grid-functions.spec.ts';
+import { IgxBadgeComponent } from '../../../../badge/src/badge/badge.component';
+import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
+import { DefaultSortingStrategy, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
-import { igxI18N } from '../../../core/i18n/resources';
+import { igxI18N } from '../../../../core/src/core/i18n/resources';
 import { DatePipe, registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import localeFr from '@angular/common/locales/fr';
 import localeBg from '@angular/common/locales/bg';
-import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../core/src/data-operations/filtering-expressions-tree';
-import { FilteringLogic, IFilteringExpression } from '../../../core/src/data-operations/filtering-expression.interface';
-import { IgxChipComponent } from '../../../chips/src/chip.component';
-import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
+import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../../core/src/data-operations/filtering-expressions-tree';
+import { FilteringLogic, IFilteringExpression } from '../../../../core/src/data-operations/filtering-expression.interface';
+import { IgxChipComponent } from '../../../../chips/src/chips/chip.component';
+import { SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
 import {
     IgxGridFilteringComponent,
     IgxGridFilteringScrollComponent,
@@ -46,17 +46,17 @@ import {
     LoadOnDemandFilterStrategy,
     IgxGridFilteringNumericComponent,
     IgxGridConditionalFilteringComponent
-} from '../../../core/src/test-utils/grid-samples.spec';
+} from '../../../../test-utils/grid-samples.spec.ts';
 import { GridSelectionMode, FilterMode, Size } from '../common/enums';
-import { ControlsFunction } from '../../../core/src/test-utils/controls-functions.spec';
-import { FilteringStrategy, FormattedValuesFilteringStrategy } from '../../../core/src/data-operations/filtering-strategy';
-import { IgxInputGroupComponent } from '../../../input-group/src/public_api';
-import { formatDate, getComponentSize } from '../../../core/src/core/utils';
-import { IgxCalendarComponent } from '../../../calendar/src/calendar.component';
-import { GridResourceStringsEN } from '../../../core/i18n/grid-resources';
-import { setElementSize } from '../../../core/src/test-utils/helper-utils.spec';
-import { IgxDateTimeEditorDirective } from '../../../directives/date-time-editor/date-time-editor.directive';
-import { IgxTimePickerComponent } from '../../../time-picker/src/time-picker.component';
+import { ControlsFunction } from '../../../../test-utils/controls-functions.spec.ts';
+import { FilteringStrategy, FormattedValuesFilteringStrategy } from '../../../../core/src/data-operations/filtering-strategy';
+import { IgxInputGroupComponent } from '../../../../input-group/src/public_api';
+import { formatDate, getComponentSize } from '../../../../core/src/core/utils';
+import { IgxCalendarComponent } from '../../../../calendar/src/calendar/calendar.component';
+import { GridResourceStringsEN } from '../../../../core/src/core/i18n/grid-resources';
+import { setElementSize } from '../../../../test-utils/helper-utils.spec.ts';
+import { IgxDateTimeEditorDirective } from '../../../../directives/src/directives/date-time-editor/date-time-editor.directive';
+import { IgxTimePickerComponent } from '../../../../time-picker/src/time-picker/time-picker.component';
 
 const DEBOUNCE_TIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';

@@ -11,7 +11,7 @@ import { IgxSelectComponent, IgxSelectFooterDirective, IgxSelectHeaderDirective 
 import { IgxSelectItemComponent } from './select-item.component';
 import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from 'igniteui-angular/core';
 import { addScrollDivToElement } from 'igniteui-angular/core';
-import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputState } from './../directives/input/input.directive';

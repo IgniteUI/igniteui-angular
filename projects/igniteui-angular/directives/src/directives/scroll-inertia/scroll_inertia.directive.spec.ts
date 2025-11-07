@@ -9,7 +9,7 @@ import {
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxScrollInertiaDirective } from './scroll_inertia.directive';
 
-import { wait } from '../../../core/src/test-utils/ui-interactions.spec';
+import { wait } from '../../../../test-utils/ui-interactions.spec.ts';
 
 describe('Scroll Inertia Directive - Rendering', () => {
     let fix: ComponentFixture<ScrollInertiaComponent>;

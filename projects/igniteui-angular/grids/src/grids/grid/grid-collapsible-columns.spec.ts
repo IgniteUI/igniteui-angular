@@ -5,11 +5,11 @@ import {
     CollapsibleColumnGroupTestComponent,
     CollapsibleGroupsTemplatesTestComponent,
     CollapsibleGroupsDynamicColComponent
-} from '../../../core/src/test-utils/grid-samples.spec';
-import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
-import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
+} from '../../../../test-utils/grid-samples.spec.ts';
+import { GridFunctions } from '../../../../test-utils/grid-functions.spec.ts';
+import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec.ts';
 import { DropPosition } from '../moving/moving.service';
-import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
+import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 
 describe('IgxGrid - multi-column headers #grid', () => {

@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
 import { IDialogCancellableEventArgs, IDialogEventArgs, IgxDialogComponent } from './dialog.component';
 import { useAnimation } from '@angular/animations';
 import { PositionSettings, HorizontalAlignment, VerticalAlignment } from 'igniteui-angular/core';

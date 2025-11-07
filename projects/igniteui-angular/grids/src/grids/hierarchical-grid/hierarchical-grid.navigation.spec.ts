@@ -2,12 +2,12 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, ViewChild, DebugElement} from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { wait, UIInteractions, waitForSelectionChange } from '../../../core/src/test-utils/ui-interactions.spec';
+import { wait, UIInteractions, waitForSelectionChange } from '../../../../test-utils/ui-interactions.spec.ts';
 import { IgxRowIslandComponent } from './row-island.component';
 import { By } from '@angular/platform-browser';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
-import { clearGridSubs, setupHierarchicalGridScrollDetection } from '../../../core/src/test-utils/helper-utils.spec';
-import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { clearGridSubs, setupHierarchicalGridScrollDetection } from '../../../../test-utils/helper-utils.spec.ts';
+import { GridFunctions } from '../../../../test-utils/grid-functions.spec.ts';
 import { IgxGridCellComponent } from '../cell.component';
 import { IGridCellEventArgs, IgxColumnComponent, IPathSegment } from '../public_api';
 

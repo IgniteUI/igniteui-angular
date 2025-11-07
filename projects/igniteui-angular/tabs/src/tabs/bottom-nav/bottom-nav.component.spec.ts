@@ -8,13 +8,13 @@ import { BottomTabBarTestComponent,
         TabBarTabsOnlyModeTestComponent,
         TabBarTestComponent,
         BottomNavRoutingGuardTestComponent,
-        BottomNavTestHtmlAttributesComponent } from '../../../core/src/test-utils/bottom-nav-components.spec';
+        BottomNavTestHtmlAttributesComponent } from '../../../../test-utils/bottom-nav-components.spec.ts';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxBottomNavContentComponent } from './bottom-nav-content.component';
 import { IgxBottomNavComponent, IgxBottomNavItemComponent } from './public_api';
-import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
-import { RoutingTestGuard } from '../../../core/src/test-utils/routing-test-guard.spec';
-import { RoutingView1Component, RoutingView2Component, RoutingView3Component, RoutingView4Component, RoutingView5Component } from '../../../core/src/test-utils/routing-view-components.spec';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
+import { RoutingTestGuard } from '../../../../test-utils/routing-test-guard.spec.ts';
+import { RoutingView1Component, RoutingView2Component, RoutingView3Component, RoutingView4Component, RoutingView5Component } from '../../../../test-utils/routing-view-components.spec.ts';
 
 describe('IgxBottomNav', () => {
 

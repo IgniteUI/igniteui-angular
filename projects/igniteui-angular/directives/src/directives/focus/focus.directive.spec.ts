@@ -3,12 +3,12 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFocusDirective } from './focus.directive';
 
-import { EditorProvider } from '../../../core/edit-provider';
-import { IgxCheckboxComponent } from '../../../checkbox/src/checkbox.component';
-import { IgxDatePickerComponent } from '../../../date-picker/src/public_api';
+import { EditorProvider } from '../../../../core/src/core/edit-provider';
+import { IgxCheckboxComponent } from '../../../../checkbox/src/checkbox/checkbox.component';
+import { IgxDatePickerComponent } from '../../../../date-picker/src/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxRadioComponent } from '../../../radio/src/radio.component';
-import { IgxSwitchComponent } from '../../../switch/src/switch.component';
+import { IgxRadioComponent } from '../../../../radio/src/radio/radio.component';
+import { IgxSwitchComponent } from '../../../../switch/src/switch/switch.component';
 
 describe('igxFocus', () => {
     beforeEach(waitForAsync(() => {

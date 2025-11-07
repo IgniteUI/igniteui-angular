@@ -4,20 +4,20 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators'
-import { IgxInputDirective } from '../../../directives/input/input.directive';
+import { IgxInputDirective } from '../../../../directives/src/directives/input/input.directive';
 import { IgxTooltipTargetDirective } from '../../../directives/tooltip/tooltip-target.directive';
-import { GridFunctions, GridSelectionFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../../../test-utils/grid-functions.spec.ts';
 import {
     IgxGridCustomEditorsComponent,
     IgxGridValidationTestBaseComponent,
     IgxGridValidationTestCustomErrorComponent,
     IgxTreeGridValidationTestComponent
-} from '../../../core/src/test-utils/grid-validation-samples.spec';
-import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
+} from '../../../../test-utils/grid-validation-samples.spec.ts';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
 import { IGridFormGroupCreatedEventArgs } from '../common/grid.interface';
 import { IgxTreeGridComponent } from '../tree-grid/tree-grid.component';
 import { IgxGridComponent } from './grid.component';
-import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService, VerticalAlignment } from '../../../core/src/services/public_api';
+import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService, VerticalAlignment } from '../../../../core/src/services/public_api';
 
 describe('IgxGrid - Validation #grid', () => {
 

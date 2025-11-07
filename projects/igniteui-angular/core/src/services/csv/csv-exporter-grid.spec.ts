@@ -1,29 +1,29 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { IgxGridComponent } from '../../../grids/src/grids/grid/grid.component';
+import { IgxGridComponent } from '../../../../grids/src/grids/grid/grid.component';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { TestMethods } from '../exporter-common/test-methods.spec';
 import { IgxCsvExporterService } from './csv-exporter';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
-import { IgxTreeGridPrimaryForeignKeyComponent } from '../../../../test-utils/tree-grid-components.spec';
-import { IgxTreeGridComponent } from '../../../grids/src/grids/tree-grid/public_api';
+import { IgxTreeGridPrimaryForeignKeyComponent } from '../../../../test-utils/tree-grid-components.spec.ts';
+import { IgxTreeGridComponent } from '../../../../grids/src/grids/tree-grid/public_api';
 import { ReorderedColumnsComponent,
         GridIDNameJobTitleComponent,
         ProductsComponent,
         ColumnsAddedOnInitComponent,
-        EmptyGridComponent } from '../../../../test-utils/grid-samples.spec';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
+        EmptyGridComponent } from '../../../../test-utils/grid-samples.spec.ts';
+import { SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
 import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { wait } from '../../../../test-utils/ui-interactions.spec';
-import { IgxPivotGridComponent } from '../../../grids/src/grids/pivot-grid/pivot-grid.component';
-import { IgxPivotGridTestBaseComponent } from '../../../../test-utils/pivot-grid-samples.spec';
-import { IgxPivotNumericAggregate } from '../../../grids/src/grids/pivot-grid/pivot-grid-aggregate';
+import { wait } from '../../../../test-utils/ui-interactions.spec.ts';
+import { IgxPivotGridComponent } from '../../../../grids/src/grids/pivot-grid/pivot-grid.component';
+import { IgxPivotGridTestBaseComponent } from '../../../../test-utils/pivot-grid-samples.spec.ts';
+import { IgxPivotNumericAggregate } from '../../../../grids/src/grids/pivot-grid/pivot-grid-aggregate';
 
 describe('CSV Grid Exporter', () => {
     let exporter: IgxCsvExporterService;

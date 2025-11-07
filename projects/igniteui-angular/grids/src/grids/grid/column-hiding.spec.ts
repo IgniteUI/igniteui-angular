@@ -3,13 +3,13 @@ import { DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { ColumnHidingTestComponent, ColumnGroupsHidingTestComponent } from '../../../core/src/test-utils/grid-base-components.spec';
-import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
-import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { ColumnHidingTestComponent, ColumnGroupsHidingTestComponent } from '../../../../test-utils/grid-base-components.spec.ts';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
+import { GridFunctions } from '../../../../test-utils/grid-functions.spec.ts';
 import { GridSelectionMode, ColumnDisplayOrder } from '../common/enums';
-import { ControlsFunction } from '../../../core/src/test-utils/controls-functions.spec';
+import { ControlsFunction } from '../../../../test-utils/controls-functions.spec.ts';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
-import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
+import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
 
 describe('Column Hiding UI #grid', () => {
 

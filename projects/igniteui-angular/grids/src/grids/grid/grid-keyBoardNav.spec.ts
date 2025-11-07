@@ -2,16 +2,16 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IGridCellEventArgs, IActiveNodeChangeEventArgs } from '../common/events';
-import { DefaultSortingStrategy, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
-import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
-import { clearGridSubs, setupGridScrollDetection } from '../../../core/src/test-utils/helper-utils.spec';
+import { DefaultSortingStrategy, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
+import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec.ts';
+import { clearGridSubs, setupGridScrollDetection } from '../../../../test-utils/helper-utils.spec.ts';
 import {
     VirtualGridComponent,
     NoScrollsComponent,
     IgxGridGroupByComponent
-} from '../../../core/src/test-utils/grid-samples.spec';
+} from '../../../../test-utils/grid-samples.spec.ts';
 
-import { GridFunctions, GridSelectionFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../../../test-utils/grid-functions.spec.ts';
 import { DebugElement, QueryList } from '@angular/core';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { CellType } from '../common/grid.interface';

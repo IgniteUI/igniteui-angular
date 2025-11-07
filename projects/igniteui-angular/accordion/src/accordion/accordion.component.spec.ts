@@ -4,9 +4,9 @@ import { waitForAsync, TestBed, fakeAsync, ComponentFixture, tick } from '@angul
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective } from '../../../expansion-panel/src/public_api';
-import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IAccordionCancelableEventArgs, IAccordionEventArgs, IgxAccordionComponent } from './accordion.component';
 import { slideInLeft, slideOutRight } from 'igniteui-angular/animations';
+import { UIInteractions } from 'igniteui-angular/test-utils/ui-interactions.spec';
 
 const ACCORDION_CLASS = 'igx-accordion';
 const PANEL_TAG = 'IGX-EXPANSION-PANEL';

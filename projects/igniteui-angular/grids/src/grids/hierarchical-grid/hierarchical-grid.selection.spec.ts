@@ -1,9 +1,9 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec.ts';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
-import { IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
+import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
 import {
     IgxHierarchicalGridTestBaseComponent,
     IgxHierarchicalGridRowSelectionComponent,
@@ -11,13 +11,13 @@ import {
     IgxHierarchicalGridCustomSelectorsComponent,
     IgxHierarchicalGridRowSelectionNoTransactionsComponent,
     IgxHierGridExternalAdvancedFilteringComponent
-} from '../../../core/src/test-utils/hierarchical-grid-components.spec';
-import { GridSelectionFunctions, GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+} from '../../../../test-utils/hierarchical-grid-components.spec.ts';
+import { GridSelectionFunctions, GridFunctions } from '../../../../test-utils/grid-functions.spec.ts';
 import { GridSelectionMode, Size } from '../common/enums';
 import { QueryList } from '@angular/core';
 import { CellType } from '../public_api';
-import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
-import { setElementSize } from '../../../core/src/test-utils/helper-utils.spec';
+import { SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
+import { setElementSize } from '../../../../test-utils/helper-utils.spec.ts';
 
 describe('IgxHierarchicalGrid selection #hGrid', () => {
     let fix;

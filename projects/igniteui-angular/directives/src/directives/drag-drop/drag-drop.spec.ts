@@ -1,7 +1,7 @@
 import { Component, ViewChildren, QueryList, ViewChild, ElementRef, TemplateRef, Renderer2 } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { UIInteractions, wait} from '../../../core/src/test-utils/ui-interactions.spec';
+import { UIInteractions, wait} from '../../../../test-utils/ui-interactions.spec.ts';
 import { first } from 'rxjs/operators';
 import { IgxInsertDropStrategy, IgxAppendDropStrategy, IgxPrependDropStrategy } from './drag-drop.strategy';
 import {
@@ -13,7 +13,7 @@ import {
     IgxDragHandleDirective,
     IgxDragIgnoreDirective
 } from './drag-drop.directive';
-import { IgxIconComponent } from '../../../icon/src/icon/icon.component';
+import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
 
 describe('General igxDrag/igxDrop', () => {
     let fix: ComponentFixture<TestDragDropComponent>;

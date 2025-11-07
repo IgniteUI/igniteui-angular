@@ -2,19 +2,19 @@ import { IgxGridComponent } from './public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
-import { GridFunctions, GridSummaryFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { GridFunctions, GridSummaryFunctions } from '../../../../test-utils/grid-functions.spec.ts';
 import {
     IgxAddRowComponent, IgxGridRowEditingDefinedColumnsComponent, IgxGridRowEditingTransactionComponent
-} from '../../../core/src/test-utils/grid-samples.spec';
+} from '../../../../test-utils/grid-samples.spec.ts';
 
 import { By } from '@angular/platform-browser';
-import { IgxActionStripComponent } from '../../../action-strip/src/action-strip.component';
+import { IgxActionStripComponent } from '../../../action-strip/src/action-strip/action-strip.component';
 import { DefaultGridMasterDetailComponent } from './grid.master-detail.spec';
 import { ColumnLayoutTestComponent } from './grid.multi-row-layout.spec';
-import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
-import { IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
-import { DefaultSortingStrategy, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
-import { TransactionType } from '../../../core/src/services/public_api';
+import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec.ts';
+import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
+import { DefaultSortingStrategy, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
+import { TransactionType } from '../../../../core/src/services/public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';

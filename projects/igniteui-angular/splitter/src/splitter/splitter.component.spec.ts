@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild, DebugElement } from '@angular/core';
 import { SplitterType, IgxSplitterComponent, ISplitterBarResizeEventArgs } from './splitter.component';
 import { By } from '@angular/platform-browser';
-import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 
 const SPLITTERBAR_CLASS = 'igx-splitter-bar';

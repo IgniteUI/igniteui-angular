@@ -5,7 +5,7 @@ import { By } from "@angular/platform-browser";
 import { DateRangeDescriptor, DateRangeType } from 'igniteui-webcomponents';
 import { ScrollDirection } from "../calendar";
 import { CalendarDay } from 'igniteui-angular/core';
-import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
 
 const TODAY = new Date(2024, 6, 12);
 

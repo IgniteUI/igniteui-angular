@@ -6,10 +6,10 @@ import { IgxChipsAreaComponent } from './chips-area.component';
 import { IgxPrefixDirective } from '../../../input-group/src/public_api';
 import { IgxLabelDirective } from '../../../input-group/src/public_api';
 import { IgxSuffixDirective } from '../../../input-group/src/public_api';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
-import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { getComponentSize } from 'igniteui-angular/core';
+import { ControlsFunction } from 'igniteui-angular/test-utils/controls-functions.spec.ts';
+import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec.ts';
 
 @Component({
     template: `

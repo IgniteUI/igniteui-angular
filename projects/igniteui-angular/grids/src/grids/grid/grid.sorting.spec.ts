@@ -1,11 +1,11 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
-import { DefaultSortingStrategy, FormattedValuesSortingStrategy, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
+import { DefaultSortingStrategy, FormattedValuesSortingStrategy, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
-import { GridDeclaredColumnsComponent, SortByParityComponent, GridWithPrimaryKeyComponent, SortByAnotherColumnComponent, SortOnInitComponent, IgxGridFormattedValuesSortingComponent } from '../../../core/src/test-utils/grid-samples.spec';
-import { UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
-import { SampleTestData } from '../../../core/src/test-utils/sample-test-data.spec';
+import { GridFunctions } from '../../../../test-utils/grid-functions.spec.ts';
+import { GridDeclaredColumnsComponent, SortByParityComponent, GridWithPrimaryKeyComponent, SortByAnotherColumnComponent, SortOnInitComponent, IgxGridFormattedValuesSortingComponent } from '../../../../test-utils/grid-samples.spec.ts';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
+import { SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
 import { CellType } from '../common/grid.interface';
 import { NoopSortingStrategy } from 'igniteui-angular/core';
 import { By } from '@angular/platform-browser';

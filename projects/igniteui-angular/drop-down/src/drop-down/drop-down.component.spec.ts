@@ -6,8 +6,8 @@ import { IgxToggleActionDirective, IgxToggleDirective } from '../../../directive
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownItemNavigationDirective } from './public_api';
 import { ISelectionEventArgs } from './drop-down.common';
-import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from '../tabs/tabs/public_api';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from '../../../../tabs/src/tabs/public_api';
+import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec.ts';
 import { CancelableEventArgs, IBaseCancelableBrowserEventArgs } from 'igniteui-angular/core';
 import { take } from 'rxjs/operators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';

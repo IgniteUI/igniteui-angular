@@ -1,12 +1,12 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { GridWithUndefinedDataComponent } from '../../../core/src/test-utils/grid-samples.spec';
-import { PagingComponent, RemotePagingComponent } from '../../../core/src/test-utils/grid-base-components.spec';
+import { GridWithUndefinedDataComponent } from '../../../../test-utils/grid-samples.spec.ts';
+import { PagingComponent, RemotePagingComponent } from '../../../../test-utils/grid-base-components.spec.ts';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { wait } from '../../../core/src/test-utils/ui-interactions.spec';
-import { IgxNumberFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
-import { GridFunctions, PAGER_CLASS } from '../../../core/src/test-utils/grid-functions.spec';
-import { ControlsFunction, BUTTON_DISABLED_CLASS } from '../../../core/src/test-utils/controls-functions.spec';
+import { wait } from '../../../../test-utils/ui-interactions.spec.ts';
+import { IgxNumberFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
+import { GridFunctions, PAGER_CLASS } from '../../../../test-utils/grid-functions.spec.ts';
+import { ControlsFunction, BUTTON_DISABLED_CLASS } from '../../../../test-utils/controls-functions.spec.ts';
 
 const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) => {
     const grid = fix.componentInstance.grid;

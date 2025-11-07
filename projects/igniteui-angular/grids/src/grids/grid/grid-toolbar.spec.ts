@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, ComponentFixture, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from '../../../core/src/services/public_api';
+import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from '../../../../core/src/services/public_api';
 import { IgxGridComponent } from './public_api';
 import { GridFunctions } from "../../test-utils/grid-functions.spec";
 import { By } from "@angular/platform-browser";

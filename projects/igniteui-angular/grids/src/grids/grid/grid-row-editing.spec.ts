@@ -5,12 +5,12 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
-import { UIInteractions, wait } from '../../../core/src/test-utils/ui-interactions.spec';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
-import { TransactionType, Transaction } from '../../../core/src/services/public_api';
-import { DefaultSortingStrategy, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
-import { clearGridSubs, setElementSize, setupGridScrollDetection } from '../../../core/src/test-utils/helper-utils.spec';
-import { GridFunctions, GridSummaryFunctions } from '../../../core/src/test-utils/grid-functions.spec';
+import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec.ts';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
+import { TransactionType, Transaction } from '../../../../core/src/services/public_api';
+import { DefaultSortingStrategy, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
+import { clearGridSubs, setElementSize, setupGridScrollDetection } from '../../../../test-utils/helper-utils.spec.ts';
+import { GridFunctions, GridSummaryFunctions } from '../../../../test-utils/grid-functions.spec.ts';
 import {
     IgxGridRowEditingComponent,
     IgxGridRowEditingTransactionComponent,
@@ -21,10 +21,10 @@ import {
     VirtualGridComponent,
     ObjectCloneStrategy,
     IgxGridCustomRowEditTemplateComponent
-} from '../../../core/src/test-utils/grid-samples.spec';
+} from '../../../../test-utils/grid-samples.spec.ts';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { DefaultDataCloneStrategy } from '../../../core/src/data-operations/data-clone-strategy';
+import { DefaultDataCloneStrategy } from '../../../../core/src/data-operations/data-clone-strategy';
 import { CellType, RowType } from '../public_api';
 import { Size } from "../common/enums";
 

@@ -1,6 +1,6 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
-import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
+import { SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
 import { IgxGridStateDirective } from './state.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGroupingExpression } from '../../../core/src/data-operations/grouping-expression.interface';

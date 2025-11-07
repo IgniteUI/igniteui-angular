@@ -3,17 +3,17 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, ViewChild } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
-import { wait, UIInteractions } from '../../../core/src/test-utils/ui-interactions.spec';
+import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
 import { By } from '@angular/platform-browser';
 import { first, delay } from 'rxjs/operators';
-import { setupHierarchicalGridScrollDetection, clearGridSubs } from '../../../core/src/test-utils/helper-utils.spec';
-import { FilteringExpressionsTree } from '../../../core/src/data-operations/filtering-expressions-tree';
-import { FilteringLogic } from '../../../core/src/data-operations/filtering-expression.interface';
-import { IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
-import { GridFunctions } from '../../../core/src/test-utils/grid-functions.spec';
-import { HierarchicalGridFunctions } from '../../../core/src/test-utils/hierarchical-grid-functions.spec';
+import { setupHierarchicalGridScrollDetection, clearGridSubs } from '../../../../test-utils/helper-utils.spec.ts';
+import { FilteringExpressionsTree } from '../../../../core/src/data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../../../../core/src/data-operations/filtering-expression.interface';
+import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
+import { GridFunctions } from '../../../../test-utils/grid-functions.spec.ts';
+import { HierarchicalGridFunctions } from '../../../../test-utils/hierarchical-grid-functions.spec.ts';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
-import { IgxHierarchicalGridDefaultComponent } from '../../../core/src/test-utils/hierarchical-grid-components.spec';
+import { IgxHierarchicalGridDefaultComponent } from '../../../../test-utils/hierarchical-grid-components.spec.ts';
 import { firstValueFrom } from 'rxjs';
 
 describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
