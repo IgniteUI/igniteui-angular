@@ -1,16 +1,19 @@
 import {
+    afterNextRender,
     ChangeDetectorRef,
     Directive,
     ElementRef,
     EventEmitter,
-    HostBinding,
     HostListener,
+    inject,
     Inject,
+    Injector,
     Input,
     OnDestroy,
     OnInit,
     Optional,
-    Output
+    Output,
+    runInInjectionContext
 } from '@angular/core';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
 import { CancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from '../../core/utils';
@@ -34,7 +37,13 @@ export interface ToggleViewCancelableEventArgs extends ToggleViewEventArgs, Canc
 @Directive({
     exportAs: 'toggle',
     selector: '[igxToggle]',
-    standalone: true
+    standalone: true,
+    host: {
+        '[class.igx-toggle--hidden]': 'hiddenClass',
+        '[attr.aria-hidden]': 'hiddenClass',
+        '[class.igx-toggle--hidden-webkit]': 'hiddenWebkitClass',
+        '[class.igx-toggle]': 'defaultClass'
+    }
 })
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     /**
@@ -159,13 +168,13 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     /**
      * @hidden
      */
-    @HostBinding('class.igx-toggle--hidden')
-    @HostBinding('attr.aria-hidden')
     public get hiddenClass() {
         return this.collapsed;
     }
 
-    @HostBinding('class.igx-toggle--hidden-webkit')
+    /**
+     * @hidden
+     */
     public get hiddenWebkitClass() {
         const isSafari = this.platform?.isSafari;
         const browserVersion = this.platform?.browserVersion;
@@ -176,7 +185,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     /**
      * @hidden
      */
-    @HostBinding('class.igx-toggle')
     public get defaultClass() {
         return !this.collapsed;
     }
@@ -193,6 +201,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     private _overlayClosingSub: Subscription;
     private _overlayClosedSub: Subscription;
     private _overlayContentAppendedSub: Subscription;
+    private _injector = inject(Injector);
 
     /**
      * @hidden
@@ -224,25 +233,28 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         }
 
         this._collapsed = false;
-        this.cdr.detectChanges();
 
-        if (!info) {
-            this.unsubscribe();
-            this.subscribe();
-            this._overlayId = this.overlayService.attach(this.elementRef, overlaySettings);
-        }
+        runInInjectionContext(this._injector, () =>{
+            afterNextRender(() => {
+                if (!info) {
+                    this.unsubscribe();
+                    this.subscribe();
+                    this._overlayId = this.overlayService.attach(this.elementRef, overlaySettings);
+                }
 
-        const args: ToggleViewCancelableEventArgs = { cancel: false, owner: this, id: this._overlayId };
-        this.opening.emit(args);
-        if (args.cancel) {
-            this.unsubscribe();
-            this.overlayService.detach(this._overlayId);
-            this._collapsed = true;
-            delete this._overlayId;
-            this.cdr.detectChanges();
-            return;
-        }
-        this.overlayService.show(this._overlayId, overlaySettings);
+                const args: ToggleViewCancelableEventArgs = { cancel: false, owner: this, id: this._overlayId };
+                this.opening.emit(args);
+                if (args.cancel) {
+                    this.unsubscribe();
+                    this.overlayService.detach(this._overlayId);
+                    this._collapsed = true;
+                    delete this._overlayId;
+                    this.cdr.detectChanges();
+                    return;
+                }
+                this.overlayService.show(this._overlayId, overlaySettings);
+            });
+        });
     }
 
     /**
