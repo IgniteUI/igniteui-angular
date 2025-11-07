@@ -3,12 +3,12 @@ import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angul
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
-import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
-import { clearGridSubs, setupGridScrollDetection } from '../../../../test-utils/helper-utils.spec.ts';
+import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
+import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../../../test-utils/helper-utils.spec';
 import { DefaultSortingStrategy, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { GridFunctions, GRID_MRL_BLOCK } from '../../../../test-utils/grid-functions.spec.ts';
+import { GridFunctions, GRID_MRL_BLOCK } from '../../../../test-utils/grid-functions.spec';
 import { CellType } from '../common/grid.interface';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { IGridCellEventArgs, IgxColumnComponent } from '../public_api';

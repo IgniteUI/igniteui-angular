@@ -5,9 +5,9 @@ import { PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMo
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { ControlsFunction } from '../../../../test-utils/controls-functions.spec.ts';
-import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
-import { HelperTestFunctions } from '../../../../test-utils/calendar-helper-utils.ts';
+import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
+import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { HelperTestFunctions } from '../../../test-utils/calendar-helper-utils';
 import { CancelableEventArgs } from 'igniteui-angular/core';
 import { CustomDateRange, DateRange, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent } from './date-range-picker-inputs.common';
 import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
@@ -25,7 +25,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { registerLocaleData } from "@angular/common";
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
-import { CalendarDay } from '../../../../core/src/date-common/util/model';
+import { CalendarDay } from 'igniteui-angular/core';
 
 // The number of milliseconds in one day
 const DEBOUNCE_TIME = 16;

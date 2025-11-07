@@ -21,7 +21,7 @@ import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IForOfState, IgxForOfDirective } from './for_of.directive';
-import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec.ts';
+import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
 
 import { IgxForOfScrollSyncService } from './for_of.sync.service';
 import { PlatformUtil } from '../../../../core/src/core/utils';

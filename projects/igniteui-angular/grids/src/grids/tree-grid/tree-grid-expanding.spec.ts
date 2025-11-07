@@ -8,11 +8,11 @@ import {
     IgxTreeGridLoadOnDemandHasChildrenComponent,
     IgxTreeGridLoadOnDemandChildDataComponent,
     IgxTreeGridCustomExpandersTemplateComponent
-} from '../../../../test-utils/tree-grid-components.spec.ts';
-import { TreeGridFunctions } from '../../../../test-utils/tree-grid-functions.spec.ts';
+} from '../../../../test-utils/tree-grid-components.spec';
+import { TreeGridFunctions } from '../../../../test-utils/tree-grid-functions.spec';
 import { first } from 'rxjs/operators';
-import { wait } from '../../../../test-utils/ui-interactions.spec.ts';
-import { GridFunctions } from '../../../../test-utils/grid-functions.spec.ts';
+import { wait } from '../../../../test-utils/ui-interactions.spec';
+import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { QueryList } from '@angular/core';

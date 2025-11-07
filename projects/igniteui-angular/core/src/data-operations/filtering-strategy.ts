@@ -7,7 +7,6 @@ import { SortingDirection } from './sorting-strategy';
 import { formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
 import type { IFilteringState } from './filtering-state.interface';
 import { isTree } from './expressions-tree-util';
-import type { IgxHierarchicalGridComponent } from './grid-types';
 import { IgxSorting } from './grid-sorting-strategy';
 
 const DateType = 'date';
@@ -99,7 +98,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy {
                     const column = grid && grid.getColumnByName(expression.fieldName);
                     dataType = column?.dataType;
                 } else if (grid.type === 'hierarchical') {
-                    const schema = (grid as IgxHierarchicalGridComponent).schema;
+                    const schema = grid.schema;
                     const entityMatch = this.findEntityByName(schema, entity);
                     dataType = entityMatch?.fields.find(f => f.field === expression.fieldName)?.dataType;
                 }

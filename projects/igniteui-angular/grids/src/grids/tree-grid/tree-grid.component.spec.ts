@@ -9,13 +9,13 @@ import {
     IgxTreeGridSummariesTransactionsComponent,
     IgxTreeGridNoDataComponent,
     IgxTreeGridWithNoForeignKeyComponent
-} from '../../../../test-utils/tree-grid-components.spec.ts';
-import { wait } from '../../../../test-utils/ui-interactions.spec.ts';
+} from '../../../../test-utils/tree-grid-components.spec';
+import { wait } from '../../../../test-utils/ui-interactions.spec';
 import { GridSelectionMode, Size } from '../common/enums';
 import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
-import { SAFE_DISPOSE_COMP_ID } from '../../../../test-utils/grid-functions.spec.ts';
-import { setElementSize } from '../../../../test-utils/helper-utils.spec.ts';
+import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
+import { SAFE_DISPOSE_COMP_ID } from '../../../../test-utils/grid-functions.spec';
+import { setElementSize } from '../../../../test-utils/helper-utils.spec';
 
 
 describe('IgxTreeGrid Component Tests #tGrid', () => {

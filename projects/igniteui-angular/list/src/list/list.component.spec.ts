@@ -26,9 +26,9 @@ import {
     TwoHeadersListNoPanningComponent,
     ListDirectivesComponent,
     ListWithSelectedItemComponent
-} from '../../../../test-utils/list-components.spec.ts';
-import { wait } from '../../../../test-utils/ui-interactions.spec.ts';
-import { GridFunctions } from '../../../../test-utils/grid-functions.spec.ts';
+} from '../../../test-utils/list-components.spec';
+import { wait } from '../../../test-utils/ui-interactions.spec';
+import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 
 describe('List', () => {
 

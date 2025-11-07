@@ -1,10 +1,10 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../../../test-utils/tree-grid-components.spec.ts';
+import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../../../test-utils/tree-grid-components.spec';
 import { IgxNumberFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
-import { TreeGridFunctions, NUMBER_CELL_CSS_CLASS } from '../../../../test-utils/tree-grid-functions.spec.ts';
+import { TreeGridFunctions, NUMBER_CELL_CSS_CLASS } from '../../../../test-utils/tree-grid-functions.spec';
 import { By } from '@angular/platform-browser';
-import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { DropPosition } from '../moving/moving.service';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';

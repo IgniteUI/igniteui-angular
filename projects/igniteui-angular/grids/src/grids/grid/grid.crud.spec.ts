@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
-import { wait } from '../../../../test-utils/ui-interactions.spec.ts';
+import { wait } from '../../../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGridEditEventArgs } from '../common/events';
 

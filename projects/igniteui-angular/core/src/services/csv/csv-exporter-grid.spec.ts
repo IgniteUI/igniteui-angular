@@ -6,23 +6,23 @@ import { TestMethods } from '../exporter-common/test-methods.spec';
 import { IgxCsvExporterService } from './csv-exporter';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
-import { IgxTreeGridPrimaryForeignKeyComponent } from '../../../../test-utils/tree-grid-components.spec.ts';
+import { IgxTreeGridPrimaryForeignKeyComponent } from '../../../../test-utils/tree-grid-components.spec';
 import { IgxTreeGridComponent } from '../../../../grids/src/grids/tree-grid/public_api';
 import { ReorderedColumnsComponent,
         GridIDNameJobTitleComponent,
         ProductsComponent,
         ColumnsAddedOnInitComponent,
-        EmptyGridComponent } from '../../../../test-utils/grid-samples.spec.ts';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
+        EmptyGridComponent } from '../../../../test-utils/grid-samples.spec';
+import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { wait } from '../../../../test-utils/ui-interactions.spec.ts';
+import { wait } from '../../../../test-utils/ui-interactions.spec';
 import { IgxPivotGridComponent } from '../../../../grids/src/grids/pivot-grid/pivot-grid.component';
-import { IgxPivotGridTestBaseComponent } from '../../../../test-utils/pivot-grid-samples.spec.ts';
+import { IgxPivotGridTestBaseComponent } from '../../../../test-utils/pivot-grid-samples.spec';
 import { IgxPivotNumericAggregate } from '../../../../grids/src/grids/pivot-grid/pivot-grid-aggregate';
 
 describe('CSV Grid Exporter', () => {

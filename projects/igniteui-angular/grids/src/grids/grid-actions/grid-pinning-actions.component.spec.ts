@@ -4,10 +4,10 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from '../grid/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { wait } from '../../../../test-utils/ui-interactions.spec.ts';
+import { wait } from '../../../../test-utils/ui-interactions.spec';
 import { IgxGridPinningActionsComponent } from './grid-pinning-actions.component';
 import { IgxColumnComponent } from '../public_api';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
+import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
 
 
 describe('igxGridPinningActions #grid ', () => {

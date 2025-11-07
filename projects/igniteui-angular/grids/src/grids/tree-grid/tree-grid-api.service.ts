@@ -12,10 +12,11 @@ import {
     GridColumnDataType,
     IFilteringExpressionsTree,
     ISortingExpression,
-    mergeObjects
+    mergeObjects,
+    ColumnType
 } from 'igniteui-angular/core';
 import { Injectable } from '@angular/core';
-import { ColumnType, GridType } from '../common/grid.interface';
+import { GridType } from '../common/grid.interface';
 
 @Injectable()
 export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {

@@ -7,8 +7,8 @@ import { FormsModule, UntypedFormGroup, UntypedFormBuilder, ReactiveFormsModule,
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputGroupComponent, IgxInputDirective } from '../../../../input-group/src/public_api';
-import { ControlsFunction } from '../../../../test-utils/controls-functions.spec.ts';
-import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
+import { ControlsFunction } from '../../../../test-utils/controls-functions.spec';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { ViewEncapsulation } from '@angular/core';
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";

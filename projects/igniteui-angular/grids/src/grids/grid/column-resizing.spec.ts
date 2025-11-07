@@ -4,16 +4,16 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../../../../calendar/src/public_api';
 import { IgxGridComponent } from './grid.component';
-import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
-import { GridTemplateStrings, ColumnDefinitions } from '../../../../test-utils/template-strings.spec.ts';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
-import { MultiColumnHeadersComponent } from '../../../../test-utils/grid-samples.spec.ts';
-import { GridFunctions } from '../../../../test-utils/grid-functions.spec.ts';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
+import { GridTemplateStrings, ColumnDefinitions } from '../../../../test-utils/template-strings.spec';
+import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
+import { MultiColumnHeadersComponent } from '../../../../test-utils/grid-samples.spec';
+import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
 import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective } from '../columns/templates.directive';
 import { IgxAvatarComponent } from '../../../../avatar/src/avatar/avatar.component';
 import { IColumnResizeEventArgs, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent } from '../public_api';
 import { Size } from "../common/enums";
-import { setElementSize } from '../../../../test-utils/helper-utils.spec.ts';
+import { setElementSize } from '../../../../test-utils/helper-utils.spec';
 import { IgxColumnResizerDirective } from '../resizing/resizer.directive';
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {

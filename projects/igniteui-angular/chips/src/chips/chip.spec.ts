@@ -8,8 +8,8 @@ import { IgxLabelDirective } from '../../../input-group/src/public_api';
 import { IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { getComponentSize } from 'igniteui-angular/core';
-import { ControlsFunction } from 'igniteui-angular/test-utils/controls-functions.spec.ts';
-import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec.ts';
+import { ControlsFunction } from 'igniteui-angular/test-utils/controls-functions.spec';
+import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 
 @Component({
     template: `

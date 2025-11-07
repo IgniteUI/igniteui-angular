@@ -2,14 +2,14 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { IgxGridComponent } from './grid.component';
-import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec.ts';
-import { clearGridSubs, setupGridScrollDetection } from '../../../../test-utils/helper-utils.spec.ts';
+import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../../../test-utils/helper-utils.spec';
 import {
     SelectionWithScrollsComponent,
     MRLTestComponent,
     ColumnGroupsNavigationTestComponent
-} from '../../../../test-utils/grid-samples.spec.ts';
-import { GridFunctions, GridSelectionFunctions } from '../../../../test-utils/grid-functions.spec.ts';
+} from '../../../../test-utils/grid-samples.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../../../test-utils/grid-functions.spec';
 import { GridSelectionMode, FilterMode } from '../common/enums';
 import { IActiveNodeChangeEventArgs } from '../common/events';
 import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';

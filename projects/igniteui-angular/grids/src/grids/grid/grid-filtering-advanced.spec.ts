@@ -1,12 +1,12 @@
 import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import {
     IgxNumberFilteringOperand,
     IgxStringFilteringOperand
 } from '../../../../core/src/data-operations/filtering-condition';
-import { GridFunctions } from '../../../../test-utils/grid-functions.spec.ts';
+import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
 import { FilteringExpressionsTree } from '../../../../core/src/data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../../../core/src/data-operations/filtering-expression.interface';
 import {
@@ -17,12 +17,12 @@ import {
     IgxGridAdvancedFilteringDynamicColumnsComponent,
     IgxGridAdvancedFilteringSerializedTreeComponent,
     IgxGridAdvancedFilteringWithToolbarComponent
-} from '../../../../test-utils/grid-samples.spec.ts';
+} from '../../../../test-utils/grid-samples.spec';
 import { FormattedValuesFilteringStrategy } from '../../../../core/src/data-operations/filtering-strategy';
-import { IgxHierarchicalGridExportComponent, IgxHierarchicalGridTestBaseComponent, IgxHierGridExternalAdvancedFilteringComponent } from '../../../../test-utils/hierarchical-grid-components.spec.ts';
+import { IgxHierarchicalGridExportComponent, IgxHierarchicalGridTestBaseComponent, IgxHierGridExternalAdvancedFilteringComponent } from '../../../../test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
 import { IFilteringEventArgs, IgxGridToolbarAdvancedFilteringComponent } from '../public_api';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
+import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
 import { QueryBuilderFunctions } from '../../../query-builder/src/query-builder/query-builder-functions.spec.ts';
 import { By } from '@angular/platform-browser';
 import { IgxDateTimeEditorDirective } from '../../../../directives/src/directives/date-time-editor/date-time-editor.directive';
@@ -1310,7 +1310,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             QueryBuilderFunctions.clickQueryBuilderGroupContextMenu(fix, 0);
             tick(100);
             fix.detectChanges();
-            
+
             const groupDDLItems = QueryBuilderFunctions.getQueryBuilderGroupContextMenuDropDownItems(fix);
             expect(groupDDLItems[0].innerText).toBe('My switch to MY OR');
             expect(groupDDLItems[1].innerText).toBe('My ungroup');
@@ -1578,7 +1578,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0, 1);
             // Populate edit inputs on level 1.
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1); // Select 'ID' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 11, 1); // Select 'Not In' operator. 
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 11, 1); // Select 'Not In' operator.
 
             // Select entity in nested level
             QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0, 2);
@@ -1595,7 +1595,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Close Advanced Filtering dialog.
             hgrid.closeAdvancedFilteringDialog(false);
             tick(200);
-            fix.detectChanges();                                  
+            fix.detectChanges();
         }));
 
         it('Should have correct entities depending on the hierarchy level.', fakeAsync(() => {
@@ -1608,12 +1608,12 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[1].nativeElement;
             const dropdownValues: string[] = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
             const expectedValues = ['childData'];
-            expect(dropdownValues).toEqual(expectedValues);  
-            
+            expect(dropdownValues).toEqual(expectedValues);
+
             // Close Advanced Filtering dialog.
             hgrid.closeAdvancedFilteringDialog(false);
             tick(200);
-            fix.detectChanges(); 
+            fix.detectChanges();
         }));
 
         it(`Should apply 'In'/'Not-In' operators for each level properly.`, fakeAsync(() => {
@@ -1636,7 +1636,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
             // Populate edit inputs on level 1.
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1); // Select 'ID' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, 1); // Select 'Contains' operator. 
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, 1); // Select 'Contains' operator.
 
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false, 1).querySelector('input');
             // Type Value
@@ -1651,7 +1651,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Close Advanced Filtering dialog.
             hgrid.closeAdvancedFilteringDialog(true);
             tick(200);
-            fix.detectChanges(); 
+            fix.detectChanges();
 
             // Veify grid data
             expect(hgrid.filteredData.length).toEqual(5);
@@ -1690,7 +1690,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Close Advanced Filtering dialog.
             hgrid.closeAdvancedFilteringDialog(false);
             tick(200);
-            fix.detectChanges(); 
+            fix.detectChanges();
             // Spy for error messages in the console
             const consoleSpy = spyOn(console, 'error');
             // Apply advanced filter through API.
@@ -1701,7 +1701,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 conditionName: IgxStringFilteringOperand.instance().condition('contains').name,
                 searchVal: '39'
             });
-    
+
             const tree = new FilteringExpressionsTree(0, undefined, 'rootData', ['ID']);
             tree.filteringOperands.push({
                 fieldName: 'ID',
@@ -1722,7 +1722,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Close Advanced Filtering dialog.
             hgrid.closeAdvancedFilteringDialog(false);
             tick(200);
-            fix.detectChanges(); 
+            fix.detectChanges();
             // Spy for error messages in the console
             const consoleSpy = spyOn(console, 'error');
 
@@ -1733,7 +1733,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 conditionName: IgxStringFilteringOperand.instance().condition('contains').name,
                 searchVal: '39'
             });
-    
+
             const tree = new FilteringExpressionsTree(0, undefined, 'rootData', ['ID']);
             tree.filteringOperands.push({
                 fieldName: 'ID',
@@ -1825,8 +1825,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         it('Should correctly change resource strings for hierarchical Advanced Filtering dialog.', fakeAsync(() => {
             hgrid.closeAdvancedFilteringDialog(false);
             tick(200);
-            fix.detectChanges(); 
-            
+            fix.detectChanges();
+
             const innerTree = new FilteringExpressionsTree(0, undefined, 'childData', ['ID']);
             innerTree.filteringOperands.push({
                 fieldName: 'ID',
@@ -1834,7 +1834,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 conditionName: IgxStringFilteringOperand.instance().condition('contains').name,
                 searchVal: '39'
             });
-    
+
             const tree = new FilteringExpressionsTree(0, undefined, 'rootData', ['ID']);
             tree.filteringOperands.push({
                 fieldName: 'ID',
@@ -1844,7 +1844,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             });
 
             hgrid.advancedFilteringExpressionsTree = tree;
-            
+
             const myResourceStrings: IGridResourceStrings = {
                 igx_grid_filter_operator_and: 'My and',
                 igx_grid_filter_operator_or: 'My or',
@@ -1878,7 +1878,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Open Advanced Filtering dialog.
             hgrid.openAdvancedFilteringDialog();
             fix.detectChanges();
-            
+
             // Open up the sub-query
             QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
             tick(100);
@@ -1886,7 +1886,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             const valueInput: any = QueryBuilderFunctions.getQueryBuilderValueInput(fix);
             expect(valueInput.querySelector('input').placeholder).toBe('My sub-query results');
-            
+
             const entitySelect = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 1);
             const selectLabel = entitySelect.previousElementSibling as HTMLSpanElement;
             expect(selectLabel.innerText).toBe('My from');

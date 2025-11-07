@@ -10,18 +10,18 @@ import {
     IgxTreeGridCascadingSelectionComponent,
     IgxTreeGridCascadingSelectionTransactionComponent,
     IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent
-} from '../../../../test-utils/tree-grid-components.spec.ts';
+} from '../../../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     TreeGridFunctions,
     TREE_ROW_SELECTION_CSS_CLASS,
     ROW_EDITING_BANNER_OVERLAY_CLASS,
     TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS
-} from '../../../../test-utils/tree-grid-functions.spec.ts';
+} from '../../../../test-utils/tree-grid-functions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
-import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
-import { IgxActionStripComponent } from '../../../action-strip/src/public_api';
-import { GridFunctions } from '../../../../test-utils/grid-functions.spec.ts';
+import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec';
+import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
+import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { By } from '@angular/platform-browser';
 import { FilteringExpressionsTree } from '../../../../core/src/data-operations/filtering-expressions-tree';

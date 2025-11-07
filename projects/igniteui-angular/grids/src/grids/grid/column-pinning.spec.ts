@@ -7,11 +7,11 @@ import {
     ColumnPinningTestComponent,
     ColumnGroupsPinningTestComponent,
     ColumnPinningWithTemplateTestComponent
-} from '../../../../test-utils/grid-base-components.spec.ts';
-import { GridFunctions } from '../../../../test-utils/grid-functions.spec.ts';
-import { ControlsFunction } from '../../../../test-utils/controls-functions.spec.ts';
+} from '../../../../test-utils/grid-base-components.spec';
+import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
+import { ControlsFunction } from '../../../../test-utils/controls-functions.spec';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
-import { wait } from '../../../../test-utils/ui-interactions.spec.ts';
+import { wait } from '../../../../test-utils/ui-interactions.spec';
 
 describe('Column Pinning UI #grid', () => {
     let fix: ComponentFixture<ColumnPinningTestComponent>;

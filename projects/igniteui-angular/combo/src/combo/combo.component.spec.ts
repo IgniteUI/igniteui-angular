@@ -25,7 +25,7 @@ import {
 import { IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective } from './combo.directives';
 import { IgxComboFilteringPipe, comboIgnoreDiacriticsFilter } from './combo.pipes';
 import { IgxDropDownItemBaseDirective } from '../../../drop-down/src/drop-down/drop-down-item.base';
-import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec.ts';
+import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';

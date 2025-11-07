@@ -4,17 +4,17 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { IgxGridComponent } from '../grid/public_api';
-import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
-import { IgxHierarchicalGridActionStripComponent } from '../../../../test-utils/hierarchical-grid-components.spec.ts';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
+import { IgxHierarchicalGridActionStripComponent } from '../../../../test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
 import { IgxHierarchicalRowComponent } from '../hierarchical-grid/hierarchical-row.component';
 import { IgxTreeGridComponent } from '../tree-grid/public_api';
-import { IgxTreeGridEditActionsComponent } from '../../../../test-utils/tree-grid-components.spec.ts';
+import { IgxTreeGridEditActionsComponent } from '../../../../test-utils/tree-grid-components.spec';
 import { IgxGridEditingActionsComponent } from './grid-editing-actions.component';
 import { IgxGridPinningActionsComponent } from './grid-pinning-actions.component';
 import { IgxActionStripComponent } from '../../../../action-strip/src/action-strip/action-strip.component';
 import { IRowDataCancelableEventArgs, IgxColumnComponent } from '../public_api';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
+import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
 import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
 
 describe('igxGridEditingActions #grid ', () => {

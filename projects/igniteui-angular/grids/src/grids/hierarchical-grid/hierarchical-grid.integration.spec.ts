@@ -2,7 +2,7 @@ import { TestBed, tick, fakeAsync, ComponentFixture, waitForAsync } from '@angul
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
+import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
@@ -14,13 +14,13 @@ import {
     IgxHierarchicalGridTestInputPaginatorComponent,
     IgxHierarchicalGridTestInputToolbarComponent,
     IgxHierarchicalGridWithTransactionProviderComponent
-} from '../../../../test-utils/hierarchical-grid-components.spec.ts';
-import { GridFunctions, GridSelectionFunctions } from '../../../../test-utils/grid-functions.spec.ts';
-import { HierarchicalGridFunctions } from '../../../../test-utils/hierarchical-grid-functions.spec.ts';
+} from '../../../../test-utils/hierarchical-grid-components.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../../../test-utils/grid-functions.spec';
+import { HierarchicalGridFunctions } from '../../../../test-utils/hierarchical-grid-functions';
 import { GridSelectionMode, ColumnPinningPosition, RowPinningPosition, Size } from '../common/enums';
 import { IgxPaginatorComponent } from '../../../../paginator/src/paginator/paginator.component';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
-import { setElementSize } from '../../../../test-utils/helper-utils.spec.ts';
+import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
+import { setElementSize } from '../../../../test-utils/helper-utils.spec';
 
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
     let fixture: ComponentFixture<IgxHierarchicalGridTestBaseComponent>;

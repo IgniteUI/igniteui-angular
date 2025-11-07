@@ -1,14 +1,12 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { wait } from '../../../../test-utils/ui-interactions.spec.ts';
+import { wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
 import { IgxNavigationService } from 'igniteui-angular/core';
 import { PlatformUtil } from 'igniteui-angular/core';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
-import { IgxLayoutModule } from '../../../directives/src/directives/layout/layout.directive';
-import { IgxNavbarModule } from '../navbar/navbar.module';
-import { IgxNavbarComponent } from '../navbar/navbar.component';
+import { IgxNavbarComponent } from 'igniteui-angular/navbar';
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
 declare let Simulator: any;
@@ -718,8 +716,6 @@ class TestComponentMiniComponent extends TestComponentDIComponent {
     selector: 'igx--test-fixed-mini',
     providers: [IgxNavigationService],
     imports: [
-        IgxLayoutModule,
-        IgxNavbarModule,
         IgxNavigationDrawerComponent,
         IgxNavDrawerTemplateDirective,
         IgxNavDrawerMiniTemplateDirective,

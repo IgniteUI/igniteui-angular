@@ -7,7 +7,7 @@ import { take } from 'rxjs/operators';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputDirective, IgxInputGroupComponent } from '../../../input-group/src/public_api';
 import { Direction } from 'igniteui-angular/core';
-import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
+import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxStepComponent } from './step/step.component';
 import {
     HorizontalAnimationType,

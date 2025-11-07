@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './public_api';
-import { BasicGridSearchComponent } from '../../../../test-utils/grid-base-components.spec.ts';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
-import { GridWithAvatarComponent, GroupableGridSearchComponent, ScrollableGridSearchComponent } from '../../../../test-utils/grid-samples.spec.ts';
-import { IForOfState } from '../../../directives/for-of/for_of.directive';
+import { BasicGridSearchComponent } from '../../../../test-utils/grid-base-components.spec';
+import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
+import { GridWithAvatarComponent, GroupableGridSearchComponent, ScrollableGridSearchComponent } from '../../../../test-utils/grid-samples.spec';
+import { IForOfState } from 'igniteui-angular/input-group';
 import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
 import { DefaultSortingStrategy, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
-import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
+import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridColumnDataType } from '../../../../core/src/data-operations/data-util';
-import { clearGridSubs, setupGridScrollDetection } from '../../../../test-utils/helper-utils.spec.ts';
-import { IgxTextHighlightDirective } from '../../../directives/text-highlight/text-highlight.directive';
-import { GridFunctions } from '../../../../test-utils/grid-functions.spec.ts';
+import { clearGridSubs, setupGridScrollDetection } from '../../../../test-utils/helper-utils.spec';
+import { IgxTextHighlightDirective } from 'igniteui-angular/input-group';
+import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
 import { firstValueFrom } from 'rxjs';
 
 describe('IgxGrid - search API #grid', () => {

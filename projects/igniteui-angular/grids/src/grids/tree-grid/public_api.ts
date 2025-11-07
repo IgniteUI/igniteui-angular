@@ -3,7 +3,6 @@ import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-
 import { IgxTreeGridGroupingPipe } from './tree-grid.grouping.pipe';
 
 export * from './tree-grid.component';
-export * from './tree-grid.interfaces';
 export * from './tree-grid.grouping.pipe';
 export * from '../grouping/tree-grid-group-by-area.component';
 export * from './tree-grid.grouping.pipe';

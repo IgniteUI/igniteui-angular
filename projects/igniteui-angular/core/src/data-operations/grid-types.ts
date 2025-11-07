@@ -396,22 +396,16 @@ export interface EntityType {
     childEntities?: EntityType[];
 }
 
-/**
- * Stub type for ITreeGridRecord - minimal interface for typing in core
- */
+/* marshalByValue */
 export interface ITreeGridRecord {
     key: any;
     data: any;
     children?: ITreeGridRecord[];
+    /* blazorAlternateName: RecordParent */
     parent?: ITreeGridRecord;
-    [key: string]: any;
-}
-
-/**
- * Stub type for IgxHierarchicalGridComponent - minimal interface for typing in core
- */
-export interface IgxHierarchicalGridComponent extends GridTypeBase {
-    [key: string]: any;
+    level?: number;
+    isFilteredOutParent?: boolean;
+    expanded?: boolean;
 }
 
 /**

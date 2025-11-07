@@ -1,8 +1,8 @@
 import { Inject, Pipe, PipeTransform } from '@angular/core';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { ISummaryRecord } from '../summaries/grid-summary';
-import { GridSummaryCalculationMode, GridSummaryPosition } from '../common/enums';
+import { GridSummaryPosition } from '../common/enums';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
+import { GridSummaryCalculationMode, ISummaryRecord } from 'igniteui-angular/core';
 
 /** @hidden */
 @Pipe({

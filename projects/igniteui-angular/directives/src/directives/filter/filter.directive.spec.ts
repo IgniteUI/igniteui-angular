@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixtureAutoDetect, TestBed, waitForAsync } from '@angular/core/testing';
-import { IgxListItemComponent } from '../../../../list/src/list-item/list-item.component';
-import { IgxListComponent } from '../../../../list/src/list/list.component';
+import { IgxListComponent, IgxListItemComponent } from 'igniteui-angular/list';
 import { IgxFilterDirective, IgxFilterOptions, IgxFilterPipe } from './filter.directive';
 
 describe('Filter', () => {

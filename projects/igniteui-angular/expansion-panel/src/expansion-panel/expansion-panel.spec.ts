@@ -8,8 +8,8 @@ import { IgxGridComponent } from '../../../grids/src/grids/grid/public_api';
 import { IgxExpansionPanelDescriptionDirective, IgxExpansionPanelIconDirective, IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
 import { By } from '@angular/platform-browser';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
-import { IgxListComponent } from '../../../../list/src/list/list.component';
-import { IgxListItemComponent } from '../../../../list/src/list-item/list-item.component';
+import { IgxListComponent } from 'igniteui-angular/list';
+import { IgxListItemComponent } from 'igniteui-angular/list';
 import { IGX_EXPANSION_PANEL_DIRECTIVES } from './public_api';
 
 const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';

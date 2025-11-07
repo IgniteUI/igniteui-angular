@@ -3,15 +3,15 @@ import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec.ts';
-import { DataParent, SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
+import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
+import { DataParent, SampleTestData } from '../../../../test-utils/sample-test-data.spec';
 import { Point } from '../../../../core/src/services/public_api';
 
 import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxDragIndicatorIconDirective, IgxRowDragDirective, IgxRowDragGhostDirective } from '../row-drag.directive';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../common/events';
-import { IgxDropDirective } from '../../../directives/drag-drop/drag-drop.directive';
+import { IgxDropDirective } from 'igniteui-angular/input-group';
 import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';

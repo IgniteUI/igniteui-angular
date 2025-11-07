@@ -1,6 +1,6 @@
 import { IgxTransactionService } from './igx-transaction';
 import { Transaction, TransactionType, HierarchicalTransaction } from './transaction';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
+import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
 import { IgxHierarchicalTransactionService } from './igx-hierarchical-transaction';
 
 describe('IgxTransaction', () => {

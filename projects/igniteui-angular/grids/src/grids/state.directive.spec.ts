@@ -1,7 +1,7 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from './grid/public_api';
 import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec.ts';
+import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { IgxGridStateDirective } from './state.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGroupingExpression } from '../../../core/src/data-operations/grouping-expression.interface';
@@ -14,7 +14,7 @@ import { GridSelectionMode } from './common/enums';
 import { FilteringLogic } from '../../../core/src/data-operations/filtering-expression.interface';
 import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { GridSelectionRange } from './common/types';
-import { CustomFilter } from '../../../../test-utils/grid-samples.spec.ts';
+import { CustomFilter } from '../../../test-utils/grid-samples.spec';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridDetailTemplateDirective } from './public_api';
 import { IColumnState, IGridState } from './state-base.directive';

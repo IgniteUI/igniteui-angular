@@ -15,7 +15,7 @@ import { first } from 'rxjs/operators';
 import { IgxAvatarComponent } from '../../../../avatar/src/avatar/avatar.component';
 import { IgxCalendarComponent } from '../../../../calendar/src/public_api';
 import { IgxCalendarContainerComponent } from '../../../../date-picker/src/date-picker/calendar-container/calendar-container.component';
-import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { IgxAngularAnimationService } from '../animation/angular-animation-service';
 import { AnimationService } from '../animation/animation';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../../../../directives/src/directives/toggle/toggle.directive';

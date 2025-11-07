@@ -1,7 +1,7 @@
 import { Component, ViewChildren, QueryList, ViewChild, ElementRef, TemplateRef, Renderer2 } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { UIInteractions, wait} from '../../../../test-utils/ui-interactions.spec.ts';
+import { UIInteractions, wait} from '../../../../test-utils/ui-interactions.spec';
 import { first } from 'rxjs/operators';
 import { IgxInsertDropStrategy, IgxAppendDropStrategy, IgxPrependDropStrategy } from './drag-drop.strategy';
 import {

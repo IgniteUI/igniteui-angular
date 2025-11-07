@@ -2,13 +2,11 @@ import { DebugElement } from "@angular/core";
 import { fakeAsync, TestBed, waitForAsync } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { IgxCheckboxComponent } from "../../checkbox/checkbox.component";
-import { SortingDirection } from "../../data-operations/sorting-strategy";
-import { IgxExpansionPanelHeaderComponent } from '../../../expansion-panel/src/expansion-panel-header.component';
-import { IgxExpansionPanelComponent } from '../../../expansion-panel/src/expansion-panel.component';
-import { IgxInputDirective } from "../../input-group/public_api";
-import { IgxPivotGridTestBaseComponent } from "../../test-utils/pivot-grid-samples.spec";
-import { UIInteractions, wait } from "../../test-utils/ui-interactions.spec";
+import { IgxExpansionPanelHeaderComponent } from 'igniteui-angular/expansion-panel';
+import { IgxExpansionPanelComponent } from 'igniteui-angular/expansion-panel';
+import { IgxInputDirective } from 'igniteui-angular/input-group';
+import { IgxPivotGridTestBaseComponent } from "../../../../test-utils/pivot-grid-samples.spec";
+import { UIInteractions, wait } from "../../../../test-utils/ui-interactions.spec";
 import { PivotGridType } from "../common/grid.interface";
 import { IgxPivotDataSelectorComponent } from "./pivot-data-selector.component";
 import {
@@ -16,8 +14,9 @@ import {
     IPivotValue,
     PivotDimensionType
 } from "./pivot-grid.interface";
-import { Size } from '../common/enums';
-import { setElementSize } from '../../../../test-utils/helper-utils.spec.ts';
+import { setElementSize } from '../../../../test-utils/helper-utils.spec';
+import { Size, SortingDirection } from 'igniteui-angular/core';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 
 describe("Pivot data selector", () => {
 

@@ -4,16 +4,16 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators'
-import { IgxInputDirective } from '../../../../directives/src/directives/input/input.directive';
-import { IgxTooltipTargetDirective } from '../../../directives/tooltip/tooltip-target.directive';
-import { GridFunctions, GridSelectionFunctions } from '../../../../test-utils/grid-functions.spec.ts';
+import { IgxInputDirective } from 'igniteui-angular/input-group';
+import { IgxTooltipTargetDirective } from 'igniteui-angular/input-group';
+import { GridFunctions, GridSelectionFunctions } from '../../../../test-utils/grid-functions.spec';
 import {
     IgxGridCustomEditorsComponent,
     IgxGridValidationTestBaseComponent,
     IgxGridValidationTestCustomErrorComponent,
     IgxTreeGridValidationTestComponent
-} from '../../../../test-utils/grid-validation-samples.spec.ts';
-import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
+} from '../../../../test-utils/grid-validation-samples';
+import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { IGridFormGroupCreatedEventArgs } from '../common/grid.interface';
 import { IgxTreeGridComponent } from '../tree-grid/tree-grid.component';
 import { IgxGridComponent } from './grid.component';

@@ -1,7 +1,7 @@
 import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { UIInteractions } from '../../../../test-utils/ui-interactions.spec.ts';
+import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import {
     IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
 } from '../../../input-group/src/public_api';

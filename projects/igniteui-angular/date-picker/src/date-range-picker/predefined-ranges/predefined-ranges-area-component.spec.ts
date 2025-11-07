@@ -2,11 +2,10 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { IgxPredefinedRangesAreaComponent } from './predefined-ranges-area.component';
-import { CalendarDay } from '../../../../../core/src/date-common/util/model';
+import { CalendarDay } from 'igniteui-angular/core';
 import { CustomDateRange } from '../date-range-picker-inputs.common';
 import { IDateRangePickerResourceStrings } from '../../../../core/src/core/i18n/date-range-picker-resources';
 import { IgxChipComponent } from '../../../../chips/src/chips/chip.component';
-import { IgxChipsModule } from 'igniteui-angular/chips';;
 import { Component, ViewChild } from '@angular/core';
 
 describe('IgxPredefinedRangesAreaComponent', () => {
@@ -38,7 +37,7 @@ describe('IgxPredefinedRangesAreaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [IgxPredefinedRangesAreaComponent, IgxChipComponent, IgxChipsModule, PredefinedRangesDefaultComponent]
+      imports: [IgxPredefinedRangesAreaComponent, IgxChipComponent, PredefinedRangesDefaultComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PredefinedRangesDefaultComponent);

@@ -10,7 +10,7 @@ import {
     booleanAttribute
 } from "@angular/core";
 import { first } from "rxjs/operators";
-import { ColumnType, PivotGridType } from "../common/grid.interface";
+import { PivotGridType } from "../common/grid.interface";
 import {
     IPivotAggregator,
     IPivotDimension,
@@ -29,7 +29,7 @@ import { IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansio
 import { IDragBaseEventArgs, IDragGhostBaseEventArgs, IDragMoveEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDragDirective, IgxDragHandleDirective, IgxDropDirective } from 'igniteui-angular/directives';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, ISelectionEventArgs } from 'igniteui-angular/drop-down';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings, PositionSettings, Size, SortingDirection, VerticalAlignment } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, ColumnType, OverlaySettings, PositionSettings, Size, SortingDirection, VerticalAlignment } from 'igniteui-angular/core';
 
 interface IDataSelectorPanel {
     name: string;

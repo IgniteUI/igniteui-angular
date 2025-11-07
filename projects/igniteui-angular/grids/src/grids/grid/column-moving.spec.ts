@@ -4,16 +4,16 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
-import { IgxInputDirective } from '../../../../directives/src/directives/input/input.directive';
+import { IgxInputDirective } from 'igniteui-angular/input-group';
 import {
     MovableColumnsComponent,
     MovableTemplatedColumnsComponent,
     MovableColumnsLargeComponent,
     MultiColumnHeadersComponent
- } from '../../../../test-utils/grid-samples.spec.ts';
-import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec.ts';
+ } from '../../../../test-utils/grid-samples.spec';
+import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
 import { IgxGridComponent } from './grid.component';
-import { GridSelectionFunctions, GridFunctions } from '../../../../test-utils/grid-functions.spec.ts';
+import { GridSelectionFunctions, GridFunctions } from '../../../../test-utils/grid-functions.spec';
 import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
 import { ColumnType, IgxColumnComponent } from '../public_api';
 
