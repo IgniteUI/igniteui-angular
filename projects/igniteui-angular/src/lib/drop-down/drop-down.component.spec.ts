@@ -239,6 +239,7 @@ describe('IgxDropDown ', () => {
                 spyOn(toggle, 'open').and.callThrough();
 
                 dropdown.open();
+                tick();
                 fixture.detectChanges();
                 expect(toggle.open).toHaveBeenCalledTimes(1);
 
@@ -852,6 +853,7 @@ describe('IgxDropDown ', () => {
                 fixture.detectChanges();
 
                 dropdown.open();
+                tick();
                 fixture.detectChanges();
 
                 const itemToClick = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_ITEM}`))[0];
@@ -943,6 +945,7 @@ describe('IgxDropDown ', () => {
         });
         it('should properly scroll when virtualized', async () => {
             dropdown.toggle();
+            tick();
             fixture.detectChanges();
             await wait(50);
             let firstItemElement = fixture.componentInstance.dropdownItems.first.element.nativeElement;
@@ -960,6 +963,7 @@ describe('IgxDropDown ', () => {
         xit('Should properly handle keyboard navigation when virtualized', async () => {
             pending('does not have time to focus last item on navigateLast()');
             // dropdown.toggle();
+            tick();
             // fixture.detectChanges();
             // dropdown.navigateFirst();
             // expect(scroll.state.startIndex).toEqual(0);
@@ -1051,6 +1055,7 @@ describe('IgxDropDown ', () => {
             it('should set the aria-label property correctly', () => {
                 // Initially aria-label should be null
                 dropdown.toggle();
+                tick();
                 fixture.detectChanges();
                 let items = document.querySelectorAll(`.${CSS_CLASS_ITEM}`);
                 items.forEach(item => {
@@ -1059,9 +1064,11 @@ describe('IgxDropDown ', () => {
 
                 // Set value and check if aria-label reflects it
                 dropdown.toggle();
+                tick();
                 fixture.detectChanges();
                 dropdown.items.forEach((item, index) => item.value = `value ${index}`);
                 dropdown.toggle();
+                tick();
                 fixture.detectChanges();
                 items = document.querySelectorAll(`.${CSS_CLASS_ITEM}`);
                 items.forEach((item, index) => {
@@ -1127,6 +1134,7 @@ describe('IgxDropDown ', () => {
                 const groups = fixture.componentInstance.groups;
                 expect(dropdown.collapsed).toBeTruthy();
                 dropdown.toggle();
+                tick();
                 fixture.detectChanges();
                 const groupItems = document.querySelectorAll(`.${CSS_CLASS_GROUP_ITEM}`);
                 for (let i = 0; i < groupItems.length; i++) {
@@ -1246,6 +1254,7 @@ describe('IgxDropDown ', () => {
                 fixture.componentInstance.maxHeight = '100px';
                 fixture.detectChanges();
                 dropdown.toggle();
+                tick();
                 fixture.detectChanges();
                 const ddList = fixture.debugElement.query(By.css(`.${CSS_CLASS_SCROLL}`)).nativeElement;
                 expect(parseInt(ddList.style.maxHeight, 10)).toEqual(ddList.offsetHeight);
@@ -1255,6 +1264,7 @@ describe('IgxDropDown ', () => {
                 fixture.componentInstance.maxHeight = '700px';
                 fixture.detectChanges();
                 dropdown.toggle();
+                tick();
                 fixture.detectChanges();
                 const ddList = fixture.debugElement.query(By.css(`.${CSS_CLASS_SCROLL}`)).nativeElement;
                 expect(parseInt(ddList.style.maxHeight, 10)).toBeGreaterThan(ddList.offsetHeight);

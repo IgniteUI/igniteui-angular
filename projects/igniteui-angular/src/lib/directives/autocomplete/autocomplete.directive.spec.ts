@@ -304,6 +304,7 @@ describe('IgxAutocomplete', () => {
         });
         it('Should not open dropdown on input clicking', () => {
             input.nativeElement.click();
+            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
             const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST));
@@ -326,6 +327,7 @@ describe('IgxAutocomplete', () => {
             expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
 
             autocomplete.open();
+            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
             expect(dropdownListScrollElement.children.length).toEqual(0);

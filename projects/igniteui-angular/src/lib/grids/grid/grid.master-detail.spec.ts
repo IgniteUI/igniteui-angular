@@ -87,6 +87,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 document.elementFromPoint(inputElemPos.left + inputElemPos.height / 2, inputElemPos.top + inputElemPos.height / 2);
 
             checkboxElem.componentInstance.nativeInput.nativeElement.click();
+            tick();
             fix.detectChanges();
 
             expect(checkboxElem.nativeElement.contains(tracedCheckbox)).toBeTruthy();

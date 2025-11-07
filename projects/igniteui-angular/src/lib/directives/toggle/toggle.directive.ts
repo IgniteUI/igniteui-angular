@@ -1,19 +1,15 @@
 import {
-    afterNextRender,
     ChangeDetectorRef,
     Directive,
     ElementRef,
     EventEmitter,
     HostListener,
-    inject,
     Inject,
-    Injector,
     Input,
     OnDestroy,
     OnInit,
     Optional,
-    Output,
-    runInInjectionContext
+    Output
 } from '@angular/core';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
 import { CancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from '../../core/utils';
@@ -201,7 +197,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     private _overlayClosingSub: Subscription;
     private _overlayClosedSub: Subscription;
     private _overlayContentAppendedSub: Subscription;
-    private _injector = inject(Injector);
 
     /**
      * @hidden
@@ -233,28 +228,29 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         }
 
         this._collapsed = false;
+        this.cdr.detectChanges();
 
-        runInInjectionContext(this._injector, () =>{
-            afterNextRender(() => {
-                if (!info) {
-                    this.unsubscribe();
-                    this.subscribe();
-                    this._overlayId = this.overlayService.attach(this.elementRef, overlaySettings);
-                }
+        // Use setTimeout to defer to next task, allowing host bindings to update
+        // This works in both production and test environments (with tick() in fakeAsync)
+        setTimeout(() => {
+            if (!info) {
+                this.unsubscribe();
+                this.subscribe();
+                this._overlayId = this.overlayService.attach(this.elementRef, overlaySettings);
+            }
 
-                const args: ToggleViewCancelableEventArgs = { cancel: false, owner: this, id: this._overlayId };
-                this.opening.emit(args);
-                if (args.cancel) {
-                    this.unsubscribe();
-                    this.overlayService.detach(this._overlayId);
-                    this._collapsed = true;
-                    delete this._overlayId;
-                    this.cdr.detectChanges();
-                    return;
-                }
-                this.overlayService.show(this._overlayId, overlaySettings);
-            });
-        });
+            const args: ToggleViewCancelableEventArgs = { cancel: false, owner: this, id: this._overlayId };
+            this.opening.emit(args);
+            if (args.cancel) {
+                this.unsubscribe();
+                this.overlayService.detach(this._overlayId);
+                this._collapsed = true;
+                delete this._overlayId;
+                this.cdr.detectChanges();
+                return;
+            }
+            this.overlayService.show(this._overlayId, overlaySettings);
+        }, 0);
     }
 
     /**

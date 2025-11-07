@@ -719,6 +719,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Click the 'add condition' button.
             const addCondButton = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement;
             addCondButton.click();
+            tick();
             fix.detectChanges();
 
             // Verify the edit mode container (the one with the editing inputs) is in view.

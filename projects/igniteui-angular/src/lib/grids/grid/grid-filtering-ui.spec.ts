@@ -739,10 +739,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
                 let close = filterUIRow.queryAll(By.css('button'))[1];
                 close.nativeElement.click();
+                tick();
                 fix.detectChanges();
 
                 // open for number
                 numberCellChip.nativeElement.click();
+                tick();
                 fix.detectChanges();
                 checkUIForType('number', fix.debugElement);
 
@@ -750,10 +752,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
                 close = filterUIRow.queryAll(By.css('button'))[1];
                 close.nativeElement.click();
+                tick();
                 fix.detectChanges();
 
                 // open for date
                 dateCellChip.nativeElement.click();
+                tick();
                 fix.detectChanges();
                 checkUIForType('date', fix.debugElement);
 
@@ -761,10 +765,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
                 close = filterUIRow.queryAll(By.css('button'))[1];
                 close.nativeElement.click();
+                tick();
                 fix.detectChanges();
 
                 // open for bool
                 boolCellChip.nativeElement.click();
+                tick();
                 fix.detectChanges();
                 checkUIForType('bool', fix.debugElement);
 
@@ -784,6 +790,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const dateCellChip = filteringCells[4].query(By.css('igx-chip'));
             // open for string
             stringCellChip.nativeElement.click();
+            tick();
             fix.detectChanges();
 
             GridFunctions.filterBy('Starts With', 'I', fix);
@@ -797,6 +804,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // open for number
             numberCellChip.nativeElement.click();
+            tick();
             fix.detectChanges();
 
             GridFunctions.filterBy('Less Than', '100', fix);
@@ -810,6 +818,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // open for bool
             boolCellChip.nativeElement.click();
+            tick();
             fix.detectChanges();
 
             GridFunctions.filterBy('False', '', fix);
@@ -823,6 +832,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // open for date
             dateCellChip.nativeElement.click();
+            tick();
             fix.detectChanges();
 
             GridFunctions.filterBy('Today', '', fix);
@@ -945,24 +955,28 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const stringCellChip = initialChips[0].nativeElement;
 
             stringCellChip.click();
+            tick();
             fix.detectChanges();
 
             checkUIForType('string', fix.debugElement);
 
             // Click on number column.
             numberHeader.nativeElement.click();
+            tick();
             fix.detectChanges();
 
             checkUIForType('number', fix.debugElement);
 
             // Click on boolean column
             boolHeader.nativeElement.click();
+            tick();
             fix.detectChanges();
 
             checkUIForType('bool', fix.debugElement);
 
             // Click on date column
             dateHeader.nativeElement.click();
+            tick();
             fix.detectChanges();
 
             checkUIForType('date', fix.debugElement);
@@ -1270,6 +1284,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const dateCellChip = initialChips[3].nativeElement;
 
             dateCellChip.click();
+            tick();
             fix.detectChanges();
 
             const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
@@ -2586,6 +2601,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
             const stringCellChip = initialChips[0].nativeElement;
             stringCellChip.click();
+            tick();
             fix.detectChanges();
 
             const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
@@ -2867,6 +2883,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Click on a column with custom filter
             const header = GridFunctions.getColumnHeaderTitleByIndex(fix, 1);
             header.click();
+            tick();
             fix.detectChanges();
 
             // Expect the filter row is closed
@@ -3365,6 +3382,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             let moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
 
             moveRight.click();
+            tick();
             fix.detectChanges();
 
             expect(grid.pinnedColumns.length).toBe(2);
@@ -3375,6 +3393,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, columnToMove.field);
             moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
             moveRight.click();
+            tick();
             fix.detectChanges();
 
             expect(grid.pinnedColumns[0].field).toBe(columnToPin.field);
@@ -3382,9 +3401,11 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             moveLeft = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[0];
             moveLeft.click();
+            tick();
             fix.detectChanges();
 
             moveLeft.click();
+            tick();
             fix.detectChanges();
 
             expect(grid.pinnedColumns.length).toBe(1);
@@ -3395,6 +3416,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
             GridFunctions.getExcelFilteringPinContainer(fix).click();
+            tick();
             fix.detectChanges();
 
             expect(grid.pinnedColumns[0].field).toEqual('Downloads');
@@ -3407,6 +3429,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
             GridFunctions.getExcelFilteringUnpinContainer(fix).click();
+            tick();
             fix.detectChanges();
 
             expect(grid.pinnedColumns.length).toEqual(0);
@@ -3418,6 +3441,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             spyOn(grid.columnVisibilityChanged, 'emit');
             spyOn(grid.columnVisibilityChanging, 'emit');
             GridFunctions.getExcelFilteringHideContainer(fix).click();
+            tick();
             fix.detectChanges();
 
             const args = { column: grid.getColumnByName('Downloads'), newValue: true };
@@ -3598,6 +3622,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const andButton = GridFunctions.getExcelCustomFilteringExpressionAndButton(fix);
             andButton.click();
+            tick();
             fix.detectChanges();
 
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
@@ -4024,6 +4049,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const clearIcon: any = Array.from(searchComponent.querySelectorAll('igx-icon'))
                 .find((icon: any) => icon.innerText === 'clear');
             clearIcon.click();
+            tick();
             fix.detectChanges();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
@@ -4069,6 +4095,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Verify the apply button is disabled when all items are unchecked (when unchecking 'Select All').
             const checkbox = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
             checkbox[0].click(); // Select All
+            tick();
             fix.detectChanges();
             await wait(100);
             applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix);
@@ -4864,6 +4891,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             let removeIcon: any = Array.from(expr.querySelectorAll('igx-icon'))
                 .find((icon: any) => icon.innerText === 'cancel');
             removeIcon.click();
+            tick();
             fix.detectChanges();
 
             // Verify expressions count.
@@ -4875,6 +4903,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             removeIcon = Array.from(expr.querySelectorAll('igx-icon'))
                 .find((icon: any) => icon.innerText === 'cancel');
             removeIcon.click();
+            tick();
             fix.detectChanges();
 
             // Verify expressions count.
@@ -5479,10 +5508,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const thirdListItemCbInput = visibleListItems[2];
             const fourthListItemCbInput = visibleListItems[3];
             secondListItemCbInput.click();
+            tick();
             fix.detectChanges();
             thirdListItemCbInput.click();
+            tick();
             fix.detectChanges();
             fourthListItemCbInput.click();
+            tick();
             fix.detectChanges();
 
             // Verify 'Select All' checkbox is unchecked.
@@ -6185,6 +6217,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
             checkboxes[3].click();
+            tick();
             fix.detectChanges();
             await wait(100);
 
@@ -6422,6 +6455,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const clearIcon: any = Array.from(searchComponent.querySelectorAll('igx-icon'))
                 .find((icon: any) => icon.innerText === 'clear');
             clearIcon.click();
+            tick();
             fix.detectChanges();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);

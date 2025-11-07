@@ -1879,6 +1879,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect((childGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('COLLAPSED');
 
             childRows[0].toggle();
+            tick();
             fixture.detectChanges();
             expect((childGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('EXPANDED');
             hierarchicalGrid.expandChildren = false;

@@ -570,6 +570,7 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 timePicker.open();
+                tick();
                 fixture.detectChanges();
                 expect(timePicker.collapsed).toBeFalsy();
 
@@ -586,6 +587,7 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 timePicker.open();
+                tick();
                 fixture.detectChanges();
                 expect(timePicker.collapsed).toBeFalsy();
 
@@ -628,6 +630,7 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 timePicker.open();
+                tick();
                 fixture.detectChanges();
                 expect(timePicker.collapsed).toBeFalsy();
 
@@ -807,6 +810,7 @@ describe('IgxTimePicker', () => {
 
                 secondsColumn = fixture.debugElement.query(By.css(CSS_CLASS_SECONDSLIST));
                 timePicker.open();
+                tick();
                 fixture.detectChanges();
                 expect(timePicker.collapsed).toBeFalsy();
 
@@ -858,6 +862,7 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 timePicker.open();
+                tick();
                 fixture.detectChanges();
                 secondsColumn = fixture.debugElement.query(By.css(CSS_CLASS_SECONDSLIST));
                 expect(timePicker.collapsed).toBeFalsy();
@@ -1090,6 +1095,7 @@ describe('IgxTimePicker', () => {
                 timePicker.mode = "dialog";
 
                 timePicker.open();
+                tick();
                 fixture.detectChanges();
 
                 const amElement = ampmColumn.query(e => e.nativeElement.textContent === 'AM');

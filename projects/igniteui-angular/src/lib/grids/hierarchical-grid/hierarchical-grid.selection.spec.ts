@@ -1180,6 +1180,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
 
             firstRow.toggle();
+            tick();
             fix.detectChanges();
 
             firstRow.onClick(UIInteractions.getMouseEvent('click'));

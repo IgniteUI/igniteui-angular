@@ -182,6 +182,7 @@ describe('Dialog', () => {
         const dialog = fixture.componentInstance.dialog;
 
         dialog.open();
+        tick();
         fixture.detectChanges();
 
         const dialogWindow = fixture.debugElement.query(By.css('.igx-dialog__window'));
@@ -367,6 +368,7 @@ describe('Dialog', () => {
             const dialog = fixture.componentInstance.dialog;
 
             dialog.open();
+            tick();
             fixture.detectChanges();
 
             const dialogWindow = fixture.debugElement.query(By.css('.igx-dialog__window'));

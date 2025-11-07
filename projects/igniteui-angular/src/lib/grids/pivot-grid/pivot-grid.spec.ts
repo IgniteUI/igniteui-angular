@@ -859,10 +859,12 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-tree-grid');
                 // uncheck Accessories
                 checkboxes[4].click();
+                tick();
                 fixture.detectChanges();
 
                 // uncheck Bikes
                 checkboxes[3].click();
+                tick();
                 fixture.detectChanges();
 
                 // Click 'apply' button to apply filter.
@@ -892,10 +894,12 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 // uncheck Bulgaria
                 checkboxes[1].click();
+                tick();
                 fixture.detectChanges();
 
                 // uncheck Uruguay
                 checkboxes[3].click();
+                tick();
                 fixture.detectChanges();
 
 
@@ -1038,10 +1042,12 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const checkBoxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-pivot-grid'));
                 // uncheck David
                 checkBoxes[4].click();
+                tick();
                 fixture.detectChanges();
 
                 // uncheck Lydia
                 checkBoxes[3].click();
+                tick();
                 fixture.detectChanges();
 
                 // Click 'apply' button to apply filter.
@@ -3396,6 +3402,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             const sortIcon = productsHeaderColumn.querySelectorAll('igx-icon')[0];
             sortIcon.click();
+            tick();
             fixture.detectChanges();
             sortIcon.click();
             fixture.detectChanges();

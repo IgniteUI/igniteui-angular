@@ -258,6 +258,7 @@ export class GridFunctions {
         const rowDE = fix.debugElement.queryAll(By.directive(IgxRowDirective)).find(el => el.componentInstance === row);
         const expandCellDE = rowDE.query(By.directive(IgxGridExpandableCellComponent));
         expandCellDE.componentInstance.toggle(new MouseEvent('click'));
+        tick();
         fix.detectChanges();
     }
 
