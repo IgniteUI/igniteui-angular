@@ -18,7 +18,8 @@ import {
     LOCALE_ID,
     Optional,
     HostListener,
-    booleanAttribute
+    booleanAttribute,
+    ViewEncapsulation
 } from '@angular/core';
 import {
     ControlValueAccessor,
@@ -89,12 +90,14 @@ export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
         }
     ],
     selector: 'igx-time-picker',
+    styleUrl: 'time-picker.component.css',
     templateUrl: 'time-picker.component.html',
     styles: [
         `:host {
             display: block;
         }`
     ],
+    encapsulation: ViewEncapsulation.None,
     imports: [
         IgxInputGroupComponent,
         IgxInputDirective,

@@ -109,10 +109,10 @@
         label: 'body-1'
     ));
     //@include tabs-typography();
-    @include time-picker-typography($categories: (
-        header-hour: 'h4',
-        selected-time: 'h4'
-    ));
+    // @include time-picker-typography($categories: (
+    //     header-hour: 'h4',
+    //     selected-time: 'h4'
+    // ));
     //@include stepper-typography();
     // @include toast-typography();
     @include tooltip-typography();

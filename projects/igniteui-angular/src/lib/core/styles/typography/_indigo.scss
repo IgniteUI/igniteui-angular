@@ -111,10 +111,10 @@
     //)) {
     //    --ig-subtitle-2-text-transform: uppercase;
     //};
-    @include time-picker-typography($categories: (
-        header-hour: 'h5',
-        selected-time: 'h6'
-    ));
+    // @include time-picker-typography($categories: (
+    //     header-hour: 'h5',
+    //     selected-time: 'h6'
+    // ));
     //@include stepper-typography($categories: (
     //    title: 'body-2',
     //    subtitle: 'caption',
