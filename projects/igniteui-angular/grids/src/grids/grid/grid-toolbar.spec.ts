@@ -3,7 +3,7 @@ import { TestBed, fakeAsync, ComponentFixture, tick, waitForAsync } from '@angul
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from '../../../../core/src/services/public_api';
 import { IgxGridComponent } from './public_api';
-import { GridFunctions } from "../../test-utils/grid-functions.spec";
+import { GridFunctions } from "../../../../test-utils/grid-functions.spec";
 import { By } from "@angular/platform-browser";
 import { IgxGridToolbarComponent } from '../toolbar/grid-toolbar.component';
 import { IgxGridToolbarActionsComponent, IgxGridToolbarTitleComponent } from '../toolbar/common';

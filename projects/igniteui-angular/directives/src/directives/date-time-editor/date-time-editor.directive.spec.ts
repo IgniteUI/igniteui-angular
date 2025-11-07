@@ -1,5 +1,4 @@
 import { IgxDateTimeEditorDirective } from './date-time-editor.directive';
-import { DatePart } from './date-time-editor.common';
 import { formatDate, registerLocaleData } from '@angular/common';
 import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges, DOCUMENT } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
@@ -12,6 +11,7 @@ import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { ViewEncapsulation } from '@angular/core';
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
+import { DatePart } from 'igniteui-angular/core';
 
 describe('IgxDateTimeEditor', () => {
     let dateTimeEditor: IgxDateTimeEditorDirective;

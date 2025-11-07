@@ -14,13 +14,13 @@ import {
 } from '../../../../test-utils/grid-samples.spec';
 import { clearGridSubs, setupGridScrollDetection, ymd } from '../../../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
-import { GridSummaryCalculationMode } from '../common/enums';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
 import { DropPosition } from '../moving/moving.service';
 import { DatePipe } from '@angular/common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
-import { IColumnPipeArgs, IgxColumnComponent, IgxDateSummaryOperand, IgxGridRow, IgxGroupByRow, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult, IgxSummaryRow } from '../public_api';
+import { IgxColumnComponent, IgxDateSummaryOperand, IgxGridRow, IgxGroupByRow, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryRow } from '../public_api';
+import { GridSummaryCalculationMode, IColumnPipeArgs, IgxSummaryResult } from 'igniteui-angular/core';
 
 describe('IgxGrid - Summaries #grid', () => {
 

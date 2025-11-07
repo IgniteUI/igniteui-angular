@@ -12,9 +12,9 @@ import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
 import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective } from '../columns/templates.directive';
 import { IgxAvatarComponent } from '../../../../avatar/src/avatar/avatar.component';
 import { IColumnResizeEventArgs, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent } from '../public_api';
-import { Size } from "../common/enums";
 import { setElementSize } from '../../../../test-utils/helper-utils.spec';
 import { IgxColumnResizerDirective } from '../resizing/resizer.directive';
+import { Size } from 'igniteui-angular/core';
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {
 

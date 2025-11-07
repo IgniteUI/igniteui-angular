@@ -9,7 +9,7 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
 import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
 import { IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../public_api';
-import { GridSelectionMode, Size } from '../common/enums';
+import { GridSelectionMode } from '../common/enums';
 import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
@@ -18,9 +18,10 @@ import { IgxExcelStyleHeaderComponent } from '../filtering/excel-style/excel-sty
 import { IgxExcelStyleSortingComponent } from '../filtering/excel-style/excel-style-sorting.component';
 import { IgxExcelStyleSearchComponent } from '../filtering/excel-style/excel-style-search.component';
 import { IgxCellHeaderTemplateDirective } from '../columns/templates.directive';
-import { CellType, ColumnType, IGridCellEventArgs, IgxColumnComponent, IgxColumnGroupComponent, IgxRowEditActionsDirective, IgxRowEditTextDirective } from '../public_api';
+import { CellType, IGridCellEventArgs, IgxColumnComponent, IgxColumnGroupComponent, IgxRowEditActionsDirective, IgxRowEditTextDirective } from '../public_api';
 import { getComponentSize } from '../../../../core/src/core/utils';
 import { setElementSize } from '../../../../test-utils/helper-utils.spec';
+import { ColumnType, Size } from 'igniteui-angular/core';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
 

@@ -11,7 +11,7 @@ import { FilteringExpressionsTree } from '../../../../core/src/data-operations/f
 import { FilteringLogic } from '../../../../core/src/data-operations/filtering-expression.interface';
 import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
 import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
-import { HierarchicalGridFunctions } from '../../../../test-utils/hierarchical-grid-functions';
+import { HierarchicalGridFunctions } from '../../../../test-utils/hierarchical-grid-functions.spec';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxHierarchicalGridDefaultComponent } from '../../../../test-utils/hierarchical-grid-components.spec';
 import { firstValueFrom } from 'rxjs';

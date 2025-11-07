@@ -16,11 +16,12 @@ import {
     IgxHierarchicalGridWithTransactionProviderComponent
 } from '../../../../test-utils/hierarchical-grid-components.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../../../test-utils/grid-functions.spec';
-import { HierarchicalGridFunctions } from '../../../../test-utils/hierarchical-grid-functions';
-import { GridSelectionMode, ColumnPinningPosition, RowPinningPosition, Size } from '../common/enums';
+import { HierarchicalGridFunctions } from '../../../../test-utils/hierarchical-grid-functions.spec';
+import { GridSelectionMode, RowPinningPosition } from '../common/enums';
 import { IgxPaginatorComponent } from '../../../../paginator/src/paginator/paginator.component';
 import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
 import { setElementSize } from '../../../../test-utils/helper-utils.spec';
+import { ColumnPinningPosition, Size } from 'igniteui-angular/core';
 
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
     let fixture: ComponentFixture<IgxHierarchicalGridTestBaseComponent>;

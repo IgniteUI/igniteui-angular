@@ -13,7 +13,7 @@ import { GridSelectionMode } from './common/enums';
 import { ISortingExpression, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { GridSelectionRange } from './common/types';
 import { IgxColumnComponent } from './public_api';
-import { IgxPaginatorComponent } from '../paginator/paginator.component';
+import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IColumnState, IGridState } from './state-base.directive';
 
 describe('IgxHierarchicalGridState - input properties #hGrid', () => {
@@ -681,9 +681,9 @@ class HelperFunctions {
                     [hidden]="c.hidden">
                 </igx-column>
             }
-            <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
+            <igx-paginator [perPage]="5"></igx-paginator>
             <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2>
-                <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
+                <igx-paginator [perPage]="5"></igx-paginator>
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,

@@ -11,7 +11,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxDragIndicatorIconDirective, IgxRowDragDirective, IgxRowDragGhostDirective } from '../row-drag.directive';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../common/events';
-import { IgxDropDirective } from 'igniteui-angular/input-group';
+import { IgxDropDirective } from 'igniteui-angular/directives';
 import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';

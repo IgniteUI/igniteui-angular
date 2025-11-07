@@ -22,7 +22,8 @@ import { IGroupingExpression } from '../../../../core/src/data-operations/groupi
 import { IgxPaginatorComponent } from '../../../../paginator/src/paginator/paginator.component';
 import { IgxCheckboxComponent } from '../../../../checkbox/src/checkbox/checkbox.component';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
-import { IgxGridStateDirective, IgxGrouping } from '../public_api';
+import { IgxGridStateDirective } from '../public_api';
+import { IgxGrouping } from 'igniteui-angular/core';
 
 describe('IgxGrid - GroupBy #grid', () => {
 

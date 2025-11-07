@@ -13,7 +13,7 @@ import { IgxColumnComponent } from '../grids/src/grids/columns/column.component'
 import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../core/src/data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../core/src/data-operations/filtering-expressions-tree';
 import { FilteringStrategy, IgxFilterItem } from '../core/src/data-operations/filtering-strategy';
-import { IgxExcelStyleConditionalFilterComponent, IgxExcelStyleHeaderIconDirective, IgxGridToolbarAdvancedFilteringComponent, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from '../grids/src/grids/public_api';
+import { IgxExcelStyleConditionalFilterComponent, IgxExcelStyleHeaderIconDirective, IgxGridEditingActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from '../grids/src/grids/public_api';
 import { IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective } from '../grids/src/grids/grid.rowEdit.directive';
 import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from '../grids/src/grids/filtering/excel-style/excel-style-filtering.component';
 import { FilteringLogic } from '../core/src/data-operations/filtering-expression.interface';

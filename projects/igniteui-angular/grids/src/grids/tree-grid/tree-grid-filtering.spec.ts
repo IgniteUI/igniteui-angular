@@ -6,7 +6,7 @@ import { IgxTreeGridFilteringComponent, IgxTreeGridFilteringESFTemplatesComponen
 import { TreeGridFunctions } from '../../../../test-utils/tree-grid-functions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
 import { FilteringStrategy } from '../../../../core/src/data-operations/filtering-strategy';
-import { TreeGridFilteringStrategy, TreeGridFormattedValuesFilteringStrategy, TreeGridMatchingRecordsOnlyFilteringStrategy } from './tree-grid.filtering.strategy';
+import { TreeGridFilteringStrategy, TreeGridFormattedValuesFilteringStrategy, TreeGridMatchingRecordsOnlyFilteringStrategy } from '../../../../core/src/data-operations/tree-grid-filtering-strategy';
 import { FilterMode } from '../common/enums';
 import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';

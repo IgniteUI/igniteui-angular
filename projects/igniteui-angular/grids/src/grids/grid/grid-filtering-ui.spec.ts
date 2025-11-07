@@ -47,16 +47,17 @@ import {
     IgxGridFilteringNumericComponent,
     IgxGridConditionalFilteringComponent
 } from '../../../../test-utils/grid-samples.spec';
-import { GridSelectionMode, FilterMode, Size } from '../common/enums';
+import { GridSelectionMode, FilterMode } from '../common/enums';
 import { ControlsFunction } from '../../../../test-utils/controls-functions.spec';
 import { FilteringStrategy, FormattedValuesFilteringStrategy } from '../../../../core/src/data-operations/filtering-strategy';
 import { IgxInputGroupComponent } from '../../../../input-group/src/public_api';
-import { formatDate, getComponentSize } from '../../../../core/src/core/utils';
+import { getComponentSize } from '../../../../core/src/core/utils';
 import { IgxCalendarComponent } from '../../../../calendar/src/calendar/calendar.component';
 import { GridResourceStringsEN } from '../../../../core/src/core/i18n/grid-resources';
 import { setElementSize } from '../../../../test-utils/helper-utils.spec';
 import { IgxDateTimeEditorDirective } from '../../../../directives/src/directives/date-time-editor/date-time-editor.directive';
 import { IgxTimePickerComponent } from '../../../../time-picker/src/time-picker/time-picker.component';
+import { Size } from 'igniteui-angular/core';
 
 const DEBOUNCE_TIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';

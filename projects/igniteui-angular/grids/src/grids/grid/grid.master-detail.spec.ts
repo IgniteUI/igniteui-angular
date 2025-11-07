@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, DebugElement, QueryList, TemplateRef, ContentChild, ViewChildren } from '@angular/core';
+import { Component, ViewChild, OnInit, DebugElement, QueryList, TemplateRef, ViewChildren } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -10,13 +10,14 @@ import { GridFunctions, GridSelectionFunctions } from '../../../../test-utils/gr
 import { IgxGridExpandableCellComponent } from './expandable-cell.component';
 import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
 import { IgxInputDirective, IgxInputGroupComponent } from '../../../../input-group/src/public_api';
-import { GridSummaryCalculationMode, GridSummaryPosition, GridSelectionMode } from '../common/enums';
+import { GridSummaryPosition, GridSelectionMode } from '../common/enums';
 import { IgxCheckboxComponent } from '../../../../checkbox/src/checkbox/checkbox.component';
 import { clearGridSubs, setupGridScrollDetection } from '../../../../test-utils/helper-utils.spec';
 import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
 import { IgxPaginatorComponent } from '../../../../paginator/src/paginator/paginator.component';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { CellType, IgxColumnComponent, IgxGridDetailTemplateDirective } from '../public_api';
+import { GridSummaryCalculationMode } from 'igniteui-angular/core';
 
 const DEBOUNCE_TIME = 30;
 const ROW_TAG = 'igx-grid-row';

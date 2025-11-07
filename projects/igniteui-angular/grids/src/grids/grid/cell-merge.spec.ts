@@ -1,8 +1,8 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrategy, GridCellMergeMode, GridColumnDataType, GridTypeBase, IgxStringFilteringOperand, Size, SortingDirection } from 'igniteui-angular/core';
-import { IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular/grids';
+import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrategy, GridColumnDataType, GridTypeBase, IgxStringFilteringOperand, Size, SortingDirection } from 'igniteui-angular/core';
+import { GridCellMergeMode, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular/grids';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';;
 import { DataParent } from '../../../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../../../test-utils/grid-functions.spec';
@@ -18,7 +18,6 @@ describe('IgxGrid - Cell merging #grid', () => {
     let fix;
     let grid: IgxGridComponent;
     const MERGE_CELL_CSS_CLASS = '.igx-grid__td--merged';
-    const CELL_CSS_CLASS = '.igx-grid__td';
     const CSS_CLASS_GRID_ROW = '.igx-grid__tr';
     const HIGHLIGHT_ACTIVE_CSS_CLASS = '.igx-highlight__active';
 

@@ -2,7 +2,7 @@
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
-import { ColumnPinningPosition, GridSelectionMode } from '../common/enums';
+import { GridSelectionMode } from '../common/enums';
 import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import {
     CELL_PINNED_CLASS,
@@ -29,6 +29,7 @@ import { DropPosition } from '../moving/moving.service';
 import { clearGridSubs, setupGridScrollDetection } from '../../../../test-utils/helper-utils.spec';
 import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
 import { IgxGridHeaderRowComponent, IPinningConfig } from '../public_api';
+import { ColumnPinningPosition } from 'igniteui-angular/core';
 
 describe('IgxGrid - Column Pinning #grid', () => {
 

@@ -9,7 +9,8 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { clearGridSubs, setupHierarchicalGridScrollDetection } from '../../../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from '../cell.component';
-import { IGridCellEventArgs, IgxColumnComponent, IPathSegment } from '../public_api';
+import { IGridCellEventArgs, IgxColumnComponent } from '../public_api';
+import { IPathSegment } from 'igniteui-angular/core';
 
 const DEBOUNCE_TIME = 50;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';

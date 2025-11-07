@@ -2,13 +2,13 @@ import { NgTemplateOutlet } from '@angular/common';
 import { Component, Input, ViewChild, Directive, TemplateRef } from '@angular/core';
 import { AbstractControl, FormsModule, NG_VALIDATORS, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { data } from '../../../src/app/shared/data';
-import { GridColumnDataType } from '../core/src/data-operations/data-util';
 import { IgxColumnComponent } from '../grids/src/grids/columns/column.component';
 import { IGX_GRID_VALIDATION_DIRECTIVES } from '../grids/src/grids/columns/public_api';
 import { IgxCellEditorTemplateDirective, IgxCellValidationErrorDirective } from '../grids/src/grids/columns/templates.directive';
 import { IgxGridComponent } from '../grids/src/grids/grid/grid.component';
 import { IgxTreeGridComponent } from '../grids/src/grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
+import { GridColumnDataType } from 'igniteui-angular/core';
 
 @Directive({
     selector: '[igxAppForbiddenName]',

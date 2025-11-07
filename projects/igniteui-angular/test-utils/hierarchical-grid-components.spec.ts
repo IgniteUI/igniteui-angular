@@ -1,10 +1,8 @@
 import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
-import { ColumnType, IPinningConfig, IgxAdvancedFilteringDialogComponent, IgxColumnComponent, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/src/grids/public_api';
 import { IgxHierarchicalGridComponent } from '../grids/src/grids/hierarchical-grid/hierarchical-grid.component';
 import { IgxRowIslandComponent } from '../grids/src/grids/hierarchical-grid/row-island.component';
-import { ColumnPinningPosition, RowPinningPosition } from '../grids/src/grids/common/enums';
-import { IgxActionStripComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent } from '../action-strip/public_api';
+import { RowPinningPosition } from '../grids/src/grids/common/enums';
 import { HIERARCHICAL_SAMPLE_DATA, HIERARCHICAL_SAMPLE_DATA_SHORT } from 'src/app/shared/sample-data';
 import { IgxHierarchicalTransactionServiceFactory } from '../grids/src/grids/hierarchical-grid/hierarchical-grid-base.directive';
 import { IgxGridToolbarComponent } from '../grids/src/grids/toolbar/grid-toolbar.component';
@@ -17,6 +15,9 @@ import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from '../grids/src/
 import { IgxGridToolbarDirective } from '../grids/src/grids/toolbar/common';
 import { IgxCellHeaderTemplateDirective } from '../grids/src/grids/columns/templates.directive';
 import { IgxPaginatorDirective } from '../paginator/src/paginator/paginator-interfaces';
+import { ColumnPinningPosition, ColumnType, IgxSummaryResult } from 'igniteui-angular/core';
+import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
+import { IgxAdvancedFilteringDialogComponent, IgxColumnComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxNumberSummaryOperand, IPinningConfig } from 'igniteui-angular/grids';
 
 @Component({
     selector: 'igx-hierarchical-grid-test-base',
@@ -32,7 +33,7 @@ import { IgxPaginatorDirective } from '../paginator/src/paginator/paginator-inte
             <igx-paginator></igx-paginator>
         }
         <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true" [rowEditable]="true" [primaryKey]="'ID'">
-            <igx-grid-toolbar *igxGridToolbar></igx-grid-toolbar>
+            <igx-grid-toolbar></igx-grid-toolbar>
             <igx-column field="ID" [groupable]="true" [hasSummary]='true'>
                 <ng-template igxHeader let-columnRef="column">
                     <div>
@@ -107,7 +108,7 @@ export class IgxHierarchicalGridTestBaseComponent {
             <igx-paginator></igx-paginator>
         }
         <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true" [rowEditable]="true" [primaryKey]="'ID'">
-            <igx-grid-toolbar *igxGridToolbar></igx-grid-toolbar>
+            <igx-grid-toolbar></igx-grid-toolbar>
             <igx-column field="ID" [groupable]="true" [hasSummary]='true'>
                 <ng-template igxHeader let-columnRef="column">
                     <div>

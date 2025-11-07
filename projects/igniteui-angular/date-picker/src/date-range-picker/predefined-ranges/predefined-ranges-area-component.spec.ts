@@ -2,8 +2,7 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { IgxPredefinedRangesAreaComponent } from './predefined-ranges-area.component';
-import { CalendarDay } from 'igniteui-angular/core';
-import { CustomDateRange } from '../date-range-picker-inputs.common';
+import { CalendarDay, CustomDateRange } from 'igniteui-angular/core';
 import { IDateRangePickerResourceStrings } from '../../../../core/src/core/i18n/date-range-picker-resources';
 import { IgxChipComponent } from '../../../../chips/src/chips/chip.component';
 import { Component, ViewChild } from '@angular/core';

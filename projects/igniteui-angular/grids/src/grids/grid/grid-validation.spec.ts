@@ -5,14 +5,14 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators'
 import { IgxInputDirective } from 'igniteui-angular/input-group';
-import { IgxTooltipTargetDirective } from 'igniteui-angular/input-group';
+import { IgxTooltipTargetDirective } from 'igniteui-angular/directives';
 import { GridFunctions, GridSelectionFunctions } from '../../../../test-utils/grid-functions.spec';
 import {
     IgxGridCustomEditorsComponent,
     IgxGridValidationTestBaseComponent,
     IgxGridValidationTestCustomErrorComponent,
     IgxTreeGridValidationTestComponent
-} from '../../../../test-utils/grid-validation-samples';
+} from '../../../../test-utils/grid-validation-samples.spec';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { IGridFormGroupCreatedEventArgs } from '../common/grid.interface';
 import { IgxTreeGridComponent } from '../tree-grid/tree-grid.component';

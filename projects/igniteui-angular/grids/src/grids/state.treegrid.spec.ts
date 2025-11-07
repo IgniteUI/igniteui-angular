@@ -14,7 +14,7 @@ import { FilteringLogic } from '../../../core/src/data-operations/filtering-expr
 import { IgxTreeGridComponent } from './tree-grid/public_api';
 import { ISortingExpression } from '../../../core/src/data-operations/sorting-strategy';
 import { GridSelectionRange } from './common/types';
-import { IgxPaginatorComponent } from '../paginator/paginator.component';
+import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxColumnComponent } from './public_api';
 import { IColumnState, IGridState } from './state-base.directive';
 

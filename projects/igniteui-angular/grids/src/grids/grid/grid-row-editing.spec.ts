@@ -26,7 +26,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DefaultDataCloneStrategy } from '../../../../core/src/data-operations/data-clone-strategy';
 import { CellType, RowType } from '../public_api';
-import { Size } from "../common/enums";
+import { Size } from 'igniteui-angular/core';
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';
