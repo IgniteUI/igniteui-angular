@@ -11,9 +11,9 @@ import {
     signal,
     TemplateRef,
     ViewContainerRef,
-    untracked,
     OnDestroy,
     ViewRef,
+    computed,
 } from '@angular/core';
 import {
     IgcChatComponent,
@@ -40,9 +40,9 @@ type ChatContextType<T extends ChatContextUnion> =
     : T extends ChatMessageRenderContext
     ? IgcChatMessage
     : T extends ChatInputRenderContext
-    ? { value: T['value']; attachments: T['attachments'] }
+    ? { value: string; attachments: IgcChatMessageAttachment[] }
     : T extends ChatRenderContext
-    ? { instance: T['instance'] }
+    ? { instance: IgcChatComponent }
     : never;
 
 type ExtractChatContext<T> = T extends (ctx: infer R) => any ? R : never;
@@ -55,15 +55,51 @@ type ChatTemplatesContextMap = {
     };
 };
 
+/**
+ * Template references for customizing chat component rendering.
+ * Each property corresponds to a specific part of the chat UI that can be customized.
+ *
+ * @example
+ * ```typescript
+ * templates = {
+ *   messageContent: this.customMessageTemplate,
+ *   attachment: this.customAttachmentTemplate
+ * }
+ * ```
+ */
 export type IgxChatTemplates = {
-    [K in keyof ChatRenderers]?: TemplateRef<ChatTemplatesContextMap[K]>;
+    [K in keyof Omit<ChatRenderers, 'typingIndicator'>]?: TemplateRef<ChatTemplatesContextMap[K]>;
 };
 
+/**
+ * Configuration options for the chat component.
+ */
 export type IgxChatOptions = Omit<IgcChatOptions, 'renderers'>;
 
 
+/**
+ * Angular wrapper component for the Ignite UI Web Components Chat component.
+ *
+ * This component provides an Angular-friendly interface to the igc-chat web component,
+ * including support for Angular templates, signals, and change detection.
+ *
+ * Uses OnPush change detection strategy for optimal performance. All inputs are signals,
+ * so changes are automatically tracked and propagated to the underlying web component.
+ *
+ * @example
+ * ```typescript
+ * <igx-chat
+ *   [messages]="messages"
+ *   [draftMessage]="draft"
+ *   [options]="chatOptions"
+ *   [templates]="chatTemplates"
+ *   (messageCreated)="onMessageCreated($event)"
+ * />
+ * ```
+ */
 @Component({
     selector: 'igx-chat',
+    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './chat.component.html',
@@ -80,32 +116,64 @@ export class IgxChatComponent implements OnInit, OnDestroy {
     private readonly _templateViewRefs = new Map<TemplateRef<any>, Set<ViewRef>>();
     private _oldTemplates: IgxChatTemplates = {};
 
-    protected readonly _mergedOptions = signal<IgcChatOptions>({});
     protected readonly _transformedTemplates = signal<ChatRenderers>({});
+
+    protected readonly _mergedOptions = computed<IgcChatOptions>(() => {
+        const options = this.options();
+        const transformedTemplates = this._transformedTemplates();
+        return {
+            ...options,
+            renderers: transformedTemplates
+        };
+    });
 
     //#endregion
 
     //#region Inputs
 
+    /** Array of chat messages to display */
     public readonly messages = input<IgcChatMessage[]>([]);
+
+    /** Draft message with text and optional attachments */
     public readonly draftMessage = input<
         { text: string; attachments?: IgcChatMessageAttachment[] } | undefined
     >({ text: '' });
+
+    /** Configuration options for the chat component */
     public readonly options = input<IgxChatOptions>({});
+
+    /** Custom templates for rendering chat elements */
     public readonly templates = input<IgxChatTemplates>({});
 
     //#endregion
 
     //#region Outputs
 
+    /** Emitted when a new message is created */
     public readonly messageCreated = output<IgcChatMessage>();
+
+    /** Emitted when a user reacts to a message */
     public readonly messageReact = output<IgcChatMessageReaction>();
+
+    /** Emitted when an attachment is clicked */
     public readonly attachmentClick = output<IgcChatMessageAttachment>();
+
+    /** Emitted when attachment drag starts */
     public readonly attachmentDrag = output<void>();
+
+    /** Emitted when attachment is dropped */
     public readonly attachmentDrop = output<void>();
+
+    /** Emitted when typing indicator state changes */
     public readonly typingChange = output<boolean>();
+
+    /** Emitted when the input receives focus */
     public readonly inputFocus = output<void>();
+
+    /** Emitted when the input loses focus */
     public readonly inputBlur = output<void>();
+
+    /** Emitted when the input value changes */
     public readonly inputChange = output<string>();
 
     //#endregion
@@ -124,27 +192,11 @@ export class IgxChatComponent implements OnInit, OnDestroy {
     }
 
     constructor() {
-        // Templates changed - update transformed templates and viewRefs and merge with options
+        // Templates changed - update transformed templates and viewRefs
         effect(() => {
             const templates = this.templates();
             this._setTemplates(templates ?? {});
-            this._mergeOptions(untracked(() => this.options()));
         });
-
-        // Options changed - merge with current template state
-        effect(() => {
-            const options = this.options();
-            this._mergeOptions(options ?? {});
-        });
-    }
-
-    private _mergeOptions(options: IgxChatOptions): void {
-        const transformedTemplates = this._transformedTemplates();
-        const merged: IgcChatOptions = {
-            ...options,
-            renderers: transformedTemplates
-        };
-        this._mergedOptions.set(merged);
     }
 
     private _setTemplates(newTemplates: IgxChatTemplates): void {
@@ -200,7 +252,8 @@ export class IgxChatComponent implements OnInit, OnDestroy {
                 angularContext = { $implicit: context.message };
             } else if ('value' in context) {
                 angularContext = {
-                    $implicit: { value: context.value, attachments: context.attachments },
+                    $implicit: context.value,
+                    attachments: context.attachments
                 };
             } else {
                 angularContext = { $implicit: { instance: context.instance } };
@@ -214,31 +267,65 @@ export class IgxChatComponent implements OnInit, OnDestroy {
     }
 }
 
-export interface ChatTemplateContext<T> {
-    $implicit: T;
-}
-
-interface ChatInputContext {
+/**
+ * Context provided to the chat input template.
+ */
+export interface ChatInputContext {
+    /** The current input value */
     $implicit: string;
+    /** Array of attachments associated with the input */
     attachments: IgcChatMessageAttachment[];
 }
 
+/**
+ * Directive providing type information for chat message template contexts.
+ * Use this directive on ng-template elements that render chat messages.
+ *
+ * @example
+ * ```html
+ * <ng-template igxChatMessageContext let-message>
+ *   <div>{{ message.text }}</div>
+ * </ng-template>
+ * ```
+ */
 @Directive({ selector: '[igxChatMessageContext]' })
 export class IgxChatMessageContextDirective {
 
-    public static ngTemplateContextGuard(_: IgxChatMessageContextDirective, ctx: unknown): ctx is ChatTemplateContext<IgcChatMessage> {
-        return true;
-    }
-};
-
-@Directive({ selector: '[igxChatAttachmentContext]' })
-export class IgxChatAttachmentContextDirective {
-
-    public static ngTemplateContextGuard(_: IgxChatAttachmentContextDirective, ctx: unknown): ctx is ChatTemplateContext<IgcChatMessageAttachment> {
+    public static ngTemplateContextGuard(_: IgxChatMessageContextDirective, ctx: unknown): ctx is { $implicit: IgcChatMessage } {
         return true;
     }
 }
 
+/**
+ * Directive providing type information for chat attachment template contexts.
+ * Use this directive on ng-template elements that render message attachments.
+ *
+ * @example
+ * ```html
+ * <ng-template igxChatAttachmentContext let-attachment>
+ *   <img [src]="attachment.url" />
+ * </ng-template>
+ * ```
+ */
+@Directive({ selector: '[igxChatAttachmentContext]' })
+export class IgxChatAttachmentContextDirective {
+
+    public static ngTemplateContextGuard(_: IgxChatAttachmentContextDirective, ctx: unknown): ctx is { $implicit: IgcChatMessageAttachment } {
+        return true;
+    }
+}
+
+/**
+ * Directive providing type information for chat input template contexts.
+ * Use this directive on ng-template elements that render the chat input.
+ *
+ * @example
+ * ```html
+ * <ng-template igxChatInputContext let-value let-attachments="attachments">
+ *   <input [value]="value" />
+ * </ng-template>
+ * ```
+ */
 @Directive({ selector: '[igxChatInputContext]' })
 export class IgxChatInputContextDirective {
 
