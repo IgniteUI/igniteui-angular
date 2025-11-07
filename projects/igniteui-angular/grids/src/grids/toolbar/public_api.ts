@@ -11,6 +11,7 @@ export * from './grid-toolbar-advanced-filtering.component';
 export * from './grid-toolbar-exporter.component';
 export * from './grid-toolbar-hiding.component';
 export * from './grid-toolbar-pinning.component';
+export * from './token';
 
 /* NOTE: Grid toolbar directives collection for ease-of-use import in standalone components scenario */
 // export const IGX_GRID_TOOLBAR_DIRECTIVES = [

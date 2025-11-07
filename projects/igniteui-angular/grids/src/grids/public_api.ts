@@ -76,6 +76,7 @@ export {
     IgxRowEditTabStopDirective
 } from './grid.rowEdit.directive';
 export { IGridState, IColumnState, IGridStateCollection, IGridStateOptions, GridFeatures } from './state-base.directive';
+export { IgxGridStateBaseDirective } from './state-base.directive';
 export * from './state.directive';
 export * from './columns/public_api';
 export * from './headers/public_api';
@@ -92,6 +93,7 @@ export * from './selection/public_api';
 export * from './summaries/grid-summary';
 export * from './column-actions/public_api';
 export * from './toolbar/public_api';
+export { DropPosition } from './moving/moving.service';
 
 /*
 export * from './api.service';
@@ -114,7 +116,6 @@ export * from './resizing/resize.module';
 export * from './grouping/tree-grid-group-by-area.component';
 export * from './grouping/grid-group-by-area.component';
 export * from './grouping/group-by-area.directive';
-export { DropPosition } from './moving/moving.service';
 */
 
 /* NOTE: Common grid directives collection for reuse
