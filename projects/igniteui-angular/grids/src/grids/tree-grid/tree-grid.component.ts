@@ -28,7 +28,6 @@ import { NgClass, NgTemplateOutlet, NgStyle } from '@angular/common';
 
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
-import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowDataCancelableEventArgs, IRowDataEventArgs, IRowToggleEventArgs } from '../common/events';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
@@ -46,7 +45,7 @@ import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-
 import { IgxGridCell } from '../grid-public-cell';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxGridTransaction } from '../common/types';
-import { DefaultTreeGridMergeStrategy, HierarchicalState, HierarchicalTransaction, HierarchicalTransactionService, IGridMergeStrategy, IgxHierarchicalTransactionFactory, IgxOverlayService, mergeObjects, PlatformUtil, StateUpdateEvent, TransactionEventOrigin, TransactionType, TreeGridFilteringStrategy } from 'igniteui-angular/core';
+import { DefaultTreeGridMergeStrategy, HierarchicalState, HierarchicalTransaction, HierarchicalTransactionService, IGridMergeStrategy, IgxHierarchicalTransactionFactory, IgxOverlayService, ITreeGridRecord, mergeObjects, PlatformUtil, StateUpdateEvent, TransactionEventOrigin, TransactionType, TreeGridFilteringStrategy } from 'igniteui-angular/core';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
 import { IgxTreeGridSummaryPipe } from './tree-grid.summary.pipe';
 import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';

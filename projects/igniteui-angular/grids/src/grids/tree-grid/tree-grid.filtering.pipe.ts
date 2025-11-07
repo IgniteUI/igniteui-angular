@@ -1,7 +1,6 @@
 import { Inject, Pipe, PipeTransform } from '@angular/core';
-import { ITreeGridRecord } from './tree-grid.interfaces';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
-import { FilteringExpressionsTree, IFilteringExpressionsTree, IFilteringState, IFilteringStrategy, TreeGridFilteringStrategy } from 'igniteui-angular/core';
+import { FilteringExpressionsTree, IFilteringExpressionsTree, IFilteringState, IFilteringStrategy, ITreeGridRecord, TreeGridFilteringStrategy } from 'igniteui-angular/core';
 
 /** @hidden */
 @Pipe({

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GridSelectionMode } from '../common/enums';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { ITreeGridRecord } from './tree-grid.interfaces';
-
+import { ITreeGridRecord } from 'igniteui-angular/core';
 
 @Injectable()
 export class IgxTreeGridSelectionService extends IgxGridSelectionService {

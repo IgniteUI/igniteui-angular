@@ -1,5 +1,4 @@
 import { GridBaseAPIService } from '../api.service';
-import { ITreeGridRecord } from './tree-grid.interfaces';
 import {
     HierarchicalTransaction,
     TransactionType,
@@ -13,7 +12,8 @@ import {
     IFilteringExpressionsTree,
     ISortingExpression,
     mergeObjects,
-    ColumnType
+    ColumnType,
+    ITreeGridRecord
 } from 'igniteui-angular/core';
 import { Injectable } from '@angular/core';
 import { GridType } from '../common/grid.interface';

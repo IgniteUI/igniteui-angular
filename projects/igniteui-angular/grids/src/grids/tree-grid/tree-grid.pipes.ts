@@ -1,7 +1,6 @@
 import { Inject, Pipe, PipeTransform } from '@angular/core';
-import { ITreeGridRecord } from './tree-grid.interfaces';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
-import { cloneArray, cloneHierarchicalArray, DataUtil, IGroupingExpression, ISortingExpression, TransactionType, IGridSortingStrategy } from 'igniteui-angular/core';
+import { cloneArray, cloneHierarchicalArray, DataUtil, IGroupingExpression, ISortingExpression, TransactionType, IGridSortingStrategy, ITreeGridRecord } from 'igniteui-angular/core';
 import { IgxAddRow } from '../common/crud.service';
 
 /**

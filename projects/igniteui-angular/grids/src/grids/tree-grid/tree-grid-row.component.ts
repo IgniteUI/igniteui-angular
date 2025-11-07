@@ -1,6 +1,5 @@
 import { Component, forwardRef, Input, ViewChildren, QueryList, HostBinding, DoCheck, ChangeDetectionStrategy } from '@angular/core';
 import { IgxRowDirective } from '../row.directive';
-import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridCellStyleClassesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe } from '../common/pipes';
 import { IgxTreeGridCellComponent } from './tree-cell.component';
 import { IgxGridCellComponent } from '../cell.component';
@@ -8,6 +7,7 @@ import { IgxRowDragDirective } from '../row-drag.directive';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 import { IgxGridForOfDirective } from 'igniteui-angular/directives';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { ITreeGridRecord } from 'igniteui-angular/core';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
