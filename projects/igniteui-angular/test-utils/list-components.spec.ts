@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective, IgxListActionDirective, IgxListComponent, IgxListItemComponent, IgxListItemLeftPanningTemplateDirective, IgxListItemRightPanningTemplateDirective, IgxListLineDirective, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective } from '../list/public_api';
 import { IgxForOfDirective } from '../directives/src/directives/for-of/for_of.directive';
 import { IgxIconComponent } from '../icon/src/icon/icon.component';
+import { IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective, IgxListActionDirective, IgxListComponent, IgxListItemComponent, IgxListItemLeftPanningTemplateDirective, IgxListItemRightPanningTemplateDirective, IgxListLineDirective, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective } from 'igniteui-angular/list';
 
 @Component({
     template: `

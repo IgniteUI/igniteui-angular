@@ -23,10 +23,10 @@ import { IgxHierarchicalGridExportComponent, IgxHierarchicalGridTestBaseComponen
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
 import { IFilteringEventArgs, IgxGridToolbarAdvancedFilteringComponent } from '../public_api';
 import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
-import { QueryBuilderFunctions } from '../../../query-builder/src/query-builder/query-builder-functions.spec.ts';
+import { QueryBuilderFunctions } from '../../../../query-builder/src/query-builder/query-builder-functions.spec';
 import { By } from '@angular/platform-browser';
 import { IgxDateTimeEditorDirective } from '../../../../directives/src/directives/date-time-editor/date-time-editor.directive';
-import { QueryBuilderSelectors } from '../../../query-builder/src/query-builder/query-builder.common';
+import { QueryBuilderSelectors } from '../../../../query-builder/src/query-builder/query-builder.common';
 import { IgxHGridRemoteOnDemandComponent, IgxHierarchicalGridMissingChildDataComponent } from '../hierarchical-grid/hierarchical-grid.spec';
 import { IGridResourceStrings } from '../../../../core/src/core/i18n/grid-resources';
 

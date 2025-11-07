@@ -1,10 +1,9 @@
 import { waitForAsync, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
-import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxDateFilteringOperand, IgxNumberFilteringOperand, IgxQueryBuilderHeaderComponent, IgxQueryBuilderSearchValueTemplateDirective } from 'igniteui-angular/core';
+import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxDateFilteringOperand, IgxNumberFilteringOperand } from 'igniteui-angular/core';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxComboComponent } from 'igniteui-angular/combo';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputGroupComponent } from 'igniteui-angular/input-group';
-import { IgxQueryBuilderComponent } from 'igniteui-angular/query-builder';
 import { IgxSelectComponent } from 'igniteui-angular/select';;
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,6 +14,9 @@ import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { FormsModule } from '@angular/forms';
 import { NgTemplateOutlet } from '@angular/common';
 import { QueryBuilderSelectors } from './query-builder.common';
+import { IgxQueryBuilderComponent } from './query-builder.component';
+import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component';
+import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 
 describe('IgxQueryBuilder', () => {
   let fix: ComponentFixture<IgxQueryBuilderSampleTestComponent>;
