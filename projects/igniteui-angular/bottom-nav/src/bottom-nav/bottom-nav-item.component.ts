@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IgxTabItemDirective } from '../tab-item.directive';
+import { IgxTabItemDirective } from 'igniteui-angular/tabs';
 
 @Component({
     selector: 'igx-bottom-nav-item',

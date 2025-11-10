@@ -29,6 +29,7 @@ export * from 'igniteui-angular/action-strip';
 export * from 'igniteui-angular/avatar';
 export * from 'igniteui-angular/badge';
 export * from 'igniteui-angular/banner';
+export * from 'igniteui-angular/bottom-nav';
 export * from 'igniteui-angular/buttonGroup';
 export * from 'igniteui-angular/calendar';
 export * from 'igniteui-angular/card';

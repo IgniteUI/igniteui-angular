@@ -1,6 +1,5 @@
 import { Component, HostBinding } from '@angular/core';
-import { IgxTabHeaderDirective } from '../tab-header.directive';
-import { IgxTabHeaderBase } from '../tabs.base';
+import { IgxTabHeaderBase, IgxTabHeaderDirective } from 'igniteui-angular/tabs';
 
 @Component({
     selector: 'igx-bottom-nav-header',

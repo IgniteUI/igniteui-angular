@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { IgxTabsBase } from '../tabs.base';
-import { IgxTabsDirective } from '../tabs.directive';
 import { NgTemplateOutlet } from '@angular/common';
+import { IgxTabsBase, IgxTabsDirective } from 'igniteui-angular/tabs';
 
 
 /** @hidden */
