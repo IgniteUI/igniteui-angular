@@ -149,3 +149,23 @@ export class IgxTooltipWithCloseButtonComponent {
     @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
     @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
 }
+
+@Component({
+    template: `
+    <button class="btn" [igxTooltipTarget]="tooltipRef">
+      Hover me
+    </button>
+
+    <div igxTooltip #tooltipRef="tooltip">
+      <div class="nested" style="background: red; width: 400px; color: white; padding: 4px;">
+        <span>Nested content</span>
+      </div>
+    </div>
+    `,
+    imports: [IgxTooltipDirective, IgxTooltipTargetDirective],
+    standalone: true
+})
+export class IgxTooltipWithNestedContentComponent {
+    @ViewChild(IgxTooltipDirective, { static: true }) public tooltip!: IgxTooltipDirective;
+    @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget!: IgxTooltipTargetDirective;
+}
