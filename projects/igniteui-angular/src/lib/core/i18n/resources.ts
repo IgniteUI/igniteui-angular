@@ -103,6 +103,6 @@ export function changei18n(resourceStrings: IResourceStrings) {
  * Set the current locale of all Ignite UI components.
  * @param locale The name of the locale. A string based on the BCP 47 language tag, that Intl supports.
  */
-export function registerI18n(resourceStrings: IResourceStrings, locale?: string) {
+export function registerI18n(resourceStrings: IResourceStrings, locale: string) {
     igxRegisterI18n(resourceStrings, locale);
 }
