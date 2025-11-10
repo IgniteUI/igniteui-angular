@@ -3,8 +3,5 @@ import { TreeResourceStringsHU as ATreeResourceStrings } from 'igniteui-i18n-res
 
 /**
  * Hungarian resource strings for IgxTree
- * 
- * Note:  This is an old implementation that uses outdated API for resource management.
- * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
 export const TreeResourceStringsHU = prefixResource(IGX_PREFIX, ATreeResourceStrings);

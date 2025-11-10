@@ -3,8 +3,5 @@ import { CalendarResourceStringsZHHANS as ACalendarResourceStrings } from 'ignit
 
 /**
  * Simplified Chinese (zh-Hans) resource strings for IgxCalendar
- * 
- * Note:  This is an old implementation that uses outdated API for resource management.
- * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
 export const CalendarResourceStringsZHHANS = prefixResource(IGX_PREFIX, ACalendarResourceStrings);

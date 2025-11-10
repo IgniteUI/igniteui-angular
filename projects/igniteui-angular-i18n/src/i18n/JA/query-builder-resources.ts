@@ -3,8 +3,5 @@ import { QueryBuilderResourceStringsJA as AQueryBuilderResourceStrings } from 'i
 
 /**
  * Japanese resource strings for IgxQueryBuilder
- * 
- * Note:  This is an old implementation that uses outdated API for resource management.
- * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
 export const QueryBuilderResourceStringsJA = prefixResource(IGX_PREFIX, AQueryBuilderResourceStrings);

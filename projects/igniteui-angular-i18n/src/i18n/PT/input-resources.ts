@@ -2,9 +2,6 @@ import { FileInputResourceStringsPT as AInputResourceStrings } from 'igniteui-i1
 
 /**
  * Portuguese resource strings for IgxInput
- *
- * Note:  This is an old implementation that uses outdated API for resource management.
- * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
 export const InputResourceStringsPT = {
     igx_input_upload_button: AInputResourceStrings.file_input_upload_button,

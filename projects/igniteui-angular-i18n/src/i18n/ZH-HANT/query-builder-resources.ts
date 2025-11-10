@@ -3,8 +3,5 @@ import { QueryBuilderResourceStringsZHHANT as AQueryBuilderResourceStrings } fro
 
 /**
  * Traditional Chinese (zh-Hant) resource strings for IgxQueryBuilder
- * 
- * Note:  This is an old implementation that uses outdated API for resource management.
- * We recommend using the new API and resources from 'igniteui-i18n-resources'.
  */
 export const QueryBuilderResourceStringsZHHANT = prefixResource(IGX_PREFIX, AQueryBuilderResourceStrings);
