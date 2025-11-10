@@ -107,6 +107,16 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IBannerEventArgs', 'banner'],
     ['IBannerCancelEventArgs', 'banner'],
     
+    // Bottom Nav
+    ['IgxBottomNavComponent', 'bottom-nav'],
+    ['IgxBottomNavModule', 'bottom-nav'],
+    ['IgxBottomNavItemComponent', 'bottom-nav'],
+    ['IgxBottomNavHeaderComponent', 'bottom-nav'],
+    ['IgxBottomNavContentComponent', 'bottom-nav'],
+    ['IgxBottomNavHeaderLabelDirective', 'bottom-nav'],
+    ['IgxBottomNavHeaderIconDirective', 'bottom-nav'],
+    ['IGX_BOTTOM_NAV_DIRECTIVES', 'bottom-nav'],
+    
     // Button Group
     ['IgxButtonGroupComponent', 'buttonGroup'],
     ['IgxButtonGroupModule', 'buttonGroup'],
