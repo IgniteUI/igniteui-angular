@@ -858,9 +858,9 @@ describe('IgxGrid - Column properties #grid', () => {
         it('should display correctly the data when column dataType is dateTime #ivy', () => {
             let orderDateColumn = grid.getColumnByName('OrderDate');
 
-            expect(orderDateColumn._cells[0].nativeElement.innerText).toEqual('Oct 1, 2015, 11:37:22 AM');
-            expect(orderDateColumn._cells[5].nativeElement.innerText).toEqual('Oct 30, 2019, 4:17:27 PM');
-            expect(orderDateColumn._cells[8].nativeElement.innerText).toEqual('Aug 3, 2021, 3:15:00 PM');
+            expect(orderDateColumn._cells[0].nativeElement.innerText.normalize("NFKD")).toEqual('Oct 1, 2015, 11:37:22 AM');
+            expect(orderDateColumn._cells[5].nativeElement.innerText.normalize("NFKD")).toEqual('Oct 30, 2019, 4:17:27 PM');
+            expect(orderDateColumn._cells[8].nativeElement.innerText.normalize("NFKD")).toEqual('Aug 3, 2021, 3:15:00 PM');
 
             orderDateColumn.pipeArgs = { format: 'short' };
             fix.detectChanges();
@@ -872,16 +872,16 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             orderDateColumn = grid.getColumnByName('OrderDate');
-            expect(orderDateColumn._cells[0].nativeElement.innerText).toEqual('10/1/15, 11:37 AM');
-            expect(orderDateColumn._cells[5].nativeElement.innerText).toEqual('10/30/19, 4:17 PM');
-            expect(orderDateColumn._cells[8].nativeElement.innerText).toEqual('8/3/21, 3:15 PM');
+            expect(orderDateColumn._cells[0].nativeElement.innerText.normalize("NFKD")).toEqual('10/1/15, 11:37 AM');
+            expect(orderDateColumn._cells[5].nativeElement.innerText.normalize("NFKD")).toEqual('10/30/19, 4:17 PM');
+            expect(orderDateColumn._cells[8].nativeElement.innerText.normalize("NFKD")).toEqual('8/3/21, 3:15 PM');
         });
 
         it('should display correctly the data when column dataType is time #ivy', () => {
             let receiveTime = grid.getColumnByName('ReceiveTime');
 
-            expect(receiveTime._cells[0].nativeElement.innerText).toEqual('8:37:11 AM');
-            expect(receiveTime._cells[5].nativeElement.innerText).toEqual('12:47:42 PM');
+            expect(receiveTime._cells[0].nativeElement.innerText.normalize("NFKD")).toEqual('8:37:11 AM');
+            expect(receiveTime._cells[5].nativeElement.innerText.normalize("NFKD")).toEqual('12:47:42 PM');
 
             receiveTime.pipeArgs = { format: 'shortTime' };
             fix.detectChanges();
@@ -893,8 +893,8 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             receiveTime = grid.getColumnByName('ReceiveTime');
-            expect(receiveTime._cells[0].nativeElement.innerText).toEqual('8:37 AM');
-            expect(receiveTime._cells[5].nativeElement.innerText).toEqual('12:47 PM');
+            expect(receiveTime._cells[0].nativeElement.innerText.normalize("NFKD")).toEqual('8:37 AM');
+            expect(receiveTime._cells[5].nativeElement.innerText.normalize("NFKD")).toEqual('12:47 PM');
         });
 
         it('DateTime: should preview the dateTime value correctly when cell is in edit mode correctly', fakeAsync(() => {
@@ -903,7 +903,7 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             const firstCell = orderColumn._cells[0];
-            expect(firstCell.nativeElement.innerText).toEqual('Oct 1, 2015, 11:37:22 AM');
+            expect(firstCell.nativeElement.innerText.normalize("NFKD")).toEqual('Oct 1, 2015, 11:37:22 AM');
 
             firstCell.setEditMode(true);
             fix.detectChanges();
@@ -933,7 +933,7 @@ describe('IgxGrid - Column properties #grid', () => {
             grid.endEdit(true);
             fix.detectChanges();
 
-            expect(firstCell.nativeElement.innerText).toEqual('Dec 3, 2021, 3:15:22 PM');
+            expect(firstCell.nativeElement.innerText.normalize("NFKD")).toEqual('Dec 3, 2021, 3:15:22 PM');
         }));
 
         it('Time: should preview the time value correctly when cell is in edit mode correctly', fakeAsync(() => {
@@ -943,7 +943,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             const cell = timeColumn._cells[1];
 
-            expect(cell.nativeElement.innerText).toEqual('12:12:02 PM');
+            expect(cell.nativeElement.innerText.normalize("NFKD")).toEqual('12:12:02 PM');
 
             cell.setEditMode(true);
             tick();
@@ -964,7 +964,7 @@ describe('IgxGrid - Column properties #grid', () => {
             grid.endEdit(true);
             fix.detectChanges();
 
-            expect(cell.nativeElement.innerText).toEqual('10:12:02 AM');
+            expect(cell.nativeElement.innerText.normalize("NFKD")).toEqual('10:12:02 AM');
         }));
 
         it('should display summaries correctly for dateTime and time column', () => {
@@ -1006,8 +1006,8 @@ describe('IgxGrid - Column properties #grid', () => {
             let esfSearch = GridFunctions.getExcelFilteringSearchComponent(fix, excelMenu);
             let checkBoxes = esfSearch.querySelectorAll('igx-checkbox');
 
-            expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Mar 12, 2015, 9:31:22 PM');
-            expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Aug 18, 2016, 11:17:22 AM');
+            expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText.normalize("NFKD")).toEqual('Mar 12, 2015, 9:31:22 PM');
+            expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText.normalize("NFKD")).toEqual('Aug 18, 2016, 11:17:22 AM');
 
             GridFunctions.clickCancelExcelStyleFiltering(fix);
             fix.detectChanges();
@@ -1025,8 +1025,8 @@ describe('IgxGrid - Column properties #grid', () => {
             esfSearch = GridFunctions.getExcelFilteringSearchComponent(fix, excelMenu);
             checkBoxes = esfSearch.querySelectorAll('igx-checkbox');
 
-            expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('3/12/15, 9:31 PM');
-            expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('8/18/16, 11:17 AM');
+            expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText.normalize("NFKD")).toEqual('3/12/15, 9:31 PM');
+            expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText.normalize("NFKD")).toEqual('8/18/16, 11:17 AM');
         }));
 
         it('Time: filtering UI list should be populated with correct values based on the pipeArgs', fakeAsync(() => {
@@ -1044,8 +1044,8 @@ describe('IgxGrid - Column properties #grid', () => {
             let esfSearch = GridFunctions.getExcelFilteringSearchComponent(fix, excelMenu);
             let checkBoxes = esfSearch.querySelectorAll('igx-checkbox');
 
-            expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('6:40:18 AM');
-            expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('12:12:02 PM');
+            expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText.normalize("NFKD")).toEqual('6:40:18 AM');
+            expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText.normalize("NFKD")).toEqual('12:12:02 PM');
             GridFunctions.clickCancelExcelStyleFiltering(fix);
             tick(200);
             fix.detectChanges();
@@ -1061,8 +1061,8 @@ describe('IgxGrid - Column properties #grid', () => {
             esfSearch = GridFunctions.getExcelFilteringSearchComponent(fix, excelMenu);
             checkBoxes = esfSearch.querySelectorAll('igx-checkbox');
 
-            expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('6:40 AM');
-            expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('12:12 PM');
+            expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText.normalize("NFKD")).toEqual('6:40 AM');
+            expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText.normalize("NFKD")).toEqual('12:12 PM');
         }));
 
         it('DateTime: dateTime input should be disabled when try to filter based on unary conditions - today or etc. #ivy', fakeAsync(() => {
@@ -1135,12 +1135,12 @@ describe('IgxGrid - Column properties #grid', () => {
         it('DateTime: Use pipeArgs.format as inputFormat for cell editor if numeric and editorOptions.dateTimeFormat is unset', fakeAsync(() => {
             const orderDateColumn = grid.getColumnByName('OrderDate');
             const firstCell = orderDateColumn._cells[0];
-            expect(firstCell.nativeElement.innerText).toEqual('Oct 1, 2015, 11:37:22 AM');
+            expect(firstCell.nativeElement.innerText.normalize('NFKD')).toEqual('Oct 1, 2015, 11:37:22 AM');
 
             orderDateColumn.pipeArgs = { format: 'dd-MM-yyyy hh:mm aa' };
             fix.detectChanges();
 
-            expect(firstCell.nativeElement.innerText).toEqual('01-10-2015 11:37 AM');
+            expect(firstCell.nativeElement.innerText.normalize('NFKD')).toEqual('01-10-2015 11:37 AM');
 
             firstCell.setEditMode(true);
             fix.detectChanges();
@@ -1220,12 +1220,12 @@ describe('IgxGrid - Column properties #grid', () => {
         it('Time: Use pipeArgs.format as inputFormat for cell editor if numeric and editorOptions.dateTimeFormat is unset', fakeAsync(() => {
             const receivedTimeColumn = grid.getColumnByName('ReceiveTime');
             const firstCell = receivedTimeColumn._cells[0];
-            expect(firstCell.nativeElement.innerText).toEqual('8:37:11 AM');
+            expect(firstCell.nativeElement.innerText.normalize('NFKD')).toEqual('8:37:11 AM');
 
             receivedTimeColumn.pipeArgs = { format: 'h-mm-ss aaaaa' };
             fix.detectChanges();
 
-            expect(firstCell.nativeElement.innerText).toEqual('8-37-11 a');
+            expect(firstCell.nativeElement.innerText.normalize('NFKD')).toEqual('8-37-11 a');
 
             firstCell.setEditMode(true);
             fix.detectChanges();
@@ -1243,7 +1243,7 @@ describe('IgxGrid - Column properties #grid', () => {
             firstCell.setEditMode(false);
             fix.detectChanges();
 
-            expect(firstCell.nativeElement.innerText).toContain('8:37:11 AM GMT');
+            expect(firstCell.nativeElement.innerText.normalize('NFKD')).toContain('8:37:11 AM GMT');
 
             firstCell.setEditMode(true);
             fix.detectChanges();

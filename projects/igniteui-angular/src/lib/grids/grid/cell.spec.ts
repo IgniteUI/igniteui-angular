@@ -393,8 +393,8 @@ describe('IgxGrid - Cell component #grid', () => {
             const grid = fixture.componentInstance.grid;
             const receiveTime = grid.getColumnByName('ReceiveTime');
 
-            expect(receiveTime._cells[0].title).toEqual('8:37:11 AM');
-            expect(receiveTime._cells[5].title).toEqual('12:47:42 PM');
+            expect(receiveTime._cells[0].title.normalize("NFKD")).toEqual('8:37:11 AM');
+            expect(receiveTime._cells[5].title.normalize("NFKD")).toEqual('12:47:42 PM');
 
             const product = grid.getColumnByName('ProductName');
 
