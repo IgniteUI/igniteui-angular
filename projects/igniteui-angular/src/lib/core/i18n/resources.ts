@@ -93,11 +93,16 @@ export function onResourceChangeHandle(destroyObj: Subject<any> | DestroyRef, ca
 
 /**
  * Change resource strings for all components globally. The locale is not taken into account and this method should be called when the locale is changed.
+ * Note: Legacy method. We suggest using the new `registerI18n` and `setCurrentI18n` methods exposed.
  */
 export function changei18n(resourceStrings: IResourceStrings) {
     igxRegisterI18n(resourceStrings, getI18nManager().defaultLocale);
 }
 
+/**
+ * Set the current locale of all Ignite UI components.
+ * @param locale The name of the locale. A string based on the BCP 47 language tag, that Intl supports.
+ */
 export function registerI18n(resourceStrings: IResourceStrings, locale?: string) {
     igxRegisterI18n(resourceStrings, locale);
 }
