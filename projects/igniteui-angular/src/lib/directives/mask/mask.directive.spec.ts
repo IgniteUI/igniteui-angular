@@ -8,6 +8,7 @@ import { Replaced } from './mask-parsing.service';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent } from '../../input-group/input-group.component';
 import { IgxInputDirective } from '../input/input.directive';
+import { mock } from 'node:test';
 
 describe('igxMask', () => {
     // TODO: Refactor tests to reuse components
@@ -638,9 +639,8 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
         // OnTouched callback
         mask.onFocus();
         expect(mockNgControl.registerOnTouchedCb).not.toHaveBeenCalled();
-        const mockBlur = new FocusEvent('blur') as FocusEvent & { target: { value: string } };
-        mockBlur.target.value = '';
-        mask.onBlur(mockBlur);
+        const mockBlur = { target: { value: ''}};
+        mask.onBlur(mockBlur as unknown as FocusEvent);
         expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
     });
 });
