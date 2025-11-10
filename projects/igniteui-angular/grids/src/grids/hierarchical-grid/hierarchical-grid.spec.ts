@@ -12,16 +12,15 @@ import { IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirecti
 import { GridSelectionMode } from '../common/enums';
 import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from '../cell.component';
-import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
 import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/excel-style-filtering.component';
 import { IgxExcelStyleHeaderComponent } from '../filtering/excel-style/excel-style-header.component';
 import { IgxExcelStyleSortingComponent } from '../filtering/excel-style/excel-style-sorting.component';
 import { IgxExcelStyleSearchComponent } from '../filtering/excel-style/excel-style-search.component';
 import { IgxCellHeaderTemplateDirective } from '../columns/templates.directive';
 import { CellType, IGridCellEventArgs, IgxColumnComponent, IgxColumnGroupComponent, IgxRowEditActionsDirective, IgxRowEditTextDirective } from '../public_api';
-import { getComponentSize } from '../../../../core/src/core/utils';
 import { setElementSize } from '../../../../test-utils/helper-utils.spec';
-import { ColumnType, Size } from 'igniteui-angular/core';
+import { ColumnType, Size, getComponentSize } from 'igniteui-angular/core';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
