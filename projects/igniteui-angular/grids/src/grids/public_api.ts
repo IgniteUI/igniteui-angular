@@ -73,7 +73,8 @@ export {
     IgxRowEditTextDirective,
     IgxRowAddTextDirective,
     IgxRowEditActionsDirective,
-    IgxRowEditTabStopDirective
+    IgxRowEditTabStopDirective,
+    IgxRowEditTemplateDirective
 } from './grid.rowEdit.directive';
 export { IGridState, IColumnState, IGridStateCollection, IGridStateOptions, GridFeatures } from './state-base.directive';
 export { IgxGridStateBaseDirective } from './state-base.directive';
