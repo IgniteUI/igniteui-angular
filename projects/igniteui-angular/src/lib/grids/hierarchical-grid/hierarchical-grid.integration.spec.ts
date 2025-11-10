@@ -759,6 +759,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(hidingUI).toBeDefined();
 
             hidingUI.click();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
 

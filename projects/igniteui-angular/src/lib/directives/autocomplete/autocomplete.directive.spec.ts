@@ -65,11 +65,13 @@ describe('IgxAutocomplete', () => {
             expect(dropDown.collapsed).toBeTruthy();
 
             autocomplete.open();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
 
             autocomplete.close();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
@@ -180,11 +182,13 @@ describe('IgxAutocomplete', () => {
             expect(dropDown.collapsed).toBeFalsy();
 
             input.nativeElement.click();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
 
             group.element.nativeElement.click();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
@@ -766,6 +770,7 @@ describe('IgxAutocomplete', () => {
             expect(input.nativeElement.attributes['aria-expanded'].value).toEqual('true');
             expect(input.nativeElement.attributes['aria-activedescendant'].value).toEqual(dropDown.focusedItem.id);
             autocomplete.close();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(input.nativeElement.attributes['aria-expanded'].value).toEqual('false');

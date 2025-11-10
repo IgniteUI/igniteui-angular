@@ -75,11 +75,13 @@ describe('IgxTooltip', () => {
 
         it('IgxTooltip is shown/hidden when hovering/unhovering its target', fakeAsync(() => {
             hoverElement(button);
+            fix.detectChanges();
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
             unhoverElement(button);
+            fixture.detectChanges();
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
@@ -89,6 +91,7 @@ describe('IgxTooltip', () => {
             expect(tooltipTarget.hasArrow).toBeFalse();
 
             hoverElement(button);
+            fixture.detectChanges();
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
@@ -105,6 +108,7 @@ describe('IgxTooltip', () => {
             fix.detectChanges();
 
             hoverElement(button);
+            fix.detectChanges();
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
@@ -120,6 +124,7 @@ describe('IgxTooltip', () => {
 
         it('show target tooltip when hovering its target and ignore [tooltip] input', fakeAsync(() => {
             hoverElement(button);
+            fix.detectChanges();
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
@@ -128,6 +133,7 @@ describe('IgxTooltip', () => {
 
         it('verify tooltip default position', fakeAsync(() => {
             hoverElement(button);
+            fix.detectChanges();
             flush();
             verifyTooltipPosition(tooltipNativeElement, button);
         }));
@@ -137,6 +143,7 @@ describe('IgxTooltip', () => {
             fix.detectChanges();
 
             hoverElement(button);
+            fix.detectChanges();
             flush();
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
 
@@ -144,6 +151,7 @@ describe('IgxTooltip', () => {
             fix.detectChanges();
 
             hoverElement(button);
+            fix.detectChanges();
             flush();
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
         }));
@@ -169,6 +177,7 @@ describe('IgxTooltip', () => {
             fix.detectChanges();
 
             hoverElement(button);
+            fix.detectChanges();
             flush();
 
             unhoverElement(button);
@@ -219,10 +228,12 @@ describe('IgxTooltip', () => {
         it('IgxTooltip respects the passed overlaySettings', fakeAsync(() => {
             // Hover the button.
             hoverElement(button);
+            fixture.detectChanges();
             flush();
             // Verify default position of the tooltip.
             verifyTooltipPosition(tooltipNativeElement, button);
             unhoverElement(button);
+            fixture.detectChanges();
             flush();
 
             // Use custom overlaySettings.
@@ -239,6 +250,7 @@ describe('IgxTooltip', () => {
 
             // Hover the button again.
             hoverElement(button);
+            fix.detectChanges();
             flush();
             // Verify that the position of the tooltip is changed.
             verifyTooltipPosition(tooltipNativeElement, button, false);
@@ -247,11 +259,13 @@ describe('IgxTooltip', () => {
             expect(Math.abs(tooltipRect.top - targetRect.bottom) <= 0.5).toBe(true);
             expect(Math.abs(tooltipRect.left - targetRect.right) <= 0.5).toBe(true);
             unhoverElement(button);
+            fixture.detectChanges();
             flush();
         }));
 
         it('IgxTooltip closes when the target is clicked', fakeAsync(() => {
             hoverElement(button);
+            fixture.detectChanges();
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
@@ -290,6 +304,7 @@ describe('IgxTooltip', () => {
 
         it('IgxTooltip is hidden when its target is destroyed', fakeAsync(() => {
             hoverElement(button);
+            fix.detectChanges();
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
@@ -368,6 +383,7 @@ describe('IgxTooltip', () => {
                 fix.componentInstance.cancelShowing = true;
 
                 hoverElement(button);
+                fixture.detectChanges();
                 flush();
 
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
@@ -377,9 +393,11 @@ describe('IgxTooltip', () => {
                 fix.componentInstance.cancelHiding = true;
 
                 hoverElement(button);
+                fixture.detectChanges();
                 flush();
 
                 unhoverElement(button);
+                fixture.detectChanges();
                 flush();
 
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
@@ -410,12 +428,14 @@ describe('IgxTooltip', () => {
         describe('Tooltip touch', () => {
             it('IgxTooltip is shown/hidden when touching/untouching its target', fakeAsync(() => {
                 touchElement(button);
+                fixture.detectChanges();
                 flush();
 
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
                 const dummyDiv = fix.debugElement.query(By.css('.dummyDiv'));
                 touchElement(dummyDiv);
+                fix.detectChanges();
                 flush();
 
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
@@ -426,6 +446,7 @@ describe('IgxTooltip', () => {
                 fix.detectChanges();
 
                 touchElement(button);
+                fix.detectChanges();
                 flush();
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
 
@@ -433,6 +454,7 @@ describe('IgxTooltip', () => {
                 fix.detectChanges();
 
                 touchElement(button);
+                fix.detectChanges();
                 flush();
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
             }));
@@ -458,6 +480,7 @@ describe('IgxTooltip', () => {
                 fix.detectChanges();
 
                 touchElement(button);
+                fix.detectChanges();
                 flush();
 
                 const dummyDiv = fix.debugElement.query(By.css('.dummyDiv'));
@@ -486,17 +509,20 @@ describe('IgxTooltip', () => {
 
         it('IgxTooltip is initially hidden', fakeAsync(() => {
             unhoverElement(button);
+            fix.detectChanges();
             flush();
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
         it('IgxTooltip is shown/hidden when hovering/unhovering its target', fakeAsync(() => {
             hoverElement(button);
+            fixture.detectChanges();
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
             unhoverElement(button);
+            fixture.detectChanges();
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
@@ -504,6 +530,7 @@ describe('IgxTooltip', () => {
 
         it('Should respect default max-width constraint for plain string tooltip', fakeAsync(() => {
             hoverElement(button);
+            fixture.detectChanges();
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
@@ -524,6 +551,7 @@ describe('IgxTooltip', () => {
 
         it('Should not have max-width constraint for custom content tooltip', fakeAsync(() => {
             hoverElement(button);
+            fix.detectChanges();
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
@@ -551,6 +579,7 @@ describe('IgxTooltip', () => {
 
         it('Same tooltip shows on different targets depending on which target is hovered', fakeAsync(() => {
             hoverElement(buttonOne);
+            fix.detectChanges();
             flush();
 
             // Tooltip is positioned relative to buttonOne and NOT relative to buttonTwo
@@ -559,8 +588,10 @@ describe('IgxTooltip', () => {
             verifyTooltipPosition(tooltipNativeElement, buttonTwo, false);
 
             unhoverElement(buttonOne);
+            fixture.detectChanges();
             flush();
             hoverElement(buttonTwo);
+            fixture.detectChanges();
             flush();
 
             // Tooltip is positioned relative to buttonTwo and NOT relative to buttonOne
@@ -574,6 +605,7 @@ describe('IgxTooltip', () => {
             fix.detectChanges();
 
             hoverElement(buttonOne);
+            fix.detectChanges();
             flush();
 
             unhoverElement(buttonOne);
@@ -628,6 +660,7 @@ describe('IgxTooltip', () => {
             tick(100);
 
             hoverElement(buttonTwo);
+            fixture.detectChanges();
             flush();
 
             // Tooltip is visible and positioned relative to buttonTwo
@@ -646,6 +679,7 @@ describe('IgxTooltip', () => {
 
             const dummyDiv = fix.debugElement.query(By.css('.dummyDiv'));
             touchElement(dummyDiv);
+            fixture.detectChanges();
             flush();
 
             expect(targetOne['_hideOnInteraction']).toHaveBeenCalledTimes(1);
@@ -657,6 +691,7 @@ describe('IgxTooltip', () => {
             spyOn(targetTwo.tooltipHide, 'emit');
 
             hoverElement(buttonOne);
+            fixture.detectChanges();
             flush();
 
             const tooltipHideArgsTargetOne = { target: targetOne, tooltip: fix.componentInstance.tooltip, cancel: false };
@@ -669,6 +704,7 @@ describe('IgxTooltip', () => {
             flush();
 
             hoverElement(buttonTwo);
+            fixture.detectChanges();
             flush();
 
             unhoverElement(buttonTwo);
@@ -681,16 +717,19 @@ describe('IgxTooltip', () => {
 
         it('IgxTooltip hides when touch one target, then another, then outside', fakeAsync(() => {
             touchElement(targetOne);
+            fixture.detectChanges();
             flush();
             verifyTooltipVisibility(tooltipNativeElement, targetOne, true);
             verifyTooltipPosition(tooltipNativeElement, targetOne, true);
 
             touchElement(targetTwo);
+            fixture.detectChanges();
             flush();
             verifyTooltipVisibility(tooltipNativeElement, targetTwo, true);
             verifyTooltipPosition(tooltipNativeElement, targetTwo, true);
 
             touchElement(fix.debugElement);
+            fix.detectChanges();
             flush();
             verifyTooltipVisibility(tooltipNativeElement, targetTwo, false);
         }));
@@ -699,6 +738,7 @@ describe('IgxTooltip', () => {
             targetOne.sticky = true;
             fix.detectChanges();
             hoverElement(buttonOne);
+            fix.detectChanges();
             flush();
 
             let closeBtn = tooltipNativeElement.querySelector('igx-tooltip-close-button');
@@ -708,6 +748,7 @@ describe('IgxTooltip', () => {
             targetTwo.sticky = false;
             fix.detectChanges();
             hoverElement(buttonTwo);
+            fix.detectChanges();
             flush();
 
             // It should still show tooltip for targetOne
@@ -720,6 +761,7 @@ describe('IgxTooltip', () => {
             flush();
 
             hoverElement(buttonTwo);
+            fix.detectChanges();
             flush();
 
             expect(tooltipNativeElement.querySelector('igx-tooltip-close-button')).toBeNull();
@@ -735,6 +777,7 @@ describe('IgxTooltip', () => {
             fix.detectChanges();
 
             hoverElement(buttonOne);
+            fix.detectChanges();
             flush();
 
             const customClose = tooltipNativeElement.querySelector('.my-close-btn');
@@ -747,6 +790,7 @@ describe('IgxTooltip', () => {
             flush();
 
             hoverElement(buttonTwo);
+            fix.detectChanges();
             flush();
 
             expect(tooltipNativeElement.querySelector('.my-close-btn')).toBeNull();
@@ -761,6 +805,7 @@ describe('IgxTooltip', () => {
             fix.detectChanges();
 
             hoverElement(buttonOne);
+            fix.detectChanges();
             flush();
 
             // Tooltip should be shown for targetOne with custom close button and correct role
@@ -795,6 +840,7 @@ describe('IgxTooltip', () => {
             fix.detectChanges();
 
             hoverElement(buttonOne);
+            fix.detectChanges();
             flush();
             fix.detectChanges();
 
@@ -855,6 +901,7 @@ describe('IgxTooltip', () => {
             fix.detectChanges();
 
             hoverElement(buttonOne);
+            fix.detectChanges();
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, targetOne, true);
@@ -862,9 +909,11 @@ describe('IgxTooltip', () => {
             expect(arrow.style.display).toEqual('');
 
             unhoverElement(buttonOne);
+            fix.detectChanges();
             flush();
 
             hoverElement(buttonTwo);
+            fixture.detectChanges();
             flush();
 
             arrow = tooltipNativeElement.querySelector(TOOLTIP_ARROW_SELECTOR) as HTMLElement;
@@ -896,6 +945,7 @@ describe('IgxTooltip', () => {
 
             const dummyDiv = fix.debugElement.query(By.css('.dummyDiv'));
             touchElement(dummyDiv);
+            fixture.detectChanges();
             flush();
 
             expect(tooltipOne['onDocumentTouchStart']).toHaveBeenCalledTimes(1);
@@ -917,6 +967,7 @@ describe('IgxTooltip', () => {
             expect(fix.componentInstance.toggleDir.collapsed).toBe(true);
 
             hoverElement(button);
+            fix.detectChanges();
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
@@ -945,6 +996,7 @@ describe('IgxTooltip', () => {
 
         it('should render custom close button when sticky is true', fakeAsync(() => {
             hoverElement(button);
+            fix.detectChanges();
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, button, true);
@@ -958,6 +1010,7 @@ describe('IgxTooltip', () => {
             tick();
 
             hoverElement(button);
+            fix.detectChanges();
             flush();
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
@@ -968,6 +1021,7 @@ describe('IgxTooltip', () => {
 
         it('should hide the tooltip custom close button is clicked', fakeAsync(() => {
             hoverElement(button);
+            fixture.detectChanges();
             flush();
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
@@ -986,6 +1040,7 @@ describe('IgxTooltip', () => {
             tick();
 
             hoverElement(button);
+            fix.detectChanges();
             flush();
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
@@ -996,6 +1051,7 @@ describe('IgxTooltip', () => {
 
         it('should update the DOM role attribute correctly when sticky changes', fakeAsync(() => {
             hoverElement(button);
+            fix.detectChanges();
             flush();
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
@@ -1012,6 +1068,7 @@ describe('IgxTooltip', () => {
             fix.detectChanges();
 
             hoverElement(button);
+            fix.detectChanges();
             flush();
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
@@ -1031,6 +1088,7 @@ describe('IgxTooltip', () => {
             tooltipTarget.sticky = true;
             fix.detectChanges();
             touchElement(button);
+            fix.detectChanges();
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
@@ -1062,6 +1120,7 @@ describe('IgxTooltip', () => {
             fix.detectChanges();
 
             hoverElement(button);
+            fix.detectChanges();
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
@@ -1077,6 +1136,7 @@ describe('IgxTooltip', () => {
             fix.detectChanges();
 
             hoverElement(button);
+            fix.detectChanges();
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
@@ -1090,6 +1150,7 @@ describe('IgxTooltip', () => {
             fix.detectChanges();
 
             hoverElement(button);
+            fix.detectChanges();
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);

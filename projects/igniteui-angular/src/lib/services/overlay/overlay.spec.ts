@@ -377,6 +377,7 @@ describe('igxOverlay', () => {
             fixture.detectChanges();
 
             fixture.componentInstance.buttonElement.nativeElement.click();
+            fixture.detectChanges();
             tick();
             const overlayDiv = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
@@ -873,6 +874,7 @@ describe('igxOverlay', () => {
             const button2 = fixture.nativeElement.getElementsByClassName('buttonTwo')[0];
 
             button1.click();
+            fixture.detectChanges();
             tick();
 
             const overlayDiv = (fixture.nativeElement as HTMLElement)
@@ -881,6 +883,7 @@ describe('igxOverlay', () => {
             expect(wrapperElement1.style.visibility).toEqual('');
 
             button2.click();
+            fixture.detectChanges();
             tick();
             const wrapperElement2 = overlayDiv.children[1] as HTMLElement;
             expect(wrapperElement1.style.visibility).toEqual('');
@@ -1304,6 +1307,7 @@ describe('igxOverlay', () => {
             expect(wrapperElement.style.visibility).toEqual('');
 
             document.body.click();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
 
@@ -1341,6 +1345,7 @@ describe('igxOverlay', () => {
             const toggledDiv = componentElement.children[0] as HTMLElement;
             toggledDiv.click();
 
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
 
@@ -1348,6 +1353,7 @@ describe('igxOverlay', () => {
             expect(wrapperElement.style.visibility).toEqual('');
 
             document.body.click();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
 
@@ -2817,6 +2823,7 @@ describe('igxOverlay', () => {
             fixture.componentInstance.target = buttonElement;
             component.ButtonPositioningSettings.minSize = { width: 80, height: 80 };
             buttonElement.click();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
 
@@ -3559,6 +3566,7 @@ describe('igxOverlay', () => {
                 expect(fixture.componentInstance.customComponent.nativeElement.style.height).toEqual('100%');
                 expect(fixture.componentInstance.customComponent.nativeElement.getBoundingClientRect().height).toEqual(280);
                 fixture.componentInstance.buttonElement.nativeElement.click();
+                fixture.detectChanges();
                 tick();
                 const componentElement = (fixture.nativeElement as HTMLElement)
                     .parentElement.getElementsByClassName('customList')[0] as HTMLElement;
@@ -3868,6 +3876,7 @@ describe('igxOverlay', () => {
             componentElement.ButtonPositioningSettings.horizontalStartPoint = HorizontalAlignment.Left;
             fixture.componentInstance.target = buttonElement;
             buttonElement.click();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
 
@@ -3922,6 +3931,7 @@ describe('igxOverlay', () => {
             fixture.componentInstance.target = buttonElement;
             componentElement.ButtonPositioningSettings.minSize = { width: 80, height: 80 };
             buttonElement.click();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
 
@@ -4016,6 +4026,7 @@ describe('igxOverlay', () => {
             fixture.componentInstance.target = buttonElement;
             componentElement.ButtonPositioningSettings.minSize = { width: 80, height: 80 };
             buttonElement.click();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
 
@@ -4359,6 +4370,7 @@ describe('igxOverlay', () => {
             expect(overlay.closing.emit).toHaveBeenCalledTimes(0);
 
             document.documentElement.click();
+            fixture.detectChanges();
             tick();
             expect(overlay.closing.emit).toHaveBeenCalledTimes(1);
             expect(overlay.closing.emit).toHaveBeenCalledWith({
@@ -4394,6 +4406,7 @@ describe('igxOverlay', () => {
             expect(overlay.show).toHaveBeenCalledTimes(1);
 
             divElement.click();
+            fixture.detectChanges();
             tick();
 
             expect(overlay.closing.emit).toHaveBeenCalledTimes(0);
@@ -4420,6 +4433,7 @@ describe('igxOverlay', () => {
 
             expect(overlay.show).toHaveBeenCalledTimes(2);
             divElement.click();
+            fixture.detectChanges();
             tick();
 
             expect(overlay.closing.emit).toHaveBeenCalledTimes(2);

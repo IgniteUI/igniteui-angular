@@ -625,6 +625,7 @@ describe('IgxSimpleCombo', () => {
             expect(dropdownListBox.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
 
             combo.open();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
 
@@ -632,6 +633,7 @@ describe('IgxSimpleCombo', () => {
             expect(list.nativeElement.getAttribute('aria-activedescendant')).toEqual(combo.dropdown.focusedItem.id);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', list);
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(list.nativeElement.getAttribute('aria-activedescendant')).toEqual(combo.dropdown.focusedItem.id);
@@ -643,10 +645,12 @@ describe('IgxSimpleCombo', () => {
         it('should render aria-expanded attribute properly', fakeAsync(() => {
             expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
             combo.open();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('true');
             combo.close();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
@@ -670,6 +674,7 @@ describe('IgxSimpleCombo', () => {
             fixture.componentInstance.size = "large";
             fixture.detectChanges();
             combo.toggle();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
             const dropdownItems = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
@@ -1163,17 +1168,20 @@ describe('IgxSimpleCombo', () => {
 
         it('should not close the dropdown on ArrowUp key if the active item is the first one in the list', fakeAsync(() => {
             combo.open();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
 
             const list = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', list);
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(combo.collapsed).toEqual(false);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', list);
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(combo.collapsed).toEqual(false);
@@ -1204,6 +1212,7 @@ describe('IgxSimpleCombo', () => {
 
             const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
             UIInteractions.triggerEventHandlerKeyDown('Tab', dropdownContent);
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(combo.collapsed).toBeTruthy();
@@ -1253,12 +1262,14 @@ describe('IgxSimpleCombo', () => {
             const toggleBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_TOGGLEBUTTON}`));
 
             UIInteractions.triggerEventHandlerKeyDown('Enter', toggleBtn);
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(combo.toggle).toHaveBeenCalledTimes(1);
             expect(combo.collapsed).toEqual(false);
 
             UIInteractions.triggerEventHandlerKeyDown('Enter', toggleBtn);
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(combo.toggle).toHaveBeenCalledTimes(2);
@@ -1395,6 +1406,7 @@ describe('IgxSimpleCombo', () => {
             spyOn(combo, 'close').and.callThrough();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', input);
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(document.activeElement).toHaveClass('igx-combo__content');
@@ -1785,12 +1797,14 @@ describe('IgxSimpleCombo', () => {
             expect(combo.collapsed).toBeTruthy();
 
             toggleIcon.nativeElement.click();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
 
             expect(combo.collapsed).toBeFalsy();
 
             toggleIcon.nativeElement.click();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
 
@@ -1842,6 +1856,7 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
 
             combo.dropdown.close();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(combo.collapsed).toEqual(true);
@@ -1852,6 +1867,7 @@ describe('IgxSimpleCombo', () => {
             expect(combo.overlaySettings.positionStrategy.settings.verticalDirection).toBe(-1);
 
             combo.dropdown.close();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(combo.collapsed).toEqual(true);
@@ -1883,6 +1899,7 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
 
             combo.toggle();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
 
@@ -2086,6 +2103,7 @@ describe('IgxSimpleCombo', () => {
             expect(combo.filteredData[0].field).toEqual('Arizona');
 
             combo.close();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
 
@@ -2108,6 +2126,7 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection.field).toEqual('Connecticut');
 
             combo.close();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
 
@@ -2122,6 +2141,7 @@ describe('IgxSimpleCombo', () => {
 
         it('should not select the first item when combo is focused there is no focus item and Enter is pressed', fakeAsync(() => {
             combo.open();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
 
@@ -2174,6 +2194,7 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
 

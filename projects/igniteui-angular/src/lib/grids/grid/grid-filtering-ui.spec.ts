@@ -358,6 +358,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.openFilterDDAndSelectCondition(fix, 0);
 
             input.triggerEventHandler('click', null);
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -371,6 +372,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             flush();
             fix.detectChanges();
             input.triggerEventHandler('change', null);
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -381,6 +383,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             pending('This should be tested in the e2e test');
             const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
             filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
@@ -388,10 +391,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const input = filterUIRow.query(By.directive(IgxInputDirective));
 
             filterIcon.nativeElement.click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
             input.nativeElement.click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -421,6 +426,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             pending('This should be tested in the e2e test');
             const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
             filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
@@ -428,10 +434,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const input = filterUIRow.query(By.directive(IgxInputDirective));
 
             filterIcon.nativeElement.click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
             input.nativeElement.click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -1275,6 +1283,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
             const datePicker = filteringRow.query(By.directive(IgxDatePickerComponent));
             datePicker.componentInstance.getEditElement().click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -2230,6 +2239,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Equals condition
             datePicker.triggerEventHandler('click', null);
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -2684,6 +2694,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             tBodyContent.triggerEventHandler('focus', null);
+            fix.detectChanges();
             tick();
             expect(console.error).not.toHaveBeenCalled();
         }));
@@ -2955,6 +2966,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.openFilterDDAndSelectCondition(fix, 0);
 
             datePicker.triggerEventHandler('click', null);
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -2968,6 +2980,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             flush();
             fix.detectChanges();
             input.triggerEventHandler('change', null);
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -3324,6 +3337,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
 
             moveLeft.click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -3331,6 +3345,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.columns[1].field).toBe('Downloads');
 
             moveLeft.click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -3339,6 +3354,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             ControlsFunction.verifyButtonIsDisabled(moveLeft);
 
             moveRight.click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -3784,10 +3800,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const checkbox = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
 
             checkbox[0].click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
             checkbox[2].click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -4499,11 +4517,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const checkbox = GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu);
 
             checkbox[0].click(); // Select All
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
             checkbox[2].click(); // Ignite UI for Angular
             checkbox[3].click(); // Ignite UI for JavaScript
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -4527,12 +4547,14 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const checkbox = GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu);
 
             checkbox[0].click(); // Select All
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
             checkbox[2].click(); // Ignite UI for Angular
             checkbox[3].click(); // Ignite UI for JavaScript
             checkbox[4].click(); // NetAdvantage
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -4556,6 +4578,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const checkbox = GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu);
 
             checkbox[0].click(); // Select All
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -4563,6 +4586,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             checkbox[3].click();
             checkbox[4].click();
             checkbox[6].click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -4578,12 +4602,14 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const checkbox = GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu);
 
             checkbox[0].click(); // Select All
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
             checkbox[1].click(); // (Blanks)
             checkbox[2].click(); // Ignite UI for Angular
             checkbox[3].click(); // Ignite UI for JavaScript
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -5587,6 +5613,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const checkbox = GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu)[1];
 
             checkbox.click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -6092,10 +6119,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             checkboxes[0].click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
             checkboxes[2].click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -6288,12 +6317,14 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const expressions = GridFunctions.getExcelCustomFilteringDateExpressions(fix);
             const lastExpression = expressions[expressions.length - 1];
             (lastExpression.querySelector('igx-select').querySelector('igx-input-group') as HTMLElement).click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
             const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
 
             const todayItem = dropdownList.children[0].children.find(item => item.nativeElement?.innerText === 'Today');
             todayItem.nativeElement.click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -6439,6 +6470,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
 
             moveLeft.click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -6446,6 +6478,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.columns[1].field).toBe('Downloads');
 
             moveLeft.click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -6454,6 +6487,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             ControlsFunction.verifyButtonIsDisabled(moveLeft);
 
             moveRight.click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -6848,6 +6882,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const checkboxElements = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
             checkboxElements[2].click();
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -7548,6 +7583,7 @@ const closeChipFromFilteringUIRow = (fix, grid, columnName, index) => {
     GridFunctions.openFilterDDAndSelectCondition(fix, index);
 
     close.triggerEventHandler('click', null);
+    fix.detectChanges();
     tick();
     fix.detectChanges();
 

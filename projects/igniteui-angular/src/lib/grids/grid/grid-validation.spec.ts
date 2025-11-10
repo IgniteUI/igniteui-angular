@@ -220,6 +220,7 @@ describe('IgxGrid - Validation #grid', () => {
             expect(positionSettings.closeAnimation.options.params).toEqual({ duration: '75ms' });
 
             cell.errorTooltip.first.close();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(cell.errorTooltip.first.collapsed).toBeTrue();

@@ -200,6 +200,7 @@ describe('IgxQueryBuilder', () => {
       const buttonsContainer = Array.from(group.querySelectorAll('.igx-filter-tree__buttons'))[1];
       const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
       (buttons[0] as HTMLElement).click();
+      fix.detectChanges();
       tick();
       fix.detectChanges();
 
@@ -237,6 +238,7 @@ describe('IgxQueryBuilder', () => {
       const buttonsContainer = Array.from(group.querySelectorAll('.igx-filter-tree__buttons'))[1];
       const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
       (buttons[1] as HTMLElement).click();
+      fix.detectChanges();
       tick();
       fix.detectChanges();
 
@@ -296,6 +298,7 @@ describe('IgxQueryBuilder', () => {
       const buttonsContainer = Array.from(group.querySelectorAll('.igx-filter-tree__buttons'))[1];
       const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
       (buttons[1] as HTMLElement).click();
+      fix.detectChanges();
       tick();
       fix.detectChanges();
 
@@ -1662,6 +1665,7 @@ describe('IgxQueryBuilder', () => {
 
       //cancel edit
       closeBtn.click();
+      fix.detectChanges();
       tick();
       fix.detectChanges();
 
@@ -1742,6 +1746,7 @@ describe('IgxQueryBuilder', () => {
       const buttonsContainer = Array.from(group.querySelectorAll('.igx-filter-tree__buttons'))[1];
       const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
       (buttons[0] as HTMLElement).click();
+      fix.detectChanges();
       tick();
       fix.detectChanges();
 
@@ -1773,6 +1778,7 @@ describe('IgxQueryBuilder', () => {
       const buttonsContainer = Array.from(group.querySelectorAll('.igx-filter-tree__buttons'))[1];
       const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
       (buttons[0] as HTMLElement).click();
+      fix.detectChanges();
       tick();
       fix.detectChanges();
 
@@ -1799,6 +1805,7 @@ describe('IgxQueryBuilder', () => {
       const buttonsContainer = Array.from(group.querySelectorAll('.igx-filter-tree__buttons'))[1];
       const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
       (buttons[0] as HTMLElement).click();
+      fix.detectChanges();
       tick();
       fix.detectChanges();
 
@@ -2403,6 +2410,7 @@ describe('IgxQueryBuilder', () => {
 
       // Open the combo
       (combo.querySelector('igx-input-group') as HTMLElement).click();
+      fixture.detectChanges();
       tick();
       fixture.detectChanges();
       // Select item
@@ -2411,6 +2419,7 @@ describe('IgxQueryBuilder', () => {
 
       const comboItem = outlet.querySelectorAll(`.igx-drop-down__item`)[0] as HTMLElement;
       comboItem.click();
+      fixture.detectChanges();
       tick();
       fixture.detectChanges();
 
