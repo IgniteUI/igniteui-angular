@@ -403,8 +403,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
         let errors = {};
         const value = DateTimeUtil.isValidDate(control.value) ? control.value : DateTimeUtil.parseIsoDate(control.value);
-        const minValueDate = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : this.parseDate(this.minValue.toString());
-        const maxValueDate = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue.toString());
+        const minValueDate = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
+        const maxValueDate = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
         if (minValueDate || maxValueDate) {
             errors = DateTimeUtil.validateMinMax(value,
                 minValueDate, maxValueDate,
@@ -600,8 +600,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         }
 
         let errors = {};
-        const minValueDate = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : this.parseDate(this.minValue.toString());
-        const maxValueDate = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue.toString());
+        const minValueDate = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
+        const maxValueDate = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
         if (minValueDate || maxValueDate) {
             errors = DateTimeUtil.validateMinMax(value,
                 this.minValue, this.maxValue,

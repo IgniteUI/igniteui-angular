@@ -1,18 +1,8 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings } from './template-strings.spec';
-import { IgxGridComponent } from '../grids/src/grids/grid/grid.component';
-import { IgxColumnActionsComponent } from '../grids/src/grids/column-actions/column-actions.component';
-import { IgxColumnComponent } from '../grids/src/grids/columns/column.component';
-import { IgxGridToolbarComponent } from '../grids/src/grids/toolbar/grid-toolbar.component';
-import { IgxGridToolbarHidingComponent } from '../grids/src/grids/toolbar/grid-toolbar-hiding.component';
-import { IgxGridToolbarActionsComponent } from '../grids/src/grids/toolbar/common';
-import { IgxPaginatorComponent } from '../paginator/src/paginator/paginator.component';
-import { IgxColumnGroupComponent } from '../grids/src/grids/columns/column-group.component';
-import { IgxGridToolbarPinningComponent } from '../grids/src/grids/toolbar/grid-toolbar-pinning.component';
-import { IgxCellTemplateDirective } from '../grids/src/grids/columns/templates.directive';
-import { IgxColumnHidingDirective } from '../grids/src/grids/column-actions/column-hiding.directive';
-import { IgxColumnPinningDirective } from '../grids/src/grids/column-actions/column-pinning.directive';
+import { IgxCellTemplateDirective, IgxColumnActionsComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnHidingDirective, IgxColumnPinningDirective, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular/grids';
+import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 
 @Component({
     template: `
