@@ -625,7 +625,6 @@ describe('IgxSimpleCombo', () => {
             expect(dropdownListBox.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
 
             combo.open();
-            flush();
             tick();
             fixture.detectChanges();
 
@@ -644,7 +643,6 @@ describe('IgxSimpleCombo', () => {
         it('should render aria-expanded attribute properly', fakeAsync(() => {
             expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
             combo.open();
-            flush();
             tick();
             fixture.detectChanges();
             expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('true');
@@ -655,7 +653,6 @@ describe('IgxSimpleCombo', () => {
         }));
         it('should render placeholder values for inputs properly', () => {
             combo.toggle();
-            flush();
             fixture.detectChanges();
             expect(combo.collapsed).toBeFalsy();
             expect(combo.placeholder).toEqual('Location');
@@ -673,7 +670,6 @@ describe('IgxSimpleCombo', () => {
             fixture.componentInstance.size = "large";
             fixture.detectChanges();
             combo.toggle();
-            flush();
             tick();
             fixture.detectChanges();
             const dropdownItems = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
@@ -713,7 +709,6 @@ describe('IgxSimpleCombo', () => {
         it('should render focused items properly', () => {
             const dropdown = combo.dropdown;
             combo.toggle();
-            flush();
             fixture.detectChanges();
 
             dropdown.navigateItem(2); // Component is virtualized, so this will focus the ACTUAL 3rd item
@@ -939,7 +934,6 @@ describe('IgxSimpleCombo', () => {
         }));
         it('should properly assign the resource string to the aria-label of the clear button',() => {
             combo.toggle();
-            flush();
             fixture.detectChanges();
 
             combo.select(['Illinois', 'Mississippi', 'Ohio']);
@@ -1169,7 +1163,6 @@ describe('IgxSimpleCombo', () => {
 
         it('should not close the dropdown on ArrowUp key if the active item is the first one in the list', fakeAsync(() => {
             combo.open();
-            flush();
             tick();
             fixture.detectChanges();
 
@@ -1188,7 +1181,6 @@ describe('IgxSimpleCombo', () => {
 
         it('should select an item from the dropdown list with the Space key without closing it', () => {
             combo.open();
-            flush();
             fixture.detectChanges();
 
             const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
@@ -1208,7 +1200,6 @@ describe('IgxSimpleCombo', () => {
 
         it('should close the dropdown list on pressing Tab key', fakeAsync(() => {
             combo.open();
-            flush();
             fixture.detectChanges();
 
             const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
@@ -1315,7 +1306,6 @@ describe('IgxSimpleCombo', () => {
             fixture.componentInstance.allowCustomValues = true;
             fixture.detectChanges();
             combo.open();
-            flush();
             fixture.detectChanges();
             UIInteractions.setInputElementValue(input.nativeElement, 'Massachuset');
             fixture.detectChanges();
@@ -1341,7 +1331,6 @@ describe('IgxSimpleCombo', () => {
             UIInteractions.setInputElementValue(input.nativeElement, 'MassachusettsL');
             fixture.detectChanges();
             combo.open();
-            flush();
             fixture.detectChanges();
             const addItemButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_ADDBUTTON}`));
             expect(addItemButton).toBeDefined();
@@ -1357,7 +1346,6 @@ describe('IgxSimpleCombo', () => {
         it('should close when an item is clicked on', () => {
             spyOn(combo, 'close').and.callThrough();
             combo.open();
-            flush();
             fixture.detectChanges();
             const item1 = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
             expect(item1).toBeDefined();
@@ -1370,7 +1358,6 @@ describe('IgxSimpleCombo', () => {
 
         it('should retain selection after blurring', () => {
             combo.open();
-            flush();
             fixture.detectChanges();
             const item1 = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
             expect(item1).toBeDefined();
@@ -1404,7 +1391,6 @@ describe('IgxSimpleCombo', () => {
 
         it('should close the dropdown with Alt + ArrowUp', fakeAsync(() => {
             combo.open();
-            flush();
             fixture.detectChanges();
             spyOn(combo, 'close').and.callThrough();
 
@@ -1845,7 +1831,6 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
 
             combo.open();
-            flush();
             fixture.detectChanges();
             expect(combo.collapsed).toEqual(false);
             expect(combo.overlaySettings.positionStrategy.settings.verticalDirection).toBe(-1);
@@ -1862,7 +1847,6 @@ describe('IgxSimpleCombo', () => {
             expect(combo.collapsed).toEqual(true);
 
             combo.open();
-            flush();
             fixture.detectChanges();
             expect(combo.collapsed).toEqual(false);
             expect(combo.overlaySettings.positionStrategy.settings.verticalDirection).toBe(-1);
@@ -1890,7 +1874,6 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
 
             dropdown.toggle();
-            flush();
             fixture.detectChanges();
 
             UIInteractions.simulateTyping('Ohio ', input);
@@ -1900,7 +1883,6 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
 
             combo.toggle();
-            flush();
             tick();
             fixture.detectChanges();
 
@@ -2140,7 +2122,6 @@ describe('IgxSimpleCombo', () => {
 
         it('should not select the first item when combo is focused there is no focus item and Enter is pressed', fakeAsync(() => {
             combo.open();
-            flush();
             tick();
             fixture.detectChanges();
 
@@ -2300,7 +2281,6 @@ describe('IgxSimpleCombo', () => {
 
                 // empty string
                 combo.open();
-                flush();
                 fixture.detectChanges();
                 const item1 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[2];
                 item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
@@ -2314,7 +2294,6 @@ describe('IgxSimpleCombo', () => {
 
                 // null
                 combo.open();
-                flush();
                 fixture.detectChanges();
                 const item2 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[3];
                 item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
@@ -2458,7 +2437,6 @@ describe('IgxSimpleCombo', () => {
                 let model;
 
                 combo.open();
-                flush();
                 fixture.detectChanges();
                 const item2 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[3];
                 item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
@@ -2535,7 +2513,6 @@ describe('IgxSimpleCombo', () => {
 
                 // empty string
                 combo.open();
-                flush();
                 fixture.detectChanges();
                 const item1 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[2];
                 item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
@@ -2551,7 +2528,6 @@ describe('IgxSimpleCombo', () => {
 
                 // null
                 combo.open();
-                flush();
                 fixture.detectChanges();
                 const item2 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[3];
                 item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
@@ -2756,7 +2732,6 @@ describe('IgxSimpleCombo', () => {
                 input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
 
                 combo.open();
-                flush();
                 fixture.detectChanges();
                 const item2 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[3];
                 item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
@@ -2910,7 +2885,6 @@ describe('IgxSimpleCombo', () => {
             expect(input.nativeElement.value).toEqual('Product 3');
 
             combo.open();
-            flush();
             fixture.detectChanges();
             const item1 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[5];
             item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));

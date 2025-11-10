@@ -1,5 +1,5 @@
 import { Component, ViewChild, DebugElement, EventEmitter, QueryList } from '@angular/core';
-import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync, flush } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -570,7 +570,6 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 timePicker.open();
-                flush();
                 fixture.detectChanges();
                 expect(timePicker.collapsed).toBeFalsy();
 
@@ -587,7 +586,6 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 timePicker.open();
-                flush();
                 fixture.detectChanges();
                 expect(timePicker.collapsed).toBeFalsy();
 
@@ -630,7 +628,6 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 timePicker.open();
-                flush();
                 fixture.detectChanges();
                 expect(timePicker.collapsed).toBeFalsy();
 
@@ -655,7 +652,6 @@ describe('IgxTimePicker', () => {
 
             it('should not change the current selection and close the dropdown on OK button click', fakeAsync(() => {
                 timePicker.open();
-                flush();
                 tick();
                 fixture.detectChanges();
 
@@ -676,7 +672,6 @@ describe('IgxTimePicker', () => {
 
             it('should close the dropdown and discard the current selection on Cancel button click', fakeAsync(() => {
                 timePicker.open();
-                flush();
                 tick();
                 fixture.detectChanges();
 
@@ -700,7 +695,6 @@ describe('IgxTimePicker', () => {
                 spyOn(timePicker.closed, 'emit').and.callThrough();
 
                 timePicker.open();
-                flush();
                 tick();
                 fixture.detectChanges();
                 expect(timePicker.collapsed).toBeFalsy();
@@ -724,7 +718,6 @@ describe('IgxTimePicker', () => {
                 const openingSub = timePicker.opening.subscribe((event) => event.cancel = true);
 
                 timePicker.open();
-                flush();
                 tick();
                 fixture.detectChanges();
                 expect(timePicker.collapsed).toBeTruthy();
@@ -736,7 +729,6 @@ describe('IgxTimePicker', () => {
                 const closingSub = timePicker.closing.subscribe((event) => event.cancel = true);
 
                 timePicker.open();
-                flush();
                 tick();
                 fixture.detectChanges();
 
@@ -815,7 +807,6 @@ describe('IgxTimePicker', () => {
 
                 secondsColumn = fixture.debugElement.query(By.css(CSS_CLASS_SECONDSLIST));
                 timePicker.open();
-                flush();
                 fixture.detectChanges();
                 expect(timePicker.collapsed).toBeFalsy();
 
@@ -867,7 +858,6 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 timePicker.open();
-                flush();
                 fixture.detectChanges();
                 secondsColumn = fixture.debugElement.query(By.css(CSS_CLASS_SECONDSLIST));
                 expect(timePicker.collapsed).toBeFalsy();
@@ -1100,7 +1090,6 @@ describe('IgxTimePicker', () => {
                 timePicker.mode = "dialog";
 
                 timePicker.open();
-                flush();
                 fixture.detectChanges();
 
                 const amElement = ampmColumn.query(e => e.nativeElement.textContent === 'AM');
@@ -1208,7 +1197,6 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 timePicker.open();
-                flush();
                 tick();
                 fixture.detectChanges();
 
@@ -1223,7 +1211,6 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 timePicker.open();
-                flush();
                 tick();
                 fixture.detectChanges();
 
@@ -1248,7 +1235,6 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 timePicker.open();
-                flush();
                 tick();
                 fixture.detectChanges();
 
@@ -1273,7 +1259,6 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 timePicker.open();
-                flush();
                 tick();
                 fixture.detectChanges();
 
@@ -1346,7 +1331,6 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 timePicker.open();
-                flush();
                 tick();
                 fixture.detectChanges();
 
@@ -1369,7 +1353,6 @@ describe('IgxTimePicker', () => {
                 expect(inputEl.getAttribute('aria-expanded')).toEqual('false');
 
                 timePicker.open();
-                flush();
                 tick();
                 fixture.detectChanges();
                 expect(inputEl.getAttribute('aria-expanded')).toEqual('true');
@@ -1409,7 +1392,6 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 timePicker.open();
-                flush();
                 tick();
                 fixture.detectChanges();
 
@@ -1456,7 +1438,6 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 timePicker.open();
-                flush();
                 tick();
                 fixture.detectChanges();
 
@@ -1477,7 +1458,6 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 timePicker.open();
-                flush();
                 tick();
                 fixture.detectChanges();
 
@@ -1499,7 +1479,6 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 timePicker.open();
-                flush();
                 tick();
                 fixture.detectChanges();
 
@@ -1518,7 +1497,6 @@ describe('IgxTimePicker', () => {
 
                 secondsColumn = fixture.debugElement.query(By.css(CSS_CLASS_SECONDSLIST));
                 timePicker.open();
-                flush();
                 tick();
                 fixture.detectChanges();
                 expect(timePicker.collapsed).toBeFalsy();
@@ -1599,7 +1577,6 @@ describe('IgxTimePicker', () => {
             it('should set headerOrientation prop in dialog mode', fakeAsync(() => {
                 timePicker.mode = PickerInteractionMode.Dialog;
                 timePicker.open();
-                flush();
                 tick();
                 fixture.detectChanges();
                 expect(timePicker.headerOrientation).toEqual('horizontal');
@@ -1615,7 +1592,6 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 timePicker.open();
-                flush();
                 tick();
                 fixture.detectChanges();
 
@@ -1629,7 +1605,6 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 timePicker.open();
-                flush();
                 tick();
                 fixture.detectChanges();
 
@@ -1710,7 +1685,6 @@ describe('IgxTimePicker', () => {
 
                 expect(timePicker.collapsed).toBeTruthy();
                 timePicker.open();
-                flush();
                 tick();
                 fixture.detectChanges();
                 expect(timePicker.collapsed).toBeFalsy();

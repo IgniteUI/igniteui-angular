@@ -182,7 +182,6 @@ describe('Dialog', () => {
         const dialog = fixture.componentInstance.dialog;
 
         dialog.open();
-        flush();
         fixture.detectChanges();
 
         const dialogWindow = fixture.debugElement.query(By.css('.igx-dialog__window'));
@@ -215,7 +214,6 @@ describe('Dialog', () => {
         expect(dialog.isOpen).toEqual(false);
 
         dialog.open();
-        flush();
         fixture.detectChanges();
         tick();
         expect(dialog.isOpen).toEqual(true);
@@ -231,7 +229,6 @@ describe('Dialog', () => {
         fixture.detectChanges();
         const dialog = fixture.componentInstance.dialog;
         dialog.open();
-        flush();
         tick();
         fixture.detectChanges();
 
@@ -244,7 +241,6 @@ describe('Dialog', () => {
 
         dialog.closeOnOutsideSelect = false;
         dialog.open();
-        flush();
         tick();
         fixture.detectChanges();
 
@@ -274,7 +270,6 @@ describe('Dialog', () => {
         spyOn(dialog.closed, 'emit');
 
         dialog.open();
-        flush();
         tick();
         fixture.detectChanges();
 
@@ -292,7 +287,6 @@ describe('Dialog', () => {
         expect(dialog.isOpenChange.emit).toHaveBeenCalledWith(false);
 
         dialog.open();
-        flush();
         tick();
         fixture.detectChanges();
         const buttons = document.querySelectorAll('button');
@@ -336,11 +330,9 @@ describe('Dialog', () => {
         const childDialog = fixture.componentInstance.child;
 
         mainDialog.open();
-        flush();
         tick();
 
         childDialog.open();
-        flush();
         tick();
         fixture.detectChanges();
 
@@ -375,7 +367,6 @@ describe('Dialog', () => {
             const dialog = fixture.componentInstance.dialog;
 
             dialog.open();
-            flush();
             fixture.detectChanges();
 
             const dialogWindow = fixture.debugElement.query(By.css('.igx-dialog__window'));
@@ -396,7 +387,6 @@ describe('Dialog', () => {
         const dialog = fix.componentInstance.dialog;
 
         dialog.open();
-        flush();
         tick();
         fix.detectChanges();
 

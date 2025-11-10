@@ -65,7 +65,6 @@ describe('IgxAutocomplete', () => {
             expect(dropDown.collapsed).toBeTruthy();
 
             autocomplete.open();
-            flush();
             tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
@@ -327,7 +326,6 @@ describe('IgxAutocomplete', () => {
             expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
 
             autocomplete.open();
-            flush();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
             expect(dropdownListScrollElement.children.length).toEqual(0);
