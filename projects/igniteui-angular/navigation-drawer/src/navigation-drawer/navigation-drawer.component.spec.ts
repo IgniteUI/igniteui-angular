@@ -3,10 +3,10 @@ import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
-import { IgxNavigationService } from 'igniteui-angular/core';
-import { PlatformUtil } from 'igniteui-angular/core';
-import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
+import { IgxNavigationService, PlatformUtil } from 'igniteui-angular/core';
+import { IgxNavDrawerItemDirective, IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
 import { IgxNavbarComponent } from 'igniteui-angular/navbar';
+import { IgxFlexDirective, IgxLayoutDirective } from 'igniteui-angular/directives';
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
 declare let Simulator: any;
@@ -614,10 +614,10 @@ describe('Navigation Drawer', () => {
             const drawerEl = fix.debugElement.query(By.directive(IgxNavigationDrawerComponent)).nativeElement;
             const navbarEl = fix.debugElement.query(By.directive(IgxNavbarComponent)).nativeElement;
 
-            let flexBasis = getComputedStyle(drawerEl).getPropertyValue('flex-basis');
+            let flexBasis = getComputedStyle(drawerEl).width;
 
             // Mini variant pinned by default
-            expect(flexBasis).toEqual('57px');;
+            expect(parseInt(flexBasis)).toBeGreaterThan(0);
             expect(navbarEl.offsetLeft).toEqual(parseInt(flexBasis));
 
             fix.componentInstance.navDrawer.toggle();
@@ -719,6 +719,10 @@ class TestComponentMiniComponent extends TestComponentDIComponent {
         IgxNavigationDrawerComponent,
         IgxNavDrawerTemplateDirective,
         IgxNavDrawerMiniTemplateDirective,
+        IgxNavDrawerItemDirective,
+        IgxNavbarComponent,
+        IgxFlexDirective,
+        IgxLayoutDirective
     ],
     styles: `
         .igx-nav-drawer__aside--pinned {

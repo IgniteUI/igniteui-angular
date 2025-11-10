@@ -149,7 +149,7 @@ export class IgxNavigationDrawerComponent implements
      *
      * ```html
      * <!--set-->
-     * <igx-nav-drawer [pin]='false'></igx-nav-drawer>
+     * <igx-nav-drawer [pin]="false"></igx-nav-drawer>
      * ```
      */
     @Input({ transform: booleanAttribute }) public pin = false;
