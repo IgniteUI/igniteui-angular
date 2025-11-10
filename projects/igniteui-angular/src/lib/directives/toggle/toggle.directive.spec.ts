@@ -69,6 +69,7 @@ describe('IgxToggle', () => {
         spyOn(toggle.opening, 'emit');
         spyOn(toggle.opened, 'emit');
         toggle.open();
+        await fixture.whenStable();
         await fixture.whenRenderingDone();
         fixture.detectChanges();
 
