@@ -205,10 +205,6 @@
             },
             "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
             "karmaConfig": "projects/igniteui-angular/karma.conf.js",
-            "codeCoverage": true,
-            "codeCoverageExclude": [
-                "test-utils"
-            ],
             "exclude": [
                 "migrations",
                 "schematics"
