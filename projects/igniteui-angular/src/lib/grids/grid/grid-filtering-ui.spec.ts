@@ -369,7 +369,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             currentDay.dispatchEvent(new Event('click'));
 
-            flush();
+            fix.detectChanges();
+            tick();
             fix.detectChanges();
             input.triggerEventHandler('change', null);
             fix.detectChanges();
@@ -407,12 +408,14 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const monthView = calendar.querySelector('.igx-calendar-picker__date');
 
             monthView.dispatchEvent(new Event('click'));
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
             const firstMonth = calendar.querySelector('.igx-calendar__month');
             const firstMonthText = (firstMonth as HTMLElement).innerText;
             firstMonth.dispatchEvent(new Event('click'));
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -448,11 +451,13 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const monthView = calendar.querySelectorAll('.igx-calendar-picker__date')[1];
             monthView.dispatchEvent(new Event('click'));
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
             const firstMonth = calendar.querySelectorAll('.igx-calendar__year')[0];
             firstMonth.dispatchEvent(new Event('click'));
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 

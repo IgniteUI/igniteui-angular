@@ -906,6 +906,7 @@ describe('igxOverlay', () => {
                 .parentElement.getElementsByClassName(CLASS_SCROLLABLE_DIV)[0] as HTMLElement;
             scrollableDiv.scrollTop += 5;
             scrollableDiv.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
             tick();
 
             overlayElement = (fixture.nativeElement as HTMLElement)
@@ -914,6 +915,7 @@ describe('igxOverlay', () => {
 
             scrollableDiv.scrollTop += 100;
             scrollableDiv.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
             tick();
 
             overlayElement = (fixture.nativeElement as HTMLElement)
@@ -2020,6 +2022,7 @@ describe('igxOverlay', () => {
 
                 document.documentElement.scrollTop += 9;
                 document.documentElement.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
                 tick();
 
                 expect(document.documentElement.scrollTop).toEqual(9);
@@ -2029,6 +2032,7 @@ describe('igxOverlay', () => {
 
                 document.documentElement.scrollTop += 25;
                 document.documentElement.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
                 tick();
 
                 expect(document.documentElement.scrollTop).toEqual(34);
@@ -2065,11 +2069,13 @@ describe('igxOverlay', () => {
             expect(buttonElement.getBoundingClientRect().y).toEqual(0);
 
             document.documentElement.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
             tick();
             expect(document.documentElement.scrollTop).toEqual(0);
 
             document.documentElement.scrollTop += 25;
             document.documentElement.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
             tick();
             expect(document.documentElement.scrollTop).toEqual(25);
             contentElement = (fixture.nativeElement as HTMLElement)
@@ -2080,6 +2086,7 @@ describe('igxOverlay', () => {
 
             document.documentElement.scrollTop += 500;
             document.documentElement.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
             tick();
             contentElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
@@ -2668,6 +2675,7 @@ describe('igxOverlay', () => {
             expect(overlay.hide).toHaveBeenCalledTimes(0);
             document.documentElement.scrollTop += scrollTolerance;
             document.documentElement.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
             tick();
             expect(scrollSpy).toHaveBeenCalledTimes(1);
             expect(overlay.hide).toHaveBeenCalledTimes(0);
@@ -2703,6 +2711,7 @@ describe('igxOverlay', () => {
 
             document.documentElement.scrollTop += scrollTolerance;
             document.documentElement.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
             tick();
             expect(scrollSpy).toHaveBeenCalledTimes(1);
             expect(scrollStrategy.detach).toHaveBeenCalledTimes(0);
@@ -3170,6 +3179,7 @@ describe('igxOverlay', () => {
             expect(overlay.hide).toHaveBeenCalledTimes(0);
             document.documentElement.scrollTop += scrollTolerance;
             document.documentElement.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
             tick();
             expect(scrollSpy).toHaveBeenCalledTimes(1);
             expect(overlay.hide).toHaveBeenCalledTimes(0);
@@ -3205,6 +3215,7 @@ describe('igxOverlay', () => {
 
             document.documentElement.scrollTop += scrollTolerance;
             document.documentElement.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
             tick();
             expect(scrollSpy).toHaveBeenCalledTimes(1);
             expect(scrollStrategy.detach).toHaveBeenCalledTimes(0);
@@ -3629,6 +3640,7 @@ describe('igxOverlay', () => {
             document.documentElement.scrollTop = 100;
             document.documentElement.scrollLeft = 50;
             document.documentElement.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
             tick();
 
             expect(componentRect).toEqual(componentElement.getBoundingClientRect());
@@ -3663,16 +3675,19 @@ describe('igxOverlay', () => {
             tick();
             expect(document.documentElement.scrollTop).toEqual(0);
             document.documentElement.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
             tick();
             expect(document.documentElement.scrollTop).toEqual(0);
 
             document.documentElement.scrollTop += 25;
             document.documentElement.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
             tick();
             expect(document.documentElement.scrollTop).toEqual(0);
 
             document.documentElement.scrollTop += 1000;
             document.documentElement.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
             tick();
 
             const wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -4070,6 +4085,7 @@ describe('igxOverlay', () => {
             document.documentElement.scrollTop = 100;
             document.documentElement.scrollLeft = 50;
             document.documentElement.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
             tick();
 
             expect(componentRect).toEqual(componentElement.getBoundingClientRect());
@@ -4110,6 +4126,7 @@ describe('igxOverlay', () => {
                 document.documentElement.scrollTop = 40;
                 document.documentElement.scrollLeft = 30;
                 document.documentElement.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
                 tick();
 
                 expect(componentRect).toEqual(componentElement.getBoundingClientRect());
@@ -4149,6 +4166,7 @@ describe('igxOverlay', () => {
 
                 document.documentElement.scrollTop = scrollTolerance;
                 document.documentElement.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
                 tick();
 
                 let wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -4159,6 +4177,7 @@ describe('igxOverlay', () => {
 
                 document.documentElement.scrollTop += scrollTolerance * 2;
                 document.documentElement.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
                 tick();
 
                 wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -4199,6 +4218,7 @@ describe('igxOverlay', () => {
 
                 document.documentElement.scrollTop += scrollTolerance;
                 document.documentElement.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
                 tick();
                 expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
                 const wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -4238,6 +4258,7 @@ describe('igxOverlay', () => {
 
             document.documentElement.scrollTop += scrollTolerance;
             document.documentElement.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
             tick();
             let wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
@@ -4247,6 +4268,7 @@ describe('igxOverlay', () => {
 
             document.documentElement.scrollTop += scrollTolerance * 2;
             document.documentElement.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
             tick();
 
             wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -4290,6 +4312,7 @@ describe('igxOverlay', () => {
 
                 document.documentElement.scrollTop += scrollTolerance;
                 document.documentElement.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
                 tick();
                 expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
                 expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
@@ -4333,6 +4356,7 @@ describe('igxOverlay', () => {
 
             document.documentElement.scrollTop += scrollTolerance;
             document.documentElement.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
             tick();
             const newElementRect = componentElement.getBoundingClientRect();
             expect(document.documentElement.scrollTop).toEqual(scrollTolerance);

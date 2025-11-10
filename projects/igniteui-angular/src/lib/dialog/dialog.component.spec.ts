@@ -308,6 +308,7 @@ describe('Dialog', () => {
 
         spyOn(dialog.rightButtonSelect, 'emit');
         dispatchEvent(rightButton, 'click');
+        fixture.detectChanges();
         tick();
         expect(dialog.rightButtonSelect.emit).toHaveBeenCalled();
     }));

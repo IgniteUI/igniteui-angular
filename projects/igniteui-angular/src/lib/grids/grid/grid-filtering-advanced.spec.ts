@@ -670,6 +670,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Hover the last visible expression chip
             const expressionItem = fix.nativeElement.querySelectorAll(`.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM}`)[9];
             expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -708,6 +709,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Hover the previous to last visible expression chip.
             const expressionItem = fix.nativeElement.querySelectorAll(`.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM}`)[9];
             expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -748,6 +750,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Hover the last visible expression chip
             const expressionItem = fix.nativeElement.querySelectorAll(`.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM}`)[9];
             expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
@@ -1322,6 +1325,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Hover the condition chip to show the add button
             const expressionItem = fix.nativeElement.querySelectorAll(`.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM}`)[0];
             expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
+            fix.detectChanges();
             tick();
             fix.detectChanges();
 
