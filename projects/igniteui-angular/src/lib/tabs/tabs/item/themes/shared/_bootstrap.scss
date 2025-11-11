@@ -8,6 +8,7 @@ $_theme: $bootstrap;
 @include themed-block(igx-tabs, bootstrap) {
     @include b(igx-tabs-header) {
         position: relative;
+        background: var-get($_theme, 'item-background');
 
         &::after {
             content: '';

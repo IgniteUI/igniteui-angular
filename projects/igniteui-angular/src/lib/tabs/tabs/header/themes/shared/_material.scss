@@ -12,6 +12,7 @@ $_theme: $material;
         min-height: rem(48px);
         transition: all .3s $tabs-animation-function;
         border: rem(1px) solid var-get($_theme, 'border-color');
+        border-radius: var-get($_theme, 'border-radius');
 
         &:hover,
         &:focus {

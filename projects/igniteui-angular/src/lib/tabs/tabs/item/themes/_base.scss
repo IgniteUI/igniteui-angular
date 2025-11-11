@@ -16,7 +16,6 @@ $theme: $material;
         align-items: center;
         overflow: hidden;
         flex: 0 0 auto;
-        background: var-get($theme, 'item-background');
         z-index: 1;
 
         @include e(content) {

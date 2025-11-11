@@ -45,7 +45,7 @@ $theme-variant: map.get($theme, '_meta', 'theme-variant');
         }
 
         &:focus {
-            background: var-get($theme, 'item-active-background');
+            background: var-get($theme, 'item-hover-background');
             color: var-get($theme, 'item-hover-color');
             border-bottom-color: transparent;
         }
@@ -71,14 +71,15 @@ $theme-variant: map.get($theme, '_meta', 'theme-variant');
         @include m(selected) {
             outline: 0;
             color: var-get($theme, 'item-active-color');
+            background: var-get($theme, 'item-active-background');
 
             &:hover,
             &:focus {
-                background: var-get($theme, 'item-active-background');
-                color: if($variant == 'fluent', var-get($theme, 'item-hover-color'), var-get($theme, 'item-active-color'));
+                background: var-get($theme, 'item-active-hover-background');
+                color: var-get($theme, 'item-active-hover-color');
 
                 igx-icon {
-                    color: var-get($theme, 'item-active-icon-color');
+                    color: var-get($theme, 'item-active-hover-icon-color');
                 }
             }
 
