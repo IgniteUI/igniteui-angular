@@ -1,21 +1,11 @@
 import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
-import { IgxTreeGridComponent } from '../grids/src/grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
-import { IgxSummaryOperand, IgxNumberSummaryOperand, IPinningConfig, IgxColumnComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent } from '../grids/src/grids/public_api';
-import { IGroupingExpression } from '../core/src/data-operations/grouping-expression.interface';
-import { IgxTreeGridGroupByAreaComponent } from '../grids/src/grids/grouping/tree-grid-group-by-area.component';
-import { IgxPaginatorComponent } from '../paginator/src/paginator/paginator.component';
-import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from '../grids/src/grids/selection/row-selectors';
-import { IgxIconComponent } from '../icon/src/icon/icon.component';
-import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleSearchComponent, IgxExcelStyleSortingComponent, IgxGridExcelStyleFilteringComponent } from '../grids/src/grids/filtering/excel-style/public_api';
-import { IgxColumnGroupComponent } from '../grids/src/grids/columns/column-group.component';
-import { RowPinningPosition } from '../grids/src/grids/common/enums';
-import { IgxCheckboxComponent } from '../checkbox/src/checkbox/checkbox.component';
-import { IgxExcelStyleHeaderIconDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../grids/src/grids/public_api';
-import { DefaultSortingStrategy } from '../core/src/data-operations/sorting-strategy';
-import { IgxTreeGridGroupingPipe } from '../grids/src/grids/tree-grid/tree-grid.grouping.pipe';
-import { GridSummaryCalculationMode, IgxSummaryResult } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, GridSummaryCalculationMode, IGroupingExpression, IgxSummaryResult } from 'igniteui-angular/core';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
+import { IgxColumnComponent, IgxColumnGroupComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleHeaderIconDirective, IgxExcelStyleSearchComponent, IgxExcelStyleSortingComponent, IgxGridEditingActionsComponent, IgxGridExcelStyleFilteringComponent, IgxGridPinningActionsComponent, IgxHeadSelectorDirective, IgxNumberSummaryOperand, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxRowSelectorDirective, IgxSummaryOperand, IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent, IgxTreeGridGroupingPipe, IPinningConfig, RowPinningPosition } from 'igniteui-angular/grids';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 
 @Component({
     template: `
