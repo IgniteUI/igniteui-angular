@@ -639,7 +639,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public onEntityChangeCancel() {
         this.entityChangeDialog.close();
-        // entitySelect will close automatically
+        this.entitySelect.close();
         this._entityNewValue = null;
     }
 
@@ -685,7 +685,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.searchValue.value = null;
 
         this.entityChangeDialog.close();
-        // entitySelect will close automatically
+        this.entitySelect.close();
 
         this._entityNewValue = null;
         this.innerQueryNewExpressionTree = null;
@@ -1247,7 +1247,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public onConditionSelectChanging(event: ISelectionEventArgs) {
         event.cancel = true;
         this.selectedCondition = event.newSelection.value;
-        // conditionSelect will close automatically
+        this.conditionSelect.close();
         this.cdr.detectChanges();
     }
 
