@@ -6,17 +6,16 @@
     %icon-size {
         igx-icon,
         igc-icon {
-            --component-size: var(--ig-size, var(--ig-size-medium));
-    
-            margin-inline: rem(6px);
+            --component-size: var(--ig-size-medium);
+            --size: auto;
+
+            width: auto !important;
+            height: auto !important;
+            padding: rem(6px);
         }
     }
 
     igx-avatar {
-        --ig-size: 2;
-    }
-
-    [igxIconButton] {
         --ig-size: 2;
     }
 
