@@ -423,6 +423,7 @@ describe('igxSelect', () => {
             dummyInput.focus();
             dummyInput.click();
 
+
             fixture.detectChanges();
             tick();
             fixture.detectChanges();
@@ -508,6 +509,7 @@ describe('igxSelect', () => {
             dummyInput.focus();
             dummyInput.click();
 
+
             fixture.detectChanges();
             tick();
             fixture.detectChanges();
@@ -529,6 +531,7 @@ describe('igxSelect', () => {
 
             dummyInput.focus();
             dummyInput.click();
+
 
             fixture.detectChanges();
             tick();
@@ -1721,6 +1724,7 @@ describe('igxSelect', () => {
             expect(select.collapsed).toBeFalsy();
             inputElement.triggerEventHandler('keydown', tabKeyEvent);
             inputElement.nativeElement.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
@@ -1730,6 +1734,7 @@ describe('igxSelect', () => {
             expect(select.collapsed).toBeFalsy();
             inputElement.triggerEventHandler('keydown', shiftTabKeysEvent);
             inputElement.nativeElement.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
@@ -1963,9 +1968,11 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
 
+
             fixture.detectChanges();
             verifySelectedItem(selectedItemIndex);
             inputElement.triggerEventHandler('keydown', arrowUpKeyEvent);
+
 
             fixture.detectChanges();
             verifySelectedItem(--selectedItemIndex);
@@ -1975,6 +1982,7 @@ describe('igxSelect', () => {
 
             fixture.detectChanges();
             inputElement.triggerEventHandler('keydown', arrowUpKeyEvent);
+
 
             fixture.detectChanges();
             verifySelectedItem(selectedItemIndex);
@@ -2569,6 +2577,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 document.documentElement.scrollLeft += 50;
                 document.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
                 tick();
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
@@ -2588,6 +2597,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 document.documentElement.scrollLeft += 50;
                 document.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
                 tick();
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
@@ -2607,6 +2617,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 document.documentElement.scrollLeft += 50;
                 document.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
                 tick();
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
@@ -2624,6 +2635,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 document.documentElement.scrollTop += 20;
                 document.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
                 tick();
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
@@ -2643,6 +2655,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 document.documentElement.scrollTop += 20;
                 document.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
                 tick();
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
@@ -2662,6 +2675,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 document.documentElement.scrollTop += 20;
                 document.dispatchEvent(new Event('scroll'));
+                fixture.detectChanges();
                 tick();
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
