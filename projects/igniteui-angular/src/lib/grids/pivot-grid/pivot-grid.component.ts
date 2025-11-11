@@ -1164,6 +1164,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         options.outlet = this.outlet;
         if (dropdown) {
             dropdown.initialize(column, this.overlayService);
+            dropdown.populateData();
             if (shouldReatach) {
                 const id = this.overlayService.attach(dropdown.element, options);
                 dropdown.overlayComponentId = id;
@@ -2021,7 +2022,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     protected getPivotRowHeaderContentWidth(headerGroup: IgxPivotRowHeaderGroupComponent) {
-        const headerSizes = this.getHeaderCellWidth(headerGroup.header.refInstance.nativeElement);
+        const headerSizes = this.getHeaderCellWidth(headerGroup.nativeElement);
         return headerSizes.width + headerSizes.padding;
     }
 
@@ -2219,6 +2220,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             ref.instance.resizable = this.rowDimensionResizing;
             ref.instance.sortable = dim.sortable === undefined ? true : dim.sortable;
             ref.instance.width = this.rowDimensionWidth(dim);
+            ref.instance.filteringIgnoreCase = false;
             ref.changeDetectorRef.detectChanges();
             columns.push(ref.instance);
         });

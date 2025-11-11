@@ -5,7 +5,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin select($theme) {
-    @include css-vars($theme, 'igx-select');
+    @include css-vars($theme);
     $variant: map.get($theme, '_meta', 'theme');
 
     %igx-select {
@@ -55,7 +55,7 @@
 
     .igx-input-group.igx-input-group--disabled.igx-input-group--filled,
     .igx-input-group.igx-input-group--disabled {
-        %igx-select__toggle-button {
+        %form-group-bundle %igx-select__toggle-button {
             background: var-get($theme, 'toggle-button-background-disabled');
             color: var-get($theme, 'toggle-button-foreground-disabled');
         }

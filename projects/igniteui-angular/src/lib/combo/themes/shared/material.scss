@@ -16,6 +16,10 @@ $_theme: $material;
     }
 
     @include e(search) {
+        igx-input-group {
+            --size: #{rem(38px)};
+        }
+
         .igx-input-group__bundle {
             padding-block-start: 0;
             height: auto;

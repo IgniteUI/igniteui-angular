@@ -250,20 +250,19 @@ $base-scale-size: (
             @extend %input-textarea-common;
 
             padding: 0;
-            min-height: var(--_textarea-size);
             resize: vertical;
             z-index: 1;
         }
 
         @include e(hint) {
             @include type-style(caption);
+            @include line-clamp(2, true, true);
 
             color: var-get($theme, 'helper-text-color');
             position: relative;
-            display: flex;
-            justify-content: space-between;
             grid-row: var(--_hint-row);
             grid-column: 1 / -1;
+            overflow-wrap: anywhere;
 
             &:empty {
                 --_hint-row: 1;
@@ -348,14 +347,51 @@ $base-scale-size: (
 
         @include m(textarea-group) {
             --_bundle-template-rows: auto auto auto;
-            --_textarea-size: #{sizable(
-                rem(82px, map.get($base-scale-size, 'compact')),
-                rem(82px, map.get($base-scale-size, 'cosy')),
-                rem(82px, map.get($base-scale-size, 'comfortable'))
-            )};
 
             @include e(bundle) {
                 height: auto;
+            }
+        }
+
+        @include m(readonly, $not: (file, disabled)) {
+            igx-prefix,
+            [igxPrefix],
+            igx-suffix,
+            [igxSuffix] {
+                color: var-get($theme, 'disabled-text-color');
+            }
+
+            @include e(input) {
+                &:hover {
+                    cursor: default;
+                    color: var-get($theme, 'filled-text-color');
+                }
+
+                &:hover:not(:focus-within) {
+                    &::placeholder {
+                        color: var-get($theme, 'placeholder-color');
+                    }
+                }
+            }
+
+            @include e(textarea) {
+                &:hover {
+                    cursor: default;
+                    color: var-get($theme, 'filled-text-color');
+                }
+
+                &:hover:not(:focus-within) {
+                    &::placeholder {
+                        color: var-get($theme, 'placeholder-color');
+                    }
+                }
+            }
+        }
+
+        @include mx(readonly, focused, ('not': (file))) {
+            igx-suffix,
+            [igxSuffix] {
+                color: var-get($theme, 'disabled-text-color');
             }
         }
 

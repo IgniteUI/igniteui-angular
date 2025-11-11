@@ -2,6 +2,8 @@
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
 name: Node.js CI
+permissions:
+  contents: read
 
 on:
   push:
@@ -16,7 +18,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x, 22.17.1]
+        node-version: [20.x, 22.x]
 
     steps:
       - name: Checkout
@@ -50,7 +52,7 @@ jobs:
             npm run test:schematics
             npm run test:i18n
         env:
-            NODE_OPTIONS: --max_old_space_size=4096
+            NODE_OPTIONS: --max_old_space_size=4096 ${{ matrix.node-version == '22.x' && '--no-experimental-strip-types' || '' }}
             TZ: America/New_York
       - name: Build i18n & validate output
         run: |

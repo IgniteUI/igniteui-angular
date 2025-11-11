@@ -1,10 +1,12 @@
-import { Injectable, ElementRef, NgZone } from "@angular/core";
+import { Injectable, ElementRef, NgZone, inject } from "@angular/core";
 import { EventManager } from "@angular/platform-browser";
+import { PlatformUtil } from "../core/utils";
 
 @Injectable()
 export class KeyboardNavigationService {
     private keyHandlers = new Map<string, (event: KeyboardEvent) => void>();
     private eventUnsubscribeFn: Function | null = null;
+    private platform = inject(PlatformUtil);
 
     constructor(
         private eventManager: EventManager,
@@ -12,6 +14,10 @@ export class KeyboardNavigationService {
     ) {}
 
     public attachKeyboardHandlers(elementRef: ElementRef, context: any) {
+        if (!this.platform.isBrowser) {
+            return this;
+        }
+
         this.detachKeyboardHandlers(); // Clean up any existing listeners
 
         this.ngZone.runOutsideAngular(() => {

@@ -88,6 +88,14 @@ $_theme: $fluent;
         }
     }
 
+    @include m(invalid) {
+        &:hover {
+            @include e(composite-mark) {
+                stroke: var-get($_theme, 'error-color');
+            }
+        }
+    }
+
     @include m(checked) {
         &:hover {
             @include e(composite) {
@@ -160,6 +168,10 @@ $_theme: $fluent;
         @include e(composite) {
             background: var-get($_theme, 'disabled-color');
             border-color: var-get($_theme, 'disabled-color');
+        }
+
+        @include e(composite-mark) {
+            stroke: var-get($_theme, 'disabled-tick-color');
         }
     }
 

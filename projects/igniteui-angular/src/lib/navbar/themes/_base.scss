@@ -24,7 +24,8 @@ $_theme: $material;
 
         igx-icon,
         igc-icon {
-            --component-size: var(--ig-size, var(--ig-size-large));
+            --component-size: var(--ig-size-large);
+
             cursor: pointer;
         }
 
@@ -77,6 +78,11 @@ $_theme: $material;
 
         igx-avatar {
             --ig-size: 1;
+        }
+
+        [igxIconButton],
+        igc-icon-button {
+            --ig-size: 2;
         }
 
         @include e(title) {

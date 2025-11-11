@@ -35,7 +35,7 @@
 @use '../components/input/file-input-theme' as *;
 
 @mixin typography() {
-    @include badge-typography();
+    // @include badge-typography($theme: 'fluent');
     // @include banner-typography($categories: (
     //     message: 'caption'
     // ));
@@ -62,7 +62,7 @@
     //     text: 'subtitle-2'
     // ));
     // @include column-actions-typography();
-    @include date-range-typography();
+    // @include date-range-typography();
     @include dialog-typography($categories: (
         title: 'h6',
         content: 'body-2'
@@ -114,7 +114,7 @@
     //@include tabs-typography($categories: (
     //    label: 'body-2'
     //));
-    @include time-picker-typography();
+    // @include time-picker-typography();
     //@include stepper-typography();
     // @include toast-typography($categories: (
     //     text: 'caption'

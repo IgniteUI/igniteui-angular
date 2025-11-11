@@ -62,14 +62,20 @@ $_theme: $material;
         background: var-get($_theme, 'error-color');
     }
 
-    %cbx-ripple--hover-checked,
     %cbx-ripple--focused-checked {
         @extend %cbx-ripple--filled;
     }
 
-    %cbx-ripple--hover-invalid,
+    %cbx-ripple--hover-checked {
+        background: var-get($_theme, 'fill-color-hover');
+    }
+
     %cbx-ripple--focused-invalid {
         @extend %cbx-ripple--error;
+    }
+
+    %cbx-ripple--hover-invalid {
+        background: var-get($_theme, 'error-color-hover');
     }
 
     @include b(igx-checkbox) {
@@ -92,6 +98,14 @@ $_theme: $material;
         &:hover {
             @include e(ripple) {
                 @extend %cbx-ripple--hovered;
+            }
+
+            @include e(label) {
+                color: var-get($_theme, 'label-color-hover');
+            }
+
+            @include e(label, $m: before) {
+                color: var-get($_theme, 'label-color-hover');
             }
         }
 
@@ -152,7 +166,7 @@ $_theme: $material;
             width: 100%;
             stroke: var-get($_theme, 'tick-color');
             stroke-linecap: square;
-            stroke-width: var(--mark-stroke);
+            stroke-width: var-get($_theme, 'tick-width');
             stroke-dasharray: var(--mark-length);
             stroke-dashoffset: var(--mark-length);
             fill: none;
@@ -199,6 +213,14 @@ $_theme: $material;
 
                 @include e(composite) {
                     border-color: var-get($_theme, 'error-color-hover');
+                }
+
+                @include e(label) {
+                    color: var-get($_theme, 'error-color');
+                }
+
+                @include e(label, $m: before) {
+                    color: var-get($_theme, 'error-color');
                 }
             }
 
