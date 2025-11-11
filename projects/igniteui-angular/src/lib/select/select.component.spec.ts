@@ -212,7 +212,6 @@ describe('igxSelect', () => {
             selectedItemEl.nativeElement.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
 
@@ -226,7 +225,6 @@ describe('igxSelect', () => {
             selectedItemEl.nativeElement.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
 
             select.open();
@@ -235,7 +233,6 @@ describe('igxSelect', () => {
             selectedItemEl.nativeElement.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
             expect(select.selectionChanging.emit).toHaveBeenCalledTimes(1);
         }));
@@ -251,7 +248,6 @@ describe('igxSelect', () => {
             toggleBtn.nativeElement.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
 
@@ -266,7 +262,6 @@ describe('igxSelect', () => {
             select.close();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
 
             select.toggle();
@@ -276,7 +271,6 @@ describe('igxSelect', () => {
             select.toggle();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
 
@@ -288,7 +282,6 @@ describe('igxSelect', () => {
             inputGroup.nativeElement.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
             expect(selectListWrapper.nativeElement.classList.contains('igx-toggle--hidden')).toBeTruthy();
         }));
@@ -308,13 +301,11 @@ describe('igxSelect', () => {
             inputGroup.nativeElement.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifyOpenCloseEvents(1, 0, 1);
 
             inputGroup.nativeElement.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifyOpenCloseEvents(1, 1, 2);
 
             select.disabled = true;
@@ -322,7 +313,6 @@ describe('igxSelect', () => {
             inputGroup.nativeElement.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
 
             // No additional calls, because select is disabled
             expect(select.closing.emit).toHaveBeenCalledTimes(1);
@@ -337,7 +327,6 @@ describe('igxSelect', () => {
             select.toggle();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
 
             spyOn(select.closing, 'emit');
@@ -346,7 +335,6 @@ describe('igxSelect', () => {
             selectedItemEl.nativeElement.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(select.closing.emit).toHaveBeenCalledTimes(1);
             expect(select.closed.emit).toHaveBeenCalledTimes(1);
         }));
@@ -366,13 +354,11 @@ describe('igxSelect', () => {
             toggleBtn.nativeElement.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifyOpenCloseEvents(1, 0, 1);
 
             toggleBtn.nativeElement.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifyOpenCloseEvents(1, 1, 2);
         }));
 
@@ -385,14 +371,12 @@ describe('igxSelect', () => {
             select.toggle();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
 
             dummyInput.focus();
             dummyInput.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
 
             expect(dummyInput).toEqual(document.activeElement);
             expect(select.collapsed).toBeTruthy();
@@ -417,7 +401,6 @@ describe('igxSelect', () => {
             select.toggle();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
 
             dummyInput.focus();
@@ -426,7 +409,6 @@ describe('igxSelect', () => {
 
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
 
             expect(dummyInput).toEqual(document.activeElement);
             expect(select.collapsed).toBeFalsy();
@@ -453,14 +435,12 @@ describe('igxSelect', () => {
             select.toggle();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(inputElement.nativeElement.getAttribute('aria-expanded')).toEqual('true');
             expect(dropdownWrapper.nativeElement.getAttribute('aria-hidden')).toEqual('false');
 
             select.toggle();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(inputElement.nativeElement.getAttribute('aria-expanded')).toEqual('false');
             expect(dropdownWrapper.nativeElement.getAttribute('aria-hidden')).toEqual('true');
         }));
@@ -490,7 +470,6 @@ describe('igxSelect', () => {
             select.type = 'box';
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
 
             expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BOX)).toBeTruthy();
             select.type = 'border';
@@ -512,7 +491,6 @@ describe('igxSelect', () => {
 
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(dummyInput).toEqual(document.activeElement);
             expect(select.collapsed).toBeTruthy();
         }));
@@ -535,7 +513,6 @@ describe('igxSelect', () => {
 
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(dummyInput).toEqual(document.activeElement);
             expect(select.collapsed).toBeFalsy();
         }));
@@ -623,7 +600,6 @@ describe('igxSelect', () => {
             toggleBtn.nativeElement.click();
             fix.detectChanges();
             tick();
-            fix.detectChanges();
             expect(selectComp.collapsed).toEqual(true);
 
             inputGroupInvalidClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_INVALID));
@@ -824,7 +800,6 @@ describe('igxSelect', () => {
             inputGroup.nativeElement.click();
             fix.detectChanges();
             tick();
-            fix.detectChanges();
             expect(selectComp.collapsed).toBeFalsy();
 
             selectComp.close();
@@ -837,7 +812,6 @@ describe('igxSelect', () => {
             inputGroup.nativeElement.click();
             fix.detectChanges();
             tick();
-            fix.detectChanges();
             expect(selectComp.collapsed).toBeTruthy();
         }));
 
@@ -871,23 +845,19 @@ describe('igxSelect', () => {
 
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 selectList.children[selectedItemIndex].nativeElement.click();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 verifySelectedItem(selectedItemIndex);
 
                 selectedItemIndex = 15;
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 selectList.children[selectedItemIndex].nativeElement.click();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 verifySelectedItem(selectedItemIndex);
             }));
 
@@ -935,27 +905,23 @@ describe('igxSelect', () => {
                 let selectedItemIndex = 2;
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
                 inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
                 inputElement.triggerEventHandler('keydown', spaceKeyEvent);
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 verifySelectedItem(selectedItemIndex);
 
                 selectedItemIndex = 4;
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
                 inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
                 inputElement.triggerEventHandler('keydown', enterKeyEvent);
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 verifySelectedItem(selectedItemIndex);
             }));
 
@@ -963,12 +929,10 @@ describe('igxSelect', () => {
                 let selectedItemIndex = 5;
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 selectList.children[selectedItemIndex].nativeElement.click();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 verifySelectedItem(selectedItemIndex);
 
                 selectedItemIndex = 15;
@@ -1005,14 +969,12 @@ describe('igxSelect', () => {
                 const selectedItemIndex = 8;
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 verifyFocusedItem(focusedItemIndex);
 
                 selectList.children[selectedItemIndex].nativeElement.click();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 verifySelectedItem(selectedItemIndex);
                 expect(select.items[focusedItemIndex].focused).toBeFalsy();
 
@@ -1022,8 +984,7 @@ describe('igxSelect', () => {
 
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 verifyFocusedItem(focusedItemIndex);
             }));
 
@@ -1047,12 +1008,10 @@ describe('igxSelect', () => {
                 // Select item - mouse click
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 selectList.children[selectedItemIndex].nativeElement.click();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 checkInputValue();
 
                 // Select item - selectItem method
@@ -1063,8 +1022,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 checkInputValue();
 
                 // Select item - item selected property
@@ -1072,8 +1030,7 @@ describe('igxSelect', () => {
                 selectedItemValue = select.items[selectedItemIndex].value;
                 select.items[selectedItemIndex].selected = true;
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 checkInputValue();
 
                 // Select item - value property
@@ -1081,8 +1038,7 @@ describe('igxSelect', () => {
                 selectedItemValue = select.items[selectedItemIndex].value;
                 select.value = select.items[selectedItemIndex].value.toString();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 checkInputValue();
             }));
 
@@ -1104,12 +1060,10 @@ describe('igxSelect', () => {
                 // Select item - mouse click
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 selectList.children[selectedItemIndex].nativeElement.click();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 checkInputValue();
 
                 // Select item - selectItem method
@@ -1119,16 +1073,14 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 checkInputValue();
 
                 // Select item - item selected property
                 selectedItemIndex = 2;
                 select.items[selectedItemIndex].selected = true;
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 checkInputValue();
             }));
 
@@ -1145,8 +1097,7 @@ describe('igxSelect', () => {
                     fixture.detectChanges();
                     select.toggle();
                     fixture.detectChanges();
-                    tick();
-                    fixture.detectChanges();
+            tick();
                     expect(select.selectedItem).toBeUndefined();
                     expect(select.input.value).toEqual('');
                     expect(inputElement.nativeElement.value).toEqual('');
@@ -1182,8 +1133,7 @@ describe('igxSelect', () => {
                 // Focus item when there is not a selected item
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 navigateDropdownItems(arrowDownKeyEvent);
                 expect(select.value).toBeNull();
                 expect(select.input.value).toEqual('');
@@ -1193,12 +1143,10 @@ describe('igxSelect', () => {
                 selectedItem = select.items[13] as IgxSelectItemComponent;
                 selectedItem.element.nativeElement.click();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 navigateDropdownItems(arrowUpKeyEvent);
                 focusedItem = select.items[selectedItem.index - navigationStep];
                 verifyFocusedItemIsNotSelected();
@@ -1244,21 +1192,18 @@ describe('igxSelect', () => {
                 let selectedItemIndex = 4;
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
 
                 select.items[selectedItemIndex].element.nativeElement.click();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 verifySelectedItem(selectedItemIndex);
 
                 const previousItem = select.items[selectedItemIndex];
                 selectedItemIndex = 1;
                 select.items[selectedItemIndex].element.nativeElement.click();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 verifySelectedItem(selectedItemIndex);
                 expect(previousItem.focused).toBeFalsy();
             }));
@@ -1269,12 +1214,10 @@ describe('igxSelect', () => {
 
                 inputElement.nativeElement.click();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 selectedItemEl.nativeElement.click();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(selectedItem.selected).toBeTruthy();
                 expect(select.value).toEqual(selectedItem.value);
                 expect(select.input.value.toString().trim()).toEqual(selectedItem.value);
@@ -1307,12 +1250,10 @@ describe('igxSelect', () => {
 
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 selectedItemEl.nativeElement.click();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(select.selectionChanging.emit).toHaveBeenCalledTimes(1);
                 expect(select.selectItem).toHaveBeenCalledTimes(1);
                 expect(select.selectionChanging.emit).toHaveBeenCalledWith(args);
@@ -1323,12 +1264,10 @@ describe('igxSelect', () => {
                 args.newSelection = selectedItem;
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 selectedItemEl.nativeElement.click();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(select.selectionChanging.emit).toHaveBeenCalledTimes(2);
                 expect(select.selectItem).toHaveBeenCalledTimes(2);
                 expect(select.selectionChanging.emit).toHaveBeenCalledWith(args);
@@ -1380,15 +1319,13 @@ describe('igxSelect', () => {
                 const navigateDropdownItems = (selectEvent: KeyboardEvent) => {
                     inputElement.triggerEventHandler('keydown', altArrowDownKeyEvent);
                     fixture.detectChanges();
-                    tick();
-                    fixture.detectChanges();
+            tick();
                     for (let itemIndex = 0; itemIndex < selectedItem.index; itemIndex++) {
                         inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
                     }
                     inputElement.triggerEventHandler('keydown', selectEvent);
                     fixture.detectChanges();
-                    tick();
-                    fixture.detectChanges();
+            tick();
                 };
 
                 navigateDropdownItems(enterKeyEvent);
@@ -1523,8 +1460,7 @@ describe('igxSelect', () => {
                     // Select item - mouse click
                     select.toggle();
                     fixture.detectChanges();
-                    tick();
-                    fixture.detectChanges();
+            tick();
                     itemElementToSelect.click();
                     fixture.detectChanges();
                     checkInputValue();
@@ -1536,8 +1472,7 @@ describe('igxSelect', () => {
                     fixture.detectChanges();
                     select.toggle();
                     fixture.detectChanges();
-                    tick();
-                    fixture.detectChanges();
+            tick();
                     checkInputValue();
 
                     // Select item - item selected property
@@ -1589,11 +1524,9 @@ describe('igxSelect', () => {
             select.toggle();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             selectedItemElement.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(select.input.value).toEqual(select.items[selectedItemIndex - 1].value);
             expect(select.value).toEqual(select.items[selectedItemIndex - 1].value);
             const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
@@ -1645,7 +1578,6 @@ describe('igxSelect', () => {
             select.toggle();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             const focusedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_FOCUSED_ITEM));
             expect(focusedItems.length).toEqual(1);
             expect(focusedItemElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
@@ -1674,7 +1606,6 @@ describe('igxSelect', () => {
             inputElement.triggerEventHandler('keydown', altArrowUpKeyEvent);
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
 
@@ -1688,7 +1619,6 @@ describe('igxSelect', () => {
             inputElement.triggerEventHandler('keydown', enterKeyEvent);
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
 
@@ -1702,7 +1632,6 @@ describe('igxSelect', () => {
             inputElement.triggerEventHandler('keydown', spaceKeyEvent);
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
 
@@ -1716,7 +1645,6 @@ describe('igxSelect', () => {
             inputElement.triggerEventHandler('keydown', escapeKeyEvent);
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
 
             select.toggle();
@@ -1726,7 +1654,6 @@ describe('igxSelect', () => {
             inputElement.nativeElement.dispatchEvent(new Event('blur'));
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
 
             select.toggle();
@@ -1736,7 +1663,6 @@ describe('igxSelect', () => {
             inputElement.nativeElement.dispatchEvent(new Event('blur'));
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
 
@@ -1752,13 +1678,11 @@ describe('igxSelect', () => {
             inputElement.triggerEventHandler('keydown', altArrowDownKeyEvent);
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifyOpenCloseEvents(1, 0, 1);
 
             inputElement.triggerEventHandler('keydown', altArrowUpKeyEvent);
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifyOpenCloseEvents(1, 1, 2);
         }));
 
@@ -1774,13 +1698,11 @@ describe('igxSelect', () => {
             inputElement.triggerEventHandler('keydown', enterKeyEvent);
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifyOpenCloseEvents(1, 0, 0);
 
             inputElement.triggerEventHandler('keydown', escapeKeyEvent);
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifyOpenCloseEvents(1, 1, 0);
         }));
 
@@ -1796,13 +1718,11 @@ describe('igxSelect', () => {
             inputElement.triggerEventHandler('keydown', spaceKeyEvent);
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifyOpenCloseEvents(1, 0, 0);
 
             inputElement.triggerEventHandler('keydown', escapeKeyEvent);
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifyOpenCloseEvents(1, 1, 0);
         }));
 
@@ -1923,12 +1843,10 @@ describe('igxSelect', () => {
             select.toggle();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
 
             inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(selectedItem.selected).toBeTruthy();
             verifyFocusedItem(focusedItemIndex);
 
@@ -1940,12 +1858,10 @@ describe('igxSelect', () => {
             select.toggle();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
 
             inputElement.triggerEventHandler('keydown', arrowUpKeyEvent);
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             selectedItem = select.items[7];
             focusedItemIndex = selectedItem.index - 1;
             verifyFocusedItem(focusedItemIndex);
@@ -2047,12 +1963,10 @@ describe('igxSelect', () => {
             for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keydown', { key: 'p' });
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 inputElement.triggerEventHandler('keydown', { key: 'a' });
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 verifyFocusedItem(item);
                 tick(500);
                 fixture.detectChanges();
@@ -2068,7 +1982,6 @@ describe('igxSelect', () => {
             inputElement.triggerEventHandler('keydown', { key: 'l' });
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[0]);
             tick(500);
             fixture.detectChanges();
@@ -2076,7 +1989,6 @@ describe('igxSelect', () => {
             inputElement.triggerEventHandler('keydown', { key: 'L' });
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[1]);
             discardPeriodicTasks();
         }));
@@ -2089,8 +2001,7 @@ describe('igxSelect', () => {
             for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keydown', { key: 'l' });
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 verifyFocusedItem(item);
                 tick(500);
                 fixture.detectChanges();
@@ -2099,7 +2010,6 @@ describe('igxSelect', () => {
             inputElement.triggerEventHandler('keydown', { key: 'l' });
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[0]);
 
             discardPeriodicTasks();
@@ -2127,8 +2037,7 @@ describe('igxSelect', () => {
             for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keydown', { key: 'ü' });
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 verifyFocusedItem(item);
                 tick(500);
                 fixture.detectChanges();
@@ -2139,8 +2048,7 @@ describe('igxSelect', () => {
             for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keydown', { key: 'с' });
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 verifyFocusedItem(item);
                 tick(500);
                 fixture.detectChanges();
@@ -2152,13 +2060,11 @@ describe('igxSelect', () => {
             select.open();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
 
             const filteredItemsInxs = fixture.componentInstance.filterCities('l');
             inputElement.triggerEventHandler('keydown', { key: 'l' });
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[0]);
             tick(500);
             fixture.detectChanges();
@@ -2167,7 +2073,6 @@ describe('igxSelect', () => {
             inputElement.triggerEventHandler('keydown', { key: 'w' });
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[0]);
 
             discardPeriodicTasks();
@@ -2178,12 +2083,10 @@ describe('igxSelect', () => {
             for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keydown', { key: 'p' });
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 inputElement.triggerEventHandler('keydown', { key: 'a' });
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 verifySelectedItem(item);
                 tick(500);
                 fixture.detectChanges();
@@ -2196,7 +2099,6 @@ describe('igxSelect', () => {
             inputElement.triggerEventHandler('keydown', { key: 'l' });
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifySelectedItem(filteredItemsInxs[0]);
             tick(500);
             fixture.detectChanges();
@@ -2204,7 +2106,6 @@ describe('igxSelect', () => {
             inputElement.triggerEventHandler('keydown', { key: 'L' });
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifySelectedItem(filteredItemsInxs[1]);
 
             discardPeriodicTasks();
@@ -2215,8 +2116,7 @@ describe('igxSelect', () => {
             for (const item of  filteredItemsInxs) {
                 inputElement.triggerEventHandler('keydown', { key: 'l' });
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 verifySelectedItem(item);
                 tick(500);
                 fixture.detectChanges();
@@ -2225,7 +2125,6 @@ describe('igxSelect', () => {
             inputElement.triggerEventHandler('keydown', { key: 'l' });
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifySelectedItem(filteredItemsInxs[0]);
 
             discardPeriodicTasks();
@@ -2251,8 +2150,7 @@ describe('igxSelect', () => {
             for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keydown', { key: 'ü' });
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 verifySelectedItem(item);
                 tick(500);
                 fixture.detectChanges();
@@ -2263,8 +2161,7 @@ describe('igxSelect', () => {
             for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keydown', { key: 'с' });
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 verifySelectedItem(item);
                 tick(500);
                 fixture.detectChanges();
@@ -2277,7 +2174,6 @@ describe('igxSelect', () => {
             inputElement.triggerEventHandler('keydown', { key: 'l' });
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[0]);
             tick(500);
             fixture.detectChanges();
@@ -2286,7 +2182,6 @@ describe('igxSelect', () => {
             inputElement.triggerEventHandler('keydown', { key: 'q' });
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[0]);
             tick(500);
             fixture.detectChanges();
@@ -2294,7 +2189,6 @@ describe('igxSelect', () => {
             inputElement.triggerEventHandler('keydown', { key: 'l' });
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[1]);
 
             discardPeriodicTasks();
@@ -2363,8 +2257,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
                 listTop = selectedItemRect.top - selectedItemRect.height;
@@ -2373,14 +2266,12 @@ describe('igxSelect', () => {
                 selectedItemIndex = 2;
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 select.items[selectedItemIndex].selected = true;
                 fixture.detectChanges();
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
                 listTop = selectedItemRect.top - selectedItemRect.height * 2;
@@ -2389,14 +2280,12 @@ describe('igxSelect', () => {
                 selectedItemIndex = 0;
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 select.items[selectedItemIndex].selected = true;
                 fixture.detectChanges();
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
                 listTop = selectedItemRect.top;
@@ -2422,36 +2311,31 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
 
                 selectedItemIndex = 5;
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 select.items[selectedItemIndex].selected = true;
                 fixture.detectChanges();
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
 
                 selectedItemIndex = 9;
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 select.items[selectedItemIndex].selected = true;
                 fixture.detectChanges();
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
             }));
@@ -2472,8 +2356,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
             }));
@@ -2487,8 +2370,7 @@ describe('igxSelect', () => {
                     fixture.detectChanges();
                     select.toggle();
                     fixture.detectChanges();
-                    tick();
-                    fixture.detectChanges();
+            tick();
                     getBoundingRectangles();
                     verifySelectedItemPositioning();
                     (select.element as HTMLElement).parentElement.style.marginTop = '10px';
@@ -2503,8 +2385,7 @@ describe('igxSelect', () => {
                     fixture.detectChanges();
                     select.toggle();
                     fixture.detectChanges();
-                    tick();
-                    fixture.detectChanges();
+            tick();
                     getBoundingRectangles();
                 }));
         });
@@ -2525,8 +2406,7 @@ describe('igxSelect', () => {
                     fixture.detectChanges();
                     select.toggle();
                     fixture.detectChanges();
-                    tick();
-                    fixture.detectChanges();
+            tick();
                     getBoundingRectangles();
                 }));
             it('should display selected item and all possible items above and below when item in the middle of the list is selected',
@@ -2537,8 +2417,7 @@ describe('igxSelect', () => {
                     fixture.detectChanges();
                     select.toggle();
                     fixture.detectChanges();
-                    tick();
-                    fixture.detectChanges();
+            tick();
                     getBoundingRectangles();
                 }));
 
@@ -2551,8 +2430,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 getBoundingRectangles();
             }));
         });
@@ -2573,8 +2451,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 document.documentElement.scrollLeft += 50;
                 document.dispatchEvent(new Event('scroll'));
                 fixture.detectChanges();
@@ -2587,14 +2464,12 @@ describe('igxSelect', () => {
                 selectedItemIndex = 2;
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 select.items[selectedItemIndex].selected = true;
                 fixture.detectChanges();
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 document.documentElement.scrollLeft += 50;
                 document.dispatchEvent(new Event('scroll'));
                 fixture.detectChanges();
@@ -2607,14 +2482,12 @@ describe('igxSelect', () => {
                 selectedItemIndex = 0;
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 select.items[selectedItemIndex].selected = true;
                 fixture.detectChanges();
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 document.documentElement.scrollLeft += 50;
                 document.dispatchEvent(new Event('scroll'));
                 fixture.detectChanges();
@@ -2631,8 +2504,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 document.documentElement.scrollTop += 20;
                 document.dispatchEvent(new Event('scroll'));
                 fixture.detectChanges();
@@ -2645,14 +2517,12 @@ describe('igxSelect', () => {
                 selectedItemIndex = 2;
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 select.items[selectedItemIndex].selected = true;
                 fixture.detectChanges();
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 document.documentElement.scrollTop += 20;
                 document.dispatchEvent(new Event('scroll'));
                 fixture.detectChanges();
@@ -2665,14 +2535,12 @@ describe('igxSelect', () => {
                 selectedItemIndex = 0;
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 select.items[selectedItemIndex].selected = true;
                 fixture.detectChanges();
                 select.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 document.documentElement.scrollTop += 20;
                 document.dispatchEvent(new Event('scroll'));
                 fixture.detectChanges();
@@ -2774,8 +2642,7 @@ describe('igxSelect', () => {
                 expect(select.collapsed).toBeTruthy();
                 hintContainer.click();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(select.collapsed).toBeTruthy();
         }));
 
