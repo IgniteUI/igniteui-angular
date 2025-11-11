@@ -441,9 +441,9 @@ export class IgxOverlayService implements OnDestroy {
             info.settings.target);
         if (openAnimation !== info.settings.positionStrategy.settings.openAnimation ||
             closeAnimation !== info.settings.positionStrategy.settings.closeAnimation){
-                this.addModalClasses(info);
+                this.buildAnimationPlayers(info);
             }
-        this.buildAnimationPlayers(info);
+        this.addModalClasses(info);
         if (info.settings.positionStrategy.settings.openAnimation) {
             // TODO: should we build players again. This was already done in attach!!!
             // this.buildAnimationPlayers(info);
