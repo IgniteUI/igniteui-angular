@@ -35,7 +35,7 @@
         'material': clamp(1px, rem(1px), rem(1px)),
         'fluent': clamp(1px, rem(1px), rem(1px)),
         'bootstrap': clamp(1px, rem(1px), rem(1px)),
-        'indigo': clamp(2px, rem(2px), rem(2px))
+        'indigo': clamp(1px, rem(1px), rem(1px))
     ), $variant);
 
     $separator-size: map.get((
@@ -99,17 +99,17 @@
         &:focus {
             outline: none;
 
-            %igx-stepper__step-title {
-                color: var-get($theme, 'title-focus-color');
-            }
-
-            %igx-stepper__step-subtitle {
-                color: var-get($theme, 'subtitle-focus-color');
-            }
-
             %igx-stepper__step-header {
                 background: var-get($theme, 'step-focus-background');
                 color: var-get($theme, 'title-focus-color');
+
+                %igx-stepper__step-title {
+                    color: var-get($theme, 'title-focus-color');
+                }
+
+                %igx-stepper__step-subtitle {
+                    color: var-get($theme, 'subtitle-focus-color');
+                }
 
                 @if $variant == 'bootstrap' {
                     box-shadow: inset 0 0 0 $outline-width var-get($theme, 'indicator-outline');
