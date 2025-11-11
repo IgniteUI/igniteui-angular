@@ -11,7 +11,6 @@ import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeComponent } from './tree.component';
 import { IgxTreeService } from './tree.service';
-import { PlatformUtil } from 'igniteui-angular/core';
 
 const TREE_ROOT_CLASS = 'igx-tree__root';
 const NODE_TAG = 'igx-tree-node';
