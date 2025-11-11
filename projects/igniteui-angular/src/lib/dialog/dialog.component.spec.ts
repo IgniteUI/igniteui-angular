@@ -154,8 +154,7 @@ describe('Dialog', () => {
 
         dialog.close();
         fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
+            tick();
         expect(dialog.isOpen).toEqual(false);
     }));
 
@@ -221,8 +220,7 @@ describe('Dialog', () => {
 
         dialog.close();
         fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
+            tick();
         expect(dialog.isOpen).toEqual(false);
     }));
 
@@ -232,27 +230,23 @@ describe('Dialog', () => {
         const dialog = fixture.componentInstance.dialog;
         dialog.open();
         fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
+            tick();
 
         const dialogElem = fixture.debugElement.query(By.css('.igx-dialog')).nativeElement;
         dialogElem.click();
         fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
+            tick();
 
         expect(dialog.isOpen).toEqual(false);
 
         dialog.closeOnOutsideSelect = false;
         dialog.open();
         fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
+            tick();
 
         dialogElem.click();
         fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
+            tick();
         expect(dialog.isOpen).toEqual(true);
     }));
 
@@ -277,8 +271,7 @@ describe('Dialog', () => {
 
         dialog.open();
         fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
+            tick();
 
         expect(dialog.opening.emit).toHaveBeenCalledWith(cancellableArgs);
         expect(dialog.isOpenChange.emit).toHaveBeenCalledWith(true);
@@ -286,8 +279,7 @@ describe('Dialog', () => {
 
         dialog.close();
         fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
+            tick();
 
         cancellableArgs = { dialog, event: undefined, cancel: false };
         expect(dialog.closing.emit).toHaveBeenCalledWith(cancellableArgs);
@@ -296,8 +288,7 @@ describe('Dialog', () => {
 
         dialog.open();
         fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
+            tick();
         const buttons = document.querySelectorAll('button');
         const leftButton = buttons[0];
         const rightButton = buttons[1];
@@ -345,8 +336,7 @@ describe('Dialog', () => {
 
         childDialog.open();
         fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
+            tick();
 
         const dialogs = fixture.debugElement.queryAll(By.css('.igx-dialog'));
         const maindDialogElem = dialogs[0].nativeElement;
@@ -354,16 +344,14 @@ describe('Dialog', () => {
 
         childDialogElem.click();
         fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
+            tick();
 
         expect(mainDialog.isOpen).toEqual(true);
         expect(childDialog.isOpen).toEqual(false);
 
         maindDialogElem.click();
         fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
+            tick();
 
         expect(mainDialog.isOpen).toEqual(false);
         expect(childDialog.isOpen).toEqual(false);
@@ -402,8 +390,7 @@ describe('Dialog', () => {
 
         dialog.open();
         fix.detectChanges();
-        tick();
-        fix.detectChanges();
+            tick();
 
         let overlaydiv = document.getElementsByClassName(OVERLAY_MAIN_CLASS)[0];
         let overlayWrapper = overlaydiv.children[0];
@@ -412,8 +399,7 @@ describe('Dialog', () => {
 
         dialog.close();
         fix.detectChanges();
-        tick();
-        fix.detectChanges();
+            tick();
 
         fix.componentInstance.isModal = true;
         fix.detectChanges();

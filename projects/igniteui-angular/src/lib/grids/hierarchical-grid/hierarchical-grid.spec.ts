@@ -1125,7 +1125,6 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             column.disabledSummaries = ['count'];
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
 
             expect(getterSpy).toHaveBeenCalledTimes(7);
             expect(summaryCell.textContent.trim()).toEqual('');
@@ -1466,7 +1465,6 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             fixture.componentInstance.islandCols2.push('Col2');
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
 
             child2Headers = child2Grid.queryAll(By.css('igx-grid-header'));
             expect(child2Headers.length).toEqual(4);
@@ -1517,7 +1515,6 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             fixture.componentInstance.islandCols2.push('Col2');
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
 
             UIInteractions.simulateClickAndSelectEvent(row1.expander);
             fixture.detectChanges();

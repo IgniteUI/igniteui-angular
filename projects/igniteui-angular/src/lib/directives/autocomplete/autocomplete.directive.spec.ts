@@ -67,13 +67,11 @@ describe('IgxAutocomplete', () => {
             autocomplete.open();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
 
             autocomplete.close();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
         }));
         it('Should open drop down on (Alt+)ArrowUp/ArrowDown', fakeAsync(() => {
@@ -184,13 +182,11 @@ describe('IgxAutocomplete', () => {
             input.nativeElement.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
 
             group.element.nativeElement.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
 
             // Click in center of the body.
@@ -772,7 +768,6 @@ describe('IgxAutocomplete', () => {
             autocomplete.close();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(input.nativeElement.attributes['aria-expanded'].value).toEqual('false');
         }));
         it('Should accept Japanese input', fakeAsync(() => {

@@ -672,7 +672,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
             fix.detectChanges();
             tick();
-            fix.detectChanges();
 
             // Click the add icon to display the adding buttons.
             QueryBuilderFunctions.clickQueryBuilderTreeExpressionChipIcon(fix, [9], 'add');
@@ -711,7 +710,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
             fix.detectChanges();
             tick();
-            fix.detectChanges();
 
             // Click the add icon to display the adding buttons.
             QueryBuilderFunctions.clickQueryBuilderTreeExpressionChipIcon(fix, [9], 'add');
@@ -752,7 +750,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
             fix.detectChanges();
             tick();
-            fix.detectChanges();
 
             // Click the chip to enter edit mode of the expression.
             QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [9]);
@@ -1327,7 +1324,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
             fix.detectChanges();
             tick();
-            fix.detectChanges();
 
             // Click the add icon to display the adding buttons and verify their content.
             QueryBuilderFunctions.clickQueryBuilderTreeExpressionChipIcon(fix, [0], 'add');

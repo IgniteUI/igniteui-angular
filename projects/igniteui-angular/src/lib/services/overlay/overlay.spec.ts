@@ -1311,7 +1311,6 @@ describe('igxOverlay', () => {
             document.body.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
 
             wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
@@ -1349,7 +1348,6 @@ describe('igxOverlay', () => {
 
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
 
             wrapperElement = shadowRoot.querySelector(`.${CLASS_OVERLAY_WRAPPER}`) as HTMLElement;
             expect(wrapperElement.style.visibility).toEqual('');
@@ -1357,7 +1355,6 @@ describe('igxOverlay', () => {
             document.body.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
 
             wrapperElement = shadowRoot.querySelector(`.${CLASS_OVERLAY_WRAPPER}`) as HTMLElement;
             expect(wrapperElement.style.visibility).toEqual('hidden');
@@ -2343,8 +2340,6 @@ describe('igxOverlay', () => {
             buttonElement.click();
             fixture.detectChanges();
             tick();
-
-            fixture.detectChanges();
             const contentElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
             expect(contentElement.children.length).toEqual(1);
@@ -2834,7 +2829,6 @@ describe('igxOverlay', () => {
             buttonElement.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
 
             const contentElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
@@ -3733,8 +3727,6 @@ describe('igxOverlay', () => {
             buttonElement.click();
             fixture.detectChanges();
             tick();
-
-            fixture.detectChanges();
             const contentElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
             const expectedStyle = 'width:100px; height:100px; background-color:red';
@@ -3787,8 +3779,6 @@ describe('igxOverlay', () => {
             buttonElement.click();
             fixture.detectChanges();
             tick();
-
-            fixture.detectChanges();
             const contentElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
             let overlayStyle = contentElement.getElementsByTagName('div')[0].getAttribute('style');
@@ -3840,8 +3830,6 @@ describe('igxOverlay', () => {
             buttonElement.click();
             fixture.detectChanges();
             tick();
-
-            fixture.detectChanges();
             const contentElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
             const expectedStyle = 'width:100px; height:100px; background-color:red';
@@ -3893,7 +3881,6 @@ describe('igxOverlay', () => {
             buttonElement.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
 
             fixture.detectChanges();
             const contentElement = (fixture.nativeElement as HTMLElement)
@@ -3948,7 +3935,6 @@ describe('igxOverlay', () => {
             buttonElement.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
 
             const contentElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
@@ -3996,7 +3982,6 @@ describe('igxOverlay', () => {
             buttonElement.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
 
             const contentElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
@@ -4043,7 +4028,6 @@ describe('igxOverlay', () => {
             buttonElement.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
 
             const contentElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;

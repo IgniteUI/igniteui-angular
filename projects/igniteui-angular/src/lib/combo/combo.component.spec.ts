@@ -1065,8 +1065,7 @@ describe('igxCombo', () => {
 
                 combo.open();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
 
                 const searchInput = fixture.debugElement.query(By.css(CSS_CLASS_SEARCHINPUT));
                 expect(searchInput.nativeElement.getAttribute('role')).toEqual('searchbox');
@@ -1079,8 +1078,7 @@ describe('igxCombo', () => {
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', list);
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(list.nativeElement.getAttribute('aria-activedescendant')).toEqual(combo.dropdown.focusedItem.id);
 
                 combo.select(['Illinois', 'Mississippi', 'Ohio']);
@@ -1091,13 +1089,11 @@ describe('igxCombo', () => {
                 expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
                 combo.open();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('true');
                 combo.close();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
             }));
             it('should render placeholder values for inputs properly', () => {
@@ -1131,8 +1127,7 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 combo.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 const dropdownItems = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
                 const dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
 
@@ -1248,16 +1243,14 @@ describe('igxCombo', () => {
             it('should focus search input', fakeAsync(() => {
                 combo.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(document.activeElement).toEqual(combo.searchInput.nativeElement);
             }));
             it('should not focus search input, when autoFocusSearch=false', fakeAsync(() => {
                 combo.autoFocusSearch = false;
                 combo.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(document.activeElement).not.toEqual(combo.searchInput.nativeElement);
             }));
             it('should properly initialize templates', () => {
@@ -1353,8 +1346,7 @@ describe('igxCombo', () => {
 
                 combo.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 const inputElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP_WRAPPER}`)).nativeElement;
                 const dropDownElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement;
                 containerElementWidth = containerElement.getBoundingClientRect().width;
@@ -1379,8 +1371,7 @@ describe('igxCombo', () => {
 
                 combo.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
 
                 let inputElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP_WRAPPER}`)).nativeElement;
                 let dropDownElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement;
@@ -1395,8 +1386,7 @@ describe('igxCombo', () => {
 
                 combo.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
 
                 comboWidth = '700px';
                 combo.width = comboWidth;
@@ -1404,8 +1394,7 @@ describe('igxCombo', () => {
 
                 combo.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
 
                 comboWrapper = fixture.debugElement.query(By.css(CSS_CLASS_COMBO)).nativeElement;
                 inputElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP_WRAPPER}`)).nativeElement;
@@ -1680,8 +1669,7 @@ describe('igxCombo', () => {
                     expect(combo.collapsed).toBeTruthy();
                     combo.toggle();
                     fixture.detectChanges();
-                    tick();
-                    fixture.detectChanges();
+            tick();
                     expect(document.activeElement).toEqual(combo.searchInput.nativeElement);
                     expect(combo.collapsed).toBeFalsy();
                     combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
@@ -1797,8 +1785,7 @@ describe('igxCombo', () => {
                 it('should properly handle dropdown.focusItem', fakeAsync(() => {
                     combo.toggle();
                     fixture.detectChanges();
-                    tick();
-                    fixture.detectChanges();
+            tick();
                     const virtualSpyUP = spyOn(dropdown, 'navigatePrev');
                     const virtualSpyDOWN = spyOn(dropdown, 'navigateNext');
                     spyOn(IgxComboDropDownComponent.prototype, 'navigateItem').and.callThrough();
@@ -1816,8 +1803,7 @@ describe('igxCombo', () => {
                 it('should handle keyboard events', fakeAsync(() => {
                     combo.toggle();
                     fixture.detectChanges();
-                    tick();
-                    fixture.detectChanges();
+            tick();
                     spyOn(combo, 'selectAllItems');
                     spyOn(combo, 'toggle');
                     spyOn(combo.dropdown, 'onFocus').and.callThrough();
@@ -1840,16 +1826,14 @@ describe('igxCombo', () => {
                     spyOn(combo, 'toggle').and.callThrough();
                     input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                     fixture.detectChanges();
-                    tick();
-                    fixture.detectChanges();
+            tick();
                     expect(combo.collapsed).toEqual(false);
                     expect(combo.toggle).toHaveBeenCalledTimes(1);
                     expect(document.activeElement).toEqual(combo.searchInput.nativeElement);
 
                     input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                     fixture.detectChanges();
-                    tick();
-                    fixture.detectChanges();
+            tick();
                     expect(combo.collapsed).toEqual(true);
                     expect(combo.toggle).toHaveBeenCalledTimes(2);
                 }));
@@ -1967,8 +1951,7 @@ describe('igxCombo', () => {
                     const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
                     UIInteractions.triggerEventHandlerKeyDown('Tab', dropdownContent);
                     fixture.detectChanges();
-                    tick();
-                    fixture.detectChanges();
+            tick();
                     expect(combo.collapsed).toBeTruthy();
                 }));
             });
@@ -2306,15 +2289,13 @@ describe('igxCombo', () => {
 
                 UIInteractions.triggerEventHandlerKeyDown('Enter', toggleBtn);
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(combo.toggle).toHaveBeenCalledTimes(1);
                 expect(combo.collapsed).toEqual(false);
 
                 UIInteractions.triggerEventHandlerKeyDown('Enter', toggleBtn);
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(combo.toggle).toHaveBeenCalledTimes(2);
                 expect(combo.collapsed).toEqual(true);
             }));
@@ -2474,8 +2455,7 @@ describe('igxCombo', () => {
 
                 dropdown.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
 
                 UIInteractions.simulateTyping('Mississippi ', input);
@@ -2485,16 +2465,13 @@ describe('igxCombo', () => {
 
                 combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 UIInteractions.triggerEventHandlerKeyDown('Space', dropdownContent);
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 combo.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 combo.onBlur();
                 tick();
                 fixture.detectChanges();
@@ -2626,8 +2603,7 @@ describe('igxCombo', () => {
             it('should group items correctly', fakeAsync(() => {
                 combo.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(combo.groupKey).toEqual('region');
                 expect(combo.dropdown.items[0].value.field === combo.data[0].field).toBeFalsy();
                 const listItems = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
@@ -2645,8 +2621,7 @@ describe('igxCombo', () => {
                 spyOn(combo.dropdown, 'selectItem').and.callThrough();
                 combo.toggle();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(combo.collapsed).toBeFalsy();
                 expect(combo.dropdown.headers).toBeDefined();
                 expect(combo.dropdown.headers.length).toEqual(2);
@@ -3001,8 +2976,7 @@ describe('igxCombo', () => {
 
                 UIInteractions.triggerEventHandlerKeyUp('Escape', searchInput);
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(combo.collapsed).toBeTruthy();
                 expect(searchInput.nativeElement.textContent).toEqual('');
             }));
@@ -3131,28 +3105,24 @@ describe('igxCombo', () => {
             it('should enable/disable filtering at runtime', fakeAsync(() => {
                 combo.open(); // Open combo - all data items are in filteredData
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(combo.dropdown.items.length).toBeGreaterThan(0);
 
                 const searchInput = fixture.debugElement.query(By.css(CSS_CLASS_SEARCHINPUT));
                 searchInput.nativeElement.value = 'Not-available item';
                 searchInput.triggerEventHandler('input', { target: searchInput.nativeElement });
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(combo.dropdown.items.length).toEqual(0); // No items are available because of filtering
 
                 combo.close(); // Filter is cleared on close
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 combo.disableFiltering = true; // Filtering is disabled
                 fixture.detectChanges();
                 combo.open(); // All items are visible since filtering is disabled
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(combo.dropdown.items.length).toBeGreaterThan(0); // All items are visible since filtering is disabled
 
                 combo.searchValue = 'Not-available item';
@@ -3162,14 +3132,12 @@ describe('igxCombo', () => {
 
                 combo.close(); // Filter is cleared on close
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 combo.disableFiltering = false; // Filtering is re-enabled
                 fixture.detectChanges();
                 combo.open(); // Filter is cleared on open
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(combo.dropdown.items.length).toBeGreaterThan(0);
             }));
             it(`should properly display "Add Item" button when filtering is off`, () => {
@@ -3220,8 +3188,7 @@ describe('igxCombo', () => {
             it('Should filter the data when custom filterFunction is provided', fakeAsync(() => {
                 combo.open();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(combo.dropdown.items.length).toBeGreaterThan(0);
 
                 combo.searchValue = 'new england';
@@ -3231,8 +3198,7 @@ describe('igxCombo', () => {
 
                 combo.close();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 combo.filteringOptions = { caseSensitive: false, filteringKey: combo.groupKey };
                 combo.filterFunction = (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions): any[] => {
                     if (!collection) return [];
@@ -3244,8 +3210,7 @@ describe('igxCombo', () => {
                 }
                 combo.open();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(combo.dropdown.items.length).toBeGreaterThan(0);
 
                 combo.searchValue = 'new england';
@@ -3261,8 +3226,7 @@ describe('igxCombo', () => {
             it('Should update filtering when custom filterFunction is provided and filteringOptions.caseSensitive is changed', fakeAsync(() => {
                 combo.open();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(combo.dropdown.items.length).toBeGreaterThan(0);
 
                 combo.searchValue = 'new england';
@@ -3272,8 +3236,7 @@ describe('igxCombo', () => {
 
                 combo.close();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 combo.filteringOptions = { caseSensitive: false, filteringKey: combo.groupKey };
                 combo.filterFunction = (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions): any[] => {
                     if (!collection) return [];
@@ -3285,8 +3248,7 @@ describe('igxCombo', () => {
                 }
                 combo.open();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(combo.dropdown.items.length).toBeGreaterThan(0);
 
                 combo.searchValue = 'new england';
@@ -3301,8 +3263,7 @@ describe('igxCombo', () => {
             it('Should update filtering when custom filteringOptions are provided', fakeAsync(() => {
                 combo.open();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(combo.dropdown.items.length).toBeGreaterThan(0);
 
                 combo.searchValue = 'new england';
@@ -3312,13 +3273,11 @@ describe('igxCombo', () => {
 
                 combo.close();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 combo.filteringOptions = { caseSensitive: false, filteringKey: combo.groupKey };
                 combo.open();
                 fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
+            tick();
                 expect(combo.dropdown.items.length).toBeGreaterThan(0);
 
                 combo.searchValue = 'new england';

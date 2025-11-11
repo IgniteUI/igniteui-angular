@@ -201,8 +201,7 @@ describe('IgxQueryBuilder', () => {
       const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
       (buttons[0] as HTMLElement).click();
       fix.detectChanges();
-      tick();
-      fix.detectChanges();
+            tick();
 
       // Newly added condition should be empty
       QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, false, false, false);
@@ -239,8 +238,7 @@ describe('IgxQueryBuilder', () => {
       const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
       (buttons[1] as HTMLElement).click();
       fix.detectChanges();
-      tick();
-      fix.detectChanges();
+            tick();
 
       // Newly added condition should be empty
       QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, false, false, false);
@@ -299,8 +297,7 @@ describe('IgxQueryBuilder', () => {
       const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
       (buttons[1] as HTMLElement).click();
       fix.detectChanges();
-      tick();
-      fix.detectChanges();
+            tick();
 
       // Newly added condition should be empty
       QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, false, false, false);
@@ -1666,8 +1663,7 @@ describe('IgxQueryBuilder', () => {
       //cancel edit
       closeBtn.click();
       fix.detectChanges();
-      tick();
-      fix.detectChanges();
+            tick();
 
       //Verify changes are reverted
       QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'OrderId', 'Greater Than', '3');
@@ -1747,8 +1743,7 @@ describe('IgxQueryBuilder', () => {
       const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
       (buttons[0] as HTMLElement).click();
       fix.detectChanges();
-      tick();
-      fix.detectChanges();
+            tick();
 
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3); // Select 'Delivered' column.
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1); // Select 'True' operator.
@@ -1779,8 +1774,7 @@ describe('IgxQueryBuilder', () => {
       const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
       (buttons[0] as HTMLElement).click();
       fix.detectChanges();
-      tick();
-      fix.detectChanges();
+            tick();
 
       // Click on the 'close' button
       const closeBtn = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
@@ -1806,8 +1800,7 @@ describe('IgxQueryBuilder', () => {
       const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
       (buttons[0] as HTMLElement).click();
       fix.detectChanges();
-      tick();
-      fix.detectChanges();
+            tick();
 
       // Add condition with 'in' operator to open inner query
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderName' column.
@@ -2411,8 +2404,7 @@ describe('IgxQueryBuilder', () => {
       // Open the combo
       (combo.querySelector('igx-input-group') as HTMLElement).click();
       fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
+            tick();
       // Select item
       const outlet = Array.from(document.querySelectorAll(`.igx-drop-down__list-scroll`))
         .filter(item => (item as HTMLElement).checkVisibility())[0] as HTMLElement;
@@ -2420,8 +2412,7 @@ describe('IgxQueryBuilder', () => {
       const comboItem = outlet.querySelectorAll(`.igx-drop-down__item`)[0] as HTMLElement;
       comboItem.click();
       fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
+            tick();
 
       // Commit the expression
       QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fixture);

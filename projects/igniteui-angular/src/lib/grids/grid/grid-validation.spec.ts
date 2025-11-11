@@ -222,14 +222,12 @@ describe('IgxGrid - Validation #grid', () => {
             cell.errorTooltip.first.close();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(cell.errorTooltip.first.collapsed).toBeTrue();
 
             const element = fixture.debugElement.query(By.directive(IgxTooltipTargetDirective)).nativeElement;
             element.dispatchEvent(new MouseEvent('mouseenter'));
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(cell.errorTooltip.first.collapsed).toBeFalse();
         }));
 
