@@ -1,1 +1,1 @@
-export * from './src/navbar/public_api';
+export * from './src/public_api';
