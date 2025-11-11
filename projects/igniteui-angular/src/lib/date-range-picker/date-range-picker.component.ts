@@ -872,7 +872,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public getEditElement(): HTMLInputElement {
-        return this.inputDirective.nativeElement;
+        return this.inputDirective!.nativeElement;
     }
 
     protected onStatusChanged = () => {
