@@ -9,7 +9,8 @@ $_theme: $bootstrap;
     %igx-tab-header--focus {
         border: none;
         box-shadow: inset 0 0 0 rem(2px) var-get($_theme, 'item-active-hover-color');
-        border-radius: var-get($_theme, 'border-radius') var-get($_theme, 'border-radius') rem(4px) rem(4px);
+        border-bottom-left-radius: rem(4px);
+        border-bottom-right-radius: rem(4px);
         z-index: 1;
 
         &::after {
