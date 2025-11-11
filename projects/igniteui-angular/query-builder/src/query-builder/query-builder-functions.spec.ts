@@ -3,7 +3,7 @@ import { ComponentFixture, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { IgxChipComponent } from 'igniteui-angular/chips';;
+import { IgxChipComponent } from 'igniteui-angular/chips';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { QueryBuilderSelectors } from './query-builder.common';
