@@ -4,6 +4,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 export * from './events';
 export * from './hierarchical-grid.component';
 export * from './row-island.component';
+export * from './hierarchical-grid.pipes';
 
 /* Imports that cannot be resolved from IGX_GRID_COMMON_DIRECTIVES spread
     NOTE: Do not remove! Issue: https://github.com/IgniteUI/igniteui-angular/issues/13310

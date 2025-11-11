@@ -55,7 +55,7 @@ let NEXT_ID = 0;
  */
 @Component({
     selector: 'igx-buttongroup',
-    templateUrl: 'buttongroup-content.component.html',
+    templateUrl: 'button-group-content.component.html',
     imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent]
 })
 export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {

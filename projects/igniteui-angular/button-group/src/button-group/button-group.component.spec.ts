@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, flushMicrotasks, waitForAsync } from '@angular/core/testing';
-import { ButtonGroupAlignment, IgxButtonGroupComponent } from './buttonGroup.component';
+import { ButtonGroupAlignment, IgxButtonGroupComponent } from './button-group.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 import { IgxRadioComponent } from '../../../radio/src/radio/radio.component';

@@ -14,7 +14,7 @@ import { IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular/sel
 import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective } from 'igniteui-angular/input-group';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxButtonDirective, IgxIconButtonDirective, IgxOverlayOutletDirective } from 'igniteui-angular/directives';
-import { IgxButtonGroupComponent } from 'igniteui-angular/buttonGroup';
+import { IgxButtonGroupComponent } from 'igniteui-angular/button-group';
 
 /**
  * @hidden

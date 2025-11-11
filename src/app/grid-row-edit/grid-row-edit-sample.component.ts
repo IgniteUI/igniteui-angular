@@ -6,6 +6,7 @@ import { GridSelectionMode, IgxCellEditorTemplateDirective, IgxCellTemplateDirec
 import { IgxSwitchComponent } from 'igniteui-angular/switch';
 import { IgxButtonDirective, IgxFocusDirective, IgxToggleDirective } from 'igniteui-angular/directives';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 
 @Component({
     selector: 'app-grid-row-edit',

@@ -65,10 +65,7 @@ export { IgxRowDirective } from './row.directive';
 export * from './grid.directives';
 export * from './grid-public-row';
 export * from './grid-public-cell';
-export {
-    IgxDragIndicatorIconDirective,
-    IgxRowDragGhostDirective
-} from './row-drag.directive';
+export * from './row-drag.directive';
 export {
     IgxRowEditTextDirective,
     IgxRowAddTextDirective,

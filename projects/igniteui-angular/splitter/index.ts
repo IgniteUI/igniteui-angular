@@ -1,1 +1,1 @@
-export * from './src/splitter/public_api';
+export * from './src/public_api';

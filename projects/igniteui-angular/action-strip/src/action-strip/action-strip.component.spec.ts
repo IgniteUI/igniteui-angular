@@ -4,7 +4,7 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
+import { wait } from '../../../test-utils/ui-interactions.spec';
 
 const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__actions';
 const DROP_DOWN_LIST = 'igx-drop-down__list';

@@ -1,6 +1,6 @@
 import { Component, HostBinding } from '@angular/core';
 import { BaseFilteringComponent } from './base-filtering.component';
-import { IgxButtonGroupComponent } from 'igniteui-angular/buttonGroup';
+import { IgxButtonGroupComponent } from 'igniteui-angular/button-group';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { ColumnPinningPosition, ColumnType } from 'igniteui-angular/core';

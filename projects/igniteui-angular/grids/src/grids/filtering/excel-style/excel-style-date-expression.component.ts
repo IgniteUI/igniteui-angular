@@ -9,7 +9,7 @@ import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from 'igniteui-angular/core';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 import { IgxButtonDirective, IgxDateTimeEditorDirective, IgxIconButtonDirective, IgxOverlayOutletDirective } from 'igniteui-angular/directives';
-import { IgxButtonGroupComponent } from 'igniteui-angular/buttonGroup';
+import { IgxButtonGroupComponent } from 'igniteui-angular/button-group';
 
 /**
  * @hidden

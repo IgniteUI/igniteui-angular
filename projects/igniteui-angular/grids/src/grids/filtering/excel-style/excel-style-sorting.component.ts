@@ -8,7 +8,7 @@ import {
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { BaseFilteringComponent } from './base-filtering.component';
-import { IgxButtonGroupComponent } from 'igniteui-angular/buttonGroup';
+import { IgxButtonGroupComponent } from 'igniteui-angular/button-group';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 

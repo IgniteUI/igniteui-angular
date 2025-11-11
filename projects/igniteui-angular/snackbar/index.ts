@@ -1,1 +1,1 @@
-export * from './src/snackbar/public_api';
+export * from './src/public_api';

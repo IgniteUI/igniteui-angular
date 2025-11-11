@@ -67,7 +67,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['TransactionType', 'core'],
     ['IgxTransactionService', 'core'],
     ['State', 'core'],
-    
+
     // Accordion
     ['IgxAccordionComponent', 'accordion'],
     ['IgxAccordionModule', 'accordion'],
@@ -78,7 +78,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxExpansionPanelIconDirective', 'accordion'],
     ['IAccordionEventArgs', 'accordion'],
     ['IAccordionCancelableEventArgs', 'accordion'],
-    
+
     // Action Strip
     ['IgxActionStripComponent', 'action-strip'],
     ['IgxActionStripModule', 'action-strip'],
@@ -86,27 +86,27 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxGridActionsBaseDirective', 'action-strip'],
     ['IgxGridEditingActionsComponent', 'action-strip'],
     ['IgxGridPinningActionsComponent', 'action-strip'],
-    
+
     // Avatar
     ['IgxAvatarComponent', 'avatar'],
     ['IgxAvatarModule', 'avatar'],
     ['AvatarType', 'avatar'],
     ['IgxAvatarSize', 'avatar'],
     ['IgxAvatarShape', 'avatar'],
-    
+
     // Badge
     ['IgxBadgeComponent', 'badge'],
     ['IgxBadgeModule', 'badge'],
     ['BadgeType', 'badge'],
     ['IgxBadgeVariant', 'badge'],
-    
+
     // Banner
     ['IgxBannerComponent', 'banner'],
     ['IgxBannerModule', 'banner'],
     ['IgxBannerActionsDirective', 'banner'],
     ['IBannerEventArgs', 'banner'],
     ['IBannerCancelEventArgs', 'banner'],
-    
+
     // Bottom Nav
     ['IgxBottomNavComponent', 'bottom-nav'],
     ['IgxBottomNavModule', 'bottom-nav'],
@@ -116,14 +116,14 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxBottomNavHeaderLabelDirective', 'bottom-nav'],
     ['IgxBottomNavHeaderIconDirective', 'bottom-nav'],
     ['IGX_BOTTOM_NAV_DIRECTIVES', 'bottom-nav'],
-    
+
     // Button Group
-    ['IgxButtonGroupComponent', 'buttonGroup'],
-    ['IgxButtonGroupModule', 'buttonGroup'],
-    ['IgxButtonDirective', 'buttonGroup'],
-    ['IgxIconButtonDirective', 'buttonGroup'],
-    ['IButtonGroupEventArgs', 'buttonGroup'],
-    
+    ['IgxButtonGroupComponent', 'button-group'],
+    ['IgxButtonGroupModule', 'button-group'],
+    ['IgxButtonDirective', 'button-group'],
+    ['IgxIconButtonDirective', 'button-group'],
+    ['IButtonGroupEventArgs', 'button-group'],
+
     // Calendar
     ['IgxCalendarComponent', 'calendar'],
     ['IgxCalendarModule', 'calendar'],
@@ -135,7 +135,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['ICalendarDate', 'calendar'],
     ['ICalendarViewChangingEventArgs', 'calendar'],
     ['WeekDays', 'calendar'],
-    
+
     // Card
     ['IgxCardComponent', 'card'],
     ['IgxCardModule', 'card'],
@@ -147,7 +147,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxCardHeaderSubtitleDirective', 'card'],
     ['IgxCardThumbnailDirective', 'card'],
     ['IgxCardType', 'card'],
-    
+
     // Carousel
     ['IgxCarouselComponent', 'carousel'],
     ['IgxCarouselModule', 'carousel'],
@@ -157,13 +157,13 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['ISlideCarouselBaseEventArgs', 'carousel'],
     ['CarouselAnimationType', 'carousel'],
     ['CarouselIndicatorsOrientation', 'carousel'],
-    
+
     // Checkbox
     ['IgxCheckboxComponent', 'checkbox'],
     ['IgxCheckboxModule', 'checkbox'],
     ['IChangeCheckboxEventArgs', 'checkbox'],
     ['LabelPosition', 'checkbox'],
-    
+
     // Chips
     ['IgxChipsComponent', 'chips'],
     ['IgxChipsModule', 'chips'],
@@ -174,7 +174,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IChipKeyDownEventArgs', 'chips'],
     ['IChipEnterDragAreaEventArgs', 'chips'],
     ['IChipSelectEventArgs', 'chips'],
-    
+
     // Combo
     ['IgxComboComponent', 'combo'],
     ['IgxComboModule', 'combo'],
@@ -182,7 +182,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IComboItemAdditionEvent', 'combo'],
     ['IComboSearchInputEventArgs', 'combo'],
     ['IgxComboState', 'combo'],
-    
+
     // Date Picker
     ['IgxDatePickerComponent', 'date-picker'],
     ['IgxDatePickerModule', 'date-picker'],
@@ -190,14 +190,14 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IDatePickerCancelEventArgs', 'date-picker'],
     ['IDatePickerDisabledDateEventArgs', 'date-picker'],
     ['IDatePickerValidationFailedEventArgs', 'date-picker'],
-    
+
     // Date Range Picker
     ['IgxDateRangePickerComponent', 'date-range-picker'],
     ['IgxDateRangePickerModule', 'date-range-picker'],
     ['DateRangeType', 'date-range-picker'],
     ['DateRangeDescriptor', 'date-range-picker'],
     ['IDateRangePickerCancelEventArgs', 'date-range-picker'],
-    
+
     // Dialog
     ['IgxDialogComponent', 'dialog'],
     ['IgxDialogModule', 'dialog'],
@@ -205,7 +205,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxDialogTitleDirective', 'dialog'],
     ['IDialogEventArgs', 'dialog'],
     ['IDialogCancelEventArgs', 'dialog'],
-    
+
     // Drop Down
     ['IgxDropDownComponent', 'drop-down'],
     ['IgxDropDownModule', 'drop-down'],
@@ -215,7 +215,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxAutocompleteDirective', 'drop-down'], // Breaking change - moved from directives
     ['ISelectionEventArgs', 'drop-down'],
     ['IDropDownNavigationDirective', 'drop-down'],
-    
+
     // Expansion Panel
     ['IgxExpansionPanelComponent', 'expansion-panel'],
     ['IgxExpansionPanelModule', 'expansion-panel'],
@@ -223,7 +223,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IExpansionPanelEventArgs', 'expansion-panel'],
     ['IExpansionPanelCancelableEventArgs', 'expansion-panel'],
     ['ToggleAnimationSettings', 'expansion-panel'],
-    
+
     // Grids - Components, Services, Types
     ['IgxGridComponent', 'grids'],
     ['IgxTreeGridComponent', 'grids'],
@@ -278,13 +278,13 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['SortingIndexFilteringStrategy', 'grids'],
     ['IgxGridEditingActions', 'grids'], // Grid actions moved to grids
     ['IgxGridPinningActions', 'grids'], // Grid actions moved to grids
-    
+
     // Icon
     ['IgxIconComponent', 'icon'],
     ['IgxIconModule', 'icon'],
     ['IgxIconService', 'icon'],
     ['IconMeta', 'icon'],
-    
+
     // Input Group
     ['IgxInputGroupComponent', 'input-group'],
     ['IgxInputGroupModule', 'input-group'],
@@ -295,7 +295,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxSuffixDirective', 'input-group'], // Breaking change - moved from directives
     ['IgxInputState', 'input-group'],
     ['IgxInputGroupType', 'input-group'],
-    
+
     // List
     ['IgxListComponent', 'list'],
     ['IgxListModule', 'list'],
@@ -303,26 +303,26 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxListHeaderComponent', 'list'],
     ['IListItemClickEventArgs', 'list'],
     ['IgxListPanState', 'list'],
-    
+
     // Navbar
     ['IgxNavbarComponent', 'navbar'],
     ['IgxNavbarModule', 'navbar'],
     ['IgxNavbarActionDirective', 'navbar'],
     ['IgxNavbarTitleDirective', 'navbar'],
-    
+
     // Navigation Drawer
     ['IgxNavigationDrawerComponent', 'navigation-drawer'],
     ['IgxNavigationDrawerModule', 'navigation-drawer'],
     ['IgxNavigationDrawerItemComponent', 'navigation-drawer'],
     ['INavigationDrawerEventArgs', 'navigation-drawer'],
     ['IgxNavDrawerMode', 'navigation-drawer'],
-    
+
     // Paginator
     ['IgxPaginatorComponent', 'paginator'],
     ['IgxPaginatorModule', 'paginator'],
     ['IPageEventArgs', 'paginator'],
     ['IPageCancelableEventArgs', 'paginator'],
-    
+
     // Progressbar
     ['IgxCircularProgressBarComponent', 'progressbar'],
     ['IgxLinearProgressBarComponent', 'progressbar'],
@@ -330,18 +330,18 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxProgressType', 'progressbar'],
     ['IgxTextAlign', 'progressbar'],
     ['IgxProgressBarGradientMode', 'progressbar'],
-    
+
     // Query Builder
     ['IgxQueryBuilderComponent', 'query-builder'],
     ['IgxQueryBuilderModule', 'query-builder'],
     ['IExpressionGroup', 'query-builder'],
-    
+
     // Radio
     ['IgxRadioComponent', 'radio'],
     ['IgxRadioModule', 'radio'],
     ['IgxRadioGroupDirective', 'radio'], // Breaking change - moved from directives
     ['IChangeRadioEventArgs', 'radio'], // Renamed from IChangeCheckboxEventArgs
-    
+
     // Select
     ['IgxSelectComponent', 'select'],
     ['IgxSelectModule', 'select'],
@@ -350,11 +350,11 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxSelectFooterDirective', 'select'],
     ['IgxSelectToggleIconDirective', 'select'],
     ['ISelectionChangedEventArgs', 'select'],
-    
+
     // Simple Combo
     ['IgxSimpleComboComponent', 'simple-combo'],
     ['IgxSimpleComboModule', 'simple-combo'],
-    
+
     // Slider
     ['IgxSliderComponent', 'slider'],
     ['IgxSliderModule', 'slider'],
@@ -362,18 +362,18 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IRangeSliderValue', 'slider'],
     ['SliderType', 'slider'],
     ['IgxSliderType', 'slider'],
-    
+
     // Snackbar
     ['IgxSnackbarComponent', 'snackbar'],
     ['IgxSnackbarModule', 'snackbar'],
-    
+
     // Splitter
     ['IgxSplitterComponent', 'splitter'],
     ['IgxSplitterModule', 'splitter'],
     ['IgxSplitterPaneComponent', 'splitter'],
     ['ISplitterEventArgs', 'splitter'],
     ['SplitterType', 'splitter'],
-    
+
     // Stepper
     ['IgxStepperComponent', 'stepper'],
     ['IgxStepperModule', 'stepper'],
@@ -382,11 +382,11 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IStepChangedEventArgs', 'stepper'],
     ['IgxStepperOrientation', 'stepper'],
     ['IgxStepType', 'stepper'],
-    
+
     // Switch
     ['IgxSwitchComponent', 'switch'],
     ['IgxSwitchModule', 'switch'],
-    
+
     // Tabs
     ['IgxTabsComponent', 'tabs'],
     ['IgxTabsModule', 'tabs'],
@@ -396,7 +396,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxTabsGroupComponent', 'tabs'],
     ['ITabsSelectedItemChangeEventArgs', 'tabs'],
     ['IgxTabsType', 'tabs'],
-    
+
     // Time Picker
     ['IgxTimePickerComponent', 'time-picker'],
     ['IgxTimePickerModule', 'time-picker'],
@@ -405,12 +405,12 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxMinuteItemDirective', 'time-picker'],
     ['IgxAmPmItemDirective', 'time-picker'],
     ['IgxItemListDirective', 'time-picker'],
-    
+
     // Toast
     ['IgxToastComponent', 'toast'],
     ['IgxToastModule', 'toast'],
     ['IgxToastPosition', 'toast'],
-    
+
     // Tree
     ['IgxTreeComponent', 'tree'],
     ['IgxTreeModule', 'tree'],
@@ -418,7 +418,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['ITreeNodeSelectionEvent', 'tree'],
     ['ITreeNodeTogglingEventArgs', 'tree'],
     ['IgxTreeSelectionType', 'tree'],
-    
+
     // Directives (re-exports from other entry points)
     ['IgxForOfDirective', 'directives'],
     ['IgxTemplateOutletDirective', 'directives'],
@@ -591,9 +591,9 @@ interface MigrationOptions {
 
 export default (options: MigrationOptions = {}): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
-    
+
     const shouldMigrateImports = options.migrateImports !== false; // Default to true if not specified
-    
+
     if (shouldMigrateImports) {
         context.logger.info('Migrating imports to new entry points...');
 

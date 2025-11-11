@@ -3,6 +3,7 @@ import { IGX_INPUT_GROUP_DIRECTIVES } from './public_api';
 
 /**
  * @hidden
+ * @deprecated
  * IMPORTANT: The following is NgModule exported for backwards-compatibility before standalone components
  */
 @NgModule({
