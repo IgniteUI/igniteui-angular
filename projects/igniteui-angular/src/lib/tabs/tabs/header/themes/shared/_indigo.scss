@@ -29,13 +29,6 @@ $_theme: $indigo;
             border-bottom: rem(1px) solid var-get($_theme, 'border-color');
         }
 
-        @include m(selected) {
-            &:hover,
-            &:focus-visible {
-                background: var-get($_theme, 'item-hover-background');
-            }
-        }
-
         @include e(inner) {
             > [igxtabheaderlabel] {
                 @include type-style(subtitle-2) {
