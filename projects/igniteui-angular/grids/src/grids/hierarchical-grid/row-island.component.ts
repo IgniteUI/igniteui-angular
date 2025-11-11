@@ -33,7 +33,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { IgxFlatTransactionFactory, IgxOverlayService, PlatformUtil } from 'igniteui-angular/core';
+import { IgxActionStripToken, IgxFlatTransactionFactory, IgxOverlayService, PlatformUtil } from 'igniteui-angular/core';
 import { first, filter, takeUntil, pluck } from 'rxjs/operators';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ISearchInfo } from '../common/events';
@@ -44,7 +44,6 @@ import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolb
 import { IGridCreatedEventArgs } from './events';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
 import { IgxPaginatorComponent, IgxPaginatorDirective } from 'igniteui-angular/paginator';
-import { IgxActionStripToken } from 'igniteui-angular/action-strip';
 import { IForOfState, IgxTextHighlightService } from 'igniteui-angular/directives';
 
 /* blazorCopyInheritedMembers */

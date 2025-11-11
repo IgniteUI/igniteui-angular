@@ -82,10 +82,6 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Action Strip
     ['IgxActionStripComponent', 'action-strip'],
     ['IgxActionStripModule', 'action-strip'],
-    ['IgxGridActionButtonComponent', 'action-strip'],
-    ['IgxGridActionsBaseDirective', 'action-strip'],
-    ['IgxGridEditingActionsComponent', 'action-strip'],
-    ['IgxGridPinningActionsComponent', 'action-strip'],
 
     // Avatar
     ['IgxAvatarComponent', 'avatar'],
@@ -278,6 +274,10 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['SortingIndexFilteringStrategy', 'grids'],
     ['IgxGridEditingActions', 'grids'], // Grid actions moved to grids
     ['IgxGridPinningActions', 'grids'], // Grid actions moved to grids
+    ['IgxGridActionButtonComponent', 'grids'], // Grid actions moved to grids
+    ['IgxGridActionsBaseDirective', 'grids'], // Grid actions moved to grids
+    ['IgxGridEditingActionsComponent', 'grids'], // Grid actions moved to grids
+    ['IgxGridPinningActionsComponent', 'grids'], // Grid actions moved to grids
 
     // Icon
     ['IgxIconComponent', 'icon'],

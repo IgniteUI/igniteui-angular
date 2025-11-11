@@ -1,9 +1,10 @@
-import { OverlaySettings } from 'igniteui-angular/core';
-import { QueryList } from '@angular/core';
+import { ChangeDetectorRef, QueryList } from '@angular/core';
+import { OverlaySettings } from '../services/overlay/utilities';
 
 /* csSuppress */
 /** @hidden @internal */
 export abstract class IgxActionStripToken {
+    public abstract cdr: ChangeDetectorRef
     public abstract context: any;
     public abstract menuOverlaySettings: OverlaySettings;
     public abstract get hideOnRowLeave(): boolean;

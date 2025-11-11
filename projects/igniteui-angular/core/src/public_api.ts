@@ -9,6 +9,9 @@ export * from './core/edit-provider';
 export * from './core/touch';
 export * from './core/touch-annotations';
 
+// Grid actions tokens
+export * from './grid-column-actions/token';
+
 // Date common
 export * from './date-common/public_api';
 

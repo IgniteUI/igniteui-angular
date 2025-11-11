@@ -88,7 +88,8 @@ import {
     EntityType,
     ISortingOptions,
     ISummaryExpression,
-    GridSummaryCalculationMode
+    GridSummaryCalculationMode,
+    IgxActionStripToken
 } from 'igniteui-angular/core';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
@@ -214,7 +215,6 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getUUID } from './common/random';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
-import { IgxActionStripToken } from 'igniteui-angular/action-strip';
 
 interface IMatchInfoCache {
     row: any;

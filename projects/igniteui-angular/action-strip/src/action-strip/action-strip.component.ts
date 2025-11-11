@@ -12,17 +12,17 @@ import {
     ChangeDetectorRef,
     AfterViewInit,
     ElementRef,
-    booleanAttribute
+    booleanAttribute,
+    AfterContentInit
 } from '@angular/core';
 
 
-import { ActionStripResourceStringsEN, CloseScrollStrategy, getCurrentResourceStrings, IActionStripResourceStrings, OverlaySettings } from 'igniteui-angular/core';
+import { ActionStripResourceStringsEN, CloseScrollStrategy, getCurrentResourceStrings, IActionStripResourceStrings, IgxActionStripActionsToken, IgxActionStripToken, OverlaySettings } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxToggleActionDirective } from 'igniteui-angular/directives';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { NgTemplateOutlet } from '@angular/common';
 import { IgxIconButtonDirective } from 'igniteui-angular/directives';
-import { IgxActionStripToken, IgxActionStripActionsToken } from './token';
 import { trackByIdentity } from 'igniteui-angular/core';
 import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective } from 'igniteui-angular/drop-down';
 
@@ -81,7 +81,7 @@ export class IgxActionStripMenuItemDirective {
     ],
     providers: [{ provide: IgxActionStripToken, useExisting: IgxActionStripComponent }]
 })
-export class IgxActionStripComponent implements IgxActionStripToken, AfterViewInit {
+export class IgxActionStripComponent implements IgxActionStripToken, AfterViewInit, AfterContentInit {
 
     /* blazorSuppress */
     /**
@@ -227,6 +227,21 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
      */
     @HostBinding('class.igx-action-strip')
     protected hostClass = 'igx-action-strip';
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public ngAfterContentInit() {
+        this.actionButtons.forEach(button => {
+            button.strip = this;
+        });
+        this.actionButtons.changes.subscribe(() => {
+            this.actionButtons.forEach(button => {
+                button.strip = this;
+            });
+        });
+    }
 
     /**
      * @hidden

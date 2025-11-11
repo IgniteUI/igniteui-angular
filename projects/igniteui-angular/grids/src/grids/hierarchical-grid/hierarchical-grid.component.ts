@@ -59,8 +59,7 @@ import { IgxButtonDirective, IgxForOfScrollSyncService, IgxForOfSyncService, Igx
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { EntityType, FieldType, IFilteringExpressionsTree, flatten } from 'igniteui-angular/core';
-import { IgxActionStripToken } from 'igniteui-angular/action-strip';
+import { EntityType, FieldType, IFilteringExpressionsTree, IgxActionStripToken, flatten } from 'igniteui-angular/core';
 import { IgxPaginatorToken } from 'igniteui-angular/paginator';
 
 let NEXT_ID = 0;

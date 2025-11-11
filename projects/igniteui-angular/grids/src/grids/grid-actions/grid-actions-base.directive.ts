@@ -2,7 +2,7 @@ import { IgxGridActionButtonComponent } from './grid-action-button.component';
 import { Directive, Input, AfterViewInit, QueryList, ViewChildren, IterableDiffers, booleanAttribute } from '@angular/core';
 import { IgxIconService } from 'igniteui-angular/icon';
 import { IgxRowDirective } from '../row.directive';
-import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
+import { IgxActionStripToken } from 'igniteui-angular/core';
 
 /* blazorElement */
 /* contentParent: ActionStrip */
@@ -31,7 +31,7 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
     public asMenuItems = false;
 
     /** @hidden @internal **/
-    public strip: IgxActionStripComponent;
+    public strip: IgxActionStripToken;
 
     /**
      * @hidden

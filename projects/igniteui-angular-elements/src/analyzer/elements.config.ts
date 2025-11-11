@@ -1,7 +1,8 @@
 import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridActionsBaseDirective, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarTitleComponent, IgxHierarchicalGridComponent, IgxPivotDataSelectorComponent, IgxPivotGridComponent, IgxRowIslandComponent, IgxToolbarToken, IgxTreeGridComponent } from 'igniteui-angular/grids';
 import { IgxGridStateComponent } from "../lib/state.component";
-import { IgxActionStripComponent, IgxActionStripToken } from 'igniteui-angular/action-strip';
+import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import { IgxPaginatorComponent, IgxPaginatorToken } from 'igniteui-angular/paginator';
+import { IgxActionStripToken } from 'igniteui-angular/core';
 
 export const registerComponents = [
   IgxGridComponent,

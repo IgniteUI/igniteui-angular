@@ -208,6 +208,8 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     public cssClass = 'igx-radio-group';
 
     /**
+     * @hidden
+     * @internal
      * Sets vertical alignment to the radio group, if `alignment` is set to `vertical`.
      * By default the alignment is horizontal.
      *

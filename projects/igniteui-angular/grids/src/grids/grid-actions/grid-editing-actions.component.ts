@@ -2,7 +2,7 @@ import { Component, HostBinding, Input, booleanAttribute } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 import { addRow, addChild } from '@igniteui/material-icons-extended';
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
-import { showMessage } from 'igniteui-angular/core';
+import { IgxActionStripActionsToken, showMessage } from 'igniteui-angular/core';
 
 
 /* blazorElement */
@@ -17,10 +17,9 @@ import { showMessage } from 'igniteui-angular/core';
 @Component({
     selector: 'igx-grid-editing-actions',
     templateUrl: 'grid-editing-actions.component.html',
-    providers: [{ provide: IgxGridActionsBaseDirective, useExisting: IgxGridEditingActionsComponent }],
+    providers: [{ provide: IgxActionStripActionsToken, useExisting: IgxGridEditingActionsComponent }],
     imports: [IgxGridActionButtonComponent]
 })
-
 export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective {
 
     /**
