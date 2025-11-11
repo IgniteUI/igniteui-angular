@@ -1,1 +1,1 @@
-export * from './src/input-group/public_api';
+export * from './src/public_api';

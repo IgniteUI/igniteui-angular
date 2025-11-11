@@ -4,6 +4,7 @@ import { IgxRadioComponent } from '../radio.component';
 
 /**
  * @hidden
+ * @deprecated
  * IMPORTANT: The following is NgModule exported for backwards-compatibility before standalone components
  */
 @NgModule({

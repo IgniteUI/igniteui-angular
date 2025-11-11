@@ -1,1 +1,1 @@
-export * from './src/button-group/public_api';
+export * from './src/public_api';
