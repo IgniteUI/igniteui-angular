@@ -61,7 +61,7 @@ describe('Localization', () => {
             expect(i18nFormatter.formatDate('2025-01-25T14:15:00', 'fullTime', 'en-US')).toContain('2:15:00 PM GMT');
         });
 
-        fit('should format string to custom format', () => {
+        it('should format string to custom format', () => {
             expect(i18nFormatter.formatDate('2025-01-25T14:15:00', 'ex: hh:mm GGG', 'en-US')).toEqual('ex: 02:15 AD');
             expect(i18nFormatter.formatDate('2025-01-25T14:15:00', 'ex: HH:mm GGG', 'en-US')).toEqual('ex: 14:15 AD');
         });
