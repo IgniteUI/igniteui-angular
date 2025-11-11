@@ -1,7 +1,7 @@
-import { Calendar } from '../calendar/src/calendar/calendar';
-import { cloneValue } from '../core/src/core/utils';
+import { Calendar } from 'igniteui-angular/calendar';
 import { ValueData } from '../core/src/services/excel/test-data.service.spec';
 import { ymd } from './helper-utils.spec';
+import { cloneValue } from 'igniteui-angular/core';
 
 export class SampleTestData {
 

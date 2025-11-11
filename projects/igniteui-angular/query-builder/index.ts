@@ -1,1 +1,1 @@
-export * from './src/query-builder/public_api';
+export * from './src/public_api';

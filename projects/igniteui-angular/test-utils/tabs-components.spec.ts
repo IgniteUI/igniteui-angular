@@ -1,12 +1,11 @@
 import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { IgxButtonDirective } from '../directives/src/directives/button/button.directive';
-import { IgxToggleActionDirective } from '../directives/src/directives/toggle/toggle.directive';
-import { IgxDropDownComponent } from '../drop-down/src/drop-down/drop-down.component';
-import { IgxIconComponent } from '../icon/src/icon/icon.component';
-import { IgxPrefixDirective, IgxSuffixDirective } from '../input-group/src/public_api';
-import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxTabItemComponent, IgxTabsComponent } from '../tabs/src/tabs/tabs/public_api';
 import { SampleTestData } from './sample-test-data.spec';
+import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular/tabs';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxDropDownComponent } from 'igniteui-angular/drop-down';
+import { IgxButtonDirective, IgxToggleActionDirective } from 'igniteui-angular/directives';
+import { IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 
 @Component({
     template: `

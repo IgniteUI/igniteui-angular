@@ -1,6 +1,6 @@
 import { first } from 'rxjs/operators';
-import { HorizontalAlignment, VerticalAlignment, Point } from '../core/src/services/public_api';
 import { DebugElement } from '@angular/core';
+import { HorizontalAlignment, Point, VerticalAlignment } from 'igniteui-angular/core';
 
 export const wait = (ms = 0) => new Promise(resolve => setTimeout(resolve, ms));
 

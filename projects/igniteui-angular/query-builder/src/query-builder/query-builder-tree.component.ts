@@ -18,7 +18,7 @@ import {
     QueryBuilderResourceStringsEN,
     PlatformUtil,
     trackByIdentity,
-    GridColumnDataType as DataType,
+    GridColumnDataType,
     DataUtil,
     IgxBooleanFilteringOperand,
     IgxDateFilteringOperand,
@@ -1547,8 +1547,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
 
         if (!pipeArgs.format) {
-            pipeArgs.format = field.dataType === DataType.Time ?
-                DEFAULT_PIPE_TIME_FORMAT : field.dataType === DataType.DateTime ?
+            pipeArgs.format = field.dataType === GridColumnDataType.Time ?
+                DEFAULT_PIPE_TIME_FORMAT : field.dataType === GridColumnDataType.DateTime ?
                     DEFAULT_PIPE_DATE_TIME_FORMAT : DEFAULT_PIPE_DATE_FORMAT;
         }
 
@@ -1564,19 +1564,19 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private getFilters(field: FieldType) {
         if (!field.filters) {
             switch (field.dataType) {
-                case DataType.Boolean:
+                case GridColumnDataType.Boolean:
                     return IgxBooleanFilteringOperand.instance();
-                case DataType.Number:
-                case DataType.Currency:
-                case DataType.Percent:
+                case GridColumnDataType.Number:
+                case GridColumnDataType.Currency:
+                case GridColumnDataType.Percent:
                     return IgxNumberFilteringOperand.instance();
-                case DataType.Date:
+                case GridColumnDataType.Date:
                     return IgxDateFilteringOperand.instance();
-                case DataType.Time:
+                case GridColumnDataType.Time:
                     return IgxTimeFilteringOperand.instance();
-                case DataType.DateTime:
+                case GridColumnDataType.DateTime:
                     return IgxDateTimeFilteringOperand.instance();
-                case DataType.String:
+                case GridColumnDataType.String:
                 default:
                     return IgxStringFilteringOperand.instance();
             }
