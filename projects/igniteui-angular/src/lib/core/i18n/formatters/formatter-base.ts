@@ -65,7 +65,7 @@ export class BaseFormatter {
      * Format provided date to reflect locales format. Similar to Angular's formatDate.
      */
     public formatDate(value: Date | string | number | null | undefined, format: string, locale: string, timezone?: string): string {
-        return ngFormatDate(value, format, locale, timezone);
+        return value ? ngFormatDate(value, format, locale, timezone) : '';
     }
 
     /** Format number value based on locale */
@@ -73,7 +73,7 @@ export class BaseFormatter {
         if (typeof value === "string") {
             value = parseFloat(value);
         }
-        return ngFormatNumber(value, locale, digitsInfo);
+        return value ? ngFormatNumber(value, locale, digitsInfo) : '';
     }
 
     /** Format number value as percent based on locale */
@@ -81,7 +81,7 @@ export class BaseFormatter {
         if (typeof value === "string") {
             value = parseFloat(value);
         }
-        return ngFormatPercent(value, locale, digitsInfo);
+        return value ? ngFormatPercent(value, locale, digitsInfo) : '';
     }
 
     /** Format number as a currency based on locale */
@@ -90,7 +90,7 @@ export class BaseFormatter {
             value = parseFloat(value);
         }
 
-        return this._currencyPipe.transform(value, currencyCode, display, digitsInfo, locale ?? getCurrentI18n());
+        return value ? this._currencyPipe.transform(value, currencyCode, display, digitsInfo, locale ?? getCurrentI18n()) : '';
     }
 
     /**
