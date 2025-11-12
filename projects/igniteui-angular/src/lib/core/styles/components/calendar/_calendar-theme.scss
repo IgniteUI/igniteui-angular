@@ -663,10 +663,7 @@
         %calendar-view__item-inner {
             color: var-get($theme, 'ym-selected-foreground');
             background: var-get($theme, 'ym-selected-background');
-
-            @if not $bootstrap-theme and $variant != 'fluent' {
-                box-shadow: inset 0 0 0 $border-size var-get($theme, 'ym-selected-outline-color');
-            }
+            box-shadow: inset 0 0 0 $border-size var-get($theme, 'ym-selected-outline-color');
 
             &:hover {
                 color: var-get($theme, 'ym-selected-hover-foreground');
@@ -773,6 +770,7 @@
             width: $date-size;
             color: var-get($theme, 'week-number-foreground');
             background: var-get($theme, 'week-number-background');
+            border-color: transparent;
 
             &::before {
                 content: '';
@@ -938,6 +936,26 @@
                 &::after {
                     border-color: var-get($theme, 'date-special-range-border-color');
                 }
+            }
+        }
+    }
+
+    %date-selected-special-range-not-current {
+        %date-inner {
+            @if $variant == 'bootstrap' {
+                border-color: transparent;
+
+                &:hover {
+                    border-color: transparent
+                }
+            }
+        }
+    }
+
+    %date-selected-special-active-range-not-current {
+        %date-inner {
+            @if $variant == 'bootstrap' {
+                border-color: transparent
             }
         }
     }
@@ -1395,6 +1413,13 @@
             }
 
             @if $variant == 'indigo' {
+                &::after {
+                    width: calc($date-inner-size - #{rem(4px)});
+                    height: calc($date-inner-size - #{rem(4px)});
+                }
+            }
+
+            @if $variant == 'indigo' or $variant == 'bootstrap' {
                 background: var-get($theme, 'date-current-background');
                 border-color: var-get($theme, 'date-current-border-color');
 
@@ -1402,10 +1427,13 @@
                     background: var-get($theme, 'date-current-hover-background');
                     border-color: var-get($theme, 'date-current-hover-border-color');
                 }
+            }
 
-                &::after {
-                    width: calc($date-inner-size - #{rem(4px)});
-                    height: calc($date-inner-size - #{rem(4px)});
+            @if $variant == 'bootstrap' {
+                color: var-get($theme, 'date-current-foreground');
+
+                &:hover {
+                    color: var-get($theme, 'date-current-hover-foreground');
                 }
             }
 
@@ -1422,17 +1450,25 @@
         }
     }
 
-    @if $variant == 'indigo' {
-        %date-special-current-active {
-            %date-inner {
+    %date-special-current-active {
+        %date-inner {
+            @if $variant == 'indigo' {
                 color: var-get($theme, 'date-special-focus-foreground');
                 background: var-get($theme, 'date-current-focus-background');
                 border-color: var-get($theme, 'date-current-focus-border-color');
             }
-        }
 
-        %date-special-current-selected {
-            %date-inner {
+            @if $variant == 'bootstrap' {
+                color: var-get($theme, 'date-current-focus-foreground');
+                background: var-get($theme, 'date-current-focus-background');
+                border-color: var-get($theme, 'date-current-focus-border-color');
+            }
+        }
+    }
+
+    %date-special-current-selected {
+        %date-inner {
+            @if $variant == 'indigo' {
                 &::after {
                     width: calc($date-inner-size - #{rem(4px)});
                     height: calc($date-inner-size - #{rem(4px)});
@@ -2502,7 +2538,7 @@
         }
 
         %date-inner {
-            @if $variant == 'fluent' {
+            @if $variant == 'fluent' or $variant == 'bootstrap' {
                 border-color: transparent;
             }
 
@@ -2514,7 +2550,8 @@
                 }
 
                 @if $bootstrap-theme {
-                    color: var-get($theme, 'date-selected-foreground');
+                    color: var-get($theme, 'date-selected-range-foreground');
+                    border-color: transparent;
                 }
             }
         }
@@ -2674,9 +2711,10 @@
     %date-first-preview-selected-active,
     %date-last-preview-selected-active {
         %date-inner {
-                @if $variant == 'bootstrap' {
+            @if $variant == 'bootstrap' {
                 color: var-get($theme, 'date-selected-focus-foreground');
                 background: var-get($theme, 'date-selected-focus-background');
+                border-color: var-get($theme, 'date-selected-focus-border-color');
             }
         }
     }

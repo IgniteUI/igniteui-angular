@@ -138,7 +138,7 @@
             @extend %date-selected !optional;
         }
 
-        @include e(date, 'selected', $not: ('range')) {
+        @include e(date, 'selected', $not: ('range', 'range-preview')) {
             @extend %date-selected-not-in-range !optional;
         }
 
@@ -186,7 +186,7 @@
             @extend %date-selected-active !optional;
         }
 
-        @include e(date, $mods: ('selected', 'active'), $not: ('range')) {
+        @include e(date, $mods: ('selected', 'active'), $not: ('range', 'range-preview')) {
             @extend %date-selected-active-not-in-range !optional;
         }
 
@@ -226,13 +226,22 @@
             @extend %date-selected-range !optional;
         }
 
-        @include e(date, $mods: ('selected', 'special','range')) {
+        @include e(date, $mods: ('selected', 'special', 'range')) {
             @extend %date-selected-special-range !optional;
         }
 
         @include e(date, $mods: ('selected', 'special', 'active', 'range')) {
             @extend %date-selected-special-range !optional;
             @extend %date-selected-special-range-active !optional;
+        }
+
+
+        @include e(date, $mods: ('selected', 'special', 'range'), $not: ('current')) {
+            @extend %date-selected-special-range-not-current !optional;
+        }
+
+        @include e(date, $mods: ('selected', 'special', 'active', 'range'), $not: ('current')) {
+            @extend %date-selected-special-active-range-not-current !optional;
         }
 
         @include e(date, 'hidden') {
@@ -623,8 +632,6 @@
         @include e(date, $mods: ('last', 'range-preview', 'current', 'selected')) {
             @extend %date-last-preview-current-selected !optional;
         }
-
-
 
         @include e(date, $mods: ('last', 'range-preview', 'current')) {
             @extend %date-last-preview-current !optional;
