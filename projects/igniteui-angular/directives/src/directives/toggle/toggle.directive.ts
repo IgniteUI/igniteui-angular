@@ -3,14 +3,13 @@ import {
     Directive,
     ElementRef,
     EventEmitter,
-    HostBinding,
     HostListener,
     Inject,
     Input,
     OnDestroy,
     OnInit,
     Optional,
-    Output
+    Output,
 } from '@angular/core';
 import { AbsoluteScrollStrategy } from 'igniteui-angular/core';
 import { CancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from 'igniteui-angular/core';
@@ -38,7 +37,13 @@ export interface ToggleViewCancelableEventArgs extends ToggleViewEventArgs, Canc
 @Directive({
     exportAs: 'toggle',
     selector: '[igxToggle]',
-    standalone: true
+    standalone: true,
+    host: {
+        '[class.igx-toggle--hidden]': 'hiddenClass',
+        '[attr.aria-hidden]': 'hiddenClass',
+        '[class.igx-toggle--hidden-webkit]': 'hiddenWebkitClass',
+        '[class.igx-toggle]': 'defaultClass'
+    }
 })
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     /**
@@ -163,13 +168,13 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     /**
      * @hidden
      */
-    @HostBinding('class.igx-toggle--hidden')
-    @HostBinding('attr.aria-hidden')
     public get hiddenClass() {
         return this.collapsed;
     }
 
-    @HostBinding('class.igx-toggle--hidden-webkit')
+    /**
+     * @hidden
+     */
     public get hiddenWebkitClass() {
         const isSafari = this.platform?.isSafari;
         const browserVersion = this.platform?.browserVersion;
@@ -180,7 +185,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     /**
      * @hidden
      */
-    @HostBinding('class.igx-toggle')
     public get defaultClass() {
         return !this.collapsed;
     }
@@ -228,6 +232,16 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         }
 
         this._collapsed = false;
+
+        // TODO: this is a workaround for the issue introduced by Angular's with Ivy renderer.
+        // When calling detectChanges(), Angular marks the element for check, but does not update the classes
+        // immediately, which causes the overlay to calculate incorrect dimensions of target element.
+        // Overlay show should be called in the next tick to ensure the classes are updated and target element is measured correctly.
+        // Note: across the codebase, each host binding should be checked and similar fix applied if needed!!!
+        this.elementRef.nativeElement.className = this.elementRef.nativeElement.className.replace('igx-toggle--hidden', 'igx-toggle');
+        this.elementRef.nativeElement.className = this.elementRef.nativeElement.className.replace('igx-toggle--hidden-webkit', 'igx-toggle');
+        this.elementRef.nativeElement.removeAttribute('aria-hidden');
+
         this.cdr.detectChanges();
 
         if (!info) {

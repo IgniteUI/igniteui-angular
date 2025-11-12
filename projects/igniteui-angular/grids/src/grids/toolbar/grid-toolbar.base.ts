@@ -6,7 +6,7 @@ import { ColumnDisplayOrder } from '../common/enums';
 import { IColumnToggledEventArgs } from '../common/events';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 import { IgxToolbarToken } from './token';
-import { AbsoluteScrollStrategy, ConnectedPositioningStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment } from 'igniteui-angular/core';
 import { IgxToggleDirective, ToggleViewCancelableEventArgs, ToggleViewEventArgs } from 'igniteui-angular/directives';
 
 /* blazorInclude */
@@ -86,7 +86,7 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     private $sub: Subscription;
 
     private _overlaySettings: OverlaySettings = {
-        positionStrategy: new ConnectedPositioningStrategy({
+        positionStrategy: new AutoPositionStrategy({
             horizontalDirection: HorizontalAlignment.Left,
             horizontalStartPoint: HorizontalAlignment.Right,
             verticalDirection: VerticalAlignment.Bottom,
