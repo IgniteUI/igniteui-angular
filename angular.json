@@ -403,6 +403,7 @@
             "outputPath": "dist/bundle-test",
             "index": "projects/bundle-test/src/index.html",
             "browser": "projects/bundle-test/src/main.ts",
+            "server": "projects/bundle-test/src/main.server.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -418,16 +419,22 @@
                 "node_modules"
               ]
             },
-            "server": "projects/bundle-test/src/main.server.ts",
             "ssr": {
               "entry": "projects/bundle-test/server.ts"
             }
           },
           "configurations": {
             "production": {
+              "statsJson": true,
               "budgets": [
                 {
                   "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "bundle",
+                  "name": "grid-component",
                   "maximumWarning": "500kb",
                   "maximumError": "1mb"
                 },
