@@ -1,8 +1,30 @@
-import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridActionsBaseDirective, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarTitleComponent, IgxHierarchicalGridComponent, IgxPivotDataSelectorComponent, IgxPivotGridComponent, IgxRowIslandComponent, IgxToolbarToken, IgxTreeGridComponent } from 'igniteui-angular/grids';
+import {
+  IgxGridComponent,
+  IgxHierarchicalGridComponent,
+  IgxPivotDataSelectorComponent,
+  IgxPivotGridComponent,
+  IgxTreeGridComponent,
+} from "../../../igniteui-angular/grids";
+import { IgxPaginatorComponent } from "../../../igniteui-angular/paginator/src/paginator/paginator.component";
+import { IgxPaginatorToken } from "../../../igniteui-angular/paginator/src/paginator/token";
+import { IgxColumnComponent } from "../../../igniteui-angular/grids/src/grids/columns/column.component";
+import { IgxColumnGroupComponent } from "../../../igniteui-angular/grids/src/grids/columns/column-group.component";
+import { IgxColumnLayoutComponent } from "../../../igniteui-angular/grids/src/grids/columns/column-layout.component";
+import { IgxGridToolbarTitleComponent } from "../../../igniteui-angular/grids/src/grids/toolbar/common";
+import { IgxGridToolbarActionsComponent } from "../../../igniteui-angular/grids/src/grids/toolbar/common";
+import { IgxGridToolbarAdvancedFilteringComponent } from "../../../igniteui-angular/grids/src/grids/toolbar/grid-toolbar-advanced-filtering.component";
+import { IgxGridToolbarComponent } from "../../../igniteui-angular/grids/src/grids/toolbar/grid-toolbar.component";
+import { IgxToolbarToken } from "../../../igniteui-angular/grids/src/grids/toolbar/token";
+import { IgxRowIslandComponent } from "../../../igniteui-angular/grids/src/grids/hierarchical-grid/row-island.component";
+import { IgxGridEditingActionsComponent } from "../../../igniteui-angular/grids/src/grids/grid-actions/grid-editing-actions.component";
+import { IgxActionStripActionsToken } from "../../../igniteui-angular/core/src/grid-column-actions/token";
+import { IgxGridPinningActionsComponent } from "../../../igniteui-angular/grids/src/grids/grid-actions/grid-pinning-actions.component";
+import { IgxGridToolbarExporterComponent } from "../../../igniteui-angular/grids/src/grids/toolbar/grid-toolbar-exporter.component";
+import { IgxGridToolbarHidingComponent } from "../../../igniteui-angular/grids/src/grids/toolbar/grid-toolbar-hiding.component";
+import { IgxGridToolbarPinningComponent } from "../../../igniteui-angular/grids/src/grids/toolbar/grid-toolbar-pinning.component";
+import { IgxActionStripComponent } from "../../../igniteui-angular/action-strip/src/action-strip/action-strip.component";
+import { IgxActionStripToken } from "../../../igniteui-angular/core/src/grid-column-actions/token";
 import { IgxGridStateComponent } from "../lib/state.component";
-import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
-import { IgxPaginatorComponent, IgxPaginatorToken } from 'igniteui-angular/paginator';
-import { IgxActionStripToken } from 'igniteui-angular/core';
 
 export const registerComponents = [
   IgxGridComponent,
@@ -23,13 +45,7 @@ export var registerConfig = [
       IgxHierarchicalGridComponent,
       IgxRowIslandComponent,
     ],
-    contentQueries: [
-      {
-        property: "actionButtons",
-        childType: IgxGridActionsBaseDirective,
-        isQueryList: true,
-      },
-    ],
+    contentQueries: [],
     additionalProperties: [],
     methods: ["show", "hide"],
     boolProps: ["hidden"],
@@ -389,7 +405,7 @@ export var registerConfig = [
     additionalProperties: [{ name: "hasChildren" }],
     methods: ["startEdit"],
     boolProps: ["addRow", "editRow", "deleteRow", "addChild", "asMenuItems"],
-    provideAs: IgxGridActionsBaseDirective,
+    provideAs: IgxActionStripActionsToken,
   },
   {
     component: IgxGridPinningActionsComponent,
@@ -399,7 +415,7 @@ export var registerConfig = [
     additionalProperties: [],
     methods: ["pin", "unpin", "scrollToRow"],
     boolProps: ["asMenuItems"],
-    provideAs: IgxGridActionsBaseDirective,
+    provideAs: IgxActionStripActionsToken,
   },
   {
     component: IgxGridStateComponent,

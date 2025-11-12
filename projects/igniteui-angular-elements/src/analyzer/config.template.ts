@@ -4,7 +4,7 @@ import {
     IgxPivotDataSelectorComponent,
     IgxPivotGridComponent,
     IgxTreeGridComponent
-} from 'igniteui-angular/grids';
+} from '../../../igniteui-angular/grids';
 
 export const registerComponents = [
     IgxGridComponent,
