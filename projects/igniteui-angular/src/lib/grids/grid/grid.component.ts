@@ -117,7 +117,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html',
-    styleUrls: ['./grid.component.scss'],
+    styleUrls: ['./grid.component.css'],
     encapsulation: ViewEncapsulation.None,
     imports: [
         NgClass,

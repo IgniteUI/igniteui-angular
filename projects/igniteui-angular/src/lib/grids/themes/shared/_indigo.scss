@@ -1,4 +1,5 @@
 @use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography/functions' as *;
 @use '../../../../lib/core/styles/themes/standalone' as *;
 
 @include themed-block(igx-grid-th, indigo) {
@@ -10,5 +11,67 @@
         .sort-icon igx-icon {
             --component-size: 2;
         }
+    }
+}
+
+@include themed-block(igx-grid, indigo) {
+    @include e(tr, $m: edited) {
+        &::before {
+            width: rem(4px);
+        }
+    }
+
+    @include e(tr, $m: header) {
+        igx-icon {
+            --component-size: 2;
+        }
+    }
+
+    @include e(tr-action) {
+        &:last-of-type {
+            min-height: sizable(rem(32px), rem(40px), rem(48px));
+        }
+    }
+
+    @include e(tree-grouping-indicator) {
+        margin-inline-end: rem(4px);
+
+        igx-icon {
+            --component-size: 2;
+        }
+    }
+
+    @include e(hierarchical-expander) {
+        igx-icon {
+            --component-size: 2;
+        }
+    }
+
+    @include e(header-indentation) {
+        igx-icon {
+            --component-size: 2;
+        }
+    }
+
+    @include e(group-content) {
+        padding-inline-start: 0;
+    }
+
+    @include e(grouping-indicator) {
+        padding-inline-end: rem(16px);
+
+        igx-icon {
+            --component-size: 2;
+        }
+    }
+
+    @include e(tr-pivot) {
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+    }
+}
+
+@include themed-block(igx-grid-thead, indigo) {
+    @include e(title) {
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
     }
 }

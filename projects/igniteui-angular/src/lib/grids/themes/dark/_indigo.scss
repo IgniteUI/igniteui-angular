@@ -14,3 +14,35 @@
         }
     }
 }
+
+@include themed-block(igx-grid, indigo, dark) {
+    @include e(pivot-empty-chip-area) {
+        color: contrast-color($color: 'gray', $variant: 50, $opacity: .6);
+    }
+
+    @include e(tr-header-row) {
+        igx-pivot-row-dimension-header-group {
+            igx-icon {
+                opacity: 0.85;
+
+                &:hover {
+                    opacity: 1;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}
+
+@include themed-block(igx-grid-thead, indigo, dark) {
+    @include e(title) {
+        igx-icon {
+            opacity: 0.85;
+
+            &:hover {
+                opacity: 1;
+                cursor: pointer;
+            }
+        }
+    }
+}
