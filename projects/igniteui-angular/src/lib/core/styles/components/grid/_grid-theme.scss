@@ -34,7 +34,7 @@
     ), $variant);
     $cbx-bs-size: rem(14px);
 
-    $grid-shadow: var-get($theme, 'grid-shadow');
+    $grid-shadow: var-get($theme, 'grid-elevation');
 
     $grid-caption-fs: rem(20px);
     $grid-caption-lh: rem(32px);
@@ -1908,7 +1908,7 @@
         top: rem(-99999px);
         inset-inline-start: rem(-99999px);
         border: none;
-        box-shadow: var-get($theme, 'drag-shadow');
+        box-shadow: var-get($theme, 'drag-elevation');
         overflow: hidden;
         z-index: 20;
 
