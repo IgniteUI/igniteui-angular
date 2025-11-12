@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform, Inject } from '@angular/core';
+import { Pipe, PipeTransform, Inject, LOCALE_ID } from '@angular/core';
 import { DataUtil } from '../../data-operations/data-util';
 import { cloneArray, columnFieldPath, resolveNestedPath } from '../../core/utils';
 import { GridType, IGX_GRID_BASE, RowType } from './grid.interface';
@@ -388,10 +388,13 @@ export class IgxColumnFormatterPipe implements PipeTransform {
 })
 export class IgxDateFormatterPipe implements PipeTransform {
 
-    constructor(@Inject(I18N_FORMATTER) private i18nFormatter: BaseFormatter) { }
+    constructor(
+        @Inject(I18N_FORMATTER) private i18nFormatter: BaseFormatter,
+        @Inject(LOCALE_ID) private locale_ID
+    ) { }
 
     public transform(value: Date | string | number | null | undefined, format?: string, timezone?: string, locale?: string) {
-        return this.i18nFormatter.formatDate(value, format, locale, timezone);
+        return this.i18nFormatter.formatDate(value, format, locale ?? this.locale_ID, timezone);
     }
 }
 

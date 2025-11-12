@@ -36,7 +36,8 @@ export class BaseFormatter {
      */
     public getLocaleDateFormat(locale: string, displayFormat?: string): string {
         const formatKeys = Object.keys(this.IntlDateTimeStyleValues) as (keyof typeof this.IntlDateTimeStyleValues)[];
-        const targetKey = formatKeys.find(k => k === displayFormat?.toLowerCase().replace('date', ''));
+        const targetFormat = displayFormat?.toLowerCase().replace('date', '');
+        const targetKey = targetFormat ? formatKeys.find(k => k === targetFormat) : '';
         if (!targetKey) {
             // if displayFormat is not shortDate, longDate, etc.
             // or if it is not set by the user
@@ -52,7 +53,8 @@ export class BaseFormatter {
      */
     public getLocaleDateTimeFormat(locale: string, displayFormat?: string): string {
         const formatKeys = Object.keys(this.IntlDateTimeStyleValues) as (keyof typeof this.IntlDateTimeStyleValues)[];
-        const targetKey = formatKeys.find(k => k === displayFormat?.toLowerCase().replace('date', ''));
+        const targetFormat = displayFormat?.toLowerCase().replace('date', '');
+        const targetKey = formatKeys.find(k => k === targetFormat);
         if (!targetKey) {
             // if displayFormat is not shortDate, longDate, etc.
             // or if it is not set by the user
