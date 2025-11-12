@@ -1300,7 +1300,7 @@ describe('IgxTimePicker', () => {
                 expect(dateTimeEditor.inputFormat).toEqual('HH:mm');
             }));
 
-            fit('should resolve inputFormat, if not set, for the editor to the value of displayFormat if it contains only numeric date/time parts', fakeAsync(() => {
+            it('should resolve inputFormat, if not set, for the editor to the value of displayFormat if it contains only numeric date/time parts', fakeAsync(() => {
                 timePicker.displayFormat = 'h:mm:ss aa';
                 fixture.detectChanges();
 
@@ -1314,7 +1314,7 @@ describe('IgxTimePicker', () => {
                 expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('hh:mm a');
             }));
 
-            fit('should resolve to the default locale-based input format for the editor in case inputFormat is not set and displayFormat contains non-numeric date/time parts', fakeAsync(() => {
+            it('should resolve to the default locale-based input format for the editor in case inputFormat is not set and displayFormat contains non-numeric date/time parts', fakeAsync(() => {
                 registerLocaleData(localeBg);
                 timePicker.locale = 'en-US';
                 timePicker.displayFormat = 'longTime';
