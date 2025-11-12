@@ -140,7 +140,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
 
     public get displayFormat(): string {
-        return this._displayFormat || this._inputFormat ||  this._i18nFormatter.getLocaleDateFormat(this.locale, 'short');
+        return this._displayFormat || this._inputFormat ||  this._i18nFormatter.getLocaleDateTimeFormat(this.locale);
     }
 
     /**
@@ -305,7 +305,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         platform: PlatformUtil,
         @Inject(DOCUMENT) private _document: any,
         @Inject(LOCALE_ID) private _locale: any,
-        @Inject(I18N_FORMATTER) private _i18nFormatter: BaseFormatter,) {
+        @Inject(I18N_FORMATTER) private _i18nFormatter: BaseFormatter) {
         super(elementRef, maskParser, renderer, platform);
         this.document = this._document as Document;
         this.locale = this.locale || this._locale;
@@ -528,8 +528,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     protected override setPlaceholder(_value: string): void { }
 
     private updateDefaultFormat(): void {
-        this._defaultInputFormat = DateTimeUtil.getNumericInputFormat(this.locale, this._displayFormat, this._i18nFormatter)
-                                || DateTimeUtil.getDefaultInputFormat(this.locale, this.defaultFormatType);
+        this._defaultInputFormat = DateTimeUtil.getNumericInputFormat(this.locale, this._i18nFormatter, this._displayFormat)
+                                || DateTimeUtil.getDefaultInputFormat(this.locale, this._i18nFormatter, this.defaultFormatType);
         this.setMask(this.inputFormat);
     }
 
@@ -560,7 +560,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     private setMask(inputFormat: string): void {
         const oldFormat = this._inputDateParts?.map(p => p.format).join('');
-        this._inputDateParts = DateTimeUtil.parseDateTimeFormat(inputFormat);
+        this._inputDateParts = DateTimeUtil.parseDateTimeFormat(inputFormat, this._i18nFormatter);
         inputFormat = this._inputDateParts.map(p => p.format).join('');
         const mask = (inputFormat || this._defaultInputFormat)
         .replace(new RegExp(/(?=[^at])[\w]/, 'g'), '0');

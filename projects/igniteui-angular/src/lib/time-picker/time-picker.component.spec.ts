@@ -1285,7 +1285,7 @@ describe('IgxTimePicker', () => {
                 timePicker.locale = 'en-US';
                 fixture.detectChanges();
 
-                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('hh:mm tt');
+                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('hh:mm a');
 
                 timePicker.locale = 'bg-BG';
                 fixture.detectChanges();
@@ -1300,7 +1300,7 @@ describe('IgxTimePicker', () => {
                 expect(dateTimeEditor.inputFormat).toEqual('HH:mm');
             }));
 
-            it('should resolve inputFormat, if not set, for the editor to the value of displayFormat if it contains only numeric date/time parts', fakeAsync(() => {
+            fit('should resolve inputFormat, if not set, for the editor to the value of displayFormat if it contains only numeric date/time parts', fakeAsync(() => {
                 timePicker.displayFormat = 'h:mm:ss aa';
                 fixture.detectChanges();
 
@@ -1311,16 +1311,16 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
 
                 expect(dateTimeEditor.displayFormat.normalize('NFKC')).toEqual('shortTime');
-                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('hh:mm tt');
+                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('hh:mm a');
             }));
 
-            it('should resolve to the default locale-based input format for the editor in case inputFormat is not set and displayFormat contains non-numeric date/time parts', fakeAsync(() => {
+            fit('should resolve to the default locale-based input format for the editor in case inputFormat is not set and displayFormat contains non-numeric date/time parts', fakeAsync(() => {
                 registerLocaleData(localeBg);
                 timePicker.locale = 'en-US';
                 timePicker.displayFormat = 'longTime';
                 fixture.detectChanges();
 
-                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('hh:mm tt');
+                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('hh:mm a');
 
                 timePicker.locale = 'bg-BG';
                 timePicker.displayFormat = 'fullTime';

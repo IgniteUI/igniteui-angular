@@ -54,17 +54,19 @@ describe('Localization', () => {
         });
 
         it('should return correct date format per locale', () => {
-            expect(i18nFormatter.getLocaleDateFormat('it', 'short')).toEqual('dd/MM/yy');
-            expect(i18nFormatter.getLocaleDateFormat('it', 'medium')).toEqual('d MMM yyyy');
-            expect(i18nFormatter.getLocaleDateFormat('it', 'long')).toEqual(`d MMMM yyyy`);
-            expect(i18nFormatter.getLocaleDateFormat('it', 'full')).toEqual(`EEEE d MMMM yyyy`);
+            expect(i18nFormatter.getLocaleDateTimeFormat('it', false)).toEqual('dd/MM/yyyy');
+            expect(i18nFormatter.getLocaleDateTimeFormat('it', false, { dateStyle: 'short' })).toEqual('dd/MM/yy');
+            expect(i18nFormatter.getLocaleDateTimeFormat('it', false, { dateStyle: 'medium' })).toEqual('d MMM yyyy');
+            expect(i18nFormatter.getLocaleDateTimeFormat('it', false, { dateStyle: 'long' })).toEqual(`d MMMM yyyy`);
+            expect(i18nFormatter.getLocaleDateTimeFormat('it', false, { dateStyle: 'full' })).toEqual(`EEEE d MMMM yyyy`);
         });
 
         it('should return correct datetime format per locale', () => {
-            expect(i18nFormatter.getLocaleDateTimeFormat('it', 'short')).toEqual('dd/MM/yy, HH:mm');
-            expect(i18nFormatter.getLocaleDateTimeFormat('it', 'medium')).toEqual('d MMM yyyy, HH:mm:ss');
-            expect(i18nFormatter.getLocaleDateTimeFormat('it', 'long')).toEqual(`d MMMM yyyy alle ore HH:mm:ss z`);
-            expect(i18nFormatter.getLocaleDateTimeFormat('it', 'full')).toEqual(`EEEE d MMMM yyyy alle ore HH:mm:ss zzzz`);
+            expect(i18nFormatter.getLocaleDateTimeFormat('it', false)).toEqual('dd/MM/yyyy, HH:mm:ss');
+            expect(i18nFormatter.getLocaleDateTimeFormat('it', false, { dateStyle: 'short', timeStyle: 'short' })).toEqual('dd/MM/yy, HH:mm');
+            expect(i18nFormatter.getLocaleDateTimeFormat('it', false, { dateStyle: 'medium', timeStyle: 'medium' })).toEqual('d MMM yyyy, HH:mm:ss');
+            expect(i18nFormatter.getLocaleDateTimeFormat('it', false, { dateStyle: 'long', timeStyle: 'long' })).toEqual(`d MMMM yyyy alle ore HH:mm:ss z`);
+            expect(i18nFormatter.getLocaleDateTimeFormat('it', false, { dateStyle: 'full', timeStyle: 'full' })).toEqual(`EEEE d MMMM yyyy alle ore HH:mm:ss zzzz`);
         });
     });
 

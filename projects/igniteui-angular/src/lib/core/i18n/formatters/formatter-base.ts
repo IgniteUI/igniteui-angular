@@ -1,17 +1,14 @@
 import {
     formatDate as ngFormatDate,
     getLocaleCurrencyCode,
-    getLocaleDateFormat as ngGetLocaleDateFormat,
-    getLocaleDateTimeFormat as ngGetLocaleDateTimeFormat,
     getLocaleFirstDayOfWeek as ngGetLocaleFirstDayOfWeek,
     formatNumber as ngFormatNumber,
     formatPercent as ngFormatPercent,
     getCurrencySymbol as ngGetCurrencySymbol,
-    FormatWidth,
     CurrencyPipe
 } from '@angular/common';
 import { InjectionToken } from '@angular/core';
-import { getCurrentI18n } from 'igniteui-i18n-core';
+import { getCurrentI18n, getDateFormatter } from 'igniteui-i18n-core';
 
 /**
  * Injection token that allows for retrieving the i18n formatter for the IgniteUI components.
@@ -30,44 +27,24 @@ export class BaseFormatter {
     };
     private _currencyPipe = new CurrencyPipe('en-US', 'USD');
 
-    /**
-     * Returns the date format based on a provided locale.
-     * Supports Angular's DatePipe format options: `short`, `medium`, `long`, `full`, `shortDate`, `mediumDate`, `longDate` and `fullDate`.
-     */
-    public getLocaleDateFormat(locale: string, displayFormat?: string): string {
+    public getSizeFromDisplayFormat(displayFormat: string | null | undefined) {
         const formatKeys = Object.keys(this.IntlDateTimeStyleValues) as (keyof typeof this.IntlDateTimeStyleValues)[];
         const targetFormat = displayFormat?.toLowerCase().replace('date', '');
-        const targetKey = targetFormat ? formatKeys.find(k => k === targetFormat) : '';
-        if (!targetKey) {
-            // if displayFormat is not shortDate, longDate, etc.
-            // or if it is not set by the user
-            return displayFormat;
-        }
-
-        return ngGetLocaleDateFormat(locale, FormatWidth[this.IntlDateTimeStyleValues[targetKey]]);
+        return  targetFormat ? formatKeys.find(k => k === targetFormat) : null;
     }
 
     /**
-     * Returns the date and time format based on a provided locale.
-     * Supports Angular's DatePipe format options: `short`, `medium`, `long`, `full`, `shortDate`, `mediumDate`, `longDate` and `fullDate`.
+     * Returns the date and time format based on a provided locale and options.
      */
-    public getLocaleDateTimeFormat(locale: string, displayFormat?: string): string {
-        const formatKeys = Object.keys(this.IntlDateTimeStyleValues) as (keyof typeof this.IntlDateTimeStyleValues)[];
-        const targetFormat = displayFormat?.toLowerCase().replace('date', '');
-        const targetKey = formatKeys.find(k => k === targetFormat);
-        if (!targetKey) {
-            // if displayFormat is not shortDate, longDate, etc.
-            // or if it is not set by the user
-            return displayFormat;
-        }
-        return ngGetLocaleDateTimeFormat(locale, FormatWidth[this.IntlDateTimeStyleValues[targetKey]]);
+    public getLocaleDateTimeFormat(locale: string, forceLeadingZero = false, options?: Intl.DateTimeFormatOptions): string {
+        return getDateFormatter().getLocaleDateTimeFormat(locale, forceLeadingZero, options);
     }
 
     /**
      * Format provided date to reflect locales format. Similar to Angular's formatDate.
      */
     public formatDate(value: Date | string | number | null | undefined, format: string, locale: string, timezone?: string): string {
-        return value ? ngFormatDate(value, format, locale, timezone) : '';
+        return value != null ? ngFormatDate(value, format, locale, timezone) : '';
     }
 
     /** Format number value based on locale */
@@ -75,7 +52,7 @@ export class BaseFormatter {
         if (typeof value === "string") {
             value = parseFloat(value);
         }
-        return value ? ngFormatNumber(value, locale, digitsInfo) : '';
+        return value != null ? ngFormatNumber(value, locale, digitsInfo) : '';
     }
 
     /** Format number value as percent based on locale */
@@ -83,7 +60,7 @@ export class BaseFormatter {
         if (typeof value === "string") {
             value = parseFloat(value);
         }
-        return value ? ngFormatPercent(value, locale, digitsInfo) : '';
+        return value != null ? ngFormatPercent(value, locale, digitsInfo) : '';
     }
 
     /** Format number as a currency based on locale */
@@ -92,7 +69,7 @@ export class BaseFormatter {
             value = parseFloat(value);
         }
 
-        return value ? this._currencyPipe.transform(value, currencyCode, display, digitsInfo, locale ?? getCurrentI18n()) : '';
+        return value != null ? this._currencyPipe.transform(value, currencyCode, display, digitsInfo, locale ?? getCurrentI18n()) : '';
     }
 
     /**

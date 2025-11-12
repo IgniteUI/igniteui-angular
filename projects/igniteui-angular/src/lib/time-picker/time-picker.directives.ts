@@ -18,6 +18,7 @@ import { HammerGesturesManager } from '../core/touch';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 import { HammerInput, HammerOptions } from '../core/touch-annotations';
+import { BaseFormatter, I18N_FORMATTER } from '../core/i18n/formatters/formatter-base';
 
 /** @hidden */
 @Directive({
@@ -269,7 +270,7 @@ export class IgxTimeItemDirective {
     public get isSelectedTime(): boolean {
         const currentValue = this.value.length < 2 ? `0${this.value}` : this.value;
         const dateType = this.itemList.type;
-        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat);
+        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat, this._i18nFormatter);
         switch (dateType) {
             case 'hourList':
                 const hourPart = inputDateParts.find(element => element.type === 'hours');
@@ -288,7 +289,7 @@ export class IgxTimeItemDirective {
 
     public get minValue(): string {
         const dateType = this.itemList.type;
-        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat);
+        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat, this._i18nFormatter);
         switch (dateType) {
             case 'hourList':
                 return this.getHourPart(this.timePicker.minDropdownValue);
@@ -316,7 +317,7 @@ export class IgxTimeItemDirective {
 
     public get maxValue(): string {
         const dateType = this.itemList.type;
-        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat);
+        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat, this._i18nFormatter);
         switch (dateType) {
             case 'hourList':
                 return this.getHourPart(this.timePicker.maxDropdownValue);
@@ -360,7 +361,8 @@ export class IgxTimeItemDirective {
     }
 
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
-    public timePicker: IgxTimePickerBase,
+        public timePicker: IgxTimePickerBase,
+        @Inject(I18N_FORMATTER) private _i18nFormatter: BaseFormatter,
         private itemList: IgxItemListDirective) { }
 
     @HostListener('click', ['value'])
@@ -372,7 +374,7 @@ export class IgxTimeItemDirective {
     }
 
     private getHourPart(date: Date): string {
-        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat);
+        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat, this._i18nFormatter);
         const hourPart = inputDateParts.find(element => element.type === 'hours');
         const ampmPart = inputDateParts.find(element => element.format.indexOf('a') !== -1 || element.format === 'tt');
         const hour = DateTimeUtil.getPartValue(date, hourPart, hourPart.format.length);

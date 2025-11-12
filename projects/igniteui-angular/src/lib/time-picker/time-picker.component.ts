@@ -639,7 +639,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public getPartValue(value: Date, type: string): string {
-        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.appliedFormat);
+        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.appliedFormat, this.i18nFormatter);
         const part = inputDateParts.find(element => element.type === type);
         return DateTimeUtil.getPartValue(value, part, part.format?.length);
     }

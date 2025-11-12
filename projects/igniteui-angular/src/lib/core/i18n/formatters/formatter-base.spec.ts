@@ -68,28 +68,32 @@ describe('Localization', () => {
 
         it('should return correct date format per locale', () => {
             // Defaults to Angular's one because they are registered in tests
-            expect(i18nFormatter.getLocaleDateFormat('en', 'short')).toEqual('M/d/yy');
-            expect(i18nFormatter.getLocaleDateFormat('en', 'medium')).toEqual('MMM d, y');
-            expect(i18nFormatter.getLocaleDateFormat('en', 'long')).toEqual('MMMM d, y');
-            expect(i18nFormatter.getLocaleDateFormat('en', 'full')).toEqual('EEEE, MMMM d, y');
+            expect(i18nFormatter.getLocaleDateTimeFormat('en', false)).toEqual('M/d/yyyy');
+            expect(i18nFormatter.getLocaleDateTimeFormat('en', false, { dateStyle: 'short' })).toEqual('M/d/yy');
+            expect(i18nFormatter.getLocaleDateTimeFormat('en', false, { dateStyle: 'medium' })).toEqual('MMM d, y');
+            expect(i18nFormatter.getLocaleDateTimeFormat('en', false, { dateStyle: 'long' })).toEqual('MMMM d, y');
+            expect(i18nFormatter.getLocaleDateTimeFormat('en', false, { dateStyle: 'full' })).toEqual('EEEE, MMMM d, y');
 
-            expect(i18nFormatter.getLocaleDateFormat('de', 'short')).toEqual('dd.MM.yy');
-            expect(i18nFormatter.getLocaleDateFormat('de', 'medium')).toEqual('dd.MM.y');
-            expect(i18nFormatter.getLocaleDateFormat('de', 'long')).toEqual('d. MMMM y');
-            expect(i18nFormatter.getLocaleDateFormat('de', 'full')).toEqual('EEEE, d. MMMM y');
+            expect(i18nFormatter.getLocaleDateTimeFormat('de', false)).toEqual('dd.MM.yyyy');
+            expect(i18nFormatter.getLocaleDateTimeFormat('de', false, { dateStyle: 'short' })).toEqual('dd.MM.yy');
+            expect(i18nFormatter.getLocaleDateTimeFormat('de', false, { dateStyle: 'medium' })).toEqual('dd.MM.y');
+            expect(i18nFormatter.getLocaleDateTimeFormat('de', false, { dateStyle: 'long' })).toEqual('d. MMMM y');
+            expect(i18nFormatter.getLocaleDateTimeFormat('de', false, { dateStyle: 'full' })).toEqual('EEEE, d. MMMM y');
         });
 
         it('should return correct datetime format per locale', () => {
             // Defaults to Angular's one because they are registered in tests
-            expect(i18nFormatter.getLocaleDateTimeFormat('en', 'short')).toEqual('{1}, {0}');
-            expect(i18nFormatter.getLocaleDateTimeFormat('en', 'medium')).toEqual('{1}, {0}');
-            expect(i18nFormatter.getLocaleDateTimeFormat('en', 'long')).toEqual(`{1} 'at' {0}`);
-            expect(i18nFormatter.getLocaleDateTimeFormat('en', 'full')).toEqual(`{1} 'at' {0}`);
+            expect(i18nFormatter.getLocaleDateTimeFormat('en', false)).toEqual('{1}, {0}');
+            expect(i18nFormatter.getLocaleDateTimeFormat('en', false, { dateStyle: 'short', timeStyle: 'short' })).toEqual('{1}, {0}');
+            expect(i18nFormatter.getLocaleDateTimeFormat('en', false, { dateStyle: 'medium', timeStyle: 'short' })).toEqual('{1}, {0}');
+            expect(i18nFormatter.getLocaleDateTimeFormat('en', false, { dateStyle: 'short', timeStyle: 'short' })).toEqual(`{1} 'at' {0}`);
+            expect(i18nFormatter.getLocaleDateTimeFormat('en', false, { dateStyle: 'full', timeStyle: 'short' })).toEqual(`{1} 'at' {0}`);
 
-            expect(i18nFormatter.getLocaleDateTimeFormat('de', 'short')).toEqual('{1}, {0}');
-            expect(i18nFormatter.getLocaleDateTimeFormat('de', 'medium')).toEqual('{1}, {0}');
-            expect(i18nFormatter.getLocaleDateTimeFormat('de', 'long')).toEqual(`{1} 'um' {0}`);
-            expect(i18nFormatter.getLocaleDateTimeFormat('de', 'full')).toEqual(`{1} 'um' {0}`);
+            expect(i18nFormatter.getLocaleDateTimeFormat('de', false)).toEqual('{1}, {0}');
+            expect(i18nFormatter.getLocaleDateTimeFormat('de', false, { dateStyle: 'short', timeStyle: 'short' })).toEqual('{1}, {0}');
+            expect(i18nFormatter.getLocaleDateTimeFormat('de', false, { dateStyle: 'medium', timeStyle: 'short' })).toEqual('{1}, {0}');
+            expect(i18nFormatter.getLocaleDateTimeFormat('de', false, { dateStyle: 'long', timeStyle: 'short' })).toEqual(`{1} 'um' {0}`);
+            expect(i18nFormatter.getLocaleDateTimeFormat('de', false, { dateStyle: 'full', timeStyle: 'short' })).toEqual(`{1} 'um' {0}`);
         });
     });
 

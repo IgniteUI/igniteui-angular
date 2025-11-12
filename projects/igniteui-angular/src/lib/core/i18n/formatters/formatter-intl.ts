@@ -12,29 +12,6 @@ export function provideIgniteIntl() {
 }
 
 export class IntlFormatter extends BaseFormatter {
-    public override getLocaleDateFormat(locale: string, displayFormat?: string): string {
-        const formatKeys = Object.keys(this.IntlDateTimeStyleValues) as (keyof typeof this.IntlDateTimeStyleValues)[];
-        const targetKey = formatKeys.find(k => k === displayFormat?.toLowerCase().replace('date', ''));
-        if (!targetKey) {
-            // if displayFormat is not shortDate, longDate, etc.
-            // or if it is not set by the user
-            return displayFormat;
-        }
-
-        return getDateFormatter().getLocaleDateTimeFormat(locale, false, { dateStyle: targetKey });
-    }
-
-    public override getLocaleDateTimeFormat(locale: string, displayFormat?: string): string {
-        const formatKeys = Object.keys(this.IntlDateTimeStyleValues) as (keyof typeof this.IntlDateTimeStyleValues)[];
-        const targetKey = formatKeys.find(k => k === displayFormat?.toLowerCase().replace('date', ''));
-        if (!targetKey) {
-            // if displayFormat is not shortDate, longDate, etc.
-            // or if it is not set by the user
-            return displayFormat;
-        }
-        return getDateFormatter().getLocaleDateTimeFormat(locale, false, { dateStyle: targetKey, timeStyle: targetKey });
-    }
-
     public override formatDate(value: Date | string | number | null | undefined, format: string, locale: string, timezone?: string): string {
         if (value === null || value === undefined || value === '') {
             return '';
