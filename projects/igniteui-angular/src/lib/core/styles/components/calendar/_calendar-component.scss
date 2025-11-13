@@ -272,7 +272,7 @@
             @extend %date-range-preview-active !optional;
         }
 
-        @include e(date, $mods: ('range-preview', 'weekend')) {
+        @include e(date, $mods: ('range-preview', 'weekend'), $not: ('current', 'special')) {
             @extend %date-range-preview-weekend !optional;
         }
 
@@ -284,7 +284,7 @@
             @extend %date-range-preview-weekend-last !optional;
         }
 
-        @include e(date, $mods: ('range-preview', 'weekend', 'active')) {
+        @include e(date, $mods: ('range-preview', 'weekend', 'active'), $not: ('current', 'special')) {
             @extend %date-range-preview-weekend-active !optional;
         }
 
@@ -466,6 +466,10 @@
 
         @include e(date, $mods: ('current', 'selected')) {
             @extend %date-selected-current !optional;
+        }
+
+        @include e(date, $mods: ('current', 'selected', 'range-preview')) {
+            @extend %date-selected-current-range-preview !optional;
         }
 
         @include e(date, $mods: ('current', 'selected', 'active')) {
