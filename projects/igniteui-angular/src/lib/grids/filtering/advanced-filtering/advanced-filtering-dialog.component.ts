@@ -13,10 +13,9 @@ import { IFilteringExpressionsTree } from '../../../data-operations/filtering-ex
 import { IgxButtonDirective } from '../../../directives/button/button.directive';
 import { IgxQueryBuilderHeaderComponent } from '../../../query-builder/query-builder-header.component';
 import { NgClass } from '@angular/common';
-import { getCurrentResourceStrings } from '../../../core/i18n/resources';
-import { QueryBuilderResourceStringsEN } from '../../../core/i18n/query-builder-resources';
+import { getCurrentResourceStrings, onResourceChangeHandle } from '../../../core/i18n/resources';
+import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../../../core/i18n/query-builder-resources';
 import { IgxHierarchicalGridComponent } from '../../hierarchical-grid/hierarchical-grid.component';
-import { IgxRowIslandComponent } from '../../hierarchical-grid/row-island.component';
 
 /**
  * A component used for presenting advanced filtering UI for a Grid.
@@ -57,12 +56,21 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      */
     public lastActiveNode = {} as IActiveNode;
 
+    /**
+     * @hidden @internal
+     */
+    public queryBuilderResourceStrings: IQueryBuilderResourceStrings;
+
     private destroy$ = new Subject<any>();
     private _overlayComponentId: string;
     private _overlayService: IgxOverlayService;
     private _grid: GridType;
 
-    constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil) { }
+    constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil) {
+        onResourceChangeHandle(this.destroy$, () => {
+            this.assignResourceStrings(false);
+        }, this);
+    }
     /**
      * @hidden @internal
      */
@@ -222,13 +230,12 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
     }
 
-    private assignResourceStrings() {
+    private assignResourceStrings(init = true) {
         // If grid has custom resource strings set for the advanced filtering,
         // they are passed to the query builder resource strings.
         const gridRS = this.grid.resourceStrings;
-
         if (gridRS !== GridResourceStringsEN) {
-            const queryBuilderRS = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+            const queryBuilderRS = getCurrentResourceStrings(QueryBuilderResourceStringsEN, init);
             Object.keys(gridRS).forEach((prop) => {
                 const reg = /^igx_grid_(advanced_)?filter_(row_)?/;
                 if (!reg.test(prop)) {
@@ -243,6 +250,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
                     queryBuilderRS[generalProp] = gridRS[prop];
                 }
             });
+
+            this.queryBuilderResourceStrings = queryBuilderRS;
         }
     }
 }

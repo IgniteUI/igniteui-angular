@@ -53,7 +53,7 @@ import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { DatePart, DatePartDeltas } from '../directives/date-time-editor/public_api';
 import { PickerHeaderOrientation } from '../date-common/types';
-import { IgxPickerActionsDirective, IgxPickerClearComponent } from '../date-common/picker-icons.common';
+import { IgxPickerActionsDirective } from '../date-common/picker-icons.common';
 import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
@@ -61,6 +61,7 @@ import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxDividerDirective } from '../directives/divider/divider.directive';
 import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
+import { BaseFormatter, I18N_FORMATTER } from '../core/i18n/formatters/formatter-base';
 
 let NEXT_ID = 0;
 export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
@@ -446,7 +447,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private _dateMinValue: Date;
     private _dateMaxValue: Date;
     private _selectedDate: Date;
-    private _resourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN);
+    private _resourceStrings: ITimePickerResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN);
     private _okButtonLabel = null;
     private _cancelButtonLabel = null;
     private _itemsDelta: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds' | 'fractionalSeconds'> =
@@ -531,7 +533,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ITimePickerResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -602,13 +604,13 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     constructor(
         element: ElementRef,
         @Inject(LOCALE_ID) _localeId: string,
+        @Inject(I18N_FORMATTER) _i18nFormatter: BaseFormatter,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
         private _injector: Injector,
         private platform: PlatformUtil,
         private cdr: ChangeDetectorRef,
     ) {
-        super(element, _localeId, _inputGroupType);
-        this.locale = this.locale || this._localeId;
+        super(element, _localeId, _i18nFormatter, _inputGroupType);
     }
 
     /** @hidden @internal */
@@ -637,7 +639,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public getPartValue(value: Date, type: string): string {
-        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.appliedFormat);
+        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.appliedFormat, this.i18nFormatter);
         const part = inputDateParts.find(element => element.type === type);
         return DateTimeUtil.getPartValue(value, part, part.format?.length);
     }
@@ -1076,6 +1078,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         if (this._inputGroup && this._inputGroup.isRequired !== this.required) {
             this._inputGroup.isRequired = this.required;
         }
+    }
+
+    protected override updateResources() {
+        this._defaultResourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN, false, this._locale);
     }
 
     private get isTouchedOrDirty(): boolean {

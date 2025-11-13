@@ -18,6 +18,7 @@ import { CalendarDay } from "../common/model";
 import type { DayInterval } from "../common/model";
 import { calendarRange } from "../common/helpers";
 import { PlatformUtil } from "../../core/utils";
+import { getDateFormatter } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
 
@@ -99,7 +100,6 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      */
     public set monthFormat(value: any) {
         this._monthFormat = value;
-        this.initFormatter();
     }
 
     /**
@@ -129,6 +129,13 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
     /**
      * @hidden
      */
+    protected override get formatter() {
+        return getDateFormatter().getIntlFormatter(this.locale, { month: this.monthFormat });
+    }
+
+    /**
+     * @hidden
+     */
     private _monthFormat = "short";
 
     constructor(
@@ -153,7 +160,7 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      * @hidden
      */
     public formattedMonth(value: Date): { long: string; formatted: string } {
-        const rawFormatter = new Intl.DateTimeFormat(this.locale, {
+        const rawFormatter = getDateFormatter().getIntlFormatter(this.locale, {
             month: "long",
             year: "numeric",
         });
@@ -161,7 +168,7 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
         if (this.formatView) {
             return {
                 long: rawFormatter.format(value),
-                formatted: this._formatter.format(value),
+                formatted: this.formatter.format(value),
             };
         }
 
@@ -176,14 +183,5 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      */
     public monthTracker(_: number, item: Date): string {
         return `${item.getMonth()}}`;
-    }
-
-    /**
-     * @hidden
-     */
-    protected initFormatter() {
-        this._formatter = new Intl.DateTimeFormat(this._locale, {
-            month: this.monthFormat,
-        });
     }
 }

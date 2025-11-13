@@ -36,7 +36,7 @@ import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarou
 import { IgxSlideComponent } from './slide.component';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxButtonDirective } from '../directives/button/button.directive';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getCurrentResourceStrings, onResourceChangeHandle } from '../core/i18n/resources';
 import { HammerGesturesManager } from '../core/touch';
 import { CarouselAnimationType, CarouselIndicatorsOrientation } from './enums';
 import { IgxDirectionality } from '../services/direction/directionality';
@@ -405,7 +405,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     protected override currentItem: IgxSlideComponent;
     protected override previousItem: IgxSlideComponent;
     private _interval: number;
-    private _resourceStrings = getCurrentResourceStrings(CarouselResourceStringsEN);
+    private _resourceStrings: ICarouselResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(CarouselResourceStringsEN);
     private lastInterval: any;
     private playing: boolean;
     private destroyed: boolean;
@@ -427,7 +428,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ICarouselResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /** @hidden */
@@ -576,6 +577,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     ) {
         super(animationService, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
+        onResourceChangeHandle(this.destroy$, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(CarouselResourceStringsEN, false);
+        }, this);
     }
 
     /** @hidden */

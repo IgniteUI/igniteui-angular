@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { formatDate } from '../../core/utils';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { GridType } from '../common/grid.interface';
@@ -123,7 +122,7 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
         const map: Map<any, GroupByRecord> = new Map<any, GroupByRecord>();
         for (const record of array) {
             const value = isDateTime
-                ? formatDate(record[key], column.pipeArgs.format, this.grid.locale)
+                ? this.grid.i18nFormatter.formatDate(record[key], column.pipeArgs.format, this.grid.locale)
                 : record[key];
 
             let valueCase = value;

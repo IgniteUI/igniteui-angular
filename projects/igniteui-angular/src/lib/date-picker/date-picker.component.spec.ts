@@ -24,6 +24,7 @@ import { registerLocaleData } from "@angular/common";
 import localeES from "@angular/common/locales/es";
 import localeBg from "@angular/common/locales/bg";
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
+import { BaseFormatter } from '../core/i18n/formatters/formatter-base';
 
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
 
@@ -496,7 +497,7 @@ describe('IgxDatePicker', () => {
                 flush();
             }));
 
-            it('Should passing invalid value for locale, then setting weekStart must be respected.', fakeAsync(() => {
+            it('Should throw error when passing invalid value for locale', fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxDatePickerReactiveFormComponent);
                 fixture.detectChanges();
                 datePicker = fixture.componentInstance.datePicker;
@@ -508,12 +509,14 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.locale).toEqual(locale);
                 expect(datePicker.weekStart).toEqual(WEEKDAYS.SUNDAY)
 
-                datePicker.locale = 'frrr';
-                datePicker.weekStart = WEEKDAYS.FRIDAY;
-                fixture.detectChanges();
-
-                expect(datePicker.locale).toEqual('en-US');
-                expect(datePicker.weekStart).toEqual(WEEKDAYS.FRIDAY);
+                let errorThrown;
+                try {
+                    datePicker.locale = "frrr";
+                    fixture.detectChanges();
+                } catch(err) {
+                    errorThrown = err;
+                }
+                expect(errorThrown).not.toBeUndefined();
             }));
 
             it('should set initial validity state when the form group is disabled', () => {
@@ -842,6 +845,7 @@ describe('IgxDatePicker', () => {
         let mockDateEditor: any;
         let mockCalendar: Partial<IgxCalendarComponent>;
         let mockInputDirective: any;
+        let mockI18nFormatter: BaseFormatter;
         const viewsContainerRef = {} as any;
         const mockOverlayId = '1';
         const today = new Date();
@@ -1014,7 +1018,8 @@ describe('IgxDatePicker', () => {
                 },
                 focus: () => { }
             };
-            datePicker = new IgxDatePickerComponent(elementRef, 'en-US', overlay, mockInjector, renderer2, null, mockCdr);
+            mockI18nFormatter = new BaseFormatter();
+            datePicker = new IgxDatePickerComponent(elementRef, 'en-US', mockI18nFormatter, overlay, mockInjector, renderer2, null, mockCdr);
             (datePicker as any).inputGroup = mockInputGroup;
             (datePicker as any).inputDirective = mockInputDirective;
             (datePicker as any).dateTimeEditor = mockDateEditor;
