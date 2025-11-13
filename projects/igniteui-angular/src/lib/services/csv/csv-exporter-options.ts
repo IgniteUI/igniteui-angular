@@ -1,5 +1,6 @@
 import { IgxExporterOptionsBase } from '../exporter-common/exporter-options-base';
 
+/* csSuppress */
 /**
  * Objects of this class are used to configure the CSV exporting process.
  */
