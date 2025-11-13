@@ -23,7 +23,7 @@
         gap: rem(8px);
         min-height: rem(24px);
         min-width: rem(24px);
-        max-width: 200px;
+        max-width: rem(200px);
         width: fit-content;
 
         igx-icon {
@@ -33,6 +33,10 @@
         igx-tooltip-close-button {
             display: flex;
             cursor: default;
+        }
+
+        &:not([data-default]) {
+            max-width: initial;
         }
     }
 
