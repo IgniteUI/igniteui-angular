@@ -49,10 +49,12 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
     protected exportDataImplementation(data: IExportRecord[], options: IgxPdfExporterOptions, done: () => void): void {
         const firstDataElement = data[0];
-        const _isHierarchicalGrid = firstDataElement?.type === ExportRecordType.HierarchicalGridRecord;
+        const isHierarchicalGrid = firstDataElement?.type === ExportRecordType.HierarchicalGridRecord;
         const isPivotGrid = firstDataElement?.type === ExportRecordType.PivotGridRecord;
 
-        const defaultOwner = this._ownersMap.get(DEFAULT_OWNER);
+        const defaultOwner =  isHierarchicalGrid ?
+            this._ownersMap.get(firstDataElement.owner) :
+            this._ownersMap.get(DEFAULT_OWNER);
 
         // Get all columns (including multi-column headers)
         const allColumns = defaultOwner?.columns.filter(col => !col.skip) || [];
@@ -64,17 +66,17 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         if (isPivotGrid && defaultOwner) {
             // First, get PivotRowHeader columns - these are the dimension names (like "City", "ContactTitle")
             const pivotRowHeaders = allColumns.filter(col => col.headerType === ExportHeaderType.PivotRowHeader);
-            
+
             // Get row dimension VALUE columns - these contain the actual data values
             const rowHeaderCols = allColumns.filter(col =>
                 col.headerType === ExportHeaderType.RowHeader ||
                 col.headerType === ExportHeaderType.MultiRowHeader ||
                 col.headerType === ExportHeaderType.PivotMergedHeader
             );
-            
+
             // Use PivotRowHeader names as column headers
             rowDimensionHeaders.push(...pivotRowHeaders.map(col => col.header || col.field).filter(h => h));
-            
+
             // Extract the field names from VALUE columns - these are the keys in the record data
             rowDimensionFields.push(...rowHeaderCols.map(col => col.field).filter(f => f));
         }
@@ -141,16 +143,16 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         // Draw multi-level headers if present
         if (hasMultiColumnHeaders || hasMultiRowHeaders) {
             yPosition = this.drawMultiLevelHeaders(
-                pdf, 
-                allColumns, 
+                pdf,
+                allColumns,
                 rowDimensionHeaders,
-                maxLevel, 
+                maxLevel,
                 maxRowLevel,
-                margin, 
-                yPosition, 
-                columnWidth, 
-                headerHeight, 
-                usableWidth, 
+                margin,
+                yPosition,
+                columnWidth,
+                headerHeight,
+                usableWidth,
                 options
             );
         } else {
@@ -180,16 +182,16 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 // Redraw headers on new page
                 if (hasMultiColumnHeaders || hasMultiRowHeaders) {
                     yPosition = this.drawMultiLevelHeaders(
-                        pdf, 
-                        allColumns, 
+                        pdf,
+                        allColumns,
                         rowDimensionHeaders,
-                        maxLevel, 
+                        maxLevel,
                         maxRowLevel,
-                        margin, 
-                        yPosition, 
-                        columnWidth, 
-                        headerHeight, 
-                        usableWidth, 
+                        margin,
+                        yPosition,
+                        columnWidth,
+                        headerHeight,
+                        usableWidth,
                         options
                     );
                 } else {
@@ -203,7 +205,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             // In both cases, the base exporter sets the level property on TreeGridRecord
             const isTreeGrid = record.type === 'TreeGridRecord';
             const recordIsHierarchicalGrid = record.type === 'HierarchicalGridRecord';
-            
+
             // For tree grids, indentation is visual (in the first column text)
             // For hierarchical grids, we don't use indentation (level determines column offset instead)
             const indentLevel = isTreeGrid ? (record.level || 0) : 0;
@@ -299,12 +301,12 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         if (maxRowLevel > 0 && rowDimensionHeaders.length > 0) {
             // Draw background
             pdf.setFillColor(240, 240, 240);
-            
+
             rowDimensionHeaders.forEach((headerText, index) => {
                 const width = baseColumnWidth;
                 const height = headerHeight;
                 const xPosition = xStart + (index * baseColumnWidth);
-                
+
                 if (options.showTableBorders) {
                     pdf.rect(xPosition, yPosition, width, height, 'F');
                     pdf.rect(xPosition, yPosition, width, height);
