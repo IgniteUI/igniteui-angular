@@ -2,13 +2,13 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxTreeGridComponent } from './public_api';
-import { IgxTreeGridEditActionsComponent, IgxTreeGridEditActionsPinningComponent } from '../../../../test-utils/tree-grid-components.spec';
+import { IgxTreeGridEditActionsComponent, IgxTreeGridEditActionsPinningComponent } from '../../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { first } from 'rxjs/operators';
-import { IRowDataCancelableEventArgs } from '../public_api';
-import { wait } from '../../../../test-utils/ui-interactions.spec';
+import { wait } from '../../../test-utils/ui-interactions.spec';
+import { IRowDataCancelableEventArgs } from 'igniteui-angular/grids/core';
 
 describe('IgxTreeGrid - Add Row UI #tGrid', () => {
     let fix;

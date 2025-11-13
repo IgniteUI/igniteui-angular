@@ -2,17 +2,19 @@ import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrategy, GridColumnDataType, GridTypeBase, IgxStringFilteringOperand, Size, SortingDirection } from 'igniteui-angular/core';
-import { GridCellMergeMode, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular/grids';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';;
-import { DataParent } from '../../../../test-utils/sample-test-data.spec';
-import { GridFunctions, GridSelectionFunctions } from '../../../../test-utils/grid-functions.spec';
+import { DataParent } from '../../../test-utils/sample-test-data.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { By } from '@angular/platform-browser';
-import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
-import { hasClass, setElementSize } from '../../../../test-utils/helper-utils.spec';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { hasClass, setElementSize } from '../../../test-utils/helper-utils.spec';
 import { ColumnLayoutTestComponent } from './grid.multi-row-layout.spec';
-import { IgxHierarchicalGridTestBaseComponent } from '../hierarchical-grid/hierarchical-grid.spec';
-import { IgxHierarchicalRowComponent } from '../hierarchical-grid/hierarchical-row.component';
-import { IgxTreeGridSelectionComponent } from '../../../../test-utils/tree-grid-components.spec';
+import { IgxHierarchicalGridTestBaseComponent } from '../../hierarchical-grid/src/hierarchical-grid.spec';
+import { IgxTreeGridSelectionComponent } from '../../../test-utils/tree-grid-components.spec';
+import { IgxGridComponent } from './grid.component';
+import { IgxHierarchicalRowComponent } from '../../hierarchical-grid/src/hierarchical-row.component';
+import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
+import { GridCellMergeMode, IgxColumnComponent } from 'igniteui-angular/grids/core';
 
 describe('IgxGrid - Cell merging #grid', () => {
     let fix;

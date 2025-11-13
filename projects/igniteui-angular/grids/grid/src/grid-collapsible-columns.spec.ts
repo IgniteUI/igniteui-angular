@@ -5,12 +5,12 @@ import {
     CollapsibleColumnGroupTestComponent,
     CollapsibleGroupsTemplatesTestComponent,
     CollapsibleGroupsDynamicColComponent
-} from '../../../../test-utils/grid-samples.spec';
-import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
-import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
+} from '../../../test-utils/grid-samples.spec';
+import { GridFunctions } from '../../../test-utils/grid-functions.spec';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { DropPosition } from 'igniteui-angular/grids/core';
-import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
 import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
+import { SortingDirection } from 'igniteui-angular/core';
 
 describe('IgxGrid - multi-column headers #grid', () => {
     let contactInf;

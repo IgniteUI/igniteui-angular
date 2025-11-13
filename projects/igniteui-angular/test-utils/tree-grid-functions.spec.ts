@@ -2,9 +2,9 @@ import { By } from '@angular/platform-browser';
 import { UIInteractions, wait } from './ui-interactions.spec';
 import { GridFunctions } from './grid-functions.spec';
 import { DebugElement } from '@angular/core';
-import { CellType, IgxRowDirective, IgxTreeGridComponent } from 'igniteui-angular/grids';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
-import { IgxGridCellComponent } from 'igniteui-angular/grids/src/grids/cell.component';
+import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
+import { CellType, IgxGridCellComponent, IgxRowDirective } from 'igniteui-angular/grids/core';
 
 // CSS class should end with a number that specified the row's level
 const TREE_CELL_DIV_INDENTATION_CSS_CLASS = '.igx-grid__tree-cell--padding-level-';

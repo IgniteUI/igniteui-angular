@@ -1,5 +1,4 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { IgxGridComponent } from '../../../../grids/src/grids/grid/grid.component';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { TestMethods } from '../exporter-common/test-methods.spec';
@@ -7,7 +6,6 @@ import { IgxCsvExporterService } from './csv-exporter';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
 import { IgxTreeGridPrimaryForeignKeyComponent } from '../../../../test-utils/tree-grid-components.spec';
-import { IgxTreeGridComponent } from '../../../../grids/src/grids/tree-grid/public_api';
 import { ReorderedColumnsComponent,
         GridIDNameJobTitleComponent,
         ProductsComponent,
@@ -21,9 +19,11 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { wait } from '../../../../test-utils/ui-interactions.spec';
-import { IgxPivotGridComponent } from '../../../../grids/src/grids/pivot-grid/pivot-grid.component';
 import { IgxPivotGridTestBaseComponent } from '../../../../test-utils/pivot-grid-samples.spec';
-import { IgxPivotNumericAggregate } from '../../../../grids/src/grids/pivot-grid/pivot-grid-aggregate';
+import { IgxGridComponent } from 'igniteui-angular/grids/grid';
+import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
+import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
+import { IgxPivotNumericAggregate } from 'igniteui-angular/grids/core';
 
 describe('CSV Grid Exporter', () => {
     let exporter: IgxCsvExporterService;

@@ -5,16 +5,16 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { IgxExpansionPanelHeaderComponent } from 'igniteui-angular/expansion-panel';
 import { IgxExpansionPanelComponent } from 'igniteui-angular/expansion-panel';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
-import { IgxPivotGridTestBaseComponent } from "../../../../test-utils/pivot-grid-samples.spec";
-import { UIInteractions, wait } from "../../../../test-utils/ui-interactions.spec";
-import { PivotGridType } from "../common/grid.interface";
+import { IgxPivotGridTestBaseComponent } from "../../../test-utils/pivot-grid-samples.spec";
+import { UIInteractions, wait } from "../../../test-utils/ui-interactions.spec";
 import { IgxPivotDataSelectorComponent } from "./pivot-data-selector.component";
 import {
     IPivotDimension,
     IPivotValue,
-    PivotDimensionType
-} from "../../core/src/pivot-grid.interface";
-import { setElementSize } from '../../../../test-utils/helper-utils.spec';
+    PivotDimensionType,
+    PivotGridType
+} from "igniteui-angular/grids/core";
+import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import { Size, SortingDirection } from 'igniteui-angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 

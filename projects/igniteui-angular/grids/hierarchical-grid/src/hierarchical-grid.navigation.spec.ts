@@ -2,14 +2,13 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, ViewChild, DebugElement} from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { wait, UIInteractions, waitForSelectionChange } from '../../../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions, waitForSelectionChange } from '../../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 import { By } from '@angular/platform-browser';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
-import { clearGridSubs, setupHierarchicalGridScrollDetection } from '../../../../test-utils/helper-utils.spec';
-import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
-import { IgxGridCellComponent } from 'igniteui-angular/grids/core';
-import { IGridCellEventArgs, IgxColumnComponent } from '../public_api';
+import { clearGridSubs, setupHierarchicalGridScrollDetection } from '../../../test-utils/helper-utils.spec';
+import { GridFunctions } from '../../../test-utils/grid-functions.spec';
+import { IGridCellEventArgs, IgxColumnComponent, IgxGridCellComponent } from 'igniteui-angular/grids/core';
 import { IPathSegment } from 'igniteui-angular/core';
 
 const DEBOUNCE_TIME = 50;

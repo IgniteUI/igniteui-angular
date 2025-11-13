@@ -11,12 +11,12 @@ import { IGroupingState } from '../../../core/src/data-operations/groupby-state.
 import { IGroupByExpandState } from '../../../core/src/data-operations/groupby-expand-state.interface';
 import { GridSelectionMode } from './common/enums';
 import { FilteringLogic } from '../../../core/src/data-operations/filtering-expression.interface';
-import { IgxTreeGridComponent } from './tree-grid/public_api';
 import { ISortingExpression } from '../../../core/src/data-operations/sorting-strategy';
 import { GridSelectionRange } from './common/types';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxColumnComponent } from './public_api';
 import { IColumnState, IGridState } from './state-base.directive';
+import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
 
 describe('IgxTreeGridState - input properties #tGrid', () => {
     let fix;

@@ -5,11 +5,9 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { By } from '@angular/platform-browser';
-import { DefaultSortingStrategy, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
-import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
 import { IgxGridHeaderComponent } from 'igniteui-angular/grids/core';
-import { GridSummaryFunctions, GridFunctions } from '../../../../test-utils/grid-functions.spec';
-import { wait } from '../../../../test-utils/ui-interactions.spec';
+import { GridSummaryFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
+import { wait } from '../../../test-utils/ui-interactions.spec';
 import { DropPosition } from 'igniteui-angular/grids/core';
 import { OneGroupOneColGridComponent, OneGroupThreeColsGridComponent,
     BlueWhaleGridComponent, ColumnGroupTestComponent, ColumnGroupFourLevelTestComponent,
@@ -18,8 +16,9 @@ import { OneGroupOneColGridComponent, OneGroupThreeColsGridComponent,
     OneColPerGroupGridComponent, NestedColumnGroupsGridComponent,
     DynamicGridComponent, NestedColGroupsWithTemplatesGridComponent,
     DynamicColGroupsGridComponent,
-    ColumnGroupHiddenInTemplateComponent} from '../../../../test-utils/grid-mch-sample.spec';
+    ColumnGroupHiddenInTemplateComponent} from '../../../test-utils/grid-mch-sample.spec';
 import { CellType } from 'igniteui-angular/grids/core';
+import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid-th__title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid-thead__title';

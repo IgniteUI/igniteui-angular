@@ -22,7 +22,7 @@ export * from './data-operations/filtering-expressions-tree';
 export * from './data-operations/filtering-condition';
 export * from './data-operations/filtering-state.interface';
 export * from './data-operations/filtering-strategy';
-export { TreeGridFilteringStrategy } from './data-operations/tree-grid-filtering-strategy';
+export * from './data-operations/tree-grid-filtering-strategy';
 export * from './data-operations/merge-strategy';
 export * from './data-operations/expressions-tree-util';
 export * from './data-operations/groupby-expand-state.interface';

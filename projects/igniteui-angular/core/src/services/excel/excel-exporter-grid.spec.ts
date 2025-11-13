@@ -1,5 +1,4 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { IgxGridComponent } from '../../../../grids/src/grids/grid/grid.component';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { TestMethods } from '../exporter-common/test-methods.spec';
@@ -32,7 +31,7 @@ import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridSummariesKeyComponent } from '../../../../test-utils/tree-grid-components.spec';
-import { IgxTreeGridComponent } from '../../../../grids/src/grids/tree-grid/public_api';
+
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -44,11 +43,14 @@ import { IgxHierarchicalGridExportComponent,
          IgxHierarchicalGridMultiColumnHeadersExportComponent,
          IgxHierarchicalGridSummariesExportComponent
 } from '../../../../test-utils/hierarchical-grid-components.spec';
-import { IgxHierarchicalGridComponent } from '../../../../grids/src/grids/hierarchical-grid/public_api';
-import { IgxHierarchicalRowComponent } from '../../../../grids/src/grids/hierarchical-grid/hierarchical-row.component';
 import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
 import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent, SALES_DATA } from '../../../../test-utils/pivot-grid-samples.spec';
-import { IgxPivotGridComponent, IgxPivotNumericAggregate, PivotRowLayoutType } from '../../../../grids/src/grids/pivot-grid/public_api';
+import { IgxHierarchicalRowComponent } from 'igniteui-angular/grids/hierarchical-grid/src/hierarchical-row.component';
+import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
+import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
+import { IgxPivotNumericAggregate, PivotRowLayoutType } from 'igniteui-angular/grids/core';
+import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
+import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 
 describe('Excel Exporter', () => {
     let exporter: IgxExcelExporterService;

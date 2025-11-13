@@ -3,27 +3,23 @@ import { formatNumber } from '@angular/common'
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
-import { IgxColumnComponent } from 'igniteui-angular/grids/core';
+import { IgxColumnComponent, IgxGridStateDirective } from 'igniteui-angular/grids/core';
 import { IgxGridComponent } from './grid.component';
 import { IgxGroupAreaDropDirective, IgxGroupByRowTemplateDirective, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from 'igniteui-angular/grids/core';
 import { IgxColumnMovingDragDirective } from 'igniteui-angular/grids/core';
 import { IgxGridRowComponent } from './grid-row.component';
-import { IgxChipComponent } from '../../../../chips/src/chips/chip.component';
-import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec';
-import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
-import { DataParent, SampleTestData } from '../../../../test-utils/sample-test-data.spec';
-import { MultiColumnHeadersWithGroupingComponent } from '../../../../test-utils/grid-samples.spec';
-import { GridSelectionFunctions, GridFunctions, GRID_SCROLL_CLASS } from '../../../../test-utils/grid-functions.spec';
+import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { DataParent, SampleTestData } from '../../../test-utils/sample-test-data.spec';
+import { MultiColumnHeadersWithGroupingComponent } from '../../../test-utils/grid-samples.spec';
+import { GridSelectionFunctions, GridFunctions, GRID_SCROLL_CLASS } from '../../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
-import { ControlsFunction } from '../../../../test-utils/controls-functions.spec';
-import { ymd } from '../../../../test-utils/helper-utils.spec';
-import { IGroupingExpression } from '../../../../core/src/data-operations/grouping-expression.interface';
-import { IgxPaginatorComponent } from '../../../../paginator/src/paginator/paginator.component';
-import { IgxCheckboxComponent } from '../../../../checkbox/src/checkbox/checkbox.component';
+import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
+import { ymd } from '../../../test-utils/helper-utils.spec';
 import { IgxGroupByRowSelectorDirective } from 'igniteui-angular/grids/core';
-import { IgxGridStateDirective } from '../public_api';
-import { IgxGrouping } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, IGroupingExpression, IgxGrouping, IgxStringFilteringOperand, ISortingExpression, SortingDirection } from 'igniteui-angular/core';
+import { IgxChipComponent } from 'igniteui-angular/chips';
+import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 
 describe('IgxGrid - GroupBy #grid', () => {
 

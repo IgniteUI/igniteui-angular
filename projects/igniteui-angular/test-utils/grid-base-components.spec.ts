@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings } from './template-strings.spec';
-import { IgxCellTemplateDirective, IgxColumnActionsComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnHidingDirective, IgxColumnPinningDirective, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular/grids';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
+import { IgxGridComponent } from 'igniteui-angular/grids/grid';
+import { IgxCellTemplateDirective, IgxColumnActionsComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnHidingDirective, IgxColumnPinningDirective, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular/grids/core';
 
 @Component({
     template: `

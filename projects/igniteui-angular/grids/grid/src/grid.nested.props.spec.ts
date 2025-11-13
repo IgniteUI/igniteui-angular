@@ -1,16 +1,13 @@
 import { TestBed, ComponentFixture, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
-import { cloneArray, columnFieldPath, resolveNestedPath } from '../../../../core/src/core/utils';
 import { Component, DebugElement, ViewChild } from '@angular/core';
-import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
-import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
-import { IgxComboComponent } from '../../../../combo/src/public_api';
-import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
-import { IGridEditEventArgs, IgxColumnComponent } from '../public_api';
-import { IgxCellEditorTemplateDirective, IgxCellTemplateDirective } from 'igniteui-angular/grids/core';
+import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { GridFunctions } from '../../../test-utils/grid-functions.spec';
+import { IGridEditEventArgs, IgxCellEditorTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { FormsModule } from '@angular/forms';
+import { IgxComboComponent } from 'igniteui-angular/combo';
+import { cloneArray, columnFieldPath, IgxStringFilteringOperand, resolveNestedPath, SortingDirection } from 'igniteui-angular/core';
 
 const first = <T>(array: T[]): T => array[0];
 

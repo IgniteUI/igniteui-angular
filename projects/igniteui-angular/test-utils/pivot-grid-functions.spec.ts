@@ -1,4 +1,4 @@
-import { IPivotGridRecord } from '../grids/src/grids/pivot-grid/pivot-grid.interface';
+import { IPivotGridRecord } from 'igniteui-angular/grids/core';
 
 export class PivotGridFunctions {
 

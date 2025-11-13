@@ -1,22 +1,12 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {  NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FilteringLogic, IFilteringExpression } from '../../../../core/src/data-operations/filtering-expression.interface';
 import { IgxGridComponent } from './grid.component';
-import { IgxChipComponent } from '../../../../chips/src/public_api';
-import {
-    IgxStringFilteringOperand,
-    IgxNumberFilteringOperand,
-    IgxBooleanFilteringOperand,
-    IgxDateFilteringOperand,
-    IgxTimeFilteringOperand,
-    IgxDateTimeFilteringOperand
-} from '../../../../core/src/data-operations/filtering-condition';
-import { FilteringExpressionsTree } from '../../../../core/src/data-operations/filtering-expressions-tree';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
-import { GridFunctions, GridSummaryFunctions } from '../../../../test-utils/grid-functions.spec';
-import { IgxGridFilteringComponent, CustomFilter, IgxGridFilteringBindingComponent } from '../../../../test-utils/grid-samples.spec';
-import { NoopFilteringStrategy } from '../../../../core/src/data-operations/filtering-strategy';
+import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
+import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
+import { IgxGridFilteringComponent, CustomFilter, IgxGridFilteringBindingComponent } from '../../../test-utils/grid-samples.spec';
+import { FilteringExpressionsTree, FilteringLogic, IFilteringExpression, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, NoopFilteringStrategy } from 'igniteui-angular/core';
+import { IgxChipComponent } from 'igniteui-angular/chips';
 import { ExpressionUI } from 'igniteui-angular/grids/core';
 
 describe('IgxGrid - Filtering actions #grid', () => {

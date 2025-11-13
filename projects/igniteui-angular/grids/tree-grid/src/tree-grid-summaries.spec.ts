@@ -7,14 +7,14 @@ import {
     IgxTreeGridSummariesTransactionsComponent,
     IgxTreeGridSummariesScrollingComponent,
     IgxTreeGridSummariesKeyScroliingComponent
-} from '../../../../test-utils/tree-grid-components.spec';
-import { clearGridSubs, setupGridScrollDetection } from '../../../../test-utils/helper-utils.spec';
-import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec';
-import { GridSummaryFunctions, GridFunctions } from '../../../../test-utils/grid-functions.spec';
-import { IgxNumberFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
+} from '../../../test-utils/tree-grid-components.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
+import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { GridSummaryFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxSummaryRow, IgxTreeGridRow } from 'igniteui-angular/grids/core';
+import { IgxNumberFilteringOperand } from 'igniteui-angular/core';
 
 describe('IgxTreeGrid - Summaries #tGrid', () => {
     const DEBOUNCETIME = 30;

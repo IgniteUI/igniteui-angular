@@ -3,25 +3,23 @@ import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
-import { DataParent, SampleTestData } from '../../../../test-utils/sample-test-data.spec';
-import { Point } from '../../../../core/src/services/public_api';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { DataParent, SampleTestData } from '../../../test-utils/sample-test-data.spec';
 
 import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { IgxDragIndicatorIconDirective, IgxRowDragDirective, IgxRowDragGhostDirective } from 'igniteui-angular/grids/core';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from 'igniteui-angular/grids/core';
 import { IgxDropDirective } from 'igniteui-angular/directives';
-import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
-import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
-import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
-import { IgxTreeGridComponent } from '../tree-grid/public_api';
+
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
 import { CellType, GridType, RowType } from 'igniteui-angular/grids/core';
-import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
 import { IgxRowDirective } from 'igniteui-angular/grids/core';
 import { NgStyle } from '@angular/common';
-import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
+import { IgxStringFilteringOperand, Point, SortingDirection } from 'igniteui-angular/core';
+import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
+import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
+import { IgxIconComponent } from 'igniteui-angular/icon';
 
 const DEBOUNCE_TIME = 50;
 const CSS_CLASS_DRAG_INDICATOR = '.igx-grid__drag-indicator';

@@ -2,11 +2,9 @@ import { TestBed, tick, fakeAsync, ComponentFixture, waitForAsync } from '@angul
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec';
-import { DefaultSortingStrategy, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
+import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxColumnMovingDragDirective } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
-import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
 import { take } from 'rxjs/operators';
 import {
     IgxHierarchicalGridTestBaseComponent,
@@ -14,14 +12,14 @@ import {
     IgxHierarchicalGridTestInputPaginatorComponent,
     IgxHierarchicalGridTestInputToolbarComponent,
     IgxHierarchicalGridWithTransactionProviderComponent
-} from '../../../../test-utils/hierarchical-grid-components.spec';
-import { GridFunctions, GridSelectionFunctions } from '../../../../test-utils/grid-functions.spec';
-import { HierarchicalGridFunctions } from '../../../../test-utils/hierarchical-grid-functions.spec';
+} from '../../../test-utils/hierarchical-grid-components.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
+import { HierarchicalGridFunctions } from '../../../test-utils/hierarchical-grid-functions.spec';
 import { GridSelectionMode, RowPinningPosition } from 'igniteui-angular/grids/core';
-import { IgxPaginatorComponent } from '../../../../paginator/src/paginator/paginator.component';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
-import { setElementSize } from '../../../../test-utils/helper-utils.spec';
-import { ColumnPinningPosition, Size } from 'igniteui-angular/core';
+import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
+import { setElementSize } from '../../../test-utils/helper-utils.spec';
+import { ColumnPinningPosition, DefaultSortingStrategy, IgxStringFilteringOperand, Size, SortingDirection } from 'igniteui-angular/core';
+import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
     let fixture: ComponentFixture<IgxHierarchicalGridTestBaseComponent>;

@@ -6,18 +6,18 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators'
 import { IgxInputDirective } from 'igniteui-angular/input-group';
 import { IgxTooltipTargetDirective } from 'igniteui-angular/directives';
-import { GridFunctions, GridSelectionFunctions } from '../../../../test-utils/grid-functions.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import {
     IgxGridCustomEditorsComponent,
     IgxGridValidationTestBaseComponent,
     IgxGridValidationTestCustomErrorComponent,
     IgxTreeGridValidationTestComponent
-} from '../../../../test-utils/grid-validation-samples.spec';
-import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
+} from '../../../test-utils/grid-validation-samples.spec';
+import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IGridFormGroupCreatedEventArgs } from 'igniteui-angular/grids/core';
-import { IgxTreeGridComponent } from '../tree-grid/tree-grid.component';
 import { IgxGridComponent } from './grid.component';
-import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService, VerticalAlignment } from '../../../../core/src/services/public_api';
+import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService, VerticalAlignment } from 'igniteui-angular/core';
+import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
 
 describe('IgxGrid - Validation #grid', () => {
 

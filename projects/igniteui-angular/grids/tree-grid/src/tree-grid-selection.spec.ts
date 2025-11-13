@@ -10,25 +10,21 @@ import {
     IgxTreeGridCascadingSelectionComponent,
     IgxTreeGridCascadingSelectionTransactionComponent,
     IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent
-} from '../../../../test-utils/tree-grid-components.spec';
+} from '../../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     TreeGridFunctions,
     TREE_ROW_SELECTION_CSS_CLASS,
     ROW_EDITING_BANNER_OVERLAY_CLASS,
     TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS
-} from '../../../../test-utils/tree-grid-functions.spec';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
-import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec';
+} from '../../../test-utils/tree-grid-functions.spec';
+import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
-import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
-import { GridSelectionMode } from 'igniteui-angular/grids/core';
+import { GridFunctions } from '../../../test-utils/grid-functions.spec';
+import { GridSelectionMode, IgxGridCell } from 'igniteui-angular/grids/core';
 import { By } from '@angular/platform-browser';
-import { FilteringExpressionsTree } from '../../../../core/src/data-operations/filtering-expressions-tree';
-import { FilteringLogic } from '../../../../core/src/data-operations/filtering-expression.interface';
 import { IRowSelectionEventArgs } from 'igniteui-angular/grids/core';
-import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
-import { IgxGridCell } from '../public_api';
+import { FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
 describe('IgxTreeGrid - Selection #tGrid', () => {
     let fix;

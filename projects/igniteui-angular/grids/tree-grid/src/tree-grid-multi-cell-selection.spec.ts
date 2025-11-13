@@ -5,12 +5,12 @@ import {
     IgxTreeGridSelectionComponent,
     IgxTreeGridSelectionWithTransactionComponent,
     IgxTreeGridFKeySelectionWithTransactionComponent
-} from '../../../../test-utils/tree-grid-components.spec';
-import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
-import { clearGridSubs, setupGridScrollDetection } from '../../../../test-utils/helper-utils.spec';
-import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
-import { GridSelectionFunctions, GridSummaryFunctions, GridFunctions } from '../../../../test-utils/grid-functions.spec';
+} from '../../../test-utils/tree-grid-components.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { GridSelectionFunctions, GridSummaryFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
+import { IgxStringFilteringOperand } from 'igniteui-angular/core';
 
 describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 

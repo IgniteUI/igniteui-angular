@@ -7,27 +7,20 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { IgxColumnComponent } from 'igniteui-angular/grids/core';
+import { IGridRowEventArgs, IgxColumnComponent, IgxColumnGroupComponent, IgxGridEmptyTemplateDirective, IgxGridFooterComponent, IgxGridLoadingTemplateDirective, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from 'igniteui-angular/grids/core';
 import { IForOfState } from 'igniteui-angular/directives';
-import { GridTemplateStrings } from '../../../../test-utils/template-strings.spec';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
-import { BasicGridComponent } from '../../../../test-utils/grid-base-components.spec';
-import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
+import { GridTemplateStrings } from '../../../test-utils/template-strings.spec';
+import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
+import { BasicGridComponent } from '../../../test-utils/grid-base-components.spec';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
-import { FilteringExpressionsTree } from '../../../../core/src/data-operations/filtering-expressions-tree';
-import { FilteringLogic } from '../../../../core/src/data-operations/filtering-expression.interface';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular/tabs';
 import { IgxGridRowComponent } from './grid-row.component';
-import { ISortingExpression, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
-import { GRID_SCROLL_CLASS, GridFunctions } from '../../../../test-utils/grid-functions.spec';
+import { GRID_SCROLL_CLASS, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { AsyncPipe } from '@angular/common';
-import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../../../../paginator/src/paginator/paginator.component';
-import { IGridRowEventArgs, IgxColumnGroupComponent, IgxGridEmptyTemplateDirective, IgxGridFooterComponent, IgxGridLoadingTemplateDirective, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
-import { getComponentSize } from '../../../../core/src/core/utils';
-import { setElementSize, ymd } from '../../../../test-utils/helper-utils.spec';
-import { GridColumnDataType, Size } from 'igniteui-angular/core';
-
+import { setElementSize, ymd } from '../../../test-utils/helper-utils.spec';
+import { FilteringExpressionsTree, FilteringLogic, getComponentSize, GridColumnDataType, IgxNumberFilteringOperand, IgxStringFilteringOperand, ISortingExpression, Size, SortingDirection } from 'igniteui-angular/core';
+import { IgxPaginatorComponent, IgxPaginatorContentDirective } from 'igniteui-angular/paginator';
 
 describe('IgxGrid Component Tests #grid', () => {
     const MIN_COL_WIDTH = '136px';

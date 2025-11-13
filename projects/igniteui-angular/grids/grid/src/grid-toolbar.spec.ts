@@ -1,16 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, ComponentFixture, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from '../../../../core/src/services/public_api';
 import { IgxGridComponent } from './public_api';
-import { GridFunctions } from "../../../../test-utils/grid-functions.spec";
+import { GridFunctions } from "../../../test-utils/grid-functions.spec";
 import { By } from "@angular/platform-browser";
-import { IgxGridToolbarComponent } from '../toolbar/grid-toolbar.component';
-import { IgxGridToolbarActionsComponent, IgxGridToolbarTitleComponent } from '../toolbar/common';
-import { IgxGridToolbarPinningComponent } from '../toolbar/grid-toolbar-pinning.component';
-import { IgxGridToolbarHidingComponent } from '../toolbar/grid-toolbar-hiding.component';
-import { IgxGridToolbarAdvancedFilteringComponent } from '../toolbar/grid-toolbar-advanced-filtering.component';
-import { IgxGridToolbarExporterComponent } from '../toolbar/grid-toolbar-exporter.component';
+import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from 'igniteui-angular/core';
+import { IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarTitleComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent } from 'igniteui-angular';
 
 const TOOLBAR_TAG = 'igx-grid-toolbar';
 const TOOLBAR_TITLE_TAG = 'igx-grid-toolbar-title';

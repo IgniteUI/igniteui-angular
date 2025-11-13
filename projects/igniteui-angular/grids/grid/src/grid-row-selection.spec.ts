@@ -1,8 +1,7 @@
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxBooleanFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
+import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import {
     RowSelectionComponent,
     SelectionWithScrollsComponent,
@@ -10,14 +9,11 @@ import {
     RowSelectionWithoutPrimaryKeyComponent,
     SelectionWithTransactionsComponent,
     GridCustomSelectorsComponent
-} from '../../../../test-utils/grid-samples.spec';
-import { GridFunctions, GridSelectionFunctions } from '../../../../test-utils/grid-functions.spec';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
-import { GridSelectionMode } from 'igniteui-angular/grids/core';
-import { FilteringExpressionsTree } from '../../../../core/src/data-operations/filtering-expressions-tree';
-import { FilteringLogic } from '../../../../core/src/data-operations/filtering-expression.interface';
-import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
-import { IRowSelectionEventArgs } from '../public_api';
+} from '../../../test-utils/grid-samples.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
+import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
+import { GridSelectionMode, IRowSelectionEventArgs } from 'igniteui-angular/grids/core';
+import { FilteringExpressionsTree, FilteringLogic, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
 const DEBOUNCETIME = 30;
 const SCROLL_DEBOUNCETIME = 100;

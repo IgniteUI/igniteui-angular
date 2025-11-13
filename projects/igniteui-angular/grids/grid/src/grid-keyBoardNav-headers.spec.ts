@@ -2,19 +2,18 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { IgxGridComponent } from './grid.component';
-import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
-import { clearGridSubs, setupGridScrollDetection } from '../../../../test-utils/helper-utils.spec';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import {
     SelectionWithScrollsComponent,
     MRLTestComponent,
     ColumnGroupsNavigationTestComponent
-} from '../../../../test-utils/grid-samples.spec';
-import { GridFunctions, GridSelectionFunctions } from '../../../../test-utils/grid-functions.spec';
+} from '../../../test-utils/grid-samples.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { GridSelectionMode, FilterMode } from 'igniteui-angular/grids/core';
 import { IActiveNodeChangeEventArgs } from 'igniteui-angular/grids/core';
-import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
 import { IgxGridHeaderRowComponent } from 'igniteui-angular/grids/core';
-import { ISortingStrategy, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
+import { IgxStringFilteringOperand, ISortingStrategy, SortingDirection } from 'igniteui-angular/core';
 
 const DEBOUNCETIME = 30;
 

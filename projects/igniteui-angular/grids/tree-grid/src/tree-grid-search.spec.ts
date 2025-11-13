@@ -1,14 +1,13 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { TreeGridFunctions, CELL_VALUE_DIV_CSS_CLASS } from '../../../../test-utils/tree-grid-functions.spec';
+import { TreeGridFunctions, CELL_VALUE_DIV_CSS_CLASS } from '../../../test-utils/tree-grid-functions.spec';
 import {
     IgxTreeGridSearchComponent,
     IgxTreeGridPrimaryForeignKeyComponent,
-    IgxTreeGridSummariesScrollingComponent } from '../../../../test-utils/tree-grid-components.spec';
+    IgxTreeGridSummariesScrollingComponent } from '../../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
-import { wait } from '../../../../test-utils/ui-interactions.spec';
-import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
+import { wait } from '../../../test-utils/ui-interactions.spec';
+import { IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
 const HIGHLIGHT_CLASS = 'igx-highlight';
 const ACTIVE_CLASS = 'igx-highlight__active';

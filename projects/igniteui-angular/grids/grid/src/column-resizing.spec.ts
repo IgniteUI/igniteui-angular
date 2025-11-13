@@ -2,19 +2,18 @@ import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Calendar } from '../../../../calendar/src/public_api';
 import { IgxGridComponent } from './grid.component';
-import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
-import { GridTemplateStrings, ColumnDefinitions } from '../../../../test-utils/template-strings.spec';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
-import { MultiColumnHeadersComponent } from '../../../../test-utils/grid-samples.spec';
-import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
-import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective } from 'igniteui-angular/grids/core';
-import { IgxAvatarComponent } from '../../../../avatar/src/avatar/avatar.component';
-import { IColumnResizeEventArgs, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent } from '../public_api';
-import { setElementSize } from '../../../../test-utils/helper-utils.spec';
+import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { GridTemplateStrings, ColumnDefinitions } from '../../../test-utils/template-strings.spec';
+import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
+import { MultiColumnHeadersComponent } from '../../../test-utils/grid-samples.spec';
+import { GridFunctions } from '../../../test-utils/grid-functions.spec';
+import { IColumnResizeEventArgs, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent } from 'igniteui-angular/grids/core';
+import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import { IgxColumnResizerDirective } from 'igniteui-angular/grids/core';
 import { Size } from 'igniteui-angular/core';
+import { IgxAvatarComponent } from 'igniteui-angular/avatar';
+import { Calendar } from 'igniteui-angular/calendar';
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {
 

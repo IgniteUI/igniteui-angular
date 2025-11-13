@@ -1,14 +1,14 @@
 import { TestBed, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
-import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestBaseComponent } from '../../../../test-utils/pivot-grid-samples.spec';
-import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
+import { GridFunctions } from '../../../test-utils/grid-functions.spec';
+import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestBaseComponent } from '../../../test-utils/pivot-grid-samples.spec';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { DebugElement } from '@angular/core';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
-import { PivotRowLayoutType } from '../../core/src/pivot-grid.interface';
+import { PivotRowLayoutType } from 'igniteui-angular/grids/core';
 
 const DEBOUNCE_TIME = 250;
 const PIVOT_TBODY_CSS_CLASS = '.igx-grid__tbody';

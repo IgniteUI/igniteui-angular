@@ -3,20 +3,18 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
+import { IgxColumnComponent, IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
 import {
     MovableColumnsComponent,
     MovableTemplatedColumnsComponent,
     MovableColumnsLargeComponent,
     MultiColumnHeadersComponent
- } from '../../../../test-utils/grid-samples.spec';
-import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
+ } from '../../../test-utils/grid-samples.spec';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxGridComponent } from './grid.component';
-import { GridSelectionFunctions, GridFunctions } from '../../../../test-utils/grid-functions.spec';
-import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
-import { IgxColumnComponent } from '../public_api';
-import { ColumnType } from 'igniteui-angular/core';
+import { GridSelectionFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
+import { ColumnType, SortingDirection } from 'igniteui-angular/core';
 
 describe('IgxGrid - Column Moving #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';

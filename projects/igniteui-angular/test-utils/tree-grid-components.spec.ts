@@ -2,10 +2,11 @@ import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
 import { DefaultSortingStrategy, GridSummaryCalculationMode, IGroupingExpression, IgxSummaryResult } from 'igniteui-angular/core';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
-import { IgxColumnComponent, IgxColumnGroupComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleHeaderIconDirective, IgxExcelStyleSearchComponent, IgxExcelStyleSortingComponent, IgxGridEditingActionsComponent, IgxGridExcelStyleFilteringComponent, IgxGridPinningActionsComponent, IgxHeadSelectorDirective, IgxNumberSummaryOperand, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxRowSelectorDirective, IgxSummaryOperand, IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent, IgxTreeGridGroupingPipe, IPinningConfig, RowPinningPosition } from 'igniteui-angular/grids';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent, IgxTreeGridGroupingPipe } from 'igniteui-angular/grids/tree-grid';
+import { IgxColumnComponent, IgxColumnGroupComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleHeaderIconDirective, IgxExcelStyleSearchComponent, IgxExcelStyleSortingComponent, IgxGridEditingActionsComponent, IgxGridExcelStyleFilteringComponent, IgxGridPinningActionsComponent, IgxHeadSelectorDirective, IgxNumberSummaryOperand, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxRowSelectorDirective, IgxSummaryOperand, IPinningConfig, RowPinningPosition } from 'igniteui-angular/grids/core';
 
 @Component({
     template: `

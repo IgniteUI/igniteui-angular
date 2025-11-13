@@ -2,16 +2,14 @@ import { Component, ViewChild, OnInit, NgZone, DebugElement } from '@angular/cor
 import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
-import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
-import { HammerGesturesManager } from '../../../../core/src/core/touch';
-import { PlatformUtil } from '../../../../core/src/core/utils';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { VirtualGridComponent, NoScrollsComponent,
-    NoColumnWidthGridComponent, IgxGridDateTimeColumnComponent } from '../../../../test-utils/grid-samples.spec';
-import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
-import { TestNgZone } from '../../../../test-utils/helper-utils.spec';
-import { CellType } from 'igniteui-angular/grids/core';
-import { IGridCellEventArgs, IgxColumnComponent } from '../public_api';
+    NoColumnWidthGridComponent, IgxGridDateTimeColumnComponent } from '../../../test-utils/grid-samples.spec';
+import { GridFunctions } from '../../../test-utils/grid-functions.spec';
+import { TestNgZone } from '../../../test-utils/helper-utils.spec';
+import { CellType, IGridCellEventArgs, IgxColumnComponent } from 'igniteui-angular/grids/core';
+import { HammerGesturesManager, PlatformUtil } from 'igniteui-angular/core';
 
 describe('IgxGrid - Cell component #grid', () => {
 
@@ -426,7 +424,7 @@ describe('IgxGrid - Cell component #grid', () => {
             </igx-column>
         }
     </igx-grid>`,
-    styleUrls: ['../../../../test-utils/grid-cell-style-testing.scss'],
+    styleUrls: ['../../../test-utils/grid-cell-style-testing.scss'],
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ConditionalCellStyleTestComponent implements OnInit {

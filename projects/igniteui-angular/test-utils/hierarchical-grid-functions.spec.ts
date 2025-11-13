@@ -1,8 +1,8 @@
 import { DebugElement } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxHierarchicalRowComponent } from '../grids/src/grids/hierarchical-grid/hierarchical-row.component';
-import { IgxRowDirective } from '../grids/src/grids/row.directive';
+import { IgxRowDirective } from 'igniteui-angular/grids/core';
+import { IgxHierarchicalRowComponent } from 'igniteui-angular/grids/hierarchical-grid/src/hierarchical-row.component';
 
 const HIERARCHICAL_GRID_TAG = 'igx-hierarchical-grid';
 const EXPANDER_CLASS = 'igx-grid__hierarchical-expander';

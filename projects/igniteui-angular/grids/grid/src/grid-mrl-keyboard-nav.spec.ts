@@ -3,15 +3,14 @@ import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angul
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
-import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec';
-import { clearGridSubs, setupGridScrollDetection } from '../../../../test-utils/helper-utils.spec';
-import { DefaultSortingStrategy, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
+import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
+import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { GridFunctions, GRID_MRL_BLOCK } from '../../../../test-utils/grid-functions.spec';
-import { CellType } from 'igniteui-angular/grids/core';
+import { GridFunctions, GRID_MRL_BLOCK } from '../../../test-utils/grid-functions.spec';
+import { CellType, IGridCellEventArgs, IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
-import { IGridCellEventArgs, IgxColumnComponent } from '../public_api';
+import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 
 const DEBOUNCE_TIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';

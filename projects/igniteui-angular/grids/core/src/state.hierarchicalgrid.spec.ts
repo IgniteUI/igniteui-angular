@@ -2,19 +2,13 @@ import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { IgxGridStateDirective } from './state.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IGroupingExpression } from '../../../core/src/data-operations/grouping-expression.interface';
-import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../../../core/src/data-operations/filtering-expressions-tree';
-import { IPagingState } from '../../../core/src/data-operations/paging-state.interface';
-import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
-import { IgxRowIslandComponent } from './hierarchical-grid/row-island.component';
-import { FilteringLogic } from '../../../core/src/data-operations/filtering-expression.interface';
-import { IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
 import { GridSelectionMode } from './common/enums';
-import { ISortingExpression, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { GridSelectionRange } from './common/types';
 import { IgxColumnComponent } from './public_api';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IColumnState, IGridState } from './state-base.directive';
+import { FilteringExpressionsTree, FilteringLogic, IFilteringExpressionsTree, IGroupingExpression, IgxStringFilteringOperand, IPagingState, ISortingExpression, SortingDirection } from 'igniteui-angular/core';
+import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
 
 describe('IgxHierarchicalGridState - input properties #hGrid', () => {
     let fix;

@@ -4,20 +4,16 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { IgxGridComponent } from './grid.component';
-import { IgxGridDetailTemplateDirective } from '../public_api';
-import { RowPinningPosition } from 'igniteui-angular/grids/core';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
-import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
-import { GridSummaryFunctions } from '../../../../test-utils/grid-functions.spec';
-import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
-import { IgxPaginatorComponent } from '../../../../paginator/src/paginator/paginator.component';
-import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec';
-import { clearGridSubs, setupGridScrollDetection } from '../../../../test-utils/helper-utils.spec';
-import { GridRowConditionalStylingComponent } from '../../../../test-utils/grid-base-components.spec';
-import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
+import { CellType, IgxColumnComponent, IgxGridDetailTemplateDirective, IPinningConfig, IPinRowEventArgs, RowPinningPosition } from 'igniteui-angular/grids/core';
+import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
+import { GridFunctions } from '../../../test-utils/grid-functions.spec';
+import { GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
+import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
+import { GridRowConditionalStylingComponent } from '../../../test-utils/grid-base-components.spec';
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
-import { CellType, IPinRowEventArgs, IPinningConfig, IgxColumnComponent } from '../public_api';
-import { ColumnPinningPosition } from 'igniteui-angular/core';
+import { ColumnPinningPosition, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';

@@ -9,14 +9,13 @@ import {
     IgxTreeGridSummariesTransactionsComponent,
     IgxTreeGridNoDataComponent,
     IgxTreeGridWithNoForeignKeyComponent
-} from '../../../../test-utils/tree-grid-components.spec';
-import { wait } from '../../../../test-utils/ui-interactions.spec';
+} from '../../../test-utils/tree-grid-components.spec';
+import { wait } from '../../../test-utils/ui-interactions.spec';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
-import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
-import { SAFE_DISPOSE_COMP_ID } from '../../../../test-utils/grid-functions.spec';
-import { setElementSize } from '../../../../test-utils/helper-utils.spec';
-import { Size } from 'igniteui-angular/core';
+import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
+import { SAFE_DISPOSE_COMP_ID } from '../../../test-utils/grid-functions.spec';
+import { setElementSize } from '../../../test-utils/helper-utils.spec';
+import { IgxStringFilteringOperand, Size } from 'igniteui-angular/core';
 
 
 describe('IgxTreeGrid Component Tests #tGrid', () => {

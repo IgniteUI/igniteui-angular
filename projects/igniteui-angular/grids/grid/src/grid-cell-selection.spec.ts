@@ -7,17 +7,16 @@ import {
     CellSelectionNoneComponent,
     CellSelectionSingleComponent,
     IgxGridRowEditingWithoutEditableColumnsComponent
-} from '../../../../test-utils/grid-samples.spec';
-import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
-import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
-import { clearGridSubs, setupGridScrollDetection } from '../../../../test-utils/helper-utils.spec';
+} from '../../../test-utils/grid-samples.spec';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
 
-import { GridSelectionFunctions, GridFunctions } from '../../../../test-utils/grid-functions.spec';
-import { DefaultSortingStrategy, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
+import { GridSelectionFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { DebugElement } from '@angular/core';
 import { DropPosition } from 'igniteui-angular/grids/core';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
+import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
 describe('IgxGrid - Cell selection #grid', () => {
     beforeEach(waitForAsync(() => {

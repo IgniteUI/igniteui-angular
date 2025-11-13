@@ -3,11 +3,11 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first, take } from 'rxjs/operators';
 import { IgxPivotGridPersistanceComponent } from '../../../test-utils/pivot-grid-samples.spec';
-import { IgxPivotNumericAggregate } from './pivot-grid/pivot-grid-aggregate';
-import { IgxPivotDateDimension } from './pivot-grid/pivot-grid-dimensions';
-import { IPivotDimension, IPivotGridRecord } from './pivot-grid/pivot-grid.interface';
-import { IgxPivotRowDimensionHeaderComponent } from './pivot-grid/pivot-row-dimension-header.component';
 import { NoopPivotDimensionsStrategy } from './common/pivot-strategy';
+import { IgxPivotNumericAggregate } from './pivot-grid-aggregate';
+import { IPivotDimension, IPivotGridRecord } from './pivot-grid.interface';
+import { IgxPivotRowDimensionHeaderComponent } from 'igniteui-angular/grids/pivot-grid/src/pivot-row-dimension-header.component';
+import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 
 describe('IgxPivotGridState #pivotGrid :', () => {
     let fixture;

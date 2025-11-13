@@ -3,14 +3,11 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs } from 'igniteui-angular/grids/core';
+import { CellType, IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs, RowType } from 'igniteui-angular/grids/core';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
-import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
-import { TransactionType, Transaction } from '../../../../core/src/services/public_api';
-import { DefaultSortingStrategy, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
-import { clearGridSubs, setElementSize, setupGridScrollDetection } from '../../../../test-utils/helper-utils.spec';
-import { GridFunctions, GridSummaryFunctions } from '../../../../test-utils/grid-functions.spec';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { clearGridSubs, setElementSize, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
+import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
 import {
     IgxGridRowEditingComponent,
     IgxGridRowEditingTransactionComponent,
@@ -21,12 +18,10 @@ import {
     VirtualGridComponent,
     ObjectCloneStrategy,
     IgxGridCustomRowEditTemplateComponent
-} from '../../../../test-utils/grid-samples.spec';
+} from '../../../test-utils/grid-samples.spec';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { DefaultDataCloneStrategy } from '../../../../core/src/data-operations/data-clone-strategy';
-import { CellType, RowType } from '../public_api';
-import { Size } from 'igniteui-angular/core';
+import { DefaultDataCloneStrategy, DefaultSortingStrategy, IgxNumberFilteringOperand, IgxStringFilteringOperand, Size, SortingDirection, Transaction, TransactionType } from 'igniteui-angular/core';
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';

@@ -1,7 +1,7 @@
 import { EventEmitter, NgZone, Injectable } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
-import { IgxHierarchicalGridComponent } from '../grids/src/grids/hierarchical-grid/public_api';
-import { GridType } from '../grids/src/grids/common/grid.interface';
+import { GridType } from 'igniteui-angular/grids/core';
+import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { Subscription } from 'rxjs';
 
 /**

@@ -1,26 +1,23 @@
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IGridCreatedEventArgs } from './public_api';
 import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, QueryList } from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
-import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
-import { IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../public_api';
-import { GridSelectionMode } from 'igniteui-angular/grids/core';
-import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
+import { CellType, GridSelectionMode, IGridCellEventArgs, IgxColumnComponent, IgxColumnGroupComponent, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowEditActionsDirective, IgxRowEditTextDirective, IgxRowExpandedIndicatorDirective } from 'igniteui-angular/grids/core';
+import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from 'igniteui-angular/grids/core';
 import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from 'igniteui-angular/grids/core';
 import { IgxExcelStyleHeaderComponent } from 'igniteui-angular/grids/core';
 import { IgxExcelStyleSortingComponent } from 'igniteui-angular/grids/core';
 import { IgxExcelStyleSearchComponent } from 'igniteui-angular/grids/core';
 import { IgxCellHeaderTemplateDirective } from 'igniteui-angular/grids/core';
-import { CellType, IGridCellEventArgs, IgxColumnComponent, IgxColumnGroupComponent, IgxRowEditActionsDirective, IgxRowEditTextDirective } from '../public_api';
-import { setElementSize } from '../../../../test-utils/helper-utils.spec';
-import { ColumnType, Size, getComponentSize } from 'igniteui-angular/core';
+import { setElementSize } from '../../../test-utils/helper-utils.spec';
+import { ColumnType, IgxStringFilteringOperand, Size, getComponentSize } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IGridCreatedEventArgs } from './events';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
@@ -136,7 +133,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(container.getAttribute('role')).toBe(null);
 
             //Filter grid so no results are available and grid is empty
-            hierarchicalGrid.filter('index','111',IgxStringFilteringOperand.instance().condition('contains'),true);
+            hierarchicalGrid.filter('index', '111', IgxStringFilteringOperand.instance().condition('contains'), true);
             hierarchicalGrid.markForCheck();
             fixture.detectChanges();
             expect(container.getAttribute('role')).toMatch('row');

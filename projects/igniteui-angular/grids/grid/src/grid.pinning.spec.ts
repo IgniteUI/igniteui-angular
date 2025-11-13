@@ -1,9 +1,8 @@
 ﻿import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
-import { GridSelectionMode } from 'igniteui-angular/grids/core';
-import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec';
+import { GridSelectionMode, IgxGridHeaderRowComponent, IPinningConfig } from 'igniteui-angular/grids/core';
+import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import {
     CELL_PINNED_CLASS,
     GRID_MRL_BLOCK,
@@ -13,7 +12,7 @@ import {
     GridSummaryFunctions,
     HEADER_PINNED_CLASS,
     PINNED_SUMMARY
-} from '../../../../test-utils/grid-functions.spec';
+} from '../../../test-utils/grid-functions.spec';
 import {
     GridFeaturesComponent,
     GridPinningMRLComponent,
@@ -23,13 +22,11 @@ import {
     PinningComponent,
     PinOnBothSidesInitComponent,
     PinOnInitAndSelectionComponent
-} from '../../../../test-utils/grid-samples.spec';
+} from '../../../test-utils/grid-samples.spec';
 import { IgxGridComponent } from './grid.component';
 import { DropPosition } from 'igniteui-angular/grids/core';
-import { clearGridSubs, setupGridScrollDetection } from '../../../../test-utils/helper-utils.spec';
-import { SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
-import { IgxGridHeaderRowComponent, IPinningConfig } from '../public_api';
-import { ColumnPinningPosition } from 'igniteui-angular/core';
+import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
+import { ColumnPinningPosition, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
 describe('IgxGrid - Column Pinning #grid', () => {
 

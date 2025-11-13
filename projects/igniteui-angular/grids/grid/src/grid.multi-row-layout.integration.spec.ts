@@ -2,18 +2,14 @@
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
+import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { ViewChild, Component, DebugElement } from '@angular/core';
-import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
-import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec';
-import { DefaultSortingStrategy, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
-import { GridFunctions, GRID_MRL_BLOCK } from '../../../../test-utils/grid-functions.spec';
-import { ControlsFunction } from '../../../../test-utils/controls-functions.spec';
+import { IgxColumnLayoutComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular/grids/core';
+import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { GridFunctions, GRID_MRL_BLOCK } from '../../../test-utils/grid-functions.spec';
+import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
-import { IgxGridToolbarComponent } from '../toolbar/grid-toolbar.component';
-import { IgxGridToolbarActionsComponent } from '../toolbar/common';
-import { IgxGridToolbarHidingComponent } from '../toolbar/grid-toolbar-hiding.component';
-import { IgxGridToolbarPinningComponent } from '../toolbar/grid-toolbar-pinning.component';
+import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 
 
 type FixtureType = ColumnLayoutGroupingTestComponent | ColumnLayoutHidingTestComponent | ColumnLayoutResizingTestComponent

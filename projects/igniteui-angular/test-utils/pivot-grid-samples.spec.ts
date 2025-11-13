@@ -1,9 +1,6 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { IgxPivotDataSelectorComponent } from '../grids/src/grids/pivot-grid/pivot-data-selector.component';
-import { IgxPivotNumericAggregate } from '../grids/src/grids/pivot-grid/pivot-grid-aggregate';
-import { IgxPivotGridComponent } from '../grids/src/grids/pivot-grid/pivot-grid.component';
-import { IPivotConfiguration, IPivotGridColumn, IPivotGridRecord, PivotAggregation } from '../grids/src/grids/pivot-grid/pivot-grid.interface';
-import { IgxGridStateDirective } from '../grids/src/grids/state.directive';
+import { IgxGridStateDirective, IgxPivotNumericAggregate, IPivotConfiguration, IPivotGridColumn, IPivotGridRecord, PivotAggregation } from 'igniteui-angular/grids/core';
+import { IgxPivotDataSelectorComponent, IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
 
 @Component({
     template: `

@@ -8,16 +8,15 @@ import {
     IgxTreeGridLoadOnDemandHasChildrenComponent,
     IgxTreeGridLoadOnDemandChildDataComponent,
     IgxTreeGridCustomExpandersTemplateComponent
-} from '../../../../test-utils/tree-grid-components.spec';
-import { TreeGridFunctions } from '../../../../test-utils/tree-grid-functions.spec';
+} from '../../../test-utils/tree-grid-components.spec';
+import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec';
 import { first } from 'rxjs/operators';
-import { wait } from '../../../../test-utils/ui-interactions.spec';
-import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
-import { GridSelectionMode } from 'igniteui-angular/grids/core';
+import { wait } from '../../../test-utils/ui-interactions.spec';
+import { GridFunctions } from '../../../test-utils/grid-functions.spec';
+import { CellType, GridSelectionMode } from 'igniteui-angular/grids/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { QueryList } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { CellType } from '../public_api';
 
 describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     let fix;

@@ -1,19 +1,17 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './public_api';
-import { BasicGridSearchComponent } from '../../../../test-utils/grid-base-components.spec';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
-import { GridWithAvatarComponent, GroupableGridSearchComponent, ScrollableGridSearchComponent } from '../../../../test-utils/grid-samples.spec';
+import { BasicGridSearchComponent } from '../../../test-utils/grid-base-components.spec';
+import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
+import { GridWithAvatarComponent, GroupableGridSearchComponent, ScrollableGridSearchComponent } from '../../../test-utils/grid-samples.spec';
 import { IForOfState } from 'igniteui-angular/directives';
-import { IgxStringFilteringOperand } from '../../../../core/src/data-operations/filtering-condition';
-import { DefaultSortingStrategy, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
-import { wait, UIInteractions } from '../../../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { clearGridSubs, setupGridScrollDetection } from '../../../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { IgxTextHighlightDirective } from 'igniteui-angular/directives';
-import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
+import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { firstValueFrom } from 'rxjs';
-import { GridColumnDataType } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, GridColumnDataType, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
 describe('IgxGrid - search API #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';

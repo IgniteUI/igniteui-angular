@@ -4,13 +4,13 @@ import { Component, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
 import { By } from '@angular/platform-browser';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
-import { wait } from '../../../../test-utils/ui-interactions.spec';
-import { DefaultSortingStrategy, SortingDirection } from '../../../../core/src/data-operations/sorting-strategy';
+import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
+import { wait } from '../../../test-utils/ui-interactions.spec';
 import { ICellPosition } from 'igniteui-angular/grids/core';
-import { GridFunctions, GRID_MRL_BLOCK } from '../../../../test-utils/grid-functions.spec';
+import { GridFunctions, GRID_MRL_BLOCK } from '../../../test-utils/grid-functions.spec';
 import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
+import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 
 const GRID_COL_THEAD_CLASS = '.igx-grid-th';
 const GRID_MRL_BLOCK_CLASS = `.${GRID_MRL_BLOCK}`;

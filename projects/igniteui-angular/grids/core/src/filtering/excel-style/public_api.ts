@@ -20,6 +20,7 @@ export * from './excel-style-selecting.component';
 export * from './excel-style-sorting.component';
 export * from './excel-style-filtering.component';
 export * from './excel-style-date-expression.component';
+export * from './common';
 
 /* NOTE: Grid excel-style filtering directives collection for ease-of-use import in standalone components scenario */
 // export const IGX_GRID_EXCEL_STYLE_FILTER_DIRECTIVES = [

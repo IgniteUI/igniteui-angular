@@ -1,23 +1,16 @@
 import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
-import { IgxHierarchicalGridComponent } from '../grids/src/grids/hierarchical-grid/hierarchical-grid.component';
-import { IgxRowIslandComponent } from '../grids/src/grids/hierarchical-grid/row-island.component';
-import { RowPinningPosition } from '../grids/src/grids/common/enums';
 import { HIERARCHICAL_SAMPLE_DATA, HIERARCHICAL_SAMPLE_DATA_SHORT } from 'src/app/shared/sample-data';
-import { IgxHierarchicalTransactionServiceFactory } from '../grids/src/grids/hierarchical-grid/hierarchical-grid-base.directive';
-import { IgxGridToolbarComponent } from '../grids/src/grids/toolbar/grid-toolbar.component';
 import { IgxButtonDirective } from '../directives/src/directives/button/button.directive';
 import { IgxCheckboxComponent } from '../checkbox/src/checkbox/checkbox.component';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../paginator/src/paginator/paginator.component';
-import { IgxColumnGroupComponent } from '../grids/src/grids/columns/column-group.component';
 import { IgxIconComponent } from '../icon/src/icon/icon.component';
-import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from '../grids/src/grids/selection/row-selectors';
-import { IgxGridToolbarDirective } from '../grids/src/grids/toolbar/common';
-import { IgxCellHeaderTemplateDirective } from '../grids/src/grids/columns/templates.directive';
 import { IgxPaginatorDirective } from '../paginator/src/paginator/paginator-interfaces';
 import { ColumnPinningPosition, ColumnType, IgxSummaryResult } from 'igniteui-angular/core';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
-import { IgxAdvancedFilteringDialogComponent, IgxColumnComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxNumberSummaryOperand, IPinningConfig } from 'igniteui-angular/grids';
+import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
+import { IgxAdvancedFilteringDialogComponent, IgxCellHeaderTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxGridToolbarComponent, IgxGridToolbarDirective, IgxHeadSelectorDirective, IgxNumberSummaryOperand, IgxRowSelectorDirective, IPinningConfig, RowPinningPosition } from 'igniteui-angular/grids/core';
+import { IgxHierarchicalTransactionServiceFactory } from 'igniteui-angular/grids/hierarchical-grid/src/hierarchical-grid-base.directive';
 
 @Component({
     selector: 'igx-hierarchical-grid-test-base',
