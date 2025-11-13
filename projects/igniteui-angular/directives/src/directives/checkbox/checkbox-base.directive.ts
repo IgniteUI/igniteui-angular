@@ -281,16 +281,9 @@ export class CheckboxBaseDirective implements AfterViewInit {
      * let isRequired = this.checkbox.required;
      * ```
      */
-    // @Input({ transform: booleanAttribute })
-    // public get required(): boolean {
-    //     return this._required || this.nativeElement.hasAttribute('required');
-    // }
-    // public set required(value: boolean) {
-    //     this._required = value;
-    // }
     @Input({ transform: booleanAttribute })
     public get required(): boolean {
-        return this._required || this.nativeElement.hasAttribute('required');
+        return this._required;
     }
     public set required(value: boolean) {
         this._required = value;
