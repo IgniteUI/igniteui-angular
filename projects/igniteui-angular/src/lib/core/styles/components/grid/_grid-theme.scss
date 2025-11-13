@@ -888,7 +888,7 @@
             @include css-vars((
                 name: 'igx-grid-row',
                 row-ghost-background: map.get($theme, 'row-ghost-background'),
-                row-drag-color: map.get($theme, 'row-drago-color')
+                row-drag-color: map.get($theme, 'row-drag-color')
             ));
         }
     }
@@ -1000,7 +1000,11 @@
         }
 
         %igx-icon--error {
-            color: color($color: 'gray', $variant: 500);
+            @if $variant == 'fluent' and $theme-variant == 'light' or $variant == 'material' and $theme-variant == 'light' {
+                color: color($color: 'gray', $variant: 600);
+            } @else {
+                color: color($color: 'gray', $variant: 500);
+            }
         }
     }
 
