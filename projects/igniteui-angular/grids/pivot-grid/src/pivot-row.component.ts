@@ -12,7 +12,6 @@ import {
     IgxColumnComponent,
     IgxGridCellComponent,
     IgxGridCellStylesPipe,
-    IgxGridDataMapperPipe,
     IgxGridNotGroupedPipe,
     IgxGridSelectionService,
     IgxGridTransactionStatePipe,
@@ -31,7 +30,7 @@ import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
     selector: 'igx-pivot-row',
     templateUrl: './pivot-row.component.html',
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxPivotRowComponent) }],
-    imports: [IgxGridForOfDirective, IgxGridCellComponent, NgClass, NgStyle, IgxCheckboxComponent, IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe, IgxPivotGridCellStyleClassesPipe]
+    imports: [IgxGridForOfDirective, IgxGridCellComponent, NgClass, NgStyle, IgxCheckboxComponent, IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridTransactionStatePipe, IgxPivotGridCellStyleClassesPipe]
 })
 export class IgxPivotRowComponent extends IgxRowDirective {
     /**

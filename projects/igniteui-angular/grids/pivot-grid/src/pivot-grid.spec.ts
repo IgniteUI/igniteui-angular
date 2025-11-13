@@ -810,6 +810,22 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.nativeElement.clientWidth - expectedSize).toBeLessThan(50, "should take sum of columns as width.");
         });
 
+        it('should render cell values for dimension columns containing dots - issue #16445', () => {
+            let data = fixture.componentInstance.data;
+            data = data.map(item => {
+                return {
+                    ...item,
+                    Country: `${item['Country']}.Test`
+                };
+            });
+
+            fixture.componentInstance.data = [...data];
+            fixture.detectChanges();
+
+            const cell = fixture.componentInstance.pivotGrid.gridAPI.get_cell_by_index(0, 'Bulgaria.Test-UnitsSold');
+            expect(cell.value).not.toBeUndefined();
+        });
+
         describe('IgxPivotGrid Features #pivotGrid', () => {
             it('should show excel style filtering via dimension chip.', async () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
