@@ -1,25 +1,27 @@
-import { IgxGridComponent } from "../../../igniteui-angular/grids/grid/src/grid.component";
-import { IgxHierarchicalGridComponent } from "../../../igniteui-angular/grids/hierarchical-grid/src/hierarchical-grid.component";
-import { IgxPivotDataSelectorComponent } from "../../../igniteui-angular/grids/pivot-grid/src/pivot-data-selector.component";
-import { IgxPivotGridComponent } from "../../../igniteui-angular/grids/pivot-grid/src/pivot-grid.component";
-import { IgxTreeGridComponent } from "../../../igniteui-angular/grids/tree-grid/src/tree-grid.component";
+import { IgxGridComponent } from "../../../igniteui-angular/grids/grid";
+import { IgxHierarchicalGridComponent } from "../../../igniteui-angular/grids/hierarchical-grid";
+import {
+  IgxPivotDataSelectorComponent,
+  IgxPivotGridComponent,
+} from "../../../igniteui-angular/grids/pivot-grid";
+import { IgxTreeGridComponent } from "../../../igniteui-angular/grids/tree-grid";
 import { IgxPaginatorComponent } from "../../../igniteui-angular/paginator/src/paginator/paginator.component";
 import { IgxPaginatorToken } from "../../../igniteui-angular/paginator/src/paginator/token";
 import { IgxColumnComponent } from "../../../igniteui-angular/grids/core/src/columns/column.component";
 import { IgxColumnGroupComponent } from "../../../igniteui-angular/grids/core/src/columns/column-group.component";
 import { IgxColumnLayoutComponent } from "../../../igniteui-angular/grids/core/src/columns/column-layout.component";
+import { IgxGridEditingActionsComponent } from "../../../igniteui-angular/grids/core/src/grid-actions/grid-editing-actions.component";
+import { IgxActionStripActionsToken } from "../../../igniteui-angular/core/src/grid-column-actions/token";
+import { IgxGridPinningActionsComponent } from "../../../igniteui-angular/grids/core/src/grid-actions/grid-pinning-actions.component";
 import { IgxGridToolbarTitleComponent } from "../../../igniteui-angular/grids/core/src/toolbar/common";
 import { IgxGridToolbarActionsComponent } from "../../../igniteui-angular/grids/core/src/toolbar/common";
 import { IgxGridToolbarAdvancedFilteringComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar-advanced-filtering.component";
 import { IgxGridToolbarComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar.component";
 import { IgxToolbarToken } from "../../../igniteui-angular/grids/core/src/toolbar/token";
-import { IgxRowIslandComponent } from "../../../igniteui-angular/grids/hierarchical-grid/src/row-island.component";
-import { IgxGridEditingActionsComponent } from "../../../igniteui-angular/grids/core/src/grid-actions/grid-editing-actions.component";
-import { IgxActionStripActionsToken } from "../../../igniteui-angular/core/src/grid-column-actions/token";
-import { IgxGridPinningActionsComponent } from "../../../igniteui-angular/grids/core/src/grid-actions/grid-pinning-actions.component";
 import { IgxGridToolbarExporterComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar-exporter.component";
 import { IgxGridToolbarHidingComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar-hiding.component";
 import { IgxGridToolbarPinningComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar-pinning.component";
+import { IgxRowIslandComponent } from "../../../igniteui-angular/grids/hierarchical-grid/src/row-island.component";
 import { IgxActionStripComponent } from "../../../igniteui-angular/action-strip/src/action-strip/action-strip.component";
 import { IgxActionStripToken } from "../../../igniteui-angular/core/src/grid-column-actions/token";
 import { IgxGridStateComponent } from "../lib/state.component";
