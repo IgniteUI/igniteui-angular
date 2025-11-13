@@ -795,7 +795,7 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
                 date = new Date(2000, 0, 1, 2, 0, 0);
-                result = formatDate(date, 'longTime', 'en-US');
+                result = formatDate(date, 'longTime', 'en-US').normalize("NFKD");
                 expect(inputElement.nativeElement.value).toEqual(result);
             });
             it('should be able to apply custom display format.', fakeAsync(() => {

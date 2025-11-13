@@ -12,7 +12,7 @@ import {
 import { ControlValueAccessor } from '@angular/forms';
 import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
-import { CheckboxBaseDirective } from '../checkbox/checkbox-base.directive';
+import { CheckboxBaseDirective, IChangeCheckboxEventArgs } from '../checkbox/checkbox-base.directive';
 import { IgxRadioGroupDirective } from '../directives/radio/radio-group.directive';
 
 /**
@@ -130,7 +130,7 @@ export class IgxRadioComponent
      * @internal
      */
     @HostListener('change', ['$event'])
-    public _changed(event: Event) {
+    public _changed(event: IChangeCheckboxEventArgs) {
         if (event instanceof Event) {
             event.preventDefault();
         }

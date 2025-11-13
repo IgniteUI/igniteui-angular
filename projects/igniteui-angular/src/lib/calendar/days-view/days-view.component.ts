@@ -272,7 +272,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     /**
      * @hidden
      */
-    @HostListener('keydown.Space', ['$event'])
+    @HostListener('keydown.space', ['$event'])
     @HostListener('keydown.enter', ['$event'])
     protected onKeydownEnter(event: KeyboardEvent) {
         event.stopPropagation();

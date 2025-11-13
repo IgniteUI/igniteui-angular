@@ -120,6 +120,11 @@ export { GridSelectionRange } from './lib/grids/common/types';
 export { CancelableEventArgs, CancelableBrowserEventArgs } from './lib/core/utils';
 
 /**
+ * Global type augmentations
+ */
+export * from './lib/core/global-types';
+
+/**
  * i18n
  */
 export { igxI18N, IResourceStrings, changei18n } from './lib/core/i18n/resources';

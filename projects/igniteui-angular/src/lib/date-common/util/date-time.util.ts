@@ -268,7 +268,7 @@ export abstract class DateTimeUtil {
     public static formatDate(value: number | Date, format: string, locale: string, timezone?: string): string {
         let formattedDate: string;
         try {
-            formattedDate = formatDate(value, format, locale, timezone);
+            formattedDate = formatDate(value, format, locale, timezone).normalize("NFKD");
         } catch {
             DateTimeUtil.logMissingLocaleSettings(locale);
             const formatter = new Intl.DateTimeFormat(locale);

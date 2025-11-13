@@ -212,7 +212,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * ```
      */
     @HostBinding('class.igx-radio-group--vertical')
-    private vertical = false;
+    protected vertical = false;
 
     /**
      * A css class applied to the component if any of the
