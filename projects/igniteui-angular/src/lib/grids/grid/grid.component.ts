@@ -1,7 +1,7 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
     QueryList, ViewChild, TemplateRef, DoCheck, AfterContentInit, HostBinding,
-    OnInit, AfterViewInit, ContentChildren, CUSTOM_ELEMENTS_SCHEMA, booleanAttribute
+    OnInit, AfterViewInit, ContentChildren, CUSTOM_ELEMENTS_SCHEMA, booleanAttribute, OnDestroy,
 } from '@angular/core';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
@@ -159,7 +159,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class IgxGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit, AfterViewInit {
+export class IgxGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit, AfterViewInit, OnDestroy {
     /**
      * Emitted when a new chunk of data is loaded from virtualization.
      *
@@ -1081,6 +1081,18 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             }
         }
         super.ngDoCheck();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public override ngOnDestroy() {
+        super.ngOnDestroy();
+        for (const childTemplate of this.childDetailTemplates.values()) {
+            if (!childTemplate.view.destroyed) {
+                childTemplate.view.destroy();
+            }
+        }
     }
 
     /**
