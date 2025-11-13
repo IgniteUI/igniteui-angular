@@ -266,7 +266,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * @hidden
      */
     public ngAfterViewChecked() {
-        if (this._valueChanged) {
+        if (this._valueChanged && this._lastSearchInfo) {
             this.highlight(this._lastSearchInfo.searchText, this._lastSearchInfo.caseSensitive, this._lastSearchInfo.exactMatch);
             this.activateIfNecessary();
             this._valueChanged = false;
@@ -278,6 +278,10 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * Returns how many times the element contains the searched text.
      */
     public highlight(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
+        if (!this._lastSearchInfo) {
+            return 0;
+        }
+
         const caseSensitiveResolved = caseSensitive ? true : false;
         const exactMatchResolved = exactMatch ? true : false;
 
@@ -308,8 +312,10 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     public clearHighlight(): void {
         this.clearChildElements(false);
 
-        this._lastSearchInfo.searchText = '';
-        this._lastSearchInfo.matchCount = 0;
+        if (this._lastSearchInfo) {
+            this._lastSearchInfo.searchText = '';
+            this._lastSearchInfo.matchCount = 0;
+        }
     }
 
     /**
@@ -469,6 +475,10 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     }
 
     private searchNeedsEvaluation(text: string, caseSensitive: boolean, exactMatch: boolean): boolean {
+        if (!this._lastSearchInfo) {
+            return false;
+        }
+
         const searchedText = this._lastSearchInfo.searchText;
 
         return !this._nodeWasRemoved &&
