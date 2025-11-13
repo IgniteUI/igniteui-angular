@@ -2,6 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 20.2.0
+
+### General
+- `IgxHierarchicalGrid`
+    - **Deprecation** - `schema` input property has been deprecated and will be removed in a future version.
 
 ## 20.1.0
 
