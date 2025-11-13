@@ -1,5 +1,5 @@
 import { ByLevelTreeGridMergeStrategy, ColumnPinningPosition, DefaultMergeStrategy, DefaultTreeGridMergeStrategy, FilteringExpressionsTree, FilteringExpressionsTreeType, FilteringLogic, HorizontalAlignment, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, NoopFilteringStrategy, NoopSortingStrategy, SortingDirection, VerticalAlignment } from 'igniteui-angular/core';
-import { DropPosition, GridPagingMode, IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotDateDimension, IgxPivotNumericAggregate, IgxPivotTimeAggregate, IgxSummaryOperand, IgxTimeSummaryOperand, NoopPivotDimensionsStrategy, PivotDimensionType, RowPinningPosition } from 'igniteui-angular/grids';
+import { DropPosition, GridPagingMode, IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotDateDimension, IgxPivotNumericAggregate, IgxPivotTimeAggregate, IgxSummaryOperand, IgxTimeSummaryOperand, NoopPivotDimensionsStrategy, PivotDimensionType, RowPinningPosition } from 'igniteui-angular/grids/core';
 
 /** Export Public API, TODO: reorganize, Generate all w/ renames? */
 export {

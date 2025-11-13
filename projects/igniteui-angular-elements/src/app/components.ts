@@ -5,9 +5,13 @@ import { IgxGridStateComponent } from '../lib/state.component';
 import { IgxIconBroadcastService } from '../lib/icon.broadcast.service';
 import { injector } from '../utils/injector-ref';
 import { registerComponent } from '../utils/register';
-import { GridType, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarTitleComponent, IgxHierarchicalGridComponent, IgxPivotDataSelectorComponent, IgxPivotGridComponent, IgxRowIslandComponent, IgxTreeGridComponent } from 'igniteui-angular/grids';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
+import { IgxGridComponent } from 'igniteui-angular/grids/grid';
+import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
+import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
+import { IgxPivotDataSelectorComponent, IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
+import { GridType, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarTitleComponent } from 'igniteui-angular/grids/core';
 
 // force-create icon service, TODO: move to initializer or register/define mechanic to avoid side-effect?
 const _iconBroadcast: IgxIconBroadcastService = injector.get(IgxIconBroadcastService);

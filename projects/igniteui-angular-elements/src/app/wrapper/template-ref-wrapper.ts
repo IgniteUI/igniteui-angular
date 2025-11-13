@@ -1,5 +1,5 @@
 import { ElementRef, EmbeddedViewRef, Injector, TemplateRef } from '@angular/core';
-import { getUUID } from 'igniteui-angular/grids';
+import { getUUID } from 'igniteui-angular/grids/core';
 
 const CONTEXT_PROP = 'context';
 const IMPLICIT_PROP = 'implicit';

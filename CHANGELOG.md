@@ -15,6 +15,12 @@ The library now supports multiple entry points for better tree-shaking and code 
 - `igniteui-angular/core` - Core utilities, services, and base types
 - `igniteui-angular/directives` - Common directives
 - Component-specific entry points: `igniteui-angular/grids`, `igniteui-angular/input-group`, `igniteui-angular/drop-down`, etc.
+- Grid-specific entry points for tree-shakable imports:
+  - `igniteui-angular/grids/core` - Shared grid infrastructure (columns, toolbar, filtering, sorting, etc.)
+  - `igniteui-angular/grids/grid` - Standard grid component (`IgxGridComponent`)
+  - `igniteui-angular/grids/tree-grid` - Tree grid component (`IgxTreeGridComponent`)
+  - `igniteui-angular/grids/hierarchical-grid` - Hierarchical grid component (`IgxHierarchicalGridComponent`, `IgxRowIslandComponent`)
+  - `igniteui-angular/grids/pivot-grid` - Pivot grid component (`IgxPivotGridComponent`, `IgxPivotDataSelectorComponent`)
 
 **Migration:**
 The `ng update` migration will prompt you to optionally migrate your imports to the new entry points. If you choose not to migrate, you can continue using the main entry point with full backwards compatibility.
@@ -28,7 +34,6 @@ ng update igniteui-angular --migrate-only --from=20.1.0 --to=21.0.0 --migrate-im
 - Input directives (`IgxHintDirective`, `IgxInputDirective`, `IgxLabelDirective`, `IgxPrefixDirective`, `IgxSuffixDirective`) → `igniteui-angular/input-group`
 - `IgxAutocompleteDirective` → `igniteui-angular/drop-down`
 - `IgxRadioGroupDirective` → `igniteui-angular/radio`
-- Grid action components → `igniteui-angular/grids`
 
 **Type Renames (to avoid conflicts):**
 - `Direction` → `IgxCarouselDirection` (in carousel)

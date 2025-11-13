@@ -1,6 +1,6 @@
 import { Component, EnvironmentInjector, EventEmitter, Inject, Injector, Output, ViewContainerRef } from '@angular/core';
 import { IFilteringExpressionsTree, IGroupingState, IPagingState, ISortingExpression } from 'igniteui-angular/core';
-import { GridFeatures, GridSelectionRange, GridType, IColumnState, IGridStateCollection, IGX_GRID_BASE, IgxGridStateBaseDirective, IPinningConfig, IPivotConfiguration } from 'igniteui-angular/grids';
+import { GridFeatures, GridSelectionRange, GridType, IColumnState, IGridStateCollection, IGX_GRID_BASE, IgxGridStateBaseDirective, IPinningConfig, IPivotConfiguration } from 'igniteui-angular/grids/core';
 
 /* tsPlainInterface */
 /* marshalByValue */
