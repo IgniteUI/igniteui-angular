@@ -269,7 +269,7 @@
                 color: var-get($theme, 'item-focused-text-color');
                 background: var-get($theme, 'item-focused-background');
                 border-color: var-get($theme, 'item-focused-border-color');
-								box-shadow: 0 0 0 rem(3px) var-get($theme, 'idle-shadow-color');
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'idle-shadow-color');
                 z-index: 2;
 
                 igx-icon {
