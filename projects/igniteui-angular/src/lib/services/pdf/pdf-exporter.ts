@@ -373,10 +373,11 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             }
 
             // Draw each header in this level
-            headersForLevel.forEach((col) => {
+            headersForLevel.forEach((col, idx) => {
                 const colSpan = col.columnSpan || 1;
                 const width = baseColumnWidth * colSpan;
-                const xPosition = xStart + rowDimensionOffset + (col.startIndex * baseColumnWidth);
+                const startIndex = col.startIndex !== -1 ? col.startIndex : idx;
+                const xPosition = xStart + rowDimensionOffset + (startIndex * baseColumnWidth);
 
                 if (options.showTableBorders) {
                     pdf.rect(xPosition, yPosition, width, headerHeight);
@@ -455,8 +456,27 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         }
 
         // Draw child table headers
-        this.drawTableHeaders(pdf, childColumns, [], childTableX, yPosition, childColumnWidth, headerHeight, childTableWidth, options);
-        yPosition += headerHeight;
+        const childOwnerObj = this._ownersMap.get(childOwner);
+        const hasMultiColumnHeaders = childOwnerObj?.maxLevel > 0 && childOwnerObj.columns.some(col => col.headerType === ExportHeaderType.MultiColumnHeader);
+
+        if (hasMultiColumnHeaders) {
+            yPosition = this.drawMultiLevelHeaders(
+                pdf,
+                childOwnerObj.columns,
+                [], // rowDimensionHeaders, if any
+                childOwnerObj.maxLevel,
+                0, // maxRowLevel
+                childTableX,
+                yPosition,
+                childColumnWidth,
+                headerHeight,
+                childTableWidth,
+                options
+            );
+        } else {
+            this.drawTableHeaders(pdf, childColumns, [], childTableX, yPosition, childColumnWidth, headerHeight, childTableWidth, options);
+            yPosition += headerHeight;
+        }
 
         // Find the minimum level in these records (direct children of parent)
         const minLevel = Math.min(...dataRecords.map(r => r.level));
