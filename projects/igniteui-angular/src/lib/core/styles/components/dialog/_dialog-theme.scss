@@ -51,7 +51,7 @@
         border: rem(1px) solid var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'background');
-        box-shadow: var-get($theme, 'shadow');
+        box-shadow: var-get($theme, 'elevation');
         overflow: hidden;
 
         .igx-calendar {
