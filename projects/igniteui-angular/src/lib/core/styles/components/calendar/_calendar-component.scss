@@ -372,6 +372,26 @@
             @extend %date-selected-special-current-first-last !optional;
         }
 
+        @include e(date, $mods: ('selected', 'special', 'current', 'active', 'first', 'last')) {
+            @extend %date-selected-special-current-active-first-last !optional;
+        }
+
+        @include e(date, $mods: ('selected', 'special', 'current', 'first', 'range-preview')) {
+            @extend %date-selected-special-current-first-range-preview !optional;
+        }
+
+        @include e(date, $mods: ('selected', 'special', 'current', 'active', 'first', 'range-preview')) {
+            @extend %date-selected-special-current-active-first-range-preview !optional;
+        }
+
+        @include e(date, $mods: ('selected', 'special', 'current', 'last', 'range-preview')) {
+            @extend %date-selected-special-current-last-range-preview !optional;
+        }
+
+        @include e(date, $mods: ('selected', 'special', 'current', 'active', 'last', 'range-preview')) {
+            @extend %date-selected-special-current-active-last-range-preview !optional;
+        }
+
         @include e(date, $mods: ('selected', 'special', 'current', 'preview', 'first')) {
             @extend %date-selected-special-current-first !optional;
         }
