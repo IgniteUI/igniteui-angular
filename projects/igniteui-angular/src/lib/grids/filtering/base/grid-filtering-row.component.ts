@@ -12,7 +12,10 @@ import {
     ChangeDetectionStrategy,
     ViewRef,
     HostListener,
-    OnDestroy
+    OnDestroy,
+    InjectionToken,
+    inject,
+    OnInit
 } from '@angular/core';
 import { GridColumnDataType, DataUtil } from '../../../data-operations/data-util';
 import { IgxDropDownComponent } from '../../../drop-down/drop-down.component';
@@ -28,7 +31,7 @@ import { IgxDatePickerComponent } from '../../../date-picker/date-picker.compone
 import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
 import { isEqual, PlatformUtil } from '../../../core/utils';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 import { ExpressionUI } from '../excel-style/common';
 import { ColumnType } from '../../common/grid.interface';
 import { IgxRippleDirective } from '../../../directives/ripple/ripple.directive';
@@ -48,6 +51,14 @@ import { IgxIconButtonDirective } from '../../../directives/button/icon-button.d
 import { Size } from '../../common/enums';
 
 /**
+ * Injection token for setting the debounce time used in filtering row inputs.
+ * @hidden
+ */
+export const INPUT_DEBOUNCE_TIME = /*@__PURE__*/new InjectionToken<number>('INPUT_DEBOUNCE_TIME', {
+    factory: () => 350
+});
+
+/**
  * @hidden
  */
 @Component({
@@ -56,7 +67,7 @@ import { Size } from '../../common/enums';
     templateUrl: './grid-filtering-row.component.html',
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxInputGroupComponent, IgxPrefixDirective, IgxDropDownItemNavigationDirective, IgxInputDirective, IgxSuffixDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, IgxButtonDirective, NgClass, IgxRippleDirective, IgxIconButtonDirective]
 })
-export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
+export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input()
     public get column(): ColumnType {
         return this._column;
@@ -196,7 +207,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     /** switch to icon buttons when width is below 432px */
     private readonly NARROW_WIDTH_THRESHOLD = 432;
 
+    private inputSubject: Subject<KeyboardEvent> = new Subject<KeyboardEvent>();
+
     private $destroyer = new Subject<void>();
+    private readonly DEBOUNCE_TIME = inject(INPUT_DEBOUNCE_TIME);
 
     constructor(
         public filteringService: IgxFilteringService,
@@ -205,12 +219,22 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         protected platform: PlatformUtil,
     ) { }
 
+    public ngOnInit(): void {
+        this.inputSubject.pipe(
+            debounceTime(this.DEBOUNCE_TIME),
+            takeUntil(this.$destroyer)
+        ).subscribe(event => {
+            this.handleInputChange(event);
+            this.cdr.markForCheck(); // ChangeDetectionStrategy.OnPush is not picking the latest changes of the updated value because of the async pipe + debounce.
+        });
+    }
+
     @HostListener('keydown', ['$event'])
     public onKeydownHandler(evt: KeyboardEvent) {
         if (this.platform.isFilteringKeyCombo(evt)) {
-                evt.preventDefault();
-                evt.stopPropagation();
-                this.close();
+            evt.preventDefault();
+            evt.stopPropagation();
+            this.close();
         }
     }
 
@@ -225,10 +249,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
 
         this.filteringService.grid.localeChange
-        .pipe(takeUntil(this.$destroyer))
-        .subscribe(() => {
-            this.cdr.markForCheck();
-        });
+            .pipe(takeUntil(this.$destroyer))
+            .subscribe(() => {
+                this.cdr.markForCheck();
+            });
 
         requestAnimationFrame(() => this.focusEditElement());
     }
@@ -335,6 +359,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
      * Event handler for input on the input.
      */
     public onInput(eventArgs) {
+        this.inputSubject.next(eventArgs);
+    }
+
+    private handleInputChange(eventArgs) {
         if (!eventArgs) {
             return;
         }
