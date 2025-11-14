@@ -754,12 +754,6 @@
         @include mx(fluent, search, focused) {
             @extend %igx-input-group-fluent-search--focused !optional;
         }
-
-        @include mx(fluent, search, disabled) {
-            @include e(bundle) {
-                @extend %form-group-bundle-search--disabled !optional;
-            }
-        }
         // FLUENT END
 
         // ============================== //
