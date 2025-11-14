@@ -78,7 +78,7 @@
         z-index: 999;
         transition: width, padding, transform;
         transition-timing-function: $in-out-quad;
-        box-shadow: var-get($theme, 'shadow');
+        box-shadow: var-get($theme, 'elevation');
         padding: $aside-padding;
 
         @if $variant != 'fluent' {
