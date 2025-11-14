@@ -287,6 +287,13 @@ $base-scale-size: (
             }
         }
 
+        @include m(search) {
+            @include e(bundle) {
+                background: #{var-get($theme, 'search-background')};
+                border-radius: #{var-get($theme, 'search-border-radius')};
+            }
+        }
+
         @include m(file, $not: (disabled)) {
             @include e(input) {
                 &[type='file'] {
@@ -484,6 +491,7 @@ $base-scale-size: (
             igx-suffix:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__case-icon),
             [igxSuffix]:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__case-icon) {
                 color: var-get($theme, 'disabled-text-color');
+                background: inherit;
             }
 
             igx-suffix.igx-combo__clear-button {
