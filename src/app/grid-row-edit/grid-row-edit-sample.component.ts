@@ -2,11 +2,12 @@ import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { data } from '../shared/data';
-import { GridSelectionMode, IgxCellEditorTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnRequiredValidatorDirective, IgxGridComponent, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTextDirective, IRowDataEventArgs } from 'igniteui-angular/grids';
 import { IgxSwitchComponent } from 'igniteui-angular/switch';
 import { IgxButtonDirective, IgxFocusDirective, IgxToggleDirective } from 'igniteui-angular/directives';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
+import { IgxGridComponent } from 'igniteui-angular/grids/grid';
+import { GridSelectionMode, IgxCellEditorTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnRequiredValidatorDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTextDirective, IRowDataEventArgs } from 'igniteui-angular/grids/core';
 
 @Component({
     selector: 'app-grid-row-edit',
