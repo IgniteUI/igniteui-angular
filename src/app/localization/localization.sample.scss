@@ -1,0 +1,58 @@
+:host {
+
+    .sample-column {
+        display: flex;
+        flex-flow: row wrap !important;
+        width: 100%;
+        height: 100vh;
+    }
+
+    .sample-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 3rem;
+    }
+
+    .grid-wrapper {
+        width: 70%;
+    }
+
+    --ig-size: var(--ig-size-small);
+
+}
+
+:host ::ng-deep{
+    .image-container {
+        max-width: 85%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .igx-carousel {
+        max-width: 100%;
+        width: unset;
+    }
+
+    .igx-slide {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-width: 100%;
+        width: unset;
+    }
+
+    .igx-slide img {
+        object-fit: fill;
+        max-width: 90%;
+    }
+}
+
+.pivot-container {
+    display: flex;
+    flex: 1 1 auto;
+    order: 0;
+    align-items: stretch;
+}
