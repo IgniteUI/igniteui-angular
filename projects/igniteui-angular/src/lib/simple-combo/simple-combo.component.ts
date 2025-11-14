@@ -376,6 +376,19 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 this.close();
             }
         }
+        if (event.key === this.platformUtil.KEYMAP.ESCAPE) {
+            if (this.collapsed) {
+                const oldSelection = this.selection;
+                this.clearSelection(true);
+                if (this.selection !== oldSelection) {
+                    this.comboInput.value = this.filterValue = this.searchValue = '';
+                }
+                this.dropdown.focusedItem = null;
+                this.comboInput.focus();
+            } else {
+                this.close();
+            }
+        }
         this.composing = false;
         super.handleKeyDown(event);
     }
@@ -424,7 +437,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public clearInput(event: Event): void {
+    public handleClear(event: Event): void {
+        if (this.disabled) {
+            return;
+        }
+
         const oldSelection = this.selection;
         this.clearSelection(true);
 
@@ -440,23 +457,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.dropdown.focusedItem = null;
         this.composing = false;
         this.comboInput.focus();
-    }
-
-    /** @hidden @internal */
-    public handleClear(event: Event): void {
-        if (this.disabled) {
-            return;
-        }
-
-        this.clearInput(event);
-    }
-
-    /** @hidden @internal */
-    public handleClearKeyDown(event: KeyboardEvent): void {
-        if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            this.clearInput(event);
-        }
     }
 
     /** @hidden @internal */
@@ -479,7 +479,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
         this.composing = false;
         // explicitly update selection so that we don't have to force CD
-        this.textSelection.selected = true;
+        const isTab = (e.event as KeyboardEvent)?.key === this.platformUtil.KEYMAP.TAB;
+        this.textSelection.selected = !isTab;
     }
 
     /** @hidden @internal */
