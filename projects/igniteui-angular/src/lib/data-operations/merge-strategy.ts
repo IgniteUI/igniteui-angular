@@ -75,7 +75,7 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
                 index++;
                 continue;
             }
-            const recToUpdateData = recData ?? { recordRef: grid.isGhostRecord(rec) ? rec.recordRef : rec, cellMergeMeta: new Map<string, IMergeByResult>(), ghostRecord: rec.ghostRecord };
+            const recToUpdateData = recData ?? { recordRef: grid.isGhostRecord(rec) ? rec.recordRef : rec, cellMergeMeta: new Map<string, IMergeByResult>(), ghostRecord: rec.ghostRecord, index: index };
             recToUpdateData.cellMergeMeta.set(field, { rowSpan: 1, childRecords: [] });
             if (prev && comparer.call(this, prev.recordRef, recToUpdateData.recordRef, field, isDate, isTime) && prev.ghostRecord === recToUpdateData.ghostRecord) {
                 const root = prev.cellMergeMeta.get(field)?.root ?? prev;
