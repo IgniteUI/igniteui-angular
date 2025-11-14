@@ -271,8 +271,11 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     protected _differ: IterableDiffer<T> | null = null;
     protected _trackByFn: TrackByFunction<T>;
     protected individualSizeCache: number[] = [];
+    /**
+     * @hidden
+     */
     /** Internal track for scroll top that is being virtualized */
-    protected _virtScrollPosition = 0;
+    public _virtScrollPosition = 0;
     /** If the next onScroll event is triggered due to internal setting of scrollTop */
     protected _bScrollInternal = false;
     // End properties related to virtual height handling
@@ -1466,15 +1469,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     }
 
     protected _updateScrollOffset() {
-        let scrollOffset = 0;
-        let currentScroll = this.scrollPosition;
-        if (this._virtRatio !== 1) {
-            this._calcVirtualScrollPosition(this.scrollPosition);
-            currentScroll = this._virtScrollPosition;
-        }
-        const scroll = this.scrollComponent.nativeElement;
-        scrollOffset = scroll && this.scrollComponent.size ?
-        currentScroll - this.sizesCache[this.state.startIndex] : 0;
+        const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
         const dir = this.igxForScrollOrientation === 'horizontal' ? 'left' : 'top';
         this.dc.instance._viewContainer.element.nativeElement.style[dir] = -(scrollOffset) + 'px';
     }
