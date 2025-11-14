@@ -1192,6 +1192,21 @@
         align-items: center;
         outline-style: none;
 
+        @extend %cell-input-overrides;
+
+        > igx-input-group,
+        igx-combo,
+        igx-simple-combo,
+        igx-select,
+        igx-date-picker,
+        igx-time-picker {
+            height: auto;
+        }
+
+        igx-input-group {
+            background: transparent;
+        }
+
         @if $variant != 'indigo' {
             padding-inline: pad-inline(
                 map.get($grid-cell-padding-inline, 'compact'),
