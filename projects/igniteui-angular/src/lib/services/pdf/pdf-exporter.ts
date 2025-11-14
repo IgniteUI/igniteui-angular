@@ -342,45 +342,70 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
         const rowDimensionOffset = rowDimensionHeaders.length * baseColumnWidth;
 
+        const totalHeaderLevels = maxLevel + 1;
+
+        // Map layout positions based on actual leaf order so headers align with child data columns
+        const headerLayoutMap = new Map<any, number>();
+        const leafHeaders = columnHeaders
+            .filter(col => col.headerType === ExportHeaderType.ColumnHeader && col.columnSpan > 0)
+            .sort((a, b) => (a.startIndex ?? 0) - (b.startIndex ?? 0));
+
+        leafHeaders.forEach((col, idx) => headerLayoutMap.set(col, idx));
+
+        const resolveLayoutStartIndex = (col: any): number => {
+            if (headerLayoutMap.has(col)) {
+                return headerLayoutMap.get(col)!;
+            }
+
+            if (col.headerType === ExportHeaderType.MultiColumnHeader) {
+                const childColumns = columnHeaders.filter(child =>
+                    child.columnGroupParent === col.columnGroup && child.columnSpan > 0);
+                const childIndices = childColumns.map(child => resolveLayoutStartIndex(child));
+
+                if (childIndices.length > 0) {
+                    const minIndex = Math.min(...childIndices);
+                    headerLayoutMap.set(col, minIndex);
+                    return minIndex;
+                }
+            }
+
+            headerLayoutMap.set(col, 0);
+            return 0;
+        };
+
         // Draw column headers level by level (from top/parent to bottom/children)
         for (let level = 0; level <= maxLevel; level++) {
             // Get headers for this level
-            const headersForLevel = columnHeaders.filter(col => {
-                // Include multi-column headers at this level
-                if (col.level === level && col.headerType === ExportHeaderType.MultiColumnHeader) {
-                    return true;
-                }
-                // Include leaf column headers at this level
-                if (col.level === level && col.headerType === ExportHeaderType.ColumnHeader) {
-                    return true;
-                }
-                // For levels > 0, include leaf columns from earlier levels that need to span down
-                if (level > 0 && col.level < level && col.headerType === ExportHeaderType.ColumnHeader) {
-                    return true;
-                }
-                return false;
-            }).filter(col => col.columnSpan > 0);
+            const headersForLevel = columnHeaders
+                .filter(col =>
+                    col.level === level &&
+                    (col.headerType === ExportHeaderType.MultiColumnHeader || col.headerType === ExportHeaderType.ColumnHeader)
+                )
+                .filter(col => col.columnSpan > 0);
 
-            if (headersForLevel.length === 0) continue;
+            if (headersForLevel.length === 0) {
+                yPosition += headerHeight;
+                continue;
+            }
 
             // Sort by startIndex to maintain order
             headersForLevel.sort((a, b) => a.startIndex - b.startIndex);
-
-            // Draw background
-            pdf.setFillColor(240, 240, 240);
-            if (options.showTableBorders) {
-                pdf.rect(xStart + rowDimensionOffset, yPosition, tableWidth - rowDimensionOffset, headerHeight, 'F');
-            }
 
             // Draw each header in this level
             headersForLevel.forEach((col, idx) => {
                 const colSpan = col.columnSpan || 1;
                 const width = baseColumnWidth * colSpan;
-                const startIndex = col.startIndex !== -1 ? col.startIndex : idx;
-                const xPosition = xStart + rowDimensionOffset + (startIndex * baseColumnWidth);
+                const normalizedStartIndex = resolveLayoutStartIndex(col);
+                const xPosition = xStart + rowDimensionOffset + (normalizedStartIndex * baseColumnWidth);
+                const rowSpan = col.headerType === ExportHeaderType.ColumnHeader ?
+                    Math.max(1, (totalHeaderLevels - (col.level ?? 0))) :
+                    1;
+                const height = headerHeight * rowSpan;
 
                 if (options.showTableBorders) {
-                    pdf.rect(xPosition, yPosition, width, headerHeight);
+                    pdf.setFillColor(240, 240, 240);
+                    pdf.rect(xPosition, yPosition, width, height, 'F');
+                    pdf.rect(xPosition, yPosition, width, height);
                 }
 
                 // Center text in cell with truncation if needed
@@ -397,7 +422,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
                 const textWidth = pdf.getTextWidth(headerText);
                 const textX = xPosition + (width - textWidth) / 2;
-                const textY = yPosition + headerHeight / 2 + options.fontSize / 3;
+                const textY = yPosition + (height / 2) + options.fontSize / 3;
 
                 pdf.text(headerText, textX, textY);
             });
