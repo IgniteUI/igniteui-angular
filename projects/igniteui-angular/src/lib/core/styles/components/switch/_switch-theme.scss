@@ -56,21 +56,21 @@
     ), $variant);
 
     $thumb-resting-shadow: map.get((
-        'material': var-get($theme, 'resting-shadow'),
+        'material': var-get($theme, 'resting-elevation'),
         'fluent': none,
         'bootstrap': none,
         'indigo': none
     ), $variant);
 
     $thumb-hover-shadow: map.get((
-        'material': var-get($theme, 'hover-shadow'),
+        'material': var-get($theme, 'hover-elevation'),
         'fluent': none,
         'bootstrap': none,
         'indigo': none
     ), $variant);
 
     $thumb-disabled-shadow: map.get((
-        'material': var-get($theme, 'disabled-shadow'),
+        'material': var-get($theme, 'disabled-elevation'),
         'fluent': none,
         'bootstrap': none,
         'indigo': none
