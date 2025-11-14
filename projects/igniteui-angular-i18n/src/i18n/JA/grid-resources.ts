@@ -140,6 +140,7 @@ export const GridResourceStringsJA = {
     igx_grid_toolbar_exporter_button_label: 'エクスポート',
     igx_grid_toolbar_exporter_excel_entry_text: 'Excel へエクスポート',
     igx_grid_toolbar_exporter_csv_entry_text: 'CSV へのエクスポート',
+    igx_grid_toolbar_exporter_pdf_entry_text: 'PDF へのエクスポート',
     igx_grid_groupByArea_select_message: 'フィールド名 {0}、値 {1} のグループ内のすべての行を選択します。',
     igx_grid_groupByArea_deselect_message: 'フィールド名 {0}、値 {1} のグループ内のすべての行を選択解除します。',
     igx_grid_snackbar_addrow_label: '行が追加されました',
