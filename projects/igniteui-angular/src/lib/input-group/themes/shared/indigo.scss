@@ -141,7 +141,7 @@ $_theme: $indigo;
 
     @include m(focused) {
         @include e(bundle) {
-            background: var-get($_theme, 'box-background-hover');
+            background: var-get($_theme, 'box-background-focus');
             border-block-end-color: var-get($_theme, 'focused-bottom-line-color');
         }
     }
@@ -202,6 +202,7 @@ $_theme: $indigo;
 
     @include m(disabled) {
         @include e(bundle) {
+            background: unset;
             border-block-end: rem(1px) solid var-get($_theme, 'disabled-bottom-line-color');
 
             &:hover {
@@ -211,7 +212,7 @@ $_theme: $indigo;
 
         &:hover {
             @include e(bundle) {
-                background: var-get($_theme, 'box-disabled-background');
+                background: inherit;
             }
         }
     }
