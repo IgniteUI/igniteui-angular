@@ -1,5 +1,5 @@
 // Import the IgniteUI themes library first
-@use '../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+@use '../../../projects/igniteui-angular/core/src/core/styles/themes' as *;
 
 $new-card-theme: card-theme(
     $background: royalblue

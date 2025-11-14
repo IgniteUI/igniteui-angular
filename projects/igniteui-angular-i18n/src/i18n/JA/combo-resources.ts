@@ -1,4 +1,4 @@
-import { IComboResourceStrings } from 'igniteui-angular';
+import { IComboResourceStrings } from 'igniteui-angular/core';
 
 // only use `satisfies` operator so export is typed by its schema
 /**

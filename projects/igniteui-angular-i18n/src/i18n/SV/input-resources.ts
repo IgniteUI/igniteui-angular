@@ -1,4 +1,4 @@
-import { IInputResourceStrings } from 'igniteui-angular';
+import { IInputResourceStrings } from 'igniteui-angular/core';
 
 // only use `satisfies` operator so export is typed by its schema
 /**

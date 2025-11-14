@@ -1,4 +1,4 @@
-import { IDateRangePickerResourceStrings } from 'igniteui-angular';
+import { IDateRangePickerResourceStrings } from 'igniteui-angular/core';
 
 // only use `satisfies` operator so export is typed by its schema
 /**

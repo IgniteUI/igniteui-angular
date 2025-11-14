@@ -1,4 +1,4 @@
-import { ICarouselResourceStrings } from 'igniteui-angular';
+import { ICarouselResourceStrings } from 'igniteui-angular/core';
 
 // only use `satisfies` operator so export is typed by its schema
 /**
