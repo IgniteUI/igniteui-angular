@@ -4,6 +4,7 @@ import {
     HostBinding,
     ElementRef,
     Inject,
+    ViewEncapsulation,
     inject,
 } from "@angular/core";
 import { IgxCalendarYearDirective } from "../calendar.directives";
@@ -31,6 +32,8 @@ import { PlatformUtil } from "../../core/utils";
     ],
     selector: "igx-years-view",
     templateUrl: "years-view.component.html",
+    styleUrl: '../shared-themes/years-months/years-months.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxCalendarYearDirective]
 })
 export class IgxYearsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {

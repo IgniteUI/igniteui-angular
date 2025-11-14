@@ -1,4 +1,21 @@
-import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Inject, Input, NgZone, Output, QueryList, booleanAttribute, forwardRef, DOCUMENT } from '@angular/core';
+import {
+    AfterContentInit,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Inject,
+    Input,
+    NgZone,
+    Output,
+    QueryList,
+    booleanAttribute,
+    ViewEncapsulation,
+    forwardRef,
+    DOCUMENT
+} from '@angular/core';
 import { DragDirection, IDragMoveEventArgs, IDragStartEventArgs, IgxDragDirective, IgxDragIgnoreDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 import { take } from 'rxjs';
@@ -45,6 +62,8 @@ export declare interface ISplitterBarResizeEventArgs {
 @Component({
     selector: 'igx-splitter',
     templateUrl: './splitter.component.html',
+    styleUrl: 'splitter.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [forwardRef(() => IgxSplitBarComponent)]
 })
 export class IgxSplitterComponent implements AfterContentInit {

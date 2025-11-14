@@ -12,7 +12,7 @@ import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 import { IgxPickerActionsDirective } from '../picker-icons.common';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
-import { IgxDividerDirective } from "../../directives/divider/divider.directive";
+import { IgxDividerComponent } from "../../directives/divider/divider.component";
 import { CustomDateRange, DateRange } from '../../date-range-picker/date-range-picker-inputs.common';
 import { IDateRangePickerResourceStrings } from '../../core/i18n/date-range-picker-resources';
 import { IgxPredefinedRangesAreaComponent } from '../../date-range-picker/predefined-ranges/predefined-ranges-area.component';
@@ -27,7 +27,7 @@ import { IgxPredefinedRangesAreaComponent } from '../../date-range-picker/predef
         IgxRippleDirective,
         IgxCalendarComponent,
         NgTemplateOutlet,
-        IgxDividerDirective,
+        IgxDividerComponent,
         IgxPredefinedRangesAreaComponent
     ]
 })

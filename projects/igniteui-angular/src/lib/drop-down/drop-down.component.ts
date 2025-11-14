@@ -16,6 +16,7 @@ import {
     SimpleChanges,
     booleanAttribute,
     Inject,
+    ViewEncapsulation,
     DOCUMENT
 } from '@angular/core';
 import { IgxToggleDirective, ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
@@ -53,6 +54,13 @@ import { ConnectedPositioningStrategy } from '../services/public_api';
 @Component({
     selector: 'igx-drop-down',
     templateUrl: './drop-down.component.html',
+    styles: [`
+        :host {
+            position: absolute;
+        }
+    `],
+    styleUrl: 'drop-down.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }],
     imports: [IgxToggleDirective]
 })
