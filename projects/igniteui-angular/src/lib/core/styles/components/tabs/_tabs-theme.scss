@@ -61,23 +61,23 @@
     %tabs-header {
         overflow: hidden;
         flex: 0 0 auto;
-        background: var-get($theme, 'item-background');
         z-index: 1;
 
-	    @if $bootstrap-theme {
-		    position: relative;
+        @if $bootstrap-theme {
+            position: relative;
+            background: var-get($theme, 'item-background');
 
-		    &::after {
-			    content: '';
-			    position: absolute;
-			    bottom: 0;
-			    inset-inline-start: 0;
-			    width: 100%;
-			    height: rem(1px);
-			    background: var-get($theme, 'border-color');
-			    z-index: 0;
-		    }
-	    }
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                inset-inline-start: 0;
+                width: 100%;
+                height: rem(1px);
+                background: var-get($theme, 'border-color');
+                z-index: 0;
+            }
+        }
     }
 
     %tabs-header-content {
@@ -204,6 +204,7 @@
         @if $not-bootstrap-theme {
             transition: all .3s $tabs-animation-function;
             border: rem(1px) solid var-get($theme, 'border-color');
+            border-radius: var-get($theme, 'border-radius');
 
             &:hover,
             &:focus {
@@ -240,7 +241,7 @@
         }
 
         &:focus {
-            background: var-get($theme, 'item-active-background');
+            background: var-get($theme, 'item-hover-background');
             color: var-get($theme, 'item-hover-color');
             border-bottom-color: transparent;
         }
@@ -268,14 +269,15 @@
     %tabs-header-item--selected {
         outline: 0;
         color: var-get($theme, 'item-active-color');
+        background: var-get($theme, 'item-active-background');
 
         &:hover,
         &:focus {
-            background: var-get($theme, 'item-active-background');
-            color: if($variant == 'fluent', var-get($theme, 'item-hover-color'), var-get($theme, 'item-active-color'));
+            background: var-get($theme, 'item-active-hover-background');
+            color: var-get($theme, 'item-active-hover-color');
 
             igx-icon {
-                color: var-get($theme, 'item-active-icon-color');
+                color: var-get($theme, 'item-active-hover-icon-color');
             }
         }
 
@@ -284,7 +286,6 @@
         }
 
         @if $bootstrap-theme {
-            background: var-get($theme, 'item-active-background');
             position: relative;
             box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color');
             z-index: 1;
@@ -310,6 +311,16 @@
 
             &:hover {
                 box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color');
+
+                &::before {
+                    background: linear-gradient(
+                            to right,
+                            var-get($theme, 'border-color') 1px,
+                            var-get($theme, 'item-active-hover-background') 1px,
+                            var-get($theme, 'item-active-hover-background') calc(100% - 1px),
+                            var-get($theme, 'border-color') calc(100% - 1px)
+                    );								
+                }
             }
         }
 
@@ -318,21 +329,15 @@
                 font-weight: 600;
             }
         }
-
-        @if $indigo-theme {
-            &:hover,
-            &:focus-within {
-                background: var-get($theme, 'item-hover-background');
-            }
-        }
     }
 
     %tabs-header-item:focus,
     %tabs-header-item--selected:focus {
         @if $bootstrap-theme {
             border: none;
-            box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'item-hover-color');
-            border-radius: rem(4px);
+            box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'item-active-hover-color');
+            border-bottom-left-radius: rem(4px);
+            border-bottom-right-radius: rem(4px);
             z-index: 1;
 
             &::after {
