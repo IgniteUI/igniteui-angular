@@ -283,9 +283,12 @@ export class CheckboxBaseDirective implements AfterViewInit {
      */
     @Input({ transform: booleanAttribute })
     public get required(): boolean {
-        return this._required;
+        return this._required || this.nativeElement.hasAttribute('required');
     }
     public set required(value: boolean) {
+        if (!value) {
+            this.nativeElement.removeAttribute('required');
+        }
         this._required = value;
     }
 
