@@ -497,7 +497,6 @@
         }
     }
 
-
     %label-week-number,
     %date-inner-week-number {
         position: relative;
@@ -2596,10 +2595,10 @@
 
         %date-range-selected-first {
             %date-inner {
-                border-start-end-radius: var-get($theme, 'date-range-border-radius');
-                border-end-end-radius: var-get($theme, 'date-range-border-radius');
-                border-end-start-radius: 0;
-                border-start-start-radius: 0;
+                border-start-end-radius: 0;
+                border-end-end-radius: 0;
+                border-end-start-radius: var-get($theme, 'date-range-border-radius');
+                border-start-start-radius: var-get($theme, 'date-range-border-radius');
             }
 
             &::before {
@@ -2611,10 +2610,10 @@
 
         %date-range-selected-last {
             %date-inner {
-                border-start-start-radius: var-get($theme, 'date-range-border-radius');
-                border-end-start-radius: var-get($theme, 'date-range-border-radius');
-                border-start-end-radius: 0;
-                border-end-end-radius: 0;
+                border-start-start-radius: 0;
+                border-end-start-radius: 0;
+                border-start-end-radius: var-get($theme, 'date-range-border-radius');
+                border-end-end-radius: var-get($theme, 'date-range-border-radius');
             }
 
             &::before {
