@@ -158,13 +158,13 @@ describe('IgxDateTimeEditor', () => {
                 let change: SimpleChange = new SimpleChange('date', 'dateTime', false);
                 let changes: SimpleChanges = { defaultFormatType: change };
                 dateTimeEditor.ngOnChanges(changes);
-                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('MM/dd/yyyy, hh:mm:ss tt');
+                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('MM/dd/yyyy, hh:mm:ss a');
 
                 dateTimeEditor.defaultFormatType = 'time';
                 change = new SimpleChange('dateTime', 'time', false);
                 changes = { defaultFormatType: change };
                 dateTimeEditor.ngOnChanges(changes);
-                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('hh:mm tt');
+                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('hh:mm a');
             });
         });
 

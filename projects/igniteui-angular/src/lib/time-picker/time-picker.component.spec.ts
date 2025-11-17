@@ -1557,7 +1557,7 @@ describe('IgxTimePicker', () => {
             it('should set placeholder correctly', fakeAsync(() => {
                 // no inputFormat set - placeholder equals the default date time input format
                 let inputEl = fixture.nativeElement.querySelector(CSS_CLASS_INPUT);
-                expect(inputEl.placeholder.normalize('NFKC')).toEqual('hh:mm tt');
+                expect(inputEl.placeholder.normalize('NFKC')).toEqual('hh:mm aa');
 
                 // no placeholder - set to inputFormat, if it is set
                 // test with the different a,aa,.. ampm formats

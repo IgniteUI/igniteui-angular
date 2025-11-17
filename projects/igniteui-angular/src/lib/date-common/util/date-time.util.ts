@@ -253,6 +253,12 @@ export abstract class DateTimeUtil {
         return formatter.getLocaleDateTimeFormat(locale, true, DateTimeUtil.getFormatOptions(dataType));
     }
 
+    /** Builds a date-time editor's default display format based on provided locale settings and data type. */
+    public static getDefaultDisplayFormat(locale: string, formatter: BaseFormatter, dataType: DataType = DataType.Date): string {
+        locale = locale || DateTimeUtil.DEFAULT_LOCALE;
+        return formatter.getLocaleDateTimeFormat(locale, false, DateTimeUtil.getFormatOptions(dataType));
+    }
+
     /** Determines if a given character is `d/M/y` or `h/m/s`. */
     public static isDateOrTimeChar(char: string): boolean {
         return DATE_CHARS.indexOf(char) !== -1 || TIME_CHARS.indexOf(char) !== -1;
