@@ -119,31 +119,6 @@
         },
         "./themes": {
             "sass": "./core/src/core/styles/themes/_index.scss"
-        },
-        "./grids/core": {
-            "types": "./grids/core/index.d.ts",
-            "esm": "./grids/core/esm2022/grids-core.mjs",
-            "default": "./grids/core/fesm2022/grids-core.mjs"
-        },
-        "./grids/grid": {
-            "types": "./grids/grid/index.d.ts",
-            "esm": "./grids/grid/esm2022/grids-grid.mjs",
-            "default": "./grids/grid/fesm2022/grids-grid.mjs"
-        },
-        "./grids/tree-grid": {
-            "types": "./grids/tree-grid/index.d.ts",
-            "esm": "./grids/tree-grid/esm2022/grids-tree-grid.mjs",
-            "default": "./grids/tree-grid/fesm2022/grids-tree-grid.mjs"
-        },
-        "./grids/hierarchical-grid": {
-            "types": "./grids/hierarchical-grid/index.d.ts",
-            "esm": "./grids/hierarchical-grid/esm2022/grids-hierarchical-grid.mjs",
-            "default": "./grids/hierarchical-grid/fesm2022/grids-hierarchical-grid.mjs"
-        },
-        "./grids/pivot-grid": {
-            "types": "./grids/pivot-grid/index.d.ts",
-            "esm": "./grids/pivot-grid/esm2022/grids-pivot-grid.mjs",
-            "default": "./grids/pivot-grid/fesm2022/grids-pivot-grid.mjs"
         }
     },
     "sideEffects": false
