@@ -292,6 +292,12 @@
             box-shadow: none !important;
             border: none !important;
         }
+
+        .igx-input-group--disabled,
+        .igx-input-group--disabled igx-prefix,
+        .igx-input-group--disabled igx-suffix {
+            color: var-get($theme, 'cell-disabled-color');
+        }
     }
 
     @if $variant != 'indigo' {
@@ -1422,8 +1428,6 @@
         &%grid-cell-number {
             justify-content: flex-start !important;
         }
-
-        @extend %cell-input-overrides;
     }
 
     %grid-cell--pinned {

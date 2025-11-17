@@ -364,7 +364,7 @@
     %form-group-display--disabled {
         pointer-events: none;
         user-select: none;
-        color: var-get($theme, 'disabled-text-color') !important;
+        color: var-get($theme, 'disabled-text-color');
 
         igx-prefix,
         [igxPrefix] {
@@ -1433,7 +1433,7 @@
     %form-group-input--disabled {
         cursor: default;
 
-        color: var-get($theme, 'disabled-text-color') !important;
+        color: var-get($theme, 'disabled-text-color');
 
         &::placeholder {
             color: var-get($theme, 'disabled-placeholder-color');
@@ -1483,7 +1483,7 @@
     }
 
     %form-group-textarea--disabled {
-        color: var-get($theme, 'disabled-text-color') !important;
+        color: var-get($theme, 'disabled-text-color');
         cursor: default;
 
         &::placeholder {
@@ -2061,7 +2061,7 @@
     }
 
     %fluent-label-disabled {
-        color: var-get($theme, 'disabled-text-color') !important;
+        color: var-get($theme, 'disabled-text-color');
     }
 
     %fluent-label-filled {
