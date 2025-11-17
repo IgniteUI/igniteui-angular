@@ -9,7 +9,7 @@ import { IgxColumnActionsComponent } from '../column-actions/column-actions.comp
 import { IgxToggleDirective, ToggleViewCancelableEventArgs, ToggleViewEventArgs } from '../../directives/toggle/toggle.directive';
 import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../../services/overlay/utilities';
 import { IgxToolbarToken } from './token';
-import { ConnectedPositioningStrategy } from '../../services/overlay/position/connected-positioning-strategy';
+import { AutoPositionStrategy } from '../../services/overlay/position/auto-position-strategy';
 
 /* blazorInclude */
 /* blazorElement */
@@ -88,7 +88,7 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     private $sub: Subscription;
 
     private _overlaySettings: OverlaySettings = {
-        positionStrategy: new ConnectedPositioningStrategy({
+        positionStrategy: new AutoPositionStrategy({
             horizontalDirection: HorizontalAlignment.Left,
             horizontalStartPoint: HorizontalAlignment.Right,
             verticalDirection: VerticalAlignment.Bottom,
