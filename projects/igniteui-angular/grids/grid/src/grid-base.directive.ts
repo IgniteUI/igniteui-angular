@@ -2272,7 +2272,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (value !== this._pinning) {
             this.resetCaches();
         }
-        this._pinning = value;
+        this._pinning = Object.assign({}, this._pinning, value);
     }
 
     /**
