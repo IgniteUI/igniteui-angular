@@ -14,7 +14,7 @@ import {
     IgxChatMessageContextDirective,
     type IgxChatOptions,
 } from 'igniteui-angular';
-import { MarkdownPipe } from 'igniteui-angular/extras';
+import { MarkdownPipe } from 'igniteui-angular/chat-extras';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
