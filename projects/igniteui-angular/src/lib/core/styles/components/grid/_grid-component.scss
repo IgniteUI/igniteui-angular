@@ -30,9 +30,10 @@
 
         @extend %grid-display !optional;
 
-        @include e(caption) {
-            @extend %grid-caption !optional;
-        }
+        // TRANSFERRED to new _base.scss
+        // @include e(caption) {
+        //     @extend %grid-caption !optional;
+        // }
 
         // @include e(tbody) {
         //     @extend %grid-tbody-container !optional;
@@ -118,17 +119,18 @@
         //     @extend %igx-grid__tr--ghost !optional;
         // }
 
-        @include e(drag-indicator) {
-            @extend %igx-grid__drag-indicator !optional;
-        }
+        // TRANSFERRED to new _base.scss
+        // @include e(drag-indicator) {
+        //     @extend %igx-grid__drag-indicator !optional;
+        // }
 
-        @include e(drag-indicator, $m: 'header') {
-            @extend %igx-grid__drag-indicator--header !optional;
-        }
+        // @include e(drag-indicator, $m: 'header') {
+        //     @extend %igx-grid__drag-indicator--header !optional;
+        // }
 
-        @include e(drag-indicator, $m: 'off') {
-            @extend %igx-grid__drag-indicator--off !optional;
-        }
+        // @include e(drag-indicator, $m: 'off') {
+        //     @extend %igx-grid__drag-indicator--off !optional;
+        // }
 
         // @include e(tr, $m: 'mrl') {
         //     @extend %grid-row--mrl !optional;
@@ -138,26 +140,27 @@
         //     @extend %grid-row--edit-mrl !optional;
         // }
 
-        @include e(summaries) {
-            @extend %grid-summaries !optional;
+        // TRANSFERRED to new _base.scss
+        // @include e(summaries) {
+        //     @extend %grid-summaries !optional;
+        //
+        //     igx-display-container {
+        //         @extend %grid-display-container-tr !optional;
+        //     }
+        // }
 
-            igx-display-container {
-                @extend %grid-display-container-tr !optional;
-            }
-        }
+        // @include e(summaries, $m: 'body') {
+        //     @extend %grid-summaries !optional;
+        //     @extend %grid-summaries--body !optional;
+        //
+        //     igx-display-container {
+        //         @extend %grid-display-container-tr !optional;
+        //     }
+        // }
 
-        @include e(summaries, $m: 'body') {
-            @extend %grid-summaries !optional;
-            @extend %grid-summaries--body !optional;
-
-            igx-display-container {
-                @extend %grid-display-container-tr !optional;
-            }
-        }
-
-        @include e(summaries-patch) {
-            @extend %grid-summaries-patch !optional;
-        }
+        // @include e(summaries-patch) {
+        //     @extend %grid-summaries-patch !optional;
+        // }
 
         // @include e(tr, $m: odd) {
         //     @extend %grid-row--odd !optional;
@@ -410,33 +413,34 @@
         //     @extend %igx-grid__grouping-indicator !optional;
         // }
 
-        @include e(scroll-on-drag-left) {
-            @extend %grid__scroll-on-drag-left !optional;
-        }
+        // TRANSFERRED to new _base.scss
+        // @include e(scroll-on-drag-left) {
+        //     @extend %grid__scroll-on-drag-left !optional;
+        // }
 
-        @include e(scroll-on-drag-right) {
-            @extend %grid__scroll-on-drag-right !optional;
-        }
+        // @include e(scroll-on-drag-right) {
+        //     @extend %grid__scroll-on-drag-right !optional;
+        // }
 
-        @include e(scroll-on-drag-pinned) {
-            @extend %grid__scroll-on-drag-pinned !optional;
-        }
+        // @include e(scroll-on-drag-pinned) {
+        //     @extend %grid__scroll-on-drag-pinned !optional;
+        // }
 
-        @include e(drag-ghost-image) {
-            @extend %grid__drag-ghost-image !optional;
-        }
+        // @include e(drag-ghost-image) {
+        //     @extend %grid__drag-ghost-image !optional;
+        // }
 
-        @include e(drag-ghost-image-icon) {
-            @extend %grid__drag-ghost-image-icon !optional;
-        }
+        // @include e(drag-ghost-image-icon) {
+        //     @extend %grid__drag-ghost-image-icon !optional;
+        // }
 
-        @include e(drag-ghost-image-icon-group) {
-            @extend %grid__drag-ghost-image-icon-group !optional;
-        }
+        // @include e(drag-ghost-image-icon-group) {
+        //     @extend %grid__drag-ghost-image-icon-group !optional;
+        // }
 
-        @include e(drag-col-header) {
-            @extend %igx-grid__drag-col-header !optional;
-        }
+        // @include e(drag-col-header) {
+        //     @extend %igx-grid__drag-col-header !optional;
+        // }
 
         // @include e(header-indentation) {
         //     @extend %igx-grid__header-indentation !optional;
@@ -454,71 +458,72 @@
         //     @extend %igx-grid__group-expand-btn--push !optional;
         // }
 
-        @include e(outlet) {
-            @extend %igx-grid__outlet !optional;
-        }
+        // TRANSFERRED to new _base.scss
+        // @include e(outlet) {
+        //     @extend %igx-grid__outlet !optional;
+        // }
 
-        @include e(loading-outlet) {
-            @extend %igx-grid__loading-outlet !optional;
-        }
+        // @include e(loading-outlet) {
+        //     @extend %igx-grid__loading-outlet !optional;
+        // }
 
         // @include e(row-editing-outlet) {
         //     @extend %igx-grid__row-editing-outlet !optional;
         // }
 
-        @include e(addrow-snackbar) {
-            @extend %igx-grid__addrow-snackbar !optional;
-        }
+        // @include e(addrow-snackbar) {
+        //     @extend %igx-grid__addrow-snackbar !optional;
+        // }
 
-        @include e(filtering-cell) {
-            @extend %igx-grid__filtering-cell !optional;
-        }
+        // @include e(filtering-cell) {
+        //     @extend %igx-grid__filtering-cell !optional;
+        // }
 
-        @include e(filtering-cell, $m: 'selected') {
-            @extend %igx-grid__filtering-cell !optional;
-            @extend %igx-grid__filtering-cell--selected !optional;
-        }
+        // @include e(filtering-cell, $m: 'selected') {
+        //     @extend %igx-grid__filtering-cell !optional;
+        //     @extend %igx-grid__filtering-cell--selected !optional;
+        // }
 
-        @include e(filtering-cell-indicator) {
-            @extend %igx-grid__filtering-cell-indicator !optional;
-        }
+        // @include e(filtering-cell-indicator) {
+        //     @extend %igx-grid__filtering-cell-indicator !optional;
+        // }
 
-        @include e(filtering-cell-indicator, $m: 'hidden') {
-            @extend %igx-grid__filtering-cell-indicator !optional;
-            @extend %igx-grid__filtering-cell-indicator--hidden !optional;
-        }
+        // @include e(filtering-cell-indicator, $m: 'hidden') {
+        //     @extend %igx-grid__filtering-cell-indicator !optional;
+        //     @extend %igx-grid__filtering-cell-indicator--hidden !optional;
+        // }
 
-        @include e(filtering-dropdown-items) {
-            @extend %igx-grid__filtering-dropdown-items !optional;
-        }
+        // @include e(filtering-dropdown-items) {
+        //     @extend %igx-grid__filtering-dropdown-items !optional;
+        // }
 
-        @include e(filtering-dropdown-text) {
-            @extend %igx-grid__filtering-dropdown-text !optional;
-        }
+        // @include e(filtering-dropdown-text) {
+        //     @extend %igx-grid__filtering-dropdown-text !optional;
+        // }
 
-        @include e(filtering-row) {
-            @extend %igx-grid__filtering-row !optional;
-        }
+        // @include e(filtering-row) {
+        //     @extend %igx-grid__filtering-row !optional;
+        // }
 
-        @include e(filtering-row-editing-buttons) {
-            @extend %igx-grid__filtering-row-editing-buttons !optional;
-        }
+        // @include e(filtering-row-editing-buttons) {
+        //     @extend %igx-grid__filtering-row-editing-buttons !optional;
+        // }
 
-        @include e(filtering-row-editing-buttons, $m: small) {
-            @extend %igx-grid__filtering-row-editing-buttons--small !optional;
-        }
+        // @include e(filtering-row-editing-buttons, $m: small) {
+        //     @extend %igx-grid__filtering-row-editing-buttons--small !optional;
+        // }
 
-        @include e(filtering-row-main) {
-            @extend %igx-grid__filtering-row-main !optional;
-        }
+        // @include e(filtering-row-main) {
+        //     @extend %igx-grid__filtering-row-main !optional;
+        // }
 
-        @include e(filtering-row-scroll-start) {
-            @extend %igx-grid__filtering-scroll-start !optional;
-        }
+        // @include e(filtering-row-scroll-start) {
+        //     @extend %igx-grid__filtering-scroll-start !optional;
+        // }
 
-        @include e(filtering-row-scroll-end) {
-            @extend %igx-grid__filtering-scroll-end !optional;
-        }
+        // @include e(filtering-row-scroll-end) {
+        //     @extend %igx-grid__filtering-scroll-end !optional;
+        // }
 
         // @include e(hierarchical-indent) {
         //     @extend %igx-grid__hierarchical-indent !optional;

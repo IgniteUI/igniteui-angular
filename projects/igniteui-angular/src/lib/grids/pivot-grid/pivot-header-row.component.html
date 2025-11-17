@@ -197,7 +197,7 @@
         [class.igx-grid__tr--mrl]="hasMRL">
 
         <!-- Column headers area -->
-        <div class="igx-grid__tr" role="row" [style.width.px]="width">
+        <div class="igx-grid__tr igx-grid__tr--header" role="row" [style.width.px]="width">
             @if (!grid.pivotUI.showRowHeaders || grid.rowDimensions.length === 0) {
                 <div #pivotContainer class="igx-grid__tr-pivot igx-grid__tr-pivot--row-area"
                     [style.width.px]="grid.pivotRowWidths - 1" (igxDragLeave)="onAreaDragLeave($event, rowArea)" igxDrop

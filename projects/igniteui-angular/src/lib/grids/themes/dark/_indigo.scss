@@ -1,4 +1,5 @@
 @use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
 @use '../../../../lib/core/styles/themes/standalone' as *;
 
 @include themed-block(igx-grid-th, indigo, dark) {
