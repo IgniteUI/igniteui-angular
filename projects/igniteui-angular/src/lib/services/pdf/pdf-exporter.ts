@@ -483,7 +483,6 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         // Fix startIndex for all child columns
         let currentIndex = 0;
         for (const col of allChildColumns) {
-            debugger
             if (col.level === 0 && (col.headerType === ExportHeaderType.MultiColumnHeader || col.headerType === ExportHeaderType.ColumnHeader)) {
                 col.startIndex = currentIndex;
                 currentIndex += col.columnSpan || 1;
