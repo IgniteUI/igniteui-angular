@@ -52,9 +52,6 @@ const predefinedNonNumericFormats = new Set<string>([
 
 /** @hidden */
 export abstract class DateTimeUtil {
-    public static readonly DEFAULT_INPUT_FORMAT = 'MM/dd/yyyy';
-    public static readonly DEFAULT_TIME_INPUT_FORMAT = 'hh:mm tt';
-    private static readonly SEPARATOR = 'literal';
     private static readonly DEFAULT_LOCALE = 'en';
 
     /**
@@ -250,13 +247,13 @@ export abstract class DateTimeUtil {
     /** Builds a date-time editor's default input format based on provided locale settings and data type. */
     public static getDefaultInputFormat(locale: string, formatter: BaseFormatter, dataType: DataType = DataType.Date): string {
         locale = locale || DateTimeUtil.DEFAULT_LOCALE;
-        return formatter.getLocaleDateTimeFormat(locale, true, DateTimeUtil.getFormatOptions(dataType));
+        return formatter.getLocaleDateTimeFormat(locale, true, DateTimeUtil.getFormatOptions(dataType, true));
     }
 
     /** Builds a date-time editor's default display format based on provided locale settings and data type. */
     public static getDefaultDisplayFormat(locale: string, formatter: BaseFormatter, dataType: DataType = DataType.Date): string {
         locale = locale || DateTimeUtil.DEFAULT_LOCALE;
-        return formatter.getLocaleDateTimeFormat(locale, false, DateTimeUtil.getFormatOptions(dataType));
+        return formatter.getLocaleDateTimeFormat(locale, false, DateTimeUtil.getFormatOptions(dataType, false));
     }
 
     /** Determines if a given character is `d/M/y` or `h/m/s`. */
@@ -619,15 +616,15 @@ export abstract class DateTimeUtil {
         }
     }
 
-    private static getFormatOptions(dataType: DataType) {
+    private static getFormatOptions(dataType: DataType, forceLeadingZero = false) {
         const dateOptions = {
-            day: FormatDesc.TwoDigits,
-            month: FormatDesc.TwoDigits,
+            day: forceLeadingZero ? FormatDesc.TwoDigits : FormatDesc.Numeric,
+            month: forceLeadingZero ? FormatDesc.TwoDigits : FormatDesc.Numeric,
             year: FormatDesc.Numeric
         };
         const timeOptions = {
-            hour: FormatDesc.TwoDigits,
-            minute: FormatDesc.TwoDigits
+            hour: forceLeadingZero ? FormatDesc.TwoDigits : FormatDesc.Numeric,
+            minute: forceLeadingZero ? FormatDesc.TwoDigits : FormatDesc.Numeric
         };
         switch (dataType) {
             case DataType.Date:
@@ -638,7 +635,7 @@ export abstract class DateTimeUtil {
                 return {
                     ...dateOptions,
                     ...timeOptions,
-                    second: FormatDesc.TwoDigits
+                    second: forceLeadingZero ? FormatDesc.TwoDigits : FormatDesc.Numeric
                 };
             default:
                 return { };

@@ -440,7 +440,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         const localFormat = formatSize
             ? this.i18nFormatter.getLocaleDateTimeFormat(this.locale, false, { dateStyle: formatSize })
             : this.displayFormat;
-        return localFormat || DateTimeUtil.DEFAULT_INPUT_FORMAT;
+        return localFormat || this.i18nFormatter.getLocaleDateTimeFormat(this.locale, false);
     }
 
     /**
