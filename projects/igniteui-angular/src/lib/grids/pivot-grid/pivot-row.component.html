@@ -14,7 +14,7 @@
         [rowData]="data" [columnData]='getColumnData(col)'
         [style.min-width]="col.resolvedWidth" [style.max-width]="col.resolvedWidth"
         [style.flex-basis]="col.resolvedWidth" [width]="col.getCellWidth()" [visibleColumnIndex]="col.visibleIndex"
-        [value]="pivotAggregationData[col.field] | dataMapper:col.field:grid.pipeTrigger:pivotAggregationData[col.field]:col.hasNestedPath"
+        [value]="pivotAggregationData[col.field]"
         [cellTemplate]="col.bodyTemplate" [lastSearchInfo]="grid.lastSearchInfo"
         [cellSelectionMode]="grid.cellSelection" [displayPinnedChip]="shouldDisplayPinnedChip(col)"
         (pointerdown)="grid.navigation.focusOutRowHeader($event)">

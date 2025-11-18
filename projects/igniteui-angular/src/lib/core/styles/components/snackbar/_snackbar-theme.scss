@@ -27,13 +27,14 @@
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
         backface-visibility: hidden;
-        box-shadow: var-get($theme, 'shadow');
+        box-shadow: var-get($theme, 'elevation');
         border-radius: var-get($theme, 'border-radius');
         backdrop-filter: blur(8px);
 
         [igxButton] {
             @include animation(fade-in .35s ease-out);
-            --ig-size: 1;
+
+            --ig-size: 2;
             background: transparent;
             color: var-get($theme, 'button-color');
             -webkit-tap-highlight-color: transparent;
@@ -43,10 +44,6 @@
         @if $variant == 'indigo' {
             padding: pad-block(rem(4px)) pad-inline(rem(16px));
             min-height: rem(36px);
-
-            [igxButton] {
-                --ig-size: 2;
-            }
         }
     }
 
