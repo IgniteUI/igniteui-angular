@@ -24,7 +24,7 @@
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background-color');
         border-radius: calc(var(--size) / 2);
-        box-shadow: var-get($theme, 'shadow');
+        box-shadow: var-get($theme, 'elevation');
         overflow: hidden;
 
         igx-icon {
