@@ -36,6 +36,31 @@ $_theme: $fluent;
             box-shadow: 0 0 0 rem(1px) var-get($_theme, 'focus-outline-color');
         }
     }
+
+    @include m(invalid) {
+        &:hover {
+            @include e(composite) {
+                &::after {
+                    border-color: var-get($_theme, 'error-color-hover');
+                }
+            }
+        }
+    }
+
+    @include mx(checked, invalid, focused) {
+        &:hover {
+            @include e(composite) {
+                &::before {
+                    background: var-get($_theme, 'error-color-hover');
+                    border-color: var-get($_theme, 'error-color-hover');
+                }
+
+                &::after {
+                    border-color: var-get($_theme, 'error-color-hover');
+                }
+            }
+        }
+    }
 }
 
 @include themed-block(igx-radio-group, fluent) {
