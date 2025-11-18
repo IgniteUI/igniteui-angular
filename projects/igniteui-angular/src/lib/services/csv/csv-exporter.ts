@@ -5,10 +5,12 @@ import { CharSeparatedValueData } from './char-separated-value-data';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { IBaseEventArgs } from '../../core/utils';
 
+/* csSuppress */
 export interface ICsvExportEndedEventArgs extends IBaseEventArgs {
     csvData?: string;
 }
 
+/* csSuppress */
 /**
  * **Ignite UI for Angular CSV Exporter Service** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/exporter-csv)
