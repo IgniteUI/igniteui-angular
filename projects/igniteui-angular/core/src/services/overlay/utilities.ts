@@ -94,7 +94,7 @@ export interface PositionSettings {
     /** Animation applied while overlay closes */
     closeAnimation?: AnimationReferenceMetadata;
     /** The size up to which element may shrink when shown in elastic position strategy */
-    minSize?: ElementDimensions;
+    minSize?: Size;
     /** The offset of the element from the target in pixels */
     offset?: number;
 }
@@ -151,11 +151,11 @@ export interface OverlayAnimationEventArgs extends IBaseEventArgs {
     animationType: 'open' | 'close';
 }
 
-export interface ElementDimensions {
-    /** Gets or sets the horizontal component of ElementDimensions */
+export interface Size {
+    /** Gets or sets the horizontal component of Size */
     width: number;
 
-    /** Gets or sets the vertical component of ElementDimensions */
+    /** Gets or sets the vertical component of Size */
     height: number;
 }
 
@@ -167,7 +167,7 @@ export interface OverlayInfo {
     elementRef?: ElementRef;
     componentRef?: ComponentRef<any>;
     settings?: OverlaySettings;
-    initialSize?: ElementDimensions;
+    initialSize?: Size;
     hook?: HTMLElement;
     openAnimationPlayer?: AnimationPlayer;
     // calling animation.destroy in detach fires animation.done. This should not happen

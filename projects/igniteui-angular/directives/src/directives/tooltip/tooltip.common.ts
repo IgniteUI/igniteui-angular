@@ -1,6 +1,6 @@
 import { first } from 'igniteui-angular/core';
 import { AutoPositionStrategy } from 'igniteui-angular/core';
-import { ConnectedFit, ElementDimensions, HorizontalAlignment, Point, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
+import { ConnectedFit, HorizontalAlignment, Point, PositionSettings, Size, VerticalAlignment } from 'igniteui-angular/core';
 import { useAnimation } from '@angular/animations';
 import { fadeOut, scaleInCenter } from 'igniteui-angular/animations';
 
@@ -82,7 +82,7 @@ export class TooltipPositionStrategy extends AutoPositionStrategy {
 
     public override position(
         contentElement: HTMLElement,
-        size: ElementDimensions,
+        size: Size,
         document?: Document,
         initialCall?: boolean,
         target?: Point | HTMLElement
