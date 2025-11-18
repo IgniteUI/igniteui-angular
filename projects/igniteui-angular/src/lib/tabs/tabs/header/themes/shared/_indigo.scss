@@ -17,6 +17,7 @@ $_theme: $indigo;
 
         transition: all .3s $tabs-animation-function;
         border: rem(1px) solid var-get($_theme, 'border-color');
+        border-radius: var-get($_theme, 'border-radius');
 
         border-top: rem(1px) solid transparent;
         border-inline: none;
@@ -26,13 +27,6 @@ $_theme: $indigo;
             border-top: rem(1px) solid transparent;
             border-inline: none;
             border-bottom: rem(1px) solid var-get($_theme, 'border-color');
-        }
-
-        @include m(selected) {
-            &:hover,
-            &:focus-visible {
-                background: var-get($_theme, 'item-hover-background');
-            }
         }
 
         @include e(inner) {
