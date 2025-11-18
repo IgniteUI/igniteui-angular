@@ -15,7 +15,7 @@ import { IgxCell, IgxEditRow } from './crud.service';
 import { GridSelectionRange } from './types';
 import { DropPosition, IgxColumnMovingService } from '../moving/moving.service';
 import { Observable, Subject } from 'rxjs';
-import { ColumnPinningPosition, ColumnType, FilteringExpressionsTree, FilteringLogic, GridColumnDataType, GridSummaryCalculationMode, GridTypeBase, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringStrategy, IGridGroupingStrategy, IGridMergeStrategy, IGridResourceStrings, IGridSortingStrategy, IGroupByExpandState, IGroupByRecord, IGroupingExpression, IgxSummaryResult, IPathSegment, ISortingExpression, ISortingOptions, ITreeGridRecord, OverlaySettings, Size, SortingDirection, State, Transaction, TransactionService } from 'igniteui-angular/core';
+import { ColumnPinningPosition, ColumnType, FilteringExpressionsTree, FilteringLogic, GridColumnDataType, GridSummaryCalculationMode, GridTypeBase, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringStrategy, IGridGroupingStrategy, IGridMergeStrategy, IGridResourceStrings, IGridSortingStrategy, IGroupByExpandState, IGroupByRecord, IGroupingExpression, IgxSummaryResult, IPathSegment, ISortingExpression, ISortingOptions, ITreeGridRecord, OverlaySettings, ɵSize, SortingDirection, State, Transaction, TransactionService } from 'igniteui-angular/core';
 import { FormControl, FormGroup, ValidationErrors } from '@angular/forms';
 import type { IForOfState, IgxGridForOfDirective, IgxOverlayOutletDirective, IgxToggleDirective } from 'igniteui-angular/directives';
 import type { IgxPaginatorComponent } from 'igniteui-angular/paginator';
@@ -464,7 +464,7 @@ export interface GridType extends IGridDataBindable {
     moving: boolean;
     isLoading: boolean;
     /** @hidden @internal */
-    gridSize: Size;
+    gridSize: ɵSize;
     /** @hidden @internal */
     isColumnWidthSum: boolean;
     /** @hidden @internal */

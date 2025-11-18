@@ -82,7 +82,7 @@ import {
     isTree,
     recreateTree,
     recreateTreeFromFields,
-    Size,
+    ɵSize,
     ColumnPinningPosition,
     ColumnType,
     EntityType,
@@ -3285,7 +3285,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _sortHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
-    private _gridSize: Size = Size.Large;
+    private _gridSize: ɵSize = ɵSize.Large;
     private _defaultRowHeight = 50;
     private _rowCount: number;
     private _cellMergeMode: GridCellMergeMode = GridCellMergeMode.onSort;
@@ -4478,9 +4478,9 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public get defaultSummaryHeight(): number {
         switch (this.gridSize) {
-            case Size.Medium:
+            case ɵSize.Medium:
                 return 30;
-            case Size.Small:
+            case ɵSize.Small:
                 return 24;
             default:
                 return 36;
@@ -5572,8 +5572,8 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      * Gets the size of the grid
      */
-    public get gridSize(): Size {
-        return this.gridComputedStyles?.getPropertyValue('--component-size') || Size.Large;
+    public get gridSize(): ɵSize {
+        return this.gridComputedStyles?.getPropertyValue('--component-size') || ɵSize.Large;
     }
 
     /**

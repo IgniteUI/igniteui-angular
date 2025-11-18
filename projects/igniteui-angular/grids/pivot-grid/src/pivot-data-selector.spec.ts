@@ -15,7 +15,7 @@ import {
     PivotGridType
 } from "igniteui-angular/grids/core";
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
-import { Size, SortingDirection } from 'igniteui-angular/core';
+import { ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 
 describe("Pivot data selector", () => {
@@ -64,9 +64,9 @@ describe("Pivot data selector integration", () => {
     }));
 
     it("should set its size based on the passed grid instance size", () => {
-        setElementSize(grid.nativeElement, Size.Small)
+        setElementSize(grid.nativeElement, ɵSize.Small)
         fixture.detectChanges();
-        expect((selector as any).size).toEqual(Size.Small);
+        expect((selector as any).size).toEqual(ɵSize.Small);
     });
 
     it("should set through API expand states for panels with two way data binding", () => {

@@ -15,7 +15,7 @@ import { IgxExcelStyleSortingComponent } from 'igniteui-angular/grids/core';
 import { IgxExcelStyleSearchComponent } from 'igniteui-angular/grids/core';
 import { IgxCellHeaderTemplateDirective } from 'igniteui-angular/grids/core';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
-import { ColumnType, IgxStringFilteringOperand, Size, getComponentSize } from 'igniteui-angular/core';
+import { ColumnType, IgxStringFilteringOperand, ɵSize, getComponentSize } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IGridCreatedEventArgs } from './events';
 
@@ -391,19 +391,19 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
             const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
 
-            expect(hierarchicalGrid.gridSize).toEqual(Size.Large);
+            expect(hierarchicalGrid.gridSize).toEqual(ɵSize.Large);
             expect(getComponentSize(hierarchicalGrid.nativeElement)).toEqual('3');
 
-            setElementSize(hierarchicalGrid.nativeElement, Size.Medium)
+            setElementSize(hierarchicalGrid.nativeElement, ɵSize.Medium)
             fixture.detectChanges();
 
-            expect(childGrid.gridSize).toBe(Size.Medium);
+            expect(childGrid.gridSize).toBe(ɵSize.Medium);
             expect(getComponentSize(hierarchicalGrid.nativeElement)).toEqual('2');
 
-            setElementSize(hierarchicalGrid.nativeElement, Size.Small)
+            setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small)
             fixture.detectChanges();
 
-            expect(childGrid.gridSize).toBe(Size.Small);
+            expect(childGrid.gridSize).toBe(ɵSize.Small);
             expect(getComponentSize(hierarchicalGrid.nativeElement)).toEqual('1');
         });
 

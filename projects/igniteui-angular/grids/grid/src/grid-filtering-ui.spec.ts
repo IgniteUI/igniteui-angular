@@ -34,7 +34,7 @@ import {
 import { GridSelectionMode, FilterMode } from 'igniteui-angular/grids/core';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
-import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, FilteringStrategy, FormattedValuesFilteringStrategy, getComponentSize, GridResourceStringsEN, IFilteringExpression, IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, igxI18N, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, Size, SortingDirection } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, FilteringStrategy, FormattedValuesFilteringStrategy, getComponentSize, GridResourceStringsEN, IFilteringExpression, IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, igxI18N, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 import { IgxChipComponent, IgxBadgeComponent, IgxDatePickerComponent, IgxCalendarComponent, IgxIconComponent } from 'igniteui-angular';
@@ -2681,19 +2681,19 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         // Filtering + Column Groups
         it('should size correctly the header based on grid size.', async () => {
-            setElementSize(grid.nativeElement, Size.Large);
+            setElementSize(grid.nativeElement, ɵSize.Large);
             fix.detectChanges();
 
             const thead = GridFunctions.getGridHeader(grid).nativeElement;
             expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
 
-            setElementSize(grid.nativeElement, Size.Medium);
+            setElementSize(grid.nativeElement, ɵSize.Medium);
             fix.detectChanges();
             await wait(100); // needed because the resize observer handler for --ig-size is called inside an angular zone
             fix.detectChanges();
             expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
 
-            setElementSize(grid.nativeElement, Size.Small);
+            setElementSize(grid.nativeElement, ɵSize.Small);
             fix.detectChanges();
             await wait(100); // needed because the resize observer handler for --ig-size is called inside an angular zone
             fix.detectChanges();
@@ -3862,7 +3862,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should pin/unpin column when clicking pin/unpin icon in header', fakeAsync(() => {
-            setElementSize(grid.nativeElement, Size.Medium);
+            setElementSize(grid.nativeElement, ɵSize.Medium);
             tick(200);
             fix.detectChanges();
 
@@ -3888,7 +3888,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should hide column when clicking hide icon in header', fakeAsync(() => {
-            setElementSize(grid.nativeElement, Size.Small);
+            setElementSize(grid.nativeElement, ɵSize.Small);
             tick(200);
             fix.detectChanges();
             spyOn(grid.columnVisibilityChanging, 'emit');
@@ -4065,11 +4065,11 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Open excel style filtering component and verify its size
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
-            verifyExcelStyleFilteringSize(fix, Size.Large);
+            verifyExcelStyleFilteringSize(fix, ɵSize.Large);
             GridFunctions.clickApplyExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            setElementSize(grid.nativeElement, Size.Small);
+            setElementSize(grid.nativeElement, ɵSize.Small);
             tick(200);
             fix.detectChanges();
 
@@ -4077,11 +4077,11 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
             tick(100);
             fix.detectChanges();
-            verifyExcelStyleFilteringSize(fix, Size.Small);
+            verifyExcelStyleFilteringSize(fix, ɵSize.Small);
             GridFunctions.clickApplyExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            setElementSize(grid.nativeElement, Size.Medium);
+            setElementSize(grid.nativeElement, ɵSize.Medium);
             tick(200);
             fix.detectChanges();
 
@@ -4089,7 +4089,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
             tick(100);
             fix.detectChanges();
-            verifyExcelStyleFilteringSize(fix, Size.Medium);
+            verifyExcelStyleFilteringSize(fix, ɵSize.Medium);
             GridFunctions.clickApplyExcelStyleFiltering(fix);
             fix.detectChanges();
         }));
@@ -4108,7 +4108,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(columnSelectionContainer).not.toBeNull();
             expect(headerIcons.length).toEqual(0);
 
-            setElementSize(grid.nativeElement, Size.Small);
+            setElementSize(grid.nativeElement, ɵSize.Small);
             fix.detectChanges();
 
             columnSelectionContainer = GridFunctions.getExcelFilteringColumnSelectionContainer(fix);
@@ -4133,10 +4133,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
             GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
 
-            verifyExcelCustomFilterSize(fix, Size.Large);
+            verifyExcelCustomFilterSize(fix, ɵSize.Large);
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
 
-            setElementSize(grid.nativeElement, Size.Medium);
+            setElementSize(grid.nativeElement, ɵSize.Medium);
             tick(200);
             fix.detectChanges();
 
@@ -4147,10 +4147,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
             GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
 
-            verifyExcelCustomFilterSize(fix, Size.Medium);
+            verifyExcelCustomFilterSize(fix, ɵSize.Medium);
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
 
-            setElementSize(grid.nativeElement, Size.Small);
+            setElementSize(grid.nativeElement, ɵSize.Small);
             tick(200);
             fix.detectChanges();
 
@@ -4161,7 +4161,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
             GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
 
-            verifyExcelCustomFilterSize(fix, Size.Small);
+            verifyExcelCustomFilterSize(fix, ɵSize.Small);
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
         }));
 
@@ -4174,13 +4174,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
 
-            verifyGridSubmenuSize(gridNativeElement, Size.Large);
+            verifyGridSubmenuSize(gridNativeElement, ɵSize.Large);
 
             GridFunctions.clickCancelExcelStyleFiltering(fix);
             tick();
             fix.detectChanges();
 
-            setElementSize(grid.nativeElement, Size.Medium);
+            setElementSize(grid.nativeElement, ɵSize.Medium);
             tick(200);
             fix.detectChanges();
 
@@ -4190,12 +4190,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
 
-            verifyGridSubmenuSize(gridNativeElement, Size.Medium);
+            verifyGridSubmenuSize(gridNativeElement, ɵSize.Medium);
 
             GridFunctions.clickCancelExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            setElementSize(grid.nativeElement, Size.Small);
+            setElementSize(grid.nativeElement, ɵSize.Small);
             tick(200);
             fix.detectChanges();
 
@@ -4204,7 +4204,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
-            verifyGridSubmenuSize(gridNativeElement, Size.Small);
+            verifyGridSubmenuSize(gridNativeElement, ɵSize.Small);
         }));
 
         it('size is properly applied on the excel custom dialog\'s default expression dropdown',
@@ -4225,13 +4225,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 tick(100);
                 fix.detectChanges();
 
-                verifyGridSubmenuSize(gridNativeElement, Size.Large);
+                verifyGridSubmenuSize(gridNativeElement, ɵSize.Large);
                 GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
                 tick(100);
                 fix.detectChanges();
 
                 // Change size
-                setElementSize(grid.nativeElement, Size.Medium);
+                setElementSize(grid.nativeElement, ɵSize.Medium);
                 tick(200);
                 fix.detectChanges();
 
@@ -4249,7 +4249,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 tick(100);
                 fix.detectChanges();
 
-                verifyGridSubmenuSize(gridNativeElement, Size.Medium);
+                verifyGridSubmenuSize(gridNativeElement, ɵSize.Medium);
             }));
 
         it('size is properly applied on the excel custom dialog\'s date expression dropdown',
@@ -4268,14 +4268,14 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 tick(100);
                 fix.detectChanges();
 
-                verifyGridSubmenuSize(gridNativeElement, Size.Large);
+                verifyGridSubmenuSize(gridNativeElement, ɵSize.Large);
 
                 GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
                 tick(100);
                 fix.detectChanges();
 
                 // Change size
-                setElementSize(grid.nativeElement, Size.Medium);
+                setElementSize(grid.nativeElement, ɵSize.Medium);
                 tick(200);
                 fix.detectChanges();
 
@@ -4292,7 +4292,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 conditionsInput.click();
                 tick(100);
                 fix.detectChanges();
-                verifyGridSubmenuSize(gridNativeElement, Size.Medium);
+                verifyGridSubmenuSize(gridNativeElement, ɵSize.Medium);
             }));
 
         it('Should include \'false\' value in results when searching.', fakeAsync(() => {
@@ -4328,7 +4328,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             }
             fix.detectChanges();
 
-            setElementSize(grid.nativeElement, Size.Small);
+            setElementSize(grid.nativeElement, ɵSize.Small);
             await wait(100);
             fix.detectChanges();
 
@@ -4598,7 +4598,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickApplyExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            setElementSize(grid.nativeElement, Size.Medium);
+            setElementSize(grid.nativeElement, ɵSize.Medium);
             await wait(100);
             fix.detectChanges();
 
@@ -4611,7 +4611,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickApplyExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            setElementSize(grid.nativeElement, Size.Small);
+            setElementSize(grid.nativeElement, ɵSize.Small);
             await wait(100);
             fix.detectChanges();
 
@@ -7262,7 +7262,7 @@ const checkUIForType = (type: string, elem: DebugElement) => {
     }
 };
 
-const verifyExcelStyleFilteringSize = (fix: ComponentFixture<any>, expectedSize: Size) => {
+const verifyExcelStyleFilteringSize = (fix: ComponentFixture<any>, expectedSize: ɵSize) => {
     // Get excel style dialog
     const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
 
@@ -7289,7 +7289,7 @@ const verifyExcelStyleFilteringSize = (fix: ComponentFixture<any>, expectedSize:
     verifySortMoveSize(fix, expectedSize);
 };
 
-const verifyPinningHidingSize = (fix: ComponentFixture<any>, expectedSize: Size) => {
+const verifyPinningHidingSize = (fix: ComponentFixture<any>, expectedSize: ɵSize) => {
     // Get excel style dialog
     const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
 
@@ -7307,7 +7307,7 @@ const verifyPinningHidingSize = (fix: ComponentFixture<any>, expectedSize: Size)
     const actionsPinArea = GridFunctions.getExcelFilteringPinContainer(fix, excelMenu);
     const actionsAreaColumnHidingIcon = GridFunctions.getExcelFilteringHideContainer(fix, excelMenu);
 
-    if (expectedSize === Size.Large) {
+    if (expectedSize === ɵSize.Large) {
         // Verify icons in header are not present.
         expect(headerAreaPinIcon === null || headerAreaPinIcon === undefined).toBe(true,
             'headerArea pin icon is present');
@@ -7338,7 +7338,7 @@ const verifyPinningHidingSize = (fix: ComponentFixture<any>, expectedSize: Size)
     }
 };
 
-const verifySortMoveSize = (fix: ComponentFixture<any>, expectedSize: Size) => {
+const verifySortMoveSize = (fix: ComponentFixture<any>, expectedSize: ɵSize) => {
     // Get excel style dialog.
     const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
 
@@ -7352,7 +7352,7 @@ const verifySortMoveSize = (fix: ComponentFixture<any>, expectedSize: Size) => {
     const moveHeaderRect = moveContainer.querySelector('header').getBoundingClientRect();
     const moveButtons = GridFunctions.getExcelStyleFilteringMoveButtons(fix, excelMenu);
 
-    const isSmall = expectedSize === Size.Small;
+    const isSmall = expectedSize === ɵSize.Small;
     // Verify sort buttons are on right of the sort title if size is 'small'
     // or that they are under the sort title if size is not 'small'.
     expect(sortHeaderRect.right <= sortButtons[0].getBoundingClientRect().left).toBe(isSmall,
@@ -7375,7 +7375,7 @@ const verifySortMoveSize = (fix: ComponentFixture<any>, expectedSize: Size) => {
         'incorrect move button vertical position based on the sort title');
 };
 
-const verifyExcelCustomFilterSize = (fix: ComponentFixture<any>, expectedSize: Size) => {
+const verifyExcelCustomFilterSize = (fix: ComponentFixture<any>, expectedSize: ɵSize) => {
     // Excel style filtering custom filter dialog
     const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
     // Main container of custom filter dialog
@@ -7396,7 +7396,7 @@ const verifyExcelCustomFilterSize = (fix: ComponentFixture<any>, expectedSize: S
     });
 };
 
-const verifyGridSubmenuSize = (gridNativeElement: HTMLElement, expectedSize: Size) => {
+const verifyGridSubmenuSize = (gridNativeElement: HTMLElement, expectedSize: ɵSize) => {
     const outlet = gridNativeElement.querySelector('.igx-grid__outlet');
     const dropdowns = Array.from(outlet.querySelectorAll('.igx-drop-down__list'));
     const visibleDropdown: any = dropdowns.find((d) => !d.classList.contains('igx-toggle--hidden'));

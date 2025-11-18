@@ -1,7 +1,7 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrategy, GridColumnDataType, GridTypeBase, IgxStringFilteringOperand, Size, SortingDirection } from 'igniteui-angular/core';
+import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrategy, GridColumnDataType, GridTypeBase, IgxStringFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';;
 import { DataParent } from '../../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
@@ -717,7 +717,7 @@ describe('IgxGrid - Cell merging #grid', () => {
             it('should size correct when size is set to anything other than large', async () => {
                 fix.componentInstance.cols = [{ field: 'ProductName', dataType: GridColumnDataType.String, merge: true }]
                 fix.detectChanges();
-                setElementSize(grid.nativeElement, Size.Small)
+                setElementSize(grid.nativeElement, ɵSize.Small)
                 fix.detectChanges();
                 await wait(100);
                 fix.detectChanges();

@@ -1,7 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxStringFilteringOperand, ISortingExpression, Size, SortingDirection } from 'igniteui-angular/core';
+import { FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxStringFilteringOperand, ISortingExpression, ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
 import { DefaultPivotSortingStrategy } from 'igniteui-angular/grids/pivot-grid';
@@ -526,7 +526,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             tick();
             fixture.detectChanges();
 
-            expect(pivotGrid.gridSize).toBe(Size.Small);
+            expect(pivotGrid.gridSize).toBe(ɵSize.Small);
             const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
             let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
             expect(rowHeaders[0].componentInstance.column.defaultMinWidth).toBe(minWidthSupercompact);
@@ -536,10 +536,10 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
             tick();
 
-            setElementSize(pivotGrid.nativeElement, Size.Large)
+            setElementSize(pivotGrid.nativeElement, ɵSize.Large)
             fixture.detectChanges();
 
-            expect(pivotGrid.gridSize).toBe(Size.Large);
+            expect(pivotGrid.gridSize).toBe(ɵSize.Large);
             rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
             expect(rowHeaders[0].componentInstance.column.defaultMinWidth).toBe(minWidthComf);
             expect(pivotGrid.rowList.first.cells.first.nativeElement.offsetHeight).toBe(cellHeightComf);
@@ -765,31 +765,31 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const rowHeightLarge = 50;
 
             pivotGrid.superCompactMode = false;
-            setElementSize(pivotGrid.nativeElement, Size.Large);
+            setElementSize(pivotGrid.nativeElement, ɵSize.Large);
 
             await wait(100);
             fixture.detectChanges();
 
-            expect(pivotGrid.gridSize).toBe(Size.Large);
+            expect(pivotGrid.gridSize).toBe(ɵSize.Large);
             const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
             let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
             let rowHeader = rowHeaders[0].queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
             expect(rowHeader[0].nativeElement.offsetHeight).toBe(rowHeightLarge);
 
-            setElementSize(pivotGrid.nativeElement, Size.Small);
+            setElementSize(pivotGrid.nativeElement, ɵSize.Small);
             await wait(100);
             fixture.detectChanges();
 
-            expect(pivotGrid.gridSize).toBe(Size.Small);
+            expect(pivotGrid.gridSize).toBe(ɵSize.Small);
             rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
             rowHeader = rowHeaders[0].queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
             expect(rowHeader[0].nativeElement.offsetHeight).toBe(rowHeightSmall);
 
-            setElementSize(pivotGrid.nativeElement, Size.Medium);
+            setElementSize(pivotGrid.nativeElement, ɵSize.Medium);
             await wait(100);
             fixture.detectChanges();
 
-            expect(pivotGrid.gridSize).toBe(Size.Medium);
+            expect(pivotGrid.gridSize).toBe(ɵSize.Medium);
             rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
             rowHeader = rowHeaders[0].queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
             expect(rowHeader[0].nativeElement.offsetHeight).toBe(rowHeightMedium);

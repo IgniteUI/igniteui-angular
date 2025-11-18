@@ -11,7 +11,7 @@ import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IColumnResizeEventArgs, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent } from 'igniteui-angular/grids/core';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import { IgxColumnResizerDirective } from 'igniteui-angular/grids/core';
-import { Size } from 'igniteui-angular/core';
+import { ɵSize } from 'igniteui-angular/core';
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
 import { Calendar } from 'igniteui-angular/calendar';
 
@@ -199,7 +199,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
 
             expect(column.width).toEqual('80px');
-            setElementSize(grid.nativeElement, Size.Medium)
+            setElementSize(grid.nativeElement, ɵSize.Medium)
             tick(16); // needed because of the throttleTime of the resize obserer
             fixture.detectChanges();
 
@@ -214,7 +214,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
 
             expect(column.width).toEqual('64px');
-            setElementSize(grid.nativeElement, Size.Small)
+            setElementSize(grid.nativeElement, ɵSize.Small)
             tick(16); // needed because of the throttleTime of the resize obserer
             fixture.detectChanges();
 

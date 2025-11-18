@@ -22,7 +22,7 @@ import { IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective, IgxList
 import { IgxButtonDirective, IgxForOfDirective } from 'igniteui-angular/directives';
 import { IgxTreeComponent, IgxTreeNodeComponent, ITreeNodeSelectionEvent } from 'igniteui-angular/tree';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
-import { cloneHierarchicalArray, FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, PlatformUtil, Size } from 'igniteui-angular/core';
+import { cloneHierarchicalArray, FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, PlatformUtil, ɵSize } from 'igniteui-angular/core';
 import { Navigate } from 'igniteui-angular/drop-down';
 
 @Directive({
@@ -351,8 +351,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         let itemSize = '40px';
         const esf = this.esf as any;
         switch (esf.size) {
-            case Size.Medium: itemSize = '32px'; break;
-            case Size.Small: itemSize = '24px'; break;
+            case ɵSize.Medium: itemSize = '32px'; break;
+            case ɵSize.Small: itemSize = '24px'; break;
             default: break;
         }
         return itemSize;

@@ -21,7 +21,7 @@ import { IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansio
 import { IDragBaseEventArgs, IDragGhostBaseEventArgs, IDragMoveEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDragDirective, IgxDragHandleDirective, IgxDropDirective } from 'igniteui-angular/directives';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, ISelectionEventArgs } from 'igniteui-angular/drop-down';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, ColumnType, OverlaySettings, PositionSettings, Size, SortingDirection, VerticalAlignment } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, ColumnType, OverlaySettings, PositionSettings, ɵSize, SortingDirection, VerticalAlignment } from 'igniteui-angular/core';
 import { IPivotAggregator, IPivotDimension, IPivotValue, PivotDimensionType, PivotGridType, PivotUtil } from 'igniteui-angular/grids/core';
 
 interface IDataSelectorPanel {
@@ -196,7 +196,7 @@ export class IgxPivotDataSelectorComponent {
     public cssClass = "igx-pivot-data-selector";
 
     @HostBinding("style.--ig-size")
-    protected get size(): Size {
+    protected get size(): ɵSize {
         return this.grid?.gridSize;
     }
 

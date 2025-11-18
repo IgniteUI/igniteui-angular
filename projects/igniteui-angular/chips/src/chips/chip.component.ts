@@ -17,7 +17,7 @@ import {
     DOCUMENT
 } from '@angular/core';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from 'igniteui-angular/directives';
-import { IBaseEventArgs, Size } from 'igniteui-angular/core';
+import { IBaseEventArgs, ɵSize } from 'igniteui-angular/core';
 import { ChipResourceStringsEN, IChipResourceStrings } from 'igniteui-angular/core';
 import { Subject } from 'rxjs';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -595,8 +595,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      */
     public destroy$ = new Subject<void>();
 
-    protected get chipSize(): Size {
-        return this.computedStyles?.getPropertyValue('--ig-size') || Size.Medium;
+    protected get chipSize(): ɵSize {
+        return this.computedStyles?.getPropertyValue('--ig-size') || ɵSize.Medium;
     }
     protected _tabIndex = null;
     protected _selected = false;

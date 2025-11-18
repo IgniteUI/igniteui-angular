@@ -1,7 +1,7 @@
 // Core utilities
 export * from './core/navigation';
 export * from './core/dates';
-export * from './core/enums';
+export { WEEKDAYS, Size as ɵSize } from './core/enums';
 export * from './core/utils';
 export * from './core/types';
 export * from './core/selection';

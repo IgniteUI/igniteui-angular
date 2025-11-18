@@ -19,7 +19,7 @@ import { IgxGridRowComponent } from './grid-row.component';
 import { GRID_SCROLL_CLASS, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { AsyncPipe } from '@angular/common';
 import { setElementSize, ymd } from '../../../test-utils/helper-utils.spec';
-import { FilteringExpressionsTree, FilteringLogic, getComponentSize, GridColumnDataType, IgxNumberFilteringOperand, IgxStringFilteringOperand, ISortingExpression, Size, SortingDirection } from 'igniteui-angular/core';
+import { FilteringExpressionsTree, FilteringLogic, getComponentSize, GridColumnDataType, IgxNumberFilteringOperand, IgxStringFilteringOperand, ISortingExpression, ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from 'igniteui-angular/paginator';
 
 describe('IgxGrid Component Tests #grid', () => {
@@ -282,7 +282,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(rowHeight.offsetHeight).toBe(51);
             expect(summaryItemHeight.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
             expect(summaryRowHeight.offsetHeight).toBe(grid.defaultSummaryHeight);
-            setElementSize(grid.nativeElement, Size.Medium)
+            setElementSize(grid.nativeElement, ɵSize.Medium)
             grid.summaryRowHeight = null;
             fixture.detectChanges();
             await wait(32); // needed because of the throttleTime on the resize observer
@@ -294,7 +294,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(rowHeight.offsetHeight).toBe(41);
             expect(summaryItemHeight.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
             expect(summaryRowHeight.offsetHeight).toBe(grid.defaultSummaryHeight);
-            setElementSize(grid.nativeElement, Size.Small)
+            setElementSize(grid.nativeElement, ɵSize.Small)
             grid.summaryRowHeight = undefined;
             fixture.detectChanges();
             await wait(32); // needed because of the throttleTime on the resize observer
@@ -1256,7 +1256,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             expect(fix.componentInstance.grid.rowList.length).toEqual(10);
 
-            setElementSize(fix.componentInstance.grid.nativeElement, Size.Small)
+            setElementSize(fix.componentInstance.grid.nativeElement, ɵSize.Small)
             fix.detectChanges();
             await wait(32); // needed because of the throttleTime on the resize observer
             fix.detectChanges();

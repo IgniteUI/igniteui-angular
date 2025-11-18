@@ -43,7 +43,7 @@ import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { FilterMode, GridPagingMode, GridSummaryPosition } from 'igniteui-angular/grids/core';
 import { WatchChanges } from 'igniteui-angular/grids/core';
-import { cloneArray, ColumnType, DataUtil, DefaultDataCloneStrategy, GridColumnDataType, GridSummaryCalculationMode, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringOperation, IFilteringStrategy, ISortingExpression, OverlaySettings, PlatformUtil, resizeObservable, Size, SortingDirection } from 'igniteui-angular/core';
+import { cloneArray, ColumnType, DataUtil, DefaultDataCloneStrategy, GridColumnDataType, GridSummaryCalculationMode, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringOperation, IFilteringStrategy, ISortingExpression, OverlaySettings, PlatformUtil, resizeObservable, ɵSize, SortingDirection } from 'igniteui-angular/core';
 import {
     IGridEditEventArgs,
     ICellPosition,
@@ -397,7 +397,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /** @hidden @internal */
     public override get gridSize() {
         if (this.superCompactMode) {
-            return Size.Small;
+            return ɵSize.Small;
         }
         return super.gridSize;
     }

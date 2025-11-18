@@ -16,7 +16,7 @@ import { CellType, GridSelectionMode } from 'igniteui-angular/grids/core';
 import { QueryList } from '@angular/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
-import { IgxStringFilteringOperand, Size } from 'igniteui-angular/core';
+import { IgxStringFilteringOperand, ɵSize } from 'igniteui-angular/core';
 
 describe('IgxHierarchicalGrid selection #hGrid', () => {
     let fix;
@@ -93,7 +93,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         });
 
         it('should be able to set cellSelection mode per grid', () => {
-            setElementSize(hierarchicalGrid.nativeElement, Size.Small);
+            setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small);
             fix.detectChanges();
 
             const row = hierarchicalGrid.gridAPI.get_row_by_index(3) as IgxHierarchicalRowComponent;
@@ -171,7 +171,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         });
 
         it('should allow to select multiple cells in the same grid on mouse drag', () => {
-            setElementSize(hierarchicalGrid.nativeElement, Size.Small);
+            setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small);
             fix.detectChanges();
 
             const row = hierarchicalGrid.gridAPI.get_row_by_index(3) as IgxHierarchicalRowComponent;
@@ -216,7 +216,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         });
 
         it('should NOT allow to select multiple cells in multiple grids on mouse drag', () => {
-            setElementSize(hierarchicalGrid.nativeElement, Size.Small);
+            setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small);
             fix.detectChanges();
 
             const row = hierarchicalGrid.gridAPI.get_row_by_index(3) as IgxHierarchicalRowComponent;
@@ -263,7 +263,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         });
 
         it('should be able to select range with shift + arrow keys in the parent grid', fakeAsync(() => {
-            setElementSize(hierarchicalGrid.nativeElement, Size.Small);
+            setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small);
             fix.detectChanges();
 
             let cell = hierarchicalGrid.gridAPI.get_cell_by_index(1, 'ChildLevels');
@@ -292,7 +292,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         }));
 
         it('should be able to select range with shift + arrow keys in the child grid', fakeAsync(() => {
-            setElementSize(hierarchicalGrid.nativeElement, Size.Small);
+            setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small);
             fix.detectChanges();
 
             const row = hierarchicalGrid.gridAPI.get_row_by_index(1) as IgxHierarchicalRowComponent;
@@ -327,7 +327,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         }));
 
         it('should be able to select range with shift + mouse click and skip the child grid', () => {
-            setElementSize(hierarchicalGrid.nativeElement, Size.Small);
+            setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small);
             fix.detectChanges();
 
             const forthRow = hierarchicalGrid.gridAPI.get_row_by_index(2) as IgxHierarchicalRowComponent;
@@ -356,7 +356,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         });
 
         it('should be able to select multiple ranges holding ctrl key', () => {
-            setElementSize(hierarchicalGrid.nativeElement, Size.Small);
+            setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small);
             fix.detectChanges();
 
             const forthRow = hierarchicalGrid.gridAPI.get_row_by_index(2) as IgxHierarchicalRowComponent;
@@ -392,7 +392,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         });
 
         it('should NOT be able to create multiple ranges in multiple grids holding ctrl key', () => {
-            setElementSize(hierarchicalGrid.nativeElement, Size.Small);
+            setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small);
             fix.detectChanges();
             const row = hierarchicalGrid.gridAPI.get_row_by_index(2) as IgxHierarchicalRowComponent;
 
@@ -423,7 +423,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         });
 
         it('should clear the selection in parent grid when continue navigation in the child grid', fakeAsync(() => {
-            setElementSize(hierarchicalGrid.nativeElement, Size.Small)
+            setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small)
             fix.detectChanges();
 
             const row = hierarchicalGrid.gridAPI.get_row_by_index(4) as IgxHierarchicalRowComponent;
@@ -454,7 +454,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         }));
 
         it('should NOT be able to create range selection between parent and child grid on mouse click + shift key', fakeAsync(() => {
-            setElementSize(hierarchicalGrid.nativeElement, Size.Small)
+            setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small)
             fix.detectChanges();
 
             const row = hierarchicalGrid.gridAPI.get_row_by_index(2) as IgxHierarchicalRowComponent;

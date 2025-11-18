@@ -21,7 +21,7 @@ import {
 } from '../../../test-utils/grid-samples.spec';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { DefaultDataCloneStrategy, DefaultSortingStrategy, IgxNumberFilteringOperand, IgxStringFilteringOperand, Size, SortingDirection, Transaction, TransactionType } from 'igniteui-angular/core';
+import { DefaultDataCloneStrategy, DefaultSortingStrategy, IgxNumberFilteringOperand, IgxStringFilteringOperand, ɵSize, SortingDirection, Transaction, TransactionType } from 'igniteui-angular/core';
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';
@@ -1137,7 +1137,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Should exit row editing AND COMMIT on grid size change`, async () => {
-            setElementSize(grid.nativeElement, Size.Large);
+            setElementSize(grid.nativeElement, ɵSize.Large);
             fix.detectChanges();
 
             cell.editMode = true;
@@ -1147,7 +1147,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(overlayContent).toBeTruthy();
             expect(cell.editMode).toBeTruthy();
 
-            setElementSize(grid.nativeElement, Size.Medium);
+            setElementSize(grid.nativeElement, ɵSize.Medium);
             fix.detectChanges();
             await wait(16); // needed because of the throttleTime on the resize observer
             fix.detectChanges();

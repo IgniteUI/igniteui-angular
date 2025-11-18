@@ -41,7 +41,7 @@ import { DropPosition } from '../moving/moving.service';
 import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
 import { IgxGridCell } from '../grid-public-cell';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
-import { ColumnPinningPosition, ColumnType, DefaultSortingStrategy, ExpressionsTreeUtil, FilteringExpressionsTree, GridColumnDataType, IColumnEditorOptions, IColumnPipeArgs, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxSummaryResult, IgxTimeFilteringOperand, isConstructor, ISortingStrategy, MRLColumnSizeInfo, MRLResizeColumnInfo, PlatformUtil, Size } from 'igniteui-angular/core';
+import { ColumnPinningPosition, ColumnType, DefaultSortingStrategy, ExpressionsTreeUtil, FilteringExpressionsTree, GridColumnDataType, IColumnEditorOptions, IColumnPipeArgs, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxSummaryResult, IgxTimeFilteringOperand, isConstructor, ISortingStrategy, MRLColumnSizeInfo, MRLResizeColumnInfo, PlatformUtil, ɵSize } from 'igniteui-angular/core';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_TIME_FORMAT = 'mediumTime';
@@ -1293,9 +1293,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             return '80';
         }
         switch (this.grid.gridSize) {
-            case Size.Medium:
+            case ɵSize.Medium:
                 return '64';
-            case Size.Small:
+            case ɵSize.Small:
                 return '56';
             default:
                 return '80';

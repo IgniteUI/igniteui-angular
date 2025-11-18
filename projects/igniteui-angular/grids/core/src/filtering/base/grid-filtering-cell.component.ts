@@ -18,7 +18,7 @@ import { IBaseChipEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'ign
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxPrefixDirective } from 'igniteui-angular/input-group';
 import { IgxBadgeComponent } from 'igniteui-angular/badge';
-import { ColumnType, IFilteringExpression, Size } from 'igniteui-angular/core';
+import { ColumnType, IFilteringExpression, ɵSize } from 'igniteui-angular/core';
 
 /**
  * @hidden
@@ -198,8 +198,8 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
         };
     }
 
-    protected get filteringElementsSize(): Size {
-        return this.column.grid.gridSize === Size.Large ? Size.Medium : this.column.grid.gridSize;
+    protected get filteringElementsSize(): ɵSize {
+        return this.column.grid.gridSize === ɵSize.Large ? ɵSize.Medium : this.column.grid.gridSize;
     }
 
     private removeExpression(indexToRemove: number) {

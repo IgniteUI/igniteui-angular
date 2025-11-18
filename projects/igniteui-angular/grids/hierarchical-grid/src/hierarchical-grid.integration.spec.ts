@@ -18,7 +18,7 @@ import { HierarchicalGridFunctions } from '../../../test-utils/hierarchical-grid
 import { GridSelectionMode, RowPinningPosition } from 'igniteui-angular/grids/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
-import { ColumnPinningPosition, DefaultSortingStrategy, IgxStringFilteringOperand, Size, SortingDirection } from 'igniteui-angular/core';
+import { ColumnPinningPosition, DefaultSortingStrategy, IgxStringFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
@@ -483,7 +483,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
 
         it('should size summaries for parent and child grids correctly when grid size is changed and summaryRowHeight is set to falsy value', () => {
-            setElementSize(hierarchicalGrid.nativeElement, Size.Large)
+            setElementSize(hierarchicalGrid.nativeElement, ɵSize.Large)
             fixture.detectChanges();
 
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key);
@@ -498,7 +498,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(childTFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
 
 
-            setElementSize(hierarchicalGrid.nativeElement, Size.Medium)
+            setElementSize(hierarchicalGrid.nativeElement, ɵSize.Medium)
             hierarchicalGrid.summaryRowHeight = 0;
             childGrid.summaryRowHeight = 0;
             fixture.detectChanges();
@@ -510,7 +510,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(tFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
             expect(childTFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
 
-            setElementSize(hierarchicalGrid.nativeElement, Size.Small)
+            setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small)
             hierarchicalGrid.summaryRowHeight = 0;
             childGrid.summaryRowHeight = 0;
             fixture.detectChanges();

@@ -15,7 +15,7 @@ import { GridSelectionMode } from 'igniteui-angular/grids/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { SAFE_DISPOSE_COMP_ID } from '../../../test-utils/grid-functions.spec';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
-import { IgxStringFilteringOperand, Size } from 'igniteui-angular/core';
+import { IgxStringFilteringOperand, ɵSize } from 'igniteui-angular/core';
 
 
 describe('IgxTreeGrid Component Tests #tGrid', () => {
@@ -96,7 +96,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         it(`should render 11 records if height is 100% and parent container\'s height is unset and grid size is changed`, async () => {
             grid.height = '100%';
             fix.detectChanges();
-            setElementSize(grid.nativeElement, Size.Small);
+            setElementSize(grid.nativeElement, ɵSize.Small);
             fix.detectChanges();
             await wait(32); // needed because of the throttleTime on the resize observer
             fix.detectChanges();

@@ -24,7 +24,7 @@ import { IBaseChipEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'ign
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
-import { AbsoluteScrollStrategy, ColumnType, ConnectedPositioningStrategy, DataUtil, FilteringLogic, GridColumnDataType, HorizontalAlignment, IFilteringExpression, IFilteringOperation, IgxPickerClearComponent, IgxPickerToggleComponent, isEqual, OverlaySettings, PlatformUtil, Size, VerticalAlignment } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, ColumnType, ConnectedPositioningStrategy, DataUtil, FilteringLogic, GridColumnDataType, HorizontalAlignment, IFilteringExpression, IFilteringOperation, IgxPickerClearComponent, IgxPickerToggleComponent, isEqual, OverlaySettings, PlatformUtil, ɵSize, VerticalAlignment } from 'igniteui-angular/core';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 import { IgxButtonDirective, IgxDateTimeEditorDirective, IgxIconButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 
@@ -110,9 +110,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    protected get filteringElementsSize(): Size {
+    protected get filteringElementsSize(): ɵSize {
         // needed because we want the size of the chips to be either Medium or Small
-        return this.column.grid.gridSize === Size.Large ? Size.Medium : this.column.grid.gridSize;
+        return this.column.grid.gridSize === ɵSize.Large ? ɵSize.Medium : this.column.grid.gridSize;
     }
 
     @HostBinding('class.igx-grid__filtering-row')
