@@ -308,6 +308,24 @@ describe('IgxHighlight', () => {
 
         expect(() => component.highlight.activateIfNecessary()).not.toThrowError();
     });
+
+    it('Should not throw error when destroyed before ngAfterViewInit completes', () => {
+        const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
+        // Do not call detectChanges() - this simulates destruction before ngAfterViewInit
+        
+        // Destroy the component before initialization completes
+        expect(() => fix.destroy()).not.toThrowError();
+    });
+
+    it('Should return 0 when highlight is called before ngAfterViewInit completes', () => {
+        const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
+        const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
+        
+        // Call highlight before detectChanges (before ngAfterViewInit)
+        const count = component.highlight.highlight('test', false, false);
+        
+        expect(count).toBe(0);
+    });
 });
 
 @Component({
