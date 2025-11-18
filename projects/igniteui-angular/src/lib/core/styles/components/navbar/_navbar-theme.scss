@@ -25,7 +25,7 @@
         padding-inline: pad-inline($navbar-padding);
         background: var-get($theme, 'background');
         color: var-get($theme, 'text-color');
-        box-shadow: var-get($theme, 'shadow');
+        box-shadow: var-get($theme, 'elevation');
         z-index: 4;
         overflow: hidden;
         border-bottom: rem(1px) solid var-get($theme, 'border-color');
