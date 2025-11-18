@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, TemplateRef, ViewChild, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
 import {
     IgxTimePickerComponent,
     IgxInputDirective,
@@ -32,6 +32,7 @@ import {
     imports: [
         IgxTimePickerComponent,
         FormsModule,
+        ReactiveFormsModule,
         IgxHintDirective,
         IgxButtonDirective,
         IgxPickerActionsDirective,
@@ -105,6 +106,12 @@ export class TimePickerSampleComponent implements OnInit {
                 defaultValue: 'box'
             }
         },
+        required: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
         readonly: {
             control: {
                 type: 'boolean',
@@ -142,9 +149,20 @@ export class TimePickerSampleComponent implements OnInit {
         }
     }
 
-    public properties: Properties;
+    private fb = inject(UntypedFormBuilder);
     private propertyChangeService = inject(PropertyChangeService);
     private destroyRef = inject(DestroyRef);
+
+    public properties: Properties = Object.fromEntries(
+        Object.keys(this.panelConfig).map((key) => {
+            const control = this.panelConfig[key]?.control;
+            return [key, control?.defaultValue];
+        })
+    ) as Properties;
+
+    public reactiveForm = this.fb.group({
+        timePicker: [this.properties?.value || ''],
+    });
 
     constructor() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
@@ -153,6 +171,10 @@ export class TimePickerSampleComponent implements OnInit {
             this.propertyChangeService.propertyChanges.subscribe(
                 (properties) => {
                     this.properties = properties;
+                    this.reactiveForm.patchValue({
+                        timePicker: properties?.value || ''
+                    });
+                    this.updateRequiredValidator();
                 }
             );
 
@@ -163,6 +185,14 @@ export class TimePickerSampleComponent implements OnInit {
         this.propertyChangeService.setCustomControls(
             this.customControlsTemplate
         );
+    }
+
+    private updateRequiredValidator(): void {
+        const control = this.reactiveForm.get('timePicker');
+        if (control) {
+            control.setValidators(this.properties?.required ? Validators.required : null);
+            control.updateValueAndValidity();
+        }
     }
 
     public change() {
