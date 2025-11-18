@@ -155,7 +155,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      * Expects a valid BCP 47 language tag.
      */
     public set locale(value: string) {
-        this._locale = value;
+        this._locale = this.i18nFormatter.verifyLocale(value);
         this.updateResources();
     }
 

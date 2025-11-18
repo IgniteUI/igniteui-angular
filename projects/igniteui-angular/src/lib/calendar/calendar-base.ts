@@ -311,7 +311,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * Expects a valid BCP 47 language tag.
      */
     public set locale(value: string) {
-        this._locale = value;
+        this._locale = this.i18nFormatter.verifyLocale(value);
         // changing locale runtime needs to update the `weekStart` too
         this._localeWeekStart = this.i18nFormatter.getLocaleFirstDayOfWeek(this._locale);
         this._defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false, this._locale);

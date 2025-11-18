@@ -2003,7 +2003,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     public set locale(value: string) {
         if (value !== this._locale) {
-            this._locale = value;
+            this._locale = this.i18nFormatter.verifyLocale(value);
             this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false, this._locale);
             this._currencyPositionLeft = undefined;
             this.summaryService.clearSummaryCache();

@@ -509,14 +509,13 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.locale).toEqual(locale);
                 expect(datePicker.weekStart).toEqual(WEEKDAYS.SUNDAY)
 
-                let errorThrown;
-                try {
-                    datePicker.locale = "frrr";
-                    fixture.detectChanges();
-                } catch(err) {
-                    errorThrown = err;
-                }
-                expect(errorThrown).not.toBeUndefined();
+
+                datePicker.locale = 'frrr';
+                datePicker.weekStart = WEEKDAYS.FRIDAY;
+                fixture.detectChanges();
+
+                expect(datePicker.locale).toEqual('en-US');
+                expect(datePicker.weekStart).toEqual(WEEKDAYS.FRIDAY);
             }));
 
             it('should set initial validity state when the form group is disabled', () => {

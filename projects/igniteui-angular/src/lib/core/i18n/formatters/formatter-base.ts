@@ -27,6 +27,16 @@ export class BaseFormatter {
     };
     private _currencyPipe = new CurrencyPipe('en-US', 'USD');
 
+    public verifyLocale(locale: string): string {
+        try {
+            // Any angular method should work.
+            ngGetLocaleFirstDayOfWeek(locale);
+        } catch {
+            return undefined;
+        }
+        return locale;
+    }
+
     /**
      * Get Intl options based on format provided:
      *

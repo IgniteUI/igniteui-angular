@@ -12,6 +12,15 @@ export function provideIgniteIntl() {
 }
 
 export class IntlFormatter extends BaseFormatter {
+    public override verifyLocale(locale: string): string {
+        try {
+            // Any angular method should work.
+            return Intl.getCanonicalLocales(locale)[0];
+        } catch {
+            return undefined;
+        }
+    }
+
     public override formatDate(value: Date | string | number | null | undefined, format: string, locale: string, timezone?: string): string {
         if (value === null || value === undefined || value === '') {
             return '';
@@ -28,7 +37,6 @@ export class IntlFormatter extends BaseFormatter {
             ...formatOptions,
             timeZone: timezone
         };
-
         return getDateFormatter().formatDateTime(value, locale, options);
     }
 
