@@ -139,10 +139,10 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: false })
     public childColumns = new QueryList<IgxColumnComponent>();
 
-    @ContentChild(IgxGridToolbarDirective, { read: TemplateRef })
+    @ContentChild(IgxGridToolbarDirective, { read: TemplateRef, descendants: false })
     protected toolbarDirectiveTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
 
-    @ContentChild(IgxPaginatorDirective, { read: TemplateRef })
+    @ContentChild(IgxPaginatorDirective, { read: TemplateRef, descendants: false })
     protected paginatorDirectiveTemplate: TemplateRef<any>;
 
     /* csSuppress */
