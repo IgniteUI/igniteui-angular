@@ -218,7 +218,13 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      *
      */
     @Input()
-    public override displayFormat: string;
+    public override set displayFormat(value: string) {
+        super.displayFormat = value;
+    }
+
+    public override get displayFormat(): string {
+        return super.displayFormat;
+    }
 
     /**
      * The expected user input format and placeholder.
@@ -229,7 +235,14 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public override inputFormat: string;
+    public override set inputFormat(value: string) {
+        super.inputFormat = value;
+    };
+
+    public override get inputFormat(): string {
+        // We need to get default input format because igxDateRangePicker is not using igxDateTimeEditor, but a plain input ???
+        return this._inputFormat ?? DateTimeUtil.getDefaultInputFormat(this.locale, this.i18nFormatter);
+    }
 
     /**
      * The minimum value in a valid range.
@@ -436,11 +449,11 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public get appliedFormat(): string {
-        const formatSize = this.i18nFormatter.getSizeFromDisplayFormat(this.displayFormat);
-        const localFormat = formatSize
-            ? this.i18nFormatter.getLocaleDateTimeFormat(this.locale, false, { dateStyle: formatSize })
-            : this.displayFormat;
-        return localFormat || this.i18nFormatter.getLocaleDateTimeFormat(this.locale, false);
+        // Resolve display format since it can be custom specified one like short, long, shortDate, longDate and etc.
+        const formatOptions = this.i18nFormatter.getFormatOptions(this.displayFormat);
+        return formatOptions
+            ? this.i18nFormatter.getLocaleDateTimeFormat(this.locale, false, formatOptions)
+            : this.displayFormat ?? this.inputFormat;
     }
 
     /**
@@ -478,7 +491,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * Expects a valid BCP 47 language tag.
      */
     public override set locale(value: string) {
-        this._locale = value;
+        this._locale = this.i18nFormatter.verifyLocale(value);
         this.updateResources();
         if (this.hasProjectedInputs) {
             this.updateInputLocale();

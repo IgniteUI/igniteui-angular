@@ -521,7 +521,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             dateTimeEditor = filterUIRow.query(By.directive(IgxDateTimeEditorDirective))
                                                 .injector.get(IgxDateTimeEditorDirective);
             // since 'shortTime' is numeric, input format will include its numeric parts
-            expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch('hh:mm a');
+            expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch('hh:mm tt');
             expect(dateTimeEditor.displayFormat).toMatch('shortTime');
         }));
 

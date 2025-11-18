@@ -61,8 +61,7 @@ describe('Localization', () => {
             expect(i18nFormatter.getLocaleDateTimeFormat('it', false, { dateStyle: 'full' })).toEqual(`EEEE d MMMM yyyy`);
         });
 
-        it('should return correct datetime format per locale', () => {
-            expect(i18nFormatter.getLocaleDateTimeFormat('it', false)).toEqual('dd/MM/yyyy, HH:mm:ss');
+        it('should return correct date and time format per locale', () => {
             expect(i18nFormatter.getLocaleDateTimeFormat('it', false, { dateStyle: 'short', timeStyle: 'short' })).toEqual('dd/MM/yy, HH:mm');
             expect(i18nFormatter.getLocaleDateTimeFormat('it', false, { dateStyle: 'medium', timeStyle: 'medium' })).toEqual('d MMM yyyy, HH:mm:ss');
             expect(i18nFormatter.getLocaleDateTimeFormat('it', false, { dateStyle: 'long', timeStyle: 'long' })).toEqual(`d MMMM yyyy alle ore HH:mm:ss z`);

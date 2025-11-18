@@ -242,7 +242,7 @@ describe(`DateTimeUtil Unit tests`, () => {
 
     it('should properly build input formats based on locale for dateTime data type ', () => {
         let result = DateTimeUtil.getDefaultInputFormat('en-US', angularFormatter, DataType.DateTime);
-        expect(result.normalize('NFKC')).toEqual('MM/dd/yyyy, hh:mm:ss a');
+        expect(result.normalize('NFKC')).toEqual('MM/dd/yyyy, hh:mm:ss tt');
 
         result = DateTimeUtil.getDefaultInputFormat('bg-BG', angularFormatter, DataType.DateTime);
         expect(result.normalize('NFKC')).toEqual('dd.MM.yyyy г., HH:mm:ss');
@@ -253,7 +253,7 @@ describe(`DateTimeUtil Unit tests`, () => {
 
     it('should properly build input formats based on locale for time data type ', () => {
         let result = DateTimeUtil.getDefaultInputFormat('en-US', angularFormatter, DataType.Time);
-        expect(result.normalize('NFKC')).toEqual('hh:mm a');
+        expect(result.normalize('NFKC')).toEqual('hh:mm tt');
 
         result = DateTimeUtil.getDefaultInputFormat('bg-BG', angularFormatter, DataType.Time);
         expect(result.normalize('NFKC')).toEqual('HH:mm');
@@ -685,10 +685,10 @@ describe(`DateTimeUtil Unit tests`, () => {
 
         // returns the equivalent of the predefined numeric formats as date parts
         // should be transformed as inputFormats for editing (numeric year, 2-digit parts for the rest)
-        expect(DateTimeUtil.getNumericInputFormat(locale, angularFormatter, 'short')).toBe('MM/dd/yyyy, hh:mm a');
+        expect(DateTimeUtil.getNumericInputFormat(locale, angularFormatter, 'short')).toBe('MM/dd/yyyy, hh:mm tt');
         expect(DateTimeUtil.getNumericInputFormat(locale, angularFormatter, 'shortDate')).toBe('MM/dd/yyyy');
-        expect(DateTimeUtil.getNumericInputFormat(locale, angularFormatter, 'shortTime').normalize('NFKD')).toBe('hh:mm a');
-        expect(DateTimeUtil.getNumericInputFormat(locale, angularFormatter, 'mediumTime').normalize('NFKD')).toBe('hh:mm:ss a');
+        expect(DateTimeUtil.getNumericInputFormat(locale, angularFormatter, 'shortTime').normalize('NFKD')).toBe('hh:mm tt');
+        expect(DateTimeUtil.getNumericInputFormat(locale, angularFormatter, 'mediumTime').normalize('NFKD')).toBe('hh:mm:ss tt');
 
         // handle the predefined formats for different locales
         locale = 'bg-BG';

@@ -19,20 +19,13 @@ export class IntlFormatter extends BaseFormatter {
         if (typeof value === "string" || typeof value === "number") {
             value = getDateFormatter().createDateFromValue(value);
         }
-        let dateStyle = undefined, timeStyle = undefined;
-        if (format === 'short' || format === 'medium' || format === 'long' || format === 'full') {
-            dateStyle = format;
-            timeStyle = format;
-        } else if (format?.includes('Date')) {
-            dateStyle = format.replace('Date', '');
-        } else if (format?.includes('Time')) {
-            timeStyle = format.replace('Time', '');
-        } else if (format) {
+        const formatOptions = this.getFormatOptions(format);
+        if (!formatOptions && format) {
             return getDateFormatter().formatDateCustomFormat(value, format, { locale, timezone });
         }
+
         const options: Intl.DateTimeFormatOptions = {
-            dateStyle,
-            timeStyle,
+            ...formatOptions,
             timeZone: timezone
         };
 

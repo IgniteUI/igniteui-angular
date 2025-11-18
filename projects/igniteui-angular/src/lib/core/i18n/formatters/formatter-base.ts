@@ -27,10 +27,34 @@ export class BaseFormatter {
     };
     private _currencyPipe = new CurrencyPipe('en-US', 'USD');
 
-    public getSizeFromDisplayFormat(displayFormat: string | null | undefined) {
-        const formatKeys = Object.keys(this.IntlDateTimeStyleValues) as (keyof typeof this.IntlDateTimeStyleValues)[];
-        const targetFormat = displayFormat?.toLowerCase().replace('date', '');
-        return  targetFormat ? formatKeys.find(k => k === targetFormat) : null;
+    /**
+     * Get Intl options based on format provided:
+     *
+     * date and time formats - short, medium, long, full
+     *
+     * date formats - shortDate, mediumDate, longDate, fullDate
+     *
+     * time formats - shortTime, mediumTime, longTime, fullTime
+     *
+     * @returns Return the resolved options or null if not matching any of the above.
+     */
+    public getFormatOptions(format: string | null | undefined): Intl.DateTimeFormatOptions | null {
+        let dateStyle = undefined, timeStyle = undefined;
+        if (format === 'short' || format === 'medium' || format === 'long' || format === 'full') {
+            dateStyle = format;
+            timeStyle = format;
+        } else if (format?.includes('Date')) {
+            dateStyle = format.replace('Date', '');
+        } else if (format?.includes('Time')) {
+            timeStyle = format.replace('Time', '');
+        } else {
+            return null;
+        }
+
+        return {
+            dateStyle,
+            timeStyle
+        };
     }
 
     /**

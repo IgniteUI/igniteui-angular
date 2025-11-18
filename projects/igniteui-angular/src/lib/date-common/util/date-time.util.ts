@@ -616,15 +616,16 @@ export abstract class DateTimeUtil {
         }
     }
 
-    private static getFormatOptions(dataType: DataType, forceLeadingZero = false) {
+    private static getFormatOptions(dataType: DataType, forceLeadingZero?: boolean) {
+        const resolvedFormat = forceLeadingZero ? FormatDesc.TwoDigits : FormatDesc.Numeric;
         const dateOptions = {
-            day: forceLeadingZero ? FormatDesc.TwoDigits : FormatDesc.Numeric,
-            month: forceLeadingZero ? FormatDesc.TwoDigits : FormatDesc.Numeric,
+            day: resolvedFormat,
+            month: resolvedFormat,
             year: FormatDesc.Numeric
         };
         const timeOptions = {
-            hour: forceLeadingZero ? FormatDesc.TwoDigits : FormatDesc.Numeric,
-            minute: forceLeadingZero ? FormatDesc.TwoDigits : FormatDesc.Numeric
+            hour: resolvedFormat,
+            minute: resolvedFormat
         };
         switch (dataType) {
             case DataType.Date:
@@ -635,7 +636,7 @@ export abstract class DateTimeUtil {
                 return {
                     ...dateOptions,
                     ...timeOptions,
-                    second: forceLeadingZero ? FormatDesc.TwoDigits : FormatDesc.Numeric
+                    second: resolvedFormat
                 };
             default:
                 return { };

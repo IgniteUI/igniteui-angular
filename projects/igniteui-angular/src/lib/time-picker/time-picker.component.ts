@@ -15,7 +15,10 @@ import {
     Injector,
     PipeTransform,
     ChangeDetectorRef,
-    LOCALE_ID, Optional, ContentChildren, QueryList, HostListener, booleanAttribute
+    LOCALE_ID,
+    Optional,
+    HostListener,
+    booleanAttribute
 } from '@angular/core';
 import {
     ControlValueAccessor,
@@ -62,6 +65,7 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxDividerDirective } from '../directives/divider/divider.directive';
 import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
 import { BaseFormatter, I18N_FORMATTER } from '../core/i18n/formatters/formatter-base';
+import { DataType } from '../data-operations/data-util';
 
 let NEXT_ID = 0;
 export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
@@ -126,13 +130,19 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      *
      */
     @Input()
-    public override displayFormat: string;
+    public override set displayFormat(value: string) {
+        super.displayFormat = value;
+    };
+
+    public override get displayFormat(): string {
+        return this._displayFormat ?? this.inputFormat ?? DateTimeUtil.getDefaultInputFormat(this.locale, this.i18nFormatter, DataType.Time);
+    };
 
     /**
      * The expected user input format and placeholder.
      *
      * @remarks
-     * Default is `hh:mm tt`
+     * Default is `hh:mm a`
      *
      * @example
      * ```html
@@ -140,7 +150,13 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public override inputFormat: string;
+    public override set inputFormat(value: string) {
+        super.inputFormat = value;
+    }
+
+    public override get inputFormat(): string {
+        return super.inputFormat;
+    }
 
     /**
      * Gets/Sets the interaction mode - dialog or drop down.
