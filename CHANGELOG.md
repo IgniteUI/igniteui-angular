@@ -37,7 +37,6 @@ ng update igniteui-angular --migrate-only --from=20.1.0 --to=21.0.0 --migrate-im
 
 **Type Renames (to avoid conflicts):**
 - `Direction` → `IgxCarouselDirection` (in carousel)
-- `Size` → `ElementDimensions` (in overlay service)
 - `IChangeCheckboxEventArgs` → `IChangeRadioEventArgs` (in radio)
 
 **Benefits:**
