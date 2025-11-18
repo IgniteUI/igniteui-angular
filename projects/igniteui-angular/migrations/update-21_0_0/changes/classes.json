@@ -6,10 +6,6 @@
             "replaceWith": "IgxCarouselDirection"
         },
         {
-            "name": "Size",
-            "replaceWith": "ElementDimensions"
-        },
-        {
             "name": "IChangeCheckboxEventArgs",
             "replaceWith": "IChangeRadioEventArgs"
         }

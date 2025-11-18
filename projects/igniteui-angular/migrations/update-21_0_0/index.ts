@@ -40,7 +40,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['OverlayCancelableEventArgs', 'core'],
     ['OverlayClosingEventArgs', 'core'],
     ['OverlayAnimationEventArgs', 'core'],
-    ['ElementDimensions', 'core'], // Renamed from Size
+    ['Size', 'core'],
     ['OffsetMode', 'core'],
     ['ConnectedFit', 'core'],
     ['IFilteringExpressionsTree', 'core'],
@@ -446,7 +446,6 @@ const ENTRY_POINT_MAP = new Map<string, string>([
 // Type renames (old name -> new name and entry point)
 const TYPE_RENAMES = new Map<string, { newName: string, entryPoint: string }>([
     ['Direction', { newName: 'IgxCarouselDirection', entryPoint: 'carousel' }],
-    ['Size', { newName: 'ElementDimensions', entryPoint: 'core' }],
     ['IChangeCheckboxEventArgs', { newName: 'IChangeRadioEventArgs', entryPoint: 'radio' }],
 ]);
 
@@ -646,7 +645,6 @@ export default (options: MigrationOptions = {}): Rule => async (host: Tree, cont
         context.logger.info('  - IgxRadioGroupDirective moved to igniteui-angular/radio');
         context.logger.info('Type renames:');
         context.logger.info('  - Direction → IgxCarouselDirection');
-        context.logger.info('  - Size → ElementDimensions');
         context.logger.info('  - IChangeCheckboxEventArgs → IChangeRadioEventArgs');
     } else {
         context.logger.info('Skipping import migration. You can continue using the main entry point.');

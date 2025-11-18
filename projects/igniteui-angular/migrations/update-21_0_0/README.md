@@ -32,7 +32,6 @@ The following directives have been moved to new entry points:
 The following types have been renamed to avoid conflicts:
 
 - `Direction` → `IgxCarouselDirection` (carousel)
-- `Size` → `ElementDimensions` (overlay service)
 - `IChangeCheckboxEventArgs` → `IChangeRadioEventArgs` (radio)
 
 ### Example
