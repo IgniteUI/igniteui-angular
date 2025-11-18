@@ -1,4 +1,5 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject } from '@angular/core';
+import { ReactiveFormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
 import {
     IGX_DATE_PICKER_DIRECTIVES,
     IgxButtonDirective,
@@ -39,9 +40,14 @@ registerIconFromText('alarm', alarm);
         IgxSuffixDirective,
         IgxIconComponent,
         IgSizeDirective,
+        ReactiveFormsModule,
     ],
 })
 export class DatePickerSampleComponent {
+    private fb = inject(UntypedFormBuilder);
+    private propertyChangeService = inject(PropertyChangeService);
+    private destroyRef = inject(DestroyRef);
+
     public date1 = new Date();
     public date2 = new Date(
         new Date(
@@ -157,22 +163,40 @@ export class DatePickerSampleComponent {
         }
     }
 
-    public properties: Properties;
+    public properties: Properties = Object.fromEntries(
+        Object.keys(this.panelConfig).map((key) => {
+            const control = this.panelConfig[key]?.control;
+            return [key, control?.defaultValue];
+        })
+    ) as Properties;
 
-    constructor(
-        private propertyChangeService: PropertyChangeService,
-        private destroyRef: DestroyRef
-    ) {
+    public reactiveForm = this.fb.group({
+        datePicker: [this.properties?.value || ''],
+    });
+
+    constructor() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
         const propertyChange =
             this.propertyChangeService.propertyChanges.subscribe(
                 (properties) => {
                     this.properties = properties;
+                    this.reactiveForm.patchValue({
+                        datePicker: properties?.value || ''
+                    });
+                    this.updateRequiredValidator();
                 }
             );
 
         this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
+    }
+
+    private updateRequiredValidator(): void {
+        const control = this.reactiveForm.get('datePicker');
+        if (control) {
+            control.setValidators(this.properties?.required ? Validators.required : null);
+            control.updateValueAndValidity();
+        }
     }
 
     protected get modeAngular() {
