@@ -1,4 +1,4 @@
-import { IActionStripResourceStrings } from 'igniteui-angular';
+import { IActionStripResourceStrings } from 'igniteui-angular/core';
 
 // only use `satisfies` operator so export is typed by its schema
 /**
