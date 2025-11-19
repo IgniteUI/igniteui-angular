@@ -62,7 +62,10 @@
         overflow: hidden;
         flex: 0 0 auto;
         z-index: 1;
-        background: var-get($theme, 'item-background');
+
+        @if $variant == 'material' or $variant == 'bootstrap' {
+            background: var-get($theme, 'item-background');
+        }
 
         @if $bootstrap-theme {
             position: relative;
