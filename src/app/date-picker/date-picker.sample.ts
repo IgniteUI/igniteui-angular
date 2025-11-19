@@ -161,7 +161,7 @@ export class DatePickerSampleComponent {
                 type: 'text'
             }
         }
-    }
+    };
 
     public properties: Properties = Object.fromEntries(
         Object.keys(this.panelConfig).map((key) => {
@@ -170,8 +170,9 @@ export class DatePickerSampleComponent {
         })
     ) as Properties;
 
+    // FormControl owns the date picker value
     public reactiveForm = this.fb.group({
-        datePicker: [this.properties?.value || ''],
+        datePicker: [null],
     });
 
     constructor() {
@@ -181,21 +182,56 @@ export class DatePickerSampleComponent {
             this.propertyChangeService.propertyChanges.subscribe(
                 (properties) => {
                     this.properties = properties;
-                    this.reactiveForm.patchValue({
-                        datePicker: properties?.value || ''
-                    });
-                    this.updateRequiredValidator();
+                    this.syncFormControlFromProperties();
                 }
             );
 
         this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
     }
 
-    private updateRequiredValidator(): void {
+    /**
+     * Syncs the reactive form control with the properties panel:
+     * - programmatic value updates
+     * - required validator
+     * - disabled state
+     *
+     * All done in a way that does NOT mark the control dirty/touched.
+     */
+    private syncFormControlFromProperties(): void {
         const control = this.reactiveForm.get('datePicker');
-        if (control) {
-            control.setValidators(this.properties?.required ? Validators.required : null);
-            control.updateValueAndValidity();
+        if (!control) {
+            return;
+        }
+
+        // 1) Programmatic value update (from properties.value)
+        // This does NOT mark the control dirty/touched.
+        if ('value' in this.properties) {
+            const newValue = this.properties.value ?? null;
+            const currentValue = control.value;
+
+            // Shallow equality check to avoid unnecessary writes
+            const sameValue =
+                (newValue === currentValue) ||
+                (newValue instanceof Date &&
+                    currentValue instanceof Date &&
+                    newValue.getTime() === currentValue.getTime());
+
+            if (!sameValue) {
+                control.setValue(newValue, { emitEvent: false });
+            }
+        }
+
+        // 2) Required validator
+        control.setValidators(this.properties?.required ? Validators.required : null);
+        // This will trigger statusChanges, but control is still pristine/untouched,
+        // so IgxDatePicker will keep the visual state INITIAL until user interaction.
+        control.updateValueAndValidity();
+
+        // 3) Disabled state
+        if (this.properties?.disabled) {
+            control.disable({ emitEvent: false });
+        } else {
+            control.enable({ emitEvent: false });
         }
     }
 
@@ -206,7 +242,7 @@ export class DatePickerSampleComponent {
             : PickerInteractionMode.Dialog;
     }
 
-    protected selectToday(picker) {
+    protected selectToday(picker: { value: Date; hide: () => void }) {
         picker.value = new Date();
         picker.hide();
     }
