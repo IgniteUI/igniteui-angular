@@ -11,6 +11,16 @@ $_theme: $indigo;
     --_prefix-suffix-spacing: #{pad-inline(rem(2px), rem(4px), rem(6px))};
     --_bundle-template-rows: revert;
 
+    igx-prefix:first-child,
+    [igxPrefix]:first-child {
+        border-start-start-radius: var-get($_theme, 'box-border-radius');
+    }
+
+    igx-suffix:last-child,
+    [igxSuffix]:last-child {
+        border-start-end-radius: var-get($_theme, 'box-border-radius');
+    }
+
     igx-icon {
         --size: #{sizable(rem(14px), rem(16px), rem(16px))};
     }
