@@ -39,7 +39,7 @@ import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { getCurrentResourceStrings } from 'igniteui-angular/core';
 import { HammerGesturesManager } from 'igniteui-angular/core';
 import { CarouselAnimationType, CarouselIndicatorsOrientation } from './enums';
-import { IgxDirectionality } from 'igniteui-angular/core';
+import { ɵIgxDirectionality } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 
@@ -571,7 +571,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         private iterableDiffers: IterableDiffers,
         @Inject(IgxAngularAnimationService) animationService: AnimationService,
         private platformUtil: PlatformUtil,
-        private dir: IgxDirectionality,
+        private dir: ɵIgxDirectionality,
         @Inject(DOCUMENT) private document: any
     ) {
         super(animationService, cdr);

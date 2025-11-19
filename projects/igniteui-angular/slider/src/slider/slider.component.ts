@@ -7,7 +7,7 @@ import { animationFrameScheduler, fromEvent, interval, merge, noop, Observable, 
 import { takeUntil, throttle, throttleTime } from 'rxjs/operators';
 import { EditorProvider } from 'igniteui-angular/core';
 import { resizeObservable } from 'igniteui-angular/core';
-import { IgxDirectionality } from 'igniteui-angular/core';
+import { ɵIgxDirectionality } from 'igniteui-angular/core';
 import { IgxThumbLabelComponent } from './label/thumb-label.component';
 import {
     IgxSliderType, IgxThumbFromTemplateDirective,
@@ -758,7 +758,7 @@ export class IgxSliderComponent implements
         private _el: ElementRef,
         private _cdr: ChangeDetectorRef,
         private _ngZone: NgZone,
-        private _dir: IgxDirectionality) {
+        private _dir: ɵIgxDirectionality) {
         this.stepDistance = this._step;
     }
 

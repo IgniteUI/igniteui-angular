@@ -5,7 +5,7 @@ export * from './animation/animation';
 export * from './csv/csv-exporter';
 export * from './csv/csv-exporter-options';
 export * from './csv/char-separated-value-data';
-export * from './direction/directionality';
+export { Direction as ɵDirection, DIR_DOCUMENT as ɵDIR_DOCUMENT, IgxDirectionality as ɵIgxDirectionality } from './direction/directionality';
 export * from './excel/excel-exporter';
 export * from './excel/excel-exporter-options';
 export * from './exporter-common/base-export-service';

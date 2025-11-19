@@ -4,7 +4,7 @@ import { IgxTabsDirective } from '../tabs.directive';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { IgxIconButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { AnimationService, getResizeObserver, IgxAngularAnimationService, IgxDirectionality, PlatformUtil } from 'igniteui-angular/core';
+import { AnimationService, getResizeObserver, IgxAngularAnimationService, ɵIgxDirectionality, PlatformUtil } from 'igniteui-angular/core';
 
 export const IgxTabsAlignment = {
     start: 'start',
@@ -134,7 +134,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         @Inject(IgxAngularAnimationService) animationService: AnimationService,
         cdr: ChangeDetectorRef,
         private ngZone: NgZone,
-        dir: IgxDirectionality,
+        dir: ɵIgxDirectionality,
         private platform: PlatformUtil
     ) {
         super(animationService, cdr, dir);

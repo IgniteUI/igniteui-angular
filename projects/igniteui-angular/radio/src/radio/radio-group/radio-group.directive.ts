@@ -18,7 +18,7 @@ import {
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { fromEvent, noop, Subject, takeUntil } from 'rxjs';
 import { IgxRadioComponent } from '../radio.component';
-import { IgxDirectionality } from 'igniteui-angular/core';
+import { ɵIgxDirectionality } from 'igniteui-angular/core';
 import { IBaseEventArgs } from 'igniteui-angular/core';
 
 export interface IChangeRadioEventArgs extends IBaseEventArgs {
@@ -488,7 +488,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
 
     constructor(
         @Optional() @Self() public ngControl: NgControl,
-        private _directionality: IgxDirectionality,
+        private _directionality: ɵIgxDirectionality,
         private cdr: ChangeDetectorRef,
     ) {
         if (this.ngControl !== null) {

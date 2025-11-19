@@ -1,14 +1,14 @@
 import { Injectable, Inject, InjectionToken, inject, DOCUMENT } from '@angular/core';
 
 /**
- * @hidden
+ * @hidden @internal
  */
 export type Direction = 'ltr' | 'rtl';
 
 /**
  * @hidden
  */
-export function DIR_DOCUMENT_FACTORY(): Document {
+function DIR_DOCUMENT_FACTORY(): Document {
     return inject(DOCUMENT);
 }
 
@@ -20,7 +20,7 @@ export function DIR_DOCUMENT_FACTORY(): Document {
  * allows override of the default providers, directive, pipes, modules of the test injector
  * which causes errors.
  *
- * @hidden
+ * @hidden @internal
  */
 export const DIR_DOCUMENT = /*@__PURE__*/new InjectionToken<Document>('dir-doc', {
     providedIn: 'root',
@@ -28,7 +28,7 @@ export const DIR_DOCUMENT = /*@__PURE__*/new InjectionToken<Document>('dir-doc',
 });
 
 /**
- * @hidden
+ * @hidden @internal
  *
  * Bidirectional service that extracts the value of the direction attribute on the body or html elements.
  *
