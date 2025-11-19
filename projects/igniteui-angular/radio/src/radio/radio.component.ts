@@ -129,7 +129,7 @@ export class IgxRadioComponent
      * @internal
      */
     @HostListener('change', ['$event'])
-    public _changed(event: Event) {
+    public _changed(event) {
         if (event instanceof Event) {
             event.preventDefault();
         }

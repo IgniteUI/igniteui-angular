@@ -8,7 +8,7 @@ import { GridType, IgxGridEmptyTemplateContext, IgxGridRowEditActionsTemplateCon
 })
 export class IgxRowEditTemplateDirective {
     public static ngTemplateContextGuard(_directive: IgxRowEditTemplateDirective,
-        context: unknown): context is IgxGridRowEditTemplateContext { 
+        context: unknown): context is IgxGridRowEditTemplateContext {
         return true;
     }
  }
@@ -20,7 +20,7 @@ export class IgxRowEditTemplateDirective {
 })
 export class IgxRowEditTextDirective {
     public static ngTemplateContextGuard(_directive: IgxRowEditTextDirective,
-        context: unknown): context is IgxGridRowEditTextTemplateContext { 
+        context: unknown): context is IgxGridRowEditTextTemplateContext {
         return true;
     }
  }
@@ -32,7 +32,7 @@ export class IgxRowEditTextDirective {
 })
 export class IgxRowAddTextDirective {
     public static ngTemplateContextGuard(_directive: IgxRowAddTextDirective,
-        context: unknown): context is IgxGridEmptyTemplateContext { 
+        context: unknown): context is IgxGridEmptyTemplateContext {
         return true;
     }
  }
@@ -44,7 +44,7 @@ export class IgxRowAddTextDirective {
 })
 export class IgxRowEditActionsDirective {
     public static ngTemplateContextGuard(_directive: IgxRowEditActionsDirective,
-        context: unknown): context is IgxGridRowEditActionsTemplateContext { 
+        context: unknown): context is IgxGridRowEditActionsTemplateContext {
         return true;
     }
  }
@@ -63,7 +63,7 @@ export class IgxRowEditTabStopDirective {
 
     @HostListener('keydown.Tab', [`$event`])
     @HostListener('keydown.Shift.Tab', [`$event`])
-    public handleTab(event: KeyboardEvent): void {
+    public handleTab(event): void {
         event.stopPropagation();
         if ((this.grid.rowEditTabs.last === this && !event.shiftKey) ||
             (this.grid.rowEditTabs.first === this && event.shiftKey)
@@ -73,13 +73,13 @@ export class IgxRowEditTabStopDirective {
     }
 
     @HostListener('keydown.Escape', [`$event`])
-    public handleEscape(event: KeyboardEvent): void {
+    public handleEscape(event): void {
         this.grid.crudService.endEdit(false, event);
         this.grid.tbody.nativeElement.focus();
     }
 
     @HostListener('keydown.Enter', ['$event'])
-    public handleEnter(event: KeyboardEvent): void {
+    public handleEnter(event): void {
         event.stopPropagation();
     }
 

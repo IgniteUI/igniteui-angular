@@ -102,7 +102,7 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
      * @hidden
      */
     @HostListener("keydown.pageup", ["$event"])
-    public previousPage(event?: KeyboardEvent) {
+    public previousPage(event) {
         event?.preventDefault();
         this.previousViewDate = this.viewDate;
 
@@ -124,7 +124,7 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
      * @hidden
      */
     @HostListener("keydown.pagedown", ["$event"])
-    public nextPage(event?: KeyboardEvent) {
+    public nextPage(event) {
         event?.preventDefault();
         this.previousViewDate = this.viewDate;
 
@@ -206,9 +206,9 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
             event.stopPropagation();
 
             if (next) {
-                this.nextPage();
+                this.nextPage(event);
             } else {
-                this.previousPage();
+                this.previousPage(event);
             }
         }
     }
@@ -370,7 +370,7 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
             this.viewDate = CalendarDay.from(this.viewDate).add('year', delta).native;
             this.cdr.detectChanges();
         } else {
-            delta > 0 ? this.nextPage() : this.previousPage();
+            delta > 0 ? this.nextPage(event) : this.previousPage(event);
         }
     }
 

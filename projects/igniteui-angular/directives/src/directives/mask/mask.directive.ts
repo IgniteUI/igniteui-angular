@@ -273,10 +273,10 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     }
 
     /** @hidden */
-    @HostListener('blur', ['$event.target.value'])
-    public onBlur(value: string): void {
+    @HostListener('blur', ['$event'])
+    public onBlur(event): void {
         this._focused = false;
-        this.showDisplayValue(value);
+        this.showDisplayValue(event.target.value);
         this._onTouchedCallback();
     }
 

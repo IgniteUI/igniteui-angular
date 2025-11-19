@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-@Directive({ 
+@Directive({
     selector: 'igc-rating[ngModel],igc-rating[formControlName]',
     providers: [
         {
@@ -35,9 +35,9 @@ export class IgcFormControlDirective implements ControlValueAccessor {
     }
 
     /** @hidden @internal */
-    @HostListener('igcChange', ['$event.detail'])
-    public listenForValueChange(value) {
-        this.onChange(value);
+    @HostListener('igcChange', ['$event'])
+    public listenForValueChange(event): void {
+        this.onChange(event.detail);
     }
 
     /** @hidden @internal */

@@ -183,7 +183,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      * @hidden
      */
     @HostListener("keydown.arrowdown", ["$event"])
-    public onKeydownArrowDown(event: KeyboardEvent) {
+    public onKeydownArrowDown(event) {
         this.navigateTo(event, IgxCalendarNavDirection.NEXT, 3);
     }
 
@@ -191,7 +191,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      * @hidden
      */
     @HostListener("keydown.arrowup", ["$event"])
-    public onKeydownArrowUp(event: KeyboardEvent) {
+    public onKeydownArrowUp(event) {
         this.navigateTo(event, IgxCalendarNavDirection.PREV, 3);
     }
 
@@ -199,7 +199,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      * @hidden
      */
     @HostListener("keydown.arrowright", ["$event"])
-    public onKeydownArrowRight(event: KeyboardEvent) {
+    public onKeydownArrowRight(event) {
         this.navigateTo(event, IgxCalendarNavDirection.NEXT, 1);
     }
 
@@ -207,7 +207,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      * @hidden
      */
     @HostListener("keydown.arrowleft", ["$event"])
-    public onKeydownArrowLeft(event: KeyboardEvent) {
+    public onKeydownArrowLeft(event) {
         this.navigateTo(event, IgxCalendarNavDirection.PREV, 1);
     }
 
@@ -215,7 +215,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      * @hidden
      */
     @HostListener("keydown.home", ["$event"])
-    public onKeydownHome(event: KeyboardEvent) {
+    public onKeydownHome(event) {
         event.preventDefault();
         event.stopPropagation();
 
@@ -227,7 +227,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      * @hidden
      */
     @HostListener("keydown.end", ["$event"])
-    public onKeydownEnd(event: KeyboardEvent) {
+    public onKeydownEnd(event) {
         event.preventDefault();
         event.stopPropagation();
 
@@ -239,7 +239,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      * @hidden
      */
     @HostListener("keydown.enter", ["$event"])
-    public onKeydownEnter(event: KeyboardEvent) {
+    public onKeydownEnter(event) {
         event.stopPropagation();
 
         this.selected.emit(this.date);

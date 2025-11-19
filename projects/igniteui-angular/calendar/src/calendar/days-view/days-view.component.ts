@@ -231,7 +231,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      * @hidden
      */
     @HostListener('keydown.arrowright', ['$event'])
-    protected onArrowRight(event: KeyboardEvent) {
+    protected onArrowRight(event) {
         this.handleArrowKeydown(event, 1);
     }
 
@@ -239,7 +239,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      * @hidden
      */
     @HostListener('keydown.arrowleft', ['$event'])
-    protected onArrowLeft(event: KeyboardEvent) {
+    protected onArrowLeft(event) {
         this.handleArrowKeydown(event, -1);
     }
 
@@ -247,7 +247,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      * @hidden
      */
     @HostListener('keydown.arrowup', ['$event'])
-    protected onArrowUp(event: KeyboardEvent) {
+    protected onArrowUp(event) {
         this.handleArrowKeydown(event, -7);
     }
 
@@ -255,7 +255,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      * @hidden
      */
     @HostListener('keydown.arrowdown', ['$event'])
-    protected onArrowDown(event: KeyboardEvent) {
+    protected onArrowDown(event) {
         this.handleArrowKeydown(event, 7);
     }
 
@@ -264,7 +264,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      */
     @HostListener('keydown.Space', ['$event'])
     @HostListener('keydown.enter', ['$event'])
-    protected onKeydownEnter(event: KeyboardEvent) {
+    protected onKeydownEnter(event) {
         event.stopPropagation();
         this.selectActiveDate();
     }
@@ -273,7 +273,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      * @hidden
      */
     @HostListener('keydown.home', ['$event'])
-    protected onKeydownHome(event: KeyboardEvent) {
+    protected onKeydownHome(event) {
         event.preventDefault();
         event.stopPropagation();
 
@@ -288,7 +288,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
      * @hidden
      */
     @HostListener('keydown.end', ['$event'])
-    protected onKeydownEnd(event: KeyboardEvent) {
+    protected onKeydownEnd(event) {
         event.preventDefault();
         event.stopPropagation();
 

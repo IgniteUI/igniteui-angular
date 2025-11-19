@@ -85,7 +85,7 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
      * @hidden
      */
     @HostListener('keydown.arrowdown', ['$event'])
-    public onKeydownArrowDown(event: KeyboardEvent) {
+    public onKeydownArrowDown(event) {
         event.preventDefault();
 
         this.nextItem(1);
@@ -95,7 +95,7 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
      * @hidden
      */
     @HostListener('keydown.arrowup', ['$event'])
-    public onKeydownArrowUp(event: KeyboardEvent) {
+    public onKeydownArrowUp(event) {
         event.preventDefault();
 
         this.nextItem(-1);
@@ -105,7 +105,7 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
      * @hidden
      */
     @HostListener('keydown.arrowright', ['$event'])
-    public onKeydownArrowRight(event: KeyboardEvent) {
+    public onKeydownArrowRight(event) {
         event.preventDefault();
 
         const listName = (event.target as HTMLElement).className;
@@ -124,7 +124,7 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
      * @hidden
      */
     @HostListener('keydown.arrowleft', ['$event'])
-    public onKeydownArrowLeft(event: KeyboardEvent) {
+    public onKeydownArrowLeft(event) {
         event.preventDefault();
         const listName = (event.target as HTMLElement).className;
 
@@ -145,7 +145,7 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
      * @hidden
      */
     @HostListener('keydown.enter', ['$event'])
-    public onKeydownEnter(event: KeyboardEvent) {
+    public onKeydownEnter(event) {
         event.preventDefault();
         this.timePicker.okButtonClick();
     }
@@ -154,7 +154,7 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
      * @hidden
      */
     @HostListener('keydown.escape', ['$event'])
-    public onKeydownEscape(event: KeyboardEvent) {
+    public onKeydownEscape(event) {
         event.preventDefault();
 
         this.timePicker.cancelButtonClick();

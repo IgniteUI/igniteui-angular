@@ -28,7 +28,7 @@ export class IgxIconButtonDirective extends IgxButtonBaseDirective {
      * @internal
      */
     @HostBinding('class.igx-icon-button')
-    private _cssClass = 'igx-icon-button';
+    public _cssClass = 'igx-icon-button';
 
     /**
      * @hidden

@@ -18,7 +18,7 @@
         [attr.aria-label]="prevNavLabel((getPrevYearDate(viewDate) | date: 'yyyy'))"
         data-action="prev"
         igxCalendarScrollPage
-        (mousedown)="previousPage()"
+        (mousedown)="previousPage($event)"
         (keydown)="changePageKB($event, false)"
     >
         <ng-container *ngTemplateOutlet="prevArrow"></ng-container>
@@ -35,7 +35,7 @@
         [attr.aria-label]="nextNavLabel((getNextYearDate(viewDate) | date: 'yyyy'))"
         data-action="next"
         igxCalendarScrollPage
-        (mousedown)="nextPage()"
+        (mousedown)="nextPage($event)"
         (keydown)="changePageKB($event)"
     >
         <ng-container *ngTemplateOutlet="nextArrow"></ng-container>
@@ -131,8 +131,8 @@
                 [monthFormat]="formatOptions.month"
                 [showActive]="showActiveDay"
                 [standalone]="false"
-                (swiperight)="previousPage()"
-                (swipeleft)="nextPage()"
+                (swiperight)="previousPage($event)"
+                (swipeleft)="nextPage($event)"
                 (selected)="selectMonth($event)"
                 (pageChanged)="updateDate($event)"
                 (mousedown)="$event.preventDefault()">
@@ -151,8 +151,8 @@
                 [yearFormat]="formatOptions.year"
                 [showActive]="showActiveDay"
                 [standalone]="false"
-                (swiperight)="previousPage()"
-                (swipeleft)="nextPage()"
+                (swiperight)="previousPage($event)"
+                (swipeleft)="nextPage($event)"
                 (selected)="selectYear($event)"
                 (pageChanged)="updateDate($event)"
                 (mousedown)="$event.preventDefault()"
