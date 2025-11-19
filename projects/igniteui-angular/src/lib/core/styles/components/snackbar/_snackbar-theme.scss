@@ -27,7 +27,7 @@
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
         backface-visibility: hidden;
-        box-shadow: var-get($theme, 'shadow');
+        box-shadow: var-get($theme, 'elevation');
         border-radius: var-get($theme, 'border-radius');
         backdrop-filter: blur(8px);
 
