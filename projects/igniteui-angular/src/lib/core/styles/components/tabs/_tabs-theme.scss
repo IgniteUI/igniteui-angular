@@ -335,7 +335,7 @@
     %tabs-header-item--selected:focus {
         @if $bootstrap-theme {
             border: none;
-            box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'item-active-hover-color');
+            box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'item-hover-color');
             border-bottom-left-radius: rem(4px);
             border-bottom-right-radius: rem(4px);
             z-index: 1;
