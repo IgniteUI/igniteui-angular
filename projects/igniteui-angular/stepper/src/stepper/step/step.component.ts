@@ -24,7 +24,7 @@ import { IgxStepperService } from '../stepper.service';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
-import { IgxCarouselDirection, IgxSlideComponentBase } from 'igniteui-angular/carousel';
+import { CarouselAnimationDirection, IgxSlideComponentBase } from 'igniteui-angular/carousel';
 import { AnimationService, IgxAngularAnimationService, ɵIgxDirectionality, PlatformUtil } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
@@ -301,11 +301,11 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
     }
 
     /** @hidden @internal */
-    public get direction(): IgxCarouselDirection {
+    public get direction(): CarouselAnimationDirection {
         return this.stepperService.previousActiveStep
             && this.stepperService.previousActiveStep.index > this.index
-            ? IgxCarouselDirection.PREV
-            : IgxCarouselDirection.NEXT;
+            ? CarouselAnimationDirection.PREV
+            : CarouselAnimationDirection.NEXT;
     }
 
     /** @hidden @internal */

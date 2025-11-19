@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 import { IBaseEventArgs, IgxAngularAnimationService, AnimationService, ɵIgxDirectionality } from 'igniteui-angular/core';
 import { IgxTabItemDirective } from './tab-item.directive';
 import { IgxTabContentBase, IgxTabsBase } from './tabs.base';
-import { IgxCarouselComponentBase, IgxCarouselDirection } from 'igniteui-angular/carousel';
+import { IgxCarouselComponentBase, CarouselAnimationDirection } from 'igniteui-angular/carousel';
 
 export interface ITabsBaseEventArgs extends IBaseEventArgs {
     readonly owner: IgxTabsDirective;
@@ -291,7 +291,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
             !this.currentItem.selected) {
             item.direction = (!this.dir.rtl && this._selectedIndex > oldSelectedIndex) ||
                 (this.dir.rtl && this._selectedIndex < oldSelectedIndex)
-                ? IgxCarouselDirection.NEXT : IgxCarouselDirection.PREV;
+                ? CarouselAnimationDirection.NEXT : CarouselAnimationDirection.PREV;
 
             if (this.previousItem && this.previousItem.previous) {
                 this.previousItem.previous = false;

@@ -31,7 +31,7 @@ import { CarouselResourceStringsEN, ICarouselResourceStrings } from 'igniteui-an
 import { first, IBaseEventArgs, last, PlatformUtil } from 'igniteui-angular/core';
 import { IgxAngularAnimationService } from 'igniteui-angular/core';
 import { AnimationService } from 'igniteui-angular/core';
-import { IgxCarouselDirection, IgxCarouselComponentBase } from './carousel-base';
+import { CarouselAnimationDirection, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -664,7 +664,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.incomingSlide) {
             this.resetSlideStyles(this.incomingSlide);
             if (slideSize / 2 < delta || velocity > 1) {
-                this.incomingSlide.direction = eventDelta < 0 ? IgxCarouselDirection.NEXT : IgxCarouselDirection.PREV;
+                this.incomingSlide.direction = eventDelta < 0 ? CarouselAnimationDirection.NEXT : CarouselAnimationDirection.PREV;
                 this.incomingSlide.previous = false;
 
                 this.animationPosition = this.animationType === CarouselAnimationType.fade ?
@@ -675,7 +675,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
                 }
                 this.incomingSlide.active = true;
             } else {
-                this.currentItem.direction = eventDelta > 0 ? IgxCarouselDirection.NEXT : IgxCarouselDirection.PREV;
+                this.currentItem.direction = eventDelta > 0 ? CarouselAnimationDirection.NEXT : CarouselAnimationDirection.PREV;
                 this.previousItem = this.incomingSlide;
                 this.previousItem.previous = true;
                 this.animationPosition = this.animationType === CarouselAnimationType.fade ?
@@ -819,22 +819,22 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * Switches to the passed-in slide with a given `direction`.
      * ```typescript
      * const slide = this.carousel.get(2);
-     * this.carousel.select(slide, IgxCarouselDirection.NEXT);
+     * this.carousel.select(slide, CarouselAnimationDirection.NEXT);
      * ```
      *
      * @memberOf IgxCarouselComponent
      */
-    public select(slide: IgxSlideComponent, direction?: IgxCarouselDirection): void;
+    public select(slide: IgxSlideComponent, direction?: CarouselAnimationDirection): void;
     /**
      * Switches to slide by index with a given `direction`.
      * ```typescript
-     * this.carousel.select(2, IgxCarouselDirection.NEXT);
+     * this.carousel.select(2, CarouselAnimationDirection.NEXT);
      * ```
      *
      * @memberOf IgxCarouselComponent
      */
-    public select(index: number, direction?: IgxCarouselDirection): void;
-    public select(slideOrIndex: IgxSlideComponent | number, direction: IgxCarouselDirection = IgxCarouselDirection.NONE): void {
+    public select(index: number, direction?: CarouselAnimationDirection): void;
+    public select(slideOrIndex: IgxSlideComponent | number, direction: CarouselAnimationDirection = CarouselAnimationDirection.NONE): void {
         const slide = typeof slideOrIndex === 'number'
             ? this.get(slideOrIndex)
             : slideOrIndex;
@@ -860,7 +860,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             this.stop();
             return;
         }
-        return this.select(this.get(index), IgxCarouselDirection.NEXT);
+        return this.select(this.get(index), CarouselAnimationDirection.NEXT);
     }
 
     /**
@@ -878,7 +878,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             this.stop();
             return;
         }
-        return this.select(this.get(index), IgxCarouselDirection.PREV);
+        return this.select(this.get(index), CarouselAnimationDirection.PREV);
     }
 
     /**
@@ -1044,9 +1044,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     private onSlideActivated(slide: IgxSlideComponent) {
         if (slide.active && slide !== this.currentItem) {
-            if (slide.direction === IgxCarouselDirection.NONE) {
+            if (slide.direction === CarouselAnimationDirection.NONE) {
                 const newIndex = slide.index;
-                slide.direction = newIndex > this.current ? IgxCarouselDirection.NEXT : IgxCarouselDirection.PREV;
+                slide.direction = newIndex > this.current ? CarouselAnimationDirection.NEXT : CarouselAnimationDirection.PREV;
             }
 
             if (this.currentItem) {

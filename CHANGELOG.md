@@ -36,7 +36,7 @@ ng update igniteui-angular --migrate-only --from=20.1.0 --to=21.0.0 --migrate-im
 - `IgxRadioGroupDirective` → `igniteui-angular/radio`
 
 **Type Renames (to avoid conflicts):**
-- `Direction` → `IgxCarouselDirection` (in carousel)
+- `Direction` → `CarouselAnimationDirection` (in carousel)
 
 **Benefits:**
 - Better tree-shaking - unused components won't be bundled

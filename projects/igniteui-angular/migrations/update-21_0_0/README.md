@@ -31,7 +31,7 @@ The following directives have been moved to new entry points:
 
 The following types have been renamed to avoid conflicts:
 
-- `Direction` → `IgxCarouselDirection` (carousel)
+- `Direction` → `CarouselAnimationDirection` (carousel)
 
 ### Example
 
@@ -48,9 +48,8 @@ import {
 **After:**
 ```typescript
 import { DisplayDensity } from 'igniteui-angular/core';
-import { IgxGridComponent } from 'igniteui-angular/grids';
+import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
-import { IgxCarouselDirection } from 'igniteui-angular/carousel';
 ```
 
 ### Note

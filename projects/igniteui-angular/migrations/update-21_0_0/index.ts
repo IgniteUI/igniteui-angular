@@ -148,7 +148,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxCarouselComponent', 'carousel'],
     ['IgxCarouselModule', 'carousel'],
     ['IgxSlideComponent', 'carousel'],
-    ['IgxCarouselDirection', 'carousel'], // Renamed from Direction
+    ['CarouselAnimationDirection', 'carousel'], // Renamed from Direction
     ['ISlideEventArgs', 'carousel'],
     ['ISlideCarouselBaseEventArgs', 'carousel'],
     ['CarouselAnimationType', 'carousel'],
@@ -444,7 +444,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
 
 // Type renames (old name -> new name and entry point)
 const TYPE_RENAMES = new Map<string, { newName: string, entryPoint: string }>([
-    ['Direction', { newName: 'IgxCarouselDirection', entryPoint: 'carousel' }],
+    ['Direction', { newName: 'CarouselAnimationDirection', entryPoint: 'carousel' }],
 ]);
 
 function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.SourceFile): { start: number, end: number, replacement: string } | null {
@@ -642,7 +642,7 @@ export default (options: MigrationOptions = {}): Rule => async (host: Tree, cont
         context.logger.info('  - IgxAutocompleteDirective moved to igniteui-angular/drop-down');
         context.logger.info('  - IgxRadioGroupDirective moved to igniteui-angular/radio');
         context.logger.info('Type renames:');
-        context.logger.info('  - Direction → IgxCarouselDirection');
+        context.logger.info('  - Direction → CarouselAnimationDirection');
     } else {
         context.logger.info('Skipping import migration. You can continue using the main entry point.');
         context.logger.info('Note: The library now supports granular entry points for better tree-shaking.');

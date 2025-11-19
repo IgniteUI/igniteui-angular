@@ -3,7 +3,7 @@
     "changes": [
         {
             "name": "Direction",
-            "replaceWith": "IgxCarouselDirection"
+            "replaceWith": "CarouselAnimationDirection"
         }
     ]
 }
