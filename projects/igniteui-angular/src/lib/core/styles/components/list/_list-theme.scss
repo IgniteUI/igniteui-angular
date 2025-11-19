@@ -6,7 +6,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin list($theme) {
-    @include css-vars($theme, 'igx-list');
+    @include css-vars($theme);
 
     $variant: map.get($theme, '_meta', 'theme');
     $bootstrap-theme: $variant == 'bootstrap';
@@ -229,7 +229,8 @@
             display: none;
         }
 
-        > * {
+        > *,
+        [class^='igx'] {
             --component-size: #{if($variant == 'indigo', 2, var(--list-size))};
         }
 

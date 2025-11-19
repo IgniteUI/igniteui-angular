@@ -1,0 +1,22 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/themes/functions' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $fluent;
+
+@include themed-block(igx-badge, fluent) {
+    @include m(success) {
+        background: color($color: 'success', $variant: 500);
+    }
+
+    @include m(info) {
+        background: color($color: 'info', $variant: 700);
+    }
+
+    @include m(error) {
+        background: color($color: 'error', $variant: 500);
+    }
+}

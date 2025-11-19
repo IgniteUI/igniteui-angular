@@ -6,7 +6,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin bottom-nav($theme) {
-    @include css-vars($theme, 'igx-bottom-nav');
+    @include css-vars($theme);
 
     $variant: map.get($theme, '_meta', 'theme');
     $menu-height: rem(56px);
@@ -43,13 +43,13 @@
     %igx-bottom-nav-menu--top {
         inset-block-start: 0;
         inset-block-end: inherit;
-        box-shadow: var-get($theme, 'shadow');
+        box-shadow: var-get($theme, 'elevation');
     }
 
     %igx-bottom-nav-menu--bottom {
         inset-block-start: inherit;
         inset-block-end: 0;
-        box-shadow: var-get($theme, 'shadow');
+        box-shadow: var-get($theme, 'elevation');
     }
 
     %igx-bottom-nav-menu-item {

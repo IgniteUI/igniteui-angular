@@ -7,7 +7,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin switch($theme) {
-    @include css-vars($theme, 'igx-switch');
+    @include css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
     $variant: map.get($theme, '_meta', 'theme');
@@ -56,21 +56,21 @@
     ), $variant);
 
     $thumb-resting-shadow: map.get((
-        'material': var-get($theme, 'resting-shadow'),
+        'material': var-get($theme, 'resting-elevation'),
         'fluent': none,
         'bootstrap': none,
         'indigo': none
     ), $variant);
 
     $thumb-hover-shadow: map.get((
-        'material': var-get($theme, 'hover-shadow'),
+        'material': var-get($theme, 'hover-elevation'),
         'fluent': none,
         'bootstrap': none,
         'indigo': none
     ), $variant);
 
     $thumb-disabled-shadow: map.get((
-        'material': var-get($theme, 'disabled-shadow'),
+        'material': var-get($theme, 'disabled-elevation'),
         'fluent': none,
         'bootstrap': none,
         'indigo': none

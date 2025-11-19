@@ -5,7 +5,7 @@ import { IPagingState, PagingError } from './paging-state.interface';
 import { IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
-import { mergeObjects } from '../core/utils';
+import { cloneArray, mergeObjects } from '../core/utils';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/transaction/transaction';
 import { getHierarchy, isHierarchyMatch } from './operations';
 import { ColumnType, GridType } from '../grids/common/grid.interface';
@@ -21,6 +21,8 @@ import {
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IGroupingExpression } from './grouping-expression.interface';
 import { DefaultMergeStrategy, IGridMergeStrategy } from './merge-strategy';
+import { IFilteringExpressionsTree } from './filtering-expressions-tree';
+import { FilteringStrategy, FilterUtil } from './filtering-strategy';
 
 /**
  * @hidden
@@ -276,6 +278,15 @@ export class DataUtil {
         }
 
         return value;
+    }
+
+    public static filterDataByExpressions(data: any[], expressionsTree: IFilteringExpressionsTree, grid: GridType): any {
+        if (expressionsTree.filteringOperands.length) {
+            const state = { expressionsTree, strategy: FilteringStrategy.instance() };
+            data = FilterUtil.filter(cloneArray(data), state, grid);
+        }
+
+        return data;
     }
 
     private static findParentFromPath(data: any[], primaryKey: any, childDataKey: any, path: any[]): any {

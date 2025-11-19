@@ -6,7 +6,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin button-group($theme) {
-    @include css-vars($theme, 'igx-buttongroup');
+    @include css-vars($theme);
 
     $group-item-border-thickness: rem(1px);
     $group-items-margin: rem(10px, 16px);
@@ -36,7 +36,7 @@
 
     %igx-group-display {
         display: flex;
-        box-shadow: var-get($theme, 'shadow');
+        box-shadow: var-get($theme, 'elevation');
         border-radius: var-get($theme, 'border-radius');
 
         button {
@@ -65,11 +65,6 @@
         &[igxButton] {
             border-radius: 0;
             border-color: var-get($theme, 'item-border-color');
-
-            @if $bootstrap-theme {
-                margin: 0 !important;
-                border: none;
-            }
         }
 
         igx-icon {
@@ -274,6 +269,7 @@
                 color: var-get($theme, 'item-focused-text-color');
                 background: var-get($theme, 'item-focused-background');
                 border-color: var-get($theme, 'item-focused-border-color');
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'idle-shadow-color');
                 z-index: 2;
 
                 igx-icon {

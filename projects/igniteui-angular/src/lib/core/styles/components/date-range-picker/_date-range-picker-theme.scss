@@ -5,7 +5,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin date-range-picker($theme) {
-    @include css-vars($theme, 'igx-date-range-picker');
+    @include css-vars($theme);
 
     %igx-date-range-picker {
         display: flex;
@@ -21,6 +21,11 @@
         igx-calendar {
             box-shadow: none;
         }
+    }
+
+    igx-date-range-start,
+    igx-date-range-end {
+        min-width: 0;
     }
 
     igx-date-range-start,
@@ -57,18 +62,18 @@
 }
 
 /// Adds typography styles for the igx-date-range-picker component.
-/// Uses the 'subtitle-1'
+/// Uses the 'caption'
 /// categories from the typographic scale.
 /// @group typography
-/// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
+/// @param {Map} $categories [(label: 'caption')] - The categories from the typographic scale used for type styles.
 @mixin date-range-typography(
     $categories: (
-        label: 'subtitle-1',
+        label: 'caption',
     )
 ) {
     $label: map.get($categories, 'label');
 
-    %igx-date-range__label {
+    %igx-date-range-picker__label {
         @include type-style($label);
     }
 }

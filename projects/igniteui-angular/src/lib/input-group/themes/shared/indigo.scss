@@ -115,6 +115,10 @@ $_theme: $indigo;
         &:hover {
             background: var-get($_theme, 'box-background-hover');
             border-block-end-color: var-get($_theme, 'hover-bottom-line-color');
+
+            .igx-input-group__toggle-button {
+                color: var(--toggle-button-foreground-focus);
+            }
         }
     }
 

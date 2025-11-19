@@ -4106,7 +4106,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             return this._activeRowIndexes;
         } else {
             const activeRow = this.navigation.activeNode?.row;
-            const selectedCellIndexes = (this.selectionService.selection?.keys() as any)?.toArray();
+
+            const selectedCellIndexes = this.selectionService.selection
+            ? Array.from(this.selectionService.selection.keys())
+            : [];
             this._activeRowIndexes = [activeRow, ...selectedCellIndexes];
             return this._activeRowIndexes;
         }
@@ -4143,6 +4146,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         options.outlet = this.outlet;
         if (this.excelStyleFilteringComponent) {
             this.excelStyleFilteringComponent.initialize(column, this.overlayService);
+            this.excelStyleFilteringComponent.populateData();
             const id = this.overlayService.attach(this.excelStyleFilteringComponent.element, options);
             this.excelStyleFilteringComponent.overlayComponentId = id;
             return id;
@@ -6435,6 +6439,12 @@ export abstract class IgxGridBaseDirective implements GridType,
             } else {
                 rowStyle.display = 'none';
             }
+        }
+    }
+
+    protected viewDetachHandler(args) {
+        if (this.actionStrip && args.view.rootNodes.find(x => x === this.actionStrip.context?.element.nativeElement)) {
+            this.actionStrip.hide();
         }
     }
 

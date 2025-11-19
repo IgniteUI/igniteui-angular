@@ -2,7 +2,7 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick, flush, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent, IgxTooltipMultipleTooltipsComponent, IgxTooltipWithCloseButtonComponent } from '../../test-utils/tooltip-components.spec';
+import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent, IgxTooltipMultipleTooltipsComponent, IgxTooltipWithCloseButtonComponent, IgxTooltipWithNestedContentComponent } from '../../test-utils/tooltip-components.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../services/public_api';
 import { IgxTooltipDirective } from './tooltip.directive';
@@ -28,7 +28,8 @@ describe('IgxTooltip', () => {
                 IgxTooltipMultipleTargetsComponent,
                 IgxTooltipPlainStringComponent,
                 IgxTooltipWithToggleActionComponent,
-                IgxTooltipWithCloseButtonComponent
+                IgxTooltipWithCloseButtonComponent,
+                IgxTooltipWithNestedContentComponent
             ]
         }).compileComponents();
         UIInteractions.clearOverlay();
@@ -500,6 +501,36 @@ describe('IgxTooltip', () => {
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
+
+        it('Should respect default max-width constraint for plain string tooltip', fakeAsync(() => {
+            hoverElement(button);
+            flush();
+
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+
+            const maxWidth = getComputedStyle(tooltipNativeElement).maxWidth;
+            expect(maxWidth).toBe('200px');
+        }));
+    });
+
+    describe('Custom content tooltip', () => {
+        beforeEach(waitForAsync(() => {
+            fix = TestBed.createComponent(IgxTooltipWithNestedContentComponent);
+            fix.detectChanges();
+            button = fix.debugElement.query(By.directive(IgxTooltipTargetDirective));
+            tooltipTarget = fix.componentInstance.tooltipTarget;
+            tooltipNativeElement = fix.debugElement.query(By.directive(IgxTooltipDirective)).nativeElement;
+        }));
+
+        it('Should not have max-width constraint for custom content tooltip', fakeAsync(() => {
+            hoverElement(button);
+            flush();
+
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+
+            const maxWidth = getComputedStyle(tooltipNativeElement).maxWidth;
+            expect(maxWidth).toBe('none');
+        }));
     });
 
     describe('Multiple targets with single tooltip', () => {
@@ -556,6 +587,31 @@ describe('IgxTooltip', () => {
             verifyTooltipPosition(tooltipNativeElement, buttonTwo);
             verifyTooltipPosition(tooltipNativeElement, buttonOne, false);
             flush();
+        }));
+
+        it('Should position relative to its target when having no close animation - #16288', fakeAsync(() => {
+            targetOne.positionSettings = targetTwo.positionSettings = {
+                openAnimation: undefined,
+                closeAnimation: undefined
+            };
+            fix.detectChanges();
+
+            hoverElement(buttonOne);
+            tick(targetOne.showDelay);
+
+            verifyTooltipVisibility(tooltipNativeElement, targetOne, true);
+            verifyTooltipPosition(tooltipNativeElement, buttonOne, true);
+
+            unhoverElement(buttonOne);
+
+            hoverElement(buttonTwo);
+            tick(targetTwo.showDelay);
+
+            // Tooltip is visible and positioned relative to buttonTwo
+            verifyTooltipVisibility(tooltipNativeElement, targetTwo, true);
+            verifyTooltipPosition(tooltipNativeElement, buttonTwo);
+            // Tooltip is NOT visible and positioned relative to buttonOne
+            verifyTooltipPosition(tooltipNativeElement, buttonOne, false);
         }));
 
         it('Hovering first target briefly and then hovering second target leads to tooltip showing for second target', fakeAsync(() => {

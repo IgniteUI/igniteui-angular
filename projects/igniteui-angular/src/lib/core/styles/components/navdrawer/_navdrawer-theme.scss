@@ -6,7 +6,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin navdrawer($theme) {
-    @include css-vars($theme, 'igx-nav-drawer');
+   @include css-vars($theme);
 
     $variant: map.get($theme, '_meta', 'theme');
     $drawer-icon-size: rem(24px);
@@ -78,7 +78,7 @@
         z-index: 999;
         transition: width, padding, transform;
         transition-timing-function: $in-out-quad;
-        box-shadow: var-get($theme, 'shadow');
+        box-shadow: var-get($theme, 'elevation');
         padding: $aside-padding;
 
         @if $variant != 'fluent' {

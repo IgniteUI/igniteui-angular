@@ -35,7 +35,7 @@
 @use '../components/input/file-input-theme' as *;
 
 @mixin typography() {
-    @include badge-typography();
+    // @include badge-typography($theme: 'material');
     // @include banner-typography();
     // @include bottom-nav-typography();
     @include button-typography();
@@ -62,7 +62,7 @@
     // @include snackbar-typography();
     @include switch-typography();
     //@include tabs-typography();
-    @include time-picker-typography();
+    // @include time-picker-typography();
     //@include stepper-typography();
     // @include toast-typography();
     @include tooltip-typography();

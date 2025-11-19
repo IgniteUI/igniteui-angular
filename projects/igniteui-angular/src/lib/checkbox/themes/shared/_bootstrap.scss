@@ -79,6 +79,12 @@ $_theme: $bootstrap;
             box-shadow: 0 0 0 rem(4px)
                 var-get($_theme, 'focus-outline-color-error');
         }
+
+        &:hover {
+            @include e(composite) {
+                border-color: var-get($_theme, 'error-color-hover');
+            }
+        }
     }
 
     @include mx(focused, indeterminate) {
@@ -92,12 +98,9 @@ $_theme: $bootstrap;
             background: var-get($_theme, 'disabled-indeterminate-color');
             border-color: transparent;
         }
-    }
 
-    @include mx(indeterminate, invalid) {
-        @include e(composite) {
-            background: var-get($_theme, 'error-color');
-            border-color: transparent;
+        @include e(composite-mark) {
+            stroke: var-get($_theme, 'disabled-tick-color');
         }
     }
 

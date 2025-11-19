@@ -35,9 +35,7 @@
 @use '../components/input/file-input-theme' as *;
 
 @mixin typography($type-scale) {
-    @include badge-typography($categories: (
-        text: 'button',
-    ));
+    // @include badge-typography($theme: 'indigo');
     // @include banner-typography();
     // @include bottom-nav-typography();
     @include button-typography();
@@ -113,10 +111,10 @@
     //)) {
     //    --ig-subtitle-2-text-transform: uppercase;
     //};
-    @include time-picker-typography($categories: (
-        header-hour: 'h5',
-        selected-time: 'h6'
-    ));
+    // @include time-picker-typography($categories: (
+    //     header-hour: 'h5',
+    //     selected-time: 'h6'
+    // ));
     //@include stepper-typography($categories: (
     //    title: 'body-2',
     //    subtitle: 'caption',
