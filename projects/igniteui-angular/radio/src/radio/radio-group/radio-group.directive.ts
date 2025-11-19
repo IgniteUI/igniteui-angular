@@ -19,13 +19,7 @@ import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { fromEvent, noop, Subject, takeUntil } from 'rxjs';
 import { IgxRadioComponent } from '../radio.component';
 import { ɵIgxDirectionality } from 'igniteui-angular/core';
-import { IBaseEventArgs } from 'igniteui-angular/core';
-
-export interface IChangeRadioEventArgs extends IBaseEventArgs {
-    checked: boolean;
-    value?: any;
-}
-
+import { IChangeCheckboxEventArgs } from 'igniteui-angular/directives';
 /**
  * Determines the Radio Group alignment
  */
@@ -196,7 +190,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * ```
      */
     // eslint-disable-next-line @angular-eslint/no-output-native
-    @Output() public readonly change: EventEmitter<IChangeRadioEventArgs> = new EventEmitter<IChangeRadioEventArgs>();
+    @Output() public readonly change: EventEmitter<IChangeCheckboxEventArgs> = new EventEmitter<IChangeCheckboxEventArgs>();
 
     /**
      * The css class applied to the component.
@@ -559,7 +553,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
             takeUntil(button.destroy$),
             takeUntil(this.destroy$),
             takeUntil(this.queryChange$)
-        ).subscribe((ev: IChangeRadioEventArgs) => this._selectedRadioButtonChanged(ev));
+        ).subscribe((ev: IChangeCheckboxEventArgs) => this._selectedRadioButtonChanged(ev));
 
         button.blurRadio
             .pipe(takeUntil(this.destroy$))
@@ -574,7 +568,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * @hidden
      * @internal
      */
-    private _selectedRadioButtonChanged(args: IChangeRadioEventArgs) {
+    private _selectedRadioButtonChanged(args: IChangeCheckboxEventArgs) {
         this._radioButtons().forEach((button) => {
             button.checked = button.id === args.owner.id;
             if (button.checked && button.ngControl) {

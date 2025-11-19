@@ -88,7 +88,7 @@ export class RadioSampleComponent {
 | `@Input()` disableRipple | boolean | Specifies the whether the ripple effect should be disabled for the radio button. |
 | `@Input()` labelPosition | string `|` enum RadioLabelPosition | Specifies the position of the text label relative to the radio button element. Possible values are "before" and "after". |
 | `@Input("aria-labelledby")` ariaLabelledBy | string | Specify an external element by id to be used as label for the radio button. |
-| `@Output()` change | EventEmitter<IChangeRadioEventArgs> | Emitted when the radio button checked value changes. |
+| `@Output()` change | EventEmitter<IChangeCheckboxEventArgs> | Emitted when the radio button checked value changes. |
 
 ### Methods
 

@@ -25,7 +25,7 @@ export * from './directives/layout/layout.directive';
 export * from './directives/mask/mask.directive';
 // Note: Radio-group directive moved to radio entry point in v21.0.0
 // Users should now import from 'igniteui-angular/radio' instead
-// export { IgxRadioGroupDirective, IChangeRadioEventArgs } from 'igniteui-angular/radio';
+// export { IgxRadioGroupDirective } from 'igniteui-angular/radio';
 export * from './directives/ripple/ripple.directive';
 export * from './directives/scroll-inertia/scroll_inertia.directive';
 export * from './directives/size/ig-size.directive';

@@ -349,7 +349,6 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxRadioComponent', 'radio'],
     ['IgxRadioModule', 'radio'],
     ['IgxRadioGroupDirective', 'radio'], // Breaking change - moved from directives
-    ['IChangeRadioEventArgs', 'radio'], // Renamed from IChangeCheckboxEventArgs
 
     // Select
     ['IgxSelectComponent', 'select'],
@@ -446,7 +445,6 @@ const ENTRY_POINT_MAP = new Map<string, string>([
 // Type renames (old name -> new name and entry point)
 const TYPE_RENAMES = new Map<string, { newName: string, entryPoint: string }>([
     ['Direction', { newName: 'IgxCarouselDirection', entryPoint: 'carousel' }],
-    ['IChangeCheckboxEventArgs', { newName: 'IChangeRadioEventArgs', entryPoint: 'radio' }],
 ]);
 
 function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.SourceFile): { start: number, end: number, replacement: string } | null {
@@ -645,7 +643,6 @@ export default (options: MigrationOptions = {}): Rule => async (host: Tree, cont
         context.logger.info('  - IgxRadioGroupDirective moved to igniteui-angular/radio');
         context.logger.info('Type renames:');
         context.logger.info('  - Direction → IgxCarouselDirection');
-        context.logger.info('  - IChangeCheckboxEventArgs → IChangeRadioEventArgs');
     } else {
         context.logger.info('Skipping import migration. You can continue using the main entry point.');
         context.logger.info('Note: The library now supports granular entry points for better tree-shaking.');

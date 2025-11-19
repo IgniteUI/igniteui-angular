@@ -4,10 +4,6 @@
         {
             "name": "Direction",
             "replaceWith": "IgxCarouselDirection"
-        },
-        {
-            "name": "IChangeCheckboxEventArgs",
-            "replaceWith": "IChangeRadioEventArgs"
         }
     ]
 }
