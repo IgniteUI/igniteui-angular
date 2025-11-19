@@ -43,6 +43,11 @@ $_theme: $indigo;
     @include m(search) {
         --_prefix-suffix-spacing: #{pad-inline(rem(6px), rem(8px), rem(10px))};
 
+        @include e(bundle) {
+            border-end-start-radius: 0;
+            border-end-end-radius: 0;
+        }
+
         @include e(input) {
             padding-inline: var(--_prefix-suffix-spacing);
         }
@@ -99,6 +104,8 @@ $_theme: $indigo;
     @include e(bundle) {
         transition: all .25s $out-cubic;
         border-block-end: rem(1px) solid var-get($_theme, 'idle-bottom-line-color');
+        border-start-start-radius: var-get($_theme, 'box-border-radius');
+        border-start-end-radius: var-get($_theme, 'box-border-radius');
 
         &:hover {
             background: var-get($_theme, 'box-background-hover');
@@ -143,6 +150,10 @@ $_theme: $indigo;
         @include e(bundle) {
             background: var-get($_theme, 'box-background-focus');
             border-block-end-color: var-get($_theme, 'focused-bottom-line-color');
+        }
+
+        @include e(label) {
+            color: var-get($_theme, 'focused-secondary-color');
         }
     }
 
