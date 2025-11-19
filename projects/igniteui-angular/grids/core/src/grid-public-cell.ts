@@ -187,7 +187,7 @@ export class IgxGridCell implements CellType {
             // TODO possibly define similar method in gridAPI, which does not emit event
             this.grid.crudService.enterEditMode(this);
         } else {
-            this.grid.crudService.endCellEdit();
+            this.grid.crudService.endCellEdit(true);
         }
         this.grid.notifyChanges();
     }

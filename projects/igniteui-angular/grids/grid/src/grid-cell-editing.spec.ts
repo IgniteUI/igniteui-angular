@@ -360,6 +360,48 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.editMode).toBe(false);
             expect(cell.value).toBe(newValue);
         }));
+
+        it('should preserve the navigation when cancel cellEdit and async set cell.editMode=false', fakeAsync(() => {
+            grid.cellEdit.subscribe((evt: IGridEditEventArgs) => {
+                evt.cancel = true;
+                const rowIndex = evt.cellID.rowIndex;
+                const field = evt.column.field;
+                const target = grid.getCellByColumn(rowIndex, field);
+                setTimeout(() => {
+                    target.editMode = false;
+                }, 100);
+            });
+
+            const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fixture.detectChanges();
+            tick(16);
+            expect(cell.editMode).toBeTrue();
+
+            const editInput = fixture.debugElement.query(By.css('igx-grid-cell input'));
+            if (editInput) {
+                UIInteractions.clickAndSendInputElementValue(editInput, 'Edited');
+            }
+            fixture.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
+            fixture.detectChanges();
+
+            tick(100);
+            fixture.detectChanges();
+            expect(cell.editMode).toBeFalse();
+
+            expect(document.activeElement).toBe(grid.tbody.nativeElement);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', document.activeElement as HTMLElement, true);
+            fixture.detectChanges();
+
+            const nextCell = grid.getCellByColumn(0, 'age');
+            const active = (grid as any).navigation.activeNode;
+            expect(active.row).toBe(0);
+            expect(active.column).toBe(nextCell.column.visibleIndex);
+        }));
     });
 
     describe('Scroll, pin and blur', () => {

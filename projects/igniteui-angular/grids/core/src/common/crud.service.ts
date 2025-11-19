@@ -331,8 +331,11 @@ export class IgxCellCrudState {
 
 
     /** Clears cell editing state */
-    public endCellEdit() {
+    public endCellEdit(restoreFocus: boolean = false) {
         this.cell = null;
+        if (restoreFocus) {
+            this.grid.tbody.nativeElement.focus();
+        }
     }
 
     /** Returns whether the targeted cell is in edit mode */
