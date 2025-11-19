@@ -67,6 +67,7 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { PickerCalendarOrientation } from '../date-common/types';
 import { IgxReadOnlyInputDirective } from '../directives/input/read-only-input.directive';
+import { BaseFormatter, I18N_FORMATTER } from '../core/i18n/formatters/formatter-base';
 
 let NEXT_ID = 0;
 
@@ -519,14 +520,15 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     constructor(element: ElementRef<HTMLElement>,
         @Inject(LOCALE_ID) _localeId: string,
+        @Inject(I18N_FORMATTER) _i18nFormatter: BaseFormatter,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
         private _injector: Injector,
         private _renderer: Renderer2,
         private platform: PlatformUtil,
         private cdr: ChangeDetectorRef,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
-        super(element, _localeId, _inputGroupType);
-        this.locale = this.locale || this._localeId;
+        super(element, _localeId,_i18nFormatter, _inputGroupType);
+        this.initLocale();
     }
 
     /** @hidden @internal */
@@ -769,8 +771,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     /** @hidden @internal */
     public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
-
-        this.locale = this.locale || this._localeId;
     }
 
     /** @hidden @internal */
@@ -1004,5 +1004,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
         componentInstance.calendarClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.close());
         componentInstance.todaySelection.pipe(takeUntil(this._destroy$)).subscribe(() => this.selectToday());
+    }
+
+    protected override updateResources(): void {
+        this._resourceStrings = getCurrentResourceStrings(DatePickerResourceStringsEN, false, this._locale);
     }
 }

@@ -13,7 +13,9 @@ import {
     ChangeDetectorRef,
     AfterViewInit,
     ElementRef,
-    booleanAttribute
+    booleanAttribute,
+    inject,
+    DestroyRef
 } from '@angular/core';
 import { ActionStripResourceStringsEN, IActionStripResourceStrings } from '../core/i18n/action-strip-resources';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
@@ -25,7 +27,7 @@ import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navig
 import { IgxToggleActionDirective } from '../directives/toggle/toggle.directive';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { NgTemplateOutlet } from '@angular/common';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getCurrentResourceStrings, onResourceChangeHandle } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IgxActionStripToken } from './token';
 import { trackByIdentity } from '../core/utils';
@@ -149,7 +151,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
     }
 
     public get resourceStrings(): IActionStripResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -187,8 +189,10 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
      */
     public menuOverlaySettings: OverlaySettings = { scrollStrategy: new CloseScrollStrategy() };
 
+    private _destroyRef = inject(DestroyRef);
     private _hidden = false;
-    private _resourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN);
+    private _resourceStrings: IActionStripResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN);
     private _originalParent!: HTMLElement;
 
     constructor(
@@ -197,7 +201,11 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
         protected el: ElementRef,
         /** @hidden @internal **/
         public cdr: ChangeDetectorRef,
-    ) { }
+    ) {
+        onResourceChangeHandle(this._destroyRef, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN, false);
+        }, this);
+    }
 
     /**
      * Menu Items list.

@@ -22,6 +22,7 @@ import { Size } from '../common/enums';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
@@ -315,9 +316,10 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 {
                     memberName: 'Date',
                     enabled: true
-                }, {
-                total: false
-            }
+                },
+                {
+                    total: false
+                }
             );
             pivotGrid.notifyDimensionChange(true);
             expect(pivotGrid.columns.length).toBe(5);

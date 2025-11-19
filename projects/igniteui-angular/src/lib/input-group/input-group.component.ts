@@ -1,4 +1,4 @@
-import { NgTemplateOutlet, NgClass } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectorRef,
     Component,
@@ -27,7 +27,7 @@ import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxInputGroupBase } from './input-group.common';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
 import { IgxIconComponent } from '../icon/icon.component';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getCurrentResourceStrings, onResourceChangeHandle } from '../core/i18n/resources';
 import { IgxTheme, THEME_TOKEN, ThemeToken } from '../services/theme/theme.token';
 
 @Component({
@@ -50,7 +50,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      * Returns the resource strings.
      */
     public get resourceStrings(): IInputResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -125,7 +125,8 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     private _type: IgxInputGroupType = null;
     private _filled = false;
     private _theme: IgxTheme;
-    private _resourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
+    private _resourceStrings: IInputResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
     private _readOnly: undefined | boolean;
 
     /** @hidden @internal */
@@ -239,6 +240,9 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
             }
         });
         this._destroyRef.onDestroy(() => themeChange.unsubscribe());
+        onResourceChangeHandle(this._destroyRef, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(InputResourceStringsEN, false);
+        }, this);
     }
 
     /** @hidden */
@@ -385,7 +389,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
 
     /** @hidden @internal */
     public get fileNames() {
-        return this.input.fileNames || this._resourceStrings.igx_input_file_placeholder;
+        return this.input.fileNames || this.resourceStrings.igx_input_file_placeholder;
     }
 
     /**

@@ -3,8 +3,6 @@ import {
     AfterViewInit, booleanAttribute, ContentChildren, Directive, ElementRef, EventEmitter,
     Inject, Input, LOCALE_ID, OnDestroy, Optional, Output, QueryList, ViewChild
 } from '@angular/core';
-import { getLocaleFirstDayOfWeek } from "@angular/common";
-
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -21,6 +19,9 @@ import { IGX_INPUT_GROUP_TYPE, IgxInputGroupType } from '../input-group/inputGro
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
+import { getCurrentI18n, IResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { DEFAULT_LOCALE, onResourceChangeHandle } from '../core/i18n/resources';
+import { BaseFormatter, I18N_FORMATTER } from '../core/i18n/formatters/formatter-base';
 
 @Directive()
 export abstract class PickerBaseDirective implements IToggleView, EditorProvider, AfterViewInit, AfterContentChecked, OnDestroy {
@@ -36,7 +37,13 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      * ```
      */
     @Input()
-    public inputFormat: string;
+    public set inputFormat(value: string) {
+        this._inputFormat = value;
+    };
+
+    public get inputFormat(): string {
+        return this._inputFormat;
+    }
 
     /**
      * The format used to display the picker's value when it's not being edited.
@@ -51,7 +58,13 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      *
      */
     @Input()
-    public displayFormat: string;
+    public set displayFormat(value: string) {
+        this._displayFormat = value;
+    };
+
+    public get displayFormat(): string {
+        return this._displayFormat ?? this._inputFormat;
+    };
 
     /**
      * Sets the `placeholder` of the picker's input.
@@ -134,7 +147,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      */
     @Input()
     public get locale(): string {
-        return this._locale;
+        return this._locale || this._defaultLocale;
     }
 
     /**
@@ -142,13 +155,8 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      * Expects a valid BCP 47 language tag.
      */
     public set locale(value: string) {
-        this._locale = value;
-        // if value is invalid, set it back to _localeId
-        try {
-            getLocaleFirstDayOfWeek(this._locale);
-        } catch (e) {
-            this._locale = this._localeId;
-        }
+        this._locale = this.i18nFormatter.verifyLocale(value);
+        this.updateResources();
     }
 
     /**
@@ -158,7 +166,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      */
     @Input()
     public get weekStart(): WEEKDAYS | number {
-        return this._weekStart ?? getLocaleFirstDayOfWeek(this._locale);
+        return this._weekStart ?? this.i18nFormatter.getLocaleFirstDayOfWeek(this.locale);
     }
 
     /**
@@ -275,6 +283,9 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     protected inputGroup: IgxInputGroupComponent;
 
     protected _locale: string;
+    protected _defaultLocale: string;
+    protected _inputFormat: string;
+    protected _displayFormat: string;
     protected _collapsed = true;
     protected _type: IgxInputGroupType;
     protected _minValue: Date | string;
@@ -319,8 +330,9 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
 
     constructor(public element: ElementRef,
         @Inject(LOCALE_ID) protected _localeId: string,
+        @Inject(I18N_FORMATTER) protected i18nFormatter: BaseFormatter,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
-        this.locale = this.locale || this._localeId;
+        this.initLocale();
     }
 
     /** @hidden @internal */
@@ -364,6 +376,19 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
         components.changes.pipe(takeUntil(this._destroy$))
             .subscribe(() => subscribeToClick(components));
     }
+
+    protected initLocale() {
+        this._defaultLocale = getCurrentI18n();
+        this._locale = this._localeId !== DEFAULT_LOCALE ? this._localeId : this._locale;
+        onResourceChangeHandle(this._destroy$, this.onResourceChange, this);
+    }
+
+    protected onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
+        this._defaultLocale = args.detail.newLocale;
+        this.updateResources();
+    }
+
+    protected updateResources() { }
 
     public abstract select(value: Date | DateRange | string): void;
     public abstract open(settings?: OverlaySettings): void;

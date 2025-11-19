@@ -30,7 +30,7 @@
         <!-- only set mask placeholder when empty, otherwise input group might use it as label if none is set -->
         <input #singleInput igxInput type="text" [igxReadOnlyInput]="readOnly" readonly [disabled]="disabled" [placeholder]="value ? '' : singleInputFormat"
             role="combobox" aria-haspopup="grid" [attr.aria-expanded]="!collapsed" [attr.aria-labelledby]="label?.id"
-            [value]="value | dateRange: appliedFormat : locale : formatter" />
+            [value]="value | dateRange: displayFormat : locale : formatter" />
 
         @if (!toggleComponents.length) {
             <igx-prefix (click)="toggle()">

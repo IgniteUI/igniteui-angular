@@ -1,6 +1,6 @@
-import { Component, HostBinding, Input } from '@angular/core';
+import { Component, DestroyRef, HostBinding, inject, Input } from '@angular/core';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
-import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { getCurrentResourceStrings, onResourceChangeHandle } from '../core/i18n/resources';
 
 @Component({
     selector: 'igx-query-builder-header',
@@ -8,7 +8,9 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 })
 export class IgxQueryBuilderHeaderComponent {
 
-    private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+    private _destroyRef = inject(DestroyRef);
+    private _resourceStrings: IQueryBuilderResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 
     /**
      * @hidden @internal
@@ -55,6 +57,12 @@ export class IgxQueryBuilderHeaderComponent {
      * Returns the resource strings.
      */
     public get resourceStrings(): IQueryBuilderResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
+    }
+
+    constructor() {
+        onResourceChangeHandle(this._destroyRef, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
+        }, this);
     }
 }

@@ -1,10 +1,11 @@
-import { Pipe, PipeTransform, Inject } from '@angular/core';
+import { Pipe, PipeTransform, Inject, LOCALE_ID } from '@angular/core';
 import { DataUtil } from '../../data-operations/data-util';
 import { cloneArray, columnFieldPath, resolveNestedPath } from '../../core/utils';
 import { GridType, IGX_GRID_BASE, RowType } from './grid.interface';
 import { IgxAddRow } from './crud.service';
 import { IgxSummaryOperand, IgxSummaryResult } from '../summaries/grid-summary';
 import { IgxGridRow } from '../grid-public-row';
+import { BaseFormatter, I18N_FORMATTER } from '../../core/i18n/formatters/formatter-base';
 
 interface GridStyleCSSProperty {
     [prop: string]: any;
@@ -378,6 +379,62 @@ export class IgxColumnFormatterPipe implements PipeTransform {
 
     public transform(value: any, formatter: (v: any, data: any, columnData?: any) => any, rowData: any, columnData?: any) {
         return formatter(value, rowData, columnData);
+    }
+}
+
+@Pipe({
+    name: 'date',
+    standalone: true
+})
+export class IgxDateFormatterPipe implements PipeTransform {
+
+    constructor(
+        @Inject(I18N_FORMATTER) private i18nFormatter: BaseFormatter,
+        @Inject(LOCALE_ID) private locale_ID
+    ) { }
+
+    public transform(value: Date | string | number | null | undefined, format?: string, timezone?: string, locale?: string) {
+        return this.i18nFormatter.formatDate(value, format, locale ?? this.locale_ID, timezone);
+    }
+}
+
+@Pipe({
+    name: 'number',
+    standalone: true
+})
+export class IgxNumberFormatterPipe implements PipeTransform {
+
+    constructor(@Inject(I18N_FORMATTER) private i18nFormatter: BaseFormatter) { }
+
+    public transform(value: number | string | null | undefined, digitsInfo?: string, locale?: string) {
+        return this.i18nFormatter.formatNumber(value, locale, digitsInfo);
+    }
+}
+
+@Pipe({
+    name: 'percent',
+    standalone: true
+})
+export class IgxPercentFormatterPipe implements PipeTransform {
+
+    constructor(@Inject(I18N_FORMATTER) private i18nFormatter: BaseFormatter) { }
+
+    public transform(value: number | string | null | undefined, digitsInfo?: string, locale?: string) {
+        return this.i18nFormatter.formatPercent(value, locale, digitsInfo);
+    }
+}
+
+@Pipe({
+    name: 'currency',
+    standalone: true
+})
+export class IgxCurrencyFormatterPipe implements PipeTransform {
+
+    constructor(@Inject(I18N_FORMATTER) private i18nFormatter: BaseFormatter) { }
+
+    public transform(value: number | string | null | undefined, currencyCode?: string, display?: 'code' | 'symbol' | 'symbol-narrow' | string , digitsInfo?: string, locale?: string) {
+
+        return this.i18nFormatter.formatCurrency(value, locale, display, currencyCode, digitsInfo);
     }
 }
 

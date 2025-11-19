@@ -470,7 +470,8 @@
                         [expectedReturnField]="this.selectedField?.field"
                         [expressionTree]="expressionItem.inEditMode ? (innerQueryNewExpressionTree ?? getExpressionTreeCopy(expressionItem.expression.searchTree, true)) : expressionItem.expression.searchTree"
                         (inEditModeChange)="onInEditModeChanged($event)"
-                        [searchValueTemplate]="searchValueTemplate">
+                        [searchValueTemplate]="searchValueTemplate"
+                        [resourceStrings]="resourceStrings">
                     </igx-query-builder-tree>
                 </ng-container>
             }

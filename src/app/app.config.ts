@@ -5,6 +5,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { HammerModule, provideClientHydration } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
+import { provideIgniteIntl } from 'igniteui-angular/src/lib/core/i18n/formatters/formatter-intl';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -17,6 +18,7 @@ export const appConfig: ApplicationConfig = {
         provideAnimations(),
         provideHttpClient(withInterceptorsFromDi(), withFetch()),
         provideClientHydration(),
-        provideRouter(appRoutes)
+        provideRouter(appRoutes),
+        provideIgniteIntl()
     ]
 };
