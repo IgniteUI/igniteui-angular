@@ -3,7 +3,7 @@ import * as path from 'path';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { setupTestTree } from '../common/setup.spec';
 
-const version = '20.2.0';
+const version = '21.0.0';
 
 describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;

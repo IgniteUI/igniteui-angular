@@ -2,6 +2,17 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 21.0.0
+
+### Themes
+
+- `IgxButton`
+    - **Breaking Change**
+        - The following shadow-related parameters were removed from the `outlined-button-theme` and `flat-button-theme`:
+            - `resting-shadow`
+            - `hover-shadow`
+            - `focus-shadow`
+            - `active-shadow`
 
 ## 20.1.0
 
