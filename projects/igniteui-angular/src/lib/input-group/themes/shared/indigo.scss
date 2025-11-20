@@ -11,6 +11,16 @@ $_theme: $indigo;
     --_prefix-suffix-spacing: #{pad-inline(rem(2px), rem(4px), rem(6px))};
     --_bundle-template-rows: revert;
 
+    igx-prefix:first-child,
+    [igxPrefix]:first-child {
+        border-start-start-radius: var-get($_theme, 'box-border-radius');
+    }
+
+    igx-suffix:last-child,
+    [igxSuffix]:last-child {
+        border-start-end-radius: var-get($_theme, 'box-border-radius');
+    }
+
     igx-icon {
         --size: #{sizable(rem(14px), rem(16px), rem(16px))};
     }
@@ -42,6 +52,11 @@ $_theme: $indigo;
 
     @include m(search) {
         --_prefix-suffix-spacing: #{pad-inline(rem(6px), rem(8px), rem(10px))};
+
+        @include e(bundle) {
+            border-end-start-radius: 0;
+            border-end-end-radius: 0;
+        }
 
         @include e(input) {
             padding-inline: var(--_prefix-suffix-spacing);
@@ -99,6 +114,8 @@ $_theme: $indigo;
     @include e(bundle) {
         transition: all .25s $out-cubic;
         border-block-end: rem(1px) solid var-get($_theme, 'idle-bottom-line-color');
+        border-start-start-radius: var-get($_theme, 'box-border-radius');
+        border-start-end-radius: var-get($_theme, 'box-border-radius');
 
         &:hover {
             background: var-get($_theme, 'box-background-hover');
@@ -141,8 +158,12 @@ $_theme: $indigo;
 
     @include m(focused) {
         @include e(bundle) {
-            background: var-get($_theme, 'box-background-hover');
+            background: var-get($_theme, 'box-background-focus');
             border-block-end-color: var-get($_theme, 'focused-bottom-line-color');
+        }
+
+        @include e(label) {
+            color: var-get($_theme, 'focused-secondary-color');
         }
     }
 
@@ -202,6 +223,7 @@ $_theme: $indigo;
 
     @include m(disabled) {
         @include e(bundle) {
+            background: unset;
             border-block-end: rem(1px) solid var-get($_theme, 'disabled-bottom-line-color');
 
             &:hover {
@@ -211,7 +233,7 @@ $_theme: $indigo;
 
         &:hover {
             @include e(bundle) {
-                background: var-get($_theme, 'box-disabled-background');
+                background: inherit;
             }
         }
     }
