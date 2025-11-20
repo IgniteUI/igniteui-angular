@@ -26,7 +26,6 @@ $_theme: $indigo;
 
     @include m(focused) {
         @include e(composite) {
-            border-radius: var-get($_theme, 'border-radius-thumb');
             box-shadow: 0 0 0 rem(3px) var-get($_theme, 'focus-outline-color');
         }
     }
