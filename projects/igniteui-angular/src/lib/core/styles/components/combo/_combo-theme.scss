@@ -276,8 +276,8 @@
 
     .igx-input-group--disabled {
         %igx-combo__toggle-button {
-            background: var-get($theme, 'toggle-button-background-disabled') !important;
-            color: var-get($theme, 'toggle-button-foreground-disabled') !important;
+            background: var-get($theme, 'toggle-button-background-disabled');
+            color: var-get($theme, 'toggle-button-foreground-disabled');
         }
 
         %igx-combo__clear-button {
