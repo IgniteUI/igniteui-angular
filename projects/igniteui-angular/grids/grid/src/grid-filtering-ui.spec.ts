@@ -7420,7 +7420,7 @@ const verifyExcelStyleFilterAvailableOptions = (fix, labels: string[], checked: 
 
     expect(labelElements.length).toBe(labels.length, 'incorrect rendered list items count');
     labels.forEach((l, index) => {
-        expect(l).toEqual(labelElements[index].innerText);
+        expect(l).toEqual(labelElements[index].innerText.normalize("NFKD"));
     });
     checked.forEach((c, index) => {
         expect(checkboxElements[index].indeterminate ? null : checkboxElements[index].checked).toEqual(c);

@@ -585,14 +585,14 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(cancelBtn.nativeElement.focus).toHaveBeenCalled();
 
             const mockObj = jasmine.createSpyObj('mockObj', ['stopPropagation', 'preventDefault']);
-            cancelBtn.triggerEventHandler('keydown.Tab', mockObj);
+            cancelBtn.triggerEventHandler('keydown.tab', mockObj);
             await wait(30);
             fix.detectChanges();
             expect((grid.rowEditTabs.first as any).move).not.toHaveBeenCalled();
             expect(mockObj.preventDefault).not.toHaveBeenCalled();
             expect(mockObj.stopPropagation).toHaveBeenCalled();
 
-            doneBtn.triggerEventHandler('keydown.Tab', mockObj);
+            doneBtn.triggerEventHandler('keydown.tab', mockObj);
             await wait(30);
             fix.detectChanges();
             expect(dateCell.editMode).toBeTruthy();

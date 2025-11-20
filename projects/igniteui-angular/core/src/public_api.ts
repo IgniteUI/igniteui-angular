@@ -59,3 +59,6 @@ export * from './core/i18n/query-builder-resources';
 export * from './core/i18n/resources';
 export * from './core/i18n/time-picker-resources';
 export * from './core/i18n/tree-resources';
+
+// Types
+export * from './core/global-types';

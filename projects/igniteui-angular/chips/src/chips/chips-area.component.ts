@@ -187,7 +187,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
     protected destroy$ = new Subject<boolean>();
 
     @HostBinding('class')
-    private hostClass = 'igx-chip-area';
+    protected hostClass = 'igx-chip-area';
 
     private modifiedChipsArray: IgxChipComponent[];
     private _differ: IterableDiffer<IgxChipComponent> | null = null;

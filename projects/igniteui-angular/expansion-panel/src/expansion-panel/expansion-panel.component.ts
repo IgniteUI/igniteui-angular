@@ -97,7 +97,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      * @hidden
      */
     @HostBinding('class.igx-expansion-panel--expanded')
-    private opened = false;
+    protected opened = false;
 
     /**
      * @hidden @internal

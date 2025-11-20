@@ -1773,7 +1773,8 @@ export class GridSummaryFunctions {
                     expect(summaryLabels[i]).toEqual(summaryLabel.nativeElement.textContent.trim());
                     if (summaryResults.length > 0) {
                         const summaryResult = summaryItem.query(By.css('.igx-grid-summary__result'));
-                        expect(summaryResults[i]).toEqual(summaryResult.nativeElement.textContent.trim());
+                        expect(summaryResults[i].normalize("NFKD"))
+                            .toEqual(summaryResult.nativeElement.textContent.trim().normalize("NFKD"));
                     }
                 }
             }

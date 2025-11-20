@@ -34,6 +34,10 @@ import { noop } from 'rxjs';
  * Supports display format that may differ from the input format.
  * Provides methods to increment and decrement any specific/targeted `DatePart`.
  *
+ * **Note:** This directive uses the Mask Directive internally and requires `type="text"` on the input element.
+ * Input elements with `type="date"` or other date/time types are not supported, as they do not allow
+ * programmatic cursor positioning and text selection required for mask functionality.
+ *
  * @example
  * ```html
  * <igx-input-group>
@@ -503,7 +507,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
 
     /** @hidden @internal */
-    public override onBlur(value: string): void {
+    public override onBlur(event: FocusEvent): void {
         this._focused = false;
         if (!this.inputIsComplete() && this.inputValue !== this.emptyMask) {
             this.updateValue(this.parseDate(this.inputValue));
@@ -516,7 +520,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
             return;
         }
 
-        super.onBlur(value);
+        super.onBlur(event);
     }
 
     // the date editor sets its own inputFormat as its placeholder if none is provided
