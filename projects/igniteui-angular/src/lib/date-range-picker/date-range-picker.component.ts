@@ -24,7 +24,7 @@ import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
     IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState,
-    IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxSuffixDirective
+    IgxLabelDirective, IgxHintDirective, IGX_INPUT_GROUP_TYPE, IgxSuffixDirective
 } from '../input-group/public_api';
 import {
     AutoPositionStrategy, IgxOverlayService, OverlayCancelableEventArgs, OverlayEventArgs,
@@ -407,6 +407,9 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     @ContentChild(IgxLabelDirective)
     public label: IgxLabelDirective;
 
+    @ContentChild(IgxHintDirective)
+    public hint: IgxHintDirective;
+
     @ContentChild(IgxPickerActionsDirective)
     public pickerActions: IgxPickerActionsDirective;
 
@@ -537,7 +540,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public get separatorClass(): string {
-        return 'igx-date-range-picker__label';
+        const classes = ['igx-date-range-picker__label'];
+        if (this.label) classes.push('input-has-label');
+        if (this.hint) classes.push('input-has-hint');
+        return classes.join(' ');
     }
 
     protected override get toggleContainer(): HTMLElement | undefined {
