@@ -1,1 +1,1 @@
-export * from './src/chat/public_api';
+export * from './src/public_api';
