@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { CalendarDay, CustomDateRange, DateRange, DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } from 'igniteui-angular/core';
 
