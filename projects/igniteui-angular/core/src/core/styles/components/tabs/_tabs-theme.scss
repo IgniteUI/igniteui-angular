@@ -63,9 +63,12 @@
         flex: 0 0 auto;
         z-index: 1;
 
+        @if $variant == 'material' or $variant == 'bootstrap' {
+            background: var-get($theme, 'item-background');
+        }
+
         @if $bootstrap-theme {
             position: relative;
-            background: var-get($theme, 'item-background');
 
             &::after {
                 content: '';

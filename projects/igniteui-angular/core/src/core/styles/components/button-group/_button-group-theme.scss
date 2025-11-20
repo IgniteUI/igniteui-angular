@@ -353,12 +353,12 @@
             &:active {
                 @extend %item-overlay;
 
-                color: var-get($theme, 'item-selected-text-color');
+                color: var-get($theme, 'item-selected-hover-text-color');
                 background: var-get($theme, 'item-selected-background');
                 border-color: var-get($theme, 'item-selected-border-color');
 
                 igx-icon {
-                    color: var-get($theme, 'item-selected-icon-color');
+                    color: var-get($theme, 'item-selected-hover-icon-color');
                 }
 
                 &::before {
