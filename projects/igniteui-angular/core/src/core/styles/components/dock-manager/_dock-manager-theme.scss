@@ -1,0 +1,18 @@
+@use 'sass:map';
+@use '../../base' as *;
+
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
+/// @param {Map} $theme - The theme used to style the component.
+@mixin dock-manager($theme) {
+    @include css-vars($theme);
+}
+
+/// Adds typography styles for the dock manager component.
+/// @access private
+/// @group typography
+@mixin dock-manager-typography() {
+    igx-dock-manager {
+        --igc-font-family: var(--ig-font-family, inherit);
+    }
+}

@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { PlatformUtil } from '../../../igniteui-angular/src/lib/core/utils';
-import { IgxIconService } from '../../../igniteui-angular/src/lib/icon/icon.service';
-import { IconMeta } from '../../../igniteui-angular/src/lib/icon/public_api';
+import { PlatformUtil } from 'igniteui-angular/core';
+import { IconMeta, IgxIconService } from 'igniteui-angular/icon';
 
 
 export interface SvgIcon {
