@@ -61,8 +61,8 @@ export class IgxRowEditTabStopDirective {
 
     constructor(@Inject(IGX_GRID_BASE) public grid: GridType, public element: ElementRef<HTMLElement>) {}
 
-    @HostListener('keydown.Tab', [`$event`])
-    @HostListener('keydown.Shift.Tab', [`$event`])
+    @HostListener('keydown.tab', [`$event`])
+    @HostListener('keydown.shift.tab', [`$event`])
     public handleTab(event: KeyboardEvent): void {
         event.stopPropagation();
         if ((this.grid.rowEditTabs.last === this && !event.shiftKey) ||
@@ -72,13 +72,13 @@ export class IgxRowEditTabStopDirective {
         }
     }
 
-    @HostListener('keydown.Escape', [`$event`])
+    @HostListener('keydown.escape', [`$event`])
     public handleEscape(event: KeyboardEvent): void {
         this.grid.crudService.endEdit(false, event);
         this.grid.tbody.nativeElement.focus();
     }
 
-    @HostListener('keydown.Enter', ['$event'])
+    @HostListener('keydown.enter', ['$event'])
     public handleEnter(event: KeyboardEvent): void {
         event.stopPropagation();
     }

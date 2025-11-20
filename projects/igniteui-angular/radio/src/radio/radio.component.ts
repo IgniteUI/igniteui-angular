@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { EditorProvider, EDITOR_PROVIDER } from 'igniteui-angular/core';
-import { CheckboxBaseDirective, IgxRippleDirective } from 'igniteui-angular/directives';
+import { CheckboxBaseDirective, IgxRippleDirective, IChangeCheckboxEventArgs } from 'igniteui-angular/directives';
 import { IgxRadioGroupDirective } from './radio-group/radio-group.directive';
 
 /**
@@ -30,10 +30,10 @@ import { IgxRadioGroupDirective } from './radio-group/radio-group.directive';
 @Component({
     selector: 'igx-radio',
     providers: [{
-            provide: EDITOR_PROVIDER,
-            useExisting: IgxRadioComponent,
-            multi: true
-        }],
+        provide: EDITOR_PROVIDER,
+        useExisting: IgxRadioComponent,
+        multi: true
+    }],
     templateUrl: 'radio.component.html',
     imports: [IgxRippleDirective]
 })
@@ -129,7 +129,7 @@ export class IgxRadioComponent
      * @internal
      */
     @HostListener('change', ['$event'])
-    public _changed(event: Event) {
+    public _changed(event: IChangeCheckboxEventArgs) {
         if (event instanceof Event) {
             event.preventDefault();
         }
