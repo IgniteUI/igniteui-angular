@@ -320,6 +320,10 @@
             @extend %date-range-selected-special-first !optional;
         }
 
+        @include e(date, $mods: ('range', 'selected', 'special', 'first', 'active')) {
+            @extend %date-range-selected-special-first-active !optional;
+        }
+
         @include e(date, $mods: ('range', 'selected', 'current', 'last')) {
             @extend %date-range-selected-current-last !optional;
         }
@@ -358,6 +362,14 @@
 
         @include e(date, $mods: ('range', 'selected', 'special', 'current', 'active')) {
             @extend %date-range-selected-special-current-active !optional;
+        }
+
+        @include e(date, $mods: ('range', 'selected', 'special', 'current', 'active', 'first')) {
+            @extend %date-range-selected-special-current-active-first !optional;
+        }
+
+        @include e(date, $mods: ('range', 'selected', 'special', 'current', 'active', 'last')) {
+            @extend %date-range-selected-special-current-active-last !optional;
         }
 
         @include e(date, $mods: ('range', 'selected', 'special', 'last')) {
@@ -600,6 +612,10 @@
             @extend %date-special-current-selected-active !optional;
         }
 
+        @include e(date, $mods: ('special', 'current', 'selected', 'active'), $not: ('first', 'last')) {
+            @extend %date-special-current-selected-active-not-first-last !optional;
+        }
+
         @include e(date, $mods: ('special', 'active')) {
             @extend %date-special-active !optional;
         }
@@ -823,8 +839,20 @@
             @extend %date-disabled-current !optional;
         }
 
+        @include e(date, $mods: ('disabled', 'current')) {
+            @extend %date-disabled-current !optional;
+        }
+
+        @include e(date, $mods: ('disabled', 'current', 'range')) {
+            @extend %date-disabled-current-range !optional;
+        }
+
         @include e(date, $mods: ('disabled', 'current', 'special')) {
             @extend %date-disabled-current-special !optional;
+        }
+
+        @include e(date, $mods: ('disabled', 'current', 'special', 'range')) {
+            @extend %date-disabled-current-special-range !optional;
         }
 
         @include e(date, $mods: ('disabled', 'single', 'current', 'special', 'selected')) {
