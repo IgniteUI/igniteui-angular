@@ -34,6 +34,10 @@ import { noop } from 'rxjs';
  * Supports display format that may differ from the input format.
  * Provides methods to increment and decrement any specific/targeted `DatePart`.
  *
+ * **Note:** This directive uses the Mask Directive internally and requires `type="text"` on the input element.
+ * Input elements with `type="date"` or other date/time types are not supported, as they do not allow
+ * programmatic cursor positioning and text selection required for mask functionality.
+ *
  * @example
  * ```html
  * <igx-input-group>
