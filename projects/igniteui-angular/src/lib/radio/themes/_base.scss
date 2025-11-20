@@ -68,6 +68,10 @@ $_theme: $material;
         cursor: pointer;
 
         &:hover {
+            @include e(label) {
+                color: var-get($_theme, 'label-color-hover');
+            }
+
             @include e(composite) {
                 &::before {
                     background: var-get($_theme, 'hover-color');
@@ -306,6 +310,10 @@ $_theme: $material;
             }
 
             &:hover {
+                @include e(label) {
+                    color: var-get($_theme, 'error-color');
+                }
+
                 @include e(ripple) {
                     @extend %radio-ripple--hover;
                     @extend %radio-ripple--hover-invalid;
@@ -317,7 +325,7 @@ $_theme: $material;
                     }
 
                     &::after {
-                        border-color: var-get($_theme, 'error-color-hover');
+                        border-color: var-get($_theme, 'error-color');
                     }
                 }
             }
