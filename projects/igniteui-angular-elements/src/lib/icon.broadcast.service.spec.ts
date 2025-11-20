@@ -36,7 +36,7 @@ describe('Icon broadcast service', () => {
         it('should correctly process event of icons registering on channel.', async () => {
             // simulate a new icon being registered on channel
             const icons: Map<string, Map<string, SvgIcon>> = new Map();
-            const icon: Map<string, SvgIcon> = new Map()
+            const icon: Map<string, SvgIcon> = new Map();
             icon.set("customIcon", { svg: buildIcon });
             icons.set("customCollection", icon);
             const message: BroadcastIconsChangeMessage = {
@@ -54,7 +54,7 @@ describe('Icon broadcast service', () => {
 
         it('should correctly process event of setting an icon reference on channel.', async () => {
             const refs: Map<string, Map<string, IconMeta>> = new Map();
-            const ref: Map<string, IconMeta> = new Map()
+            const ref: Map<string, IconMeta> = new Map();
             ref.set("customIcon", { name: "customNameOfIcon", collection: "customCollection" } as any);
             refs.set("customCollection", ref);
             const message: BroadcastIconsChangeMessage = {
