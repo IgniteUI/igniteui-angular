@@ -1,8 +1,8 @@
 import { ClassProvider, createEnvironmentInjector, EnvironmentInjector, getPlatform, importProvidersFrom, provideZoneChangeDetection, ɵChangeDetectionScheduler, ɵprovideZonelessChangeDetectionInternal, } from '@angular/core';
 import { BrowserModule, platformBrowser } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { ELEMENTS_TOKEN } from 'igniteui-angular/src/lib/core/utils';
 import { IgxIconBroadcastService } from '../lib/icon.broadcast.service';
+import { ELEMENTS_TOKEN } from 'igniteui-angular/core';
 
 /**
  * Top-level await (TLA) both requires higher ES target and currently has only partial support in ES build
