@@ -1,7 +1,7 @@
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxPdfExporterService } from './pdf-exporter';
 import { IgxPdfExporterOptions } from './pdf-exporter-options';
-import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { ExportRecordType, ExportHeaderType, DEFAULT_OWNER, IExportRecord, IColumnInfo, IColumnList, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
 

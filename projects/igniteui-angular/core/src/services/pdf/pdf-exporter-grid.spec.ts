@@ -2,14 +2,14 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxPdfExporterService } from './pdf-exporter';
 import { IgxPdfExporterOptions } from './pdf-exporter-options';
-import { GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
+import { GridIDNameJobTitleComponent } from '../../../../test-utils/grid-samples.spec';
 import { first } from 'rxjs/operators';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { NestedColumnGroupsGridComponent, ColumnGroupTestComponent, BlueWhaleGridComponent } from '../../test-utils/grid-mch-sample.spec';
-import { IgxHierarchicalGridTestBaseComponent } from '../../test-utils/hierarchical-grid-components.spec';
-import { IgxTreeGridSortingComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
-import { CustomSummariesComponent } from '../../grids/grid/grid-summary.spec';
-import { IgxHierarchicalGridComponent } from '../../grids/hierarchical-grid/public_api';
+import { NestedColumnGroupsGridComponent, ColumnGroupTestComponent, BlueWhaleGridComponent } from '../../../../test-utils/grid-mch-sample.spec';
+import { IgxHierarchicalGridTestBaseComponent } from '../../../../test-utils/hierarchical-grid-components.spec';
+import { IgxTreeGridSortingComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../../../test-utils/tree-grid-components.spec';
+import { CustomSummariesComponent } from 'igniteui-angular/grids/grid/src/grid-summary.spec';
+import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 
 describe('PDF Grid Exporter', () => {
     let exporter: IgxPdfExporterService;
