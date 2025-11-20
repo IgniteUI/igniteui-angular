@@ -15,11 +15,11 @@ import {
     IgxTimeFilteringOperand,
     IgxDateTimeFilteringOperand,
     IgxComboComponent,
-    IGX_DIALOG_DIRECTIVES, IgxIconComponent
+    IGX_DIALOG_DIRECTIVES, IgxIconComponent,
+    IgxQueryBuilderSearchValueTemplateDirective
 } from 'igniteui-angular';
 import { IgxResourceStringsFR } from 'igniteui-angular-i18n';
 import { CommonModule } from '@angular/common';
-import { IgxQueryBuilderSearchValueTemplateDirective } from 'igniteui-angular/src/lib/query-builder/query-builder.directives';
 import { FormsModule } from '@angular/forms';
 
 @Component({
