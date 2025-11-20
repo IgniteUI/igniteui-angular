@@ -343,7 +343,7 @@
 
         &%form-group-display--search {
             %form-group-bundle-search--hover:not(:focus-within) {
-                box-shadow: var-get($theme, 'search-resting-shadow');
+                box-shadow: var-get($theme, 'search-resting-elevation');
             }
         }
 
@@ -1024,7 +1024,7 @@
 
     %form-group-bundle--search {
         background: var-get($theme, 'search-background');
-        box-shadow: var-get($theme, 'search-resting-shadow');
+        box-shadow: var-get($theme, 'search-resting-elevation');
 
         @if $variant != 'bootstrap' {
             border-radius: var-get($theme, 'search-border-radius');
@@ -1039,28 +1039,28 @@
     }
 
     %form-group-bundle-search--hover {
-        box-shadow: var-get($theme, 'search-hover-shadow');
+        box-shadow: var-get($theme, 'search-hover-elevation');
         border-color: var-get($theme, 'hover-border-color');
     }
 
     %form-group-bundle-search--focus {
-        box-shadow: var-get($theme, 'search-hover-shadow');
+        box-shadow: var-get($theme, 'search-hover-elevation');
         border-color: var-get($theme, 'hover-border-color');
     }
 
     %form-group-bundle-search--error {
-        box-shadow: var-get($theme, 'search-hover-shadow');
-        border-color: var-get($theme, 'search-hover-shadow');
+        box-shadow: var-get($theme, 'search-hover-elevation');
+        border-color: var-get($theme, 'search-hover-elevation');
     }
 
     %form-group-bundle-search--success {
-        box-shadow: var-get($theme, 'search-hover-shadow');
-        border-color: var-get($theme, 'search-hover-shadow');
+        box-shadow: var-get($theme, 'search-hover-elevation');
+        border-color: var-get($theme, 'search-hover-elevation');
     }
 
     %form-group-bundle-search--disabled {
         background: var-get($theme, 'search-disabled-background');
-        box-shadow: var-get($theme, 'search-disabled-shadow');
+        box-shadow: var-get($theme, 'search-disabled-elevation');
         border-color: var-get($theme, 'disabled-border-color');
 
         igx-prefix,
