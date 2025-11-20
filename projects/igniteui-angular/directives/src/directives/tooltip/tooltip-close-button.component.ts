@@ -5,13 +5,12 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'igx-tooltip-close-button',
   template: `
-        <ng-container *ngIf="customTemplate; else defaultTemplate">
-            <ng-container *ngTemplateOutlet="customTemplate"></ng-container>
-        </ng-container>
-        <ng-template #defaultTemplate>
-            <igx-icon aria-hidden="true" family="default" name="close"></igx-icon>
-        </ng-template>
-  `,
+        @if (customTemplate) {
+          <ng-container *ngTemplateOutlet="customTemplate"></ng-container>
+        } @else {
+          <igx-icon aria-hidden="true" family="default" name="close"></igx-icon>
+        }
+        `,
   imports: [IgxIconComponent, CommonModule],
 })
 export class IgxTooltipCloseButtonComponent {
