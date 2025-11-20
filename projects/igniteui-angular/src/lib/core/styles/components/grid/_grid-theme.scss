@@ -34,7 +34,7 @@
     ), $variant);
     $cbx-bs-size: rem(14px);
 
-    $grid-shadow: var-get($theme, 'grid-shadow');
+    $grid-shadow: var-get($theme, 'grid-elevation');
 
     $grid-caption-fs: rem(20px);
     $grid-caption-lh: rem(32px);
@@ -291,6 +291,12 @@
         .igx-input-group__textarea {
             box-shadow: none !important;
             border: none !important;
+        }
+
+        .igx-input-group--disabled,
+        .igx-input-group--disabled igx-prefix,
+        .igx-input-group--disabled igx-suffix {
+            color: var-get($theme, 'cell-disabled-color');
         }
     }
 
@@ -1192,6 +1198,21 @@
         align-items: center;
         outline-style: none;
 
+        @extend %cell-input-overrides;
+
+        > igx-input-group,
+        igx-combo,
+        igx-simple-combo,
+        igx-select,
+        igx-date-picker,
+        igx-time-picker {
+            height: auto;
+        }
+
+        igx-input-group {
+            background: transparent;
+        }
+
         @if $variant != 'indigo' {
             padding-inline: pad-inline(
                 map.get($grid-cell-padding-inline, 'compact'),
@@ -1407,8 +1428,6 @@
         &%grid-cell-number {
             justify-content: flex-start !important;
         }
-
-        @extend %cell-input-overrides;
     }
 
     %grid-cell--pinned {
@@ -1908,7 +1927,7 @@
         top: rem(-99999px);
         inset-inline-start: rem(-99999px);
         border: none;
-        box-shadow: var-get($theme, 'drag-shadow');
+        box-shadow: var-get($theme, 'drag-elevation');
         overflow: hidden;
         z-index: 20;
 
