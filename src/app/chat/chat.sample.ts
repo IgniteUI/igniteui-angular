@@ -13,7 +13,7 @@ import {
     IgxChatComponent,
     IgxChatMessageContextDirective,
     type IgxChatOptions,
-} from 'igniteui-angular';
+} from 'igniteui-angular/chat';
 import { MarkdownPipe } from 'igniteui-angular/chat-extras';
 
 @Component({
