@@ -114,13 +114,13 @@
             "default": "./migrations/*"
         },
         "./lib/core/styles/themes/index": {
-            "sass": "./lib/core/styles/themes/_index.scss"
+            "sass": "./core/src/core/styles/themes/_index.scss"
         },
         "./theming": {
-            "sass": "./lib/core/styles/themes/_index.scss"
+            "sass": "./core/src/core/styles/themes/_index.scss"
         },
         "./themes": {
-            "sass": "./lib/core/styles/themes/_index.scss"
+            "sass": "./core/src/core/styles/themes/_index.scss"
         }
     },
     "sideEffects": false
