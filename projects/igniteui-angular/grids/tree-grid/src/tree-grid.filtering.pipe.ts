@@ -1,4 +1,4 @@
-import { Inject, Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { GridType, IGX_GRID_BASE } from 'igniteui-angular/grids/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree, IFilteringState, IFilteringStrategy, ITreeGridRecord, TreeGridFilteringStrategy } from 'igniteui-angular/core';
 
@@ -8,8 +8,8 @@ import { FilteringExpressionsTree, IFilteringExpressionsTree, IFilteringState, I
     standalone: true
 })
 export class IgxTreeGridFilteringPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) {}
 
     public transform(hierarchyData: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
         filterStrategy: IFilteringStrategy,

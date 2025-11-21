@@ -29,6 +29,9 @@ describe('IgxHierarchicalGrid Navigation', () => {
                 IgxHierarchicalGridTestComplexComponent,
                 IgxHierarchicalGridMultiLayoutComponent,
                 IgxHierarchicalGridSmallerChildComponent
+            ],
+            providers: [
+                IgxGridNavigationService
             ]
         }).compileComponents();
         jasmine.DEFAULT_TIMEOUT_INTERVAL = defaultTimeout * 2;

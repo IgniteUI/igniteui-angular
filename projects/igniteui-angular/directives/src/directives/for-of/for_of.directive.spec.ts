@@ -1,22 +1,5 @@
 ﻿import { AsyncPipe, NgClass, NgForOfContext } from '@angular/common';
-import {
-    AfterViewInit,
-    ChangeDetectorRef,
-    Component,
-    Directive,
-    Injectable,
-    IterableDiffers,
-    NgZone,
-    OnInit,
-    QueryList,
-    TemplateRef,
-    ViewChild,
-    ViewChildren,
-    ViewContainerRef,
-    DebugElement,
-    Pipe,
-    PipeTransform
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Directive, Injectable, IterableDiffers, NgZone, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, DebugElement, Pipe, PipeTransform, inject } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -1356,18 +1339,16 @@ class DataGenerator {
     standalone: true
 })
 export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
+    public viewContainer: ViewContainerRef;
+    public template: TemplateRef<NgForOfContext<T>>;
+    public differs: IterableDiffers;
+    public changeDet: ChangeDetectorRef;
+    public zone: NgZone;
+    protected syncService: IgxForOfScrollSyncService;
+
     public scrStepArray = [];
     public scrTopArray = [];
-    constructor(
-        public viewContainer: ViewContainerRef,
-        public template: TemplateRef<NgForOfContext<T>>,
-        public differs: IterableDiffers,
-        public changeDet: ChangeDetectorRef,
-        public zone: NgZone,
-        protected syncService: IgxForOfScrollSyncService,
-        platformUtil: PlatformUtil) {
-        super(viewContainer, template, differs, changeDet, zone, syncService, platformUtil, document);
-    }
+
     public override onScroll(evt) {
         const ind = this.scrTopArray.length - 1;
         const prevScrTop = ind < 0 ? 0 : this.scrTopArray[ind];
@@ -1745,6 +1726,8 @@ export class LocalService {
     imports: [TestIgxForOfDirective, AsyncPipe]
 })
 export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
+    private localService = inject(LocalService);
+
     @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: true })
     public parentVirtDir: TestIgxForOfDirective<any>;
 
@@ -1753,8 +1736,6 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
 
     public height = '500px';
     public data;
-
-    constructor(private localService: LocalService) { }
     public ngOnInit(): void {
         this.data = this.localService.records;
     }
@@ -1790,6 +1771,8 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
     imports: [TestIgxForOfDirective, AsyncPipe]
 })
 export class RemoteVirtCountComponent implements OnInit, AfterViewInit {
+    private localService = inject(LocalService);
+
     @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: true })
     public parentVirtDir: TestIgxForOfDirective<any>;
 
@@ -1799,8 +1782,6 @@ export class RemoteVirtCountComponent implements OnInit, AfterViewInit {
     public height = '500px';
     public data;
     public count: Observable<number>;
-
-    constructor(private localService: LocalService) { }
     public ngOnInit(): void {
         this.data = this.localService.records;
         this.count = this.localService.count;

@@ -30,19 +30,6 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
     // protected hSelection;
     protected _rootGrid;
 
-    constructor(
-        selectionService: IgxGridSelectionService,
-        @Inject(IGX_GRID_BASE) grid: GridType,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        cdr: ChangeDetectorRef,
-        helement: ElementRef<HTMLElement>,
-        zone: NgZone,
-        touchManager: HammerGesturesManager,
-        platformUtil: PlatformUtil
-    ) {
-        super(selectionService, grid, overlayService, cdr, helement, zone, touchManager, platformUtil);
-    }
-
     public override ngOnInit() {
         super.ngOnInit();
         this._rootGrid = this._getRootGrid();

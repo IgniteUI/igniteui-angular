@@ -24,6 +24,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
                 NoopAnimationsModule,
                 ColumnLayoutTestComponent,
                 ColumnLayoutAndGroupsTestComponent
+            ],
+            providers: [
+                IgxGridMRLNavigationService
             ]
         }).compileComponents();
     }));
@@ -677,7 +680,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         gridFirstRow = grid.rowList.first;
         GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
-        GridFunctions.verifyDOMMatchesLayoutSettings(grid,gridFirstRow, fixture.componentInstance.colGroups);
+        GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridFirstRow, fixture.componentInstance.colGroups);
     }));
 
     it('should initialize correctly when grid width is in % and no widths are set for columns.', fakeAsync(() => {

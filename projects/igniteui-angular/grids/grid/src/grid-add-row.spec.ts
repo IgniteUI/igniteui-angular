@@ -45,6 +45,9 @@ describe('IgxGrid - Row Adding #grid', () => {
                 IgxGridRowEditingDefinedColumnsComponent,
                 ColumnLayoutTestComponent,
                 DefaultGridMasterDetailComponent
+            ],
+            providers: [
+                IgxGridMRLNavigationService
             ]
         }).compileComponents();
     }));

@@ -26,6 +26,9 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             TestBed.configureTestingModule({
                 imports: [
                     SelectionWithScrollsComponent, NoopAnimationsModule
+                ],
+                providers: [
+                    IgxGridMRLNavigationService
                 ]
             }).compileComponents();
         }));
@@ -765,6 +768,9 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             TestBed.configureTestingModule({
                 imports: [
                     MRLTestComponent, NoopAnimationsModule
+                ],
+                providers: [
+                    IgxGridMRLNavigationService
                 ]
             }).compileComponents();
         }));

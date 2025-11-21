@@ -46,6 +46,9 @@ describe("Pivot data selector integration", () => {
             imports: [
                 NoopAnimationsModule,
                 IgxPivotGridTestBaseComponent
+            ],
+            providers: [
+                IgxGridNavigationService
             ]
         }).compileComponents();
     }));

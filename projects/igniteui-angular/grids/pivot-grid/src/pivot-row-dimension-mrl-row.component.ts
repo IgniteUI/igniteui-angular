@@ -32,6 +32,11 @@ import { IgxPivotGridHorizontalRowCellMerging } from './pivot-grid.pipes';
     imports: [IgxPivotRowDimensionContentComponent, IgxPivotGridHorizontalRowCellMerging]
 })
 export class IgxPivotRowDimensionMrlRowComponent extends IgxGridHeaderRowComponent {
+    public override grid = inject<PivotGridType>(IGX_GRID_BASE);
+    protected injector = inject(Injector);
+    protected envInjector = inject(EnvironmentInjector);
+    protected viewRef = inject(ViewContainerRef);
+
     @ViewChildren(IgxPivotRowDimensionContentComponent)
     public rowDimensionContentCollection: QueryList<IgxPivotRowDimensionContentComponent>;
 
@@ -74,17 +79,6 @@ export class IgxPivotRowDimensionMrlRowComponent extends IgxGridHeaderRowCompone
      */
     @ViewChildren(IgxPivotRowDimensionContentComponent)
     public contentCells: QueryList<IgxPivotRowDimensionContentComponent>
-
-    constructor(
-        @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
-        ref: ElementRef<HTMLElement>,
-        protected injector: Injector,
-        protected envInjector: EnvironmentInjector,
-        cdr: ChangeDetectorRef,
-        protected viewRef: ViewContainerRef
-    ) {
-        super(ref, cdr);
-    }
 
     /**
      * @hidden @internal

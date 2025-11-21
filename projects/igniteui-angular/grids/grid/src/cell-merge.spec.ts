@@ -28,6 +28,10 @@ describe('IgxGrid - Cell merging #grid', () => {
             imports: [
                 NoopAnimationsModule, DefaultCellMergeGridComponent, ColumnLayoutTestComponent,
                 IgxHierarchicalGridTestBaseComponent, IgxTreeGridSelectionComponent
+            ],
+            providers: [
+                IgxGridMRLNavigationService,
+                IgxGridNavigationService
             ]
         }).compileComponents();
     }));

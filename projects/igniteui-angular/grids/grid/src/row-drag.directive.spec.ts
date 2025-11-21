@@ -952,6 +952,9 @@ describe('Row Drag Tests', () => {
                     NoopAnimationsModule,
                     IgxHierarchicalGridTestComponent,
                     IgxHierarchicalGridCustomGhostTestComponent
+                ],
+                providers: [
+                    IgxGridNavigationService
                 ]
             }).compileComponents();
         }));

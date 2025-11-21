@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from '@angular/core';
+import { inject, Injectable, NgZone } from '@angular/core';
 import { ColumnType } from 'igniteui-angular/core';
 
 /**
@@ -7,6 +7,8 @@ import { ColumnType } from 'igniteui-angular/core';
  */
 @Injectable()
 export class IgxColumnResizingService {
+    private zone = inject(NgZone);
+
 
     /**
      * @hidden
@@ -28,8 +30,6 @@ export class IgxColumnResizingService {
      * The column being resized.
      */
     public column: ColumnType;
-
-    constructor(private zone: NgZone) { }
 
     /**
      * @hidden

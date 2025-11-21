@@ -1,17 +1,17 @@
-import { Directive, ElementRef, HostBinding } from '@angular/core';
+import { Directive, ElementRef, HostBinding, inject } from '@angular/core';
 import { IgxTabItemDirective } from './tab-item.directive';
 import { IgxTabContentBase } from './tabs.base';
 
 @Directive()
 export abstract class IgxTabContentDirective implements IgxTabContentBase {
+    /** @hidden */
+    public tab = inject(IgxTabItemDirective);
+    /** @hidden */
+    private elementRef = inject(ElementRef<HTMLElement>);
 
     /** @hidden */
     @HostBinding('attr.role')
     public role = 'tabpanel';
-
-    /** @hidden */
-    constructor(public tab: IgxTabItemDirective, private elementRef: ElementRef<HTMLElement>) {
-    }
 
     /** @hidden */
     @HostBinding('attr.tabindex')

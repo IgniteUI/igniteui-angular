@@ -33,6 +33,9 @@ import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
     imports: [IgxGridForOfDirective, IgxGridCellComponent, NgClass, NgStyle, IgxCheckboxComponent, IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridTransactionStatePipe, IgxPivotGridCellStyleClassesPipe]
 })
 export class IgxPivotRowComponent extends IgxRowDirective {
+    public override grid = inject<PivotGridType>(IGX_GRID_BASE);
+    protected viewRef = inject(ViewContainerRef);
+
     /**
      * @hidden
      */
@@ -47,16 +50,6 @@ export class IgxPivotRowComponent extends IgxRowDirective {
             }
         }
         return isSelected;
-    }
-
-    constructor(
-        @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
-        selectionService: IgxGridSelectionService,
-        element: ElementRef<HTMLElement>,
-        cdr: ChangeDetectorRef,
-        protected viewRef: ViewContainerRef
-    ) {
-        super(grid, selectionService, element, cdr);
     }
 
     /**

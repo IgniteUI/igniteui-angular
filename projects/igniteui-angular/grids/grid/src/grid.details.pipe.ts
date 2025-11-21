@@ -1,4 +1,4 @@
-import { PipeTransform, Pipe, Inject } from '@angular/core';
+import { PipeTransform, Pipe, inject } from '@angular/core';
 import { GridType, IGX_GRID_BASE } from 'igniteui-angular/grids/core';
 
 /** @hidden */
@@ -7,8 +7,8 @@ import { GridType, IGX_GRID_BASE } from 'igniteui-angular/grids/core';
     standalone: true
 })
 export class IgxGridDetailsPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any[], hasDetails: boolean, expansionStates: Map<any, boolean>, _pipeTrigger: number) {
         if (!hasDetails) {

@@ -1,14 +1,5 @@
 import { useAnimation } from "@angular/animations";
-import {
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    HostBinding,
-    Input,
-    Output,
-    Renderer2,
-    booleanAttribute
-} from "@angular/core";
+import { ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, Output, Renderer2, booleanAttribute, inject } from "@angular/core";
 import { first } from "rxjs/operators";
 import { IgxFilterPivotItemsPipe } from "./pivot-grid.pipes";
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
@@ -63,6 +54,9 @@ interface IDataSelectorPanel {
     imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, IgxInputDirective, IgxListComponent, IgxListItemComponent, IgxCheckboxComponent, IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxDropDirective, IgxExpansionPanelTitleDirective, IgxChipComponent, IgxExpansionPanelBodyComponent, IgxDragDirective, IgxDropDownItemNavigationDirective, IgxDragHandleDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxFilterPivotItemsPipe]
 })
 export class IgxPivotDataSelectorComponent {
+    private renderer = inject(Renderer2);
+    private cdr = inject(ChangeDetectorRef);
+
 
     /**
      * Gets/sets whether the columns panel is expanded
@@ -249,8 +243,6 @@ export class IgxPivotDataSelectorComponent {
     public get values(): IPivotValue[] {
         return this._grid?.pivotConfiguration.values || [];
     }
-
-    constructor(private renderer: Renderer2, private cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden @internal

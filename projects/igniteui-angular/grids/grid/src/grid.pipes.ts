@@ -1,4 +1,4 @@
-import { Inject, Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { IGridSortingStrategy, IGridGroupingStrategy, cloneArray, DataUtil, FilteringExpressionsTree, FilterUtil, IFilteringExpressionsTree, IFilteringStrategy, IGridMergeStrategy, IGroupByExpandState, IGroupingExpression, ISortingExpression, IGroupByResult, ColumnType } from 'igniteui-angular/core';
 import { GridCellMergeMode, RowPinningPosition, GridType, IGX_GRID_BASE } from 'igniteui-angular/grids/core';
 
@@ -10,8 +10,8 @@ import { GridCellMergeMode, RowPinningPosition, GridType, IGX_GRID_BASE } from '
     standalone: true
 })
 export class IgxGridSortingPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any[], sortExpressions: ISortingExpression[], groupExpressions: IGroupingExpression[], sorting: IGridSortingStrategy,
         id: string, pipeTrigger: number, pinned?): any[] {
@@ -36,8 +36,8 @@ export class IgxGridSortingPipe implements PipeTransform {
     standalone: true
 })
 export class IgxGridGroupingPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any[], expression: IGroupingExpression | IGroupingExpression[],
         expansion: IGroupByExpandState | IGroupByExpandState[],
@@ -73,27 +73,9 @@ export class IgxGridGroupingPipe implements PipeTransform {
     standalone: true
 })
 export class IgxGridCellMergePipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
-
-    public transform(collection: any, colsToMerge: ColumnType[], mergeMode: GridCellMergeMode, mergeStrategy: IGridMergeStrategy, _pipeTrigger: number) {
-        if (colsToMerge.length === 0) {
-            return collection;
-        }
-        const result = DataUtil.merge(collection, colsToMerge, mergeStrategy, [], this.grid);
-        return result;
-    }
-}
-
-@Pipe({
-    name: 'gridUnmergeActive',
-    standalone: true
-})
-export class IgxGridUnmergeActivePipe implements PipeTransform {
-
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
-
-    public transform(collection: any, colsToMerge: ColumnType[], activeRowIndexes: number[], pinned: boolean, _pipeTrigger: number) {
+    public transform(collection: any, colsToMerge: ColumnType[], mergeMode: GridCellMergeMode, mergeStrategy: IGridMergeStrategy, activeRowIndexes: number[], pinned: boolean, _pipeTrigger: number) {
         if (colsToMerge.length === 0) {
             return collection;
         }
@@ -158,8 +140,8 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
     standalone: true
 })
 export class IgxGridPagingPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: IGroupByResult, enabled: boolean, page = 0, perPage = 15, _: number): IGroupByResult {
         if (!enabled || this.grid.pagingMode !== 'local') {
@@ -192,8 +174,8 @@ export class IgxGridPagingPipe implements PipeTransform {
     standalone: true
 })
 export class IgxGridFilteringPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
         filterStrategy: IFilteringStrategy,

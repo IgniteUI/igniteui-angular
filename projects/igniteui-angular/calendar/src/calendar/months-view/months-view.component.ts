@@ -35,6 +35,8 @@ let NEXT_ID = 0;
     imports: [IgxCalendarMonthDirective, TitleCasePipe]
 })
 export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
+    public el = inject(ElementRef);
+
     #standalone = true;
     private platform = inject(PlatformUtil);
 
@@ -127,13 +129,6 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      * @hidden
      */
     private _monthFormat = "short";
-
-    constructor(
-        public el: ElementRef,
-        @Inject(DAY_INTERVAL_TOKEN) dayInterval: DayInterval,
-    ) {
-        super(dayInterval);
-    }
 
     /**
      * @hidden

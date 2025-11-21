@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { first, throttleTime } from 'rxjs/operators';
 import { IgxForOfDirective } from 'igniteui-angular/directives';
 import { GridType } from './common/grid.interface';
@@ -34,6 +34,7 @@ export interface IActiveNode {
 /** @hidden */
 @Injectable()
 export class IgxGridNavigationService {
+    protected platform = inject(PlatformUtil);
     public grid: GridType;
     public _activeNode: IActiveNode = {} as IActiveNode;
     public lastActiveNode: IActiveNode = {} as IActiveNode;
@@ -48,7 +49,7 @@ export class IgxGridNavigationService {
         this._activeNode = value;
     }
 
-    constructor(protected platform: PlatformUtil) {
+    constructor() {
         this.keydownNotify.pipe(
             throttleTime(30, animationFrameScheduler),
         )

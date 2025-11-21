@@ -31,6 +31,8 @@ import { CalendarDay, calendarRange, PlatformUtil, type DayInterval } from 'igni
     imports: [IgxCalendarYearDirective]
 })
 export class IgxYearsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
+    public el = inject(ElementRef);
+
     #standalone = true;
     private platform = inject(PlatformUtil);
 
@@ -108,13 +110,6 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements C
         return Array.from(calendarRange({ start, end, unit: this.dayInterval })).map(
             (m) => m.native,
         );
-    }
-
-    constructor(
-        public el: ElementRef,
-        @Inject(DAY_INTERVAL_TOKEN) dayInterval: DayInterval,
-    ) {
-        super(dayInterval);
     }
 
     /**

@@ -42,6 +42,9 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 MultiColumnHeadersWithGroupingComponent,
                 GridPinningMRLComponent,
                 PinOnBothSidesInitComponent
+            ],
+            providers: [
+                IgxGridMRLNavigationService
             ]
         }).compileComponents();
     }))

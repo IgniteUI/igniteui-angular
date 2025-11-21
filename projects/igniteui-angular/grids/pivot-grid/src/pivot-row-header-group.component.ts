@@ -27,6 +27,8 @@ import { PlatformUtil, SortingDirection } from 'igniteui-angular/core';
     imports: [IgxIconComponent, IgxPivotRowDimensionHeaderComponent, NgClass, NgStyle, IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxPivotResizeHandleDirective, IgxHeaderGroupStylePipe]
 })
 export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent implements PivotRowHeaderGroupType {
+    public override grid = inject<PivotGridType>(IGX_GRID_BASE);
+    public override colResizingService = inject(IgxPivotColumnResizingService);
 
     /**
      * @hidden
@@ -39,16 +41,6 @@ export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent
      */
     public get role(): string {
         return 'columnheader';
-    }
-
-    constructor(private cdRef: ChangeDetectorRef,
-        @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
-        private elementRef: ElementRef<HTMLElement>,
-        public override colResizingService: IgxPivotColumnResizingService,
-        filteringService: IgxFilteringService,
-        platform: PlatformUtil,
-        protected zone: NgZone) {
-        super(cdRef, grid, elementRef, colResizingService, filteringService, platform);
     }
 
     /**

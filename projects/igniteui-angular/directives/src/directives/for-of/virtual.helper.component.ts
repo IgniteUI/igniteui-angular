@@ -1,5 +1,5 @@
-import { Component, ElementRef, HostBinding, Input, ViewChild, ViewContainerRef,
-    ChangeDetectorRef, OnDestroy, OnInit, Inject, NgZone} from '@angular/core';
+import { Component, HostBinding, Input, ViewChild, ViewContainerRef,
+    OnDestroy, OnInit} from '@angular/core';
 import { VirtualHelperBaseDirective } from './base.helper.component';
 import { DOCUMENT } from '@angular/common';
 import { PlatformUtil } from 'igniteui-angular/core';
@@ -20,16 +20,6 @@ export class VirtualHelperComponent extends VirtualHelperBaseDirective implement
 
     @HostBinding('class')
     public cssClasses = 'igx-vhelper--vertical';
-
-    constructor(
-        elementRef: ElementRef,
-        cdr: ChangeDetectorRef,
-        zone: NgZone,
-        @Inject(DOCUMENT) document: any,
-        platformUtil: PlatformUtil,
-    ) {
-        super(elementRef, cdr, zone, document, platformUtil);
-    }
 
     public ngOnInit() {
         this.scrollWidth = this.scrollNativeSize;

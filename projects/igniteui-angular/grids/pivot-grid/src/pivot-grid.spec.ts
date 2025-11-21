@@ -35,6 +35,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 IgxPivotGridTestBaseComponent,
                 IgxPivotGridTestComplexHierarchyComponent,
                 IgxPivotGridFlexContainerComponent
+            ],
+            providers: [
+                IgxGridNavigationService
             ]
         }).compileComponents();
     }));

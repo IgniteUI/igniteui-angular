@@ -84,6 +84,8 @@ import { IForOfState, IgxTextHighlightService } from 'igniteui-angular/directive
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy {
+    public rowIslandAPI = inject(IgxRowIslandAPIService);
+
 
     /* blazorSuppress */
     /**
@@ -370,52 +372,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             ptr = ptr.parentIsland;
         }
         return lvl + 1;
-    }
-
-    constructor(
-        validationService: IgxGridValidationService,
-        selectionService: IgxGridSelectionService,
-        colResizingService: IgxColumnResizingService,
-        @Inject(IGX_GRID_SERVICE_BASE) gridAPI: IgxHierarchicalGridAPIService,
-        transactionFactory: IgxFlatTransactionFactory,
-        elementRef: ElementRef<HTMLElement>,
-        zone: NgZone,
-        @Inject(DOCUMENT) document,
-        cdr: ChangeDetectorRef,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        injector: Injector,
-        envInjector: EnvironmentInjector,
-        navigation: IgxHierarchicalGridNavigationService,
-        filteringService: IgxFilteringService,
-        textHighlightService: IgxTextHighlightService,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        summaryService: IgxGridSummaryService,
-        public rowIslandAPI: IgxRowIslandAPIService,
-        @Inject(LOCALE_ID) localeId: string,
-        platform: PlatformUtil) {
-        super(
-            validationService,
-            selectionService,
-            colResizingService,
-            gridAPI,
-            transactionFactory,
-            elementRef,
-            zone,
-            document,
-            cdr,
-            differs,
-            viewRef,
-            injector,
-            envInjector,
-            navigation,
-            filteringService,
-            textHighlightService,
-            overlayService,
-            summaryService,
-            localeId,
-            platform
-        );
     }
 
     /**

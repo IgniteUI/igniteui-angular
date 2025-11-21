@@ -1,29 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    HostBinding,
-    Input,
-    OnInit,
-    TemplateRef,
-    ContentChild,
-    AfterContentInit,
-    ViewChild,
-    DoCheck,
-    AfterViewInit,
-    ElementRef,
-    NgZone,
-    Inject,
-    ChangeDetectorRef,
-    IterableDiffers,
-    ViewContainerRef,
-    Optional,
-    LOCALE_ID,
-    Injector,
-    EnvironmentInjector,
-    CUSTOM_ELEMENTS_SCHEMA,
-    booleanAttribute,
-    DOCUMENT
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, Input, OnInit, TemplateRef, ContentChild, AfterContentInit, ViewChild, DoCheck, AfterViewInit, CUSTOM_ELEMENTS_SCHEMA, booleanAttribute, inject } from '@angular/core';
 import { NgClass, NgTemplateOutlet, NgStyle } from '@angular/common';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective, IgxGridCellMergePipe, IgxGridUnmergeActivePipe } from 'igniteui-angular/grids/grid';
@@ -171,6 +146,9 @@ let NEXT_ID = 0;
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, AfterViewInit, DoCheck, AfterContentInit {
+    protected override _diTransactions = inject<HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>>(IgxGridTransaction, { optional: true, });
+    protected override transactionFactory = inject(IgxHierarchicalTransactionFactory);
+
     /**
      * Sets the child data key of the `IgxTreeGridComponent`.
      * ```html
@@ -351,7 +329,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     private _rowLoadingIndicatorTemplate: TemplateRef<void>;
     private _expansionDepth = Infinity;
 
-     /* treatAsRef */
+    /* treatAsRef */
     /**
      * Gets/Sets the array of data that populates the component.
      * ```html
@@ -365,7 +343,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return this._data;
     }
 
-     /* treatAsRef */
+    /* treatAsRef */
     public set data(value: any[] | null) {
         const oldData = this._data;
         this._data = value || [];
@@ -445,56 +423,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     // private get _gridAPI(): IgxTreeGridAPIService {
     //     return this.gridAPI as IgxTreeGridAPIService;
     // }
-
-    constructor(
-        validationService: IgxGridValidationService,
-        selectionService: IgxGridSelectionService,
-        colResizingService: IgxColumnResizingService,
-        @Inject(IGX_GRID_SERVICE_BASE) gridAPI: GridServiceType,
-        // public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        transactionFactory: IgxHierarchicalTransactionFactory,
-        _elementRef: ElementRef<HTMLElement>,
-        _zone: NgZone,
-        @Inject(DOCUMENT) document: any,
-        cdr: ChangeDetectorRef,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        injector: Injector,
-        envInjector: EnvironmentInjector,
-        navigation: IgxGridNavigationService,
-        filteringService: IgxFilteringService,
-        textHighlightService: IgxTextHighlightService,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        summaryService: IgxGridSummaryService,
-        @Inject(LOCALE_ID) localeId: string,
-        platform: PlatformUtil,
-        @Optional() @Inject(IgxGridTransaction) protected override _diTransactions?:
-            HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
-    ) {
-        super(
-            validationService,
-            selectionService,
-            colResizingService,
-            gridAPI,
-            transactionFactory,
-            _elementRef,
-            _zone,
-            document,
-            cdr,
-            differs,
-            viewRef,
-            injector,
-            envInjector,
-            navigation,
-            filteringService,
-            textHighlightService,
-            overlayService,
-            summaryService,
-            localeId,
-            platform,
-            _diTransactions,
-        );
-    }
 
     /**
      * @hidden

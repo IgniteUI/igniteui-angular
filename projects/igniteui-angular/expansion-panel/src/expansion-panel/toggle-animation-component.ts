@@ -1,5 +1,5 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
-import { Directive, ElementRef, EventEmitter, Inject, OnDestroy } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, inject, OnDestroy } from '@angular/core';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -34,6 +34,8 @@ export enum ANIMATION_TYPE {
 /**@hidden @internal */
 @Directive()
 export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnDestroy {
+    protected animationService = inject<AnimationService>(IgxAngularAnimationService);
+
     /** @hidden @internal */
     public openAnimationDone: EventEmitter<void> = new EventEmitter();
     /** @hidden @internal */
@@ -70,9 +72,6 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
     private _defaultOpenedCallback = noop;
     private onClosedCallback: () => any = this._defaultClosedCallback;
     private onOpenedCallback: () => any = this._defaultOpenedCallback;
-
-    constructor(@Inject(IgxAngularAnimationService) protected animationService: AnimationService) {
-    }
 
     /** @hidden @internal */
     public playOpenAnimation(targetElement: ElementRef, onDone?: () => void): void {

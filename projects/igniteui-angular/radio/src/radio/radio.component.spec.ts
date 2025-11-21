@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ViewChild, ViewChildren, inject } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -366,14 +366,14 @@ class RadioFormComponent {
     imports: [ReactiveFormsModule, IgxRadioComponent]
 })
 class ReactiveFormComponent {
+    private fb = inject(UntypedFormBuilder);
+
     @ViewChild('radio', { read: IgxRadioComponent, static: true })
     public radio: IgxRadioComponent;
 
     public reactiveForm = this.fb.group({
         radio: ['', Validators.required],
     });
-
-    constructor(private fb: UntypedFormBuilder) { }
 
     public markAsTouched() {
         if (!this.reactiveForm.valid) {

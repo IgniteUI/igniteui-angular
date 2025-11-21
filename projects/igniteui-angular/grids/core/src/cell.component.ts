@@ -14,11 +14,11 @@ import {
     OnDestroy,
     OnChanges,
     SimpleChanges,
-    Inject,
     ViewChildren,
     QueryList,
     AfterViewInit,
-    booleanAttribute
+    booleanAttribute,
+    inject
 } from '@angular/core';
 import { formatPercent, NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe, getLocaleCurrencyCode, getCurrencySymbol } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -108,6 +108,15 @@ import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
     ]
 })
 export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellType, AfterViewInit {
+    protected selectionService = inject(IgxGridSelectionService);
+    public grid = inject(IGX_GRID_BASE);
+    protected overlayService = inject(IgxOverlayService);
+    public cdr = inject(ChangeDetectorRef);
+    private element = inject(ElementRef<HTMLElement>);
+    protected zone = inject(NgZone);
+    private touchManager = inject(HammerGesturesManager);
+    protected platformUtil = inject(PlatformUtil);
+
     private _destroy$ = new Subject<void>();
     /**
      * @hidden
@@ -834,16 +843,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     private _cellSelection: GridSelectionMode = GridSelectionMode.multiple;
     private _vIndex = -1;
 
-    constructor(
-        protected selectionService: IgxGridSelectionService,
-        @Inject(IGX_GRID_BASE) public grid: GridType,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        public cdr: ChangeDetectorRef,
-        private element: ElementRef<HTMLElement>,
-        protected zone: NgZone,
-        private touchManager: HammerGesturesManager,
-        protected platformUtil: PlatformUtil
-    ) { }
+
 
     /**
      * @hidden

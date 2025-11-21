@@ -24,6 +24,7 @@ import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
 import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
 import { IgxPivotNumericAggregate } from 'igniteui-angular/grids/core';
+import { IgxGridNavigationService } from '../../grids/grid-navigation.service';
 
 describe('CSV Grid Exporter', () => {
     let exporter: IgxCsvExporterService;
@@ -523,6 +524,12 @@ describe('CSV Grid Exporter', () => {
         let fix;
         let pivotGrid: IgxPivotGridComponent;
         beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [
+                    IgxGridNavigationService
+                ]
+            });
+
             fix = TestBed.createComponent(IgxPivotGridTestBaseComponent);
             fix.detectChanges();
             pivotGrid = fix.componentInstance.pivotGrid;

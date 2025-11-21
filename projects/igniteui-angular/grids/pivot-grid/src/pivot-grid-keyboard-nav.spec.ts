@@ -31,6 +31,9 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
                 imports: [
                     NoopAnimationsModule,
                     IgxPivotGridMultipleRowComponent
+                ],
+                providers: [
+                    IgxGridNavigationService
                 ]
             }).compileComponents();
         }));
@@ -344,6 +347,9 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
                 imports: [
                     NoopAnimationsModule,
                     IgxPivotGridTestBaseComponent
+                ],
+                providers: [
+                    IgxGridNavigationService
                 ]
             }).compileComponents();
         }));

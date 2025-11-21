@@ -63,6 +63,9 @@ let NEXT_TAB_ID = 0;
 })
 
 export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit, OnDestroy {
+    private ngZone = inject(NgZone);
+    private platform = inject(PlatformUtil);
+
 
     /**
      * Gets/Sets the tab alignment. Defaults to `start`.
@@ -129,17 +132,6 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
     private _tabAlignment: string | IgxTabsAlignment = 'start';
     private _resizeObserver: ResizeObserver;
-
-    constructor(
-        @Inject(IgxAngularAnimationService) animationService: AnimationService,
-        cdr: ChangeDetectorRef,
-        private ngZone: NgZone,
-        dir: ɵIgxDirectionality,
-        private platform: PlatformUtil
-    ) {
-        super(animationService, cdr, dir);
-    }
-
 
     /** @hidden @internal */
     public override ngAfterViewInit(): void {

@@ -32,10 +32,6 @@ export class IgxGridGroupByAreaComponent extends IgxGroupByAreaDirective {
     @Input()
     public override grid: FlatGridType;
 
-    constructor(ref: ElementRef<HTMLElement>, platform: PlatformUtil) {
-        super(ref, platform);
-     }
-
     public handleReorder(event: IChipsAreaReorderEventArgs) {
         const { chipsArray, originalEvent } = event;
         const newExpressions = this.getReorderedExpressions(chipsArray);

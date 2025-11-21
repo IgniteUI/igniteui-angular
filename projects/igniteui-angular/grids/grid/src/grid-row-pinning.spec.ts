@@ -32,6 +32,9 @@ describe('Row Pinning #grid', () => {
                 GridRowPinningWithMDVComponent,
                 GridRowPinningWithTransactionsComponent,
                 GridRowPinningWithInitialPinningComponent
+            ],
+            providers: [
+                IgxGridMRLNavigationService
             ]
         }).compileComponents();
     }));

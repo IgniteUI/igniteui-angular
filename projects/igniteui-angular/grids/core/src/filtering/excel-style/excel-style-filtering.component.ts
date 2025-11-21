@@ -68,6 +68,9 @@ export class IgxExcelStyleFilterOperationsTemplateDirective { }
     imports: [IgxExcelStyleHeaderComponent, IgxExcelStyleSortingComponent, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleHidingComponent, IgxExcelStyleSelectingComponent, IgxExcelStyleClearFiltersComponent, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleSearchComponent, NgClass]
 })
 export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent implements AfterViewInit, OnDestroy {
+    private document = inject(DOCUMENT);
+    protected gridAPI? = inject<GridType>(IGX_GRID_BASE, { host: true, optional: true });
+
 
     /**
      * @hidden @internal
@@ -274,17 +277,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
      */
     public get grid(): GridTypeBase {
         return this.column?.grid ?? this.gridAPI;
-    }
-
-    constructor(
-        cdr: ChangeDetectorRef,
-        element: ElementRef<HTMLElement>,
-        platform: PlatformUtil,
-        @Inject(DOCUMENT)
-        private document: any,
-        @Host() @Optional() @Inject(IGX_GRID_BASE) protected gridAPI?: GridTypeBase,
-    ) {
-        super(cdr, element, platform);
     }
 
     /**

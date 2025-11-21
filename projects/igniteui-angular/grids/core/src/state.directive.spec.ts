@@ -27,6 +27,9 @@ describe('IgxGridState - input properties #grid', () => {
                 IgxGridStateComponent,
                 IgxGridStateWithOptionsComponent,
                 IgxGridStateWithDetailsComponent
+            ],
+            providers: [
+                IgxGridMRLNavigationService
             ]
         }).compileComponents();
     }));

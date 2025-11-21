@@ -1,4 +1,4 @@
-import { booleanAttribute, ContentChild, EventEmitter, Output, TemplateRef } from '@angular/core';
+import { booleanAttribute, ContentChild, EventEmitter, Output, TemplateRef, inject } from '@angular/core';
 import {
     Component, Input, ViewChild, ElementRef, OnDestroy, HostBinding
 } from '@angular/core';
@@ -35,6 +35,8 @@ import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.dir
     imports: [IgxQueryBuilderTreeComponent]
 })
 export class IgxQueryBuilderComponent implements OnDestroy {
+    protected iconService = inject(IgxIconService);
+
     /**
      * @hidden @internal
      */
@@ -216,7 +218,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     private _entities: EntityType[];
     private _shouldEmitTreeChange = true;
 
-    constructor(protected iconService: IgxIconService) {
+    constructor() {
         this.registerSVGIcons();
     }
 

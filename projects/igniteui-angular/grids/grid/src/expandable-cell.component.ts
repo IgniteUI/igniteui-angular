@@ -39,6 +39,8 @@ import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
     imports: [IgxChipComponent, IgxTextHighlightDirective, IgxIconComponent, NgClass, FormsModule, ReactiveFormsModule, IgxInputGroupComponent, IgxInputDirective, IgxFocusDirective, IgxCheckboxComponent, IgxDatePickerComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, IgxPrefixDirective, IgxSuffixDirective, NgTemplateOutlet, IgxTooltipTargetDirective, IgxTooltipDirective, IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe]
 })
 export class IgxGridExpandableCellComponent extends IgxGridCellComponent implements OnInit {
+    public document = inject(DOCUMENT);
+
     /**
      * @hidden
      */
@@ -62,18 +64,6 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
      */
     @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
     protected defaultCollapsedTemplate: TemplateRef<any>;
-
-    constructor(selectionService: IgxGridSelectionService,
-                @Inject(IGX_GRID_BASE) grid: GridType,
-                @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-                cdr: ChangeDetectorRef,
-                element: ElementRef,
-                zone: NgZone,
-                touchManager: HammerGesturesManager,
-                @Inject(DOCUMENT) public document,
-                platformUtil: PlatformUtil) {
-        super(selectionService, grid, overlayService, cdr, element, zone, touchManager, platformUtil);
-    }
 
     /**
      * @hidden

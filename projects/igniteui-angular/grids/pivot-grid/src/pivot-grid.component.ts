@@ -1,35 +1,4 @@
-import {
-    AfterContentInit,
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    ElementRef,
-    HostBinding,
-    Inject,
-    Input,
-    IterableDiffers,
-    LOCALE_ID,
-    NgZone,
-    OnInit,
-    Output,
-    Optional,
-    QueryList,
-    TemplateRef,
-    ViewChild,
-    ViewChildren,
-    ViewContainerRef,
-    Injector,
-    ContentChild,
-    createComponent,
-    EnvironmentInjector,
-    CUSTOM_ELEMENTS_SCHEMA,
-    booleanAttribute,
-    OnChanges,
-    SimpleChanges,
-    DOCUMENT
-} from '@angular/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, ElementRef, HostBinding, Input, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren, ContentChild, createComponent, CUSTOM_ELEMENTS_SCHEMA, booleanAttribute, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
 import { first, take, takeUntil } from 'rxjs/operators';
@@ -140,6 +109,7 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
         { provide: IGX_GRID_SERVICE_BASE, useClass: GridBaseAPIService },
         { provide: IGX_GRID_BASE, useExisting: IgxPivotGridComponent },
         { provide: IgxFilteringService, useClass: IgxPivotFilteringService },
+        IgxGridNavigationService,
         IgxPivotGridNavigationService,
         IgxPivotColumnResizingService,
         IgxForOfSyncService,
@@ -184,6 +154,9 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
 })
 export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnInit, AfterContentInit,
     PivotGridType, AfterViewInit, OnChanges {
+    public override readonly gridAPI = inject<GridBaseAPIService<IgxGridBaseDirective & GridType>>(GridBaseAPIService);
+    public override navigation = inject(IgxPivotGridNavigationService);
+    protected override colResizingService = inject(IgxPivotColumnResizingService);
 
     /**
      * Emitted when the dimension collection is changed via the grid chip area.
@@ -997,53 +970,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         });
 
         return selectedRowIds;
-    }
-
-    constructor(
-        validationService: IgxGridValidationService,
-        selectionService: IgxGridSelectionService,
-        colResizingService: IgxPivotColumnResizingService,
-        gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        transactionFactory: IgxFlatTransactionFactory,
-        elementRef: ElementRef<HTMLElement>,
-        zone: NgZone,
-        @Inject(DOCUMENT) document,
-        cdr: ChangeDetectorRef,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        injector: Injector,
-        envInjector: EnvironmentInjector,
-        public override navigation: IgxPivotGridNavigationService,
-        filteringService: IgxFilteringService,
-        textHighlightService: IgxTextHighlightService,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        summaryService: IgxGridSummaryService,
-        @Inject(LOCALE_ID) localeId: string,
-        platform: PlatformUtil,
-        @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>
-    ) {
-        super(
-            validationService,
-            selectionService,
-            colResizingService,
-            gridAPI,
-            transactionFactory,
-            elementRef,
-            zone,
-            document,
-            cdr,
-            differs,
-            viewRef,
-            injector,
-            envInjector,
-            navigation,
-            filteringService,
-            textHighlightService,
-            overlayService,
-            summaryService,
-            localeId,
-            platform,
-            _diTransactions);
     }
 
     /**

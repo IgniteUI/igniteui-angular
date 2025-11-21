@@ -1367,7 +1367,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     protected _setupNavigationService() {
         if (this.hasColumnLayouts) {
-            this.navigation = new IgxGridMRLNavigationService(this.platform);
+            this.navigation = this.injector.get(IgxGridMRLNavigationService);
             this.navigation.grid = this;
         }
     }

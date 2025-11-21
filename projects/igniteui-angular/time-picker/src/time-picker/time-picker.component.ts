@@ -93,6 +93,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     OnDestroy,
     AfterViewInit,
     Validator {
+    private _injector = inject(Injector);
+    private platform = inject(PlatformUtil);
+    private cdr = inject(ChangeDetectorRef);
+
     /**
      * Sets the value of the `id` attribute.
      * ```html
@@ -590,15 +594,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         return this._itemsDelta;
     }
 
-    constructor(
-        element: ElementRef,
-        @Inject(LOCALE_ID) _localeId: string,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
-        private _injector: Injector,
-        private platform: PlatformUtil,
-        private cdr: ChangeDetectorRef,
-    ) {
-        super(element, _localeId, _inputGroupType);
+    constructor() {
+        super();
         this.locale = this.locale || this._localeId;
     }
 

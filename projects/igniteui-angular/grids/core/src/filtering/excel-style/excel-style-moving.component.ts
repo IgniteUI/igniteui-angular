@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, inject } from '@angular/core';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { IgxButtonGroupComponent } from 'igniteui-angular/button-group';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
@@ -14,13 +14,13 @@ import { ColumnPinningPosition, ColumnType } from 'igniteui-angular/core';
     imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class IgxExcelStyleMovingComponent {
+    public esf = inject(BaseFilteringComponent);
+
     /**
      * @hidden @internal
      */
     @HostBinding('class.igx-excel-filter__move')
     public defaultClass = true;
-
-    constructor(public esf: BaseFilteringComponent) { }
 
     private get visibleColumns() {
         return this.esf.grid.visibleColumns.filter(col => !col.columnGroup);

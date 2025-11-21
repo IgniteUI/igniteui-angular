@@ -159,6 +159,7 @@ export class IgxDragLocation {
     standalone: true
 })
 export class IgxDragHandleDirective {
+    public element = inject(ElementRef<any>);
 
     @HostBinding('class.igx-drag__handle')
     public baseClass = true;
@@ -167,8 +168,6 @@ export class IgxDragHandleDirective {
      * @hidden
      */
     public parentDragElement: HTMLElement = null;
-
-    constructor(public element: ElementRef<any>) { }
 }
 
 @Directive({
@@ -176,11 +175,10 @@ export class IgxDragHandleDirective {
     standalone: true
 })
 export class IgxDragIgnoreDirective {
+    public element = inject(ElementRef<any>);
 
     @HostBinding('class.igx-drag__ignore')
     public baseClass = true;
-
-    constructor(public element: ElementRef<any>) { }
 }
 
 @Directive({
@@ -687,14 +685,14 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         return this._offsetY !== undefined ? this._offsetY : this._defaultOffsetY;
     }
 
-    constructor(
-        public cdr: ChangeDetectorRef,
-        public element: ElementRef,
-        public viewContainer: ViewContainerRef,
-        public zone: NgZone,
-        public renderer: Renderer2,
-        protected platformUtil: PlatformUtil
-    ) {
+    public cdr = inject(ChangeDetectorRef);
+    public element = inject(ElementRef);
+    public viewContainer = inject(ViewContainerRef);
+    public zone = inject(NgZone);
+    public renderer = inject(Renderer2);
+    protected platformUtil = inject(PlatformUtil);
+
+    constructor() {
         this.onTransitionEnd = this.onTransitionEnd.bind(this);
         this.onPointerMove = this.onPointerMove.bind(this);
         this.onPointerUp = this.onPointerUp.bind(this);
@@ -1772,7 +1770,11 @@ export class IgxDropDirective implements OnInit, OnDestroy {
 
     private _data: any;
 
-    constructor(public element: ElementRef, private _renderer: Renderer2, private _zone: NgZone) {
+    public element = inject(ElementRef);
+    protected _renderer = inject(Renderer2);
+    private _zone = inject(NgZone);
+
+    constructor() {
         this._dropStrategy = new IgxDefaultDropStrategy();
     }
 

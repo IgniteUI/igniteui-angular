@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
@@ -20,6 +20,12 @@ describe('Navigation Drawer', () => {
                 TestComponentMiniComponent,
                 TestComponent,
                 TestComponentDIComponent
+            ],
+            providers: [
+                IgxNavigationDrawerComponent,
+                { provide: ElementRef, useValue: null },
+                Renderer2,
+                HammerGesturesManager
             ]
         }).compileComponents();
 
@@ -578,8 +584,7 @@ describe('Navigation Drawer', () => {
 
     it('should get correct window width', (done) => {
         const originalWidth = window.innerWidth;
-        const platformUtil = TestBed.inject(PlatformUtil);
-        const drawer = new IgxNavigationDrawerComponent(null, null, null, null, platformUtil);
+        const drawer = TestBed.inject(IgxNavigationDrawerComponent);
 
         // re-enable `getWindowWidth`
         const widthSpy = (widthSpyOverride as jasmine.Spy).and.callThrough();

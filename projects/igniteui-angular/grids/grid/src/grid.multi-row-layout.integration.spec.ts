@@ -35,6 +35,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 ColumnLayoutHidingTestComponent,
                 ColumnLayoutGroupingTestComponent,
                 ColumnLayoutResizingTestComponent
+            ],
+            providers: [
+                IgxGridMRLNavigationService
             ]
         }).compileComponents();
     }));

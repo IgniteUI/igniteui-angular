@@ -122,13 +122,8 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
     private _platformUtil = inject(PlatformUtil);
 
     /** @hidden */
-    constructor(
-        elementRef: ElementRef,
-        cdr: ChangeDetectorRef,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        @Optional() navigationService: IgxNavigationService) {
-        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
-        super(elementRef, cdr, overlayService, navigationService);
+    constructor() {
+        super();
 
         this.onDocumentTouchStart = this.onDocumentTouchStart.bind(this);
         this.opening.pipe(takeUntil(this._destroy$)).subscribe(() => {

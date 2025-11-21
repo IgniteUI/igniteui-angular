@@ -1,9 +1,11 @@
-import { ContentChild, Directive, EventEmitter, Input, Output, TemplateRef, ViewChild, booleanAttribute } from '@angular/core';
+import { ContentChild, Directive, EventEmitter, Input, Output, TemplateRef, ViewChild, booleanAttribute, inject } from '@angular/core';
 import { IgxTabHeaderBase, IgxTabItemBase, IgxTabContentBase, IgxTabsBase } from './tabs.base';
 import { CarouselAnimationDirection, IgxSlideComponentBase } from 'igniteui-angular/carousel';
 
 @Directive()
 export abstract class IgxTabItemDirective implements IgxTabItemBase, IgxSlideComponentBase {
+    /** @hidden */
+    private tabs = inject(IgxTabsBase);
 
     /** @hidden */
     @ContentChild(IgxTabHeaderBase)
@@ -54,9 +56,5 @@ export abstract class IgxTabItemDirective implements IgxTabItemBase, IgxSlideCom
             this.tabs.selectTab(this, this._selected);
             this.selectedChange.emit(this._selected);
         }
-    }
-
-    /** @hidden */
-    constructor(private tabs: IgxTabsBase) {
     }
 }

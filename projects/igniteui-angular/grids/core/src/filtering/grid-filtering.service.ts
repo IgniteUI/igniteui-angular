@@ -1,7 +1,4 @@
-import {
-    Injectable,
-    OnDestroy,
-} from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, first } from 'rxjs/operators';
 import { IColumnResizeEventArgs, IFilteringEventArgs } from '../common/events';
@@ -21,6 +18,9 @@ import { IForOfState } from 'igniteui-angular/directives';
  */
 @Injectable()
 export class IgxFilteringService implements OnDestroy {
+    private iconService = inject(IgxIconService);
+    protected _overlayService = inject(IgxOverlayService);
+
     public isFilterRowVisible = false;
     public filteredColumn: ColumnType = null;
     public selectedExpression: IFilteringExpression = null;
@@ -46,11 +46,6 @@ export class IgxFilteringService implements OnDestroy {
         scrollStrategy: new AbsoluteScrollStrategy()
     };
     protected lastActiveNode;
-
-    constructor(
-        private iconService: IgxIconService,
-        protected _overlayService: IgxOverlayService,
-    ) { }
 
     public ngOnDestroy(): void {
         this.destroy$.next(true);

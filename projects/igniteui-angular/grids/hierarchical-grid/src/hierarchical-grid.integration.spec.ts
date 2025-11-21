@@ -40,6 +40,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
                 IgxHierarchicalGridWithTransactionProviderComponent,
                 IgxHierarchicalGridTestInputPaginatorComponent,
                 IgxHierarchicalGridTestInputToolbarComponent
+            ],
+            providers: [
+                IgxGridNavigationService
             ]
         }).compileComponents();
     }))

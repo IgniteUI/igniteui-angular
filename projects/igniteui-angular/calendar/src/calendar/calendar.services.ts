@@ -4,14 +4,12 @@ import { PlatformUtil } from 'igniteui-angular/core';
 
 @Injectable()
 export class KeyboardNavigationService {
+    private eventManager = inject(EventManager);
+    private ngZone = inject(NgZone);
+
     private keyHandlers = new Map<string, (event: KeyboardEvent) => void>();
     private eventUnsubscribeFn: Function | null = null;
     private platform = inject(PlatformUtil);
-
-    constructor(
-        private eventManager: EventManager,
-        private ngZone: NgZone,
-    ) {}
 
     public attachKeyboardHandlers(elementRef: ElementRef, context: any) {
         if (!this.platform.isBrowser) {

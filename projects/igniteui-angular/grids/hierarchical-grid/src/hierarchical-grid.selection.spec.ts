@@ -35,6 +35,9 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 IgxHierarchicalGridCustomSelectorsComponent,
                 IgxHierarchicalGridRowSelectionNoTransactionsComponent,
                 IgxHierGridExternalAdvancedFilteringComponent,
+            ],
+            providers: [
+                IgxGridNavigationService
             ]
         }).compileComponents();
     }))

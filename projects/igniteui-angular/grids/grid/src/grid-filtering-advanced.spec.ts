@@ -38,6 +38,9 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridExportComponent,
                 IgxHGridRemoteOnDemandComponent
+            ],
+            providers: [
+                IgxGridNavigationService
             ]
         }).compileComponents();
     }));

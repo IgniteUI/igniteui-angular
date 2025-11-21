@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.component';
@@ -18,6 +18,9 @@ import { AbsoluteScrollStrategy, AutoPositionStrategy, GridColumnDataType, Horiz
     imports: [NgClass, IgxDropDownItemNavigationDirective, IgxIconComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxExcelStyleCustomDialogComponent]
 })
 export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
+    public esf = inject(BaseFilteringComponent);
+    protected platform = inject(PlatformUtil);
+
     /**
      * @hidden @internal
      */
@@ -48,10 +51,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         scrollStrategy: new AbsoluteScrollStrategy()
     };
 
-    constructor(
-        public esf: BaseFilteringComponent,
-        protected platform: PlatformUtil,
-    ) {
+    constructor() {
         this.esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.esf.grid) {
                 this.shouldOpenSubMenu = true;

@@ -1,19 +1,4 @@
-import {
-    AfterViewInit,
-    ChangeDetectorRef,
-    Component,
-    Input,
-    TemplateRef,
-    ViewChild,
-    ViewChildren,
-    QueryList,
-    ElementRef,
-    HostBinding,
-    ChangeDetectionStrategy,
-    ViewRef,
-    HostListener,
-    OnDestroy
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, TemplateRef, ViewChild, ViewChildren, QueryList, ElementRef, HostBinding, ChangeDetectionStrategy, ViewRef, HostListener, OnDestroy, inject } from '@angular/core';
 import { IgxFilteringService } from '../grid-filtering.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -59,6 +44,11 @@ import { IgxButtonDirective, IgxDateTimeEditorDirective, IgxIconButtonDirective,
     ]
 })
 export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
+    public filteringService = inject(IgxFilteringService);
+    public ref = inject<ElementRef<HTMLElement>>(ElementRef);
+    public cdr = inject(ChangeDetectorRef);
+    protected platform = inject(PlatformUtil);
+
     @Input()
     public get column(): ColumnType {
         return this._column;
@@ -199,13 +189,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     private readonly NARROW_WIDTH_THRESHOLD = 432;
 
     private $destroyer = new Subject<void>();
-
-    constructor(
-        public filteringService: IgxFilteringService,
-        public ref: ElementRef<HTMLElement>,
-        public cdr: ChangeDetectorRef,
-        protected platform: PlatformUtil,
-    ) { }
 
     @HostListener('keydown', ['$event'])
     public onKeydownHandler(evt: KeyboardEvent) {

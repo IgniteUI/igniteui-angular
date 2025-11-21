@@ -1,14 +1,4 @@
-import {
-    AfterViewInit,
-    Component,
-    ViewChild,
-    ChangeDetectorRef,
-    TemplateRef,
-    Directive,
-    OnDestroy,
-    HostBinding,
-    Input
-} from '@angular/core';
+import { AfterViewInit, Component, ViewChild, ChangeDetectorRef, TemplateRef, Directive, OnDestroy, HostBinding, Input, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { takeUntil } from 'rxjs/operators';
@@ -30,11 +20,12 @@ import { Navigate } from 'igniteui-angular/drop-down';
     standalone: true
 })
 export class IgxExcelStyleLoadingValuesTemplateDirective {
+    public template = inject<TemplateRef<undefined>>(TemplateRef);
+
     public static ngTemplateContextGuard(_dir: IgxExcelStyleLoadingValuesTemplateDirective,
         ctx: unknown): ctx is undefined {
         return true
     }
-    constructor(public template: TemplateRef<undefined>) { }
 }
 
 let NEXT_ID = 0;
@@ -47,6 +38,10 @@ let NEXT_ID = 0;
     imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, FormsModule, IgxInputDirective, IgxSuffixDirective, IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxCheckboxComponent, IgxDataLoadingTemplateDirective, NgTemplateOutlet, IgxEmptyListTemplateDirective, IgxTreeComponent, IgxTreeNodeComponent, IgxCircularProgressBarComponent, IgxButtonDirective]
 })
 export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
+    public cdr = inject(ChangeDetectorRef);
+    public esf = inject(BaseFilteringComponent);
+    protected platform = inject(PlatformUtil);
+
     private static readonly filterOptimizationThreshold = 2;
 
     /**
@@ -195,7 +190,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     private _focusedItem: ActiveElement = null;
     private destroy$ = new Subject<boolean>();
 
-    constructor(public cdr: ChangeDetectorRef, public esf: BaseFilteringComponent, protected platform: PlatformUtil) {
+    constructor() {
+        const esf = this.esf;
+
         esf.loadingStart.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.displayedListData = [];
             this.isLoading = true;
