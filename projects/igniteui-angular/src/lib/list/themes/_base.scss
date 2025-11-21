@@ -140,7 +140,8 @@ $theme: $base;
                 display: none;
             }
 
-            > * {
+            > *,
+            [class^='igx'] {
                 --component-size: var(--list-size);
             }
 
