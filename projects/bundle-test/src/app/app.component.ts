@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
-import { ChipResourceStringsBG } from 'igniteui-angular-i18n';
 import { RouterOutlet } from '@angular/router';
+import { IgxNavbarComponent } from 'igniteui-angular/navbar';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    imports: [RouterOutlet]
+    imports: [RouterOutlet, IgxNavbarComponent]
 })
 export class AppComponent {
-    protected chipStrings = ChipResourceStringsBG;
 }
