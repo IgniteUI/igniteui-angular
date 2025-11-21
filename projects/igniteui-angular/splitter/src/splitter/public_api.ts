@@ -10,3 +10,6 @@ export const IGX_SPLITTER_DIRECTIVES = [
     IgxSplitterPaneComponent,
     IgxSplitBarComponent
 ] as const;
+
+// Backwards compatibility module export
+export * from './splitter.module';

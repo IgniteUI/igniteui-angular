@@ -22,3 +22,6 @@ export const IGX_DATE_PICKER_DIRECTIVES = [
     IgxCalendarSubheaderTemplateDirective,
     IgxCalendarHeaderTitleTemplateDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './date-picker.module';

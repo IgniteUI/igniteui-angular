@@ -30,3 +30,6 @@ export const IGX_CIRCULAR_PROGRESS_BAR_DIRECTIVES = [
     IgxProgressBarTextTemplateDirective,
     IgxProgressBarGradientDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './progressbar.module';

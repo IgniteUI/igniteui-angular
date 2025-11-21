@@ -10,3 +10,6 @@ export const IGX_DIALOG_DIRECTIVES = [
     IgxDialogTitleDirective,
     IgxDialogActionsDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './dialog.module';

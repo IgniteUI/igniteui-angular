@@ -3,7 +3,8 @@ import { IgxTreeComponent, IgxTreeExpandIndicatorDirective } from './tree.compon
 
 export { IgxTreeComponent, IgxTreeExpandIndicatorDirective } from './tree.component';
 export * from './tree-node/tree-node.component';
-export { IgxTreeSearchResolver, ITreeNodeSelectionEvent, ITreeNodeEditingEvent,
+export {
+    IgxTreeSearchResolver, ITreeNodeSelectionEvent, ITreeNodeEditingEvent,
     ITreeNodeEditedEvent, ITreeNodeTogglingEventArgs, ITreeNodeToggledEventArgs,
     IgxTreeSelectionType, IgxTree, IgxTreeNode
 } from './common';
@@ -15,3 +16,6 @@ export const IGX_TREE_DIRECTIVES = [
     IgxTreeNodeLinkDirective,
     IgxTreeExpandIndicatorDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './tree.module';

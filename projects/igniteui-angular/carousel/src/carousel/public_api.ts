@@ -16,3 +16,6 @@ export const IGX_CAROUSEL_DIRECTIVES = [
     IgxCarouselNextButtonDirective,
     IgxCarouselPrevButtonDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './carousel.module';

@@ -12,3 +12,6 @@ export const IGX_CHIPS_DIRECTIVES = [
     IgxPrefixDirective,
     IgxSuffixDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './chips.module';

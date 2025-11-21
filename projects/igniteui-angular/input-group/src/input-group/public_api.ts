@@ -24,3 +24,6 @@ export const IGX_INPUT_GROUP_DIRECTIVES = [
     IgxSuffixDirective,
     IgxHintDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './input-group.module';

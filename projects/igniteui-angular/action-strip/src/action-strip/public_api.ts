@@ -7,3 +7,6 @@ export const IGX_ACTION_STRIP_DIRECTIVES = [
     IgxActionStripComponent,
     IgxActionStripMenuItemDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './action-strip.module';
