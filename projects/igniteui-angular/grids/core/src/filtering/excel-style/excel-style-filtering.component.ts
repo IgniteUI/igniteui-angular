@@ -35,7 +35,7 @@ import { IgxExcelStylePinningComponent } from './excel-style-pinning.component';
 import { IgxExcelStyleMovingComponent } from './excel-style-moving.component';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { IgxExcelStyleHeaderComponent } from './excel-style-header.component';
-import { ColumnType, FilteringExpressionsTree, GridColumnDataType, GridTypeBase, IFilteringExpressionsTree, IgxFilterItem, IgxOverlayService, isTree, PlatformUtil, SortingDirection } from 'igniteui-angular/core';
+import { ColumnType, FilteringExpressionsTree, FilteringLogic, GridColumnDataType, GridTypeBase, IFilteringExpressionsTree, IgxFilterItem, IgxOverlayService, isTree, PlatformUtil, SortingDirection } from 'igniteui-angular/core';
 
 @Directive({
     selector: 'igx-excel-style-column-operations,[igxExcelStyleColumnOperations]',
@@ -461,7 +461,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         }
 
         const selectableExpressionsCount = this.expressionsList.filter(exp =>
-            (exp.beforeOperator === 1 || exp.afterOperator === 1) &&
+            (exp.beforeOperator === FilteringLogic.Or || exp.afterOperator === FilteringLogic.Or) &&
             (exp.expression.condition.name === 'equals' ||
                 exp.expression.condition.name === 'at' ||
                 exp.expression.condition.name === 'true' ||

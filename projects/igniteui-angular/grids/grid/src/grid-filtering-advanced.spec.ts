@@ -1687,7 +1687,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Spy for error messages in the console
             const consoleSpy = spyOn(console, 'error');
             // Apply advanced filter through API.
-            const innerTree = new FilteringExpressionsTree(0, undefined, 'childData', ['ID']);
+            const innerTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'childData', ['ID']);
             innerTree.filteringOperands.push({
                 fieldName: 'ID',
                 ignoreCase: false,
@@ -1695,7 +1695,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 searchVal: '39'
             });
 
-            const tree = new FilteringExpressionsTree(0, undefined, 'rootData', ['ID']);
+            const tree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'rootData', ['ID']);
             tree.filteringOperands.push({
                 fieldName: 'ID',
                 conditionName: IgxStringFilteringOperand.instance().condition('inQuery').name,
@@ -1719,7 +1719,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Spy for error messages in the console
             const consoleSpy = spyOn(console, 'error');
 
-            const innerTree = new FilteringExpressionsTree(0, undefined, 'childData', ['ID']);
+            const innerTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'childData', ['ID']);
             innerTree.filteringOperands.push({
                 fieldName: 'ID',
                 ignoreCase: false,
@@ -1727,7 +1727,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 searchVal: '39'
             });
 
-            const tree = new FilteringExpressionsTree(0, undefined, 'rootData', ['ID']);
+            const tree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'rootData', ['ID']);
             tree.filteringOperands.push({
                 fieldName: 'ID',
                 conditionName: IgxStringFilteringOperand.instance().condition('inQuery').name,
@@ -1820,7 +1820,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tick(200);
             fix.detectChanges();
 
-            const innerTree = new FilteringExpressionsTree(0, undefined, 'childData', ['ID']);
+            const innerTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'childData', ['ID']);
             innerTree.filteringOperands.push({
                 fieldName: 'ID',
                 ignoreCase: false,
@@ -1828,7 +1828,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 searchVal: '39'
             });
 
-            const tree = new FilteringExpressionsTree(0, undefined, 'rootData', ['ID']);
+            const tree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'rootData', ['ID']);
             tree.filteringOperands.push({
                 fieldName: 'ID',
                 conditionName: IgxStringFilteringOperand.instance().condition('inQuery').name,

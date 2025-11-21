@@ -1,11 +1,16 @@
 import { IFilteringOperation } from './filtering-condition';
 import { IExpressionTree } from './filtering-expressions-tree';
 
-/* mustCoerceToInt */
-export enum FilteringLogic {
-    And,
-    Or
-}
+/**
+ * Enumeration representing different filtering logic operators.
+ * - And: Logical AND operator - all conditions must be met.
+ * - Or: Logical OR operator - at least one condition must be met.
+ */
+export const FilteringLogic = {
+    And: 'and',
+    Or: 'or'
+} as const;
+export type FilteringLogic = (typeof FilteringLogic)[keyof typeof FilteringLogic];
 
 /* marshalByValue */
 /**
