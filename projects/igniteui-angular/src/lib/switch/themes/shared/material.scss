@@ -27,11 +27,9 @@ $_theme: $material;
 
     @include e(thumb) {
         box-shadow: var-get($_theme, 'resting-elevation');
-    }
 
-    &:hover {
-        @include e(thumb) {
-            box-shadow: var-get($_theme, 'resting-elevation');
+        &:hover {
+            box-shadow: var-get($_theme, 'hover-elevation');
         }
     }
 
