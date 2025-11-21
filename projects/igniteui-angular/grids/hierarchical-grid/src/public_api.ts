@@ -175,3 +175,6 @@ export const IGX_HIERARCHICAL_GRID_DIRECTIVES = [
     IgxPaginatorContentDirective,
     IgxPaginatorDirective
 ] as const;
+
+// Backward compatibility module export
+export * from './hierarchical-grid.module';

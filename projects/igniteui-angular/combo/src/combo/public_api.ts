@@ -37,3 +37,6 @@ export const IGX_COMBO_DIRECTIVES = [
     IgxSuffixDirective,
     IgxHintDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './combo.module';

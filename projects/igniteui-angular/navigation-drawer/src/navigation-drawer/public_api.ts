@@ -11,3 +11,6 @@ export const IGX_NAVIGATION_DRAWER_DIRECTIVES = [
     IgxNavDrawerMiniTemplateDirective,
     IgxNavDrawerTemplateDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './navigation-drawer.module';

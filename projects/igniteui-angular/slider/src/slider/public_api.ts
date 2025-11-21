@@ -11,3 +11,6 @@ export const IGX_SLIDER_DIRECTIVES = [
     IgxThumbToTemplateDirective,
     IgxTickLabelTemplateDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './slider.module';

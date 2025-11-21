@@ -27,3 +27,6 @@ export const IGX_LIST_DIRECTIVES = [
     IgxListItemLeftPanningTemplateDirective,
     IgxListItemRightPanningTemplateDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './list.module';

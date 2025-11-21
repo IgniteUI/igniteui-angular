@@ -8,3 +8,6 @@ export const IGX_BUTTON_GROUP_DIRECTIVES = [
     IgxButtonGroupComponent,
     IgxButtonDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './button-group.module';

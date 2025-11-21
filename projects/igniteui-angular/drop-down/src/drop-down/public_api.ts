@@ -20,3 +20,6 @@ export const IGX_DROP_DOWN_DIRECTIVES = [
     IgxDropDownGroupComponent,
     IgxDropDownItemNavigationDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './drop-down.module';

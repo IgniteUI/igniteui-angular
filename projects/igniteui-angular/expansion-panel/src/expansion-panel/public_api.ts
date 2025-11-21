@@ -24,3 +24,6 @@ export const IGX_EXPANSION_PANEL_DIRECTIVES = [
     IgxExpansionPanelTitleDirective,
     IgxExpansionPanelIconDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './expansion-panel.module';

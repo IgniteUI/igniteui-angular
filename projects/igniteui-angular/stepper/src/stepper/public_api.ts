@@ -27,3 +27,6 @@ export const IGX_STEPPER_DIRECTIVES = [
     IgxStepCompletedIndicatorDirective,
     IgxStepInvalidIndicatorDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './stepper.module';

@@ -23,3 +23,6 @@ export const IGX_DATE_RANGE_PICKER_DIRECTIVES = [
     IgxCalendarSubheaderTemplateDirective,
     IgxCalendarHeaderTitleTemplateDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './date-range-picker.module';

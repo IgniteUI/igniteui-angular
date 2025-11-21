@@ -14,3 +14,6 @@ export const IGX_QUERY_BUILDER_DIRECTIVES = [
     IgxQueryBuilderHeaderComponent,
     IgxQueryBuilderSearchValueTemplateDirective,
 ] as const;
+
+// Backwards compatibility module export
+export * from './query-builder.module';

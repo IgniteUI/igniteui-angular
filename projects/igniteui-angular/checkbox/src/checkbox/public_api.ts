@@ -1,2 +1,5 @@
 export { LabelPosition, type IChangeCheckboxEventArgs } from "igniteui-angular/directives";
 export * from "./checkbox.component";
+
+// Backwards compatibility module export
+export * from './checkbox.module';

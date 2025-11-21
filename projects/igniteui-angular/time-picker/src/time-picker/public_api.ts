@@ -16,3 +16,6 @@ export const IGX_TIME_PICKER_DIRECTIVES = [
     IgxSuffixDirective,
     IgxHintDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './time-picker.module';

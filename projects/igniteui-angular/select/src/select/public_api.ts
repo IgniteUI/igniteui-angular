@@ -20,3 +20,6 @@ export const IGX_SELECT_DIRECTIVES = [
     IgxSuffixDirective,
     IgxHintDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './select.module';

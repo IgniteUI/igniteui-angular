@@ -24,3 +24,6 @@ export const IGX_CARD_DIRECTIVES = [
     IgxCardHeaderSubtitleDirective,
     IgxCardThumbnailDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './card.module';

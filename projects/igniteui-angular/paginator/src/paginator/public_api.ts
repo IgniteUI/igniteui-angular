@@ -13,3 +13,6 @@ export const IGX_PAGINATOR_DIRECTIVES = [
     IgxPaginatorContentDirective,
     IgxPaginatorDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './paginator.module';

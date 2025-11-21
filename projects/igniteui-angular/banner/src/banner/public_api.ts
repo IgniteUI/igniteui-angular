@@ -9,3 +9,6 @@ export const IGX_BANNER_DIRECTIVES = [
     IgxBannerComponent,
     IgxBannerActionsDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './banner.module';

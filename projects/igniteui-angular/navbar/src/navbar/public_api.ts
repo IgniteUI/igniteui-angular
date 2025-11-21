@@ -8,3 +8,6 @@ export const IGX_NAVBAR_DIRECTIVES = [
     IgxNavbarActionDirective,
     IgxNavbarTitleDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './navbar.module';

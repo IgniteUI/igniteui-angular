@@ -27,3 +27,6 @@ export const IGX_CALENDAR_DIRECTIVES = [
     IgxCalendarSubheaderTemplateDirective
 ] as const;
 
+
+// Backwards compatibility module export
+export * from './calendar.module';

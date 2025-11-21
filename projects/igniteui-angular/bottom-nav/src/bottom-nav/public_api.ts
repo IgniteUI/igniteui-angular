@@ -19,3 +19,6 @@ export const IGX_BOTTOM_NAV_DIRECTIVES = [
     IgxBottomNavHeaderLabelDirective,
     IgxBottomNavHeaderIconDirective
 ] as const;
+
+// Backwards compatibility module export
+export * from './bottom-nav.module';
