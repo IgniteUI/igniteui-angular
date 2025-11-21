@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "id": "igniteui-angular-migration-21",
+  "$id": "igniteui-angular-migration-21",
   "title": "Update to version 21.0.0",
   "type": "object",
   "properties": {
