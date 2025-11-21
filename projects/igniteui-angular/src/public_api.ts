@@ -34,6 +34,7 @@ export * from 'igniteui-angular/button-group';
 export * from 'igniteui-angular/calendar';
 export * from 'igniteui-angular/card';
 export * from 'igniteui-angular/carousel';
+export * from 'igniteui-angular/chat';
 export * from 'igniteui-angular/checkbox';
 export * from 'igniteui-angular/chips';
 export * from 'igniteui-angular/combo';

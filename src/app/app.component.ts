@@ -129,6 +129,11 @@ export class AppComponent implements OnInit {
             name: 'Carousel'
         },
         {
+            link: '/chat',
+            icon: 'chat',
+            name: 'Chat'
+        },
+        {
             link: '/chip',
             icon: 'android',
             name: 'Chips'
