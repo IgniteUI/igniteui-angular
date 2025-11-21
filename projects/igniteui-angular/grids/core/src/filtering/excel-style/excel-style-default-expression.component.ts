@@ -163,7 +163,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         } else {
             this.logicOperatorChanged.emit({
                 target: this.expressionUI,
-                newValue: buttonIndex as FilteringLogic
+                newValue: buttonIndex === 0 ? FilteringLogic.And : FilteringLogic.Or
             });
         }
     }
@@ -173,8 +173,21 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
             this.logicOperatorButtonGroup.selectButton(buttonIndex);
             this.logicOperatorChanged.emit({
                 target: this.expressionUI,
-                newValue: buttonIndex as FilteringLogic
+                newValue: buttonIndex === 0 ? FilteringLogic.And : FilteringLogic.Or
             });
+        }
+    }
+
+    /**
+     * Check if the given button index matches the expression's afterOperator.
+     * Handles backwards compatibility with old numeric enum values (0, 1).
+     */
+    public isOperatorSelected(buttonIndex: number): boolean {
+        const operator = this.expressionUI?.afterOperator;
+        if (buttonIndex === 0) {
+            return operator === FilteringLogic.And || (operator as any) === 0;
+        } else {
+            return operator === FilteringLogic.Or || (operator as any) === 1;
         }
     }
 

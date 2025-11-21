@@ -420,7 +420,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public initialOperator = 0;
+    public initialOperator: FilteringLogic = FilteringLogic.And;
 
     /**
      * @hidden @internal
@@ -1313,7 +1313,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         event.cancel = true;
 
         if (event.newSelection.value === 'switchCondition') {
-            const newOperator = (!this.expressionTree ? this.initialOperator : (this.contextualGroup ?? this._expressionTree).operator) === 0 ? 1 : 0;
+            const currentOperator = !this.expressionTree ? this.initialOperator : (this.contextualGroup ?? this._expressionTree).operator;
+            const newOperator = currentOperator === FilteringLogic.And ? FilteringLogic.Or : FilteringLogic.And;
             this.selectFilteringLogic(newOperator);
         } else if (event.newSelection.value === 'ungroup') {
             this.ungroup();
@@ -1342,17 +1343,17 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public selectFilteringLogic(index: number) {
+    public selectFilteringLogic(operator: FilteringLogic) {
         if (!this.expressionTree) {
-            this.initialOperator = index;
+            this.initialOperator = operator;
             return;
         }
 
         if (this.contextualGroup) {
-            this.contextualGroup.operator = index as FilteringLogic;
+            this.contextualGroup.operator = operator;
             this.commitOperandEdit();
         } else if (this.expressionTree) {
-            this._expressionTree.operator = index as FilteringLogic;
+            this._expressionTree.operator = operator;
         }
 
         this.initialOperator = null;

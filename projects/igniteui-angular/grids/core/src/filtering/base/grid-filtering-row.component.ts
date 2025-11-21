@@ -662,12 +662,27 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
      */
     public onLogicOperatorChanged(eventArgs: ISelectionEventArgs, expression: ExpressionUI) {
         if (eventArgs.oldSelection) {
-            expression.afterOperator = (eventArgs.newSelection as IgxDropDownItemComponent).value;
+            const value = (eventArgs.newSelection as IgxDropDownItemComponent).value;
+            // Convert numeric values to FilteringLogic constants for backwards compatibility
+            expression.afterOperator = value === 0 ? FilteringLogic.And : (value === 1 ? FilteringLogic.Or : value);
             this.expressionsList[this.expressionsList.indexOf(expression) + 1].beforeOperator = expression.afterOperator;
 
             // update grid's filtering on the next cycle to ensure the drop-down is closed
             // if the drop-down is not closed this event handler will be invoked multiple times
             requestAnimationFrame(() => this.filter());
+        }
+    }
+
+    /**
+     * Check if the given button index matches the expression's afterOperator.
+     * Handles backwards compatibility with old numeric enum values (0, 1).
+     */
+    public isOperatorSelected(expression: ExpressionUI, buttonIndex: number): boolean {
+        const operator = expression?.afterOperator;
+        if (buttonIndex === 0) {
+            return operator === FilteringLogic.And || (operator as any) === 0;
+        } else {
+            return operator === FilteringLogic.Or || (operator as any) === 1;
         }
     }
 
