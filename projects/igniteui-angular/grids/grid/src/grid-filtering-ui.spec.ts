@@ -3,6 +3,7 @@ import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from 
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective, IgxInputGroupComponent } from 'igniteui-angular/input-group';
+import { INPUT_DEBOUNCE_TIME } from 'igniteui-angular/grids/core';
 import { IgxGridComponent } from './grid.component';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxGridFilteringCellComponent } from 'igniteui-angular/grids/core';
