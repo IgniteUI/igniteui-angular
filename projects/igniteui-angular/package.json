@@ -112,13 +112,13 @@
             "default": "./migrations/*"
         },
         "./lib/core/styles/themes/index": {
-            "sass": "./core/src/core/styles/themes/_index.scss"
+            "sass": "./lib/core/styles/themes/_index.scss"
         },
         "./theming": {
-            "sass": "./core/src/core/styles/themes/_index.scss"
+            "sass": "./lib/core/styles/themes/_index.scss"
         },
         "./themes": {
-            "sass": "./core/src/core/styles/themes/_index.scss"
+            "sass": "./lib/core/styles/themes/_index.scss"
         }
     },
     "sideEffects": false
