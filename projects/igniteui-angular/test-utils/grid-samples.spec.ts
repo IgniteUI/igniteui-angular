@@ -2133,7 +2133,7 @@ export class IgxGridAdvancedFilteringSerializedTreeComponent extends BasicGridCo
                     "searchVal": 200
                 }
             ],
-            "operator": 0
+            "operator": "and"
         }`);
 
         this.filterTreeObject =	{
@@ -2151,7 +2151,7 @@ export class IgxGridAdvancedFilteringSerializedTreeComponent extends BasicGridCo
                 "searchTree": null
               }
             ],
-            "operator": 1,
+            "operator": "or",
             "returnFields": [
               "ID",
               "ProductName"
