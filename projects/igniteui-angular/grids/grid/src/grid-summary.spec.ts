@@ -207,7 +207,7 @@ describe('IgxGrid - Summaries #grid', () => {
             beforeEach(() => {
                 fixture = TestBed.createComponent(CustomSummariesComponent);
                 fixture.detectChanges();
-                grid = fixture.componentInstance.grid1;
+                grid = fixture.componentInstance.grid;
             });
 
             it('should properly render custom summaries', () => {
@@ -2761,7 +2761,7 @@ class AllDataAvgSummary extends IgxSummaryOperand {
 
 export class CustomSummariesComponent {
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
-    public grid1: IgxGridComponent;
+    public grid: IgxGridComponent;
     public data = SampleTestData.foodProductData();
     public dealsSummary = DealsSummary;
     public dealsSummaryMinMax = DealsSummaryMinMax;

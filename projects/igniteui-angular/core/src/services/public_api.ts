@@ -8,6 +8,8 @@ export * from './csv/char-separated-value-data';
 export { Direction as ɵDirection, DIR_DOCUMENT as ɵDIR_DOCUMENT, IgxDirectionality as ɵIgxDirectionality } from './direction/directionality';
 export * from './excel/excel-exporter';
 export * from './excel/excel-exporter-options';
+export * from './pdf/pdf-exporter';
+export * from './pdf/pdf-exporter-options';
 export * from './exporter-common/base-export-service';
 export * from './exporter-common/exporter-options-base';
 export * from './overlay/overlay';
