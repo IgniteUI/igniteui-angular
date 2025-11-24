@@ -129,13 +129,15 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.moving = true;
 
             const header = TreeGridFunctions.getHeaderCell(fix, 'ID').nativeElement;
+            const headerRect = header.getBoundingClientRect();
+            const startX = headerRect.width / 2;
+            const startY = headerRect.height / 2;
 
-            UIInteractions.simulatePointerEvent('pointerdown', header, 50, 40);
-            UIInteractions.simulatePointerEvent('pointermove', header, 56, 46);
+            UIInteractions.simulatePointerEvent('pointerdown', header, startX, startY);
+            UIInteractions.simulatePointerEvent('pointermove', header, startX + 6, startY + 6);
             await wait();
-
-            UIInteractions.simulatePointerEvent('pointermove', header, 490, 40);
-            UIInteractions.simulatePointerEvent('pointerup', header, 490, 40);
+            UIInteractions.simulatePointerEvent('pointermove', header, startX + headerRect.width, startY);
+            UIInteractions.simulatePointerEvent('pointerup', header, startX + headerRect.width, startY);
             await wait();
             fix.detectChanges();
 
@@ -311,11 +313,15 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.moving = true;
 
             const header = TreeGridFunctions.getHeaderCell(fix, 'ID').nativeElement;
-            UIInteractions.simulatePointerEvent('pointerdown', header, 50, 40);
-            UIInteractions.simulatePointerEvent('pointermove', header, 56, 46);
+            const headerRect = header.getBoundingClientRect();
+            const startX = headerRect.width / 2;
+            const startY = headerRect.height / 2;
+
+            UIInteractions.simulatePointerEvent('pointerdown', header, startX, startY);
+            UIInteractions.simulatePointerEvent('pointermove', header, startX + 6, startY + 6);
             await wait();
-            UIInteractions.simulatePointerEvent('pointermove', header, 490, 40);
-            UIInteractions.simulatePointerEvent('pointerup', header, 490, 40);
+            UIInteractions.simulatePointerEvent('pointermove', header, startX + headerRect.width, startY);
+            UIInteractions.simulatePointerEvent('pointerup', header, startX + headerRect.width, startY);
             await wait();
             fix.detectChanges();
 
