@@ -67,17 +67,13 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Accordion
     ['IgxAccordionComponent', 'accordion'],
     ['IgxAccordionModule', 'accordion'],
-    ['IgxExpansionPanelHeaderComponent', 'accordion'],
-    ['IgxExpansionPanelBodyComponent', 'accordion'],
-    ['IgxExpansionPanelTitleDirective', 'accordion'],
-    ['IgxExpansionPanelDescriptionDirective', 'accordion'],
-    ['IgxExpansionPanelIconDirective', 'accordion'],
     ['IAccordionEventArgs', 'accordion'],
     ['IAccordionCancelableEventArgs', 'accordion'],
 
     // Action Strip
     ['IgxActionStripComponent', 'action-strip'],
     ['IgxActionStripModule', 'action-strip'],
+    ['IgxActionStripMenuItemDirective', 'action-strip'],
 
     // Avatar
     ['IgxAvatarComponent', 'avatar'],
@@ -115,6 +111,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxButtonDirective', 'button-group'],
     ['IgxIconButtonDirective', 'button-group'],
     ['IButtonGroupEventArgs', 'button-group'],
+    ['ButtonGroupAlignment', 'button-group'],
 
     // Calendar
     ['IgxCalendarComponent', 'calendar'],
@@ -127,6 +124,11 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['ICalendarDate', 'calendar'],
     ['ICalendarViewChangingEventArgs', 'calendar'],
     ['WeekDays', 'calendar'],
+    ['IFormattingOptions', 'calendar'],
+    ['IgxCalendarView', 'calendar'],
+    ['IgxCalendarHeaderTemplateDirective', 'calendar'],
+    ['IgxCalendarSubheaderTemplateDirective', 'calendar'],
+    ['IViewDateChangeEventArgs', 'calendar'],
 
     // Card
     ['IgxCardComponent', 'card'],
@@ -166,6 +168,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IChipKeyDownEventArgs', 'chips'],
     ['IChipEnterDragAreaEventArgs', 'chips'],
     ['IChipSelectEventArgs', 'chips'],
+    ['IChipsAreaReorderEventArgs', 'chips'],
 
     // Combo
     ['IgxComboComponent', 'combo'],
@@ -176,6 +179,12 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxComboState', 'combo'],
     ['IgxComboClearIconDirective', 'combo'],
     ['IgxComboItemDirective', 'combo'],
+    ['IgxComboAddItemDirective', 'combo'],
+    ['IgxComboEmptyDirective', 'combo'],
+    ['IgxComboFooterDirective', 'combo'],
+    ['IgxComboHeaderDirective', 'combo'],
+    ['IgxComboHeaderItemDirective', 'combo'],
+    ['IgxComboToggleIconDirective', 'combo'],
 
     // Date and Date Range Picker
     ['IgxDatePickerComponent', 'date-picker'],
@@ -209,6 +218,8 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxAutocompleteDirective', 'drop-down'], // Breaking change - moved from directives
     ['ISelectionEventArgs', 'drop-down'],
     ['IDropDownNavigationDirective', 'drop-down'],
+    ['IgxDropDownItemNavigationDirective', 'drop-down'],
+    ['IgxAutocompleteModule', 'drop-down'],
 
     // Expansion Panel
     ['IgxExpansionPanelComponent', 'expansion-panel'],
@@ -216,6 +227,11 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxExpansionPanelBase', 'expansion-panel'],
     ['IExpansionPanelEventArgs', 'expansion-panel'],
     ['IExpansionPanelCancelableEventArgs', 'expansion-panel'],
+    ['IgxExpansionPanelHeaderComponent', 'expansion-panel'],
+    ['IgxExpansionPanelBodyComponent', 'expansion-panel'],
+    ['IgxExpansionPanelTitleDirective', 'expansion-panel'],
+    ['IgxExpansionPanelDescriptionDirective', 'expansion-panel'],
+    ['IgxExpansionPanelIconDirective', 'expansion-panel'],
     ['ToggleAnimationSettings', 'expansion-panel'],
 
     // Grids - Components, Services, Types
@@ -238,6 +254,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxPivotGridModule', 'grids/pivot-grid'],
     ['IgxColumnComponent', 'grids/core'],
     ['IgxColumnGroupComponent', 'grids/core'],
+    ['IgxCollapsibleIndicatorTemplateDirective', 'grids/core'],
     ['IgxRowDirective', 'grids/core'],
     ['IgxCellComponent', 'grids/core'],
     ['IgxGridCellComponent', 'grids/core'],
@@ -287,12 +304,15 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxCellValidationErrorDirective', 'grids/core'],
     ['IgxColumnMaxValidatorDirective', 'grids/core'],
     ['IgxColumnMinValidatorDirective', 'grids/core'],
+    ['IgxColumnEmailValidatorDirective', 'grids/core'],
+    ['IgxColumnMinLengthValidatorDirective', 'grids/core'],
+    ['IgxColumnMaxLengthValidatorDirective', 'grids/core'],
+    ['IgxColumnPatternValidatorDirective', 'grids/core'],
     ['IgxColumnRequiredValidatorDirective', 'grids/core'],
     ['CellType', 'grids/core'],
     ['IPinningConfig', 'grids/core'],
     ['RowType', 'grids/core'],
     ['IgxCellEditorTemplateDirective', 'grids/core'],
-    ['IgxGridExcelStyleFilteringComponent', 'grids/core'],
     ['IGridToolbarExportEventArgs', 'grids/core'],
     ['SortingIndexFilteringStrategy', 'grids/core'],
     ['IgxHeadSelectorDirective', 'grids/core'],
@@ -306,13 +326,55 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxRowEditTextDirective', 'grids/core'],
     ['IgxRowAddTextDirective', 'grids/core'],
     ['GridPagingMode', 'grids/core'],
+    ['IgxAdvancedFilteringDialogComponent', 'grids/core'],
+    ['IgxExcelStyleColumnOperationsTemplateDirective', 'grids/core'],
+    ['IgxExcelStyleFilterOperationsTemplateDirective', 'grids/core'],
+    ['IgxExcelStyleLoadingValuesTemplateDirective', 'grids/core'],
+    ['IgxExcelStyleHeaderComponent', 'grids/core'],
+    ['IgxExcelStyleHeaderIconDirective', 'grids/core'],
+    ['IgxExcelStyleSearchComponent', 'grids/core'],
+    ['IgxExcelStyleSortingComponent', 'grids/core'],
+    ['IgxExcelStylePinningComponent', 'grids/core'],
+    ['IgxGridExcelStyleFilteringComponent', 'grids/core'],
+    ['IgxExcelTextDirective', 'grids/core'],
+    ['IgxCSVTextDirective', 'grids/core'],
+    ['GridCellMergeMode', 'grids/core'],
+    ['IActiveNodeChangeEventArgs', 'grids/core'],
+    ['IPivotAggregator', 'grids/core'],
+    ['PivotAggregation', 'grids/core'],
+    ['PivotAggregationType', 'grids/core'],
+    ['PivotRowLayoutType', 'grids/core'],
+    ['IPivotConfiguration', 'grids/core'],
+    ['IPivotDimension', 'grids/core'],
+    ['IPivotDimensionData', 'grids/core'],
+    ['IPivotValue', 'grids/core'],
+    ['IgxPivotDateDimension', 'grids/core'],
+    ['IgxPivotAggregate', 'grids/core'],
+    ['IgxPivotNumericAggregate', 'grids/core'],
+    ['IgxPivotDateAggregate', 'grids/core'],
+    ['IgxPivotTimeAggregate', 'grids/core'],
+    ['IPivotUISettings', 'grids/core'],
+    ['PivotSummaryPosition', 'grids/core'],
+    ['NoopPivotDimensionsStrategy', 'grids/core'],
+    ['IgxGridToolbarDirective', 'grids/core'],
+    ['IgxGroupByRowTemplateDirective', 'grids/core'],
+    ['IgxGridDetailTemplateDirective', 'grids/core'],
+    ['GridType', 'grids/core'],
+    ['IGX_GRID_BASE', 'grids/core'],
+    ['IColumnSelectionEventArgs', 'grids/core'],
     ['IgxGridEditingActions', 'grids/core'], // Grid actions moved to grids
     ['IgxGridPinningActions', 'grids/core'], // Grid actions moved to grids
     ['IgxGridActionButtonComponent', 'grids/core'], // Grid actions moved to grids
     ['IgxGridActionsBaseDirective', 'grids/core'], // Grid actions moved to grids
     ['IgxGridEditingActionsComponent', 'grids/core'], // Grid actions moved to grids
     ['IgxGridPinningActionsComponent', 'grids/core'], // Grid actions moved to grids
+    ['IgxColumnActionsComponent', 'grids/core'],
+    ['IgxColumnHidingDirective', 'grids/core'],
+    ['IgxColumnPinningDirective', 'grids/core'],
     ['IgxTreeGridGroupByAreaComponent', 'grids/tree-grid'],
+    ['ITreeGridAggregation', 'grids/tree-grid'],
+    ['IgxGroupedTreeGridSorting', 'grids/tree-grid'],
+    ['IgxTreeGridGroupingPipe', 'grids/tree-grid'],
 
     // Icon
     ['IgxIconComponent', 'icon'],
@@ -330,6 +392,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxSuffixDirective', 'input-group'], // Breaking change - moved from directives
     ['IgxInputState', 'input-group'],
     ['IgxInputGroupType', 'input-group'],
+    ['IGX_INPUT_GROUP_TYPE', 'input-group'],
 
     // List
     ['IgxListComponent', 'list'],
@@ -338,6 +401,13 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxListHeaderComponent', 'list'],
     ['IListItemClickEventArgs', 'list'],
     ['IgxListPanState', 'list'],
+    ['IgxEmptyListTemplateDirective', 'list'],
+    ['IgxListLineDirective', 'list'],
+    ['IgxListLineSubTitleDirective', 'list'],
+    ['IgxListLineTitleDirective', 'list'],
+    ['IgxDataLoadingTemplateDirective', 'list'],
+    ['IgxListActionDirective', 'list'],
+    ['IgxListThumbnailDirective', 'list'],
 
     // Navbar
     ['IgxNavbarComponent', 'navbar'],
@@ -351,6 +421,9 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxNavigationDrawerItemComponent', 'navigation-drawer'],
     ['INavigationDrawerEventArgs', 'navigation-drawer'],
     ['IgxNavDrawerMode', 'navigation-drawer'],
+    ['IgxNavDrawerItemDirective', 'navigation-drawer'],
+    ['IgxNavDrawerTemplateDirective', 'navigation-drawer'],
+    ['IgxNavDrawerMiniTemplateDirective', 'navigation-drawer'],
 
     // Paginator
     ['IgxPaginatorComponent', 'paginator'],
@@ -377,7 +450,8 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Radio
     ['IgxRadioComponent', 'radio'],
     ['IgxRadioModule', 'radio'],
-    ['IgxRadioGroupDirective', 'radio'], // Breaking change - moved from directives
+    ['RadioGroupAlignment', 'radio'],
+    ['IgxRadioGroupDirective', 'radio'],
 
     // Select
     ['IgxSelectComponent', 'select'],
@@ -387,9 +461,11 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxSelectFooterDirective', 'select'],
     ['IgxSelectToggleIconDirective', 'select'],
     ['ISelectionChangedEventArgs', 'select'],
+    ['IgxSelectGroupComponent', 'select'],
 
     // Simple Combo
     ['IgxSimpleComboComponent', 'simple-combo'],
+    ['ISimpleComboSelectionChangingEventArgs', 'simple-combo'],
     ['IgxSimpleComboModule', 'simple-combo'],
 
     // Slider
@@ -399,6 +475,11 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IRangeSliderValue', 'slider'],
     ['SliderType', 'slider'],
     ['IgxSliderType', 'slider'],
+    ['TickLabelsOrientation', 'slider'],
+    ['TicksOrientation', 'slider'],
+    ['IgxTickLabelTemplateDirective', 'slider'],
+    ['IgxThumbToTemplateDirective', 'slider'],
+    ['IgxThumbFromTemplateDirective', 'slider'],
 
     // Snackbar
     ['IgxSnackbarComponent', 'snackbar'],
@@ -419,6 +500,13 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IStepChangedEventArgs', 'stepper'],
     ['IgxStepperOrientation', 'stepper'],
     ['IgxStepType', 'stepper'],
+    ['IgxStepActiveIndicatorDirective', 'stepper'],
+    ['IgxStepCompletedIndicatorDirective', 'stepper'],
+    ['IgxStepContentDirective', 'stepper'],
+    ['IgxStepTitleDirective', 'stepper'],
+    ['IgxStepSubtitleDirective', 'stepper'],
+    ['IgxStepInvalidIndicatorDirective', 'stepper'],
+    ['IgxStepIndicatorDirective', 'stepper'],
 
     // Switch
     ['IgxSwitchComponent', 'switch'],
@@ -433,6 +521,8 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxTabsGroupComponent', 'tabs'],
     ['ITabsSelectedItemChangeEventArgs', 'tabs'],
     ['IgxTabsType', 'tabs'],
+    ['IgxTabHeaderIconDirective', 'tabs'],
+    ['IgxTabHeaderLabelDirective', 'tabs'],
 
     // Time Picker
     ['IgxTimePickerComponent', 'time-picker'],
@@ -455,41 +545,64 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['ITreeNodeSelectionEvent', 'tree'],
     ['ITreeNodeTogglingEventArgs', 'tree'],
     ['IgxTreeSelectionType', 'tree'],
+    ['IgxTreeNodeLinkDirective', 'tree'],
 
     // Directives (re-exports from other entry points)
     ['IgxForOfDirective', 'directives'],
+    ['IForOfState', 'directives'],
+    ['IgxForOfModule', 'directives'],
     ['IgxTemplateOutletDirective', 'directives'],
     ['IgxTextSelectionDirective', 'directives'],
+    ['IgxTextSelectionModule', 'directives'],
     ['IgxTextHighlightDirective', 'directives'],
+    ['IgxTextHighlightModule', 'directives'],
     ['IgxDateTimeEditorDirective', 'directives'],
     ['IgxMaskDirective', 'directives'],
+    ['IgxMaskModule', 'directives'],
     ['IgxDividerDirective', 'directives'],
+    ['IgxDividerModule', 'directives'],
     ['IgxFilterDirective', 'directives'],
     ['IgxButtonDirective', 'directives'],
+    ['IgxButtonModule', 'directives'],
     ['IgxIconButtonDirective', 'directives'],
     ['IgxToggleActionDirective', 'directives'],
     ['IgxLayoutDirective', 'directives'],
+    ['IgxLayoutModule', 'directives'],
     ['IgxFlexDirective', 'directives'],
     ['IgxFocusDirective', 'directives'],
+    ['IgxFocusModule', 'directives'],
     ['IgxTooltipDirective', 'directives'],
     ['IgxTooltipTargetDirective', 'directives'],
+    ['IgxTooltipModule', 'directives'],
     ['IgxRippleDirective', 'directives'],
+    ['IgxRippleModule', 'directives'],
     ['IDropDroppedEventArgs', 'directives'],
     ['IDragGhostCreatedEventArgs', 'directives'],
     ['IDragStartEventArgs', 'directives'],
     ['IDragBaseEventArgs', 'directives'],
     ['IDropBaseEventArgs', 'directives'],
+    ['IDragMoveEventArgs', 'directives'],
     ['IgxDragIndicatorIconDirective', 'directives'],
     ['IgxRowDragGhostDirective', 'directives'],
     ['IgxDragDirective', 'directives'],
+    ['IgxDragHandleDirective', 'directives'],
+    ['IgxDragLocation', 'directives'],
     ['IgxDropDirective', 'directives'],
+    ['IgxDragDropModule', 'directives'],
     ['IgxFocusTrapDirective', 'directives'],
     ['IgxToggleDirective', 'directives'],
+    ['IgxToggleModule', 'directives'],
+    ['IgxFilterOptions', 'directives'],
+    ['IgxFilterPipe', 'directives'],
+    ['IgxFilterModule', 'directives'],
+    ['IgcFormControlDirective', 'directives'],
+    ['IgxTextHighlightService', 'directives']
 ]);
 
 // Type renames (old name -> new name and entry point)
 const TYPE_RENAMES = new Map<string, { newName: string, entryPoint: string }>([
     ['Direction', { newName: 'CarouselAnimationDirection', entryPoint: 'carousel' }],
+    ['IgxColumPatternValidatorDirective', { newName: 'IgxColumnPatternValidatorDirective', entryPoint: 'grids/core' }],
 ]);
 
 function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.SourceFile): { start: number, end: number, replacement: string } | null {
