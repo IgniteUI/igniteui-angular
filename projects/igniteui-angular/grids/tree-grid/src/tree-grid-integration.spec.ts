@@ -128,7 +128,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             treeGrid.moving = true;
 
-            const header = TreeGridFunctions.getHeaderCell(fix, 'ID').nativeElement;
+            // const header = TreeGridFunctions.getHeaderCell(fix, 'ID').nativeElement;
+            const header = treeGrid.headerCellList[0].nativeElement;
             const headerRect = header.getBoundingClientRect();
             const startX = headerRect.width / 2;
             const startY = headerRect.height / 2;
@@ -312,7 +313,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             treeGrid.moving = true;
 
-            const header = TreeGridFunctions.getHeaderCell(fix, 'ID').nativeElement;
+            // const header = TreeGridFunctions.getHeaderCell(fix, 'ID').nativeElement;
+            const header = treeGrid.headerCellList[0].nativeElement;
             const headerRect = header.getBoundingClientRect();
             const startX = headerRect.width / 2;
             const startY = headerRect.height / 2;
