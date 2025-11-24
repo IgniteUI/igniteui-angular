@@ -44,15 +44,13 @@ function igxRegisterI18n(resourceStrings: IResourceStrings, locale: string) {
 
 /** Get current resource strings based on default. Result is truncated result, containing only relevant locale strings. */
 export function getCurrentResourceStrings<T>(defaultEN: T, init = true, locale?: string) {
-    const igxResourceStringKeys = Object.keys(defaultEN);
-    if (init) {
-        igxRegisterI18n(defaultEN, getI18nManager().defaultLocale);
-    }
+    const resourceStrings = getI18nManager().getCurrentResourceStrings(locale);
+    const resourceStringsKeys = Object.keys(resourceStrings);
+    const normalizedResourceStrings: T = {} as T;
+    const newResourceStrings: T = {} as T;
 
     // Append back `igx_` prefix for compatibility with older versions.
-    const resourceStrings = getI18nManager().getCurrentResourceStrings(locale);
-    const normalizedResourceStrings: T = {} as T;
-    const resourceStringsKeys = Object.keys(resourceStrings);
+    const igxResourceStringKeys = Object.keys(defaultEN);
     for (const igxKey of igxResourceStringKeys) {
         let coreKey = igxKey;
         if (coreKey.startsWith("igx_")) {
@@ -62,7 +60,13 @@ export function getCurrentResourceStrings<T>(defaultEN: T, init = true, locale?:
             normalizedResourceStrings[igxKey] = resourceStrings[coreKey];
         } else {
             normalizedResourceStrings[igxKey] = defaultEN[igxKey];
+            newResourceStrings[coreKey] = defaultEN[igxKey];
         }
+    }
+
+    if (init) {
+        // Register only new resources. We don't want to accidentally override any default set by user.
+        getI18nManager().registerI18n(newResourceStrings, getI18nManager().defaultLocale);
     }
 
     return normalizedResourceStrings;
@@ -96,7 +100,8 @@ export function onResourceChangeHandle(destroyObj: Subject<any> | DestroyRef, ca
  * Note: Legacy method. We suggest using the new `registerI18n` and `setCurrentI18n` methods exposed.
  */
 export function changei18n(resourceStrings: IResourceStrings) {
-    igxRegisterI18n(resourceStrings, getI18nManager().defaultLocale);
+    // Register to current locale, since the user might have already set `lang` tag on root html.
+    igxRegisterI18n(resourceStrings, getI18nManager().currentLocale);
 }
 
 /**
