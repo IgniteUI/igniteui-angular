@@ -1,1 +1,1 @@
-export * from './src/banner/public_api';
+export * from './src/public_api';

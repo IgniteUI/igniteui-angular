@@ -1,1 +1,1 @@
-export * from './src/chips/public_api';
+export * from './src/public_api';

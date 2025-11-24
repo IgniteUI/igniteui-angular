@@ -1,1 +1,1 @@
-export * from './src/paginator/public_api';
+export * from './src/public_api';
