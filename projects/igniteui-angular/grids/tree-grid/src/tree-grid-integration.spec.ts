@@ -130,21 +130,19 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             const header = TreeGridFunctions.getHeaderCell(fix, 'ID').nativeElement;
+
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 35);
-            fix.detectChanges();
             await wait();
 
             UIInteractions.simulatePointerEvent('pointermove', header, 56, 35);
-            fix.detectChanges();
             await wait();
 
             UIInteractions.simulatePointerEvent('pointermove', header, 550, 20);
-            fix.detectChanges();
             await wait();
 
             UIInteractions.simulatePointerEvent('pointerup', header, 550, 20);
-            fix.detectChanges();
             await wait();
+            // fix.detectChanges();
 
             const headerCells = fix.debugElement.queryAll(By.css('igx-grid-header')).map(h => h.nativeElement.innerText.trim());
             expect(headerCells[0]).toBe('Name');
@@ -322,19 +320,15 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             const header = TreeGridFunctions.getHeaderCell(fix, 'ID').nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 35);
-            fix.detectChanges();
             await wait();
 
             UIInteractions.simulatePointerEvent('pointermove', header, 56, 35);
-            fix.detectChanges();
             await wait();
 
             UIInteractions.simulatePointerEvent('pointermove', header, 550, 20);
-            fix.detectChanges();
             await wait();
 
             UIInteractions.simulatePointerEvent('pointerup', header, 550, 20);
-            fix.detectChanges();
             await wait();
 
             const headerCells = fix.debugElement.queryAll(By.css('igx-grid-header')).map(h => h.nativeElement.innerText.trim());
