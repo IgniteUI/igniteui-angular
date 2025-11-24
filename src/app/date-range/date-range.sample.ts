@@ -148,6 +148,12 @@ export class DateRangeSampleComponent {
                 defaultValue: 'MM/dd/yyyy'
             }
         },
+        hint: {
+            label: 'Hint Text',
+            control: {
+                type: 'text'
+            }
+        },
         displayFormat: {
             label: 'Display Format',
             control: {

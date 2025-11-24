@@ -38,12 +38,22 @@ import { IgxCalendarContainerComponent } from '../date-picker/calendar-container
 import { PickerBaseDirective } from '../date-picker/picker-base.directive';
 import { IgxOverlayOutletDirective } from 'igniteui-angular/directives';
 import {
-    IgxInputDirective, IgxInputGroupComponent, IgxInputState,
-    IgxLabelDirective, IgxSuffixDirective,
+    IgxInputDirective,
+    IgxInputGroupComponent,
+    IgxInputState,
+    IgxLabelDirective,
+    IgxSuffixDirective,
     IgxPrefixDirective,
-    IgxReadOnlyInputDirective
+    IgxReadOnlyInputDirective,
+    IgxHintDirective
 } from 'igniteui-angular/input-group';
-import { IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, DateRangePickerFormatPipe } from './date-range-picker-inputs.common';
+import {
+    IgxDateRangeEndComponent,
+    IgxDateRangeInputsBaseComponent,
+    IgxDateRangeSeparatorDirective,
+    IgxDateRangeStartComponent,
+    DateRangePickerFormatPipe,
+} from './date-range-picker-inputs.common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
@@ -420,6 +430,9 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     @ContentChild(IgxLabelDirective)
     public label: IgxLabelDirective;
 
+    @ContentChild(IgxHintDirective)
+    public hint: IgxHintDirective;
+
     @ContentChild(IgxPickerActionsDirective)
     public pickerActions: IgxPickerActionsDirective;
 
@@ -550,7 +563,9 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public get separatorClass(): string {
-        return 'igx-date-range-picker__label';
+        const classes = ['igx-date-range-picker__label'];
+        if (this.hint) classes.push('input-has-hint');
+        return classes.join(' ');
     }
 
     protected override get toggleContainer(): HTMLElement | undefined {

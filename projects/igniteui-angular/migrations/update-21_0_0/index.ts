@@ -4,6 +4,7 @@ import type {
     SchematicContext,
     Tree
 } from '@angular-devkit/schematics';
+import { UpdateChanges } from '../common/UpdateChanges';
 import * as ts from 'typescript';
 
 const version = '21.0.0';
@@ -598,6 +599,7 @@ interface MigrationOptions {
 export default (options: MigrationOptions = {}): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
 
+    const update = new UpdateChanges(__dirname, host, context);
     const shouldMigrateImports = options.migrateImports !== false; // Default to true if not specified
 
     if (shouldMigrateImports) {
@@ -648,4 +650,6 @@ export default (options: MigrationOptions = {}): Rule => async (host: Tree, cont
         context.logger.info('Note: The library now supports granular entry points for better tree-shaking.');
         context.logger.info('To migrate later, run: ng update igniteui-angular --migrate-only --from=20.1.0 --to=21.0.0');
     }
+
+    update.applyChanges();
 };
