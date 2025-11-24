@@ -140,7 +140,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected colResizingService = inject(IgxColumnResizingService);
     public readonly gridAPI = inject<GridServiceType>(IGX_GRID_SERVICE_BASE);
     protected transactionFactory = inject(IgxFlatTransactionFactory);
-    private elementRef = inject(ElementRef<HTMLElement>);
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     protected zone = inject(NgZone);
     /** @hidden @internal */
     public document = inject(DOCUMENT);
