@@ -1,1 +1,1 @@
-export * from './src/carousel/public_api';
+export * from './src/public_api';

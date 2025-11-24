@@ -1,1 +1,1 @@
-export * from './src/progressbar/public_api';
+export * from './src/public_api';

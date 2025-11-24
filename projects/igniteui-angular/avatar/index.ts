@@ -1,1 +1,1 @@
-export * from './src/avatar/public_api';
+export * from './src/public_api';
