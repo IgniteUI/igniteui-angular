@@ -383,6 +383,8 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxGridFooterComponent', 'grids/core'],
     ['IgxColumnLayoutComponent', 'grids/core'],
     ['IgxExporterEvent', 'grids/core'],
+    ['IGridEditDoneEventArgs', 'grids/core'],
+    ['IgxGridRow', 'grids/core'],
     ['IgxGridEditingActions', 'grids/core'], // Grid actions moved to grids
     ['IgxGridPinningActions', 'grids/core'], // Grid actions moved to grids
     ['IgxGridActionButtonComponent', 'grids/core'], // Grid actions moved to grids
@@ -802,7 +804,7 @@ export default function migrate(options: MigrationOptions): Rule {
         context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
 
         const update = new UpdateChanges(__dirname, host, context);
-        const shouldMigrateImports = options.migrateImports !== false; // Default to true if not specified
+        const shouldMigrateImports = options.migrateImports === true;
 
         if (shouldMigrateImports) {
             context.logger.info('Migrating imports to new entry points...');
