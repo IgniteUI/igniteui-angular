@@ -5,9 +5,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { animationFrameScheduler, fromEvent, interval, merge, noop, Observable, Subject, timer } from 'rxjs';
 import { takeUntil, throttle, throttleTime } from 'rxjs/operators';
-import { EditorProvider } from 'igniteui-angular/core';
-import { resizeObservable } from 'igniteui-angular/core';
-import { ɵIgxDirectionality } from 'igniteui-angular/core';
+import { EditorProvider, IgxDirectionality, resizeObservable } from 'igniteui-angular/core';
 import { IgxThumbLabelComponent } from './label/thumb-label.component';
 import {
     IgxSliderType, IgxThumbFromTemplateDirective,
@@ -758,7 +756,7 @@ export class IgxSliderComponent implements
         private _el: ElementRef,
         private _cdr: ChangeDetectorRef,
         private _ngZone: NgZone,
-        private _dir: ɵIgxDirectionality) {
+        private _dir: IgxDirectionality) {
         this.stepDistance = this._step;
     }
 

@@ -14,11 +14,6 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Core - Services, Utilities, Types, Enums
     ['IgxOverlayService', 'core'],
     ['IgxNavigationService', 'core'],
-    ['IgxFocusTrapDirective', 'core'],
-    ['IgxToggleDirective', 'core'],
-    ['IgxRippleDirective', 'core'],
-    ['IgxDragDirective', 'core'],
-    ['IgxDropDirective', 'core'],
     ['DisplayDensity', 'core'],
     ['DisplayDensityToken', 'core'],
     ['DisplayDensityBase', 'core'],
@@ -179,21 +174,23 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IComboItemAdditionEvent', 'combo'],
     ['IComboSearchInputEventArgs', 'combo'],
     ['IgxComboState', 'combo'],
+    ['IgxComboClearIconDirective', 'combo'],
+    ['IgxComboItemDirective', 'combo'],
 
-    // Date Picker
+    // Date and Date Range Picker
     ['IgxDatePickerComponent', 'date-picker'],
     ['IgxDatePickerModule', 'date-picker'],
     ['InteractionMode', 'date-picker'],
     ['IDatePickerCancelEventArgs', 'date-picker'],
     ['IDatePickerDisabledDateEventArgs', 'date-picker'],
     ['IDatePickerValidationFailedEventArgs', 'date-picker'],
-
-    // Date Range Picker
-    ['IgxDateRangePickerComponent', 'date-range-picker'],
-    ['IgxDateRangePickerModule', 'date-range-picker'],
-    ['DateRangeType', 'date-range-picker'],
-    ['DateRangeDescriptor', 'date-range-picker'],
-    ['IDateRangePickerCancelEventArgs', 'date-range-picker'],
+    ['IgxDateRangePickerComponent', 'date-picker'],
+    ['IgxDateRangePickerModule', 'date-picker'],
+    ['DateRangeType', 'date-picker'],
+    ['DateRangeDescriptor', 'date-picker'],
+    ['IDateRangePickerCancelEventArgs', 'date-picker'],
+    ['IgxDateRangeEndComponent', 'date-picker'],
+    ['IgxDateRangeStartComponent', 'date-picker'],
 
     // Dialog
     ['IgxDialogComponent', 'dialog'],
@@ -278,16 +275,44 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['GridSummaryCalculationMode', 'grids/core'],
     ['GridSummaryPosition', 'grids/core'],
     ['RowPinningPosition', 'grids/core'],
-    ['ColumnPinningPosition', 'grids/core'],
     ['GridInstanceType', 'grids/core'],
-    ['Size', 'core'], // Moved to core
+    ['IgxSummaryOperand', 'grids/core'],
+    ['IgxNumberSummaryOperand', 'grids/core'],
+    ['IgxDateSummaryOperand', 'grids/core'],
+    ['IgxSummaryTemplateDirective', 'grids/core'],
+    ['IgxCellTemplateDirective', 'grids/core'],
+    ['IgxCellHeaderTemplateDirective', 'grids/core'],
+    ['IgxFilterCellTemplateDirective', 'grids/core'],
+    ['IGridFormGroupCreatedEventArgs', 'grids/core'],
+    ['IgxCellValidationErrorDirective', 'grids/core'],
+    ['IgxColumnMaxValidatorDirective', 'grids/core'],
+    ['IgxColumnMinValidatorDirective', 'grids/core'],
+    ['IgxColumnRequiredValidatorDirective', 'grids/core'],
+    ['CellType', 'grids/core'],
+    ['IPinningConfig', 'grids/core'],
+    ['RowType', 'grids/core'],
+    ['IgxCellEditorTemplateDirective', 'grids/core'],
+    ['IgxGridExcelStyleFilteringComponent', 'grids/core'],
+    ['IGridToolbarExportEventArgs', 'grids/core'],
     ['SortingIndexFilteringStrategy', 'grids/core'],
+    ['IgxHeadSelectorDirective', 'grids/core'],
+    ['IgxRowSelectorDirective', 'grids/core'],
+    ['GridFeatures', 'grids/core'],
+    ['IGridState', 'grids/core'],
+    ['IGridStateOptions', 'grids/core'],
+    ['IgxGridStateDirective', 'grids/core'],
+    ['IgxRowEditActionsDirective', 'grids/core'],
+    ['IgxRowEditTabStopDirective', 'grids/core'],
+    ['IgxRowEditTextDirective', 'grids/core'],
+    ['IgxRowAddTextDirective', 'grids/core'],
+    ['GridPagingMode', 'grids/core'],
     ['IgxGridEditingActions', 'grids/core'], // Grid actions moved to grids
     ['IgxGridPinningActions', 'grids/core'], // Grid actions moved to grids
     ['IgxGridActionButtonComponent', 'grids/core'], // Grid actions moved to grids
     ['IgxGridActionsBaseDirective', 'grids/core'], // Grid actions moved to grids
     ['IgxGridEditingActionsComponent', 'grids/core'], // Grid actions moved to grids
     ['IgxGridPinningActionsComponent', 'grids/core'], // Grid actions moved to grids
+    ['IgxTreeGridGroupByAreaComponent', 'grids/tree-grid'],
 
     // Icon
     ['IgxIconComponent', 'icon'],
@@ -329,6 +354,9 @@ const ENTRY_POINT_MAP = new Map<string, string>([
 
     // Paginator
     ['IgxPaginatorComponent', 'paginator'],
+    ['IgxPageNavigationComponent', 'paginator'],
+    ['IgxPageSizeSelectorComponent', 'paginator'],
+    ['IgxPaginatorContentDirective', 'paginator'],
     ['IgxPaginatorModule', 'paginator'],
     ['IPageEventArgs', 'paginator'],
     ['IPageCancelableEventArgs', 'paginator'],
@@ -438,9 +466,25 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxDividerDirective', 'directives'],
     ['IgxFilterDirective', 'directives'],
     ['IgxButtonDirective', 'directives'],
+    ['IgxIconButtonDirective', 'directives'],
     ['IgxToggleActionDirective', 'directives'],
     ['IgxLayoutDirective', 'directives'],
     ['IgxFlexDirective', 'directives'],
+    ['IgxFocusDirective', 'directives'],
+    ['IgxTooltipDirective', 'directives'],
+    ['IgxTooltipTargetDirective', 'directives'],
+    ['IgxRippleDirective', 'directives'],
+    ['IDropDroppedEventArgs', 'directives'],
+    ['IDragGhostCreatedEventArgs', 'directives'],
+    ['IDragStartEventArgs', 'directives'],
+    ['IDragBaseEventArgs', 'directives'],
+    ['IDropBaseEventArgs', 'directives'],
+    ['IgxDragIndicatorIconDirective', 'directives'],
+    ['IgxRowDragGhostDirective', 'directives'],
+    ['IgxDragDirective', 'directives'],
+    ['IgxDropDirective', 'directives'],
+    ['IgxFocusTrapDirective', 'directives'],
+    ['IgxToggleDirective', 'directives'],
 ]);
 
 // Type renames (old name -> new name and entry point)

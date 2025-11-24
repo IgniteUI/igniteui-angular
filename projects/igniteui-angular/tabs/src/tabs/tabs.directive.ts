@@ -4,7 +4,7 @@ import {
     Input, OnDestroy, Output, QueryList, booleanAttribute
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { IBaseEventArgs, IgxAngularAnimationService, AnimationService, ɵIgxDirectionality } from 'igniteui-angular/core';
+import { IBaseEventArgs, IgxAngularAnimationService, AnimationService, IgxDirectionality } from 'igniteui-angular/core';
 import { IgxTabItemDirective } from './tab-item.directive';
 import { IgxTabContentBase, IgxTabsBase } from './tabs.base';
 import { IgxCarouselComponentBase, CarouselAnimationDirection } from 'igniteui-angular/carousel';
@@ -114,7 +114,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     constructor(
         @Inject(IgxAngularAnimationService) animationService: AnimationService,
         cdr: ChangeDetectorRef,
-        public dir: ɵIgxDirectionality) {
+        public dir: IgxDirectionality) {
         super(animationService, cdr);
     }
 

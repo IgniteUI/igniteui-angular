@@ -3,7 +3,7 @@ import { IgxTabItemDirective } from '../tab-item.directive';
 import { IgxTabHeaderDirective } from '../tab-header.directive';
 import { IgxTabHeaderBase } from '../tabs.base';
 import { IgxTabsComponent } from './tabs.component';
-import { getResizeObserver, ɵIgxDirectionality, PlatformUtil } from 'igniteui-angular/core';
+import { getResizeObserver, IgxDirectionality, PlatformUtil } from 'igniteui-angular/core';
 
 @Component({
     selector: 'igx-tab-header',
@@ -38,7 +38,7 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
         elementRef: ElementRef<HTMLElement>,
         platform: PlatformUtil,
         private ngZone: NgZone,
-        private dir: ɵIgxDirectionality
+        private dir: IgxDirectionality
     ) {
         super(tabs, tab, elementRef, platform);
     }
