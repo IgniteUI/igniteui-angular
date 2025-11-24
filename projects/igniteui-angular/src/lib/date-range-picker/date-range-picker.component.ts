@@ -1286,12 +1286,13 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         this.projectedInputs.forEach(i => {
             const input = i as IgxDateRangeInputsBaseComponent;
             input.dateTimeEditor.locale = this.locale;
+            input.dateTimeEditor.updateMask();
         });
     }
 
     protected override onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
         super.onResourceChange(args);
-        if (this.hasProjectedInputs) {
+        if (args.detail.oldLocale !== args.detail.newLocale && this.hasProjectedInputs) {
             this.updateInputLocale();
             this.updateDisplayFormat();
         }

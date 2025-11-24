@@ -304,11 +304,11 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         maskParser: MaskParsingService,
         platform: PlatformUtil,
         @Inject(DOCUMENT) private _document: any,
-        @Inject(LOCALE_ID) private _locale: any,
+        @Inject(LOCALE_ID) private _localeID: any,
         @Inject(I18N_FORMATTER) private _i18nFormatter: BaseFormatter) {
         super(elementRef, maskParser, renderer, platform);
         this.document = this._document as Document;
-        this.locale = this.locale || this._locale;
+        this.locale = this.locale || this._localeID;
     }
 
     @HostListener('wheel', ['$event'])
@@ -533,7 +533,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         this.setMask(this.inputFormat);
     }
 
-    private updateMask(): void {
+    /** @hidden @internal */
+    public updateMask(): void {
         if (this._focused) {
             // store the cursor position as it will be moved during masking
             const cursor = this.selectionEnd;

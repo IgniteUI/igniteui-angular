@@ -47,8 +47,8 @@ export class DateRangePickerFormatPipe implements PipeTransform {
         if (!isDate(end)) {
             end = DateTimeUtil.parseIsoDate(end);
         }
-        const startDate = appliedFormat ? this.i18nFormatter.formatDate(start, appliedFormat, locale || 'en') : start?.toLocaleDateString();
-        const endDate = appliedFormat ? this.i18nFormatter.formatDate(end, appliedFormat, locale || 'en') : end?.toLocaleDateString();
+        const startDate = this.i18nFormatter.formatDate(start, appliedFormat, locale);
+        const endDate = this.i18nFormatter.formatDate(end, appliedFormat, locale);
         let formatted;
         if (start) {
             formatted = `${startDate} - `;
