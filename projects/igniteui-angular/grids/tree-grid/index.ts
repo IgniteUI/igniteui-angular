@@ -6,3 +6,4 @@
 
 // Export tree-grid-specific components
 export * from './src/public_api';
+export * from './src/tree-grid.module';
