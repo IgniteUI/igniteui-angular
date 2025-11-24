@@ -1,1 +1,1 @@
-export * from './src/badge/public_api';
+export * from './src/public_api';
