@@ -51,6 +51,7 @@ import { IgxGridValidationService } from '../grid/grid-validation.service';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { BaseFormatter, I18N_FORMATTER } from '../../core/i18n/formatters/formatter-base';
+import { IGridResourceStrings } from '../../core/i18n/grid-resources';
 
 /* blazorCopyInheritedMembers */
 /* blazorElement */
@@ -114,6 +115,24 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /* blazorInclude,wcInclude */
     public set childDataKey(value: string) {
         this.key = value;
+    }
+
+    /**
+     * Gets/Sets the resource strings.
+     *
+     * @remarks
+     * By default it uses the root grid resources.
+     */
+    @Input()
+    public override set resourceStrings(value: IGridResourceStrings) {
+        this._resourceStrings = value;
+        this.rowIslandAPI.getChildGrids().forEach((grid) => {
+            grid.resourceStrings = value;
+        });
+    }
+
+    public override get resourceStrings() {
+        return this._resourceStrings ?? this.rootGrid.resourceStrings;
     }
 
     /**

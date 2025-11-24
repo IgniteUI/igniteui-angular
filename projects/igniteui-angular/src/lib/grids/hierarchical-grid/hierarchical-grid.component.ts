@@ -69,6 +69,7 @@ import { IgxActionStripToken } from '../../action-strip/token';
 import { flatten } from '../../core/utils';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IgxScrollInertiaDirective } from '../../directives/scroll-inertia/scroll_inertia.directive';
+import { IGridResourceStrings } from 'igniteui-angular';
 
 let NEXT_ID = 0;
 
@@ -607,6 +608,26 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
+     * Gets/Sets the resource strings.
+     *
+     * @remarks
+     * By default it uses EN resources.
+     */
+    @Input()
+    public override set resourceStrings(value: IGridResourceStrings) {
+        super.resourceStrings = value;
+        if (!this.parent) {
+            this.gridAPI.getChildGrids(true).forEach((grid) => {
+                grid.resourceStrings = value;
+            });
+        }
+    }
+
+    public override get resourceStrings() {
+        return super.resourceStrings;
+    }
+
+    /**
      * Gets the unique identifier of the parent row. It may be a `string` or `number` if `primaryKey` of the
      * parent grid is set or an object reference of the parent record otherwise.
      * ```typescript
@@ -733,6 +754,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.rootGrid.hasChildrenKey;
         this.showExpandAll = this.parentIsland ?
             this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
+        this.resourceStrings = this.parentIsland?.resourceStrings ?? this.rootGrid.resourceStrings;
     }
 
     /**

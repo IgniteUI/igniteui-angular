@@ -3245,6 +3245,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     };
     protected _hGridSchema: EntityType[];
     protected gridComputedStyles;
+    protected _resourceStrings = null;
 
     /** @hidden @internal */
     public get paginator() {
@@ -3282,7 +3283,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _loadingGridTemplate: TemplateRef<IgxGridTemplateContext>;
 
     private _cdrRequests = false;
-    private _resourceStrings = null;
     private _defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
     private _emptyGridMessage = null;
     private _emptyFilteredGridMessage = null;
