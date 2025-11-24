@@ -123,18 +123,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 3);
         });
 
-        it('(API) should transform a non-tree column into a tree column when moving the original tree-column through', () => {
-            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
-
-            // Move tree-column
-            const sourceColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
-            const targetColumn = treeGrid.columnList.filter(c => c.field === 'HireDate')[0];
-            treeGrid.moveColumn(sourceColumn, targetColumn);
-            fix.detectChanges();
-
-            TreeGridFunctions.verifyTreeColumn(fix, 'Name', 4);
-        });
-
         it('(UI) should transform a non-tree column into a tree column when moving the original tree-column through', async () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
 
@@ -156,6 +144,18 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             UIInteractions.simulatePointerEvent('pointerup', header, 490, 30);
             await wait(30);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumn(fix, 'Name', 4);
+        });
+
+        it('(API) should transform a non-tree column into a tree column when moving the original tree-column through', () => {
+            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
+
+            // Move tree-column
+            const sourceColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
+            const targetColumn = treeGrid.columnList.filter(c => c.field === 'HireDate')[0];
+            treeGrid.moveColumn(sourceColumn, targetColumn);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumn(fix, 'Name', 4);
@@ -312,18 +312,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
         });
 
-        it('(API) should transform a non-tree column into a tree column when moving the original tree-column through', () => {
-            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
-
-            // Move tree-column
-            const sourceColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
-            const targetColumn = treeGrid.columnList.filter(c => c.field === 'JobTitle')[0];
-            treeGrid.moveColumn(sourceColumn, targetColumn);
-            fix.detectChanges();
-
-            TreeGridFunctions.verifyTreeColumn(fix, 'ParentID', 5);
-        });
-
         it('(UI) should transform a non-tree column into a tree column when moving the original tree-column through', async () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
 
@@ -345,6 +333,18 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             UIInteractions.simulatePointerEvent('pointerup', header, 490, 30);
             await wait(30);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumn(fix, 'ParentID', 5);
+        });
+
+        it('(API) should transform a non-tree column into a tree column when moving the original tree-column through', () => {
+            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
+
+            // Move tree-column
+            const sourceColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
+            const targetColumn = treeGrid.columnList.filter(c => c.field === 'JobTitle')[0];
+            treeGrid.moveColumn(sourceColumn, targetColumn);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumn(fix, 'ParentID', 5);
