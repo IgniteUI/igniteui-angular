@@ -1,1 +1,1 @@
-export * from './src/time-picker/public_api';
+export * from './src/public_api';
