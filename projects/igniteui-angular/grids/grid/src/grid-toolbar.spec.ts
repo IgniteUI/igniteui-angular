@@ -6,6 +6,7 @@ import { GridFunctions } from "../../../test-utils/grid-functions.spec";
 import { By } from "@angular/platform-browser";
 import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from 'igniteui-angular/core';
 import { IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarTitleComponent } from 'igniteui-angular/grids/core';
+import { ExportUtilities } from 'igniteui-angular/core/src/services/exporter-common/export-utilities';
 
 const TOOLBAR_TAG = 'igx-grid-toolbar';
 const TOOLBAR_TITLE_TAG = 'igx-grid-toolbar-title';
@@ -239,6 +240,8 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             const exporterButton = $(TOOLBAR_EXPORTER_TAG).querySelector('button');
             exporterButton.click();
             fixture.detectChanges();
+
+            spyOn(ExportUtilities, 'saveBlobToFile');
             $('#pdfEntry').click();
             fixture.detectChanges();
 
