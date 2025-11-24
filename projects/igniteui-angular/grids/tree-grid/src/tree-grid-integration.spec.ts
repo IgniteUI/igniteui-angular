@@ -142,7 +142,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             UIInteractions.simulatePointerEvent('pointerup', header, 550, 20);
             await wait();
-            // fix.detectChanges();
+            fix.detectChanges();
 
             const headerCells = fix.debugElement.queryAll(By.css('igx-grid-header')).map(h => h.nativeElement.innerText.trim());
             expect(headerCells[0]).toBe('Name');
@@ -330,6 +330,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             UIInteractions.simulatePointerEvent('pointerup', header, 550, 20);
             await wait();
+            fix.detectChanges();
 
             const headerCells = fix.debugElement.queryAll(By.css('igx-grid-header')).map(h => h.nativeElement.innerText.trim());
             expect(headerCells[0]).toBe('ParentID');
