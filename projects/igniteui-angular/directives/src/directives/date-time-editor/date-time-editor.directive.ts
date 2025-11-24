@@ -4,8 +4,7 @@ import {
     Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from '@angular/forms';
 import { IgxMaskDirective } from '../mask/mask.directive';
-import { MaskParsingService } from '../mask/mask-parsing.service';
-import { isDate, PlatformUtil, DatePartInfo, DatePart, DatePartDeltas, DateTimeUtil } from 'igniteui-angular/core';
+import { isDate, DatePartInfo, DatePart, DatePartDeltas, DateTimeUtil } from 'igniteui-angular/core';
 import { IgxDateTimeEditorEventArgs } from './date-time-editor.common';
 import { noop } from 'rxjs';
 

@@ -1,16 +1,14 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    ElementRef,
-    Inject,
     OnChanges,
     QueryList,
     Renderer2,
     ViewChild,
     SimpleChanges,
     ViewChildren,
-    HostBinding
+    HostBinding,
+    inject
 } from '@angular/core';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 

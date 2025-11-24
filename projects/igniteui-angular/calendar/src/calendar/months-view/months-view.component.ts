@@ -4,7 +4,6 @@ import {
     HostBinding,
     ElementRef,
     booleanAttribute,
-    Inject,
     inject,
 } from "@angular/core";
 import { IgxCalendarMonthDirective } from "../calendar.directives";
@@ -14,7 +13,7 @@ import {
     DAY_INTERVAL_TOKEN,
 } from "../common/calendar-view.directive";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { CalendarDay, calendarRange, DayInterval, PlatformUtil } from 'igniteui-angular/core';
+import { CalendarDay, calendarRange, PlatformUtil } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 

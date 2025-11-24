@@ -9,7 +9,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     DoCheck,
-    Inject
+    inject
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { IgxSummaryCellComponent } from './summary-cell.component';

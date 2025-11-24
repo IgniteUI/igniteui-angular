@@ -2066,7 +2066,7 @@ describe('IgxSlider', () => {
     imports: [IgxSliderComponent]
 })
 export class SliderRtlComponent {
-    public dir = inject(IgxDirectionality);
+    public dir = inject(ɵIgxDirectionality);
 
     @ViewChild(IgxSliderComponent)
     public slider: IgxSliderComponent;

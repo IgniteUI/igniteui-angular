@@ -39,7 +39,7 @@ import {
 import { IgxGridSelectionService } from './selection/selection.service';
 import { HammerGesturesManager } from 'igniteui-angular/core';
 import { GridSelectionMode } from './common/enums';
-import { CellType, GridType, IgxCellTemplateContext, IGX_GRID_BASE, RowType } from './common/grid.interface';
+import { CellType, IgxCellTemplateContext, IGX_GRID_BASE, RowType } from './common/grid.interface';
 import { IgxRowDirective } from './row.directive';
 import { ISearchInfo } from './common/events';
 import { IgxGridCell } from './grid-public-cell';

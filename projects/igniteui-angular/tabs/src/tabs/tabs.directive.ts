@@ -4,7 +4,7 @@ import {
     inject
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { IBaseEventArgs, IgxAngularAnimationService, AnimationService, ɵIgxDirectionality } from 'igniteui-angular/core';
+import { IBaseEventArgs, ɵIgxDirectionality } from 'igniteui-angular/core';
 import { IgxTabItemDirective } from './tab-item.directive';
 import { IgxTabContentBase, IgxTabsBase } from './tabs.base';
 import { IgxCarouselComponentBase, CarouselAnimationDirection } from 'igniteui-angular/carousel';
@@ -27,7 +27,7 @@ export interface ITabsSelectedItemChangeEventArgs extends ITabsBaseEventArgs {
 @Directive()
 export abstract class IgxTabsDirective extends IgxCarouselComponentBase implements IgxTabsBase, AfterViewInit, OnDestroy {
     /** @hidden */
-    public dir = inject(IgxDirectionality);
+    public dir = inject(ɵIgxDirectionality);
 
     /**
      * Gets/Sets the index of the selected item.

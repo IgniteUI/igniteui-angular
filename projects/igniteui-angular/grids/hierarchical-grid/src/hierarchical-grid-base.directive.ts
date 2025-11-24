@@ -10,19 +10,15 @@ import {
 } from '@angular/core';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
-import { IgxFilteringService, IgxGridValidationService } from 'igniteui-angular/grids/core';
 import { IgxSummaryOperand } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
-import { IgxGridSummaryService } from 'igniteui-angular/grids/core';
-import { IgxGridSelectionService } from 'igniteui-angular/grids/core';
-import { IgxColumnResizingService } from 'igniteui-angular/grids/core';
 import { GridType, IGX_GRID_SERVICE_BASE } from 'igniteui-angular/grids/core';
 import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { takeUntil } from 'rxjs/operators';
 import { IgxGridTransaction } from 'igniteui-angular/grids/core';
-import { IgxFlatTransactionFactory, IgxOverlayService, IgxTransactionService, IPathSegment, PlatformUtil, State, Transaction, TransactionService } from 'igniteui-angular/core';
-import { IForOfState, IgxTextHighlightService } from 'igniteui-angular/directives';
+import { IgxTransactionService, IPathSegment } from 'igniteui-angular/core';
+import { IForOfState } from 'igniteui-angular/directives';
 import { IgxGridBaseDirective } from 'igniteui-angular/grids/grid';
 
 export const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();

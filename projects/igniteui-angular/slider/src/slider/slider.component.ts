@@ -49,7 +49,7 @@ export class IgxSliderComponent implements
     private _el = inject(ElementRef);
     private _cdr = inject(ChangeDetectorRef);
     private _ngZone = inject(NgZone);
-    private _dir = inject(IgxDirectionality);
+    private _dir = inject(ɵIgxDirectionality);
 
     /**
      * @hidden

@@ -12,6 +12,7 @@ import { ViewEncapsulation } from '@angular/core';
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
 import { DatePart } from 'igniteui-angular/core';
+import { MaskParsingService } from '../mask/mask-parsing.service';
 
 describe('IgxDateTimeEditor', () => {
     let dateTimeEditor: IgxDateTimeEditorDirective;

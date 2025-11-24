@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, inject } from '@angular/core';
 
-import { GridType, IGX_GRID_BASE, PivotGridType, PivotRowLayoutType, PivotUtil } from 'igniteui-angular/grids/core';
+import { PivotGridType, PivotRowLayoutType, PivotUtil } from 'igniteui-angular/grids/core';
 
 import { IgxGridHeaderComponent } from 'igniteui-angular/grids/core';
 import { IgxPivotColumnResizingService } from 'igniteui-angular/grids/core';

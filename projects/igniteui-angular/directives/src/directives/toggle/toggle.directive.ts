@@ -4,11 +4,10 @@ import {
     ElementRef,
     EventEmitter,
     HostListener,
-    Inject,
+    inject,
     Input,
     OnDestroy,
     OnInit,
-    Optional,
     Output,
 } from '@angular/core';
 import { AbsoluteScrollStrategy } from 'igniteui-angular/core';

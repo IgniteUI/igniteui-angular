@@ -60,7 +60,7 @@ let nextId = 0;
 })
 export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, DoCheck {
     public ngControl = inject(NgControl, { optional: true, self: true });
-    private _directionality = inject(IgxDirectionality);
+    private _directionality = inject(ɵIgxDirectionality);
     private cdr = inject(ChangeDetectorRef);
 
     private _radioButtons = signal<IgxRadioComponent[]>([]);

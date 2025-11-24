@@ -10,7 +10,7 @@ import {
     ColumnGroupsNavigationTestComponent
 } from '../../../test-utils/grid-samples.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
-import { GridSelectionMode, FilterMode } from 'igniteui-angular/grids/core';
+import { GridSelectionMode, FilterMode, IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 import { IActiveNodeChangeEventArgs } from 'igniteui-angular/grids/core';
 import { IgxGridHeaderRowComponent } from 'igniteui-angular/grids/core';
 import { IgxStringFilteringOperand, ISortingStrategy, SortingDirection } from 'igniteui-angular/core';

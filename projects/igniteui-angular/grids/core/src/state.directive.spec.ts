@@ -15,7 +15,7 @@ import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from '..
 import { GridSelectionRange } from './common/types';
 import { CustomFilter } from '../../../test-utils/grid-samples.spec';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
-import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridDetailTemplateDirective } from './public_api';
+import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridDetailTemplateDirective, IgxGridMRLNavigationService } from './public_api';
 import { IColumnState, IGridState } from './state-base.directive';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 

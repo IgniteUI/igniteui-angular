@@ -3,7 +3,7 @@ import { NgClass, NgTemplateOutlet, NgStyle } from '@angular/common';
 
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
-import { IgxFilteringService, IgxGridValidationService } from 'igniteui-angular/grids/core';
+import { IgxFilteringService, IgxGridNavigationService, IgxGridValidationService } from 'igniteui-angular/grids/core';
 import { IgxColumnComponent, } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from 'igniteui-angular/grids/core';

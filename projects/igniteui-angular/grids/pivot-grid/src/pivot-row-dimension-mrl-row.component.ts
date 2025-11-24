@@ -1,11 +1,9 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    ElementRef,
     EnvironmentInjector,
     HostBinding,
-    Inject,
+    inject,
     Injector,
     Input,
     QueryList,

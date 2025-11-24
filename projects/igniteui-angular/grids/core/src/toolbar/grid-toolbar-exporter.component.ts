@@ -11,7 +11,6 @@ import {
     IgxExcelExporterService
 } from 'igniteui-angular/core';
 import { GridType } from '../common/grid.interface';
-import { IgxToolbarToken } from './token';
 import { IgxButtonDirective, IgxRippleDirective, IgxToggleDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 

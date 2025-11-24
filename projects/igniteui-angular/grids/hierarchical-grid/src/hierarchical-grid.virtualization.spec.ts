@@ -13,6 +13,7 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxHierarchicalGridDefaultComponent } from '../../../test-utils/hierarchical-grid-components.spec';
 import { firstValueFrom } from 'rxjs';
 import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand } from 'igniteui-angular/core';
+import { IgxGridNavigationService } from 'igniteui-angular/grids/core';
 
 describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     let fixture;

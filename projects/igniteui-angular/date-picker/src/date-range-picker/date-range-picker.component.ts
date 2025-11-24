@@ -38,8 +38,8 @@ import { IgxCalendarContainerComponent } from '../date-picker/calendar-container
 import { PickerBaseDirective } from '../date-picker/picker-base.directive';
 import { IgxOverlayOutletDirective } from 'igniteui-angular/directives';
 import {
-    IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState,
-    IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxSuffixDirective,
+    IgxInputDirective, IgxInputGroupComponent, IgxInputState,
+    IgxLabelDirective, IgxSuffixDirective,
     IgxPrefixDirective,
     IgxReadOnlyInputDirective
 } from 'igniteui-angular/input-group';

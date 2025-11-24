@@ -1,7 +1,7 @@
 ﻿import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { GridSelectionMode, IgxGridHeaderRowComponent, IPinningConfig } from 'igniteui-angular/grids/core';
+import { GridSelectionMode, IgxGridHeaderRowComponent, IgxGridMRLNavigationService, IPinningConfig } from 'igniteui-angular/grids/core';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import {
     CELL_PINNED_CLASS,

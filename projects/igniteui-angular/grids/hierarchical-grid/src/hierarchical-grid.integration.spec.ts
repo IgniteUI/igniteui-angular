@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
-import { IgxColumnMovingDragDirective } from 'igniteui-angular/grids/core';
+import { IgxColumnMovingDragDirective, IgxGridNavigationService } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { take } from 'rxjs/operators';
 import {

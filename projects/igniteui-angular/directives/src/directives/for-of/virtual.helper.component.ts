@@ -1,8 +1,6 @@
 import { Component, HostBinding, Input, ViewChild, ViewContainerRef,
     OnDestroy, OnInit} from '@angular/core';
 import { VirtualHelperBaseDirective } from './base.helper.component';
-import { DOCUMENT } from '@angular/common';
-import { PlatformUtil } from 'igniteui-angular/core';
 
 @Component({
     selector: 'igx-virtual-helper',

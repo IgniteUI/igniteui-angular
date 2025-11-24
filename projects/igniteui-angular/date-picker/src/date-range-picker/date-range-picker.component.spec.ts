@@ -14,10 +14,8 @@ import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/d
 import { DateRangeType } from 'igniteui-angular/core';
 import { IgxDateRangePickerComponent, IgxDateRangeEndComponent } from './public_api';
 import { AutoPositionStrategy, IgxOverlayService } from 'igniteui-angular/core';
-import { AnimationMetadata, AnimationOptions } from '@angular/animations';
 import { Subject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { AnimationService } from 'igniteui-angular/core';
 import { IgxAngularAnimationService } from 'igniteui-angular/core';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../../../core/src/date-common/picker-icons.common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -26,6 +24,7 @@ import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
 import { CalendarDay } from 'igniteui-angular/core';
 import { IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from 'igniteui-angular/calendar';
+import { KeyboardNavigationService } from 'igniteui-angular/calendar/src/calendar/calendar.services';
 
 // The number of milliseconds in one day
 const DEBOUNCE_TIME = 16;

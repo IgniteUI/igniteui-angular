@@ -1,8 +1,9 @@
-import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotDateDimension, IgxPivotNumericAggregate, IgxPivotTimeAggregate, IPivotConfiguration, NoopPivotDimensionsStrategy } from 'igniteui-angular/grids/core';
+import { IGX_GRID_BASE, IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotDateDimension, IgxPivotNumericAggregate, IgxPivotTimeAggregate, IPivotConfiguration, NoopPivotDimensionsStrategy } from 'igniteui-angular/grids/core';
 import { IgxPivotAutoTransform, IgxPivotColumnPipe, IgxPivotRowExpansionPipe, IgxPivotRowPipe } from './pivot-grid.pipes';
 import { PivotGridFunctions } from '../../../test-utils/pivot-grid-functions.spec';
 import { DATA } from 'src/app/shared/pivot-data';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from 'igniteui-angular/core';
+import { TestBed } from '@angular/core/testing';
 
 describe('Pivot pipes #pivotGrid', () => {
     let rowPipe: IgxPivotRowPipe;

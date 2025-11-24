@@ -312,13 +312,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     private destroy$ = new Subject<void>();
     private unsubChildren$ = new Subject<void>();
 
-    constructor(
-        private navService: IgxTreeNavigationService,
-        private selectionService: IgxTreeSelectionService,
-        private treeService: IgxTreeService,
-        private element: ElementRef<HTMLElement>,
-        private platform: PlatformUtil
-    ) {
+    constructor() {
         this.selectionService.register(this);
         this.treeService.register(this);
         this.navService.register(this);

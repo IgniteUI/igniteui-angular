@@ -1,17 +1,14 @@
 import {
     Component,
-    ElementRef,
     HostBinding,
-    Inject,
     Input,
     booleanAttribute,
     inject
 } from '@angular/core';
 import { IgxComboAPIService } from './combo.api';
-import { IgxSelectionAPIService } from 'igniteui-angular/core';
 import { rem } from 'igniteui-angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
-import { IDropDownBase, IGX_DROPDOWN_BASE, IgxDropDownItemComponent, Navigate } from 'igniteui-angular/drop-down';
+import { IgxDropDownItemComponent, Navigate } from 'igniteui-angular/drop-down';
 
 /** @hidden */
 @Component({

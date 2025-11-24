@@ -49,10 +49,9 @@ import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyCompo
 import { IgxHierarchicalRowComponent } from 'igniteui-angular/grids/hierarchical-grid/src/hierarchical-row.component';
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
 import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
-import { IgxPivotNumericAggregate, PivotRowLayoutType } from 'igniteui-angular/grids/core';
+import { IgxGridNavigationService, IgxPivotNumericAggregate, PivotRowLayoutType } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
-import { IgxGridNavigationService } from '../../grids/grid-navigation.service';
 
 describe('Excel Exporter', () => {
     let exporter: IgxExcelExporterService;

@@ -1,27 +1,22 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     ElementRef,
-    Inject,
     Input,
-    NgZone,
     OnInit,
     TemplateRef,
     ViewChild,
-    DOCUMENT
+    DOCUMENT,
+    inject
 } from '@angular/core';
 import { NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe } from '@angular/common';
 import {
-    GridType,
-    IGX_GRID_BASE,
     IgxColumnFormatterPipe,
     IgxGridCellComponent,
     IgxGridCellImageAltPipe,
-    IgxGridSelectionService,
     IgxStringReplacePipe
 } from 'igniteui-angular/grids/core';
-import { HammerGesturesManager, IgxOverlayService, PlatformUtil } from 'igniteui-angular/core';
+import { HammerGesturesManager } from 'igniteui-angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxDateTimeEditorDirective, IgxFocusDirective, IgxTextHighlightDirective, IgxTooltipDirective, IgxTooltipTargetDirective } from 'igniteui-angular/directives';

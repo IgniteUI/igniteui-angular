@@ -1,7 +1,5 @@
 import { Component, HostBinding, Input, ViewChild, ViewContainerRef } from '@angular/core';
 import { VirtualHelperBaseDirective } from './base.helper.component';
-import { DOCUMENT } from '@angular/common';
-import { PlatformUtil } from 'igniteui-angular/core';
 
 /**
  * @hidden

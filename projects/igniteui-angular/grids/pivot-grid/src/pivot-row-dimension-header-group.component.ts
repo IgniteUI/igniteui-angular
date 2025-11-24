@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, HostListener, Inject, Input, NgZone, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, HostListener, inject, Input, NgZone, ViewChild } from '@angular/core';
 import { NgClass, NgStyle } from '@angular/common';
 
 import {
@@ -6,7 +6,6 @@ import {
     IgxColumnComponent,
     IgxColumnMovingDragDirective,
     IgxColumnMovingDropDirective,
-    IgxFilteringService,
     IgxGridHeaderGroupComponent,
     IgxHeaderGroupStylePipe,
     IgxPivotColumnResizingService,
@@ -18,7 +17,6 @@ import {
 } from 'igniteui-angular/grids/core';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { PlatformUtil } from 'igniteui-angular/core';
 
 /**
  * @hidden

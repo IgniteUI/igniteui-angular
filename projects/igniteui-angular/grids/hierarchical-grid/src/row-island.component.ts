@@ -3,53 +3,38 @@ import {
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
-    ElementRef,
-    EnvironmentInjector,
     EventEmitter,
     forwardRef,
-    Inject,
-    Injector,
     Input,
     IterableChangeRecord,
-    IterableDiffers,
-    LOCALE_ID,
-    NgZone,
     OnChanges,
     OnDestroy,
     OnInit,
     Output,
     QueryList,
     TemplateRef,
-    ViewContainerRef,
-    DOCUMENT
+    inject
 } from '@angular/core';
-import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import {
     GridType,
-    IGX_GRID_SERVICE_BASE,
     IgxColumnComponent,
-    IgxColumnResizingService,
     IgxFilteringService,
     IgxGridPaginatorTemplateContext,
     IgxGridSelectionService,
-    IgxGridSummaryService,
     IgxGridToolbarDirective,
     IgxGridToolbarTemplateContext,
-    IgxGridValidationService,
     ISearchInfo
 } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
-import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
-import { IgxActionStripToken, IgxFlatTransactionFactory, IgxOverlayService, PlatformUtil } from 'igniteui-angular/core';
+import { IgxActionStripToken } from 'igniteui-angular/core';
 import { first, filter, takeUntil, pluck } from 'rxjs/operators';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IGridCreatedEventArgs } from './events';
 import { IgxPaginatorComponent, IgxPaginatorDirective } from 'igniteui-angular/paginator';
-import { IForOfState, IgxTextHighlightService } from 'igniteui-angular/directives';
+import { IForOfState } from 'igniteui-angular/directives';
 
 /* blazorCopyInheritedMembers */
 /* blazorElement */

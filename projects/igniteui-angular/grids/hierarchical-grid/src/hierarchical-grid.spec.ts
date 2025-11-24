@@ -6,7 +6,7 @@ import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
-import { CellType, GridSelectionMode, IGridCellEventArgs, IgxColumnComponent, IgxColumnGroupComponent, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowEditActionsDirective, IgxRowEditTextDirective, IgxRowExpandedIndicatorDirective } from 'igniteui-angular/grids/core';
+import { CellType, GridSelectionMode, IGridCellEventArgs, IgxColumnComponent, IgxColumnGroupComponent, IgxGridNavigationService, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowEditActionsDirective, IgxRowEditTextDirective, IgxRowExpandedIndicatorDirective } from 'igniteui-angular/grids/core';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from 'igniteui-angular/grids/core';
 import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from 'igniteui-angular/grids/core';

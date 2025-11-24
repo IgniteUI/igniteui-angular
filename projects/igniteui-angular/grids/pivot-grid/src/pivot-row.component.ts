@@ -1,10 +1,8 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    ElementRef,
     forwardRef,
-    HostBinding, Inject, Input, ViewContainerRef
+    HostBinding, inject, Input, ViewContainerRef
 } from '@angular/core';
 import { NgClass, NgStyle } from '@angular/common';
 import {
@@ -13,7 +11,6 @@ import {
     IgxGridCellComponent,
     IgxGridCellStylesPipe,
     IgxGridNotGroupedPipe,
-    IgxGridSelectionService,
     IgxGridTransactionStatePipe,
     IgxRowDirective,
     IPivotGridColumn,

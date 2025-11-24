@@ -7,8 +7,8 @@ import {
     DestroyRef,
     ElementRef,
     HostBinding,
-    HostListener, Inject, Input,
-    Optional, QueryList, booleanAttribute,
+    HostListener, Input,
+    QueryList, booleanAttribute,
     inject,
     DOCUMENT,
     AfterContentChecked

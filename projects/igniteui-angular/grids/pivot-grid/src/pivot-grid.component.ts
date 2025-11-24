@@ -2,7 +2,7 @@ import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, Component, Ev
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
 import { first, take, takeUntil } from 'rxjs/operators';
-import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxFilteringService, IgxGridValidationService, IgxPivotDateDimension, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotUISettings, IPivotValue, IValuesChange, PivotDimensionType, PivotRowLayoutType, PivotSummaryPosition, PivotUtil } from 'igniteui-angular/grids/core';
+import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxFilteringService, IgxGridNavigationService, IgxGridValidationService, IgxPivotDateDimension, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotUISettings, IPivotValue, IValuesChange, PivotDimensionType, PivotRowLayoutType, PivotSummaryPosition, PivotUtil } from 'igniteui-angular/grids/core';
 import { IgxGridSelectionService } from 'igniteui-angular/grids/core';
 import { GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, IgxColumnTemplateContext, PivotGridType, RowType } from 'igniteui-angular/grids/core';
 import { IgxGridCRUDService } from 'igniteui-angular/grids/core';
@@ -12,7 +12,7 @@ import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { FilterMode, GridPagingMode, GridSummaryPosition } from 'igniteui-angular/grids/core';
 import { WatchChanges } from 'igniteui-angular/grids/core';
-import { cloneArray, ColumnType, DataUtil, DefaultDataCloneStrategy, GridColumnDataType, GridSummaryCalculationMode, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringOperation, IFilteringStrategy, ISortingExpression, OverlaySettings, PlatformUtil, resizeObservable, ɵSize, SortingDirection } from 'igniteui-angular/core';
+import { cloneArray, ColumnType, DataUtil, DefaultDataCloneStrategy, GridColumnDataType, GridSummaryCalculationMode, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringOperation, IFilteringStrategy, ISortingExpression, OverlaySettings, resizeObservable, ɵSize, SortingDirection } from 'igniteui-angular/core';
 import {
     IGridEditEventArgs,
     ICellPosition,
@@ -33,9 +33,8 @@ import { DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from 'i
 import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective } from 'igniteui-angular/grids/core';
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
 import { IgxPivotColumnResizingService } from 'igniteui-angular/grids/core';
-import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from 'igniteui-angular/core';
+import { State, Transaction, TransactionService } from 'igniteui-angular/core';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
-import { IgxGridTransaction } from 'igniteui-angular/grids/core';
 import { GridBaseAPIService } from 'igniteui-angular/grids/core';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
 import { IgxPivotGridColumnResizerComponent } from 'igniteui-angular/grids/core';
@@ -51,7 +50,7 @@ import { IgxGridBodyDirective } from 'igniteui-angular/grids/core';
 import { IgxColumnResizingService } from 'igniteui-angular/grids/core';
 import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
-import { IForOfDataChangingEventArgs, IgxForOfScrollSyncService, IgxForOfSyncService, IgxGridForOfDirective, IgxOverlayOutletDirective, IgxTemplateOutletDirective, IgxTextHighlightService, IgxToggleDirective } from 'igniteui-angular/directives';
+import { IForOfDataChangingEventArgs, IgxForOfScrollSyncService, IgxForOfSyncService, IgxGridForOfDirective, IgxOverlayOutletDirective, IgxTemplateOutletDirective, IgxToggleDirective } from 'igniteui-angular/directives';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { IgxIconComponent } from 'igniteui-angular/icon';

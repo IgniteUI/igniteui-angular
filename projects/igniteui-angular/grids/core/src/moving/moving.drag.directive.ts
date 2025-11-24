@@ -1,9 +1,9 @@
-import { Directive, OnDestroy, Input, ElementRef, ViewContainerRef, NgZone, ChangeDetectorRef, Renderer2 } from '@angular/core';
+import { Directive, OnDestroy, Input, inject } from '@angular/core';
 import { Subscription, fromEvent } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxColumnMovingService } from './moving.service';
 import { IgxDragDirective } from 'igniteui-angular/directives';
-import { ColumnType, PlatformUtil } from 'igniteui-angular/core';
+import { ColumnType } from 'igniteui-angular/core';
 
 /**
  * @hidden

@@ -3,7 +3,7 @@ import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
-import { IgxNavigationService, PlatformUtil } from 'igniteui-angular/core';
+import { HammerGesturesManager, IgxNavigationService } from 'igniteui-angular/core';
 import { IgxNavDrawerItemDirective, IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
 import { IgxNavbarComponent } from 'igniteui-angular/navbar';
 import { IgxFlexDirective, IgxLayoutDirective } from 'igniteui-angular/directives';

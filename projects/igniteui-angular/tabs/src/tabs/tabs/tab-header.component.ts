@@ -2,7 +2,7 @@ import { AfterViewInit, Component, HostBinding, HostListener, NgZone, OnDestroy,
 import { IgxTabHeaderDirective } from '../tab-header.directive';
 import { IgxTabHeaderBase } from '../tabs.base';
 import { IgxTabsComponent } from './tabs.component';
-import { getResizeObserver, ɵIgxDirectionality, PlatformUtil } from 'igniteui-angular/core';
+import { getResizeObserver, ɵIgxDirectionality } from 'igniteui-angular/core';
 
 @Component({
     selector: 'igx-tab-header',
@@ -13,7 +13,7 @@ import { getResizeObserver, ɵIgxDirectionality, PlatformUtil } from 'igniteui-a
 export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements AfterViewInit, OnDestroy {
     protected override tabs = inject(IgxTabsComponent);
     private ngZone = inject(NgZone);
-    private dir = inject(IgxDirectionality);
+    private dir = inject(ɵIgxDirectionality);
 
     /** @hidden @internal */
     @HostBinding('class.igx-tabs__header-item--selected')

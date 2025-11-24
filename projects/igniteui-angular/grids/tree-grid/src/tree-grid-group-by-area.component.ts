@@ -6,7 +6,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxDropDirective } from 'igniteui-angular/directives';
-import { IGroupingExpression, ISortingExpression, PlatformUtil } from 'igniteui-angular/core';
+import { IGroupingExpression, ISortingExpression } from 'igniteui-angular/core';
 import { IgxGroupAreaDropDirective, IgxGroupByAreaDirective, IgxGroupByMetaPipe } from 'igniteui-angular/grids/core';
 
 /**

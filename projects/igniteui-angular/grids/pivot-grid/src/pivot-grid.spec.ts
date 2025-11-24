@@ -5,7 +5,7 @@ import { FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxString
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
 import { DefaultPivotSortingStrategy } from 'igniteui-angular/grids/pivot-grid';
-import { DimensionValuesFilteringStrategy, IgxPivotDateAggregate, IgxPivotDateDimension, IgxPivotNumericAggregate, NoopPivotDimensionsStrategy } from 'igniteui-angular/grids/core';
+import { DimensionValuesFilteringStrategy, IgxGridNavigationService, IgxPivotDateAggregate, IgxPivotDateDimension, IgxPivotNumericAggregate, NoopPivotDimensionsStrategy } from 'igniteui-angular/grids/core';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { PivotGridFunctions } from '../../../test-utils/pivot-grid-functions.spec';
 import { IgxPivotGridFlexContainerComponent, IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponent, IgxTotalSaleAggregate } from '../../../test-utils/pivot-grid-samples.spec';

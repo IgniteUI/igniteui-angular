@@ -1,4 +1,18 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, forwardRef, HostBinding, HostListener, Input, QueryList, ViewChild, ViewChildren, inject } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    DoCheck,
+    ElementRef,
+    forwardRef,
+    HostBinding,
+    HostListener,
+    inject,
+    Input,
+    QueryList,
+    ViewChild,
+    ViewChildren
+} from '@angular/core';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxGridHeaderComponent } from './grid-header.component';
@@ -25,6 +39,7 @@ const Z_INDEX = 9999;
     imports: [NgClass, NgStyle, IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxIconComponent, NgTemplateOutlet, IgxGridHeaderComponent, IgxGridFilteringCellComponent, IgxResizeHandleDirective, IgxHeaderGroupStylePipe]
 })
 export class IgxGridHeaderGroupComponent implements DoCheck {
+
     private cdr = inject(ChangeDetectorRef);
     public grid = inject<GridType>(IGX_GRID_BASE);
     private ref = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -111,21 +126,6 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     @HostBinding('class.igx-grid-thead__item')
     public defaultCss = true;
-
-    @HostBinding('class.igx-grid-th--pinned')
-    public get pinnedCss() {
-        return this.isPinned;
-    }
-
-    @HostBinding('class.igx-grid-th--pinned-last')
-    public get pinnedLastCss() {
-        return this.isLastPinned;
-    }
-
-    @HostBinding('class.igx-grid-th--pinned-first')
-    public get pinnedFirstCSS() {
-        return this.isFirstPinned;
-    }
 
     @HostBinding('class.igx-grid__drag-col-header')
     public get headerDragCss() {

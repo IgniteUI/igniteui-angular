@@ -1,12 +1,10 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     createComponent,
-    ElementRef,
     EnvironmentInjector,
     HostBinding,
-    Inject,
+    inject,
     Injector,
     Input,
     OnChanges,

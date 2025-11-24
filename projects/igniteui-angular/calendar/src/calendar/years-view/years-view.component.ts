@@ -3,7 +3,6 @@ import {
     Input,
     HostBinding,
     ElementRef,
-    Inject,
     inject,
 } from "@angular/core";
 import { IgxCalendarYearDirective } from "../calendar.directives";
@@ -12,7 +11,7 @@ import {
     DAY_INTERVAL_TOKEN,
 } from "../common/calendar-view.directive";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { CalendarDay, calendarRange, PlatformUtil, type DayInterval } from 'igniteui-angular/core';
+import { CalendarDay, calendarRange, PlatformUtil } from 'igniteui-angular/core';
 
 @Component({
     providers: [

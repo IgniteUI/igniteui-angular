@@ -6,13 +6,11 @@ import {
     ElementRef,
     EventEmitter,
     HostBinding,
-    Inject,
+    inject,
     Input,
     Output,
     booleanAttribute
 } from '@angular/core';
-import { IgxAngularAnimationService } from 'igniteui-angular/core';
-import { AnimationService } from 'igniteui-angular/core';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
 import {

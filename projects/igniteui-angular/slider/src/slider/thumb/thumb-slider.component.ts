@@ -15,7 +15,7 @@ import { ɵIgxDirectionality } from 'igniteui-angular/core';
 })
 export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     private _elementRef = inject(ElementRef);
-    private _dir = inject(IgxDirectionality);
+    private _dir = inject(ɵIgxDirectionality);
 
     @Input()
     public value: any;

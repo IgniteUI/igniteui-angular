@@ -35,7 +35,7 @@ import {
      IFormattingViews, IFormattingOptions
 } from 'igniteui-angular/calendar';
 import {
-    IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupType, IgxInputState, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxSuffixDirective,
+    IgxLabelDirective, IgxInputState, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxSuffixDirective,
     IgxReadOnlyInputDirective
 } from 'igniteui-angular/input-group';
 import { fromEvent, Subscription, noop, MonoTypeOperatorFunction } from 'rxjs';

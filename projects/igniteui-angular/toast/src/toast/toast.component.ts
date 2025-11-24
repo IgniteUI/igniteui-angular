@@ -1,6 +1,5 @@
 import { Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, inject } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
-import { IgxNavigationService } from 'igniteui-angular/core';
 import {
     HorizontalAlignment,
     VerticalAlignment,

@@ -1,9 +1,7 @@
 import {
     Directive,
-    ElementRef,
-    Input,
-    NgZone
-} from '@angular/core';
+    inject,
+    Input} from '@angular/core';
 import { IgxPivotColumnResizingService } from './pivot-resizing.service'
 import { IgxResizeHandleDirective } from '../resize-handle.directive';
 import { ColumnType } from 'igniteui-angular/core';

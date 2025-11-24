@@ -2,7 +2,7 @@
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
+import { IgxColumnLayoutComponent, IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 import { By } from '@angular/platform-browser';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { wait } from '../../../test-utils/ui-interactions.spec';

@@ -3,7 +3,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TitleCasePipe } from '@angular/common';
 import { CalendarSelection, ScrollDirection } from '../../calendar/calendar';
 import { IgxDayItemComponent } from './day-item.component';
-import { CalendarDay, DateRangeType, PlatformUtil, areSameMonth, generateMonth, getClosestActiveDate, getNextActiveDate, getPreviousActiveDate, intoChunks, isDateInRanges } from 'igniteui-angular/core';
+import { CalendarDay, DateRangeType, areSameMonth, generateMonth, getClosestActiveDate, getNextActiveDate, getPreviousActiveDate, intoChunks, isDateInRanges } from 'igniteui-angular/core';
 import { IgxCalendarBaseDirective } from '../calendar-base';
 import { IViewChangingEventArgs } from './days-view.interface';
 

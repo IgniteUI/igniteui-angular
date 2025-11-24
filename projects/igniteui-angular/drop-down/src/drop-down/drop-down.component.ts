@@ -1,5 +1,4 @@
 import {
-    ChangeDetectorRef,
     Component,
     ContentChildren,
     ElementRef,
@@ -15,9 +14,7 @@ import {
     EventEmitter,
     SimpleChanges,
     booleanAttribute,
-    Inject,
-    DOCUMENT
-} from '@angular/core';
+    inject} from '@angular/core';
 import { IgxToggleDirective, ToggleViewEventArgs } from 'igniteui-angular/directives';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownBaseDirective } from './drop-down.base';

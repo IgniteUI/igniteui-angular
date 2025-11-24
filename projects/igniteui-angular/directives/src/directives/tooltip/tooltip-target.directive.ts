@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IgxNavigationService } from 'igniteui-angular/core';
 import { IBaseEventArgs } from 'igniteui-angular/core';
 import { PositionSettings } from 'igniteui-angular/core';
 import { IgxToggleActionDirective } from '../toggle/toggle.directive';

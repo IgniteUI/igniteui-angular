@@ -10,13 +10,12 @@ import {
     Output,
     ViewChild,
     ContentChild,
-    Inject,
     AfterViewInit,
     Injector,
     PipeTransform,
     ChangeDetectorRef,
-    LOCALE_ID, Optional,
-    HostListener, booleanAttribute
+    HostListener, booleanAttribute,
+    inject
 } from '@angular/core';
 import {
     ControlValueAccessor,
@@ -28,7 +27,7 @@ import {
     NG_VALIDATORS
 } from '@angular/forms';
 
-import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE, IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxReadOnlyInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxReadOnlyInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import {
     IgxItemListDirective,
     IgxTimeItemDirective

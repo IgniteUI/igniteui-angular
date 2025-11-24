@@ -1,12 +1,9 @@
-import { ChangeDetectorRef, ElementRef, ChangeDetectionStrategy, Component, OnInit, NgZone, Inject } from '@angular/core';
-import { HammerGesturesManager, IgxOverlayService, PlatformUtil } from 'igniteui-angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { HammerGesturesManager } from 'igniteui-angular/core';
 import {
-    GridType,
-    IGX_GRID_BASE,
     IgxColumnFormatterPipe,
     IgxGridCellComponent,
     IgxGridCellImageAltPipe,
-    IgxGridSelectionService,
     IgxStringReplacePipe
 } from 'igniteui-angular/grids/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';

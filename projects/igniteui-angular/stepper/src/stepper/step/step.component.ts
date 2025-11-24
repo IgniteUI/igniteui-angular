@@ -7,7 +7,7 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
 import { CarouselAnimationDirection, IgxSlideComponentBase } from 'igniteui-angular/carousel';
-import { AnimationService, IgxAngularAnimationService, ɵIgxDirectionality, PlatformUtil } from 'igniteui-angular/core';
+import { ɵIgxDirectionality, PlatformUtil } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 
@@ -45,7 +45,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
     protected platform = inject(PlatformUtil);
     protected stepperService = inject(IgxStepperService);
     private element = inject<ElementRef<HTMLElement>>(ElementRef);
-    private dir = inject(IgxDirectionality);
+    private dir = inject(ɵIgxDirectionality);
 
 
     /**

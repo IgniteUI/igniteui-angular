@@ -17,7 +17,7 @@ import { IgxHierarchicalRowComponent } from 'igniteui-angular/grids/hierarchical
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
 import { IRowDataCancelableEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
-import { IgxGridNavigationService } from '../../grids/grid-navigation.service';
+import { IgxGridNavigationService } from 'igniteui-angular';
 
 describe('igxGridEditingActions #grid ', () => {
     let fixture;

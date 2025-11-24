@@ -3,13 +3,12 @@ import { AfterViewInit, Component, DoCheck, EventEmitter, HostListener, Output, 
 import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 
-import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil, IgxSelectionAPIService } from 'igniteui-angular/core';
+import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from 'igniteui-angular/core';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxForOfDirective } from 'igniteui-angular/directives';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxTextSelectionDirective } from 'igniteui-angular/directives';
-import { IgxIconService } from 'igniteui-angular/icon';
-import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IGX_COMBO_COMPONENT, IgxComboAddItemComponent, IgxComboAPIService, IgxComboBaseDirective, IgxComboDropDownComponent, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboItemComponent } from 'igniteui-angular/combo';
 import { IgxDropDownItemNavigationDirective } from 'igniteui-angular/drop-down';

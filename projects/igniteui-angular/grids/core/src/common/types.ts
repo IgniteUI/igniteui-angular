@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
+import { State, Transaction, TransactionService } from 'igniteui-angular/core';
 
 /* tsPlainInterface */
 /* marshalByValue */

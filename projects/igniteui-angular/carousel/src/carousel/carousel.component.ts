@@ -5,8 +5,6 @@ import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CarouselResourceStringsEN, ICarouselResourceStrings } from 'igniteui-angular/core';
 import { first, IBaseEventArgs, last, PlatformUtil } from 'igniteui-angular/core';
-import { IgxAngularAnimationService } from 'igniteui-angular/core';
-import { AnimationService } from 'igniteui-angular/core';
 import { CarouselAnimationDirection, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
@@ -67,7 +65,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     private element = inject(ElementRef);
     private iterableDiffers = inject(IterableDiffers);
     private platformUtil = inject(PlatformUtil);
-    private dir = inject(IgxDirectionality);
+    private dir = inject(ɵIgxDirectionality);
     private document = inject(DOCUMENT);
 
 

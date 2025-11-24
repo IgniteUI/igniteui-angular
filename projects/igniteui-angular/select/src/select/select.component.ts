@@ -6,7 +6,6 @@ import { takeUntil } from 'rxjs/operators';
 
 import {
     EditorProvider,
-    IgxSelectionAPIService,
     IBaseCancelableBrowserEventArgs,
     IBaseEventArgs,
     AbsoluteScrollStrategy,

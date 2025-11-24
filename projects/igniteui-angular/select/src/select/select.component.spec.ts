@@ -5,11 +5,11 @@ import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, 
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { IgxDropDownItemComponent, ISelectionEventArgs } from '../../../drop-down/src/drop-down/public_api';
+import { IGX_DROPDOWN_BASE, IgxDropDownItemComponent, ISelectionEventArgs } from '../../../drop-down/src/drop-down/public_api';
 import { IgxHintDirective, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { IgxSelectComponent, IgxSelectFooterDirective, IgxSelectHeaderDirective } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
-import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from 'igniteui-angular/core';
+import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy, IgxSelectionAPIService } from 'igniteui-angular/core';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 import { IgxIconComponent } from 'igniteui-angular/icon';

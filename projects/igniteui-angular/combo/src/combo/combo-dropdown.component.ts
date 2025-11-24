@@ -2,7 +2,6 @@ import { Component, QueryList, OnDestroy, AfterViewInit, ContentChildren, Input,
 import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
-import { IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxToggleDirective } from 'igniteui-angular/directives';
 import { DropDownActionKey, IDropDownBase, IGX_DROPDOWN_BASE, IgxDropDownComponent, IgxDropDownItemBaseDirective } from 'igniteui-angular/drop-down';

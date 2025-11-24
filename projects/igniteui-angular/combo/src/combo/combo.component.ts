@@ -7,11 +7,9 @@ import {
     IBaseEventArgs,
     IBaseCancelableEventArgs,
     CancelableEventArgs,
-    IgxSelectionAPIService,
     EditorProvider
 } from 'igniteui-angular/core';
 import { IgxForOfDirective } from 'igniteui-angular/directives';
-import { IgxIconService } from 'igniteui-angular/icon';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxComboItemComponent } from './combo-item.component';
@@ -20,7 +18,7 @@ import { IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
 import { IGX_COMBO_COMPONENT, IgxComboBaseDirective } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
-import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE, IgxInputGroupComponent, IgxInputDirective, IgxReadOnlyInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IgxInputGroupComponent, IgxInputDirective, IgxReadOnlyInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxDropDownItemNavigationDirective } from 'igniteui-angular/drop-down';
 

@@ -8,6 +8,7 @@ import { MaskParsingService, Replaced } from './mask-parsing.service';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent } from '../../../../input-group/src/input-group/input-group.component';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
+import { PlatformUtil } from 'igniteui-angular/core';
 
 describe('igxMask', () => {
     // TODO: Refactor tests to reuse components

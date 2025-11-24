@@ -16,6 +16,7 @@ import { IgxGridRowComponent } from './grid-row.component';
 import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection, TransactionType } from 'igniteui-angular/core';
+import { IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 
 const DEBOUNCETIME = 30;
 

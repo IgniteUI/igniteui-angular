@@ -16,7 +16,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
-import { AnimationService, getCurrentResourceStrings, IgxAngularAnimationService, ITreeResourceStrings, TreeResourceStringsEN } from 'igniteui-angular/core';
+import { getCurrentResourceStrings, ITreeResourceStrings, TreeResourceStringsEN } from 'igniteui-angular/core';
 
 // TODO: Implement aria functionality
 /**

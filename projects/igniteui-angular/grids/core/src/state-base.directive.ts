@@ -1,4 +1,4 @@
-import { Directive, Input, ViewContainerRef, createComponent, EnvironmentInjector, Injector, inject, Host, Inject, Optional } from '@angular/core';
+import { Directive, Input, ViewContainerRef, createComponent, EnvironmentInjector, Injector, inject } from '@angular/core';
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { GridSelectionRange } from './common/types';

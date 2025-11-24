@@ -1,6 +1,5 @@
 import {
     Directive,
-    ElementRef,
     EventEmitter,
     HostBinding,
     HostListener,
@@ -8,6 +7,7 @@ import {
     Output,
     Renderer2,
     booleanAttribute,
+    inject
 } from '@angular/core';
 import { IBaseEventArgs } from 'igniteui-angular/core';
 import { IgxBaseButtonType, IgxButtonBaseDirective } from './button-base';

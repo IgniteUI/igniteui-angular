@@ -5,7 +5,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { IgxCarouselComponentBase } from 'igniteui-angular/carousel';
-import { IgxAngularAnimationService, AnimationService } from 'igniteui-angular/core';
 import { IgxStepComponent } from './step/step.component';
 import {
     IgxStepper, IgxStepperOrientation, IgxStepperTitlePosition, IgxStepType,
