@@ -130,19 +130,19 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             const header = TreeGridFunctions.getHeaderCell(fix, 'ID').nativeElement;
-            UIInteractions.simulatePointerEvent('pointerdown', header, 50, 50);
-            await wait();
-            fix.detectChanges();
-
-            UIInteractions.simulatePointerEvent('pointermove', header, 56, 56);
+            UIInteractions.simulatePointerEvent('pointerdown', header, 50, 35);
             await wait(30);
             fix.detectChanges();
 
-            UIInteractions.simulatePointerEvent('pointermove', header, 490, 30);
+            UIInteractions.simulatePointerEvent('pointermove', header, 56, 35);
             await wait(30);
             fix.detectChanges();
 
-            UIInteractions.simulatePointerEvent('pointerup', header, 490, 30);
+            UIInteractions.simulatePointerEvent('pointermove', header, 550, 20);
+            await wait(30);
+            fix.detectChanges();
+
+            UIInteractions.simulatePointerEvent('pointerup', header, 550, 20);
             await wait(30);
             fix.detectChanges();
 
@@ -319,19 +319,19 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             const header = TreeGridFunctions.getHeaderCell(fix, 'ID').nativeElement;
-            UIInteractions.simulatePointerEvent('pointerdown', header, 50, 50);
-            await wait();
-            fix.detectChanges();
-
-            UIInteractions.simulatePointerEvent('pointermove', header, 56, 56);
+            UIInteractions.simulatePointerEvent('pointerdown', header, 50, 35);
             await wait(30);
             fix.detectChanges();
 
-            UIInteractions.simulatePointerEvent('pointermove', header, 490, 30);
+            UIInteractions.simulatePointerEvent('pointermove', header, 56, 35);
             await wait(30);
             fix.detectChanges();
 
-            UIInteractions.simulatePointerEvent('pointerup', header, 490, 30);
+            UIInteractions.simulatePointerEvent('pointermove', header, 550, 20);
+            await wait(30);
+            fix.detectChanges();
+
+            UIInteractions.simulatePointerEvent('pointerup', header, 550, 20);
             await wait(30);
             fix.detectChanges();
 
