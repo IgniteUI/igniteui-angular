@@ -12,67 +12,69 @@ const version = '21.0.0';
 // Comprehensive entry point mapping for ALL exports from all 42 entry points
 const ENTRY_POINT_MAP = new Map<string, string>([
     // Core - Services, Utilities, Types, Enums
-    ['IgxOverlayService', 'core'],
-    ['IgxNavigationService', 'core'],
-    ['DisplayDensity', 'core'],
-    ['DisplayDensityToken', 'core'],
-    ['DisplayDensityBase', 'core'],
-    ['IDisplayDensityOptions', 'core'],
-    ['OverlaySettings', 'core'],
-    ['PositionSettings', 'core'],
-    ['ScrollStrategy', 'core'],
-    ['GlobalPositionStrategy', 'core'],
-    ['AutoPositionStrategy', 'core'],
-    ['ConnectedPositioningStrategy', 'core'],
-    ['ElasticPositionStrategy', 'core'],
-    ['AbsoluteScrollStrategy', 'core'],
-    ['BlockScrollStrategy', 'core'],
-    ['CloseScrollStrategy', 'core'],
-    ['NoOpScrollStrategy', 'core'],
-    ['HorizontalAlignment', 'core'],
-    ['VerticalAlignment', 'core'],
-    ['PositionStrategy', 'core'],
-    ['OverlayEventArgs', 'core'],
-    ['OverlayCancelableEventArgs', 'core'],
-    ['OverlayClosingEventArgs', 'core'],
-    ['OverlayAnimationEventArgs', 'core'],
-    ['Size', 'core'],
-    ['OffsetMode', 'core'],
-    ['ConnectedFit', 'core'],
-    ['IFilteringExpressionsTree', 'core'],
-    ['IFilteringExpression', 'core'],
-    ['FilteringLogic', 'core'],
-    ['IFilteringOperation', 'core'],
-    ['ISortingExpression', 'core'],
-    ['SortingDirection', 'core'],
-    ['IGroupingExpression', 'core'],
-    ['IGroupByExpandState', 'core'],
-    ['IPagingState', 'core'],
-    ['PagingError', 'core'],
-    ['DataUtil', 'core'],
-    ['DatePart', 'core'],
-    ['DatePartInfo', 'core'],
-    ['DatePickerUtil', 'core'],
-    ['IBaseCancelableBrowserEventArgs', 'core'],
-    ['IBaseCancelableEventArgs', 'core'],
-    ['IBaseEventArgs', 'core'],
-    ['ICancelableBrowserEventArgs', 'core'],
-    ['ICancelableEventArgs', 'core'],
-    ['PlatformUtil', 'core'],
-    ['Transaction', 'core'],
-    ['TransactionType', 'core'],
-    ['IgxTransactionService', 'core'],
-    ['State', 'core'],
+    // ['IgxOverlayService', 'core'],
+    // ['IgxNavigationService', 'core'],
+    // ['DisplayDensity', 'core'],
+    // ['DisplayDensityToken', 'core'],
+    // ['DisplayDensityBase', 'core'],
+    // ['IDisplayDensityOptions', 'core'],
+    // ['OverlaySettings', 'core'],
+    // ['PositionSettings', 'core'],
+    // ['ScrollStrategy', 'core'],
+    // ['GlobalPositionStrategy', 'core'],
+    // ['AutoPositionStrategy', 'core'],
+    // ['ConnectedPositioningStrategy', 'core'],
+    // ['ElasticPositionStrategy', 'core'],
+    // ['AbsoluteScrollStrategy', 'core'],
+    // ['BlockScrollStrategy', 'core'],
+    // ['CloseScrollStrategy', 'core'],
+    // ['NoOpScrollStrategy', 'core'],
+    // ['HorizontalAlignment', 'core'],
+    // ['VerticalAlignment', 'core'],
+    // ['PositionStrategy', 'core'],
+    // ['OverlayEventArgs', 'core'],
+    // ['OverlayCancelableEventArgs', 'core'],
+    // ['OverlayClosingEventArgs', 'core'],
+    // ['OverlayAnimationEventArgs', 'core'],
+    // ['Size', 'core'],
+    // ['OffsetMode', 'core'],
+    // ['ConnectedFit', 'core'],
+    // ['IFilteringExpressionsTree', 'core'],
+    // ['IFilteringExpression', 'core'],
+    // ['FilteringLogic', 'core'],
+    // ['IFilteringOperation', 'core'],
+    // ['ISortingExpression', 'core'],
+    // ['SortingDirection', 'core'],
+    // ['IGroupingExpression', 'core'],
+    // ['IGroupByExpandState', 'core'],
+    // ['IPagingState', 'core'],
+    // ['PagingError', 'core'],
+    // ['DataUtil', 'core'],
+    // ['DatePart', 'core'],
+    // ['DatePartInfo', 'core'],
+    // ['DatePickerUtil', 'core'],
+    // ['IBaseCancelableBrowserEventArgs', 'core'],
+    // ['IBaseCancelableEventArgs', 'core'],
+    // ['IBaseEventArgs', 'core'],
+    // ['ICancelableBrowserEventArgs', 'core'],
+    // ['ICancelableEventArgs', 'core'],
+    // ['PlatformUtil', 'core'],
+    // ['Transaction', 'core'],
+    // ['TransactionType', 'core'],
+    // ['IgxTransactionService', 'core'],
+    // ['State', 'core'],
 
     // Accordion
     ['IgxAccordionComponent', 'accordion'],
     ['IgxAccordionModule', 'accordion'],
+    ['IGX_ACCORDION_DIRECTIVES', 'accordion'],
     ['IAccordionEventArgs', 'accordion'],
     ['IAccordionCancelableEventArgs', 'accordion'],
 
     // Action Strip
     ['IgxActionStripComponent', 'action-strip'],
     ['IgxActionStripModule', 'action-strip'],
+    ['IGX_ACTION_STRIP_DIRECTIVES', 'action-strip'],
     ['IgxActionStripMenuItemDirective', 'action-strip'],
 
     // Avatar
@@ -91,6 +93,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Banner
     ['IgxBannerComponent', 'banner'],
     ['IgxBannerModule', 'banner'],
+    ['IGX_BANNER_DIRECTIVES', 'banner'],
     ['IgxBannerActionsDirective', 'banner'],
     ['IBannerEventArgs', 'banner'],
     ['IBannerCancelEventArgs', 'banner'],
@@ -108,6 +111,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Button Group
     ['IgxButtonGroupComponent', 'button-group'],
     ['IgxButtonGroupModule', 'button-group'],
+    ['IGX_BUTTON_GROUP_DIRECTIVES', 'button-group'],
     ['IgxButtonDirective', 'button-group'],
     ['IgxIconButtonDirective', 'button-group'],
     ['IButtonGroupEventArgs', 'button-group'],
@@ -116,6 +120,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Calendar
     ['IgxCalendarComponent', 'calendar'],
     ['IgxCalendarModule', 'calendar'],
+    ['IGX_CALENDAR_DIRECTIVES', 'calendar'],
     ['IgxDaysViewComponent', 'calendar'],
     ['IgxMonthsViewComponent', 'calendar'],
     ['IgxYearsViewComponent', 'calendar'],
@@ -133,6 +138,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Card
     ['IgxCardComponent', 'card'],
     ['IgxCardModule', 'card'],
+    ['IGX_CARD_DIRECTIVES', 'card'],
     ['IgxCardHeaderComponent', 'card'],
     ['IgxCardMediaDirective', 'card'],
     ['IgxCardContentDirective', 'card'],
@@ -145,6 +151,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Carousel
     ['IgxCarouselComponent', 'carousel'],
     ['IgxCarouselModule', 'carousel'],
+    ['IGX_CAROUSEL_DIRECTIVES', 'carousel'],
     ['IgxSlideComponent', 'carousel'],
     ['CarouselAnimationDirection', 'carousel'], // Renamed from Direction
     ['ISlideEventArgs', 'carousel'],
@@ -161,6 +168,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Chips
     ['IgxChipsComponent', 'chips'],
     ['IgxChipsModule', 'chips'],
+    ['IGX_CHIPS_DIRECTIVES', 'chips'],
     ['IgxChipComponent', 'chips'],
     ['IgxChipsAreaComponent', 'chips'],
     ['IBaseChipEventArgs', 'chips'],
@@ -173,6 +181,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Combo
     ['IgxComboComponent', 'combo'],
     ['IgxComboModule', 'combo'],
+    ['IGX_COMBO_DIRECTIVES', 'combo'],
     ['IComboSelectionChangingEventArgs', 'combo'],
     ['IComboItemAdditionEvent', 'combo'],
     ['IComboSearchInputEventArgs', 'combo'],
@@ -189,13 +198,14 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Date and Date Range Picker
     ['IgxDatePickerComponent', 'date-picker'],
     ['IgxDatePickerModule', 'date-picker'],
+    ['IGX_DATE_PICKER_DIRECTIVES', 'date-picker'],
+    ['IGX_DATE_RANGE_PICKER_DIRECTIVES', 'date-picker'],
     ['InteractionMode', 'date-picker'],
     ['IDatePickerCancelEventArgs', 'date-picker'],
     ['IDatePickerDisabledDateEventArgs', 'date-picker'],
     ['IDatePickerValidationFailedEventArgs', 'date-picker'],
     ['IgxDateRangePickerComponent', 'date-picker'],
     ['IgxDateRangePickerModule', 'date-picker'],
-    ['DateRangeType', 'date-picker'],
     ['DateRangeDescriptor', 'date-picker'],
     ['IDateRangePickerCancelEventArgs', 'date-picker'],
     ['IgxDateRangeEndComponent', 'date-picker'],
@@ -204,6 +214,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Dialog
     ['IgxDialogComponent', 'dialog'],
     ['IgxDialogModule', 'dialog'],
+    ['IGX_DIALOG_DIRECTIVES', 'dialog'],
     ['IgxDialogActionsDirective', 'dialog'],
     ['IgxDialogTitleDirective', 'dialog'],
     ['IDialogEventArgs', 'dialog'],
@@ -212,6 +223,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Drop Down
     ['IgxDropDownComponent', 'drop-down'],
     ['IgxDropDownModule', 'drop-down'],
+    ['IGX_DROP_DOWN_DIRECTIVES', 'drop-down'],
     ['IgxDropDownItemComponent', 'drop-down'],
     ['IgxDropDownGroupComponent', 'drop-down'],
     ['IgxDropDownItemBaseDirective', 'drop-down'],
@@ -224,6 +236,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Expansion Panel
     ['IgxExpansionPanelComponent', 'expansion-panel'],
     ['IgxExpansionPanelModule', 'expansion-panel'],
+    ['IGX_EXPANSION_PANEL_DIRECTIVES', 'expansion-panel'],
     ['IgxExpansionPanelBase', 'expansion-panel'],
     ['IExpansionPanelEventArgs', 'expansion-panel'],
     ['IExpansionPanelCancelableEventArgs', 'expansion-panel'],
@@ -243,9 +256,13 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     //   - 'igniteui-angular/grids/hierarchical-grid' - Hierarchical grid (IgxHierarchicalGridComponent, IgxRowIslandComponent)
     //   - 'igniteui-angular/grids/pivot-grid' - Pivot grid (IgxPivotGridComponent, IgxPivotDataSelectorComponent)
     ['IgxGridComponent', 'grids/grid'],
+    ['IGX_GRID_DIRECTIVES', 'grids/grid'],
     ['IgxTreeGridComponent', 'grids/tree-grid'],
+    ['IGX_TREE_GRID_DIRECTIVES', 'grids/tree-grid'],
     ['IgxHierarchicalGridComponent', 'grids/hierarchical-grid'],
+    ['IGX_HIERARCHICAL_GRID_DIRECTIVES', 'grids/hierarchical-grid'],
     ['IgxPivotGridComponent', 'grids/pivot-grid'],
+    ['IGX_PIVOT_GRID_DIRECTIVES', 'grids/pivot-grid'],
     ['IgxPivotDataSelectorComponent', 'grids/pivot-grid'],
     ['IgxRowIslandComponent', 'grids/hierarchical-grid'],
     ['IgxGridModule', 'grids/grid'],
@@ -289,7 +306,6 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IRowDragStartEventArgs', 'grids/core'],
     ['GridSelectionMode', 'grids/core'],
     ['FilterMode', 'grids/core'],
-    ['GridSummaryCalculationMode', 'grids/core'],
     ['GridSummaryPosition', 'grids/core'],
     ['RowPinningPosition', 'grids/core'],
     ['GridInstanceType', 'grids/core'],
@@ -362,6 +378,11 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['GridType', 'grids/core'],
     ['IGX_GRID_BASE', 'grids/core'],
     ['IColumnSelectionEventArgs', 'grids/core'],
+    ['IgxDragIndicatorIconDirective', 'grids/core'],
+    ['IgxRowDragGhostDirective', 'grids/core'],
+    ['IgxGridFooterComponent', 'grids/core'],
+    ['IgxColumnLayoutComponent', 'grids/core'],
+    ['IgxExporterEvent', 'grids/core'],
     ['IgxGridEditingActions', 'grids/core'], // Grid actions moved to grids
     ['IgxGridPinningActions', 'grids/core'], // Grid actions moved to grids
     ['IgxGridActionButtonComponent', 'grids/core'], // Grid actions moved to grids
@@ -375,6 +396,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['ITreeGridAggregation', 'grids/tree-grid'],
     ['IgxGroupedTreeGridSorting', 'grids/tree-grid'],
     ['IgxTreeGridGroupingPipe', 'grids/tree-grid'],
+    ['IGridCreatedEventArgs', 'grids/hierarchical-grid'],
 
     // Icon
     ['IgxIconComponent', 'icon'],
@@ -385,6 +407,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Input Group
     ['IgxInputGroupComponent', 'input-group'],
     ['IgxInputGroupModule', 'input-group'],
+    ['IGX_INPUT_GROUP_DIRECTIVES', 'input-group'],
     ['IgxInputDirective', 'input-group'], // Breaking change - moved from directives
     ['IgxLabelDirective', 'input-group'], // Breaking change - moved from directives
     ['IgxHintDirective', 'input-group'], // Breaking change - moved from directives
@@ -397,6 +420,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // List
     ['IgxListComponent', 'list'],
     ['IgxListModule', 'list'],
+    ['IGX_LIST_DIRECTIVES', 'list'],
     ['IgxListItemComponent', 'list'],
     ['IgxListHeaderComponent', 'list'],
     ['IListItemClickEventArgs', 'list'],
@@ -408,16 +432,20 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxDataLoadingTemplateDirective', 'list'],
     ['IgxListActionDirective', 'list'],
     ['IgxListThumbnailDirective', 'list'],
+    ['IgxListItemLeftPanningTemplateDirective', 'list'],
+    ['IgxListItemRightPanningTemplateDirective', 'list'],
 
     // Navbar
     ['IgxNavbarComponent', 'navbar'],
     ['IgxNavbarModule', 'navbar'],
+    ['IGX_NAVBAR_DIRECTIVES', 'navbar'],
     ['IgxNavbarActionDirective', 'navbar'],
     ['IgxNavbarTitleDirective', 'navbar'],
 
     // Navigation Drawer
     ['IgxNavigationDrawerComponent', 'navigation-drawer'],
     ['IgxNavigationDrawerModule', 'navigation-drawer'],
+    ['IGX_NAVIGATION_DRAWER_DIRECTIVES', 'navigation-drawer'],
     ['IgxNavigationDrawerItemComponent', 'navigation-drawer'],
     ['INavigationDrawerEventArgs', 'navigation-drawer'],
     ['IgxNavDrawerMode', 'navigation-drawer'],
@@ -427,6 +455,8 @@ const ENTRY_POINT_MAP = new Map<string, string>([
 
     // Paginator
     ['IgxPaginatorComponent', 'paginator'],
+    ['IGX_PAGINATOR_DIRECTIVES', 'paginator'],
+    ['IgxPaginatorDirective', 'paginator'],
     ['IgxPageNavigationComponent', 'paginator'],
     ['IgxPageSizeSelectorComponent', 'paginator'],
     ['IgxPaginatorContentDirective', 'paginator'],
@@ -438,24 +468,31 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxCircularProgressBarComponent', 'progressbar'],
     ['IgxLinearProgressBarComponent', 'progressbar'],
     ['IgxProgressBarModule', 'progressbar'],
+    ['IGX_PROGRESS_BAR_DIRECTIVES', 'progressbar'],
     ['IgxProgressType', 'progressbar'],
     ['IgxTextAlign', 'progressbar'],
     ['IgxProgressBarGradientMode', 'progressbar'],
+    ['IgxProgressBarGradientDirective', 'progressbar'],
 
     // Query Builder
     ['IgxQueryBuilderComponent', 'query-builder'],
     ['IgxQueryBuilderModule', 'query-builder'],
+    ['IGX_QUERY_BUILDER_DIRECTIVES', 'query-builder'],
     ['IExpressionGroup', 'query-builder'],
+    ['IgxQueryBuilderHeaderComponent', 'query-builder'],
+    ['IgxQueryBuilderSearchValueTemplateDirective', 'query-builder'],
 
     // Radio
     ['IgxRadioComponent', 'radio'],
     ['IgxRadioModule', 'radio'],
+    ['IGX_RADIO_GROUP_DIRECTIVES', 'radio'],
     ['RadioGroupAlignment', 'radio'],
     ['IgxRadioGroupDirective', 'radio'],
 
     // Select
     ['IgxSelectComponent', 'select'],
     ['IgxSelectModule', 'select'],
+    ['IGX_SELECT_DIRECTIVES', 'select'],
     ['IgxSelectItemComponent', 'select'],
     ['IgxSelectHeaderDirective', 'select'],
     ['IgxSelectFooterDirective', 'select'],
@@ -465,12 +502,14 @@ const ENTRY_POINT_MAP = new Map<string, string>([
 
     // Simple Combo
     ['IgxSimpleComboComponent', 'simple-combo'],
+    ['IGX_SIMPLE_COMBO_DIRECTIVES', 'simple-combo'],
     ['ISimpleComboSelectionChangingEventArgs', 'simple-combo'],
     ['IgxSimpleComboModule', 'simple-combo'],
 
     // Slider
     ['IgxSliderComponent', 'slider'],
     ['IgxSliderModule', 'slider'],
+    ['IGX_SLIDER_DIRECTIVES', 'slider'],
     ['ISliderValueChangeEventArgs', 'slider'],
     ['IRangeSliderValue', 'slider'],
     ['SliderType', 'slider'],
@@ -488,6 +527,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Splitter
     ['IgxSplitterComponent', 'splitter'],
     ['IgxSplitterModule', 'splitter'],
+    ['IGX_SPLITTER_DIRECTIVES', 'splitter'],
     ['IgxSplitterPaneComponent', 'splitter'],
     ['ISplitterEventArgs', 'splitter'],
     ['SplitterType', 'splitter'],
@@ -495,6 +535,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Stepper
     ['IgxStepperComponent', 'stepper'],
     ['IgxStepperModule', 'stepper'],
+    ['IGX_STEPPER_DIRECTIVES', 'stepper'],
     ['IgxStepComponent', 'stepper'],
     ['IStepChangingEventArgs', 'stepper'],
     ['IStepChangedEventArgs', 'stepper'],
@@ -507,6 +548,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxStepSubtitleDirective', 'stepper'],
     ['IgxStepInvalidIndicatorDirective', 'stepper'],
     ['IgxStepIndicatorDirective', 'stepper'],
+    ['IgxStepperTitlePosition', 'stepper'],
 
     // Switch
     ['IgxSwitchComponent', 'switch'],
@@ -515,6 +557,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Tabs
     ['IgxTabsComponent', 'tabs'],
     ['IgxTabsModule', 'tabs'],
+    ['IGX_TABS_DIRECTIVES', 'tabs'],
     ['IgxTabItemComponent', 'tabs'],
     ['IgxTabHeaderComponent', 'tabs'],
     ['IgxTabContentComponent', 'tabs'],
@@ -527,6 +570,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Time Picker
     ['IgxTimePickerComponent', 'time-picker'],
     ['IgxTimePickerModule', 'time-picker'],
+    ['IGX_TIME_PICKER_DIRECTIVES', 'time-picker'],
     ['IgxTimePickerActionsDirective', 'time-picker'],
     ['IgxHourItemDirective', 'time-picker'],
     ['IgxMinuteItemDirective', 'time-picker'],
@@ -541,6 +585,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     // Tree
     ['IgxTreeComponent', 'tree'],
     ['IgxTreeModule', 'tree'],
+    ['IGX_TREE_DIRECTIVES', 'tree'],
     ['IgxTreeNodeComponent', 'tree'],
     ['ITreeNodeSelectionEvent', 'tree'],
     ['ITreeNodeTogglingEventArgs', 'tree'],
@@ -573,6 +618,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxFocusModule', 'directives'],
     ['IgxTooltipDirective', 'directives'],
     ['IgxTooltipTargetDirective', 'directives'],
+    ['TooltipPositionStrategy', 'directives'],
     ['IgxTooltipModule', 'directives'],
     ['IgxRippleDirective', 'directives'],
     ['IgxRippleModule', 'directives'],
@@ -582,8 +628,6 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IDragBaseEventArgs', 'directives'],
     ['IDropBaseEventArgs', 'directives'],
     ['IDragMoveEventArgs', 'directives'],
-    ['IgxDragIndicatorIconDirective', 'directives'],
-    ['IgxRowDragGhostDirective', 'directives'],
     ['IgxDragDirective', 'directives'],
     ['IgxDragHandleDirective', 'directives'],
     ['IgxDragLocation', 'directives'],
@@ -753,60 +797,62 @@ interface MigrationOptions {
     migrateImports?: boolean;
 }
 
-export default (options: MigrationOptions = {}): Rule => async (host: Tree, context: SchematicContext) => {
-    context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
+export default function migrate(options: MigrationOptions): Rule {
+    return async (host: Tree, context: SchematicContext) => {
+        context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
 
-    const update = new UpdateChanges(__dirname, host, context);
-    const shouldMigrateImports = options.migrateImports !== false; // Default to true if not specified
+        const update = new UpdateChanges(__dirname, host, context);
+        const shouldMigrateImports = options.migrateImports !== false; // Default to true if not specified
 
-    if (shouldMigrateImports) {
-        context.logger.info('Migrating imports to new entry points...');
+        if (shouldMigrateImports) {
+            context.logger.info('Migrating imports to new entry points...');
 
-        const visit: FileVisitor = (filePath) => {
-            // Only process TypeScript files
-            if (!filePath.endsWith('.ts')) {
-                return;
-            }
+            const visit: FileVisitor = (filePath) => {
+                // Only process TypeScript files
+                if (!filePath.endsWith('.ts')) {
+                    return;
+                }
 
-            // Skip node_modules and dist
-            if (filePath.includes('node_modules') || filePath.includes('dist')) {
-                return;
-            }
+                // Skip node_modules and dist
+                if (filePath.includes('node_modules') || filePath.includes('dist')) {
+                    return;
+                }
 
-            const content = host.read(filePath);
-            if (!content) {
-                return;
-            }
+                const content = host.read(filePath);
+                if (!content) {
+                    return;
+                }
 
-            const originalContent = content.toString();
+                const originalContent = content.toString();
 
-            // Check if file has igniteui-angular imports
-            if (!originalContent.includes("from 'igniteui-angular'") && !originalContent.includes('from "igniteui-angular"')) {
-                return;
-            }
+                // Check if file has igniteui-angular imports
+                if (!originalContent.includes("from 'igniteui-angular'") && !originalContent.includes('from "igniteui-angular"')) {
+                    return;
+                }
 
-            const migratedContent = migrateFile(filePath, originalContent);
+                const migratedContent = migrateFile(filePath, originalContent);
 
-            if (migratedContent !== originalContent) {
-                host.overwrite(filePath, migratedContent);
-                context.logger.info(`  ✓ Migrated ${filePath}`);
-            }
-        };
+                if (migratedContent !== originalContent) {
+                    host.overwrite(filePath, migratedContent);
+                    context.logger.info(`  ✓ Migrated ${filePath}`);
+                }
+            };
 
-        host.visit(visit);
+            host.visit(visit);
 
-        context.logger.info('Migration complete!');
-        context.logger.info('Breaking changes:');
-        context.logger.info('  - Input directives moved to igniteui-angular/input-group');
-        context.logger.info('  - IgxAutocompleteDirective moved to igniteui-angular/drop-down');
-        context.logger.info('  - IgxRadioGroupDirective moved to igniteui-angular/radio');
-        context.logger.info('Type renames:');
-        context.logger.info('  - Direction → CarouselAnimationDirection');
-    } else {
-        context.logger.info('Skipping import migration. You can continue using the main entry point.');
-        context.logger.info('Note: The library now supports granular entry points for better tree-shaking.');
-        context.logger.info('To migrate later, run: ng update igniteui-angular --migrate-only --from=20.1.0 --to=21.0.0');
-    }
+            context.logger.info('Migration complete!');
+            context.logger.info('Breaking changes:');
+            context.logger.info('  - Input directives moved to igniteui-angular/input-group');
+            context.logger.info('  - IgxAutocompleteDirective moved to igniteui-angular/drop-down');
+            context.logger.info('  - IgxRadioGroupDirective moved to igniteui-angular/radio');
+            context.logger.info('Type renames:');
+            context.logger.info('  - Direction → CarouselAnimationDirection');
+        } else {
+            context.logger.info('Skipping import migration. You can continue using the main entry point.');
+            context.logger.info('Note: The library now supports granular entry points for better tree-shaking.');
+            context.logger.info('To migrate later, run: ng update igniteui-angular --migrate-only --from=20.1.0 --to=21.0.0');
+        }
 
-    update.applyChanges();
-};
+        update.applyChanges();
+    };
+}
