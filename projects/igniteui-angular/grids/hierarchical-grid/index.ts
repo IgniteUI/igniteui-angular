@@ -6,3 +6,4 @@
 
 // Export hierarchical-grid-specific components
 export * from './src/public_api';
+export * from './src/hierarchical-grid.module';
