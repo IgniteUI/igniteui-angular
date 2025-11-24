@@ -658,6 +658,8 @@ export class GridFunctions {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const input = filterUIRow.query(By.directive(IgxInputDirective));
         UIInteractions.clickAndSendInputElementValue(input.nativeElement, value, fix);
+        tick(); // Needed because of the debounce time in filtering row input
+        fix.detectChanges();
 
         // Enter key to submit
         UIInteractions.triggerEventHandlerKeyDown('Enter', input);
