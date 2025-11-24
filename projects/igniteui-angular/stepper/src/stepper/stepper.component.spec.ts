@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputDirective, IgxInputGroupComponent } from '../../../input-group/src/public_api';
-import { ɵDirection } from 'igniteui-angular/core';
+import { Direction } from 'igniteui-angular/core';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxStepComponent } from './step/step.component';
 import {
@@ -996,7 +996,7 @@ describe('Stepper service unit tests', () => {
         };
 
         mockDir = {
-            value: (): ɵDirection => 'rtl',
+            value: (): Direction => 'rtl',
             document: () => mockDocument,
             rtl: () => true
         };

@@ -3,7 +3,7 @@ import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angul
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By, HammerModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ɵDIR_DOCUMENT, ɵIgxDirectionality } from 'igniteui-angular/core';
+import { DIR_DOCUMENT, IgxDirectionality } from 'igniteui-angular/core';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxSliderType, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from './slider.common';
 import { IgxSliderComponent } from './slider.component';
@@ -51,7 +51,7 @@ describe('IgxSlider', () => {
                 SliderWithValueAdjustmentComponent
             ],
             providers: [
-                { provide: ɵDIR_DOCUMENT, useFactory: () => fakeDoc }
+                { provide: DIR_DOCUMENT, useFactory: () => fakeDoc }
             ]
         }).compileComponents();
     }));
@@ -2076,7 +2076,7 @@ export class SliderRtlComponent {
 
     public type: IgxSliderType = IgxSliderType.RANGE;
 
-    constructor(public dir: ɵIgxDirectionality) { }
+    constructor(public dir: IgxDirectionality) { }
 }
 
 @Component({
