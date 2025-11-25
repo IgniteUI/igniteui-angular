@@ -29,11 +29,12 @@ import {
     getPreviousActiveDate,
     intoChunks,
     isDateInRanges,
+    BaseFormatter,
+    I18N_FORMATTER
 } from 'igniteui-angular/core';
 import { IgxCalendarBaseDirective } from '../calendar-base';
 import { IViewChangingEventArgs } from './days-view.interface';
 import { getDateFormatter } from 'igniteui-i18n-core';
-import { BaseFormatter, I18N_FORMATTER } from '../../../../core/src/core/i18n/formatters/formatter-base';
 
 let NEXT_ID = 0;
 

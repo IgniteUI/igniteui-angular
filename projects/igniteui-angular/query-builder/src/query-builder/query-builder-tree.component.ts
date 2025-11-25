@@ -45,7 +45,8 @@ import {
     isTree,
     getCurrentResourceStrings,
     DEFAULT_LOCALE,
-    onResourceChangeHandle
+    onResourceChangeHandle,
+    IgxDateFormatterPipe
 } from 'igniteui-angular/core';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 
@@ -78,7 +79,6 @@ import { IgxQueryBuilderComponent } from './query-builder.component';
 import { IgxQueryBuilderDragService } from './query-builder-drag.service';
 import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, IgxFieldFormatterPipe } from './query-builder.common';
 import { getCurrentI18n, IResourceChangeEventArgs } from 'igniteui-i18n-core';
-import { IgxDateFormatterPipe } from '../../../core/src/data-operations/pipes';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';

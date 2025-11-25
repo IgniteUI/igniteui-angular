@@ -18,7 +18,7 @@ import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffi
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
-import { IgxCurrencyFormatterPipe, IgxDateFormatterPipe, IgxNumberFormatterPipe, IgxPercentFormatterPipe } from '../../../core/src/data-operations/pipes';
+import { IgxCurrencyFormatterPipe, IgxDateFormatterPipe, IgxNumberFormatterPipe, IgxPercentFormatterPipe } from 'igniteui-angular/core';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

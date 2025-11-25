@@ -44,13 +44,12 @@ import {
 } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
-import { IgxActionStripToken, IgxFlatTransactionFactory, IgxOverlayService, PlatformUtil, IGridResourceStrings } from 'igniteui-angular/core';
+import { IgxActionStripToken, IgxFlatTransactionFactory, IgxOverlayService, PlatformUtil, IGridResourceStrings, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 import { first, filter, takeUntil, pluck } from 'rxjs/operators';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IGridCreatedEventArgs } from './events';
 import { IgxPaginatorComponent, IgxPaginatorDirective } from 'igniteui-angular/paginator';
 import { IForOfState, IgxTextHighlightService } from 'igniteui-angular/directives';
-import { BaseFormatter, I18N_FORMATTER } from '../../../core/src/core/i18n/formatters/formatter-base';
 
 /* blazorCopyInheritedMembers */
 /* blazorElement */

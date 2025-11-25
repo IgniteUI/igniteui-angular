@@ -19,11 +19,12 @@ import {
     PickerInteractionMode,
     WEEKDAYS,
     DEFAULT_LOCALE,
-    onResourceChangeHandle
+    onResourceChangeHandle,
+    BaseFormatter,
+    I18N_FORMATTER
 } from 'igniteui-angular/core';
 import { IgxOverlayOutletDirective } from 'igniteui-angular/directives';
 import { getCurrentI18n, IResourceChangeEventArgs } from 'igniteui-i18n-core';
-import { BaseFormatter, I18N_FORMATTER } from '../../../core/src/core/i18n/formatters/formatter-base';
 
 @Directive()
 export abstract class PickerBaseDirective implements IToggleView, EditorProvider, AfterViewInit, AfterContentChecked, OnDestroy {

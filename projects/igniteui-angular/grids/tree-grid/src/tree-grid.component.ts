@@ -77,7 +77,7 @@ import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxTreeGridGroupByAreaComponent } from './tree-grid-group-by-area.component';
-import { BaseFormatter, I18N_FORMATTER } from '../../../core/src/core/i18n/formatters/formatter-base';
+import { BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 

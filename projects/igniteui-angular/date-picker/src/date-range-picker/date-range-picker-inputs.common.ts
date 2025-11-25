@@ -2,10 +2,9 @@ import { Component, ContentChild, Pipe, PipeTransform, Directive, Inject, inject
 import { NgControl } from '@angular/forms';
 import { IgxInputDirective, IgxInputGroupBase, IgxInputGroupComponent, IgxInputState, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxButtonDirective, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
-import { isDate, DateRange, DateTimeUtil } from 'igniteui-angular/core';
+import { isDate, DateRange, DateTimeUtil, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { NgTemplateOutlet } from '@angular/common';
-import { BaseFormatter, I18N_FORMATTER } from '../../../core/src/core/i18n/formatters/formatter-base';
 
 /** @hidden @internal */
 @Pipe({

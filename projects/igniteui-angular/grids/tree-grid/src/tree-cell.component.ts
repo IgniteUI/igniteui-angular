@@ -9,7 +9,7 @@ import { IgxTreeGridRow } from 'igniteui-angular/grids/core';
 import { RowType } from 'igniteui-angular/grids/core';
 import { IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe } from 'igniteui-angular/grids/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HammerGesturesManager } from 'igniteui-angular/core';
+import { HammerGesturesManager, IgxNumberFormatterPipe, IgxPercentFormatterPipe, IgxCurrencyFormatterPipe, IgxDateFormatterPipe } from 'igniteui-angular/core';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxDateTimeEditorDirective, IgxFocusDirective, IgxTextHighlightDirective, IgxTextSelectionDirective, IgxTooltipDirective, IgxTooltipTargetDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -19,7 +19,6 @@ import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { IgxGridExpandableCellComponent } from 'igniteui-angular/grids/grid';
-import { IgxNumberFormatterPipe, IgxPercentFormatterPipe, IgxCurrencyFormatterPipe, IgxDateFormatterPipe } from '../../../core/src/data-operations/pipes';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

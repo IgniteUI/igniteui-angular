@@ -17,10 +17,11 @@ import {
     CalendarDay,
     getYearRange,
     isDateInRanges,
-    WEEKDAYS
+    WEEKDAYS,
+    BaseFormatter,
+    I18N_FORMATTER
 } from 'igniteui-angular/core';
 import { KeyboardNavigationService } from './calendar.services';
-import { BaseFormatter, I18N_FORMATTER } from '../../../core/src/core/i18n/formatters/formatter-base';
 
 /** @hidden @internal */
 @Directive({

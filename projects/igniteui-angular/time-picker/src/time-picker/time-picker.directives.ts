@@ -14,9 +14,8 @@ import {
     OnDestroy,
     OnInit
 } from '@angular/core';
-import { DateTimeUtil, HammerGesturesManager, HammerInput, HammerOptions } from 'igniteui-angular/core';
+import { DateTimeUtil, HammerGesturesManager, HammerInput, HammerOptions, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
-import { BaseFormatter, I18N_FORMATTER } from '../../../core/src/core/i18n/formatters/formatter-base';
 
 /** @hidden */
 @Directive({

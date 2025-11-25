@@ -21,7 +21,7 @@ import {
     IgxGridSelectionService,
     IgxStringReplacePipe
 } from 'igniteui-angular/grids/core';
-import { HammerGesturesManager, IgxOverlayService, PlatformUtil } from 'igniteui-angular/core';
+import { HammerGesturesManager, IgxOverlayService, PlatformUtil, IgxNumberFormatterPipe, IgxDateFormatterPipe, IgxCurrencyFormatterPipe, IgxPercentFormatterPipe } from 'igniteui-angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxDateTimeEditorDirective, IgxFocusDirective, IgxTextHighlightDirective, IgxTooltipDirective, IgxTooltipTargetDirective } from 'igniteui-angular/directives';
@@ -30,7 +30,6 @@ import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffi
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
-import { IgxNumberFormatterPipe, IgxPercentFormatterPipe, IgxCurrencyFormatterPipe, IgxDateFormatterPipe } from '../../../core/src/data-operations/pipes';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

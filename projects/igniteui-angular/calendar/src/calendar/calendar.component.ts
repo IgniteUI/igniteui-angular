@@ -32,8 +32,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxCalendarBaseDirective } from './calendar-base';
 import { KeyboardNavigationService } from './calendar.services';
 import { getDateFormatter } from 'igniteui-i18n-core';
-import { areSameMonth, CalendarDay, formatToParts, getClosestActiveDate, isDateInRanges } from 'igniteui-angular/core';
-import { IgxDateFormatterPipe } from '../../../core/src/data-operations/pipes';
+import { areSameMonth, CalendarDay, formatToParts, getClosestActiveDate, isDateInRanges, IgxDateFormatterPipe } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 

@@ -46,14 +46,13 @@ import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxToggleDirective } from 'igniteui-angular/directives';
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from 'igniteui-angular/core';
-import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs } from 'igniteui-angular/core';
+import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 
 import { IgxTextSelectionDirective } from 'igniteui-angular/directives';
 import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxDividerDirective } from 'igniteui-angular/directives';
 import { PickerBaseDirective } from 'igniteui-angular/date-picker';
-import { BaseFormatter, I18N_FORMATTER } from '../../../core/src/core/i18n/formatters/formatter-base';
 
 let NEXT_ID = 0;
 export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {

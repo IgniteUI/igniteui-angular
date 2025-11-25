@@ -5,11 +5,10 @@ import { IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular/sel
 import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective } from 'igniteui-angular/input-group';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
-import { IgxPickerClearComponent, IgxPickerToggleComponent, PlatformUtil } from 'igniteui-angular/core';
+import { IgxPickerClearComponent, IgxPickerToggleComponent, PlatformUtil, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 import { IgxButtonDirective, IgxDateTimeEditorDirective, IgxIconButtonDirective, IgxOverlayOutletDirective } from 'igniteui-angular/directives';
 import { IgxButtonGroupComponent } from 'igniteui-angular/button-group';
-import { BaseFormatter, I18N_FORMATTER } from '../../../../../core/src/core/i18n/formatters/formatter-base';
 
 /**
  * @hidden

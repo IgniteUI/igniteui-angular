@@ -27,8 +27,7 @@ import { IgxGridRowComponent } from './grid-row.component';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxBadgeComponent } from 'igniteui-angular/badge';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
-import { GridColumnDataType, IGroupByRecord } from 'igniteui-angular/core';
-import { IgxCurrencyFormatterPipe, IgxDateFormatterPipe, IgxNumberFormatterPipe, IgxPercentFormatterPipe } from '../../../core/src/data-operations/pipes';
+import { GridColumnDataType, IGroupByRecord, IgxNumberFormatterPipe, IgxDateFormatterPipe, IgxCurrencyFormatterPipe, IgxPercentFormatterPipe } from 'igniteui-angular/core';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

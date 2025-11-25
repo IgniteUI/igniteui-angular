@@ -11,7 +11,8 @@ import { IgxDatePickerComponent } from './date-picker.component';
 import {
     IgxOverlayService,
     OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings,
-    WEEKDAYS
+    WEEKDAYS,
+    BaseFormatter
 } from 'igniteui-angular/core';
 import { Component, DebugElement, ElementRef, EventEmitter, QueryList, Renderer2, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
@@ -25,7 +26,6 @@ import { registerLocaleData } from "@angular/common";
 import localeES from "@angular/common/locales/es";
 import localeBg from "@angular/common/locales/bg";
 import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
-import { BaseFormatter } from '../../../core/src/core/i18n/formatters/formatter-base';
 
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
 

@@ -24,9 +24,8 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { registerLocaleData } from "@angular/common";
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
-import { CalendarDay } from 'igniteui-angular/core';
+import { CalendarDay, BaseFormatter } from 'igniteui-angular/core';
 import { IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from 'igniteui-angular/calendar';
-import { BaseFormatter } from '../../../core/src/core/i18n/formatters/formatter-base';
 
 // The number of milliseconds in one day
 const DEBOUNCE_TIME = 16;

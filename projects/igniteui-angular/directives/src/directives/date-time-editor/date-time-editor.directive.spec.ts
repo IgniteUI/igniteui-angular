@@ -11,8 +11,7 @@ import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { ViewEncapsulation } from '@angular/core';
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
-import { DatePart } from 'igniteui-angular/core';
-import { BaseFormatter } from '../../../../core/src/core/i18n/formatters/formatter-base';
+import { DatePart, BaseFormatter } from 'igniteui-angular/core';
 
 describe('IgxDateTimeEditor', () => {
     let dateTimeEditor: IgxDateTimeEditorDirective;

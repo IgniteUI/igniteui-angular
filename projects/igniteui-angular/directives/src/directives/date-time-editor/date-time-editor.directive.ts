@@ -9,10 +9,9 @@ import {
 } from '@angular/forms';
 import { IgxMaskDirective } from '../mask/mask.directive';
 import { MaskParsingService } from '../mask/mask-parsing.service';
-import { isDate, PlatformUtil, DatePartInfo, DatePart, DatePartDeltas, DateTimeUtil } from 'igniteui-angular/core';
+import { isDate, PlatformUtil, DatePartInfo, DatePart, DatePartDeltas, DateTimeUtil, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 import { IgxDateTimeEditorEventArgs } from './date-time-editor.common';
 import { noop } from 'rxjs';
-import { BaseFormatter, I18N_FORMATTER } from '../../../../core/src/core/i18n/formatters/formatter-base';
 
 /**
  * Date Time Editor provides a functionality to input, edit and format date and time.

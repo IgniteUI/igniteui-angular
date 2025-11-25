@@ -64,7 +64,7 @@ import {
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { IResourceChangeEventArgs } from 'igniteui-i18n-core';
-import { BaseFormatter, I18N_FORMATTER } from '../../../core/src/core/i18n/formatters/formatter-base';
+import { BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 
 const SingleInputDatesConcatenationString = ' - ';
 

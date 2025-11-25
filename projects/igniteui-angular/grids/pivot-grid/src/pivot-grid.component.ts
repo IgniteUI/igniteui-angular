@@ -64,7 +64,7 @@ import { DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from 'i
 import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective } from 'igniteui-angular/grids/core';
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
 import { IgxPivotColumnResizingService } from 'igniteui-angular/grids/core';
-import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService, onResourceChangeHandle } from 'igniteui-angular/core';
+import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService, onResourceChangeHandle, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
 import { IgxGridTransaction } from 'igniteui-angular/grids/core';
 import { GridBaseAPIService } from 'igniteui-angular/grids/core';
@@ -88,7 +88,6 @@ import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxPivotGridRow } from './pivot-grid-row';
 import { IgxGridBaseDirective, IgxGridRowComponent } from 'igniteui-angular/grids/grid';
-import { BaseFormatter, I18N_FORMATTER } from '../../../core/src/core/i18n/formatters/formatter-base';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;

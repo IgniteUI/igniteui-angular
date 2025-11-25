@@ -4,8 +4,7 @@ import {
 } from './grid-summary';
 import { NgTemplateOutlet } from '@angular/common';
 import { ISelectionNode } from '../common/types';
-import { GridTypeBase,  ColumnType, GridColumnDataType, IgxSummaryResult, trackByIdentity } from 'igniteui-angular/core';
-import { BaseFormatter } from '../../../../core/src/core/i18n/formatters/formatter-base';
+import { GridTypeBase,  ColumnType, GridColumnDataType, IgxSummaryResult, trackByIdentity, BaseFormatter } from 'igniteui-angular/core';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -18,8 +18,7 @@ import { IgxCalendarView } from "../calendar";
 import { IgxCalendarBaseDirective } from "../calendar-base";
 import { KeyboardNavigationService } from "../calendar.services";
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { CalendarDay, formatToParts } from 'igniteui-angular/core';
-import { IgxDateFormatterPipe } from '../../../../core/src/data-operations/pipes';
+import { CalendarDay, formatToParts, IgxDateFormatterPipe } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 @Component({

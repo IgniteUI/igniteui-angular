@@ -32,7 +32,11 @@ import {
     HorizontalAlignment,
     IgxOverlayService,
     GridColumnDataType,
-    ColumnType
+    ColumnType,
+    IgxNumberFormatterPipe,
+    IgxDateFormatterPipe,
+    IgxCurrencyFormatterPipe,
+    IgxPercentFormatterPipe
 } from 'igniteui-angular/core';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { HammerGesturesManager } from 'igniteui-angular/core';
@@ -52,7 +56,6 @@ import {
     IgxFocusDirective,
     IgxTextHighlightDirective
  } from 'igniteui-angular/directives';
-import { IgxNumberFormatterPipe, IgxDateFormatterPipe, IgxCurrencyFormatterPipe, IgxPercentFormatterPipe } from '../../../core/src/data-operations/pipes';
 import { fadeOut, scaleInCenter } from 'igniteui-angular/animations';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
