@@ -15,7 +15,7 @@ import { takeUntil } from 'rxjs/operators';
 import { SliderHandle } from '../slider.common';
 import { Subject } from 'rxjs';
 import { NgClass } from '@angular/common';
-import { IgxDirectionality } from 'igniteui-angular/core';
+import { ɵIgxDirectionality } from 'igniteui-angular/core';
 
 /**
  * @hidden
@@ -195,7 +195,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         return thumbBounderies.left + thumbCenter;
     }
 
-    constructor(private _elementRef: ElementRef, private _dir: IgxDirectionality) { }
+    constructor(private _elementRef: ElementRef, private _dir: ɵIgxDirectionality) { }
 
     @HostListener('pointerenter')
     public onPointerEnter() {

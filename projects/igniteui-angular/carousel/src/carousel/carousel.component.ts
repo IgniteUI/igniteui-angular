@@ -27,7 +27,7 @@ import {
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CarouselResourceStringsEN, ICarouselResourceStrings, IgxDirectionality } from 'igniteui-angular/core';
+import { CarouselResourceStringsEN, ICarouselResourceStrings, ɵIgxDirectionality } from 'igniteui-angular/core';
 import { first, IBaseEventArgs, last, PlatformUtil } from 'igniteui-angular/core';
 import { IgxAngularAnimationService } from 'igniteui-angular/core';
 import { AnimationService } from 'igniteui-angular/core';
@@ -570,7 +570,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         private iterableDiffers: IterableDiffers,
         @Inject(IgxAngularAnimationService) animationService: AnimationService,
         private platformUtil: PlatformUtil,
-        private dir: IgxDirectionality,
+        private dir: ɵIgxDirectionality,
         @Inject(DOCUMENT) private document: any
     ) {
         super(animationService, cdr);
