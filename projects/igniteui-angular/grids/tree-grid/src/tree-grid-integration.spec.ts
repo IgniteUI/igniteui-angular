@@ -1389,17 +1389,21 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.moving = true;
             fix.detectChanges();
 
-            // const header = fix.debugElement.queryAll(By.css('.igx-grid-thead__item'))[0].nativeElement;
-            const header = treeGrid.headerGroups[0].nativeElement;
+            const header = fix.debugElement.queryAll(By.css('.igx-grid-thead__item'))[3].nativeElement;
+            // const header = treeGrid.headerGroups[0].nativeElement;
 
             UIInteractions.simulatePointerEvent('pointerdown', header, 100, 40);
-            await wait();
+            fix.detectChanges();
+            await wait(100);
+
             UIInteractions.simulatePointerEvent('pointermove', header, 106, 46);
-            await wait();
+            fix.detectChanges();
+            await wait(100);
+
             UIInteractions.simulatePointerEvent('pointermove', header, 700, 40);
-            await wait();
+            fix.detectChanges();
+            await wait(100);
             UIInteractions.simulatePointerEvent('pointerup', header, 700, 40);
-            await wait();
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'HireDate', 4);
