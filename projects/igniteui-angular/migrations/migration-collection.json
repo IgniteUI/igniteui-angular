@@ -256,6 +256,7 @@
             "version": "21.0.0",
             "description": "Migrates imports to use granular entry points for better tree-shaking",
             "factory": "./update-21_0_0_import-migration",
+            "recommended": true,
             "optional": true
         }
     }
