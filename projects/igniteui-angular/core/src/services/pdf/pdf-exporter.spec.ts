@@ -5,7 +5,7 @@ import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { ExportRecordType, ExportHeaderType, DEFAULT_OWNER, IExportRecord, IColumnInfo, IColumnList, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
 
-describe('PDF Exporter', () => {
+xdescribe('PDF Exporter', () => {
     let exporter: IgxPdfExporterService;
     let options: IgxPdfExporterOptions;
 

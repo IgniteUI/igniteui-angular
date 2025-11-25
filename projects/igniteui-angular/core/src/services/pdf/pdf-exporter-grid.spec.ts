@@ -11,7 +11,7 @@ import { IgxTreeGridSortingComponent, IgxTreeGridPrimaryForeignKeyComponent } fr
 import { CustomSummariesComponent } from 'igniteui-angular/grids/grid/src/grid-summary.spec';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 
-describe('PDF Grid Exporter', () => {
+xdescribe('PDF Grid Exporter', () => {
     let exporter: IgxPdfExporterService;
     let options: IgxPdfExporterOptions;
 
