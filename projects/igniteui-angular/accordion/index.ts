@@ -1,1 +1,1 @@
-export * from './src/accordion/public_api';
+export * from './src/public_api';

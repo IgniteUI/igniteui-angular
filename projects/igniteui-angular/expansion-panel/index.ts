@@ -1,1 +1,1 @@
-export * from './src/expansion-panel/public_api';
+export * from './src/public_api';

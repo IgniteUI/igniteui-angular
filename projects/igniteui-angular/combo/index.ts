@@ -1,1 +1,1 @@
-export * from './src/combo/public_api';
+export * from './src/public_api';
