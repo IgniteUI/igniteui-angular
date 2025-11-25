@@ -1,17 +1,29 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
-import { ComponentRef, ElementRef, Injector, NgZone } from '@angular/core';
+import { ComponentRef, Directive, ElementRef, Injector, NgZone } from '@angular/core';
 import { CancelableBrowserEventArgs, CancelableEventArgs, cloneValue, IBaseEventArgs } from '../../core/utils';
 import { AnimationPlayer } from '../animation/animation';
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { IScrollStrategy } from './scroll';
 
 /**
- * Interface representing an overlay outlet directive.
- * The actual implementation is in igniteui-angular/directives.
+ * Mark an element as an igxOverlay outlet container.
+ * Directive instance is exported as `overlay-outlet` to be assigned to templates variables:
+ * ```html
+ * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
+ * ```
  */
-export interface IgxOverlayOutletDirective {
-    element: ElementRef;
-    readonly nativeElement: HTMLElement;
+@Directive({
+    exportAs: 'overlay-outlet',
+    selector: '[igxOverlayOutlet]',
+    standalone: true
+})
+export class IgxOverlayOutletDirective {
+    constructor(public element: ElementRef<HTMLElement>) { }
+
+    /** @hidden */
+    public get nativeElement() {
+        return this.element.nativeElement;
+    }
 }
 
 /* blazorAlternateName: GridHorizontalAlignment */

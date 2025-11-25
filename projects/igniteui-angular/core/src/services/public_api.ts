@@ -15,7 +15,8 @@ export * from './overlay/position';
 export * from './overlay/scroll';
 export {
     AbsolutePosition, ConnectedFit, HorizontalAlignment, OffsetMode, OverlayAnimationEventArgs, OverlayCancelableEventArgs, OverlayClosingEventArgs,
-    OverlayCreateSettings, OverlayEventArgs, OverlaySettings, Point, PositionSettings, RelativePosition, RelativePositionStrategy, Size, VerticalAlignment, Util
+    OverlayCreateSettings, OverlayEventArgs, OverlaySettings, Point, PositionSettings, RelativePosition, RelativePositionStrategy, Size, VerticalAlignment, Util,
+    IgxOverlayOutletDirective
 } from './overlay/utilities';
 export * from './transaction/base-transaction';
 export * from './transaction/hierarchical-transaction';

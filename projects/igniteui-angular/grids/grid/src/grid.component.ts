@@ -50,13 +50,13 @@ import {
 import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { take, takeUntil } from 'rxjs/operators';
-import { cloneArray, IBaseEventArgs, IGridGroupingStrategy, IGroupByExpandState, IGroupByRecord, IGroupingExpression, ISortingExpression } from 'igniteui-angular/core';
+import { cloneArray, IBaseEventArgs, IGridGroupingStrategy, IGroupByExpandState, IGroupByRecord, IGroupingExpression, IgxOverlayOutletDirective, ISortingExpression } from 'igniteui-angular/core';
 import { IgxGridDetailsPipe } from './grid.details.pipe';
 import { IgxGridSummaryPipe } from './grid.summary.pipe';
 import { IgxGridGroupingPipe, IgxGridPagingPipe, IgxGridSortingPipe, IgxGridFilteringPipe, IgxGridCellMergePipe, IgxGridUnmergeActivePipe } from './grid.pipes';
 import { IgxGridRowComponent } from './grid-row.component';
 import { Observable, Subject } from 'rxjs';
-import { IForOfState, IgxButtonDirective, IgxForOfScrollSyncService, IgxForOfSyncService, IgxGridForOfDirective, IgxOverlayOutletDirective, IgxRippleDirective, IgxScrollInertiaDirective, IgxTemplateOutletDirective, IgxToggleDirective } from 'igniteui-angular/directives';
+import { IForOfState, IgxButtonDirective, IgxForOfScrollSyncService, IgxForOfSyncService, IgxGridForOfDirective, IgxRippleDirective, IgxScrollInertiaDirective, IgxTemplateOutletDirective, IgxToggleDirective } from 'igniteui-angular/directives';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { IgxIconComponent } from 'igniteui-angular/icon';

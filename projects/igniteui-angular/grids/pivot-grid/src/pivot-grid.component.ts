@@ -43,7 +43,7 @@ import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { FilterMode, GridPagingMode, GridSummaryPosition } from 'igniteui-angular/grids/core';
 import { WatchChanges } from 'igniteui-angular/grids/core';
-import { cloneArray, ColumnType, DataUtil, DefaultDataCloneStrategy, GridColumnDataType, GridSummaryCalculationMode, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringOperation, IFilteringStrategy, ISortingExpression, OverlaySettings, PlatformUtil, resizeObservable, ɵSize, SortingDirection } from 'igniteui-angular/core';
+import { cloneArray, ColumnType, DataUtil, DefaultDataCloneStrategy, GridColumnDataType, GridSummaryCalculationMode, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringOperation, IFilteringStrategy, ISortingExpression, OverlaySettings, PlatformUtil, resizeObservable, ɵSize, SortingDirection, IgxOverlayOutletDirective } from 'igniteui-angular/core';
 import {
     IGridEditEventArgs,
     ICellPosition,
@@ -82,7 +82,7 @@ import { IgxGridBodyDirective } from 'igniteui-angular/grids/core';
 import { IgxColumnResizingService } from 'igniteui-angular/grids/core';
 import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
-import { IForOfDataChangingEventArgs, IgxForOfScrollSyncService, IgxForOfSyncService, IgxGridForOfDirective, IgxOverlayOutletDirective, IgxTemplateOutletDirective, IgxTextHighlightService, IgxToggleDirective } from 'igniteui-angular/directives';
+import { IForOfDataChangingEventArgs, IgxForOfScrollSyncService, IgxForOfSyncService, IgxGridForOfDirective, IgxTemplateOutletDirective, IgxTextHighlightService, IgxToggleDirective } from 'igniteui-angular/directives';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { IgxIconComponent } from 'igniteui-angular/icon';

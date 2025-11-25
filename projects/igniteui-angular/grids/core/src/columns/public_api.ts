@@ -18,7 +18,7 @@ import {
     IgxColumnMinLengthValidatorDirective,
     IgxColumnMinValidatorDirective,
     IgxColumnRequiredValidatorDirective,
-    IgxColumPatternValidatorDirective
+    IgxColumnPatternValidatorDirective
 } from './validators.directive';
 
 export * from './column.component';
@@ -35,7 +35,7 @@ export const IGX_GRID_VALIDATION_DIRECTIVES = [
     IgxColumnEmailValidatorDirective,
     IgxColumnMinLengthValidatorDirective,
     IgxColumnMaxLengthValidatorDirective,
-    IgxColumPatternValidatorDirective
+    IgxColumnPatternValidatorDirective
 ] as const;
 
 /* NOTE: Grid column validation directives collection for ease-of-use import in standalone components scenario */
