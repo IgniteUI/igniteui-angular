@@ -13,7 +13,11 @@ export * from './exporter-common/exporter-options-base';
 export * from './overlay/overlay';
 export * from './overlay/position';
 export * from './overlay/scroll';
-export * from './overlay/utilities';
+export {
+    AbsolutePosition, ConnectedFit, HorizontalAlignment, OffsetMode, OverlayAnimationEventArgs, OverlayCancelableEventArgs, OverlayClosingEventArgs,
+    OverlayCreateSettings, OverlayEventArgs, OverlaySettings, Point, PositionSettings, RelativePosition, RelativePositionStrategy, Size, VerticalAlignment, Util,
+    IgxOverlayOutletDirective
+} from './overlay/utilities';
 export * from './transaction/base-transaction';
 export * from './transaction/hierarchical-transaction';
 export * from './transaction/igx-hierarchical-transaction';
