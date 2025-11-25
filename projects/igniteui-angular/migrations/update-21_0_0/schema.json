@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "igniteui-angular-migration-21",
+  "title": "Update to version 21.0.0",
+  "type": "object",
+  "properties": {
+    "migrateImports": {
+      "type": "boolean",
+      "description": "Migrate imports to use granular entry points (e.g., 'igniteui-angular/grids' instead of 'igniteui-angular'). The library remains backwards compatible - you can continue using the main entry point.",
+      "default": true,
+      "x-prompt": "Would you like to migrate your imports to use the new granular entry points for better tree-shaking? (The library remains backwards compatible if you choose 'No')"
+    }
+  }
+}
