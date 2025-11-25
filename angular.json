@@ -196,7 +196,7 @@
               "projects/igniteui-angular/test.css"
             ],
             "assets": [
-              "projects/igniteui-angular/src/assets"
+              "projects/igniteui-angular/test-utils/assets"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
