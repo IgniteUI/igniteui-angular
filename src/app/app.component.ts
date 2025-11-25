@@ -4,18 +4,21 @@ import {
     ViewChild,
     HostBinding,
     inject,
-    signal,
+    signal
 } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { IgxNavigationDrawerComponent, IgxIconService, IgxRippleDirective, IGX_NAVIGATION_DRAWER_DIRECTIVES, registerI18n } from 'igniteui-angular';
 import { DocumentDirection, PageHeaderComponent } from './pageHeading/pageHeading.component';
-import { IgxIconComponent } from '../../projects/igniteui-angular/src/lib/icon/icon.component';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { PropertiesPanelComponent } from './properties-panel/properties-panel.component';
 import { PropertyChangeService } from './properties-panel/property-change.service';
-import { IgxResourceStringsBG, IgxResourceStringsDE, IgxResourceStringsES, IgxResourceStringsFR, IgxResourceStringsIT, IgxResourceStringsJA, IgxResourceStringsKO, IgxResourceStringsZHHANS, IgxResourceStringsZHHANT } from 'igniteui-angular-i18n';
+import { IGX_NAVIGATION_DRAWER_DIRECTIVES, IgxNavigationDrawerComponent } from 'igniteui-angular/navigation-drawer';
+import { IgxIconComponent, IgxIconService } from 'igniteui-angular/icon';
+import { IgxRippleDirective } from 'igniteui-angular/directives';
 
+// I18n
+import { registerI18n } from 'igniteui-angular';
+import { IgxResourceStringsBG, IgxResourceStringsDE, IgxResourceStringsES, IgxResourceStringsFR, IgxResourceStringsIT, IgxResourceStringsJA, IgxResourceStringsKO, IgxResourceStringsZHHANS, IgxResourceStringsZHHANT } from 'igniteui-angular-i18n';
 import localeBG from '@angular/common/locales/bg';
 import localeEN from '@angular/common/locales/en';
 import localeDE from '@angular/common/locales/de';
@@ -789,16 +792,16 @@ export class AppComponent implements OnInit {
         this.iconService.addSvgIcon('breeze', '../assets/images/card/icons/breeze.svg', 'weather-icons');
 
         // Angular locale data
-        // registerLocaleData(localeBG);
-        // registerLocaleData(localeEN);
-        // registerLocaleData(localeDE);
-        // registerLocaleData(localeES);
-        // registerLocaleData(localeFR);
-        // registerLocaleData(localeIT);
-        // registerLocaleData(localeJA);
-        // registerLocaleData(localeKO);
-        // registerLocaleData(localeHans);
-        // registerLocaleData(localeHant);
+        registerLocaleData(localeBG);
+        registerLocaleData(localeEN);
+        registerLocaleData(localeDE);
+        registerLocaleData(localeES);
+        registerLocaleData(localeFR);
+        registerLocaleData(localeIT);
+        registerLocaleData(localeJA);
+        registerLocaleData(localeKO);
+        registerLocaleData(localeHans);
+        registerLocaleData(localeHant);
 
         registerI18n(IgxResourceStringsBG, 'bg');
         registerI18n(IgxResourceStringsDE, 'de');

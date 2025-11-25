@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ChipResourceStringsBG } from 'igniteui-angular-i18n';
-import { IgxChipComponent } from 'igniteui-angular';
+import { IgxChipComponent } from 'igniteui-angular/chips';
 
 @Component({
     selector: 'app-chip',

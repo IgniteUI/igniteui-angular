@@ -2,14 +2,72 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 20.2.0 
+## 21.1.0
 
-- Localization(i18n) for `IgxActionStrip`, `IgxBanner`, `IgxCalendar`, `IgxCarousel`, `IgxChip`, `IgxCombo`, `IgxDatePicker`, `IgxDateRangePicker`, `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`, `IgxInputs`, `IgxList`, `IgxPaginator`, `IgxQueryBuilder`, `IgxTimePicker`, `IgxTree`
+# Localization(i18n)
+
+- `IgxActionStrip`, `IgxBanner`, `IgxCalendar`, `IgxCarousel`, `IgxChip`, `IgxCombo`, `IgxDatePicker`, `IgxDateRangePicker`, `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`, `IgxInputs`, `IgxList`, `IgxPaginator`, `IgxQueryBuilder`, `IgxTimePicker`, `IgxTree`
   - New `Intl` implementation for all currently supported components that format and render data like dates and numbers.
   - New localization implementation for the currently supported languages for all components that have resource strings in the currently supported languages.
   - New public localization API and package named `igniteui-i18n-resources` containing the new resources that are used in conjunction.
   - Added API to toggle off Angular's default formatting completely in favor of the new `Intl` implementation. Otherwise `Intl` will be used when a locale is not defined for Angular to use.
   - Old resources and API should still remain working and not experience any change in behavior, despite internally using the new localization as well.
+
+## 21.0.0
+
+### Themes
+
+- `IgxButton`
+    - **Breaking Change**
+        - The following shadow-related parameters were removed from the `outlined-button-theme` and `flat-button-theme`:
+            - `resting-shadow`
+            - `hover-shadow`
+            - `focus-shadow`
+            - `active-shadow`
+
+## 21.0.0
+
+### Breaking Changes
+
+#### Multiple Entry Points Support
+
+The library now supports multiple entry points for better tree-shaking and code splitting. While the main entry point (`igniteui-angular`) remains fully backwards compatible by re-exporting all granular entry points, we recommend migrating to the new entry points for optimal bundle sizes.
+
+**Entry Points:**
+- `igniteui-angular/core` - Core utilities, services, and base types
+- `igniteui-angular/directives` - Common directives
+- Component-specific entry points: `igniteui-angular/grids`, `igniteui-angular/input-group`, `igniteui-angular/drop-down`, etc.
+- Grid-specific entry points for tree-shakable imports:
+  - `igniteui-angular/grids/core` - Shared grid infrastructure (columns, toolbar, filtering, sorting, etc.)
+  - `igniteui-angular/grids/grid` - Standard grid component (`IgxGridComponent`)
+  - `igniteui-angular/grids/tree-grid` - Tree grid component (`IgxTreeGridComponent`)
+  - `igniteui-angular/grids/hierarchical-grid` - Hierarchical grid component (`IgxHierarchicalGridComponent`, `IgxRowIslandComponent`)
+  - `igniteui-angular/grids/pivot-grid` - Pivot grid component (`IgxPivotGridComponent`, `IgxPivotDataSelectorComponent`)
+
+**Migration:**
+The `ng update` migration will prompt you to optionally migrate your imports to the new entry points. If you choose not to migrate, you can continue using the main entry point with full backwards compatibility.
+
+To migrate manually later:
+```bash
+ng update igniteui-angular --migrate-only --from=20.1.0 --to=21.0.0 --migrate-imports
+```
+
+**Component Relocations:**
+- Input directives (`IgxHintDirective`, `IgxInputDirective`, `IgxLabelDirective`, `IgxPrefixDirective`, `IgxSuffixDirective`) → `igniteui-angular/input-group`
+- `IgxAutocompleteDirective` → `igniteui-angular/drop-down`
+- `IgxRadioGroupDirective` → `igniteui-angular/radio`
+
+**Type Renames (to avoid conflicts):**
+- `Direction` → `CarouselAnimationDirection` (in carousel)
+
+**Benefits:**
+- Better tree-shaking - unused components won't be bundled
+- Code splitting - each component can be lazy-loaded separately
+- Smaller bundle sizes - import only what you need
+- Improved build performance
+
+See the [Angular Package Format documentation](https://angular.io/guide/angular-package-format#entrypoints-and-code-splitting) for more details on entry points.
+
 
 ## 20.1.0
 
