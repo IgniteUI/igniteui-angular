@@ -2,13 +2,17 @@
 
 # Current Milestone
 
-## Milestone 40, version 20.1 (Due by Nov, 2025)
+## Milestone 40, version 21 (Due by Nov, 2025)
 1. Support for Angular 21
 2. AI Chat UI component [#16094](https://github.com/IgniteUI/igniteui-angular/issues/16094)
+3. PDF Export feature on Angular Data Grid, Tree Grid, Hierarchical Grid and Pivot Grid [#5696](https://github.com/IgniteUI/igniteui-angular/issues/5696)
+4. Multiple entry points library refactoring for code splitting support [#16325](https://github.com/IgniteUI/igniteui-angular/issues/16325)
+5. Grids filtering performance improvements
 
 ## Going down the road
 
-1. Grids performance
+1. Transition the library to signals
+2. Zoneless support
 
 # Previous Milestone
 
