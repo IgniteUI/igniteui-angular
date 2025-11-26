@@ -1353,37 +1353,37 @@ describe('IgxGrid - Column properties #grid', () => {
         let fix: ComponentFixture<IgxGridComponent>;
         let grid: IgxGridComponent;
         const dataWithImages = [{
-            avatar: 'assets/images/avatar/1.jpg',
+            avatar: './test-utils/assets/images/avatar/1.jpg',
             phone: '770-504-2217',
             text: 'Terrance Orta',
             available: false
         }, {
-            avatar: 'assets/images/avatar/2.jpg',
+            avatar: './test-utils/assets/images/avatar/2.jpg',
             phone: '423-676-2869',
             text: 'Richard Mahoney',
             available: true
         }, {
-            avatar: 'assets/images/avatar/3.jpg',
+            avatar: './test-utils/assets/images/avatar/3.jpg',
             phone: '859-496-2817',
             text: 'Donna Price',
             available: true
         }, {
-            avatar: 'assets/images/avatar/4.jpg',
+            avatar: './test-utils/assets/images/avatar/4.jpg',
             phone: '901-747-3428',
             text: 'Lisa Landers',
             available: true
         }, {
-            avatar: 'assets/images/avatar/12.jpg',
+            avatar: './test-utils/assets/images/avatar/12.jpg',
             phone: '573-394-9254',
             text: 'Dorothy H. Spencer',
             available: true
         }, {
-            avatar: 'assets/images/avatar/13.jpg',
+            avatar: './test-utils/assets/images/avatar/13.jpg',
             phone: '323-668-1482',
             text: 'Stephanie May',
             available: false
         }, {
-            avatar: 'assets/images/avatar/14.jpg',
+            avatar: './test-utils/assets/images/avatar/14.jpg',
             phone: '401-661-3742',
             text: 'Marianne Taylor',
             available: true
@@ -1410,7 +1410,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             const cell = column._cells[0];
             expect(cell.nativeElement.firstElementChild.tagName).toBe('IMG');
-            expect(cell.nativeElement.firstElementChild.getAttribute('src')).toBe('assets/images/avatar/1.jpg');
+            expect(cell.nativeElement.firstElementChild.getAttribute('src')).toBe('./test-utils/assets/images/avatar/1.jpg');
             expect(cell.nativeElement.firstElementChild.getAttribute('alt')).toBe('1');
         });
 

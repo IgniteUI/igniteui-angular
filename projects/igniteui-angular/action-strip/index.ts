@@ -1,1 +1,1 @@
-export * from './src/action-strip/public_api';
+export * from './src/public_api';

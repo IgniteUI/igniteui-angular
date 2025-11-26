@@ -1,1 +1,1 @@
-export * from './src/dialog/public_api';
+export * from './src/public_api';
