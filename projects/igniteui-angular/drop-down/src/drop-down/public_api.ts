@@ -12,6 +12,7 @@ export { ISelectionEventArgs, IDropDownNavigationDirective } from './drop-down.c
 export * from './drop-down-navigation.directive';
 export * from './drop-down-group.component';
 export * from './autocomplete/autocomplete.directive';
+export * from './autocomplete/autocomplete.module';
 
 /* NOTE: Drop down directives collection for ease-of-use import in standalone components scenario */
 export const IGX_DROP_DOWN_DIRECTIVES = [
