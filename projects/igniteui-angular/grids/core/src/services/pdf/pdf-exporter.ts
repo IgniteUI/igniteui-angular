@@ -74,12 +74,12 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             if (rowDimensionFields.length === 0 && firstDataElement && firstDataElement.data) {
                 // Fallback: Try to infer dimension keys from the record data structure
                 // Get row dimension columns to understand the structure
-            const rowHeaderCols = allColumns.filter(col =>
-                (col.headerType === ExportHeaderType.RowHeader ||
-                col.headerType === ExportHeaderType.MultiRowHeader ||
-                col.headerType === ExportHeaderType.PivotMergedHeader) &&
-                !col.skip
-            );
+                const rowHeaderCols = allColumns.filter(col =>
+                    (col.headerType === ExportHeaderType.RowHeader ||
+                    col.headerType === ExportHeaderType.MultiRowHeader ||
+                    col.headerType === ExportHeaderType.PivotMergedHeader) &&
+                    !col.skip
+                );
 
                 const recordKeys = Object.keys(firstDataElement.data);
                 // Try to match row dimension columns to record keys
