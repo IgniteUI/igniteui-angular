@@ -426,6 +426,7 @@
         &:active {
             background: var-get($flat-theme, 'focus-background');
             color: var-get($flat-theme, 'focus-foreground');
+            border-color: var-get($flat-theme, 'focus-border-color');
 
             igx-icon {
                 color: var-get($flat-theme, 'focus-foreground');
@@ -524,13 +525,13 @@
         color: var-get($outlined-theme, 'focus-visible-foreground');
         border-color: var-get($outlined-theme, 'focus-visible-border-color');
 
-        igx-icon {
-            color: var-get($outlined-theme, 'icon-color');
-        }
-
-        @if $variant == 'material' {
+        @if $variant == 'material'  or $variant == 'bootstrap' {
             igx-icon {
                 color: var-get($outlined-theme, 'icon-color-hover');
+            }
+        } @else {
+            igx-icon {
+                color: var-get($outlined-theme, 'icon-color');
             }
         }
 
