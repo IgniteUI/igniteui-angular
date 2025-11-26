@@ -2,7 +2,6 @@ import { IExcelFile } from './excel-interfaces';
 import { ExcelStrings } from './excel-strings';
 import { WorksheetData } from './worksheet-data';
 
-import { strToU8 } from 'fflate';
 import { ExportHeaderType, ExportRecordType, IExportRecord, IColumnList, IColumnInfo, GRID_ROOT_SUMMARY, GRID_PARENT, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
 import { yieldingLoop } from 'igniteui-angular/core';
 
@@ -11,7 +10,7 @@ import { yieldingLoop } from 'igniteui-angular/core';
  */
 export class RootRelsFile implements IExcelFile {
     public writeElement(folder: Object) {
-        folder['.rels'] = strToU8(ExcelStrings.getRels());
+        import('fflate').then(({ strToU8 }) => folder['.rels'] = strToU8(ExcelStrings.getRels()));
     }
 }
 
@@ -20,7 +19,7 @@ export class RootRelsFile implements IExcelFile {
  */
 export class AppFile implements IExcelFile {
     public writeElement(folder: Object, worksheetData: WorksheetData) {
-        folder['app.xml'] = strToU8(ExcelStrings.getApp(worksheetData.options.worksheetName));
+        import('fflate').then(({ strToU8 }) => folder['app.xml'] = strToU8(ExcelStrings.getApp(worksheetData.options.worksheetName)));
     }
 }
 
@@ -29,7 +28,7 @@ export class AppFile implements IExcelFile {
  */
 export class CoreFile implements IExcelFile {
     public writeElement(folder: Object) {
-        folder['core.xml'] = strToU8(ExcelStrings.getCore());
+        import('fflate').then(({ strToU8 }) => folder['core.xml'] = strToU8(ExcelStrings.getCore()));
     }
 }
 
@@ -39,7 +38,7 @@ export class CoreFile implements IExcelFile {
 export class WorkbookRelsFile implements IExcelFile {
     public writeElement(folder: Object, worksheetData: WorksheetData) {
         const hasSharedStrings = !worksheetData.isEmpty || worksheetData.options.alwaysExportHeaders;
-        folder['workbook.xml.rels'] = strToU8(ExcelStrings.getWorkbookRels(hasSharedStrings));
+        import('fflate').then(({ strToU8 }) => folder['workbook.xml.rels'] = strToU8(ExcelStrings.getWorkbookRels(hasSharedStrings)));
     }
 }
 
@@ -48,7 +47,7 @@ export class WorkbookRelsFile implements IExcelFile {
  */
 export class ThemeFile implements IExcelFile {
     public writeElement(folder: Object) {
-        folder['theme1.xml'] = strToU8(ExcelStrings.getTheme());
+        import('fflate').then(({ strToU8 }) => folder['theme1.xml'] = strToU8(ExcelStrings.getTheme()));
     }
 }
 
@@ -103,9 +102,10 @@ export class WorksheetFile implements IExcelFile {
                 const hasTable = (!worksheetData.isEmpty || worksheetData.options.alwaysExportHeaders)
                     && worksheetData.options.exportAsTable;
 
-                folder['sheet1.xml'] = strToU8(ExcelStrings.getSheetXML(
-                    this.dimension, this.freezePane, cols, rows, hasTable, this.maxOutlineLevel, worksheetData.isHierarchical));
-                resolve();
+                import('fflate').then(({ strToU8 }) => {
+                    folder['sheet1.xml'] = strToU8(ExcelStrings.getSheetXML(this.dimension, this.freezePane, cols, rows, hasTable, this.maxOutlineLevel, worksheetData.isHierarchical));
+                    resolve();
+                });
             });
         });
     }
@@ -718,7 +718,7 @@ export class WorksheetFile implements IExcelFile {
  */
 export class StyleFile implements IExcelFile {
     public writeElement(folder: Object) {
-        folder['styles.xml'] = strToU8(ExcelStrings.getStyles());
+        import('fflate').then(({ strToU8 }) => folder['styles.xml'] = strToU8(ExcelStrings.getStyles()));
     }
 }
 
@@ -727,7 +727,7 @@ export class StyleFile implements IExcelFile {
  */
 export class WorkbookFile implements IExcelFile {
     public writeElement(folder: Object, worksheetData: WorksheetData) {
-        folder['workbook.xml'] = strToU8(ExcelStrings.getWorkbook(worksheetData.options.worksheetName));
+        import('fflate').then(({ strToU8 }) => folder['workbook.xml'] = strToU8(ExcelStrings.getWorkbook(worksheetData.options.worksheetName)));
     }
 }
 
@@ -737,7 +737,7 @@ export class WorkbookFile implements IExcelFile {
 export class ContentTypesFile implements IExcelFile {
     public writeElement(folder: Object, worksheetData: WorksheetData) {
         const hasSharedStrings = !worksheetData.isEmpty || worksheetData.options.alwaysExportHeaders;
-        folder['[Content_Types].xml'] = strToU8(ExcelStrings.getContentTypesXML(hasSharedStrings, worksheetData.options.exportAsTable));
+        import('fflate').then(({ strToU8 }) => folder['[Content_Types].xml'] = strToU8(ExcelStrings.getContentTypesXML(hasSharedStrings, worksheetData.options.exportAsTable)));
     }
 }
 
@@ -754,11 +754,13 @@ export class SharedStringsFile implements IExcelFile {
             sharedStrings[dict.getSanitizedValue(value)] = '<si><t>' + value + '</t></si>';
         }
 
-        folder['sharedStrings.xml'] = strToU8(ExcelStrings.getSharedStringXML(
-                        dict.stringsCount,
-                        sortedValues.length,
-                        sharedStrings.join(''))
-                    );
+        import('fflate').then(({ strToU8 }) => {
+            folder['sharedStrings.xml'] = strToU8(ExcelStrings.getSharedStringXML(
+                dict.stringsCount,
+                sortedValues.length,
+                sharedStrings.join(''))
+            );
+        });
     }
 }
 
@@ -799,7 +801,7 @@ export class TablesFile implements IExcelFile {
             sortString = `<sortState ref="A2:${lastColumn}"><sortCondition descending="${dir}" ref="${sc}1:${sc}15"/></sortState>`;
         }
 
-        folder['table1.xml'] = strToU8(ExcelStrings.getTablesXML(autoFilterDimension, tableDimension, tableColumns, sortString));
+        import('fflate').then(({ strToU8 }) => folder['table1.xml'] = strToU8(ExcelStrings.getTablesXML(autoFilterDimension, tableDimension, tableColumns, sortString)));
     }
 }
 
@@ -808,6 +810,6 @@ export class TablesFile implements IExcelFile {
  */
 export class WorksheetRelsFile implements IExcelFile {
     public writeElement(folder: Object) {
-        folder['sheet1.xml.rels'] = strToU8(ExcelStrings.getWorksheetRels());
+        import('fflate').then(({ strToU8 }) => folder['sheet1.xml.rels'] = strToU8(ExcelStrings.getWorksheetRels()));
     }
 }
