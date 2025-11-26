@@ -218,9 +218,9 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
             const gridContent = GridFunctions.getGridContent(fixture);
 
-            expect(async () => {
+            expect(() => {
                 gridContent.triggerEventHandler('focus', null);
-                await wait(400);
+                tick(400);
                 fixture.detectChanges();
             }).not.toThrow();
         }));
