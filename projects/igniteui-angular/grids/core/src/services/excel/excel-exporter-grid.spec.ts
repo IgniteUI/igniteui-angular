@@ -4,8 +4,6 @@ import { ExportUtilities } from '../exporter-common/export-utilities';
 import { TestMethods } from '../exporter-common/test-methods.spec';
 import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
-import { ZipWrapper } from './zip-verification-wrapper.spec';
-import { FileContentData } from './test-data.service.spec';
 import {
     ReorderedColumnsComponent,
     GridIDNameJobTitleComponent,
@@ -25,32 +23,34 @@ import {
     GridCustomSummaryWithUndefinedZeroAndValidNumberComponent,
     GridCustomSummaryWithUndefinedAndNullComponent,
     GridCustomSummaryWithDateComponent
-} from '../../../../test-utils/grid-samples.spec';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
+} from '../../../../../test-utils/grid-samples.spec';
+import { SampleTestData } from '../../../../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
-import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridSummariesKeyComponent } from '../../../../test-utils/tree-grid-components.spec';
+import { DefaultSortingStrategy, SortingDirection } from '../../../../../core/src/data-operations/sorting-strategy';
+import { IgxStringFilteringOperand } from '../../../../../core/src/data-operations/filtering-condition';
+import { IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridSummariesKeyComponent } from '../../../../../test-utils/tree-grid-components.spec';
 
-import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
-import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
+import { IgxNumberFilteringOperand } from '../../../../../core/src/data-operations/filtering-condition';
+import { UIInteractions, wait } from '../../../../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
+import { FilteringExpressionsTree } from '../../../../../core/src/data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../../../../../core/src/data-operations/filtering-expression.interface';
 import { IgxHierarchicalGridExportComponent,
          IgxHierarchicalGridMCHCollapsibleComponent,
          IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
          IgxHierarchicalGridMultiColumnHeadersExportComponent,
          IgxHierarchicalGridSummariesExportComponent
-} from '../../../../test-utils/hierarchical-grid-components.spec';
-import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
-import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent, SALES_DATA } from '../../../../test-utils/pivot-grid-samples.spec';
+} from '../../../../../test-utils/hierarchical-grid-components.spec';
+import { GridFunctions } from '../../../../../test-utils/grid-functions.spec';
+import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent, SALES_DATA } from '../../../../../test-utils/pivot-grid-samples.spec';
 import { IgxHierarchicalRowComponent } from 'igniteui-angular/grids/hierarchical-grid/src/hierarchical-row.component';
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
 import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
 import { IgxPivotNumericAggregate, PivotRowLayoutType } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
+import { FileContentData } from './test-data.service.spec';
+import { ZipWrapper } from './zip-verification-wrapper.spec';
 
 describe('Excel Exporter', () => {
     let exporter: IgxExcelExporterService;

@@ -3,7 +3,7 @@ import { DEFAULT_OWNER, ExportHeaderType, IColumnInfo, IExportRecord, IgxBaseExp
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { CharSeparatedValueData } from './char-separated-value-data';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
-import { IBaseEventArgs } from '../../core/utils';
+import { IBaseEventArgs } from 'igniteui-angular/core';
 
 export interface ICsvExportEndedEventArgs extends IBaseEventArgs {
     csvData?: string;
@@ -51,13 +51,13 @@ export class IgxCsvExporterService extends IgxBaseExporter {
 
     protected exportDataImplementation(data: IExportRecord[], options: IgxCsvExporterOptions, done: () => void) {
         const dimensionKeys = data[0]?.dimensionKeys;
-        data = dimensionKeys?.length ? 
+        data = dimensionKeys?.length ?
             data.map((item) => item.rawData):
             data.map((item) => item.data);
         const columnList = this._ownersMap.get(DEFAULT_OWNER);
         const columns = columnList?.columns.filter(c => c.headerType === ExportHeaderType.ColumnHeader);
         if (dimensionKeys) {
-            const dimensionCols = dimensionKeys.map((key) => {               
+            const dimensionCols = dimensionKeys.map((key) => {
                 const columnInfo: IColumnInfo = {
                     header: key,
                     field: key,

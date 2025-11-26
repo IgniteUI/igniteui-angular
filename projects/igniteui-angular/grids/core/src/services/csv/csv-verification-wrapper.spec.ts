@@ -1,7 +1,6 @@
 
 export class CSVWrapper {
     private _data: string;
-    private _hasValues = true;
     private _delimiter = '';
     private _eor = '\r\n';
 
