@@ -1,9 +1,9 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { jsPDF } from 'jspdf';
 import { DEFAULT_OWNER, ExportHeaderType, ExportRecordType, GRID_LEVEL_COL, IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxPdfExporterOptions } from './pdf-exporter-options';
 import { IBaseEventArgs } from 'igniteui-angular/core';
+import type { jsPDF } from 'jspdf';
 
 export interface IPdfExportEndedEventArgs extends IBaseEventArgs {
     pdf?: jsPDF;
@@ -74,12 +74,12 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             if (rowDimensionFields.length === 0 && firstDataElement && firstDataElement.data) {
                 // Fallback: Try to infer dimension keys from the record data structure
                 // Get row dimension columns to understand the structure
-            const rowHeaderCols = allColumns.filter(col =>
-                (col.headerType === ExportHeaderType.RowHeader ||
-                col.headerType === ExportHeaderType.MultiRowHeader ||
-                col.headerType === ExportHeaderType.PivotMergedHeader) &&
-                !col.skip
-            );
+                const rowHeaderCols = allColumns.filter(col =>
+                    (col.headerType === ExportHeaderType.RowHeader ||
+                    col.headerType === ExportHeaderType.MultiRowHeader ||
+                    col.headerType === ExportHeaderType.PivotMergedHeader) &&
+                    !col.skip
+                );
 
                 const recordKeys = Object.keys(firstDataElement.data);
                 // Try to match row dimension columns to record keys
@@ -202,201 +202,203 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 });
             });
         }
-
-        // Create PDF document
-        const pdf = new jsPDF({
-            orientation: options.pageOrientation,
-            unit: 'pt',
-            format: options.pageSize
-        });
-
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const pageHeight = pdf.internal.pageSize.getHeight();
-        const margin = 40;
-        const usableWidth = pageWidth - (2 * margin);
-
-        // Calculate column widths
-        // For pivot grids with row dimensions, we need space for both row dimension columns and data columns
-        // Use the maximum of headers and fields to ensure we have space for all columns
-        // Headers determine how many columns to display, fields determine what data to show
-        const rowDimensionColumnCount = isPivotGrid ? Math.max(rowDimensionHeaders.length, rowDimensionFields.length) : 0;
-        const totalColumns = rowDimensionColumnCount + leafColumns.length;
-        const columnWidth = usableWidth / (totalColumns > 0 ? totalColumns : 1);
-        const rowHeight = 20;
-        const headerHeight = 25;
-        const indentSize = 15; // Indentation per level for hierarchical data (visual indent in first column)
-        const childTableIndent = 30; // Indent for child tables
-
-        let yPosition = margin;
-
-        // Set font
-        pdf.setFontSize(options.fontSize);
-
-        // Draw multi-level headers if present
-        // For pivot grids, always draw row dimension headers if they exist, even if there are no multi-column headers
-        if (hasMultiColumnHeaders || (isPivotGrid && rowDimensionHeaders.length > 0)) {
-            yPosition = this.drawMultiLevelHeaders(
-                pdf,
-                allColumns,
-                rowDimensionHeaders,
-                maxLevel,
-                maxRowLevel,
-                margin,
-                yPosition,
-                columnWidth,
-                headerHeight,
-                usableWidth,
-                options,
-                allColumns
-            );
-        } else {
-            // Draw simple single-level headers
-            this.drawTableHeaders(pdf, leafColumns, rowDimensionHeaders, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
-            yPosition += headerHeight;
-        }
-
-        // Draw data rows
-        pdf.setFont('helvetica', 'normal');
-
-        // For pivot grids, get row dimension columns to help with value lookup
-        const rowDimensionColumnsByLevel: Map<number, any[]> = new Map();
-        if (isPivotGrid && defaultOwner) {
-            const allRowDimCols = allColumns.filter(col =>
-                (col.headerType === ExportHeaderType.RowHeader ||
-                 col.headerType === ExportHeaderType.MultiRowHeader ||
-                 col.headerType === ExportHeaderType.PivotMergedHeader) &&
-                !col.skip
-            );
-            // Group by level
-            allRowDimCols.forEach(col => {
-                const level = col.level ?? 0;
-                if (!rowDimensionColumnsByLevel.has(level)) {
-                    rowDimensionColumnsByLevel.set(level, []);
-                }
-                rowDimensionColumnsByLevel.get(level)!.push(col);
+        // Dynamically import jsPDF to reduce initial bundle size
+        import('jspdf').then(({ jsPDF }) => {
+            // Create PDF document
+            const pdf = new jsPDF({
+                orientation: options.pageOrientation,
+                unit: 'pt',
+                format: options.pageSize
             });
-            // Sort each level by startIndex
-            rowDimensionColumnsByLevel.forEach((cols, level) => {
-                cols.sort((a, b) => (a.startIndex ?? 0) - (b.startIndex ?? 0));
-            });
-        }
 
-        let i = 0;
-        while (i < data.length) {
-            const record = data[i];
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const margin = 40;
+            const usableWidth = pageWidth - (2 * margin);
 
-            // Skip hidden records (collapsed hierarchy)
-            if (record.hidden) {
-                i++;
-                continue;
+            // Calculate column widths
+            // For pivot grids with row dimensions, we need space for both row dimension columns and data columns
+            // Use the maximum of headers and fields to ensure we have space for all columns
+            // Headers determine how many columns to display, fields determine what data to show
+            const rowDimensionColumnCount = isPivotGrid ? Math.max(rowDimensionHeaders.length, rowDimensionFields.length) : 0;
+            const totalColumns = rowDimensionColumnCount + leafColumns.length;
+            const columnWidth = usableWidth / (totalColumns > 0 ? totalColumns : 1);
+            const rowHeight = 20;
+            const headerHeight = 25;
+            const indentSize = 15; // Indentation per level for hierarchical data (visual indent in first column)
+            const childTableIndent = 30; // Indent for child tables
+
+            let yPosition = margin;
+
+            // Set font
+            pdf.setFontSize(options.fontSize);
+
+            // Draw multi-level headers if present
+            // For pivot grids, always draw row dimension headers if they exist, even if there are no multi-column headers
+            if (hasMultiColumnHeaders || (isPivotGrid && rowDimensionHeaders.length > 0)) {
+                yPosition = this.drawMultiLevelHeaders(
+                    pdf,
+                    allColumns,
+                    rowDimensionHeaders,
+                    maxLevel,
+                    maxRowLevel,
+                    margin,
+                    yPosition,
+                    columnWidth,
+                    headerHeight,
+                    usableWidth,
+                    options,
+                    allColumns
+                );
+            } else {
+                // Draw simple single-level headers
+                this.drawTableHeaders(pdf, leafColumns, rowDimensionHeaders, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
+                yPosition += headerHeight;
             }
 
-            // Check if we need a new page
-            if (yPosition + rowHeight > pageHeight - margin) {
-                pdf.addPage();
-                yPosition = margin;
+            // Draw data rows
+            pdf.setFont('helvetica', 'normal');
 
-                // Redraw headers on new page
-                if (hasMultiColumnHeaders || hasMultiRowHeaders) {
-                    yPosition = this.drawMultiLevelHeaders(
-                        pdf,
-                        allColumns,
-                        rowDimensionHeaders,
-                        maxLevel,
-                        maxRowLevel,
-                        margin,
-                        yPosition,
-                        columnWidth,
-                        headerHeight,
-                        usableWidth,
-                        options,
-                        allColumns
-                    );
-                } else {
-                    this.drawTableHeaders(pdf, leafColumns, rowDimensionHeaders, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
-                    yPosition += headerHeight;
-                }
+            // For pivot grids, get row dimension columns to help with value lookup
+            const rowDimensionColumnsByLevel: Map<number, any[]> = new Map();
+            if (isPivotGrid && defaultOwner) {
+                const allRowDimCols = allColumns.filter(col =>
+                    (col.headerType === ExportHeaderType.RowHeader ||
+                    col.headerType === ExportHeaderType.MultiRowHeader ||
+                    col.headerType === ExportHeaderType.PivotMergedHeader) &&
+                    !col.skip
+                );
+                // Group by level
+                allRowDimCols.forEach(col => {
+                    const level = col.level ?? 0;
+                    if (!rowDimensionColumnsByLevel.has(level)) {
+                        rowDimensionColumnsByLevel.set(level, []);
+                    }
+                    rowDimensionColumnsByLevel.get(level)!.push(col);
+                });
+                // Sort each level by startIndex
+                rowDimensionColumnsByLevel.forEach((cols, level) => {
+                    cols.sort((a, b) => (a.startIndex ?? 0) - (b.startIndex ?? 0));
+                });
             }
 
-            // Calculate indentation for hierarchical records
-            // TreeGrid supports both hierarchical data and flat self-referencing data (with foreignKey)
-            // In both cases, the base exporter sets the level property on TreeGridRecord
-            const isTreeGrid = record.type === 'TreeGridRecord';
-            const recordIsHierarchicalGrid = record.type === 'HierarchicalGridRecord';
+            let i = 0;
+            while (i < data.length) {
+                const record = data[i];
 
-            // For tree grids, indentation is visual (in the first column text)
-            // For hierarchical grids, we don't use indentation (level determines column offset instead)
-            const indentLevel = isTreeGrid ? (record.level || 0) : 0;
-            const indent = indentLevel * indentSize;
-
-            // Draw parent row
-            this.drawDataRow(pdf, record, leafColumns, rowDimensionFields, margin, yPosition, columnWidth, rowHeight, indent, options, allColumns, isPivotGrid, rowDimensionColumnsByLevel, i, rowDimensionHeaders);
-            yPosition += rowHeight;
-
-            // For hierarchical grids, check if this record has child records
-            if (recordIsHierarchicalGrid) {
-                const allDescendants = [];
-
-                // Collect all descendant records (children, grandchildren, etc.) that belong to this parent
-                // Child records have a different owner (island object) than the parent
-                let j = i + 1;
-                while (j < data.length && data[j].level > record.level) {
-                    // Include all descendants (any level deeper)
-                    if (!data[j].hidden) {
-                        allDescendants.push(data[j]);
-                    }
-                    j++;
+                // Skip hidden records (collapsed hierarchy)
+                if (record.hidden) {
+                    i++;
+                    continue;
                 }
 
-                // If there are descendant records, draw child table(s)
-                if (allDescendants.length > 0) {
-                    // Group descendants by owner to separate different child grids
-                    // Owner is the actual island object, not a string
-                    // Only collect DIRECT children (one level deeper) for initial grouping
-                    const directDescendantsByOwner = new Map<any, IExportRecord[]>();
+                // Check if we need a new page
+                if (yPosition + rowHeight > pageHeight - margin) {
+                    pdf.addPage();
+                    yPosition = margin;
 
-                    for (const desc of allDescendants) {
-                        // Only include records that are exactly one level deeper (direct children)
-                        if (desc.level === record.level + 1) {
-                            const owner = desc.owner;
-                            if (!directDescendantsByOwner.has(owner)) {
-                                directDescendantsByOwner.set(owner, []);
-                            }
-                            directDescendantsByOwner.get(owner)!.push(desc);
-                        }
-                    }
-
-                    // Draw each child grid separately with its direct children only
-                    for (const [owner, directChildren] of directDescendantsByOwner) {
-                        yPosition = this.drawHierarchicalChildren(
+                    // Redraw headers on new page
+                    if (hasMultiColumnHeaders || hasMultiRowHeaders) {
+                        yPosition = this.drawMultiLevelHeaders(
                             pdf,
-                            data,
-                            allDescendants, // Pass all descendants so grandchildren can be found
-                            directChildren,
-                            owner,
-                            yPosition,
+                            allColumns,
+                            rowDimensionHeaders,
+                            maxLevel,
+                            maxRowLevel,
                             margin,
-                            childTableIndent,
-                            usableWidth,
-                            pageHeight,
+                            yPosition,
+                            columnWidth,
                             headerHeight,
-                            rowHeight,
-                            options
+                            usableWidth,
+                            options,
+                            allColumns
                         );
+                    } else {
+                        this.drawTableHeaders(pdf, leafColumns, rowDimensionHeaders, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
+                        yPosition += headerHeight;
+                    }
+                }
+
+                // Calculate indentation for hierarchical records
+                // TreeGrid supports both hierarchical data and flat self-referencing data (with foreignKey)
+                // In both cases, the base exporter sets the level property on TreeGridRecord
+                const isTreeGrid = record.type === 'TreeGridRecord';
+                const recordIsHierarchicalGrid = record.type === 'HierarchicalGridRecord';
+
+                // For tree grids, indentation is visual (in the first column text)
+                // For hierarchical grids, we don't use indentation (level determines column offset instead)
+                const indentLevel = isTreeGrid ? (record.level || 0) : 0;
+                const indent = indentLevel * indentSize;
+
+                // Draw parent row
+                this.drawDataRow(pdf, record, leafColumns, rowDimensionFields, margin, yPosition, columnWidth, rowHeight, indent, options, allColumns, isPivotGrid, rowDimensionColumnsByLevel, i, rowDimensionHeaders);
+                yPosition += rowHeight;
+
+                // For hierarchical grids, check if this record has child records
+                if (recordIsHierarchicalGrid) {
+                    const allDescendants = [];
+
+                    // Collect all descendant records (children, grandchildren, etc.) that belong to this parent
+                    // Child records have a different owner (island object) than the parent
+                    let j = i + 1;
+                    while (j < data.length && data[j].level > record.level) {
+                        // Include all descendants (any level deeper)
+                        if (!data[j].hidden) {
+                            allDescendants.push(data[j]);
+                        }
+                        j++;
                     }
 
-                    // Skip the descendant records we just processed
-                    i = j - 1;
+                    // If there are descendant records, draw child table(s)
+                    if (allDescendants.length > 0) {
+                        // Group descendants by owner to separate different child grids
+                        // Owner is the actual island object, not a string
+                        // Only collect DIRECT children (one level deeper) for initial grouping
+                        const directDescendantsByOwner = new Map<any, IExportRecord[]>();
+
+                        for (const desc of allDescendants) {
+                            // Only include records that are exactly one level deeper (direct children)
+                            if (desc.level === record.level + 1) {
+                                const owner = desc.owner;
+                                if (!directDescendantsByOwner.has(owner)) {
+                                    directDescendantsByOwner.set(owner, []);
+                                }
+                                directDescendantsByOwner.get(owner)!.push(desc);
+                            }
+                        }
+
+                        // Draw each child grid separately with its direct children only
+                        for (const [owner, directChildren] of directDescendantsByOwner) {
+                            yPosition = this.drawHierarchicalChildren(
+                                pdf,
+                                data,
+                                allDescendants, // Pass all descendants so grandchildren can be found
+                                directChildren,
+                                owner,
+                                yPosition,
+                                margin,
+                                childTableIndent,
+                                usableWidth,
+                                pageHeight,
+                                headerHeight,
+                                rowHeight,
+                                options
+                            );
+                        }
+
+                        // Skip the descendant records we just processed
+                        i = j - 1;
+                    }
                 }
+
+                i++;
             }
 
-            i++;
-        }
-
-        // Save the PDF
-        this.saveFile(pdf, options.fileName);
-        this.exportEnded.emit({ pdf });
-        done();
+            // Save the PDF
+            this.saveFile(pdf, options.fileName);
+            this.exportEnded.emit({ pdf });
+            done();
+        });
     }
 
     private drawMultiLevelHeaders(
