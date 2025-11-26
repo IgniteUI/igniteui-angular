@@ -102,12 +102,7 @@ export type IgxChatOptions = Omit<IgcChatOptions, 'renderers'>;
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    templateUrl: './chat.component.html',
-    styles: `
-        igc-chat {
-            --igc-chat-height: calc(100vh - 32px);
-        }
-    `
+    templateUrl: './chat.component.html'
 })
 export class IgxChatComponent implements OnInit, OnDestroy {
     //#region Internal state
