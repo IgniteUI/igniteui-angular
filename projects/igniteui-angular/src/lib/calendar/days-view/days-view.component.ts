@@ -31,7 +31,7 @@ import {
     isDateInRanges,
 } from "../common/helpers";
 import { CalendarDay } from '../common/model';
-import {IgxTheme, THEME_TOKEN, ThemeToken} from "igniteui-angular/src/lib/services/theme/theme.token";
+import {IgxTheme, THEME_TOKEN, ThemeToken} from "../../services/theme/theme.token";
 
 let NEXT_ID = 0;
 
