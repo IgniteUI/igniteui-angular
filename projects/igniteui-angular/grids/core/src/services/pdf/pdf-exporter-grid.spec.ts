@@ -10,6 +10,9 @@ import { IgxHierarchicalGridTestBaseComponent } from '../../../../../test-utils/
 import { IgxTreeGridSortingComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../../../../test-utils/tree-grid-components.spec';
 import { CustomSummariesComponent } from 'igniteui-angular/grids/grid/src/grid-summary.spec';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
+import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent } from '../../../../../test-utils/pivot-grid-samples.spec';
+import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
+import { PivotRowLayoutType } from 'igniteui-angular/grids/core';
 
 describe('PDF Grid Exporter', () => {
     let exporter: IgxPdfExporterService;
@@ -19,7 +22,9 @@ describe('PDF Grid Exporter', () => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
-                GridIDNameJobTitleComponent
+                GridIDNameJobTitleComponent,
+                IgxPivotGridMultipleRowComponent,
+                IgxPivotGridTestComplexHierarchyComponent
             ]
         }).compileComponents();
     }));
@@ -387,5 +392,154 @@ describe('PDF Grid Exporter', () => {
         // Use smaller page size to force truncation
         options.pageSize = 'a5';
         exporter.export(grid, options);
+    });
+
+    describe('Pivot Grid PDF Export', () => {
+        let pivotGrid: IgxPivotGridComponent;
+
+        // Helper function to wait for async operations
+        const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+        it('should export basic pivot grid', async (done) => {
+            const fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
+            fix.detectChanges();
+            await wait(300);
+
+            pivotGrid = fix.componentInstance.pivotGrid;
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(pivotGrid, options);
+        });
+
+        it('should export pivot grid with row headers', async (done) => {
+            const fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
+            fix.detectChanges();
+
+            pivotGrid = fix.componentInstance.pivotGrid;
+            pivotGrid.pivotUI.showRowHeaders = true;
+            fix.detectChanges();
+            await wait(300);
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(pivotGrid, options);
+        });
+
+        it('should export pivot grid with horizontal row layout', async (done) => {
+            const fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
+            fix.detectChanges();
+
+            pivotGrid = fix.componentInstance.pivotGrid;
+            pivotGrid.pivotUI.showRowHeaders = true;
+            pivotGrid.pivotUI.rowLayout = PivotRowLayoutType.Horizontal;
+            pivotGrid.pivotConfiguration.rows = [{
+                memberName: 'ProductCategory',
+                memberFunction: (data) => data.ProductCategory,
+                enabled: true,
+                childLevel: {
+                    memberName: 'Country',
+                    enabled: true,
+                    childLevel: {
+                        memberName: 'Date',
+                        enabled: true
+                    }
+                }
+            }];
+            fix.detectChanges();
+            await wait(300);
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(pivotGrid, options);
+        });
+
+        it('should export hierarchical pivot grid', async (done) => {
+            const fix = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
+            fix.detectChanges();
+            await wait(300);
+
+            pivotGrid = fix.componentInstance.pivotGrid;
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(pivotGrid, options);
+        });
+
+        it('should export pivot grid with custom page size', async (done) => {
+            const fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
+            fix.detectChanges();
+            await wait(300);
+
+            pivotGrid = fix.componentInstance.pivotGrid;
+            options.pageSize = 'letter';
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(pivotGrid, options);
+        });
+
+        it('should export pivot grid with landscape orientation', async (done) => {
+            const fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
+            fix.detectChanges();
+            await wait(300);
+
+            pivotGrid = fix.componentInstance.pivotGrid;
+            options.pageOrientation = 'landscape';
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(pivotGrid, options);
+        });
+
+        it('should export pivot grid without table borders', async (done) => {
+            const fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
+            fix.detectChanges();
+            await wait(300);
+
+            pivotGrid = fix.componentInstance.pivotGrid;
+            options.showTableBorders = false;
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(pivotGrid, options);
+        });
+
+        it('should export pivot grid with custom font size', async (done) => {
+            const fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
+            fix.detectChanges();
+            await wait(300);
+
+            pivotGrid = fix.componentInstance.pivotGrid;
+            options.fontSize = 14;
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(pivotGrid, options);
+        });
     });
 });
