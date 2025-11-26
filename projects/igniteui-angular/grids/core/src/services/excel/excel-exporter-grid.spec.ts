@@ -26,15 +26,10 @@ import {
 } from '../../../../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../../../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
-import { DefaultSortingStrategy, SortingDirection } from '../../../../../core/src/data-operations/sorting-strategy';
-import { IgxStringFilteringOperand } from '../../../../../core/src/data-operations/filtering-condition';
 import { IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridSummariesKeyComponent } from '../../../../../test-utils/tree-grid-components.spec';
 
-import { IgxNumberFilteringOperand } from '../../../../../core/src/data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../../../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FilteringExpressionsTree } from '../../../../../core/src/data-operations/filtering-expressions-tree';
-import { FilteringLogic } from '../../../../../core/src/data-operations/filtering-expression.interface';
 import { IgxHierarchicalGridExportComponent,
          IgxHierarchicalGridMCHCollapsibleComponent,
          IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
@@ -51,6 +46,7 @@ import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchica
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { FileContentData } from './test-data.service.spec';
 import { ZipWrapper } from './zip-verification-wrapper.spec';
+import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
 describe('Excel Exporter', () => {
     let exporter: IgxExcelExporterService;
