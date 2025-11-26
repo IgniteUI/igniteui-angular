@@ -218,11 +218,6 @@ export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
 
     public hasGroupColumns = false;
     public override data = SampleTestData.contactInfoDataFull();
-    constructor() {
-        const cdr = inject(ChangeDetectorRef);
-
-        super();
-    }
 }
 
 @Component({
@@ -290,10 +285,4 @@ export class ColumnPinningWithTemplateTestComponent extends ColumnPinningTestCom
 })
 export class ColumnGroupsPinningTestComponent extends ColumnPinningTestComponent {
     public override data = SampleTestData.contactInfoDataFull();
-
-    constructor() {
-        const cdr = inject(ChangeDetectorRef);
-
-        super();
-    }
 }

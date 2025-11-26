@@ -120,7 +120,7 @@ describe('igxCombo', () => {
                     })
                 };
             }
-        })
+        });
 
         afterAll(() => {
             jasmine.getEnv().allowRespy(false);

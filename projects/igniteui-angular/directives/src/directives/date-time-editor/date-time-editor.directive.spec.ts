@@ -53,7 +53,7 @@ describe('IgxDateTimeEditor', () => {
                     IgxDateTimeEditorDirective,
                 ]
             });
-        })
+        });
         describe('Properties & Events', () => {
             it('should emit valueChange event on clear()', () => {
                 inputFormat = 'dd/M/yy';

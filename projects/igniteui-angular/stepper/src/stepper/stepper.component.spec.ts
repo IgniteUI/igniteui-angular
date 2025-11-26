@@ -1033,7 +1033,7 @@ describe('Stepper service unit tests', () => {
         steps = [];
         for (let index = 0; index < 4; index++) {
             const fixture = TestBed.createComponent(IgxStepComponent);
-            fixture.detectChanges()
+            fixture.detectChanges();
             const newStep = fixture.componentInstance;
             newStep._index = index;
             steps.push(newStep);
