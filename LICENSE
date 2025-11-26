@@ -56,8 +56,6 @@ For information on that license, please go to:
 
 https://www.infragistics.com/legal/license
 
-
-
 -----------------------------------------------------------------
 
 MIT License
@@ -66,137 +64,68 @@ MIT License
 
 The MIT License applies exclusively to the components (encompassing all related modules and directives), directives, and services listed below and their associated source code. **All other parts of this package remain under the Infragistics Commercial License.**
 
-
-
 **Covered Components, Directives and Services with MIT License:**
 
-
-
 - `igx-accordion`
-
 - `igxAutocomplete`
-
 - `igx-avatar`
-
 - `igx-badge`
-
 - `igx-banner`
-
 - `igx-bottom-nav`
-
 - `igx-button`
-
 - `igx-card`
-
 - `igx-carousel`
-
 - `igx-checkbox`
-
 - `igx-chip`
-
 - `igx-circular-bar`
-
 - `igx-combo`
-
 - `igx-date-picker`
-
 - `igx-date-range-picker`
-
 - `igx-dialog`
-
 - `igx-divider`
-
 - `igx-drop-down`
-
 - `igx-expansion-panel`
-
 - `igx-icon`
-
 - `igx-input-group`
-
 - `igx-linear-bar`
-
 - `igx-list`
-
 - `igx-navbar`
-
 - `igx-nav-drawer`
-
 - `igx-paginator`
-
 - `igx-radio`
-
 - `igx-radio-group`
-
 - `igx-rating`
-
 - `igx-select`
-
 - `igx-simple-combo`
-
 - `igx-slider`
-
 - `igx-snackbar`
-
 - `igx-splitter-pane`
-
 - `igx-switch`
-
 - `igx-tabs`
-
 - `igx-toast`
-
 - `igx-tooltip`
-
 - `igx-tree`
-
 - `igx-time-picker`
-
 - `igx-stepper`
-
 - `igx-month-picker`
-
 - `igx-action-strip`
-
 - `igx-buttongroup`
-
 - `igx-calendar`
-
 - `igx-chip-area`
-
 - `igxDateTimeEditor`
-
 - `igxDrag`
-
 - `igxDrop`
-
 - `igxFor`
-
 - `igxIconButton`
-
 - `igxInput`
-
 - `igxLabel`
-
-- `igxLayout
-
+- `igxLayout`
 - `igxMask`
-
 - `igxRipple`
-
 - `IgxOverlayService`
-
 - `IgxTextHighlightDirective`
-
 - `IgxTextHighlightService`
-
 - `igxToggle`
-
-
-
-
-
-
 
 The MIT License applies exclusively to the components (encompassing all related modules and directives), directives, and services listed above and their associated source code. 
 
@@ -245,7 +174,5 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 
 SOFTWARE.
-
-
 
 For details, see https://opensource.org/licenses/MIT
