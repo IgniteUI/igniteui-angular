@@ -2,20 +2,17 @@ import { Component, Input, Output, EventEmitter, Inject, booleanAttribute } from
 import { first } from 'rxjs/operators';
 import { BaseToolbarDirective } from './grid-toolbar.base';
 import { IgxExcelTextDirective, IgxCSVTextDirective, IgxPdfTextDirective } from './common';
-import {
-    CsvFileTypes,
-    IgxBaseExporter,
-    IgxCsvExporterOptions,
-    IgxCsvExporterService,
-    IgxExcelExporterOptions,
-    IgxExcelExporterService,
-    IgxPdfExporterOptions,
-    IgxPdfExporterService
-} from 'igniteui-angular/core';
 import { GridType } from '../common/grid.interface';
 import { IgxToolbarToken } from './token';
 import { IgxButtonDirective, IgxRippleDirective, IgxToggleDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
+import { CsvFileTypes, IgxCsvExporterOptions } from '../services/csv/csv-exporter-options';
+import { IgxExcelExporterOptions } from '../services/excel/excel-exporter-options';
+import { IgxPdfExporterOptions } from '../services/pdf/pdf-exporter-options';
+import { IgxBaseExporter } from '../services/exporter-common/base-export-service';
+import { IgxExcelExporterService } from '../services/excel/excel-exporter';
+import { IgxCsvExporterService } from '../services/csv/csv-exporter';
+import { IgxPdfExporterService } from '../services/pdf/pdf-exporter';
 
 export type IgxExporterOptions = IgxCsvExporterOptions | IgxExcelExporterOptions | IgxPdfExporterOptions;
 

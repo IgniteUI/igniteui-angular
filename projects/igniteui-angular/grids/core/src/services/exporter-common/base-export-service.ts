@@ -1,18 +1,10 @@
 import { EventEmitter } from '@angular/core';
-import { cloneArray, cloneValue, columnFieldPath, IBaseEventArgs, resolveNestedPath, yieldingLoop } from '../../core/utils';
-import { DataUtil } from '../../data-operations/data-util';
 import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
-import type { ITreeGridRecord, ColumnType, GridTypeBase, IPathSegment, IgxSummaryResult, GridColumnDataType } from '../../data-operations/grid-types';
-import { GridSummaryCalculationMode } from '../../data-operations/grid-types';
-import { TreeGridFilteringStrategy } from '../../data-operations/tree-grid-filtering-strategy';
-import { IGroupingState } from '../../data-operations/groupby-state.interface';
-import { getHierarchy, isHierarchyMatch } from '../../data-operations/operations';
-import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
-import { IFilteringState } from '../../data-operations/filtering-state.interface';
+import { type ITreeGridRecord, type ColumnType, type GridTypeBase, type IPathSegment, type IgxSummaryResult, type GridColumnDataType, DataUtil, FilterUtil, GridSummaryCalculationMode, IBaseEventArgs, IFilteringState, IGroupByExpandState, IGroupByRecord, IGroupingState, TreeGridFilteringStrategy, cloneArray, cloneValue, columnFieldPath, resolveNestedPath, yieldingLoop, getHierarchy, isHierarchyMatch } from 'igniteui-angular/core';
+
 import { DatePipe, FormatWidth, getLocaleCurrencyCode, getLocaleDateFormat, getLocaleDateTimeFormat } from '@angular/common';
-import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
-import { FilterUtil } from '../../data-operations/filtering-strategy';
+
 
 export enum ExportRecordType {
     GroupedRecord = 'GroupedRecord',

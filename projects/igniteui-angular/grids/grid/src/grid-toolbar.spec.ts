@@ -4,9 +4,9 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
 import { GridFunctions } from "../../../test-utils/grid-functions.spec";
 import { By } from "@angular/platform-browser";
-import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from 'igniteui-angular/core';
-import { IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarTitleComponent } from 'igniteui-angular/grids/core';
-import { ExportUtilities } from 'igniteui-angular/core/src/services/exporter-common/export-utilities';
+import { AbsoluteScrollStrategy, GlobalPositionStrategy } from 'igniteui-angular/core';
+import { IgxCsvExporterService, IgxExcelExporterService, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarTitleComponent } from 'igniteui-angular/grids/core';
+import { ExportUtilities } from 'igniteui-angular/grids/core';
 
 const TOOLBAR_TAG = 'igx-grid-toolbar';
 const TOOLBAR_TITLE_TAG = 'igx-grid-toolbar-title';

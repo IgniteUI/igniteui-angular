@@ -3,7 +3,7 @@ import { jsPDF } from 'jspdf';
 import { DEFAULT_OWNER, ExportHeaderType, ExportRecordType, GRID_LEVEL_COL, IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxPdfExporterOptions } from './pdf-exporter-options';
-import { IBaseEventArgs } from '../../core/utils';
+import { IBaseEventArgs } from 'igniteui-angular/core';
 
 export interface IPdfExportEndedEventArgs extends IBaseEventArgs {
     pdf?: jsPDF;
