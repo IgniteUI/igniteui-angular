@@ -292,6 +292,12 @@
             box-shadow: none !important;
             border: none !important;
         }
+
+        .igx-input-group--disabled,
+        .igx-input-group--disabled igx-prefix,
+        .igx-input-group--disabled igx-suffix {
+            color: var-get($theme, 'cell-disabled-color');
+        }
     }
 
     @if $variant != 'indigo' {
@@ -888,7 +894,7 @@
             @include css-vars((
                 name: 'igx-grid-row',
                 row-ghost-background: map.get($theme, 'row-ghost-background'),
-                row-drag-color: map.get($theme, 'row-drago-color')
+                row-drag-color: map.get($theme, 'row-drag-color')
             ));
         }
     }
@@ -1000,7 +1006,11 @@
         }
 
         %igx-icon--error {
-            color: color($color: 'gray', $variant: 500);
+            @if $variant == 'fluent' and $theme-variant == 'light' or $variant == 'material' and $theme-variant == 'light' {
+                color: color($color: 'gray', $variant: 600);
+            } @else {
+                color: color($color: 'gray', $variant: 500);
+            }
         }
     }
 
@@ -1191,6 +1201,21 @@
         flex: 1 1 0%;
         align-items: center;
         outline-style: none;
+
+        @extend %cell-input-overrides;
+
+        > igx-input-group,
+        igx-combo,
+        igx-simple-combo,
+        igx-select,
+        igx-date-picker,
+        igx-time-picker {
+            height: auto;
+        }
+
+        igx-input-group {
+            background: transparent;
+        }
 
         @if $variant != 'indigo' {
             padding-inline: pad-inline(
@@ -1407,8 +1432,6 @@
         &%grid-cell-number {
             justify-content: flex-start !important;
         }
-
-        @extend %cell-input-overrides;
     }
 
     %grid-cell--pinned {
