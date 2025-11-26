@@ -90,13 +90,13 @@ import {
     GridSummaryCalculationMode,
     IgxActionStripToken,
     GridResourceStringsEN,
-    IGridResourceStrings
+    IGridResourceStrings,
+    IgxOverlayOutletDirective
 } from 'igniteui-angular/core';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
 import {
-    IgxOverlayOutletDirective,
     IgxToggleDirective,
     IForOfDataChangeEventArgs,
     IgxGridForOfDirective,

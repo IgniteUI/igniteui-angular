@@ -2,9 +2,7 @@ import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentC
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { animationFrameScheduler, fromEvent, interval, merge, noop, Observable, Subject, timer } from 'rxjs';
 import { takeUntil, throttle, throttleTime } from 'rxjs/operators';
-import { EditorProvider } from 'igniteui-angular/core';
-import { resizeObservable } from 'igniteui-angular/core';
-import { ɵIgxDirectionality } from 'igniteui-angular/core';
+import { EditorProvider, ɵIgxDirectionality, resizeObservable } from 'igniteui-angular/core';
 import { IgxThumbLabelComponent } from './label/thumb-label.component';
 import {
     IgxSliderType, IgxThumbFromTemplateDirective,

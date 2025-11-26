@@ -9,6 +9,7 @@ import { IFormattingViews, IgxCalendarComponent, IgxCalendarHeaderTemplateDirect
 import { IgxCalendarContainerComponent } from './calendar-container/calendar-container.component';
 import { IgxDatePickerComponent } from './date-picker.component';
 import {
+    IgxOverlayOutletDirective,
     IgxOverlayService,
     OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings,
     WEEKDAYS
@@ -18,7 +19,6 @@ import { By } from '@angular/platform-browser';
 import { PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../../../core/src/date-common/types';
 import { DatePart } from '../../../core/src/date-common/public_api';
 import { DateRangeDescriptor, DateRangeType } from 'igniteui-angular/core';
-import { IgxOverlayOutletDirective } from '../../../directives/src/directives/toggle/toggle.directive';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../../../core/src/date-common/public_api';
 import { DateTimeUtil } from '../../../core/src/date-common/util/date-time.util';
 import { registerLocaleData } from "@angular/common";

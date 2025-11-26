@@ -3,7 +3,7 @@ import { AfterContentInit, Component, ContentChild, ContentChildren, ElementRef,
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CarouselResourceStringsEN, ICarouselResourceStrings } from 'igniteui-angular/core';
+import { CarouselResourceStringsEN, ICarouselResourceStrings, ɵIgxDirectionality } from 'igniteui-angular/core';
 import { first, IBaseEventArgs, last, PlatformUtil } from 'igniteui-angular/core';
 import { CarouselAnimationDirection, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
@@ -13,7 +13,6 @@ import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { getCurrentResourceStrings } from 'igniteui-angular/core';
 import { HammerGesturesManager } from 'igniteui-angular/core';
 import { CarouselAnimationType, CarouselIndicatorsOrientation } from './enums';
-import { ɵIgxDirectionality } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 

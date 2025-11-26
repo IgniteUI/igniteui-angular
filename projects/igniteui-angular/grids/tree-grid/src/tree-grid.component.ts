@@ -41,12 +41,12 @@ import {
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
-import { DefaultTreeGridMergeStrategy, HierarchicalState, HierarchicalTransaction, HierarchicalTransactionService, IGridMergeStrategy, IgxHierarchicalTransactionFactory, ITreeGridRecord, mergeObjects, StateUpdateEvent, TransactionEventOrigin, TransactionType, TreeGridFilteringStrategy } from 'igniteui-angular/core';
+import { DefaultTreeGridMergeStrategy, HierarchicalState, HierarchicalTransaction, HierarchicalTransactionService, IGridMergeStrategy, IgxHierarchicalTransactionFactory, IgxOverlayOutletDirective, IgxOverlayService, ITreeGridRecord, mergeObjects, PlatformUtil, StateUpdateEvent, TransactionEventOrigin, TransactionType, TreeGridFilteringStrategy } from 'igniteui-angular/core';
 import { IgxTreeGridSummaryPipe } from './tree-grid.summary.pipe';
 import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
 import { IgxTreeGridHierarchizingPipe, IgxTreeGridFlatteningPipe, IgxTreeGridSortingPipe, IgxTreeGridPagingPipe, IgxTreeGridTransactionPipe, IgxTreeGridNormalizeRecordsPipe, IgxTreeGridAddRowPipe } from './tree-grid.pipes';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
-import { IgxButtonDirective, IgxForOfScrollSyncService, IgxForOfSyncService, IgxGridForOfDirective, IgxOverlayOutletDirective, IgxRippleDirective, IgxScrollInertiaDirective, IgxTemplateOutletDirective, IgxToggleDirective } from 'igniteui-angular/directives';
+import { IgxButtonDirective, IgxForOfScrollSyncService, IgxForOfSyncService, IgxGridForOfDirective, IgxRippleDirective, IgxScrollInertiaDirective, IgxTemplateOutletDirective, IgxTextHighlightService, IgxToggleDirective } from 'igniteui-angular/directives';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { IgxIconComponent } from 'igniteui-angular/icon';

@@ -32,11 +32,11 @@ import {
     DateTimeUtil,
     IgxPickerActionsDirective,
     isDateInRanges,
-    PickerCalendarOrientation
+    PickerCalendarOrientation,
+    IgxOverlayOutletDirective
 } from 'igniteui-angular/core';
 import { IgxCalendarContainerComponent } from '../date-picker/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-picker/picker-base.directive';
-import { IgxOverlayOutletDirective } from 'igniteui-angular/directives';
 import {
     IgxInputDirective,
     IgxInputGroupComponent,

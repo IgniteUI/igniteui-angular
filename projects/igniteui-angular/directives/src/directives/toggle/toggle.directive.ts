@@ -10,7 +10,7 @@ import {
     OnInit,
     Output,
 } from '@angular/core';
-import { AbsoluteScrollStrategy } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, IgxOverlayOutletDirective } from 'igniteui-angular/core';
 import { CancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from 'igniteui-angular/core';
 import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
 import { filter, first, takeUntil } from 'rxjs/operators';
@@ -518,26 +518,5 @@ export class IgxToggleActionDirective implements OnInit {
         }
 
         return settings;
-    }
-}
-
-/**
- * Mark an element as an igxOverlay outlet container.
- * Directive instance is exported as `overlay-outlet` to be assigned to templates variables:
- * ```html
- * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
- * ```
- */
-@Directive({
-    exportAs: 'overlay-outlet',
-    selector: '[igxOverlayOutlet]',
-    standalone: true
-})
-export class IgxOverlayOutletDirective {
-    public element = inject<ElementRef<HTMLElement>>(ElementRef);
-
-    /** @hidden */
-    public get nativeElement() {
-        return this.element.nativeElement;
     }
 }

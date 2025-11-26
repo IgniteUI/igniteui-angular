@@ -1,11 +1,11 @@
 import { Component, AfterViewInit, Input, Output, EventEmitter, ChangeDetectorRef, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ExpressionUI } from './common';
-import { AbsoluteScrollStrategy, ColumnType, ConnectedPositioningStrategy, DataUtil, FilteringLogic, GridColumnDataType, IBaseEventArgs, IFilteringOperation, OverlaySettings, PlatformUtil } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, ColumnType, ConnectedPositioningStrategy, DataUtil, FilteringLogic, GridColumnDataType, IBaseEventArgs, IFilteringOperation, IgxOverlayOutletDirective, OverlaySettings, PlatformUtil } from 'igniteui-angular/core';
 import { IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular/select';
 import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective } from 'igniteui-angular/input-group';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { IgxButtonDirective, IgxIconButtonDirective, IgxOverlayOutletDirective } from 'igniteui-angular/directives';
+import { IgxButtonDirective, IgxIconButtonDirective } from 'igniteui-angular/directives';
 import { IgxButtonGroupComponent } from 'igniteui-angular/button-group';
 
 /**

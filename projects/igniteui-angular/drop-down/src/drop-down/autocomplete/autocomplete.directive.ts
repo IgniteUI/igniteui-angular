@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Directive, ElementRef, EventEmitter, HostBinding, Ho
 import { NgModel, FormControlName } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CancelableEventArgs, IBaseEventArgs } from 'igniteui-angular/core';
+import { CancelableEventArgs, IBaseEventArgs, IgxOverlayOutletDirective } from 'igniteui-angular/core';
 import {
     AbsoluteScrollStrategy,
     AutoPositionStrategy,
@@ -12,7 +12,6 @@ import {
 } from 'igniteui-angular/core';
 import { IgxDropDownComponent } from '../drop-down.component';
 import { IgxDropDownItemNavigationDirective } from '../drop-down-navigation.directive';
-import { IgxOverlayOutletDirective } from 'igniteui-angular/directives';
 import { ISelectionEventArgs } from '../drop-down.common';
 import { IgxInputGroupComponent } from 'igniteui-angular/input-group';
 
