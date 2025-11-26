@@ -4,7 +4,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first } from 'rxjs/operators';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { IgxAngularAnimationService } from '../animation/angular-animation-service';
-import { AnimationService } from '../animation/animation';
 import { IgxOverlayService } from './overlay';
 import { ContainerPositionStrategy } from './position';
 import { AutoPositionStrategy } from './position/auto-position-strategy';
@@ -33,6 +32,7 @@ import { IgxCalendarContainerComponent } from 'igniteui-angular/date-picker';
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
 import { IgxCalendarComponent } from 'igniteui-angular/calendar';
 import { IgxToggleDirective } from 'igniteui-angular/directives';
+import { PlatformUtil } from 'igniteui-angular';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
