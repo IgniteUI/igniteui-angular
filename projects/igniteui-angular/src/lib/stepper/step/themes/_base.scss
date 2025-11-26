@@ -54,6 +54,16 @@ $theme: $material;
             @include e(header) {
                 background: var-get($theme, 'step-focus-background');
                 color: var-get($theme, 'title-focus-color');
+
+                &:hover {
+                    #{elem($this, title)} {
+                        color: var-get($theme, 'title-focus-color');
+                    }
+
+                    #{elem($this, subtitle)} {
+                        color: var-get($theme, 'subtitle-focus-color');
+                    }
+                }
             }
         }
 
@@ -67,6 +77,16 @@ $theme: $material;
             &:focus {
                 @include e(header) {
                     background: var-get($theme, 'invalid-step-focus-background');
+
+                    &:hover {
+                        #{elem($this, title)} {
+                            color: var-get($theme, 'invalid-title-focus-color');
+                        }
+
+                        #{elem($this, subtitle)} {
+                            color: var-get($theme, 'invalid-subtitle-focus-color');
+                        }
+                    }
                 }
 
                 @include e(title) {
@@ -82,7 +102,17 @@ $theme: $material;
         @include m(current) {
             &:focus {
                 @include e(header) {
-                    background: var-get($theme, 'current-step-focus-background') !important;
+                    background: var-get($theme, 'current-step-focus-background');
+
+                    &:hover {
+                        #{elem($this, title)} {
+                            color: var-get($theme, 'current-title-focus-color');
+                        }
+
+                        #{elem($this, subtitle)} {
+                            color: var-get($theme, 'current-subtitle-focus-color');
+                        }
+                    }
                 }
 
                 @include e(title) {
@@ -146,6 +176,16 @@ $theme: $material;
             &:focus {
                 @include e(header) {
                     background: var-get($theme, 'complete-step-focus-background');
+
+                    &:hover {
+                        #{elem($this, title)} {
+                            color: var-get($theme, 'complete-title-focus-color');
+                        }
+
+                        #{elem($this, subtitle)} {
+                            color: var-get($theme, 'complete-subtitle-focus-color');
+                        }
+                    }
                 }
 
                 @include e(title) {
@@ -388,6 +428,7 @@ $theme: $material;
             border-radius: var-get($theme, 'border-radius-indicator');
             color: var-get($theme, 'indicator-color');
             background: var-get($theme, 'indicator-background');
+            box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($theme, 'indicator-outline');
         }
 
         @include e(title) {
@@ -427,6 +468,7 @@ $theme: $material;
             @include e(indicator) {
                 color: var-get($theme, 'invalid-indicator-color');
                 background: var-get($theme, 'invalid-indicator-background');
+                box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($theme, 'invalid-indicator-outline');
             }
 
             @include e(title) {
@@ -438,6 +480,8 @@ $theme: $material;
             }
 
             &:hover {
+                background: var-get($theme, 'invalid-step-hover-background');
+
                 @include e(title) {
                     color: var-get($theme, 'invalid-title-hover-color');
                 }
@@ -459,6 +503,7 @@ $theme: $material;
             @include e(indicator) {
                 color: var-get($theme, 'complete-indicator-color');
                 background: var-get($theme, 'complete-indicator-background');
+                box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($theme, 'complete-indicator-outline');
             }
 
             @include e(title) {
@@ -483,12 +528,13 @@ $theme: $material;
         }
 
         @include m(current) {
-            background: var-get($theme, 'current-step-background') !important;
+            background: var-get($theme, 'current-step-background');
             color: var-get($theme, 'current-title-color');
 
             @include e(indicator) {
                 color: var-get($theme, 'current-indicator-color') !important;
-                background: var-get($theme, 'current-indicator-background') !important;
+                background: var-get($theme, 'current-indicator-background');
+                box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($theme, 'current-indicator-outline') !important;
             }
 
             @include e(title) {
@@ -503,7 +549,7 @@ $theme: $material;
             }
 
             &:hover {
-                background: var-get($theme, 'current-step-hover-background') !important;
+                background: var-get($theme, 'current-step-hover-background');
 
                 @include e(title) {
                     color: var-get($theme, 'current-title-hover-color');
@@ -523,6 +569,7 @@ $theme: $material;
             @include e(indicator) {
                 color: var-get($theme, 'disabled-indicator-color');
                 background: var-get($theme, 'disabled-indicator-background');
+                box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($theme, 'disabled-indicator-outline');
             }
 
             @include e(title) {

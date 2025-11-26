@@ -113,7 +113,6 @@ $_theme: $material;
         height: $indicator-size;
         width: $indicator-size;
         min-width: $indicator-size;
-        box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($_theme, 'indicator-outline');
 
         > igx-icon {
             --size: var(--igx-icon-size, #{rem(18px)});
@@ -125,32 +124,6 @@ $_theme: $material;
         > igx-circular-bar {
             max-height: $indicator-size;
             max-width: $indicator-size;
-        }
-    }
-}
-
-@include themed-block(igx-step-header, material) {
-    @include m(completed) {
-        @include e(indicator) {
-            box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($_theme, 'complete-indicator-outline');
-        }
-    }
-
-    @include m(current) {
-        @include e(indicator) {
-            box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($_theme, 'current-indicator-outline') !important;
-        }
-    }
-
-    @include m(invalid) {
-        @include e(indicator) {
-            box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($_theme, 'invalid-indicator-outline');
-        }
-    }
-
-    @include m(disabled) {
-        @include e(indicator) {
-            box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($_theme, 'disabled-indicator-outline');
         }
     }
 }

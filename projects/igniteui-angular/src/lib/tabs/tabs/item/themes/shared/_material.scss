@@ -6,6 +6,10 @@
 $_theme: $material;
 
 @include themed-block(igx-tabs, material) {
+    @include b(igx-tabs-header) {
+        background: var-get($_theme, 'item-background');
+    }
+
     @include b(igx-tabs-header-button) {
         &:focus {
             background: var-get($_theme, 'button-hover-background');
