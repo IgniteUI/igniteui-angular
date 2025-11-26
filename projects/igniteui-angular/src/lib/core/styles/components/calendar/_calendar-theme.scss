@@ -602,6 +602,28 @@
                     border-color: var-get($theme, 'ym-selected-current-outline-focus-color');
                 }
             }
+
+            @if $variant == 'fluent' {
+                box-shadow: 0 0 0 $border-size var-get($theme, 'ym-selected-current-outline-focus-color');
+            }
+
+            &:hover {
+                color: var-get($theme, 'ym-selected-current-hover-foreground');
+                background: var-get($theme, 'ym-selected-current-hover-background');
+
+                // stylelint-disable-next-line
+                @if $variant != 'indigo' {
+                    box-shadow: inset 0 0 0 $border-size var-get($theme, 'ym-selected-current-outline-focus-color');
+                } @else {
+                    &::after {
+                        border-color: var-get($theme, 'ym-selected-current-outline-focus-color');
+                    }
+                }
+
+                @if $variant == 'fluent' {
+                    box-shadow: 0 0 0 $border-size var-get($theme, 'ym-selected-current-outline-focus-color');
+                }
+            }
         }
     }
 
@@ -670,6 +692,10 @@
                 }
             }
 
+            @if $variant == 'fluent' {
+                box-shadow: 0 0 0 $border-size var-get($theme, 'ym-selected-current-outline-color');
+            }
+
             &:hover {
                 color: var-get($theme, 'ym-selected-current-hover-foreground');
                 background: var-get($theme, 'ym-selected-current-hover-background');
@@ -682,6 +708,11 @@
                     &::after {
                         border-color: var-get($theme, 'ym-selected-current-outline-hover-color');
                     }
+                }
+
+
+                @if $variant == 'fluent' {
+                    box-shadow: 0 0 0 $border-size var-get($theme, 'ym-selected-current-outline-hover-color');
                 }
             }
         }
@@ -1364,7 +1395,7 @@
 
         &::after {
             background: var-get($theme, 'date-selected-special-background');
-            border-color: var-get($theme, 'date-special-border-color');
+            border-color: var-get($theme, 'date-selected-special-border-color');
             border-radius: var-get($theme, 'date-special-border-radius');
         }
 
