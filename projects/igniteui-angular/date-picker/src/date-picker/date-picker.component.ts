@@ -43,7 +43,7 @@ import {
 import { fromEvent, Subscription, noop, MonoTypeOperatorFunction } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
-import { IgxDateTimeEditorDirective, IgxOverlayOutletDirective, IgxTextSelectionDirective } from 'igniteui-angular/directives';
+import { IgxDateTimeEditorDirective, IgxTextSelectionDirective } from 'igniteui-angular/directives';
 import {
     AbsoluteScrollStrategy,
     AutoPositionStrategy,
@@ -64,7 +64,8 @@ import {
     DateTimeUtil,
     DatePartDeltas,
     DatePart,
-    isDateInRanges
+    isDateInRanges,
+    IgxOverlayOutletDirective
 } from 'igniteui-angular/core';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
