@@ -40,7 +40,7 @@ type ChatContextType<T extends ChatContextUnion> =
     : T extends ChatMessageRenderContext
     ? IgcChatMessage
     : T extends ChatInputRenderContext
-    ? { value: string; attachments: IgcChatMessageAttachment[] }
+    ? string
     : T extends ChatRenderContext
     ? { instance: IgcChatComponent }
     : never;
@@ -214,14 +214,13 @@ export class IgxChatComponent implements OnInit, OnDestroy {
             }
         }
 
-        if (newTemplateKeys.length > 0) {
-            this._oldTemplates = {};
-            for (const key of newTemplateKeys) {
-                const ref = newTemplates[key];
-                if (ref) {
-                    this._oldTemplates[key] = ref as any;
-                    templateCopies[key] = this._createTemplateRenderer(ref);
-                }
+        this._oldTemplates = {};
+
+        for (const key of newTemplateKeys) {
+            const ref = newTemplates[key];
+            if (ref) {
+                (this._oldTemplates as Record<string, TemplateRef<unknown>>)[key] = ref;
+                templateCopies[key] = this._createTemplateRenderer(ref);
             }
         }
 
@@ -283,7 +282,7 @@ export interface ChatInputContext {
  * </ng-template>
  * ```
  */
-@Directive({ selector: '[igxChatMessageContext]' })
+@Directive({ selector: '[igxChatMessageContext]', standalone: true })
 export class IgxChatMessageContextDirective {
 
     public static ngTemplateContextGuard(_: IgxChatMessageContextDirective, ctx: unknown): ctx is { $implicit: IgcChatMessage } {
@@ -302,7 +301,7 @@ export class IgxChatMessageContextDirective {
  * </ng-template>
  * ```
  */
-@Directive({ selector: '[igxChatAttachmentContext]' })
+@Directive({ selector: '[igxChatAttachmentContext]', standalone: true })
 export class IgxChatAttachmentContextDirective {
 
     public static ngTemplateContextGuard(_: IgxChatAttachmentContextDirective, ctx: unknown): ctx is { $implicit: IgcChatMessageAttachment } {
@@ -321,7 +320,7 @@ export class IgxChatAttachmentContextDirective {
  * </ng-template>
  * ```
  */
-@Directive({ selector: '[igxChatInputContext]' })
+@Directive({ selector: '[igxChatInputContext]', standalone: true })
 export class IgxChatInputContextDirective {
 
     public static ngTemplateContextGuard(_: IgxChatInputContextDirective, ctx: unknown): ctx is ChatInputContext {
