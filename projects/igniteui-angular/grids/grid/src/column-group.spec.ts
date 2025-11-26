@@ -203,6 +203,27 @@ describe('IgxGrid - multi-column headers #grid', () => {
             }
         }));
 
+        it('The ariaHidden getter should not throw when the grid has no active node (#16517)', fakeAsync(() => {
+            fixture = TestBed.createComponent(BlueWhaleGridComponent) as ComponentFixture<BlueWhaleGridComponent>;
+            tick();
+            fixture.detectChanges();
+
+            // The grid active node will be null if there is no data and the body is focused
+            grid = fixture.componentInstance.grid;
+            grid.data = [];
+
+            tick();
+            fixture.detectChanges();
+
+            const gridContent = GridFunctions.getGridContent(fixture);
+
+            expect(async () => {
+                gridContent.triggerEventHandler('focus', null);
+                await wait(400);
+                fixture.detectChanges();
+            }).not.toThrow();
+        }));
+
         it('Should render dynamic column group header correctly (#12165).', () => {
             fixture = TestBed.createComponent(BlueWhaleGridComponent) as ComponentFixture<BlueWhaleGridComponent>;
             (fixture as ComponentFixture<BlueWhaleGridComponent>).componentInstance.firstGroupRepeats = 1;
