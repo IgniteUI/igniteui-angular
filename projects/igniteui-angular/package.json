@@ -75,7 +75,6 @@
         "igniteui-trial-watermark": "^3.1.0",
         "jspdf": "^3.0.2",
         "lodash-es": "^4.17.21",
-        "tslib": "^2.3.0",
         "igniteui-theming": "^24.0.0",
         "@igniteui/material-icons-extended": "^3.1.0"
     },
