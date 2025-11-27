@@ -404,7 +404,6 @@ describe('PDF Grid Exporter', () => {
             await wait();
 
             pivotGrid = fix.componentInstance.pivotGrid;
-            spyOn(ExportUtilities as any, 'saveBlobToFile');
         });
 
         it('should export basic pivot grid', (done) => {
