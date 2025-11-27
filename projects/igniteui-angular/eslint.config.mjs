@@ -25,6 +25,9 @@ export default [
                 style: "kebab-case",
             }],
 
+            // Separate configs for element (kebab-case) and attribute (camelCase) selectors.
+            // 'ig' prefix only used for attribute selectors (e.g., [igSize]).
+            // 'excel', 'csv', 'pdf' prefixes used for toolbar export directives.
             "@angular-eslint/directive-selector": ["error", [
                 {
                     type: "element",
