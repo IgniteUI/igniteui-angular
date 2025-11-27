@@ -25,10 +25,18 @@ export default [
                 style: "kebab-case",
             }],
 
-            "@angular-eslint/directive-selector": ["error", {
-                type: ["attribute", "element"],
-                prefix: ["igx", "igc"],
-            }],
+            "@angular-eslint/directive-selector": ["error", [
+                {
+                    type: "element",
+                    prefix: ["igx", "igc", "excel", "csv", "pdf"],
+                    style: "kebab-case",
+                },
+                {
+                    type: "attribute",
+                    prefix: ["igx", "igc", "ig", "excel", "csv", "pdf"],
+                    style: "camelCase",
+                }
+            ]],
 
             "@angular-eslint/no-input-rename": "off",
             "@typescript-eslint/consistent-type-definitions": "error",
@@ -48,6 +56,24 @@ export default [
             }],
 
             "no-debugger": "error",
+        },
+    },
+    // Override for files with compound selectors (element[attribute]) that confuse the selector rule
+    {
+        files: [
+            "**/columns/validators.directive.ts",
+            "**/form-control/form-control.directive.ts",
+        ],
+        rules: {
+            "@angular-eslint/directive-selector": "off",
+        },
+    },
+    // Override for test files with non-standard selectors
+    {
+        files: ["**/*.spec.ts"],
+        rules: {
+            "@angular-eslint/component-selector": "off",
+            "@angular-eslint/directive-selector": "off",
         },
     },
     ...compat.extends(
