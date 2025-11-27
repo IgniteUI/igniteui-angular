@@ -22,8 +22,10 @@ $cell-editing-outline-width: rem(2px);
         color: inherit;
         text-align: start;
         // TODO: Verify if this is needed, commenting out for now
-        // background-clip: border-box !important;
+        background-clip: border-box !important;
         min-height: var(--cell-height);
+        clip-path: inset(0 1px 0 0);
+        overflow: hidden;
 
         // Font size for the cell is different in the ingigo theme -> it simply uses the detail-1 styles for all cells
         font-size: $cell-font-size;
@@ -61,6 +63,7 @@ $cell-editing-outline-width: rem(2px);
             var-get($theme, 'header-border-color');
         overflow: hidden;
         transition: color 250ms ease-in-out;
+        outline-style: none;
     }
 
     @include b(igx-grid) {
@@ -143,7 +146,8 @@ $cell-editing-outline-width: rem(2px);
         // Table body scrollbar
         @include e(tbody-scrollbar) {
             background: var-get($theme, 'content-background');
-            border-inline-start: rem(1px) solid var-get($theme, 'row-border-color');
+            border-inline-start: rem(1px) solid
+                var-get($theme, 'row-border-color');
             position: relative;
         }
 
@@ -225,7 +229,8 @@ $cell-editing-outline-width: rem(2px);
             top: 0;
             inset-inline-end: 0;
             background: var-get($theme, 'header-background');
-            border-inline-start: rem(1px) solid var-get($theme, 'header-border-color');
+            border-inline-start: rem(1px) solid
+                var-get($theme, 'header-border-color');
         }
 
         // Grid footer
@@ -235,6 +240,15 @@ $cell-editing-outline-width: rem(2px);
 
         @include e(td) {
             @extend %cell-display;
+
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                width: calc(100% - 1px);
+                height: 100%;
+                pointer-events: none;
+            }
         }
 
         @include e(td, $m: fw) {
@@ -295,7 +309,10 @@ $cell-editing-outline-width: rem(2px);
                 // WARN: This doesn't follow the BEM structure, needs work
                 .igx-grid__td--column-selected {
                     color: var-get($theme, 'row-selected-hover-text-color');
-                    background: var-get($theme, 'row-selected-hover-background');
+                    background: var-get(
+                        $theme,
+                        'row-selected-hover-background'
+                    );
                 }
             }
         }
@@ -423,7 +440,10 @@ $cell-editing-outline-width: rem(2px);
 
         // Merged cell when both selected and hovered
         @include e(td, $mods: (merged-selected, merged-hovered)) {
-            background: var-get($theme, 'row-selected-hover-background') !important;
+            background: var-get(
+                $theme,
+                'row-selected-hover-background'
+            ) !important;
             color: var-get($theme, 'row-selected-hover-text-color');
         }
 
@@ -443,12 +463,14 @@ $cell-editing-outline-width: rem(2px);
 
         // Last pinned column (right border)
         @include e(td, $m: pinned-last) {
-            border-inline-end: rem(2px) solid var-get($theme, 'pinned-border-color') !important;
+            border-inline-end: rem(2px) solid
+                var-get($theme, 'pinned-border-color') !important;
         }
 
         // First pinned column (left border)
         @include e(td, $m: pinned-first) {
-            border-inline-start: rem(2px) solid var-get($theme, 'pinned-border-color') !important;
+            border-inline-start: rem(2px) solid
+                var-get($theme, 'pinned-border-color') !important;
         }
 
         // Pinned cell when selected
@@ -479,8 +501,10 @@ $cell-editing-outline-width: rem(2px);
         }
 
         @include e(td, $m: active) {
-            box-shadow: inset 0 0 0 rem(1px)
-                var-get($theme, 'cell-active-border-color');
+            &::after {
+                box-shadow: inset 0 0 0 rem(1px)
+                    var-get($theme, 'cell-active-border-color');
+            }
         }
 
         // Selected cell
@@ -492,6 +516,12 @@ $cell-editing-outline-width: rem(2px);
                 &:hover {
                     color: var-get($theme, 'cell-selected-text-color');
                 }
+            }
+        }
+
+        @include e(td, $m: valid) {
+            &::after {
+                box-shadow: inset 0 0 0 rem(2px) color($color: 'success') !important;
             }
         }
 
@@ -515,8 +545,12 @@ $cell-editing-outline-width: rem(2px);
         @include e(td, $m: editing) {
             border-width: 0;
             background: var-get($theme, 'cell-editing-background') !important;
-            box-shadow: inset 0 0 0 #{$cell-editing-outline-width} var-get($theme, 'edit-mode-color');
             padding-inline: rem(4px);
+
+            &::after {
+                box-shadow: inset 0 0 0 #{$cell-editing-outline-width}
+                    var-get($theme, 'edit-mode-color');
+            }
 
             igx-input-group {
                 --size: var(--cell-height) !important;
@@ -560,7 +594,10 @@ $cell-editing-outline-width: rem(2px);
         }
 
         @include e(td, $mods: (editing, invalid)) {
-            box-shadow: inset 0 0 0 #{$cell-editing-outline-width} color($color: 'error') !important;
+            &::after {
+                box-shadow: inset 0 0 0 #{$cell-editing-outline-width}
+                    color($color: 'error') !important;
+            }
         }
 
         // Row editing state - active edit mode on a row
@@ -629,7 +666,8 @@ $cell-editing-outline-width: rem(2px);
 
         // Row add animation
         @include e(tr, $m: add-animate) {
-            animation: scale-in-ver-center 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation: scale-in-ver-center 0.2s
+                cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         // Edited row indicator - shows row has been modified
@@ -659,7 +697,8 @@ $cell-editing-outline-width: rem(2px);
 
         // Active row container
         @include e(tr-container, $m: active) {
-            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'cell-active-border-color');
+            box-shadow: inset 0 0 0 rem(1px)
+                var-get($theme, 'cell-active-border-color');
         }
 
         // Action row (for row actions like edit, delete buttons)
@@ -710,7 +749,8 @@ $cell-editing-outline-width: rem(2px);
             justify-content: center;
             align-items: center;
             padding-inline: pad-inline(rem(12px), rem(16px), rem(18px));
-            border-inline-end: rem(1px) solid var-get($theme, 'header-border-color');
+            border-inline-end: rem(1px) solid
+                var-get($theme, 'header-border-color');
             background: inherit;
             z-index: 1;
             background-clip: border-box;
@@ -769,7 +809,8 @@ $cell-editing-outline-width: rem(2px);
         // Hierarchical expander in header
         @include e(hierarchical-expander, $m: header) {
             background: inherit;
-            border-inline-end: rem(1px) solid var-get($theme, 'header-border-color');
+            border-inline-end: rem(1px) solid
+                var-get($theme, 'header-border-color');
             z-index: 3;
             background-clip: border-box;
 
@@ -807,7 +848,11 @@ $cell-editing-outline-width: rem(2px);
                 $level-cosy: $i * rem(32px);
                 $level-comfortable: $i * rem(36px);
 
-                padding-inline-start: pad-inline($level-compact, $level-cosy, $level-comfortable);
+                padding-inline-start: pad-inline(
+                    $level-compact,
+                    $level-cosy,
+                    $level-comfortable
+                );
             }
         }
 
@@ -815,7 +860,8 @@ $cell-editing-outline-width: rem(2px);
         @include e(header-indentation) {
             position: relative;
             padding-inline-end: sizable(rem(12px), rem(16px), rem(18px));
-            border-inline-end: rem(1px) solid var-get($theme, 'header-border-color');
+            border-inline-end: rem(1px) solid
+                var-get($theme, 'header-border-color');
             background: var-get($theme, 'header-background');
             z-index: 4;
 
@@ -869,7 +915,8 @@ $cell-editing-outline-width: rem(2px);
         // Active group row
         @include e(group-row, $m: active) {
             background: var-get($theme, 'group-row-selected-background');
-            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'cell-active-border-color');
+            box-shadow: inset 0 0 0 rem(1px)
+                var-get($theme, 'cell-active-border-color');
 
             &:hover {
                 background: var-get($theme, 'group-row-selected-background');
@@ -952,7 +999,11 @@ $cell-editing-outline-width: rem(2px);
                 $indicator-padding-comfortable: $i * rem(18px);
 
                 .igx-grid__grouping-indicator {
-                    margin-inline-start: sizable($indicator-padding-compact, $indicator-padding-cosy, $indicator-padding-comfortable);
+                    margin-inline-start: sizable(
+                        $indicator-padding-compact,
+                        $indicator-padding-cosy,
+                        $indicator-padding-comfortable
+                    );
                 }
             }
         }
@@ -1419,7 +1470,11 @@ $cell-editing-outline-width: rem(2px);
                 width: rem(10px);
                 content: '';
                 inset-block: rem(-2px);
-                background: linear-gradient(to right, var-get($theme, 'filtering-row-background'), transparent);
+                background: linear-gradient(
+                    to right,
+                    var-get($theme, 'filtering-row-background'),
+                    transparent
+                );
                 inset-inline-end: rem(-10px);
             }
         }
@@ -1434,7 +1489,11 @@ $cell-editing-outline-width: rem(2px);
                 width: rem(10px);
                 content: '';
                 inset-block: rem(-2px);
-                background: linear-gradient(to left, var-get($theme, 'filtering-row-background'), transparent);
+                background: linear-gradient(
+                    to left,
+                    var-get($theme, 'filtering-row-background'),
+                    transparent
+                );
                 inset-inline-start: rem(-10px);
             }
         }
@@ -1446,9 +1505,11 @@ $cell-editing-outline-width: rem(2px);
             padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
             padding-block: 0;
             overflow: hidden;
-            border-inline-end: rem(1px) solid var-get($theme, 'header-border-color');
+            border-inline-end: rem(1px) solid
+                var-get($theme, 'header-border-color');
             border-top: rem(1px) solid var-get($theme, 'header-border-color');
             height: var(--header-size);
+            background-clip: padding-box !important;
 
             igx-chips-area {
                 width: 100%;
@@ -1548,7 +1609,10 @@ $cell-editing-outline-width: rem(2px);
             // Override summary component colors when in body context
             .igx-grid-summary {
                 --background-color: inherit;
-                --result-color: hsla(from color(from var(--background-color) var(--y-contrast)) h 0 l / 1);
+                --result-color: hsla(
+                    from color(from var(--background-color) var(--y-contrast)) h
+                        0 l / 1
+                );
             }
         }
 
@@ -1556,7 +1620,8 @@ $cell-editing-outline-width: rem(2px);
         @include e(summaries-patch) {
             position: relative;
             background: inherit;
-            border-inline-end: rem(1px) solid var-get($theme, 'header-border-color');
+            border-inline-end: rem(1px) solid
+                var-get($theme, 'header-border-color');
             z-index: 1;
         }
 
@@ -1634,7 +1699,7 @@ $cell-editing-outline-width: rem(2px);
         color: inherit;
         text-align: start;
         // TODO: Verify if this is needed, commenting out for now
-        // background-clip: border-box !important;
+        background-clip: padding-box !important;
 
         // Font size for the cell is different in the ingigo theme -> it simply uses the detail-1 styles for all cells
         line-height: $cell-line-height;
@@ -1648,18 +1713,59 @@ $cell-editing-outline-width: rem(2px);
         padding-block: 0;
         font-size: rem(12px);
         font-weight: 600;
-        // border-inline-end: var-get($theme, 'header-border-width')
-        //     var-get($theme, 'header-border-style')
-        //     var-get($theme, 'header-border-color');
+        border-inline-end: var-get($theme, 'header-border-width')
+            var-get($theme, 'header-border-style')
+            var-get($theme, 'header-border-color');
         overflow: hidden;
         transition: color 250ms ease-in-out;
+        outline-style: none;
+
+        @include e(expander) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-inline-end: rem(8px);
+            cursor: pointer;
+
+            igx-icon {
+                // @if $variant == 'indigo' {
+                //     --component-size: 2;
+                // }
+
+                color: var-get($theme, 'expand-icon-color');
+            }
+
+            &:hover {
+                igx-icon {
+                    color: var-get($theme, 'expand-icon-hover-color');
+                }
+            }
+        }
+
+        @include e(group-title) {
+            @include ellipsis();
+
+            // @if $variant == 'indigo' {
+            //     @include type-style('detail-2', false);
+            // }
+        }
 
         @include e(title) {
             @include ellipsis();
 
+            // TODO: Update the font weight here based on the theme
+            //  $grid-header-weight: map.get((
+            //      'material': 600,
+            //      'fluent': 800,
+            //      'bootstrap': 700,
+            //      'indigo': 600,
+            //  ), $variant);
+            // Indigo should do @include type-style('detail-2', false); instead
+
             min-width: 3ch;
             user-select: none;
             cursor: initial;
+            flex-grow: 1;
             line-height: var(--header-size);
             transition: color 250ms ease-in-out;
         }
@@ -1669,7 +1775,7 @@ $cell-editing-outline-width: rem(2px);
             align-items: center;
             justify-content: flex-end;
             user-select: none;
-            min-width: rem(30px);
+            min-width: rem(30px); /* sort-icon + filter icon width */
             height: var(--header-size);
             align-self: flex-end;
 
@@ -1680,6 +1786,13 @@ $cell-editing-outline-width: rem(2px);
             .sort-icon {
                 position: relative;
                 display: flex;
+
+                // TODO: Adjust in indigo
+                // @if $variant != 'indigo' {
+                //     igx-icon {
+                //         --size: var(--igx-icon-size, #{rem(15px)});
+                //     }
+                // }
 
                 &::after {
                     content: attr(data-sortIndex);
@@ -1694,85 +1807,36 @@ $cell-editing-outline-width: rem(2px);
             }
         }
 
-        @include m(sortable) {
-            @include e(icons) {
-                .sort-icon {
-                    cursor: pointer;
-                    opacity: 0.7;
-
-                    &:hover {
-                        opacity: 1;
-                    }
-                }
-            }
+        @include e(resize-handle) {
+            position: absolute;
+            width: rem(4px);
+            top: 0;
+            inset-inline-end: rem(-2px);
+            height: 100%;
+            z-index: 2;
         }
 
-        // Sorted header (column is currently sorted)
-        @include m(sorted) {
-            .sort-icon {
-                opacity: 1;
-                color: var-get($theme, 'sorted-header-icon-color');
+        @include e(resize-line) {
+            position: absolute;
+            cursor: col-resize;
+            width: rem(4px);
+            background: var-get($theme, 'resize-line-color');
+            z-index: 2;
 
-                > igx-icon {
-                    color: inherit;
-                }
-
-                &:focus,
-                &:hover {
-                    color: var-get($theme, 'sortable-header-icon-hover-color');
-
-                    > igx-icon {
-                        color: inherit;
-                    }
-                }
+            &::before,
+            &::after {
+                position: absolute;
+                content: '';
+                height: 100%;
+                width: rem(96px);
             }
 
-            // When hovering over the header cell itself, change icon color
-            &:hover .sort-icon {
-                color: var-get($theme, 'sortable-header-icon-hover-color');
-
-                > igx-icon {
-                    color: inherit;
-                }
-            }
-        }
-
-        // Active header (selected/focused header cell)
-        @include m(active) {
-            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'cell-active-border-color');
-
-            .igx-grid-th--selected,
-            .igx-grid-th--selectable,
-            > .igx-grid__filtering-cell,
-            > .igx-grid-thead__title,
-            > .igx-grid-th {
-                border-inline-end-color: var-get($theme, 'cell-active-border-color');
-                border-bottom-color: var-get($theme, 'cell-active-border-color');
-            }
-        }
-
-        // Selected header (column selection)
-        @include m(selectable) {
-            color: var-get($theme, 'header-selected-text-color');
-            background: var-get($theme, 'header-selected-background');
-        }
-
-        @include m(selected) {
-            color: var-get($theme, 'header-selected-text-color');
-            background: var-get($theme, 'header-selected-background');
-
-            .sort-icon::after {
-                background: var-get($theme, 'header-selected-background');
+            &::before {
+                inset-inline-end: 100%;
             }
 
-            &.igx-grid-th--sorted {
-                .sort-icon {
-                    color: var-get($theme, 'header-selected-text-color');
-
-                    > igx-icon {
-                        color: inherit;
-                    }
-                }
+            &::after {
+                inset-inline-start: 100%;
             }
         }
 
@@ -1795,12 +1859,193 @@ $cell-editing-outline-width: rem(2px);
             inset-inline-end: rem(-1px);
         }
 
+        // Active header (selected/focused header cell)
+        @include m(active) {
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                width: calc(100% - 1px);
+                height: 100%;
+                box-shadow: inset 0 0 0 rem(1px)
+                    var-get($theme, 'cell-active-border-color');
+                pointer-events: none;
+            }
+        }
+
+        @include m(number) {
+            text-align: end;
+            // TODO: This was enabled in the old styles but it overrides the flex behavior of the title and icons. Check agains designs.
+            // justify-content: flex-end;
+            flex-grow: 1;
+
+            @include e(icons) {
+                justify-content: flex-start;
+                order: -1;
+
+                .sort-icon {
+                    order: 1;
+                }
+            }
+        }
+
+        @include m(collapsible) {
+            justify-content: normal;
+        }
+
+        @include m(sortable) {
+            :where(.sort-icon) {
+                cursor: pointer;
+                // TODO: This varies by theme if($variant == 'indigo', if($theme-variant == 'light', .75, .85), .7);
+                opacity: 0.7;
+
+                &:is(:hover) {
+                    opacity: 1;
+                }
+            }
+        }
+
+        // Sorted header (column is currently sorted)
+        @include m(sorted) {
+            :where(.sort-icon) {
+                opacity: 1;
+                color: var-get($theme, 'sorted-header-icon-color');
+
+                &:is(:hover, :focus) {
+                    color: var-get($theme, 'sortable-header-icon-hover-color');
+                }
+            }
+
+            // When hovering over the header cell itself, change icon color
+            // TODO: Questionable why this is here
+            &:hover :where(.sort-icon) {
+                color: var-get($theme, 'sortable-header-icon-hover-color');
+            }
+        }
+
+        // Selected header (column selection)
+        @include m(selectable) {
+            color: var-get($theme, 'header-selected-text-color');
+            background: var-get($theme, 'header-selected-background');
+        }
+
+        @include m(selected) {
+            color: var-get($theme, 'header-selected-text-color');
+            background: var-get($theme, 'header-selected-background');
+
+            :where(.sort-icon::after) {
+                background: var-get($theme, 'header-selected-background');
+            }
+        }
+
+        // TODO: Verify the class is really named 'filtrable' and not 'filterable'
+        @include m(filtrable) {
+            :where(.igx-grid-th__title) {
+                // TODO: Move to indigo theme overwrites
+                // @if $variant != 'indigo' {
+                //     opacity: .7;
+                // }
+            }
+        }
+
+        @include m(pinned) {
+            position: relative;
+            background: inherit;
+            z-index: 9999;
+        }
+
+        @include m(pinned-last) {
+            border-inline-end: var-get($theme, 'pinned-border-width')
+                var-get($theme, 'pinned-border-style')
+                var-get($theme, 'pinned-border-color');
+        }
+
+        @include m(pinned-first) {
+            border-inline-start: var-get($theme, 'pinned-border-width')
+                var-get($theme, 'pinned-border-style')
+                var-get($theme, 'pinned-border-color');
+        }
+
+        @include m(fw) {
+            flex-grow: 0;
+            outline-style: none;
+
+            igx-icon {
+                // TODO: Move to indigo theme overwrites
+                --component-size: 3;
+            }
+        }
+
+        @include m(filtering) {
+            background: var-get($theme, 'filtering-header-background');
+            color: var-get($theme, 'filtering-header-text-color');
+            z-index: 3;
+        }
+
+        @include mx(filtrable, sortable) {
+            :where(.sort-icon) {
+                cursor: pointer;
+                opacity: 0.7;
+
+                // TODO: move this to indigo theme overwrites
+                // opacity: if($variant == 'indigo', 1, 0.7);
+
+                :is(:hover) {
+                    opacity: 1;
+                }
+            }
+            @extend %igx-grid-th--filtrable-sortable !optional;
+        }
+
+        // @include mx(selectable, active) {
+        //     box-shadow: inset 0 0 0 rem(1px)
+        //         var-get($theme, 'cell-active-border-color');
+        //
+        //     border-inline-end-color: var-get(
+        //         $theme,
+        //         'cell-active-border-color'
+        //     );
+        //     border-bottom-color: var-get($theme, 'cell-active-border-color');
+        // }
+        //
+        // @include mx(selected, active) {
+        //     box-shadow: inset 0 0 0 rem(1px)
+        //         var-get($theme, 'cell-active-border-color');
+        //
+        //     border-inline-end-color: var-get(
+        //         $theme,
+        //         'cell-active-border-color'
+        //     );
+        //     border-bottom-color: var-get($theme, 'cell-active-border-color');
+        // }
+
+        @include mx(selectable, sorted) {
+            :where(.sort-icon) {
+                color: var-get($theme, 'header-selected-text-color');
+
+                :is(:hover, :focus) {
+                    color: var-get($theme, 'header-selected-text-color');
+                }
+            }
+        }
+
+        @include mx(selected, sorted) {
+            :where(.sort-icon) {
+                color: var-get($theme, 'header-selected-text-color');
+
+                :is(:hover, :focus) {
+                    color: var-get($theme, 'header-selected-text-color');
+                }
+            }
+        }
+
         // Active state with compound selectors - use @at-root to prevent nesting
         @at-root {
             .igx-grid-th__drop-indicator--active {
                 &.igx-grid-th__drop-indicator-left,
                 &.igx-grid-th__drop-indicator-right {
-                    border-inline-end: rem(1px) solid var-get($theme, 'drop-indicator-color');
+                    border-inline-end: rem(1px) solid
+                        var-get($theme, 'drop-indicator-color');
                 }
 
                 &::after,
@@ -1816,18 +2061,22 @@ $cell-editing-outline-width: rem(2px);
                 &::before {
                     bottom: 0;
                     border-width: 0 rem(4px) rem(4px);
-                    border-color: transparent transparent var-get($theme, 'drop-indicator-color');
+                    border-color: transparent transparent
+                        var-get($theme, 'drop-indicator-color');
                 }
 
                 &::after {
                     top: 0;
                     border-width: rem(4px) rem(4px) 0;
-                    border-color: var-get($theme, 'drop-indicator-color') transparent transparent;
+                    border-color: var-get($theme, 'drop-indicator-color')
+                        transparent transparent;
                 }
             }
         }
     }
 
+    // NOTE: Consider this done for now
+    // ============================================================================
     // Grid header (thead) container and structure
     @include b(igx-grid-thead) {
         // Main thead container
@@ -1864,6 +2113,7 @@ $cell-editing-outline-width: rem(2px);
             outline-style: none;
             z-index: 2;
 
+            // WARN: BEM not followed here
             .igx-grid__tr {
                 position: relative;
                 background: inherit;
@@ -1895,23 +2145,28 @@ $cell-editing-outline-width: rem(2px);
             }
         }
 
+        // Pivot wrapper specific styling
+        @include e(wrapper, $m: pivot) {
+            border-bottom: none;
+        }
+
         // Header title cell
         @include e(title) {
             @extend %cell-display;
             @extend %cell-header;
+
             flex-basis: auto !important;
             align-items: center !important;
             border-bottom: var-get($theme, 'header-border-width')
                 var-get($theme, 'header-border-style')
                 var-get($theme, 'header-border-color');
             height: var(--header-size);
-            padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
-            padding-block: 0;
         }
 
         // Pinned header title (last pinned column)
         @include e(title, $m: pinned-last) {
-            border-inline-end: rem(2px) solid var-get($theme, 'pinned-border-color') !important;
+            border-inline-end: rem(2px) solid
+                var-get($theme, 'pinned-border-color') !important;
         }
 
         // Header group (contains multiple columns)
@@ -1920,27 +2175,42 @@ $cell-editing-outline-width: rem(2px);
             flex-flow: row nowrap;
         }
 
-        // Header item (column header wrapper)
-        @include e(item) {
-            display: flex;
-            flex-flow: column nowrap;
-            position: relative;
-        }
-
         // Header subgroup (nested column headers)
         @include e(subgroup) {
             position: relative;
         }
 
+        // Header item (column header wrapper)
+        @include e(item) {
+            display: flex;
+            flex-flow: column nowrap;
+            position: relative;
+
+            :where(.igx-grid-th, .igx-grid-thead__group) {
+                flex: 1 1 auto;
+            }
+
+            :where(.igx-grid-thead__title) {
+                flex: 0 0 auto;
+            }
+        }
+
         // Scrollbar thumb for header
         @include e(thumb) {
             background: var-get($theme, 'header-background');
-            border-inline-start: rem(1px) solid var-get($theme, 'header-border-color');
+            border-inline-start: rem(1px) solid
+                var-get($theme, 'header-border-color');
         }
 
         // Pivot grid modifier
         @include m(pivot) {
             display: flex;
+
+            :where(.igx-grid-thead--virtualizationWrapper) {
+                border-inline-start: var-get($theme, 'header-border-width')
+                    var-get($theme, 'header-border-style')
+                    var-get($theme, 'header-border-color');
+            }
         }
 
         // Virtualization wrapper
@@ -1953,15 +2223,10 @@ $cell-editing-outline-width: rem(2px);
             overflow: visible;
             height: 100%;
         }
-
-        // Pivot wrapper specific styling
-        @include e(wrapper, $m: pivot) {
-            border-bottom: 0;
-        }
     }
 
     // ============================================================================
-    // TEMPORARY: Context-Specific Nested Rules
+    // NOTE: Context-Specific Nested Rules
     // These rules handle nested contexts that don't fit cleanly into the BEM model
     // ============================================================================
 
@@ -1985,7 +2250,8 @@ $cell-editing-outline-width: rem(2px);
             .igx-grid__header-indentation,
             .igx-grid__row-indentation,
             .igx-grid__cbx-selection {
-                border-bottom: var(--header-border-width) var(--header-border-style) var(--header-border-color);
+                border-bottom: var(--header-border-width)
+                    var(--header-border-style) var(--header-border-color);
             }
         }
 
