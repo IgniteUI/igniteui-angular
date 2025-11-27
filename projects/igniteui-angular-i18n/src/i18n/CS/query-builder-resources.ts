@@ -1,4 +1,4 @@
-import { IQueryBuilderResourceStrings } from 'igniteui-angular';
+import { IQueryBuilderResourceStrings } from 'igniteui-angular/core';
 
 /**
  * Czech resource strings for IgxQueryBuilder
