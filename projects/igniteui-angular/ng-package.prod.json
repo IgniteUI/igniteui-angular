@@ -13,6 +13,11 @@
     "lodash-es",
     "@igniteui/material-icons-extended",
     "igniteui-theming",
-    "igniteui-i18n-core"
+    "igniteui-i18n-core",
+    "igniteui-webcomponents",
+    "dompurify",
+    "marked",
+    "marked-shiki",
+    "shiki"
   ]
 }
