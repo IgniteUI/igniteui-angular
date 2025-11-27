@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DebugElement, ViewChild, ElementRef, OnInit, inject as inject_1 } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, ViewChild, ElementRef, OnInit, inject } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -716,7 +716,7 @@ export class IgxToggleServiceInjectComponent {
     imports: [IgxToggleDirective]
 })
 export class IgxOverlayServiceComponent {
-    public overlay = inject_1(IgxOverlayService);
+    public overlay = inject(IgxOverlayService);
 
     @ViewChild(IgxToggleDirective, { static: true }) public toggle: IgxToggleDirective;
     @ViewChild(`other`, { static: true }) public other: ElementRef;
