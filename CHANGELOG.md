@@ -48,6 +48,7 @@ ng update igniteui-angular --migrate-only --from=20.1.0 --to=21.0.0 --migrate-im
 
 **Type Renames (to avoid conflicts):**
 - `Direction` → `CarouselAnimationDirection` (in carousel)
+- `IGX_GRID_ACTION_STRIP_DIRECTIVES` → `IGX_ACTION_STRIP_DIRECTIVES` (in action-strip)
 
 **Benefits:**
 - Better tree-shaking - unused components won't be bundled
