@@ -27,6 +27,11 @@ export const DEPENDENCIES_MAP: PackageEntry[] = [
     { name: 'lodash-es', target: PackageTarget.NONE },
     { name: '@igniteui/material-icons-extended', target: PackageTarget.REGULAR },
     { name: 'igniteui-theming', target: PackageTarget.NONE },
+    { name: 'igniteui-webcomponents', target: PackageTarget.NONE },
+    { name: 'dompurify', target: PackageTarget.NONE },
+    { name: 'marked', target: PackageTarget.NONE },
+    { name: 'marked-shiki', target: PackageTarget.NONE },
+    { name: 'shiki', target: PackageTarget.NONE },
     // peerDependencies
     { name: '@angular/forms', target: PackageTarget.NONE },
     { name: '@angular/common', target: PackageTarget.NONE },
