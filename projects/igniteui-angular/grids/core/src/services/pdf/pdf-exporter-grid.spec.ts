@@ -498,7 +498,7 @@ describe('PDF Grid Exporter', () => {
         });
 
         it('should export hierarchical pivot grid', (done) => {
-            const fix = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
+            fix = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
             fix.detectChanges();
             fix.whenStable().then(() => {
                 pivotGrid = fix.componentInstance.pivotGrid;
