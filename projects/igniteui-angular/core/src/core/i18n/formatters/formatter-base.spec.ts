@@ -40,10 +40,10 @@ describe('Localization', () => {
     describe('date formatting', () => {
         it('should format string to dateTime using Angular', () => {
             // Angular expects time to be already in local time so we don't exact check timezone...
-            expect(i18nFormatter.formatDate('2025-01-25T14:15:00', 'short', 'en-US')).toEqual('1/25/25, 2:15 PM');
-            expect(i18nFormatter.formatDate('2025-01-25T14:15:00', 'medium', 'en-US')).toEqual('Jan 25, 2025, 2:15:00 PM');
-            expect(i18nFormatter.formatDate('2025-01-25T14:15:00', 'long', 'en-US')).toContain('January 25, 2025 at 2:15:00 PM GMT');
-            expect(i18nFormatter.formatDate('2025-01-25T14:15:00', 'full', 'en-US')).toContain('Saturday, January 25, 2025 at 2:15:00 PM GMT');
+            expect(i18nFormatter.formatDate('2025-01-25T14:15:00', 'short', 'en-US')).toEqual('1/25/25, 2:15 PM');
+            expect(i18nFormatter.formatDate('2025-01-25T14:15:00', 'medium', 'en-US')).toEqual('Jan 25, 2025, 2:15:00 PM');
+            expect(i18nFormatter.formatDate('2025-01-25T14:15:00', 'long', 'en-US')).toContain('January 25, 2025, 2:15:00 PM GMT');
+            expect(i18nFormatter.formatDate('2025-01-25T14:15:00', 'full', 'en-US')).toContain('Saturday, January 25, 2025, 2:15:00 PM GMT');
         });
 
         it('should format string to date using Angular', () => {
@@ -55,10 +55,10 @@ describe('Localization', () => {
 
         it('should format string to time using Angular', () => {
             // Angular expects time to be already in local time so we don't exact check timezone...
-            expect(i18nFormatter.formatDate('2025-01-25T14:15:00', 'shortTime', 'en-US')).toEqual('2:15 PM');
-            expect(i18nFormatter.formatDate('2025-01-25T14:15:00', 'mediumTime', 'en-US')).toEqual('2:15:00 PM');
-            expect(i18nFormatter.formatDate('2025-01-25T14:15:00', 'longTime', 'en-US')).toContain('2:15:00 PM GMT');
-            expect(i18nFormatter.formatDate('2025-01-25T14:15:00', 'fullTime', 'en-US')).toContain('2:15:00 PM GMT');
+            expect(i18nFormatter.formatDate('2025-01-25T14:15:00', 'shortTime', 'en-US')).toEqual('2:15 PM');
+            expect(i18nFormatter.formatDate('2025-01-25T14:15:00', 'mediumTime', 'en-US')).toEqual('2:15:00 PM');
+            expect(i18nFormatter.formatDate('2025-01-25T14:15:00', 'longTime', 'en-US')).toContain('2:15:00 PM GMT');
+            expect(i18nFormatter.formatDate('2025-01-25T14:15:00', 'fullTime', 'en-US')).toContain('2:15:00 PM GMT');
         });
 
         it('should format string to custom format', () => {

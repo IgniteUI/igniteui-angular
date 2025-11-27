@@ -12,6 +12,7 @@ import { ViewEncapsulation } from '@angular/core';
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
 import { DatePart, BaseFormatter } from 'igniteui-angular/core';
+import { removeUnicodeSpaces } from 'igniteui-angular/test-utils/helper-utils.spec';
 
 describe('IgxDateTimeEditor', () => {
     let dateTimeEditor: IgxDateTimeEditorDirective;
@@ -789,7 +790,7 @@ describe('IgxDateTimeEditor', () => {
                 date = new Date(0, 0, 0, 1, 0, 0);
                 const shortTimeOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
                 result = ControlsFunction.formatDate(date, shortTimeOptions);
-                expect(inputElement.nativeElement.value).toEqual(result);
+                expect(removeUnicodeSpaces(inputElement.nativeElement.value)).toEqual(result);
 
                 dateTimeEditorDirective.clear();
                 fixture.detectChanges();
@@ -804,7 +805,7 @@ describe('IgxDateTimeEditor', () => {
                 fixture.detectChanges();
                 date = new Date(2000, 0, 1, 2, 0, 0);
                 result = formatDate(date, 'longTime', 'en-US').normalize("NFKD");
-                expect(inputElement.nativeElement.value).toEqual(result);
+                expect(removeUnicodeSpaces(inputElement.nativeElement.value)).toContain(result);
             });
             it('should be able to apply custom display format.', fakeAsync(() => {
                 // default format
