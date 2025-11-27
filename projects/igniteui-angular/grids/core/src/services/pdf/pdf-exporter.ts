@@ -64,10 +64,17 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         const rowDimensionFields: string[] = [];
         const rowDimensionHeaders: string[] = [];
         if (isPivotGrid && defaultOwner) {
+            const uniqueFields = new Set<string>();
+
             // Primary source: use dimensionKeys from the first record (set by base exporter)
             // This is the authoritative source for dimension field names
             if (firstDataElement?.dimensionKeys && Array.isArray(firstDataElement.dimensionKeys) && firstDataElement.dimensionKeys.length > 0) {
-                rowDimensionFields.push(...firstDataElement.dimensionKeys);
+                firstDataElement.dimensionKeys.forEach(key => {
+                    if (!uniqueFields.has(key)) {
+                        uniqueFields.add(key);
+                        rowDimensionFields.push(key);
+                    }
+                });
             }
 
             // If we still don't have fields, try to get them from the record data
@@ -83,7 +90,6 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
                 const recordKeys = Object.keys(firstDataElement.data);
                 // Try to match row dimension columns to record keys
-                const uniqueFields = new Set<string>();
                 rowHeaderCols.forEach(col => {
                     const fieldName = typeof col.field === 'string' ? col.field : null;
                     const columnGroup = typeof col.columnGroup === 'string' ? col.columnGroup :
@@ -108,7 +114,12 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                                key === key.trim();
                     });
                     // Take up to the number of row dimensions (usually 1-3)
-                    rowDimensionFields.push(...simpleKeys.slice(0, Math.min(3, simpleKeys.length)));
+                    simpleKeys.slice(0, Math.min(3, simpleKeys.length)).forEach(key => {
+                        if (!uniqueFields.has(key)) {
+                            uniqueFields.add(key);
+                            rowDimensionFields.push(key);
+                        }
+                    });
                 }
             }
 
