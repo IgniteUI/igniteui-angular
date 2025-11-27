@@ -718,6 +718,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
         if (this.parent) {
             this.childLayoutKeys = this.parentIsland.children.map((item) => item.key);
+            this._resourceStrings = this.rootGrid._resourceStrings;
         }
 
         this.headSelectorsTemplates = this.parentIsland ?
@@ -743,7 +744,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.rootGrid.hasChildrenKey;
         this.showExpandAll = this.parentIsland ?
             this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
-        this.resourceStrings = this.parentIsland?.resourceStrings ?? this.rootGrid.resourceStrings;
     }
 
     /**

@@ -123,14 +123,12 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      */
     @Input()
     public override set resourceStrings(value: IGridResourceStrings) {
-        this._resourceStrings = value;
-        this.rowIslandAPI.getChildGrids().forEach((grid) => {
-            grid.resourceStrings = value;
-        });
+        super.resourceStrings = value;
+        this.updateGridsResources();
     }
 
     public override get resourceStrings() {
-        return this._resourceStrings ?? this.rootGrid.resourceStrings;
+        return super.resourceStrings ?? this.rootGrid.resourceStrings;
     }
 
     /**
@@ -606,5 +604,11 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         });
         grid.childGridTemplates.clear();
         grid.onRowIslandChange();
+    }
+
+    private updateGridsResources() {
+        this.rowIslandAPI.getChildGrids().forEach((grid) => {
+            grid.resourceStrings = this.resourceStrings;
+        });
     }
 }
