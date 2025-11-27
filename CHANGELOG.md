@@ -18,6 +18,11 @@ All notable changes for each version of this project will be documented in this 
 
 ### Breaking Changes
 
+#### Dependency Injection Refactor
+- All internal DI now uses the `inject()` API across `igniteui-angular` (no more constructor DI in library code).
+- If you extend our components/services or call their constructors directly, remove DI params and switch to `inject()` (e.g., `protected foo = inject(FooService);`).
+- App usage via templates remains the same; no action needed unless you subclass/override our types.
+
 #### Multiple Entry Points Support
 
 The library now supports multiple entry points for better tree-shaking and code splitting. While the main entry point (`igniteui-angular`) remains fully backwards compatible by re-exporting all granular entry points, we recommend migrating to the new entry points for optimal bundle sizes.
