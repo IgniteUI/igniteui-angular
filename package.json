@@ -60,7 +60,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^21.0.0",
-    "@angular/common": "^21.0.0",
+    "@angular/common": "^21.0.1",
     "@angular/compiler": "^21.0.0",
     "@angular/core": "^21.0.0",
     "@angular/elements": "^21.0.0",
