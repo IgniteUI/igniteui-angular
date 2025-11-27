@@ -40,6 +40,7 @@
         "drag drop",
         "drop down",
         "excel export",
+        "pdf export",
         "expansion panel",
         "grid",
         "hierarchical grid",
@@ -72,6 +73,7 @@
         "fflate": "^0.8.2",
         "tslib": "^2.8.1",
         "igniteui-trial-watermark": "^3.1.0",
+        "jspdf": "^3.0.2",
         "lodash-es": "^4.17.21",
         "igniteui-theming": "^24.0.0",
         "@igniteui/material-icons-extended": "^3.1.0"
