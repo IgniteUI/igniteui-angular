@@ -13,6 +13,7 @@ import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchica
 import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent } from '../../../../../test-utils/pivot-grid-samples.spec';
 import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
 import { PivotRowLayoutType } from 'igniteui-angular/grids/core';
+import { wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 
 describe('PDF Grid Exporter', () => {
     let exporter: IgxPdfExporterService;
@@ -396,17 +397,17 @@ describe('PDF Grid Exporter', () => {
 
     describe('Pivot Grid PDF Export', () => {
         let pivotGrid: IgxPivotGridComponent;
-
-        // Helper function to wait for async operations
-        const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-        it('should export basic pivot grid', async (done) => {
-            const fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
+        let fix;
+        beforeEach(async () => {
+            fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
             fix.detectChanges();
-            await wait(300);
+            await wait();
 
             pivotGrid = fix.componentInstance.pivotGrid;
+            spyOn(ExportUtilities as any, 'saveBlobToFile');
+        });
 
+        it('should export basic pivot grid', (done) => {
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
                 done();
@@ -415,14 +416,8 @@ describe('PDF Grid Exporter', () => {
             exporter.export(pivotGrid, options);
         });
 
-        it('should export pivot grid with row headers', async (done) => {
-            const fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
-            fix.detectChanges();
-
-            pivotGrid = fix.componentInstance.pivotGrid;
+        it('should export pivot grid with row headers', (done) => {
             pivotGrid.pivotUI.showRowHeaders = true;
-            fix.detectChanges();
-            await wait(300);
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
@@ -432,11 +427,7 @@ describe('PDF Grid Exporter', () => {
             exporter.export(pivotGrid, options);
         });
 
-        it('should export pivot grid with horizontal row layout', async (done) => {
-            const fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
-            fix.detectChanges();
-
-            pivotGrid = fix.componentInstance.pivotGrid;
+        it('should export pivot grid with horizontal row layout', (done) => {
             pivotGrid.pivotUI.showRowHeaders = true;
             pivotGrid.pivotUI.rowLayout = PivotRowLayoutType.Horizontal;
             pivotGrid.pivotConfiguration.rows = [{
@@ -453,37 +444,16 @@ describe('PDF Grid Exporter', () => {
                 }
             }];
             fix.detectChanges();
-            await wait(300);
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+               expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+               done();
             });
 
             exporter.export(pivotGrid, options);
         });
 
-        it('should export hierarchical pivot grid', async (done) => {
-            const fix = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
-            fix.detectChanges();
-            await wait(300);
-
-            pivotGrid = fix.componentInstance.pivotGrid;
-
-            exporter.exportEnded.pipe(first()).subscribe(() => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
-            });
-
-            exporter.export(pivotGrid, options);
-        });
-
-        it('should export pivot grid with custom page size', async (done) => {
-            const fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
-            fix.detectChanges();
-            await wait(300);
-
-            pivotGrid = fix.componentInstance.pivotGrid;
+        it('should export pivot grid with custom page size', (done) => {
             options.pageSize = 'letter';
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
@@ -494,12 +464,7 @@ describe('PDF Grid Exporter', () => {
             exporter.export(pivotGrid, options);
         });
 
-        it('should export pivot grid with landscape orientation', async (done) => {
-            const fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
-            fix.detectChanges();
-            await wait(300);
-
-            pivotGrid = fix.componentInstance.pivotGrid;
+        it('should export pivot grid with landscape orientation', (done) => {
             options.pageOrientation = 'landscape';
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
@@ -510,12 +475,7 @@ describe('PDF Grid Exporter', () => {
             exporter.export(pivotGrid, options);
         });
 
-        it('should export pivot grid without table borders', async (done) => {
-            const fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
-            fix.detectChanges();
-            await wait(300);
-
-            pivotGrid = fix.componentInstance.pivotGrid;
+        it('should export pivot grid without table borders', (done) => {
             options.showTableBorders = false;
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
@@ -526,12 +486,7 @@ describe('PDF Grid Exporter', () => {
             exporter.export(pivotGrid, options);
         });
 
-        it('should export pivot grid with custom font size', async (done) => {
-            const fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
-            fix.detectChanges();
-            await wait(300);
-
-            pivotGrid = fix.componentInstance.pivotGrid;
+        it('should export pivot grid with custom font size', (done) => {
             options.fontSize = 14;
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
@@ -540,6 +495,21 @@ describe('PDF Grid Exporter', () => {
             });
 
             exporter.export(pivotGrid, options);
+        });
+
+        it('should export hierarchical pivot grid', (done) => {
+            const fix = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
+            fix.detectChanges();
+            fix.whenStable().then(() => {
+                pivotGrid = fix.componentInstance.pivotGrid;
+
+                exporter.exportEnded.pipe(first()).subscribe(() => {
+                    expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                    done();
+                });
+
+                exporter.export(pivotGrid, options);
+            });
         });
     });
 });
