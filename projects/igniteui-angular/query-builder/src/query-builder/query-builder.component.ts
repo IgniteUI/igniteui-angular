@@ -10,10 +10,10 @@ import {
     IQueryBuilderResourceStrings,
     QueryBuilderResourceStringsEN,
     recreateTree,
+    IgxOverlayOutletDirective,
     getCurrentResourceStrings,
     onResourceChangeHandle
 } from 'igniteui-angular/core';
-import { IgxOverlayOutletDirective } from 'igniteui-angular/directives';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { IgxIconService } from 'igniteui-angular/icon';
 import { editor } from '@igniteui/material-icons-extended';

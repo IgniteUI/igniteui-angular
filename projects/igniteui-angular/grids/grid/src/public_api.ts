@@ -41,7 +41,7 @@ import {
     IgxColumnEmailValidatorDirective,
     IgxColumnMinLengthValidatorDirective,
     IgxColumnMaxLengthValidatorDirective,
-    IgxColumPatternValidatorDirective,
+    IgxColumnPatternValidatorDirective,
     IgxColumnActionsComponent,
     IgxColumnHidingDirective,
     IgxColumnPinningDirective,
@@ -174,7 +174,7 @@ export const IGX_GRID_DIRECTIVES = [
     IgxColumnEmailValidatorDirective,
     IgxColumnMinLengthValidatorDirective,
     IgxColumnMaxLengthValidatorDirective,
-    IgxColumPatternValidatorDirective,
+    IgxColumnPatternValidatorDirective,
     // IGX_PAGINATOR_DIRECTIVES:
     IgxPaginatorComponent,
     IgxPageNavigationComponent,

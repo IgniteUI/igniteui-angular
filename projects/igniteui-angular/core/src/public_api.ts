@@ -35,6 +35,7 @@ export * from './data-operations/grid-sorting-strategy';
 export * from './data-operations/paging-state.interface';
 export * from './data-operations/data-util';
 export * from './data-operations/grid-types';
+export * from './data-operations/operations';
 export * from './data-operations/pipes';
 
 // Services

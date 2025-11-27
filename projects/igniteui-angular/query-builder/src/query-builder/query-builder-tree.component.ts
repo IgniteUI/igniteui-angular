@@ -42,18 +42,18 @@ import {
     ConnectedPositioningStrategy,
     IgxPickerToggleComponent,
     IgxPickerClearComponent,
-    isTree,
     getCurrentResourceStrings,
     DEFAULT_LOCALE,
     onResourceChangeHandle,
-    IgxDateFormatterPipe
+    IgxDateFormatterPipe,
+    isTree,
+    IgxOverlayOutletDirective
 } from 'igniteui-angular/core';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 
 import {
     IgxButtonDirective,
     IgxDateTimeEditorDirective,
-    IgxOverlayOutletDirective,
     IgxIconButtonDirective,
     IgxTooltipDirective,
     IgxTooltipTargetDirective,

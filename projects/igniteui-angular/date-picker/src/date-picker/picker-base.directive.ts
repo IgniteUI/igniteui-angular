@@ -11,6 +11,7 @@ import {
     EditorProvider,
     IBaseCancelableBrowserEventArgs,
     IBaseEventArgs,
+    IgxOverlayOutletDirective,
     IgxPickerClearComponent,
     IgxPickerToggleComponent,
     IToggleView,
@@ -23,7 +24,6 @@ import {
     BaseFormatter,
     I18N_FORMATTER
 } from 'igniteui-angular/core';
-import { IgxOverlayOutletDirective } from 'igniteui-angular/directives';
 import { getCurrentI18n, IResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 @Directive()

@@ -2,15 +2,10 @@ import { ChangeDetectionStrategy, Component, DebugElement, ViewChild, ElementRef
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxToggleActionDirective, IgxToggleDirective, IgxOverlayOutletDirective } from './toggle.directive';
-import {
-    IgxOverlayService, OverlaySettings, ConnectedPositioningStrategy,
-    AbsoluteScrollStrategy, AutoPositionStrategy, HorizontalAlignment
-} from '../../../../core/src/services/public_api';
-import { CancelableEventArgs } from '../../../../core/src/core/utils';
+import { IgxToggleActionDirective, IgxToggleDirective } from './toggle.directive';
 
 import { first } from 'rxjs/operators';
-import { OffsetMode } from '../../../../core/src/services/overlay/utilities';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, CancelableEventArgs, ConnectedPositioningStrategy, HorizontalAlignment, IgxOverlayOutletDirective, IgxOverlayService, OffsetMode, OverlaySettings } from 'igniteui-angular/core';
 
 describe('IgxToggle', () => {
     const HIDDEN_TOGGLER_CLASS = 'igx-toggle--hidden';

@@ -437,6 +437,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Export'
         },
         {
+            link: '/gridPdfExport',
+            icon: 'view_column',
+            name: 'Grid PDF Export'
+        },
+        {
             link: '/gridSearch',
             icon: 'view_column',
             name: 'Grid Search'
