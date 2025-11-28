@@ -399,6 +399,65 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxTreeGridGroupingPipe', 'grids/tree-grid'],
     ['IGridCreatedEventArgs', 'grids/hierarchical-grid'],
 
+    // Exporter services and types (moved from core to grids/core in 21.0.0)
+    ['IgxBaseExporter', 'grids/core'],
+    ['IgxExporterOptionsBase', 'grids/core'],
+    ['ExportUtilities', 'grids/core'],
+    ['ExportRecordType', 'grids/core'],
+    ['ExportHeaderType', 'grids/core'],
+    ['IExportRecord', 'grids/core'],
+    ['IColumnList', 'grids/core'],
+    ['IColumnInfo', 'grids/core'],
+    ['IRowExportingEventArgs', 'grids/core'],
+    ['IColumnExportingEventArgs', 'grids/core'],
+    ['DEFAULT_OWNER', 'grids/core'],
+    ['GRID_ROOT_SUMMARY', 'grids/core'],
+    ['GRID_PARENT', 'grids/core'],
+    ['GRID_LEVEL_COL', 'grids/core'],
+    // CSV Exporter
+    ['IgxCsvExporterService', 'grids/core'],
+    ['IgxCsvExporterOptions', 'grids/core'],
+    ['ICsvExportEndedEventArgs', 'grids/core'],
+    ['CsvFileTypes', 'grids/core'],
+    ['CharSeparatedValueData', 'grids/core'],
+    // Excel Exporter
+    ['IgxExcelExporterService', 'grids/core'],
+    ['IgxExcelExporterOptions', 'grids/core'],
+    ['IExcelExportEndedEventArgs', 'grids/core'],
+    ['ExcelFolderTypes', 'grids/core'],
+    ['ExcelFileTypes', 'grids/core'],
+    ['IExcelFile', 'grids/core'],
+    ['IExcelFolder', 'grids/core'],
+    ['ExcelStrings', 'grids/core'],
+    ['ExcelElementsFactory', 'grids/core'],
+    ['WorksheetData', 'grids/core'],
+    ['WorksheetDataDictionary', 'grids/core'],
+    ['RootExcelFolder', 'grids/core'],
+    ['RootRelsExcelFolder', 'grids/core'],
+    ['DocPropsExcelFolder', 'grids/core'],
+    ['XLExcelFolder', 'grids/core'],
+    ['XLRelsExcelFolder', 'grids/core'],
+    ['ThemeExcelFolder', 'grids/core'],
+    ['WorksheetsExcelFolder', 'grids/core'],
+    ['TablesExcelFolder', 'grids/core'],
+    ['WorksheetsRelsExcelFolder', 'grids/core'],
+    ['RootRelsFile', 'grids/core'],
+    ['AppFile', 'grids/core'],
+    ['CoreFile', 'grids/core'],
+    ['WorkbookRelsFile', 'grids/core'],
+    ['ThemeFile', 'grids/core'],
+    ['WorksheetFile', 'grids/core'],
+    ['StyleFile', 'grids/core'],
+    ['WorkbookFile', 'grids/core'],
+    ['ContentTypesFile', 'grids/core'],
+    ['SharedStringsFile', 'grids/core'],
+    ['TablesFile', 'grids/core'],
+    ['WorksheetRelsFile', 'grids/core'],
+    // PDF Exporter
+    ['IgxPdfExporterService', 'grids/core'],
+    ['IgxPdfExporterOptions', 'grids/core'],
+    ['IPdfExportEndedEventArgs', 'grids/core'],
+
     // Icon
     ['IgxIconComponent', 'icon'],
     ['IgxIconModule', 'icon'],
@@ -837,6 +896,7 @@ export default function migrate(): Rule {
         context.logger.info('  - Input directives moved to igniteui-angular/input-group');
         context.logger.info('  - IgxAutocompleteDirective moved to igniteui-angular/drop-down');
         context.logger.info('  - IgxRadioGroupDirective moved to igniteui-angular/radio');
+        context.logger.info('  - Exporter services (CSV, Excel, PDF) moved to igniteui-angular/grids/core');
         context.logger.info('Type renames:');
         context.logger.info('  - Direction → CarouselAnimationDirection');
     };

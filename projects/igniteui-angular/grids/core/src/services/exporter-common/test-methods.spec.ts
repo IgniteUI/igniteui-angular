@@ -1,9 +1,9 @@
 
 import { TestBed } from '@angular/core/testing';
-import { GridIDNameJobTitleComponent } from '../../../../test-utils/grid-samples.spec';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { wait } from '../../../../test-utils/ui-interactions.spec';
+import { GridIDNameJobTitleComponent } from '../../../../../test-utils/grid-samples.spec';
+import { wait } from '../../../../../test-utils/ui-interactions.spec';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
+import { IgxStringFilteringOperand } from 'igniteui-angular/core';
 
 export class TestMethods {
 
