@@ -2014,7 +2014,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return activeHeader ? `${this.id}_${activeHeader.title}` : null;
     }
 
-    protected resolveToggle(groupColumn: IgxColumnComponent, state: boolean) {
+    protected resolveToggle(groupColumn: ColumnType, state: boolean) {
         if (!groupColumn) return;
         groupColumn.hidden = state;
         this.columnGroupStates.set(groupColumn.field, state);
