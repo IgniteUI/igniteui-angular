@@ -5,6 +5,7 @@ import type {
     Tree
 } from '@angular-devkit/schematics';
 import * as ts from 'typescript';
+import { IG_PACKAGE_NAME, IG_LICENSED_PACKAGE_NAME } from '../common/tsUtils';
 
 const version = '21.0.0';
 
@@ -709,6 +710,19 @@ const TYPE_RENAMES = new Map<string, { newName: string, entryPoint: string }>([
     ['IgxColumPatternValidatorDirective', { newName: 'IgxColumnPatternValidatorDirective', entryPoint: 'grids/core' }],
 ]);
 
+/**
+ * Quick check if file content has base igniteui-angular imports (without entry point subpaths).
+ * Uses regex to check for imports like: from 'igniteui-angular' or from "@infragistics/igniteui-angular"
+ * but not from 'igniteui-angular/core' etc.
+ */
+const hasBaseIgniteuiImports = (content: string): boolean => {
+    // Match imports from base package (with single or double quotes) but not subpaths
+    // Matches: from 'igniteui-angular' or from "igniteui-angular" (end of import)
+    // Does not match: from 'igniteui-angular/core' (has subpath)
+    const baseImportPattern = /from\s+['"](@infragistics\/)?igniteui-angular['"]/;
+    return baseImportPattern.test(content);
+};
+
 function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.SourceFile): { start: number, end: number, replacement: string } | null {
     const moduleSpecifier = node.moduleSpecifier;
     if (!ts.isStringLiteral(moduleSpecifier)) {
@@ -717,8 +731,8 @@ function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.Sou
 
     const importPath = moduleSpecifier.text;
 
-    // Only process igniteui-angular imports (not already using entry points)
-    if (importPath !== 'igniteui-angular' && importPath !== '@infragistics/igniteui-angular') {
+    // Only process base igniteui-angular imports (not already using entry points)
+    if (importPath !== IG_PACKAGE_NAME && importPath !== IG_LICENSED_PACKAGE_NAME) {
         return null;
     }
 
@@ -799,7 +813,7 @@ function migrateFile(filePath: string, content: string): string {
 
                 // Track old type names that were imported
                 const moduleSpecifier = node.moduleSpecifier;
-                if (ts.isStringLiteral(moduleSpecifier) && (moduleSpecifier.text === 'igniteui-angular' || moduleSpecifier.text === '@infragistics/igniteui-angular')) {
+                if (ts.isStringLiteral(moduleSpecifier) && (moduleSpecifier.text === IG_PACKAGE_NAME || moduleSpecifier.text === IG_LICENSED_PACKAGE_NAME)) {
                     const importClause = node.importClause;
                     if (importClause?.namedBindings && ts.isNamedImports(importClause.namedBindings)) {
                         for (const element of importClause.namedBindings.elements) {
@@ -876,9 +890,8 @@ export default function migrate(): Rule {
 
             const originalContent = content.toString();
 
-            // Check if file has igniteui-angular imports
-            if (!originalContent.includes("from 'igniteui-angular'") && !originalContent.includes('from "igniteui-angular"') &&
-                !originalContent.includes("from '@infragistics/igniteui-angular'") && !originalContent.includes('from "@infragistics/igniteui-angular"')) {
+            // Check if file has base igniteui-angular imports (not using entry point subpaths)
+            if (!hasBaseIgniteuiImports(originalContent)) {
                 return;
             }
 
