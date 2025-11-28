@@ -719,7 +719,7 @@ function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.Sou
     const importPath = moduleSpecifier.text;
 
     // Only process igniteui-angular imports (not already using entry points)
-    if (importPath !== 'igniteui-angular') {
+    if (importPath !== 'igniteui-angular' && importPath !== '@infragistics/igniteui-angular') {
         return null;
     }
 
@@ -769,7 +769,7 @@ function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.Sou
     const newImports: string[] = [];
     for (const [entryPoint, imports] of entryPointGroups) {
         const sortedImports = imports.sort();
-        newImports.push(`import { ${sortedImports.join(', ')} } from 'igniteui-angular/${entryPoint}';`);
+        newImports.push(`import { ${sortedImports.join(', ')} } from '${importPath}/${entryPoint}';`);
     }
 
     return {
@@ -800,7 +800,7 @@ function migrateFile(filePath: string, content: string): string {
 
                 // Track old type names that were imported
                 const moduleSpecifier = node.moduleSpecifier;
-                if (ts.isStringLiteral(moduleSpecifier) && moduleSpecifier.text === 'igniteui-angular') {
+                if (ts.isStringLiteral(moduleSpecifier) && (moduleSpecifier.text === 'igniteui-angular' || moduleSpecifier.text === '@infragistics/igniteui-angular')) {
                     const importClause = node.importClause;
                     if (importClause?.namedBindings && ts.isNamedImports(importClause.namedBindings)) {
                         for (const element of importClause.namedBindings.elements) {
@@ -878,7 +878,8 @@ export default function migrate(): Rule {
             const originalContent = content.toString();
 
             // Check if file has igniteui-angular imports
-            if (!originalContent.includes("from 'igniteui-angular'") && !originalContent.includes('from "igniteui-angular"')) {
+            if (!originalContent.includes("from 'igniteui-angular'") && !originalContent.includes('from "igniteui-angular"') &&
+                !originalContent.includes("from '@infragistics/igniteui-angular'") && !originalContent.includes('from "@infragistics/igniteui-angular"')) {
                 return;
             }
 
