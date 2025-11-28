@@ -6,6 +6,7 @@ import type {
 } from '@angular-devkit/schematics';
 import * as ts from 'typescript';
 import { IG_PACKAGE_NAME, IG_LICENSED_PACKAGE_NAME } from '../common/tsUtils';
+import { escapeRegExp } from '../common/util';
 
 const version = '21.0.0';
 
@@ -710,18 +711,18 @@ const TYPE_RENAMES = new Map<string, { newName: string, entryPoint: string }>([
     ['IgxColumPatternValidatorDirective', { newName: 'IgxColumnPatternValidatorDirective', entryPoint: 'grids/core' }],
 ]);
 
+// Pre-compiled regex for quick file content checks - matches base package imports only (not subpaths)
+const BASE_IMPORT_PATTERN = new RegExp(
+    `from\\s+['"](${escapeRegExp(IG_LICENSED_PACKAGE_NAME)}|${escapeRegExp(IG_PACKAGE_NAME)})['"]`
+);
+
 /**
- * Quick check if file content has base igniteui-angular imports (without entry point subpaths).
+ * Quick regex-based check if file content has base igniteui-angular imports (without entry point subpaths).
+ * This is a performance optimization to avoid parsing files that don't need migration.
  * Uses regex to check for imports like: from 'igniteui-angular' or from "@infragistics/igniteui-angular"
- * but not from 'igniteui-angular/core' etc.
+ * but not from 'igniteui-angular/core' etc. which are already using entry points.
  */
-const hasBaseIgniteuiImports = (content: string): boolean => {
-    // Match imports from base package (with single or double quotes) but not subpaths
-    // Matches: from 'igniteui-angular' or from "igniteui-angular" (end of import)
-    // Does not match: from 'igniteui-angular/core' (has subpath)
-    const baseImportPattern = /from\s+['"](@infragistics\/)?igniteui-angular['"]/;
-    return baseImportPattern.test(content);
-};
+const hasBaseIgniteuiImports = (content: string): boolean => BASE_IMPORT_PATTERN.test(content);
 
 function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.SourceFile): { start: number, end: number, replacement: string } | null {
     const moduleSpecifier = node.moduleSpecifier;
