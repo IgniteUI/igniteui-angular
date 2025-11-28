@@ -1006,10 +1006,10 @@
         }
 
         %igx-icon--error {
-            @if $variant == 'fluent' and $theme-variant == 'light' or $variant == 'material' and $theme-variant == 'light' {
-                color: color($color: 'gray', $variant: 600);
-            } @else {
+            @if $variant == 'indigo' or $theme-variant == 'dark' {
                 color: color($color: 'gray', $variant: 500);
+            } @else {
+                color: color($color: 'gray', $variant: 600);
             }
         }
     }
