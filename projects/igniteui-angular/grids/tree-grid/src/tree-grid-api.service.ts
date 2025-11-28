@@ -28,7 +28,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
         return data;
     }
 
-    public override get_summary_data() {
+    public override get_summary_data(): any[] | null {
         const grid = this.grid;
         const data = grid.processedRootRecords?.filter(row => row.isFilteredOutParent === undefined || row.isFilteredOutParent === false)
             .map(rec => rec.data);

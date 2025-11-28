@@ -31,13 +31,13 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
     public cms = inject(IgxColumnMovingService)
 
     public grid: T;
-    protected destroyMap: Map<string, Subject<boolean>> = new Map<string, Subject<boolean>>();    
+    protected destroyMap: Map<string, Subject<boolean>> = new Map<string, Subject<boolean>>();
 
     public get_column_by_name(name: string): ColumnType {
         return this.grid.columns.find((col: ColumnType) => col.field === name);
     }
 
-    public get_summary_data() {
+    public get_summary_data(): any[] | null {
         const grid = this.grid;
         let data = grid.filteredData;
         if (data && grid.hasPinnedRecords) {
