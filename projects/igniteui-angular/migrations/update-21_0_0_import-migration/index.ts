@@ -694,6 +694,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxDragLocation', 'directives'],
     ['IgxDropDirective', 'directives'],
     ['IgxDragDropModule', 'directives'],
+    ['IGX_DRAG_DROP_DIRECTIVES', 'directives'],
     ['IgxFocusTrapDirective', 'directives'],
     ['IgxToggleDirective', 'directives'],
     ['IgxToggleModule', 'directives'],

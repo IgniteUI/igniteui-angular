@@ -1,4 +1,4 @@
-import { Directive, Input, EventEmitter, OnDestroy, Output, Inject, booleanAttribute } from '@angular/core';
+import { Directive, Input, EventEmitter, OnDestroy, Output, booleanAttribute, inject } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 
@@ -20,6 +20,8 @@ import { IgxToggleDirective, ToggleViewCancelableEventArgs, ToggleViewEventArgs 
  */
 @Directive()
 export abstract class BaseToolbarDirective implements OnDestroy {
+    protected toolbar = inject(IgxToolbarToken);
+
     /**
      * Sets the height of the column list in the dropdown.
      */
@@ -105,8 +107,6 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     public get grid() {
         return this.toolbar.grid;
     }
-
-    constructor(@Inject(IgxToolbarToken) protected toolbar: IgxToolbarToken) { }
 
     /** @hidden @internal **/
     public ngOnDestroy() {

@@ -1,10 +1,10 @@
 import {
-    AfterViewInit, ChangeDetectorRef, ContentChildren, Directive, EventEmitter,
-    Inject,
-    Input, OnDestroy, Output, QueryList, booleanAttribute
+    AfterViewInit, ContentChildren, Directive, EventEmitter,
+    Input, OnDestroy, Output, QueryList, booleanAttribute,
+    inject
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { IBaseEventArgs, IgxAngularAnimationService, AnimationService, ɵIgxDirectionality } from 'igniteui-angular/core';
+import { IBaseEventArgs, ɵIgxDirectionality } from 'igniteui-angular/core';
 import { IgxTabItemDirective } from './tab-item.directive';
 import { IgxTabContentBase, IgxTabsBase } from './tabs.base';
 import { IgxCarouselComponentBase, CarouselAnimationDirection } from 'igniteui-angular/carousel';
@@ -26,6 +26,8 @@ export interface ITabsSelectedItemChangeEventArgs extends ITabsBaseEventArgs {
 
 @Directive()
 export abstract class IgxTabsDirective extends IgxCarouselComponentBase implements IgxTabsBase, AfterViewInit, OnDestroy {
+    /** @hidden */
+    public dir = inject(ɵIgxDirectionality);
 
     /**
      * Gets/Sets the index of the selected item.
@@ -109,14 +111,6 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
 
     private _selectedIndex = -1;
     private _itemChanges$: Subscription;
-
-    /** @hidden */
-    constructor(
-        @Inject(IgxAngularAnimationService) animationService: AnimationService,
-        cdr: ChangeDetectorRef,
-        public dir: ɵIgxDirectionality) {
-        super(animationService, cdr);
-    }
 
     /** @hidden */
     public ngAfterViewInit(): void {
