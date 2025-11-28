@@ -93,7 +93,7 @@ export enum ColumnPinningPosition {
 export interface GridTypeBase {
     primaryKey?: string;
     id?: string;
-    data?: any[];
+    data: any[] | null;
     [key: string]: any;
 }
 
