@@ -3,7 +3,7 @@ import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { GridSelectionRange } from './common/types';
 import { GridType, IGX_GRID_BASE, IPinningConfig, PivotGridType } from './common/grid.interface';
-import { cloneArray, cloneValue, ColumnType, FieldType, GridColumnDataType, IExpressionTree, IFilteringExpressionsTree, IGroupByExpandState, IGroupingExpression, IGroupingState, IPagingState, ISortingExpression, recreateTreeFromFields } from 'igniteui-angular/core';
+import { cloneArray, cloneValue, ColumnType, FieldType, FilteringLogic, GridColumnDataType, IExpressionTree, IFilteringExpressionsTree, IGroupByExpandState, IGroupingExpression, IGroupingState, IPagingState, ISortingExpression, recreateTreeFromFields } from 'igniteui-angular/core';
 import { IgxColumnLayoutComponent } from './columns/column-layout.component';
 import { IPivotConfiguration, IPivotDimension } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
@@ -670,11 +670,40 @@ export class IgxGridStateBaseDirective {
             return null;
         }
 
+        // Normalize operator to handle both old enum values (0, 1) and new string values ('and', 'or')
+        this.normalizeOperators(exprTreeObject);
+
         if (this.currGrid.type === 'pivot') {
             return recreateTreeFromFields(exprTreeObject, this.currGrid.allDimensions.map(d => ({ dataType: d.dataType, field: d.memberName })) as FieldType[]) as IExpressionTree;
         }
 
         return recreateTreeFromFields(exprTreeObject, this.currGrid.columns) as IExpressionTree;
+    }
+
+    /**
+     * Recursively normalize FilteringLogic operators to handle backwards compatibility
+     * with old numeric enum values (0, 1) and new string values ('and', 'or')
+     */
+    private normalizeOperators(tree: IExpressionTree): void {
+        if (!tree) {
+            return;
+        }
+
+        // Normalize the operator at this level - convert old numeric values to new string values
+        if ((tree.operator as any) === 0) {
+            tree.operator = FilteringLogic.And;
+        } else if ((tree.operator as any) === 1) {
+            tree.operator = FilteringLogic.Or;
+        }
+
+        // Recursively normalize child trees
+        if (tree.filteringOperands) {
+            for (const operand of tree.filteringOperands) {
+                if (operand && 'operator' in operand && 'filteringOperands' in operand) {
+                    this.normalizeOperators(operand as IExpressionTree);
+                }
+            }
+        }
     }
 
     protected stringifyCallback(key: string, val: any) {
