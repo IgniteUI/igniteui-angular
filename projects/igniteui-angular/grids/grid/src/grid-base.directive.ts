@@ -2771,18 +2771,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     /**
-     * @hidden @internal
-     */
-    public get maxLevelHeaderDepth(): number {
-        if (this._maxLevelHeaderDepth === null) {
-            this._maxLevelHeaderDepth = this.hasColumnLayouts ?
-                this._columns.reduce((acc, col) => Math.max(acc, col.rowStart), 0) :
-                this._columns.reduce((acc, col) => Math.max(acc, col.level), 0);
-        }
-        return this._maxLevelHeaderDepth;
-    }
-
-    /**
      * Gets the number of hidden columns.
      *
      * @example
@@ -3136,10 +3124,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden
      */
     protected _sortingExpressions: Array<ISortingExpression> = [];
-    /**
-     * @hidden
-     */
-    protected _maxLevelHeaderDepth = 0;
     /**
      * @hidden
      */
@@ -7374,7 +7358,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             const columnLayoutColumns = collection.filter((col) => col.columnLayout || col.columnLayoutChild);
             collection = columnLayoutColumns;
         }
-        this._maxLevelHeaderDepth = null;
+
         collection.forEach((column: IgxColumnComponent) => {
             column.defaultWidth = this.columnWidthSetByUser ? this._columnWidth : column.defaultWidth ? column.defaultWidth : '';
 

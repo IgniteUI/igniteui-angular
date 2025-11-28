@@ -79,16 +79,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         return 'hierarchical';
     }
 
-    /**
-     * @hidden
-     */
-    public override get maxLevelHeaderDepth() {
-        if (this._maxLevelHeaderDepth === null) {
-            this._maxLevelHeaderDepth = this.columns.reduce((acc, col) => Math.max(acc, col.level), 0);
-        }
-        return this._maxLevelHeaderDepth;
-    }
-
     /* blazorSuppress */
     /**
      * Gets the outlet used to attach the grid's overlays to.
