@@ -5,7 +5,7 @@ import type {
     Tree
 } from '@angular-devkit/schematics';
 import * as ts from 'typescript';
-import { IG_PACKAGE_NAME, IG_LICENSED_PACKAGE_NAME, namedImportFilter } from '../common/tsUtils';
+import { IG_PACKAGE_NAME, IG_LICENSED_PACKAGE_NAME, igNamedImportFilter } from '../common/tsUtils';
 
 const version = '21.0.0';
 
@@ -711,22 +711,12 @@ const TYPE_RENAMES = new Map<string, { newName: string, entryPoint: string }>([
 ]);
 
 function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.SourceFile): { start: number, end: number, replacement: string } | null {
-    // Use namedImportFilter to check if this is a valid igniteui-angular named import
-    if (!namedImportFilter(node)) {
+    if (!igNamedImportFilter(node)) {
         return null;
     }
 
-    const moduleSpecifier = node.moduleSpecifier as ts.StringLiteral;
-    const importPath = moduleSpecifier.text;
-
-    // Only process base igniteui-angular imports (not already using entry points)
-    if (importPath !== IG_PACKAGE_NAME && importPath !== IG_LICENSED_PACKAGE_NAME) {
-        return null;
-    }
-
-    // namedImportFilter already validates importClause and namedBindings exist with NamedImports type
-    const importClause = node.importClause!;
-    const namedBindings = importClause.namedBindings as ts.NamedImports;
+    const importPath = node.moduleSpecifier.text;
+    const namedBindings = node.importClause.namedBindings;
 
     // Group imports by entry point
     const entryPointGroups = new Map<string, string[]>();
@@ -873,7 +863,7 @@ export default function migrate(): Rule {
 
             const originalContent = content.toString();
 
-            // Quick check if file has base igniteui-angular imports (not using entry point subpaths)
+            // Check if file has base igniteui-angular imports
             if (!originalContent.includes(`from '${IG_PACKAGE_NAME}'`) && !originalContent.includes(`from "${IG_PACKAGE_NAME}"`) &&
                 !originalContent.includes(`from '${IG_LICENSED_PACKAGE_NAME}'`) && !originalContent.includes(`from "${IG_LICENSED_PACKAGE_NAME}"`)) {
                 return;
