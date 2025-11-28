@@ -16,6 +16,51 @@ All notable changes for each version of this project will be documented in this 
 
 ## 21.0.0
 
+### New Features
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Added PDF export functionality to grid components. Grids can now be exported to PDF format alongside the existing Excel and CSV export options.
+    
+        The new `IgxPdfExporterService` follows the same pattern as Excel and CSV exporters:
+
+        ```ts
+        import { IgxPdfExporterService, IgxPdfExporterOptions } from 'igniteui-angular';
+
+        constructor(private pdfExporter: IgxPdfExporterService) {}
+        
+        exportToPdf() {
+            const options = new IgxPdfExporterOptions('MyGridExport');
+            options.pageOrientation = 'landscape'; // 'portrait' or 'landscape' (default: 'landscape')
+            options.pageSize = 'a4'; // 'a3', 'a4', 'a5', 'letter', 'legal', etc.
+            options.fontSize = 10;
+            options.showTableBorders = true;
+            
+            this.pdfExporter.export(this.grid, options);
+        }
+        ```
+
+        The grid toolbar exporter component now includes a PDF export button:
+
+        ```html
+        <igx-grid-toolbar>
+            <igx-grid-toolbar-exporter 
+                [exportPDF]="true" 
+                [exportExcel]="true" 
+                [exportCSV]="true">
+            </igx-grid-toolbar-exporter>
+        </igx-grid-toolbar>
+        ```
+
+        Key features:
+        - **Multi-page support** with automatic page breaks
+        - **Hierarchical visualization** for TreeGrid (with indentation) and HierarchicalGrid (with child tables)
+        - **Multi-level column headers** (column groups) support
+        - **Summary rows** with proper value formatting
+        - **Text truncation** with ellipsis for long content
+        - **Landscape orientation** by default (suitable for wide grids)
+        - **Internationalization** support for all 19 supported languages
+        - Respects all grid export options (ignoreFiltering, ignoreSorting, ignoreColumnsVisibility, etc.)
+        
 ### Breaking Changes
 
 #### Dependency Injection Refactor

@@ -152,7 +152,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @hidden
      */
     public get ariaHidden(): boolean {
-        return this.grid.hasColumnGroups && (this.column.hidden || this.grid.navigation.activeNode.row !== -1);
+        return this.grid.hasColumnGroups && (this.column.hidden || this.grid.navigation.activeNode?.row !== -1);
     }
 
     /**

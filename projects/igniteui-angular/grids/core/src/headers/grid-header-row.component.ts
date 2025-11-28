@@ -127,7 +127,7 @@ export class IgxGridHeaderRowComponent implements DoCheck {
     * @internal
     */
     public get isLeafHeaderAriaHidden(): boolean {
-        return this.grid.navigation.activeNode.row === -1;
+        return this.grid.navigation.activeNode?.row === -1;
     }
 
     /** The virtualized part of the header row containing the unpinned header groups. */

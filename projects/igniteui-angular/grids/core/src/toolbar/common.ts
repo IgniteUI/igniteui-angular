@@ -13,6 +13,12 @@ export class IgxExcelTextDirective { }
 })
 export class IgxCSVTextDirective { }
 
+@Directive({ 
+    selector: '[pdfText],pdf-text',
+    standalone: true
+})
+export class IgxPdfTextDirective { }
+
 /* blazorElement */
 /* wcElementTag: igc-grid-toolbar-title */
 /* blazorAlternateBaseType: GridToolbarContent */
