@@ -8,10 +8,6 @@
         {
             "name": "IgxColumPatternValidatorDirective",
             "replaceWith": "IgxColumnPatternValidatorDirective"
-        },
-        {
-            "name": "IGX_GRID_ACTION_STRIP_DIRECTIVES",
-            "replaceWith": "IGX_ACTION_STRIP_DIRECTIVES"
         }
     ]
 }
