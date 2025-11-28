@@ -24,14 +24,14 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { registerLocaleData } from "@angular/common";
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
-import { CalendarDay } from 'igniteui-angular/core';
+import { CalendarDay, BaseFormatter } from 'igniteui-angular/core';
 import { IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from 'igniteui-angular/calendar';
 
 // The number of milliseconds in one day
 const DEBOUNCE_TIME = 16;
 const DEFAULT_ICON_TEXT = 'date_range';
 const CLEAR_ICON_TEXT = 'clear';
-const DEFAULT_FORMAT_OPTIONS = { day: '2-digit', month: '2-digit', year: 'numeric' };
+const DEFAULT_FORMAT_OPTIONS = { day: 'numeric', month: 'numeric', year: 'numeric' };
 const CSS_CLASS_INPUT_BUNDLE = '.igx-input-group__bundle';
 const CSS_CLASS_INPUT_START = '.igx-input-group__bundle-start'
 const CSS_CLASS_INPUT_END = '.igx-input-group__bundle-end'
@@ -65,6 +65,7 @@ describe('IgxDateRangePicker', () => {
         let mockDaysView: any;
         let mockAnimationService: AnimationService;
         let mockCdr: any;
+        let mockI18nFormatter: BaseFormatter;
         const elementRef = { nativeElement: null };
         const platform = {} as any;
         const mockNgControl = jasmine.createSpyObj('NgControl',
@@ -93,6 +94,7 @@ describe('IgxDateRangePicker', () => {
             mockCdr = jasmine.createSpyObj('ChangeDetectorRef', {
                 detectChanges: () => { }
             });
+            mockI18nFormatter = new BaseFormatter();
             mockAnimationBuilder = {
                 build: (a: AnimationMetadata | AnimationMetadata[]) => ({
                     create: (e: any, opt?: AnimationOptions) => ({
@@ -136,7 +138,9 @@ describe('IgxDateRangePicker', () => {
             mockAnimationService = new IgxAngularAnimationService(mockAnimationBuilder);
             overlay = new IgxOverlayService(
                 mockApplicationRef, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
-            mockCalendar = new IgxCalendarComponent(platform, 'en');
+            mockCalendar = TestBed.runInInjectionContext(() => {
+                return new IgxCalendarComponent(platform, 'en', mockI18nFormatter);
+            });
 
             mockDaysView = {
                 focusActiveDate: jasmine.createSpy()
@@ -249,7 +253,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should disable calendar dates when min and/or max values as dates are provided', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, mockCdr, overlay);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, mockCdr, overlay, mockI18nFormatter);
             dateRange.ngOnInit();
 
             spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
@@ -558,7 +562,7 @@ describe('IgxDateRangePicker', () => {
                     dateRange.inputFormat = 'dd/MM/yy'; // should not be registered
                     dateRange.displayFormat = 'longDate';
                     fixture.detectChanges();
-                    expect(dateRange.inputDirective.placeholder).toEqual(`MMMM d, y - MMMM d, y`);
+                    expect(dateRange.inputDirective.placeholder).toEqual(`MMMM d, yyyy - MMMM d, yyyy`);
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
                     endDate = new Date(today.getFullYear(), today.getMonth(), 5, 0, 0, 0);
@@ -588,7 +592,7 @@ describe('IgxDateRangePicker', () => {
                     dateRange.displayFormat = 'fullDate';
                     fixture.detectChanges();
 
-                    expect(dateRange.inputDirective.placeholder).toEqual(`EEEE, MMMM d, y - EEEE, MMMM d, y`);
+                    expect(dateRange.inputDirective.placeholder).toEqual(`EEEE, MMMM d, yyyy - EEEE, MMMM d, yyyy`);
                     startDate.setDate(12);
                     endDate.setDate(23);
                     dateRange.select(startDate, endDate);

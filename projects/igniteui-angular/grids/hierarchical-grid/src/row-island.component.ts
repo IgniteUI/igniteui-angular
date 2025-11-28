@@ -44,7 +44,7 @@ import {
 } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
-import { IgxActionStripToken, IgxFlatTransactionFactory, IgxOverlayService, PlatformUtil } from 'igniteui-angular/core';
+import { IgxActionStripToken, IgxFlatTransactionFactory, IgxOverlayService, PlatformUtil, IGridResourceStrings, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 import { first, filter, takeUntil, pluck } from 'rxjs/operators';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IGridCreatedEventArgs } from './events';
@@ -113,6 +113,22 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /* blazorInclude,wcInclude */
     public set childDataKey(value: string) {
         this.key = value;
+    }
+
+    /**
+     * Gets/Sets the resource strings.
+     *
+     * @remarks
+     * By default it uses the root grid resources.
+     */
+    @Input()
+    public override set resourceStrings(value: IGridResourceStrings) {
+        super.resourceStrings = value;
+        this.updateGridsResources();
+    }
+
+    public override get resourceStrings() {
+        return super.resourceStrings ?? this.rootGrid.resourceStrings;
     }
 
     /**
@@ -393,6 +409,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         summaryService: IgxGridSummaryService,
         public rowIslandAPI: IgxRowIslandAPIService,
         @Inject(LOCALE_ID) localeId: string,
+        @Inject(I18N_FORMATTER) i18nFormatter: BaseFormatter,
         platform: PlatformUtil) {
         super(
             validationService,
@@ -414,6 +431,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             overlayService,
             summaryService,
             localeId,
+            i18nFormatter,
             platform
         );
     }
@@ -586,5 +604,11 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         });
         grid.childGridTemplates.clear();
         grid.onRowIslandChange();
+    }
+
+    private updateGridsResources() {
+        this.rowIslandAPI.getChildGrids().forEach((grid) => {
+            grid.resourceStrings = this.resourceStrings;
+        });
     }
 }

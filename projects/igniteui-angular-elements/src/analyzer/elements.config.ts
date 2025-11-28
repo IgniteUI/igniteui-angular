@@ -5,6 +5,8 @@ import {
   IgxPivotGridComponent,
 } from "../../../igniteui-angular/grids/pivot-grid";
 import { IgxTreeGridComponent } from "../../../igniteui-angular/grids/tree-grid";
+import { IgxActionStripComponent } from "../../../igniteui-angular/action-strip/src/action-strip/action-strip.component";
+import { IgxActionStripToken } from "../../../igniteui-angular/core/src/grid-column-actions/token";
 import { IgxPaginatorComponent } from "../../../igniteui-angular/paginator/src/paginator/paginator.component";
 import { IgxPaginatorToken } from "../../../igniteui-angular/paginator/src/paginator/token";
 import { IgxColumnComponent } from "../../../igniteui-angular/grids/core/src/columns/column.component";
@@ -22,8 +24,6 @@ import { IgxGridToolbarExporterComponent } from "../../../igniteui-angular/grids
 import { IgxGridToolbarHidingComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar-hiding.component";
 import { IgxGridToolbarPinningComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar-pinning.component";
 import { IgxRowIslandComponent } from "../../../igniteui-angular/grids/hierarchical-grid/src/row-island.component";
-import { IgxActionStripComponent } from "../../../igniteui-angular/action-strip/src/action-strip/action-strip.component";
-import { IgxActionStripToken } from "../../../igniteui-angular/core/src/grid-column-actions/token";
 import { IgxGridStateComponent } from "../lib/state.component";
 
 export const registerComponents = [

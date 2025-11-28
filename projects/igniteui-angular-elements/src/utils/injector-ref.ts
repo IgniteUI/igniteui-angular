@@ -2,7 +2,7 @@ import { ClassProvider, createEnvironmentInjector, EnvironmentInjector, getPlatf
 import { BrowserModule, platformBrowser } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { IgxIconBroadcastService } from '../lib/icon.broadcast.service';
-import { ELEMENTS_TOKEN } from 'igniteui-angular/core';
+import { ELEMENTS_TOKEN , provideIgniteIntl} from 'igniteui-angular/core';
 
 /**
  * Top-level await (TLA) both requires higher ES target and currently has only partial support in ES build
@@ -36,7 +36,8 @@ const injector = createEnvironmentInjector([
     // Elements specific:
     provideAnimations(),
     { provide: ELEMENTS_TOKEN, useValue: true },
-    IgxIconBroadcastService
+    IgxIconBroadcastService,
+    provideIgniteIntl()
 ], platformInjector as EnvironmentInjector);
 
 export { injector };

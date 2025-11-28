@@ -36,7 +36,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
-import { AnimationService, getCurrentResourceStrings, IgxAngularAnimationService, ITreeResourceStrings, TreeResourceStringsEN } from 'igniteui-angular/core';
+import { AnimationService, getCurrentResourceStrings, onResourceChangeHandle, IgxAngularAnimationService, ITreeResourceStrings, TreeResourceStringsEN } from 'igniteui-angular/core';
 
 // TODO: Implement aria functionality
 /**
@@ -223,7 +223,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ITreeResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -375,9 +375,8 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     /** @hidden @internal */
     public registeredChildren: IgxTreeNodeLinkDirective[] = [];
 
-    /** @hidden @internal */
-    private _resourceStrings = getCurrentResourceStrings(TreeResourceStringsEN);
-
+    private _resourceStrings: ITreeResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(TreeResourceStringsEN);
     private _tabIndex = null;
     private _disabled = false;
 
@@ -392,6 +391,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         @Optional() @SkipSelf() @Inject(IGX_TREE_NODE_COMPONENT) public parentNode: IgxTreeNode<any>
     ) {
         super(animationService);
+        onResourceChangeHandle(this.destroy$, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(TreeResourceStringsEN, false);
+        }, this);
     }
 
     /**

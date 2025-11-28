@@ -11,7 +11,8 @@ import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { ViewEncapsulation } from '@angular/core';
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
-import { DatePart } from 'igniteui-angular/core';
+import { DatePart, BaseFormatter } from 'igniteui-angular/core';
+import { removeUnicodeSpaces } from 'igniteui-angular/test-utils/helper-utils.spec';
 
 describe('IgxDateTimeEditor', () => {
     let dateTimeEditor: IgxDateTimeEditorDirective;
@@ -26,7 +27,15 @@ describe('IgxDateTimeEditor', () => {
         let inputDate: string;
         const initializeDateTimeEditor = (_control?: NgControl) => {
             // const injector = { get: () => control };
-            dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, null, DOCUMENT, locale);
+            dateTimeEditor = new IgxDateTimeEditorDirective(
+                renderer2,
+                elementRef,
+                maskParsingService,
+                null,
+                DOCUMENT,
+                locale,
+                new BaseFormatter()
+            );
             dateTimeEditor.inputFormat = inputFormat;
             dateTimeEditor.ngOnInit();
 
@@ -781,7 +790,7 @@ describe('IgxDateTimeEditor', () => {
                 date = new Date(0, 0, 0, 1, 0, 0);
                 const shortTimeOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
                 result = ControlsFunction.formatDate(date, shortTimeOptions);
-                expect(inputElement.nativeElement.value).toEqual(result);
+                expect(removeUnicodeSpaces(inputElement.nativeElement.value)).toEqual(result);
 
                 dateTimeEditorDirective.clear();
                 fixture.detectChanges();
@@ -796,7 +805,7 @@ describe('IgxDateTimeEditor', () => {
                 fixture.detectChanges();
                 date = new Date(2000, 0, 1, 2, 0, 0);
                 result = formatDate(date, 'longTime', 'en-US').normalize("NFKD");
-                expect(inputElement.nativeElement.value).toEqual(result);
+                expect(removeUnicodeSpaces(inputElement.nativeElement.value)).toContain(result);
             });
             it('should be able to apply custom display format.', fakeAsync(() => {
                 // default format

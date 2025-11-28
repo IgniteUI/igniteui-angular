@@ -1,3 +1,4 @@
+import { registerI18n, setCurrentI18n } from 'igniteui-i18n-core';
 import { ByLevelTreeGridMergeStrategy, ColumnPinningPosition, DefaultMergeStrategy, DefaultTreeGridMergeStrategy, FilteringExpressionsTree, FilteringExpressionsTreeType, FilteringLogic, HorizontalAlignment, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, NoopFilteringStrategy, NoopSortingStrategy, SortingDirection, VerticalAlignment } from 'igniteui-angular/core';
 import { DropPosition, GridPagingMode, IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotDateDimension, IgxPivotNumericAggregate, IgxPivotTimeAggregate, IgxSummaryOperand, IgxTimeSummaryOperand, NoopPivotDimensionsStrategy, PivotDimensionType, RowPinningPosition } from 'igniteui-angular/grids/core';
 
@@ -44,4 +45,8 @@ export {
     // overlay position settings (used in grids, paginator, toolbar)
     HorizontalAlignment,
     VerticalAlignment,
+
+    // i18n
+    registerI18n,
+    setCurrentI18n,
 }

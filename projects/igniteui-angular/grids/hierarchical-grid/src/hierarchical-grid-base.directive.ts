@@ -31,7 +31,7 @@ import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { takeUntil } from 'rxjs/operators';
 import { IgxGridTransaction } from 'igniteui-angular/grids/core';
-import { IgxFlatTransactionFactory, IgxOverlayService, IgxTransactionService, IPathSegment, PlatformUtil, State, Transaction, TransactionService } from 'igniteui-angular/core';
+import { IgxFlatTransactionFactory, IgxOverlayService, IgxTransactionService, IPathSegment, PlatformUtil, State, Transaction, TransactionService, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 import { IForOfState, IgxTextHighlightService } from 'igniteui-angular/directives';
 import { IgxGridBaseDirective } from 'igniteui-angular/grids/grid';
 
@@ -166,6 +166,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
         @Inject(LOCALE_ID) localeId: string,
+        @Inject(I18N_FORMATTER) i18nFormatter: BaseFormatter,
         platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>,
     ) {
@@ -189,6 +190,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             overlayService,
             summaryService,
             localeId,
+            i18nFormatter,
             platform,
             _diTransactions,
         );

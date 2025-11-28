@@ -314,9 +314,10 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 {
                     memberName: 'Date',
                     enabled: true
-                }, {
-                total: false
-            }
+                },
+                {
+                    total: false
+                }
             );
             pivotGrid.notifyDimensionChange(true);
             expect(pivotGrid.columns.length).toBe(5);

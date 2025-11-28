@@ -1,10 +1,8 @@
 import { EventEmitter } from '@angular/core';
 import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
-import { type ITreeGridRecord, type ColumnType, type GridTypeBase, type IPathSegment, type IgxSummaryResult, type GridColumnDataType, DataUtil, FilterUtil, GridSummaryCalculationMode, IBaseEventArgs, IFilteringState, IGroupByExpandState, IGroupByRecord, IGroupingState, TreeGridFilteringStrategy, cloneArray, cloneValue, columnFieldPath, resolveNestedPath, yieldingLoop, getHierarchy, isHierarchyMatch } from 'igniteui-angular/core';
-
-import { DatePipe, FormatWidth, getLocaleCurrencyCode, getLocaleDateFormat, getLocaleDateTimeFormat } from '@angular/common';
-
+import { type ITreeGridRecord, type ColumnType, type GridTypeBase, type IPathSegment, type IgxSummaryResult, type GridColumnDataType, DataUtil, FilterUtil, GridSummaryCalculationMode, IBaseEventArgs, IFilteringState, IGroupByExpandState, IGroupByRecord, IGroupingState, TreeGridFilteringStrategy, cloneArray, cloneValue, columnFieldPath, resolveNestedPath, yieldingLoop, getHierarchy, isHierarchyMatch, BaseFormatter } from 'igniteui-angular/core';
+import { FormatWidth, getLocaleDateFormat, getLocaleDateTimeFormat } from '@angular/common';
 
 export enum ExportRecordType {
     GroupedRecord = 'GroupedRecord',
@@ -215,6 +213,7 @@ export abstract class IgxBaseExporter {
     private pivotGridColumns: IColumnInfo[] = []
     private pivotGridRowDimensionsMap: Map<string, string>;
     private ownerGrid: any;
+    private i18nFormatter: BaseFormatter;
 
     /* alternateName: exportGrid */
     /**
@@ -233,6 +232,7 @@ export abstract class IgxBaseExporter {
         this.options = options;
         this.locale = grid.locale;
         this.ownerGrid = grid;
+        this.i18nFormatter = grid.i18nFormatter;
         let columns = grid.columns;
 
         if (this.options.ignoreMultiColumnHeaders) {
@@ -1045,8 +1045,7 @@ export abstract class IgxBaseExporter {
             if (isDate) {
                 const timeZoneOffset = recordVal.getTimezoneOffset() * 60000;
                 const isoString = (new Date(recordVal - timeZoneOffset)).toISOString();
-                const pipe = new DatePipe(grid.locale);
-                recordVal = pipe.transform(isoString);
+                recordVal = this.i18nFormatter.formatDate(isoString, 'mediumDate', grid.locale);
             }
 
             const groupExpressionName = record.column && record.column.header ?
@@ -1150,9 +1149,7 @@ export abstract class IgxBaseExporter {
             };
 
             if (column.dataType === 'currency') {
-                columnInfo.currencyCode = column.pipeArgs.currencyCode
-                    ? column.pipeArgs.currencyCode
-                    : getLocaleCurrencyCode(this.locale);
+                columnInfo.currencyCode = this.i18nFormatter.getCurrencyCode(this.locale, column.pipeArgs.currencyCode);;
 
                 columnInfo.displayFormat = column.pipeArgs.display
                     ? column.pipeArgs.display

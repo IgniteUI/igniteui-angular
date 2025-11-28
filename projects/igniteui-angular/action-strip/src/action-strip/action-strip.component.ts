@@ -13,11 +13,22 @@ import {
     AfterViewInit,
     ElementRef,
     booleanAttribute,
+    inject,
+    DestroyRef,
     AfterContentInit
 } from '@angular/core';
 
 
-import { ActionStripResourceStringsEN, CloseScrollStrategy, getCurrentResourceStrings, IActionStripResourceStrings, IgxActionStripActionsToken, IgxActionStripToken, OverlaySettings } from 'igniteui-angular/core';
+import {
+    ActionStripResourceStringsEN,
+    CloseScrollStrategy,
+    getCurrentResourceStrings,
+    onResourceChangeHandle,
+    IActionStripResourceStrings,
+    IgxActionStripActionsToken,
+    IgxActionStripToken,
+    OverlaySettings
+} from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxToggleActionDirective } from 'igniteui-angular/directives';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
@@ -145,7 +156,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
     }
 
     public get resourceStrings(): IActionStripResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -183,7 +194,9 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
      */
     public menuOverlaySettings: OverlaySettings = { scrollStrategy: new CloseScrollStrategy() };
 
-    private _resourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN);
+    private _destroyRef = inject(DestroyRef);
+    private _resourceStrings: IActionStripResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN);
     private _originalParent!: HTMLElement;
 
     constructor(
@@ -192,7 +205,11 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
         protected el: ElementRef,
         /** @hidden @internal **/
         public cdr: ChangeDetectorRef,
-    ) { }
+    ) {
+        onResourceChangeHandle(this._destroyRef, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN, false);
+        }, this);
+    }
 
     /**
      * Menu Items list.

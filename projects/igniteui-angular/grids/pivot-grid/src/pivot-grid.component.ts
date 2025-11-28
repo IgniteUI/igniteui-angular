@@ -64,7 +64,7 @@ import { DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from 'i
 import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective } from 'igniteui-angular/grids/core';
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
 import { IgxPivotColumnResizingService } from 'igniteui-angular/grids/core';
-import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from 'igniteui-angular/core';
+import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService, onResourceChangeHandle, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
 import { IgxGridTransaction } from 'igniteui-angular/grids/core';
 import { GridBaseAPIService } from 'igniteui-angular/grids/core';
@@ -1019,6 +1019,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
         @Inject(LOCALE_ID) localeId: string,
+        @Inject(I18N_FORMATTER) i18nFormatter: BaseFormatter,
         platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>
     ) {
@@ -1042,6 +1043,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             overlayService,
             summaryService,
             localeId,
+            i18nFormatter,
             platform,
             _diTransactions);
     }
@@ -1066,6 +1068,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 this.generateConfig();
             }
             this.setupColumns();
+            // Bind to onResourceChange after the columns have initialized the first time to avoid premature initialization.
+            onResourceChangeHandle(this.destroy$, () => {
+                // Since the columns are kinda static, due to assigning DisplayName on init, they need to be regenerated.
+                this.setupColumns();
+            }, this);
         });
         if (this.valueChipTemplateDirective) {
             this.valueChipTemplate = this.valueChipTemplateDirective.template;
@@ -1082,6 +1089,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         Promise.resolve().then(() => {
             super.ngAfterViewInit();
         });
+
     }
 
     /**

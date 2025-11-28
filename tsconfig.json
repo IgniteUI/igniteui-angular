@@ -25,7 +25,8 @@
         ],
         "igniteui-angular-i18n": [
           "projects/igniteui-angular-i18n/src/index.ts"
-        ]
+        ],
+
       },
       "rootDir": ".",
       "useDefineForClassFields": false,

@@ -1,14 +1,7 @@
-import { IComboResourceStrings } from 'igniteui-angular/core';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { ComboResourceStringsNL as AComboResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Dutch resource strings for IgxCombo
  */
-export const ComboResourceStringsNL = {
-    igx_combo_empty_message: 'De lijst is leeg',
-    igx_combo_filter_search_placeholder: 'Typ een zoekterm',
-    igx_combo_addCustomValues_placeholder: 'Item toevoegen',
-    igx_combo_clearItems_placeholder: 'Selectie wissen',
-    igx_combo_aria_label_options: 'Geselecteerde opties',
-    igx_combo_aria_label_no_options: 'Geen geselecteerde opties'
-} satisfies MakeRequired<IComboResourceStrings>;
+export const ComboResourceStringsNL = prefixResource(IGX_PREFIX, AComboResourceStrings);

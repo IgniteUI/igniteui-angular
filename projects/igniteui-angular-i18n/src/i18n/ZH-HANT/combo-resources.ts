@@ -1,14 +1,7 @@
-import { IComboResourceStrings } from 'igniteui-angular/core';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { ComboResourceStringsZHHANT as AComboResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Traditional Chinese (zh-Hant) resource strings for IgxCombo
  */
-export const ComboResourceStringsZHHANT = {
-    igx_combo_empty_message: '清單是空的',
-    igx_combo_filter_search_placeholder: '輸入搜尋字串',
-    igx_combo_addCustomValues_placeholder: '新增項目',
-    igx_combo_clearItems_placeholder: '清除選擇',
-    igx_combo_aria_label_options: '已選擇的選項',
-    igx_combo_aria_label_no_options: '沒有已選擇的選項'
-} satisfies MakeRequired<IComboResourceStrings>;
+export const ComboResourceStringsZHHANT = prefixResource(IGX_PREFIX, AComboResourceStrings);

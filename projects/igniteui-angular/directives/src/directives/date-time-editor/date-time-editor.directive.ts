@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { IgxMaskDirective } from '../mask/mask.directive';
 import { MaskParsingService } from '../mask/mask-parsing.service';
-import { isDate, PlatformUtil, DatePartInfo, DatePart, DatePartDeltas, DateTimeUtil } from 'igniteui-angular/core';
+import { isDate, PlatformUtil, DatePartInfo, DatePart, DatePartDeltas, DateTimeUtil, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 import { IgxDateTimeEditorEventArgs } from './date-time-editor.common';
 import { noop } from 'rxjs';
 
@@ -141,7 +141,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
 
     public get displayFormat(): string {
-        return this._displayFormat || this.inputFormat;
+        return this._displayFormat || this._inputFormat || DateTimeUtil.getDefaultDisplayFormat(this.locale, this._i18nFormatter, this.defaultFormatType);
     }
 
     /**
@@ -305,10 +305,11 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         maskParser: MaskParsingService,
         platform: PlatformUtil,
         @Inject(DOCUMENT) private _document: any,
-        @Inject(LOCALE_ID) private _locale: any) {
+        @Inject(LOCALE_ID) private _localeID: any,
+        @Inject(I18N_FORMATTER) private _i18nFormatter: BaseFormatter) {
         super(elementRef, maskParser, renderer, platform);
         this.document = this._document as Document;
-        this.locale = this.locale || this._locale;
+        this.locale = this.locale || this._localeID;
     }
 
     @HostListener('wheel', ['$event'])
@@ -528,12 +529,13 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     protected override setPlaceholder(_value: string): void { }
 
     private updateDefaultFormat(): void {
-        this._defaultInputFormat = DateTimeUtil.getNumericInputFormat(this.locale, this._displayFormat)
-                                || DateTimeUtil.getDefaultInputFormat(this.locale, this.defaultFormatType);
+        this._defaultInputFormat = DateTimeUtil.getNumericInputFormat(this.locale, this._i18nFormatter, this._displayFormat)
+                                || DateTimeUtil.getDefaultInputFormat(this.locale, this._i18nFormatter, this.defaultFormatType);
         this.setMask(this.inputFormat);
     }
 
-    private updateMask(): void {
+    /** @hidden @internal */
+    public updateMask(): void {
         if (this._focused) {
             // store the cursor position as it will be moved during masking
             const cursor = this.selectionEnd;
@@ -551,7 +553,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
             }
             const format = this.displayFormat || this.inputFormat;
             if (format) {
-                this.inputValue = DateTimeUtil.formatDate(this.dateValue, format.replace('tt', 'aa'), this.locale);
+                this.inputValue = this._i18nFormatter.formatDate(this.dateValue, format.replace('tt', 'aa'), this.locale);
             } else {
                 this.inputValue = this.dateValue.toLocaleString();
             }
@@ -560,7 +562,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     private setMask(inputFormat: string): void {
         const oldFormat = this._inputDateParts?.map(p => p.format).join('');
-        this._inputDateParts = DateTimeUtil.parseDateTimeFormat(inputFormat);
+        this._inputDateParts = DateTimeUtil.parseDateTimeFormat(inputFormat, this._i18nFormatter);
         inputFormat = this._inputDateParts.map(p => p.format).join('');
         const mask = (inputFormat || this._defaultInputFormat)
         .replace(new RegExp(/(?=[^at])[\w]/, 'g'), '0');

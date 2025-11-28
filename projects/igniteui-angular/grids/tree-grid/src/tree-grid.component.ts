@@ -77,6 +77,7 @@ import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxTreeGridGroupByAreaComponent } from './tree-grid-group-by-area.component';
+import { BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 
@@ -467,6 +468,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
         @Inject(LOCALE_ID) localeId: string,
+        @Inject(I18N_FORMATTER) i18nFormatter: BaseFormatter,
         platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected override _diTransactions?:
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
@@ -491,6 +493,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             overlayService,
             summaryService,
             localeId,
+            i18nFormatter,
             platform,
             _diTransactions,
         );

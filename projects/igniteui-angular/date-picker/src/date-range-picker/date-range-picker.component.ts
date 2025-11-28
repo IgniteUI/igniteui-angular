@@ -4,7 +4,7 @@ import {
     OnChanges, OnDestroy, OnInit, Optional, Output, QueryList,
     SimpleChanges, TemplateRef, ViewChild, ViewContainerRef
 } from '@angular/core';
-import { NgTemplateOutlet, getLocaleFirstDayOfWeek } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     AbstractControl, ControlValueAccessor, NgControl,
     NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
@@ -63,6 +63,8 @@ import {
 } from './date-range-picker-inputs.common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
+import { IResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 
 const SingleInputDatesConcatenationString = ' - ';
 
@@ -241,7 +243,13 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      *
      */
     @Input()
-    public override displayFormat: string;
+    public override set displayFormat(value: string) {
+        super.displayFormat = value;
+    }
+
+    public override get displayFormat(): string {
+        return super.displayFormat;
+    }
 
     /**
      * The expected user input format and placeholder.
@@ -252,7 +260,14 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public override inputFormat: string;
+    public override set inputFormat(value: string) {
+        super.inputFormat = value;
+    };
+
+    public override get inputFormat(): string {
+        // We need to get default input format because igxDateRangePicker is not using igxDateTimeEditor, but a plain input ???
+        return this._inputFormat ?? DateTimeUtil.getDefaultInputFormat(this.locale, this.i18nFormatter);
+    }
 
     /**
      * The minimum value in a valid range.
@@ -334,7 +349,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): IDateRangePickerResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -462,8 +477,11 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public get appliedFormat(): string {
-        return DateTimeUtil.getLocaleDateFormat(this.locale, this.displayFormat)
-            || DateTimeUtil.DEFAULT_INPUT_FORMAT;
+        // Resolve display format since it can be custom specified one like short, long, shortDate, longDate and etc.
+        const formatOptions = this.i18nFormatter.getFormatOptions(this.displayFormat);
+        return formatOptions
+            ? this.i18nFormatter.getLocaleDateTimeFormat(this.locale, false, formatOptions)
+            : this.displayFormat ?? this.inputFormat;
     }
 
     /**
@@ -493,7 +511,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      */
     @Input()
     public override get locale(): string {
-        return this._locale;
+        return this._locale || this._defaultLocale;
     }
 
     /**
@@ -501,13 +519,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * Expects a valid BCP 47 language tag.
      */
     public override set locale(value: string) {
-        this._locale = value;
-        // if value is invalid, set it back to _localeId
-        try {
-            getLocaleFirstDayOfWeek(this._locale);
-        } catch (e) {
-            this._locale = this._localeId;
-        }
+        this._locale = this.i18nFormatter.verifyLocale(value);
+        this.updateResources();
         if (this.hasProjectedInputs) {
             this.updateInputLocale();
             this.updateDisplayFormat();
@@ -603,7 +616,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         return range?.start ?? range?.end ?? null;
     }
 
-    private _resourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN);
+    private _resourceStrings: IDateRangePickerResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN);
     private _doneButtonText = null;
     private _cancelButtonText = null;
     private _dateSeparator = null;
@@ -645,9 +659,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         private _injector: Injector,
         private _cdr: ChangeDetectorRef,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
+        @Inject(I18N_FORMATTER) _i18nFormatter: BaseFormatter,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
-        super(element, _localeId, _inputGroupType);
-        this.locale = this.locale || this._localeId;
+        super(element, _localeId, _i18nFormatter, _inputGroupType);
+        this.initLocale();
     }
 
     /** @hidden @internal */
@@ -838,8 +853,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     /** @hidden */
     public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
-
-        this.locale = this.locale || this._localeId;
     }
 
     /** @hidden */
@@ -1303,7 +1316,20 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         this.projectedInputs.forEach(i => {
             const input = i as IgxDateRangeInputsBaseComponent;
             input.dateTimeEditor.locale = this.locale;
+            input.dateTimeEditor.updateMask();
         });
+    }
+
+    protected override onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
+        super.onResourceChange(args);
+        if (args.detail.oldLocale !== args.detail.newLocale && this.hasProjectedInputs) {
+            this.updateInputLocale();
+            this.updateDisplayFormat();
+        }
+    }
+
+    protected override updateResources(): void {
+        this._defaultResourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN, false, this._locale);
     }
 
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {

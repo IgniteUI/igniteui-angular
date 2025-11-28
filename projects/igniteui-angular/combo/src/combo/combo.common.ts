@@ -42,7 +42,8 @@ import {
     OverlaySettings,
     ComboResourceStringsEN,
     IComboResourceStrings,
-    getCurrentResourceStrings
+    getCurrentResourceStrings,
+    onResourceChangeHandle
 } from 'igniteui-angular/core';
 import { IForOfState, IgxForOfDirective } from 'igniteui-angular/directives';
 import { IgxIconService } from 'igniteui-angular/icon';
@@ -471,7 +472,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      */
     @Input()
     public get resourceStrings(): IComboResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
     public set resourceStrings(value: IComboResourceStrings) {
         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
@@ -949,7 +950,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     protected _filteredData = [];
     protected _displayKey: string;
     protected _remoteSelection = {};
-    protected _resourceStrings = getCurrentResourceStrings(ComboResourceStringsEN);
+    protected _resourceStrings: IComboResourceStrings = null;
+    protected _defaultResourceStrings = getCurrentResourceStrings(ComboResourceStringsEN);
     protected _valid = IgxInputState.INITIAL;
     protected ngControl: NgControl = null;
     protected destroy$ = new Subject<void>();
@@ -982,7 +984,11 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
         @Optional() protected _injector: Injector,
         @Optional() @Inject(IgxIconService) protected _iconService?: IgxIconService,
-    ) { }
+    ) {
+        onResourceChangeHandle(this.destroy$, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(ComboResourceStringsEN, false);
+        }, this);
+    }
 
     public ngAfterViewChecked() {
         const targetElement = this.inputGroup.element.nativeElement.querySelector('.igx-input-group__bundle') as HTMLElement;

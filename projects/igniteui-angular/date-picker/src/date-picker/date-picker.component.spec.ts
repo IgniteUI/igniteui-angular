@@ -12,7 +12,8 @@ import {
     IgxOverlayOutletDirective,
     IgxOverlayService,
     OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings,
-    WEEKDAYS
+    WEEKDAYS,
+    BaseFormatter
 } from 'igniteui-angular/core';
 import { Component, DebugElement, ElementRef, EventEmitter, QueryList, Renderer2, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
@@ -497,7 +498,7 @@ describe('IgxDatePicker', () => {
                 flush();
             }));
 
-            it('Should passing invalid value for locale, then setting weekStart must be respected.', fakeAsync(() => {
+            it('Should throw error when passing invalid value for locale', fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxDatePickerReactiveFormComponent);
                 fixture.detectChanges();
                 datePicker = fixture.componentInstance.datePicker;
@@ -508,6 +509,7 @@ describe('IgxDatePicker', () => {
 
                 expect(datePicker.locale).toEqual(locale);
                 expect(datePicker.weekStart).toEqual(WEEKDAYS.SUNDAY)
+
 
                 datePicker.locale = 'frrr';
                 datePicker.weekStart = WEEKDAYS.FRIDAY;
@@ -843,6 +845,7 @@ describe('IgxDatePicker', () => {
         let mockDateEditor: any;
         let mockCalendar: Partial<IgxCalendarComponent>;
         let mockInputDirective: any;
+        let mockI18nFormatter: BaseFormatter;
         const viewsContainerRef = {} as any;
         const mockOverlayId = '1';
         const today = new Date();
@@ -1015,7 +1018,8 @@ describe('IgxDatePicker', () => {
                 },
                 focus: () => { }
             };
-            datePicker = new IgxDatePickerComponent(elementRef, 'en-US', overlay, mockInjector, renderer2, null, mockCdr);
+            mockI18nFormatter = new BaseFormatter();
+            datePicker = new IgxDatePickerComponent(elementRef, 'en-US', mockI18nFormatter, overlay, mockInjector, renderer2, null, mockCdr);
             (datePicker as any).inputGroup = mockInputGroup;
             (datePicker as any).inputDirective = mockInputDirective;
             (datePicker as any).dateTimeEditor = mockDateEditor;

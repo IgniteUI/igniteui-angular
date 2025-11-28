@@ -1,10 +1,9 @@
-import { IInputResourceStrings } from 'igniteui-angular/core';
+import { FileInputResourceStringsFR as AInputResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * French resource strings for IgxInput
  */
 export const InputResourceStringsFR = {
-    igx_input_upload_button: 'Charger un fichier',
-    igx_input_file_placeholder: 'Aucun fichier sélectionné'
-} satisfies MakeRequired<IInputResourceStrings>;
+    igx_input_upload_button: AInputResourceStrings.file_input_upload_button,
+    igx_input_file_placeholder: AInputResourceStrings.file_input_placeholder
+};
