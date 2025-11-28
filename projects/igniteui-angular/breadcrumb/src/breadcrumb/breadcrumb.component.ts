@@ -49,6 +49,7 @@ let NEXT_ID = 0;
     selector: 'igx-breadcrumb',
     templateUrl: 'breadcrumb.component.html',
     styleUrl: 'breadcrumb.component.scss',
+    standalone: true,
     host: {
         'role': 'navigation',
         '[attr.aria-label]': '"breadcrumb"'

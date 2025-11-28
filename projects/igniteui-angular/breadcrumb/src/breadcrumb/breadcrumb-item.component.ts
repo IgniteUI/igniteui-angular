@@ -33,6 +33,7 @@ let NEXT_ID = 0;
     selector: 'igx-breadcrumb-item',
     templateUrl: 'breadcrumb-item.component.html',
     styleUrl: 'breadcrumb-item.component.scss',
+    standalone: true,
     imports: [RouterLink, IgxIconComponent],
     host: {
         'role': 'listitem'
