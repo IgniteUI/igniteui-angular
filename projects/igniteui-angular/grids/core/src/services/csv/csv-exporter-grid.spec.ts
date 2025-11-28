@@ -18,7 +18,7 @@ import { IgxPivotGridTestBaseComponent } from '../../../../../test-utils/pivot-g
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
 import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
-import { IgxPivotNumericAggregate } from 'igniteui-angular/grids/core';
+import { IgxGridNavigationService, IgxPivotNumericAggregate } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
 
@@ -520,6 +520,12 @@ describe('CSV Grid Exporter', () => {
         let fix;
         let pivotGrid: IgxPivotGridComponent;
         beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [
+                    IgxGridNavigationService
+                ]
+            });
+
             fix = TestBed.createComponent(IgxPivotGridTestBaseComponent);
             fix.detectChanges();
             pivotGrid = fix.componentInstance.pivotGrid;

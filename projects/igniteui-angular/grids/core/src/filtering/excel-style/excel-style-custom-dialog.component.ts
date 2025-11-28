@@ -1,14 +1,4 @@
-import {
-    Component,
-    Input,
-    ChangeDetectorRef,
-    ViewChild,
-    AfterViewInit,
-    TemplateRef,
-    ViewChildren,
-    QueryList,
-    ElementRef
-} from '@angular/core';
+import { Component, Input, ChangeDetectorRef, ViewChild, AfterViewInit, TemplateRef, ViewChildren, QueryList, ElementRef, inject } from '@angular/core';
 import { IgxFilteringService } from '../grid-filtering.service';
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
@@ -28,6 +18,11 @@ import { AbsoluteScrollStrategy, AutoPositionStrategy, ColumnType, FilteringLogi
     imports: [IgxToggleDirective, NgClass, IgxExcelStyleDateExpressionComponent, IgxExcelStyleDefaultExpressionComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
+    protected overlayService = inject(IgxOverlayService);
+    private cdr = inject(ChangeDetectorRef);
+    protected platform = inject(PlatformUtil);
+    public esf = inject(BaseFilteringComponent);
+
     @Input()
     public expressionsList = new Array<ExpressionUI>();
 
@@ -74,14 +69,6 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         positionStrategy: new AutoPositionStrategy(this._customDialogPositionSettings),
         scrollStrategy: new AbsoluteScrollStrategy()
     };
-
-
-    constructor(
-        protected overlayService: IgxOverlayService,
-        private cdr: ChangeDetectorRef,
-        protected platform: PlatformUtil,
-        public esf:BaseFilteringComponent
-    ) { }
 
     public ngAfterViewInit(): void {
         this._customDialogOverlaySettings.outlet = this.grid.outlet;

@@ -1,4 +1,4 @@
-import { Directive, Input, Output, EventEmitter, ElementRef, OnDestroy, NgZone, OnInit, booleanAttribute } from '@angular/core';
+import { Directive, Input, Output, EventEmitter, ElementRef, OnDestroy, NgZone, OnInit, booleanAttribute, inject } from '@angular/core';
 import { interval, Observable, Subscription, Subject, animationFrameScheduler } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
@@ -24,6 +24,9 @@ enum DragScrollDirection {
     standalone: true
 })
 export class IgxGridDragSelectDirective implements OnInit, OnDestroy {
+    private ref = inject<ElementRef<HTMLElement>>(ElementRef);
+    private zone = inject(NgZone);
+
 
     @Output()
     public dragStop = new EventEmitter<boolean>();
@@ -54,7 +57,7 @@ export class IgxGridDragSelectDirective implements OnInit, OnDestroy {
 
     private _activeDrag: boolean;
 
-    constructor(private ref: ElementRef<HTMLElement>, private zone: NgZone) {
+    constructor() {
         this._interval$ = interval(0, animationFrameScheduler).pipe(
             takeUntil(this.end$),
             filter(() => this.activeDrag)
