@@ -4,7 +4,7 @@ import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { IColumnExportingEventArgs } from '../exporter-common/base-export-service';
 import { ZipWrapper } from './zip-verification-wrapper.spec';
 import { FileContentData } from './test-data.service.spec';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
+import { SampleTestData } from '../../../../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 
 describe('Excel Exporter', () => {

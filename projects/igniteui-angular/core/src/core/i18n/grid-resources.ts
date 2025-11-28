@@ -136,6 +136,7 @@ export interface IGridResourceStrings {
     igx_grid_toolbar_exporter_button_label?: string;
     igx_grid_toolbar_exporter_excel_entry_text?: string;
     igx_grid_toolbar_exporter_csv_entry_text?: string;
+    igx_grid_toolbar_exporter_pdf_entry_text?: string;
     igx_grid_snackbar_addrow_label?: string;
     igx_grid_snackbar_addrow_actiontext?: string;
     igx_grid_actions_edit_label?: string;
@@ -318,6 +319,7 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_toolbar_exporter_button_label: 'Export',
     igx_grid_toolbar_exporter_excel_entry_text: 'Export to Excel',
     igx_grid_toolbar_exporter_csv_entry_text: 'Export to CSV',
+    igx_grid_toolbar_exporter_pdf_entry_text: 'Export to PDF',
     igx_grid_snackbar_addrow_label: 'Row added',
     igx_grid_snackbar_addrow_actiontext: 'SHOW',
     igx_grid_actions_edit_label: 'Edit',
