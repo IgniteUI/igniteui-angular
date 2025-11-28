@@ -47,9 +47,21 @@
         <div class="custom-controls">
             <label>Special Dates</label>
             <igx-date-range-picker
+                type="box"
                 mode="dialog"
                 [(ngModel)]="specialRange"
             ></igx-date-range-picker>
+
+            <label>Disabled Dates</label>
+            <igx-date-range-picker
+                type="box"
+                mode="dialog"
+                [(ngModel)]="disabledRange"
+            >
+                <span igxHint>
+                    Currently disabled + selected is not possible combination!
+                </span>
+            </igx-date-range-picker>
 
             <label>Weekday format</label>
             <igx-buttongroup selectionMode="singleRequired">
