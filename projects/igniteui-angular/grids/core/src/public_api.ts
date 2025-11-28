@@ -1,3 +1,4 @@
+import { IgxActionStripComponent, IgxActionStripMenuItemDirective } from 'igniteui-angular/action-strip';
 import {
     IgxColumnActionsComponent,
     IgxColumnHidingDirective,
@@ -202,6 +203,16 @@ export const IGX_GRID_COMMON_DIRECTIVES = [
     IgxExcelStyleFilterOperationsTemplateDirective,
     IgxExcelStyleLoadingValuesTemplateDirective,
     // IGX_GRID_ACTION_STRIP_DIRECTIVES:
+    IgxGridPinningActionsComponent,
+    IgxGridEditingActionsComponent,
+    IgxGridActionsBaseDirective,
+    IgxGridActionButtonComponent
+] as const;
+
+/* Action-strip in grid directives collection for ease-of-use import in standalone components scenario */
+export const IGX_GRID_ACTION_STRIP_DIRECTIVES = [
+    IgxActionStripComponent,
+    IgxActionStripMenuItemDirective,
     IgxGridPinningActionsComponent,
     IgxGridEditingActionsComponent,
     IgxGridActionsBaseDirective,

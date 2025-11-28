@@ -75,6 +75,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxActionStripModule', 'action-strip'],
     ['IGX_ACTION_STRIP_DIRECTIVES', 'action-strip'],
     ['IgxActionStripMenuItemDirective', 'action-strip'],
+    ['IGX_GRID_ACTION_STRIP_DIRECTIVES', 'grids/core'],
 
     // Avatar
     ['IgxAvatarComponent', 'avatar'],

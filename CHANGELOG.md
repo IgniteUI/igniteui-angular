@@ -45,6 +45,7 @@ ng update igniteui-angular --migrate-only --from=20.1.0 --to=21.0.0 --migrate-im
 - Input directives (`IgxHintDirective`, `IgxInputDirective`, `IgxLabelDirective`, `IgxPrefixDirective`, `IgxSuffixDirective`) → `igniteui-angular/input-group`
 - `IgxAutocompleteDirective` → `igniteui-angular/drop-down`
 - `IgxRadioGroupDirective` → `igniteui-angular/radio`
+- `IGX_GRID_ACTION_STRIP_DIRECTIVES` → `igniteui-angular/grids/core`
 
 **Type Renames (to avoid conflicts):**
 - `Direction` → `CarouselAnimationDirection` (in carousel)
