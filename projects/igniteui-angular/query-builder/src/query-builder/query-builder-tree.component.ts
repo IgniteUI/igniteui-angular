@@ -43,14 +43,14 @@ import {
     IgxPickerToggleComponent,
     IgxPickerClearComponent,
     getCurrentResourceStrings,
-    isTree
+    isTree,
+    IgxOverlayOutletDirective
 } from 'igniteui-angular/core';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 
 import {
     IgxButtonDirective,
     IgxDateTimeEditorDirective,
-    IgxOverlayOutletDirective,
     IgxIconButtonDirective,
     IgxTooltipDirective,
     IgxTooltipTargetDirective,

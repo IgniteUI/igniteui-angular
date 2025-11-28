@@ -12,13 +12,9 @@ import {
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first } from 'rxjs/operators';
-import { IgxAvatarComponent } from '../../../../avatar/src/avatar/avatar.component';
-import { IgxCalendarComponent } from '../../../../calendar/src/public_api';
-import { IgxCalendarContainerComponent } from '../../../../date-picker/src/date-picker/calendar-container/calendar-container.component';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { IgxAngularAnimationService } from '../animation/angular-animation-service';
 import { AnimationService } from '../animation/animation';
-import { IgxOverlayOutletDirective, IgxToggleDirective } from '../../../../directives/src/directives/toggle/toggle.directive';
 import { IgxOverlayService } from './overlay';
 import { ContainerPositionStrategy } from './position';
 import { AutoPositionStrategy } from './position/auto-position-strategy';
@@ -33,6 +29,7 @@ import { CloseScrollStrategy } from './scroll/close-scroll-strategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import {
     HorizontalAlignment,
+    IgxOverlayOutletDirective,
     OffsetMode,
     OverlayCancelableEventArgs,
     OverlayEventArgs,
@@ -42,6 +39,10 @@ import {
     VerticalAlignment
 } from './utilities';
 import { scaleInVerTop, scaleOutVerTop } from 'igniteui-angular/animations';
+import { IgxCalendarContainerComponent } from 'igniteui-angular/date-picker';
+import { IgxAvatarComponent } from 'igniteui-angular/avatar';
+import { IgxCalendarComponent } from 'igniteui-angular/calendar';
+import { IgxToggleDirective } from 'igniteui-angular/directives';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';

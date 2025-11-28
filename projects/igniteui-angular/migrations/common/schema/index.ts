@@ -1,5 +1,5 @@
 // generate schema:
-// npx typescript-json-schema migrations/common/schema/index.ts SelectorChanges -o migrations/common/schema/selector.schema.json --required
+// npx typescript-json-schema projects/igniteui-angular/migrations/common/schema/index.ts ThemeChanges -o projects/igniteui-angular/migrations/common/schema/theme-changes.schema.json --required
 
 export interface ThemeChanges {
     /** An array of changes to theme function properties */

@@ -1,5 +1,5 @@
 import { Inject, Pipe, PipeTransform } from '@angular/core';
-import { IGridSortingStrategy, IGridGroupingStrategy, cloneArray, DataUtil, FilteringExpressionsTree, FilterUtil, IFilteringExpressionsTree, IFilteringStrategy, IGridMergeStrategy, IGroupByExpandState, IGroupingExpression, ISortingExpression, IGroupByResult, ColumnType } from 'igniteui-angular/core';
+import { IGridSortingStrategy, IGridGroupingStrategy, cloneArray, DataUtil, FilteringExpressionsTree, FilterUtil, IFilteringExpressionsTree, IFilteringStrategy, IGridMergeStrategy, IGroupByExpandState, IGroupingExpression, ISortingExpression, IGroupByResult, ColumnType, IMergeByResult } from 'igniteui-angular/core';
 import { GridCellMergeMode, RowPinningPosition, GridType, IGX_GRID_BASE } from 'igniteui-angular/grids/core';
 
 /**
@@ -119,33 +119,40 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
             // if nothing to update, return
             return collection;
         }
+
         let result = cloneArray(collection) as any;
         uniqueRoots.forEach(x => {
-            const index = result.indexOf(x);
+            const index = collection.indexOf(x);
             const colKeys = [...x.cellMergeMeta.keys()];
             const cols = colsToMerge.filter(col => colKeys.indexOf(col.field) !== -1);
-            let res = [];
             for (const col of cols) {
-
-                let childData = x.cellMergeMeta.get(col.field).childRecords;
+                const childData = x.cellMergeMeta.get(col.field).childRecords;
                 const childRecs = childData.map(rec => rec.recordRef);
-                const isDate = col?.dataType === 'date' || col?.dataType === 'dateTime';
-                const isTime = col?.dataType === 'time' || col?.dataType === 'dateTime';
-                res = this.grid.mergeStrategy.merge(
-                    [x.recordRef, ...childRecs],
-                    col.field,
-                    col.mergingComparer,
-                    res,
-                    activeRowIndexes.map(ri => ri - index),
-                    isDate,
-                    isTime,
-                    this.grid);
-
+                if(childRecs.length === 0) {
+                    // nothing to unmerge
+                    continue;
+                }
+                const unmergedData = DataUtil.merge([x.recordRef, ...childRecs], [col], this.grid.mergeStrategy, activeRowIndexes.map(ri => ri - index), this.grid);
+                for (let i = 0; i < unmergedData.length; i++) {
+                    const unmergedRec = unmergedData[i];
+                    const origRecord = result[index + i];
+                    if (unmergedRec.cellMergeMeta?.get(col.field)) {
+                        // clone of object, since we don't want to pollute the original fully merged collection.
+                        const objCopy = {
+                            recordRef: origRecord.recordRef,
+                            ghostRecord: origRecord.ghostRecord,
+                            cellMergeMeta: new Map<string, IMergeByResult>(origRecord.cellMergeMeta.entries())
+                        };
+                        // update copy with new meta from unmerged data record, but just for this column
+                        objCopy.cellMergeMeta?.set(col.field, unmergedRec.cellMergeMeta.get(col.field));
+                        result[index + i] = objCopy;
+                    } else {
+                        // this is the unmerged record, with no merge metadata
+                        result[index + i] = unmergedRec;
+                    }
+                }
             }
-            result = result.slice(0, index).concat(res, result.slice(index + res.length));
         });
-
-
         return result;
     }
 }

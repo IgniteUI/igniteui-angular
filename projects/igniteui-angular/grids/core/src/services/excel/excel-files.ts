@@ -3,8 +3,8 @@ import { ExcelStrings } from './excel-strings';
 import { WorksheetData } from './worksheet-data';
 
 import { strToU8 } from 'fflate';
-import { yieldingLoop } from '../../core/utils';
 import { ExportHeaderType, ExportRecordType, IExportRecord, IColumnList, IColumnInfo, GRID_ROOT_SUMMARY, GRID_PARENT, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
+import { yieldingLoop } from 'igniteui-angular/core';
 
 /**
  * @hidden
@@ -645,7 +645,7 @@ export class WorksheetFile implements IExcelFile {
                     rowCoordinate = startValue + 1;
                 }
 
-                const columnValue = currentCol.headerType === ExportHeaderType.PivotMergedHeader ? 
+                const columnValue = currentCol.headerType === ExportHeaderType.PivotMergedHeader ?
                                         dictionary.saveValue(currentCol.field, true, true) :
                                         dictionary.saveValue(currentCol.header, true, false);
 

@@ -73,8 +73,7 @@ export {
     IgxRowEditTabStopDirective,
     IgxRowEditTemplateDirective
 } from './grid.rowEdit.directive';
-export { IGridState, IColumnState, IGridStateCollection, IGridStateOptions, GridFeatures } from './state-base.directive';
-export { IgxGridStateBaseDirective } from './state-base.directive';
+export * from './state-base.directive';
 export * from './state.directive';
 export * from './columns/public_api';
 export * from './headers/public_api';
@@ -115,6 +114,17 @@ export * from './pivot-grid.interface';
 export * from './pivot-grid-dimensions';
 export * from './pivot-grid-aggregate';
 export * from './watch-changes';
+// Exporter services (moved from core)
+export * from './services/exporter-common/base-export-service';
+export * from './services/exporter-common/exporter-options-base';
+export * from './services/exporter-common/export-utilities';
+export * from './services/csv/csv-exporter';
+export * from './services/csv/csv-exporter-options';
+export * from './services/csv/char-separated-value-data';
+export * from './services/excel/excel-exporter';
+export * from './services/excel/excel-exporter-options';
+export * from './services/pdf/pdf-exporter';
+export * from './services/pdf/pdf-exporter-options';
 
 /*
 

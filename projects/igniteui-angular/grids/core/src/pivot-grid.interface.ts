@@ -230,7 +230,7 @@ export interface IPivotUISettings {
     horizontalSummariesPosition?: PivotSummaryPosition;
 }
 
-export type PivotAggregationType = 'SUM' | 'AVG' | 'MIN' | 'MAX' | 'COUNT' | 'LATEST' | 'EARLIEST' ;
+export type PivotAggregationType = 'SUM' | 'AVG' | 'MIN' | 'MAX' | 'COUNT' | 'LATEST' | 'EARLIEST';
 
 /** Interface describing the pivot dimension data.
 * Contains additional information needed to render dimension headers.

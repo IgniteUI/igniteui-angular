@@ -196,7 +196,7 @@
               "projects/igniteui-angular/test.css"
             ],
             "assets": [
-              "projects/igniteui-angular/src/assets"
+              "projects/igniteui-angular/test-utils/assets"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
@@ -305,8 +305,8 @@
               "budgets": [
                 {
                   "type": "allScript",
-                  "maximumWarning": "2.1mb",
-                  "maximumError": "2.5mb"
+                  "maximumWarning": "2.5mb",
+                  "maximumError": "3mb"
                 },
                 {
                   "type": "bundle",
