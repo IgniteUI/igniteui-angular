@@ -2729,11 +2729,11 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     /** @hidden @internal */
-    public get activeDescendant() {
+    public get activeDescendant(): string | undefined {
         const activeElem = this.navigation.activeNode;
 
         if (!activeElem || !Object.keys(activeElem).length || activeElem.row < 0) {
-            return null;
+            return;
         }
         return `${this.id}_${activeElem.row}_${activeElem.column}`;
     }
@@ -2773,7 +2773,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public get maxLevelHeaderDepth() {
+    public get maxLevelHeaderDepth(): number {
         if (this._maxLevelHeaderDepth === null) {
             this._maxLevelHeaderDepth = this.hasColumnLayouts ?
                 this._columns.reduce((acc, col) => Math.max(acc, col.rowStart), 0) :
@@ -3139,7 +3139,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden
      */
-    protected _maxLevelHeaderDepth = null;
+    protected _maxLevelHeaderDepth = 0;
     /**
      * @hidden
      */
@@ -3353,7 +3353,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * const filteredSortedData = this.grid1.filteredSortedData;
      * ```
      */
-    public get filteredSortedData(): any[] {
+    public get filteredSortedData(): any[] | null {
         return this._filteredSortedData;
     }
 

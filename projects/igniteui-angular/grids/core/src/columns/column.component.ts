@@ -1801,10 +1801,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * ```typescript
      * this.column.parent = higherLevelColumn;
      * ```
-     *
-     * @memberof IgxColumnComponent
      */
-    public parent = null;
+    public parent: ColumnType | null = null;
 
     /* blazorSuppress */
     /**
