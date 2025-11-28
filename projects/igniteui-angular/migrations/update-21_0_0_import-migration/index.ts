@@ -724,6 +724,7 @@ function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.Sou
         return null;
     }
 
+    // namedImportFilter already validates importClause and namedBindings exist with NamedImports type
     const importClause = node.importClause!;
     const namedBindings = importClause.namedBindings as ts.NamedImports;
 
@@ -872,7 +873,7 @@ export default function migrate(): Rule {
 
             const originalContent = content.toString();
 
-            // Check if file has igniteui-angular imports
+            // Quick check if file has base igniteui-angular imports (not using entry point subpaths)
             if (!originalContent.includes(`from '${IG_PACKAGE_NAME}'`) && !originalContent.includes(`from "${IG_PACKAGE_NAME}"`) &&
                 !originalContent.includes(`from '${IG_LICENSED_PACKAGE_NAME}'`) && !originalContent.includes(`from "${IG_LICENSED_PACKAGE_NAME}"`)) {
                 return;
