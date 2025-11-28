@@ -12,7 +12,10 @@ import {
     booleanAttribute,
     ElementRef,
     ChangeDetectorRef,
-    ChangeDetectionStrategy, inject, DestroyRef, AfterContentChecked,
+    ChangeDetectionStrategy,
+    inject,
+    DestroyRef,
+    AfterContentChecked
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TitleCasePipe } from '@angular/common';
@@ -206,32 +209,23 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
 
     // Theme-specific classes
     @HostBinding('class.igx-days-view--material')
-    public get isMaterial(): boolean {
+    protected get isMaterial(): boolean {
         return this._theme === 'material';
     }
 
     @HostBinding('class.igx-days-view--fluent')
-    public get isFluent(): boolean {
+    protected get isFluent(): boolean {
         return this._theme === 'fluent';
     }
 
     @HostBinding('class.igx-days-view--bootstrap')
-    public get isBootstrap(): boolean {
+    protected get isBootstrap(): boolean {
         return this._theme === 'bootstrap';
     }
 
     @HostBinding('class.igx-days-view--indigo')
-    public get isIndigo(): boolean {
+    protected get isIndigo(): boolean {
         return this._theme === 'indigo';
-    }
-
-    @Input()
-    public set theme(value: IgxTheme) {
-        this._theme = value;
-    }
-
-    public get theme(): IgxTheme {
-        return this._theme;
     }
 
     /**
@@ -265,7 +259,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
             const theme = getComponentTheme(this.el.nativeElement);
 
             if (theme && theme !== this._theme) {
-                this.theme = theme;
+                this._theme = theme;
                 this.cdr.markForCheck();
             }
         }
