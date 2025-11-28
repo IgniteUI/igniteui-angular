@@ -30,6 +30,7 @@ export * from 'igniteui-angular/avatar';
 export * from 'igniteui-angular/badge';
 export * from 'igniteui-angular/banner';
 export * from 'igniteui-angular/bottom-nav';
+export * from 'igniteui-angular/breadcrumb';
 export * from 'igniteui-angular/button-group';
 export * from 'igniteui-angular/calendar';
 export * from 'igniteui-angular/card';
