@@ -5,8 +5,7 @@ import type {
     Tree
 } from '@angular-devkit/schematics';
 import * as ts from 'typescript';
-import { IG_PACKAGE_NAME, IG_LICENSED_PACKAGE_NAME } from '../common/tsUtils';
-import { escapeRegExp } from '../common/util';
+import { IG_PACKAGE_NAME, IG_LICENSED_PACKAGE_NAME, namedImportFilter } from '../common/tsUtils';
 
 const version = '21.0.0';
 
@@ -711,25 +710,13 @@ const TYPE_RENAMES = new Map<string, { newName: string, entryPoint: string }>([
     ['IgxColumPatternValidatorDirective', { newName: 'IgxColumnPatternValidatorDirective', entryPoint: 'grids/core' }],
 ]);
 
-// Pre-compiled regex for quick file content checks - matches base package imports only (not subpaths)
-const BASE_IMPORT_PATTERN = new RegExp(
-    `from\\s+['"](${escapeRegExp(IG_LICENSED_PACKAGE_NAME)}|${escapeRegExp(IG_PACKAGE_NAME)})['"]`
-);
-
-/**
- * Quick regex-based check if file content has base igniteui-angular imports (without entry point subpaths).
- * This is a performance optimization to avoid parsing files that don't need migration.
- * Uses regex to check for imports like: from 'igniteui-angular' or from "@infragistics/igniteui-angular"
- * but not from 'igniteui-angular/core' etc. which are already using entry points.
- */
-const hasBaseIgniteuiImports = (content: string): boolean => BASE_IMPORT_PATTERN.test(content);
-
 function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.SourceFile): { start: number, end: number, replacement: string } | null {
-    const moduleSpecifier = node.moduleSpecifier;
-    if (!ts.isStringLiteral(moduleSpecifier)) {
+    // Use namedImportFilter to check if this is a valid igniteui-angular named import
+    if (!namedImportFilter(node)) {
         return null;
     }
 
+    const moduleSpecifier = node.moduleSpecifier as ts.StringLiteral;
     const importPath = moduleSpecifier.text;
 
     // Only process base igniteui-angular imports (not already using entry points)
@@ -737,19 +724,13 @@ function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.Sou
         return null;
     }
 
-    const importClause = node.importClause;
-    if (!importClause || !importClause.namedBindings) {
-        return null;
-    }
-
-    if (!ts.isNamedImports(importClause.namedBindings)) {
-        return null;
-    }
+    const importClause = node.importClause!;
+    const namedBindings = importClause.namedBindings as ts.NamedImports;
 
     // Group imports by entry point
     const entryPointGroups = new Map<string, string[]>();
 
-    for (const element of importClause.namedBindings.elements) {
+    for (const element of namedBindings.elements) {
         const name = element.name.text;
         const alias = element.propertyName?.text;
         const importName = alias || name;
@@ -891,8 +872,9 @@ export default function migrate(): Rule {
 
             const originalContent = content.toString();
 
-            // Check if file has base igniteui-angular imports (not using entry point subpaths)
-            if (!hasBaseIgniteuiImports(originalContent)) {
+            // Check if file has igniteui-angular imports
+            if (!originalContent.includes(`from '${IG_PACKAGE_NAME}'`) && !originalContent.includes(`from "${IG_PACKAGE_NAME}"`) &&
+                !originalContent.includes(`from '${IG_LICENSED_PACKAGE_NAME}'`) && !originalContent.includes(`from "${IG_LICENSED_PACKAGE_NAME}"`)) {
                 return;
             }
 
