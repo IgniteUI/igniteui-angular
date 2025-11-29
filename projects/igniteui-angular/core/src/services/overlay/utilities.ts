@@ -1,5 +1,5 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
-import { ComponentRef, Directive, ElementRef, Injector, NgZone } from '@angular/core';
+import { ComponentRef, Directive, ElementRef, inject, Injector, NgZone } from '@angular/core';
 import { CancelableBrowserEventArgs, CancelableEventArgs, cloneValue, IBaseEventArgs } from '../../core/utils';
 import { AnimationPlayer } from '../animation/animation';
 import { IPositionStrategy } from './position/IPositionStrategy';
@@ -18,7 +18,7 @@ import { IScrollStrategy } from './scroll';
     standalone: true
 })
 export class IgxOverlayOutletDirective {
-    constructor(public element: ElementRef<HTMLElement>) { }
+    public element = inject<ElementRef<HTMLElement>>(ElementRef);
 
     /** @hidden */
     public get nativeElement() {

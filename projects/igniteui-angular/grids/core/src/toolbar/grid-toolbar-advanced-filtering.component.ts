@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { IgxToolbarToken } from './token';
 import { IgxButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -29,6 +29,8 @@ import { IFilteringExpressionsTree, isTree, OverlaySettings } from 'igniteui-ang
     imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent]
 })
 export class IgxGridToolbarAdvancedFilteringComponent implements OnInit {
+    private toolbar = inject<IgxToolbarToken>(IgxToolbarToken);
+
     protected numberOfColumns: number;
     /**
      * Returns the grid containing this component.
@@ -40,8 +42,6 @@ export class IgxGridToolbarAdvancedFilteringComponent implements OnInit {
 
     @Input()
     public overlaySettings: OverlaySettings;
-
-    constructor( @Inject(IgxToolbarToken) private toolbar: IgxToolbarToken) { }
 
     /**
      * @hidden

@@ -1,4 +1,4 @@
-import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef, TemplateRef, booleanAttribute } from '@angular/core';
+import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef, TemplateRef, booleanAttribute, inject } from '@angular/core';
 import {
     IgxSummaryOperand
 } from './grid-summary';
@@ -13,6 +13,8 @@ import { ColumnType, GridColumnDataType, IgxSummaryResult, trackByIdentity } fro
     imports: [NgTemplateOutlet]
 })
 export class IgxSummaryCellComponent {
+    private element = inject(ElementRef);
+
 
     @Input()
     public summaryResults: IgxSummaryResult[];
@@ -40,9 +42,6 @@ export class IgxSummaryCellComponent {
     @Input()
     @HostBinding('attr.data-rowIndex')
     public rowIndex: number;
-
-    constructor(private element: ElementRef) {
-    }
 
     @HostBinding('attr.data-visibleIndex')
     public get visibleColumnIndex(): number {

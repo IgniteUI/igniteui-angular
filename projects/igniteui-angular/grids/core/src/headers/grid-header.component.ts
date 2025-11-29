@@ -6,7 +6,7 @@ import {
     ElementRef,
     HostBinding,
     HostListener,
-    Inject,
+    inject,
     Input,
     OnDestroy,
     TemplateRef,
@@ -31,6 +31,10 @@ import { ColumnType, ExpressionsTreeUtil, GridColumnDataType, SortingDirection }
     imports: [IgxIconComponent, NgTemplateOutlet, NgClass, SortingIndexPipe]
 })
 export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
+    public grid = inject<GridType>(IGX_GRID_BASE);
+    public colResizingService = inject(IgxColumnResizingService);
+    public cdr = inject(ChangeDetectorRef);
+    private ref = inject<ElementRef<HTMLElement>>(ElementRef);
 
     @Input()
     public column: ColumnType;
@@ -237,13 +241,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
 
     public sortDirection = SortingDirection.None;
     protected _destroy$ = new Subject<boolean>();
-
-    constructor(
-        @Inject(IGX_GRID_BASE) public grid: GridType,
-        public colResizingService: IgxColumnResizingService,
-        public cdr: ChangeDetectorRef,
-        private ref: ElementRef<HTMLElement>
-    ) { }
 
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {

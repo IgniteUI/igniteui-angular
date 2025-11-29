@@ -4,11 +4,10 @@ import {
     ElementRef,
     EventEmitter,
     HostListener,
-    Inject,
+    inject,
     Input,
     OnDestroy,
     OnInit,
-    Optional,
     Output,
 } from '@angular/core';
 import { AbsoluteScrollStrategy, IgxOverlayOutletDirective } from 'igniteui-angular/core';
@@ -46,6 +45,12 @@ export interface ToggleViewCancelableEventArgs extends ToggleViewEventArgs, Canc
     }
 })
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
+    private elementRef = inject(ElementRef);
+    private cdr = inject(ChangeDetectorRef);
+    protected overlayService = inject<IgxOverlayService>(IgxOverlayService);
+    private navigationService = inject(IgxNavigationService, { optional: true });
+    private platform = inject(PlatformUtil, { optional: true });
+
     /**
      * Emits an event after the toggle container is opened.
      *
@@ -201,18 +206,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     private _overlayClosingSub: Subscription;
     private _overlayClosedSub: Subscription;
     private _overlayContentAppendedSub: Subscription;
-
-    /**
-     * @hidden
-     */
-    constructor(
-        private elementRef: ElementRef,
-        private cdr: ChangeDetectorRef,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        @Optional() private navigationService: IgxNavigationService,
-        @Optional() private platform?: PlatformUtil
-    ) {
-    }
 
     /**
      * Opens the toggle.
@@ -427,6 +420,9 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     standalone: true
 })
 export class IgxToggleActionDirective implements OnInit {
+    protected element = inject(ElementRef);
+    protected navigationService = inject(IgxNavigationService, { optional: true });
+
     /**
      * Provide settings that control the toggle overlay positioning, interaction and scroll behavior.
      * ```typescript
@@ -478,8 +474,6 @@ export class IgxToggleActionDirective implements OnInit {
 
     protected _overlayDefaults: OverlaySettings;
     protected _target: IToggleView | string;
-
-    constructor(private element: ElementRef, @Optional() private navigationService: IgxNavigationService) { }
 
     /**
      * @hidden

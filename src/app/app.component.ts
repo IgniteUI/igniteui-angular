@@ -129,6 +129,11 @@ export class AppComponent implements OnInit {
             name: 'Carousel'
         },
         {
+            link: '/chat',
+            icon: 'chat',
+            name: 'Chat'
+        },
+        {
             link: '/chip',
             icon: 'android',
             name: 'Chips'
@@ -421,6 +426,11 @@ export class AppComponent implements OnInit {
             link: '/gridExport',
             icon: 'view_column',
             name: 'Grid Export'
+        },
+        {
+            link: '/gridPdfExport',
+            icon: 'view_column',
+            name: 'Grid PDF Export'
         },
         {
             link: '/gridSearch',

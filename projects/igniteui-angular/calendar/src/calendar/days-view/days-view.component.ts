@@ -1,24 +1,9 @@
-import {
-    Component,
-    Output,
-    EventEmitter,
-    Input,
-    HostListener,
-    ViewChildren,
-    QueryList,
-    HostBinding,
-    Inject,
-    LOCALE_ID,
-    booleanAttribute,
-    ElementRef,
-    ChangeDetectorRef,
-    ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, Output, EventEmitter, Input, HostListener, ViewChildren, QueryList, HostBinding, booleanAttribute, ElementRef, ChangeDetectorRef, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TitleCasePipe } from '@angular/common';
 import { CalendarSelection, ScrollDirection } from '../../calendar/calendar';
 import { IgxDayItemComponent } from './day-item.component';
-import { CalendarDay, DateRangeType, PlatformUtil, areSameMonth, generateMonth, getClosestActiveDate, getNextActiveDate, getPreviousActiveDate, intoChunks, isDateInRanges } from 'igniteui-angular/core';
+import { CalendarDay, DateRangeType, areSameMonth, generateMonth, getClosestActiveDate, getNextActiveDate, getPreviousActiveDate, intoChunks, isDateInRanges } from 'igniteui-angular/core';
 import { IgxCalendarBaseDirective } from '../calendar-base';
 import { IViewChangingEventArgs } from './days-view.interface';
 
@@ -38,6 +23,9 @@ let NEXT_ID = 0;
     imports: [IgxDayItemComponent, TitleCasePipe]
 })
 export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
+    protected el = inject(ElementRef);
+    public override cdr = inject(ChangeDetectorRef);
+
     #standalone = true;
 
     /**
@@ -186,18 +174,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     private _hideLeadingDays: boolean;
     private _hideTrailingDays: boolean;
     private _showActiveDay: boolean;
-
-    /**
-     * @hidden
-     */
-    constructor(
-        platform: PlatformUtil,
-        @Inject(LOCALE_ID) _localeId: string,
-        protected el: ElementRef,
-        public override cdr: ChangeDetectorRef,
-    ) {
-        super(platform, _localeId, null, cdr);
-    }
 
     /**
      * @hidden
