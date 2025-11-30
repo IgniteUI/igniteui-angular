@@ -1,0 +1,109 @@
+<section class="sample-content">
+
+    <!-- Sample 1: Basic Breadcrumb Usage -->
+    <article class="sample-column">
+        <h4 class="sample-title">Basic Breadcrumb</h4>
+        <p class="sample-description">Simple breadcrumb navigation with icons and disabled current page.</p>
+        <div class="breadcrumb-sample">
+            <igx-breadcrumb>
+                <igx-breadcrumb-item [routerLink]="['/home']" icon="home">Home</igx-breadcrumb-item>
+                <igx-breadcrumb-item [routerLink]="['/products']">Products</igx-breadcrumb-item>
+                <igx-breadcrumb-item [routerLink]="['/products', 'electronics']">Electronics</igx-breadcrumb-item>
+                <igx-breadcrumb-item [disabled]="true">Laptops</igx-breadcrumb-item>
+            </igx-breadcrumb>
+        </div>
+    </article>
+
+    <!-- Sample 2: Breadcrumb with Custom Separator -->
+    <article class="sample-column">
+        <h4 class="sample-title">Custom Separator</h4>
+        <p class="sample-description">Breadcrumb with a custom separator character.</p>
+        <div class="breadcrumb-sample">
+            <igx-breadcrumb separator="/">
+                <igx-breadcrumb-item [routerLink]="['/dashboard']">Dashboard</igx-breadcrumb-item>
+                <igx-breadcrumb-item [routerLink]="['/settings']">Settings</igx-breadcrumb-item>
+                <igx-breadcrumb-item [routerLink]="['/settings', 'account']">Account</igx-breadcrumb-item>
+                <igx-breadcrumb-item [disabled]="true">Profile</igx-breadcrumb-item>
+            </igx-breadcrumb>
+        </div>
+    </article>
+
+    <!-- Sample 3: Breadcrumb with Template Separator -->
+    <article class="sample-column">
+        <h4 class="sample-title">Icon Separator Template</h4>
+        <p class="sample-description">Breadcrumb with a custom icon as separator using ng-template.</p>
+        <div class="breadcrumb-sample">
+            <igx-breadcrumb>
+                <ng-template igxBreadcrumbSeparator>
+                    <igx-icon>chevron_right</igx-icon>
+                </ng-template>
+                <igx-breadcrumb-item [routerLink]="['/']" icon="home">Home</igx-breadcrumb-item>
+                <igx-breadcrumb-item [routerLink]="['/catalog']">Catalog</igx-breadcrumb-item>
+                <igx-breadcrumb-item [routerLink]="['/catalog', 'books']">Books</igx-breadcrumb-item>
+                <igx-breadcrumb-item [disabled]="true">Fiction</igx-breadcrumb-item>
+            </igx-breadcrumb>
+        </div>
+    </article>
+
+    <!-- Sample 4: Breadcrumb with Overflow/Collapse -->
+    <article class="sample-column full-width">
+        <h4 class="sample-title">Collapsed Items (Overflow)</h4>
+        <p class="sample-description">Long breadcrumb trail with collapsed middle items. Shows first item and last 2 items.</p>
+        <div class="breadcrumb-sample">
+            <igx-breadcrumb [maxItems]="4" [itemsBeforeCollapse]="1" [itemsAfterCollapse]="2">
+                <igx-breadcrumb-item [routerLink]="['/home']" icon="home">Home</igx-breadcrumb-item>
+                <igx-breadcrumb-item [routerLink]="['/products']">Products</igx-breadcrumb-item>
+                <igx-breadcrumb-item [routerLink]="['/products', 'electronics']">Electronics</igx-breadcrumb-item>
+                <igx-breadcrumb-item [routerLink]="['/products', 'electronics', 'laptops']">Laptops</igx-breadcrumb-item>
+                <igx-breadcrumb-item [routerLink]="['/products', 'electronics', 'laptops', 'gaming']">Gaming</igx-breadcrumb-item>
+                <igx-breadcrumb-item [disabled]="true">ASUS ROG Strix</igx-breadcrumb-item>
+            </igx-breadcrumb>
+        </div>
+    </article>
+
+    <!-- Sample 5: Breadcrumb with Links (standard href) -->
+    <article class="sample-column">
+        <h4 class="sample-title">Standard Links (href)</h4>
+        <p class="sample-description">Breadcrumb using standard href links instead of router links.</p>
+        <div class="breadcrumb-sample">
+            <igx-breadcrumb>
+                <igx-breadcrumb-item link="https://www.infragistics.com">Infragistics</igx-breadcrumb-item>
+                <igx-breadcrumb-item link="https://www.infragistics.com/products">Products</igx-breadcrumb-item>
+                <igx-breadcrumb-item [disabled]="true">Ignite UI</igx-breadcrumb-item>
+            </igx-breadcrumb>
+        </div>
+    </article>
+
+    <!-- Sample 6: Dynamic Breadcrumb -->
+    <article class="sample-column full-width">
+        <h4 class="sample-title">Dynamic Breadcrumb (Data-driven)</h4>
+        <p class="sample-description">Breadcrumb items generated from data array.</p>
+        <div class="breadcrumb-sample">
+            <igx-breadcrumb>
+                @for (item of breadcrumbItems; track item.label; let last = $last) {
+                    <igx-breadcrumb-item 
+                        [link]="item.link" 
+                        [icon]="item.icon" 
+                        [disabled]="item.disabled || last">
+                        {{ item.label }}
+                    </igx-breadcrumb-item>
+                }
+            </igx-breadcrumb>
+        </div>
+    </article>
+
+    <!-- Sample 7: Styled Breadcrumb -->
+    <article class="sample-column full-width">
+        <h4 class="sample-title">Custom Styled Breadcrumb</h4>
+        <p class="sample-description">Breadcrumb with custom CSS styling applied.</p>
+        <div class="breadcrumb-sample styled-breadcrumb">
+            <igx-breadcrumb separator="•">
+                <igx-breadcrumb-item [routerLink]="['/']" icon="store">Store</igx-breadcrumb-item>
+                <igx-breadcrumb-item [routerLink]="['/category']">Category</igx-breadcrumb-item>
+                <igx-breadcrumb-item [routerLink]="['/category', 'subcategory']">Subcategory</igx-breadcrumb-item>
+                <igx-breadcrumb-item [disabled]="true">Current Product</igx-breadcrumb-item>
+            </igx-breadcrumb>
+        </div>
+    </article>
+
+</section>
