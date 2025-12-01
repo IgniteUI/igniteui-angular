@@ -1,4 +1,4 @@
-import { Component, DoCheck, EventEmitter, HostBinding, Inject, Input, IterableDiffer, IterableDiffers, Output, Pipe, PipeTransform, QueryList, ViewChildren, booleanAttribute, forwardRef } from '@angular/core';
+import { Component, DoCheck, EventEmitter, HostBinding, Input, IterableDiffer, IterableDiffers, Output, Pipe, PipeTransform, QueryList, ViewChildren, booleanAttribute, forwardRef, inject } from '@angular/core';
 import { ColumnDisplayOrder } from '../common/enums';
 import { GridType } from '../common/grid.interface';
 import { IColumnToggledEventArgs } from '../common/events';
@@ -22,6 +22,8 @@ let NEXT_ID = 0;
     imports: [IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxCheckboxComponent, IgxButtonDirective, IgxRippleDirective, forwardRef(() => IgxColumnActionEnabledPipe), forwardRef(() => IgxFilterActionColumnsPipe), forwardRef(() => IgxSortActionColumnsPipe)]
 })
 export class IgxColumnActionsComponent implements DoCheck {
+    private differs = inject(IterableDiffers);
+
 
     /**
      * Gets/Sets the grid to provide column actions for.
@@ -160,7 +162,7 @@ export class IgxColumnActionsComponent implements DoCheck {
      */
     private _id = `igx-column-actions-${NEXT_ID++}`;
 
-    constructor(private differs: IterableDiffers) {
+    constructor() {
         this._differ = this.differs.find([]).create(this.trackChanges);
     }
 
@@ -389,8 +391,8 @@ export class IgxColumnActionsComponent implements DoCheck {
     standalone: true
 })
 export class IgxColumnActionEnabledPipe implements PipeTransform {
+    protected columnActions = inject<IgxColumnActionsComponent>(IgxColumnActionsComponent);
 
-    constructor(@Inject(IgxColumnActionsComponent) protected columnActions: IgxColumnActionsComponent) { }
 
     public transform(
         collection: ColumnType[],
@@ -418,8 +420,8 @@ export class IgxColumnActionEnabledPipe implements PipeTransform {
     standalone: true
 })
 export class IgxFilterActionColumnsPipe implements PipeTransform {
+    protected columnActions = inject<IgxColumnActionsComponent>(IgxColumnActionsComponent);
 
-    constructor(@Inject(IgxColumnActionsComponent) protected columnActions: IgxColumnActionsComponent) { }
 
     public transform(collection: ColumnType[], filterCriteria: string, _pipeTrigger: number): ColumnType[] {
         if (!collection) {

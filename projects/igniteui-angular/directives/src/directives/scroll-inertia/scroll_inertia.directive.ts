@@ -1,4 +1,4 @@
-import { Directive, Input, ElementRef, NgZone, OnInit, OnDestroy } from '@angular/core';
+import { Directive, Input, ElementRef, NgZone, OnInit, OnDestroy, inject } from '@angular/core';
 
 /**
  * @hidden
@@ -8,6 +8,9 @@ import { Directive, Input, ElementRef, NgZone, OnInit, OnDestroy } from '@angula
     standalone: true
 })
 export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
+    private element = inject(ElementRef);
+    private _zone = inject(NgZone);
+
 
     @Input()
     public IgxScrollInertiaDirection: string;
@@ -59,8 +62,6 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     private parentElement;
     private baseDeltaMultiplier = 1 / 120;
     private firefoxDeltaMultiplier = 1 / 30;
-
-    constructor(private element: ElementRef, private _zone: NgZone) { }
 
     public ngOnInit(): void {
         this._zone.runOutsideAngular(() => {

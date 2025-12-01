@@ -4,7 +4,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { ViewChild, Component, DebugElement } from '@angular/core';
-import { IgxColumnLayoutComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular/grids/core';
+import { IgxColumnLayoutComponent, IgxGridMRLNavigationService, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular/grids/core';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../../test-utils/grid-functions.spec';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
@@ -35,6 +35,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 ColumnLayoutHidingTestComponent,
                 ColumnLayoutGroupingTestComponent,
                 ColumnLayoutResizingTestComponent
+            ],
+            providers: [
+                IgxGridMRLNavigationService
             ]
         }).compileComponents();
     }));

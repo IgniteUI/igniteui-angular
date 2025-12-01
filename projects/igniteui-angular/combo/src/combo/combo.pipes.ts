@@ -1,4 +1,4 @@
-import { Inject, Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { IComboFilteringOptions, IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { SortingDirection } from 'igniteui-angular/core';
 
@@ -32,8 +32,8 @@ export class IgxComboFilteringPipe implements PipeTransform {
     standalone: true
 })
 export class IgxComboGroupingPipe implements PipeTransform {
+    public combo = inject<IgxComboBase>(IGX_COMBO_COMPONENT);
 
-    constructor(@Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) { }
 
     public transform(collection: any[], groupKey: any, valueKey: any, sortingDirection: SortingDirection, compareCollator: Intl.Collator) {
         // TODO: should filteredData be changed here?
