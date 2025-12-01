@@ -42,5 +42,19 @@
                 }
             </li>
         }
+
+        @if (exportPDF) {
+            <li #btnExportPdf id="btnExportPdf" class="igx-grid-toolbar__dd-list-items"
+                igxRipple (click)="exportClicked('pdf', toggleRef)">
+                <span #pdf>
+                    <ng-content select=[pdfText],pdf-text></ng-content>
+                </span>
+                @if (!pdf.childNodes.length) {
+                    <pdf-text>
+                        {{ grid?.resourceStrings.igx_grid_toolbar_exporter_pdf_entry_text }}
+                    </pdf-text>
+                }
+            </li>
+        }
     </ul>
 </div>

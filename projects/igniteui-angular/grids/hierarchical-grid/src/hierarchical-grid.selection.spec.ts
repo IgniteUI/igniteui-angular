@@ -12,7 +12,7 @@ import {
     IgxHierGridExternalAdvancedFilteringComponent
 } from '../../../test-utils/hierarchical-grid-components.spec';
 import { GridSelectionFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
-import { CellType, GridSelectionMode } from 'igniteui-angular/grids/core';
+import { CellType, GridSelectionMode, IgxGridNavigationService } from 'igniteui-angular/grids/core';
 import { QueryList } from '@angular/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
@@ -35,6 +35,9 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 IgxHierarchicalGridCustomSelectorsComponent,
                 IgxHierarchicalGridRowSelectionNoTransactionsComponent,
                 IgxHierGridExternalAdvancedFilteringComponent,
+            ],
+            providers: [
+                IgxGridNavigationService
             ]
         }).compileComponents();
     }))
