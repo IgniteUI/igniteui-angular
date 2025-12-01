@@ -153,6 +153,7 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
 })
 export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnInit, AfterContentInit,
     PivotGridType, AfterViewInit, OnChanges {
+    public override readonly gridAPI = inject<GridBaseAPIService<IgxGridBaseDirective & GridType>>(GridBaseAPIService);
     public override navigation = inject(IgxPivotGridNavigationService);
     protected override colResizingService = inject(IgxPivotColumnResizingService);
 
