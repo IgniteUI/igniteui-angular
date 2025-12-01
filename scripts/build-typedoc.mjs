@@ -48,7 +48,7 @@ const CONFIG = {
     name: "Ignite UI for Angular",
     readme: "none",
     out: OUT_DIR,
-    router: "structure",
+    router: "kind",
     logLevel: "Verbose",
     tsconfig: ROOT("tsconfig.typedoc.json")
 };
