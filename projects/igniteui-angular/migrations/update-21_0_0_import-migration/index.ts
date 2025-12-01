@@ -719,6 +719,11 @@ function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.Sou
     const importPath = node.moduleSpecifier.text;
     const namedBindings = node.importClause.namedBindings;
 
+    // Only process main entry imports (not sub-entry points which igNamedImportFilter will allow)
+    if (importPath !== IG_PACKAGE_NAME && importPath !== IG_LICENSED_PACKAGE_NAME) {
+        return null;
+    }
+
     // Group imports by entry point
     const entryPointGroups = new Map<string, string[]>();
 
