@@ -676,8 +676,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     @Input()
-    public override get pagingMode() {
-        return;
+    public override get pagingMode(): GridPagingMode {
+        return 'local';
     }
 
     public override set pagingMode(_val: GridPagingMode) {
@@ -688,8 +688,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @WatchChanges()
     @Input({ transform: booleanAttribute })
-    public override get hideRowSelectors() {
-        return;
+    public override get hideRowSelectors(): boolean {
+        return false;
     }
 
     public override set hideRowSelectors(_value: boolean) {
@@ -733,7 +733,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @Input({ transform: booleanAttribute })
     public override get rowDraggable(): boolean {
-        return;
+        return false;
     }
 
 
@@ -789,7 +789,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @Input()
     public override get perPage(): number {
-        return;
+        return 0;
     }
 
     public override set perPage(_val: number) {
@@ -894,7 +894,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /**
-     * @hidden @interal
+     * @hidden @internal
      */
     @Input()
     public override get summaryCalculationMode() {
@@ -905,7 +905,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /**
-     * @hidden @interal
+     * @hidden @internal
      */
     @Input({ transform: booleanAttribute })
     public override get showSummaryOnCollapse() {
@@ -918,15 +918,15 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public override get hiddenColumnsCount() {
-        return null;
+    public override get hiddenColumnsCount(): number {
+        return 0;
     }
 
     /**
      * @hidden @internal
      */
-    public override get pinnedColumnsCount() {
-        return null;
+    public override get pinnedColumnsCount(): number {
+        return 0;
     }
 
     /**
@@ -934,7 +934,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @Input({ transform: booleanAttribute })
     public override get batchEditing(): boolean {
-        return;
+        return false;
     }
 
     public override set batchEditing(_val: boolean) {
@@ -1276,7 +1276,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     public override isRecordPinnedByIndex(_rowIndex: number) {
-        return null;
+        return false;
     }
 
     /**
@@ -1991,9 +1991,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /** @hidden @internal */
-    public override get activeDescendant() {
+    public override get activeDescendant(): string | undefined {
         if (this.navigation.isRowHeaderActive || this.navigation.isRowDimensionHeaderActive) {
-            return null;
+            return;
         }
         return super.activeDescendant;
     }
@@ -2015,7 +2015,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return activeHeader ? `${this.id}_${activeHeader.title}` : null;
     }
 
-    protected resolveToggle(groupColumn: IgxColumnComponent, state: boolean) {
+    protected resolveToggle(groupColumn: ColumnType, state: boolean) {
         if (!groupColumn) return;
         groupColumn.hidden = state;
         this.columnGroupStates.set(groupColumn.field, state);
