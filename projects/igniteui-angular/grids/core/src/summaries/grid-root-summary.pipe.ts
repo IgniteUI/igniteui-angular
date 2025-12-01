@@ -1,4 +1,4 @@
-import { Inject, Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 
 @Pipe({
@@ -6,8 +6,8 @@ import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
     standalone: true
 })
 export class IgxSummaryDataPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public transform(id: string, trigger = 0) {

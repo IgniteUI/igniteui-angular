@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { DateRangeDescriptor, DateRangeType } from 'igniteui-webcomponents';
 import { ScrollDirection } from "../calendar";
+import { KeyboardNavigationService } from '../calendar.services';
 import { CalendarDay } from 'igniteui-angular/core';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 
@@ -15,6 +16,9 @@ describe("Days View Component", () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [InitDaysViewComponent],
+            providers: [
+                KeyboardNavigationService
+            ]
         }).compileComponents();
     }));
 

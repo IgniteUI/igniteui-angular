@@ -2,7 +2,6 @@ import { IScrollStrategy } from './IScrollStrategy';
 import { IgxOverlayService } from '../overlay';
 
 export abstract class ScrollStrategy implements IScrollStrategy {
-    constructor() { }
     /**
      * Initializes the strategy. Should be called once
      *

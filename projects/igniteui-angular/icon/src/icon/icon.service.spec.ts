@@ -276,9 +276,11 @@ class IconRefComponent { }
     imports: [IgxIconComponent]
 })
 class IconWithThemeTokenComponent {
+    public iconService = inject(IgxIconService);
+
     public themeToken = inject(THEME_TOKEN);
 
-    constructor(public iconService: IgxIconService) {
+    constructor() {
         this.iconService.setIconRef('expand_more', 'default', { family: 'material', name: 'home' });
     }
 

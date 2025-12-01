@@ -1,6 +1,6 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, inject } from '@angular/core';
 
-import { GridType, IGX_GRID_BASE, PivotGridType, PivotRowLayoutType, PivotUtil } from 'igniteui-angular/grids/core';
+import { PivotGridType, PivotRowLayoutType, PivotUtil } from 'igniteui-angular/grids/core';
 
 import { IgxGridHeaderComponent } from 'igniteui-angular/grids/core';
 import { IgxPivotColumnResizingService } from 'igniteui-angular/grids/core';
@@ -20,15 +20,13 @@ import { ISortingExpression, SortingDirection } from 'igniteui-angular/core';
     imports: [IgxIconComponent, NgTemplateOutlet, NgClass, SortingIndexPipe]
 })
 export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent implements AfterViewInit {
+    public override colResizingService = inject(IgxPivotColumnResizingService);
+    public refInstance = inject(ElementRef<HTMLElement>);
+
     private pivotGrid: PivotGridType;
 
-    constructor(
-        @Inject(IGX_GRID_BASE) grid: GridType,
-        public override colResizingService: IgxPivotColumnResizingService,
-        cdr: ChangeDetectorRef,
-        public refInstance: ElementRef<HTMLElement>
-    ) {
-        super(grid, colResizingService, cdr, refInstance);
+    constructor() {
+        super();
 
         this.pivotGrid = this.grid as PivotGridType;
         this.pivotGrid.dimensionsSortingExpressionsChange

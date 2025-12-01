@@ -1,4 +1,4 @@
-import { Inject, Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { GridType, IGX_GRID_BASE } from 'igniteui-angular/grids/core';
 import { cloneArray, cloneHierarchicalArray, DataUtil, IGroupingExpression, ISortingExpression, TransactionType, IGridSortingStrategy, ITreeGridRecord } from 'igniteui-angular/core';
 import { IgxAddRow } from 'igniteui-angular/grids/core';
@@ -11,8 +11,8 @@ import { IgxAddRow } from 'igniteui-angular/grids/core';
     standalone: true
 })
 export class IgxTreeGridHierarchizingPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any[], primaryKey: string, foreignKey: string, childDataKey: string, _: number): ITreeGridRecord[] {
         let hierarchicalRecords: ITreeGridRecord[] = [];
@@ -142,8 +142,8 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
     standalone: true
 })
 export class IgxTreeGridFlatteningPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: ITreeGridRecord[],
         expandedLevels: number, expandedStates: Map<any, boolean>, _: number): any[] {
@@ -194,8 +194,8 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
     standalone: true
 })
 export class IgxTreeGridSortingPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(
         hierarchicalData: ITreeGridRecord[],
@@ -236,8 +236,8 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
     standalone: true
 })
 export class IgxTreeGridPagingPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: ITreeGridRecord[], enabled: boolean, page = 0, perPage = 15, _: number): ITreeGridRecord[] {
         if (!enabled || this.grid.pagingMode !== 'local') {
@@ -265,9 +265,8 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
     standalone: true
 })
 export class IgxTreeGridTransactionPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any[], _: number): any[] {
 
@@ -312,8 +311,8 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
     standalone: true
 })
 export class IgxTreeGridNormalizeRecordsPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(_: any[], __: number): any[] {
         const primaryKey = this.grid.primaryKey;
@@ -335,8 +334,8 @@ export class IgxTreeGridNormalizeRecordsPipe implements PipeTransform {
     standalone: true
 })
 export class IgxTreeGridAddRowPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any, isPinned = false, _pipeTrigger: number) {
         if (!this.grid.rowEditable || !this.grid.crudService.row || !this.grid.crudService.row.isAddRow ||
