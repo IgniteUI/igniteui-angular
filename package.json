@@ -155,23 +155,11 @@
     "typescript": "5.9.3"
   },
   "overrides": {
-    "sassdoc": {
-      "update-notifier": {
-        "latest-version": {
-          "package-json": {
-            "got": "^11.8.6"
-          }
-        }
-      },
-      "sassdoc-theme-default": {
-        "html-minifier": "npm:html-minifier-terser@^7.0.0",
-        "sassdoc-extras": {
-          "marked": "^4.2.5"
-        }
-      },
-      "sass-convert": {
-        "semver-regex": "^4.0.5"
-      }
-    }
+    "got": "^11.8.6",
+    "html-minifier": "npm:html-minifier-terser@^7.0.0",
+    "sassdoc-extras": {
+      "marked": "^4.2.5"
+    },
+    "semver-regex": "^4.0.5"
   }
 }
