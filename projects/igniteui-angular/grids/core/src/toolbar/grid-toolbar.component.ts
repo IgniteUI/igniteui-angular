@@ -1,13 +1,4 @@
-import {
-    Component,
-    ContentChild,
-    ElementRef,
-    HostBinding,
-    Inject,
-    Input,
-    OnDestroy,
-    booleanAttribute
-} from '@angular/core';
+import { Component, ContentChild, ElementRef, HostBinding, Input, OnDestroy, booleanAttribute, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { IgxGridToolbarActionsComponent } from './common';
@@ -41,6 +32,10 @@ import { IgxIconService } from 'igniteui-angular/icon';
     imports: [IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, NgTemplateOutlet, IgxLinearProgressBarComponent]
 })
 export class IgxGridToolbarComponent implements OnDestroy {
+    private api = inject<GridServiceType>(IGX_GRID_SERVICE_BASE);
+    private iconService = inject(IgxIconService);
+    private element = inject<ElementRef<HTMLElement>>(ElementRef);
+
 
     /**
      * When enabled, shows the indeterminate progress bar.
@@ -96,11 +91,7 @@ export class IgxGridToolbarComponent implements OnDestroy {
     protected _grid: GridType;
     protected sub: Subscription;
 
-    constructor(
-        @Inject(IGX_GRID_SERVICE_BASE) private api: GridServiceType,
-        private iconService: IgxIconService,
-        private element: ElementRef<HTMLElement>
-    ) {
+    constructor() {
         this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons', true);
         this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons', true);
     }

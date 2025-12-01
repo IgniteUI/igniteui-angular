@@ -1,31 +1,28 @@
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     ContentChild,
     Directive,
     ElementRef,
     EventEmitter,
     forwardRef,
-    Host,
     HostBinding,
-    Inject,
     Input,
     OnDestroy,
-    Optional,
     Output,
     TemplateRef,
     ViewChild,
     ViewRef,
-    DOCUMENT
+    DOCUMENT,
+    inject
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { GridSelectionMode } from '../../common/enums';
 import { formatCurrency, formatDate, formatNumber, formatPercent, getLocaleCurrencyCode, NgClass } from '@angular/common';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem, generateExpressionsList } from './common';
-import { IGX_GRID_BASE } from '../../common/grid.interface';
+import { GridType, IGX_GRID_BASE } from '../../common/grid.interface';
 import { IgxExcelStyleSearchComponent } from './excel-style-search.component';
 import { IgxExcelStyleConditionalFilterComponent } from './excel-style-conditional-filter.component';
 import { IgxExcelStyleClearFiltersComponent } from './excel-style-clear-filters.component';
@@ -35,7 +32,7 @@ import { IgxExcelStylePinningComponent } from './excel-style-pinning.component';
 import { IgxExcelStyleMovingComponent } from './excel-style-moving.component';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { IgxExcelStyleHeaderComponent } from './excel-style-header.component';
-import { ColumnType, FilteringExpressionsTree, GridColumnDataType, GridTypeBase, IFilteringExpressionsTree, IgxFilterItem, IgxOverlayService, isTree, PlatformUtil, SortingDirection } from 'igniteui-angular/core';
+import { ColumnType, FilteringExpressionsTree, GridColumnDataType, GridTypeBase, IFilteringExpressionsTree, IgxFilterItem, IgxOverlayService, isTree, SortingDirection } from 'igniteui-angular/core';
 
 @Directive({
     selector: 'igx-excel-style-column-operations,[igxExcelStyleColumnOperations]',
@@ -68,6 +65,9 @@ export class IgxExcelStyleFilterOperationsTemplateDirective { }
     imports: [IgxExcelStyleHeaderComponent, IgxExcelStyleSortingComponent, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleHidingComponent, IgxExcelStyleSelectingComponent, IgxExcelStyleClearFiltersComponent, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleSearchComponent, NgClass]
 })
 export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent implements AfterViewInit, OnDestroy {
+    private document = inject(DOCUMENT);
+    protected gridAPI? = inject<GridType>(IGX_GRID_BASE, { host: true, optional: true });
+
 
     /**
      * @hidden @internal
@@ -274,17 +274,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
      */
     public get grid(): GridTypeBase {
         return this.column?.grid ?? this.gridAPI;
-    }
-
-    constructor(
-        cdr: ChangeDetectorRef,
-        element: ElementRef<HTMLElement>,
-        platform: PlatformUtil,
-        @Inject(DOCUMENT)
-        private document: any,
-        @Host() @Optional() @Inject(IGX_GRID_BASE) protected gridAPI?: GridTypeBase,
-    ) {
-        super(cdr, element, platform);
     }
 
     /**

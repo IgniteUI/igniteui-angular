@@ -1,13 +1,12 @@
 import {
-    Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener,
-    Input, EventEmitter, booleanAttribute, TemplateRef, ComponentRef, Renderer2,
+    Directive, OnInit, OnDestroy, Output, ViewContainerRef, HostListener,
+    Input, EventEmitter, booleanAttribute, inject, TemplateRef, ComponentRef, Renderer2,
     EnvironmentInjector,
     createComponent,
     AfterViewInit,
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IgxNavigationService } from 'igniteui-angular/core';
 import { IBaseEventArgs } from 'igniteui-angular/core';
 import { PositionSettings } from 'igniteui-angular/core';
 import { IgxToggleActionDirective } from '../toggle/toggle.directive';
@@ -47,6 +46,10 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
     standalone: true
 })
 export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit, AfterViewInit, OnDestroy {
+    private _viewContainerRef = inject(ViewContainerRef);
+    private _renderer = inject(Renderer2);
+    private _envInjector = inject(EnvironmentInjector);
+
     /**
      * Gets/sets the amount of milliseconds that should pass before showing the tooltip.
      *
@@ -247,7 +250,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     public override get target(): any {
         if (typeof this._target === 'string') {
-            return this._navigationService.get(this._target);
+            return this.navigationService.get(this._target);
         }
         return this._target;
     }
@@ -273,7 +276,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * ```
      */
     public get nativeElement() {
-        return this._element.nativeElement;
+        return this.element.nativeElement;
     }
 
     /**
@@ -331,16 +334,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     private _closeTemplate: TemplateRef<any>;
     private _sticky = false;
     private _positionSettings: PositionSettings = TooltipPositionSettings;
-
-    constructor(
-        private _element: ElementRef,
-        @Optional() private _navigationService: IgxNavigationService,
-        private _viewContainerRef: ViewContainerRef,
-        private _renderer: Renderer2,
-        private _envInjector: EnvironmentInjector
-    ) {
-        super(_element, _navigationService);
-    }
 
     /**
      * @hidden

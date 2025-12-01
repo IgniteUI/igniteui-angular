@@ -1,39 +1,8 @@
-import {
-    AfterContentInit,
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    ElementRef,
-    HostBinding,
-    Inject,
-    Input,
-    IterableDiffers,
-    LOCALE_ID,
-    NgZone,
-    OnInit,
-    Output,
-    Optional,
-    QueryList,
-    TemplateRef,
-    ViewChild,
-    ViewChildren,
-    ViewContainerRef,
-    Injector,
-    ContentChild,
-    createComponent,
-    EnvironmentInjector,
-    CUSTOM_ELEMENTS_SCHEMA,
-    booleanAttribute,
-    OnChanges,
-    SimpleChanges,
-    DOCUMENT
-} from '@angular/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, ElementRef, HostBinding, Input, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren, ContentChild, createComponent, CUSTOM_ELEMENTS_SCHEMA, booleanAttribute, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
 import { first, take, takeUntil } from 'rxjs/operators';
-import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxFilteringService, IgxGridValidationService, IgxPivotDateDimension, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotUISettings, IPivotValue, IValuesChange, PivotDimensionType, PivotRowLayoutType, PivotSummaryPosition, PivotUtil } from 'igniteui-angular/grids/core';
+import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxFilteringService, IgxGridNavigationService, IgxGridValidationService, IgxPivotDateDimension, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotUISettings, IPivotValue, IValuesChange, PivotDimensionType, PivotRowLayoutType, PivotSummaryPosition, PivotUtil } from 'igniteui-angular/grids/core';
 import { IgxGridSelectionService } from 'igniteui-angular/grids/core';
 import { GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, IgxColumnTemplateContext, PivotGridType, RowType } from 'igniteui-angular/grids/core';
 import { IgxGridCRUDService } from 'igniteui-angular/grids/core';
@@ -43,7 +12,7 @@ import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { FilterMode, GridPagingMode, GridSummaryPosition } from 'igniteui-angular/grids/core';
 import { WatchChanges } from 'igniteui-angular/grids/core';
-import { cloneArray, ColumnType, DataUtil, DefaultDataCloneStrategy, GridColumnDataType, GridSummaryCalculationMode, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringOperation, IFilteringStrategy, ISortingExpression, OverlaySettings, PlatformUtil, resizeObservable, ɵSize, SortingDirection, IgxOverlayOutletDirective } from 'igniteui-angular/core';
+import { cloneArray, ColumnType, DataUtil, DefaultDataCloneStrategy, GridColumnDataType, GridSummaryCalculationMode, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringOperation, IFilteringStrategy, ISortingExpression, OverlaySettings, resizeObservable, ɵSize, SortingDirection, IgxOverlayOutletDirective } from 'igniteui-angular/core';
 import {
     IGridEditEventArgs,
     ICellPosition,
@@ -64,9 +33,8 @@ import { DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from 'i
 import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective } from 'igniteui-angular/grids/core';
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
 import { IgxPivotColumnResizingService } from 'igniteui-angular/grids/core';
-import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from 'igniteui-angular/core';
+import { State, Transaction, TransactionService } from 'igniteui-angular/core';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
-import { IgxGridTransaction } from 'igniteui-angular/grids/core';
 import { GridBaseAPIService } from 'igniteui-angular/grids/core';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
 import { IgxPivotGridColumnResizerComponent } from 'igniteui-angular/grids/core';
@@ -82,7 +50,7 @@ import { IgxGridBodyDirective } from 'igniteui-angular/grids/core';
 import { IgxColumnResizingService } from 'igniteui-angular/grids/core';
 import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
-import { IForOfDataChangingEventArgs, IgxForOfScrollSyncService, IgxForOfSyncService, IgxGridForOfDirective, IgxTemplateOutletDirective, IgxTextHighlightService, IgxToggleDirective } from 'igniteui-angular/directives';
+import { IForOfDataChangingEventArgs, IgxForOfScrollSyncService, IgxForOfSyncService, IgxGridForOfDirective, IgxTemplateOutletDirective, IgxToggleDirective } from 'igniteui-angular/directives';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -140,6 +108,7 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
         { provide: IGX_GRID_SERVICE_BASE, useClass: GridBaseAPIService },
         { provide: IGX_GRID_BASE, useExisting: IgxPivotGridComponent },
         { provide: IgxFilteringService, useClass: IgxPivotFilteringService },
+        IgxGridNavigationService,
         IgxPivotGridNavigationService,
         IgxPivotColumnResizingService,
         IgxForOfSyncService,
@@ -184,6 +153,9 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
 })
 export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnInit, AfterContentInit,
     PivotGridType, AfterViewInit, OnChanges {
+    public override readonly gridAPI = inject<GridBaseAPIService<IgxGridBaseDirective & GridType>>(GridBaseAPIService);
+    public override navigation = inject(IgxPivotGridNavigationService);
+    protected override colResizingService = inject(IgxPivotColumnResizingService);
 
     /**
      * Emitted when the dimension collection is changed via the grid chip area.
@@ -704,8 +676,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     @Input()
-    public override get pagingMode() {
-        return;
+    public override get pagingMode(): GridPagingMode {
+        return 'local';
     }
 
     public override set pagingMode(_val: GridPagingMode) {
@@ -716,8 +688,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @WatchChanges()
     @Input({ transform: booleanAttribute })
-    public override get hideRowSelectors() {
-        return;
+    public override get hideRowSelectors(): boolean {
+        return false;
     }
 
     public override set hideRowSelectors(_value: boolean) {
@@ -761,7 +733,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @Input({ transform: booleanAttribute })
     public override get rowDraggable(): boolean {
-        return;
+        return false;
     }
 
 
@@ -817,7 +789,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @Input()
     public override get perPage(): number {
-        return;
+        return 0;
     }
 
     public override set perPage(_val: number) {
@@ -922,7 +894,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /**
-     * @hidden @interal
+     * @hidden @internal
      */
     @Input()
     public override get summaryCalculationMode() {
@@ -933,7 +905,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /**
-     * @hidden @interal
+     * @hidden @internal
      */
     @Input({ transform: booleanAttribute })
     public override get showSummaryOnCollapse() {
@@ -946,15 +918,15 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public override get hiddenColumnsCount() {
-        return null;
+    public override get hiddenColumnsCount(): number {
+        return 0;
     }
 
     /**
      * @hidden @internal
      */
-    public override get pinnedColumnsCount() {
-        return null;
+    public override get pinnedColumnsCount(): number {
+        return 0;
     }
 
     /**
@@ -962,7 +934,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @Input({ transform: booleanAttribute })
     public override get batchEditing(): boolean {
-        return;
+        return false;
     }
 
     public override set batchEditing(_val: boolean) {
@@ -997,53 +969,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         });
 
         return selectedRowIds;
-    }
-
-    constructor(
-        validationService: IgxGridValidationService,
-        selectionService: IgxGridSelectionService,
-        colResizingService: IgxPivotColumnResizingService,
-        gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        transactionFactory: IgxFlatTransactionFactory,
-        elementRef: ElementRef<HTMLElement>,
-        zone: NgZone,
-        @Inject(DOCUMENT) document,
-        cdr: ChangeDetectorRef,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        injector: Injector,
-        envInjector: EnvironmentInjector,
-        public override navigation: IgxPivotGridNavigationService,
-        filteringService: IgxFilteringService,
-        textHighlightService: IgxTextHighlightService,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        summaryService: IgxGridSummaryService,
-        @Inject(LOCALE_ID) localeId: string,
-        platform: PlatformUtil,
-        @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>
-    ) {
-        super(
-            validationService,
-            selectionService,
-            colResizingService,
-            gridAPI,
-            transactionFactory,
-            elementRef,
-            zone,
-            document,
-            cdr,
-            differs,
-            viewRef,
-            injector,
-            envInjector,
-            navigation,
-            filteringService,
-            textHighlightService,
-            overlayService,
-            summaryService,
-            localeId,
-            platform,
-            _diTransactions);
     }
 
     /**
@@ -1351,7 +1276,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     public override isRecordPinnedByIndex(_rowIndex: number) {
-        return null;
+        return false;
     }
 
     /**
@@ -2066,9 +1991,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /** @hidden @internal */
-    public override get activeDescendant() {
+    public override get activeDescendant(): string | undefined {
         if (this.navigation.isRowHeaderActive || this.navigation.isRowDimensionHeaderActive) {
-            return null;
+            return;
         }
         return super.activeDescendant;
     }
@@ -2090,7 +2015,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return activeHeader ? `${this.id}_${activeHeader.title}` : null;
     }
 
-    protected resolveToggle(groupColumn: IgxColumnComponent, state: boolean) {
+    protected resolveToggle(groupColumn: ColumnType, state: boolean) {
         if (!groupColumn) return;
         groupColumn.hidden = state;
         this.columnGroupStates.set(groupColumn.field, state);

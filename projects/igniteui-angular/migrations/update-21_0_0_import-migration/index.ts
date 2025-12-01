@@ -5,6 +5,7 @@ import type {
     Tree
 } from '@angular-devkit/schematics';
 import * as ts from 'typescript';
+import { IG_PACKAGE_NAME, IG_LICENSED_PACKAGE_NAME, igNamedImportFilter } from '../common/tsUtils';
 
 const version = '21.0.0';
 
@@ -693,6 +694,7 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxDragLocation', 'directives'],
     ['IgxDropDirective', 'directives'],
     ['IgxDragDropModule', 'directives'],
+    ['IGX_DRAG_DROP_DIRECTIVES', 'directives'],
     ['IgxFocusTrapDirective', 'directives'],
     ['IgxToggleDirective', 'directives'],
     ['IgxToggleModule', 'directives'],
@@ -710,31 +712,17 @@ const TYPE_RENAMES = new Map<string, { newName: string, entryPoint: string }>([
 ]);
 
 function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.SourceFile): { start: number, end: number, replacement: string } | null {
-    const moduleSpecifier = node.moduleSpecifier;
-    if (!ts.isStringLiteral(moduleSpecifier)) {
+    if (!igNamedImportFilter(node)) {
         return null;
     }
 
-    const importPath = moduleSpecifier.text;
-
-    // Only process igniteui-angular imports (not already using entry points)
-    if (importPath !== 'igniteui-angular') {
-        return null;
-    }
-
-    const importClause = node.importClause;
-    if (!importClause || !importClause.namedBindings) {
-        return null;
-    }
-
-    if (!ts.isNamedImports(importClause.namedBindings)) {
-        return null;
-    }
+    const importPath = node.moduleSpecifier.text;
+    const namedBindings = node.importClause.namedBindings;
 
     // Group imports by entry point
     const entryPointGroups = new Map<string, string[]>();
 
-    for (const element of importClause.namedBindings.elements) {
+    for (const element of namedBindings.elements) {
         const name = element.name.text;
         const alias = element.propertyName?.text;
         const importName = alias || name;
@@ -768,7 +756,7 @@ function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.Sou
     const newImports: string[] = [];
     for (const [entryPoint, imports] of entryPointGroups) {
         const sortedImports = imports.sort();
-        newImports.push(`import { ${sortedImports.join(', ')} } from 'igniteui-angular/${entryPoint}';`);
+        newImports.push(`import { ${sortedImports.join(', ')} } from '${importPath}/${entryPoint}';`);
     }
 
     return {
@@ -799,7 +787,7 @@ function migrateFile(filePath: string, content: string): string {
 
                 // Track old type names that were imported
                 const moduleSpecifier = node.moduleSpecifier;
-                if (ts.isStringLiteral(moduleSpecifier) && moduleSpecifier.text === 'igniteui-angular') {
+                if (ts.isStringLiteral(moduleSpecifier) && (moduleSpecifier.text === IG_PACKAGE_NAME || moduleSpecifier.text === IG_LICENSED_PACKAGE_NAME)) {
                     const importClause = node.importClause;
                     if (importClause?.namedBindings && ts.isNamedImports(importClause.namedBindings)) {
                         for (const element of importClause.namedBindings.elements) {
@@ -876,8 +864,9 @@ export default function migrate(): Rule {
 
             const originalContent = content.toString();
 
-            // Check if file has igniteui-angular imports
-            if (!originalContent.includes("from 'igniteui-angular'") && !originalContent.includes('from "igniteui-angular"')) {
+            // Check if file has base igniteui-angular imports
+            if (!originalContent.includes(`from '${IG_PACKAGE_NAME}'`) && !originalContent.includes(`from "${IG_PACKAGE_NAME}"`) &&
+                !originalContent.includes(`from '${IG_LICENSED_PACKAGE_NAME}'`) && !originalContent.includes(`from "${IG_LICENSED_PACKAGE_NAME}"`)) {
                 return;
             }
 
