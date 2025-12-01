@@ -14,7 +14,7 @@ import { IgxTreeGridSelectionComponent } from '../../../test-utils/tree-grid-com
 import { IgxGridComponent } from './grid.component';
 import { IgxHierarchicalRowComponent } from '../../hierarchical-grid/src/hierarchical-row.component';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
-import { GridCellMergeMode, IgxColumnComponent } from 'igniteui-angular/grids/core';
+import { GridCellMergeMode, IgxColumnComponent, IgxGridMRLNavigationService, IgxGridNavigationService } from 'igniteui-angular/grids/core';
 
 describe('IgxGrid - Cell merging #grid', () => {
     let fix;
@@ -28,6 +28,10 @@ describe('IgxGrid - Cell merging #grid', () => {
             imports: [
                 NoopAnimationsModule, DefaultCellMergeGridComponent, ColumnLayoutTestComponent,
                 IgxHierarchicalGridTestBaseComponent, IgxTreeGridSelectionComponent
+            ],
+            providers: [
+                IgxGridMRLNavigationService,
+                IgxGridNavigationService
             ]
         }).compileComponents();
     }));

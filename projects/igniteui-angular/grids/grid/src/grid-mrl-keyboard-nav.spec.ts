@@ -8,7 +8,7 @@ import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../../test-utils/grid-functions.spec';
-import { CellType, IGridCellEventArgs, IgxColumnComponent } from 'igniteui-angular/grids/core';
+import { CellType, IGridCellEventArgs, IgxColumnComponent, IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 
@@ -22,7 +22,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, ColumnLayoutTestComponent]
+            imports: [NoopAnimationsModule, ColumnLayoutTestComponent],
+            providers: [IgxGridMRLNavigationService]
         }).compileComponents();
     }));
 
@@ -1465,7 +1466,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
                 setupGridScrollDetection(fix, fix.componentInstance.grid);
 
-                const [ _firstCell, _secondCell, thirdCell ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+                const [_firstCell, _secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
                 UIInteractions.simulateClickAndSelectEvent(thirdCell);
                 fix.detectChanges();
@@ -1906,7 +1907,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;
-                 fix.detectChanges();
+                fix.detectChanges();
 
                 // focus 3rd row, first cell
                 let cell = grid.gridAPI.get_cell_by_index(2, 'ContactName');
@@ -2371,7 +2372,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const secondBlock = fix.debugElement.query(By.css('igx-grid-row')).queryAll(By.css(CELL_BLOCK))[1];
                 const thirdBlock = fix.debugElement.query(By.css('igx-grid-row')).queryAll(By.css(CELL_BLOCK))[2];
 
-                const [secondCell, thirdCell, _fourthCell ] = thirdBlock.queryAll(By.css(CELL_CSS_CLASS));
+                const [secondCell, thirdCell, _fourthCell] = thirdBlock.queryAll(By.css(CELL_CSS_CLASS));
                 const firstCell = secondBlock.queryAll(By.css(CELL_CSS_CLASS))[0];
 
                 fix.componentInstance.grid.headerContainer.getScroll().scrollLeft = 500;
