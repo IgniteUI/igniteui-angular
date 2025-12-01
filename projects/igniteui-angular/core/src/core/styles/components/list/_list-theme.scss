@@ -69,7 +69,7 @@
         border-radius: var-get($theme, 'border-radius');
 
         @if $variant == 'bootstrap' {
-            border: rem(1px) solid var-get($theme, 'border-color');
+            border: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
         }
 
         &:focus-visible {
@@ -137,13 +137,10 @@
         justify-content: center;
         border-radius: var-get($theme, 'item-border-radius');
         color: var-get($theme, 'item-text-color');
+        border-bottom: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
 
-        @if $bootstrap-theme or $variant == 'fluent' {
-            border-bottom: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
-
-            &:last-of-type {
-                border-bottom: none;
-            }
+        &:last-of-type {
+            border-bottom: none;
         }
 
         &:hover {
@@ -283,6 +280,11 @@
         > igx-icon,
         > igc-icon {
             --component-size: #{if($variant == 'indigo', 2, var(--list-size))};
+        }
+
+        igx-icon,
+        igc-icon {
+            color: var-get($theme, 'item-thumbnail-color');
         }
 
         &:empty {
