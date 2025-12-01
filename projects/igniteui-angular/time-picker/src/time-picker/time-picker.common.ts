@@ -1,8 +1,8 @@
-import { ElementRef } from '@angular/core';
+import { ElementRef, InjectionToken } from '@angular/core';
 import { DatePartDeltas } from 'igniteui-angular/core';
 
 /** @hidden */
-export const IGX_TIME_PICKER_COMPONENT = 'IgxTimePickerComponentToken';
+export const IGX_TIME_PICKER_COMPONENT = new InjectionToken<IgxTimePickerBase>('IgxTimePickerComponentToken');
 
 /** @hidden */
 export interface IgxTimePickerBase {

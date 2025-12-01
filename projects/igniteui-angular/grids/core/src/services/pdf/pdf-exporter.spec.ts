@@ -143,20 +143,25 @@ describe('PDF Exporter', () => {
         const pageSizes = ['a3', 'a5', 'legal'];
         let completed = 0;
 
-        pageSizes.forEach(size => {
+        const exportNext = (index: number) => {
+            if (index >= pageSizes.length) {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(pageSizes.length);
+                done();
+                return;
+            }
+
             const opts = new IgxPdfExporterOptions('Test');
-            opts.pageSize = size as any;
+            opts.pageSize = pageSizes[index] as any;
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 completed++;
-                if (completed === pageSizes.length) {
-                    expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(pageSizes.length);
-                    done();
-                }
+                exportNext(completed);
             });
 
             exporter.exportData(SampleTestData.contactsData(), opts);
-        });
+        };
+
+        exportNext(0);
     });
 
     it('should export with different font sizes', (done) => {

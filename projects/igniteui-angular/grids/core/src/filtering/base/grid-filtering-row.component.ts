@@ -15,8 +15,7 @@ import {
     OnDestroy,
     InjectionToken,
     inject,
-    OnInit
-} from '@angular/core';
+    OnInit} from '@angular/core';
 import { IgxFilteringService } from '../grid-filtering.service';
 import { Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
@@ -70,6 +69,11 @@ export const INPUT_DEBOUNCE_TIME = /*@__PURE__*/new InjectionToken<number>('INPU
     ]
 })
 export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDestroy {
+    public filteringService = inject(IgxFilteringService);
+    public ref = inject<ElementRef<HTMLElement>>(ElementRef);
+    public cdr = inject(ChangeDetectorRef);
+    protected platform = inject(PlatformUtil);
+
     @Input()
     public get column(): ColumnType {
         return this._column;
@@ -213,13 +217,6 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
 
     private $destroyer = new Subject<void>();
     private readonly DEBOUNCE_TIME = inject(INPUT_DEBOUNCE_TIME);
-
-    constructor(
-        public filteringService: IgxFilteringService,
-        public ref: ElementRef<HTMLElement>,
-        public cdr: ChangeDetectorRef,
-        protected platform: PlatformUtil,
-    ) { }
 
     public ngOnInit(): void {
         this.inputSubject.pipe(

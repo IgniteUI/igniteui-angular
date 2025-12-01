@@ -1,29 +1,5 @@
 ﻿import { NgForOfContext } from '@angular/common';
-import {
-    ChangeDetectorRef,
-    ComponentRef,
-    Directive,
-    DoCheck,
-    EmbeddedViewRef,
-    EventEmitter,
-    Input,
-    IterableChanges,
-    IterableDiffer,
-    IterableDiffers,
-    NgZone,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Output,
-    SimpleChanges,
-    TemplateRef,
-    TrackByFunction,
-    ViewContainerRef,
-    AfterViewInit,
-    Inject,
-    booleanAttribute,
-    DOCUMENT
-} from '@angular/core';
+import { ChangeDetectorRef, ComponentRef, Directive, DoCheck, EmbeddedViewRef, EventEmitter, Input, IterableChanges, IterableDiffer, IterableDiffers, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, TemplateRef, TrackByFunction, ViewContainerRef, AfterViewInit, booleanAttribute, DOCUMENT, inject } from '@angular/core';
 
 import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
@@ -109,6 +85,15 @@ export abstract class IgxForOfToken<T, U extends T[] = T[]> {
     standalone: true
 })
 export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U> implements OnInit, OnChanges, DoCheck, OnDestroy, AfterViewInit {
+    private _viewContainer = inject(ViewContainerRef);
+    protected _template = inject<TemplateRef<NgForOfContext<T>>>(TemplateRef);
+    protected _differs = inject(IterableDiffers);
+    public cdr = inject(ChangeDetectorRef);
+    protected _zone = inject(NgZone);
+    protected syncScrollService = inject(IgxForOfScrollSyncService);
+    protected platformUtil = inject(PlatformUtil);
+    protected document = inject(DOCUMENT);
+
 
     /**
      * Sets the data to be rendered.
@@ -402,20 +387,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
     private get _isAtBottomIndex() {
         return this.igxForOf && this.state.startIndex + this.state.chunkSize > this.igxForOf.length;
-    }
-
-    constructor(
-        private _viewContainer: ViewContainerRef,
-        protected _template: TemplateRef<NgForOfContext<T>>,
-        protected _differs: IterableDiffers,
-        public cdr: ChangeDetectorRef,
-        protected _zone: NgZone,
-        protected syncScrollService: IgxForOfScrollSyncService,
-        protected platformUtil: PlatformUtil,
-        @Inject(DOCUMENT)
-        protected document: any,
-    ) {
-        super();
     }
 
     public verticalScrollHandler(event) {
@@ -1539,6 +1510,8 @@ export class IgxGridForOfContext<T, U extends T[] = T[]> extends IgxForOfContext
     standalone: true
 })
 export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirective<T, U> implements OnInit, OnChanges, DoCheck {
+    protected syncService = inject(IgxForOfSyncService);
+
     @Input()
     public set igxGridForOf(value: U & T[] | null) {
         this.igxForOf = value;
@@ -1592,19 +1565,6 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
      */
     @Output()
     public dataChanging = new EventEmitter<IForOfDataChangeEventArgs>();
-
-    constructor(
-        _viewContainer: ViewContainerRef,
-        _template: TemplateRef<NgForOfContext<T>>,
-        _differs: IterableDiffers,
-        cdr: ChangeDetectorRef,
-        _zone: NgZone,
-        _platformUtil: PlatformUtil,
-        @Inject(DOCUMENT) _document: any,
-        syncScrollService: IgxForOfScrollSyncService,
-        protected syncService: IgxForOfSyncService) {
-        super(_viewContainer, _template, _differs, cdr, _zone, syncScrollService, _platformUtil, _document);
-    }
 
     /**
      * @hidden @internal

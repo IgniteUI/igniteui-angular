@@ -10,6 +10,10 @@ import { IgxHierarchicalGridTestBaseComponent } from '../../../../../test-utils/
 import { IgxTreeGridSortingComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../../../../test-utils/tree-grid-components.spec';
 import { CustomSummariesComponent } from 'igniteui-angular/grids/grid/src/grid-summary.spec';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
+import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent } from '../../../../../test-utils/pivot-grid-samples.spec';
+import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
+import { PivotRowLayoutType } from 'igniteui-angular/grids/core';
+import { wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 
 describe('PDF Grid Exporter', () => {
     let exporter: IgxPdfExporterService;
@@ -19,7 +23,9 @@ describe('PDF Grid Exporter', () => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
-                GridIDNameJobTitleComponent
+                GridIDNameJobTitleComponent,
+                IgxPivotGridMultipleRowComponent,
+                IgxPivotGridTestComplexHierarchyComponent
             ]
         }).compileComponents();
     }));
@@ -387,5 +393,122 @@ describe('PDF Grid Exporter', () => {
         // Use smaller page size to force truncation
         options.pageSize = 'a5';
         exporter.export(grid, options);
+    });
+
+    describe('Pivot Grid PDF Export', () => {
+        let pivotGrid: IgxPivotGridComponent;
+        let fix;
+        beforeEach(async () => {
+            fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
+            fix.detectChanges();
+            await wait();
+
+            pivotGrid = fix.componentInstance.pivotGrid;
+        });
+
+        it('should export basic pivot grid', (done) => {
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(pivotGrid, options);
+        });
+
+        it('should export pivot grid with row headers', (done) => {
+            pivotGrid.pivotUI.showRowHeaders = true;
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(pivotGrid, options);
+        });
+
+        it('should export pivot grid with horizontal row layout', (done) => {
+            pivotGrid.pivotUI.showRowHeaders = true;
+            pivotGrid.pivotUI.rowLayout = PivotRowLayoutType.Horizontal;
+            pivotGrid.pivotConfiguration.rows = [{
+                memberName: 'ProductCategory',
+                memberFunction: (data) => data.ProductCategory,
+                enabled: true,
+                childLevel: {
+                    memberName: 'Country',
+                    enabled: true,
+                    childLevel: {
+                        memberName: 'Date',
+                        enabled: true
+                    }
+                }
+            }];
+            fix.detectChanges();
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+               expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+               done();
+            });
+
+            exporter.export(pivotGrid, options);
+        });
+
+        it('should export pivot grid with custom page size', (done) => {
+            options.pageSize = 'letter';
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(pivotGrid, options);
+        });
+
+        it('should export pivot grid with landscape orientation', (done) => {
+            options.pageOrientation = 'landscape';
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(pivotGrid, options);
+        });
+
+        it('should export pivot grid without table borders', (done) => {
+            options.showTableBorders = false;
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(pivotGrid, options);
+        });
+
+        it('should export pivot grid with custom font size', (done) => {
+            options.fontSize = 14;
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(pivotGrid, options);
+        });
+
+        it('should export hierarchical pivot grid', (done) => {
+            fix = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
+            fix.detectChanges();
+            fix.whenStable().then(() => {
+                pivotGrid = fix.componentInstance.pivotGrid;
+
+                exporter.exportEnded.pipe(first()).subscribe(() => {
+                    expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                    done();
+                });
+
+                exporter.export(pivotGrid, options);
+            });
+        });
     });
 });

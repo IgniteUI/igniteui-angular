@@ -1,18 +1,14 @@
 import { NgTemplateOutlet } from '@angular/common';
-import {
-    AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostListener, Inject, Injector,
-    Optional, Output, ViewChild, DOCUMENT
-} from '@angular/core';
+import { AfterViewInit, Component, DoCheck, EventEmitter, HostListener, Output, ViewChild, inject } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 
-import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil, IgxSelectionAPIService } from 'igniteui-angular/core';
+import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from 'igniteui-angular/core';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxForOfDirective } from 'igniteui-angular/directives';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxTextSelectionDirective } from 'igniteui-angular/directives';
-import { IgxIconService } from 'igniteui-angular/icon';
-import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IGX_COMBO_COMPONENT, IgxComboAddItemComponent, IgxComboAPIService, IgxComboBaseDirective, IgxComboDropDownComponent, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboItemComponent } from 'igniteui-angular/combo';
 import { IgxDropDownItemNavigationDirective } from 'igniteui-angular/drop-down';
@@ -61,6 +57,9 @@ export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventA
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxTextSelectionDirective, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxComboDropDownComponent, IgxDropDownItemNavigationDirective, IgxForOfDirective, IgxComboItemComponent, IgxComboAddItemComponent, IgxButtonDirective, IgxRippleDirective, IgxComboFilteringPipe, IgxComboGroupingPipe]
 })
 export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit, DoCheck {
+    private platformUtil = inject(PlatformUtil);
+    private formGroupDirective = inject(FormGroupDirective, { optional: true });
+
     /** @hidden @internal */
     @ViewChild(IgxComboDropDownComponent, { static: true })
     public dropdown: IgxComboDropDownComponent;
@@ -131,27 +130,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         return !!this.selectionService.get(this.id).size;
     }
 
-    constructor(elementRef: ElementRef,
-        cdr: ChangeDetectorRef,
-        selectionService: IgxSelectionAPIService,
-        comboAPI: IgxComboAPIService,
-        private platformUtil: PlatformUtil,
-        @Inject(DOCUMENT) document: any,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
-        @Optional() _injector: Injector,
-        @Optional() @Inject(IgxIconService) _iconService?: IgxIconService,
-        @Optional() private formGroupDirective?: FormGroupDirective
-    ) {
-        super(
-            elementRef,
-            cdr,
-            selectionService,
-            comboAPI,
-            document,
-            _inputGroupType,
-            _injector,
-            _iconService
-        );
+    constructor() {
+        super();
         this.comboAPI.register(this);
     }
 
@@ -215,7 +195,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.virtDir.contentSizeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (super.selection.length > 0) {
                 const index = this.virtDir.igxForOf.findIndex(e => {
-                    let current = e? e[this.valueKey] : undefined;
+                    let current = e ? e[this.valueKey] : undefined;
                     if (this.valueKey === null || this.valueKey === undefined) {
                         current = e;
                     }

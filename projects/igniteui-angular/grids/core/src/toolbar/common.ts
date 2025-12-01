@@ -1,4 +1,4 @@
-import { Component, Directive, HostBinding, TemplateRef } from '@angular/core';
+import { Component, Directive, HostBinding, TemplateRef, inject } from '@angular/core';
 import { GridType } from '../common/grid.interface';
 
 @Directive({ 
@@ -92,7 +92,8 @@ export interface IgxGridToolbarTemplateContext {
     standalone: true
 })
 export class IgxGridToolbarDirective {
-    constructor(public template: TemplateRef<IgxGridToolbarTemplateContext>) {}
+    public template = inject<TemplateRef<IgxGridToolbarTemplateContext>>(TemplateRef);
+
 
     public static ngTemplateContextGuard(_dir: IgxGridToolbarDirective,
         ctx: unknown): ctx is IgxGridToolbarTemplateContext {
