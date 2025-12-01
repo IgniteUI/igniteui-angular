@@ -25,6 +25,7 @@ import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPi
 import { IgxGridCell } from '../grid-public-cell';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
 import { ColumnPinningPosition, ColumnType, DefaultSortingStrategy, ExpressionsTreeUtil, FilteringExpressionsTree, GridColumnDataType, IColumnEditorOptions, IColumnPipeArgs, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxSummaryResult, IgxTimeFilteringOperand, isConstructor, ISortingStrategy, MRLColumnSizeInfo, MRLResizeColumnInfo, PlatformUtil, ɵSize } from 'igniteui-angular/core';
+import type { IgxColumnLayoutComponent } from './column-layout.component';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_TIME_FORMAT = 'mediumTime';
@@ -1525,8 +1526,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * ```typescript
      * let visibleColumnIndex =  this.column.visibleIndex;
      * ```
-     *
-     * @memberof IgxColumnComponent
      */
     public get visibleIndex(): number {
         if (!isNaN(this._vIndex)) {
@@ -1543,7 +1542,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             col = this.allChildren.filter(c => !c.columnGroup && !c.hidden)[0] as any;
         }
         if (this.columnLayoutChild) {
-            return this.parent.childrenVisibleIndexes.find(x => x.column === this).index;
+            // TODO: Refactor/redo/remove this
+            return (this.parent as IgxColumnLayoutComponent).childrenVisibleIndexes.find(x => x.column === this).index;
         }
 
         if (!this.pinned) {
@@ -1668,7 +1668,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         this._visibleWhenCollapsed = value;
         this.visibleWhenCollapsedChange.emit(this._visibleWhenCollapsed);
         if (this.parent) {
-            this.parent?.setExpandCollapseState?.();
+            // TODO: Refactor/redo/remove this
+            (this.parent as IgxColumnLayoutComponent)?.setExpandCollapseState?.();
         }
     }
 
@@ -1801,10 +1802,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * ```typescript
      * this.column.parent = higherLevelColumn;
      * ```
-     *
-     * @memberof IgxColumnComponent
      */
-    public parent = null;
+    public parent: ColumnType | null = null;
 
     /* blazorSuppress */
     /**
@@ -2199,7 +2198,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             return [{ target: this, spanUsed: 1 }];
         }
 
-        const columnSized = this.getInitialChildColumnSizes(this.parent.children);
+        const columnSized = this.getInitialChildColumnSizes(this.parent.children as QueryList<IgxColumnComponent>);
         const targets: MRLResizeColumnInfo[] = [];
         const colEnd = this.colEnd ? this.colEnd : this.colStart + 1;
 

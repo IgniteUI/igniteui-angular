@@ -518,7 +518,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         super.ngAfterContentInit();
     }
 
-    public override getDefaultExpandState(record: ITreeGridRecord) {
+    public override getDefaultExpandState(record: ITreeGridRecord): boolean {
         return record.children && record.children.length && record.level < this.expansionDepth;
     }
 
