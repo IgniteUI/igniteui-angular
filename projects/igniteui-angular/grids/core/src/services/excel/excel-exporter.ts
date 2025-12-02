@@ -54,6 +54,15 @@ export class IgxExcelExporterService extends IgxBaseExporter {
      */
     public override exportEnded = new EventEmitter<IExcelExportEndedEventArgs>();
 
+    private static fflateModulePromise: Promise<typeof import('fflate')> | null = null;
+
+    private static getFflateModule(): Promise<typeof import('fflate')> {
+        if (!IgxExcelExporterService.fflateModulePromise) {
+            IgxExcelExporterService.fflateModulePromise = import('fflate');
+        }
+        return IgxExcelExporterService.fflateModulePromise;
+    }
+
     private static async populateZipFileConfig(fileStructure: Object, folder: IExcelFolder, worksheetData: WorksheetData) {
         for (const childFolder of folder.childFolders(worksheetData)) {
             const folderInstance = ExcelElementsFactory.getExcelFolder(childFolder);
@@ -135,8 +144,8 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         const fileData = {};
         IgxExcelExporterService.populateZipFileConfig(fileData, rootFolder, worksheetData)
             .then(() => {
-                // Dynamically import fflate to reduce initial bundle size
-                import('fflate').then(({ zip }) => {
+                // Use cached fflate module to avoid redundant imports
+                IgxExcelExporterService.getFflateModule().then(({ zip }) => {
                     zip(fileData, (_, result) => {
                         this.saveFile(result, options.fileName);
                         this.exportEnded.emit({ xlsx: fileData });
