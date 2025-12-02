@@ -123,7 +123,7 @@
     "gulp-uglify": "^3.0.1",
     "hammer-simulator": "0.0.1",
     "hammerjs": "^2.0.8",
-    "ig-typedoc-theme": "^7.0.0",
+    "ig-typedoc-theme": "^7.0.1",
     "igniteui-dockmanager": "^1.17.0",
     "igniteui-sassdoc-theme": "^2.1.0",
     "igniteui-webcomponents": "^6.3.1",
