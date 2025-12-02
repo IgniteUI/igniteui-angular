@@ -37,7 +37,7 @@ Each of the components, directives and helper classes in the _IgxGridModule_ can
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 // Per-feature entry points (examples):
 // import { IgxPaginatorModule } from 'igniteui-angular/paginator';
-// import { IgxButtonModule } from 'igniteui-angular/button-group';
+// import { IgxButtonModule } from 'igniteui-angular/button';
 // import { IgxIconModule } from 'igniteui-angular/icon';
 ...
 
