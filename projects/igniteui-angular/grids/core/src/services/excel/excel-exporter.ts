@@ -8,8 +8,8 @@ import { IExcelFolder } from './excel-interfaces';
 import { ExportRecordType, IExportRecord, IgxBaseExporter, DEFAULT_OWNER, ExportHeaderType, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { WorksheetData } from './worksheet-data';
-import { IBaseEventArgs } from '../../core/utils';
 import { WorksheetFile } from './excel-files';
+import { IBaseEventArgs } from 'igniteui-angular/core';
 
 export interface IExcelExportEndedEventArgs extends IBaseEventArgs {
     xlsx?: Object

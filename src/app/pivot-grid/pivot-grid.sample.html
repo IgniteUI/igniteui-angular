@@ -70,10 +70,10 @@
             [rowSelection]="'single'"
             [autoGenerateConfig]="true"
         >
-        <ng-template igxPivotValueChip let-value>
-            {{ value.displayName }}
-       </ng-template>
-    </igx-pivot-grid>
+            <ng-template igxPivotValueChip let-value>
+                {{ value.displayName }}
+            </ng-template>
+        </igx-pivot-grid>
     </div>
     <igx-pivot-data-selector [grid]="grid1"></igx-pivot-data-selector>
 </div>

@@ -6,13 +6,11 @@ import {
     ElementRef,
     EventEmitter,
     HostBinding,
-    Inject,
+    inject,
     Input,
     Output,
     booleanAttribute
 } from '@angular/core';
-import { IgxAngularAnimationService } from 'igniteui-angular/core';
-import { AnimationService } from 'igniteui-angular/core';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
 import {
@@ -32,6 +30,9 @@ let NEXT_ID = 0;
     imports: []
 })
 export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements IgxExpansionPanelBase, AfterContentInit {
+    private cdr = inject(ChangeDetectorRef);
+    private elementRef = inject(ElementRef);
+
     /**
      * Sets/gets the animation settings of the expansion panel component
      * Open and Close animation should be passed
@@ -213,13 +214,6 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      */
     @ContentChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
     public header: IgxExpansionPanelHeaderComponent;
-
-    constructor(
-        @Inject(IgxAngularAnimationService) animationService: AnimationService,
-        private cdr: ChangeDetectorRef,
-        private elementRef?: ElementRef) {
-        super(animationService);
-    }
 
     /** @hidden */
     public ngAfterContentInit(): void {

@@ -8,7 +8,7 @@ import { By } from '@angular/platform-browser';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { clearGridSubs, setupHierarchicalGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
-import { IGridCellEventArgs, IgxColumnComponent, IgxGridCellComponent } from 'igniteui-angular/grids/core';
+import { IGridCellEventArgs, IgxColumnComponent, IgxGridCellComponent, IgxGridNavigationService } from 'igniteui-angular/grids/core';
 import { IPathSegment } from 'igniteui-angular/core';
 
 const DEBOUNCE_TIME = 50;
@@ -29,6 +29,9 @@ describe('IgxHierarchicalGrid Navigation', () => {
                 IgxHierarchicalGridTestComplexComponent,
                 IgxHierarchicalGridMultiLayoutComponent,
                 IgxHierarchicalGridSmallerChildComponent
+            ],
+            providers: [
+                IgxGridNavigationService
             ]
         }).compileComponents();
         jasmine.DEFAULT_TIMEOUT_INTERVAL = defaultTimeout * 2;

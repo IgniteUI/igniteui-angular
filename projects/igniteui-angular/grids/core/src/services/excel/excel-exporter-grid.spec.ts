@@ -4,8 +4,6 @@ import { ExportUtilities } from '../exporter-common/export-utilities';
 import { TestMethods } from '../exporter-common/test-methods.spec';
 import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
-import { ZipWrapper } from './zip-verification-wrapper.spec';
-import { FileContentData } from './test-data.service.spec';
 import {
     ReorderedColumnsComponent,
     GridIDNameJobTitleComponent,
@@ -25,32 +23,30 @@ import {
     GridCustomSummaryWithUndefinedZeroAndValidNumberComponent,
     GridCustomSummaryWithUndefinedAndNullComponent,
     GridCustomSummaryWithDateComponent
-} from '../../../../test-utils/grid-samples.spec';
-import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
+} from '../../../../../test-utils/grid-samples.spec';
+import { SampleTestData } from '../../../../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
-import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridSummariesKeyComponent } from '../../../../test-utils/tree-grid-components.spec';
+import { IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridSummariesKeyComponent } from '../../../../../test-utils/tree-grid-components.spec';
 
-import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
-import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../../../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxHierarchicalGridExportComponent,
          IgxHierarchicalGridMCHCollapsibleComponent,
          IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
          IgxHierarchicalGridMultiColumnHeadersExportComponent,
          IgxHierarchicalGridSummariesExportComponent
-} from '../../../../test-utils/hierarchical-grid-components.spec';
-import { GridFunctions } from '../../../../test-utils/grid-functions.spec';
-import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent, SALES_DATA } from '../../../../test-utils/pivot-grid-samples.spec';
+} from '../../../../../test-utils/hierarchical-grid-components.spec';
+import { GridFunctions } from '../../../../../test-utils/grid-functions.spec';
+import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent, SALES_DATA } from '../../../../../test-utils/pivot-grid-samples.spec';
 import { IgxHierarchicalRowComponent } from 'igniteui-angular/grids/hierarchical-grid/src/hierarchical-row.component';
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
 import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
-import { IgxPivotNumericAggregate, PivotRowLayoutType } from 'igniteui-angular/grids/core';
+import { IgxGridNavigationService, IgxPivotNumericAggregate, PivotRowLayoutType } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
+import { FileContentData } from './test-data.service.spec';
+import { ZipWrapper } from './zip-verification-wrapper.spec';
+import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
 describe('Excel Exporter', () => {
     let exporter: IgxExcelExporterService;
@@ -87,6 +83,9 @@ describe('Excel Exporter', () => {
                 GridCustomSummaryWithUndefinedZeroAndValidNumberComponent,
                 GridCustomSummaryWithUndefinedAndNullComponent,
                 GridCustomSummaryWithDateComponent
+            ],
+            providers: [
+                IgxGridNavigationService
             ]
         }).compileComponents();
     }));
@@ -292,7 +291,7 @@ describe('Excel Exporter', () => {
             await wait();
 
             const grid = fix.componentInstance.grid;
-            grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+            grid.sort({ fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
 
             const wrapper = await getExportedData(grid, options);
@@ -309,13 +308,13 @@ describe('Excel Exporter', () => {
             await wait();
 
             const grid = fix.componentInstance.grid;
-            grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+            grid.sort({ fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
 
             let wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(actualData.simpleGridSortByName, 'Ascending sorted data should have been exported.');
 
-            grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+            grid.sort({ fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
 
             wrapper = await getExportedData(grid, options);
@@ -323,7 +322,7 @@ describe('Excel Exporter', () => {
                 actualData.simpleGridSortByNameDesc(), 'Descending sorted data should have been exported.');
 
             grid.clearSort();
-            grid.sort({fieldName: 'ID',  dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+            grid.sort({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
 
             // wrapper = await getExportedData(grid, options);
@@ -527,7 +526,7 @@ describe('Excel Exporter', () => {
             const grid = fix.componentInstance.grid;
             grid.columnList.get(1).header = 'My header';
             grid.columnList.get(1).sortable = true;
-            grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: false});
+            grid.sort({ fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: false });
             const sortField = grid.sortingExpressions[0].fieldName;
             fix.detectChanges();
 
@@ -548,7 +547,7 @@ describe('Excel Exporter', () => {
 
             // Set column formatters
             grid.columnList.get(0).formatter = ((val: number) => {
-                const numbers = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine' , 'ten'];
+                const numbers = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
                 return numbers[val - 1];
             });
             grid.cdr.detectChanges();
@@ -708,7 +707,7 @@ describe('Excel Exporter', () => {
             const grid = fix.componentInstance.grid;
 
             grid.groupBy({ fieldName: 'Brand', dir: SortingDirection.Asc, ignoreCase: false });
-            grid.sort({fieldName: 'Price', dir: SortingDirection.Desc});
+            grid.sort({ fieldName: 'Price', dir: SortingDirection.Desc });
 
             options.ignoreSorting = true;
 
@@ -824,14 +823,14 @@ describe('Excel Exporter', () => {
         });
 
         it('should export sorted hierarchical grid data', async () => {
-            hGrid.sort({fieldName: 'GrammyNominations', dir: SortingDirection.Desc});
+            hGrid.sort({ fieldName: 'GrammyNominations', dir: SortingDirection.Desc });
             fix.detectChanges();
 
             await exportAndVerify(hGrid, options, actualData.exportSortedHierarchicalData);
         });
 
         it('should export hierarchical grid data with ignored sorting', async () => {
-            hGrid.sort({fieldName: 'GrammyNominations', dir: SortingDirection.Desc});
+            hGrid.sort({ fieldName: 'GrammyNominations', dir: SortingDirection.Desc });
 
             options.ignoreSorting = true;
             fix.detectChanges();
@@ -910,7 +909,7 @@ describe('Excel Exporter', () => {
                     args.header === 'Tickets Sold' ||
                     args.header === 'Released') {
                     args.cancel = true;
-                  }
+                }
             });
 
             fix.detectChanges();
@@ -924,8 +923,8 @@ describe('Excel Exporter', () => {
                     args.owner?.key === "Songs" ||
                     args.owner?.key === "Tours" ||
                     args.owner?.key === "TourData") {
-                        args.cancel = true;
-                    }
+                    args.cancel = true;
+                }
             });
 
             fix.detectChanges();
@@ -1056,7 +1055,7 @@ describe('Excel Exporter', () => {
         });
 
         it('should export sorted tree grid properly.', async () => {
-            treeGrid.sort({fieldName: 'ID', dir: SortingDirection.Desc});
+            treeGrid.sort({ fieldName: 'ID', dir: SortingDirection.Desc });
             options.ignoreSorting = true;
             fix.detectChanges();
 
@@ -1088,7 +1087,7 @@ describe('Excel Exporter', () => {
         it('should export filtered and sorted tree grid properly.', async () => {
             treeGrid.filter('ID', 3, IgxNumberFilteringOperand.instance().condition('greaterThan'));
             fix.detectChanges();
-            treeGrid.sort({fieldName: 'Name', dir: SortingDirection.Desc});
+            treeGrid.sort({ fieldName: 'Name', dir: SortingDirection.Desc });
             fix.detectChanges();
 
             await exportAndVerify(treeGrid, options, actualData.treeGridDataFilteredSorted);
@@ -1115,7 +1114,7 @@ describe('Excel Exporter', () => {
         });
 
         it('should export tree grid with ignore sorting properly.', async () => {
-            treeGrid.sort({fieldName: 'Age', dir: SortingDirection.Desc});
+            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Desc });
             options.ignoreSorting = true;
             fix.detectChanges();
 
@@ -1464,11 +1463,12 @@ describe('Excel Exporter', () => {
 
         beforeEach(waitForAsync(() => {
             options = createExportOptions('PivotGridExcelExport');
+            fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
+            fix.detectChanges();
         }));
 
         it('should export pivot grid', async () => {
-            fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
-            fix.detectChanges();
+
             await wait(300);
 
             grid = fix.componentInstance.pivotGrid;
@@ -1511,7 +1511,7 @@ describe('Excel Exporter', () => {
                         memberName: 'All_Srep Codes',
                         enabled: true,
                         width: '150px',
-                            childLevel: {
+                        childLevel: {
                             memberName: 'SREP_CODE',
                             displayName: 'Srep Code',
                             sortDirection: 1,
@@ -1532,29 +1532,29 @@ describe('Excel Exporter', () => {
                 ],
                 columns: [],
                 values: [
-                  {
-                    member: 'JOBS',
-                    aggregate: {
-                      key: 'Count of Jobs',
-                      aggregator: IgxPivotNumericAggregate.count,
-                      label: 'Count of Jobs',
+                    {
+                        member: 'JOBS',
+                        aggregate: {
+                            key: 'Count of Jobs',
+                            aggregator: IgxPivotNumericAggregate.count,
+                            label: 'Count of Jobs',
+                        },
+                        enabled: true,
+                        dataType: 'number',
                     },
-                    enabled: true,
-                    dataType: 'number',
-                  },
-                  {
-                    member: 'INV_SALES',
-                    aggregate: {
-                      key: 'Sum of Sales',
-                      aggregator: IgxPivotNumericAggregate.sum,
-                      label: 'Sum of Sales',
+                    {
+                        member: 'INV_SALES',
+                        aggregate: {
+                            key: 'Sum of Sales',
+                            aggregator: IgxPivotNumericAggregate.sum,
+                            label: 'Sum of Sales',
+                        },
+                        enabled: true,
+                        dataType: 'number',
                     },
-                    enabled: true,
-                    dataType: 'number',
-                  },
                 ],
                 filters: [],
-              };
+            };
             grid.pivotUI.showRowHeaders = true;
             fix.detectChanges();
             await wait(300);
@@ -1583,7 +1583,7 @@ describe('Excel Exporter', () => {
                 memberName: 'ProductCategory',
                 memberFunction: (data) => data.ProductCategory,
                 enabled: true,
-                childLevel:{
+                childLevel: {
                     memberName: 'Country',
                     enabled: true,
                     childLevel: {
@@ -1592,7 +1592,7 @@ describe('Excel Exporter', () => {
                     }
                 }
             }],
-            fix.detectChanges();
+                fix.detectChanges();
             await wait(300);
             fix.detectChanges();
 
@@ -1612,29 +1612,29 @@ describe('Excel Exporter', () => {
     };
 
     const setColWidthAndExport = (grid, exportOptions: IgxExcelExporterOptions, fix, value) => new Promise<void>((resolve) => {
-            options.columnWidth = value;
-            fix.detectChanges();
-            getExportedData(grid, exportOptions).then((wrapper) => {
-                wrapper.verifyDataFilesContent(actualData.simpleGridColumnWidth(value), ' Width :' + value).then(() => resolve());
-            });
+        options.columnWidth = value;
+        fix.detectChanges();
+        getExportedData(grid, exportOptions).then((wrapper) => {
+            wrapper.verifyDataFilesContent(actualData.simpleGridColumnWidth(value), ' Width :' + value).then(() => resolve());
         });
+    });
 
     const setRowHeightAndExport = (grid, exportOptions: IgxExcelExporterOptions, fix, value) => new Promise<void>((resolve) => {
-            options.rowHeight = value;
-            fix.detectChanges();
-            getExportedData(grid, exportOptions).then((wrapper) => {
-                wrapper.verifyDataFilesContent(actualData.simpleGridRowHeight(value), ' Height :' + value).then(() => resolve());
-            });
+        options.rowHeight = value;
+        fix.detectChanges();
+        getExportedData(grid, exportOptions).then((wrapper) => {
+            wrapper.verifyDataFilesContent(actualData.simpleGridRowHeight(value), ' Height :' + value).then(() => resolve());
         });
+    });
 
     const setWorksheetNameAndExport = (grid, exportOptions: IgxExcelExporterOptions, fix, worksheetName) => new Promise<void>((resolve) => {
-            options.worksheetName = worksheetName;
-            fix.detectChanges();
-            getExportedData(grid, exportOptions).then((wrapper) => {
-                wrapper.verifyDataFilesContent(actualData.simpleGridWorksheetName(worksheetName), ' Worksheet Name : ' + worksheetName)
-                    .then(() => resolve());
-            });
+        options.worksheetName = worksheetName;
+        fix.detectChanges();
+        getExportedData(grid, exportOptions).then((wrapper) => {
+            wrapper.verifyDataFilesContent(actualData.simpleGridWorksheetName(worksheetName), ' Worksheet Name : ' + worksheetName)
+                .then(() => resolve());
         });
+    });
 
     const createExportOptions = (fileName, columnWidth?) => {
         const opts = new IgxExcelExporterOptions(fileName);

@@ -14,7 +14,6 @@ export class WorksheetData {
     private _hasSummaries: boolean;
     private _isPivotGrid: boolean;
     private _isTreeGrid: boolean;
-    private _isGroupedGrid: boolean;
 
     constructor(private _data: IExportRecord[],
                 public options: IgxExcelExporterOptions,

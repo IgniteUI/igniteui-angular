@@ -1,11 +1,4 @@
-import {
-    Component,
-    Directive,
-    NgZone,
-    OnInit,
-    ViewChild,
-    ElementRef,
-} from '@angular/core';
+import { Component, Directive, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxScrollInertiaDirective } from './scroll_inertia.directive';
 
@@ -82,14 +75,21 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     let scrollContainerMock;
 
     beforeEach(() => {
-        const mockZone = jasmine.createSpyObj('NgZone', ['runOutsideAngular']);
         scrollContainerMock = {
             scrollLeft: 0,
             scrollTop: 0,
             offsetHeight: 500,
             children: [{ style: { width: '50px', height: '500px', scrollHeight: 100 } }]
         };
-        scrollInertiaDir = new IgxTestScrollInertiaDirective(null, mockZone);
+
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: ElementRef, useValue: null },
+                IgxTestScrollInertiaDirective
+            ]
+        });
+
+        scrollInertiaDir = TestBed.inject(IgxTestScrollInertiaDirective);
         scrollInertiaDir.IgxScrollInertiaScrollContainer = scrollContainerMock;
         scrollInertiaDir.smoothingDuration = 0;
     });
@@ -101,14 +101,14 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     // Unit test for wheel - wheelDelataY/wheelDeltaX supported on Chrome, Safari, Opera.
     it('should change scroll top for related scrollbar if onWheel is executed with wheelDeltaY.', () => {
         scrollInertiaDir.IgxScrollInertiaDirection = 'vertical';
-        const evt = {wheelDeltaY: -240, preventDefault: () => {}};
+        const evt = { wheelDeltaY: -240, preventDefault: () => { } };
         scrollInertiaDir.onWheel(evt);
         expect(scrollContainerMock.scrollTop).toEqual(2 * scrollInertiaDir.wheelStep);
     });
 
     it('should change scroll left for related scrollbar if onWheel is executed with wheelDeltaX.', () => {
         scrollInertiaDir.IgxScrollInertiaDirection = 'horizontal';
-        const evt = {wheelDeltaX: -240, preventDefault: () => {}};
+        const evt = { wheelDeltaX: -240, preventDefault: () => { } };
         scrollInertiaDir.onWheel(evt);
 
         expect(scrollContainerMock.scrollLeft).toEqual(2 * scrollInertiaDir.wheelStep);
@@ -117,14 +117,14 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     // Unit tests for wheel on other browsers that don't provide wheelDelta - use deltaX and deltaY.
     it('should change scroll top for related scrollbar if onWheel is executed with deltaY.', () => {
         scrollInertiaDir.IgxScrollInertiaDirection = 'vertical';
-        const evt = {deltaY: 1, preventDefault: () => {}};
+        const evt = { deltaY: 1, preventDefault: () => { } };
         scrollInertiaDir.onWheel(evt);
         expect(scrollContainerMock.scrollTop).toEqual(scrollInertiaDir.wheelStep);
     });
 
     it('should change scroll left for related scrollbar if onWheel is executed with deltaX.', () => {
         scrollInertiaDir.IgxScrollInertiaDirection = 'horizontal';
-        const evt = {deltaX: 1, preventDefault: () => {}};
+        const evt = { deltaX: 1, preventDefault: () => { } };
         scrollInertiaDir.onWheel(evt);
 
         expect(scrollContainerMock.scrollLeft).toEqual(scrollInertiaDir.wheelStep);
@@ -132,53 +132,53 @@ describe('Scroll Inertia Directive - Scrolling', () => {
 
     it('should not throw error if there is no associated scrollbar and wheel event is called.', () => {
         scrollInertiaDir.IgxScrollInertiaScrollContainer = null;
-        const evt = {preventDefault: () => {}};
-        expect (() => scrollInertiaDir.onWheel(evt)).not.toThrow();
+        const evt = { preventDefault: () => { } };
+        expect(() => scrollInertiaDir.onWheel(evt)).not.toThrow();
     });
 
 
-    it('should change scroll left when shift + wheel is triggered' , () => {
+    it('should change scroll left when shift + wheel is triggered', () => {
         scrollInertiaDir.IgxScrollInertiaDirection = 'horizontal';
-        const evt =  {shiftKey: true, wheelDeltaY: -240, preventDefault: () => {}};
+        const evt = { shiftKey: true, wheelDeltaY: -240, preventDefault: () => { } };
         scrollInertiaDir.onWheel(evt);
 
         expect(scrollContainerMock.scrollTop).toEqual(0);
         expect(scrollContainerMock.scrollLeft).toEqual(2 * scrollInertiaDir.wheelStep);
     });
 
-    it('should be able to scroll to left/right when shift + wheel is triggered' , () => {
+    it('should be able to scroll to left/right when shift + wheel is triggered', () => {
         scrollInertiaDir.IgxScrollInertiaDirection = 'horizontal';
-        let evt =  {shiftKey: true, wheelDeltaY: -240, preventDefault: () => {}};
+        let evt = { shiftKey: true, wheelDeltaY: -240, preventDefault: () => { } };
         scrollInertiaDir.onWheel(evt);
 
         expect(scrollContainerMock.scrollTop).toEqual(0);
         expect(scrollContainerMock.scrollLeft).toEqual(2 * scrollInertiaDir.wheelStep);
 
-        evt =  {shiftKey: true, wheelDeltaY: 120, preventDefault: () => {}};
+        evt = { shiftKey: true, wheelDeltaY: 120, preventDefault: () => { } };
         scrollInertiaDir.onWheel(evt);
 
         expect(scrollContainerMock.scrollTop).toEqual(0);
         expect(scrollContainerMock.scrollLeft).toEqual(scrollInertiaDir.wheelStep);
     });
 
-    it('should change scroll left when shift + wheel is called with with deltaY' , () => {
+    it('should change scroll left when shift + wheel is called with with deltaY', () => {
         scrollInertiaDir.IgxScrollInertiaDirection = 'horizontal';
-        const evt =  {shiftKey: true, deltaY: 1, preventDefault: () => {}};
+        const evt = { shiftKey: true, deltaY: 1, preventDefault: () => { } };
         scrollInertiaDir.onWheel(evt);
 
         expect(scrollContainerMock.scrollTop).toEqual(0);
         expect(scrollContainerMock.scrollLeft).toEqual(scrollInertiaDir.wheelStep);
     });
 
-    it('should be able to scroll to left/right when shift + wheel is called with with deltaY' , () => {
+    it('should be able to scroll to left/right when shift + wheel is called with with deltaY', () => {
         scrollInertiaDir.IgxScrollInertiaDirection = 'horizontal';
-        let evt =  {shiftKey: true, deltaY: 1, preventDefault: () => {}};
+        let evt = { shiftKey: true, deltaY: 1, preventDefault: () => { } };
         scrollInertiaDir.onWheel(evt);
 
         expect(scrollContainerMock.scrollTop).toEqual(0);
         expect(scrollContainerMock.scrollLeft).toEqual(scrollInertiaDir.wheelStep);
 
-        evt =  {shiftKey: true, deltaY: -1, preventDefault: () => {}};
+        evt = { shiftKey: true, deltaY: -1, preventDefault: () => { } };
         scrollInertiaDir.onWheel(evt);
 
         expect(scrollContainerMock.scrollTop).toEqual(0);
@@ -192,7 +192,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
                 pageX: 0,
                 pageY: 0
             }],
-            preventDefault: () => {}
+            preventDefault: () => { }
         };
         scrollInertiaDir.onTouchStart(evt);
 
@@ -201,7 +201,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
                 pageX: 0,
                 pageY: -100
             }],
-            preventDefault: () => {}
+            preventDefault: () => { }
         };
         tick(10);
         scrollInertiaDir.onTouchMove(evt);
@@ -218,7 +218,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
                 pageX: 0,
                 pageY: 0
             }],
-            preventDefault: () => {}
+            preventDefault: () => { }
         };
         scrollInertiaDir.onTouchStart(evt);
 
@@ -227,7 +227,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
                 pageX: 0,
                 pageY: -100
             }],
-            preventDefault: () => {}
+            preventDefault: () => { }
         };
         tick(10);
         scrollInertiaDir.onTouchMove(evt);
@@ -241,7 +241,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
                 pageX: 0,
                 pageY: 0
             }],
-            preventDefault: () => {}
+            preventDefault: () => { }
         };
         scrollInertiaDir.onTouchStart(evt);
 
@@ -255,7 +255,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
                 pageX: 0,
                 pageY: 0
             }],
-            preventDefault: () => {}
+            preventDefault: () => { }
         };
         scrollInertiaDir.onTouchStart(evt);
         evt = {
@@ -263,7 +263,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
                 pageX: -10,
                 pageY: -50
             }],
-            preventDefault: () => {}
+            preventDefault: () => { }
         };
         tick(10);
         scrollInertiaDir.onTouchMove(evt);
@@ -281,7 +281,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
                 pageX: 0,
                 pageY: 0
             }],
-            preventDefault: () => {}
+            preventDefault: () => { }
         };
         scrollInertiaDir.onTouchStart(evt);
 
@@ -290,7 +290,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
                 pageX: -100,
                 pageY: 0
             }],
-            preventDefault: () => {}
+            preventDefault: () => { }
         };
         tick(10);
         scrollInertiaDir.onTouchMove(evt);
@@ -303,10 +303,10 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     }));
     it('should not throw errors on touch start/move/end if no scrollbar is associated.', () => {
         scrollInertiaDir.IgxScrollInertiaScrollContainer = null;
-        const evt = {preventDefault: () => {}};
-        expect (() => scrollInertiaDir.onTouchStart(evt)).not.toThrow();
-        expect (() => scrollInertiaDir.onTouchMove(evt)).not.toThrow();
-        expect (() => scrollInertiaDir.onTouchEnd(evt)).not.toThrow();
+        const evt = { preventDefault: () => { } };
+        expect(() => scrollInertiaDir.onTouchStart(evt)).not.toThrow();
+        expect(() => scrollInertiaDir.onTouchMove(evt)).not.toThrow();
+        expect(() => scrollInertiaDir.onTouchEnd(evt)).not.toThrow();
     });
 });
 
@@ -317,9 +317,6 @@ describe('Scroll Inertia Directive - Scrolling', () => {
 })
 export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
 
-    constructor(element: ElementRef, _zone: NgZone) {
-        super(element, _zone);
-    }
     public override onWheel(evt) {
         super.onWheel(evt);
     }
@@ -331,7 +328,7 @@ export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
         super.onTouchEnd(evt);
     }
     public override onTouchMove(evt) {
-       return super.onTouchMove(evt);
+        return super.onTouchMove(evt);
     }
 
     public override _inertiaInit(speedX, speedY) {
@@ -365,7 +362,7 @@ export class ScrollInertiaComponent implements OnInit {
     public scrLeftArray = [];
     public scrLeftStepArray = [];
 
-   public ngOnInit() {
+    public ngOnInit() {
         this.scrInertiaDir.IgxScrollInertiaScrollContainer = this.scrollContainer.nativeElement;
     }
 
