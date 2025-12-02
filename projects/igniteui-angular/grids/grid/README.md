@@ -399,12 +399,20 @@ this.grid.filter('Quantity', 10, IgxNumberFilteringOperand.instance().condition(
 this.grid.clearFilter('Name');
 ```
 
-### Available condition names (common examples)
+### String types
 
-- String: `contains`, `startsWith`, `endsWith`, `doesNotContain`, `equals`, `doesNotEqual`, `empty`, `notEmpty`
-- Number: `equals`, `doesNotEqual`, `greaterThan`, `greaterThanOrEqualTo`, `lessThan`, `lessThanOrEqualTo`, `between`
-- Date: `equals`, `doesNotEqual`, `before`, `after`, `today`, `yesterday`, `thisMonth`
-- Boolean: `true`, `false`
+|Name|Signature|Description|
+|--- |--- |--- |
+|`contains`|`(target: string, searchVal: string, ignoreCase?: boolean)`|Returns true if the `target` contains the `searchVal`.|
+|`startsWith`|`(target: string, searchVal: string, ignoreCase?: boolean)`|Returns true if the `target` starts with the `searchVal`.|
+|`endsWith`|`(target: string, searchVal: string, ignoreCase?: boolean)`|Returns true if the `target` ends with the `searchVal`.|
+|`doesNotContain`|`(target: string, searchVal: string, ignoreCase?: boolean)`|Returns true if `searchVal` is not in `target`.|
+|`equals`|`(target: string, searchVal: string, ignoreCase?: boolean)`|Returns true if `searchVal` matches `target`.|
+|`doesNotEqual`|`(target: string, searchVal: string, ignoreCase?: boolean)`|Returns true if `searchVal` does not match `target`.|
+|`null`|`(target: any)`|Returns true if `target` is `null`.|
+|`notNull`|`(target: any)`|Returns true if `target` is not `null`.|
+|`empty`|`(target: any)`|Returns true if `target` is either `null`, `undefined` or a string of length 0.|
+|`notEmpty`|`(target: any)`|Returns true if `target` is not `null`, `undefined` or a string of length 0.|
 
 Use them via the corresponding operand, for example:
 
@@ -412,10 +420,6 @@ Use them via the corresponding operand, for example:
 const contains = IgxStringFilteringOperand.instance().condition('contains');
 this.grid.filter('Name', 'Ann', contains);
 ```
-|`null`|`(target: any)`|Returns true if `target` is `null`.|
-|`notNull`|`(target: any)`|Returns true if `target` is not `null`.|
-|`empty`|`(target: any)`|Returns true if `target` is either `null`, `undefined` or a string of length 0.|
-|`notEmpty`|`(target: any)`|Returns true if `target` is not `null`, `undefined` or a string of length 0.|
 
 
 ### Number types
