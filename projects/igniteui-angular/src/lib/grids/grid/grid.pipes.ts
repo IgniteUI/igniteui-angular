@@ -114,7 +114,7 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
         const rootsToUpdate = [];
         activeRowIndexes.forEach(index => {
             const target = collection[index];
-            if (target) {
+            if (target && target.cellMergeMeta) {
                 colsToMerge.forEach(col => {
                     const colMeta = target.cellMergeMeta.get(col.field);
                     const root = colMeta.root ||  (colMeta.rowSpan > 1 ? target : null);
