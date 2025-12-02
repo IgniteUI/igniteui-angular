@@ -142,7 +142,16 @@ export class IgxExcelExporterService extends IgxBaseExporter {
                         this.exportEnded.emit({ xlsx: fileData });
                         done();
                     });
+                }).catch((error) => {
+                    // Handle dynamic import failure
+                    console.error('Failed to load fflate module:', error);
+                    done();
                 });
+            })
+            .catch((error) => {
+                // Handle populateZipFileConfig failure
+                console.error('Failed to populate zip file config:', error);
+                done();
             });
     }
 
