@@ -142,35 +142,43 @@
         &:last-of-type {
             border-bottom: none;
         }
+    }
 
-        &:hover {
+    %igx-list-item-base:not(%igx-list-item-base--selected) {
+        &:hover,
+        &:focus-within {
             %igx-list__item-lines {
                 color: currentColor;
             }
 
-            %igx-list__item-line-title {
-                color: var-get($theme, 'item-title-color-hover');
-            }
+            %igx-list-item-content:not(%igx-list-item-content--active) {
+                color: var-get($theme, 'item-text-color-hover');
+                background: var-get($theme, 'item-background-hover');
 
-            %igx-list__item-line-subtitle {
-                color: var-get($theme, 'item-subtitle-color-hover');
-            }
-
-            %igx-list__item-actions {
-                color: var-get($theme, 'item-action-color-hover');
-
-                igx-icon,
-                igc-icon {
-                    color: var-get($theme, 'item-action-color-hover')
+                %igx-list__item-line-title {
+                    color: var-get($theme, 'item-title-color-hover');
                 }
-            }
 
-            %igx-list__item-thumbnail {
-                color: var-get($theme, 'item-thumbnail-color-hover');
+                %igx-list__item-line-subtitle {
+                    color: var-get($theme, 'item-subtitle-color-hover');
+                }
 
-                igx-icon,
-                igc-icon {
-                    color: var-get($theme, 'item-thumbnail-color-hover')
+                %igx-list__item-actions {
+                    color: var-get($theme, 'item-action-color-hover');
+
+                    igx-icon,
+                    igc-icon {
+                        color: var-get($theme, 'item-action-color-hover')
+                    }
+                }
+
+                %igx-list__item-thumbnail {
+                    color: var-get($theme, 'item-thumbnail-color-hover');
+
+                    igx-icon,
+                    igc-icon {
+                        color: var-get($theme, 'item-thumbnail-color-hover')
+                    }
                 }
             }
         }
@@ -253,12 +261,6 @@
         background: var-get($theme, 'item-background');
         z-index: 2;
         gap: if($variant == 'indigo', rem(8px), rem(16px));
-
-        &:hover,
-        &:focus-within {
-            color: var-get($theme, 'item-text-color-hover');
-            background: var-get($theme, 'item-background-hover');
-        }
     }
 
     %igx-list-header,
