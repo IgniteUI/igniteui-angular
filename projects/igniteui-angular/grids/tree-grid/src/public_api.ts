@@ -79,7 +79,11 @@ import {
     IgxExcelStyleSearchComponent,
     IgxExcelStyleColumnOperationsTemplateDirective,
     IgxExcelStyleFilterOperationsTemplateDirective,
-    IgxExcelStyleLoadingValuesTemplateDirective
+    IgxExcelStyleLoadingValuesTemplateDirective,
+    IgxGridActionButtonComponent,
+    IgxGridActionsBaseDirective,
+    IgxGridEditingActionsComponent,
+    IgxGridPinningActionsComponent
 } from "igniteui-angular/grids/core";
 import {
     IgxPaginatorComponent,
@@ -113,6 +117,11 @@ export const IGX_TREE_GRID_DIRECTIVES = [
     IgxDragIndicatorIconDirective,
     IgxRowDragGhostDirective,
     IgxGridStateDirective,
+    // IGX_GRID_ACTIONS
+    IgxGridPinningActionsComponent,
+    IgxGridEditingActionsComponent,
+    IgxGridActionsBaseDirective,
+    IgxGridActionButtonComponent,
     // IGX_GRID_HEADERS_DIRECTIVES:
     IgxGridHeaderComponent,
     IgxGridHeaderGroupComponent,

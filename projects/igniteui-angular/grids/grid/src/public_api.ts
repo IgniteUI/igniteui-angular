@@ -76,7 +76,11 @@ import {
     IgxRowAddTextDirective,
     IgxRowEditActionsDirective,
     IgxRowEditTabStopDirective,
-    IgxRowEditTextDirective
+    IgxRowEditTextDirective,
+    IgxGridActionButtonComponent,
+    IgxGridPinningActionsComponent,
+    IgxGridActionsBaseDirective,
+    IgxGridEditingActionsComponent
 } from "igniteui-angular/grids/core";
 import {
     IgxPaginatorComponent,
@@ -118,6 +122,11 @@ export const IGX_GRID_DIRECTIVES = [
     IgxDragIndicatorIconDirective,
     IgxRowDragGhostDirective,
     IgxGridStateDirective,
+    // IGX_GRID_ACTIONS
+    IgxGridPinningActionsComponent,
+    IgxGridEditingActionsComponent,
+    IgxGridActionsBaseDirective,
+    IgxGridActionButtonComponent,
     // IGX_GRID_HEADERS_DIRECTIVES:
     IgxGridHeaderComponent,
     IgxGridHeaderGroupComponent,
