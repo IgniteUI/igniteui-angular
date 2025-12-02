@@ -387,7 +387,7 @@ import {
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
     IgxBooleanFilteringOperand
-} from 'igniteui-angular';
+} from 'igniteui-angular/core';
 
 // Example: quick filter a column (string contains)
 this.grid.filter('Name', 'John', IgxStringFilteringOperand.instance().condition('contains'));
