@@ -68,7 +68,7 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
      * Show entry for PDF export.
      */
     @Input({ transform: booleanAttribute })
-    public exportPDF = true;
+    public exportPDF = false;
 
     /**
      * The name for the exported file.
