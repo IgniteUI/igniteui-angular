@@ -88,7 +88,7 @@ The `ng update` migration will prompt you to optionally migrate your imports to 
 
 To migrate manually later:
 ```bash
-ng update igniteui-angular --migrate-only --from=20.1.0 --to=21.0.0 --migrate-imports
+ng update igniteui-angular --migrate-only --from=20.1.0 --to=21.0.0
 ```
 
 **Component Relocations:**
