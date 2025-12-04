@@ -9,7 +9,7 @@ import { TREEGRID_FLAT_DATA, EMPLOYEE_DATA, employeesData } from './data';
 import { FilteringExpressionsTree, FilteringLogic,
   IgxNumberSummaryOperand, IgxSummaryResult, IGridState, IgxGridStateDirective,
   IgxExpansionPanelComponent, IgxCellHeaderTemplateDirective,
-  IGridStateOptions, GridFeatures, GridColumnDataType, IgxColumnComponent, GridTypeBase, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelIconDirective, IgxExpansionPanelBodyComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridDetailTemplateDirective, IgxPaginatorComponent, IgxTooltipDirective, IgxColumnGroupComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent, IgxTooltipTargetDirective, IgxIconComponent, IgxSwitchComponent, IgxButtonDirective, IgxCellTemplateDirective,
+  IGridStateOptions, GridFeatures, GridColumnDataType, IgxColumnComponent, GridType, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelIconDirective, IgxExpansionPanelBodyComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridDetailTemplateDirective, IgxPaginatorComponent, IgxTooltipDirective, IgxColumnGroupComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent, IgxTooltipTargetDirective, IgxIconComponent, IgxSwitchComponent, IgxButtonDirective, IgxCellTemplateDirective,
   IgxColumnLayoutComponent} from 'igniteui-angular';
 
 class MySummary extends IgxNumberSummaryOperand {
@@ -131,7 +131,7 @@ export class GridSaveStateComponent implements OnInit {
         });
     }
 
-    public getContext(grid: GridTypeBase) {
+    public getContext(grid: GridType) {
         if (this.state) {
         const stateDirective = this.state.find(st => st.grid.id === grid.id);
         return { $implicit: grid, stateDirective};

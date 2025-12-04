@@ -1,4 +1,4 @@
-@use '../../projects/igniteui-angular/core/src/core/styles/themes' as *;
+@use '../../projects/igniteui-angular/src/lib/core/styles/themes/index' as *;
 @use 'igniteui-theming/sass/animations' as *;
 
 @include b(igniteui-logo) {

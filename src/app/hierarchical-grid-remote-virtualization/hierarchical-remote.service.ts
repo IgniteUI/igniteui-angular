@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { IgxGridHierarchicalPipe, IgxHierarchicalGridComponent } from 'igniteui-angular';
+import { IgxGridHierarchicalPipe } from 'projects/igniteui-angular/src/lib/grids/hierarchical-grid/hierarchical-grid.pipes';
+import { IgxHierarchicalGridComponent } from 'igniteui-angular';
 
 @Injectable()
 export class HierarchicalRemoteService {
@@ -44,7 +45,7 @@ export class HierarchicalRemoteService {
     }
 
     public getData(virtualizationState: any, grid: IgxHierarchicalGridComponent, cb?: (any) => void) {
-        this.hierarchyPipe = this.hierarchyPipe ?? new IgxGridHierarchicalPipe();
+        this.hierarchyPipe = this.hierarchyPipe ?? new IgxGridHierarchicalPipe(grid);
         return this.http.get(this.buildUrl(virtualizationState, grid)).pipe(
             map(response => response),
         )

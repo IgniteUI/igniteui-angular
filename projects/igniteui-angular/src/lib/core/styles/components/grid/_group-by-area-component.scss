@@ -1,0 +1,12 @@
+@use '../../base' as *;
+
+/// @access private
+@mixin group-by-area {
+    @include b(igx-grid-grouparea) {
+        @extend %igx-grid-grouparea !optional;
+
+        @include e(connector) {
+            @extend %igx-grid-grouparea__connector !optional;
+        }
+    }
+}

@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
+import { IgxColumnComponent } from 'igniteui-angular';
+import { IgxGridComponent } from '../../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
 
 @Component({
     selector: 'app-shadow-grid-sample',

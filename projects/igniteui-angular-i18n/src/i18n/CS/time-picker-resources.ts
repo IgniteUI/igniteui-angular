@@ -1,4 +1,4 @@
-import { ITimePickerResourceStrings } from 'igniteui-angular/core';
+import { ITimePickerResourceStrings } from 'igniteui-angular';
 
 // only use `satisfies` operator so export is typed by its schema
 /**

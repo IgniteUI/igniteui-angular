@@ -1,0 +1,50 @@
+@use '../../base' as *;
+@use 'sass:string';
+
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+@mixin component {
+    @include b(igx-action-strip) {
+        // Register the component in the component registry
+        $this: bem--selector-to-string(&);
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: (
+                igx-icon-button,
+                igx-drop-down,
+                igx-icon,
+            )
+        );
+
+        @extend %igx-action-strip !optional;
+
+        @include e(actions) {
+            @extend %igx-action-strip__actions !optional;
+        }
+
+        @include e(delete) {
+            @extend %igx-action-strip__delete !optional;
+        }
+
+        @include e(editing-actions) {
+            @extend %igx-action-strip__editing-actions !optional;
+        }
+
+        @include e(pinning-actions) {
+            @extend %igx-action-strip__pinning-actions !optional;
+        }
+
+        @include e(menu-item) {
+            @extend %igx-action-strip__menu-item !optional;
+        }
+
+        @include e(menu-item, $m: 'danger') {
+            @extend %igx-action-strip__menu-item !optional;
+            @extend %igx-action-strip__menu-item--danger !optional;
+        }
+
+        @include e(menu-button) {
+            @extend %igx-action-strip__menu-button !optional;
+        }
+    }
+}

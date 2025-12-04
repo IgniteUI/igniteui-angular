@@ -8,11 +8,6 @@
       "hammerjs"
     ]
   },
-  "exclude": [
-    "migrations/**/*.spec.ts",
-    "schematics/**/*.spec.ts",
-    "cypress/**/*.spec.ts"
-  ],
   "include": [
     "**/*.spec.ts",
     "**/*.d.ts"

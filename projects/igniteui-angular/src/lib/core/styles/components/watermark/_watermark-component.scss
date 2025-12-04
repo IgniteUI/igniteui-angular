@@ -1,0 +1,14 @@
+@use '../../base' as *;
+@use 'sass:string';
+
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+@mixin component {
+    @include b(igc-trial-watermark) {
+        $this: bem--selector-to-string(&);
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: ()
+        );
+    }
+}

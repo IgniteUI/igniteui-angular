@@ -1,0 +1,41 @@
+@use '../../base' as *;
+@use 'sass:string';
+
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+@mixin component {
+    @include b(igx-banner-host) {
+        @extend %igx-banner-host !optional;
+    }
+
+    @include b(igx-banner) {
+        // Register the component in the component registry
+        $this: bem--selector-to-string(&);
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: (
+                igx-button,
+                igx-expansion-panel,
+                igx-icon,
+            )
+        );
+
+        @extend %igx-banner !optional;
+
+        @include e(message) {
+            @extend %igx-banner__message !optional;
+        }
+
+        @include e(illustration) {
+            @extend %igx-banner__illustration !optional;
+        }
+
+        @include e(text) {
+            @extend %igx-banner__text !optional;
+        }
+
+        @include e(actions) {
+            @extend %igx-banner__actions !optional;
+        }
+    }
+}

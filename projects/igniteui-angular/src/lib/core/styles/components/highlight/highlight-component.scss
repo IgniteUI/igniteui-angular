@@ -1,0 +1,22 @@
+@use '../../base' as *;
+@use 'sass:string';
+
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+@mixin component {
+    @include b(igx-highlight) {
+        // Register the component in the component registry
+        $this: bem--selector-to-string(&);
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: ()
+        );
+
+        @extend %igx-highlight !optional;
+
+        @include m(active) {
+            @extend %igx-highlight !optional;
+            @extend %igx-highlight--active !optional;
+        }
+    }
+}

@@ -9,15 +9,9 @@
     "@types/hammerjs",
     "hammerjs",
     "fflate",
-    "jspdf",
     "igniteui-trial-watermark",
     "lodash-es",
     "@igniteui/material-icons-extended",
-    "igniteui-theming",
-    "igniteui-webcomponents",
-    "dompurify",
-    "marked",
-    "marked-shiki",
-    "shiki"
+    "igniteui-theming"
   ]
 }

@@ -1,0 +1,82 @@
+@use '../../../base' as *;
+@use 'sass:string';
+
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+@mixin component {
+    @include b(igx-linear-bar) {
+        $this: bem--selector-to-string(&);
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: ()
+        );
+
+        @extend %display-linear !optional;
+
+        @include e(base) {
+            @extend %base !optional;
+        }
+
+        @include e(indicator) {
+            @extend %indicator !optional;
+        }
+
+        @include e(indicator-secondary) {
+            @extend %indicator__secondary !optional;
+        }
+
+        @include e(value) {
+            @extend %value !optional;
+        }
+
+        @each $modifier in ('start', 'center', 'end', 'top', 'hidden') {
+            @include e(value, $m: $modifier) {
+                @extend %value--#{$modifier} !optional;
+            }
+        }
+
+        @include e(value, $m: hidden) {
+            @extend %value--hidden !optional;
+        }
+
+        @include e(value, $m: fraction) {
+            @extend %value--fraction !optional;
+        }
+
+        @each $modifier in ('danger', 'warning', 'info', 'success') {
+            @include m($modifier) {
+                @extend %display-linear--#{$modifier} !optional;
+            }
+        }
+
+        @include m(striped) {
+            @extend %display-linear--striped !optional;
+        }
+
+        @include m(indeterminate) {
+            @extend %display-linear--indeterminate !optional;
+
+            @include e(indicator) {
+                @extend %indicator__indeterminate !optional;
+            }
+
+            @include e(indicator-secondary) {
+                @extend %indicator__indeterminate-secondary !optional;
+            }
+
+            @include e(value) {
+                @extend %value--hidden !optional;
+            }
+        }
+
+        @include m(animation-none) {
+            @extend %animation-none !optional;
+        }
+
+        @include m(hide-counter) {
+            @include e(value) {
+                @extend %hide-counter !optional;
+            }
+        }
+    }
+}

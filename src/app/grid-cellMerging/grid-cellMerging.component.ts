@@ -1,14 +1,16 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, HostBinding, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     DefaultTreeGridMergeStrategy,
     IgxActionStripComponent,
+    IgxButtonDirective,
     IgxCellTemplateDirective,
     IgxColumnComponent,
     IgxGridComponent,
     IgxGridPinningActionsComponent,
     IgxGridToolbarActionsComponent,
     IgxGridToolbarComponent,
+    IgxGridToolbarExporterComponent,
     IgxGridToolbarHidingComponent,
     IgxGridToolbarPinningComponent,
     IgxHierarchicalGridComponent,
@@ -23,6 +25,7 @@ import {
 } from 'igniteui-angular';
 import { HIERARCHICAL_DATA } from '../shared/hierarchicalData';
 
+import { data, dataWithoutPK } from '../shared/data';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 import { ByLevelTreeGridMergeStrategy } from 'igniteui-angular';
 import { INVOICE_DATA } from '../shared/invoiceData';

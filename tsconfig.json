@@ -16,6 +16,10 @@
       "typeRoots": [
         "node_modules/@types"
       ],
+      "lib": [
+        "es2022",
+        "dom"
+      ],
       "paths": {
         "igniteui-angular": [
           "projects/igniteui-angular/src/public_api.ts"

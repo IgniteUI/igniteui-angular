@@ -1,0 +1,58 @@
+<button
+    [title]="paginator.resourceStrings.igx_paginator_first_page_button_text"
+    [disabled]="paginator.isFirstPage"
+    [attr.aria-disabled]="paginator.isFirstPage"
+    (click)="paginator.paginate(0)"
+    igxIconButton="flat"
+    igxRipple
+    [igxRippleCentered]="true"
+    type="button"
+>
+    <igx-icon family="default" name="first_page"></igx-icon>
+</button>
+<button
+    [title]="paginator.resourceStrings.igx_paginator_previous_page_button_text"
+    [disabled]="paginator.isFirstPage"
+    [attr.aria-disabled]="paginator.isFirstPage"
+    (click)="paginator.previousPage()"
+    igxIconButton="flat"
+    igxRipple
+    [igxRippleCentered]="true"
+    type="button"
+>
+    <igx-icon family="default" name="prev"></igx-icon>
+</button>
+<div class="igx-page-nav__text" aria-current="page">
+    <span>{{ paginator.page + 1 }}</span>
+    <span
+        >&nbsp;{{
+            paginator.resourceStrings.igx_paginator_pager_text
+        }}&nbsp;</span
+    >
+    <span>{{ paginator.totalPages || 1 }}</span>
+</div>
+<button
+    [title]="paginator.resourceStrings.igx_paginator_next_page_button_text"
+    [disabled]="paginator.isLastPage"
+    [attr.aria-disabled]="paginator.isLastPage"
+    (click)="paginator.nextPage()"
+    igxRipple
+    [igxRippleCentered]="true"
+    igxIconButton="flat"
+    type="button"
+>
+    <igx-icon family="default" name="next"></igx-icon>
+</button>
+<button
+    [title]="paginator.resourceStrings.igx_paginator_last_page_button_text"
+    [disabled]="paginator.isLastPage"
+    [attr.aria-disabled]="paginator.isLastPage"
+    (click)="paginator.paginate(paginator.totalPages - 1)"
+    igxIconButton="flat"
+    igxRipple
+    [igxRippleCentered]="true"
+    type="button"
+>
+    <igx-icon family="default" name="last_page"></igx-icon>
+</button>
+

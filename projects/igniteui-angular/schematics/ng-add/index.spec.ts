@@ -89,6 +89,7 @@ describe('ng-add schematics', () => {
   it('should add the correct igniteui-angular packages to package.json dependencies', async () => {
     await runner.runSchematic('ng-add', { normalizeCss: false }, tree);
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
+    expect(pkgJsonData.dependencies['fflate']).toBeTruthy();
     // hammer is optional now.
     expect(pkgJsonData.dependencies['hammerjs']).toBeFalsy();
   });
@@ -96,6 +97,7 @@ describe('ng-add schematics', () => {
   it('should add hammerjs dependency to package.json dependencies if addHammer prompt is set.', async () => {
     await runner.runSchematic('ng-add', { normalizeCss: false, addHammer: true }, tree);
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
+    expect(pkgJsonData.dependencies['fflate']).toBeTruthy();
     expect(pkgJsonData.dependencies['hammerjs']).toBeTruthy();
   });
 

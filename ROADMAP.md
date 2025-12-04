@@ -2,24 +2,16 @@
 
 # Current Milestone
 
-## Milestone 40, version 21 (Due by Nov, 2025)
-1. Support for Angular 21
-2. AI Chat UI component [#16094](https://github.com/IgniteUI/igniteui-angular/issues/16094)
-3. PDF Export feature on Angular Data Grid, Tree Grid, Hierarchical Grid and Pivot Grid [#5696](https://github.com/IgniteUI/igniteui-angular/issues/5696)
-4. Multiple entry points library refactoring for code splitting support [#16325](https://github.com/IgniteUI/igniteui-angular/issues/16325)
-5. Grids filtering performance improvements
+## Milestone 38, version 20.1 (Due by Sep, 2025)
+1. Grid cell merging feature [#3514](https://github.com/IgniteUI/igniteui-angular/issues/3514)
+2. “Clear Selection” button in Combo component is keyboard accessible [#15841](https://github.com/IgniteUI/igniteui-angular/issues/15841)
+3. Selecting a slide by index in the Carousel component [#16046](https://github.com/IgniteUI/igniteui-angular/issues/16046)
 
 ## Going down the road
 
-1. Transition the library to signals
-2. Zoneless support
+1. AI Chat UI component [#16094](https://github.com/IgniteUI/igniteui-angular/issues/16094)
 
 # Previous Milestone
-
-## Milestone 39, version 20.1 (Released Sep  25th, 2025)
-1. **[DONE]** Grid cell merging feature [#3514](https://github.com/IgniteUI/igniteui-angular/issues/3514)
-2. **[DONE]** “Clear Selection” button in Combo component is keyboard accessible [#15841](https://github.com/IgniteUI/igniteui-angular/issues/15841)
-3. **[DONE]** Selecting a slide by index in the Carousel component [#16046](https://github.com/IgniteUI/igniteui-angular/issues/16046)
 
 ## Milestone 38, version 20.0 (Released Jun 09th, 2025)
 1. **[DONE]** Support of Angular 20.0

@@ -1,0 +1,63 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use '../../base' as *;
+
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
+/// @param {Map} $theme - The theme used to style the component.
+@mixin scrollbar($theme) {
+    @include css-vars($theme, '.ig-scrollbar');
+
+    %scrollbar-display {
+        // The @-moz-document rule is specifically for Firefox because it does not support the WebKit pseudo-selectors for scrollbar styling.
+        /* stylelint-disable-next-line at-rule-no-vendor-prefix */
+        @-moz-document url-prefix() {
+            scrollbar-width: var-get($theme, 'sb-size');
+            scrollbar-color: var-get($theme, 'sb-thumb-bg-color') var-get($theme, 'sb-track-bg-color');
+        }
+
+        ::-webkit-scrollbar {
+            @if meta.type-of(map.get($theme, 'sb-size') == 'string') {
+                width: var-get($theme, 'sb-size');
+                height: var-get($theme, 'sb-size');
+            }
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var-get($theme, 'sb-track-bg-color');
+        }
+
+        ::-webkit-scrollbar-track:hover,
+        ::-webkit-scrollbar-track:active {
+            background: var-get($theme, 'sb-track-bg-color-hover');
+        }
+
+        ::-webkit-scrollbar-thumb {
+            min-height: var-get($theme, 'sb-thumb-min-height');
+            border-radius: var-get($theme, 'sb-thumb-border-radius');
+            border: var-get($theme, 'sb-thumb-border-size') solid var-get($theme, 'sb-thumb-border-color');
+            background-clip: content-box;
+            background-color: var-get($theme, 'sb-thumb-bg-color');
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: var-get($theme, 'sb-thumb-bg-color-hover');
+        }
+
+        ::-webkit-scrollbar-corner {
+            background: var-get($theme, 'sb-corner-bg');
+            border: var-get($theme, 'sb-corner-border-size') solid var-get($theme, 'sb-corner-border-color');
+        }
+
+        ::-webkit-scrollbar-track-piece {
+            border: var-get($theme, 'sb-track-border-size') solid var-get($theme, 'sb-track-border-color');
+        }
+    }
+
+    @media (hover: none) {
+        %scrollbar-display ::-webkit-scrollbar {
+            width: auto;
+            height: auto;
+        }
+    }
+}

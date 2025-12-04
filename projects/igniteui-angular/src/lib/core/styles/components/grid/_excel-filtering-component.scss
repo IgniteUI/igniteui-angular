@@ -1,0 +1,182 @@
+@use '../../base' as *;
+
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+@mixin excel-filtering-partial {
+    @include b(igx-excel-filter) {
+        @extend %grid-excel-filter !optional;
+
+        @include e(loading) {
+            @extend %igx-excel-filter__loading !optional;
+        }
+
+        @include e(sizing) {
+            @extend %igx-excel-filter__sizing !optional;
+        }
+
+        @include e(tree) {
+            @extend %igx-excel-filter__tree !optional;
+        }
+
+        @include e(empty) {
+            @extend %igx-excel-filter__empty !optional;
+        }
+
+        @include e(tree-alike) {
+            @extend %igx-excel-filter__tree-alike !optional;
+        }
+
+        @include e(tree-alike-item) {
+            @extend %igx-excel-filter__tree-alike-item !optional;
+        }
+
+        @include e(menu) {
+            @include sizable();
+            @extend %grid-excel-menu !optional;
+        }
+
+        @include e(menu, $m: 'cosy') {
+            @extend %grid-excel-menu--cosy !optional;
+        }
+
+        @include e(menu, $m: 'compact') {
+            @extend %grid-excel-menu--compact !optional;
+        }
+
+        @include e(icon) {
+            @extend %grid-excel-icon !optional;
+        }
+
+        @include e(icon, $m: 'filtered') {
+            @extend %grid-excel-icon !optional;
+            @extend %grid-excel-icon--filtered !optional;
+        }
+
+        @include e(menu-header) {
+            @extend %grid-excel-menu__header !optional;
+        }
+
+        @include e(menu-header-actions) {
+            @extend %grid-excel-menu__header-actions !optional;
+        }
+
+        @include e(menu-main) {
+            @extend %grid-excel-main !optional;
+        }
+
+        @include e(menu-footer) {
+            @extend %grid-excel-menu__footer !optional;
+        }
+
+        @include e(sort) {
+            @extend %grid-excel-sort !optional;
+        }
+
+        @include e(move) {
+            @extend %grid-excel-move !optional;
+        }
+
+        @include e(actions) {
+            @extend %grid-excel-actions !optional;
+        }
+
+        @include e(actions-pin) {
+            @extend %grid-excel-actions__action !optional;
+        }
+
+        @include e(actions-pin, $m: disabled) {
+            @extend %grid-excel-actions__action !optional;
+            @extend %grid-excel-actions__action--disabled !optional;
+        }
+
+        @include e(actions-unpin) {
+            @extend %grid-excel-actions__action !optional;
+        }
+
+        @include e(actions-hide) {
+            @extend %grid-excel-actions__action !optional;
+        }
+
+        @include e(actions-select) {
+            @extend %grid-excel-actions__action !optional;
+        }
+
+        @include e(actions-selected) {
+            @extend %grid-excel-actions__action !optional;
+            @extend %grid-excel-actions--selected !optional;
+        }
+
+        @include e(actions-filter) {
+            @extend %grid-excel-actions__action !optional;
+            @extend %grid-excel-actions__action-filter !optional;
+        }
+
+        @include e(actions-filter, $m: active) {
+            @extend %grid-excel-actions__action !optional;
+            @extend %grid-excel-actions__action--active !optional;
+        }
+
+        @include e(actions-clear) {
+            @extend %grid-excel-actions__action !optional;
+        }
+
+        @include e(actions-clear, $m: disabled) {
+            @extend %grid-excel-actions__action !optional;
+            @extend %grid-excel-actions__action--disabled !optional;
+        }
+
+        @include e(secondary) {
+            @extend %grid-excel-menu__secondary !optional;
+        }
+
+        @include e(secondary, $m: 'cosy') {
+            @extend %grid-excel-menu__secondary--cosy !optional;
+        }
+
+        @include e(secondary, $m: 'compact') {
+            @extend %grid-excel-menu__secondary--compact !optional;
+        }
+
+        @include e(secondary-header) {
+            @extend %grid-excel-menu__header !optional;
+            @extend %grid-excel-menu__secondary-header !optional;
+        }
+
+        @include e(secondary-main) {
+            @extend %grid-excel-menu__secondary-main !optional;
+        }
+
+        @include e(secondary-footer) {
+            @extend %grid-excel-menu__footer !optional;
+            @extend %grid-excel-menu__secondary-footer !optional;
+        }
+
+        @include e(condition) {
+            @extend %grid-excel-menu__condition !optional;
+        }
+
+        @include e(add-filter) {
+            @extend %grid-excel-menu__add-filter !optional;
+        }
+
+        @include e(clear) {
+            @extend %grid-excel-filter__clear !optional;
+        }
+
+        @include e(cancel) {
+            @extend %grid-excel-filter__cancel !optional;
+        }
+
+        @include e(apply) {
+            @extend %grid-excel-filter__apply !optional;
+        }
+
+        @include m(inline) {
+            @extend %grid-excel-filter--inline !optional;
+        }
+
+        @include e(filter-results) {
+            @extend %grid-excel-menu__filter-results !optional;
+        }
+    }
+}

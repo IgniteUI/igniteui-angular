@@ -1,0 +1,12 @@
+@use '../../base' as *;
+@use 'sass:string';
+
+/// @access private
+/// @author <a href="https://github.com/didimmova" target="_blank">Dilyana Dimova</a>
+@mixin component {
+    @include b(geo-map) {
+        // Register the component in the component registry
+        $this: bem--selector-to-string(&);
+        @include register-component(string.slice($this, 2, -1));
+    }
+}

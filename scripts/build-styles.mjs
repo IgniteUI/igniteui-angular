@@ -15,10 +15,10 @@ const report = {
 };
 
 const STYLES = {
-    SRC: "projects/igniteui-angular/core/src/core/styles/themes/presets",
+    SRC: "projects/igniteui-angular/src/lib/core/styles/themes/presets",
     DIST: "../dist/igniteui-angular/styles",
     THEMING: {
-        SRC: "projects/igniteui-angular/core/src/core/styles/",
+        SRC: "projects/igniteui-angular/src/lib/core/styles/",
         DIST: "dist/igniteui-angular/lib/core/styles/",
     },
     CONFIG: {

@@ -1,0 +1,58 @@
+@use '../../base' as *;
+@use 'sass:string';
+
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+@mixin component {
+    @include b(igx-button) {
+        $this: bem--selector-to-string(&);
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: ()
+        );
+
+        @extend %igx-button-display !optional;
+
+        // FLAT BUTTON
+        @include m(flat) {
+            @extend %igx-button--flat !optional;
+        }
+
+        // CONTAINED BUTTON
+        @include m(contained) {
+            @extend %igx-button--contained !optional;
+        }
+
+        // OUTLINED BUTTON
+        @include m(outlined) {
+            @extend %igx-button--outlined !optional;
+        }
+
+        // FAB BUTTON
+        @include m(fab) {
+            @extend %igx-button--round !optional;
+            @extend %igx-button--fab !optional;
+        }
+
+        @include mx(flat, focused) {
+            @extend %igx-button--flat-focused !optional;
+        }
+
+        @include mx(contained, focused) {
+            @extend %igx-button--contained-focused !optional;
+        }
+
+        @include mx(outlined, focused) {
+            @extend %igx-button--outlined-focused !optional;
+        }
+
+        @include mx(fab, focused) {
+            @extend %igx-button--fab-focused !optional;
+        }
+
+        // DISABLED BUTTON
+        @include m(disabled) {
+            @extend %igx-button--disabled !optional;
+        }
+    }
+}

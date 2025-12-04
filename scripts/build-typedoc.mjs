@@ -1,35 +1,46 @@
 import path from "path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath } from "url";
 import { Application } from "typedoc";
 import getArgs from "./get-args.mjs";
 
 const product = "ignite-ui-angular";
 const { localize, jsonExport, jsonImport } = getArgs();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const toPosix = (p) => String(p).replace(/\\/g, "/");
-const ROOT = (...segments) => toPosix(path.resolve(__dirname, "..", ...segments));
+const DEST = path.join.bind(
+    null,
+    path.resolve(__dirname, "../dist/igniteui-angular/docs"),
+);
 
 /*
  * Determines the entry points for the documentation generation.
  */
 function entryPoints() {
     if (localize === "jp") {
-        return ROOT("i18nRepo", "typedoc", "ja", "igniteui-angular.json");
+        return path.resolve(
+            __dirname,
+            "../i18nRepo/typedoc/ja/igniteui-angular.json",
+        );
     }
 
     if (jsonImport) {
-        return ROOT("dist", "igniteui-angular", "docs", "typescript-exported", "igniteui-angular.json");
+        return path.resolve(
+            __dirname,
+            "../dist/igniteui-angular/docs/typescript-exported/igniteui-angular.json",
+        );
     }
 
-    return ROOT("projects", "igniteui-angular", "src", "public_api.ts");
+    return path.resolve(
+        __dirname,
+        "../projects/igniteui-angular/src/public_api.ts",
+    );
 }
 
 /*
  * The output directory for the static site or json generation.
  */
 const OUT_DIR = jsonExport
-    ? ROOT("dist", "igniteui-angular", "docs", "typescript-exported", "igniteui-angular.json")
-    : ROOT("dist", "igniteui-angular", "docs", "typescript");
+    ? DEST("/typescript-exported/igniteui-angular.json")
+    : DEST("/typescript");
 
 /*
  * The Typedoc configuration object.
@@ -39,8 +50,11 @@ const CONFIG = {
     entryPoints: entryPoints(),
     entryPointStrategy: jsonImport || localize === "jp" ? "merge" : "resolve",
     plugin: [
-        ROOT("node_modules", "typedoc-plugin-localization", "dist", "index.js"),
-        ROOT("node_modules", "ig-typedoc-theme", "dist", "index.js"),
+        path.resolve(
+            __dirname,
+            "../node_modules/typedoc-plugin-localization/dist/index.js",
+        ),
+        path.resolve(__dirname, "../node_modules/ig-typedoc-theme/dist/index.js"),
     ],
     theme: "igtheme",
     excludePrivate: true,
@@ -48,9 +62,7 @@ const CONFIG = {
     name: "Ignite UI for Angular",
     readme: "none",
     out: OUT_DIR,
-    router: "kind",
-    logLevel: "Verbose",
-    tsconfig: ROOT("tsconfig.typedoc.json")
+    tsconfig: path.resolve(__dirname, "../tsconfig.typedoc.json"),
 };
 
 async function main() {
@@ -61,7 +73,10 @@ async function main() {
     app.options.setValue('versioning', true);
 
     if (localize === "jp") {
-        const jpTemplateStrings = ROOT("extras", "template", "strings", "shell-strings.json");
+        const jpTemplateStrings = path.resolve(
+            __dirname,
+            "../extras/template/strings/shell-strings.json",
+        );
         app.options.setValue("templateStrings", jpTemplateStrings);
     }
 

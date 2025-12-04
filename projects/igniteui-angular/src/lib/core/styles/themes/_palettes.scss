@@ -1,0 +1,88 @@
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'igniteui-theming/sass/color/presets' as palettes;
+
+////
+/// @group palettes
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// @access private
+/// @deprecated
+$default-palette: palettes.$light-material-palette;
+
+/// @access private
+$default-dark-palette: palettes.$dark-material-palette;
+
+/// Same as $light-material-palette.
+/// @type Map
+/// @prop {Color} primary [#09f] - The 500 variant of the `primary` color (default).
+/// @prop {Color} secondary [#e41c77] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} gray [#000] - The base color for  the `gray` shades.
+/// @prop {Color} surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#4eb862] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#fbb13c] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#ff134a] - The `error`. Default for every palette if not specified.
+/// @access public
+/// @group palettes
+/// @deprecated
+$light-palette: palettes.$light-material-palette;
+
+/// Same as $dark-material-palette but with modified gray and surface colors.
+/// @type Map
+/// @prop {Color} primary [#09f] - The 500 variant of the `primary` color (default).
+/// @prop {Color} secondary [#e41c77] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} gray [#fff] - The base color for  the `gray` shades.
+/// @prop {Color} surface [#222] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#4eb862] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#fbb13c] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#ff134a] - The `error`. Default for every palette if not specified.
+/// @access public
+/// @group palettes
+/// @deprecated
+$dark-palette: palettes.$dark-material-palette;
+
+/// @access private
+$green-palette: palettes.$light-green-palette;
+
+/// @access private
+$green-dark-palette: palettes.$dark-green-palette;
+
+/// @access private
+$purple-palette: palettes.$light-purple-palette;
+
+/// @access private
+$purple-dark-palette: palettes.$dark-purple-palette;
+
+/// @access private
+$fluent-excel-palette: palettes.$light-fluent-excel-palette;
+
+/// @access private
+$fluent-excel-dark-palette: palettes.$dark-fluent-excel-palette;
+
+/// @access private
+$fluent-word-palette: palettes.$light-fluent-word-palette;
+
+/// @access private
+$fluent-word-dark-palette: palettes.$dark-fluent-word-palette;
+
+/// @access private
+$fluent-palette: palettes.$light-fluent-palette;
+
+/// @access private
+$fluent-dark-palette: palettes.$dark-fluent-palette;
+
+/// @access private
+$bootstrap-palette: palettes.$light-bootstrap-palette;
+
+/// @access private
+$bootstrap-dark-palette: palettes.$dark-bootstrap-palette;
+
+/// Global Overlay Color.
+/// Assigned to the 500 variant of the gray color form the current palette.
+/// @group palettes
+/// @type Color
+/// @access private
+/// @deprecated
+$overlay-color: color($light-palette, 'gray') !default;

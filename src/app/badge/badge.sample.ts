@@ -3,7 +3,7 @@ import {
     IgxBadgeComponent,
     IgxAvatarComponent,
     IgxIconComponent,
-    IgSizeDirective,
+    IgSizeDirective
 } from 'igniteui-angular';
 import {
     defineComponents,
@@ -91,7 +91,7 @@ export class BadgeSampleComponent {
             info: 'info',
             success: 'success',
             warning: 'warning',
-            error: 'danger'
+            error: 'danger',
         })
     );
 

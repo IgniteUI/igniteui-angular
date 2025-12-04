@@ -7,11 +7,6 @@ on:
 jobs:
   stale:
 
-    permissions:
-      contents: read
-      issues: write
-      pull-requests: write
-
     runs-on: ubuntu-latest
 
     steps:

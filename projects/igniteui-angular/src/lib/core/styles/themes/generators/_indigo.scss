@@ -1,0 +1,89 @@
+@use 'base' as *;
+@use '../schemas' as *;
+@use 'igniteui-theming/sass/color' as *;
+@use 'igniteui-theming/sass/color/presets' as *;
+@use 'igniteui-theming/sass/elevations/presets' as elevations;
+
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// A wrapper around the theme mixin. Creates a global indigo theme that can be used with light backgrounds.
+/// @param {Map} $palette - An palette to be used by the global theme.
+/// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
+/// @see {mixin} theme
+/// @deprecated - Use the theme mixin instead.
+@mixin indigo-light-theme(
+    $palette,
+    $exclude: (),
+    $roundness: null,
+    $elevation: true,
+) {
+    $primary: color($palette, primary);
+    $secondary: color($palette, secondary);
+    $gray: color($light-indigo-palette, gray);
+    $surface: color($light-indigo-palette, surface);
+    $info: color($palette, info);
+    $success: color($palette, success);
+    $warn: color($palette, warn);
+    $error: color($palette, error);
+
+    @include theme(
+        $palette: palette(
+            $primary,
+            $secondary,
+            $surface: $surface,
+            $gray: $gray,
+            $info: $info,
+            $success: $success,
+            $warn: $warn,
+            $error: $error
+        ),
+        $schema: $light-indigo-schema,
+        $exclude: $exclude,
+        $roundness: $roundness,
+        $elevation: $elevation,
+        $elevations: elevations.$indigo-elevations,
+    );
+}
+
+/// A wrapper around the theme mixin. Creates a global indigo theme that can be used with dark backgrounds.
+/// @param {Map} $palette - An palette to be used by the global theme.
+/// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
+/// @see {mixin} theme
+/// @deprecated - Use the theme mixin instead.
+@mixin indigo-dark-theme(
+    $palette,
+    $exclude: (),
+    $roundness: null,
+    $elevation: true,
+) {
+    $primary: color($palette, primary);
+    $secondary: color($palette, secondary);
+    $gray: color($dark-indigo-palette, gray);
+    $surface: color($dark-indigo-palette, surface);
+    $info: color($palette, info);
+    $success: color($palette, success);
+    $warn: color($palette, warn);
+    $error: color($palette, error);
+
+    @include theme(
+        $palette: palette(
+            $primary,
+            $secondary,
+            $surface: $surface,
+            $gray: $gray,
+            $info: $info,
+            $success: $success,
+            $warn: $warn,
+            $error: $error
+        ),
+        $schema: $dark-indigo-schema,
+        $exclude: $exclude,
+        $roundness: $roundness,
+        $elevation: $elevation,
+        $elevations: elevations.$indigo-elevations,
+    );
+}

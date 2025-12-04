@@ -24,18 +24,14 @@
                     "description": "The type of the change: variable, function, mixin"
                 }
             },
-            "required": [
-                "name",
-                "type"
-            ],
             "type": "object"
         },
         "ThemeType": {
             "enum": [
-                "variable",
-                "property",
                 "function",
-                "mixin"
+                "mixin",
+                "property",
+                "variable"
             ],
             "type": "string"
         }
@@ -49,9 +45,6 @@
             "type": "array"
         }
     },
-    "required": [
-        "changes"
-    ],
     "type": "object"
 }
 

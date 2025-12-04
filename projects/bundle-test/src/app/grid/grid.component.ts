@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { IgxGridComponent } from 'igniteui-angular/grids/grid';
+import { IgxGridComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid',

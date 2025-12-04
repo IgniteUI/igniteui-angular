@@ -1,4 +1,4 @@
-import { IBannerResourceStrings } from 'igniteui-angular/core';
+import { IBannerResourceStrings } from 'igniteui-angular';
 
 // only use `satisfies` operator so export is typed by its schema
 /**

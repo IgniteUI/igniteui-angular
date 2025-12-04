@@ -1,0 +1,24 @@
+@use 'igniteui-theming/sass/bem' as *;
+
+%display-container {
+    display: inherit;
+    flex-flow: inherit;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+%display-container--inactive {
+    width: 100%;
+}
+
+@mixin component {
+    @include b(igx-display-container) {
+        @extend %display-container !optional;
+
+        @include m(inactive) {
+            @extend %display-container--inactive !optional;
+        }
+    }
+}

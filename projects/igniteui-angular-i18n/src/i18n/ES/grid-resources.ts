@@ -1,4 +1,4 @@
-import { IGridResourceStrings } from 'igniteui-angular/core';
+import { IGridResourceStrings } from 'igniteui-angular';
 
 // only use `satisfies` operator so export is typed by its schema
 /**
@@ -140,7 +140,6 @@ export const GridResourceStringsES = {
     igx_grid_toolbar_exporter_button_label: 'Exportar',
     igx_grid_toolbar_exporter_excel_entry_text: 'Exportar a Excel',
     igx_grid_toolbar_exporter_csv_entry_text: 'Exportar a CSV',
-    igx_grid_toolbar_exporter_pdf_entry_text: 'Exportar a PDF',
     igx_grid_groupByArea_select_message: 'Seleccione todas las filas del grupo con el nombre de campo {0} y el valor {1}.',
     igx_grid_groupByArea_deselect_message: 'Anule la selección de todas las filas del grupo con el nombre de campo {0} y el valor {1}.',
     igx_grid_snackbar_addrow_label: 'Fila agregada',

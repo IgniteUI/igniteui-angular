@@ -1,4 +1,4 @@
-import { ICalendarResourceStrings } from 'igniteui-angular/core';
+import { ICalendarResourceStrings } from 'igniteui-angular';
 
 // only use `satisfies` operator so export is typed by its schema
 /**

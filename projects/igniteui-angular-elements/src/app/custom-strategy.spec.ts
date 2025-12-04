@@ -3,7 +3,7 @@ import { html } from 'lit';
 import { firstValueFrom, fromEvent, skip, timer } from 'rxjs';
 import { ComponentRefKey, IgcNgElement } from './custom-strategy';
 import hgridData from '../assets/data/projects-hgrid.js';
-import { SampleTestData } from 'igniteui-angular/test-utils/sample-test-data.spec';
+import { SampleTestData } from 'igniteui-angular/src/lib/test-utils/sample-test-data.spec';
 import {
     IgcGridComponent,
     IgcHierarchicalGridComponent,

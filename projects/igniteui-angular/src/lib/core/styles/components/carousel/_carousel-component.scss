@@ -1,0 +1,97 @@
+@use '../../base' as *;
+@use 'sass:string';
+
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+@mixin _igx-carousel-indicators-partial {
+    @include b(igx-carousel-indicators) {
+        @extend %igx-carousel-indicators !optional;
+
+        @include e(indicator) {
+            @extend %igx-carousel-indicator !optional;
+        }
+
+        @include m(start) {
+            @extend %igx-carousel-indicators !optional;
+            @extend %igx-carousel-indicators--start !optional;
+        }
+
+        @include m(end) {
+            @extend %igx-carousel-indicators !optional;
+            @extend %igx-carousel-indicators--end !optional;
+        }
+
+        @include m(focused) {
+            @extend %igx-carousel-indicators !optional;
+            @extend %igx-carousel-indicators--focused !optional;
+        }
+    }
+
+    @include b(igx-carousel-label-indicator) {
+        @extend %igx-carousel-label-indicator !optional;
+    }
+}
+
+@mixin _igx-carousel-navigation-partial {
+    @include b(igx-nav-dot) {
+        @extend %igx-nav-dot !optional;
+
+        @include m(active) {
+            @extend %igx-nav-dot--active !optional;
+        }
+    }
+}
+
+@mixin _igx-carousel-slide-partial {
+    @include b(igx-slide) {
+        @extend %igx-carousel-slide !optional;
+
+        @include m(current) {
+            @extend %igx-carousel-slide--current !optional;
+        }
+
+        @include m(previous) {
+            @extend %igx-carousel-slide--previous !optional;
+        }
+    }
+}
+
+@mixin component {
+    @include b(igx-carousel) {
+        $this: bem--selector-to-string(&);
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: (
+                igx-icon,
+            )
+        );
+
+        @extend %igx-carousel-display !optional;
+
+        @include e(inner) {
+            @extend %igx-carousel-slide-wrapper !optional;
+        }
+
+        @include e(label) {
+            @extend %igx-carousel-indicators-label !optional;
+        }
+
+        @include e(arrow, $m: prev) {
+            @extend %igx-carousel-arrow !optional;
+            @extend %igx-carousel-arrow--prev !optional;
+        }
+
+        @include e(arrow, $m: next) {
+            @extend %igx-carousel-arrow !optional;
+            @extend %igx-carousel-arrow--next !optional;
+        }
+
+        @include m(vertical) {
+            @extend %igx-carousel--vertical !optional;
+        }
+
+        @include _igx-carousel-indicators-partial();
+        @include _igx-carousel-navigation-partial();
+        @include _igx-carousel-slide-partial();
+    }
+}

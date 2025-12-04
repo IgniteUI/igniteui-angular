@@ -1,4 +1,4 @@
-import { IQueryBuilderResourceStrings } from 'igniteui-angular/core';
+import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
 /**
  * Turkish resource strings for IgxQueryBuilder

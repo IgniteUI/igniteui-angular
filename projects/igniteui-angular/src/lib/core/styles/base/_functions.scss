@@ -1,0 +1,65 @@
+@use 'variables' as *;
+@use 'sass:map';
+@use 'sass:list';
+@use 'sass:string';
+
+/// Get the difference between two lists.
+/// @access private
+/// @param {List} $list1 - The source list.
+/// @param {List} $list2 - The list to check against the source list.
+/// @return {List} - A list containing the diff items.
+@function list-diff($list1, $list2) {
+    $result: ();
+
+    @each $item in $list1 {
+        @if not list.index($list2, $item) {
+            $result: list.append($result, $item, comma);
+        }
+    }
+
+    @return $result;
+}
+
+/// @group Utilities
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @access private
+@function is-used($component, $checklist) {
+    $used: true;
+
+    @if list.index($checklist, $component) {
+        $deps: map.get($components, $component, 'usedBy');
+        $excluded: ();
+
+        @each $item in $checklist {
+            @if list.index($deps, $item) {
+                $excluded: list.append($excluded, $item);
+            }
+        }
+
+        $used: list.length($deps) != list.length($excluded);
+
+        @if not($used) {
+            $dropped-themes: list.append($dropped-themes, $component) !global;
+        } @else {
+            $remaining: list-diff($deps, $excluded);
+
+            @warn string.unquote('You\'ve opted to exclude the "#{$component}" theme but it was held back as the following components depend on it: "#{$remaining}".');
+        }
+    }
+
+    @return $used;
+}
+
+/// Test if a component, or list of components is in the list of known components.
+/// @access private
+/// @param {String|List} $items - The components list to check in.
+/// @return {List} - The list of passed items.
+@function is-component($items) {
+    $register: map.keys($components);
+    @each $item in $items {
+        @if not(list.index($register, $item)) {
+            @warn string.unquote('Can\'t exclude "#{$item}" because it is not in the list of known components.');
+        }
+    }
+    @return $items;
+}

@@ -4,7 +4,7 @@
         "rootDir": "./src",
         "target": "es2015",
         "module": "esnext",
-        "moduleResolution": "bundler",
+        "moduleResolution": "node",
         "declaration": true,
         "outDir": "../../dist/igniteui-angular-i18n",
         "stripInternal": true,
@@ -14,9 +14,6 @@
         "paths": {
             "igniteui-angular": [
                 "../../dist/igniteui-angular/"
-            ],
-            "igniteui-angular/*": [
-                "../../dist/igniteui-angular/*"
             ]
         }
     }

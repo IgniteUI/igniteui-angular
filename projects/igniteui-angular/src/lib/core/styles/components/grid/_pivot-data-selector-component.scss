@@ -1,0 +1,70 @@
+@use '../../base' as *;
+@use 'sass:string';
+
+@mixin component() {
+    @include b(igx-pivot-data-selector) {
+        $this: bem--selector-to-string(&);
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: ()
+        );
+
+        @extend %selector-base !optional;
+
+        @include e(header) {
+            @extend %selector-header !optional;
+        }
+
+        @include e(header-extra) {
+            @extend %selector-header-extra !optional;
+        }
+
+        @include e(filter) {
+            @extend %selector-filter !optional;
+        }
+
+        @include e(item) {
+            @extend %selector-item !optional;
+        }
+
+        @include e(item-ghost) {
+            @extend %selector-item-ghost !optional;
+        }
+
+        @include e(item-ghost, $m: no-drop) {
+            @extend %selector-item-ghost--no-drop !optional;
+        }
+
+        @include e(item-ghost-text) {
+            @extend %selector-item-ghost-text !optional;
+        }
+
+        @include e(item-start) {
+            @extend %selector-item-start !optional;
+        }
+
+        @include e(item-end) {
+            @extend %selector-item-end !optional;
+        }
+
+        @include e(item-text) {
+            @extend %selector-item-text !optional;
+        }
+
+        @include e(action-sort) {
+            @extend %selector-action-sort !optional;
+        }
+
+        @include e(action-filter) {
+            @extend %selector-action-filter !optional;
+        }
+
+        @include e(action-move) {
+            @extend %selector-action-move !optional;
+        }
+
+        @include e(action-summary) {
+            @extend %selector-action-summary !optional;
+        }
+    }
+}

@@ -1,0 +1,64 @@
+////
+/// @group typography
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+@use 'sass:map';
+@use 'sass:list';
+@use 'material';
+@use 'bootstrap';
+@use 'fluent';
+@use 'indigo';
+@use 'igniteui-theming/sass/utils/meta' as *;
+@use 'igniteui-theming/sass/typography' as theming;
+@use 'igniteui-theming/sass/typography/presets' as presets;
+@use 'igniteui-theming/sass/typography/charts' as *;
+
+@mixin _component-typography($type-scale, $exclude) {
+    font-family: var(--ig-font-family);
+
+    $variant: map.get(map.get($type-scale, '_meta'), 'variant');
+
+    @if not(list.index($exclude, 'charts')) {
+        @include charts-typography($type-scale);
+    }
+
+    @if $variant == 'material' or not($variant) {
+        @include material.typography();
+    }
+
+    @if $variant == 'bootstrap' {
+        @include bootstrap.typography($type-scale);
+    }
+
+    @if $variant == 'fluent' {
+        @include fluent.typography();
+    }
+
+    @if $variant == 'indigo' {
+        @include indigo.typography($type-scale);
+    }
+}
+
+/// Adds typography styles for h1-h6, paragraph and creates custom typography class selectors.
+/// The produces styles are based on the passed typeface and type scale.
+/// If omitted the $material-typeface and $material-type-scale will be used.
+/// @access public
+/// @param {String} $font-family [$material-typeface] - The font family to be used across all typographic elements.
+/// @param {Map} $type-scale [$material-type-scale] - A type scale map as produced by type-scale.
+/// @param {Map} $exclude [null] - A list of typography styles to be excluded.
+@mixin typography(
+    $font-family: presets.$material-typeface,
+    $type-scale: presets.$material-type-scale,
+    $exclude: null
+) {
+    $_scope: if(is-root() or is-host(), '.ig-typography', '&');
+
+    #{$_scope} {
+        @include _component-typography($type-scale, $exclude);
+    }
+
+    @if not(list.index($exclude, 'global')) {
+        @include theming.typography($font-family, $type-scale);
+    }
+}

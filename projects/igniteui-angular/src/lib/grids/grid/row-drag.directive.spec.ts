@@ -1,0 +1,1550 @@
+import { Component, ViewChild, DebugElement, QueryList, TemplateRef } from '@angular/core';
+import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { DataParent, SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { Point } from '../../services/public_api';
+
+import { IgxGridComponent } from './grid.component';
+import { IgxColumnComponent } from '../columns/column.component';
+import { IgxDragIndicatorIconDirective, IgxRowDragDirective, IgxRowDragGhostDirective } from '../row-drag.directive';
+import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../common/events';
+import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
+import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
+import { IgxTreeGridComponent } from '../tree-grid/public_api';
+import { GridSelectionMode } from '../common/enums';
+import { CellType, GridType, RowType } from '../common/grid.interface';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IgxRowDirective } from '../row.directive';
+import { NgStyle } from '@angular/common';
+import { IgxIconComponent } from '../../icon/icon.component';
+
+const DEBOUNCE_TIME = 50;
+const CSS_CLASS_DRAG_INDICATOR = '.igx-grid__drag-indicator';
+const CSS_CLASS_DRAG_INDICATOR_OFF = 'igx-grid__drag-indicator--off';
+const CSS_CLASS_GRID_ROW = '.igx-grid__tr';
+const CSS_CLASS_DRAG_ROW = 'igx-grid__tr--drag';
+const CSS_CLASS_GHOST_ROW = 'igx-grid__tr--ghost';
+const CSS_CLASS_SELECTED_ROW = 'igx-grid__tr--selected';
+const CSS_CLASS_SELECTION_CHECKBOX = '.igx-grid__cbx-selection';
+const CSS_CLASS_VIRTUAL_HSCROLLBAR = '.igx-vhelper--horizontal';
+const CSS_CLASS_LAST_PINNED_HEADER = 'igx-grid-th--pinned-last';
+const CSS_CLASS_DROPPABLE_AREA = '.droppable-area';
+const CSS_CLASS_NON_DROPPABLE_AREA = '.non-droppable-area';
+
+describe('Row Drag Tests', () => {
+
+    describe('Flat Grid', () => {
+        let fixture: ComponentFixture<any>;
+        let dropAreaElement: Element;
+        let dragIndicatorElements: DebugElement[];
+        let dragIndicatorElement: Element;
+        let rowDragDirective: IgxRowDragDirective;
+        let startPoint: Point;
+        let movePoint: Point;
+        let dropPoint: Point;
+        let pointerDownEvent: PointerEvent;
+        let pointerMoveEvent: PointerEvent;
+        let pointerUpEvent: PointerEvent;
+
+        describe('General tests', () => {
+            describe('Drag and drop tests', () => {
+                let grid: IgxGridComponent;
+                let nonDroppableAreaElement: Element;
+                let rows: IgxRowDirective[];
+                let dragRows: DebugElement[];
+                let rowToDrag: IgxRowDirective;
+
+                beforeEach(waitForAsync(() => {
+                    TestBed.configureTestingModule({
+                        imports: [
+                            NoopAnimationsModule,
+                            IgxGridRowDraggableComponent
+                        ]
+                    }).compileComponents();
+                }));
+
+                beforeEach(() => {
+                    fixture = TestBed.createComponent(IgxGridRowDraggableComponent);
+                    grid = fixture.componentInstance.instance;
+                    fixture.detectChanges();
+                    rows = grid.rowList.toArray();
+                    dropAreaElement = fixture.debugElement.query(By.css(CSS_CLASS_DROPPABLE_AREA)).nativeElement;
+                    nonDroppableAreaElement = fixture.debugElement.query(By.css(CSS_CLASS_NON_DROPPABLE_AREA)).nativeElement;
+                    dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
+                    dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
+                });
+
+                it('should drag and drop draggable row over droppable container', () => {
+                    dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+                    rowToDrag = rows[1];
+                    rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    movePoint = UIInteractions.getPointFromElement(rows[4].nativeElement);
+                    dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                    pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+                    pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+
+                    spyOn(grid.rowDragStart, 'emit');
+                    spyOn(grid.rowDragEnd, 'emit');
+
+                    expect(rowToDrag.dragging).toBeFalsy();
+                    expect(rowToDrag.grid.rowDragging).toBeFalsy();
+
+                    rowDragDirective.onPointerDown(pointerDownEvent);
+                    rowDragDirective.onPointerMove(pointerMoveEvent);
+                    expect(rowToDrag.dragging).toBeTruthy();
+                    expect(rowToDrag.grid.rowDragging).toBeTruthy();
+                    verifyRowDragStartEvent(grid, grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective);
+
+                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                    rowDragDirective.onPointerMove(pointerMoveEvent);
+                    expect(rowToDrag.dragging).toBeTruthy();
+                    expect(rowToDrag.grid.rowDragging).toBeTruthy();
+
+                    rowDragDirective.onPointerUp(pointerUpEvent);
+                    expect(rowToDrag.dragging).toBeFalsy();
+                    expect(rowToDrag.grid.rowDragging).toBeFalsy();
+                    verifyRowDragEndEvent(grid, grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective, false);
+                });
+                it('should be able to drag row only by drag icon', async () => {
+                    dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+                    rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+                    rowToDrag = rows[1];
+                    const rowElement = rowToDrag.nativeElement;
+
+                    const dragIndicatorPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    const rowPoint = UIInteractions.getPointFromElement(rowElement);
+                    movePoint = UIInteractions.getPointFromElement(rows[4].nativeElement);
+                    pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+                    pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+                    spyOn(grid.rowDragStart, 'emit');
+
+                    expect(rowToDrag.dragging).toBeFalsy();
+                    expect(rowToDrag.grid.rowDragging).toBeFalsy();
+
+                    await pointerDown(rowElement, rowPoint, fixture);
+                    await pointerMove(rowElement, movePoint, fixture);
+                    expect(rowToDrag.dragging).toBeFalsy();
+                    expect(rowToDrag.grid.rowDragging).toBeFalsy();
+                    expect(grid.rowDragStart.emit).toHaveBeenCalledTimes(0);
+
+                    await pointerDown(dragIndicatorElement, dragIndicatorPoint, fixture);
+                    await pointerMove(dragIndicatorElement, movePoint, fixture);
+                    expect(rowToDrag.dragging).toBeTruthy();
+                    expect(rowToDrag.grid.rowDragging).toBeTruthy();
+                    verifyRowDragStartEvent(grid, grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective);
+                    await pointerUp(dragIndicatorElement, movePoint, fixture);
+                });
+                it('should not be able to drag grid header', () => {
+                    const header = fixture.debugElement.query(By.css(CSS_CLASS_GRID_ROW));
+                    const headerDragDirective = header.injector.get(IgxRowDragDirective, false);
+                    expect(headerDragDirective).toBe(false);
+                });
+                it('should cancel dragging when ESCAPE key is pressed.', async () => {
+                    dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+                    const row = rows[1];
+                    rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    movePoint = UIInteractions.getPointFromElement(rows[4].nativeElement);
+                    spyOn(grid.rowDragStart, 'emit');
+                    spyOn(grid.rowDragEnd, 'emit');
+
+                    rowDragDirective.onPointerDown(UIInteractions.createPointerEvent('pointerdown', startPoint));
+                    rowDragDirective.onPointerMove(UIInteractions.createPointerEvent('pointermove', movePoint));
+                    expect(row.dragging).toBeTruthy();
+                    expect(grid.rowDragging).toBeTruthy();
+                    expect(grid.rowDragStart.emit).toHaveBeenCalledTimes(1);
+
+                    UIInteractions.triggerKeyDownEvtUponElem('Escape', dragIndicatorElement);
+                    await wait(DEBOUNCE_TIME);
+                    fixture.detectChanges();
+                    expect(row.dragging).toBeFalsy();
+                    expect(grid.rowDragging).toBeFalsy();
+                    expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(1);
+                });
+                it('should create ghost element upon row dragging', () => {
+                    dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+                    rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    movePoint = UIInteractions.getPointFromElement(rows[4].nativeElement);
+                    dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                    pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+                    pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+                    let ghostElements: HTMLCollection;
+
+                    rowDragDirective.onPointerDown(pointerDownEvent);
+                    rowDragDirective.onPointerMove(pointerMoveEvent);
+                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                    rowDragDirective.onPointerMove(pointerMoveEvent);
+                    ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
+                    expect(ghostElements.length).toEqual(1);
+
+                    rowDragDirective.onPointerUp(pointerUpEvent);
+                    ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
+                    expect(ghostElements.length).toEqual(0);
+                });
+                it('should apply drag class to row upon row dragging', () => {
+                    dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+                    rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+                    rowToDrag = rows[1];
+
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    movePoint = UIInteractions.getPointFromElement(rows[4].nativeElement);
+                    dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                    pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+                    pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+
+                    expect(rowToDrag.dragging).toBeFalsy();
+                    expect(rowToDrag.grid.rowDragging).toBeFalsy();
+                    expect(rowToDrag.element.nativeElement.classList.contains(CSS_CLASS_DRAG_ROW)).toBeFalsy();
+
+                    rowDragDirective.onPointerDown(pointerDownEvent);
+                    rowDragDirective.onPointerMove(pointerMoveEvent);
+                    expect(rowToDrag.dragging).toBeTruthy();
+                    expect(rowToDrag.grid.rowDragging).toBeTruthy();
+                    expect(rowToDrag.element.nativeElement.classList.contains(CSS_CLASS_DRAG_ROW)).toBeTruthy();
+
+                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                    rowDragDirective.onPointerMove(pointerMoveEvent);
+                    rowDragDirective.onPointerUp(pointerUpEvent);
+                    expect(rowToDrag.dragging).toBeFalsy();
+                    expect(rowToDrag.grid.rowDragging).toBeFalsy();
+                    expect(rowToDrag.element.nativeElement.classList.contains(CSS_CLASS_DRAG_ROW)).toBeFalsy();
+                });
+                it('should align horizontal scrollbar with first column when column pinning is disabled', () => {
+                    // has no draggable and selectable rows
+                    grid.width = '400px';
+                    grid.rowSelection = GridSelectionMode.none;
+                    grid.rowDraggable = false;
+                    fixture.detectChanges();
+                    let rowSelectElement: DebugElement = fixture.debugElement.query(By.css(CSS_CLASS_SELECTION_CHECKBOX));
+                    let rowDragIndicatorElement: DebugElement = fixture.debugElement.query(By.css(CSS_CLASS_DRAG_INDICATOR));
+                    let horizontalScrollbarElement: DebugElement = fixture.debugElement.query(By.css(CSS_CLASS_VIRTUAL_HSCROLLBAR));
+                    expect(rowSelectElement).toBeNull();
+                    expect(rowDragIndicatorElement).toBeNull();
+
+                    // has draggable rows and has no selectable rows
+                    grid.rowSelection = GridSelectionMode.none;
+                    grid.rowDraggable = true;
+                    fixture.detectChanges();
+                    rowSelectElement = fixture.debugElement.query(By.css(CSS_CLASS_SELECTION_CHECKBOX));
+                    rowDragIndicatorElement = fixture.debugElement.query(By.css(CSS_CLASS_DRAG_INDICATOR));
+                    horizontalScrollbarElement = fixture.debugElement.query(By.css(CSS_CLASS_VIRTUAL_HSCROLLBAR));
+                    const dragIndicatorRect = rowDragIndicatorElement.nativeElement.getBoundingClientRect();
+                    let horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
+                    expect(rowSelectElement).toBeNull();
+                    expect(dragIndicatorRect.right).toBe(horizontalScrollbarRect.left);
+
+                    // has draggable and selectable rows
+                    grid.rowSelection = GridSelectionMode.multiple;
+                    grid.rowDraggable = true;
+                    fixture.detectChanges();
+                    horizontalScrollbarElement = fixture.debugElement.query(By.css(CSS_CLASS_VIRTUAL_HSCROLLBAR));
+                    horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
+                    // The horizontal scrollbar should be visible
+                    expect(horizontalScrollbarRect.left).not.toBe(0);
+                });
+                it('should align horizontal scrollbar with first non-pinned column when column pinning is enabled', () => {
+                    grid.width = '400px';
+                    grid.pinColumn('ProductName');
+                    fixture.detectChanges();
+
+                    // selectable rows disabled
+                    fixture.detectChanges();
+                    let horizontalScrollbarElement: DebugElement = fixture.debugElement.query(By.css(CSS_CLASS_VIRTUAL_HSCROLLBAR));
+                    let horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
+                    let pinnedColumnHeaderElement: DebugElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_LAST_PINNED_HEADER));
+                    let pinnedColumnHeaderRect = pinnedColumnHeaderElement.nativeElement.getBoundingClientRect();
+
+                    // The horizontal scrollbar should be visible
+                    expect(horizontalScrollbarRect.left).not.toBe(0);
+
+                    // selectable rows enabled
+                    grid.rowSelection = GridSelectionMode.multiple;
+                    fixture.detectChanges();
+                    horizontalScrollbarElement = fixture.debugElement.query(By.css(CSS_CLASS_VIRTUAL_HSCROLLBAR));
+                    horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
+                    pinnedColumnHeaderElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_LAST_PINNED_HEADER));
+                    pinnedColumnHeaderRect = pinnedColumnHeaderElement.nativeElement.getBoundingClientRect();
+                    expect(pinnedColumnHeaderRect.right).toBe(horizontalScrollbarRect.left);
+                });
+                it('should fire drag events with correct values of event arguments.', () => {
+                    rowToDrag = rows[2];
+                    rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+                    dragIndicatorElement = dragIndicatorElements[3].nativeElement;
+
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                    pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                    pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+
+                    spyOn(grid.rowDragStart, 'emit').and.callThrough();
+                    spyOn(grid.rowDragEnd, 'emit').and.callThrough();
+
+                    rowDragDirective.onPointerDown(pointerDownEvent);
+                    rowDragDirective.onPointerMove(pointerMoveEvent);
+                    verifyRowDragStartEvent(grid, grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective);
+
+                    rowDragDirective.onPointerMove(pointerMoveEvent);
+                    rowDragDirective.onPointerUp(pointerUpEvent);
+                    verifyRowDragEndEvent(grid, grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective, false);
+                });
+                it('should emit dragdrop events if dropping a row on a non-interactive area', () => {
+                    dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+                    rowToDrag = rows[1];
+                    rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    movePoint = UIInteractions.getPointFromElement(rows[4].nativeElement);
+                    dropPoint = UIInteractions.getPointFromElement(nonDroppableAreaElement);
+                    pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+                    pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+
+                    spyOn(grid.rowDragStart, 'emit');
+                    spyOn(grid.rowDragEnd, 'emit');
+
+                    expect(rowToDrag.dragging).toBeFalsy();
+                    expect(rowToDrag.grid.rowDragging).toBeFalsy();
+
+                    rowDragDirective.onPointerDown(pointerDownEvent);
+                    rowDragDirective.onPointerMove(pointerMoveEvent);
+                    expect(rowToDrag.dragging).toBeTruthy();
+                    expect(rowToDrag.grid.rowDragging).toBeTruthy();
+                    verifyRowDragStartEvent(grid, grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective);
+
+                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                    rowDragDirective.onPointerMove(pointerMoveEvent);
+                    expect(rowToDrag.dragging).toBeTruthy();
+                    expect(rowToDrag.grid.rowDragging).toBeTruthy();
+
+                    rowDragDirective.onPointerUp(pointerUpEvent);
+                    expect(rowToDrag.dragging).toBeFalsy();
+                    expect(rowToDrag.grid.rowDragging).toBeFalsy();
+                    verifyRowDragEndEvent(grid, grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective, false);
+                });
+                it('should destroy the drag ghost if dropping a row on a non-interactive area when animations are enabled', () => {
+                    grid.rowDragEnd.subscribe((e: IRowDragEndEventArgs) => {
+                        e.animation = true;
+                    });
+                    dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+                    rowToDrag = rows[1];
+                    rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    movePoint = UIInteractions.getPointFromElement(rows[4].nativeElement);
+                    dropPoint = UIInteractions.getPointFromElement(nonDroppableAreaElement);
+                    pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+                    pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+
+                    spyOn(grid.rowDragStart, 'emit');
+                    spyOn(grid.rowDragEnd, 'emit');
+
+                    expect(rowToDrag.dragging).toBeFalsy();
+                    expect(rowToDrag.grid.rowDragging).toBeFalsy();
+
+                    rowDragDirective.onPointerDown(pointerDownEvent);
+                    rowDragDirective.onPointerMove(pointerMoveEvent);
+                    expect(rowToDrag.dragging).toBeTruthy();
+                    expect(rowToDrag.grid.rowDragging).toBeTruthy();
+                    verifyRowDragStartEvent(grid, grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective);
+
+                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                    rowDragDirective.onPointerMove(pointerMoveEvent);
+                    expect(rowToDrag.dragging).toBeTruthy();
+                    expect(rowToDrag.grid.rowDragging).toBeTruthy();
+
+                    rowDragDirective.onPointerUp(pointerUpEvent);
+                    expect(rowToDrag.dragging).toBeFalsy();
+                    expect(rowToDrag.grid.rowDragging).toBeFalsy();
+                    verifyRowDragEndEvent(grid, grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective, false);
+                    const ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
+                    expect(ghostElements.length).toEqual(0);
+                    const dragIndicatorsOff = document.getElementsByClassName(CSS_CLASS_DRAG_INDICATOR_OFF);
+                    expect(dragIndicatorsOff.length).toEqual(0);
+                });
+                it('should be able to cancel rowDragStart event.', () => {
+                    grid.rowDragStart.subscribe((e: IRowDragStartEventArgs) => {
+                        e.cancel = true;
+                    });
+                    rowToDrag = rows[2];
+                    rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+                    dragIndicatorElement = dragIndicatorElements[rowToDrag.index].nativeElement;
+
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                    pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                    pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+
+                    spyOn(grid.rowDragStart, 'emit').and.callThrough();
+                    spyOn(grid.rowDragEnd, 'emit').and.callThrough();
+
+                    rowDragDirective.onPointerDown(pointerDownEvent);
+                    rowDragDirective.onPointerMove(pointerMoveEvent);
+                    expect(grid.rowDragStart.emit).toHaveBeenCalledTimes(1);
+
+                    rowDragDirective.onPointerMove(pointerMoveEvent);
+                    rowDragDirective.onPointerUp(pointerUpEvent);
+                    expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(0);
+                    const ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
+                    expect(ghostElements.length).toEqual(0);
+                });
+            });
+            describe('Custom ghost template tests', () => {
+                let grid: IgxGridComponent;
+                let rows: IgxRowDirective[];
+                let dragRows: DebugElement[];
+
+                beforeEach(waitForAsync(() => {
+                    TestBed.configureTestingModule({
+                        imports: [
+                            NoopAnimationsModule,
+                            IgxGridRowCustomGhostDraggableComponent
+                        ]
+                    }).compileComponents();
+                }));
+                beforeEach(() => {
+                    fixture = TestBed.createComponent(IgxGridRowCustomGhostDraggableComponent);
+                    grid = fixture.componentInstance.instance;
+                    fixture.detectChanges();
+                });
+                it('should correctly create custom ghost element', () => {
+                    dropAreaElement = fixture.debugElement.query(By.css(CSS_CLASS_DROPPABLE_AREA)).nativeElement;
+                    rows = grid.rowList.toArray();
+                    dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
+                    dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
+                    rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+                    dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    movePoint = UIInteractions.getPointFromElement(rows[4].nativeElement);
+                    dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                    pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+
+                    rowDragDirective.onPointerDown(pointerDownEvent);
+                    rowDragDirective.onPointerMove(pointerMoveEvent);
+                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                    rowDragDirective.onPointerMove(pointerMoveEvent);
+                    const ghostElements: HTMLCollection = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
+                    expect(ghostElements.length).toEqual(1);
+
+                    expect((rowDragDirective as any).ghostContext.data.ProductName).toEqual('NetAdvantage');
+                    expect((rowDragDirective as any).ghostContext.data.ID).toEqual(2);
+                    expect((rowDragDirective as any).ghostContext.grid).toEqual(grid);
+
+                    const ghostText = document.getElementsByClassName(CSS_CLASS_GHOST_ROW)[0].textContent;
+                    expect(ghostText).toEqual(' Moving a row! ');
+                    pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+                    rowDragDirective.onPointerUp(pointerUpEvent);
+                });
+
+                it('should allow setting custom drag icon and ghost element via Input.', () => {
+                    dropAreaElement = fixture.debugElement.query(By.css(CSS_CLASS_DROPPABLE_AREA)).nativeElement;
+                    grid.dragIndicatorIconTemplate = fixture.componentInstance.rowDragTemplate;
+                    grid.dragGhostCustomTemplate = fixture.componentInstance.rowDragGhostTemplate;
+                    fixture.detectChanges();
+                    rows = grid.rowList.toArray();
+                    dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
+                    dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+                    dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
+                    rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+
+                    expect(dragIndicatorElement.textContent.trim()).toBe('expand_less');
+
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    movePoint = UIInteractions.getPointFromElement(rows[4].nativeElement);
+                    dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                    pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+
+                    rowDragDirective.onPointerDown(pointerDownEvent);
+                    rowDragDirective.onPointerMove(pointerMoveEvent);
+                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                    rowDragDirective.onPointerMove(pointerMoveEvent);
+                    const ghostElements: HTMLCollection = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
+                    expect(ghostElements.length).toEqual(1);
+
+                    const ghostText = document.getElementsByClassName(CSS_CLASS_GHOST_ROW)[0].textContent;
+                    expect(ghostText.trim()).toEqual('CUSTOM');
+
+                    pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+                    rowDragDirective.onPointerUp(pointerUpEvent);
+
+                });
+            });
+        });
+
+        describe('Grid feature integration tests', () => {
+            let dragGrid: IgxGridComponent;
+            let dropGrid: IgxGridComponent;
+            let dragGridRows: IgxRowDirective[];
+            let dropGridRows: IgxRowDirective[];
+            let dragRows: DebugElement[];
+
+            beforeEach(waitForAsync(() => {
+                TestBed.configureTestingModule({
+                    imports: [
+                        NoopAnimationsModule,
+                        IgxGridFeaturesRowDragComponent
+                    ]
+                }).compileComponents();
+            }));
+            beforeEach(() => {
+                fixture = TestBed.createComponent(IgxGridFeaturesRowDragComponent);
+                dragGrid = fixture.componentInstance.dragGrid;
+                dropGrid = fixture.componentInstance.dropGrid;
+                fixture.detectChanges();
+                dragGridRows = dragGrid.rowList.toArray();
+                dropAreaElement = fixture.debugElement.query(By.directive(IgxDropDirective)).nativeElement;
+                dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
+                dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
+            });
+            const verifyDragAndDropRowCellValues = (dragRowIndex: number, dropRowIndex: number) => {
+                const dragRow = dragGrid.gridAPI.get_row_by_index(dragRowIndex);
+                const dragRowCells = (dragRow.cells as QueryList<CellType>).toArray();
+
+                const dropRow = dropGrid.gridAPI.get_row_by_index(dropRowIndex);
+                const dropRowCells = (dropRow.cells as QueryList<CellType>).toArray();
+                for (let cellIndex = 0; cellIndex < dropRowCells.length; cellIndex++) {
+                    expect(dropRowCells[cellIndex].value).toEqual(dragRowCells[cellIndex].value);
+                }
+            };
+            it('should drop row data in the proper grid columns', () => {
+                dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+                rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+
+                startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                movePoint = UIInteractions.getPointFromElement(dragGridRows[2].nativeElement);
+                dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+
+                rowDragDirective.onPointerDown(pointerDownEvent);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                rowDragDirective.onPointerUp(pointerUpEvent);
+                fixture.detectChanges();
+                verifyDragAndDropRowCellValues(1, 0);
+            });
+            it('should be able to drag grid row when column moving is enabled', () => {
+                const dragGridColumns = dragGrid.columns;
+                dragGrid.moveColumn(dragGridColumns[0], dragGridColumns[2]);
+                fixture.detectChanges();
+
+                dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+                const row = dragGridRows[1];
+                rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+                const dragRowCells = row.cells.toArray();
+
+                startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                movePoint = UIInteractions.getPointFromElement(dragGridRows[2].nativeElement);
+                dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+                pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+
+                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
+                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+
+                rowDragDirective.onPointerDown(pointerDownEvent);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                expect(row.dragging).toBeTruthy();
+                expect(row.grid.rowDragging).toBeTruthy();
+                verifyRowDragStartEvent(dragGrid, dragGrid.getRowByIndex(row.index), row.nativeElement, rowDragDirective);
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                rowDragDirective.onPointerUp(pointerUpEvent);
+                fixture.detectChanges();
+                expect(row.dragging).toBeFalsy();
+                expect(row.grid.rowDragging).toBeFalsy();
+                verifyRowDragEndEvent(dragGrid, dragGrid.getRowByIndex(row.index), row.nativeElement, rowDragDirective, false);
+
+                dropGridRows = dropGrid.rowList.toArray();
+                const dropRowCells = dropGridRows[0].cells.toArray();
+                expect(dropRowCells[0].value).toEqual(dragRowCells[2].value);
+                expect(dropRowCells[1].value).toEqual(dragRowCells[0].value);
+                expect(dropRowCells[2].value).toEqual(dragRowCells[1].value);
+                expect(dropRowCells[3].value).toEqual(dragRowCells[3].value);
+                expect(dropRowCells[4].value).toEqual(dragRowCells[4].value);
+            });
+            it('should be able to drag grid row when column pinning is enabled', () => {
+                dragGrid.pinColumn('ProductName');
+                fixture.detectChanges();
+
+                dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+                const row = dragGridRows[1];
+                rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+                const dragRowCells = row.cells.toArray();
+
+                startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                movePoint = UIInteractions.getPointFromElement(dragGridRows[2].nativeElement);
+                dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+                pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+
+                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
+                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+
+                rowDragDirective.onPointerDown(pointerDownEvent);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                expect(row.dragging).toBeTruthy();
+                expect(row.grid.rowDragging).toBeTruthy();
+                verifyRowDragStartEvent(dragGrid, dragGrid.getRowByIndex(row.index), row.nativeElement, rowDragDirective);
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                rowDragDirective.onPointerUp(pointerUpEvent);
+                fixture.detectChanges();
+                expect(row.dragging).toBeFalsy();
+                expect(row.grid.rowDragging).toBeFalsy();
+                verifyRowDragEndEvent(dragGrid, dragGrid.getRowByIndex(row.index), row.nativeElement, rowDragDirective, false);
+
+                dropGridRows = dropGrid.rowList.toArray();
+                const dropRowCells = dropGridRows[0].cells.toArray();
+                expect(dropRowCells[0].value).toEqual(dragRowCells[1].value);
+                expect(dropRowCells[1].value).toEqual(dragRowCells[2].value);
+                expect(dropRowCells[2].value).toEqual(dragRowCells[0].value);
+                expect(dropRowCells[3].value).toEqual(dragRowCells[3].value);
+                expect(dropRowCells[4].value).toEqual(dragRowCells[4].value);
+            });
+            it('should be able to drag grid row when column hiding is enabled', () => {
+                const hiddenDragCellValue = dragGrid.getCellByColumn(1, 'Downloads').value;
+                const column = dragGrid.getColumnByName('Downloads');
+                column.hidden = true;
+
+                dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+                const row = dragGridRows[1];
+                rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+                startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                movePoint = UIInteractions.getPointFromElement(dragGridRows[2].nativeElement);
+                dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+                pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+
+                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
+                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+
+                rowDragDirective.onPointerDown(pointerDownEvent);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                expect(row.dragging).toBeTruthy();
+                expect(dragGrid.rowDragging).toBeTruthy();
+                verifyRowDragStartEvent(dragGrid, dragGrid.getRowByIndex(row.index), row.nativeElement, rowDragDirective);
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                rowDragDirective.onPointerUp(pointerUpEvent);
+                fixture.detectChanges();
+                expect(row.dragging).toBeFalsy();
+                expect(dragGrid.rowDragging).toBeFalsy();
+                expect(dropGrid.rowList.length).toEqual(1);
+                verifyRowDragEndEvent(dragGrid, dragGrid.getRowByIndex(row.index), row.nativeElement, rowDragDirective, false);
+
+                const hiddenDropCellValue = dropGrid.getCellByColumn(0, 'Downloads').value;
+                expect(hiddenDropCellValue).toEqual(hiddenDragCellValue);
+            });
+            it('should be able to drag sorted grid row', () => {
+                dragGrid.sort({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: true });
+
+                dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+                const row = dragGridRows[1];
+                rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+                startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                movePoint = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
+                dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+                pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+
+                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
+                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+
+                rowDragDirective.onPointerDown(pointerDownEvent);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                expect(row.dragging).toBeTruthy();
+                expect(row.grid.rowDragging).toBeTruthy();
+                verifyRowDragStartEvent(dragGrid, dragGrid.getRowByIndex(row.index), row.nativeElement, rowDragDirective);
+
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                rowDragDirective.onPointerUp(pointerUpEvent);
+                fixture.detectChanges();
+                expect(row.dragging).toBeFalsy();
+                expect(row.grid.rowDragging).toBeFalsy();
+                verifyRowDragEndEvent(dragGrid, dragGrid.getRowByIndex(row.index), row.nativeElement, rowDragDirective, false);
+                expect(dropGrid.rowList.length).toEqual(1);
+                verifyDragAndDropRowCellValues(1, 0);
+            });
+            it('should be able to drag filtered grid row', () => {
+                dragGrid.filter('ProductName', 'Advantage', IgxStringFilteringOperand.instance().condition('contains'), true);
+
+                dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+                const row = dragGridRows[1];
+                rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+                startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                movePoint = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
+                dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+                pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+
+                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
+                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+
+                rowDragDirective.onPointerDown(pointerDownEvent);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                expect(row.dragging).toBeTruthy();
+                expect(row.grid.rowDragging).toBeTruthy();
+                verifyRowDragStartEvent(dragGrid, dragGrid.getRowByIndex(row.index), row.nativeElement, rowDragDirective);
+
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                rowDragDirective.onPointerUp(pointerUpEvent);
+                fixture.detectChanges();
+                expect(row.dragging).toBeFalsy();
+                expect(row.grid.rowDragging).toBeFalsy();
+                verifyRowDragEndEvent(dragGrid, dragGrid.getRowByIndex(row.index), row.nativeElement, rowDragDirective, false);
+                expect(dropGrid.rowList.length).toEqual(1);
+                verifyDragAndDropRowCellValues(1, 0);
+            });
+            it('should be able to drag selected grid row', () => {
+                dragGrid.rowSelection = GridSelectionMode.multiple;
+                fixture.detectChanges();
+                dragGrid.selectRows([2], false);
+                fixture.detectChanges();
+
+                dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+                const row = dragGridRows[1];
+                rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+                expect(row.selected).toBeTruthy();
+
+                startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                movePoint = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
+                dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+                pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+
+                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
+                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+
+                rowDragDirective.onPointerDown(pointerDownEvent);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                expect(row.dragging).toBeTruthy();
+                expect(row.grid.rowDragging).toBeTruthy();
+                verifyRowDragStartEvent(dragGrid, dragGrid.getRowByIndex(row.index), row.nativeElement,  rowDragDirective);
+
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                rowDragDirective.onPointerUp(pointerUpEvent);
+                fixture.detectChanges();
+                expect(row.dragging).toBeFalsy();
+                expect(row.grid.rowDragging).toBeFalsy();
+                verifyRowDragEndEvent(dragGrid, dragGrid.getRowByIndex(row.index), row.nativeElement, rowDragDirective, false);
+                expect(dropGrid.rowList.length).toEqual(1);
+                expect(row.selected).toBeTruthy();
+            });
+            it('should not apply selection class to ghost element when dragging selected grid row', () => {
+                dragGrid.rowSelection = GridSelectionMode.multiple;
+                fixture.detectChanges();
+                dragGrid.selectRows([2], false);
+                fixture.detectChanges();
+
+                dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+                rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+                const row = dragGridRows[1];
+                expect(row.selected).toBeTruthy();
+
+                startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                movePoint = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
+                dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+                pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+
+                rowDragDirective.onPointerDown(pointerDownEvent);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                expect(row.dragging).toBeTruthy();
+                expect(row.grid.rowDragging).toBeTruthy();
+
+                const ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
+                const ghostElement = ghostElements[0];
+                expect(ghostElements.length).toEqual(1);
+                expect(ghostElement.classList.contains(CSS_CLASS_SELECTED_ROW)).toBeFalsy();
+
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                rowDragDirective.onPointerUp(pointerUpEvent);
+                fixture.detectChanges();
+            });
+            it('should be able to drag grid row with selected cells', () => {
+                const range = { rowStart: 1, rowEnd: 1, columnStart: 0, columnEnd: 2 };
+                dragGrid.selectRange(range);
+                fixture.detectChanges();
+
+                const verifyCellSelection = () => {
+                    for (let index = 0; index < rowCells.length; index++) {
+                        const cellSelected = index <= 2 ? true : false;
+                        expect(rowCells[index].selected).toEqual(cellSelected);
+                    }
+                };
+
+                dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+                const row = dragGridRows[1];
+                rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+                const rowCells = row.cells.toArray();
+                verifyCellSelection();
+
+                startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                movePoint = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
+                dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+                pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+
+                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
+                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+
+                rowDragDirective.onPointerDown(pointerDownEvent);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                expect(row.dragging).toBeTruthy();
+                expect(row.grid.rowDragging).toBeTruthy();
+                verifyRowDragStartEvent(dragGrid, dragGrid.getRowByIndex(row.index), row.nativeElement, rowDragDirective);
+
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                rowDragDirective.onPointerUp(pointerUpEvent);
+                fixture.detectChanges();
+                expect(row.dragging).toBeFalsy();
+                expect(row.grid.rowDragging).toBeFalsy();
+                verifyRowDragEndEvent(dragGrid, dragGrid.getRowByIndex(row.index), row.nativeElement, rowDragDirective, false);
+                expect(dropGrid.rowList.length).toEqual(1);
+                verifyCellSelection();
+            });
+            it('should be able to drag grouped grid row', () => {
+                dragGrid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: true });
+                fixture.detectChanges();
+
+                dragIndicatorElement = dragIndicatorElements[3].nativeElement;
+                const row = dragGridRows[2];
+                rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+                const rowCells = row.cells.toArray();
+                const groupHeader = dragGrid.groupsRecords.find(element => element.value === rowCells[2].value);
+                let groupRow = groupHeader.records.find(element => element['ID'] === rowCells[1].value);
+                expect(groupHeader.records.length).toEqual(2);
+                expect(groupRow).toBeDefined();
+
+                startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                movePoint = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
+                dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+                pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+
+                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
+                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+
+                rowDragDirective.onPointerDown(pointerDownEvent);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                expect(row.dragging).toBeTruthy();
+                expect(row.grid.rowDragging).toBeTruthy();
+                verifyRowDragStartEvent(dragGrid, dragGrid.getRowByIndex(row.index), row.nativeElement, rowDragDirective);
+
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                rowDragDirective.onPointerUp(pointerUpEvent);
+                fixture.detectChanges();
+                expect(row.dragging).toBeFalsy();
+                expect(row.grid.rowDragging).toBeFalsy();
+                verifyRowDragEndEvent(dragGrid, dragGrid.getRowByIndex(row.index), row.nativeElement, rowDragDirective, false);
+                expect(dropGrid.rowList.length).toEqual(1);
+                expect(groupHeader.records.length).toEqual(2);
+                groupRow = groupHeader.records.find(element => element['ID'] === rowCells[1].value);
+                expect(groupRow).toBeDefined();
+            });
+            it('should exit edit mode and discard changes on row dragging', () => {
+                dragGrid.rowEditable = true;
+                fixture.detectChanges();
+
+                dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+                rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+                const row = dragGridRows[1];
+
+                startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                movePoint = UIInteractions.getPointFromElement(dragGridRows[2].nativeElement);
+                dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+                pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+
+                const dragCell = dragGrid.gridAPI.get_cell_by_index(1, 'Downloads');
+                const cacheValue = dragCell.value;
+                const cellElement = dragCell.nativeElement;
+                let cellInput = null;
+
+                spyOn(dragGrid.gridAPI.crudService, 'endEdit').and.callThrough();
+
+                cellElement.dispatchEvent(new Event('focus'));
+                fixture.detectChanges();
+
+                cellElement.dispatchEvent(new Event('dblclick'));
+                fixture.detectChanges();
+
+                const newCellValue = 2000;
+                cellInput = cellElement.querySelector('[igxinput]');
+                cellInput.value = newCellValue;
+                cellInput.dispatchEvent(new Event('input'));
+                fixture.detectChanges();
+                expect(row.inEditMode).toBeTruthy();
+                expect(dragCell.editMode).toEqual(true);
+
+                rowDragDirective.onPointerDown(pointerDownEvent);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                expect(row.dragging).toBeTruthy();
+                expect(row.grid.rowDragging).toBeTruthy();
+                expect(dragGrid.gridAPI.crudService.endEdit).toHaveBeenCalled();
+                expect(row.inEditMode).toBeFalsy();
+                expect(dragCell.editMode).toEqual(false);
+
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                rowDragDirective.onPointerUp(pointerUpEvent);
+                fixture.detectChanges();
+                expect(row.dragging).toBeFalsy();
+                expect(row.grid.rowDragging).toBeFalsy();
+
+                const dropCell = dropGrid.getCellByColumn(0, 'Downloads');
+                expect(dropCell.value).toEqual(cacheValue);
+                expect(dragCell.value).toEqual(cacheValue);
+            });
+        });
+    });
+
+    describe('Hierarchical Grid', () => {
+        let fixture: ComponentFixture<any>;
+        let dropAreaElement: Element;
+        let dragIndicatorElement: Element;
+        let rowDragDirective: IgxRowDragDirective;
+        let startPoint: Point;
+        let movePoint: Point;
+        let dropPoint: Point;
+        let pointerDownEvent: PointerEvent;
+        let pointerMoveEvent: PointerEvent;
+        let pointerUpEvent: PointerEvent;
+        let dragGrid: IgxHierarchicalGridComponent;
+        let dragRows: DebugElement[];
+        let pointerMoveToDropEvent: PointerEvent;
+
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxHierarchicalGridTestComponent,
+                    IgxHierarchicalGridCustomGhostTestComponent
+                ]
+            }).compileComponents();
+        }));
+        it('should be able to drag row on every hierarchical level', () => {
+            fixture = TestBed.createComponent(IgxHierarchicalGridTestComponent);
+            fixture.detectChanges();
+            dragGrid = fixture.componentInstance.hDragGrid;
+            dropAreaElement = fixture.debugElement.query(By.directive(IgxDropDirective)).nativeElement;
+            dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
+
+            // first level row
+            let rowToDrag = dragGrid.gridAPI.get_row_by_index(0);
+            dragIndicatorElement = rowToDrag.nativeElement.querySelector(CSS_CLASS_DRAG_INDICATOR);
+            rowDragDirective = dragRows[0].injector.get(IgxRowDragDirective);
+
+            startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+            movePoint = UIInteractions.getPointFromElement(dragGrid.gridAPI.get_row_by_index(3).nativeElement);
+            dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+            pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+            pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+            pointerMoveToDropEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+            pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+
+            spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
+            spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+
+            rowDragDirective.onPointerDown(pointerDownEvent);
+            rowDragDirective.onPointerMove(pointerMoveEvent);
+            verifyRowDragStartEvent(dragGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index),
+                rowToDrag.nativeElement, rowDragDirective, 1);
+            // pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+            rowDragDirective.onPointerMove(pointerMoveToDropEvent);
+            rowDragDirective.onPointerUp(pointerUpEvent);
+            fixture.detectChanges();
+            verifyRowDragEndEvent(dragGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index),
+                rowToDrag.nativeElement, rowDragDirective, false, 1);
+
+            // second level row
+            const childGrid = dragGrid.gridAPI.getChildGrids(false)[0];
+            rowToDrag = childGrid.gridAPI.get_row_by_index(0);
+            dragIndicatorElement = rowToDrag.nativeElement.querySelector(CSS_CLASS_DRAG_INDICATOR);
+            rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+            startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+            pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+
+            spyOn(childGrid.rowDragStart, 'emit').and.callThrough();
+            spyOn(childGrid.rowDragEnd, 'emit').and.callThrough();
+
+            rowDragDirective.onPointerDown(pointerDownEvent);
+            rowDragDirective.onPointerMove(pointerMoveEvent);
+            verifyRowDragStartEvent(childGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index),
+                rowToDrag.nativeElement, rowDragDirective, 1);
+            rowDragDirective.onPointerMove(pointerMoveToDropEvent);
+            rowDragDirective.onPointerUp(pointerUpEvent);
+            fixture.detectChanges();
+            verifyRowDragEndEvent(childGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index),
+                rowToDrag.nativeElement, rowDragDirective, false, 1);
+
+            // third level row
+            const nestedChildGrid = childGrid.gridAPI.getChildGrids(false)[0];
+            rowToDrag = nestedChildGrid.gridAPI.get_row_by_index(0);
+            dragIndicatorElement = rowToDrag.nativeElement.querySelector(CSS_CLASS_DRAG_INDICATOR);
+            rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+            startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+            pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+
+            spyOn(nestedChildGrid.rowDragStart, 'emit').and.callThrough();
+            spyOn(nestedChildGrid.rowDragEnd, 'emit').and.callThrough();
+
+            rowDragDirective.onPointerDown(pointerDownEvent);
+            rowDragDirective.onPointerMove(pointerMoveEvent);
+            verifyRowDragStartEvent(nestedChildGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index),
+                rowToDrag.nativeElement, rowDragDirective, 1);
+            rowDragDirective.onPointerMove(pointerMoveToDropEvent);
+            rowDragDirective.onPointerUp(pointerUpEvent);
+            fixture.detectChanges();
+            verifyRowDragEndEvent(nestedChildGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index),
+            rowToDrag.nativeElement, rowDragDirective, false, 1);
+        });
+
+        it('should correctly create custom ghost element', () => {
+            fixture = TestBed.createComponent(IgxHierarchicalGridCustomGhostTestComponent);
+            dragGrid = fixture.componentInstance.hDragGrid;
+            fixture.detectChanges();
+            dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
+
+            // first level row
+            let rowToDrag = dragGrid.gridAPI.get_row_by_index(0);
+            dragIndicatorElement = rowToDrag.nativeElement.querySelector(CSS_CLASS_DRAG_INDICATOR);
+            rowDragDirective = dragRows[0].injector.get(IgxRowDragDirective);
+
+            startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+            movePoint = UIInteractions.getPointFromElement(dragGrid.gridAPI.get_row_by_index(3).nativeElement);
+            dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+            pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+            pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+            pointerMoveToDropEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+            pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+
+            rowDragDirective.onPointerDown(pointerDownEvent);
+            rowDragDirective.onPointerMove(pointerMoveEvent);
+            rowDragDirective.onPointerMove(pointerMoveToDropEvent);
+            rowDragDirective.onPointerUp(pointerUpEvent);
+            fixture.detectChanges();
+
+            expect((rowDragDirective as any).ghostContext.data.ProductName).toEqual('Product: A0');
+            expect((rowDragDirective as any).ghostContext.grid).toEqual(dragGrid);
+
+            // second level row
+            const childGrid = dragGrid.gridAPI.getChildGrids(false)[0];
+            rowToDrag = childGrid.gridAPI.get_row_by_index(0);
+            dragIndicatorElement = rowToDrag.nativeElement.querySelector(CSS_CLASS_DRAG_INDICATOR);
+            rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+            startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+            pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+
+            rowDragDirective.onPointerDown(pointerDownEvent);
+            rowDragDirective.onPointerMove(pointerMoveEvent);
+            rowDragDirective.onPointerMove(pointerMoveToDropEvent);
+            rowDragDirective.onPointerUp(pointerUpEvent);
+            fixture.detectChanges();
+
+            expect((rowDragDirective as any).ghostContext.data.ProductName).toEqual('Product: A0');
+            expect((rowDragDirective as any).ghostContext.data.ChildLevels).toEqual(2);
+            expect((rowDragDirective as any).ghostContext.grid).toEqual(childGrid);
+        });
+    });
+
+    describe('Tree Grid', () => {
+        let fixture: ComponentFixture<any>;
+        let dropAreaElement: Element;
+        let dragIndicatorElements: DebugElement[];
+        let dragIndicatorElement: Element;
+        let rowDragDirective: IgxRowDragDirective;
+        let startPoint: Point;
+        let movePoint: Point;
+        let dropPoint: Point;
+        let pointerDownEvent: PointerEvent;
+        let pointerMoveEvent: PointerEvent;
+        let pointerUpEvent: PointerEvent;
+        let dragGrid: IgxTreeGridComponent;
+        let dragRows: DebugElement[];
+        let pointerMoveToDropEvent: PointerEvent;
+
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxTreeGridTestComponent
+                ]
+            }).compileComponents();
+        }));
+        beforeEach(() => {
+            fixture = TestBed.createComponent(IgxTreeGridTestComponent);
+            fixture.detectChanges();
+            dragGrid = fixture.componentInstance.treeGrid;
+            dropAreaElement = fixture.debugElement.query(By.directive(IgxDropDirective)).nativeElement;
+            dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
+            dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
+        });
+
+        it('should be able to drag row on every hierarchical level', () => {
+            // first level row
+            dragIndicatorElement = dragIndicatorElements[1].nativeElement;
+            let rowToDrag = dragGrid.gridAPI.get_row_by_index(0);
+            rowDragDirective = dragRows[0].injector.get(IgxRowDragDirective);
+
+            startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+            movePoint = UIInteractions.getPointFromElement(dragGrid.gridAPI.get_row_by_index(3).nativeElement);
+            dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+            pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+            pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+            pointerMoveToDropEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+            pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+
+            spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
+            spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+
+            rowDragDirective.onPointerDown(pointerDownEvent);
+            rowDragDirective.onPointerMove(pointerMoveEvent);
+            verifyRowDragStartEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.key),
+                rowToDrag.nativeElement, rowDragDirective, 1);
+            rowDragDirective.onPointerMove(pointerMoveToDropEvent);
+            rowDragDirective.onPointerUp(pointerUpEvent);
+            fixture.detectChanges();
+            verifyRowDragEndEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.key),
+                rowToDrag.nativeElement, rowDragDirective, false, 1);
+
+            // second level row
+            dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+            rowToDrag = dragGrid.gridAPI.get_row_by_index(1);
+            rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+            startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+            pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+
+            rowDragDirective.onPointerDown(pointerDownEvent);
+            rowDragDirective.onPointerMove(pointerMoveEvent);
+            verifyRowDragStartEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.key), rowToDrag.nativeElement, rowDragDirective, 2);
+            rowDragDirective.onPointerMove(pointerMoveToDropEvent);
+            rowDragDirective.onPointerUp(pointerUpEvent);
+            fixture.detectChanges();
+            verifyRowDragEndEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.key), rowToDrag.nativeElement, rowDragDirective, false, 2);
+
+            // third level row
+            dragIndicatorElement = dragIndicatorElements[3].nativeElement;
+            rowToDrag = dragGrid.gridAPI.get_row_by_index(2);
+            rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+            startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+            pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+
+            rowDragDirective.onPointerDown(pointerDownEvent);
+            rowDragDirective.onPointerMove(pointerMoveEvent);
+            verifyRowDragStartEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.key),
+                rowToDrag.nativeElement, rowDragDirective, 3);
+            rowDragDirective.onPointerMove(pointerMoveToDropEvent);
+            rowDragDirective.onPointerUp(pointerUpEvent);
+            fixture.detectChanges();
+            verifyRowDragEndEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.key),
+                rowToDrag.nativeElement, rowDragDirective, false, 3);
+        });
+    });
+});
+
+@Component({
+    template: `
+        <igx-grid #grid
+            [width]='width'
+            [height]='height'
+            primaryKey="ID"
+            [data]="data"
+            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (groupingDone)="groupingDoneHandler($event)"
+            [rowEditable]="true" [rowDraggable]="enableRowDraggable"
+            >
+        </igx-grid>
+        <div #dropArea class="droppable-area" igxDrop (dropped)="onRowDrop($event)"
+        [ngStyle]="{width:'100px', height:'100px', backgroundColor:'red'}">
+        </div>
+        <div #nonDroppableArea class="non-droppable-area"
+        [ngStyle]="{width:'100px', height:'100px', backgroundColor:'yellow'}">
+        </div>
+    `,
+    imports: [IgxGridComponent, IgxDropDirective, NgStyle]
+})
+export class IgxGridRowDraggableComponent extends DataParent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
+
+    @ViewChild('dropArea', { read: IgxDropDirective, static: true })
+    public dropArea: IgxDropDirective;
+
+    public width = '800px';
+    public height = null;
+
+    public enableSorting = false;
+    public enableFiltering = false;
+    public enableResizing = false;
+    public enableEditing = true;
+    public enableGrouping = true;
+    public enableRowEditing = true;
+    public enableRowDraggable = true;
+    public currentSortExpressions;
+
+    public columnsCreated(column: IgxColumnComponent) {
+        column.sortable = this.enableSorting;
+        column.filterable = this.enableFiltering;
+        column.resizable = this.enableResizing;
+        column.editable = this.enableEditing;
+        column.groupable = this.enableGrouping;
+    }
+    public groupingDoneHandler(sortExpr) {
+        this.currentSortExpressions = sortExpr;
+    }
+    public onRowDrop(args) {
+        args.cancel = true;
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid #grid
+            [width]='width'
+            [height]='height'
+            primaryKey="ID"
+            [data]="data"
+            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (groupingDone)="groupingDoneHandler($event)"
+            [rowEditable]="true" [rowDraggable]="enableRowDraggable"
+            >
+            <ng-template let-data igxRowDragGhost>
+                <div class="dragGhost">
+                    <igx-icon></igx-icon>
+                        Moving a row!
+                </div>
+            </ng-template>
+        </igx-grid>
+        <div #dropArea class="droppable-area" igxDrop (dropped)="onRowDrop($event)"
+        [ngStyle]="{width:'100px', height:'100px', backgroundColor:'red'}">
+        </div>
+        <div #nonDroppableArea class="non-droppable-area"
+        [ngStyle]="{width:'100px', height:'100px', backgroundColor:'yellow'}">
+        </div>
+
+        <ng-template #rowDragGhostTemplate let-data igxRowDragGhost>
+                <div class="dragGhost">
+                        CUSTOM
+                </div>
+        </ng-template>
+        <ng-template #rowDragTemplate let-data igxDragIndicatorIcon>
+            <igx-icon>expand_less</igx-icon>
+        </ng-template>
+    `,
+    imports: [IgxGridComponent, IgxIconComponent, IgxDropDirective, IgxRowDragGhostDirective, IgxDragIndicatorIconDirective, NgStyle]
+})
+export class IgxGridRowCustomGhostDraggableComponent extends DataParent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
+
+    @ViewChild('rowDragGhostTemplate', {read: TemplateRef, static: true })
+    public rowDragGhostTemplate: TemplateRef<any>;
+
+    @ViewChild('rowDragTemplate', {read: TemplateRef, static: true })
+    public rowDragTemplate: TemplateRef<any>;
+
+    @ViewChild('dropArea', { read: IgxDropDirective, static: true })
+    public dropArea: IgxDropDirective;
+
+    public width = '800px';
+    public height = null;
+
+    public enableSorting = false;
+    public enableFiltering = false;
+    public enableResizing = false;
+    public enableEditing = true;
+    public enableGrouping = true;
+    public enableRowEditing = true;
+    public enableRowDraggable = true;
+    public currentSortExpressions;
+
+    public columnsCreated(column: IgxColumnComponent) {
+        column.sortable = this.enableSorting;
+        column.filterable = this.enableFiltering;
+        column.resizable = this.enableResizing;
+        column.editable = this.enableEditing;
+        column.groupable = this.enableGrouping;
+    }
+    public groupingDoneHandler(sortExpr) {
+        this.currentSortExpressions = sortExpr;
+    }
+    public onRowDrop(args) {
+        args.cancel = true;
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid #dragGrid
+            [width]="'800px'"
+            [height]="'300px'"
+            [data]="data"
+            primaryKey="ID"
+            [autoGenerate]="true" (groupingDone)="groupingDoneHandler($event)"
+            [rowEditable]="true" [rowDraggable]="true"
+            >
+        </igx-grid>
+        <div class="droppable-area" igxDrop (dropped)="onRowDrop($event)">
+        <igx-grid #dropGrid [data]="newData" [primaryKey]="'ID'"
+            [width]="'800px'" [height]="'300px'">
+            <igx-column [field]="'Downloads'"></igx-column>
+            <igx-column [field]="'ID'"></igx-column>
+            <igx-column [field]="'ProductName'"></igx-column>
+            <igx-column [field]="'ReleaseDate'"></igx-column>
+            <igx-column [field]="'Released'"></igx-column>
+        </igx-grid></div>
+    `,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxDropDirective]
+})
+export class IgxGridFeaturesRowDragComponent extends DataParent {
+    @ViewChild('dragGrid', { read: IgxGridComponent, static: true })
+    public dragGrid: IgxGridComponent;
+    @ViewChild('dropGrid', { read: IgxGridComponent, static: true })
+    public dropGrid: IgxGridComponent;
+    public newData = [];
+    public currentSortExpressions;
+
+    public groupingDoneHandler(sortExpr) {
+        this.currentSortExpressions = sortExpr;
+    }
+    public onRowDrop(args) {
+        args.cancel = true;
+        this.dropGrid.addRow(args.dragData.data);
+    }
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #hierarchicalDragGrid [data]="data"
+     [autoGenerate]="true" [height]="'500px'" [width]="'1500px'"
+      primaryKey="ID" [expandChildren]='true' [rowDraggable]="true">
+        <igx-row-island [key]="'childData'" [expandChildren]='true' [autoGenerate]="true" [rowDraggable]="true" #rowIsland>
+            <igx-row-island [key]="'childData2'" [autoGenerate]="true" [rowDraggable]="true" #rowIsland2 >
+            </igx-row-island>
+        </igx-row-island>
+    </igx-hierarchical-grid>
+    <div class="droppable-area" igxDrop (dropped)="onRowDrop($event)">
+        <igx-hierarchical-grid #hierarchicalDropGrid [data]="newData" [primaryKey]="'ID'"
+            [width]="'1500px'" [height]="'500px'">
+            <igx-column [field]="'ID'"></igx-column>
+            <igx-column [field]="'ChildLevels'"></igx-column>
+            <igx-column [field]="'ProductName'"></igx-column>
+            <igx-column [field]="'Col1'"></igx-column>
+            <igx-column [field]="'Col2'"></igx-column>
+            <igx-column [field]="'Col3'"></igx-column>
+        </igx-hierarchical-grid>
+    </div>`,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxDropDirective]
+})
+export class IgxHierarchicalGridTestComponent {
+    @ViewChild('hierarchicalDragGrid', { read: IgxHierarchicalGridComponent, static: true }) public hDragGrid: IgxHierarchicalGridComponent;
+    @ViewChild('hierarchicalDropGrid', { read: IgxHierarchicalGridComponent, static: true }) public hDropGrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+
+    public data;
+    public newData = [];
+
+    constructor() {
+        this.data = SampleTestData.generateHGridData(2, 3);
+    }
+    public onRowDrop(args) {
+        args.cancel = true;
+        this.hDropGrid.addRow(args.dragData.data);
+    }
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #hierarchicalDragGrid [data]="data"
+     [autoGenerate]="true" [height]="'500px'" [width]="'1500px'"
+      primaryKey="ID" [expandChildren]='true' [rowDraggable]="true">
+        <igx-row-island [key]="'childData'" [expandChildren]='true' [autoGenerate]="true" [rowDraggable]="true" #rowIsland>
+            <igx-row-island [key]="'childData2'" [autoGenerate]="true" [rowDraggable]="true" #rowIsland2 >
+            </igx-row-island>
+            <ng-template let-data igxRowDragGhost>
+            <div>
+                Moving {{data.ProductName}}!
+            </div>
+        </ng-template>
+        </igx-row-island>
+        <ng-template let-data igxRowDragGhost>
+            <div>
+                Moving {{data.ProductName}}!
+            </div>
+        </ng-template>
+    </igx-hierarchical-grid>`,
+    imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxRowDragGhostDirective]
+})
+export class IgxHierarchicalGridCustomGhostTestComponent {
+    @ViewChild('hierarchicalDragGrid', { read: IgxHierarchicalGridComponent, static: true }) public hDragGrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+
+    public data;
+    public newData = [];
+
+    constructor() {
+        this.data = SampleTestData.generateHGridData(2, 3);
+    }
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="employeeID" foreignKey="PID" width="900px" height="500px" [rowDraggable]="true">
+        <igx-column [field]="'employeeID'" dataType="number"></igx-column>
+        <igx-column [field]="'firstName'"></igx-column>
+        <igx-column [field]="'lastName'"></igx-column>
+        <igx-column [field]="'Salary'" dataType="number" ></igx-column>
+    </igx-tree-grid>
+    <div class="droppable-area" igxDrop (dropped)="onRowDrop($event)">
+    <igx-grid #dropGrid [data]="newData" [primaryKey]="'employeeID'"
+        [width]="'900px'" [height]="'300px'">
+        <igx-column [field]="'employeeID'" dataType="number"></igx-column>
+        <igx-column [field]="'firstName'"></igx-column>
+        <igx-column [field]="'lastName'"></igx-column>
+        <igx-column [field]="'Salary'" dataType="number" ></igx-column>
+    </igx-grid></div>
+    `,
+    imports: [IgxTreeGridComponent, IgxGridComponent, IgxColumnComponent, IgxDropDirective]
+})
+export class IgxTreeGridTestComponent {
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxGridComponent, { static: true }) public dropGrid: IgxGridComponent;
+    public data = SampleTestData.employeeScrollingData();
+    public newData = [];
+
+    public onRowDrop(args) {
+        args.cancel = true;
+        this.dropGrid.addRow(args.dragData.data);
+    }
+}
+
+/**
+ * Move pointer to the provided point and calls pointerdown event over provided element
+ *
+ * @param element Element to fire event on
+ * @param startPoint Point on which to move the pointer to
+ * @param fixture Test's ComponentFixture
+ * @returns Promise with reference to the generated event
+ */
+const pointerDown = async (element: Element, startPoint: Point, fixture: ComponentFixture<any>): Promise<PointerEvent> => {
+    const pointerEvent = UIInteractions.simulatePointerEvent('pointerdown', element, startPoint.x, startPoint.y);
+    await wait(DEBOUNCE_TIME);
+    fixture.detectChanges();
+    return pointerEvent;
+};
+
+/**
+ * Move pointer to the provided point and calls pointermove event over provided element
+ *
+ * @param element Element to fire event on
+ * @param startPoint Point on which to move the pointer to
+ * @param fixture Test's ComponentFixture
+ * @returns Promise with reference to the generated event
+ */
+const pointerMove = async (element: Element, startPoint: Point, fixture: ComponentFixture<any>): Promise<PointerEvent> => {
+    const pointerEvent = UIInteractions.simulatePointerEvent('pointermove', element, startPoint.x, startPoint.y);
+    await wait(DEBOUNCE_TIME);
+    fixture.detectChanges();
+    return pointerEvent;
+};
+
+/**
+ * Move pointer to the provided point and calls pointerup event over provided element
+ *
+ * @param element Element to fire event on
+ * @param startPoint Point on which to move the pointer to
+ * @param fixture Test's ComponentFixture
+ * @returns Promise with reference to the generated event
+ */
+const pointerUp = async (element: Element, startPoint: Point, fixture: ComponentFixture<any>): Promise<PointerEvent> => {
+    const pointerEvent = UIInteractions.simulatePointerEvent('pointerup', element, startPoint.x, startPoint.y);
+    await wait(DEBOUNCE_TIME);
+    fixture.detectChanges();
+    return pointerEvent;
+};
+
+/**
+ * Verifies weather the rowDragStart event has been emitted with the correct arguments
+ *
+ * @param grid IgxGrid from which a row is being dragged
+ * @param dragRow Grid row which is being dragged
+ * @param dragDirective IgxRowDragDirective of the dragged row
+ * @param timesCalled The number of times the rowDragStart event has been emitted. Defaults to 1.
+ * @param cancel Indicates weather the rowDragStart event is cancelled. Default value is false.
+ */
+const verifyRowDragStartEvent =(
+    grid: GridType,
+    dragRow: RowType,
+    dragElement: HTMLElement,
+    dragDirective: IgxRowDragDirective,
+    timesCalled = 1,
+    cancel = false) => {
+    expect(grid.rowDragStart.emit).toHaveBeenCalledTimes(timesCalled);
+    expect(grid.rowDragStart.emit).toHaveBeenCalledWith({
+        dragData: dragRow,
+        dragElement,
+        dragDirective,
+        cancel,
+        owner: grid
+    });
+};
+
+/**
+ * Verifies weather the rowDragEnd event has been emitted with the correct arguments
+ *
+ * @param grid IgxGrid from which a row is being dragged
+ * @param dragRow Grid row which is being dragged
+ * @param dragDirective IgxRowDragDirective of the dragged row
+ * @param timesCalled The number of times the rowDragEnd event has been emitted. Defaults to 1.
+ */
+const verifyRowDragEndEvent = (
+    grid: GridType,
+    dragRow: RowType,
+    dragElement: HTMLElement,
+    dragDirective: IgxRowDragDirective,
+    animations: boolean,
+    timesCalled = 1) => {
+    expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(timesCalled);
+    expect(grid.rowDragEnd.emit).toHaveBeenCalledWith({
+        dragDirective,
+        dragData: dragRow,
+        dragElement,
+        animation: animations,
+        owner: grid
+    });
+};

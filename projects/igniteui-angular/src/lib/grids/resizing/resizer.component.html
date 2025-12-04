@@ -1,0 +1,8 @@
+<div class="igx-grid-th__resize-line"
+    [style.left.px]="-99999" igxResizer
+    [style.height.px]="colResizingService.resizerHeight"
+    [restrictHResizeMax]="colResizingService.restrictResizeMax"
+    [restrictHResizeMin]="colResizingService.restrictResizeMin"
+    [restrictResizerTop]="restrictResizerTop"
+    (resizeEnd)="colResizingService.resizeColumn($event, resizer.ratio)">
+</div>

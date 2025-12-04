@@ -1,0 +1,12 @@
+////
+/// @group base
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// The global component registry map.
+/// @type List
+$components: () !default;
+
+/// Stores a list of dropped component themes.
+$dropped-themes: () !default;

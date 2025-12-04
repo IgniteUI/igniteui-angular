@@ -6,7 +6,6 @@ import { ButtonSampleComponent } from './button/button.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
-import { ChatSampleComponent } from './chat/chat.sample';
 import { InputControlsSampleComponent } from './input-controls/input-controls.sample';
 import { ChipsSampleComponent } from './chips/chips.sample';
 import { CircularProgressSampleComponent } from './circular-progress-showcase/circular-progress-showcase.sample'
@@ -142,7 +141,6 @@ import { QueryBuilderComponent } from './query-builder/query-builder.sample';
 import { PivotGridStateSampleComponent } from './pivot-grid-state/pivot-grid-state.sample';
 import { GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
 import { GridExportComponent } from './grid-export/grid-export.sample';
-import { GridPdfExportSampleComponent } from './grid-pdf-export/grid-pdf-export.sample';
 import { DividerComponent } from './divider/divider.component';
 import { MonthPickerSampleComponent } from './month-picker/month-picker.sample';
 import { GridDockManagerSampleComponent } from './dockmanager-grid/dockmanager-grid.sample';
@@ -200,10 +198,6 @@ export const appRoutes: Routes = [
     {
         path: 'carousel',
         component: CarouselSampleComponent
-    },
-    {
-        path: 'chat',
-        component: ChatSampleComponent
     },
     {
         path: 'input-controls',
@@ -537,10 +531,6 @@ export const appRoutes: Routes = [
     {
         path: 'gridExport',
         component: GridExportComponent
-    },
-    {
-        path: 'gridPdfExport',
-        component: GridPdfExportSampleComponent
     },
     {
         path: 'buttonGroup',

@@ -2,12 +2,18 @@ import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { data } from '../shared/data';
-import { IgxSwitchComponent } from 'igniteui-angular/switch';
-import { IgxButtonDirective, IgxFocusDirective, IgxToggleDirective } from 'igniteui-angular/directives';
-import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
-import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
-import { IgxGridComponent } from 'igniteui-angular/grids/grid';
-import { GridSelectionMode, IgxCellEditorTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnRequiredValidatorDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTextDirective, IRowDataEventArgs } from 'igniteui-angular/grids/core';
+import { IgxToggleDirective } from '../../../projects/igniteui-angular/src/lib/directives/toggle/toggle.directive';
+import { IgxPaginatorComponent } from '../../../projects/igniteui-angular/src/lib/paginator/paginator.component';
+import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxCheckboxComponent } from '../../../projects/igniteui-angular/src/lib/checkbox/checkbox.component';
+import { IgxFocusDirective } from '../../../projects/igniteui-angular/src/lib/directives/focus/focus.directive';
+import { GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
+import { IgxColumnComponent, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTextDirective, IRowDataEventArgs } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/public_api';
+import { IgxCellEditorTemplateDirective, IgxCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
+import { IgxColumnRequiredValidatorDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/validators.directive';
+import { IgxColumnGroupComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column-group.component';
 
 @Component({
     selector: 'app-grid-row-edit',

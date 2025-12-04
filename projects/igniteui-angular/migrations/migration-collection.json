@@ -246,18 +246,6 @@
             "version": "20.1.0",
             "description": "Updates Ignite UI for Angular from v20.0.6 to v20.1.0",
             "factory": "./update-20_1_0"
-        },
-        "migration-50": {
-            "version": "21.0.0",
-            "description": "Updates Ignite UI for Angular from v20.1.0 to v21.0.0",
-            "factory": "./update-21_0_0"
-        },
-        "migration-51": {
-            "version": "21.0.0",
-            "description": "Migrates imports to use granular entry points for better tree-shaking",
-            "factory": "./update-21_0_0_import-migration",
-            "recommended": true,
-            "optional": true
         }
     }
 }

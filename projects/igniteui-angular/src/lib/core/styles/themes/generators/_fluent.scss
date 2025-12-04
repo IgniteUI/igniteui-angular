@@ -1,0 +1,86 @@
+@use 'base' as *;
+@use '../schemas' as *;
+@use 'igniteui-theming/sass/color' as *;
+@use 'igniteui-theming/sass/color/presets' as *;
+
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// A wrapper around the theme mixin. Creates a global fluent theme that can be used with light backgrounds.
+/// @param {Map} $palette - An palette to be used by the global theme.
+/// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
+/// @see {mixin} theme
+/// @deprecated - Use the theme mixin instead.
+@mixin fluent-light-theme(
+    $palette,
+    $exclude: (),
+    $roundness: null,
+    $elevation: true,
+) {
+    $primary: color($palette, primary);
+    $secondary: color($palette, secondary);
+    $gray: color($light-fluent-palette, gray);
+    $surface: color($light-fluent-palette, surface);
+    $info: color($palette, info);
+    $success: color($palette, success);
+    $warn: color($palette, warn);
+    $error: color($palette, error);
+
+    @include theme(
+        $palette: palette(
+            $primary,
+            $secondary,
+            $surface: $surface,
+            $gray: $gray,
+            $info: $info,
+            $success: $success,
+            $warn: $warn,
+            $error: $error
+        ),
+        $schema: $light-fluent-schema,
+        $exclude: $exclude,
+        $roundness: $roundness,
+        $elevation: $elevation,
+    );
+}
+
+/// A wrapper around the theme mixin. Creates a global fluent theme that can be used with dark backgrounds.
+/// @param {Map} $palette - An palette to be used by the global theme.
+/// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
+/// @see {mixin} theme
+/// @deprecated - Use the theme mixin instead.
+@mixin fluent-dark-theme(
+    $palette,
+    $exclude: (),
+    $roundness: null,
+    $elevation: true,
+) {
+    $primary: color($palette, primary);
+    $secondary: color($palette, secondary);
+    $gray: color($dark-fluent-palette, gray);
+    $surface: color($dark-fluent-palette, surface);
+    $info: color($palette, info);
+    $success: color($palette, success);
+    $warn: color($palette, warn);
+    $error: color($palette, error);
+
+    @include theme(
+        $palette: palette(
+            $primary,
+            $secondary,
+            $surface: $surface,
+            $gray: $gray,
+            $info: $info,
+            $success: $success,
+            $warn: $warn,
+            $error: $error
+        ),
+        $schema: $dark-fluent-schema,
+        $exclude: $exclude,
+        $roundness: $roundness,
+        $elevation: $elevation,
+    );
+}

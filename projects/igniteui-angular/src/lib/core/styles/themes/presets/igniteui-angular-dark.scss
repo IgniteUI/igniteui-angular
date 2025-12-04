@@ -1,0 +1,11 @@
+@use '../../themes' as *;
+
+@include core();
+@include typography(
+    $font-family: $material-typeface,
+    $type-scale: $material-type-scale
+);
+@include theme(
+    $schema: $dark-material-schema,
+    $palette: $dark-material-palette,
+);

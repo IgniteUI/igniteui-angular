@@ -1,0 +1,11 @@
+@use '../../themes' as *;
+
+@include core();
+@include typography(
+    $font-family: $bootstrap-typeface,
+    $type-scale: $bootstrap-type-scale
+);
+@include theme(
+    $schema: $light-bootstrap-schema,
+    $palette: $light-bootstrap-palette,
+);

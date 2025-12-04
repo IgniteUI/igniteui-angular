@@ -1,0 +1,40 @@
+<div class="igx-column-actions__header">
+    @if (title) {
+        <h4 [attr.id]='titleID' class="igx-column-actions__header-title">{{ title }}</h4>
+    }
+
+    @if (!hideFilter) {
+        <igx-input-group class="igx-column-actions__header-input">
+            <input igxInput
+                type="text"
+                [attr.aria-describedby]='titleID'
+                [(ngModel)]="filterCriteria"
+                [placeholder]="filterColumnsPrompt"
+                autocomplete="off" />
+        </igx-input-group>
+    }
+</div>
+
+<div class="igx-column-actions__columns" tabindex="0"
+    [style.max-height]="columnsAreaMaxHeight">
+    @for (
+        column of $any(grid)?._columns
+        | columnActionEnabled:actionsDirective.actionEnabledColumnsFilter:pipeTrigger
+        | filterActionColumns:filterCriteria:pipeTrigger
+        | sortActionColumns:columnDisplayOrder:pipeTrigger; track column
+    ) {
+        <igx-checkbox
+            class="igx-column-actions__columns-item"
+            [readonly]="true"
+            (click)="toggleColumn(column)"
+            [checked]="actionsDirective.columnChecked(column)"
+            [style.margin-left.px]="column.level * indentation">
+            {{ column.header || column.field }}
+        </igx-checkbox>
+    }
+</div>
+
+<div class="igx-column-actions__buttons">
+    <button type="button" igxButton igxRipple (click)="uncheckAllColumns()" [disabled]="uncheckAllDisabled">{{ uncheckAllText }}</button>
+    <button type="button" igxButton igxRipple (click)="checkAllColumns()" [disabled]="checkAllDisabled">{{ checkAllText }}</button>
+</div>

@@ -1,0 +1,37 @@
+@use 'sass:map';
+@use 'sass-true' as *;
+@use '../base' as *;
+@use '../components' as *;
+
+@include describe('Register Component') {
+    $components: () !default;
+
+    @include it('should add new component inside components list') {
+        @include register-component('my-component');
+        @include assert-true(map.has-key($components, 'my-component'));
+    }
+}
+
+@include describe('Generate color class') {
+    @include it('should concatenate the name, variant, prefix, and suffix in the correct order.') {
+        $name: primary;
+        $variant: 500;
+        $prefix: igx;
+        $suffix: bg;
+        $selector: #{$prefix}-#{$name}-#{$variant}-#{$suffix};
+
+        @include assert() {
+            @include output() {
+                @include gen-color-class($name, $variant, $prefix, $suffix) {
+                    content: 'test';
+                }
+            }
+
+            @include expect() {
+                .#{$selector}{
+                    content: 'test'
+                }
+            }
+        }
+    }
+}

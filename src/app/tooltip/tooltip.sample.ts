@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxAvatarComponent,
@@ -18,18 +18,11 @@ import {
     IgxTooltipTargetDirective,
     OverlaySettings,
 } from 'igniteui-angular';
-import {
-    defineComponents,
-    IgcButtonComponent,
-    IgcTooltipComponent,
-} from 'igniteui-webcomponents';
 
-defineComponents(IgcTooltipComponent, IgcButtonComponent);
 @Component({
     selector: 'app-tooltip-sample',
     styleUrls: ['tooltip.sample.css'],
     templateUrl: 'tooltip.sample.html',
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     imports: [IgxAvatarComponent, IgxTooltipTargetDirective, IgxTooltipDirective, IgxIconComponent, IgxIconButtonDirective, IgxSwitchComponent, FormsModule, IgxSliderComponent, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardActionsComponent, IgxRippleDirective, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class TooltipSampleComponent implements OnInit {
