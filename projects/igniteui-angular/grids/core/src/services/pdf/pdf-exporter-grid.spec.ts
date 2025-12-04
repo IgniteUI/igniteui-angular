@@ -328,7 +328,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
     });
 
-    fit('should export the correct number of child data rows from a hierarchical grid', (done) => {
+    it('should export the correct number of child data rows from a hierarchical grid', (done) => {
         const fix = TestBed.createComponent(IgxHierarchicalGridExportComponent);
         fix.detectChanges();
 
