@@ -95,7 +95,7 @@
     "@angular-eslint/schematics": "^20.6.0",
     "@angular-eslint/template-parser": "^20.6.0",
     "@angular/build": "^21.0.1",
-    "@angular/cli": "^21.0.1",
+    "@angular/cli": "^21.0.2",
     "@angular/compiler-cli": "^21.0.2",
     "@angular/language-service": "^21.0.2",
     "@angularclass/hmr": "^3.0.0",
