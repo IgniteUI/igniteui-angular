@@ -35,7 +35,7 @@ describe('PDF Grid Exporter', () => {
         options = new IgxPdfExporterOptions('PdfGridExport');
 
         // Spy the saveBlobToFile method so the files are not really created
-        // spyOn(ExportUtilities as any, 'saveBlobToFile');
+        spyOn(ExportUtilities as any, 'saveBlobToFile');
     });
 
     it('should export grid as displayed.', (done) => {
