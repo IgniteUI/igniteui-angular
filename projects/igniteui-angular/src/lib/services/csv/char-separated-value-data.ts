@@ -55,7 +55,7 @@ export class CharSeparatedValueData {
                         /* When column groups are present, always use the field as it indicates the group the column belongs to.
                         * Otherwise, in PivotGrid scenarios we can end up with many duplicated column names without a hint what they represent.
                         */
-                        columns.map(c => c.columnGroupParent ? c.field : c.header ?? c.field) :
+                        columns.map(c => c.header ?? c.field) :
                         keys;
 
         this._headerRecord = this.processHeaderRecord(headers, this._data.length);
