@@ -1,5 +1,3 @@
-import { zip } from 'fflate';
-
 import { EventEmitter, Injectable } from '@angular/core';
 import { ExcelElementsFactory } from './excel-elements-factory';
 import { ExcelFolderTypes } from './excel-enums';
@@ -137,11 +135,23 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         const fileData = {};
         IgxExcelExporterService.populateZipFileConfig(fileData, rootFolder, worksheetData)
             .then(() => {
-                zip(fileData, (_, result) => {
-                    this.saveFile(result, options.fileName);
-                    this.exportEnded.emit({ xlsx: fileData });
+                // Dynamically import fflate to reduce initial bundle size
+                import('fflate').then(({ zip }) => {
+                    zip(fileData, (_, result) => {
+                        this.saveFile(result, options.fileName);
+                        this.exportEnded.emit({ xlsx: fileData });
+                        done();
+                    });
+                }).catch((error) => {
+                    // Handle dynamic import failure
+                    console.error('Failed to load fflate module:', error);
                     done();
                 });
+            })
+            .catch((error) => {
+                // Handle populateZipFileConfig failure
+                console.error('Failed to populate zip file config:', error);
+                done();
             });
     }
 
