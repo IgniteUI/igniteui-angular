@@ -352,28 +352,21 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
                 // For hierarchical grids, check if this record has child records
                 if (recordIsHierarchicalGrid) {
-                    const allDescendants = [];
+                    const allDescendants: Array<IExportRecord & { __index: number }> = [];
 
-                    // Collect all descendant records (children, grandchildren, etc.) that belong to this parent
-                    // Child records have a different owner (island object) than the parent
                     let j = i + 1;
                     while (j < data.length && data[j].level > record.level) {
-                        // Include all descendants (any level deeper)
                         if (!data[j].hidden) {
-                            allDescendants.push(data[j]);
+                            // Attach the original index into data
+                            allDescendants.push({ ...(data[j] as any), __index: j });
                         }
                         j++;
                     }
 
-                    // If there are descendant records, draw child table(s)
                     if (allDescendants.length > 0) {
-                        // Group descendants by owner to separate different child grids
-                        // Owner is the actual island object, not a string
-                        // Only collect DIRECT children (one level deeper) for initial grouping
-                        const directDescendantsByOwner = new Map<any, IExportRecord[]>();
+                        const directDescendantsByOwner = new Map<any, Array<IExportRecord & { __index: number }>>();
 
                         for (const desc of allDescendants) {
-                            // Only include records that are exactly one level deeper (direct children)
                             if (desc.level === record.level + 1) {
                                 const owner = desc.owner;
                                 if (!directDescendantsByOwner.has(owner)) {
@@ -383,13 +376,12 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                             }
                         }
 
-                        // Draw each child grid separately with its direct children only
                         for (const [owner, directChildren] of directDescendantsByOwner) {
                             yPosition = this.drawHierarchicalChildren(
                                 pdf,
                                 data,
-                                allDescendants, // Pass all descendants so grandchildren can be found
-                                directChildren,
+                                allDescendants,   // descendants WITH __index
+                                directChildren,   // direct children WITH __index
                                 owner,
                                 yPosition,
                                 margin,
@@ -402,7 +394,6 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                             );
                         }
 
-                        // Skip the descendant records we just processed
                         i = j - 1;
                     }
                 }
@@ -649,7 +640,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
     private drawHierarchicalChildren(
         pdf: jsPDF,
         allData: IExportRecord[],
-        allDescendants: IExportRecord[], // All descendants to search for grandchildren
+        allDescendants: any[], // All descendants to search for grandchildren
         childRecords: IExportRecord[], // Direct children to render at this level
         childOwner: any, // Owner is the island object, not a string
         yPosition: number,
@@ -773,49 +764,67 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             this.drawDataRow(pdf, childRecord, childColumns, [], childTableX, yPosition, childColumnWidth, rowHeight, 0, options);
             yPosition += rowHeight;
 
-            // Check if this child has grandchildren (deeper levels in different child grids)
-            // Look for grandchildren in allDescendants that are direct descendants of this childRecord
-            const grandchildrenForThisRecord = allDescendants.filter(r =>
-                r.level === childRecord.level + 1 && r.type !== 'HeaderRecord'
-            );
+            // allDescendants here is an array of records with an extra __index property
+            const childIndex = (childRecord as any).__index as number | undefined;
 
-            if (grandchildrenForThisRecord.length > 0) {
-                // Group grandchildren by their owner (different child islands under this record)
-                const grandchildrenByOwner = new Map<any, IExportRecord[]>();
+            if (childIndex !== undefined) {
+                // Find this child's position in allDescendants (by original index)
+                const childPosInDesc = allDescendants.findIndex(d => d.__index === childIndex);
 
-                for (const gc of grandchildrenForThisRecord) {
-                    // Use the actual owner object
-                    const gcOwner = gc.owner;
-                    // Only include grandchildren that have a different owner (separate child grid)
-                    if (gcOwner !== childOwner) {
-                        if (!grandchildrenByOwner.has(gcOwner)) {
-                            grandchildrenByOwner.set(gcOwner, []);
+                if (childPosInDesc !== -1) {
+                    const subtree: Array<IExportRecord & { __index: number }> = [];
+                    const childLevel = childRecord.level;
+
+                    // Collect all deeper records until we hit same-or-higher level
+                    for (let k = childPosInDesc + 1; k < allDescendants.length; k++) {
+                        const rec = allDescendants[k];
+                        if (rec.level <= childLevel) {
+                            break;
                         }
-                        grandchildrenByOwner.get(gcOwner)!.push(gc);
+                        if (rec.type !== 'HeaderRecord') {
+                            subtree.push(rec);
+                        }
                     }
-                }
 
-                // Recursively draw each grandchild owner's records with increased indentation
-                for (const [gcOwner, directGrandchildren] of grandchildrenByOwner) {
-                    yPosition = this.drawHierarchicalChildren(
-                        pdf,
-                        allData,
-                        allDescendants, // Pass all descendants so great-grandchildren can be found
-                        directGrandchildren, // Direct grandchildren to render
-                        gcOwner,
-                        yPosition,
-                        margin,
-                        indentPerLevel + 20, // Increase indentation for next level
-                        usableWidth,
-                        pageHeight,
-                        headerHeight,
-                        rowHeight,
-                        options
-                    );
+                    if (subtree.length > 0) {
+                        // Direct grandchildren for this child: exactly one level deeper
+                        const grandchildrenForThisRecord = subtree.filter(r =>
+                            r.level === childRecord.level + 1 && r.owner !== childOwner
+                        );
+
+                        if (grandchildrenForThisRecord.length > 0) {
+                            const grandchildrenByOwner = new Map<any, Array<IExportRecord & { __index: number }>>();
+
+                            for (const gc of grandchildrenForThisRecord) {
+                                const gcOwner = gc.owner;
+                                if (!grandchildrenByOwner.has(gcOwner)) {
+                                    grandchildrenByOwner.set(gcOwner, []);
+                                }
+                                grandchildrenByOwner.get(gcOwner)!.push(gc);
+                            }
+
+                            for (const [gcOwner, directGrandchildren] of grandchildrenByOwner) {
+                                yPosition = this.drawHierarchicalChildren(
+                                    pdf,
+                                    allData,
+                                    subtree,            // only this child's subtree for deeper levels
+                                    directGrandchildren,
+                                    gcOwner,
+                                    yPosition,
+                                    margin,
+                                    indentPerLevel + 20,
+                                    usableWidth,
+                                    pageHeight,
+                                    headerHeight,
+                                    rowHeight,
+                                    options
+                                );
+                            }
+                        }
+                    }
                 }
             }
         }
-
         // Add spacing after child table
         yPosition += 5;
 
