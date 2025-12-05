@@ -21,6 +21,7 @@ import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
 import { IgxGridNavigationService, IgxPivotNumericAggregate } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
+import { OneGroupThreeColsGridComponent } from '../../../../../test-utils/grid-mch-sample.spec';
 
 describe('CSV Grid Exporter', () => {
     let exporter: IgxCsvExporterService;
@@ -386,6 +387,20 @@ describe('CSV Grid Exporter', () => {
         exporter.export(grid, options);
 
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+    });
+
+    it('should print column headers when available when column groups are present.', async () => {
+        const fix = TestBed.createComponent(OneGroupThreeColsGridComponent);
+        fix.componentInstance.data = [];
+        fix.detectChanges();
+
+        fix.componentInstance.grid.getColumnByName('City').header = 'Test Header';
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        const wrapper = await getExportedData(grid, options);
+        wrapper.verifyData('Country,Region,Test Header', 'Only headers should be exported.');
     });
 
     describe('Tree Grid CSV export', () => {
