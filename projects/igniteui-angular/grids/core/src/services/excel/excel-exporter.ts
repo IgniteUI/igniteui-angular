@@ -71,7 +71,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         }
     }
 
-    protected async exportDataImplementation(data: IExportRecord[], options: IgxExcelExporterOptions, done: () => void) {
+    protected exportDataImplementation(data: IExportRecord[], options: IgxExcelExporterOptions, done: () => void): void {
         const firstDataElement = data[0];
         const isHierarchicalGrid = firstDataElement?.type === ExportRecordType.HierarchicalGridRecord;
         const isPivotGrid = firstDataElement?.type === ExportRecordType.PivotGridRecord;
@@ -133,29 +133,31 @@ export class IgxExcelExporterService extends IgxBaseExporter {
 
         const rootFolder = ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder);
         const fileData = {};
-        try {
-            await IgxExcelExporterService.populateZipFileConfig(fileData, rootFolder, worksheetData);
+        (async () => {
+            try {
+                await IgxExcelExporterService.populateZipFileConfig(fileData, rootFolder, worksheetData);
 
-            // Dynamically import fflate to reduce initial bundle size
-            const { zip } = await import('fflate');
+                // Dynamically import fflate to reduce initial bundle size
+                const { zip } = await import('fflate');
 
-            await new Promise<void>((resolve, reject) => {
-                zip(fileData, (error, result) => {
-                    if (error) {
-                        reject(error);
-                        return;
-                    }
-                    this.saveFile(result, options.fileName);
-                    this.exportEnded.emit({ xlsx: fileData });
-                    resolve();
+                await new Promise<void>((resolve, reject) => {
+                    zip(fileData, (error, result) => {
+                        if (error) {
+                            reject(error);
+                            return;
+                        }
+                        this.saveFile(result, options.fileName);
+                        this.exportEnded.emit({ xlsx: fileData });
+                        resolve();
+                    });
                 });
-            });
 
-            done();
-        } catch (error) {
-            console.error('Excel export failed:', error);
-            done();
-        }
+                done();
+            } catch (error) {
+                console.error('Excel export failed:', error);
+                done();
+            }
+        })();
     }
 
     private saveFile(data: Uint8Array, fileName: string): void {

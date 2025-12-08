@@ -90,13 +90,14 @@ describe('Excel Exporter', () => {
         }).compileComponents();
     }));
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         exporter = new IgxExcelExporterService();
         actualData = new FileContentData();
+        await import('fflate');
 
         // Spy the saveBlobToFile method so the files are not really created
         spyOn(ExportUtilities as any, 'saveBlobToFile');
-    }));
+    });
 
     afterEach(waitForAsync(() => {
         exporter.columnExporting.unsubscribe();
@@ -528,9 +529,6 @@ describe('Excel Exporter', () => {
             grid.columnList.get(1).sortable = true;
             grid.sort({ fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: false });
             const sortField = grid.sortingExpressions[0].fieldName;
-            fix.detectChanges();
-
-            await getExportedData(grid, options);
             fix.detectChanges();
 
             await getExportedData(grid, options);
