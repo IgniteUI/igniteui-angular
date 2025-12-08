@@ -9,7 +9,6 @@ import {
     Directive,
     HostBinding,
     InjectionToken,
-    Inject,
     inject,
     DestroyRef,
 } from "@angular/core";
@@ -52,6 +51,8 @@ export const DAY_INTERVAL_TOKEN = new InjectionToken<DayInterval>(
     standalone: true,
 })
 export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
+    protected dayInterval = inject<DayInterval>(DAY_INTERVAL_TOKEN);
+
     @HostBinding("attr.role")
     @Input()
     public role = 'grid';
@@ -189,7 +190,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
         this._locale = value;
     }
 
-    constructor(@Inject(DAY_INTERVAL_TOKEN) protected dayInterval?: DayInterval) {
+    constructor() {
         this.initLocale();
     }
 

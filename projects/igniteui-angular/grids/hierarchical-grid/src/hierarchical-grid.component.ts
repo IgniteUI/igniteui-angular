@@ -1,32 +1,9 @@
-import {
-    AfterContentInit,
-    AfterViewInit,
-    booleanAttribute,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ContentChildren,
-    CUSTOM_ELEMENTS_SCHEMA,
-    DoCheck,
-    ElementRef,
-    HostBinding,
-    Inject,
-    Input,
-    OnDestroy,
-    OnInit,
-    QueryList,
-    reflectComponentType,
-    SimpleChanges,
-    TemplateRef,
-    ViewChild,
-    ViewChildren,
-    ViewContainerRef
-} from '@angular/core';
+import { AfterContentInit, AfterViewInit, booleanAttribute, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, CUSTOM_ELEMENTS_SCHEMA, DoCheck, ElementRef, HostBinding, Input, OnDestroy, OnInit, QueryList, reflectComponentType, SimpleChanges, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, inject } from '@angular/core';
 import { NgClass, NgTemplateOutlet, NgStyle } from '@angular/common';
 
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
-import { IgxFilteringService, IgxGridValidationService } from 'igniteui-angular/grids/core';
+import { IgxFilteringService, IgxGridNavigationService, IgxGridValidationService } from 'igniteui-angular/grids/core';
 import { IgxColumnComponent, } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from 'igniteui-angular/grids/core';
@@ -72,6 +49,10 @@ let NEXT_ID = 0;
     imports: [NgClass]
 })
 export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
+    public readonly gridAPI = inject<IgxHierarchicalGridAPIService>(IGX_GRID_SERVICE_BASE);
+    public element = inject<ElementRef<HTMLElement>>(ElementRef);
+    public cdr = inject(ChangeDetectorRef);
+
     @Input()
     public layout: IgxRowIslandComponent;
 
@@ -178,11 +159,6 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     public expanded = false;
 
     private _data: any;
-
-    constructor(
-        @Inject(IGX_GRID_SERVICE_BASE) public readonly gridAPI: IgxHierarchicalGridAPIService,
-        public element: ElementRef<HTMLElement>,
-        public cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden
@@ -302,6 +278,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         { provide: IGX_GRID_BASE, useExisting: IgxHierarchicalGridComponent },
         IgxGridSummaryService,
         IgxFilteringService,
+        IgxGridNavigationService,
         IgxHierarchicalGridNavigationService,
         IgxColumnResizingService,
         IgxForOfSyncService,

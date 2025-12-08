@@ -1,4 +1,4 @@
-import { Component, ContentChild, Pipe, PipeTransform, Directive, Inject, inject } from '@angular/core';
+import { Component, ContentChild, Pipe, PipeTransform, Directive, inject } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { IgxInputDirective, IgxInputGroupBase, IgxInputGroupComponent, IgxInputState, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxButtonDirective, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';

@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { IgxGridComponent } from './grid.component';
-import { CellType, IgxColumnComponent, IgxGridDetailTemplateDirective, IPinningConfig, IPinRowEventArgs, RowPinningPosition } from 'igniteui-angular/grids/core';
+import { CellType, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxGridMRLNavigationService, IPinningConfig, IPinRowEventArgs, RowPinningPosition } from 'igniteui-angular/grids/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
@@ -32,6 +32,9 @@ describe('Row Pinning #grid', () => {
                 GridRowPinningWithMDVComponent,
                 GridRowPinningWithTransactionsComponent,
                 GridRowPinningWithInitialPinningComponent
+            ],
+            providers: [
+                IgxGridMRLNavigationService
             ]
         }).compileComponents();
     }));

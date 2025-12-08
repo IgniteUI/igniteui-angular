@@ -1,12 +1,9 @@
-import { ChangeDetectorRef, ElementRef, ChangeDetectionStrategy, Component, OnInit, NgZone, Inject } from '@angular/core';
-import { HammerGesturesManager, IgxOverlayService, PlatformUtil } from 'igniteui-angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { HammerGesturesManager } from 'igniteui-angular/core';
 import {
-    GridType,
-    IGX_GRID_BASE,
     IgxColumnFormatterPipe,
     IgxGridCellComponent,
     IgxGridCellImageAltPipe,
-    IgxGridSelectionService,
     IgxStringReplacePipe
 } from 'igniteui-angular/grids/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -35,19 +32,6 @@ import { IgxCurrencyFormatterPipe, IgxDateFormatterPipe, IgxNumberFormatterPipe,
 export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent implements OnInit {
     // protected hSelection;
     protected _rootGrid;
-
-    constructor(
-        selectionService: IgxGridSelectionService,
-        @Inject(IGX_GRID_BASE) grid: GridType,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        cdr: ChangeDetectorRef,
-        helement: ElementRef<HTMLElement>,
-        zone: NgZone,
-        touchManager: HammerGesturesManager,
-        platformUtil: PlatformUtil
-    ) {
-        super(selectionService, grid, overlayService, cdr, helement, zone, touchManager, platformUtil);
-    }
 
     public override ngOnInit() {
         super.ngOnInit();

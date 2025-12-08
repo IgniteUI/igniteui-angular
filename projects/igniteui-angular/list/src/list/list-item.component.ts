@@ -1,14 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    HostBinding,
-    HostListener,
-    Input,
-    Renderer2,
-    ViewChild,
-    booleanAttribute
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, Input, Renderer2, ViewChild, booleanAttribute, inject } from '@angular/core';
 
 import {
     IgxListPanState,
@@ -42,6 +32,10 @@ import { NgTemplateOutlet } from '@angular/common';
     imports: [NgTemplateOutlet]
 })
 export class IgxListItemComponent implements IListChild {
+    public list = inject(IgxListBaseDirective);
+    private elementRef = inject(ElementRef);
+    private _renderer = inject(Renderer2);
+
     /**
      * Provides a reference to the template's base element shown when left panning a list item.
      * ```typescript
@@ -256,12 +250,6 @@ export class IgxListItemComponent implements IListChild {
     /** @hidden @internal */
     public get offsetHeightInRem() {
         return rem(this.element.offsetHeight);
-    }
-
-    constructor(
-        public list: IgxListBaseDirective,
-        private elementRef: ElementRef,
-        private _renderer: Renderer2) {
     }
 
     /**

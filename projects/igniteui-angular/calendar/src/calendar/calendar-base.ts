@@ -1,4 +1,4 @@
-import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID, HostListener, booleanAttribute, ViewChildren, QueryList, ElementRef, ChangeDetectorRef, inject, DestroyRef } from '@angular/core';
+import { Input, Output, EventEmitter, Directive, LOCALE_ID, HostListener, booleanAttribute, ViewChildren, QueryList, ElementRef, ChangeDetectorRef, inject, DestroyRef } from '@angular/core';
 import { IFormattingOptions, IFormattingViews, IViewDateChangeEventArgs, ScrollDirection, IgxCalendarView, CalendarSelection } from './calendar';
 import { ControlValueAccessor } from '@angular/forms';
 import { noop, Subject } from 'rxjs';
@@ -18,7 +18,6 @@ import {
     getYearRange,
     isDateInRanges,
     WEEKDAYS,
-    BaseFormatter,
     I18N_FORMATTER
 } from 'igniteui-angular/core';
 import { KeyboardNavigationService } from './calendar.services';
@@ -30,6 +29,13 @@ import { KeyboardNavigationService } from './calendar.services';
     providers: [KeyboardNavigationService]
 })
 export class IgxCalendarBaseDirective implements ControlValueAccessor {
+    protected _destroyRef = inject(DestroyRef);
+    protected platform = inject(PlatformUtil);
+    protected _localeId = inject(LOCALE_ID);
+    protected keyboardNavigation? = inject(KeyboardNavigationService);
+    protected cdr? = inject(ChangeDetectorRef);
+    protected i18nFormatter = inject(I18N_FORMATTER);
+
     /**
      * Holds month view index we are operating on.
      */
@@ -249,8 +255,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     private _selection: CalendarSelection | string = CalendarSelection.SINGLE;
-
-    protected _destroyRef = inject(DestroyRef);
     private _resourceStrings: ICalendarResourceStrings = null;
     private _defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN);
 
@@ -671,13 +675,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    constructor(
-        protected platform: PlatformUtil,
-        @Inject(LOCALE_ID) protected _localeId: string,
-        @Inject(I18N_FORMATTER) protected i18nFormatter: BaseFormatter,
-        protected keyboardNavigation?: KeyboardNavigationService,
-        protected cdr?: ChangeDetectorRef,
-    ) {
+    constructor() {
         this.initLocale();
         this.viewDate = this.viewDate ? this.viewDate : new Date();
     }

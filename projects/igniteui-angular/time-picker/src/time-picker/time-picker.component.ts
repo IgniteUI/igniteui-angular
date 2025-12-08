@@ -10,15 +10,13 @@ import {
     Output,
     ViewChild,
     ContentChild,
-    Inject,
     AfterViewInit,
     Injector,
     PipeTransform,
     ChangeDetectorRef,
-    LOCALE_ID,
-    Optional,
     HostListener,
-    booleanAttribute
+    booleanAttribute,
+    inject
 } from '@angular/core';
 import {
     ControlValueAccessor,
@@ -30,7 +28,7 @@ import {
     NG_VALIDATORS
 } from '@angular/forms';
 
-import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE, IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxReadOnlyInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxReadOnlyInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import {
     IgxItemListDirective,
     IgxTimeItemDirective
@@ -46,7 +44,7 @@ import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxToggleDirective } from 'igniteui-angular/directives';
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from 'igniteui-angular/core';
-import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
+import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs } from 'igniteui-angular/core';
 
 import { IgxTextSelectionDirective } from 'igniteui-angular/directives';
 import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';
@@ -94,6 +92,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     OnDestroy,
     AfterViewInit,
     Validator {
+    private _injector = inject(Injector);
+    private platform = inject(PlatformUtil);
+    private cdr = inject(ChangeDetectorRef);
+
     /**
      * Sets the value of the `id` attribute.
      * ```html
@@ -604,16 +606,9 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         return this._itemsDelta;
     }
 
-    constructor(
-        element: ElementRef,
-        @Inject(LOCALE_ID) _localeId: string,
-        @Inject(I18N_FORMATTER) _i18nFormatter: BaseFormatter,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
-        private _injector: Injector,
-        private platform: PlatformUtil,
-        private cdr: ChangeDetectorRef,
-    ) {
-        super(element, _localeId, _i18nFormatter, _inputGroupType);
+    constructor() {
+        super();
+        this.locale = this.locale || this._localeId;
     }
 
     /** @hidden @internal */

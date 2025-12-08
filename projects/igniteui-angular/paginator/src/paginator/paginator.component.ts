@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ContentChild, DestroyRef, Directive, ElementRef, EventEmitter, Host, HostBinding, Input, Output, forwardRef, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ContentChild, DestroyRef, Directive, ElementRef, EventEmitter, HostBinding, Input, Output, forwardRef, inject } from '@angular/core';
 import { IPageCancellableEventArgs, IPageEventArgs } from './paginator-interfaces';
 import {
     IPaginatorResourceStrings,
@@ -49,6 +49,9 @@ export class IgxPaginatorContentDirective {
 })
 // switch IgxPaginatorToken to extends once density is dropped
 export class IgxPaginatorComponent implements IgxPaginatorToken {
+    private elementRef = inject(ElementRef);
+    private cdr = inject(ChangeDetectorRef);
+    private destroyRef = inject(DestroyRef);
 
     /**
      * @hidden
@@ -124,7 +127,6 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     protected _selectOptions = [5, 10, 15, 25, 50, 100, 500];
     protected _perPage = 15;
 
-    private _destroyRef = inject(DestroyRef);
     private _resourceStrings: IPaginatorResourceStrings = null;
     private _defaultResourceStrings = getCurrentResourceStrings(PaginatorResourceStringsEN, true);
     private _overlaySettings: OverlaySettings = {};
@@ -264,8 +266,8 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
         return this._resourceStrings || this._defaultResourceStrings;
     }
 
-    constructor(private elementRef: ElementRef, private cdr: ChangeDetectorRef) {
-        onResourceChangeHandle(this._destroyRef, () => {
+    constructor() {
+        onResourceChangeHandle(this.destroyRef, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(PaginatorResourceStringsEN, false);
         }, this);
     }
@@ -367,14 +369,14 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     imports: [IgxSelectComponent, FormsModule, IgxSelectItemComponent]
 })
 export class IgxPageSizeSelectorComponent {
+    public paginator = inject(IgxPaginatorComponent, { host: true });
+
     /**
      * @internal
      * @hidden
      */
     @HostBinding('class.igx-page-size')
     public cssClass = 'igx-page-size';
-
-    constructor(@Host() public paginator: IgxPaginatorComponent) { }
 }
 
 
@@ -384,6 +386,8 @@ export class IgxPageSizeSelectorComponent {
     imports: [IgxRippleDirective, IgxIconComponent, IgxIconButtonDirective]
 })
 export class IgxPageNavigationComponent {
+    public paginator = inject(IgxPaginatorComponent, { host: true });
+
     /**
      * @internal
      * @hidden
@@ -397,8 +401,4 @@ export class IgxPageNavigationComponent {
     @HostBinding('attr.role')
     @Input()
     public role = 'navigation';
-
-    constructor(
-        @Host()
-        public paginator: IgxPaginatorComponent) { }
 }

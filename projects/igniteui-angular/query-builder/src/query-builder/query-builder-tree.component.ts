@@ -1,12 +1,6 @@
-import {
-    AfterViewInit,
-    EventEmitter,
-    LOCALE_ID,
-    Output,
-    TemplateRef
-} from '@angular/core';
+import { AfterViewInit, EventEmitter, LOCALE_ID, Output, TemplateRef, inject } from '@angular/core';
 import { NgTemplateOutlet, NgClass } from '@angular/common';
-import { Inject } from '@angular/core';
+
 import {
     Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding
 } from '@angular/core';
@@ -129,6 +123,12 @@ const DEFAULT_CHIP_FOCUS_DELAY = 50;
     ],
 })
 export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
+    public cdr = inject(ChangeDetectorRef);
+    public dragService = inject(IgxQueryBuilderDragService);
+    protected platform = inject(PlatformUtil);
+    private elRef = inject(ElementRef);
+    protected _localeId = inject(LOCALE_ID);
+
     /**
      * @hidden @internal
      */
@@ -561,13 +561,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     this.selectedField.filters.condition(this.selectedCondition).isNestedQuery));
     }
 
-    constructor(public cdr: ChangeDetectorRef,
-        public dragService: IgxQueryBuilderDragService,
-        protected platform: PlatformUtil,
-        private elRef: ElementRef,
-        @Inject(LOCALE_ID) protected _localeId: string) {
+    constructor() {
         this.initLocale();
-        this.dragService.register(this, elRef);
+        this.dragService.register(this, this.elRef);
     }
 
     /**

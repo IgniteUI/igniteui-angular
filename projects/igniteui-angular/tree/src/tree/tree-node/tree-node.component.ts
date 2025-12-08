@@ -1,24 +1,4 @@
-import {
-    ChangeDetectorRef,
-    Component,
-    ContentChildren,
-    Directive,
-    ElementRef,
-    EventEmitter,
-    HostBinding,
-    HostListener,
-    Inject,
-    Input,
-    OnDestroy,
-    OnInit,
-    Optional,
-    Output,
-    QueryList,
-    SkipSelf,
-    TemplateRef,
-    ViewChild,
-    booleanAttribute
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ContentChildren, Directive, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild, booleanAttribute, inject } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import {
     IgxTree,
@@ -36,7 +16,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
-import { AnimationService, getCurrentResourceStrings, onResourceChangeHandle, IgxAngularAnimationService, ITreeResourceStrings, TreeResourceStringsEN } from 'igniteui-angular/core';
+import { getCurrentResourceStrings, onResourceChangeHandle, ITreeResourceStrings, TreeResourceStringsEN } from 'igniteui-angular/core';
 
 // TODO: Implement aria functionality
 /**
@@ -48,6 +28,10 @@ import { AnimationService, getCurrentResourceStrings, onResourceChangeHandle, Ig
     standalone: true
 })
 export class IgxTreeNodeLinkDirective implements OnDestroy {
+    private node = inject<IgxTreeNode<any>>(IGX_TREE_NODE_COMPONENT, { optional: true });
+    private navService = inject(IgxTreeNavigationService);
+    public elementRef = inject(ElementRef);
+
 
     @HostBinding('attr.role')
     public role = 'treeitem';
@@ -88,13 +72,6 @@ export class IgxTreeNodeLinkDirective implements OnDestroy {
     }
 
     private _parentNode: IgxTreeNode<any> = null;
-
-    constructor(
-        @Optional() @Inject(IGX_TREE_NODE_COMPONENT)
-        private node: IgxTreeNode<any>,
-        private navService: IgxTreeNavigationService,
-        public elementRef: ElementRef,
-    ) { }
 
     /** @hidden @internal */
     @HostBinding('attr.tabindex')
@@ -154,6 +131,14 @@ export class IgxTreeNodeLinkDirective implements OnDestroy {
     imports: [NgTemplateOutlet, IgxIconComponent, IgxCheckboxComponent, NgClass, IgxCircularProgressBarComponent]
 })
 export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements IgxTreeNode<T>, OnInit, OnDestroy {
+    public tree = inject<IgxTree>(IGX_TREE_COMPONENT);
+    protected selectionService = inject(IgxTreeSelectionService);
+    protected treeService = inject(IgxTreeService);
+    protected navService = inject(IgxTreeNavigationService);
+    protected cdr = inject(ChangeDetectorRef);
+    private element = inject<ElementRef<HTMLElement>>(ElementRef);
+    public parentNode = inject<IgxTreeNode<any>>(IGX_TREE_NODE_COMPONENT, { optional: true, skipSelf: true });
+
     /**
      * The data entry that the node is visualizing.
      *
@@ -380,17 +365,8 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     private _tabIndex = null;
     private _disabled = false;
 
-    constructor(
-        @Inject(IGX_TREE_COMPONENT) public tree: IgxTree,
-        protected selectionService: IgxTreeSelectionService,
-        protected treeService: IgxTreeService,
-        protected navService: IgxTreeNavigationService,
-        protected cdr: ChangeDetectorRef,
-        @Inject(IgxAngularAnimationService) animationService: AnimationService,
-        private element: ElementRef<HTMLElement>,
-        @Optional() @SkipSelf() @Inject(IGX_TREE_NODE_COMPONENT) public parentNode: IgxTreeNode<any>
-    ) {
-        super(animationService);
+    constructor() {
+        super();
         onResourceChangeHandle(this.destroy$, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(TreeResourceStringsEN, false);
         }, this);

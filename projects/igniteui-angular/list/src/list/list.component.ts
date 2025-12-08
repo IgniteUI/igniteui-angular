@@ -151,6 +151,9 @@ export class IgxListLineSubTitleDirective {
     imports: [NgTemplateOutlet]
 })
 export class IgxListComponent extends IgxListBaseDirective {
+    public element = inject(ElementRef);
+    private destroyRef = inject(DestroyRef);
+
     /**
      * Returns a collection of all items and headers in the list.
      *
@@ -444,7 +447,6 @@ export class IgxListComponent extends IgxListBaseDirective {
     @ViewChild('defaultDataLoading', { read: TemplateRef, static: true })
     protected defaultDataLoadingTemplate: TemplateRef<any>;
 
-    private _destroyRef = inject(DestroyRef);
     private _resourceStrings: IListResourceStrings = null;
     private _defaultResourceStrings = getCurrentResourceStrings(ListResourceStringsEN);
 
@@ -464,9 +466,9 @@ export class IgxListComponent extends IgxListBaseDirective {
         return this._resourceStrings || this._defaultResourceStrings;
     }
 
-    constructor(public element: ElementRef) {
-        super(element);
-        onResourceChangeHandle(this._destroyRef, () => {
+    constructor() {
+        super();
+        onResourceChangeHandle(this.destroyRef, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(ListResourceStringsEN, false);
         }, this);
     }

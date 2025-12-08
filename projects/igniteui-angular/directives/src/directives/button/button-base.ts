@@ -22,7 +22,8 @@ export const IgxBaseButtonType = {
 @Directive()
 export abstract class IgxButtonBaseDirective implements AfterViewInit{
     private _platformUtil = inject(PlatformUtil);
-    private _viewInit = false;
+    public element = inject(ElementRef);
+        private _viewInit = false;
 
     /**
      * Emitted when the button is clicked.
@@ -95,9 +96,7 @@ export abstract class IgxButtonBaseDirective implements AfterViewInit{
         return this.disabled || null;
     }
 
-    protected constructor(
-        public element: ElementRef,
-    ) {
+    protected constructor() {
         // In browser, set via native API for immediate effect (no-op on server).
         // In SSR there is no paint, so there’s no visual rendering or transitions to suppress.
         // Fix style flickering https://github.com/IgniteUI/igniteui-angular/issues/14759

@@ -42,7 +42,7 @@ import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigati
     standalone: true
 })
 export class IgxActionStripMenuItemDirective {
-    constructor(public templateRef: TemplateRef<any>) {}
+    public templateRef = inject<TemplateRef<any>>(TemplateRef);
 }
 
 /* blazorElement */
@@ -93,6 +93,11 @@ export class IgxActionStripMenuItemDirective {
     providers: [{ provide: IgxActionStripToken, useExisting: IgxActionStripComponent }]
 })
 export class IgxActionStripComponent implements IgxActionStripToken, AfterViewInit, AfterContentInit {
+    private _viewContainer = inject(ViewContainerRef);
+    private renderer = inject(Renderer2);
+    protected el = inject(ElementRef);
+    public cdr = inject(ChangeDetectorRef);
+
 
     /* blazorSuppress */
     /**
@@ -199,13 +204,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
     private _defaultResourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN);
     private _originalParent!: HTMLElement;
 
-    constructor(
-        private _viewContainer: ViewContainerRef,
-        private renderer: Renderer2,
-        protected el: ElementRef,
-        /** @hidden @internal **/
-        public cdr: ChangeDetectorRef,
-    ) {
+    constructor() {
         onResourceChangeHandle(this._destroyRef, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN, false);
         }, this);

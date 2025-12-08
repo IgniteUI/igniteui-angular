@@ -55,6 +55,8 @@ export interface BannerCancelEventArgs extends BannerEventArgs, CancelableEventA
     imports: [IgxExpansionPanelComponent, IgxExpansionPanelBodyComponent, IgxButtonDirective, IgxRippleDirective]
 })
 export class IgxBannerComponent implements IToggleView {
+    public elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
     /**
      * @hidden
      */
@@ -243,7 +245,7 @@ export class IgxBannerComponent implements IToggleView {
     private _resourceStrings: IBannerResourceStrings = null;
     private _defaultResourceStrings = getCurrentResourceStrings(BannerResourceStringsEN);
 
-    constructor(public elementRef: ElementRef<HTMLElement>) {
+    constructor() {
         onResourceChangeHandle(this._destroyRef, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(BannerResourceStringsEN, false);
         }, this);

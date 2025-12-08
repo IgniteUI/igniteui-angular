@@ -1,7 +1,8 @@
 import {
     AfterContentChecked,
     AfterViewInit, booleanAttribute, ContentChildren, Directive, ElementRef, EventEmitter,
-    Inject, Input, LOCALE_ID, OnDestroy, Optional, Output, QueryList, ViewChild
+    inject,
+    Input, LOCALE_ID, OnDestroy, Output, QueryList, ViewChild
 } from '@angular/core';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -21,13 +22,17 @@ import {
     WEEKDAYS,
     DEFAULT_LOCALE,
     onResourceChangeHandle,
-    BaseFormatter,
     I18N_FORMATTER
 } from 'igniteui-angular/core';
 import { getCurrentI18n, IResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 @Directive()
 export abstract class PickerBaseDirective implements IToggleView, EditorProvider, AfterViewInit, AfterContentChecked, OnDestroy {
+    public element = inject(ElementRef);
+    protected _localeId = inject<string>(LOCALE_ID);
+    protected _inputGroupType = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE, { optional: true });
+    protected i18nFormatter = inject(I18N_FORMATTER);
+
     /**
      * The editor's input mask.
      *
@@ -331,10 +336,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     // w/ TS2416 Type 'string | Date ...' not assignable to type 'DateRange' due to observer method check
     public abstract valueChange: EventEmitter<any>;
 
-    constructor(public element: ElementRef,
-        @Inject(LOCALE_ID) protected _localeId: string,
-        @Inject(I18N_FORMATTER) protected i18nFormatter: BaseFormatter,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
+    constructor() {
         this.initLocale();
     }
 

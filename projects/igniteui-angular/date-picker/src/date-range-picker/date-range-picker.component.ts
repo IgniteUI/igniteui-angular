@@ -1,8 +1,8 @@
 import {
     AfterViewInit, booleanAttribute, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef,
-    EventEmitter, HostBinding, HostListener, Inject, Injector, Input, LOCALE_ID,
-    OnChanges, OnDestroy, OnInit, Optional, Output, QueryList,
-    SimpleChanges, TemplateRef, ViewChild, ViewContainerRef
+    EventEmitter, HostBinding, HostListener, Injector, Input,
+    OnChanges, OnDestroy, OnInit, Output, QueryList,
+    SimpleChanges, TemplateRef, ViewChild, ViewContainerRef, inject
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -45,10 +45,8 @@ import { PickerBaseDirective } from '../date-picker/picker-base.directive';
 import {
     IgxInputDirective,
     IgxInputGroupComponent,
-    IgxInputGroupType,
     IgxInputState,
     IgxLabelDirective,
-    IGX_INPUT_GROUP_TYPE,
     IgxSuffixDirective,
     IgxPrefixDirective,
     IgxReadOnlyInputDirective,
@@ -64,7 +62,6 @@ import {
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { IResourceChangeEventArgs } from 'igniteui-i18n-core';
-import { BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 
 const SingleInputDatesConcatenationString = ' - ';
 
@@ -110,6 +107,11 @@ const SingleInputDatesConcatenationString = ' - ';
 })
 export class IgxDateRangePickerComponent extends PickerBaseDirective
     implements OnChanges, OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
+    protected platform = inject(PlatformUtil);
+    private _injector = inject(Injector);
+    private _cdr = inject(ChangeDetectorRef);
+    private _overlayService = inject<IgxOverlayService>(IgxOverlayService);
+
 
     /**
      * The number of displayed month views.
@@ -653,15 +655,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private onTouchCallback: () => void = noop;
     private onValidatorChange: () => void = noop;
 
-    constructor(element: ElementRef,
-        @Inject(LOCALE_ID) _localeId: string,
-        protected platform: PlatformUtil,
-        private _injector: Injector,
-        private _cdr: ChangeDetectorRef,
-        @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
-        @Inject(I18N_FORMATTER) _i18nFormatter: BaseFormatter,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
-        super(element, _localeId, _i18nFormatter, _inputGroupType);
+    constructor() {
+        super();
         this.initLocale();
     }
 

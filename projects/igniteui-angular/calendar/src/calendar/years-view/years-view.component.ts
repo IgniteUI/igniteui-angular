@@ -3,7 +3,6 @@ import {
     Input,
     HostBinding,
     ElementRef,
-    Inject,
     inject,
 } from "@angular/core";
 import { IgxCalendarYearDirective } from "../calendar.directives";
@@ -13,7 +12,7 @@ import {
 } from "../common/calendar-view.directive";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { getDateFormatter } from 'igniteui-i18n-core';
-import { CalendarDay, calendarRange, PlatformUtil, type DayInterval } from 'igniteui-angular/core';
+import { CalendarDay, calendarRange, PlatformUtil } from 'igniteui-angular/core';
 
 @Component({
     providers: [
@@ -32,6 +31,8 @@ import { CalendarDay, calendarRange, PlatformUtil, type DayInterval } from 'igni
     imports: [IgxCalendarYearDirective]
 })
 export class IgxYearsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
+    public el = inject(ElementRef);
+
     #standalone = true;
     private platform = inject(PlatformUtil);
 
@@ -115,13 +116,6 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements C
         return Array.from(calendarRange({ start, end, unit: this.dayInterval })).map(
             (m) => m.native,
         );
-    }
-
-    constructor(
-        public el: ElementRef,
-        @Inject(DAY_INTERVAL_TOKEN) dayInterval: DayInterval,
-    ) {
-        super(dayInterval);
     }
 
     /**

@@ -1,10 +1,7 @@
-import {
-    ChangeDetectorRef, Component, ElementRef, Inject, QueryList, OnDestroy, AfterViewInit, ContentChildren, Input, booleanAttribute, DOCUMENT
-} from '@angular/core';
+import { Component, QueryList, OnDestroy, AfterViewInit, ContentChildren, Input, booleanAttribute, inject } from '@angular/core';
 import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
-import { IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxToggleDirective } from 'igniteui-angular/directives';
 import { DropDownActionKey, IDropDownBase, IGX_DROPDOWN_BASE, IgxDropDownComponent, IgxDropDownItemBaseDirective } from 'igniteui-angular/drop-down';
@@ -17,6 +14,9 @@ import { DropDownActionKey, IDropDownBase, IGX_DROPDOWN_BASE, IgxDropDownCompone
     imports: [IgxToggleDirective]
 })
 export class IgxComboDropDownComponent extends IgxDropDownComponent implements IDropDownBase, OnDestroy, AfterViewInit {
+    public combo = inject<IgxComboBase>(IGX_COMBO_COMPONENT);
+    protected comboAPI = inject(IgxComboAPIService);
+
     /** @hidden @internal */
     @Input({ transform: booleanAttribute })
     public singleMode = false;
@@ -73,16 +73,6 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         }
 
         return items;
-    }
-
-    constructor(
-        elementRef: ElementRef,
-        cdr: ChangeDetectorRef,
-        @Inject(DOCUMENT) document: any,
-        selection: IgxSelectionAPIService,
-        @Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase,
-        protected comboAPI: IgxComboAPIService) {
-        super(elementRef, cdr, document, selection);
     }
 
     /**

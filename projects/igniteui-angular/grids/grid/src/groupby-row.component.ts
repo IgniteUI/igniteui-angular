@@ -9,7 +9,7 @@ import {
     ViewChild,
     TemplateRef,
     OnDestroy,
-    Inject
+    inject
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { takeUntil } from 'rxjs/operators';
@@ -46,6 +46,12 @@ import { GridColumnDataType, IGroupByRecord, IgxNumberFormatterPipe, IgxDateForm
     ]
 })
 export class IgxGridGroupByRowComponent implements OnDestroy {
+    public grid = inject<GridType>(IGX_GRID_BASE);
+    public gridSelection = inject(IgxGridSelectionService);
+    public element = inject(ElementRef);
+    public cdr = inject(ChangeDetectorRef);
+    public filteringService = inject(IgxFilteringService);
+
     /**
      * @hidden
      */
@@ -142,12 +148,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
         return this.grid.i18nFormatter.getCurrencyCode(this.grid.locale, this.groupRow.column.pipeArgs.currencyCode);
     }
 
-    constructor(
-        @Inject(IGX_GRID_BASE) public grid: GridType,
-        public gridSelection: IgxGridSelectionService,
-        public element: ElementRef,
-        public cdr: ChangeDetectorRef,
-        public filteringService: IgxFilteringService) {
+    constructor() {
         this.gridSelection.selectedRowsChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.cdr.markForCheck();
         });

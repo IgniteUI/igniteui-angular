@@ -3407,6 +3407,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             expect(grid.pinnedColumns.length).toBe(1);
             expect(grid.pinnedColumns[0].field).toBe(columnToPin.field);
+
+            tick(16);
         }));
 
         it('Should pin column when clicking buttons.', fakeAsync(() => {

@@ -13,7 +13,7 @@ import {
     OnDestroy,
     booleanAttribute,
     OnInit,
-    Inject,
+    inject,
     DOCUMENT
 } from '@angular/core';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from 'igniteui-angular/directives';
@@ -87,6 +87,11 @@ let CHIP_ID = 0;
     imports: [IgxDropDirective, IgxDragDirective, NgClass, NgTemplateOutlet, IgxIconComponent]
 })
 export class IgxChipComponent implements OnInit, OnDestroy {
+    public cdr = inject(ChangeDetectorRef);
+    private ref = inject<ElementRef<HTMLElement>>(ElementRef);
+    private renderer = inject(Renderer2);
+    public document = inject(DOCUMENT);
+
 
     /**
      * Sets/gets the variant of the chip.
@@ -606,11 +611,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     private _resourceStrings: IChipResourceStrings = null;
     private _defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
 
-    constructor(
-        public cdr: ChangeDetectorRef,
-        private ref: ElementRef<HTMLElement>,
-        private renderer: Renderer2,
-        @Inject(DOCUMENT) public document: any) {
+    constructor() {
         onResourceChangeHandle(this.destroy$, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN, false);
         }, this);

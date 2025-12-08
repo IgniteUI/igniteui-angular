@@ -9,12 +9,12 @@ import {
     ElementRef,
     HostBinding,
     HostListener,
-    Inject,
+    inject,
     Input,
     OnDestroy,
     OnInit
 } from '@angular/core';
-import { DateTimeUtil, HammerGesturesManager, HammerInput, HammerOptions, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
+import { DateTimeUtil, HammerGesturesManager, HammerInput, HammerOptions, I18N_FORMATTER } from 'igniteui-angular/core';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 
 /** @hidden */
@@ -24,6 +24,10 @@ import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.comm
     standalone: true
 })
 export class IgxItemListDirective implements OnInit, OnDestroy {
+    public timePicker = inject<IgxTimePickerBase>(IGX_TIME_PICKER_COMPONENT);
+    private elementRef = inject(ElementRef);
+    private touchManager = inject(HammerGesturesManager);
+
     @HostBinding('attr.tabindex')
     public tabindex = 0;
 
@@ -39,12 +43,6 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
      * accumulates wheel scrolls and triggers a change action above SCROLL_THRESHOLD
      */
     private scrollAccumulator = 0;
-
-    constructor(
-        @Inject(IGX_TIME_PICKER_COMPONENT) public timePicker: IgxTimePickerBase,
-        private elementRef: ElementRef,
-        private touchManager: HammerGesturesManager
-    ) { }
 
     @HostBinding('class.igx-time-picker__column')
     public get defaultCSS(): boolean {
@@ -246,6 +244,10 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
     standalone: true
 })
 export class IgxTimeItemDirective {
+    public timePicker = inject<IgxTimePickerBase>(IGX_TIME_PICKER_COMPONENT);
+    private itemList = inject(IgxItemListDirective);
+    private _i18nFormatter = inject(I18N_FORMATTER);
+
     @Input('igxTimeItem')
     public value: string;
 
@@ -356,11 +358,6 @@ export class IgxTimeItemDirective {
     public get hourValue(): string {
         return this.getHourPart(this.timePicker.selectedDate);
     }
-
-    constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
-        public timePicker: IgxTimePickerBase,
-        @Inject(I18N_FORMATTER) private _i18nFormatter: BaseFormatter,
-        private itemList: IgxItemListDirective) { }
 
     @HostListener('click', ['value'])
     public onClick(item) {

@@ -1,15 +1,10 @@
-import {
-    Directive, Input, ElementRef, DOCUMENT,
-    Renderer2, Output, EventEmitter, Inject,
-    LOCALE_ID, OnChanges, SimpleChanges, HostListener, OnInit, booleanAttribute
-} from '@angular/core';
+import { Directive, Input, DOCUMENT, Output, EventEmitter, LOCALE_ID, OnChanges, SimpleChanges, HostListener, OnInit, booleanAttribute, inject } from '@angular/core';
 import {
     ControlValueAccessor,
     Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from '@angular/forms';
 import { IgxMaskDirective } from '../mask/mask.directive';
-import { MaskParsingService } from '../mask/mask-parsing.service';
-import { isDate, PlatformUtil, DatePartInfo, DatePart, DatePartDeltas, DateTimeUtil, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
+import { isDate, DatePartInfo, DatePart, DatePartDeltas, DateTimeUtil, I18N_FORMATTER } from 'igniteui-angular/core';
 import { IgxDateTimeEditorEventArgs } from './date-time-editor.common';
 import { noop } from 'rxjs';
 
@@ -55,6 +50,10 @@ import { noop } from 'rxjs';
     standalone: true
 })
 export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnChanges, OnInit, Validator, ControlValueAccessor {
+    private _document = inject(DOCUMENT);
+    private _localeID = inject(LOCALE_ID);
+    private _i18nFormatter = inject(I18N_FORMATTER);
+
     /**
      * Locale settings used for value formatting.
      *
@@ -299,15 +298,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         return this._dateValue;
     }
 
-    constructor(
-        renderer: Renderer2,
-        elementRef: ElementRef,
-        maskParser: MaskParsingService,
-        platform: PlatformUtil,
-        @Inject(DOCUMENT) private _document: any,
-        @Inject(LOCALE_ID) private _localeID: any,
-        @Inject(I18N_FORMATTER) private _i18nFormatter: BaseFormatter) {
-        super(elementRef, maskParser, renderer, platform);
+    constructor() {
+        super();
         this.document = this._document as Document;
         this.locale = this.locale || this._localeID;
     }

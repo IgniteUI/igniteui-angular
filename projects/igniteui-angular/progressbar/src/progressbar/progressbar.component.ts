@@ -519,6 +519,8 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     imports: [NgTemplateOutlet, NgClass]
 })
 export class IgxCircularProgressBarComponent extends BaseProgressDirective implements AfterContentInit {
+    private renderer = inject(Renderer2);
+
     /**
      * @hidden
      */
@@ -596,10 +598,6 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
      */
     public get textContent(): string {
         return this.text;
-    }
-
-    constructor(private renderer: Renderer2) {
-        super();
     }
 
     /**

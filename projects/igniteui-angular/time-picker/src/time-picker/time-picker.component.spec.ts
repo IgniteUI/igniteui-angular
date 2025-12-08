@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement, EventEmitter, QueryList } from '@angular/core';
+import { Component, ViewChild, DebugElement, EventEmitter, QueryList, ElementRef, Injector, ChangeDetectorRef } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -9,7 +9,7 @@ import {
     IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
 } from '../../../input-group/src/public_api';
 import { PickerInteractionMode } from '../../../core/src/date-common/types';
-import { PlatformUtil, BaseFormatter } from 'igniteui-angular/core';
+import { PlatformUtil, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 import { DatePart } from '../../../core/src/date-common/public_api';
 import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
 import { IgxItemListDirective, IgxTimeItemDirective } from './time-picker.directives';
@@ -20,6 +20,7 @@ import { HammerOptions } from 'igniteui-angular/core';
 import { registerLocaleData } from "@angular/common";
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
+import { IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 
 const CSS_CLASS_TIMEPICKER = 'igx-time-picker';
 const CSS_CLASS_INPUTGROUP = 'igx-input-group';
@@ -194,8 +195,22 @@ describe('IgxTimePicker', () => {
             mockI18nFormatter = new BaseFormatter();
 
             mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
-            const platformUtil = TestBed.inject(PlatformUtil);
-            timePicker = new IgxTimePickerComponent(elementRef, 'en', mockI18nFormatter, null, mockInjector, platformUtil, mockCdr);
+            //const platformUtil = TestBed.inject(PlatformUtil);
+
+            TestBed.configureTestingModule({
+                providers: [
+                    {provide: ElementRef, useValue: elementRef},
+                    {provide: Injector, useValue: mockInjector},
+                    {provide: ChangeDetectorRef, useValue: mockCdr},
+                    { provide: IGX_TIME_PICKER_COMPONENT, useExisting: IgxTimePickerComponent },
+                    { provide: I18N_FORMATTER, useExisting: mockI18nFormatter },
+                    IgxTimePickerComponent,
+                    PlatformUtil,
+                    HammerGesturesManager,
+                    IgxItemListDirective
+                ]
+            });
+            timePicker = TestBed.inject(IgxTimePickerComponent);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
             (timePicker as any)._inputGroup = mockInputGroup;
             (timePicker as any).inputDirective = mockInputDirective;
@@ -296,7 +311,6 @@ describe('IgxTimePicker', () => {
         });
 
         it('should open/close the dropdown with toggle() method', () => {
-            timePicker = new IgxTimePickerComponent(elementRef, 'en', mockI18nFormatter, null, mockInjector, null, mockCdr);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
             const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', ['open', 'close'], { collapsed: true });
             (timePicker as any).toggleRef = mockToggleDirective;
@@ -311,7 +325,6 @@ describe('IgxTimePicker', () => {
         });
 
         it('should reset value and emit valueChange with clear() method', () => {
-            timePicker = new IgxTimePickerComponent(elementRef, 'en', mockI18nFormatter, null, mockInjector, null, mockCdr);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
             const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', { collapsed: true });
             (timePicker as any).toggleRef = mockToggleDirective;
@@ -338,7 +351,6 @@ describe('IgxTimePicker', () => {
         });
 
         it('should not emit valueChange when value is \'00:00:00\' and is cleared', () => {
-            timePicker = new IgxTimePickerComponent(elementRef, 'en', mockI18nFormatter, null, mockInjector, null, mockCdr);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
             const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', { collapsed: true });
             (timePicker as any).toggleRef = mockToggleDirective;
@@ -354,7 +366,6 @@ describe('IgxTimePicker', () => {
         });
 
         it('should not emit valueChange when value is null and is cleared', () => {
-            timePicker = new IgxTimePickerComponent(elementRef, 'en', mockI18nFormatter, null, mockInjector, null, mockCdr);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
             const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', { collapsed: true });
             (timePicker as any).toggleRef = mockToggleDirective;
@@ -367,7 +378,6 @@ describe('IgxTimePicker', () => {
         });
 
         it('should select time and trigger valueChange event with select() method', () => {
-            timePicker = new IgxTimePickerComponent(elementRef, 'en', mockI18nFormatter, null, mockInjector, null, mockCdr);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
 
             const date = new Date(2020, 12, 12, 10, 30, 30);
@@ -388,7 +398,6 @@ describe('IgxTimePicker', () => {
             const date = new Date(2020, 12, 12, 10, 30, 30);
             const updatedDate = new Date(2020, 12, 12, 11, 30, 30);
 
-            timePicker = new IgxTimePickerComponent(elementRef, 'en', mockI18nFormatter, null, mockInjector, null, mockCdr);
             const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', ['close'], { collapsed: true });
             timePicker['dateTimeEditor'] = mockDateTimeEditorDirective;
             timePicker['inputDirective'] = mockInputDirective;
@@ -420,7 +429,6 @@ describe('IgxTimePicker', () => {
         });
 
         it('should validate correctly minValue and maxValue', () => {
-            timePicker = new IgxTimePickerComponent(elementRef, 'en', mockI18nFormatter, null, mockInjector, null, mockCdr);
             timePicker['dateTimeEditor'] = mockDateTimeEditorDirective;
             timePicker['inputDirective'] = mockInputDirective;
             timePicker.ngOnInit();
@@ -449,8 +457,8 @@ describe('IgxTimePicker', () => {
         });
 
         it('should handle panmove event correctly', () => {
-            const touchManager = new HammerGesturesManager(null, null, TestBed.inject(PlatformUtil));
-            const itemListDirective = new IgxItemListDirective(timePicker, elementRef, touchManager);
+            const touchManager = TestBed.inject(HammerGesturesManager);
+            const itemListDirective = TestBed.inject(IgxItemListDirective);
             spyOn(touchManager, 'addEventListener');
 
             itemListDirective.ngOnInit();

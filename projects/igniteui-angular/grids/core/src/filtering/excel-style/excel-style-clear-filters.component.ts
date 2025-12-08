@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { NgClass } from '@angular/common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -13,10 +13,9 @@ import { PlatformUtil } from 'igniteui-angular/core';
     imports: [NgClass, IgxIconComponent]
 })
 export class IgxExcelStyleClearFiltersComponent {
-    constructor(
-        public esf: BaseFilteringComponent,
-        protected platform: PlatformUtil,
-    ) { }
+    public esf = inject(BaseFilteringComponent);
+    protected platform = inject(PlatformUtil);
+
 
     /**
      * @hidden @internal

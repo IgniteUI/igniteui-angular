@@ -1,6 +1,4 @@
-import {
-    Component, Input, ViewChild, ChangeDetectorRef, AfterViewInit, OnDestroy, HostBinding
-} from '@angular/core';
+import { Component, Input, ViewChild, ChangeDetectorRef, AfterViewInit, OnDestroy, HostBinding, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IActiveNode } from '../../grid-navigation.service';
 import { GridType } from '../../common/grid.interface';
@@ -37,6 +35,9 @@ import {
     imports: [IgxDragDirective, NgClass, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxDragHandleDirective, IgxButtonDirective]
 })
 export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDestroy {
+    public cdr = inject(ChangeDetectorRef);
+    protected platform = inject(PlatformUtil);
+
     /**
      * @hidden @internal
      */
@@ -69,7 +70,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     private _overlayService: IgxOverlayService;
     private _grid: GridType;
 
-    constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil) {
+    constructor() {
         onResourceChangeHandle(this.destroy$, () => {
             this.assignResourceStrings(false);
         }, this);

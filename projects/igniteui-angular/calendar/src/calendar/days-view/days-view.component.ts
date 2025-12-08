@@ -7,12 +7,11 @@ import {
     ViewChildren,
     QueryList,
     HostBinding,
-    Inject,
-    LOCALE_ID,
     booleanAttribute,
     ElementRef,
     ChangeDetectorRef,
     ChangeDetectionStrategy,
+    inject
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TitleCasePipe } from '@angular/common';
@@ -21,7 +20,6 @@ import { IgxDayItemComponent } from './day-item.component';
 import {
     CalendarDay,
     DateRangeType,
-    PlatformUtil,
     areSameMonth,
     generateMonth,
     getClosestActiveDate,
@@ -29,11 +27,13 @@ import {
     getPreviousActiveDate,
     intoChunks,
     isDateInRanges,
-    BaseFormatter,
-    I18N_FORMATTER
+    IgxTheme,
+    THEME_TOKEN,
+    ThemeToken
 } from 'igniteui-angular/core';
 import { IgxCalendarBaseDirective } from '../calendar-base';
 import { IViewChangingEventArgs } from './days-view.interface';
+import { KeyboardNavigationService } from '../calendar.services';
 import { getDateFormatter } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
@@ -45,6 +45,7 @@ let NEXT_ID = 0;
             provide: NG_VALUE_ACCESSOR,
             useExisting: IgxDaysViewComponent
         },
+        KeyboardNavigationService
     ],
     selector: 'igx-days-view',
     templateUrl: 'days-view.component.html',
@@ -52,6 +53,9 @@ let NEXT_ID = 0;
     imports: [IgxDayItemComponent, TitleCasePipe]
 })
 export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
+    protected el = inject(ElementRef);
+    public override cdr = inject(ChangeDetectorRef);
+    private themeToken: ThemeToken = inject(THEME_TOKEN);
     #standalone = true;
 
     /**
@@ -200,18 +204,30 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     private _hideLeadingDays: boolean;
     private _hideTrailingDays: boolean;
     private _showActiveDay: boolean;
+    private _theme: IgxTheme;
 
-    /**
-     * @hidden
-     */
-    constructor(
-        platform: PlatformUtil,
-        @Inject(LOCALE_ID) _localeId: string,
-        @Inject(I18N_FORMATTER) _i18nFormatter: BaseFormatter,
-        protected el: ElementRef,
-        public override cdr: ChangeDetectorRef,
-    ) {
-        super(platform, _localeId, _i18nFormatter, null, cdr);
+    @HostBinding('class.igx-days-view')
+    public defaultClass = true;
+
+    // Theme-specific classes
+    @HostBinding('class.igx-days-view--material')
+    protected get isMaterial(): boolean {
+        return this._theme === 'material';
+    }
+
+    @HostBinding('class.igx-days-view--fluent')
+    protected get isFluent(): boolean {
+        return this._theme === 'fluent';
+    }
+
+    @HostBinding('class.igx-days-view--bootstrap')
+    protected get isBootstrap(): boolean {
+        return this._theme === 'bootstrap';
+    }
+
+    @HostBinding('class.igx-days-view--indigo')
+    protected get isIndigo(): boolean {
+        return this._theme === 'indigo';
     }
 
     /**

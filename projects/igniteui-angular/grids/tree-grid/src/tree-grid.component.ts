@@ -1,36 +1,10 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    HostBinding,
-    Input,
-    OnInit,
-    TemplateRef,
-    ContentChild,
-    AfterContentInit,
-    ViewChild,
-    DoCheck,
-    AfterViewInit,
-    ElementRef,
-    NgZone,
-    Inject,
-    ChangeDetectorRef,
-    IterableDiffers,
-    ViewContainerRef,
-    Optional,
-    LOCALE_ID,
-    Injector,
-    EnvironmentInjector,
-    CUSTOM_ELEMENTS_SCHEMA,
-    booleanAttribute,
-    DOCUMENT
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, Input, OnInit, TemplateRef, ContentChild, AfterContentInit, ViewChild, DoCheck, AfterViewInit, CUSTOM_ELEMENTS_SCHEMA, booleanAttribute, inject } from '@angular/core';
 import { NgClass, NgTemplateOutlet, NgStyle } from '@angular/common';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective, IgxGridCellMergePipe, IgxGridUnmergeActivePipe } from 'igniteui-angular/grids/grid';
 import {
     CellType,
     GridSelectionMode,
-    GridServiceType,
     GridType,
     IGX_GRID_BASE,
     IGX_GRID_SERVICE_BASE,
@@ -67,17 +41,16 @@ import {
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
-import { DefaultTreeGridMergeStrategy, HierarchicalState, HierarchicalTransaction, HierarchicalTransactionService, IGridMergeStrategy, IgxHierarchicalTransactionFactory, IgxOverlayOutletDirective, IgxOverlayService, ITreeGridRecord, mergeObjects, PlatformUtil, StateUpdateEvent, TransactionEventOrigin, TransactionType, TreeGridFilteringStrategy } from 'igniteui-angular/core';
+import { DefaultTreeGridMergeStrategy, HierarchicalState, HierarchicalTransaction, HierarchicalTransactionService, IGridMergeStrategy, IgxHierarchicalTransactionFactory, IgxOverlayOutletDirective, ITreeGridRecord, mergeObjects, StateUpdateEvent, TransactionEventOrigin, TransactionType, TreeGridFilteringStrategy } from 'igniteui-angular/core';
 import { IgxTreeGridSummaryPipe } from './tree-grid.summary.pipe';
 import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
 import { IgxTreeGridHierarchizingPipe, IgxTreeGridFlatteningPipe, IgxTreeGridSortingPipe, IgxTreeGridPagingPipe, IgxTreeGridTransactionPipe, IgxTreeGridNormalizeRecordsPipe, IgxTreeGridAddRowPipe } from './tree-grid.pipes';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
-import { IgxButtonDirective, IgxForOfScrollSyncService, IgxForOfSyncService, IgxGridForOfDirective, IgxRippleDirective, IgxScrollInertiaDirective, IgxTemplateOutletDirective, IgxTextHighlightService, IgxToggleDirective } from 'igniteui-angular/directives';
+import { IgxButtonDirective, IgxForOfScrollSyncService, IgxForOfSyncService, IgxGridForOfDirective, IgxRippleDirective, IgxScrollInertiaDirective, IgxTemplateOutletDirective, IgxToggleDirective } from 'igniteui-angular/directives';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxTreeGridGroupByAreaComponent } from './tree-grid-group-by-area.component';
-import { BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 
@@ -172,6 +145,9 @@ let NEXT_ID = 0;
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, AfterViewInit, DoCheck, AfterContentInit {
+    protected override _diTransactions = inject<HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>>(IgxGridTransaction, { optional: true, });
+    protected override transactionFactory = inject(IgxHierarchicalTransactionFactory);
+
     /**
      * Sets the child data key of the `IgxTreeGridComponent`.
      * ```html
@@ -352,7 +328,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     private _rowLoadingIndicatorTemplate: TemplateRef<void>;
     private _expansionDepth = Infinity;
 
-     /* treatAsRef */
+    /* treatAsRef */
     /**
      * Gets/Sets the array of data that populates the component.
      * ```html
@@ -366,7 +342,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return this._data;
     }
 
-     /* treatAsRef */
+    /* treatAsRef */
     public set data(value: any[] | null) {
         const oldData = this._data;
         this._data = value || [];
@@ -446,58 +422,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     // private get _gridAPI(): IgxTreeGridAPIService {
     //     return this.gridAPI as IgxTreeGridAPIService;
     // }
-
-    constructor(
-        validationService: IgxGridValidationService,
-        selectionService: IgxGridSelectionService,
-        colResizingService: IgxColumnResizingService,
-        @Inject(IGX_GRID_SERVICE_BASE) gridAPI: GridServiceType,
-        // public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        transactionFactory: IgxHierarchicalTransactionFactory,
-        _elementRef: ElementRef<HTMLElement>,
-        _zone: NgZone,
-        @Inject(DOCUMENT) document: any,
-        cdr: ChangeDetectorRef,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        injector: Injector,
-        envInjector: EnvironmentInjector,
-        navigation: IgxGridNavigationService,
-        filteringService: IgxFilteringService,
-        textHighlightService: IgxTextHighlightService,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        summaryService: IgxGridSummaryService,
-        @Inject(LOCALE_ID) localeId: string,
-        @Inject(I18N_FORMATTER) i18nFormatter: BaseFormatter,
-        platform: PlatformUtil,
-        @Optional() @Inject(IgxGridTransaction) protected override _diTransactions?:
-            HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
-    ) {
-        super(
-            validationService,
-            selectionService,
-            colResizingService,
-            gridAPI,
-            transactionFactory,
-            _elementRef,
-            _zone,
-            document,
-            cdr,
-            differs,
-            viewRef,
-            injector,
-            envInjector,
-            navigation,
-            filteringService,
-            textHighlightService,
-            overlayService,
-            summaryService,
-            localeId,
-            i18nFormatter,
-            platform,
-            _diTransactions,
-        );
-    }
 
     /**
      * @hidden
@@ -594,7 +518,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         super.ngAfterContentInit();
     }
 
-    public override getDefaultExpandState(record: ITreeGridRecord) {
+    public override getDefaultExpandState(record: ITreeGridRecord): boolean {
         return record.children && record.children.length && record.level < this.expansionDepth;
     }
 
