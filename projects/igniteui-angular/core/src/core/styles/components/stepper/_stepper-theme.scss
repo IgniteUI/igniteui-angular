@@ -446,11 +446,11 @@
                     color: var-get($theme, 'complete-subtitle-hover-color');
                 }
             }
+        }
 
-            &::after {
-                border-top-color: var-get($theme, 'complete-step-separator-color') !important;
-                border-top-style: var-get($theme, 'complete-step-separator-style') !important;
-            }
+        %igx-stepper__step-header::after {
+            border-top-color: var-get($theme, 'complete-step-separator-color') !important;
+            border-top-style: var-get($theme, 'complete-step-separator-style') !important;
         }
 
         &:focus {
