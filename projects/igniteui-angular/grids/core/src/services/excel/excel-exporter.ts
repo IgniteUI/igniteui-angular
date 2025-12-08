@@ -71,7 +71,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         }
     }
 
-    protected exportDataImplementation(data: IExportRecord[], options: IgxExcelExporterOptions, done: () => void): void {
+    protected async exportDataImplementation(data: IExportRecord[], options: IgxExcelExporterOptions, done: () => void) {
         const firstDataElement = data[0];
         const isHierarchicalGrid = firstDataElement?.type === ExportRecordType.HierarchicalGridRecord;
         const isPivotGrid = firstDataElement?.type === ExportRecordType.PivotGridRecord;
@@ -133,26 +133,29 @@ export class IgxExcelExporterService extends IgxBaseExporter {
 
         const rootFolder = ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder);
         const fileData = {};
-        IgxExcelExporterService.populateZipFileConfig(fileData, rootFolder, worksheetData)
-            .then(() => {
-                // Dynamically import fflate to reduce initial bundle size
-                import('fflate').then(({ zip }) => {
-                    zip(fileData, (_, result) => {
-                        this.saveFile(result, options.fileName);
-                        this.exportEnded.emit({ xlsx: fileData });
-                        done();
-                    });
-                }).catch((error) => {
-                    // Handle dynamic import failure
-                    console.error('Failed to load fflate module:', error);
-                    done();
+        try {
+            await IgxExcelExporterService.populateZipFileConfig(fileData, rootFolder, worksheetData);
+
+            // Dynamically import fflate to reduce initial bundle size
+            const { zip } = await import('fflate');
+
+            await new Promise<void>((resolve, reject) => {
+                zip(fileData, (error, result) => {
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
+                    this.saveFile(result, options.fileName);
+                    this.exportEnded.emit({ xlsx: fileData });
+                    resolve();
                 });
-            })
-            .catch((error) => {
-                // Handle populateZipFileConfig failure
-                console.error('Failed to populate zip file config:', error);
-                done();
             });
+
+            done();
+        } catch (error) {
+            console.error('Excel export failed:', error);
+            done();
+        }
     }
 
     private saveFile(data: Uint8Array, fileName: string): void {
