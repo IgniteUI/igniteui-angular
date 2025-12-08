@@ -54,7 +54,6 @@ describe('IgxTimePicker', () => {
         let mockDateTimeEditorDirective;
         let mockInputGroup: Partial<IgxInputGroupComponent>;
         let mockInputDirective;
-        let mockI18nFormatter: BaseFormatter;
 
         beforeEach(() => {
             mockDateTimeEditorDirective = {
@@ -192,7 +191,6 @@ describe('IgxTimePicker', () => {
             mockInjector = jasmine.createSpyObj('Injector', {
                 get: mockNgControl
             });
-            mockI18nFormatter = new BaseFormatter();
 
             mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
             //const platformUtil = TestBed.inject(PlatformUtil);
@@ -203,7 +201,6 @@ describe('IgxTimePicker', () => {
                     {provide: Injector, useValue: mockInjector},
                     {provide: ChangeDetectorRef, useValue: mockCdr},
                     { provide: IGX_TIME_PICKER_COMPONENT, useExisting: IgxTimePickerComponent },
-                    { provide: I18N_FORMATTER, useExisting: mockI18nFormatter },
                     IgxTimePickerComponent,
                     PlatformUtil,
                     HammerGesturesManager,

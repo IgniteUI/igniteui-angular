@@ -58,7 +58,6 @@ describe('IgxDateRangePicker', () => {
         let mockCdr: any;
         let fixture: any;
         let dateRange: IgxDateRangePickerComponent;
-        let mockI18nFormatter: BaseFormatter;
         const elementRef = { nativeElement: null };
         const mockNgControl = jasmine.createSpyObj('NgControl',
             ['registerOnChangeCb',
@@ -83,13 +82,11 @@ describe('IgxDateRangePicker', () => {
             mockCdr = jasmine.createSpyObj('ChangeDetectorRef', {
                 detectChanges: () => { }
             });
-            mockI18nFormatter = new BaseFormatter();
 
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule],
                 providers: [
                     { provide: ElementRef, useValue: elementRef },
-                    { provide: I18N_FORMATTER, useValue: mockI18nFormatter },
                     IgxAngularAnimationService,
                     IgxOverlayService,
                     IgxCalendarComponent,

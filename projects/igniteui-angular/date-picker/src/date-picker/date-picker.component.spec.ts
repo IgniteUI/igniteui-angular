@@ -846,7 +846,6 @@ describe('IgxDatePicker', () => {
         let mockDateEditor: any;
         let mockCalendar: Partial<IgxCalendarComponent>;
         let mockInputDirective: any;
-        let mockI18nFormatter: BaseFormatter;
         const viewsContainerRef = {} as any;
         const mockOverlayId = '1';
         const today = new Date();
@@ -908,7 +907,6 @@ describe('IgxDatePicker', () => {
             });
 
             mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
-            mockI18nFormatter = new BaseFormatter();
             mockCalendar = { selected: new EventEmitter<any>(), selectDate: () => {} };
             const mockComponentInstance = {
                 calendar: mockCalendar,
@@ -1026,7 +1024,6 @@ describe('IgxDatePicker', () => {
                     { provide: Injector, useValue: mockInjector },
                     { provide: Renderer2, useValue: renderer2 },
                     { provide: ChangeDetectorRef, useValue: mockCdr },
-                    { provide: I18N_FORMATTER, useValue: mockI18nFormatter },
                     IgxDatePickerComponent
                 ]
             });
