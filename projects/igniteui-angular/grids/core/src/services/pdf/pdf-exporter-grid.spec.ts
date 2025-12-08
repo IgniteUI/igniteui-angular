@@ -6,14 +6,14 @@ import { GridIDNameJobTitleComponent } from '../../../../../test-utils/grid-samp
 import { first } from 'rxjs/operators';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NestedColumnGroupsGridComponent, ColumnGroupTestComponent, BlueWhaleGridComponent } from '../../../../../test-utils/grid-mch-sample.spec';
-import { IgxHierarchicalGridTestBaseComponent } from '../../../../../test-utils/hierarchical-grid-components.spec';
+import { IgxHierarchicalGridExportComponent, IgxHierarchicalGridTestBaseComponent } from '../../../../../test-utils/hierarchical-grid-components.spec';
 import { IgxTreeGridSortingComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../../../../test-utils/tree-grid-components.spec';
 import { CustomSummariesComponent } from 'igniteui-angular/grids/grid/src/grid-summary.spec';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent } from '../../../../../test-utils/pivot-grid-samples.spec';
 import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
 import { PivotRowLayoutType } from 'igniteui-angular/grids/core';
-import { wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 
 describe('PDF Grid Exporter', () => {
     let exporter: IgxPdfExporterService;
@@ -326,6 +326,50 @@ describe('PDF Grid Exporter', () => {
         });
 
         exporter.export(grid, options);
+    });
+
+    it('should export the correct number of child data rows from a hierarchical grid', (done) => {
+        const fix = TestBed.createComponent(IgxHierarchicalGridExportComponent);
+        fix.detectChanges();
+
+        const hGrid = fix.componentInstance.hGrid;
+        hGrid.data = hGrid.data.slice(0, 1); // Limit data for test performance
+
+        // Expand first few rows to realize all inner levels, same as in Excel tests
+        const firstRow = hGrid.gridAPI.get_row_by_index(0) as any;
+
+        UIInteractions.simulateClickAndSelectEvent(firstRow.expander);
+        fix.detectChanges();
+
+        let childGrids = hGrid.gridAPI.getChildGrids(false) as any[];
+        const firstChildGrid = childGrids[0];
+        const firstChildRow = firstChildGrid.gridAPI.get_row_by_index(0) as any;
+        const secondChildRow = firstChildGrid.gridAPI.get_row_by_index(1) as any;
+        UIInteractions.simulateClickAndSelectEvent(secondChildRow.expander);
+        fix.detectChanges();
+
+        UIInteractions.simulateClickAndSelectEvent(firstChildRow.expander);
+        fix.detectChanges();
+
+        childGrids = hGrid.gridAPI.getChildGrids(false) as any[];
+        const thirdChildGrid = childGrids[1];
+        const thirdChildRow = thirdChildGrid.gridAPI.get_row_by_index(0) as any;
+        UIInteractions.simulateClickAndSelectEvent(thirdChildRow.expander);
+        fix.detectChanges();
+
+        // Calculate expected number of data rows to be exported
+        const allGrids = [hGrid, ...(hGrid.gridAPI.getChildGrids(true) as any[])];
+        const expectedRows = allGrids.reduce((acc, g) => acc + g.data.length, 0);
+
+        // Spy PDF row drawing to count exported rows
+        const drawDataRowSpy = spyOn<any>(exporter as any, 'drawDataRow').and.callThrough();
+
+        exporter.exportEnded.pipe(first()).subscribe(() => {
+            expect(drawDataRowSpy.calls.count()).toBe(expectedRows);
+            done();
+        });
+
+        exporter.export(hGrid, options);
     });
 
     it('should export tree grid with hierarchical data', (done) => {
