@@ -20,7 +20,6 @@ describe('IgxDateTimeEditor', () => {
     describe('Unit tests', () => {
         let maskParsingService: jasmine.SpyObj<MaskParsingService>;
         let renderer2: jasmine.SpyObj<Renderer2>;
-        let locale = 'en';
         let elementRef: ElementRef;
         let inputFormat: string;
         let displayFormat: string;
@@ -92,7 +91,6 @@ describe('IgxDateTimeEditor', () => {
             it('should set default inputFormat with parts for day, month, year based on locale', () => {
                 registerLocaleData(localeBg);
                 registerLocaleData(localeJa);
-                locale = 'en-US';
                 inputFormat = undefined;
                 elementRef = { nativeElement: { value: inputDate } };
                 initializeDateTimeEditor();
@@ -129,7 +127,6 @@ describe('IgxDateTimeEditor', () => {
 
             it('should resolve to the default locale-based input format in case inputFormat is not set and displayFormat contains non-numeric date/time parts', () => {
                 registerLocaleData(localeBg);
-                locale = 'en-US';
                 displayFormat = undefined;
                 elementRef = { nativeElement: { value: inputDate } };
                 initializeDateTimeEditor();

@@ -1,16 +1,13 @@
-import { Pipe, PipeTransform, Inject, LOCALE_ID } from '@angular/core';
-import { BaseFormatter, I18N_FORMATTER } from '../core/i18n/formatters/formatter-base';
+import { Pipe, PipeTransform, LOCALE_ID, inject } from '@angular/core';
+import { I18N_FORMATTER } from '../core/i18n/formatters/formatter-base';
 
 @Pipe({
     name: 'date',
     standalone: true
 })
 export class IgxDateFormatterPipe implements PipeTransform {
-
-    constructor(
-        @Inject(I18N_FORMATTER) private i18nFormatter: BaseFormatter,
-        @Inject(LOCALE_ID) private locale_ID
-    ) { }
+    private i18nFormatter = inject(I18N_FORMATTER);
+    private locale_ID = inject(LOCALE_ID);
 
     public transform(value: Date | string | number | null | undefined, format?: string, timezone?: string, locale?: string) {
         return this.i18nFormatter.formatDate(value, format, locale ?? this.locale_ID, timezone);
@@ -22,8 +19,7 @@ export class IgxDateFormatterPipe implements PipeTransform {
     standalone: true
 })
 export class IgxNumberFormatterPipe implements PipeTransform {
-
-    constructor(@Inject(I18N_FORMATTER) private i18nFormatter: BaseFormatter) { }
+    private i18nFormatter = inject(I18N_FORMATTER);
 
     public transform(value: number | string | null | undefined, digitsInfo?: string, locale?: string) {
         return this.i18nFormatter.formatNumber(value, locale, digitsInfo);
@@ -35,8 +31,7 @@ export class IgxNumberFormatterPipe implements PipeTransform {
     standalone: true
 })
 export class IgxPercentFormatterPipe implements PipeTransform {
-
-    constructor(@Inject(I18N_FORMATTER) private i18nFormatter: BaseFormatter) { }
+    private i18nFormatter = inject(I18N_FORMATTER);
 
     public transform(value: number | string | null | undefined, digitsInfo?: string, locale?: string) {
         return this.i18nFormatter.formatPercent(value, locale, digitsInfo);
@@ -48,8 +43,7 @@ export class IgxPercentFormatterPipe implements PipeTransform {
     standalone: true
 })
 export class IgxCurrencyFormatterPipe implements PipeTransform {
-
-    constructor(@Inject(I18N_FORMATTER) private i18nFormatter: BaseFormatter) { }
+    private i18nFormatter = inject(I18N_FORMATTER);
 
     public transform(value: number | string | null | undefined, currencyCode?: string, display?: 'code' | 'symbol' | 'symbol-narrow' | string , digitsInfo?: string, locale?: string) {
 
