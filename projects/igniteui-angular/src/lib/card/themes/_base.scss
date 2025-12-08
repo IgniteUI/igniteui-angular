@@ -90,9 +90,9 @@ $theme: $material;
     @include b(igx-card-header) {
         display: flex;
         flex-flow: row wrap;
-        align-content: flex-start;
+        align-items: center;
         width: 100%;
-        padding: rem(16px, 16px);
+        padding: rem(16px);
         color: var-get($theme, 'header-text-color');
 
         &:empty {
@@ -101,7 +101,6 @@ $theme: $material;
         }
 
         @include e(thumbnail) {
-            align-self: flex-start;
             margin-inline-end: rem(16px);
 
             &:empty {
@@ -155,7 +154,7 @@ $theme: $material;
         flex-flow: row wrap;
         justify-content: space-between;
         align-items: center;
-        padding: rem(8px);
+        padding: rem(8px) rem(16px);
 
         &:first-child {
             margin-block-end: auto;

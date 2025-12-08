@@ -58,9 +58,6 @@ $_theme: $material;
     @include b(igx-navbar) {
         display: block;
         width: 100%;
-        background: var-get($_theme, 'background');
-        color: var-get($_theme, 'text-color');
-        box-shadow: var-get($_theme, 'elevation');
 
         nav {
             display: flex;
@@ -73,6 +70,9 @@ $_theme: $material;
             max-height: rem(128px);
             z-index: 4;
             overflow: hidden;
+            background: var-get($_theme, 'background');
+            color: var-get($_theme, 'text-color');
+            box-shadow: var-get($_theme, 'elevation');
             border-bottom: rem(1px) solid var-get($_theme, 'border-color');
         }
 
