@@ -270,6 +270,9 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             // Draw data rows
             pdf.setFont('helvetica', 'normal');
 
+            // Check if this is a tree grid export (tree grids can have both TreeGridRecord and DataRecord types for nested children)
+            const isTreeGridExport = data.some(record => record.type === ExportRecordType.TreeGridRecord);
+
             // For pivot grids, get row dimension columns to help with value lookup
             const rowDimensionColumnsByLevel: Map<number, any[]> = new Map();
             if (isPivotGrid && defaultOwner) {
@@ -333,12 +336,14 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 // Calculate indentation for hierarchical records
                 // TreeGrid supports both hierarchical data and flat self-referencing data (with foreignKey)
                 // In both cases, the base exporter sets the level property on TreeGridRecord
-                const isTreeGrid = record.type === 'TreeGridRecord';
+                // Note: Nested child records without children are created as DataRecord type,
+                // but they still have a level property and should be treated as tree grid records
                 const recordIsHierarchicalGrid = record.type === 'HierarchicalGridRecord';
 
                 // For tree grids, indentation is visual (in the first column text)
                 // For hierarchical grids, we don't use indentation (level determines column offset instead)
-                const indentLevel = isTreeGrid ? (record.level || 0) : 0;
+                // If this is a tree grid export and the record has a level property, use it for indentation
+                const indentLevel = (isTreeGridExport && record.level !== undefined) ? (record.level || 0) : 0;
                 const indent = indentLevel * indentSize;
 
                 // Draw parent row
