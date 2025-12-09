@@ -150,3 +150,5 @@ export const IGX_PIVOT_GRID_DIRECTIVES = [
     IgxExcelStyleFilterOperationsTemplateDirective,
     IgxExcelStyleLoadingValuesTemplateDirective
 ] as const;
+
+export * from './pivot-grid.module';

@@ -191,3 +191,5 @@ export const IGX_GRID_DIRECTIVES = [
     IgxPaginatorContentDirective,
     IgxPaginatorDirective
 ] as const;
+
+export * from './grid.module';
