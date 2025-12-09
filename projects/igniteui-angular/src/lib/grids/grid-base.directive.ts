@@ -5711,7 +5711,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             }, 0);
 
         // When all columns are hidden, return 0px width
-        if (!sumExistingWidths && !columnsToSize) {
+        if (!sumExistingWidths || !columnsToSize) {
             return '0px';
         }
         computedWidth -= this.featureColumnsWidth();
@@ -6828,7 +6828,8 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     protected _derivePossibleWidth() {
         if (!this.columnWidthSetByUser) {
-            this._columnWidth = this.width !== null ? this.getPossibleColumnWidth() : this.minColumnWidth + 'px';
+            const possibleWidth = this.getPossibleColumnWidth();
+            this._columnWidth = this.width !== null && possibleWidth !== "0px" ? possibleWidth : this.minColumnWidth + 'px';
         }
         this._columns.forEach((column: IgxColumnComponent) => {
             if (this.hasColumnLayouts && parseFloat(this._columnWidth)) {
