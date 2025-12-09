@@ -2716,8 +2716,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         } else if (this.minWidth && newSize <= this.userSetMinWidthPx) {
             this.widthConstrained = true;
             return this.userSetMinWidthPx;
-        } else if (!this.minWidth && !this.widthSetByUser && newSize <= this.grid.minColumnWidth){
-            this.widthConstrained = true;
+        } else if (!this.minWidth && !this.widthSetByUser && newSize <= this.grid.minColumnWidth) {
             return this.grid.minColumnWidth;
         } else {
             this.widthConstrained = false;
