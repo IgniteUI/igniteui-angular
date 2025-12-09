@@ -8,12 +8,13 @@ import {
 } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { IgxNavigationDrawerComponent, IgxIconService, IgxRippleDirective, IGX_NAVIGATION_DRAWER_DIRECTIVES } from 'igniteui-angular';
 import { DocumentDirection, PageHeaderComponent } from './pageHeading/pageHeading.component';
-import { IgxIconComponent } from '../../projects/igniteui-angular/src/lib/icon/icon.component';
 import { CommonModule } from '@angular/common';
 import { PropertiesPanelComponent } from './properties-panel/properties-panel.component';
 import { PropertyChangeService } from './properties-panel/property-change.service';
+import { IGX_NAVIGATION_DRAWER_DIRECTIVES, IgxNavigationDrawerComponent } from 'igniteui-angular/navigation-drawer';
+import { IgxIconComponent, IgxIconService } from 'igniteui-angular/icon';
+import { IgxRippleDirective } from 'igniteui-angular/directives';
 
 @Component({
     selector: 'app-root',
@@ -126,6 +127,11 @@ export class AppComponent implements OnInit {
             link: '/carousel',
             icon: 'view_carousel',
             name: 'Carousel'
+        },
+        {
+            link: '/chat',
+            icon: 'chat',
+            name: 'Chat'
         },
         {
             link: '/chip',
@@ -420,6 +426,11 @@ export class AppComponent implements OnInit {
             link: '/gridExport',
             icon: 'view_column',
             name: 'Grid Export'
+        },
+        {
+            link: '/gridPdfExport',
+            icon: 'view_column',
+            name: 'Grid PDF Export'
         },
         {
             link: '/gridSearch',

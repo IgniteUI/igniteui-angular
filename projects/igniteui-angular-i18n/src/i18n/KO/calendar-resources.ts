@@ -1,4 +1,4 @@
-import { ICalendarResourceStrings } from 'igniteui-angular';
+import { ICalendarResourceStrings } from 'igniteui-angular/core';
 
 // only use `satisfies` operator so export is typed by its schema
 /**
@@ -7,18 +7,18 @@ import { ICalendarResourceStrings } from 'igniteui-angular';
 export const CalendarResourceStringsKO = {
     igx_calendar_previous_month: '이전 달',
     igx_calendar_next_month: '다음 달',
-    igx_calendar_previous_year: 'Previous Year',
-    igx_calendar_next_year: 'Next Year',
-    igx_calendar_previous_years: 'Previous {0} Years',
-    igx_calendar_next_years: 'Next {0} Years',
-    igx_calendar_select_date: 'Select Date',
+    igx_calendar_previous_year: '이전 해',
+    igx_calendar_next_year: '다음 해',
+    igx_calendar_previous_years: '이전 {0} 년',
+    igx_calendar_next_years: '다음 {0} 년',
+    igx_calendar_select_date: '날짜 선택',
     igx_calendar_select_month: '월 선택',
     igx_calendar_select_year: '연도 선택',
     igx_calendar_range_start: '범위 시작',
     igx_calendar_range_end: '범위 끝',
-    igx_calendar_range_label_start: 'Start',
-    igx_calendar_range_label_end: 'End',
-    igx_calendar_range_placeholder: 'Select Range',
+    igx_calendar_range_label_start: '시작',
+    igx_calendar_range_label_end: '끝',
+    igx_calendar_range_placeholder: '범위 선택',
     igx_calendar_selected_month_is: '선택한 달은 ',
     igx_calendar_first_picker_of: '{0} 의 첫 번째 선택기는 다음에서 시작',
     igx_calendar_multi_selection: '{0} 날짜 선택기가있는 다중 선택 달력',

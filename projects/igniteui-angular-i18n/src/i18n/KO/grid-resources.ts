@@ -1,4 +1,4 @@
-import { IGridResourceStrings } from 'igniteui-angular';
+import { IGridResourceStrings } from 'igniteui-angular/core';
 
 // only use `satisfies` operator so export is typed by its schema
 /**
@@ -140,6 +140,7 @@ export const GridResourceStringsKO = {
     igx_grid_toolbar_exporter_button_label: '내보내기',
     igx_grid_toolbar_exporter_excel_entry_text: 'Excel 로 내보내기',
     igx_grid_toolbar_exporter_csv_entry_text: 'CSV 로 내보내기',
+    igx_grid_toolbar_exporter_pdf_entry_text: 'PDF 로 내보내기',
     igx_grid_groupByArea_select_message: '필드 이름이 {0} 이고 값이 {1} 인 그룹의 모든 행을 선택하십시오.',
     igx_grid_groupByArea_deselect_message: '필드 이름이 {0} 이고 값이 {1} 인 그룹의 모든 행을 선택 취소합니다.',
     igx_grid_snackbar_addrow_label: '추가된 열',

@@ -1,4 +1,4 @@
-import { IGridResourceStrings } from 'igniteui-angular';
+import { IGridResourceStrings } from 'igniteui-angular/core';
 
 // only use `satisfies` operator so export is typed by its schema
 /**
@@ -140,6 +140,7 @@ export const GridResourceStringsZHHANS = {
     igx_grid_toolbar_exporter_button_label: '导出',
     igx_grid_toolbar_exporter_excel_entry_text: '导出至 Excel',
     igx_grid_toolbar_exporter_csv_entry_text: '导出为 CSV',
+    igx_grid_toolbar_exporter_pdf_entry_text: '导出为 PDF',
     igx_grid_groupByArea_select_message: '选择组中字段名称为 {0} 且值为 {1} 的所有行。',
     igx_grid_groupByArea_deselect_message: '取消选择组中字段名称为 {0} 且值为 {1} 的所有行。',
     igx_grid_snackbar_addrow_label: '已添加行',
