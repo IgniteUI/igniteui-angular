@@ -2710,12 +2710,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @internal
      */
     public getConstrainedSizePx(newSize){
-        if (this.maxWidth && newSize > this.maxWidthPx) {
+        if (this.maxWidth && newSize >= this.maxWidthPx) {
             this.widthConstrained = true;
             return this.maxWidthPx;
-        } else if (this.minWidth && newSize < this.userSetMinWidthPx) {
+        } else if (this.minWidth && newSize <= this.userSetMinWidthPx) {
             this.widthConstrained = true;
             return this.userSetMinWidthPx;
+        } else if (!this.minWidth && newSize <= this.grid.minColumnWidth){
+            this.widthConstrained = true;
+            return this.grid.minColumnWidth;
         } else {
             this.widthConstrained = false;
             return newSize;
@@ -2738,11 +2741,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         } else if (!colWidth || isAutoWidth && !this.autoSize) {
             // no width
             const currentCalcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
-            this._calcWidth = this.getConstrainedSizePx(currentCalcWidth);
+            this._calcWidth = this.getConstrainedSizePx(parseFloat(currentCalcWidth));
         } else {
             let possibleColumnWidth = '';
             if (!this.widthSetByUser && this.userSetMinWidthPx && this.userSetMinWidthPx < this.grid.minColumnWidth) {
-                possibleColumnWidth = this.defaultWidth = this.grid.getPossibleColumnWidth(null, this.userSetMinWidthPx);
+                possibleColumnWidth = this.defaultWidth = this.grid.getPossibleColumnWidth();
             } else {
                 possibleColumnWidth = this.width;
             }
