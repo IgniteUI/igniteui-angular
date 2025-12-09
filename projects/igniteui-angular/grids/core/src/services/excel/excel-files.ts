@@ -102,14 +102,13 @@ export class WorksheetFile implements IExcelFile {
 
     public async writeElementAsync(folder: Object, worksheetData: WorksheetData) {
         return new Promise<void>(resolve => {
-            this.prepareDataAsync(worksheetData, (cols, rows) => {
+            this.prepareDataAsync(worksheetData, async (cols, rows) => {
                 const hasTable = (!worksheetData.isEmpty || worksheetData.options.alwaysExportHeaders)
                     && worksheetData.options.exportAsTable;
 
-                import('fflate').then(({ strToU8 }) => {
-                    folder['sheet1.xml'] = strToU8(ExcelStrings.getSheetXML(this.dimension, this.freezePane, cols, rows, hasTable, this.maxOutlineLevel, worksheetData.isHierarchical));
-                    resolve();
-                });
+                const { strToU8 } = await import('fflate');
+                folder['sheet1.xml'] = strToU8(ExcelStrings.getSheetXML(this.dimension, this.freezePane, cols, rows, hasTable, this.maxOutlineLevel, worksheetData.isHierarchical));
+                resolve();
             });
         });
     }
