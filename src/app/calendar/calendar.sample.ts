@@ -96,8 +96,8 @@ export class CalendarSampleComponent implements OnInit {
                         label: 'JP'
                     },
                     {
-                        value: 'zh-ZH',
-                        label: 'ZH'
+                        value: 'zh-CN',
+                        label: 'CN'
                     }
                 ],
                 defaultValue: 'en-US'
