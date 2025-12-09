@@ -341,7 +341,7 @@ It is crucial to understand which license applies to which part of the package.
 
 © Copyright 2025 INFRAGISTICS. All Rights Reserved.
 The Infragistics Ultimate license & copyright applies to this distribution.
-For information on that license, please go to our website [LICENSE.md]([https://www.infragistics.com/legal/license](https://github.com/IgniteUI/igniteui-angular/blob/master/LICENSE)).
+For information on that license, please go to [LICENSE.md]([https://www.infragistics.com/legal/license](https://github.com/IgniteUI/igniteui-angular/blob/master/LICENSE)).
 
 
 
