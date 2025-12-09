@@ -53,3 +53,41 @@ The following directives are available for type checking in templates:
 | `IgxChatMessageContextDirective` | `[igxChatMessageContext]` | Provides type information for chat message template contexts |
 | `IgxChatAttachmentContextDirective` | `[igxChatAttachmentContext]` | Provides type information for chat attachment template contexts |
 | `IgxChatInputContextDirective` | `[igxChatInputContext]` | Provides type information for chat input template contexts |
+
+# Chat Extras
+
+The **chat-extras** module provides additional utilities for enhancing chat functionality.
+
+## MarkdownPipe
+
+The `MarkdownPipe` transforms markdown text into HTML, allowing you to render formatted messages in the chat.
+
+### Usage
+
+```typescript
+import { MarkdownPipe } from 'igniteui-angular/chat-extras';
+
+@Component({
+    standalone: true,
+    imports: [IgxChatComponent, MarkdownPipe, AsyncPipe],
+    template: `
+        <igx-chat [messages]="messages" [templates]="templates">
+            <ng-template #renderer igxChatMessageContext let-message>
+                <div [innerHTML]="message.text | fromMarkdown | async"></div>
+            </ng-template>
+        </igx-chat>
+    `
+})
+```
+
+### Supported Markdown Features
+
+The pipe supports common markdown syntax including:
+- **Bold** text (`**text**`)
+- *Italic* text (`*text*`)
+- Headings (`# H1`, `## H2`, etc.)
+- Lists (ordered and unordered)
+- Links (`[text](url)`)
+- Code blocks and inline code
+- Blockquotes
+- And more...
