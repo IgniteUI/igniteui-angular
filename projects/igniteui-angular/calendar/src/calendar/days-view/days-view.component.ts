@@ -446,7 +446,8 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
      */
     public formattedDate(value: Date): string {
         if (this.formatViews.day) {
-            return this.formatterDay.format(value);
+            const dateParts = this.formatterDay.formatToParts(value);
+            return dateParts.find(part => part.type === 'day')?.value ?? value.getDate().toString();
         }
 
         return `${value.getDate()}`;
