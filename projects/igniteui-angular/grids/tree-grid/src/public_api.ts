@@ -186,3 +186,5 @@ export const IGX_TREE_GRID_DIRECTIVES = [
     IgxPaginatorContentDirective,
     IgxPaginatorDirective
 ] as const;
+
+export * from './tree-grid.module';
