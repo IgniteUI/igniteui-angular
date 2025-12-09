@@ -6835,6 +6835,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 const columnWidthCombined = parseFloat(this._columnWidth) * (column.colEnd ? column.colEnd - column.colStart : 1);
                 column.defaultWidth = columnWidthCombined + 'px';
             } else {
+                column.defaultWidth = this._columnWidth;
                 column.resetCaches();
             }
         });
