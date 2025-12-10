@@ -1,16 +1,134 @@
+=================================================================
+
+Dual License for Ignite UI for Angular
+
+=================================================================
+
+This software package is offered under a dual-license model, which allows for both commercial and permissive open-source use, depending on the components, modules, directives, and services being used.
+
+It is crucial to understand which license applies to which part of the package.
+
+-----------------------------------------------------------------
+
+MIT License
+
+-----------------------------------------------------------------
+
+The MIT License applies exclusively to the components (encompassing all related modules and directives), directives, and services listed below and their associated source code. **All other parts of this package remain under the Infragistics Commercial License.**
+
+**Covered Components, Directives and Services with MIT License:**
+
+- `igx-accordion`
+- `igxAutocomplete`
+- `igx-avatar`
+- `igx-badge`
+- `igx-banner`
+- `igx-bottom-nav`
+- `igx-button`
+- `igx-card`
+- `igx-carousel`
+- `igx-chat`
+- `igx-checkbox`
+- `igx-chip`
+- `igx-circular-bar`
+- `igx-combo`
+- `igx-date-picker`
+- `igx-date-range-picker`
+- `igx-dialog`
+- `igx-divider`
+- `igx-drop-down`
+- `igx-expansion-panel`
+- `igx-icon`
+- `igx-input-group`
+- `igx-linear-bar`
+- `igx-list`
+- `igx-navbar`
+- `igx-nav-drawer`
+- `igx-paginator`
+- `igx-radio`
+- `igx-radio-group`
+- `igx-rating`
+- `igx-select`
+- `igx-simple-combo`
+- `igx-slider`
+- `igx-snackbar`
+- `igx-splitter-pane`
+- `igx-switch`
+- `igx-tabs`
+- `igx-toast`
+- `igx-tooltip`
+- `igx-tree`
+- `igx-time-picker`
+- `igx-stepper`
+- `igx-month-picker`
+- `igx-action-strip`
+- `igx-buttongroup`
+- `igx-calendar`
+- `igx-chip-area`
+- `igxDateTimeEditor`
+- `igxDrag`
+- `igxDrop`
+- `igxFor`
+- `igxIconButton`
+- `igxInput`
+- `igxLabel`
+- `igxLayout`
+- `igxMask`
+- `igxRipple`
+- `IgxOverlayService`
+- `IgxTextHighlightDirective`
+- `IgxTextHighlightService`
+- `igxToggle`
+
+The MIT License applies exclusively to the components (encompassing all related modules and directives), directives, and services listed above and their associated source code. 
+All other parts of this package remain under the Infragistics Commercial License.
+
+The MIT License (MIT)
+
+Copyright (c) 2025 Infragistics
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+-----------------------------------------------------------------
+
+Infragistics Commercial License
+
+-----------------------------------------------------------------
+
+All components (encompassing all related modules and directives), modules, directives, services, and code within this package, **except those listed under the MIT License section above**, are licensed under the Infragistics Commercial License (EULA).
+
 This is a commercial product, requiring a valid paid-for license for commercial use.
 This product is free to use for non-commercial educational use for students in K through 12 grades
-or University programs, and for educators to use in a classroom setting as examples / tools in their curriculum.
+or University programs, and for educators to use in a classroom setting as examples/tools in their curriculum.
 
-In order for us to verify your eligibility for free usage, please register for trial at
-https://Infragistics.com/Angular and open a support ticket with a request for free license.
+To verify eligibility for free usage, please register for trial at:
+https://www.infragistics.com/angular and open a support ticket with a request for free license.
 
-To acquire a license for commercial usage, please register for trial at https://Infragistics.com/Angular
-and refer to the purchasing options in the pricing section on the product page.
+To acquire a license for commercial usage, please register for trial at:
+https://www.infragistics.com/angular and refer to the purchasing options in the pricing section on the product page.
 
 This repository includes code originally copied from https://github.com/zloirock/core-js
 in the projects/igniteui-angular/src/lib/core/setImmediate.ts file. The original version of the code is MIT licensed. See the file header for details.
 
 © Copyright 2025 INFRAGISTICS. All Rights Reserved.
 The Infragistics Ultimate license & copyright applies to this distribution.
-For information on that license, please go to our website https://www.infragistics.com/legal/license.
+For information on that license, please go to:
+https://www.infragistics.com/legal/license
+
+For details, see https://opensource.org/licenses/MIT

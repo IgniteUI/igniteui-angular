@@ -1,4 +1,4 @@
-import { ICalendarResourceStrings } from 'igniteui-angular';
+import { ICalendarResourceStrings } from 'igniteui-angular/core';
 
 // only use `satisfies` operator so export is typed by its schema
 /**
@@ -7,19 +7,19 @@ import { ICalendarResourceStrings } from 'igniteui-angular';
 export const CalendarResourceStringsZHHANT = {
     igx_calendar_previous_month: '上個月',
     igx_calendar_next_month: '下個月',
-    igx_calendar_previous_year: 'Previous Year',
-    igx_calendar_next_year: 'Next Year',
-    igx_calendar_previous_years: 'Previous {0} Years',
-    igx_calendar_next_years: 'Next {0} Years',
-    igx_calendar_select_date: 'Select Date',
-    igx_calendar_select_month: '選取月',
-    igx_calendar_select_year: '選取年',
+    igx_calendar_previous_year: '去年',
+    igx_calendar_next_year: '明年',
+    igx_calendar_previous_years: '前 {0} 年',
+    igx_calendar_next_years: '後 {0} 年',
+    igx_calendar_select_date: '選擇日期',
+    igx_calendar_select_month: '選擇月',
+    igx_calendar_select_year: '選擇年',
     igx_calendar_range_start: '範圍開始',
     igx_calendar_range_end: '範圍結束',
-    igx_calendar_range_label_start: 'Start',
-    igx_calendar_range_label_end: 'End',
-    igx_calendar_range_placeholder: 'Select Range',
-    igx_calendar_selected_month_is: '選取的月份: ',
+    igx_calendar_range_label_start: '開始',
+    igx_calendar_range_label_end: '結束',
+    igx_calendar_range_placeholder: '選擇範圍',
+    igx_calendar_selected_month_is: '選擇的月份: ',
     igx_calendar_first_picker_of: '{0} 的第一個選擇器從開始',
     igx_calendar_multi_selection: '帶有 {0} 日期選擇器的多重選擇日曆',
     igx_calendar_range_selection: '帶有 {0} 日期選擇器的範圍選擇日曆',

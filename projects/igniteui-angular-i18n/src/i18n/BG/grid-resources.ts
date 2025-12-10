@@ -1,4 +1,4 @@
-import { IGridResourceStrings } from 'igniteui-angular';
+import { IGridResourceStrings } from 'igniteui-angular/core';
 
 // only use `satisfies` operator so export is typed by its schema
 /**
@@ -142,6 +142,7 @@ export const GridResourceStringsBG = {
     igx_grid_toolbar_exporter_button_label: 'Експортирай',
     igx_grid_toolbar_exporter_excel_entry_text: 'Експортирай в Excel',
     igx_grid_toolbar_exporter_csv_entry_text: 'Експортиране в CSV файл',
+    igx_grid_toolbar_exporter_pdf_entry_text: 'Експортиране в PDF файл',
     igx_grid_snackbar_addrow_label: 'Добавен е ред',
     igx_grid_snackbar_addrow_actiontext: 'Покажи',
     igx_grid_actions_edit_label: 'Редактирай',

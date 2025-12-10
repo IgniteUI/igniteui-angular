@@ -166,7 +166,7 @@
     },
     "igniteui-angular": {
       "root": "projects/igniteui-angular",
-      "sourceRoot": "projects/igniteui-angular/src",
+      "sourceRoot": "projects/igniteui-angular",
       "projectType": "library",
       "prefix": "lib",
       "architect": {
@@ -196,7 +196,7 @@
               "projects/igniteui-angular/test.css"
             ],
             "assets": [
-              "projects/igniteui-angular/src/assets"
+              "projects/igniteui-angular/test-utils/assets"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
@@ -204,7 +204,11 @@
               ]
             },
             "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
-            "karmaConfig": "projects/igniteui-angular/karma.conf.js"
+            "karmaConfig": "projects/igniteui-angular/karma.conf.js",
+            "exclude": [
+                "migrations",
+                "schematics"
+            ]
           }
         },
         "lint": {
@@ -301,14 +305,14 @@
               "budgets": [
                 {
                   "type": "allScript",
-                  "maximumWarning": "2.1mb",
-                  "maximumError": "2.5mb"
+                  "maximumWarning": "2.5mb",
+                  "maximumError": "3mb"
                 },
                 {
                   "type": "bundle",
                   "name": "styles",
-                  "maximumWarning": "500kb",
-                  "maximumError": "550kb"
+                  "maximumWarning": "600kb",
+                  "maximumError": "600kb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -399,6 +403,7 @@
             "outputPath": "dist/bundle-test",
             "index": "projects/bundle-test/src/index.html",
             "browser": "projects/bundle-test/src/main.ts",
+            "server": "projects/bundle-test/src/main.server.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -414,16 +419,22 @@
                 "node_modules"
               ]
             },
-            "server": "projects/bundle-test/src/main.server.ts",
             "ssr": {
               "entry": "projects/bundle-test/server.ts"
             }
           },
           "configurations": {
             "production": {
+              "statsJson": true,
               "budgets": [
                 {
                   "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "bundle",
+                  "name": "grid-component",
                   "maximumWarning": "500kb",
                   "maximumError": "1mb"
                 },
