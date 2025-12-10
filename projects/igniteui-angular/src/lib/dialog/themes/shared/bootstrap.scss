@@ -12,6 +12,10 @@ $_theme: $bootstrap;
     --actions-padding: #{rem(16px)};
 
     @include e(window-title) {
+        @include type-style(h5) {
+            margin: 0;
+        };
+
         border-bottom: rem(1px) solid var-get($_theme, 'border-color');
     }
 

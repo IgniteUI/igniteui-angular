@@ -42,31 +42,31 @@
     // @include bottom-nav-typography();
     @include button-typography();
     // @include button-group-typography();
-    //@include calendar-typography($categories: (
+    // @include calendar-typography($categories: (
     //    header-year: 'overline',
     //    header-date: 'h4',
     //    weekday-label: 'body-1',
     //    picker-date: 'subtitle-2',
     //    content: 'body-1',
-    //));
+    // ));
     // @include card-typography($categories: (
     //     title: 'subtitle-1',
     //     title-small: 'subtitle-2',
     //     subtitle: 'body-2',
     //     content: 'body-2'
     // ));
-    @include checkbox-typography($categories: (
-        label: 'body-2'
-    ));
+    // @include checkbox-typography($categories: (
+    //     label: 'body-2'
+    // ));
     // @include chip-typography($categories: (
     //     text: 'subtitle-2'
     // ));
     // @include column-actions-typography();
     // @include date-range-typography();
-    @include dialog-typography($categories: (
-        title: 'h6',
-        content: 'body-2'
-    ));
+    // @include dialog-typography($categories: (
+    //     title: 'h6',
+    //     content: 'body-2'
+    // ));
     @include dock-manager-typography();
     // @include drop-down-typography($categories: (
     //     header: 'subtitle-2',
@@ -80,42 +80,42 @@
     // ));
     @include excel-filtering-typography();
     @include icon-button-typography();
-    //@include input-group-typography($categories: (
+    // @include input-group-typography($categories: (
     //    helper-text: 'caption',
     //    input-text: 'body-2'
-    //));
+    // ));
     @include file-input-typography($categories: (
         file-text: 'body-2'
     ));
-    @include linear-bar-typography();
+    // @include linear-bar-typography();
     // @include list-typography($categories: (
     //     header: 'overline',
     //     item: 'caption',
     //     title: 'caption',
     //     subtitle: 'caption'
     // ));
-    @include navbar-typography($categories: (
-        title: 'subtitle-2'
-    ));
+    // @include navbar-typography($categories: (
+    //     title: 'subtitle-2'
+    // ));
     // @include navdrawer-typography($categories: (
     //     item: 'body-2',
     //     header: 'subtitle-1'
     // ));
-    @include radio-typography($categories: (
-        label: 'body-2'
-    ));
+    // @include radio-typography($categories: (
+    //     label: 'body-2'
+    // ));
     // @include slider-typography();
     // @include snackbar-typography($categories: (
     //     text: 'caption'
     // ));
-    @include switch-typography($categories: (
-        label: 'body-2'
-    ));
-    //@include tabs-typography($categories: (
+    // @include switch-typography($categories: (
+    //     label: 'body-2'
+    // ));
+    // @include tabs-typography($categories: (
     //    label: 'body-2'
-    //));
+    // ));
     // @include time-picker-typography();
-    //@include stepper-typography();
+    // @include stepper-typography();
     // @include toast-typography($categories: (
     //     text: 'caption'
     // ));

@@ -24,7 +24,7 @@
 
 @include themed-block(igx-card-content, bootstrap) {
     padding-block: rem(16px) rem(24px);
-    padding-inline: rem(24px);
+    padding-inline: rem(16px);
 
     > *:not(igx-icon) {
         @include type-style(body-1) {

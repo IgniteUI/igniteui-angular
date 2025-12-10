@@ -54,18 +54,18 @@
     //     subtitle: 'body-1',
     //     content: 'body-1',
     // ));
-    @include checkbox-typography($categories: (
-        label: 'body-1',
-    ));
+    // @include checkbox-typography($categories: (
+    //     label: 'body-1',
+    // ));
     // @include chip-typography();
     // @include column-actions-typography();
     // @include date-range-typography($categories: (
     //     label: 'body-1',
     // ));
-    @include dialog-typography($categories: (
-        title: 'h5',
-        content: 'body-1'
-    ));
+    // @include dialog-typography($categories: (
+    //     title: 'h5',
+    //     content: 'body-1'
+    // ));
     @include dock-manager-typography();
     // @include drop-down-typography($categories: (
     //     header: 'overline',
@@ -79,35 +79,35 @@
     // ));
     @include excel-filtering-typography();
     @include icon-button-typography();
-    //@include input-group-typography($categories: (
+    // @include input-group-typography($categories: (
     //    helper-text: 'body-2',
     //    input-text: 'body-1'
-    //));
+    // ));
     @include file-input-typography($categories: (
         file-text: 'body-1'
     ));
-    @include linear-bar-typography();
+    // @include linear-bar-typography();
     // @include list-typography($categories: (
     //     item: 'body-2',
     //     title: 'body-1',
     //     subtitle: 'body-2',
     //     header: 'overline',
     // ));
-    @include navbar-typography($categories: (
-        title: 'h5'
-    ));
+    // @include navbar-typography($categories: (
+    //     title: 'h5'
+    // ));
     // @include navdrawer-typography($categories: (
     //     item: 'body-2',
     //     header: 'caption'
     // ));
-    @include radio-typography($categories: (
-        label: 'body-1'
-    ));
+    // @include radio-typography($categories: (
+    //     label: 'body-1'
+    // ));
     // @include slider-typography();
-    @include snackbar-typography();
-    @include switch-typography($categories: (
-        label: 'body-1'
-    ));
+    // @include snackbar-typography();
+    // @include switch-typography($categories: (
+    //     label: 'body-1'
+    // ));
     //@include tabs-typography();
     // @include time-picker-typography($categories: (
     //     header-hour: 'h4',

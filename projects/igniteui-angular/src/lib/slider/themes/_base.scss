@@ -19,7 +19,6 @@ $_theme: $material;
         // https://github.com/IgniteUI/igniteui-angular/issues/11597
         z-index: 0;
         height: rem(48px);
-        flex-grow: 1;
         align-items: center;
         transition: all .2s $out-quad;
         touch-action: pan-y pinch-zoom;
@@ -267,7 +266,7 @@ $_theme: $material;
                 &:focus div::before {
                     box-shadow: none;
                 }
-        
+
                 &:focus div::after {
                     transform: scale(0);
                 }

@@ -31,12 +31,20 @@ $_theme: $material;
         }
 
         @include e(window-title) {
+            @include type-style(h6) {
+                margin: 0;
+            };
+
             display: flex;
             color: var-get($_theme, 'title-color');
             padding: var(--title-padding);
         }
 
         @include e(window-content) {
+            @include type-style(body-1) {
+                margin: 0;
+            };
+
             color: var-get($_theme, 'message-color');
             padding: var(--message-padding);
             // The 2 rules below are related to https://github.com/IgniteUI/igniteui-angular/issues/11300

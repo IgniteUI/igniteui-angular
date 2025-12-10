@@ -3,8 +3,6 @@
 @use 'styles/themes/standalone' as *;
 
 @include themed-block(igx-card-header, fluent) {
-    padding: rem(16px) rem(8px);
-
     @include e(title) {
         @include type-style(subtitle-1) {
             margin: 0;

@@ -312,7 +312,7 @@ $border-radius: var-get($_theme, 'border-border-radius');
         }
 
         @include e(bundle-main) {
-            border-color: var-get($_theme, 'warning-secondary-color');
+            border-color: var-get($_theme, 'success-secondary-color');
         }
     }
 
