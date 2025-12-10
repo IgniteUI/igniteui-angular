@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { IFormattingViews } from "igniteui-angular/calendar";
+import { IFormattingViews } from "./calendar";
 
 @Pipe({ name: 'dayDigit' })
 export class DayDigitPipe implements PipeTransform {

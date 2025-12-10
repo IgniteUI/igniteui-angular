@@ -37,7 +37,7 @@ import {
 import { IgxCalendarBaseDirective } from '../calendar-base';
 import { IViewChangingEventArgs } from './days-view.interface';
 import { KeyboardNavigationService } from '../calendar.services';
-import { DayDigitPipe } from "igniteui-angular/calendar/src/calendar/day-digit.pipe";
+import { DayDigitPipe } from "../day-digit.pipe";
 
 let NEXT_ID = 0;
 
