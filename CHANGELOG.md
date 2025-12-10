@@ -18,23 +18,14 @@ All notable changes for each version of this project will be documented in this 
 
 ## 21.0.0
 
-### Themes
-
-- `IgxButton`
-    - **Breaking Change**
-        - The following shadow-related parameters were removed from the `outlined-button-theme` and `flat-button-theme`:
-            - `resting-shadow`
-            - `hover-shadow`
-            - `focus-shadow`
-            - `active-shadow`
-
-## 21.0.0
-
 ### New Features
+
+- **New component** `IgxChat`:
+    - A component that provides complete solution for building conversational interfaces in your applications. Read up more information in the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/chat/README.md)
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Added PDF export functionality to grid components. Grids can now be exported to PDF format alongside the existing Excel and CSV export options.
-    
+
         The new `IgxPdfExporterService` follows the same pattern as Excel and CSV exporters:
 
         ```ts
@@ -74,8 +65,15 @@ All notable changes for each version of this project will be documented in this 
         - **Landscape orientation** by default (suitable for wide grids)
         - **Internationalization** support for all 19 supported languages
         - Respects all grid export options (ignoreFiltering, ignoreSorting, ignoreColumnsVisibility, etc.)
-        
+
 ### Breaking Changes
+
+- `IgxButton`
+    - The following shadow-related parameters were removed from the `outlined-button-theme` and `flat-button-theme`:
+        - `resting-shadow`
+        - `hover-shadow`
+        - `focus-shadow`
+        - `active-shadow`
 
 #### Dependency Injection Refactor
 - All internal DI now uses the `inject()` API across `igniteui-angular` (no more constructor DI in library code).
