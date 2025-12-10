@@ -2737,10 +2737,20 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         } else if (isPercentageWidth) {
             const currentCalcWidth = parseFloat(colWidth) / 100 * this.grid.calcWidth;
             this._calcWidth = this.grid.calcWidth ? this.getConstrainedSizePx(currentCalcWidth) : 0;
-        } else {
+        } else if (!colWidth || isAutoWidth && !this.autoSize) {
             // no width
             const currentCalcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
             this._calcWidth = this.getConstrainedSizePx(parseFloat(currentCalcWidth));
+        } else {
+            let possibleColumnWidth = '';
+            if (!this.widthSetByUser && this.userSetMinWidthPx && this.userSetMinWidthPx < this.grid.minColumnWidth) {
+                possibleColumnWidth = this.defaultWidth = this.grid.getPossibleColumnWidth();
+            } else {
+                possibleColumnWidth = this.width;
+            }
+
+            const currentCalcWidth = parseFloat(possibleColumnWidth);
+            this._calcWidth = this.getConstrainedSizePx(currentCalcWidth);
         }
         this.calcPixelWidth = parseFloat(this._calcWidth);
     }
