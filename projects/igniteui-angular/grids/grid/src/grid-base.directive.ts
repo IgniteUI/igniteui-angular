@@ -6739,7 +6739,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected _derivePossibleWidth() {
         if (!this.columnWidthSetByUser) {
             const possibleWidth = this.getPossibleColumnWidth();
-            this._columnWidth = this.width !== null && possibleWidth !== "" ? possibleWidth : this.minColumnWidth + 'px';
+            this._columnWidth = this.width !== null && possibleWidth !== "" ? Math.max(parseFloat(possibleWidth), this.minColumnWidth) + 'px' : this.minColumnWidth + 'px';
         }
         this._columns.forEach((column: IgxColumnComponent) => {
             if (this.hasColumnLayouts && parseFloat(this._columnWidth)) {
