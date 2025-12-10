@@ -6,4 +6,3 @@
 
 // Export pivot-grid-specific components
 export * from './src/public_api';
-export * from './src/pivot-grid.module';
