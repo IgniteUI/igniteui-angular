@@ -1,7 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { IFormattingViews } from "./calendar";
 
-@Pipe({ name: 'dayDigit' })
+@Pipe({
+    name: 'dayDigit',
+    standalone: true
+})
 export class DayDigitPipe implements PipeTransform {
     public transform(value: string, formatViews: IFormattingViews): string {
         if (!value) {
