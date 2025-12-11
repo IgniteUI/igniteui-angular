@@ -145,12 +145,12 @@ $_theme: $bootstrap;
         @include e(inner) {
             color: var-get($_theme, 'date-selected-current-range-foreground');
             background: var-get($_theme, 'date-selected-current-range-background');
-            border-color: var-get($_theme, 'date-current-border-color');
+            border-color: var-get($_theme, 'date-selected-current-border-color');
 
             &:hover {
                 color: var-get($_theme, 'date-selected-current-range-hover-foreground');
                 background: var-get($_theme, 'date-selected-current-range-hover-background');
-                border-color: var-get($_theme, 'date-current-hover-border-color');
+                border-color: var-get($_theme, 'date-selected-current-hover-border-color');
             }
         }
     }
@@ -159,7 +159,7 @@ $_theme: $bootstrap;
         @include e(inner) {
             color: var-get($_theme, 'date-selected-current-range-focus-foreground');
             background: var-get($_theme, 'date-selected-current-range-focus-background');
-            border-color: var-get($_theme, 'date-current-focus-border-color');
+            border-color: var-get($_theme, 'date-selected-current-focus-border-color');
         }
     }
 
