@@ -5621,9 +5621,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             return '0px';
         }
 
-        if (!columnsToSize) {
-            return '';
-        }
         computedWidth -= this.featureColumnsWidth();
 
         const columnWidth = !Number.isFinite(sumExistingWidths) ?
@@ -6742,7 +6739,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (possibleWidth === "0px") {
                 // all columns - hidden
                 this._columnWidth = possibleWidth;
-            } else if (this.width !== null && possibleWidth !== "") {
+            } else if (this.width !== null) {
                 this._columnWidth = Math.max(parseFloat(possibleWidth), this.minColumnWidth) + 'px'
             } else {
                 this._columnWidth =  this.minColumnWidth + 'px';
