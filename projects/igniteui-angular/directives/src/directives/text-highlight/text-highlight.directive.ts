@@ -302,8 +302,10 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     public clearHighlight(): void {
         this.clearChildElements(false);
 
-        this._lastSearchInfo.searchText = '';
-        this._lastSearchInfo.matchCount = 0;
+        if (this._lastSearchInfo) {
+            this._lastSearchInfo.searchText = '';
+            this._lastSearchInfo.matchCount = 0;
+        }
     }
 
     /**
