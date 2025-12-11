@@ -7076,6 +7076,8 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.cdr.detectChanges();
             this.calculateGridHeight();
             this.cdr.detectChanges();
+        } else {
+            this.resetCaches(recalcFeatureWidth);
         }
     }
 
