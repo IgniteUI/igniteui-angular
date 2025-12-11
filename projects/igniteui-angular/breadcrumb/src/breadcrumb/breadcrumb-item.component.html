@@ -1,0 +1,29 @@
+@if (disabled) {
+    <span class="igx-breadcrumb-item__text" [attr.aria-current]="isCurrent ? 'page' : null">
+        @if (icon) {
+            <igx-icon>{{ icon }}</igx-icon>
+        }
+        <ng-content></ng-content>
+    </span>
+} @else if (routerLink) {
+    <a class="igx-breadcrumb-item__link" [routerLink]="routerLink">
+        @if (icon) {
+            <igx-icon>{{ icon }}</igx-icon>
+        }
+        <ng-content></ng-content>
+    </a>
+} @else if (link) {
+    <a class="igx-breadcrumb-item__link" [href]="link">
+        @if (icon) {
+            <igx-icon>{{ icon }}</igx-icon>
+        }
+        <ng-content></ng-content>
+    </a>
+} @else {
+    <span class="igx-breadcrumb-item__text" [attr.aria-current]="isCurrent ? 'page' : null">
+        @if (icon) {
+            <igx-icon>{{ icon }}</igx-icon>
+        }
+        <ng-content></ng-content>
+    </span>
+}
