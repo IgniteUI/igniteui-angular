@@ -2170,6 +2170,36 @@ describe('IgxGrid Component Tests #grid', () => {
                 // first column takes new min
                 expect(col1.calcPixelWidth).toBe(500);
             });
+
+            it('in columns with no width and min-widths should recalculate and re-apply constraints to all cols.', () => {
+                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+                // 3 cols
+                fix.componentInstance.initColumnsRows(5, 3);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                grid.columns[0].minWidth = "80px";
+                grid.columns[1].minWidth = "90px";
+                grid.columns[2].minWidth = "130px";
+
+                grid.width = "300px";
+                fix.detectChanges();
+
+                expect(grid.columns[0].calcWidth).toBe(80);
+                expect(grid.columns[1].calcWidth).toBe(90);
+                expect(grid.columns[2].calcWidth).toBe(130);
+
+                expect(grid.hasHorizontalScroll()).toBe(false);
+
+                grid.width = "290px";
+                fix.detectChanges();
+
+                expect(grid.columns[0].calcWidth).toBe(80);
+                expect(grid.columns[1].calcWidth).toBe(90);
+                expect(grid.columns[2].calcWidth).toBe(130);
+
+                expect(grid.hasHorizontalScroll()).toBe(true);
+            });
         });
 
 
