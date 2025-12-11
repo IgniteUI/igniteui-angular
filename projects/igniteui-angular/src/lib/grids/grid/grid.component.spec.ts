@@ -2200,6 +2200,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 expect(grid.columns[2].calcWidth).toBe(130);
 
                 expect(grid.hasHorizontalScroll()).toBe(false);
+                expect(grid.isHorizontalScrollHidden).toBe(true);
 
                 grid.width = "290px";
                 fix.detectChanges();
@@ -2209,6 +2210,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 expect(grid.columns[2].calcWidth).toBe(130);
 
                 expect(grid.hasHorizontalScroll()).toBe(true);
+                expect(grid.isHorizontalScrollHidden).toBe(false);
             });
         });
 

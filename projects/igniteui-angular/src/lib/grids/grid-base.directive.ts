@@ -7144,13 +7144,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.cdr.detectChanges();
         }
 
-        // in case horizontal scrollbar has appeared recalc to size correctly.
-        if (hasHScroll !== this.hasHorizontalScroll()) {
-            this.isHorizontalScrollHidden = !this.hasHorizontalScroll();
-            this.cdr.detectChanges();
-            this.calculateGridHeight();
-            this.cdr.detectChanges();
-        }
         if (this.zone.isStable) {
             this.zone.run(() => {
                 this._applyWidthHostBinding();
@@ -7169,6 +7162,14 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.zone.onStable.pipe(first()).subscribe(() => {
                 this._autoSizeColumnsNotify.next();
             });
+        }
+
+        // in case horizontal scrollbar has appeared recalc to size correctly.
+        if (hasHScroll !== this.hasHorizontalScroll()) {
+            this.isHorizontalScrollHidden = !this.hasHorizontalScroll();
+            this.cdr.detectChanges();
+            this.calculateGridHeight();
+            this.cdr.detectChanges();
         }
     }
 
