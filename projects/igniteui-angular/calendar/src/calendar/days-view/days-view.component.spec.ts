@@ -7,7 +7,7 @@ import { ScrollDirection } from "../calendar";
 import { KeyboardNavigationService } from '../calendar.services';
 import { CalendarDay } from 'igniteui-angular/core';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
-import { DayDigitPipe } from "igniteui-angular/calendar/src/calendar/day-digit.pipe";
+import { DayDigitPipe } from "../day-digit.pipe";
 
 const TODAY = new Date(2024, 6, 12);
 
