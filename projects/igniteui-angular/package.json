@@ -76,7 +76,7 @@
         "jspdf": "^3.0.2",
         "lodash-es": "^4.17.21",
         "igniteui-theming": "^24.0.0",
-        "igniteui-i18n-core": "1.0.1",
+        "igniteui-i18n-core": "^1.0.1",
         "@igniteui/material-icons-extended": "^3.1.0"
     },
     "peerDependencies": {

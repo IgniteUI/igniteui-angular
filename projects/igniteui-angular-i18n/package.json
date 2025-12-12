@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/IgniteUI/igniteui-angular/projects/igniteui-angular-i18n#readme",
   "dependencies": {
-    "igniteui-i18n-core": "1.0.1",
-    "igniteui-i18n-resources": "1.0.1"
+    "igniteui-i18n-core": "^1.0.1",
+    "igniteui-i18n-resources": "^1.0.1"
   }
 }
