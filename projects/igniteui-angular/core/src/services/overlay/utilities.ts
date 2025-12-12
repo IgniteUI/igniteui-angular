@@ -18,6 +18,7 @@ import { IScrollStrategy } from './scroll';
     standalone: true
 })
 export class IgxOverlayOutletDirective {
+    /* blazorSuppress */
     public element = inject<ElementRef<HTMLElement>>(ElementRef);
 
     /** @hidden */

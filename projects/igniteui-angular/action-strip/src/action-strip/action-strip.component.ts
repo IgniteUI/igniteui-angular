@@ -86,6 +86,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
     private _viewContainer = inject(ViewContainerRef);
     private renderer = inject(Renderer2);
     protected el = inject(ElementRef);
+    /* blazorSuppress */
     public cdr = inject(ChangeDetectorRef);
 
 
