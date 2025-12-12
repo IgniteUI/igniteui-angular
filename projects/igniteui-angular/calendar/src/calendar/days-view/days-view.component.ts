@@ -34,6 +34,7 @@ import {
 import { IgxCalendarBaseDirective } from '../calendar-base';
 import { IViewChangingEventArgs } from './days-view.interface';
 import { KeyboardNavigationService } from '../calendar.services';
+import { DayDigitPipe } from "../day-digit.pipe";
 import { getDateFormatter } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
@@ -50,7 +51,7 @@ let NEXT_ID = 0;
     selector: 'igx-days-view',
     templateUrl: 'days-view.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [IgxDayItemComponent, TitleCasePipe]
+    imports: [IgxDayItemComponent, TitleCasePipe, DayDigitPipe]
 })
 export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     protected el = inject(ElementRef);
