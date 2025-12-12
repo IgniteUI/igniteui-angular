@@ -69,6 +69,7 @@ import { IForOfState } from 'igniteui-angular/directives';
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy {
+    /* blazorSuppress */
     public rowIslandAPI = inject(IgxRowIslandAPIService);
 
 
