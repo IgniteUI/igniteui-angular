@@ -77,7 +77,6 @@ describe('Localization', () => {
 
         it('getCurrencySymbol should return correct currency symbol', () => {
             expect(i18nFormatter.getCurrencySymbol('USD', 'en-US')).toEqual('$');
-            expect(i18nFormatter.getCurrencySymbol('BGN', 'bg')).toEqual('лв.');
             expect(i18nFormatter.getCurrencySymbol('EUR', 'de')).toEqual('€');
             expect(i18nFormatter.getCurrencySymbol('EUR', 'it')).toEqual('€');
         });

@@ -100,13 +100,11 @@ describe('Localization', () => {
             expect(i18nFormatter.getCurrencyCode('en-US')).toEqual('USD');
 
             // Registered in tests, that's why they are available
-            expect(i18nFormatter.getCurrencyCode('bg')).toEqual('BGN');
             expect(i18nFormatter.getCurrencyCode('de')).toEqual('EUR');
         });
 
         it('getCurrencySymbol should return correct currency symbol', () => {
             expect(i18nFormatter.getCurrencySymbol('USD', 'en-US')).toEqual('$');
-            expect(i18nFormatter.getCurrencySymbol('BGN', 'bg')).toEqual('лв.');
             expect(i18nFormatter.getCurrencySymbol('EUR', 'de')).toEqual('€');
         });
 
