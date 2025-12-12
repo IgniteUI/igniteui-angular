@@ -11,6 +11,7 @@ import {
     AfterViewInit,
 } from '@angular/core';
 import { PlatformUtil } from 'igniteui-angular/core';
+import { animationFrameScheduler } from 'rxjs';
 
 export const IgxBaseButtonType = {
     Flat: 'flat',
@@ -109,7 +110,7 @@ export abstract class IgxButtonBaseDirective implements AfterViewInit{
         if (this._platformUtil.isBrowser && !this._viewInit) {
             this._viewInit = true;
 
-            requestAnimationFrame(() => {
+            animationFrameScheduler.schedule(() => {
                 this.element.nativeElement.style.removeProperty('--_init-transition');
             });
         }
