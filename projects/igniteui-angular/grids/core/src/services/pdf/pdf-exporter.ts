@@ -4,6 +4,7 @@ import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxPdfExporterOptions } from './pdf-exporter-options';
 import { IBaseEventArgs } from 'igniteui-angular/core';
 import type { jsPDF } from 'jspdf';
+import { RobotoSubsetFont } from './roboto-subset-font';
 
 export interface IPdfExportEndedEventArgs extends IBaseEventArgs {
     pdf?: jsPDF;
@@ -222,6 +223,11 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 format: options.pageSize
             });
 
+            // Add Unicode-capable font for non-Latin character support
+            // This allows proper rendering of Chinese, Japanese, and other non-Latin scripts
+            pdf.addFileToVFS('Roboto-Subset.ttf', RobotoSubsetFont);
+            pdf.addFont('Roboto-Subset.ttf', 'Roboto', 'normal');
+
             const pageWidth = pdf.internal.pageSize.getWidth();
             const pageHeight = pdf.internal.pageSize.getHeight();
             const margin = 40;
@@ -241,7 +247,8 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
             let yPosition = margin;
 
-            // Set font
+            // Set font to Roboto for Unicode support
+            pdf.setFont('Roboto', 'normal');
             pdf.setFontSize(options.fontSize);
 
             // Draw multi-level headers if present
@@ -268,7 +275,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             }
 
             // Draw data rows
-            pdf.setFont('helvetica', 'normal');
+            pdf.setFont('Roboto', 'normal');
 
             // Check if this is a tree grid export (tree grids can have both TreeGridRecord and DataRecord types for nested children)
             const isTreeGridExport = data.some(record => record.type === ExportRecordType.TreeGridRecord);
@@ -423,7 +430,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         allColumns?: any[]
     ): number {
         let yPosition = yStart;
-        pdf.setFont('helvetica', 'bold');
+        pdf.setFont('Roboto', 'bold');
 
         // First, draw row dimension header labels (for pivot grids) if present
         // Draw headers if we have any row dimension headers, regardless of maxRowLevel
@@ -633,7 +640,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             yPosition = yStart + totalHeaderHeight;
         }
 
-        pdf.setFont('helvetica', 'normal');
+        pdf.setFont('Roboto', 'normal');
         return yPosition;
     }
 
@@ -842,7 +849,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         tableWidth: number,
         options: IgxPdfExporterOptions
     ): void {
-        pdf.setFont('helvetica', 'bold');
+        pdf.setFont('Roboto', 'bold');
         pdf.setFillColor(240, 240, 240);
 
         if (options.showTableBorders) {
@@ -908,7 +915,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             pdf.text(headerText, textX, textY);
         });
 
-        pdf.setFont('helvetica', 'normal');
+        pdf.setFont('Roboto', 'normal');
     }
 
     private drawDataRow(
