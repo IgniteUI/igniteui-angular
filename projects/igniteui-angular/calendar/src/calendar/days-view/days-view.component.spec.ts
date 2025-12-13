@@ -127,10 +127,13 @@ describe("Days View Component", () => {
 
         // Mock the formatter behavior
         // Simulate a locale (like zh-CN) that adds a suffix to the day number.
-        // Cast to 'any' to overwrite the protected 'formatterDay' property used by formattedDate()
-        (daysView as any).formatterDay = {
-            format: () => '25日',
-        } as Intl.DateTimeFormat;
+        Object.defineProperty(daysView, "formatterDay", {
+            get() {
+                return {
+                    format: () => '25日',
+                } as Intl.DateTimeFormat
+            }
+        });
 
         // 1. Verify Programmatic Access (formattedDate method)
         // Should return the raw formatted string from the formatter (with suffix)
