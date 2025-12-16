@@ -9,8 +9,10 @@ import {
     booleanAttribute,
     inject,
     AfterViewInit,
+    OnDestroy
 } from '@angular/core';
 import { PlatformUtil } from '../../core/utils';
+import { animationFrameScheduler, Subscription } from 'rxjs';
 
 export const IgxBaseButtonType = {
     Flat: 'flat',
@@ -20,9 +22,10 @@ export const IgxBaseButtonType = {
 
 
 @Directive()
-export abstract class IgxButtonBaseDirective implements AfterViewInit{
+export abstract class IgxButtonBaseDirective implements AfterViewInit, OnDestroy {
     private _platformUtil = inject(PlatformUtil);
     private _viewInit = false;
+    private _animationScheduler: Subscription;
 
     /**
      * Emitted when the button is clicked.
@@ -110,10 +113,14 @@ export abstract class IgxButtonBaseDirective implements AfterViewInit{
         if (this._platformUtil.isBrowser && !this._viewInit) {
             this._viewInit = true;
 
-            requestAnimationFrame(() => {
+            this._animationScheduler = animationFrameScheduler.schedule(() => {
                 this.element.nativeElement.style.removeProperty('--_init-transition');
             });
         }
+    }
+
+    public ngOnDestroy(): void {
+        this._animationScheduler.unsubscribe();
     }
 
     /**
