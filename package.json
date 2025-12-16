@@ -128,7 +128,6 @@
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "^2.0.3",
     "karma-jasmine": "~5.1.0",
-    "karma-jasmine-spec-tags": "^2.0.0",
     "karma-junit-reporter": "^2.0.1",
     "karma-parallel": "^0.3.1",
     "karma-spec-reporter": "^0.0.36",
