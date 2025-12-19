@@ -2516,6 +2516,7 @@
             letter-spacing: sizable(var(--ig-body-2-letter-spacing), var(--ig-body-2-letter-spacing), var(--ig-body-1-letter-spacing));
             text-transform: sizable(var(--ig-body-2-text-transform), var(--ig-body-2-text-transform), var(--ig-body-1-text-transform));
             margin: 0;
+            white-space: nowrap;
         }
     }
 
@@ -2528,6 +2529,7 @@
             letter-spacing: sizable(var(--ig-body-2-letter-spacing), var(--ig-body-2-letter-spacing), var(--ig-body-1-letter-spacing));
             text-transform: sizable(var(--ig-body-2-text-transform), var(--ig-body-2-text-transform), var(--ig-body-1-text-transform));
             margin: 0;
+            white-space: nowrap;
         }
     }
 }

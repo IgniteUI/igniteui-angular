@@ -35,6 +35,7 @@ import {
 } from "../common/helpers";
 import { CalendarDay } from '../common/model';
 import {IgxTheme, THEME_TOKEN, ThemeToken} from "../../services/theme/theme.token";
+import { DayDigitPipe } from "../day-digit.pipe";
 
 let NEXT_ID = 0;
 
@@ -49,7 +50,7 @@ let NEXT_ID = 0;
     selector: 'igx-days-view',
     templateUrl: 'days-view.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [IgxDayItemComponent, TitleCasePipe]
+    imports: [IgxDayItemComponent, TitleCasePipe, DayDigitPipe]
 })
 export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements AfterContentChecked {
     #standalone = true;
