@@ -1,6 +1,6 @@
-<label class="igx-page-size__label">{{ paginator.resourceStrings.igx_paginator_label }}</label>
+<label [id]="id" class="igx-page-size__label">{{ paginator.resourceStrings.igx_paginator_label }}</label>
 <div class="igx-page-size__select">
-    <igx-select [overlaySettings]="paginator.overlaySettings" [(ngModel)]="paginator.perPage" type="border">
+    <igx-select [labelledBy]="id" [overlaySettings]="paginator.overlaySettings" [(ngModel)]="paginator.perPage" type="border">
         @for (val of paginator.selectOptions; track val) {
             <igx-select-item [value]="val">
                 {{ val }}

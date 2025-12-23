@@ -13,7 +13,7 @@
         [value]="this.selectionValue"
         role="combobox"
         aria-haspopup="listbox"
-        [attr.aria-labelledby]="this.label?.id"
+        [attr.aria-labelledby]="labelledBy || label?.id"
         [attr.aria-expanded]="!this.collapsed"
         [attr.aria-owns]="this.listId"
         [attr.aria-activedescendant]="!this.collapsed ? this.focusedItem?.id : null"
