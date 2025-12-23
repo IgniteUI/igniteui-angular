@@ -69,7 +69,7 @@ export class CircularProgressSampleComponent {
             }
         },
         variant: {
-            label: 'Variant (WebComponents)',
+            label: 'Variant',
             control: {
                 type: 'select',
                 options: ['primary', 'info', 'success', 'warning', 'danger'],
@@ -92,13 +92,26 @@ export class CircularProgressSampleComponent {
     ) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        const { unsubscribe } =
+        const propertyChange =
             this.propertyChangeService.propertyChanges.subscribe(
                 (properties) => {
                     this.properties = properties;
                 }
             );
 
-        this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
+    }
+
+    protected get variantAngular() {
+        const variantValue = this.propertyChangeService.getProperty('variant');
+
+        switch (variantValue) {
+            case 'primary':
+                return 'default';
+            case 'danger':
+                return 'error';
+            default:
+                return variantValue;
+        }
     }
 }

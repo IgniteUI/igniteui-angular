@@ -1,0 +1,14 @@
+@for (tab of items; track tab; let i = $index) {
+    <ng-container *ngTemplateOutlet="tab.panelTemplate"></ng-container>
+}
+
+<div
+    #tablist
+    role="tablist"
+    class="igx-bottom-nav__menu igx-bottom-nav__menu--bottom"
+    aria-orientation="horizontal"
+>
+    @for (tab of items; track tab; let i = $index) {
+        <ng-container *ngTemplateOutlet="tab.headerTemplate"></ng-container>
+    }
+</div>

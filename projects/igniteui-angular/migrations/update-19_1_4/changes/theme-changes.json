@@ -1,0 +1,29 @@
+{
+    "$schema": "../../common/schema/theme-changes.schema.json",
+    "changes": [
+      {
+        "name": "$root-summaries-background",
+        "remove": true,
+        "owner": "grid-theme",
+        "type": "property"
+      },
+      {
+        "name": "$root-summaries-text-color",
+        "remove": true,
+        "owner": "grid-theme",
+        "type": "property"
+      },
+      {
+        "name": "$body-summaries-background",
+        "remove": true,
+        "owner": "grid-theme",
+        "type": "property"
+      },
+      {
+        "name": "$body-summaries-text-color",
+        "remove": true,
+        "owner": "grid-theme",
+        "type": "property"
+      }
+    ]
+  }

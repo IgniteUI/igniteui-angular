@@ -1,5 +1,4 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { Observable } from 'rxjs';
@@ -21,7 +20,6 @@ import { data } from '../shared/data';
         IgxColumnComponent,
         IgxGridComponent,
         IgxSwitchComponent,
-        NgFor,
     ]
 })
 export class GridSelectionComponent implements AfterViewInit {

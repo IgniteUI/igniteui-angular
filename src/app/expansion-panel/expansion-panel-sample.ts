@@ -13,7 +13,6 @@ import {
 defineComponents(IgcExpansionPanelComponent);
 
 @Component({
-    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'expansion-panel-sample',
     templateUrl: './expansion-panel-sample.html',
     styleUrls: ['expansion-panel-sample.scss'],
@@ -51,14 +50,14 @@ export class ExpansionPanelSampleComponent {
     ) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        const { unsubscribe } =
+        const propertyChange =
             this.propertyChangeService.propertyChanges.subscribe(
                 (properties) => {
                     this.properties = properties;
                 }
             );
 
-        this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
     }
 
     private iconPositionMap = new Map<string, string>([

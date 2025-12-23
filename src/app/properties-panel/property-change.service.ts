@@ -13,7 +13,8 @@ export type ControlType =
     'text' |
     'date' |
     'time' |
-    'date-time';
+    'date-time' |
+    'date-range';
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type PropertyPanelConfig = {
@@ -21,7 +22,7 @@ export type PropertyPanelConfig = {
         label?: string;
         control: {
             type: ControlType,
-            options?: string[];
+            options?: string[] | { label: string, value: any }[];
             labels?: string[];
             min?: number;
             max?: number;

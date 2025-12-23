@@ -18,16 +18,18 @@
                         </igx-grid-toolbar-exporter>
                     </igx-grid-toolbar-actions>
                 </igx-grid-toolbar>
-                <igx-column *ngFor="let each of config"
-                    [field]="each.field"
-                    [sortable]="true"
-                    [editable]="true"
-                    [hasSummary]="true"
-                    [dataType]="each.type"
-                    [groupable]="each.groupable"
-                    [cellStyles]="styles"
-                >
-                </igx-column>
+                @for (each of config; track each) {
+                    <igx-column
+                        [field]="each.field"
+                        [sortable]="true"
+                        [editable]="true"
+                        [hasSummary]="true"
+                        [dataType]="each.type"
+                        [groupable]="each.groupable"
+                        [cellStyles]="styles"
+                    >
+                    </igx-column>
+                }
             </igx-grid>
         </div>
     </section>

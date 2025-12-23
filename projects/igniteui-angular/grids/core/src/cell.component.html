@@ -1,0 +1,267 @@
+<ng-template #defaultPinnedIndicator>
+    @if (displayPinnedChip) {
+        <igx-chip
+            class="igx-grid__td--pinned-chip"
+            [disabled]="true"
+            [style.--ig-size]="1"
+        >{{ grid.resourceStrings.igx_grid_pinned_row_indicator }}</igx-chip>
+    }
+</ng-template>
+<ng-template #defaultCell>
+    @if (column.dataType !== 'boolean' && column.dataType !== 'image' || (column.dataType === 'boolean' && this.formatter)) {
+        <div
+            igxTextHighlight
+            class="igx-grid__td-text"
+            [cssClass]="highlightClass"
+            [activeCssClass]="activeHighlightClass"
+            [groupName]="gridID"
+            [value]="
+                formatter
+                    ? (value | columnFormatter:formatter:rowData:columnData)
+                    : column.dataType === 'number'
+                    ? (value | number:column.pipeArgs.digitsInfo:grid.locale)
+                    : (column.dataType === 'date' || column.dataType === 'time' || column.dataType === 'dateTime')
+                    ? (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale)
+                    : column.dataType === 'currency'
+                    ? (value | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale)
+                    : column.dataType === 'percent'
+                    ? (value | percent:column.pipeArgs.digitsInfo:grid.locale)
+                    : value
+            "
+            [row]="rowData"
+            [column]="this.column.field"
+            [containerClass]="'igx-grid__td-text'"
+            [metadata]="searchMetadata"
+        >{{
+            formatter
+                ? (value | columnFormatter:formatter:rowData:columnData)
+                : column.dataType === "number"
+                ? (value | number:column.pipeArgs.digitsInfo:grid.locale)
+                : (column.dataType === 'date' || column.dataType === 'time' || column.dataType === 'dateTime')
+                ? (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale)
+                : column.dataType === 'currency'
+                ? (value | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale)
+                : column.dataType === 'percent'
+                ? (value | percent:column.pipeArgs.digitsInfo:grid.locale)
+                : value
+        }}</div>
+    }
+    @if (column.dataType === 'boolean' && !this.formatter) {
+        <igx-icon
+            family="default"
+            [name]="value ? 'confirm' : 'close'"
+            [ngClass]="{ 'igx-icon--success': value, 'igx-icon--error': !value }">
+        </igx-icon>
+    }
+    @if (column.dataType === 'image') {
+        <img [src]="value" [alt]="value | igxCellImageAlt" />
+    }
+</ng-template>
+
+<ng-template #emptyCell></ng-template>
+<ng-template #addRowCell let-cell="cell">
+    @if (column.dataType !== 'boolean' || (column.dataType === 'boolean' && this.formatter)) {
+        <div
+            igxTextHighlight class="igx-grid__td-text"
+            [cssClass]="highlightClass"
+            [activeCssClass]="activeHighlightClass"
+            [groupName]="gridID"
+            [value]="formatter ? (value | columnFormatter:formatter:rowData) : column.dataType === 'number' ?
+                (value | number:column.pipeArgs.digitsInfo:grid.locale) : (column.dataType === 'date' || column.dataType === 'time' || column.dataType === 'dateTime') ?
+                (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale) : column.dataType === 'currency' ?
+                (value | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale) : column.dataType === 'percent' ?
+                (value | percent:column.pipeArgs.digitsInfo:grid.locale) : value"
+            [row]="rowData"
+            [column]="this.column.field"
+            [containerClass]="'igx-grid__td-text'"
+            [metadata]="searchMetadata"
+        >{{
+            !isEmptyAddRowCell ? value : (column.header || column.field)
+        }}</div>
+    }
+</ng-template>
+<ng-template #inlineEditor let-cell="cell">
+    @if (column.dataType === 'string' || column.dataType === 'image') {
+        <ng-container [formGroup]="formGroup">
+            <igx-input-group>
+                <input
+                    igxInput
+                    [attr.aria-describedby]="ariaDescribeBy"
+                    [attr.aria-invalid]="isInvalid"
+                    [igxFocus]="true"
+                    [igxTextSelection]="true"
+                    [formControl]="formControl"
+                    (compositionstart)="grid.crudService.isInCompositionMode = true"
+                    (compositionend)="grid.crudService.isInCompositionMode = false"
+                />
+            </igx-input-group>
+        </ng-container>
+    }
+    @if (column.dataType === 'number') {
+        <igx-input-group [formGroup]="formGroup">
+            <input
+                igxInput
+                [attr.aria-describedby]="ariaDescribeBy"
+                [attr.aria-invalid]="isInvalid"
+                [igxFocus]="true"
+                [igxTextSelection]="true"
+                [step]="step"
+                type="number"
+                [formControl]="formControl"
+            />
+        </igx-input-group>
+    }
+    @if (column.dataType === 'boolean') {
+        <ng-container [formGroup]="formGroup">
+            <igx-checkbox
+                [checked]="editValue"
+                [igxFocus]="true"
+                [disableRipple]="true"
+                [formControl]="formControl"
+            ></igx-checkbox>
+        </ng-container>
+    }
+    @if (column.dataType === 'date') {
+        <ng-container [formGroup]="formGroup">
+            <igx-date-picker
+                [style.width.%]="100"
+                [outlet]="grid.outlet"
+                mode="dropdown"
+                [locale]="grid.locale"
+                [weekStart]="column.pipeArgs.weekStart"
+                [(value)]="editValue"
+                [igxFocus]="true"
+                [formControl]="formControl"
+                [inputFormat]="column.editorOptions?.dateTimeFormat"
+                [displayFormat]="column.pipeArgs.format"
+            >
+            </igx-date-picker>
+        </ng-container>
+    }
+    @if (column.dataType === 'time') {
+        <ng-container [formGroup]="formGroup">
+            <igx-time-picker
+                [style.width.%]="100"
+                [outlet]="grid.outlet"
+                mode="dropdown"
+                [locale]="grid.locale"
+                [inputFormat]="column.editorOptions?.dateTimeFormat"
+                [displayFormat]="column.pipeArgs.format"
+                [(value)]="editValue"
+                [igxFocus]="true"
+                [formControl]="formControl"
+            ></igx-time-picker>
+        </ng-container>
+    }
+    @if (column.dataType === 'dateTime') {
+        <igx-input-group [formGroup]="formGroup">
+            <input
+                type="text"
+                [attr.aria-describedby]="ariaDescribeBy"
+                [attr.aria-invalid]="isInvalid"
+                [formControl]="formControl"
+                igxInput
+                [locale]="grid.locale"
+                [igxDateTimeEditor]="column.editorOptions?.dateTimeFormat"
+                [defaultFormatType]="column.dataType"
+                [displayFormat]="column.pipeArgs.format"
+                [igxFocus]="true"
+            />
+        </igx-input-group>
+    }
+    @if (column.dataType === 'currency') {
+        <igx-input-group [formGroup]="formGroup">
+            @if (grid.currencyPositionLeft) {
+                <igx-prefix>{{ currencyCodeSymbol }}</igx-prefix>
+            }
+            <input
+                igxInput
+                [attr.aria-describedby]="ariaDescribeBy"
+                [attr.aria-invalid]="isInvalid"
+                [igxFocus]="true"
+                [igxTextSelection]="true"
+                [step]="step"
+                type="number"
+                [formControl]="formControl"
+            />
+            @if (!grid.currencyPositionLeft) {
+                <igx-suffix>{{ currencyCodeSymbol }}</igx-suffix>
+            }
+        </igx-input-group>
+    }
+    @if (column.dataType === 'percent') {
+        <igx-input-group [formGroup]="formGroup">
+            <input
+                igxInput
+                [attr.aria-describedby]="ariaDescribeBy"
+                [attr.aria-invalid]="isInvalid"
+                [igxFocus]="true"
+                [igxTextSelection]="true"
+                [step]="step"
+                type="number"
+                [formControl]="formControl"
+            />
+            <igx-suffix> {{ editValue | percent:column.pipeArgs.digitsInfo:grid.locale }} </igx-suffix>
+        </igx-input-group>
+    }
+</ng-template>
+<ng-container *ngTemplateOutlet="pinnedIndicatorTemplate; context: context">
+</ng-container>
+<ng-container *ngTemplateOutlet="template; context: context"></ng-container>
+
+@if (isInvalid) {
+    <igx-icon
+        family="default"
+        name="error"
+        #errorIcon
+        [igxTooltipTarget]="tooltipRef"
+        [igxToggleOutlet]="grid.outlet"
+        (mouseover)='errorShowing = true'
+        (mouseout)='errorShowing = false'>
+    </igx-icon>
+    <div [id]="ariaErrorMessage"
+    igxTooltip #error #tooltipRef="tooltip">
+        <div [style.width]="'max-content'">
+            <ng-container *ngTemplateOutlet="cellValidationErrorTemplate || defaultError; context: context"></ng-container>
+        </div>
+    </div>
+}
+
+<ng-template #defaultError>
+    @let errors = formControl.errors;
+    @if (errors?.['required']) {
+        <div>
+            {{grid.resourceStrings.igx_grid_required_validation_error}}
+        </div>
+    }
+    @if (errors?.['minlength']) {
+        <div>
+            {{grid.resourceStrings.igx_grid_min_length_validation_error | igxStringReplace:'{0}':errors.minlength.requiredLength }}
+        </div>
+    }
+    @if (errors?.['maxlength']) {
+        <div>
+            {{grid.resourceStrings.igx_grid_max_length_validation_error | igxStringReplace:'{0}':errors.maxlength.requiredLength }}
+        </div>
+    }
+    @if (errors?.['min']) {
+        <div>
+            {{grid.resourceStrings.igx_grid_min_validation_error | igxStringReplace:'{0}':errors.min.min }}
+        </div>
+    }
+    @if (errors?.['max']) {
+        <div>
+            {{grid.resourceStrings.igx_grid_max_validation_error | igxStringReplace:'{0}':errors.max.max }}
+        </div>
+    }
+    @if (errors?.['email']) {
+        <div>
+            {{grid.resourceStrings.igx_grid_email_validation_error }}
+        </div>
+    }
+    @if (errors?.['pattern']) {
+        <div>
+            {{grid.resourceStrings.igx_grid_pattern_validation_error}}
+        </div>
+    }
+</ng-template>

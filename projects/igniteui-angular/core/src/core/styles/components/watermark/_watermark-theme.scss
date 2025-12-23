@@ -1,0 +1,13 @@
+@use 'sass:map';
+@use '../../base' as *;
+
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
+/// @param {Map} $theme - The theme used to style the component.
+@mixin watermark($theme) {
+    @include css-vars($theme, 'igc-trial-watermark');
+
+    igc-trial-watermark::part(link) {
+        font-family: var(--ig-font-family);
+    }
+}

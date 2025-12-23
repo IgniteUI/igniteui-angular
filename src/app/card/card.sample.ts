@@ -152,6 +152,13 @@ export class CardSampleComponent implements OnInit {
                 defaultValue: false
             }
         },
+        justifyActions: {
+            label: 'Justify actions(Angular Only)',
+            control: {
+                type: 'boolean',
+                defaultValue: true
+            }
+        },
     };
 
     public properties: Properties;
@@ -162,14 +169,14 @@ export class CardSampleComponent implements OnInit {
     ) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        const { unsubscribe } =
+        const propertyChange =
             this.propertyChangeService.propertyChanges.subscribe(
                 (properties) => {
                     this.properties = properties;
                 }
             );
 
-        this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
     }
 
     public ngOnInit() {

@@ -30,6 +30,8 @@ import {
     PropertyChangeService,
     PropertyPanelConfig,
 } from '../properties-panel/property-change.service';
+import { HAMMER_GESTURE_CONFIG, HammerModule } from '@angular/platform-browser';
+import Hammer from 'hammerjs';
 
 defineComponents(
     IgcListComponent,
@@ -61,6 +63,7 @@ interface Employee {
     name: string;
     position: string;
     description: string;
+    selected?: boolean;
 }
 
 @Component({
@@ -78,7 +81,18 @@ interface Employee {
         IgxAvatarComponent,
         IgxButtonModule,
         IgxButtonDirective,
-        IgSizeDirective
+        IgSizeDirective,
+        HammerModule
+    ],
+    providers: [
+        {
+            provide: HAMMER_GESTURE_CONFIG,
+            useClass: class {
+                public overrides = {
+                    pan: { direction: Hammer.DIRECTION_HORIZONTAL }
+                }
+            }
+        }
     ]
 })
 export class ListSampleComponent {
@@ -86,7 +100,8 @@ export class ListSampleComponent {
         size: {
             control: {
                 type: 'button-group',
-                options: ['small', 'medium', 'large']
+                options: ['small', 'medium', 'large'],
+                defaultValue: 'medium'
             }
         },
         hideTitle: {
@@ -144,6 +159,13 @@ export class ListSampleComponent {
                 type: 'boolean',
                 defaultValue: false
             }
+        },
+        enablePanning: {
+            label: 'Item Panning',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
         }
     }
 
@@ -155,14 +177,14 @@ export class ListSampleComponent {
     ) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        const { unsubscribe } =
+        const propertyChange =
             this.propertyChangeService.propertyChanges.subscribe(
                 (properties) => {
                     this.properties = properties;
                 }
             );
 
-        this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
     }
 
     public employeeItems: Employee[] = [

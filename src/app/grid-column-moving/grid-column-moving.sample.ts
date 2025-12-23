@@ -1,17 +1,16 @@
 import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
 
-import { IgxButtonDirective, IgxButtonGroupComponent, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPaginatorComponent } from 'igniteui-angular';
+import { ColumnPinningPosition, IgxButtonDirective, IgxButtonGroupComponent, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPaginatorComponent } from 'igniteui-angular';
 
 @Component({
     providers: [],
     selector: 'app-grid-column-moving-sample',
     styleUrls: ['grid-column-moving.sample.scss'],
     templateUrl: 'grid-column-moving.sample.html',
-    imports: [IgxButtonDirective, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxLabelDirective, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, NgFor, IgxColumnComponent, IgxCellTemplateDirective, NgIf, IgxPaginatorComponent, IgxColumnGroupComponent, IgxCellHeaderTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxIconComponent]
+    imports: [IgxButtonDirective, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxLabelDirective, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxPaginatorComponent, IgxColumnGroupComponent, IgxCellHeaderTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxIconComponent]
 })
 export class GridColumnMovingSampleComponent implements OnInit {
     @HostBinding('style.--ig-size')
@@ -77,11 +76,11 @@ export class GridColumnMovingSampleComponent implements OnInit {
             { field: 'ID', width: 150, resizable: true, sortable: false, filterable: true, groupable: true,
                 summary: true, type: 'string', pinned: false, hidden: true },
             { field: 'CompanyName', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
-                summary: true, type: 'string'},
+                summary: true, type: 'string', pinned: true , pinningPosition: ColumnPinningPosition.End},
             { field: 'ContactName', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'string' },
             { field: 'ContactTitle', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
-                summary: true, type: 'string' },
+                summary: true, type: 'string', pinningPosition: ColumnPinningPosition.End },
             { field: 'Address', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'string' },
             { field: 'City', width: 150, resizable: true, sortable: false, filterable: false, groupable: true,

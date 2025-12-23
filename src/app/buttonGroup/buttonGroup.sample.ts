@@ -94,7 +94,7 @@ export class ButtonGroupSampleComponent {
         selection: {
             control: {
                 type: 'select',
-                options: ['single', 'single-required', 'multi'],
+                options: ['single', 'singleRequired', 'multi'],
                 defaultValue: 'single'
             }
         },
@@ -114,20 +114,20 @@ export class ButtonGroupSampleComponent {
     ) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        const { unsubscribe } =
+        const propertyChange =
             this.propertyChangeService.propertyChanges.subscribe(
                 (properties) => {
                     this.properties = properties;
                 }
             );
 
-        this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
     }
 
     private selectionMap = new Map<string, string>(
         Object.entries({
             single: 'single',
-            'single-required': 'singleRequired',
+            'singleRequired': 'single-required',
             multi: 'multiple',
         })
     );

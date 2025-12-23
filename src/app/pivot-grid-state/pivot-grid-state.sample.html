@@ -1,31 +1,34 @@
 <div class="sample-flex-row">
-    <button igxButton="outlined" (click)="saveState()">SAVE STATE</button>
-    <button igxButton="contained" (click)="restoreState()">RESTORE STATE</button>
-    <button igxButton="contained" (click)="export()">EXPORT</button>
-    <igx-switch [checked]="pivotUI.showRowHeaders" (change)="onShowHeadersToggle($event)">Show headers</igx-switch>
-    <igx-switch [checked]="pivotUI.rowLayout === 'horizontal'" (change)="onLayoutToggle($event)">Horizontal layout</igx-switch>
-<div class="pivot-container">
     <div>
-        <igx-pivot-grid
-            #grid1
-            [igxGridState]="options"
-            (valueInit)='onValueInit($event)'
-            (dimensionInit)='onDimensionInit($event)'
-            [data]="origData"
-            [width]="'100%'"
-            [height]="'800px'"
-            [superCompactMode]="true"
-            [defaultExpandState]="true"
-            [pivotConfiguration]="pivotConfigHierarchy"
-            [pivotUI]="pivotUI"
-            [allowFiltering]="true"
-            [filterMode]="'quickFilter'"
-            [rowSelection]="'single'"
-        >
-            <ng-template igxPivotRowDimensionHeader let-col>
-                <span>{{col.header}} 📐</span>
-            </ng-template>
-        </igx-pivot-grid>
+        <button igxButton="outlined" (click)="saveState()">SAVE STATE</button>
+        <button igxButton="contained" (click)="restoreState()">RESTORE STATE</button>
+        <button igxButton="contained" (click)="export()">EXPORT</button>
+        <igx-switch [checked]="pivotUI.showRowHeaders" (change)="onShowHeadersToggle($event)">Show headers</igx-switch>
+        <igx-switch [checked]="pivotUI.rowLayout === 'horizontal'" (change)="onLayoutToggle($event)">Horizontal layout</igx-switch>
     </div>
-    <igx-pivot-data-selector [grid]="grid1"></igx-pivot-data-selector>
+    <div class="pivot-container">
+        <div style="width: 100%;">
+            <igx-pivot-grid
+                #grid1
+                [igxGridState]="options"
+                (valueInit)='onValueInit($event)'
+                (dimensionInit)='onDimensionInit($event)'
+                [data]="origData"
+                [width]="'100%'"
+                [height]="'800px'"
+                [superCompactMode]="true"
+                [defaultExpandState]="true"
+                [pivotConfiguration]="pivotConfigHierarchy"
+                [pivotUI]="pivotUI"
+                [allowFiltering]="true"
+                [filterMode]="'quickFilter'"
+                [rowSelection]="'single'"
+            >
+                <ng-template igxPivotRowDimensionHeader let-col>
+                    <span>{{col.header}} 📐</span>
+                </ng-template>
+            </igx-pivot-grid>
+        </div>
+        <igx-pivot-data-selector [grid]="grid1"></igx-pivot-data-selector>
+    </div>
 </div>

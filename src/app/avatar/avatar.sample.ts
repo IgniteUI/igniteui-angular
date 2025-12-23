@@ -4,7 +4,6 @@ import {
     IgxIconComponent,
     IgSizeDirective,
 } from 'igniteui-angular';
-import { CommonModule } from '@angular/common';
 import {
     defineComponents,
     IgcAvatarComponent,
@@ -30,10 +29,9 @@ defineComponents(IgcAvatarComponent, IgcIconComponent);
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
     imports: [
-        CommonModule,
         IgxAvatarComponent,
         IgxIconComponent,
-        IgSizeDirective,
+        IgSizeDirective
     ],
 })
 export class AvatarSampleComponent {
@@ -76,13 +74,13 @@ export class AvatarSampleComponent {
     ) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        const { unsubscribe } =
+        const propertyChange =
             this.propertyChangeService.propertyChanges.subscribe(
                 (properties) => {
                     this.properties = properties;
                 }
             );
 
-        this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
     }
 }

@@ -1,20 +1,37 @@
-import { Component, ViewChild } from '@angular/core';
-import { NgFor, JsonPipe } from '@angular/common';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ViewChild } from '@angular/core';
+import { JsonPipe } from '@angular/common';
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidatorFn, AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DateRange, IgxButtonDirective, IgxDateRangeEndComponent, IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateTimeEditorDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxPickerToggleComponent, IgxPrefixDirective, IgxRadioComponent, IgxRippleDirective, IgxSuffixDirective, IGX_INPUT_GROUP_TYPE, IChangeCheckboxEventArgs } from 'igniteui-angular';
+import { DateRange, IgxButtonDirective, IgxDateRangePickerComponent, IgxDateTimeEditorDirective, IgxInputDirective, IgxLabelDirective, IgxRadioComponent, IgxRippleDirective, IGX_INPUT_GROUP_TYPE, IChangeCheckboxEventArgs, IGX_DATE_RANGE_PICKER_DIRECTIVES, IgxIconComponent, IgSizeDirective, CustomDateRange, CalendarDay, DateRangeType } from 'igniteui-angular';
+import { defineComponents, IgcButtonComponent, IgcDateRangePickerComponent, IgcDateTimeInputComponent, IgcIconComponent } from 'igniteui-webcomponents';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
+defineComponents(IgcDateRangePickerComponent, IgcButtonComponent, IgcIconComponent, IgcDateTimeInputComponent);
 
 @Component({
     selector: 'app-date-range',
     templateUrl: './date-range.sample.html',
     styleUrls: ['./date-range.sample.scss'],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [
         {
             provide: IGX_INPUT_GROUP_TYPE,
             useValue: 'border'
         }
     ],
-    imports: [IgxButtonDirective, IgxRippleDirective, IgxDateRangePickerComponent, IgxPickerToggleComponent, IgxSuffixDirective, IgxIconComponent, IgxDateRangeStartComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxPrefixDirective, IgxDateRangeEndComponent, FormsModule, IgxLabelDirective, NgFor, IgxRadioComponent, ReactiveFormsModule, JsonPipe]
+    imports: [
+        IgxButtonDirective,
+        IgxRippleDirective,
+        FormsModule,
+        IgxLabelDirective,
+        IgxRadioComponent,
+        ReactiveFormsModule,
+        JsonPipe,
+        IGX_DATE_RANGE_PICKER_DIRECTIVES,
+        IgxInputDirective,
+        IgxDateTimeEditorDirective,
+        IgxIconComponent,
+        IgSizeDirective
+    ]
 })
 export class DateRangeSampleComponent {
     @ViewChild('dr1', { static: true })
@@ -29,15 +46,186 @@ export class DateRangeSampleComponent {
     public range6Start = null;
     public range6End = null;
     public range6: DateRange = { start: this.range6Start, end: this.range6End };
-    public minDate: Date = new Date();
+    public minDate: Date = new Date(new Date().setDate(new Date().getDate() - 20));
     public maxDate: Date = new Date(new Date().setDate(new Date().getDate() + 25));
+    public today = CalendarDay.today;
+    public previousThreeMonthsStart = new Date(
+        this.today.native.getFullYear(),
+        this.today.native.getMonth() - 3,
+        1
+    );
+    public previousThreeMonthsEnd = new Date(
+        this.today.native.getFullYear(),
+        this.today.native.getMonth(),
+        0
+    );
+    public nextThreeMonthsStart = new Date(
+        this.today.native.getFullYear(),
+        this.today.native.getMonth() + 1,
+        1
+    );
+    public nextThreeMonthsEnd = new Date(
+        this.today.native.getFullYear(),
+        this.today.native.getMonth() + 4,
+        0
+    );
+    public customRanges : CustomDateRange[] = [
+        { label:"Next three months", dateRange: {start: this.nextThreeMonthsStart, end: this.nextThreeMonthsEnd} },
+        { label:"Previous three months", dateRange: {start: this.previousThreeMonthsStart, end: this.previousThreeMonthsEnd} },
+    ]
 
     public reactiveForm: UntypedFormGroup;
+    public DateRangeType = DateRangeType;
 
     public updateOnOptions: string[] = ['change', 'blur', 'submit'];
     public updateOn = 'blur';
 
-    constructor(fb: UntypedFormBuilder) {
+
+    public specialDates = [{
+        type: DateRangeType.Between, dateRange: [
+            new Date(new Date().getFullYear(), new Date().getMonth(), 3),
+            new Date(new Date().getFullYear(), new Date().getMonth(), 8)
+        ]
+    }];
+
+    public disabledDates = [{
+        type: DateRangeType.Between, dateRange: [
+            new Date(new Date().getFullYear(), new Date().getMonth(), 20),
+            new Date(new Date().getFullYear(), new Date().getMonth(), 25)
+        ]
+    }];
+
+    public panelConfig: PropertyPanelConfig = {
+        size: {
+            control: {
+                type: 'button-group',
+                options: ['small', 'medium', 'large'],
+                defaultValue: 'medium',
+            }
+        },
+        mode: {
+            control: {
+                type: 'button-group',
+                options: ['dropdown', 'dialog'],
+                defaultValue: 'dropdown'
+            }
+        },
+        value: {
+            control: {
+                type: 'date-range',
+                defaultValue: this.range3
+            }
+        },
+        minValue: {
+            label: 'Min Value',
+            control: {
+                type: 'date',
+                defaultValue: this.minDate
+            }
+        },
+        maxValue: {
+            label: 'Max Value',
+            control: {
+                type: 'date',
+                defaultValue: this.maxDate
+            }
+        },
+        required: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        disabled: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        placeholder: {
+            control: {
+                type: 'text',
+                defaultValue: 'MM/dd/yyyy'
+            }
+        },
+        hint: {
+            label: 'Hint Text',
+            control: {
+                type: 'text'
+            }
+        },
+        displayFormat: {
+            label: 'Display Format',
+            control: {
+                type: 'text'
+            }
+        },
+        inputFormat: {
+            label: 'Input Format',
+            control: {
+                type: 'text'
+            }
+        },
+        hideHeader: {
+            label: 'Hide Header (for dialog mode)',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        orientation: {
+            label: 'Orientation',
+            control: {
+                type: 'button-group',
+                options: ['horizontal', 'vertical'],
+                defaultValue: 'horizontal'
+            }
+        },
+        headerOrientation: {
+            label: 'Header Orientation (dialog mode)',
+            control: {
+                type: 'button-group',
+                options: ['horizontal', 'vertical'],
+                defaultValue: 'horizontal'
+            }
+        },
+        headerTemplate: {
+            label: 'Show Header Template (dialog)',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        calendarTitle: {
+            label: 'Show Calendar Title (dialog)',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        separator: {
+            label: 'Separator text',
+            control: {
+                type: 'text',
+                defaultValue: 'to'
+            }
+        },
+        visibleMonths: {
+            label: 'Visible Months',
+            control: {
+                type: 'number',
+                defaultValue: 2,
+            }
+        },
+    };
+
+    public properties: Properties;
+
+    constructor(
+        fb: UntypedFormBuilder,
+        private propertyChangeService: PropertyChangeService,
+        private destroyRef: DestroyRef
+    ) {
         const today = new Date();
         const in5days = new Date();
         in5days.setDate(today.getDate() + 5);
@@ -53,6 +241,17 @@ export class DateRangeSampleComponent {
             start6: ['', { validators: Validators.required, updateOn: this.updateOn }],
             end6: ['', { validators: Validators.required, updateOn: this.updateOn }],
         });
+
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
+
+        const propertyChange =
+            this.propertyChangeService.propertyChanges.subscribe(
+                (properties) => {
+                    this.properties = properties;
+                }
+            );
+
+        this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
     }
 
     public updateOnChange(e: IChangeCheckboxEventArgs) {

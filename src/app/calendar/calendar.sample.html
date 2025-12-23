@@ -14,6 +14,7 @@
                 [showWeekNumbers]="properties.showWeekNumbers"
                 [hasHeader]="!properties.hideHeader"
                 [formatOptions]="formatOptions"
+                [formatViews]="formatViews"
                 [disabledDates]="disabledDates"
                 [specialDates]="specialDates"
                 (selected)="onSelection($event)"
@@ -47,13 +48,25 @@
         <div class="custom-controls">
             <label>Special Dates</label>
             <igx-date-range-picker
+                type="box"
                 mode="dialog"
                 [(ngModel)]="specialRange"
             ></igx-date-range-picker>
 
+            <label>Disabled Dates</label>
+            <igx-date-range-picker
+                type="box"
+                mode="dialog"
+                [(ngModel)]="disabledRange"
+            >
+                <span igxHint>
+                    Currently disabled + selected is not possible combination!
+                </span>
+            </igx-date-range-picker>
+
             <label>Weekday format</label>
             <igx-buttongroup selectionMode="singleRequired">
-                @for(option of ['narrow', 'short', 'long']; track option) {
+                @for (option of ['narrow', 'short', 'long']; track option) {
                 <button
                     igxButton
                     value="option"
@@ -67,7 +80,7 @@
 
             <label>Month format</label>
             <igx-buttongroup selectionMode="singleRequired">
-                @for(option of ['numeric', '2-digit', 'narrow', 'short',
+                @for (option of ['numeric', '2-digit', 'narrow', 'short',
                 'long']; track option) {
                 <button
                     igxButton

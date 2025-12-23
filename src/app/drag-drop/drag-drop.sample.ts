@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
-import { NgIf, NgClass, NgFor, NgStyle } from '@angular/common';
+import { NgClass, NgStyle } from '@angular/common';
 
 import { ShadowGridSampleComponent } from './shadow-dom-grid/shadow-grid-sample';
 import { DragDirection, GlobalPositionStrategy, IDragBaseEventArgs, IDragStartEventArgs, IDropDroppedEventArgs, IgxButtonDirective, IgxDragDirective, IgxDragHandleDirective, IgxDragIgnoreDirective, IgxDragLocation, IgxDropDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxInsertDropStrategy, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective, IgxToggleDirective, NoOpScrollStrategy, OverlaySettings } from 'igniteui-angular';
@@ -9,7 +9,7 @@ import { DragDirection, GlobalPositionStrategy, IDragBaseEventArgs, IDragStartEv
     templateUrl: './drag-drop.sample.html',
     styleUrls: ['drag-drop.sample.scss'],
     imports: [
-        NgFor, NgIf, NgStyle, NgClass,
+        NgStyle, NgClass,
         IgxDragDirective, IgxDragIgnoreDirective, IgxDragHandleDirective, IgxDropDirective,
         IgxIconComponent, IgxButtonDirective, IgxRippleDirective, IgxToggleDirective,
         IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxLabelDirective,
@@ -100,7 +100,7 @@ export class DragDropSampleComponent {
     public toggleStartPageY;
 
     // Multi selection row drag
-    public sourceRows: any[] = Array.from(Array(10)).map((e, i) => {
+    public sourceRows: any[] = Array.from(Array(10)).map((_e, i) => {
         return {name: "Item " + i, selected: false}
     });
     public targetRows: any[] = [];
@@ -330,7 +330,7 @@ export class DragDropSampleComponent {
         item.dragged = false;
     }
 
-    public listItemEnter(event, itemIndex) {
+    public listItemEnter(_event, itemIndex) {
         const moveDown = this.draggedIndex < itemIndex;
         const listNotesDirsArray = this.listNotesDirs.toArray();
 
@@ -391,7 +391,7 @@ export class DragDropSampleComponent {
         }
     }
 
-    public listItemOver(event, itemIndex) {
+    public listItemOver(_event, itemIndex) {
         const moveDown = itemIndex > this.draggedIndex;
         const itemDragDir = this.listNotesDirs.toArray()[itemIndex];
 

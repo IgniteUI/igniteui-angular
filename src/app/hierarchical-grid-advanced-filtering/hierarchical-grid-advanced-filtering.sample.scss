@@ -1,0 +1,13 @@
+:host::ng-deep {
+    .activeRow {
+        background-color: rgb(201, 241, 201);
+      }
+}
+
+[igxButton="contained"] {
+    margin: 0.5rem;
+}
+
+h4 {
+    padding-top: 2rem;
+}

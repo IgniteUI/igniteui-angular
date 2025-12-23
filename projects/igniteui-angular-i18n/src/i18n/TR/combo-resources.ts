@@ -1,12 +1,7 @@
-import { IComboResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { ComboResourceStringsTR as AComboResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Turkish resource strings for IgxCombo
  */
-export const ComboResourceStringsTR = {
-    igx_combo_empty_message: 'Liste boş',
-    igx_combo_filter_search_placeholder: 'Arama terimi girin',
-    igx_combo_addCustomValues_placeholder: 'Öğe ekle',
-    igx_combo_clearItems_placeholder: 'Seçimi temizle'
-} satisfies MakeRequired<IComboResourceStrings>;
+export const ComboResourceStringsTR = prefixResource(IGX_PREFIX, AComboResourceStrings);

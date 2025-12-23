@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { registerLocaleData, NgFor } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewChild } from '@angular/core';
+import { formatDate, registerLocaleData } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import localeBG from '@angular/common/locales/bg';
 import localeEN from '@angular/common/locales/en';
@@ -19,13 +19,43 @@ import {
     IgxResourceStringsBG, IgxResourceStringsDE, IgxResourceStringsES, IgxResourceStringsFR, IgxResourceStringsIT,
     IgxResourceStringsJA, IgxResourceStringsKO, IgxResourceStringsZHHANS, IgxResourceStringsZHHANT
 } from 'igniteui-angular-i18n';
-import { IResourceStrings, GridResourceStringsEN, IgxColumnComponent, IgxGridComponent, IgxSelectComponent, IgxSelectItemComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent } from 'igniteui-angular';
+import {
+    IResourceStrings,
+    GridResourceStringsEN,
+    IgxColumnComponent,
+    IgxGridComponent,
+    IgxSelectComponent,
+    IgxSelectItemComponent,
+    IgxGridToolbarComponent,
+    IgxGridToolbarTitleComponent,
+    IgxPaginatorComponent,
+    changei18n,
+    registerI18n,
+    setCurrentI18n,
+    IgxGridPinningActionsComponent,
+    IgxGridEditingActionsComponent,
+    IgxActionStripComponent
+} from 'igniteui-angular';
+import { getDateFormatter } from 'igniteui-i18n-core';
 
 @Component({
     selector: 'app-grid-localization',
     styleUrls: ['./grid-localization.sample.scss'],
     templateUrl: 'grid-localization.sample.html',
-    imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent]
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        IgxGridComponent,
+        IgxColumnComponent,
+        IgxGridToolbarComponent,
+        IgxGridToolbarTitleComponent,
+        IgxSelectComponent,
+        IgxSelectItemComponent,
+        IgxPaginatorComponent,
+        IgxGridPinningActionsComponent,
+        IgxGridEditingActionsComponent,
+        IgxActionStripComponent
+    ]
 })
 
 export class GridLocalizationSampleComponent implements OnInit {
@@ -37,20 +67,10 @@ export class GridLocalizationSampleComponent implements OnInit {
     public selectLocales = ['HI', 'BG', 'EN', 'DE', 'ES', 'FR', 'IT', 'JA', 'KO', 'zh-Hans', 'zh-Hant'];
     public cashedLocalizationEN: IResourceStrings;
     public partialCustomHindi: IResourceStrings;
+    public inputValue;
 
     constructor() { }
     public ngOnInit(): void {
-        registerLocaleData(localeBG);
-        registerLocaleData(localeEN);
-        registerLocaleData(localeDE);
-        registerLocaleData(localeES);
-        registerLocaleData(localeFR);
-        registerLocaleData(localeIT);
-        registerLocaleData(localeJA);
-        registerLocaleData(localeKO);
-        registerLocaleData(localeHans);
-        registerLocaleData(localeHant);
-        registerLocaleData(localeHI);
         this.data = DATA;
         this.cashedLocalizationEN = Object.assign({}, GridResourceStringsEN);
         // Creating a custom locale (HI) for specific grid strings.
@@ -78,10 +98,45 @@ export class GridLocalizationSampleComponent implements OnInit {
         ];
 
         this.locale = 'EN';
+
+        // Old way by Angular
+        // registerLocaleData(localeBG);
+        // registerLocaleData(localeDE);
+        // registerLocaleData(localeES);
+        // registerLocaleData(localeFR);
+        // registerLocaleData(localeIT);
+        // registerLocaleData(localeJA);
+        // registerLocaleData(localeKO);
+        // registerLocaleData(localeHans);
+        // registerLocaleData(localeHant);
+        // registerLocaleData(localeHI);
+
+        // New API
+        registerI18n(IgxResourceStringsBG, 'bg');
+        registerI18n(IgxResourceStringsDE, 'de');
+        registerI18n(IgxResourceStringsES, 'es');
+        registerI18n(IgxResourceStringsFR, 'fr');
+        registerI18n(IgxResourceStringsIT, 'it');
+        registerI18n(IgxResourceStringsJA, 'ja');
+        registerI18n(IgxResourceStringsKO, 'ko');
+        registerI18n(IgxResourceStringsZHHANS, 'zh-Hans');
+        registerI18n(IgxResourceStringsZHHANT, 'zh-Hant');
     }
 
     public updateLocale() {
         const newLocale = this.locales.find(x => x.type === this.locale).resource;
-        this.grid.resourceStrings = newLocale;
+        // Manual assign of resource strings.
+        //this.grid.resourceStrings = newLocale;
+
+        // Old API
+        // changei18n(newLocale);
+
+        // New API
+        setCurrentI18n(this.locale);
+    }
+
+    public onButtonClick() {
+        console.log("Old: " + formatDate(new Date("10/10/1993"), this.inputValue, this.locale));
+        console.log("New: " + getDateFormatter().formatDateCustomFormat(new Date("10/10/1993"), this.inputValue, { locale:  this.locale }));
     }
 }

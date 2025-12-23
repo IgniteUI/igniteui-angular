@@ -20,14 +20,20 @@ import {
     defineComponents,
     IgcTabsComponent,
     IgcTabComponent,
-    IgcTabPanelComponent,
+    IgcIconComponent,
+    registerIconFromText
 } from 'igniteui-webcomponents';
 import {
     PropertyChangeService,
     Properties,
 } from '../properties-panel/property-change.service';
 
-defineComponents(IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent);
+defineComponents(IgcTabsComponent, IgcTabComponent, IgcIconComponent);
+
+registerIconFromText(
+    'folder',
+    '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h240l80 80h320q33 0 56.5 23.5T880-640v400q0 33-23.5 56.5T800-160H160Z"/></svg>'
+);
 
 @Component({
     selector: 'app-tabs-showcase-sample',
@@ -93,13 +99,13 @@ export class TabsShowcaseSampleComponent implements OnInit {
             },
         });
 
-        const { unsubscribe } = this.pcs.propertyChanges.subscribe(
+        const propertyChange = this.pcs.propertyChanges.subscribe(
             (properties) => {
                 this.properties = properties;
             }
         );
 
-        this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
     }
 
     public ngOnInit() {

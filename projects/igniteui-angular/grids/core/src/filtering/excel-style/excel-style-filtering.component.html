@@ -1,0 +1,50 @@
+<article #mainDropdown
+    class="igx-excel-filter__menu"
+    [ngClass]="{
+        'igx-excel-filter__sizing': shouldApplySizes,
+        'igx-excel-filter__menu--cosy': size === '2',
+        'igx-excel-filter__menu--compact': size === '1'
+    }"
+    [id]="overlayComponentId"
+    (keydown)="onKeyDown($event)"
+    [style.min-height]="minHeight"
+    [style.max-height]="maxHeight"
+    role="menu">
+
+    @if (this.excelColumnOperationsDirective) {
+        <ng-content select="igx-excel-style-column-operations,[igxExcelStyleColumnOperations]">
+        </ng-content>
+    } @else {
+        <igx-excel-style-header
+            [showHiding]="size !== '3' && !column?.disableHiding"
+            [showPinning]="size !== '3' && !column?.disablePinning"
+            [showSelecting]="size !== '3' && columnSelectable()"
+        >
+        </igx-excel-style-header>
+        @if (column?.sortable) {
+            <igx-excel-style-sorting>
+            </igx-excel-style-sorting>
+        }
+        @if (grid?.moving) {
+            <igx-excel-style-moving></igx-excel-style-moving>
+        }
+        @if (!column?.disablePinning && size === '3') {
+            <igx-excel-style-pinning></igx-excel-style-pinning>
+        }
+        @if (!column?.disableHiding && size === '3') {
+            <igx-excel-style-hiding></igx-excel-style-hiding>
+        }
+        @if (columnSelectable() && size === '3') {
+            <igx-excel-style-selecting></igx-excel-style-selecting>
+        }
+    }
+
+    @if (this.excelFilterOperationsDirective) {
+        <ng-content select="igx-excel-style-filter-operations,[igxExcelStyleFilterOperations]">
+        </ng-content>
+    } @else {
+        <igx-excel-style-clear-filters></igx-excel-style-clear-filters>
+        <igx-excel-style-conditional-filter></igx-excel-style-conditional-filter>
+        <igx-excel-style-search></igx-excel-style-search>
+    }
+</article>

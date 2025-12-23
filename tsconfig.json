@@ -7,7 +7,7 @@
       "outDir": "./dist/out-tsc",
       "sourceMap": true,
       "declaration": false,
-      "moduleResolution": "node",
+      "moduleResolution": "bundler",
       "experimentalDecorators": true,
       "forceConsistentCasingInFileNames": true,
       "esModuleInterop": true,
@@ -15,10 +15,6 @@
       "skipLibCheck": true,
       "typeRoots": [
         "node_modules/@types"
-      ],
-      "lib": [
-        "es2022",
-        "dom"
       ],
       "paths": {
         "igniteui-angular": [
@@ -29,7 +25,8 @@
         ],
         "igniteui-angular-i18n": [
           "projects/igniteui-angular-i18n/src/index.ts"
-        ]
+        ],
+
       },
       "rootDir": ".",
       "useDefineForClassFields": false,
@@ -51,5 +48,13 @@
         },
         "strictInjectionParameters": true,
         "strictInputAccessModifiers": true,
-    }
+    },
+    "references": [
+      {
+        "path": "./projects/igniteui-angular-performance/tsconfig.app.json"
+      },
+      {
+        "path": "./projects/igniteui-angular-performance/tsconfig.spec.json"
+      }
+    ]
 }

@@ -40,7 +40,7 @@ import {
     IgcButtonComponent,
     IgcInputComponent,
     registerIconFromText,
-    IgcActiveStepChangingArgs,
+    IgcActiveStepChangingEventArgs,
 } from 'igniteui-webcomponents';
 import {
     Properties,
@@ -212,13 +212,13 @@ export class IgxStepperSampleComponent {
     constructor(private destroyRef: DestroyRef) {
         this.pcs.setPanelConfig(this.panelConfig);
 
-        const { unsubscribe } = this.pcs.propertyChanges.subscribe(
+        const propertyChange = this.pcs.propertyChanges.subscribe(
             (properties) => {
                 this.properties = properties;
             }
         );
 
-        this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
     }
 
     // Reactive forms initialization
@@ -318,7 +318,7 @@ export class IgxStepperSampleComponent {
 
     // Handle changes from Web Component Stepper
     public onWcStepperChange(
-        event: CustomEvent<IgcActiveStepChangingArgs>
+        event: CustomEvent<IgcActiveStepChangingEventArgs>
     ): void {
         if (this.isSyncing) return;
 

@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 
@@ -10,7 +9,7 @@ import { IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
     standalone: true,
     providers: [
     ],
-    imports: [NgIf, IgxGridComponent, IgxColumnComponent]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridRecreateSampleComponent implements OnInit {
     public data = [] as any[];

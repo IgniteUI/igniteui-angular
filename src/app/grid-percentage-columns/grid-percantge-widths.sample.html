@@ -1,22 +1,23 @@
 <div class="wrapper">
     <div class="sample-content">
         <div class="sample-column">
-            <igx-grid [data]="data" [locale]="locale" [allowFiltering]="true" [moving]="true" [filterMode]="'excelStyleFilter'" width="100%" height="600px">
-                <igx-column field="ProductName" [pinned]="true" header="Product Name" width="19%" [dataType]="'string'" [sortable]="true" [hasSummary]="false" [editable]="true" [filterable]="true" [resizable]="true">
+            <igx-grid [data]="data" [locale]="locale" [allowFiltering]="true" [moving]="true" [filterMode]="'excelStyleFilter'" width="420px" height="600px">
+                <igx-column field="ProductName" [pinned]="false" header="Product Name" width="20%" [dataType]="'string'" [sortable]="true" [hasSummary]="false" [editable]="true" [filterable]="true" >
                 </igx-column>
-                <igx-column field="UnitsInStock" [pinned]="false"  header="Units In Stock" width="19%" dataType="currency" [pipeArgs]="pipeArgs" [sortable]="true" [hasSummary]="true" [editable]="true" [filterable]="true" [resizable]="true">
+                <igx-column field="UnitsInStock" [pinned]="false"  header="Units In Stock" width="20%" dataType="currency" [pipeArgs]="pipeArgs" [sortable]="true" [hasSummary]="true" [editable]="true" [filterable]="true" >
                 </igx-column>
-                <igx-column field="OrderDate" header="Order Date" width="19%" [dataType]="'date'" [sortable]="true" [hasSummary]="false" [editable]="true" [filterable]="true" [resizable]="true">
+                <igx-column field="OrderDate" header="Order Date" width="20%" [dataType]="'date'" [sortable]="true" [hasSummary]="false" [editable]="true" [filterable]="true" >
                     <ng-template igxCell let-cell="cell" let-val>
                         {{val | date:'dd/MM/yyyy'}}
                     </ng-template>
                 </igx-column>
-                <igx-column field="Discontinued" [resizable]="true"  header="Discontinued" width="15%" [dataType]="'boolean'"
+                <igx-column field="Discontinued"   header="Discontinued" width="10%" [dataType]="'boolean'" minWidth="20px"
                     [sortable]="false" [hasSummary]="false" [editable]="true" [filterable]="false">
                 </igx-column>
-                <igx-column field="ReorderLevel" header="Reorder Level" [resizable]="true" dataType="percent" [pipeArgs]="pipeArgs" [hasSummary]="true" width="19%" [sortable]="false"  [editable]="true" >
+                <igx-column field="ReorderLevel" header="Reorder Level"  dataType="percent" [pipeArgs]="pipeArgs" [hasSummary]="true" width="10%" [sortable]="false"  [editable]="true" >
                 </igx-column>
-                <igx-paginator [perPage]="10"></igx-paginator>
+                <igx-column field="SupplierID" header="SupplierID"  width="10%" [sortable]="false"  [editable]="true">
+                </igx-column>
             </igx-grid>
         </div>
     </div>
@@ -39,11 +40,15 @@
             </igx-input-group>
             <igx-select [(ngModel)]="currencyCode">
                 <label igxLabel>Currency</label>
-                <igx-select-item *ngFor="let cur of currencies" [value]="cur">{{cur}}</igx-select-item>
+                @for (cur of currencies; track cur) {
+                    <igx-select-item [value]="cur">{{cur}}</igx-select-item>
+                }
             </igx-select>
             <igx-select [(ngModel)]="locale">
                 <label igxLabel>Locale</label>
-                <igx-select-item *ngFor="let cur of locales" [value]="cur">{{cur}}</igx-select-item>
+                @for (cur of locales; track cur) {
+                    <igx-select-item [value]="cur">{{cur}}</igx-select-item>
+                }
             </igx-select>
             <button igxButton="contained" (click)="changePipeArgs()">Apply Changes</button>
         </igx-card-content>
@@ -66,8 +71,12 @@
             </igx-column>
             <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'">
                 <ng-template igxCell let-cell="cell" let-val>
-                    <img *ngIf="val" src="/assets/images/grid/active.png" title="Continued" alt="Continued" />
-                    <img *ngIf="!val" src="/assets/images/grid/expired.png" title="Discontinued" alt="Discontinued" />
+                    @if (val) {
+                        <img src="/assets/images/grid/active.png" title="Continued" alt="Continued" />
+                    }
+                    @if (!val) {
+                        <img src="/assets/images/grid/expired.png" title="Discontinued" alt="Discontinued" />
+                    }
                 </ng-template>
             </igx-column>
         </igx-grid>

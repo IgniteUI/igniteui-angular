@@ -1,0 +1,60 @@
+import { ContentChild, Directive, EventEmitter, Input, Output, TemplateRef, ViewChild, booleanAttribute, inject } from '@angular/core';
+import { IgxTabHeaderBase, IgxTabItemBase, IgxTabContentBase, IgxTabsBase } from './tabs.base';
+import { CarouselAnimationDirection, IgxSlideComponentBase } from 'igniteui-angular/carousel';
+
+@Directive()
+export abstract class IgxTabItemDirective implements IgxTabItemBase, IgxSlideComponentBase {
+    /** @hidden */
+    private tabs = inject(IgxTabsBase);
+
+    /** @hidden */
+    @ContentChild(IgxTabHeaderBase)
+    public headerComponent: IgxTabHeaderBase;
+
+    /** @hidden */
+    @ContentChild(IgxTabContentBase)
+    public panelComponent: IgxTabContentBase;
+
+    /** @hidden */
+    @ViewChild('headerTemplate', { static: true })
+    public headerTemplate: TemplateRef<any>;
+
+    /** @hidden */
+    @ViewChild('panelTemplate', { static: true })
+    public panelTemplate: TemplateRef<any>;
+
+    /**
+     * Output to enable support for two-way binding on [(selected)]
+     */
+    @Output()
+    public selectedChange = new EventEmitter<boolean>();
+
+    /**
+     * Disables the item.
+     */
+    @Input({ transform: booleanAttribute })
+    public disabled = false;
+
+    /** @hidden */
+    public direction = CarouselAnimationDirection.NONE;
+    /** @hidden */
+    public previous: boolean;
+
+    private _selected = false;
+
+    /**
+     * Gets/Sets whether an item is selected.
+     */
+    @Input({ transform: booleanAttribute })
+    public get selected(): boolean {
+        return this._selected;
+    }
+
+    public set selected(value: boolean) {
+        if (this._selected !== value) {
+            this._selected = value;
+            this.tabs.selectTab(this, this._selected);
+            this.selectedChange.emit(this._selected);
+        }
+    }
+}

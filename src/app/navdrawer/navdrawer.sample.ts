@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IgxRadioComponent, IgxSwitchComponent } from 'igniteui-angular';
 import { AppComponent } from '../app.component';
@@ -10,7 +9,7 @@ import { AppComponent } from '../app.component';
     selector: 'app-navbar-sample',
     styleUrls: ['navdrawer.sample.scss'],
     templateUrl: 'navdrawer.sample.html',
-    imports: [IgxSwitchComponent, FormsModule, NgFor, IgxRadioComponent]
+    imports: [IgxSwitchComponent, FormsModule, IgxRadioComponent]
 })
 export class NavdrawerSampleComponent {
     constructor(public app: AppComponent) {}

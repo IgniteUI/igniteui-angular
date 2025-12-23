@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IGX_INPUT_GROUP_DIRECTIVES, IGX_LIST_DIRECTIVES, IgxAvatarComponent, IgxButtonDirective, IgxCardComponent, IgxFilterOptions, IgxFilterPipe, IgxForOfDirective, IgxIconComponent, IgxRippleDirective } from 'igniteui-angular';
 
@@ -9,7 +8,7 @@ import { IGX_INPUT_GROUP_DIRECTIVES, IGX_LIST_DIRECTIVES, IgxAvatarComponent, Ig
     selector: 'app-list-performance-sample',
     styleUrls: ['list-performance.sample.scss'],
     templateUrl: 'list-performance.sample.html',
-    imports: [IgxIconComponent, FormsModule, NgIf, IgxButtonDirective, IgxCardComponent, IgxForOfDirective, IgxRippleDirective, IgxAvatarComponent, IgxFilterPipe, IGX_LIST_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES]
+    imports: [IgxIconComponent, FormsModule, IgxButtonDirective, IgxCardComponent, IgxForOfDirective, IgxRippleDirective, IgxAvatarComponent, IgxFilterPipe, IGX_LIST_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES]
 })
 export class ListPerformanceSampleComponent {
     public search1: string;

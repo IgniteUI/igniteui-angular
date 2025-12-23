@@ -60,7 +60,6 @@ import { scaleInCenter, scaleOutCenter } from 'igniteui-angular/animations';
         IgxSimpleComboComponent,
         IgxLabelDirective,
         IgxHintDirective,
-        IgxComboComponent,
         IgxButtonDirective,
         ReactiveFormsModule,
         IgxToastComponent,

@@ -1,0 +1,14 @@
+<ng-content select="igx-splitter-pane"></ng-content>
+@for (pane of panes; track pane; let last = $last; let index = $index) {
+    @if (!last) {
+        <igx-splitter-bar [order]="pane.order + 1" role="separator"
+            [type]="type"
+            [pane]="pane"
+            [siblings]="getPaneSiblingsByOrder(pane.order + 1, index)"
+            (moveStart)="onMoveStart($event)"
+            (moving)="onMoving($event)"
+            (movingEnd)="onMoveEnd($event)"
+            [nonCollapsible]="nonCollapsible">
+        </igx-splitter-bar>
+    }
+}

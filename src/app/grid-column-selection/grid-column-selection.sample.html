@@ -1,7 +1,7 @@
 <div>
     <igx-grid #grid1 [data]="data" [columnSelection]="'multiple'" [allowFiltering]="true"
-              [rowSelection]="'multiple'" [filterMode]="'excelStyleFilter'" [moving]="true"
-              [height]="'530px'" (columnSelectionChanging)="onColumnSelection($event)">
+            [rowSelection]="'multiple'" [filterMode]="'excelStyleFilter'" [moving]="true"
+            [height]="'530px'" (columnSelectionChanging)="onColumnSelection($event)">
         <igx-grid-toolbar>
             <igx-grid-toolbar-title>
                 Grid 1 selection mode is: <span class="selection-mode">{{grid1.columnSelection}}</span>
@@ -23,37 +23,42 @@
                         <igx-input-group class="column-actions__header-input">
                             <label igxLabel>Column list</label>
                             <input igxInput tabindex="0" [(ngModel)]="searchSelectedColumn"
-                                   [placeholder]="'Filter Column list ...'" autocomplete="off" />
+                                [placeholder]="'Filter Column list ...'" autocomplete="off" />
                         </igx-input-group>
                     </div>
                     <div class="column-actions__columns"
-                         [style.max-height]="(grid1.calcHeight) ? grid1.calcHeight * 0.7 + 'px' : '100%'">
-                        <igx-checkbox
-                                *ngFor="let columnItem of grid1.columns | filterColumns: searchSelectedColumn"
+                        [style.max-height]="(grid1.calcHeight) ? grid1.calcHeight * 0.7 + 'px' : '100%'">
+                        @for (columnItem of grid1.columns | filterColumns: searchSelectedColumn; track columnItem) {
+                            <igx-checkbox
                                 class="igx-column-hiding__columns-item"
                                 (change)="columnItem.selected = !columnItem.selected" [checked]="columnItem.selected"
                                 [disabled]="!columnItem.selectable">
-                            {{ columnItem.field }}
-                        </igx-checkbox>
+                                {{ columnItem.field }}
+                            </igx-checkbox>
+                        }
                     </div>
                     <div class="column-hiding__buttons">
                         <button igxButton igxRipple (click)="grid1.selectAllColumns()">Select All</button>
                         <button igxButton igxRipple (click)="grid1.deselectAllColumns()"
-                                [disabled]="grid1.selectedColumns().length === 0">Deselect All</button>
+                        [disabled]="grid1.selectedColumns().length === 0">Deselect All</button>
                     </div>
                 </div>
             </igx-drop-down>
         </igx-grid-toolbar>
-        <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field"
-                    [groupable]="c.groupable" [resizable]="c.resizable" [width]="c.width" [sortable]="c.sortable"
-                    [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="true"
-                    [selectable]="c.selectable" [dataType]="c.type">
-        </igx-column>
-        <igx-paginator *ngIf="paging"></igx-paginator>
+        @for (c of columns; track c) {
+            <igx-column [field]="c.field" [header]="c.field"
+                [groupable]="c.groupable" [resizable]="c.resizable" [width]="c.width" [sortable]="c.sortable"
+                [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="true"
+                [selectable]="c.selectable" [dataType]="c.type">
+            </igx-column>
+        }
+        @if (paging) {
+            <igx-paginator></igx-paginator>
+        }
     </igx-grid>
 
     <igx-grid #grid2 [data]="data" height="300px" [columnSelection]="'multiple'"
-              columnWidth="100px">
+            columnWidth="100px">
         <igx-grid-toolbar>
             <igx-grid-toolbar-title>
                 Grid 2 selection mode is: <span class="selection-mode">{{grid2.columnSelection}}</span>
@@ -91,9 +96,11 @@
         <igx-icon igxSuffix>expand_more</igx-icon>
     </button>
     <igx-drop-down #dropDownComfortable (selectionChanging)="selected($event)">
-        <igx-drop-down-item *ngFor="let item of selectionModes">
-            {{ item }}
-        </igx-drop-down-item>
+        @for (item of selectionModes; track item) {
+            <igx-drop-down-item>
+                {{ item }}
+            </igx-drop-down-item>
+        }
     </igx-drop-down>
     <igx-switch [(ngModel)]="paging">Enable Paging</igx-switch>
     <button igxButton="contained" (click)="getGridSelectedColunsData()">Console log Selected Columns Data</button>

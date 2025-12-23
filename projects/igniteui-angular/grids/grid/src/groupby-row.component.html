@@ -1,0 +1,78 @@
+<ng-container #defaultGroupRow>
+
+    @if (rowDraggable) {
+        <div class="igx-grid__drag-indicator igx-grid__tr-action">
+            <igx-icon family="default" name="drag_indicator" [style.visibility]="'hidden'"></igx-icon>
+        </div>
+    }
+
+    @if (showRowSelectors) {
+        <div class="igx-grid__cbx-selection igx-grid__tr-action" (pointerdown)="$event.preventDefault()"
+            (click)="onGroupSelectorClick($event)">
+            <ng-template #groupByRowSelector *ngTemplateOutlet="
+                this.grid.groupByRowSelectorTemplate ? this.grid.groupByRowSelectorTemplate : groupByRowSelectorBaseTemplate;
+                context: { $implicit: {
+                    selectedCount: selectedRowsInTheGroup.length,
+                    totalCount: this.groupRow.records.length,
+                    groupRow: this.groupRow }}">
+            </ng-template>
+        </div>
+    }
+
+    <div (click)="toggle()" class="igx-grid__grouping-indicator">
+        <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }">
+        </ng-container>
+    </div>
+
+    <div class="igx-grid__group-content" #groupContent>
+        <ng-container
+            *ngTemplateOutlet="grid.groupRowTemplate ? grid.groupRowTemplate : defaultGroupByTemplate; context: { $implicit: groupRow }">
+        </ng-container>
+    </div>
+
+    <ng-template #defaultGroupByExpandedTemplate>
+        <igx-icon family="default" name="tree_collapse"></igx-icon>
+    </ng-template>
+
+    <ng-template #defaultGroupByCollapsedTemplate>
+        <igx-icon family="default" name="tree_expand"></igx-icon>
+    </ng-template>
+
+
+    <ng-template #defaultGroupByTemplate>
+        <div class="igx-group-label">
+            <igx-icon family="default" name="group_work" class="igx-group-label__icon"></igx-icon>
+            <span class="igx-group-label__column-name">
+                {{ groupRow.column && groupRow.column.header ?
+                groupRow.column.header :
+                (groupRow.expression ? groupRow.expression.fieldName : '') }}:
+            </span>
+
+            <span class="igx-group-label__text">{{
+                formatter
+                    ? (groupRow.value | columnFormatter:formatter:groupRow.records[0]:null)
+                    : dataType === "number"
+                    ? (groupRow.value | number:groupRow.column.pipeArgs.digitsInfo:grid.locale)
+                    : (dataType === 'date' || dataType === 'time' || dataType === 'dateTime')
+                    ? (groupRow.value | date:groupRow.column.pipeArgs.format:groupRow.column.pipeArgs.timezone:grid.locale)
+                    : dataType === 'currency'
+                    ? (groupRow.value | currency:currencyCode:groupRow.column.pipeArgs.display:groupRow.column.pipeArgs.digitsInfo:grid.locale)
+                    : dataType === 'percent'
+                    ? (groupRow.value | percent:groupRow.column.pipeArgs.digitsInfo:grid.locale)
+                    : groupRow.value
+            }}</span>
+
+            <igx-badge [value]="groupRow.records ? groupRow.records.length : 0" class='igx-group-label__count-badge'>
+            </igx-badge>
+        </div>
+    </ng-template>
+    <ng-template #groupByRowSelectorBaseTemplate let-context>
+        <div class="igx-grid__cbx-padding">
+            <igx-checkbox [tabindex]="-1" [readonly]="true" [checked]="areAllRowsInTheGroupSelected"
+                [disableRipple]="true" [indeterminate]="groupByRowCheckboxIndeterminateState"
+                [disabled]="this.grid.rowSelection === 'single'" [aria-label]="groupByRowSelectorBaseAriaLabel"
+                #groupByRowCheckbox>
+            </igx-checkbox>
+        </div>
+    </ng-template>
+</ng-container>

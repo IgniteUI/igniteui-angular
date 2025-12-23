@@ -1,0 +1,19 @@
+@use 'sass:map';
+@use '../../base' as *;
+
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
+/// @param {Map} $theme - The theme used to style the component.
+@mixin highlight($theme) {
+    @include css-vars($theme, '.igx-highlight');
+
+    %igx-highlight {
+        color: var-get($theme, 'resting-color');
+        background: var-get($theme, 'resting-background');
+    }
+
+    %igx-highlight--active {
+        color: var-get($theme, 'active-color');
+        background: var-get($theme, 'active-background');
+    }
+}

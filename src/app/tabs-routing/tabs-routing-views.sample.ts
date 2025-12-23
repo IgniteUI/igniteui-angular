@@ -1,24 +1,24 @@
 import { Component } from '@angular/core';
-import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IgxAvatarComponent } from '../../../projects/igniteui-angular/src/lib/avatar/avatar.component';
-import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
-import { NgFor } from '@angular/common';
-import { IgxListItemComponent } from '../../../projects/igniteui-angular/src/lib/list/list-item.component';
-import { IgxListComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxListActionDirective } from '../../../projects/igniteui-angular/src/lib/list/list.component';
+import { IgxAvatarComponent } from 'igniteui-angular/avatar';
+import { IgxRippleDirective } from 'igniteui-angular/directives';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxListActionDirective, IgxListComponent, IgxListItemComponent, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective } from 'igniteui-angular/list';
 
 @Component({
     template: `
         <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
             <igx-list-item [isHeader]="true">History</igx-list-item>
-            <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item" *ngFor="let contact of contacts">
-                <igx-avatar [src]="contact.avatar" igxListThumbnail></igx-avatar>
-                <h4 igxListLineTitle>{{contact.text}}</h4>
-                <p igxListLineSubTitle>{{contact.phone}}</p>
-                <igx-icon igxListAction>phone</igx-icon>
-            </igx-list-item>
+            @for (contact of contacts; track contact) {
+                <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item">
+                    <igx-avatar [src]="contact.avatar" igxListThumbnail></igx-avatar>
+                    <h4 igxListLineTitle>{{contact.text}}</h4>
+                    <p igxListLineSubTitle>{{contact.phone}}</p>
+                    <igx-icon igxListAction>phone</igx-icon>
+                </igx-list-item>
+            }
         </igx-list>
     `,
-    imports: [IgxListComponent, IgxListItemComponent, NgFor, IgxRippleDirective, IgxAvatarComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxIconComponent, IgxListActionDirective]
+    imports: [IgxListComponent, IgxListItemComponent, IgxRippleDirective, IgxAvatarComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxIconComponent, IgxListActionDirective]
 })
 export class TabsRoutingView1Component {
     public contacts = [{

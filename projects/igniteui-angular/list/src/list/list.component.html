@@ -1,0 +1,18 @@
+<ng-content></ng-content>
+
+<ng-template #defaultEmptyList>
+    <article class="igx-list__message">
+        {{resourceStrings.igx_list_no_items}}
+    </article>
+</ng-template>
+
+<ng-template #defaultDataLoading>
+    <article class="igx-list__message">
+        {{resourceStrings.igx_list_loading}}
+    </article>
+</ng-template>
+
+@if (!children || children.length === 0 || isLoading) {
+    <ng-container *ngTemplateOutlet="template; context: context">
+    </ng-container>
+}

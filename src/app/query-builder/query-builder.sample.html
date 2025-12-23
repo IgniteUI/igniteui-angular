@@ -1,17 +1,68 @@
-<div class="sample-content">
-    <div class="sample-column">
-        <size-selector #sizeSelector></size-selector>
+<div class="qb-sample-content">
+    <div class="qb-sample-column">
+        <button igxButton="contained" (click)="qbDialog.open()">Open QB inside a dialog</button>
+
+        <igx-dialog #qbDialog closeOnOutsideSelect>
+            <igx-query-builder [entities]="this.entities">
+            </igx-query-builder>
+        </igx-dialog>
 
         <igx-query-builder #queryBuilder
-            [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'"
-            [fields]="this.fields"
-            [expressionTree]="this.expressionTree">
+                           (expressionTreeChange)="handleExpressionTreeChange()" [entities]="this.entities"
+                           [expressionTree]="this.expressionTree">
             <!-- Custom header -->
-            <igx-query-builder-header [title]="'Builder'" [showLegend]="false"><span>Custom Title</span></igx-query-builder-header>
+            <igx-query-builder-header [title]="'Builder'"><span> &nbsp; Custom Title</span></igx-query-builder-header>
+
+            <!-- Custom SearchValue template for a given column and condition -->
+            <ng-template #searchValueTemplate igxQueryBuilderSearchValue let-searchValue
+                         let-selectedField="selectedField" let-selectedCondition="selectedCondition"
+                         let-defaultSearchValueTemplate="defaultSearchValueTemplate">
+                @if (selectedField?.field === 'Id' && selectedCondition === 'equals'){
+                    <!-- <input type="text" required [(ngModel)]="searchValue.value"/> -->
+                            <!-- <igx-combo #combo class="combo" [data]="lData" [(ngModel)]="searchValue.value"
+                                (selectionChanging)="handleChange($event, selectedField, searchValue)" [displayKey]="'field'">
+                            </igx-combo> -->
+                    <igx-combo #combo class="combo" [data]="lData" [(ngModel)]="searchValue.value" [displayKey]="'field'">
+                    </igx-combo>
+                } @else {
+                    <ng-container *ngTemplateOutlet="defaultSearchValueTemplate"></ng-container>
+                }
+            </ng-template>
+        </igx-query-builder>
+        
+        <div class="qb-sample-buttons">
+            <button igxButton="contained" igxRipple (click)="canCommitExpressionTree()">can commit</button>
+            <button igxButton="contained" igxRipple (click)="commitExpressionTree()">commit</button>
+            <button igxButton="contained" igxRipple (click)="discardExpressionTree()">discard</button>
+        </div>
+
+        @if (this.queryResult) {
+            <div style="margin-top: 1em">
+                {{ this.queryResult }}
+            </div>
+        }
+
+        <div class="qb-output-area">
+            <pre>{{ printExpressionTree(queryBuilder.expressionTree) }}</pre>
+        </div>
+        
+        <p>NO HEADER</p>
+        <igx-query-builder #queryBuilder0 [entities]="this.entities">
         </igx-query-builder>
 
-        <div class="sample-buttons">
-            <button igxButton="contained" igxRipple (click)="changeLocale('fr')">Change locale to France</button>
-        </div>
+        <p>EMPTY HEADER</p>
+        <igx-query-builder #queryBuilder1 [entities]="this.entities">
+            <igx-query-builder-header></igx-query-builder-header>
+        </igx-query-builder>
+
+        <p>ONLY HEADER CONTENT</p>
+        <igx-query-builder #queryBuilder1 [entities]="this.entities">
+            <igx-query-builder-header><igx-icon>face</igx-icon> &nbsp; Custom header content</igx-query-builder-header>
+        </igx-query-builder>
+
+        <p>HEADER WITH TITLE</p>
+        <igx-query-builder #queryBuilder2 [entities]="this.entities">
+            <igx-query-builder-header [title]="'Query Builder'"></igx-query-builder-header>
+        </igx-query-builder>
     </div>
 </div>

@@ -9,11 +9,13 @@
 
     <igx-tree-grid #grid1 [moving]="true" [batchEditing]="true" [allowFiltering]="true" [data]="data" primaryKey="employeeID" foreignKey="PID" [rowSelection]="selectionMode"
         [width]="'100%'" [height]="'800px'" [moving]="true" [summaryCalculationMode]="summaryMode">
-        <igx-column *ngFor="let c of columns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
-            [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
-            [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.hasSummary"
-            [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
-        </igx-column>
+        @for (c of columns; track c) {
+            <igx-column [field]="c.field" [dataType]="c.dataType" [header]="c.label"
+                [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
+                [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.hasSummary"
+                [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
+            </igx-column>
+        }
         <igx-grid-toolbar>
             <app-grid-search-box [grid]="grid1" [style.width]="'300px'"></app-grid-search-box>
             <igx-grid-toolbar-actions>
@@ -26,7 +28,9 @@
                 </igx-grid-toolbar-exporter>
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
-        <igx-paginator *ngIf="paging"></igx-paginator>
+        @if (paging) {
+            <igx-paginator></igx-paginator>
+        }
     </igx-tree-grid>
 
     <div class="topMargin">

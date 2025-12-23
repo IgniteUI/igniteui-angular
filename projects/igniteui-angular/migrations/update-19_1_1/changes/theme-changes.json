@@ -1,0 +1,11 @@
+{
+    "$schema": "../../common/schema/theme-changes.schema.json",
+    "changes": [
+      {
+        "name": "$progress-circle-color",
+        "replaceWith": "$fill-color-default",
+        "owner": "circular-theme",
+        "type": "property"
+      }
+    ]
+  }

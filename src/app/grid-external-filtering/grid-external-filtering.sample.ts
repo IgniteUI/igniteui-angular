@@ -1,5 +1,4 @@
 import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef, HostBinding } from '@angular/core';
-import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FilterMode, FilteringExpressionsTree, FilteringLogic, GridSelectionMode, IChangeCheckboxEventArgs, IgxAdvancedFilteringDialogComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxCSVTextDirective, IgxCheckboxComponent, IgxColumnComponent, IgxExcelTextDirective, IgxFlexDirective, IgxGridComponent, IgxGridExcelStyleFilteringComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxLabelDirective, IgxLayoutDirective, IgxSelectComponent, IgxSelectItemComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 
@@ -9,7 +8,7 @@ import { FilterMode, FilteringExpressionsTree, FilteringLogic, GridSelectionMode
     selector: 'app-grid-external-filtering-sample',
     styleUrls: ['grid-external-filtering.sample.scss'],
     templateUrl: 'grid-external-filtering.sample.html',
-    imports: [IgxFlexDirective, IgxLayoutDirective, IgxButtonGroupComponent, IgxSelectComponent, IgxLabelDirective, NgFor, IgxSelectItemComponent, IgxGridExcelStyleFilteringComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxAdvancedFilteringDialogComponent, IgxCheckboxComponent, FormsModule, IgxButtonDirective]
+    imports: [IgxFlexDirective, IgxLayoutDirective, IgxButtonGroupComponent, IgxSelectComponent, IgxLabelDirective, IgxSelectItemComponent, IgxGridExcelStyleFilteringComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxAdvancedFilteringDialogComponent, IgxCheckboxComponent, FormsModule, IgxButtonDirective]
 })
 export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
     @HostBinding('style.--ig-size')
@@ -37,6 +36,7 @@ export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
         tree.filteringOperands.push({
             fieldName: 'ID',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains',
             searchVal: 'a',
             ignoreCase: true
         });
@@ -44,12 +44,14 @@ export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
         orTree.filteringOperands.push({
             fieldName: 'ID',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains',
             searchVal: 'b',
             ignoreCase: true
         });
         orTree.filteringOperands.push({
             fieldName: 'CompanyName',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains',
             searchVal: 'c',
             ignoreCase: true
         });
@@ -57,6 +59,7 @@ export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
         tree.filteringOperands.push({
             fieldName: 'CompanyName',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains',
             searchVal: 'd',
             ignoreCase: true
         });

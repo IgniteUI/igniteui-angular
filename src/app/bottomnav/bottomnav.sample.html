@@ -10,13 +10,14 @@
                     <igx-bottom-nav-content class="igx-bottom-nav-item-content">
                         <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                             <igx-list-item [isHeader]="true">History</igx-list-item>
-                            <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item-content"
-                                *ngFor="let contact of contacts">
-                                <igx-avatar igxListThumbnail [src]="contact.avatar"></igx-avatar>
-                                <p igxListLineTitle>{{contact.text}}</p>
-                                <span igxListLineSubTitle>{{contact.phone}}</span>
-                                <igx-icon igxListAction>phone</igx-icon>
-                            </igx-list-item>
+                            @for (contact of contacts; track contact) {
+                                <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item-content">
+                                    <igx-avatar igxListThumbnail [src]="contact.avatar"></igx-avatar>
+                                    <p igxListLineTitle>{{contact.text}}</p>
+                                    <span igxListLineSubTitle>{{contact.phone}}</span>
+                                    <igx-icon igxListAction>phone</igx-icon>
+                                </igx-list-item>
+                            }
                         </igx-list>
                     </igx-bottom-nav-content>
                 </igx-bottom-nav-item>

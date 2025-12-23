@@ -2,7 +2,7 @@
 @use 'sass:meta';
 @use 'sass:string';
 @use 'sass:list';
-@use '../../../igniteui-angular/src/lib/core/styles/themes' as igx;
+@use '../../../igniteui-angular/core/src/core/styles/themes' as igx;
 @use './variables' as vars;
 
 /// Prefix used for 'global' component CSS vars
@@ -72,9 +72,8 @@ $elements-selector-prefix: 'igc';
 /// @return {String} - Updated selector(s) with `igc-` prefixed equivalents
 @function updateSelectors($selector) {
     $result: ();
-    $selectors: string.split($selector, ", ");
 
-    @each $sel in $selectors {
+    @each $sel in $selector {
         $result: list.append($result, $sel, comma);
 
         @if string.index($sel, 'igx-') == 1 {

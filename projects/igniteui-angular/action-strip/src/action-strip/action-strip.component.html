@@ -1,0 +1,33 @@
+<div class="igx-action-strip__actions">
+    <ng-content #content></ng-content>
+    @if (menuItems.length > 0) {
+        <button
+            type="button"
+            igxIconButton="flat"
+            igxRipple
+            [igxToggleAction]="dropdown"
+            [overlaySettings]="menuOverlaySettings"
+            (click)="$event.stopPropagation()"
+            [title]="resourceStrings.igx_action_strip_button_more_title"
+            [igxDropDownItemNavigation]="dropdown"
+        >
+            <igx-icon family="default" name="more_vert"></igx-icon>
+        </button>
+    }
+    <igx-drop-down #dropdown>
+        @for (item of menuItems; track trackMenuItem(item)) {
+            <igx-drop-down-item
+                class="igx-action-strip__menu-item"
+            >
+                <div class="igx-drop-down__item-template">
+                    <ng-container
+                        *ngTemplateOutlet="
+                            item.templateRef;
+                            context: { $implicit: item }
+                        "
+                    ></ng-container>
+                </div>
+            </igx-drop-down-item>
+        }
+    </igx-drop-down>
+</div>

@@ -318,8 +318,7 @@ export const SAMPLE_DATA = [
     },
     {
         ID: 'ERNSH',
-        CompanyName:
-            'Ernst Handel',
+        CompanyName: 'Ernst Handel',
         ContactName: 'Roland Mendel',
         ContactTitle: 'Sales Manager',
         Address: 'Kirchgasse 6',

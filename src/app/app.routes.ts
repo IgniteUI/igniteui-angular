@@ -6,6 +6,7 @@ import { ButtonSampleComponent } from './button/button.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
+import { ChatSampleComponent } from './chat/chat.sample';
 import { InputControlsSampleComponent } from './input-controls/input-controls.sample';
 import { ChipsSampleComponent } from './chips/chips.sample';
 import { CircularProgressSampleComponent } from './circular-progress-showcase/circular-progress-showcase.sample'
@@ -51,6 +52,7 @@ import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
 import { ToastShowcaseSampleComponent } from './toast-showcase/toast-showcase.sample';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
 import { GridCellEditingComponent } from './grid-cellEditing/grid-cellEditing.component';
+import { GridCellMergingComponent } from './grid-cellMerging/grid-cellMerging.component';
 import { GridSampleComponent } from './grid/grid.sample';
 import { GridColumnMovingSampleComponent } from './grid-column-moving/grid-column-moving.sample';
 import { GridColumnSelectionSampleComponent } from './grid-column-selection/grid-column-selection.sample';
@@ -140,12 +142,14 @@ import { QueryBuilderComponent } from './query-builder/query-builder.sample';
 import { PivotGridStateSampleComponent } from './pivot-grid-state/pivot-grid-state.sample';
 import { GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
 import { GridExportComponent } from './grid-export/grid-export.sample';
+import { GridPdfExportSampleComponent } from './grid-pdf-export/grid-pdf-export.sample';
 import { DividerComponent } from './divider/divider.component';
 import { MonthPickerSampleComponent } from './month-picker/month-picker.sample';
 import { GridDockManagerSampleComponent } from './dockmanager-grid/dockmanager-grid.sample';
 import { HoundComponent } from './hound/hound.component';
 import { LabelSampleComponent } from "./label/label.sample";
 import { GridRecreateSampleComponent } from './grid-re-create/grid-re-create.sample';
+import { HierarchicalGridAdvancedFilteringSampleComponent } from './hierarchical-grid-advanced-filtering/hierarchical-grid-advanced-filtering.sample';
 
 export const appRoutes: Routes = [
     {
@@ -196,6 +200,10 @@ export const appRoutes: Routes = [
     {
         path: 'carousel',
         component: CarouselSampleComponent
+    },
+    {
+        path: 'chat',
+        component: ChatSampleComponent
     },
     {
         path: 'input-controls',
@@ -419,6 +427,10 @@ export const appRoutes: Routes = [
         component: GridCellEditingComponent
     },
     {
+        path: 'gridCellMerging',
+        component: GridCellMergingComponent
+    },
+    {
         path: 'gridConditionalCellStyling',
         component: GridCellStylingSampleComponent
     },
@@ -527,6 +539,10 @@ export const appRoutes: Routes = [
         component: GridExportComponent
     },
     {
+        path: 'gridPdfExport',
+        component: GridPdfExportSampleComponent
+    },
+    {
         path: 'buttonGroup',
         component: ButtonGroupSampleComponent
     },
@@ -616,6 +632,9 @@ export const appRoutes: Routes = [
     }, {
         path: 'hierarchicalGrid',
         component: HierarchicalGridSampleComponent
+    }, {
+        path: 'hierarchicalGridAdvancedFiltering',
+        component: HierarchicalGridAdvancedFilteringSampleComponent
     }, {
         path: 'hierarchicalGridRemote',
         component: HierarchicalGridRemoteSampleComponent

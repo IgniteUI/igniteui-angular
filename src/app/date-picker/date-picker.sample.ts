@@ -1,4 +1,5 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject } from '@angular/core';
+import { ReactiveFormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
 import {
     IGX_DATE_PICKER_DIRECTIVES,
     IgxButtonDirective,
@@ -39,9 +40,14 @@ registerIconFromText('alarm', alarm);
         IgxSuffixDirective,
         IgxIconComponent,
         IgSizeDirective,
+        ReactiveFormsModule,
     ],
 })
 export class DatePickerSampleComponent {
+    private fb = inject(UntypedFormBuilder);
+    private propertyChangeService = inject(PropertyChangeService);
+    private destroyRef = inject(DestroyRef);
+
     public date1 = new Date();
     public date2 = new Date(
         new Date(
@@ -107,7 +113,20 @@ export class DatePickerSampleComponent {
                 defaultValue: 'dropdown'
             }
         },
+        type: {
+            control: {
+                type: 'button-group',
+                options: ['box', 'border', 'line'],
+                defaultValue: 'box'
+            }
+        },
         required: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        readonly: {
             control: {
                 type: 'boolean',
                 defaultValue: false
@@ -142,24 +161,78 @@ export class DatePickerSampleComponent {
                 type: 'text'
             }
         }
-    }
+    };
 
-    public properties: Properties;
+    public properties: Properties = Object.fromEntries(
+        Object.keys(this.panelConfig).map((key) => {
+            const control = this.panelConfig[key]?.control;
+            return [key, control?.defaultValue];
+        })
+    ) as Properties;
 
-    constructor(
-        private propertyChangeService: PropertyChangeService,
-        private destroyRef: DestroyRef
-    ) {
+    // FormControl owns the date picker value
+    public reactiveForm = this.fb.group({
+        datePicker: [null],
+    });
+
+    constructor() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        const { unsubscribe } =
+        const propertyChange =
             this.propertyChangeService.propertyChanges.subscribe(
                 (properties) => {
                     this.properties = properties;
+                    this.syncFormControlFromProperties();
                 }
             );
 
-        this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
+    }
+
+    /**
+     * Syncs the reactive form control with the properties panel:
+     * - programmatic value updates
+     * - required validator
+     * - disabled state
+     *
+     * All done in a way that does NOT mark the control dirty/touched.
+     */
+    private syncFormControlFromProperties(): void {
+        const control = this.reactiveForm.get('datePicker');
+        if (!control) {
+            return;
+        }
+
+        // 1) Programmatic value update (from properties.value)
+        // This does NOT mark the control dirty/touched.
+        if ('value' in this.properties) {
+            const newValue = this.properties.value ?? null;
+            const currentValue = control.value;
+
+            // Shallow equality check to avoid unnecessary writes
+            const sameValue =
+                (newValue === currentValue) ||
+                (newValue instanceof Date &&
+                    currentValue instanceof Date &&
+                    newValue.getTime() === currentValue.getTime());
+
+            if (!sameValue) {
+                control.setValue(newValue, { emitEvent: false });
+            }
+        }
+
+        // 2) Required validator
+        control.setValidators(this.properties?.required ? Validators.required : null);
+        // This will trigger statusChanges, but control is still pristine/untouched,
+        // so IgxDatePicker will keep the visual state INITIAL until user interaction.
+        control.updateValueAndValidity();
+
+        // 3) Disabled state
+        if (this.properties?.disabled) {
+            control.disable({ emitEvent: false });
+        } else {
+            control.enable({ emitEvent: false });
+        }
     }
 
     protected get modeAngular() {
@@ -169,7 +242,7 @@ export class DatePickerSampleComponent {
             : PickerInteractionMode.Dialog;
     }
 
-    protected selectToday(picker) {
+    protected selectToday(picker: { value: Date; hide: () => void }) {
         picker.value = new Date();
         picker.hide();
     }

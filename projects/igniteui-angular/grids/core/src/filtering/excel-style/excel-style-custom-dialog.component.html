@@ -1,0 +1,77 @@
+<article #toggle igxToggle
+    class="igx-excel-filter__secondary"
+    [ngClass]="{
+        'igx-excel-filter__secondary--cosy': grid.gridSize === '2',
+        'igx-excel-filter__secondary--compact': grid.gridSize === '1'
+    }"
+    (keydown)="onKeyDown($event)"
+    (opening)="onCustomDialogOpening()"
+    (opened)="onCustomDialogOpened()">
+    <header class="igx-excel-filter__secondary-header">
+        <h4 class="ig-typography__h6">
+            {{ grid.resourceStrings.igx_grid_excel_custom_dialog_header }}{{ column.header || column.field }}
+        </h4>
+    </header>
+
+    <article #expressionsContainer class="igx-excel-filter__secondary-main">
+        @if (column.dataType === 'date' || column.dataType === 'dateTime' || column.dataType === 'time') {
+            @for (expression of expressionsList; track expression.expressionId) {
+                <igx-excel-style-date-expression
+                    class="igx-excel-filter__condition"
+                    [expressionUI]="expression"
+                    [column]="column"
+                    [grid]="grid"
+                    [expressionsList]="expressionsList"
+                    (expressionRemoved)="onExpressionRemoved($event)"
+                    (logicOperatorChanged)="onLogicOperatorChanged($event)">
+                </igx-excel-style-date-expression>
+            }
+        }
+
+        @if (column.dataType !== 'date' && column.dataType !== 'dateTime' && column.dataType !== 'time') {
+            @for (expression of expressionsList; track expression.expressionId) {
+                <igx-excel-style-default-expression
+                    class="igx-excel-filter__condition"
+                    [expressionUI]="expression"
+                    [column]="column"
+                    [grid]="grid"
+                    [expressionsList]="expressionsList"
+                    (expressionRemoved)="onExpressionRemoved($event)"
+                    (logicOperatorChanged)="onLogicOperatorChanged($event)">
+                </igx-excel-style-default-expression>
+            }
+        }
+
+        <button type="button" igxButton
+            class="igx-excel-filter__add-filter"
+            (click)="onAddButtonClick()">
+            <igx-icon family="default" name="add"></igx-icon>
+            <span>{{ grid.resourceStrings.igx_grid_excel_custom_dialog_add }}</span>
+        </button>
+    </article>
+
+    <footer class="igx-excel-filter__secondary-footer">
+        <div class="igx-excel-filter__clear">
+            <button type="button"
+                igxButton="flat"
+                (click)="onClearButtonClick()">
+                    {{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}
+            </button>
+        </div>
+        <div class="igx-excel-filter__cancel">
+            <button type="button"
+                igxButton="flat"
+                (click)="cancelDialog()">
+                    {{ grid.resourceStrings.igx_grid_excel_cancel }}
+            </button>
+        </div>
+        <div class="igx-excel-filter__apply">
+            <button type="button"
+                igxButton="contained"
+                (click)="onApplyButtonClick()"
+                (keydown)="onApplyButtonKeyDown($event)">
+                {{ grid.resourceStrings.igx_grid_excel_apply }}
+            </button>
+        </div>
+    </footer>
+</article>
