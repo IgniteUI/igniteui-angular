@@ -118,6 +118,7 @@
         align-items: center;
 
         @if $variant == 'indigo' {
+            igc-icon-button,
             [igxIconButton] {
                 padding: rem(6px);
             }
