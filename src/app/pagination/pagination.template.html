@@ -29,7 +29,7 @@
         <button [disabled]="pag.isLastPage" (click)="pag.nextPage()" igxIconButton="flat" [attr.aria-label]="pag.resourceStrings.igx_paginator_next_page_button_text">
             <igx-icon>chevron_right</igx-icon>
         </button>
-        <button [disabled]="paginator.isLastPage" (click)="paginator.paginate(paginator.totalPages - 1)" igxIconButton="flat" [attr.aria-label]="pag.resourceStrings.igx_paginator_last_page_button_text">
+        <button [disabled]="pag.isLastPage" (click)="pag.paginate(pag.totalPages - 1)" igxIconButton="flat" [attr.aria-label]="pag.resourceStrings.igx_paginator_last_page_button_text">
             <igx-icon>last_page</igx-icon>
         </button>
     </igx-paginator-content>
