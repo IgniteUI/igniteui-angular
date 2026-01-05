@@ -382,6 +382,10 @@ export class IgxPageSizeSelectorComponent {
     @HostBinding('attr.id')
     @Input()
     public id = `igx-paginator-${NEXT_ID++}`;
+
+    public get labelId() {
+        return `${this.id}-label`;
+    }
 }
 
 
