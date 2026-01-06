@@ -11,9 +11,7 @@ import {
     ElementRef,
     ChangeDetectorRef,
     ChangeDetectionStrategy,
-    inject,
-    DestroyRef,
-    AfterContentChecked
+    inject
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TitleCasePipe } from '@angular/common';
@@ -29,7 +27,6 @@ import {
     getPreviousActiveDate,
     intoChunks,
     isDateInRanges,
-    getComponentTheme,
     IgxTheme,
     THEME_TOKEN,
     ThemeToken
@@ -38,6 +35,7 @@ import { IgxCalendarBaseDirective } from '../calendar-base';
 import { IViewChangingEventArgs } from './days-view.interface';
 import { KeyboardNavigationService } from '../calendar.services';
 import { DayDigitPipe } from "../day-digit.pipe";
+import { getDateFormatter } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
 
@@ -55,7 +53,7 @@ let NEXT_ID = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [IgxDayItemComponent, TitleCasePipe, DayDigitPipe]
 })
-export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements AfterContentChecked {
+export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     protected el = inject(ElementRef);
     public override cdr = inject(ChangeDetectorRef);
     private themeToken: ThemeToken = inject(THEME_TOKEN);
@@ -207,8 +205,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
     private _hideLeadingDays: boolean;
     private _hideTrailingDays: boolean;
     private _showActiveDay: boolean;
-
-    private _destroyRef = inject(DestroyRef);
     private _theme: IgxTheme;
 
     @HostBinding('class.igx-days-view')
@@ -233,39 +229,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
     @HostBinding('class.igx-days-view--indigo')
     protected get isIndigo(): boolean {
         return this._theme === 'indigo';
-    }
-
-    /**
-     * @hidden
-     */
-    constructor() {
-        super();
-        this._theme = this.themeToken.theme;
-
-        const themeChange = this.themeToken.onChange((theme) => {
-            if (this._theme !== theme) {
-                this._theme = theme;
-                this.cdr.detectChanges();
-            }
-        });
-
-        this._destroyRef.onDestroy(() => themeChange.unsubscribe());
-    }
-
-    private setComponentTheme() {
-        // allow DOM theme override (same pattern as input-group)
-        if (!this.themeToken.preferToken) {
-            const theme = getComponentTheme(this.el.nativeElement);
-
-            if (theme && theme !== this._theme) {
-                this._theme = theme;
-                this.cdr.markForCheck();
-            }
-        }
-    }
-
-    public ngAfterContentChecked() {
-        this.setComponentTheme();
     }
 
     /**
@@ -458,7 +421,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
      */
     public get weekHeaderLabels(): {long: string, formatted: string}[] {
         const weekdays = [];
-        const rawFormatter = new Intl.DateTimeFormat(this.locale, { weekday: 'long' });
+        const rawFormatter = getDateFormatter().getIntlFormatter(this.locale, { weekday: 'long' });
 
         for (const day of this.monthWeeks.at(0)) {
             weekdays.push({

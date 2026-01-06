@@ -1,10 +1,7 @@
-import { ITreeResourceStrings } from 'igniteui-angular/core';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { TreeResourceStringsES as ATreeResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Spanish resource strings for IgxTree
  */
-export const TreeResourceStringsES = {
-    igx_expand: 'Expandir',
-    igx_collapse: 'Contraer'
-} satisfies MakeRequired<ITreeResourceStrings>;
+export const TreeResourceStringsES = prefixResource(IGX_PREFIX, ATreeResourceStrings);

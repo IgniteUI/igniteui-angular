@@ -12,7 +12,9 @@ import {
     IgxOverlayOutletDirective,
     IgxOverlayService,
     OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings,
-    WEEKDAYS
+    WEEKDAYS,
+    BaseFormatter,
+    I18N_FORMATTER
 } from 'igniteui-angular/core';
 import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, Injector, QueryList, Renderer2, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
@@ -497,7 +499,7 @@ describe('IgxDatePicker', () => {
                 flush();
             }));
 
-            it('Should passing invalid value for locale, then setting weekStart must be respected.', fakeAsync(() => {
+            it('Should throw error when passing invalid value for locale', fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxDatePickerReactiveFormComponent);
                 fixture.detectChanges();
                 datePicker = fixture.componentInstance.datePicker;
@@ -508,6 +510,7 @@ describe('IgxDatePicker', () => {
 
                 expect(datePicker.locale).toEqual(locale);
                 expect(datePicker.weekStart).toEqual(WEEKDAYS.SUNDAY)
+
 
                 datePicker.locale = 'frrr';
                 datePicker.weekStart = WEEKDAYS.FRIDAY;
@@ -904,7 +907,6 @@ describe('IgxDatePicker', () => {
             });
 
             mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
-
             mockCalendar = { selected: new EventEmitter<any>(), selectDate: () => {} };
             const mockComponentInstance = {
                 calendar: mockCalendar,
@@ -1015,7 +1017,6 @@ describe('IgxDatePicker', () => {
                 },
                 focus: () => { }
             };
-
             TestBed.configureTestingModule({
                 providers: [
                     { provide: ElementRef, useValue: elementRef },

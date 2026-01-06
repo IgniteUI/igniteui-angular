@@ -1,12 +1,11 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, inject, Input, ViewChild } from '@angular/core';
 import { IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
-import { getLocaleFirstDayOfWeek } from "@angular/common";
 import { FormsModule } from '@angular/forms';
 import { IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular/select';
 import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective } from 'igniteui-angular/input-group';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
-import { IgxOverlayOutletDirective, IgxPickerClearComponent, IgxPickerToggleComponent } from 'igniteui-angular/core';
+import { IgxOverlayOutletDirective, IgxPickerClearComponent, IgxPickerToggleComponent, I18N_FORMATTER } from 'igniteui-angular/core';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 import { IgxButtonDirective, IgxDateTimeEditorDirective, IgxIconButtonDirective } from 'igniteui-angular/directives';
 import { IgxButtonGroupComponent } from 'igniteui-angular/button-group';
@@ -20,6 +19,8 @@ import { IgxButtonGroupComponent } from 'igniteui-angular/button-group';
     imports: [IgxSelectComponent, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxDateTimeEditorDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, IgxIconButtonDirective]
 })
 export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultExpressionComponent {
+    protected i18nFormatter = inject(I18N_FORMATTER);
+
     @ViewChild('input', { read: IgxInputDirective, static: false })
     private input: IgxInputDirective;
 
@@ -48,6 +49,6 @@ export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultEx
     }
 
     public get weekStart(): number {
-        return getLocaleFirstDayOfWeek(this.grid.locale);
+        return this.i18nFormatter.getLocaleFirstDayOfWeek(this.grid.locale);
     }
 }

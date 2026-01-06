@@ -2,7 +2,16 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-# 21.1.0
+## 21.1.0
+
+# Localization(i18n)
+
+- `IgxActionStrip`, `IgxBanner`, `IgxCalendar`, `IgxCarousel`, `IgxChip`, `IgxCombo`, `IgxDatePicker`, `IgxDateRangePicker`, `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`, `IgxInputs`, `IgxList`, `IgxPaginator`, `IgxQueryBuilder`, `IgxTimePicker`, `IgxTree`
+  - New `Intl` implementation for all currently supported components that format and render data like dates and numbers.
+  - New localization implementation for the currently supported languages for all components that have resource strings in the currently supported languages.
+  - New public localization API and package named `igniteui-i18n-resources` containing the new resources that are used in conjunction.
+  - Added API to toggle off Angular's default formatting completely in favor of the new `Intl` implementation. Otherwise `Intl` will be used when a locale is not defined for Angular to use.
+  - Old resources and API should still remain working and not experience any change in behavior, despite internally using the new localization as well.
 
 ## New Features
 
@@ -19,7 +28,7 @@ All notable changes for each version of this project will be documented in this 
   
   const options = new IgxPdfExporterOptions('Export');
   options.customFont = NOTO_SANS_CJK_FONT;
-
+  
 ## 21.0.0
 
 ### New Features
@@ -127,7 +136,6 @@ See the [Angular Package Format documentation](https://angular.io/guide/angular-
 ## 20.1.0
 
 ### New Features
-
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Introduced a new cell merging feature that allows you to configure and merge cells in a column based on same data or other custom condition, into a single cell.
 
