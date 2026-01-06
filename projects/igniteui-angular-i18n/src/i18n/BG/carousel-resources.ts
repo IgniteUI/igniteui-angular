@@ -1,12 +1,7 @@
-import { ICarouselResourceStrings } from 'igniteui-angular/core';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { CarouselResourceStringsBG as ACarouselResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Bulgarian resource strings for IgxCarousel
  */
-export const CarouselResourceStringsBG = {
-    igx_carousel_of: 'от',
-    igx_carousel_slide: 'слайд',
-    igx_carousel_previous_slide: 'предишен слайд',
-    igx_carousel_next_slide: 'следващ слайд'
-} satisfies MakeRequired<ICarouselResourceStrings>;
+export const CarouselResourceStringsBG = prefixResource(IGX_PREFIX, ACarouselResourceStrings);

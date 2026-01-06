@@ -7,7 +7,7 @@ import {
     IgxStringReplacePipe
 } from 'igniteui-angular/grids/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxDateTimeEditorDirective, IgxFocusDirective, IgxTextHighlightDirective, IgxTextSelectionDirective, IgxTooltipDirective, IgxTooltipTargetDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -15,13 +15,19 @@ import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffi
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
+import { IgxCurrencyFormatterPipe, IgxDateFormatterPipe, IgxNumberFormatterPipe, IgxPercentFormatterPipe } from 'igniteui-angular/core';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-hierarchical-grid-cell',
     templateUrl: '../../core/src/cell.component.html',
     providers: [HammerGesturesManager],
-    imports: [IgxChipComponent, IgxTextHighlightDirective, IgxIconComponent, NgClass, FormsModule, ReactiveFormsModule, IgxInputGroupComponent, IgxInputDirective, IgxFocusDirective, IgxTextSelectionDirective, IgxCheckboxComponent, IgxDatePickerComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, IgxPrefixDirective, IgxSuffixDirective, NgTemplateOutlet, IgxTooltipTargetDirective, IgxTooltipDirective, IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe]
+    imports: [IgxChipComponent, IgxTextHighlightDirective, IgxIconComponent, NgClass, FormsModule, ReactiveFormsModule,
+        IgxInputGroupComponent, IgxInputDirective, IgxFocusDirective, IgxTextSelectionDirective, IgxCheckboxComponent,
+        IgxDatePickerComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, IgxPrefixDirective,
+        IgxSuffixDirective, NgTemplateOutlet, IgxTooltipTargetDirective, IgxTooltipDirective, IgxGridCellImageAltPipe,
+        IgxStringReplacePipe, IgxColumnFormatterPipe, IgxNumberFormatterPipe, IgxPercentFormatterPipe,
+        IgxCurrencyFormatterPipe, IgxDateFormatterPipe]
 })
 export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent implements OnInit {
     // protected hSelection;

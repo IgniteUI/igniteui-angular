@@ -1,8 +1,8 @@
-import { Component, ContentChild, Pipe, PipeTransform, Directive } from '@angular/core';
+import { Component, ContentChild, Pipe, PipeTransform, Directive, inject } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { IgxInputDirective, IgxInputGroupBase, IgxInputGroupComponent, IgxInputState, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxButtonDirective, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
-import { isDate, DateRange, DateTimeUtil } from 'igniteui-angular/core';
+import { isDate, DateRange, DateTimeUtil, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { NgTemplateOutlet } from '@angular/common';
 
@@ -12,6 +12,8 @@ import { NgTemplateOutlet } from '@angular/common';
     standalone: true
 })
 export class DateRangePickerFormatPipe implements PipeTransform {
+    private i18nFormatter: BaseFormatter = inject(I18N_FORMATTER);
+
     public transform(values: DateRange, appliedFormat?: string,
         locale?: string, formatter?: (_: DateRange) => string): string {
         if (!values || !values.start && !values.end) {
@@ -27,8 +29,8 @@ export class DateRangePickerFormatPipe implements PipeTransform {
         if (!isDate(end)) {
             end = DateTimeUtil.parseIsoDate(end);
         }
-        const startDate = appliedFormat ? DateTimeUtil.formatDate(start, appliedFormat, locale || 'en') : start?.toLocaleDateString();
-        const endDate = appliedFormat ? DateTimeUtil.formatDate(end, appliedFormat, locale || 'en') : end?.toLocaleDateString();
+        const startDate = this.i18nFormatter.formatDate(start, appliedFormat, locale);
+        const endDate = this.i18nFormatter.formatDate(end, appliedFormat, locale);
         let formatted;
         if (start) {
             formatted = `${startDate} - `;
