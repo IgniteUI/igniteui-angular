@@ -1,10 +1,7 @@
-import { IChipResourceStrings } from 'igniteui-angular/core';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { ChipResourceStringsHU as AChipResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Hungarian resource strings for IgxChip
  */
-export const ChipResourceStringsHU = {
-    igx_chip_remove: 'Eltávolítás chip',
-    igx_chip_select: 'Kijelöl chip'
-} satisfies MakeRequired<IChipResourceStrings>;
+export const ChipResourceStringsHU = prefixResource(IGX_PREFIX, AChipResourceStrings);

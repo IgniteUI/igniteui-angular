@@ -504,6 +504,8 @@ export interface GridType extends IGridDataBindable {
     crudService: any;
     /** @hidden @internal */
     summaryService: any;
+    /** @hidden @internal */
+    i18nFormatter: any;
 
 
 
@@ -905,7 +907,7 @@ export interface GridType extends IGridDataBindable {
     refreshSearch(): void;
     getDefaultExpandState(record: any): boolean;
     trackColumnChanges(index: number, column: any): any;
-    getPossibleColumnWidth(baseWidth?: number, minColumnWidth?: number): string;
+    getPossibleColumnWidth(baseWidth?: number): string;
     resetHorizontalVirtualization(): void;
     hasVerticalScroll(): boolean;
     getVisibleContentHeight(): number;
