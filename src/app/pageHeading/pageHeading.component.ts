@@ -1,12 +1,20 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { AsyncPipe, KeyValuePipe } from '@angular/common';
 import {
+    IgxDropDownComponent,
+    IgxDropDownItemComponent,
+    IgxDropDownItemNavigationDirective,
     IgxIconButtonDirective,
     IgxIconComponent,
+    IgxInputDirective,
+    IgxInputGroupComponent,
     IgxRippleDirective,
-    IgxToggleActionDirective
+    IgxToggleActionDirective,
+    ISelectionEventArgs,
+    setCurrentI18n
 } from 'igniteui-angular';
 import { PropertyChangeService } from '../properties-panel/property-change.service';
+import { FormsModule } from '@angular/forms';
 
 export type DocumentDirection = 'ltr' | 'rtl';
 
@@ -20,12 +28,20 @@ export type DocumentDirection = 'ltr' | 'rtl';
         IgxIconComponent,
         IgxIconButtonDirective,
         AsyncPipe,
-        KeyValuePipe
+        KeyValuePipe,
+        IgxDropDownItemNavigationDirective,
+        IgxDropDownComponent,
+        IgxDropDownItemComponent,
+        IgxInputGroupComponent,
+        IgxInputDirective,
+        FormsModule,
     ]
 })
 export class PageHeaderComponent {
     @Input() public title: string;
     public dirMode: DocumentDirection = 'ltr';
+    public locale = 'EN';
+    public selectLocales = ['BG', 'EN', 'DE', 'ES', 'FR', 'IT', 'JA', 'KO', 'zh-Hans', 'zh-Hant'];
 
     @Output()
     public toggleDirection = new EventEmitter<DocumentDirection>();
@@ -36,4 +52,11 @@ export class PageHeaderComponent {
     }
 
     protected propertyChangeService = inject(PropertyChangeService);
+
+
+    public updateLocale(args: ISelectionEventArgs) {
+        // New API
+        this.locale = args.newSelection.value;
+        setCurrentI18n(this.locale);
+    }
 }
