@@ -83,6 +83,7 @@ Here is a link to the most recent Angular style guide https://angular.dev/style-
 
 ### Components
 
+- New components should have their own entry-point
 - Keep components small and focused on a single responsibility
 - Use `input()` signal instead of decorators, learn more here https://angular.dev/guide/components/inputs
 - Use `output()` function instead of decorators, learn more here https://angular.dev/guide/components/outputs
