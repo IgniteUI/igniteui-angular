@@ -1,3 +1,4 @@
+/* stylelint-disable max-nesting-depth */
 @use 'sass:map';
 @use 'sass:math';
 @use '../../base' as *;
@@ -1253,9 +1254,9 @@
         flex-grow: 0;
         outline-style: none;
 
-        igx-icon {
-            --component-size: #{if($variant == 'indigo', 2, 3)};
-        }
+        // igx-icon {
+        //     --component-size: #{if($variant == 'indigo', 2, 3)};
+        // }
     }
 
     %grid-cell--active {
@@ -1404,9 +1405,9 @@
     }
 
     %igx-grid__td--editing {
-        background: var-get($theme, 'cell-editing-background') !important;
-        box-shadow: inset 0 0 0 $editing-outline-width var-get($theme, 'edit-mode-color');
-        padding-inline: rem(4px);
+        // background: var-get($theme, 'cell-editing-background') !important;
+        // box-shadow: inset 0 0 0 $editing-outline-width var-get($theme, 'edit-mode-color');
+        // padding-inline: rem(4px);
 
         &.igx-grid__td--invalid {
             box-shadow: inset 0 0 0 rem(2px) color($color: 'error') !important;
@@ -1416,7 +1417,7 @@
             justify-content: flex-start !important;
         }
 
-        @extend %cell-input-overrides;
+        // @extend %cell-input-overrides;
     }
 
     %grid-cell--pinned {

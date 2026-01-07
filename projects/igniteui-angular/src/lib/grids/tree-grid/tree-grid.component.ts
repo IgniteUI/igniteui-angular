@@ -22,7 +22,8 @@ import {
     EnvironmentInjector,
     CUSTOM_ELEMENTS_SCHEMA,
     booleanAttribute,
-    DOCUMENT
+    DOCUMENT,
+    ViewEncapsulation
 } from '@angular/core';
 import { NgClass, NgTemplateOutlet, NgStyle } from '@angular/common';
 
@@ -123,6 +124,8 @@ let NEXT_ID = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-tree-grid',
     templateUrl: 'tree-grid.component.html',
+    styleUrl: 'tree-grid.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [
         IgxGridCRUDService,
         IgxGridValidationService,
