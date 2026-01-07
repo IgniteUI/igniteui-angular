@@ -117,6 +117,13 @@
         display: flex;
         align-items: center;
 
+        @if $variant == 'indigo' {
+            igc-icon-button,
+            [igxIconButton] {
+                padding: rem(6px);
+            }
+        }
+
         igx-icon,
         igc-icon {
             --component-size: #{if($variant == 'indigo', 2, 3)};
@@ -128,7 +135,6 @@
             @if $variant == 'indigo' {
                 width: auto;
                 height: auto;
-                padding: rem(6px);
             }
         }
 
