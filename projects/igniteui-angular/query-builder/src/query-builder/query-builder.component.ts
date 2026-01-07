@@ -1,4 +1,4 @@
-import { booleanAttribute, ContentChild, EventEmitter, Output, TemplateRef } from '@angular/core';
+import { booleanAttribute, ContentChild, EventEmitter, Output, TemplateRef, inject } from '@angular/core';
 import {
     Component, Input, ViewChild, ElementRef, OnDestroy, HostBinding
 } from '@angular/core';
@@ -10,8 +10,9 @@ import {
     IQueryBuilderResourceStrings,
     QueryBuilderResourceStringsEN,
     recreateTree,
+    IgxOverlayOutletDirective,
     getCurrentResourceStrings,
-    IgxOverlayOutletDirective
+    onResourceChangeHandle
 } from 'igniteui-angular/core';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { IgxIconService } from 'igniteui-angular/icon';
@@ -35,6 +36,8 @@ import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.dir
     imports: [IgxQueryBuilderTreeComponent]
 })
 export class IgxQueryBuilderComponent implements OnDestroy {
+    protected iconService = inject(IgxIconService);
+
     /**
      * @hidden @internal
      */
@@ -172,7 +175,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      * Returns the resource strings.
      */
     public get resourceStrings(): IQueryBuilderResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -210,14 +213,18 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     public queryTree: IgxQueryBuilderTreeComponent;
 
     private destroy$ = new Subject<any>();
-    private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+    private _resourceStrings: IQueryBuilderResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
     private _expressionTree: IExpressionTree;
     private _fields: FieldType[];
     private _entities: EntityType[];
     private _shouldEmitTreeChange = true;
 
-    constructor(protected iconService: IgxIconService) {
+    constructor() {
         this.registerSVGIcons();
+        onResourceChangeHandle(this.destroy$, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
+        }, this);
     }
 
     /**

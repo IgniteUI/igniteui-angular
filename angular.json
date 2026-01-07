@@ -305,14 +305,14 @@
               "budgets": [
                 {
                   "type": "allScript",
-                  "maximumWarning": "2.1mb",
-                  "maximumError": "2.5mb"
+                  "maximumWarning": "2.5mb",
+                  "maximumError": "3mb"
                 },
                 {
                   "type": "bundle",
                   "name": "styles",
-                  "maximumWarning": "500kb",
-                  "maximumError": "550kb"
+                  "maximumWarning": "600kb",
+                  "maximumError": "600kb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -328,7 +328,7 @@
               ],
               "outputHashing": "none",
               "optimization": true,
-              "externalDependencies": ["lit"]
+              "externalDependencies": ["lit", "igniteui-i18n-core"]
             },
             "development": {
               "optimization": false,

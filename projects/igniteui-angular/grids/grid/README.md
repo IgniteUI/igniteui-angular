@@ -19,7 +19,7 @@ The grid is exported as as an `NgModule`, thus all you need to do in your applic
 
 import { IgxGridModule } from 'igniteui-angular';
 // Or
-import { IgxGridModule } from 'igniteui-angular/grid';
+import { IgxGridModule } from 'igniteui-angular/grids/grid';
 
 @NgModule({
     imports: [
@@ -31,12 +31,14 @@ import { IgxGridModule } from 'igniteui-angular/grid';
 export class AppModule {}
 ```
 
-Each of the components, directives and helper classes in the _IgxGridModule_ can be imported either through the _grid_ sub-package or through the main bundle in _igniteui-angular_. While you don't need to import all of them to instantiate and use the grid, you usually will import them (or your editor will auto-import them for you) when declaring types that are part of the grid API.
+Each of the components, directives and helper classes in the _IgxGridModule_ can be imported through the per-package entry points. Prefer subpath imports for optimal tree-shaking and smaller bundles.
 
 ```typescript
-import { IgxGridComponent } from 'igniteui-angular/grid';
-// Or
-import { IgxGridComponent } from 'igniteui-angular'
+import { IgxGridComponent } from 'igniteui-angular/grids/grid';
+// Per-feature entry points (examples):
+// import { IgxPaginatorModule } from 'igniteui-angular/paginator';
+// import { IgxButtonModule } from 'igniteui-angular/button';
+// import { IgxIconModule } from 'igniteui-angular/icon';
 ...
 
 @ViewChild('myGrid', { read: IgxGridComponent })
@@ -377,15 +379,24 @@ Here is a list of all public methods exposed by **IgxGridColumnComponent**:
 
 ## Filtering Conditions
 
-You will need to import the appropriate condition types from the `igniteui-angular` package.
+Use the filtering operand classes to apply conditions programmatically. Import the operand that matches your column data type and use its built-in condition names.
 
 ```typescript
 import {
-    STRING_FILTERS,
-    NUMBER_FILTERS,
-    DATE_FILTERS,
-    BOOLEAN_FILTERS
-} from 'igniteui-angular/main';
+    IgxStringFilteringOperand,
+    IgxNumberFilteringOperand,
+    IgxDateFilteringOperand,
+    IgxBooleanFilteringOperand
+} from 'igniteui-angular/core';
+
+// Example: quick filter a column (string contains)
+this.grid.filter('Name', 'John', IgxStringFilteringOperand.instance().condition('contains'));
+
+// Example: number greater than
+this.grid.filter('Quantity', 10, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+
+// Clear filter
+this.grid.clearFilter('Name');
 ```
 
 ### String types
@@ -402,6 +413,13 @@ import {
 |`notNull`|`(target: any)`|Returns true if `target` is not `null`.|
 |`empty`|`(target: any)`|Returns true if `target` is either `null`, `undefined` or a string of length 0.|
 |`notEmpty`|`(target: any)`|Returns true if `target` is not `null`, `undefined` or a string of length 0.|
+
+Use them via the corresponding operand, for example:
+
+```typescript
+const contains = IgxStringFilteringOperand.instance().condition('contains');
+this.grid.filter('Name', 'Ann', contains);
+```
 
 
 ### Number types

@@ -9,7 +9,7 @@ import {
     forwardRef,
     HostBinding,
     HostListener,
-    Inject,
+    inject,
     Input,
     OnDestroy,
     Output,
@@ -33,6 +33,11 @@ import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
     standalone: true
 })
 export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
+    public grid = inject<GridType>(IGX_GRID_BASE);
+    public selectionService = inject(IgxGridSelectionService);
+    public element = inject<ElementRef<HTMLElement>>(ElementRef);
+    public cdr = inject(ChangeDetectorRef);
+
     /**
      * @hidden
      */
@@ -398,12 +403,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     protected destroy$ = new Subject<any>();
     protected _data: any;
     protected _addRow: boolean;
-
-    constructor(
-        @Inject(IGX_GRID_BASE) public grid: GridType,
-        public selectionService: IgxGridSelectionService,
-        public element: ElementRef<HTMLElement>,
-        public cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden

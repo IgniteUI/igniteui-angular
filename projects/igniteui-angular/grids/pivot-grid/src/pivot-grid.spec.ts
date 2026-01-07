@@ -5,7 +5,7 @@ import { FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxString
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
 import { DefaultPivotSortingStrategy } from 'igniteui-angular/grids/pivot-grid';
-import { DimensionValuesFilteringStrategy, IgxPivotDateAggregate, IgxPivotDateDimension, IgxPivotNumericAggregate, NoopPivotDimensionsStrategy } from 'igniteui-angular/grids/core';
+import { DimensionValuesFilteringStrategy, IgxGridNavigationService, IgxPivotDateAggregate, IgxPivotDateDimension, IgxPivotNumericAggregate, NoopPivotDimensionsStrategy } from 'igniteui-angular/grids/core';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { PivotGridFunctions } from '../../../test-utils/pivot-grid-functions.spec';
 import { IgxPivotGridFlexContainerComponent, IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponent, IgxTotalSaleAggregate } from '../../../test-utils/pivot-grid-samples.spec';
@@ -21,6 +21,7 @@ import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-cont
 import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxGridCell } from 'igniteui-angular/grids/core';
 import { IGridCellEventArgs } from 'igniteui-angular/grids/core';
+import { getI18nManager } from 'igniteui-i18n-core';
 
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
@@ -35,6 +36,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 IgxPivotGridTestBaseComponent,
                 IgxPivotGridTestComplexHierarchyComponent,
                 IgxPivotGridFlexContainerComponent
+            ],
+            providers: [
+                IgxGridNavigationService
             ]
         }).compileComponents();
     }));
@@ -314,9 +318,10 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 {
                     memberName: 'Date',
                     enabled: true
-                }, {
-                total: false
-            }
+                },
+                {
+                    total: false
+                }
             );
             pivotGrid.notifyDimensionChange(true);
             expect(pivotGrid.columns.length).toBe(5);
@@ -824,6 +829,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
         describe('IgxPivotGrid Features #pivotGrid', () => {
             it('should show excel style filtering via dimension chip.', async () => {
+                // Weird angular error caused by calling setupColumns() on opening a filter. Disable it for now.
+                (getI18nManager() as any).removeAllListeners();
+
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 expect(pivotGrid.filterStrategy).toBeInstanceOf(DimensionValuesFilteringStrategy);
                 const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[1];
@@ -857,6 +865,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
             });
 
             it('should filter rows via excel style filtering dimension chip.', async () => {
+                // Weird angular error caused by calling setupColumns() on opening a filter. Disable it for now.
+                (getI18nManager() as any).removeAllListeners();
+
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const rowChip = headerRow.querySelector('igx-chip[id="All"]');
@@ -1101,6 +1112,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
             });
 
             it('should show complex tree and allow filtering for Date dimension', async () => {
+                // Weird angular error caused by calling setupColumns() on opening a filter. Disable it for now.
+                (getI18nManager() as any).removeAllListeners();
+
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 pivotGrid.pivotConfiguration.rows = [new IgxPivotDateDimension(
                     {

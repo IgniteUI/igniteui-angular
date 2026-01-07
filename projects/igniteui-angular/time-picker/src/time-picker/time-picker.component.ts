@@ -10,13 +10,13 @@ import {
     Output,
     ViewChild,
     ContentChild,
-    Inject,
     AfterViewInit,
     Injector,
     PipeTransform,
     ChangeDetectorRef,
-    LOCALE_ID, Optional,
-    HostListener, booleanAttribute
+    HostListener,
+    booleanAttribute,
+    inject
 } from '@angular/core';
 import {
     ControlValueAccessor,
@@ -28,14 +28,14 @@ import {
     NG_VALIDATORS
 } from '@angular/forms';
 
-import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE, IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxReadOnlyInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxReadOnlyInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import {
     IgxItemListDirective,
     IgxTimeItemDirective
 } from './time-picker.directives';
 import { Subscription, noop, fromEvent } from 'rxjs';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
-import { AbsoluteScrollStrategy, DatePart, DatePartDeltas, DateTimeUtil, IgxPickerActionsDirective, PickerHeaderOrientation, PickerInteractionMode } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, DatePart, DatePartDeltas, DateTimeUtil, GridColumnDataType, IgxPickerActionsDirective, PickerHeaderOrientation, PickerInteractionMode, getCurrentResourceStrings } from 'igniteui-angular/core';
 import { AutoPositionStrategy } from 'igniteui-angular/core';
 import { OverlaySettings } from 'igniteui-angular/core';
 import { takeUntil } from 'rxjs/operators';
@@ -49,7 +49,6 @@ import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEv
 import { IgxTextSelectionDirective } from 'igniteui-angular/directives';
 import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { getCurrentResourceStrings } from 'igniteui-angular/core';
 import { IgxDividerDirective } from 'igniteui-angular/directives';
 import { PickerBaseDirective } from 'igniteui-angular/date-picker';
 
@@ -93,6 +92,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     OnDestroy,
     AfterViewInit,
     Validator {
+    private _injector = inject(Injector);
+    private platform = inject(PlatformUtil);
+    private cdr = inject(ChangeDetectorRef);
+
     /**
      * Sets the value of the `id` attribute.
      * ```html
@@ -116,7 +119,13 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      *
      */
     @Input()
-    public override displayFormat: string;
+    public override set displayFormat(value: string) {
+        super.displayFormat = value;
+    };
+
+    public override get displayFormat(): string {
+        return this._displayFormat ?? this.inputFormat ?? DateTimeUtil.getDefaultInputFormat(this.locale, this.i18nFormatter, GridColumnDataType.Time);
+    };
 
     /**
      * The expected user input format and placeholder.
@@ -130,7 +139,13 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public override inputFormat: string;
+    public override set inputFormat(value: string) {
+        super.inputFormat = value;
+    }
+
+    public override get inputFormat(): string {
+        return super.inputFormat;
+    }
 
     /**
      * Gets/Sets the interaction mode - dialog or drop down.
@@ -437,7 +452,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private _dateMinValue: Date;
     private _dateMaxValue: Date;
     private _selectedDate: Date;
-    private _resourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN);
+    private _resourceStrings: ITimePickerResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN);
     private _okButtonLabel = null;
     private _cancelButtonLabel = null;
     private _itemsDelta: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds' | 'fractionalSeconds'> =
@@ -522,7 +538,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ITimePickerResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -590,15 +606,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         return this._itemsDelta;
     }
 
-    constructor(
-        element: ElementRef,
-        @Inject(LOCALE_ID) _localeId: string,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
-        private _injector: Injector,
-        private platform: PlatformUtil,
-        private cdr: ChangeDetectorRef,
-    ) {
-        super(element, _localeId, _inputGroupType);
+    constructor() {
+        super();
         this.locale = this.locale || this._localeId;
     }
 
@@ -628,7 +637,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public getPartValue(value: Date, type: string): string {
-        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.appliedFormat);
+        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.appliedFormat, this.i18nFormatter);
         const part = inputDateParts.find(element => element.type === type);
         return DateTimeUtil.getPartValue(value, part, part.format?.length);
     }
@@ -1067,6 +1076,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         if (this._inputGroup && this._inputGroup.isRequired !== this.required) {
             this._inputGroup.isRequired = this.required;
         }
+    }
+
+    protected override updateResources() {
+        this._defaultResourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN, false, this._locale);
     }
 
     private get isTouchedOrDirty(): boolean {

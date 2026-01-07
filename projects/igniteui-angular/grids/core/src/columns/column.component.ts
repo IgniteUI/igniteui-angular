@@ -1,23 +1,6 @@
 import { Subject } from 'rxjs';
 import { isEqual } from 'lodash-es';
-import {
-    AfterContentInit,
-    ChangeDetectorRef,
-    ChangeDetectionStrategy,
-    Component,
-    ContentChild,
-    ContentChildren,
-    Input,
-    QueryList,
-    TemplateRef,
-    Output,
-    EventEmitter,
-    OnDestroy,
-    Inject,
-    Optional,
-    Self,
-    booleanAttribute,
-} from '@angular/core';
+import { AfterContentInit, ChangeDetectorRef, ChangeDetectionStrategy, Component, ContentChild, ContentChildren, Input, QueryList, TemplateRef, Output, EventEmitter, OnDestroy, booleanAttribute, inject } from '@angular/core';
 import { notifyChanges } from '../watch-changes';
 import { WatchColumnChanges } from '../watch-changes';
 import { IgxRowDirective } from '../row.directive';
@@ -42,6 +25,7 @@ import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPi
 import { IgxGridCell } from '../grid-public-cell';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
 import { ColumnPinningPosition, ColumnType, DefaultSortingStrategy, ExpressionsTreeUtil, FilteringExpressionsTree, GridColumnDataType, IColumnEditorOptions, IColumnPipeArgs, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxSummaryResult, IgxTimeFilteringOperand, isConstructor, ISortingStrategy, MRLColumnSizeInfo, MRLResizeColumnInfo, PlatformUtil, ɵSize } from 'igniteui-angular/core';
+import type { IgxColumnLayoutComponent } from './column-layout.component';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_TIME_FORMAT = 'mediumTime';
@@ -71,6 +55,13 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
     standalone: true
 })
 export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnType {
+    public grid = inject<GridType>(IGX_GRID_BASE);
+    private _validators = inject<Validator[]>(NG_VALIDATORS, { optional: true, self: true });
+
+    /** @hidden @internal **/
+    public cdr = inject(ChangeDetectorRef);
+    protected platform = inject(PlatformUtil);
+
     /**
      * Sets/gets the `field` value.
      * ```typescript
@@ -120,7 +111,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden @internal
      */
-    public validators: Validator[] = [];
+    public validators: Validator[] = this._validators;
 
     /**
      * Sets/gets the `header` value.
@@ -1535,8 +1526,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * ```typescript
      * let visibleColumnIndex =  this.column.visibleIndex;
      * ```
-     *
-     * @memberof IgxColumnComponent
      */
     public get visibleIndex(): number {
         if (!isNaN(this._vIndex)) {
@@ -1553,7 +1542,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             col = this.allChildren.filter(c => !c.columnGroup && !c.hidden)[0] as any;
         }
         if (this.columnLayoutChild) {
-            return this.parent.childrenVisibleIndexes.find(x => x.column === this).index;
+            // TODO: Refactor/redo/remove this
+            return (this.parent as IgxColumnLayoutComponent).childrenVisibleIndexes.find(x => x.column === this).index;
         }
 
         if (!this.pinned) {
@@ -1678,7 +1668,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         this._visibleWhenCollapsed = value;
         this.visibleWhenCollapsedChange.emit(this._visibleWhenCollapsed);
         if (this.parent) {
-            this.parent?.setExpandCollapseState?.();
+            // TODO: Refactor/redo/remove this
+            (this.parent as IgxColumnLayoutComponent)?.setExpandCollapseState?.();
         }
     }
 
@@ -1811,10 +1802,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * ```typescript
      * this.column.parent = higherLevelColumn;
      * ```
-     *
-     * @memberof IgxColumnComponent
      */
-    public parent = null;
+    public parent: ColumnType | null = null;
 
     /* blazorSuppress */
     /**
@@ -1960,16 +1949,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     private _calcWidth = null;
     private _columnPipeArgs: IColumnPipeArgs = { digitsInfo: DEFAULT_DIGITS_INFO };
     private _editorOptions: IColumnEditorOptions = { };
-
-    constructor(
-        @Inject(IGX_GRID_BASE) public grid: GridType,
-        @Optional() @Self() @Inject(NG_VALIDATORS) private _validators: Validator[],
-        /** @hidden @internal **/
-        public cdr: ChangeDetectorRef,
-        protected platform: PlatformUtil,
-    ) {
-        this.validators = _validators;
-    }
 
     /**
      * @hidden
@@ -2219,7 +2198,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             return [{ target: this, spanUsed: 1 }];
         }
 
-        const columnSized = this.getInitialChildColumnSizes(this.parent.children);
+        const columnSized = this.getInitialChildColumnSizes(this.parent.children as QueryList<IgxColumnComponent>);
         const targets: MRLResizeColumnInfo[] = [];
         const colEnd = this.colEnd ? this.colEnd : this.colStart + 1;
 
@@ -2693,13 +2672,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      * @internal
      */
-    public getConstrainedSizePx(newSize){
-        if (this.maxWidth && newSize > this.maxWidthPx) {
+    public getConstrainedSizePx(newSize) {
+        if (this.maxWidth && newSize >= this.maxWidthPx) {
             this.widthConstrained = true;
             return this.maxWidthPx;
-        } else if (this.minWidth && newSize < this.userSetMinWidthPx) {
+        } else if (this.minWidth && newSize <= this.userSetMinWidthPx) {
             this.widthConstrained = true;
             return this.userSetMinWidthPx;
+        } else if (!this.minWidth && (!this.widthSetByUser || this.width === 'fit-content') && !this.grid.columnWidthSetByUser && (!newSize || newSize <= this.grid.minColumnWidth)) {
+            return this.grid.minColumnWidth;
         } else {
             this.widthConstrained = false;
             return newSize;
@@ -2722,11 +2703,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         } else if (!colWidth || isAutoWidth && !this.autoSize) {
             // no width
             const currentCalcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
-            this._calcWidth = this.getConstrainedSizePx(currentCalcWidth);
+            this._calcWidth = this.getConstrainedSizePx(parseFloat(currentCalcWidth));
         } else {
             let possibleColumnWidth = '';
             if (!this.widthSetByUser && this.userSetMinWidthPx && this.userSetMinWidthPx < this.grid.minColumnWidth) {
-                possibleColumnWidth = this.defaultWidth = this.grid.getPossibleColumnWidth(null, this.userSetMinWidthPx);
+                possibleColumnWidth = this.defaultWidth = this.grid.getPossibleColumnWidth();
             } else {
                 possibleColumnWidth = this.width;
             }

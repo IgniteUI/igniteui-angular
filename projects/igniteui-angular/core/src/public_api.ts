@@ -35,6 +35,8 @@ export * from './data-operations/grid-sorting-strategy';
 export * from './data-operations/paging-state.interface';
 export * from './data-operations/data-util';
 export * from './data-operations/grid-types';
+export * from './data-operations/operations';
+export * from './data-operations/pipes';
 
 // Services
 export * from './services/public_api';
@@ -43,6 +45,11 @@ export * from './services/public_api';
 export * from './performance.service';
 
 // i18n
+export { setCurrentI18n } from 'igniteui-i18n-core';
+export { IResourceStrings, changei18n, registerI18n } from './core/i18n/resources';
+export { provideIgniteIntl } from './core/i18n/formatters/formatter-intl';
+export * from './core/i18n/formatters/formatter-base';
+export * from './core/i18n/formatters/formatter-intl';
 export * from './core/i18n/action-strip-resources';
 export * from './core/i18n/banner-resources';
 export * from './core/i18n/calendar-resources';
