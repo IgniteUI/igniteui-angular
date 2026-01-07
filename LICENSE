@@ -14,71 +14,72 @@ MIT License
 
 -----------------------------------------------------------------
 
-The MIT License applies exclusively to the components (encompassing all related modules and directives), directives, and services listed below and their associated source code. **All other parts of this package remain under the Infragistics Commercial License.**
+The MIT License applies exclusively to the components (encompassing all related modules and directives), directives, and services listed below and their associated source code. All other parts of this package remain under the Infragistics Commercial License.
 
-**Covered Components, Directives and Services with MIT License:**
+Covered Components, Directives and Services with MIT License:
 
-- `igx-accordion`
-- `igxAutocomplete`
-- `igx-avatar`
-- `igx-badge`
-- `igx-banner`
-- `igx-bottom-nav`
-- `igx-button`
-- `igx-card`
-- `igx-carousel`
-- `igx-chat`
-- `igx-checkbox`
-- `igx-chip`
-- `igx-circular-bar`
-- `igx-combo`
-- `igx-date-picker`
-- `igx-date-range-picker`
-- `igx-dialog`
-- `igx-divider`
-- `igx-drop-down`
-- `igx-expansion-panel`
-- `igx-icon`
-- `igx-input-group`
-- `igx-linear-bar`
-- `igx-list`
-- `igx-navbar`
-- `igx-nav-drawer`
-- `igx-paginator`
-- `igx-radio`
-- `igx-radio-group`
-- `igx-rating`
-- `igx-select`
-- `igx-simple-combo`
-- `igx-slider`
-- `igx-snackbar`
-- `igx-splitter-pane`
-- `igx-switch`
-- `igx-tabs`
-- `igx-toast`
-- `igx-tooltip`
-- `igx-tree`
-- `igx-time-picker`
-- `igx-stepper`
-- `igx-month-picker`
-- `igx-action-strip`
-- `igx-buttongroup`
-- `igx-calendar`
-- `igx-chip-area`
-- `igxDateTimeEditor`
-- `igxDrag`
-- `igxDrop`
-- `igxFor`
-- `igxIconButton`
-- `igxInput`
-- `igxLabel`
-- `igxLayout`
-- `igxMask`
-- `igxRipple`
-- `IgxOverlayService`
-- `IgxTextHighlightDirective`
-- `IgxTextHighlightService`
-- `igxToggle`
+- igx-accordion
+- igx-action-strip
+- igxAutocomplete
+- igx-avatar
+- igx-badge
+- igx-banner
+- igx-bottom-nav
+- igxButton
+- igx-card
+- igx-carousel
+- igx-chat
+- igx-checkbox
+- igx-chip
+- igx-circular-bar
+- igx-combo
+- igx-date-picker
+- igx-date-range-picker
+- igx-dialog
+- igx-divider
+- igx-drop-down
+- igx-expansion-panel
+- igx-icon
+- igx-input-group
+- igx-linear-bar
+- igx-list
+- igx-navbar
+- igx-nav-drawer
+- igx-paginator
+- igx-radio
+- igx-radio-group
+- igx-rating
+- igx-select
+- igx-simple-combo
+- igx-slider
+- igx-snackbar
+- igx-splitter
+- igx-switch
+- igx-tabs
+- igx-toast
+- igx-tooltip
+- igx-tree
+- igx-time-picker
+- igx-stepper
+- igx-month-picker
+- igx-action-strip
+- igx-buttongroup
+- igx-calendar
+- igx-chip-area
+- igxDateTimeEditor
+- igxDrag
+- igxDrop
+- igxFor
+- igxIconButton
+- igxInput
+- igxLabel
+- igxLayout
+- igxMask
+- igxRipple
+- IgxOverlayService
+- IgxTextHighlightDirective
+- IgxTextHighlightService
+- igxToggle
 
 The MIT License applies exclusively to the components (encompassing all related modules and directives), directives, and services listed above and their associated source code. 
 All other parts of this package remain under the Infragistics Commercial License.
@@ -105,13 +106,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+For details, see https://opensource.org/licenses/MIT
+
 -----------------------------------------------------------------
 
 Infragistics Commercial License
 
 -----------------------------------------------------------------
 
-All components (encompassing all related modules and directives), modules, directives, services, and code within this package, **except those listed under the MIT License section above**, are licensed under the Infragistics Commercial License (EULA).
+All components (encompassing all related modules and directives), modules, directives, services, and code within this package, except those listed under the MIT License section above, are licensed under the Infragistics Commercial License (EULA).
 
 This is a commercial product, requiring a valid paid-for license for commercial use.
 This product is free to use for non-commercial educational use for students in K through 12 grades
@@ -130,5 +133,3 @@ in the projects/igniteui-angular/src/lib/core/setImmediate.ts file. The original
 The Infragistics Ultimate license & copyright applies to this distribution.
 For information on that license, please go to:
 https://www.infragistics.com/legal/license
-
-For details, see https://opensource.org/licenses/MIT
