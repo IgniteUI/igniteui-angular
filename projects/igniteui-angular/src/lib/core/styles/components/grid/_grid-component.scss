@@ -28,7 +28,7 @@
 
         @extend %grid-host !optional;
 
-        @extend %grid-display !optional;
+        // @extend %grid-display !optional;
 
         // TRANSFERRED to new _base.scss
         // @include e(caption) {
@@ -629,7 +629,7 @@
         @include excel-filtering-partial();
         @include advanced-filtering-partial();
         @include group-by-area();
-        @include header-row();
+        // @include header-row();
     }
 
     @include b(igx-drop-area) {
