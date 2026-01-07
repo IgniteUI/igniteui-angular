@@ -1,16 +1,54 @@
+@use '../../../projects/igniteui-angular/core/src/core/styles/themes/utilities' as *;
+
 .wrapper {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    gap: rem(48px);
+    padding: rem(24px);
 }
 
 .badges {
-    place-items: center;
-    display: grid;
-    grid-template-columns: subgrid;
+    place-items: start;
+    display: flex;
+    flex-direction: column;
     gap: 24px;
+}
+
+.badge-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: rem(32px);
+    align-items: center;
+    padding: rem(16px);
+    background: color($color: 'gray', $variant: 100);
+    border-radius: rem(8px);
+}
+
+.badge-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+
+    span {
+        font-size: 14px;
+    }
 }
 
 .avatar-sample {
     display: flex;
     align-items: center;
+    position: relative;
+
+    igx-avatar {
+        anchor-name: --avatar;
+    }
+
+    igx-badge {
+        position: absolute;
+        position-anchor: --avatar;
+        bottom: anchor(--avatar top);
+        left: anchor(right);
+        transform: translate(-75%, 75%);
+    }
 }

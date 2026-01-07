@@ -32,7 +32,7 @@
             @for (contact of contacts; track contact.id) {
                 <igc-tab [selected]="contact.id === selectedTabId">
                     @if(!properties.hideIcon) {
-                        <igx-icon slot="label">folder</igx-icon>
+                        <igc-icon name="folder" slot="label"></igc-icon>
                     }
                     @if(!properties.hideText) {
                     <span slot="label">{{ contact.text }}</span>
