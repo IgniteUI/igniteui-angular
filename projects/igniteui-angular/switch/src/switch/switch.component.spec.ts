@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -361,11 +361,11 @@ class SwitchInvisibleLabelComponent {
     imports: [ReactiveFormsModule, IgxSwitchComponent]
 })
 class SwitchFormGroupComponent {
+    private fb = inject(UntypedFormBuilder);
+
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
 
     public myForm = this.fb.group({ switch: ['', Validators.required] });
-
-    constructor(private fb: UntypedFormBuilder) {}
 }
 
 @Component({

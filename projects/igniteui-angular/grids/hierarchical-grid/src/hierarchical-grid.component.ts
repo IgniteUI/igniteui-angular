@@ -1,32 +1,9 @@
-import {
-    AfterContentInit,
-    AfterViewInit,
-    booleanAttribute,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ContentChildren,
-    CUSTOM_ELEMENTS_SCHEMA,
-    DoCheck,
-    ElementRef,
-    HostBinding,
-    Inject,
-    Input,
-    OnDestroy,
-    OnInit,
-    QueryList,
-    reflectComponentType,
-    SimpleChanges,
-    TemplateRef,
-    ViewChild,
-    ViewChildren,
-    ViewContainerRef
-} from '@angular/core';
+import { AfterContentInit, AfterViewInit, booleanAttribute, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, CUSTOM_ELEMENTS_SCHEMA, DoCheck, ElementRef, HostBinding, Input, OnDestroy, OnInit, QueryList, reflectComponentType, SimpleChanges, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, inject } from '@angular/core';
 import { NgClass, NgTemplateOutlet, NgStyle } from '@angular/common';
 
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
-import { IgxFilteringService, IgxGridValidationService } from 'igniteui-angular/grids/core';
+import { IgxFilteringService, IgxGridNavigationService, IgxGridValidationService } from 'igniteui-angular/grids/core';
 import { IgxColumnComponent, } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from 'igniteui-angular/grids/core';
@@ -56,7 +33,7 @@ import { IgxButtonDirective, IgxForOfScrollSyncService, IgxForOfSyncService, Igx
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { EntityType, FieldType, IFilteringExpressionsTree, IgxActionStripToken, IgxOverlayOutletDirective, flatten } from 'igniteui-angular/core';
+import { EntityType, FieldType, IFilteringExpressionsTree, IgxActionStripToken, IgxOverlayOutletDirective, flatten, IGridResourceStrings } from 'igniteui-angular/core';
 import { IgxPaginatorToken } from 'igniteui-angular/paginator';
 import { IgxGridCellMergePipe, IgxGridComponent, IgxGridFilteringPipe, IgxGridSortingPipe, IgxGridUnmergeActivePipe } from 'igniteui-angular/grids/grid';
 
@@ -72,6 +49,10 @@ let NEXT_ID = 0;
     imports: [NgClass]
 })
 export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
+    public readonly gridAPI = inject<IgxHierarchicalGridAPIService>(IGX_GRID_SERVICE_BASE);
+    public element = inject<ElementRef<HTMLElement>>(ElementRef);
+    public cdr = inject(ChangeDetectorRef);
+
     @Input()
     public layout: IgxRowIslandComponent;
 
@@ -178,11 +159,6 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     public expanded = false;
 
     private _data: any;
-
-    constructor(
-        @Inject(IGX_GRID_SERVICE_BASE) public readonly gridAPI: IgxHierarchicalGridAPIService,
-        public element: ElementRef<HTMLElement>,
-        public cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden
@@ -302,6 +278,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         { provide: IGX_GRID_BASE, useExisting: IgxHierarchicalGridComponent },
         IgxGridSummaryService,
         IgxFilteringService,
+        IgxGridNavigationService,
         IgxHierarchicalGridNavigationService,
         IgxColumnResizingService,
         IgxForOfSyncService,
@@ -597,6 +574,26 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
+     * Gets/Sets the resource strings.
+     *
+     * @remarks
+     * By default it uses EN resources.
+     */
+    @Input()
+    public override set resourceStrings(value: IGridResourceStrings) {
+        super.resourceStrings = value;
+        if (!this.parent) {
+            this.gridAPI.getChildGrids(true).forEach((grid) => {
+                grid.resourceStrings = value;
+            });
+        }
+    }
+
+    public override get resourceStrings() {
+        return super.resourceStrings;
+    }
+
+    /**
      * Gets the unique identifier of the parent row. It may be a `string` or `number` if `primaryKey` of the
      * parent grid is set or an object reference of the parent record otherwise.
      * ```typescript
@@ -698,6 +695,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
         if (this.parent) {
             this.childLayoutKeys = this.parentIsland.children.map((item) => item.key);
+            this._resourceStrings = this.rootGrid._resourceStrings;
         }
 
         this.headSelectorsTemplates = this.parentIsland ?

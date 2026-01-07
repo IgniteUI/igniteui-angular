@@ -311,8 +311,8 @@
                 {
                   "type": "bundle",
                   "name": "styles",
-                  "maximumWarning": "500kb",
-                  "maximumError": "550kb"
+                  "maximumWarning": "600kb",
+                  "maximumError": "600kb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -328,7 +328,7 @@
               ],
               "outputHashing": "none",
               "optimization": true,
-              "externalDependencies": ["lit"]
+              "externalDependencies": ["lit", "igniteui-i18n-core"]
             },
             "development": {
               "optimization": false,

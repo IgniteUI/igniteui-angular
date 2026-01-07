@@ -77,7 +77,7 @@ Some of the Angular chart types included are: [Polar chart](https://www.infragis
 |calendar|:white_check_mark:|[Readme](projects/igniteui-angular/calendar/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/calendar)|5.1.0|[MIT](/LICENSE)|focus-trap|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/focus-trap/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog)|13.0.0|[MIT](/LICENSE)
 |card|:white_check_mark:|[Readme](projects/igniteui-angular/card/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/card)|5.1.0|[MIT](/LICENSE)|forOf|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/for-of/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/for-of)|5.2.0|[MIT](/LICENSE)
 |carousel|:white_check_mark:|[Readme](projects/igniteui-angular/carousel/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/carousel)|2.0.0|[MIT](/LICENSE)|hint|:white_check_mark:|[Readme](projects/igniteui-angular/input-group/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group)|5.3.0|[MIT](/LICENSE)
-|checkbox|:white_check_mark:|[Readme](projects/igniteui-angular/checkbox/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/checkbox)|2.0.0|[MIT](/LICENSE)|input|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/input/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group)|2.0.0|[MIT](/LICENSE)|
+|chat|:white_check_mark:|[Readme]()|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/chat)|21.0.0|[MIT](/LICENSE)|checkbox|:white_check_mark:|[Readme](projects/igniteui-angular/checkbox/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/checkbox)|2.0.0|[MIT](/LICENSE)|input|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/input/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group)|2.0.0|[MIT](/LICENSE)|
 |chips|:white_check_mark:|[Readme](projects/igniteui-angular/chips/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/chip)|6.1.0|[MIT](/LICENSE)|label|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/label/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/label-input)|2.0.0|[MIT](/LICENSE)
 |circular progress|:white_check_mark:|[Readme](projects/igniteui-angular/progressbar/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/circular-progress)|5.1.0|[MIT](/LICENSE)|layout|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/layout/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/layout)|2.0.0|[MIT](/LICENSE)
 |combo|:white_check_mark:|[Readme](projects/igniteui-angular/combo/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo)|6.1.0|[MIT](/LICENSE)|mask|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/mask/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/mask)|5.3.0|[MIT](/LICENSE)
@@ -168,6 +168,7 @@ Some of the Angular chart types included are: [Polar chart](https://www.infragis
 |19.2.0|16-Apr-25|[Milestone #37](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-37--version-192-released-apr-16th-2025-release-blog-192)|
 |20.0.0|09-Jun-25|[Milestone #38](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-38-version-200-released-jun-09th-2025)|
 |20.1.0|25-Sep-25|[Milestone #39](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-39-version-201-released-sep--25th-2025)|
+|21.0.0|03-Dec-25|[Milestone #40]()|
 
 
 ### Components available in [igniteui-angular-charts](https://www.npmjs.com/package/igniteui-angular-charts)
@@ -334,15 +335,13 @@ Developer support is provided as part of the commercial, paid-for license via [I
 Community support for open source usage of this product is available at [StackOverflow](https://stackoverflow.com/questions/tagged/ignite-ui-angular).
 
 ## License
-This is a commercial product, requiring a valid paid-for license for commercial use.
-This product is free to use for non-commercial educational use for students in K through 12 grades or University programs, and for educators to use in a classroom setting as examples / tools in their curriculum.
-In order for us to verify your eligibility for free usage, please [register for trial](https://Infragistics.com/Angular) and open a support ticket with a request for free license.
+This software package is offered under a dual-license model, which allows for both commercial and permissive open-source use, depending on the components, modules, directives, and services being used.
 
-To acquire a license for commercial usage, please [register for trial](https://Infragistics.com/Angular) and refer to the purchasing options in the pricing section on the product page.
+It is crucial to understand which license applies to which part of the package.
 
 © Copyright 2025 INFRAGISTICS. All Rights Reserved.
 The Infragistics Ultimate license & copyright applies to this distribution.
-For information on that license, please go to our website [https://www.infragistics.com/legal/license](https://www.infragistics.com/legal/license).
+For information on that license, please go to [LICENSE](LICENSE).
 
 
 

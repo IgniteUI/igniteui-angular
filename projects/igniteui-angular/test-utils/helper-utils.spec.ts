@@ -72,6 +72,14 @@ export function ymd(str: YMD): Date {
     return new Date(str + 'T00:00');
 }
 
+/**
+ * Removes any unicode symbols for different variations in spaces.
+ * Use when just comparing to basic string wouldn't work.
+ */
+export function removeUnicodeSpaces(value: string) {
+    return value.replace(/[\u00A0\u1680​\u180e\u2000-\u2009\u200a​\u200b​\u202f\u205f​\u3000]/g, ' ');
+}
+
 
 @Injectable()
 export class TestNgZone extends NgZone {

@@ -7,8 +7,8 @@ import {
     DestroyRef,
     ElementRef,
     HostBinding,
-    HostListener, Inject, Input,
-    Optional, QueryList, booleanAttribute,
+    HostListener, Input,
+    QueryList, booleanAttribute,
     inject,
     DOCUMENT,
     AfterContentChecked
@@ -27,7 +27,7 @@ import { IgxSuffixDirective } from './directives-suffix/suffix.directive';
 import { IgxInputGroupBase } from './input-group.common';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { getCurrentResourceStrings } from 'igniteui-angular/core';
+import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
 import { IgxTheme, THEME_TOKEN, ThemeToken } from 'igniteui-angular/core';
 
 @Component({
@@ -37,6 +37,13 @@ import { IgxTheme, THEME_TOKEN, ThemeToken } from 'igniteui-angular/core';
     imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
 })
 export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentChecked {
+    public element = inject<ElementRef<HTMLElement>>(ElementRef);
+    private _inputGroupType = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE, { optional: true });
+    private document = inject(DOCUMENT);
+    private platform = inject(PlatformUtil);
+    private cdr = inject(ChangeDetectorRef);
+    private themeToken = inject<ThemeToken>(THEME_TOKEN);
+
     /**
      * Sets the resource strings.
      * By default it uses EN resources.
@@ -50,7 +57,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      * Returns the resource strings.
      */
     public get resourceStrings(): IInputResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -125,7 +132,8 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     private _type: IgxInputGroupType = null;
     private _filled = false;
     private _theme: IgxTheme;
-    private _resourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
+    private _resourceStrings: IInputResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
     private _readOnly: undefined | boolean;
 
     /** @hidden @internal */
@@ -219,18 +227,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
         return this._theme;
     }
 
-    constructor(
-        public element: ElementRef<HTMLElement>,
-        @Optional()
-        @Inject(IGX_INPUT_GROUP_TYPE)
-        private _inputGroupType: IgxInputGroupType,
-        @Inject(DOCUMENT)
-        private document: any,
-        private platform: PlatformUtil,
-        private cdr: ChangeDetectorRef,
-        @Inject(THEME_TOKEN)
-        private themeToken: ThemeToken
-    ) {
+    constructor() {
         this._theme = this.themeToken.theme;
         const themeChange = this.themeToken.onChange((theme) => {
             if (this._theme !== theme) {
@@ -239,6 +236,9 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
             }
         });
         this._destroyRef.onDestroy(() => themeChange.unsubscribe());
+        onResourceChangeHandle(this._destroyRef, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(InputResourceStringsEN, false);
+        }, this);
     }
 
     /** @hidden */
@@ -385,7 +385,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
 
     /** @hidden @internal */
     public get fileNames() {
-        return this.input.fileNames || this._resourceStrings.igx_input_file_placeholder;
+        return this.input.fileNames || this.resourceStrings.igx_input_file_placeholder;
     }
 
     /**

@@ -11,19 +11,18 @@ import {
     EventEmitter,
     forwardRef,
     HostBinding,
-    Inject,
     InjectionToken,
     Injector,
     Input,
     OnDestroy,
     OnInit,
-    Optional,
     Output,
     QueryList,
     TemplateRef,
     ViewChild,
     DOCUMENT,
-    ViewChildren
+    ViewChildren,
+    inject
 } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NgControl } from '@angular/forms';
 import { caseSensitive } from '@igniteui/material-icons-extended';
@@ -42,7 +41,8 @@ import {
     OverlaySettings,
     ComboResourceStringsEN,
     IComboResourceStrings,
-    getCurrentResourceStrings
+    getCurrentResourceStrings,
+    onResourceChangeHandle
 } from 'igniteui-angular/core';
 import { IForOfState, IgxForOfDirective } from 'igniteui-angular/directives';
 import { IgxIconService } from 'igniteui-angular/icon';
@@ -110,6 +110,15 @@ export interface IComboFilteringOptions {
 @Directive()
 export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewChecked, OnInit,
     AfterViewInit, AfterContentChecked, OnDestroy, ControlValueAccessor {
+    protected elementRef = inject(ElementRef);
+    protected cdr = inject(ChangeDetectorRef);
+    protected selectionService = inject(IgxSelectionAPIService);
+    protected comboAPI = inject(IgxComboAPIService);
+    public document = inject<Document>(DOCUMENT);
+    protected _inputGroupType = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE, { optional: true });
+    protected _injector = inject(Injector, { optional: true });
+    protected _iconService = inject(IgxIconService, { optional: true });
+
     /**
      * Defines whether the caseSensitive icon should be shown in the search input
      *
@@ -471,7 +480,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      */
     @Input()
     public get resourceStrings(): IComboResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
     public set resourceStrings(value: IComboResourceStrings) {
         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
@@ -949,7 +958,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     protected _filteredData = [];
     protected _displayKey: string;
     protected _remoteSelection = {};
-    protected _resourceStrings = getCurrentResourceStrings(ComboResourceStringsEN);
+    protected _resourceStrings: IComboResourceStrings = null;
+    protected _defaultResourceStrings = getCurrentResourceStrings(ComboResourceStringsEN);
     protected _valid = IgxInputState.INITIAL;
     protected ngControl: NgControl = null;
     protected destroy$ = new Subject<void>();
@@ -973,16 +983,11 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     public abstract dropdown: IgxComboDropDownComponent;
     public abstract selectionChanging: EventEmitter<any>;
 
-    constructor(
-        protected elementRef: ElementRef,
-        protected cdr: ChangeDetectorRef,
-        protected selectionService: IgxSelectionAPIService,
-        protected comboAPI: IgxComboAPIService,
-        @Inject(DOCUMENT) public document: Document,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
-        @Optional() protected _injector: Injector,
-        @Optional() @Inject(IgxIconService) protected _iconService?: IgxIconService,
-    ) { }
+    constructor() {
+        onResourceChangeHandle(this.destroy$, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(ComboResourceStringsEN, false);
+        }, this);
+    }
 
     public ngAfterViewChecked() {
         const targetElement = this.inputGroup.element.nativeElement.querySelector('.igx-input-group__bundle') as HTMLElement;

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Directive, ElementRef, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, Directive, ElementRef, EventEmitter, inject } from '@angular/core';
 import { ExpressionUI, FilterListItem } from './common';
 import { IgxOverlayService, PlatformUtil } from 'igniteui-angular/core';
 
@@ -6,6 +6,10 @@ import { IgxOverlayService, PlatformUtil } from 'igniteui-angular/core';
 
 @Directive()
 export abstract class BaseFilteringComponent {
+    protected cdr = inject(ChangeDetectorRef);
+    public element = inject(ElementRef<HTMLElement>);
+    protected platform = inject(PlatformUtil);
+
 
     public abstract column: any;
     public abstract get grid(): any;
@@ -23,13 +27,6 @@ export abstract class BaseFilteringComponent {
     public abstract sortingChanged: EventEmitter<undefined>;
     public abstract listDataLoaded: EventEmitter<undefined>;
     public abstract filterCleared: EventEmitter<undefined>;
-
-    constructor(
-        protected cdr: ChangeDetectorRef,
-        public element: ElementRef<HTMLElement>,
-        protected platform: PlatformUtil
-    ) { }
-
 
     public abstract initialize(column: any, overlayService: IgxOverlayService): void;
     public abstract detectChanges(): void;

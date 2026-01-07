@@ -913,7 +913,7 @@ describe('IgxGrid - Column properties #grid', () => {
             const input = dateTimeEditor.nativeElement;
 
             // input is not focused yet, so the value is as the display format sets it
-            expect(input.value).toEqual('Oct 1, 2015, 11:37:22 AM');
+            expect(input.value).toEqual('Oct 1, 2015, 11:37:22 AM');
 
             expect(dateTimeEditor.inputFormat.normalize('NFKC')).toBe('MM/dd/yyyy, hh:mm:ss tt');
             dateTimeEditor.onFocus();

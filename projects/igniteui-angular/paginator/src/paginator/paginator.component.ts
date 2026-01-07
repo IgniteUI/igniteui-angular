@@ -1,10 +1,11 @@
-import { ChangeDetectorRef, Component, ContentChild, Directive, ElementRef, EventEmitter, Host, HostBinding, Input, Output, forwardRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ContentChild, DestroyRef, Directive, ElementRef, EventEmitter, HostBinding, Input, Output, forwardRef, inject } from '@angular/core';
 import { IPageCancellableEventArgs, IPageEventArgs } from './paginator-interfaces';
 import {
     IPaginatorResourceStrings,
     PaginatorResourceStringsEN,
     OverlaySettings,
-    getCurrentResourceStrings
+    getCurrentResourceStrings,
+    onResourceChangeHandle
 } from 'igniteui-angular/core';
 import { FormsModule } from '@angular/forms';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -48,6 +49,9 @@ export class IgxPaginatorContentDirective {
 })
 // switch IgxPaginatorToken to extends once density is dropped
 export class IgxPaginatorComponent implements IgxPaginatorToken {
+    private elementRef = inject(ElementRef);
+    private cdr = inject(ChangeDetectorRef);
+    private destroyRef = inject(DestroyRef);
 
     /**
      * @hidden
@@ -123,7 +127,8 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     protected _selectOptions = [5, 10, 15, 25, 50, 100, 500];
     protected _perPage = 15;
 
-    private _resourceStrings = getCurrentResourceStrings(PaginatorResourceStringsEN);
+    private _resourceStrings: IPaginatorResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(PaginatorResourceStringsEN, true);
     private _overlaySettings: OverlaySettings = {};
     private defaultSelectValues = [5, 10, 15, 25, 50, 100, 500];
 
@@ -258,10 +263,14 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): IPaginatorResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
-    constructor(private elementRef: ElementRef, private cdr: ChangeDetectorRef) { }
+    constructor() {
+        onResourceChangeHandle(this.destroyRef, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(PaginatorResourceStringsEN, false);
+        }, this);
+    }
 
     /**
      * Returns if the current page is the last page.
@@ -353,6 +362,7 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     }
 }
 
+let NEXT_ID = 0;
 
 @Component({
     selector: 'igx-page-size',
@@ -360,6 +370,8 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     imports: [IgxSelectComponent, FormsModule, IgxSelectItemComponent]
 })
 export class IgxPageSizeSelectorComponent {
+    public paginator = inject(IgxPaginatorComponent, { host: true });
+
     /**
      * @internal
      * @hidden
@@ -367,7 +379,13 @@ export class IgxPageSizeSelectorComponent {
     @HostBinding('class.igx-page-size')
     public cssClass = 'igx-page-size';
 
-    constructor(@Host() public paginator: IgxPaginatorComponent) { }
+    @HostBinding('attr.id')
+    @Input()
+    public id = `igx-paginator-${NEXT_ID++}`;
+
+    public get labelId() {
+        return `${this.id}-label`;
+    }
 }
 
 
@@ -377,6 +395,8 @@ export class IgxPageSizeSelectorComponent {
     imports: [IgxRippleDirective, IgxIconComponent, IgxIconButtonDirective]
 })
 export class IgxPageNavigationComponent {
+    public paginator = inject(IgxPaginatorComponent, { host: true });
+
     /**
      * @internal
      * @hidden
@@ -390,8 +410,4 @@ export class IgxPageNavigationComponent {
     @HostBinding('attr.role')
     @Input()
     public role = 'navigation';
-
-    constructor(
-        @Host()
-        public paginator: IgxPaginatorComponent) { }
 }

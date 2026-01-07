@@ -6,10 +6,9 @@ import {
     Input,
     ElementRef,
     AfterViewInit,
-    OnDestroy,
     OnInit,
 } from "@angular/core";
-import { NgTemplateOutlet, DatePipe } from "@angular/common";
+import { NgTemplateOutlet } from "@angular/common";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
 
 import { IgxMonthsViewComponent } from "../months-view/months-view.component";
@@ -19,7 +18,7 @@ import { IgxCalendarView } from "../calendar";
 import { IgxCalendarBaseDirective } from "../calendar-base";
 import { KeyboardNavigationService } from "../calendar.services";
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { CalendarDay, formatToParts } from 'igniteui-angular/core';
+import { CalendarDay, formatToParts, IgxDateFormatterPipe } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 @Component({
@@ -38,13 +37,13 @@ let NEXT_ID = 0;
     templateUrl: "month-picker.component.html",
     imports: [
         NgTemplateOutlet,
-        DatePipe,
+        IgxDateFormatterPipe,
         IgxIconComponent,
         IgxMonthsViewComponent,
         IgxYearsViewComponent,
     ]
 })
-export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements OnInit, AfterViewInit, OnDestroy {
+export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements OnInit, AfterViewInit {
     /**
      * Sets/gets the `id` of the month picker.
      * If not set, the `id` will have value `"igx-month-picker-0"`.
@@ -348,6 +347,10 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
                 currentValue: this.viewDate
             });
         });
+
+        this._destroyRef.onDestroy(() => {
+            this.keyboardNavigation.detachKeyboardHandlers();
+        });
     }
 
     protected onWrapperFocus(event: FocusEvent) {
@@ -455,14 +458,6 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
             this.dacadeView.onKeydownEnd(event);
         }
     }
-
-	/**
-	 * @hidden
-	 * @internal
-	 */
-	public ngOnDestroy(): void {
-        this.keyboardNavigation.detachKeyboardHandlers();
-	}
 
 	/**
 	 * @hidden

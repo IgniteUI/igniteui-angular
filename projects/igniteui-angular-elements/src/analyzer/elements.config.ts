@@ -5,10 +5,12 @@ import {
   IgxPivotGridComponent,
 } from "../../../igniteui-angular/grids/pivot-grid";
 import { IgxTreeGridComponent } from "../../../igniteui-angular/grids/tree-grid";
+import { IgxActionStripComponent } from "../../../igniteui-angular/action-strip/src/action-strip/action-strip.component";
+import { IgxActionStripToken } from "../../../igniteui-angular/core/src/grid-column-actions/token";
 import { IgxPaginatorComponent } from "../../../igniteui-angular/paginator/src/paginator/paginator.component";
 import { IgxPaginatorToken } from "../../../igniteui-angular/paginator/src/paginator/token";
-import { IgxColumnComponent } from "../../../igniteui-angular/grids/core/src/columns/column.component";
 import { IgxColumnGroupComponent } from "../../../igniteui-angular/grids/core/src/columns/column-group.component";
+import { IgxColumnComponent } from "../../../igniteui-angular/grids/core/src/columns/column.component";
 import { IgxColumnLayoutComponent } from "../../../igniteui-angular/grids/core/src/columns/column-layout.component";
 import { IgxGridEditingActionsComponent } from "../../../igniteui-angular/grids/core/src/grid-actions/grid-editing-actions.component";
 import { IgxActionStripActionsToken } from "../../../igniteui-angular/core/src/grid-column-actions/token";
@@ -22,8 +24,6 @@ import { IgxGridToolbarExporterComponent } from "../../../igniteui-angular/grids
 import { IgxGridToolbarHidingComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar-hiding.component";
 import { IgxGridToolbarPinningComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar-pinning.component";
 import { IgxRowIslandComponent } from "../../../igniteui-angular/grids/hierarchical-grid/src/row-island.component";
-import { IgxActionStripComponent } from "../../../igniteui-angular/action-strip/src/action-strip/action-strip.component";
-import { IgxActionStripToken } from "../../../igniteui-angular/core/src/grid-column-actions/token";
 import { IgxGridStateComponent } from "../lib/state.component";
 
 export const registerComponents = [
@@ -46,7 +46,7 @@ export var registerConfig = [
       IgxRowIslandComponent,
     ],
     contentQueries: [],
-    additionalProperties: [],
+    additionalProperties: [{ name: "cdr", writable: true }],
     methods: ["show", "hide"],
     boolProps: ["hidden"],
     provideAs: IgxActionStripToken,
@@ -65,6 +65,7 @@ export var registerConfig = [
     ],
     contentQueries: [],
     additionalProperties: [
+      { name: "grid", writable: true },
       { name: "selected", writable: true },
       { name: "index" },
       { name: "visibleIndex" },
@@ -75,7 +76,6 @@ export var registerConfig = [
       { name: "level" },
       { name: "filteringExpressionsTree" },
       { name: "parent", writable: true },
-      { name: "grid", writable: true },
       { name: "topLevelParent" },
     ],
     methods: ["pin", "unpin", "move", "autosize"],
@@ -130,13 +130,13 @@ export var registerConfig = [
       { name: "childColumns" },
       { name: "columnGroup" },
       { name: "columnLayout" },
+      { name: "grid", writable: true },
       { name: "index" },
       { name: "visibleIndex" },
       { name: "columnLayoutChild" },
       { name: "level" },
       { name: "filteringExpressionsTree" },
       { name: "parent", writable: true },
-      { name: "grid", writable: true },
       { name: "topLevelParent" },
     ],
     methods: ["pin", "unpin", "move", "autosize"],
@@ -187,12 +187,12 @@ export var registerConfig = [
       { name: "selected", writable: true },
       { name: "childColumns" },
       { name: "columnGroup" },
+      { name: "grid", writable: true },
       { name: "index" },
       { name: "columnLayoutChild" },
       { name: "level" },
       { name: "filteringExpressionsTree" },
       { name: "parent", writable: true },
-      { name: "grid", writable: true },
       { name: "topLevelParent" },
     ],
     methods: ["pin", "unpin", "move", "autosize"],
@@ -252,6 +252,10 @@ export var registerConfig = [
     additionalProperties: [
       { name: "groupsRecords" },
       { name: "selectedCells" },
+      { name: "validation" },
+      { name: "gridAPI" },
+      { name: "cdr" },
+      { name: "navigation", writable: true },
       { name: "shouldGenerate", writable: true },
       { name: "rowList" },
       { name: "dataRowList" },
@@ -261,10 +265,6 @@ export var registerConfig = [
       { name: "lastSearchInfo" },
       { name: "filteredData" },
       { name: "filteredSortedData" },
-      { name: "validation" },
-      { name: "gridAPI" },
-      { name: "cdr" },
-      { name: "navigation", writable: true },
       { name: "virtualizationState" },
       { name: "nativeElement" },
       { name: "defaultRowHeight" },
@@ -550,6 +550,8 @@ export var registerConfig = [
       { name: "selectedCells" },
       { name: "gridAPI", writable: true },
       { name: "navigation", writable: true },
+      { name: "validation" },
+      { name: "cdr" },
       { name: "shouldGenerate", writable: true },
       { name: "rowList" },
       { name: "dataRowList" },
@@ -559,8 +561,6 @@ export var registerConfig = [
       { name: "lastSearchInfo" },
       { name: "filteredData" },
       { name: "filteredSortedData" },
-      { name: "validation" },
-      { name: "cdr" },
       { name: "virtualizationState" },
       { name: "nativeElement" },
       { name: "defaultRowHeight" },
@@ -733,17 +733,17 @@ export var registerConfig = [
       },
     ],
     additionalProperties: [
-      { name: "dimensionsSortingExpressions" },
+      { name: "gridAPI" },
       { name: "navigation", writable: true },
+      { name: "dimensionsSortingExpressions" },
       { name: "allDimensions" },
+      { name: "validation" },
+      { name: "cdr" },
       { name: "rowList" },
       { name: "dataRowList" },
       { name: "lastSearchInfo" },
       { name: "filteredData" },
       { name: "filteredSortedData" },
-      { name: "validation" },
-      { name: "gridAPI" },
-      { name: "cdr" },
       { name: "virtualizationState" },
       { name: "nativeElement" },
       { name: "defaultRowHeight" },
@@ -865,12 +865,12 @@ export var registerConfig = [
       { name: "rowIslandAPI", writable: true },
       { name: "gridAPI", writable: true },
       { name: "navigation", writable: true },
+      { name: "validation" },
+      { name: "cdr" },
       { name: "shouldGenerate", writable: true },
       { name: "rowList" },
       { name: "dataRowList" },
       { name: "transactions" },
-      { name: "validation" },
-      { name: "cdr" },
       { name: "nativeElement" },
       { name: "defaultRowHeight" },
       { name: "columns" },
@@ -1009,6 +1009,10 @@ export var registerConfig = [
       { name: "processedRootRecords", writable: true },
       { name: "processedRecords", writable: true },
       { name: "selectedCells" },
+      { name: "validation" },
+      { name: "gridAPI" },
+      { name: "cdr" },
+      { name: "navigation", writable: true },
       { name: "shouldGenerate", writable: true },
       { name: "rowList" },
       { name: "dataRowList" },
@@ -1017,10 +1021,6 @@ export var registerConfig = [
       { name: "lastSearchInfo" },
       { name: "filteredData" },
       { name: "filteredSortedData" },
-      { name: "validation" },
-      { name: "gridAPI" },
-      { name: "cdr" },
-      { name: "navigation", writable: true },
       { name: "virtualizationState" },
       { name: "nativeElement" },
       { name: "defaultRowHeight" },

@@ -1,5 +1,5 @@
-import { CurrencyPipe, formatDate as _formatDate, isPlatformBrowser } from '@angular/common';
-import { Inject, Injectable, InjectionToken, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, InjectionToken, PLATFORM_ID, inject } from '@angular/core';
 import { mergeWith } from 'lodash-es';
 import { NEVER, Observable } from 'rxjs';
 import { setImmediate } from './setImmediate';
@@ -257,6 +257,8 @@ export const clamp = (number: number, min: number, max: number) =>
  */
 @Injectable({ providedIn: 'root' })
 export class PlatformUtil {
+    private platformId = inject(PLATFORM_ID);
+
     public isBrowser: boolean = isPlatformBrowser(this.platformId);
     public isIOS = this.isBrowser && /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
     public isSafari = this.isBrowser && /Safari[\/\s](\d+\.\d+)/.test(navigator.userAgent);
@@ -292,8 +294,6 @@ export class PlatformUtil {
         Y: 'y',
         Z: 'z'
     } as const;
-
-    constructor(@Inject(PLATFORM_ID) private platformId: any) { }
 
     /**
      * @hidden @internal
@@ -598,19 +598,6 @@ export const yieldingLoop = (count: number, chunkSize: number, callback: (index:
 };
 
 export const isConstructor = (ref: any) => typeof ref === 'function' && Boolean(ref.prototype) && Boolean(ref.prototype.constructor);
-
-/**
- * Similar to Angular's formatDate. However it will not throw on `undefined | null | ''` instead
- * coalescing to an empty string.
- */
-export const formatDate = (value: string | number | Date, format: string, locale: string, timezone?: string): string => {
-    if (value === null || value === undefined || value === '') {
-        return '';
-    }
-    return _formatDate(value, format, locale, timezone);
-};
-
-export const formatCurrency = new CurrencyPipe(undefined).transform;
 
 /** Converts pixel values to their rem counterparts for a base value */
 export const rem = (value: number | string) => {

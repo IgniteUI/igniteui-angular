@@ -9,9 +9,9 @@ import {
     ViewChild,
     TemplateRef,
     OnDestroy,
-    Inject
+    inject
 } from '@angular/core';
-import { NgTemplateOutlet, DecimalPipe, DatePipe, getLocaleCurrencyCode, PercentPipe, CurrencyPipe } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import {
@@ -27,7 +27,7 @@ import { IgxGridRowComponent } from './grid-row.component';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxBadgeComponent } from 'igniteui-angular/badge';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
-import { GridColumnDataType, IGroupByRecord } from 'igniteui-angular/core';
+import { GridColumnDataType, IGroupByRecord, IgxNumberFormatterPipe, IgxDateFormatterPipe, IgxCurrencyFormatterPipe, IgxPercentFormatterPipe } from 'igniteui-angular/core';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,10 +35,10 @@ import { GridColumnDataType, IGroupByRecord } from 'igniteui-angular/core';
     templateUrl: './groupby-row.component.html',
     imports: [
         NgTemplateOutlet,
-        DecimalPipe,
-        DatePipe,
-        PercentPipe,
-        CurrencyPipe,
+        IgxNumberFormatterPipe,
+        IgxDateFormatterPipe,
+        IgxPercentFormatterPipe,
+        IgxCurrencyFormatterPipe,
         IgxIconComponent,
         IgxBadgeComponent,
         IgxCheckboxComponent,
@@ -46,6 +46,12 @@ import { GridColumnDataType, IGroupByRecord } from 'igniteui-angular/core';
     ]
 })
 export class IgxGridGroupByRowComponent implements OnDestroy {
+    public grid = inject<GridType>(IGX_GRID_BASE);
+    public gridSelection = inject(IgxGridSelectionService);
+    public element = inject(ElementRef);
+    public cdr = inject(ChangeDetectorRef);
+    public filteringService = inject(IgxFilteringService);
+
     /**
      * @hidden
      */
@@ -139,16 +145,10 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
 
     /** @hidden @internal */
     public get currencyCode(): string {
-        return this.groupRow.column.pipeArgs.currencyCode ?
-            this.groupRow.column.pipeArgs.currencyCode : getLocaleCurrencyCode(this.grid.locale);
+        return this.grid.i18nFormatter.getCurrencyCode(this.grid.locale, this.groupRow.column.pipeArgs.currencyCode);
     }
 
-    constructor(
-        @Inject(IGX_GRID_BASE) public grid: GridType,
-        public gridSelection: IgxGridSelectionService,
-        public element: ElementRef,
-        public cdr: ChangeDetectorRef,
-        public filteringService: IgxFilteringService) {
+    constructor() {
         this.gridSelection.selectedRowsChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.cdr.markForCheck();
         });

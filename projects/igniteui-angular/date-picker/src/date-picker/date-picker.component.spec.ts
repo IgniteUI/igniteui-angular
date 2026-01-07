@@ -12,9 +12,11 @@ import {
     IgxOverlayOutletDirective,
     IgxOverlayService,
     OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings,
-    WEEKDAYS
+    WEEKDAYS,
+    BaseFormatter,
+    I18N_FORMATTER
 } from 'igniteui-angular/core';
-import { Component, DebugElement, ElementRef, EventEmitter, QueryList, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, Injector, QueryList, Renderer2, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../../../core/src/date-common/types';
 import { DatePart } from '../../../core/src/date-common/public_api';
@@ -497,7 +499,7 @@ describe('IgxDatePicker', () => {
                 flush();
             }));
 
-            it('Should passing invalid value for locale, then setting weekStart must be respected.', fakeAsync(() => {
+            it('Should throw error when passing invalid value for locale', fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxDatePickerReactiveFormComponent);
                 fixture.detectChanges();
                 datePicker = fixture.componentInstance.datePicker;
@@ -508,6 +510,7 @@ describe('IgxDatePicker', () => {
 
                 expect(datePicker.locale).toEqual(locale);
                 expect(datePicker.weekStart).toEqual(WEEKDAYS.SUNDAY)
+
 
                 datePicker.locale = 'frrr';
                 datePicker.weekStart = WEEKDAYS.FRIDAY;
@@ -904,7 +907,6 @@ describe('IgxDatePicker', () => {
             });
 
             mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
-
             mockCalendar = { selected: new EventEmitter<any>(), selectDate: () => {} };
             const mockComponentInstance = {
                 calendar: mockCalendar,
@@ -1015,7 +1017,18 @@ describe('IgxDatePicker', () => {
                 },
                 focus: () => { }
             };
-            datePicker = new IgxDatePickerComponent(elementRef, 'en-US', overlay, mockInjector, renderer2, null, mockCdr);
+            TestBed.configureTestingModule({
+                providers: [
+                    { provide: ElementRef, useValue: elementRef },
+                    { provide: IgxOverlayService, useValue: overlay },
+                    { provide: Injector, useValue: mockInjector },
+                    { provide: Renderer2, useValue: renderer2 },
+                    { provide: ChangeDetectorRef, useValue: mockCdr },
+                    IgxDatePickerComponent
+                ]
+            });
+
+            datePicker = TestBed.inject(IgxDatePickerComponent);
             (datePicker as any).inputGroup = mockInputGroup;
             (datePicker as any).inputDirective = mockInputDirective;
             (datePicker as any).dateTimeEditor = mockDateEditor;

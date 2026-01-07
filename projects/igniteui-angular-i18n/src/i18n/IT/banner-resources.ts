@@ -1,9 +1,7 @@
-import { IBannerResourceStrings } from 'igniteui-angular/core';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { BannerResourceStringsIT as ABannerResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Italian resource strings for IgxBanner
  */
-export const BannerResourceStringsIT = {
-    igx_banner_button_dismiss: 'Elimina'
-} satisfies MakeRequired<IBannerResourceStrings>;
+export const BannerResourceStringsIT = prefixResource(IGX_PREFIX, ABannerResourceStrings);

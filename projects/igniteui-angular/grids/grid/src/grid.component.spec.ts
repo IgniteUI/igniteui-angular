@@ -1,7 +1,4 @@
-import {
-    AfterViewInit, ChangeDetectorRef, Component, Injectable,
-    OnInit, ViewChild, TemplateRef
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, TemplateRef, inject } from '@angular/core';
 import { TestBed, fakeAsync, tick, flush, waitForAsync } from '@angular/core/testing';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
@@ -2173,6 +2170,38 @@ describe('IgxGrid Component Tests #grid', () => {
                 // first column takes new min
                 expect(col1.calcPixelWidth).toBe(500);
             });
+
+            it('in columns with no width and min-widths should recalculate and re-apply constraints to all cols.', () => {
+                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+                // 3 cols
+                fix.componentInstance.initColumnsRows(5, 3);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                grid.columns[0].minWidth = "80px";
+                grid.columns[1].minWidth = "90px";
+                grid.columns[2].minWidth = "130px";
+
+                grid.width = "300px";
+                fix.detectChanges();
+
+                expect(grid.columns[0].calcWidth).toBe(80);
+                expect(grid.columns[1].calcWidth).toBe(90);
+                expect(grid.columns[2].calcWidth).toBe(130);
+
+                expect(grid.hasHorizontalScroll()).toBe(false);
+                expect(grid.isHorizontalScrollHidden).toBe(true);
+
+                grid.width = "290px";
+                fix.detectChanges();
+
+                expect(grid.columns[0].calcWidth).toBe(80);
+                expect(grid.columns[1].calcWidth).toBe(90);
+                expect(grid.columns[2].calcWidth).toBe(130);
+
+                expect(grid.hasHorizontalScroll()).toBe(true);
+                expect(grid.isHorizontalScrollHidden).toBe(false);
+            });
         });
 
 
@@ -3228,6 +3257,8 @@ describe('IgxGrid Component Tests #grid', () => {
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridTestComponent {
+    public cdr = inject(ChangeDetectorRef);
+
     @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
     public data: any[] = [{ index: 1, value: 1 }];
     public columns = [
@@ -3240,8 +3271,6 @@ export class IgxGridTestComponent {
     public autoGenerateExclude = [];
 
     public columnEventCount = 0;
-
-    constructor(public cdr: ChangeDetectorRef) { }
 
     public columnCreated(column: IgxColumnComponent) {
         this.columnEventCount++;
@@ -3618,10 +3647,12 @@ export class LocalService {
     imports: [IgxGridComponent, IgxColumnComponent, AsyncPipe]
 })
 export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewInit {
+    private localService = inject(LocalService);
+    public cdr = inject(ChangeDetectorRef);
+
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
     public data;
-    constructor(private localService: LocalService, public cdr: ChangeDetectorRef) { }
     public ngOnInit(): void {
         this.data = this.localService.records;
     }
@@ -3661,13 +3692,15 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
     imports: [IgxGridComponent, IgxGridEmptyTemplateDirective, IgxGridLoadingTemplateDirective, AsyncPipe]
 })
 export class IgxGridRemoteOnDemandComponent {
+    private localService = inject(LocalService);
+    public cdr = inject(ChangeDetectorRef);
+
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
     @ViewChild('customTemplate', { read: TemplateRef, static: true })
     public customTemplate: TemplateRef<any>;
     public data;
     public customLoading = false;
-    constructor(private localService: LocalService, public cdr: ChangeDetectorRef) { }
 
     public bind() {
         this.data = this.localService.records;

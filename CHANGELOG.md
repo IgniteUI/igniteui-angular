@@ -2,25 +2,27 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 21.0.0
+## 21.1.0
 
-### Themes
+# Localization(i18n)
 
-- `IgxButton`
-    - **Breaking Change**
-        - The following shadow-related parameters were removed from the `outlined-button-theme` and `flat-button-theme`:
-            - `resting-shadow`
-            - `hover-shadow`
-            - `focus-shadow`
-            - `active-shadow`
+- `IgxActionStrip`, `IgxBanner`, `IgxCalendar`, `IgxCarousel`, `IgxChip`, `IgxCombo`, `IgxDatePicker`, `IgxDateRangePicker`, `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`, `IgxInputs`, `IgxList`, `IgxPaginator`, `IgxQueryBuilder`, `IgxTimePicker`, `IgxTree`
+  - New `Intl` implementation for all currently supported components that format and render data like dates and numbers.
+  - New localization implementation for the currently supported languages for all components that have resource strings in the currently supported languages.
+  - New public localization API and package named `igniteui-i18n-resources` containing the new resources that are used in conjunction.
+  - Added API to toggle off Angular's default formatting completely in favor of the new `Intl` implementation. Otherwise `Intl` will be used when a locale is not defined for Angular to use.
+  - Old resources and API should still remain working and not experience any change in behavior, despite internally using the new localization as well.
 
 ## 21.0.0
 
 ### New Features
 
+- **New component** `IgxChat`:
+    - A component that provides complete solution for building conversational interfaces in your applications. Read up more information in the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/chat/README.md)
+
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Added PDF export functionality to grid components. Grids can now be exported to PDF format alongside the existing Excel and CSV export options.
-    
+
         The new `IgxPdfExporterService` follows the same pattern as Excel and CSV exporters:
 
         ```ts
@@ -60,8 +62,20 @@ All notable changes for each version of this project will be documented in this 
         - **Landscape orientation** by default (suitable for wide grids)
         - **Internationalization** support for all 19 supported languages
         - Respects all grid export options (ignoreFiltering, ignoreSorting, ignoreColumnsVisibility, etc.)
-        
+
 ### Breaking Changes
+
+- `IgxButton`
+    - The following shadow-related parameters were removed from the `outlined-button-theme` and `flat-button-theme`:
+        - `resting-shadow`
+        - `hover-shadow`
+        - `focus-shadow`
+        - `active-shadow`
+
+#### Dependency Injection Refactor
+- All internal DI now uses the `inject()` API across `igniteui-angular` (no more constructor DI in library code).
+- If you extend our components/services or call their constructors directly, remove DI params and switch to `inject()` (e.g., `protected foo = inject(FooService);`).
+- App usage via templates remains the same; no action needed unless you subclass/override our types.
 
 #### Multiple Entry Points Support
 
@@ -83,7 +97,7 @@ The `ng update` migration will prompt you to optionally migrate your imports to 
 
 To migrate manually later:
 ```bash
-ng update igniteui-angular --migrate-only --from=20.1.0 --to=21.0.0 --migrate-imports
+ng update igniteui-angular --migrate-only --from=20.1.0 --to=21.0.0
 ```
 
 **Component Relocations:**
@@ -106,7 +120,6 @@ See the [Angular Package Format documentation](https://angular.io/guide/angular-
 ## 20.1.0
 
 ### New Features
-
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Introduced a new cell merging feature that allows you to configure and merge cells in a column based on same data or other custom condition, into a single cell.
 

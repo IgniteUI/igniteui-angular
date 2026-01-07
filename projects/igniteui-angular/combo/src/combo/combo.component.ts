@@ -1,8 +1,5 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import {
-    AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy, DOCUMENT,
-    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck, booleanAttribute,
-} from '@angular/core';
+import { AfterViewInit, Component, OnInit, OnDestroy, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck, booleanAttribute } from '@angular/core';
 
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -10,11 +7,9 @@ import {
     IBaseEventArgs,
     IBaseCancelableEventArgs,
     CancelableEventArgs,
-    IgxSelectionAPIService,
     EditorProvider
 } from 'igniteui-angular/core';
 import { IgxForOfDirective } from 'igniteui-angular/directives';
-import { IgxIconService } from 'igniteui-angular/icon';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxComboItemComponent } from './combo-item.component';
@@ -23,7 +18,7 @@ import { IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
 import { IGX_COMBO_COMPONENT, IgxComboBaseDirective } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
-import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE, IgxInputGroupComponent, IgxInputDirective, IgxReadOnlyInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IgxInputGroupComponent, IgxInputDirective, IgxReadOnlyInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxDropDownItemNavigationDirective } from 'igniteui-angular/drop-down';
 
@@ -177,17 +172,8 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     private _displayText: string;
 
-    constructor(
-        elementRef: ElementRef,
-        cdr: ChangeDetectorRef,
-        selectionService: IgxSelectionAPIService,
-        comboAPI: IgxComboAPIService,
-        @Inject(DOCUMENT) document: any,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
-        @Optional() _injector: Injector,
-        @Optional() @Inject(IgxIconService) _iconService?: IgxIconService,
-    ) {
-        super(elementRef, cdr, selectionService, comboAPI, document, _inputGroupType, _injector, _iconService);
+    constructor() {
+        super();
         this.comboAPI.register(this);
     }
 

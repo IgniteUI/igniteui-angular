@@ -1,9 +1,8 @@
-import { Component, Input, Output, EventEmitter, Inject, booleanAttribute } from '@angular/core';
+import { Component, Input, Output, EventEmitter, booleanAttribute, inject } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { BaseToolbarDirective } from './grid-toolbar.base';
 import { IgxExcelTextDirective, IgxCSVTextDirective, IgxPdfTextDirective } from './common';
 import { GridType } from '../common/grid.interface';
-import { IgxToolbarToken } from './token';
 import { IgxButtonDirective, IgxRippleDirective, IgxToggleDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { CsvFileTypes, IgxCsvExporterOptions } from '../services/csv/csv-exporter-options';
@@ -49,6 +48,9 @@ export interface IgxExporterEvent {
     imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent, IgxToggleDirective, IgxExcelTextDirective, IgxCSVTextDirective, IgxPdfTextDirective]
 })
 export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
+    private excelExporter = inject(IgxExcelExporterService);
+    private csvExporter = inject(IgxCsvExporterService);
+    private pdfExporter = inject(IgxPdfExporterService);
 
     /**
      * Show entry for CSV export.
@@ -91,15 +93,6 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
      * Indicates whether there is an export in progress.
      */
     protected isExporting = false;
-
-    constructor(
-        @Inject(IgxToolbarToken) toolbar: IgxToolbarToken,
-        private excelExporter: IgxExcelExporterService,
-        private csvExporter: IgxCsvExporterService,
-        private pdfExporter: IgxPdfExporterService,
-    ) {
-        super(toolbar);
-    }
 
     protected exportClicked(type: 'excel' | 'csv' | 'pdf', toggleRef?: IgxToggleDirective) {
         toggleRef?.close();
