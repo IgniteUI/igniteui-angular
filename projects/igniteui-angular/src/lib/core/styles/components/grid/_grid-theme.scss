@@ -35,7 +35,7 @@
     ), $variant);
     $cbx-bs-size: rem(14px);
 
-    $grid-shadow: var-get($theme, 'grid-shadow');
+    $grid-shadow: var-get($theme, 'grid-elevation');
 
     $grid-caption-fs: rem(20px);
     $grid-caption-lh: rem(32px);
@@ -893,7 +893,7 @@
             @include css-vars((
                 name: 'igx-grid-row',
                 row-ghost-background: map.get($theme, 'row-ghost-background'),
-                row-drag-color: map.get($theme, 'row-drago-color')
+                row-drag-color: map.get($theme, 'row-drag-color')
             ));
         }
     }
@@ -1005,7 +1005,11 @@
         }
 
         %igx-icon--error {
-            color: color($color: 'gray', $variant: 500);
+            @if $variant == 'indigo' or $theme-variant == 'dark' {
+                color: color($color: 'gray', $variant: 500);
+            } @else {
+                color: color($color: 'gray', $variant: 600);
+            }
         }
     }
 
@@ -1913,7 +1917,7 @@
         top: rem(-99999px);
         inset-inline-start: rem(-99999px);
         border: none;
-        box-shadow: var-get($theme, 'drag-shadow');
+        box-shadow: var-get($theme, 'drag-elevation');
         overflow: hidden;
         z-index: 20;
 

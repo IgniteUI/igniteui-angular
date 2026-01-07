@@ -217,6 +217,12 @@ $input-bottom-spacing: rem(6px);
         }
     }
 
+    @include mx(focused, filled) {
+        @include e(toggle-button) {
+            color: var(--toggle-button-foreground-filled);
+        }
+    }
+
     @include mx(base, valid) {
         @include e(bundle) {
             &::before {

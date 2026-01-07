@@ -23,13 +23,4 @@ $_theme: $fluent;
             margin: 0;
         }
     }
-
-    @include m(base) {
-        border-bottom: var-get($_theme, 'border-width') solid
-            var-get($_theme, 'border-color');
-
-        &:last-of-type {
-            border-bottom: none;
-        }
-    }
 }

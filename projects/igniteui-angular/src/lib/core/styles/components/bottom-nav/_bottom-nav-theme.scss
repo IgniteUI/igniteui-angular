@@ -43,13 +43,13 @@
     %igx-bottom-nav-menu--top {
         inset-block-start: 0;
         inset-block-end: inherit;
-        box-shadow: var-get($theme, 'shadow');
+        box-shadow: var-get($theme, 'elevation');
     }
 
     %igx-bottom-nav-menu--bottom {
         inset-block-start: inherit;
         inset-block-end: 0;
-        box-shadow: var-get($theme, 'shadow');
+        box-shadow: var-get($theme, 'elevation');
     }
 
     %igx-bottom-nav-menu-item {

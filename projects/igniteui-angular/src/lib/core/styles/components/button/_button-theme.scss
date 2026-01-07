@@ -195,7 +195,7 @@
 
         $contained-shadow: map.get(
             (
-                'material': var-get($contained-theme, 'resting-shadow'),
+                'material': var-get($contained-theme, 'resting-elevation'),
                 'fluent': none,
                 'bootstrap': none,
                 'indigo': none,
@@ -205,7 +205,7 @@
 
         $contained-shadow--hover: map.get(
             (
-                'material': var-get($contained-theme, 'hover-shadow'),
+                'material': var-get($contained-theme, 'hover-elevation'),
                 'fluent': none,
                 'bootstrap': none,
                 'indigo': none,
@@ -215,9 +215,8 @@
 
         $contained-shadow--focus: map.get(
             (
-                'material': var-get($contained-theme, 'focus-shadow'),
-                'fluent': 0 0 0 rem(3px)
-                    var-get($contained-theme, 'shadow-color'),
+                'material': var-get($contained-theme, 'focus-elevation'),
+                'fluent': none,
                 'bootstrap': 0 0 0 rem(4px)
                     var-get($contained-theme, 'shadow-color'),
                 'indigo': 0 0 0 rem(3px)
@@ -228,9 +227,8 @@
 
         $contained-shadow--active: map.get(
             (
-                'material': var-get($contained-theme, 'active-shadow'),
-                'fluent': 0 0 0 rem(3px)
-                    var-get($contained-theme, 'shadow-color'),
+                'material': var-get($contained-theme, 'active-elevation'),
+                'fluent': none,
                 'bootstrap': 0 0 0 rem(4px)
                     var-get($contained-theme, 'shadow-color'),
                 'indigo': 0 0 0 rem(3px)
@@ -241,7 +239,7 @@
 
         $fab-shadow: map.get(
             (
-                'material': var-get($fab-theme, 'resting-shadow'),
+                'material': var-get($fab-theme, 'resting-elevation'),
                 'fluent': none,
                 'bootstrap': none,
                 'indigo': none,
@@ -251,7 +249,7 @@
 
         $fab-shadow--hover: map.get(
             (
-                'material': var-get($fab-theme, 'hover-shadow'),
+                'material': var-get($fab-theme, 'hover-elevation'),
                 'fluent': none,
                 'bootstrap': none,
                 'indigo': none,
@@ -261,8 +259,8 @@
 
         $fab-shadow--focus: map.get(
             (
-                'material': var-get($fab-theme, 'focus-shadow'),
-                'fluent': 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
+                'material': var-get($fab-theme, 'focus-elevation'),
+                'fluent': none,
                 'bootstrap': 0 0 0 rem(4px) var-get($fab-theme, 'shadow-color'),
                 'indigo': 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
             ),
@@ -271,8 +269,8 @@
 
         $fab-shadow--active: map.get(
             (
-                'material': var-get($fab-theme, 'active-shadow'),
-                'fluent': 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
+                'material': var-get($fab-theme, 'active-elevation'),
+                'fluent': none,
                 'bootstrap': 0 0 0 rem(4px) var-get($fab-theme, 'shadow-color'),
                 'indigo': 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
             ),
@@ -331,11 +329,9 @@
 
             igx-icon {
                 --component-size: var(--ig-size, var(--ig-size-large));
+                --igx-icon-size: #{$icon-in-button-size};
                 display: flex;
                 justify-content: center;
-                width: var(--igx-icon-size, #{$icon-in-button-size});
-                height: var(--igx-icon-size, #{$icon-in-button-size});
-                font-size: var(--igx-icon-size, #{$icon-in-button-size});
                 transition: $button-transition;
             }
         }
@@ -416,7 +412,11 @@
             border-color: var-get($flat-theme, 'focus-visible-border-color');
 
             igx-icon {
-                color: var-get($flat-theme, 'icon-color');
+                @if $variant == 'material' {
+                    color: var-get($flat-theme, 'icon-color-hover');
+                } @else {
+                    color: var-get($flat-theme, 'icon-color');
+                }
             }
 
             @if $variant == 'bootstrap' {
@@ -439,12 +439,6 @@
 
             @if $variant == 'indigo' {
                 box-shadow: 0 0 0 rem(3px) var-get($flat-theme, 'shadow-color');
-
-                &:active {
-                    igx-icon {
-                        color: var-get($flat-theme, 'icon-color-hover');
-                    }
-                }
             }
 
             &:hover {
@@ -459,9 +453,14 @@
             &:active {
                 background: var-get($flat-theme, 'focus-background');
                 color: var-get($flat-theme, 'focus-foreground');
+                border-color: var-get($flat-theme, 'focus-border-color');
 
                 igx-icon {
-                    color: var-get($flat-theme, 'focus-foreground');
+                    @if $variant == 'indigo' {
+                        color: var-get($flat-theme, 'icon-color-hover');
+                    } @else {
+                        color: var-get($flat-theme, 'focus-foreground');
+                    }
                 }
             }
         }
@@ -539,9 +538,16 @@
                 'focus-visible-border-color'
             );
 
-            igx-icon {
-                color: var-get($outlined-theme, 'focus-visible-foreground');
+            @if $variant == 'material' or $variant == 'bootstrap' {
+                igx-icon {
+                    color: var-get($outlined-theme, 'icon-color-hover');
+                }
+            } @else {
+                igx-icon {
+                    color: var-get($outlined-theme, 'icon-color');
+                }
             }
+
 
             @if $variant == 'bootstrap' {
                 box-shadow: 0
@@ -555,10 +561,6 @@
                     0
                     rem(3px)
                     var-get($outlined-theme, 'shadow-color');
-
-                igx-icon {
-                    color: var-get($outlined-theme, 'icon-color');
-                }
             }
 
             &:hover {
@@ -574,7 +576,11 @@
             &:active {
                 background: var-get($outlined-theme, 'focus-background');
                 color: var-get($outlined-theme, 'focus-foreground');
-                border-color: var-get($outlined-theme, 'active-border-color');
+                border-color: var-get($outlined-theme, 'focus-border-color');
+
+                igx-icon {
+                    color: var-get($outlined-theme, 'focus-foreground');
+                }
 
                 @if $variant == 'indigo' {
                     igx-icon {
@@ -607,7 +613,10 @@
             background: var-get($contained-theme, 'background');
             border-color: var-get($contained-theme, 'border-color');
             border-radius: var-get($contained-theme, 'border-radius');
-            box-shadow: var-get($contained-theme, 'resting-shadow');
+
+            @if $variant == 'material' {
+                box-shadow: var-get($contained-theme, 'resting-elevation');
+            }
 
             igx-icon {
                 color: var-get($contained-theme, 'icon-color');
@@ -617,7 +626,10 @@
                 color: var-get($contained-theme, 'hover-foreground');
                 background: var-get($contained-theme, 'hover-background');
                 border-color: var-get($contained-theme, 'hover-border-color');
-                box-shadow: var-get($contained-theme, 'hover-shadow');
+
+                @if $variant == 'material' {
+                    box-shadow: var-get($contained-theme, 'hover-elevation');
+                }
 
                 igx-icon {
                     color: var-get($contained-theme, 'icon-color-hover');
@@ -628,7 +640,10 @@
                 color: var-get($contained-theme, 'active-foreground');
                 background: var-get($contained-theme, 'active-background');
                 border-color: var-get($contained-theme, 'active-border-color');
-                box-shadow: var-get($contained-theme, 'active-shadow');
+
+                @if $variant == 'material' {
+                    box-shadow: var-get($contained-theme, 'active-elevation');
+                }
 
                 igx-icon {
                     color: var-get($contained-theme, 'active-foreground');
@@ -664,7 +679,7 @@
             }
 
             @if $variant == 'material' {
-                box-shadow: var-get($contained-theme, 'focus-shadow');
+                box-shadow: var-get($contained-theme, 'focus-elevation');
             } @else {
                 box-shadow: $contained-shadow--active;
             }
@@ -693,13 +708,18 @@
                 }
 
                 @if $variant == 'material' {
-                    box-shadow: var-get($contained-theme, 'focus-shadow');
+                    box-shadow: var-get($contained-theme, 'focus-elevation');
                 }
             }
 
             &:active {
                 color: var-get($contained-theme, 'focus-foreground');
                 background: var-get($contained-theme, 'focus-background');
+                border-color: var-get($contained-theme, 'focus-border-color');
+
+                igx-icon {
+                    color: var-get($outlined-theme, 'focus-foreground');
+                }
 
                 @if $variant == 'indigo' {
                     igx-icon {
@@ -760,7 +780,10 @@
             background: var-get($fab-theme, 'background');
             border-color: var-get($fab-theme, 'border-color');
             border-radius: var-get($fab-theme, 'border-radius');
-            box-shadow: var-get($fab-theme, 'resting-shadow');
+
+            @if $variant == 'material' {
+                box-shadow: var-get($fab-theme, 'resting-elevation');
+            }
 
             igx-icon {
                 color: var-get($fab-theme, 'icon-color');
@@ -770,7 +793,10 @@
                 color: var-get($fab-theme, 'hover-foreground');
                 background: var-get($fab-theme, 'hover-background');
                 border-color: var-get($fab-theme, 'hover-border-color');
-                box-shadow: var-get($fab-theme, 'hover-shadow');
+
+                @if $variant == 'material' {
+                    box-shadow: var-get($fab-theme, 'hover-elevation');
+                }
 
                 igx-icon {
                     color: var-get($fab-theme, 'icon-color-hover');
@@ -781,7 +807,10 @@
                 color: var-get($fab-theme, 'active-foreground');
                 background: var-get($fab-theme, 'active-background');
                 border-color: var-get($fab-theme, 'active-border-color');
-                box-shadow: var-get($fab-theme, 'active-shadow');
+
+                @if $variant == 'material' {
+                    box-shadow: var-get($fab-theme, 'active-elevation');
+                }
 
                 igx-icon {
                     color: var-get($fab-theme, 'active-foreground');
@@ -805,7 +834,7 @@
             }
 
             @if $variant == 'material' {
-                box-shadow: var-get($fab-theme, 'focus-shadow');
+                box-shadow: var-get($fab-theme, 'focus-elevation');
             } @else {
                 box-shadow: $contained-shadow--focus;
             }
@@ -840,10 +869,15 @@
             &:active {
                 background: var-get($fab-theme, 'focus-background');
                 color: var-get($fab-theme, 'focus-foreground');
+                border-color: var-get($fab-theme, 'focus-border-color');
 
                 @if $variant == 'indigo' {
                     igx-icon {
                         color: var-get($outlined-theme, 'icon-color-hover');
+                    }
+                } @else {
+                    igx-icon {
+                        color: var-get($outlined-theme, 'focus-foreground');
                     }
                 }
             }

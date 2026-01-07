@@ -31,10 +31,10 @@
     }
 
     %igx-card--elevated {
-        box-shadow: var-get($theme, 'resting-shadow');
+        box-shadow: var-get($theme, 'resting-elevation');
 
         &:hover {
-            box-shadow: var-get($theme, 'hover-shadow');
+            box-shadow: var-get($theme, 'hover-elevation');
         }
 
         @if $not-material-theme {

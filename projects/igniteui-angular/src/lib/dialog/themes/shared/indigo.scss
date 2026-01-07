@@ -7,6 +7,10 @@
     --message-padding: #{rem(16px) rem(24px)};
     --actions-padding: #{rem(16px) rem(24px) rem(24px) rem(24px)};
 
+    @include e(window-title) {
+        @include type-style(h5);
+    }
+
     @include e(window-actions) {
         gap: rem(16px);
     }

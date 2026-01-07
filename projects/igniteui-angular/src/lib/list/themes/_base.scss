@@ -66,38 +66,6 @@ $theme: $base;
             --ig-size: 1;
         }
 
-        &:hover {
-            @include e(lines) {
-                color: currentColor;
-            }
-
-            @include e(title) {
-                color: var-get($theme, 'item-title-color-hover');
-            }
-
-            @include e(subtitle) {
-                color: var-get($theme, 'item-subtitle-color-hover');
-            }
-
-            @include e(actions) {
-                color: var-get($theme, 'item-action-color-hover');
-
-                igx-icon,
-                igc-icon {
-                    color: var-get($theme, 'item-action-color-hover');
-                }
-            }
-
-            @include e(thumbnail) {
-                color: var-get($theme, 'item-thumbnail-color-hover');
-
-                igx-icon,
-                igc-icon {
-                    color: var-get($theme, 'item-thumbnail-color-hover');
-                }
-            }
-        }
-
         @include e(thumbnail) {
             display: flex;
             align-items: center;
@@ -110,6 +78,11 @@ $theme: $base;
             > igx-icon,
             > igc-icon {
                 --component-size: var(--list-size);
+            }
+
+            igx-avatar igx-icon,
+            igx-avatar igc-icon {
+                color: var-get($theme, 'item-thumbnail-color');
             }
 
             &:empty {
@@ -140,7 +113,8 @@ $theme: $base;
                 display: none;
             }
 
-            > * {
+            > *,
+            [class^='igx'] {
                 --component-size: var(--list-size);
             }
 
@@ -178,12 +152,6 @@ $theme: $base;
             border-radius: var-get($theme, 'item-border-radius');
             z-index: 2;
             gap: rem(16px);
-
-            &:hover,
-            &:focus-within {
-                color: var-get($theme, 'item-text-color-hover');
-                background: var-get($theme, 'item-background-hover');
-            }
         }
 
         @include e(left) {
@@ -209,38 +177,118 @@ $theme: $base;
 
         @include m(base) {
             border-radius: var-get($theme, 'item-border-radius');
-        }
+            border-bottom: var-get($theme, 'border-width') solid
+                var-get($theme, 'border-color');
 
-        @include m(active) {
-            @include e(content) {
-                color: var-get($theme, 'item-text-color-active');
-                background: var-get($theme, 'item-background-active');
-                z-index: 3;
+            &:last-of-type {
+                border-bottom: none;
             }
 
-            @include e(thumbnail) {
-                color: var-get($theme, 'item-thumbnail-color-active');
+            &:hover {
+                @include e(lines) {
+                    color: currentColor;
+                }
 
-                igx-icon,
-                igc-icon {
-                    color: var-get($theme, 'item-thumbnail-color-active');
+                @include e(content) {
+                    color: var-get($theme, 'item-text-color-hover');
+                    background: var-get($theme, 'item-background-hover');
+                }
+
+                @include e(title) {
+                    color: var-get($theme, 'item-title-color-hover');
+                }
+
+                @include e(subtitle) {
+                    color: var-get($theme, 'item-subtitle-color-hover');
+                }
+
+                @include e(actions) {
+                    color: var-get($theme, 'item-action-color-hover');
+
+                    igx-icon,
+                    igc-icon {
+                        color: var-get($theme, 'item-action-color-hover');
+                    }
+                }
+
+                @include e(thumbnail) {
+                    color: var-get($theme, 'item-thumbnail-color-hover');
+
+                    igx-icon,
+                    igc-icon {
+                        color: var-get($theme, 'item-thumbnail-color-hover');
+                    }
                 }
             }
 
-            @include e(title) {
-                color: var-get($theme, 'item-title-color-active');
+            &:focus-within {
+                @include e(lines) {
+                    color: currentColor;
+                }
+
+                @include e(content) {
+                    color: var-get($theme, 'item-text-color-hover');
+                    background: var-get($theme, 'item-background-hover');
+                }
+
+                @include e(title) {
+                    color: var-get($theme, 'item-title-color-hover');
+                }
+
+                @include e(subtitle) {
+                    color: var-get($theme, 'item-subtitle-color-hover');
+                }
+
+                @include e(actions) {
+                    color: var-get($theme, 'item-action-color-hover');
+
+                    igx-icon,
+                    igc-icon {
+                        color: var-get($theme, 'item-action-color-hover');
+                    }
+                }
+
+                @include e(thumbnail) {
+                    color: var-get($theme, 'item-thumbnail-color-hover');
+
+                    igx-icon,
+                    igc-icon {
+                        color: var-get($theme, 'item-thumbnail-color-hover');
+                    }
+                }
             }
 
-            @include e(subtitle) {
-                color: var-get($theme, 'item-subtitle-color-active');
-            }
+            &:active {
+                @include e(content) {
+                    color: var-get($theme, 'item-text-color-active');
+                    background: var-get($theme, 'item-background-active');
+                    z-index: 3;
+                }
 
-            @include e(actions) {
-                color: var-get($theme, 'item-action-color-active');
+                @include e(thumbnail) {
+                    color: var-get($theme, 'item-thumbnail-color-active');
 
-                igx-icon,
-                igc-icon {
+                    igx-icon,
+                    igc-icon {
+                        color: var-get($theme, 'item-thumbnail-color-active');
+                    }
+                }
+
+                @include e(title) {
+                    color: var-get($theme, 'item-title-color-active');
+                }
+
+                @include e(subtitle) {
+                    color: var-get($theme, 'item-subtitle-color-active');
+                }
+
+                @include e(actions) {
                     color: var-get($theme, 'item-action-color-active');
+
+                    igx-icon,
+                    igc-icon {
+                        color: var-get($theme, 'item-action-color-active');
+                    }
                 }
             }
         }
@@ -275,6 +323,72 @@ $theme: $base;
                 igx-icon,
                 igc-icon {
                     color: var-get($theme, 'item-action-color-selected');
+                }
+            }
+
+            &:hover {
+                @include e(content) {
+                    color: var-get($theme, 'item-text-color-selected');
+                    background: var-get($theme, 'item-background-selected');
+                }
+
+                @include e(thumbnail) {
+                    color: var-get($theme, 'item-thumbnail-color-selected');
+
+                    igx-icon,
+                    igc-icon {
+                        color: var-get($theme, 'item-thumbnail-color-selected');
+                    }
+                }
+
+                @include e(title) {
+                    color: var-get($theme, 'item-title-color-selected');
+                }
+
+                @include e(subtitle) {
+                    color: var-get($theme, 'item-subtitle-color-selected');
+                }
+
+                @include e(actions) {
+                    color: var-get($theme, 'item-action-color-selected');
+
+                    igx-icon,
+                    igc-icon {
+                        color: var-get($theme, 'item-action-color-selected');
+                    }
+                }
+            }
+
+            &:focus-within {
+                @include e(content) {
+                    color: var-get($theme, 'item-text-color-selected');
+                    background: var-get($theme, 'item-background-selected');
+                }
+
+                @include e(thumbnail) {
+                    color: var-get($theme, 'item-thumbnail-color-selected');
+
+                    igx-icon,
+                    igc-icon {
+                        color: var-get($theme, 'item-thumbnail-color-selected');
+                    }
+                }
+
+                @include e(title) {
+                    color: var-get($theme, 'item-title-color-selected');
+                }
+
+                @include e(subtitle) {
+                    color: var-get($theme, 'item-subtitle-color-selected');
+                }
+
+                @include e(actions) {
+                    color: var-get($theme, 'item-action-color-selected');
+
+                    igx-icon,
+                    igc-icon {
+                        color: var-get($theme, 'item-action-color-selected');
+                    }
                 }
             }
         }

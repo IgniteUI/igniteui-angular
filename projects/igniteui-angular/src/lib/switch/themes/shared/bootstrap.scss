@@ -49,6 +49,12 @@ $_theme: $bootstrap;
         @include e(thumb) {
             background: var-get($_theme, 'thumb-on-color');
         }
+
+        &:hover {
+            @include e(composite) {
+                border-color: var-get($_theme, 'border-on-hover-color');
+            }
+        }
     }
 
     @include mx(disabled, checked) {

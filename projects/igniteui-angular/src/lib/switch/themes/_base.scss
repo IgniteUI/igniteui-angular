@@ -84,7 +84,7 @@ $_theme: $material;
             }
 
             @include e(thumb) {
-                background: var-get($_theme, 'border-hover-color');
+                background: var-get($_theme, 'thumb-off-hover-color');
             }
 
             @include e(label) {

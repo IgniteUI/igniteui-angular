@@ -12,7 +12,7 @@ $_theme: $material;
     --switch-height: #{rem(14px)};
     --switch-thumb-size: #{rem(20px)};
     --switch-on-offset: #{rem(1px)};
-    --switch-off-offset: 0;
+    --switch-off-offset: #{rem(-1px)};
     --label-margin: #{rem(12px)};
 
     @include e(label) {
@@ -21,22 +21,15 @@ $_theme: $material;
         }
     }
 
-    @include e(composite) {
-        border-width: 0;
-    }
-
     @include e(ripple) {
         display: block;
     }
 
     @include e(thumb) {
         box-shadow: var-get($_theme, 'resting-elevation');
-    }
 
-    &:hover {
-        @include e(thumb) {
-            background: var-get($_theme, 'thumb-off-color');
-            box-shadow: var-get($_theme, 'resting-elevation');
+        &:hover {
+            box-shadow: var-get($_theme, 'hover-elevation');
         }
     }
 

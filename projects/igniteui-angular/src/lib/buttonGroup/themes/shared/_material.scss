@@ -77,12 +77,12 @@ $_theme: $material;
         &:active {
             @extend %item-overlay;
 
-            color: var-get($_theme, 'item-selected-text-color');
+            color: var-get($_theme, 'item-selected-hover-text-color');
             background: var-get($_theme, 'item-selected-background');
             border-color: var-get($_theme, 'item-selected-border-color');
 
             igx-icon {
-                color: var-get($_theme, 'item-selected-icon-color');
+                color: var-get($_theme, 'item-selected-hover-icon-color');
             }
 
             &::before {
@@ -119,6 +119,11 @@ $_theme: $material;
 
             &:active {
                 background: var-get($_theme, 'item-selected-background');
+                color: var-get($_theme, 'item-selected-hover-text-color');
+
+                igx-icon {
+                    color: var-get($_theme, 'item-selected-hover-icon-color');
+                }
             }
         }
     }

@@ -7,4 +7,8 @@
     --title-padding: #{rem(16px) rem(24px) rem(24px) rem(24px)};
     --message-padding: #{0 rem(24px) rem(20px) rem(24px)};
     --actions-padding: #{0 rem(24px) rem(24px) rem(24px)};
+
+    @include e(window-content) {
+        @include type-style(body-2);
+    }
 }

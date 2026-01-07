@@ -6,7 +6,7 @@
 $_theme: $bootstrap;
 
 @include themed-block(igx-list, bootstrap) {
-    border: rem(1px) solid var-get($_theme, 'border-color');
+    border: var-get($_theme, 'border-width') solid var-get($_theme, 'border-color');
 }
 
 @include themed-block(igx-list-item, bootstrap) {
@@ -25,15 +25,6 @@ $_theme: $bootstrap;
     @include e(subtitle) {
         @include type-style(body-2) {
             margin: 0;
-        }
-    }
-
-    @include m(base) {
-        border-bottom: var-get($_theme, 'border-width') solid
-            var-get($_theme, 'border-color');
-
-        &:last-of-type {
-            border-bottom: none;
         }
     }
 }
