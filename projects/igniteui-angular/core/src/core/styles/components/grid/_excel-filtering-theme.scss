@@ -172,7 +172,9 @@
 
             %igx-group-display {
                 --item-background: transparent;
-                --item-text-color: #{contrast-color($color: 'surface', $variant: 500)};
+                @if $theme-variant == 'dark' {
+                    --item-text-color: #{contrast-color($color: 'surface', $variant: 500)};
+                }
                 --border-color: transparent;
                 --item-border-color: transparent;
                 --item-focused-border-color: transparent;
