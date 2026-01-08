@@ -39,7 +39,7 @@ import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, Filte
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 import { IgxChipComponent, IgxBadgeComponent, IgxDatePickerComponent, IgxCalendarComponent, IgxIconComponent } from 'igniteui-angular';
-import { HelperTestFunctions } from 'igniteui-angular/test-utils/calendar-helper-utils';
+import { HelperTestFunctions } from '../../../test-utils/calendar-helper-utils';
 
 const DEBOUNCE_TIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
