@@ -35,7 +35,7 @@ All notable changes for each version of this project will be documented in this 
 ## New Features
 
 ### PDF Exporter
-- **Custom Font Support for CJK and Arabic Scripts**: Added pre-configured font constants for easy PDF export with non-Latin character support:
+- **Custom Font Support for CJK and Arabic Scripts**: Added pre-configured font constants (licensed under SIL OFL 1.1) for easy PDF export with non-Latin character support:
   - `NOTO_SANS_FONT` - Supports Latin, Cyrillic, and Greek characters
   - `NOTO_SANS_CJK_FONT` - Supports Chinese, Japanese, and Korean characters (CJK)
   - `NOTO_SANS_ARABIC_FONT` - Supports Arabic script and related languages
