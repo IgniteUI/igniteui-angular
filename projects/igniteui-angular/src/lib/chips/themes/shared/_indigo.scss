@@ -65,30 +65,31 @@ $_theme: $indigo;
     @include m(success) {
         @include e(item) {
             color: contrast-color($color: 'success', $variant: 900);
+            background: color($color: 'success', $variant: 800);
+            border-color: color($color: 'success', $variant: 800);
         }
 
         &:focus {
             @include e(item) {
-                color: contrast-color($color: 'success', $variant: 900);
-                background: color($color: 'success', $variant: 500);
-                border-color: color($color: 'success', $variant: 500);
                 box-shadow: 0 0 0 rem(3px) color($color: 'success', $variant: 200);
             }
         }
 
         &:hover {
             @include e(item) {
-                color: contrast-color($color: 'success', $variant: 900);
-                background: color($color: 'success', $variant: 400);
-                border-color: color($color: 'success', $variant: 400);
+                background: color($color: 'success', $variant: 700);
+                border-color: color($color: 'success', $variant: 700);
             }
         }
     }
 
     @include m(warning) {
+        @include e(item) {
+            color: color($color: 'gray', $variant: 900);
+        }
+
         &:focus {
             @include e(item) {
-                color: contrast-color($color: 'warn', $variant: 900);
                 background: color($color: 'warn', $variant: 500);
                 border-color: color($color: 'warn', $variant: 500);
                 box-shadow: 0 0 0 rem(3px) color($color: 'warn', $variant: 100);
@@ -97,7 +98,6 @@ $_theme: $indigo;
 
         &:hover {
             @include e(item) {
-                color: contrast-color($color: 'warn', $variant: 900);
                 background: color($color: 'warn', $variant: 400);
                 border-color: color($color: 'warn', $variant: 400);
             }
@@ -107,22 +107,21 @@ $_theme: $indigo;
     @include m(danger) {
         @include e(item) {
             color: contrast-color($color: 'error', $variant: 900);
+            background: color($color: 'error', $variant: 600);
+            border-color: color($color: 'error', $variant: 600);
         }
 
         &:focus {
             @include e(item) {
                 color: contrast-color($color: 'error', $variant: 900);
-                background: color($color: 'error', $variant: 500);
-                border-color: color($color: 'error', $variant: 500);
                 box-shadow: 0 0 0 rem(3px) color($color: 'error', $variant: 100);
             }
         }
 
         &:hover {
             @include e(item) {
-                color: contrast-color($color: 'error', $variant: 900);
-                background: color($color: 'error', $variant: 400);
-                border-color: color($color: 'error', $variant: 400);
+                background: color($color: 'error', $variant: 500);
+                border-color: color($color: 'error', $variant: 500);
             }
         }
     }
@@ -154,16 +153,13 @@ $_theme: $indigo;
 
     @include mx(disabled, success) {
         @include e(item) {
-            color: contrast-color($color: 'success', $variant: 900);
-            background: color($color: 'success', $variant: 500);
-            border-color: color($color: 'success', $variant: 500);
             opacity: .4;
         }
     }
 
     @include mx(disabled, warning) {
         @include e(item) {
-            color: contrast-color($color: 'warn', $variant: 900);
+            color: color($color: 'gray', $variant: 900);
             background: color($color: 'warn', $variant: 500);
             border-color: color($color: 'warn', $variant: 500);
             opacity: .4;
@@ -173,8 +169,8 @@ $_theme: $indigo;
     @include mx(disabled, danger) {
         @include e(item) {
             color: contrast-color($color: 'error', $variant: 900);
-            background: color($color: 'error', $variant: 500);
-            border-color: color($color: 'error', $variant: 500);
+            background: color($color: 'error', $variant: 600);
+            border-color: color($color: 'error', $variant: 600);
             opacity: .4;
         }
     }
