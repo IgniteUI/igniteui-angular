@@ -90,7 +90,8 @@ import {
     IGridResourceStrings,
     IgxOverlayOutletDirective,
     DEFAULT_LOCALE,
-    onResourceChangeHandle
+    onResourceChangeHandle,
+    PerformanceService
 } from 'igniteui-angular/core';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
@@ -134,6 +135,7 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 @Directive()
 export abstract class IgxGridBaseDirective implements GridType,
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
+    private performance = inject(PerformanceService);
 
     public readonly validation = inject(IgxGridValidationService);
     /** @hidden @internal */
@@ -2999,6 +3001,9 @@ export abstract class IgxGridBaseDirective implements GridType,
     public resizeNotify = new Subject<void>();
 
     /** @hidden @internal */
+    public scrollNotify = new Subject<any>();
+
+    /** @hidden @internal */
     public rowAddedNotifier = new Subject<IRowDataEventArgs>();
 
     /** @hidden @internal */
@@ -3709,6 +3714,15 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         this.subscribeToTransactions();
 
+        this.scrollNotify.pipe(
+            filter(() => !this._init),
+            throttleTime(40, animationFrameScheduler, { leading: false, trailing: true }),
+            destructor
+        )
+            .subscribe((event) => {
+                this.verticalScrollHandler(event);
+            });
+
         this.resizeNotify.pipe(
             filter(() => !this._init),
             throttleTime(40, animationFrameScheduler, { leading: true, trailing: true }),
@@ -3852,6 +3866,8 @@ export abstract class IgxGridBaseDirective implements GridType,
     public ngOnInit() {
         this._setupServices();
         this._setupListeners();
+        this.performance.setLogEnabled(true);
+        this.performance.attachObserver();
         this.rowListDiffer = this.differs.find([]).create(null);
         // compare based on field, not on object ref.
         this.columnListDiffer = this.differs.find([]).create((_index, col: ColumnType) => col.field);
@@ -4153,7 +4169,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.zone.runOutsideAngular(() => {
             this.verticalScrollHandler = this.verticalScrollHandler.bind(this);
             this.horizontalScrollHandler = this.horizontalScrollHandler.bind(this);
-            this.verticalScrollContainer.getScroll().addEventListener('scroll', this.verticalScrollHandler);
+            this.verticalScrollContainer.getScroll().addEventListener('scroll', (event) => this.scrollNotify.next(event));
             this.headerContainer?.getScroll().addEventListener('scroll', this.horizontalScrollHandler);
             if (this.hasColumnsToAutosize) {
                 this.headerContainer?.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -7721,14 +7737,14 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.verticalScrollContainer.onScroll(event);
         this.disableTransitions = true;
 
-        this.zone.run(() => {
-            this.zone.onStable.pipe(first()).subscribe(() => {
-                this.verticalScrollContainer.chunkLoad.emit(this.verticalScrollContainer.state);
-                if (this.rowEditable) {
-                    this.changeRowEditingOverlayStateOnScroll(this.crudService.rowInEditMode);
-                }
-            });
-        });
+        // this.zone.run(() => {
+        //     this.zone.onStable.pipe(first()).subscribe(() => {
+        //         this.verticalScrollContainer.chunkLoad.emit(this.verticalScrollContainer.state);
+        //         if (this.rowEditable) {
+        //             this.changeRowEditingOverlayStateOnScroll(this.crudService.rowInEditMode);
+        //         }
+        //     });
+        // });
         this.disableTransitions = false;
 
         this.hideOverlays();
