@@ -8,8 +8,8 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The grid theme used to style the component.
 @mixin excel-filtering($theme) {
-    $variant: map.get($theme, '_meta', 'variant');
-    $theme-variant: map.get($theme, '_meta', 'theme-variant');
+    $variant: map.get($theme, '_meta', 'theme');
+    $theme-variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
     $tree-node-indent: (
@@ -757,7 +757,6 @@
     $header-comfortable: map.get($categories, 'header-comfortable');
     $header-compact: map.get($categories, 'header-compact');
 
-
     %grid-excel-menu {
         %grid-excel-menu__header > h4 {
             @include type-style('h6')
@@ -805,6 +804,10 @@
         %cbx-label {
             @include type-style('body-2');
         }
+    }
+
+    %igx-group-item {
+        @include type-style('button');
     }
 
     %grid-excel-menu__secondary--cosy {
