@@ -274,8 +274,8 @@
         } @else {
             color: contrast-color($color: 'success', $variant: if($variant == 'indigo', 900, 500));
         }
-        background: color($color: 'success', $variant: 500);
-        border-color: color($color: 'success', $variant: 500);
+        background: color($color: 'success', $variant: if($variant == 'indigo', 800, 500));
+        border-color: color($color: 'success', $variant: if($variant == 'indigo', 800, 500));
     }
 
     %igx-chip%igx-chip--success {
@@ -285,17 +285,13 @@
                 background: color($color: 'success', $variant: 800);
                 border-color: color($color: 'success', $variant: 800);
 
-                @if $variant == 'indigo' or $variant == 'bootstrap' {
-                    background: color($color: 'success', $variant: 500);
-                    border-color: color($color: 'success', $variant: 500);
-                    box-shadow: 0 0 0 rem(3px) color($color: 'success', $variant: if($theme-variant == 'light', 200, 800));
-                }
-
                 @if $variant == 'indigo' {
-                    color: contrast-color($color: 'success', $variant: 900);
+                    box-shadow: 0 0 0 rem(3px) color($color: 'success', $variant: if($theme-variant == 'light', 200, 900));
                 }
 
                 @if $variant == 'bootstrap' {
+                    border-color: color($color: 'success', $variant: 500);
+                    background: color($color: 'success', $variant: 500);
                     color: contrast-color($color: 'success', $variant: 600);
                     box-shadow: 0 0 0 rem(4px) color($color: 'success', $variant: 500, $opacity: .38);
                 }
@@ -306,8 +302,8 @@
             %igx-chip__item {
                 @if $variant == 'indigo' {
                     color: contrast-color($color: 'success', $variant: 900);
-                    background: color($color: 'success', $variant: 400);
-                    border-color: color($color: 'success', $variant: 400);
+                    background: color($color: 'success', $variant: 700);
+                    border-color: color($color: 'success', $variant: 700);
                 } @else {
                     color: contrast-color($color: 'success', $variant: 600);
                     background: color($color: 'success', $variant: 600);
@@ -318,7 +314,11 @@
     }
 
     %igx-chip__item--warning {
-        color: contrast-color($color: 'warn', $variant: 900);
+        @if $variant == 'indigo' {
+            color: color($color: 'gray', $variant: if($theme-variant == 'light', 900, 50));
+        } @else {
+            color: contrast-color($color: 'warn', $variant: 900);
+        }
         background: color($color: 'warn', $variant: 500);
         border-color: color($color: 'warn', $variant: 500);
     }
@@ -331,12 +331,12 @@
                 border-color: color($color: 'warn', $variant: 800);
 
                 @if $variant == 'indigo' or $variant == 'bootstrap' {
-                    color: contrast-color($color: 'warn', $variant: 900);
                     background: color($color: 'warn', $variant: 500);
                     border-color: color($color: 'warn', $variant: 500);
                 }
 
                 @if $variant == 'indigo' {
+                    color: color($color: 'gray', $variant: if($theme-variant == 'light', 900, 50));
                     box-shadow: 0 0 0 rem(3px) color($color: 'warn', $variant: if($theme-variant == 'light', 100, 900));
                 }
 
@@ -349,7 +349,7 @@
         &:hover {
             %igx-chip__item {
                 @if $variant == 'indigo' {
-                    color: contrast-color($color: 'warn', $variant: 900);
+                    color: color($color: 'gray', $variant: if($theme-variant == 'light', 900, 50));
                     background: color($color: 'warn', $variant: 400);
                     border-color: color($color: 'warn', $variant: 400);
                 } @else {
@@ -367,8 +367,8 @@
         } @else {
             color: contrast-color($color: 'error', $variant: if($variant == 'indigo', 900, 500));
         }
-        background: color($color: 'error', $variant: 500);
-        border-color: color($color: 'error', $variant: 500);
+        background: color($color: 'error', $variant: if($variant == 'indigo', 600, 500));
+        border-color: color($color: 'error', $variant: if($variant == 'indigo', 600, 500));
     }
 
     %igx-chip%igx-chip--danger {
@@ -378,17 +378,16 @@
                 background: color($color: 'error', $variant: 800);
                 border-color: color($color: 'error', $variant: 800);
 
-                @if $variant == 'indigo' or $variant == 'bootstrap' {
-                    background: color($color: 'error', $variant: 500);
-                    border-color: color($color: 'error', $variant: 500);
-                }
-
                 @if $variant == 'indigo' {
+                    border-color: color($color: 'error', $variant: 600);
+                    background: color($color: 'error', $variant: 600);
                     color: contrast-color($color: 'error', $variant: 900);
                     box-shadow: 0 0 0 rem(3px) color($color: 'error', $variant: if($theme-variant == 'light', 100, 900));
                 }
 
                 @if $variant == 'bootstrap' {
+                    border-color: color($color: 'error', $variant: 500);
+                    background: color($color: 'error', $variant: 500);
                     color: contrast-color($color: 'error', $variant: 600);
                     box-shadow: 0 0 0 rem(4px) color($color: 'error', $variant: 500, $opacity: .38);
                 }
@@ -399,8 +398,8 @@
             %igx-chip__item {
                 @if $variant == 'indigo' {
                     color: contrast-color($color: 'error', $variant: 900);
-                    background: color($color: 'error', $variant: 400);
-                    border-color: color($color: 'error', $variant: 400);
+                    background: color($color: 'error', $variant: 500);
+                    border-color: color($color: 'error', $variant: 500);
                 } @else {
                     color: contrast-color($color: 'error', $variant: 600);
                     background: color($color: 'error', $variant: 600);
@@ -603,14 +602,14 @@
             &%igx-chip--success {
                 %igx-chip__item {
                     color: contrast-color($color: 'success', $variant: 900);
-                    background: color($color: 'success', $variant: 500);
-                    border-color: color($color: 'success', $variant: 500);
+                    background: color($color: 'success', $variant: 800);
+                    border-color: color($color: 'success', $variant: 800);
                 }
             }
 
             &%igx-chip--warning {
                 %igx-chip__item {
-                    color: contrast-color($color: 'warn', $variant: 900);
+                    color: color($color: 'gray', $variant: if($theme-variant == 'light', 900, 50));
                     background: color($color: 'warn', $variant: 500);
                     border-color: color($color: 'warn', $variant: 500);
                 }
@@ -619,8 +618,8 @@
             &%igx-chip--danger {
                 %igx-chip__item {
                     color: contrast-color($color: 'error', $variant: 900);
-                    background: color($color: 'error', $variant: 500);
-                    border-color: color($color: 'error', $variant: 500);
+                    background: color($color: 'error', $variant: 600);
+                    border-color: color($color: 'error', $variant: 600);
                 }
             }
 
