@@ -47,6 +47,9 @@ export class IgxPdfExporterService extends IgxBaseExporter {
      */
     public override exportEnded = new EventEmitter<IPdfExportEndedEventArgs>();
 
+    private _currentFontName = 'helvetica';
+    private _hasBoldFont = true;
+
     protected exportDataImplementation(data: IExportRecord[], options: IgxPdfExporterOptions, done: () => void): void {
         const firstDataElement = data[0];
         const isHierarchicalGrid = firstDataElement?.type === ExportRecordType.HierarchicalGridRecord;
@@ -222,6 +225,32 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 format: options.pageSize
             });
 
+            // Reset font name to default
+            this._currentFontName = 'helvetica';
+
+            // Add custom Unicode font if provided
+            if (options.customFont) {
+                this._hasBoldFont = !!options.customFont.bold;
+                try {
+                    pdf.addFileToVFS(`${options.customFont.name}.ttf`, options.customFont.data);
+                    pdf.addFont(`${options.customFont.name}.ttf`, options.customFont.name, 'normal', 'Identity-H');
+
+                    if (this._hasBoldFont) {
+                        pdf.addFileToVFS(`${options.customFont.name}-Bold.ttf`, options.customFont.bold.data);
+                        pdf.addFont(
+                            `${options.customFont.name}-Bold.ttf`,
+                            options.customFont.name,
+                            'bold',
+                            'Identity-H'
+                        );
+                    }
+                    this._currentFontName = options.customFont.name;
+                } catch (error) {
+                    console.warn('Failed to load custom font, falling back to Helvetica:', error);
+                    this._currentFontName = 'helvetica';
+                }
+            }
+
             const pageWidth = pdf.internal.pageSize.getWidth();
             const pageHeight = pdf.internal.pageSize.getHeight();
             const margin = 40;
@@ -268,7 +297,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             }
 
             // Draw data rows
-            pdf.setFont('helvetica', 'normal');
+            pdf.setFont(this._currentFontName, 'normal');
 
             // Check if this is a tree grid export (tree grids can have both TreeGridRecord and DataRecord types for nested children)
             const isTreeGridExport = data.some(record => record.type === ExportRecordType.TreeGridRecord);
@@ -423,7 +452,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         allColumns?: any[]
     ): number {
         let yPosition = yStart;
-        pdf.setFont('helvetica', 'bold');
+        pdf.setFont(this._currentFontName, this._hasBoldFont ? 'bold' : 'normal');
 
         // First, draw row dimension header labels (for pivot grids) if present
         // Draw headers if we have any row dimension headers, regardless of maxRowLevel
@@ -633,7 +662,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             yPosition = yStart + totalHeaderHeight;
         }
 
-        pdf.setFont('helvetica', 'normal');
+        pdf.setFont(this._currentFontName, 'normal');
         return yPosition;
     }
 
@@ -842,7 +871,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         tableWidth: number,
         options: IgxPdfExporterOptions
     ): void {
-        pdf.setFont('helvetica', 'bold');
+        pdf.setFont(this._currentFontName, this._hasBoldFont ? 'bold' : 'normal');
         pdf.setFillColor(240, 240, 240);
 
         if (options.showTableBorders) {
@@ -908,7 +937,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             pdf.text(headerText, textX, textY);
         });
 
-        pdf.setFont('helvetica', 'normal');
+        pdf.setFont(this._currentFontName, 'normal');
     }
 
     private drawDataRow(
