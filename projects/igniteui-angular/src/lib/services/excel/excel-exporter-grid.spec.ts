@@ -42,7 +42,9 @@ import { IgxHierarchicalGridExportComponent,
          IgxHierarchicalGridMCHCollapsibleComponent,
          IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
          IgxHierarchicalGridMultiColumnHeadersExportComponent,
-         IgxHierarchicalGridSummariesExportComponent
+         IgxHierarchicalGridSummariesExportComponent,
+         IgxHierarchicalGridEmptyDataExportComponent,
+         IgxHierarchicalGridMissingChildDataExportComponent
 } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridComponent } from '../../grids/hierarchical-grid/public_api';
 import { IgxHierarchicalRowComponent } from '../../grids/hierarchical-grid/hierarchical-row.component';
@@ -77,6 +79,8 @@ describe('Excel Exporter', () => {
                 IgxPivotGridTestComplexHierarchyComponent,
                 IgxTreeGridSummariesKeyComponent,
                 IgxHierarchicalGridSummariesExportComponent,
+                IgxHierarchicalGridEmptyDataExportComponent,
+                IgxHierarchicalGridMissingChildDataExportComponent,
                 GroupedGridWithSummariesComponent,
                 GridCurrencySummariesComponent,
                 GridUserMeetingDataComponent,
@@ -930,6 +934,26 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithSkippedRows);
         });
+
+        it('should export hierarchical grid with empty data without throwing error', async () => {
+            fix = TestBed.createComponent(IgxHierarchicalGridEmptyDataExportComponent);
+            fix.detectChanges();
+
+            hGrid = fix.componentInstance.hGrid;
+            options = createExportOptions('HierarchicalGridEmptyDataExcelExport');
+
+            await expectAsync(getExportedData(hGrid, options)).toBeResolved();
+        });
+
+        it('should export hierarchical grid with missing child data key without throwing error', async () => {
+            fix = TestBed.createComponent(IgxHierarchicalGridMissingChildDataExportComponent);
+            fix.detectChanges();
+
+            hGrid = fix.componentInstance.hGrid;
+            options = createExportOptions('HierarchicalGridMissingChildDataExcelExport');
+
+            await expectAsync(getExportedData(hGrid, options)).toBeResolved();
+        });
     });
 
     describe('', () => {
@@ -1494,7 +1518,7 @@ describe('Excel Exporter', () => {
             fix.componentInstance.data = SALES_DATA;
             fix.componentInstance.pivotConfigHierarchy = {
                 rows: [
-                    {                     
+                    {
                         memberName: 'All_Srep Code Alts',
                         enabled: true,
                         width: '150px',
