@@ -25,8 +25,8 @@ export class IgxGridSelectionService {
     public pointerState = {} as ISelectionPointerState;
     public columnsState = {} as IColumnSelectionState;
 
-    public selection = new Map<number, Set<number>>();
-    public temp = new Map<number, Set<number>>();
+    public selection = new Map<any, Set<number>>();
+    public temp = new Map<any, Set<number>>();
     public rowSelection: Set<any> = new Set<any>();
     public indeterminateRows: Set<any> = new Set<any>();
     public columnSelection: Set<string> = new Set<string>();
@@ -38,7 +38,7 @@ export class IgxGridSelectionService {
     /**
      * @hidden @internal
      */
-    public selectedRangeChange = new Subject<Map<number, Set<number>>>();
+    public selectedRangeChange = new Subject<Map<any, Set<number>>>();
 
     /**
      * Toggled when a pointerdown event is triggered inside the grid body (cells).
@@ -118,10 +118,11 @@ export class IgxGridSelectionService {
      * Single clicks | Ctrl + single clicks on cells is the usual case.
      */
     public add(node: ISelectionNode, addToRange = true): void {
-        if (this.selection.has(node.row)) {
-            this.selection.get(node.row).add(node.column);
+        const rowObject = this.getRowObjectByIndex(node.row);
+        if (this.selection.has(rowObject)) {
+            this.selection.get(rowObject).add(node.column);
         } else {
-            this.selection.set(node.row, new Set<number>()).get(node.row).add(node.column);
+            this.selection.set(rowObject, new Set<number>()).get(rowObject).add(node.column);
         }
 
         if (addToRange) {
@@ -139,8 +140,9 @@ export class IgxGridSelectionService {
     }
 
     public remove(node: ISelectionNode): void {
-        if (this.selection.has(node.row)) {
-            this.selection.get(node.row).delete(node.column);
+        const rowObject = this.getRowObjectByIndex(node.row);
+        if (this.selection.has(rowObject)) {
+            this.selection.get(rowObject).delete(node.column);
         }
         if (this.isActiveNode(node)) {
             this.activeElement = null;
@@ -149,8 +151,9 @@ export class IgxGridSelectionService {
     }
 
     public isInMap(node: ISelectionNode): boolean {
-        return (this.selection.has(node.row) && this.selection.get(node.row).has(node.column)) ||
-            (this.temp.has(node.row) && this.temp.get(node.row).has(node.column));
+        const rowObject = this.getRowObjectByIndex(node.row);
+        return (this.selection.has(rowObject) && this.selection.get(rowObject).has(node.column)) ||
+            (this.temp.has(rowObject) && this.temp.get(rowObject).has(node.column));
     }
 
     public selected(node: ISelectionNode): boolean {
@@ -279,10 +282,10 @@ export class IgxGridSelectionService {
         this.selectRange(node, this.pointerState);
     }
 
-    public mergeMap(target: Map<number, Set<number>>, source: Map<number, Set<number>>): void {
+    public mergeMap(target: Map<any, Set<number>>, source: Map<any, Set<number>>): void {
         const iterator = source.entries();
         let pair = iterator.next();
-        let key: number;
+        let key: any;
         let value: Set<number>;
 
         while (!pair.done) {
@@ -346,17 +349,18 @@ export class IgxGridSelectionService {
         return false;
     }
 
-    public selectRange(node: ISelectionNode, state: SelectionState, collection: Map<number, Set<number>> = this.selection): void {
+    public selectRange(node: ISelectionNode, state: SelectionState, collection: Map<any, Set<number>> = this.selection): void {
         if (collection === this.temp) {
             collection.clear();
         }
         const { rowStart, rowEnd, columnStart, columnEnd } = this.generateRange(node, state);
         for (let i = rowStart; i <= rowEnd; i++) {
+            const rowObject = this.getRowObjectByIndex(i);
             for (let j = columnStart as number; j <= (columnEnd as number); j++) {
-                if (collection.has(i)) {
-                    collection.get(i).add(j);
+                if (collection.has(rowObject)) {
+                    collection.get(rowObject).add(j);
                 } else {
-                    collection.set(i, new Set<number>()).get(i).add(j);
+                    collection.set(rowObject, new Set<number>()).get(rowObject).add(j);
                 }
             }
         }
@@ -849,6 +853,31 @@ export class IgxGridSelectionService {
         range.selectNode(node);
         range.collapse(true);
         selection.addRange(range);
+    }
+
+    /**
+     * Gets the row object from the grid's dataView by index.
+     * Used as the key for the selection Map.
+     */
+    private getRowObjectByIndex(rowIndex: number): any {
+        return this.grid.dataView[rowIndex];
+    }
+
+    /**
+     * Gets the row index from a row object by finding it in the dataView.
+     * Returns -1 if the row object is not found.
+     */
+    public getRowIndexByObject(rowObject: any): number {
+        return this.grid.dataView.indexOf(rowObject);
+    }
+
+    /**
+     * Returns the selected row indexes from the selection Map.
+     */
+    public getSelectedCellRowIndexes(): number[] {
+        return Array.from(this.selection.keys())
+            .map(rowObject => this.getRowIndexByObject(rowObject))
+            .filter(index => index !== -1);
     }
 
     private isFilteringApplied(): boolean {

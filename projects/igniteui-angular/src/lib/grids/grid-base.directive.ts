@@ -4108,7 +4108,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             const activeRow = this.navigation.activeNode?.row;
 
             const selectedCellIndexes = this.selectionService.selection
-                ? Array.from(this.selectionService.selection.keys())
+                ? this.selectionService.getSelectedCellRowIndexes()
                 : [];
             this._activeRowIndexes = [activeRow, ...selectedCellIndexes];
             return this._activeRowIndexes;
@@ -7485,15 +7485,16 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
             if (this.selectionService.selection.size > 0) {
                 if (expansionRowIndexes.length > 0) {
-                    for (const [key, value] of this.selectionService.selection.entries()) {
-                        const updatedKey = key;
+                    for (const [rowObject, value] of this.selectionService.selection.entries()) {
+                        const rowIndex = this.selectionService.getRowIndexByObject(rowObject);
+                        if (rowIndex === -1) continue;
                         let subtract = 0;
                         expansionRowIndexes.forEach((row) => {
-                            if (updatedKey > Number(row)) {
+                            if (rowIndex > Number(row)) {
                                 subtract++;
                             }
                         });
-                        selectionCollection.set(updatedKey - subtract, value);
+                        selectionCollection.set(rowIndex - subtract, value);
                     }
                 }
             } else if (activeEl) {
@@ -7511,13 +7512,17 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         const totalItems = (this as any).totalItemCount ?? 0;
         const isRemote = totalItems && totalItems > this.dataView.length;
-        let selectionMap;
+        let selectionMap: [number, Set<number>][];
         if (this.type === 'hierarchical' && selectionCollection.size > 0) {
             selectionMap = isRemote ? Array.from(selectionCollection) :
                 Array.from(selectionCollection).filter((tuple) => tuple[0] < source.length);
         } else {
-            selectionMap = isRemote ? Array.from(this.selectionService.selection) :
-                Array.from(this.selectionService.selection).filter((tuple) => tuple[0] < source.length);
+            // Convert row objects to row indexes for selection map
+            const selectionWithIndexes: [number, Set<number>][] = Array.from(this.selectionService.selection.entries())
+                .map(([rowObject, columns]) => [this.selectionService.getRowIndexByObject(rowObject), columns] as [number, Set<number>])
+                .filter(([rowIndex]) => rowIndex !== -1);
+            selectionMap = isRemote ? selectionWithIndexes :
+                selectionWithIndexes.filter((tuple) => tuple[0] < source.length);
         }
 
         if (this.cellSelection === GridSelectionMode.single && activeEl) {
