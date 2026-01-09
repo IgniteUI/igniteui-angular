@@ -34,7 +34,9 @@ export const IgxHierarchicalTransactionServiceFactory = {
    wcSkipComponentSuffix */
 @Directive()
 export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective implements GridType {
+    /* blazorSuppress */
     public override gridAPI = inject<IgxHierarchicalGridAPIService>(IGX_GRID_SERVICE_BASE);
+    /* blazorSuppress */
     public override navigation = inject(IgxHierarchicalGridNavigationService);
     /**
      * Gets/Sets the key indicating whether a row has children. If row has no children it does not render an expand indicator.
