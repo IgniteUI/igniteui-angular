@@ -34,7 +34,9 @@ import { IgxHierarchicalGridExportComponent,
          IgxHierarchicalGridMCHCollapsibleComponent,
          IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
          IgxHierarchicalGridMultiColumnHeadersExportComponent,
-         IgxHierarchicalGridSummariesExportComponent
+         IgxHierarchicalGridSummariesExportComponent,
+         IgxHierarchicalGridEmptyDataExportComponent,
+         IgxHierarchicalGridMissingChildDataExportComponent
 } from '../../../../../test-utils/hierarchical-grid-components.spec';
 import { GridFunctions } from '../../../../../test-utils/grid-functions.spec';
 import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent, SALES_DATA } from '../../../../../test-utils/pivot-grid-samples.spec';
@@ -75,6 +77,8 @@ describe('Excel Exporter', () => {
                 IgxPivotGridTestComplexHierarchyComponent,
                 IgxTreeGridSummariesKeyComponent,
                 IgxHierarchicalGridSummariesExportComponent,
+                IgxHierarchicalGridEmptyDataExportComponent,
+                IgxHierarchicalGridMissingChildDataExportComponent,
                 GroupedGridWithSummariesComponent,
                 GridCurrencySummariesComponent,
                 GridUserMeetingDataComponent,
@@ -930,6 +934,26 @@ describe('Excel Exporter', () => {
             fix.detectChanges();
 
             await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithSkippedRows);
+        });
+
+        it('should export hierarchical grid with empty data without throwing error', async () => {
+            fix = TestBed.createComponent(IgxHierarchicalGridEmptyDataExportComponent);
+            fix.detectChanges();
+
+            hGrid = fix.componentInstance.hGrid;
+            options = createExportOptions('HierarchicalGridEmptyDataExcelExport');
+
+            await expectAsync(getExportedData(hGrid, options)).toBeResolved();
+        });
+
+        it('should export hierarchical grid with missing child data key without throwing error', async () => {
+            fix = TestBed.createComponent(IgxHierarchicalGridMissingChildDataExportComponent);
+            fix.detectChanges();
+
+            hGrid = fix.componentInstance.hGrid;
+            options = createExportOptions('HierarchicalGridMissingChildDataExcelExport');
+
+            await expectAsync(getExportedData(hGrid, options)).toBeResolved();
         });
     });
 
