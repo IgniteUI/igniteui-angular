@@ -1,0 +1,50 @@
+@use 'sass:map';
+
+:host {
+    display: flex;
+    align-items: center;
+}
+
+.igx-breadcrumb-item__link,
+.igx-breadcrumb-item__text {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    text-decoration: none;
+    color: inherit;
+    white-space: nowrap;
+}
+
+.igx-breadcrumb-item__link {
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 2px;
+        border-radius: 2px;
+    }
+}
+
+:host(.igx-breadcrumb-item--disabled) {
+    .igx-breadcrumb-item__text {
+        cursor: default;
+    }
+}
+
+:host(.igx-breadcrumb-item--current) {
+    .igx-breadcrumb-item__text {
+        font-weight: 600;
+    }
+}
+
+:host(.igx-breadcrumb-item--hidden) {
+    display: none;
+}
