@@ -34,7 +34,7 @@
     ), $variant);
     $cbx-bs-size: rem(14px);
 
-    $grid-shadow: var-get($theme, 'grid-shadow');
+    $grid-shadow: var-get($theme, 'grid-elevation');
 
     $grid-caption-fs: rem(20px);
     $grid-caption-lh: rem(32px);
@@ -177,7 +177,7 @@
         igx-date-picker,
         igx-time-picker {
             position: relative;
-            height: calc(100% - #{$editing-outline-width * 2});
+            height: auto;
             width: 100% !important;
             overflow: hidden;
         }
@@ -210,6 +210,11 @@
             height: 100% !important;
             min-height: 100% !important;
             border: none !important;
+
+            .igx-input-group__filler,
+            .igx-input-group__notch {
+                border: none !important;
+            }
 
             &::before {
                 content: none !important;
@@ -291,6 +296,12 @@
         .igx-input-group__textarea {
             box-shadow: none !important;
             border: none !important;
+        }
+
+        .igx-input-group--disabled,
+        .igx-input-group--disabled igx-prefix,
+        .igx-input-group--disabled igx-suffix {
+            color: var-get($theme, 'cell-disabled-color');
         }
     }
 
@@ -888,7 +899,7 @@
             @include css-vars((
                 name: 'igx-grid-row',
                 row-ghost-background: map.get($theme, 'row-ghost-background'),
-                row-drag-color: map.get($theme, 'row-drago-color')
+                row-drag-color: map.get($theme, 'row-drag-color')
             ));
         }
     }
@@ -1000,7 +1011,11 @@
         }
 
         %igx-icon--error {
-            color: color($color: 'gray', $variant: 500);
+            @if $variant == 'indigo' or $theme-variant == 'dark' {
+                color: color($color: 'gray', $variant: 500);
+            } @else {
+                color: color($color: 'gray', $variant: 600);
+            }
         }
     }
 
@@ -1191,6 +1206,12 @@
         flex: 1 1 0%;
         align-items: center;
         outline-style: none;
+
+        @extend %cell-input-overrides;
+
+        igx-input-group {
+            background: transparent;
+        }
 
         @if $variant != 'indigo' {
             padding-inline: pad-inline(
@@ -1407,8 +1428,6 @@
         &%grid-cell-number {
             justify-content: flex-start !important;
         }
-
-        @extend %cell-input-overrides;
     }
 
     %grid-cell--pinned {
@@ -1908,7 +1927,7 @@
         top: rem(-99999px);
         inset-inline-start: rem(-99999px);
         border: none;
-        box-shadow: var-get($theme, 'drag-shadow');
+        box-shadow: var-get($theme, 'drag-elevation');
         overflow: hidden;
         z-index: 20;
 

@@ -4106,7 +4106,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             return this._activeRowIndexes;
         } else {
             const activeRow = this.navigation.activeNode?.row;
-            const selectedCellIndexes = (this.selectionService.selection?.keys() as any)?.toArray();
+
+            const selectedCellIndexes = this.selectionService.selection
+                ? Array.from(this.selectionService.selection.keys())
+                : [];
             this._activeRowIndexes = [activeRow, ...selectedCellIndexes];
             return this._activeRowIndexes;
         }
@@ -5664,7 +5667,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public getPossibleColumnWidth(baseWidth: number = null, minColumnWidth: number = null) {
+    public getPossibleColumnWidth(baseWidth: number = null) {
         let computedWidth;
         if (baseWidth !== null) {
             computedWidth = baseWidth;
@@ -5711,13 +5714,12 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (!sumExistingWidths && !columnsToSize) {
             return '0px';
         }
+
         computedWidth -= this.featureColumnsWidth();
 
-        const minColWidth = minColumnWidth || this.minColumnWidth;
-
         const columnWidth = !Number.isFinite(sumExistingWidths) ?
-            Math.max(computedWidth / columnsToSize, minColWidth) :
-            Math.max((computedWidth - sumExistingWidths) / columnsToSize, minColWidth);
+            computedWidth / columnsToSize :
+            (computedWidth - sumExistingWidths) / columnsToSize;
 
         return columnWidth + 'px';
     }
@@ -6438,6 +6440,12 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
     }
 
+    protected viewDetachHandler(args) {
+        if (this.actionStrip && args.view.rootNodes.find(x => x === this.actionStrip.context?.element.nativeElement)) {
+            this.actionStrip.hide();
+        }
+    }
+
     /**
      * @hidden @internal
      */
@@ -6821,47 +6829,26 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     protected _derivePossibleWidth() {
         if (!this.columnWidthSetByUser) {
-            this._columnWidth = this.width !== null ? this.getPossibleColumnWidth() : this.minColumnWidth + 'px';
+            const possibleWidth = this.getPossibleColumnWidth();
+            if (possibleWidth === "0px") {
+                // all columns - hidden
+                this._columnWidth = possibleWidth;
+            } else if (this.width !== null) {
+                this._columnWidth = Math.max(parseFloat(possibleWidth), this.minColumnWidth) + 'px'
+            } else {
+                this._columnWidth =  this.minColumnWidth + 'px';
+            }
         }
         this._columns.forEach((column: IgxColumnComponent) => {
             if (this.hasColumnLayouts && parseFloat(this._columnWidth)) {
                 const columnWidthCombined = parseFloat(this._columnWidth) * (column.colEnd ? column.colEnd - column.colStart : 1);
                 column.defaultWidth = columnWidthCombined + 'px';
             } else {
-                // D.K. March 29th, 2021 #9145 Consider min/max width when setting defaultWidth property
-                column.defaultWidth = this.getExtremumBasedColWidth(column);
+                column.defaultWidth = this._columnWidth;
                 column.resetCaches();
             }
         });
         this.resetCachedWidths();
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    protected getExtremumBasedColWidth(column: IgxColumnComponent): string {
-        let width = this._columnWidth;
-        if (width && typeof width !== 'string') {
-            width = String(width);
-        }
-        const minWidth = width.indexOf('%') === -1 ? column.userSetMinWidthPx : column.minWidthPercent;
-        const maxWidth = width.indexOf('%') === -1 ? column.maxWidthPx : column.maxWidthPercent;
-        if (column.hidden) {
-            return width;
-        }
-
-        if (minWidth > parseFloat(width)) {
-            width = String(column.minWidth);
-        } else if (maxWidth < parseFloat(width)) {
-            width = String(column.maxWidth);
-        }
-
-        // if no px or % are defined in maxWidth/minWidth consider it px
-        if (width.indexOf('%') === -1 && width.indexOf('px') === -1) {
-            width += 'px';
-        }
-        return width;
     }
 
     protected resetNotifyChanges() {
@@ -7157,13 +7144,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.cdr.detectChanges();
         }
 
-        // in case horizontal scrollbar has appeared recalc to size correctly.
-        if (hasHScroll !== this.hasHorizontalScroll()) {
-            this.isHorizontalScrollHidden = !this.hasHorizontalScroll();
-            this.cdr.detectChanges();
-            this.calculateGridHeight();
-            this.cdr.detectChanges();
-        }
         if (this.zone.isStable) {
             this.zone.run(() => {
                 this._applyWidthHostBinding();
@@ -7182,6 +7162,16 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.zone.onStable.pipe(first()).subscribe(() => {
                 this._autoSizeColumnsNotify.next();
             });
+        }
+
+        // in case horizontal scrollbar has appeared recalc to size correctly.
+        if (hasHScroll !== this.hasHorizontalScroll()) {
+            this.isHorizontalScrollHidden = !this.hasHorizontalScroll();
+            this.cdr.detectChanges();
+            this.calculateGridHeight();
+            this.cdr.detectChanges();
+        } else {
+            this.resetCaches(recalcFeatureWidth);
         }
     }
 
