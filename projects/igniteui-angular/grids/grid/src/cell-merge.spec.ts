@@ -308,6 +308,27 @@ describe('IgxGrid - Cell merging #grid', () => {
 
         });
 
+        describe('Summaries', () => {
+            it('should merge correctly when summary row is shown.', () => {
+                grid.groupBy({
+                    fieldName: 'ProductName', dir: SortingDirection.Desc,
+                    ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+                });
+                fix.detectChanges();
+
+                const col = grid.getColumnByName('ProductName');
+                col.hasSummary = true;
+                fix.detectChanges();
+
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'NetAdvantage', span: 2 },
+                    { value: 'Ignite UI for JavaScript', span: 3 },
+                    { value: 'Ignite UI for Angular', span: 3 },
+                    { value: null, span: 1 }
+                ]);
+            });
+        });
+
         describe('Master-Detail', () => {
 
             it('should interrupt merge sequence if a master-detail row is expanded.', () => {
