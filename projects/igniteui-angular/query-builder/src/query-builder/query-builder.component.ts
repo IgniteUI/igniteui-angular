@@ -19,6 +19,7 @@ import { IgxIconService } from 'igniteui-angular/icon';
 import { editor } from '@igniteui/material-icons-extended';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 
+/* wcElementTag: igc-query-builder-header */
 /**
  * A component used for operating with complex filters by creating or editing conditions
  * and grouping them using AND/OR logic.
@@ -204,7 +205,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      * @hidden @internal
      */
     @ContentChild(IgxQueryBuilderSearchValueTemplateDirective, { read: TemplateRef })
-    public searchValueTemplate: TemplateRef<any>;
+    public searchValueTemplate: TemplateRef<IgxQueryBuilderSearchValueTemplateDirective>;
 
     /**
      * @hidden @internal
