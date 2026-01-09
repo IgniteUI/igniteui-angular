@@ -114,6 +114,7 @@
         }
     }
 
+    @include theming.sizing();
     @include theming.spacing();
 
     @property --_progress-integer {
