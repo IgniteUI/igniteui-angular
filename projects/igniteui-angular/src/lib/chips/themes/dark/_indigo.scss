@@ -16,12 +16,16 @@
     @include m(success) {
         &:focus {
             @include e(item) {
-                box-shadow: 0 0 0 rem(3px) color($color: 'success', $variant: 800);
+                box-shadow: 0 0 0 rem(3px) color($color: 'success', $variant: 900);
             }
         }
     }
 
     @include m(warning) {
+        @include e(item) {
+            color: color($color: 'gray', $variant: 50);
+        }
+
         &:focus {
             @include e(item) {
                 box-shadow: 0 0 0 rem(3px) color($color: 'warn', $variant: 900);
@@ -46,6 +50,12 @@
     @include mx(disabled, primary) {
         @include e(item) {
             color: contrast-color($color: 'primary', $variant: 900, $opacity: .2);
+        }
+    }
+
+    @include mx(disabled, warning) {
+        @include e(item) {
+            color: color($color: 'gray', $variant: 50);
         }
     }
 }
