@@ -1,9 +1,10 @@
 import {
-    Directive, OnInit, OnDestroy, Output, ViewContainerRef, HostListener,
-    Input, EventEmitter, booleanAttribute, inject, TemplateRef, ComponentRef, Renderer2,
+    Directive, OnInit, OnDestroy, Output, ElementRef, ViewContainerRef,
+    Input, EventEmitter, booleanAttribute, TemplateRef, ComponentRef, Renderer2,
     EnvironmentInjector,
     createComponent,
     AfterViewInit,
+    inject,
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -13,7 +14,7 @@ import { IgxToggleActionDirective } from '../toggle/toggle.directive';
 import { IgxTooltipComponent } from './tooltip.component';
 import { IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipCloseButtonComponent } from './tooltip-close-button.component';
-import { TooltipPositionSettings, TooltipPositionStrategy } from './tooltip.common';
+import { parseTriggers, TooltipPositionSettings, TooltipPositionStrategy } from './tooltip.common';
 
 export interface ITooltipShowEventArgs extends IBaseEventArgs {
     target: IgxTooltipTargetDirective;
@@ -46,10 +47,6 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
     standalone: true
 })
 export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit, AfterViewInit, OnDestroy {
-    private _viewContainerRef = inject(ViewContainerRef);
-    private _renderer = inject(Renderer2);
-    private _envInjector = inject(EnvironmentInjector);
-
     /**
      * Gets/sets the amount of milliseconds that should pass before showing the tooltip.
      *
@@ -236,6 +233,46 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     public tooltipDisabled = false;
 
     /**
+     * Which event triggers will show the tooltip.
+     * Expects a comma-separated string of different event triggers.
+     * Defaults to `pointerenter`.
+     * ```html
+     * <igx-icon [igxTooltipTarget]="tooltipRef" [showTriggers]="'click,focus'">info</igx-icon>
+     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+     * ```
+     */
+    @Input()
+    public get showTriggers(): string {
+        return Array.from(this._showTriggers).join();
+    }
+
+    public set showTriggers(value: string) {
+        this._showTriggers = parseTriggers(value);
+        this.removeEventListeners();
+        this.addEventListeners();
+    }
+
+    /**
+     * Which event triggers will hide the tooltip.
+     * Expects a comma-separated string of different event triggers.
+     * Defaults to `pointerleave` and `click`.
+     * ```html
+     * <igx-icon [igxTooltipTarget]="tooltipRef" [hideTriggers]="'keypress,blur'">info</igx-icon>
+     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+     * ```
+     */
+    @Input()
+    public get hideTriggers(): string {
+        return Array.from(this._hideTriggers).join();
+    }
+
+    public set hideTriggers(value: string) {
+        this._hideTriggers = parseTriggers(value);
+        this.removeEventListeners();
+        this.addEventListeners();
+    }
+
+    /**
      * @hidden
      */
     @Input('igxTooltipTarget')
@@ -256,8 +293,11 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
 
     /**
-    * @hidden
-    */
+     * Specifies a plain text as tooltip content.
+     * ```html
+     * <igx-icon igxTooltipTarget [tooltip]="'Infragistics Inc. HQ'">info</igx-icon>
+     * ```
+     */
     @Input()
     public set tooltip(content: any) {
         if (!this.target && (typeof content === 'string' || content instanceof String)) {
@@ -326,6 +366,10 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     @Output()
     public tooltipHide = new EventEmitter<ITooltipHideEventArgs>();
 
+    private _viewContainerRef = inject(ViewContainerRef);
+    private _renderer = inject(Renderer2);
+    private _envInjector = inject(EnvironmentInjector);
+
     private _destroy$ = new Subject<void>();
     private _autoHideDelay = 180;
     private _isForceClosed = false;
@@ -334,15 +378,20 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     private _closeTemplate: TemplateRef<any>;
     private _sticky = false;
     private _positionSettings: PositionSettings = TooltipPositionSettings;
+    private _showTriggers = new Set(['pointerenter']);
+    private _hideTriggers = new Set(['pointerleave', 'click']);
+
+    private _abortController = new AbortController();
 
     /**
      * @hidden
      */
-    @HostListener('click')
     public override onClick() {
-        if (!this.target.collapsed) {
-            this._hideOnInteraction();
-        } else if (this.target.timeoutId) {
+        if (
+            this.target.timeoutId &&
+            this.target.collapsed &&
+            !this._showTriggers.has('click')
+        ) {
             clearTimeout(this.target.timeoutId);
             this.target.timeoutId = null;
         }
@@ -351,44 +400,20 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * @hidden
      */
-    @HostListener('mouseenter')
-    public onMouseEnter() {
+    public onShow(): void {
         this._checksBeforeShowing(() => this._showOnInteraction());
     }
 
     /**
      * @hidden
      */
-    @HostListener('mouseleave')
-    public onMouseLeave() {
-        if (this.tooltipDisabled) {
+    public onHide(): void {
+        if (this.tooltipDisabled || this.target.collapsed) {
             return;
         }
 
         this._checkOutletAndOutsideClick();
         this._hideOnInteraction();
-    }
-
-    /**
-     * @hidden
-     */
-    public onTouchStart() {
-        this._checksBeforeShowing(() => this._showOnInteraction());
-    }
-
-    /**
-     * @hidden
-     */
-    public onDocumentTouchStart(event) {
-        if (this.tooltipDisabled || this?.target?.tooltipTarget !== this) {
-            return;
-        }
-
-        if (this.nativeElement !== event.target &&
-            !this.nativeElement.contains(event.target)
-        ) {
-            this._hideOnInteraction();
-        }
     }
 
     /**
@@ -414,7 +439,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             }
         });
 
-        this.nativeElement.addEventListener('touchstart', this.onTouchStart = this.onTouchStart.bind(this), { passive: true });
+        this.removeEventListeners();
+        this.addEventListeners();
     }
 
     /**
@@ -431,7 +457,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     public ngOnDestroy() {
         this.hideTooltip();
-        this.nativeElement.removeEventListener('touchstart', this.onTouchStart);
+        this.removeEventListeners();
         this._destroyCloseButton();
         this._destroy$.next();
         this._destroy$.complete();
@@ -461,6 +487,24 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     private get _mergedOverlaySettings() {
         return Object.assign({}, this._overlayDefaults, this.overlaySettings);
+    }
+
+    private addEventListeners(): void {
+        const options = { passive: true, signal: this._abortController.signal };
+
+        this.onShow = this.onShow.bind(this);
+        for (const each of this._showTriggers) {
+            this.nativeElement.addEventListener(each, this.onShow, options);
+        }
+        this.onHide = this.onHide.bind(this);
+        for (const each of this._hideTriggers) {
+            this.nativeElement.addEventListener(each, this.onHide, options);
+        }
+    }
+
+    private removeEventListeners(): void {
+        this._abortController.abort();
+        this._abortController = new AbortController();
     }
 
     private _checkOutletAndOutsideClick(): void {
