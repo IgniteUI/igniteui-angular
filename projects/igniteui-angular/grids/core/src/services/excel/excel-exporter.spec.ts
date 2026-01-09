@@ -12,11 +12,11 @@ describe('Excel Exporter', () => {
     let options: IgxExcelExporterOptions;
     let actualData: FileContentData;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         exporter = new IgxExcelExporterService();
         actualData = new FileContentData();
         options = new IgxExcelExporterOptions('ExcelExport');
-
+        await import('fflate');
         // Spy the saveBlobToFile method so the files are not really created
         spyOn(ExportUtilities, 'saveBlobToFile');
     });

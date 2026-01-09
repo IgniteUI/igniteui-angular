@@ -1,8 +1,6 @@
 import { IExcelFile } from './excel-interfaces';
 import { ExcelStrings } from './excel-strings';
 import { WorksheetData } from './worksheet-data';
-
-import { strToU8 } from 'fflate';
 import { ExportHeaderType, ExportRecordType, IExportRecord, IColumnList, IColumnInfo, GRID_ROOT_SUMMARY, GRID_PARENT, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
 import { yieldingLoop } from 'igniteui-angular/core';
 
@@ -10,7 +8,8 @@ import { yieldingLoop } from 'igniteui-angular/core';
  * @hidden
  */
 export class RootRelsFile implements IExcelFile {
-    public writeElement(folder: Object) {
+    public async writeElement(folder: Object): Promise<void> {
+        const { strToU8 } = await import('fflate');
         folder['.rels'] = strToU8(ExcelStrings.getRels());
     }
 }
@@ -19,7 +18,8 @@ export class RootRelsFile implements IExcelFile {
  * @hidden
  */
 export class AppFile implements IExcelFile {
-    public writeElement(folder: Object, worksheetData: WorksheetData) {
+    public async writeElement(folder: Object, worksheetData: WorksheetData): Promise<void> {
+        const { strToU8 } = await import('fflate');
         folder['app.xml'] = strToU8(ExcelStrings.getApp(worksheetData.options.worksheetName));
     }
 }
@@ -28,7 +28,8 @@ export class AppFile implements IExcelFile {
  * @hidden
  */
 export class CoreFile implements IExcelFile {
-    public writeElement(folder: Object) {
+    public async writeElement(folder: Object): Promise<void> {
+        const { strToU8 } = await import('fflate');
         folder['core.xml'] = strToU8(ExcelStrings.getCore());
     }
 }
@@ -37,8 +38,9 @@ export class CoreFile implements IExcelFile {
  * @hidden
  */
 export class WorkbookRelsFile implements IExcelFile {
-    public writeElement(folder: Object, worksheetData: WorksheetData) {
+    public async writeElement(folder: Object, worksheetData: WorksheetData): Promise<void> {
         const hasSharedStrings = !worksheetData.isEmpty || worksheetData.options.alwaysExportHeaders;
+        const { strToU8 } = await import('fflate');
         folder['workbook.xml.rels'] = strToU8(ExcelStrings.getWorkbookRels(hasSharedStrings));
     }
 }
@@ -47,7 +49,8 @@ export class WorkbookRelsFile implements IExcelFile {
  * @hidden
  */
 export class ThemeFile implements IExcelFile {
-    public writeElement(folder: Object) {
+    public async writeElement(folder: Object): Promise<void> {
+        const { strToU8 } = await import('fflate');
         folder['theme1.xml'] = strToU8(ExcelStrings.getTheme());
     }
 }
@@ -99,12 +102,12 @@ export class WorksheetFile implements IExcelFile {
 
     public async writeElementAsync(folder: Object, worksheetData: WorksheetData) {
         return new Promise<void>(resolve => {
-            this.prepareDataAsync(worksheetData, (cols, rows) => {
+            this.prepareDataAsync(worksheetData, async (cols, rows) => {
                 const hasTable = (!worksheetData.isEmpty || worksheetData.options.alwaysExportHeaders)
                     && worksheetData.options.exportAsTable;
 
-                folder['sheet1.xml'] = strToU8(ExcelStrings.getSheetXML(
-                    this.dimension, this.freezePane, cols, rows, hasTable, this.maxOutlineLevel, worksheetData.isHierarchical));
+                const { strToU8 } = await import('fflate');
+                folder['sheet1.xml'] = strToU8(ExcelStrings.getSheetXML(this.dimension, this.freezePane, cols, rows, hasTable, this.maxOutlineLevel, worksheetData.isHierarchical));
                 resolve();
             });
         });
@@ -717,7 +720,8 @@ export class WorksheetFile implements IExcelFile {
  * @hidden
  */
 export class StyleFile implements IExcelFile {
-    public writeElement(folder: Object) {
+    public async writeElement(folder: Object): Promise<void> {
+        const { strToU8 } = await import('fflate');
         folder['styles.xml'] = strToU8(ExcelStrings.getStyles());
     }
 }
@@ -726,7 +730,8 @@ export class StyleFile implements IExcelFile {
  * @hidden
  */
 export class WorkbookFile implements IExcelFile {
-    public writeElement(folder: Object, worksheetData: WorksheetData) {
+    public async writeElement(folder: Object, worksheetData: WorksheetData): Promise<void> {
+        const { strToU8 } = await import('fflate');
         folder['workbook.xml'] = strToU8(ExcelStrings.getWorkbook(worksheetData.options.worksheetName));
     }
 }
@@ -735,8 +740,9 @@ export class WorkbookFile implements IExcelFile {
  * @hidden
  */
 export class ContentTypesFile implements IExcelFile {
-    public writeElement(folder: Object, worksheetData: WorksheetData) {
+    public async writeElement(folder: Object, worksheetData: WorksheetData): Promise<void> {
         const hasSharedStrings = !worksheetData.isEmpty || worksheetData.options.alwaysExportHeaders;
+        const { strToU8 } = await import('fflate');
         folder['[Content_Types].xml'] = strToU8(ExcelStrings.getContentTypesXML(hasSharedStrings, worksheetData.options.exportAsTable));
     }
 }
@@ -745,7 +751,7 @@ export class ContentTypesFile implements IExcelFile {
  * @hidden
  */
 export class SharedStringsFile implements IExcelFile {
-    public writeElement(folder: Object, worksheetData: WorksheetData) {
+    public async writeElement(folder: Object, worksheetData: WorksheetData): Promise<void> {
         const dict = worksheetData.dataDictionary;
         const sortedValues = dict.getKeys();
         const sharedStrings = new Array<string>(sortedValues.length);
@@ -754,11 +760,12 @@ export class SharedStringsFile implements IExcelFile {
             sharedStrings[dict.getSanitizedValue(value)] = '<si><t>' + value + '</t></si>';
         }
 
+        const { strToU8 } = await import('fflate');
         folder['sharedStrings.xml'] = strToU8(ExcelStrings.getSharedStringXML(
-                        dict.stringsCount,
-                        sortedValues.length,
-                        sharedStrings.join(''))
-                    );
+            dict.stringsCount,
+            sortedValues.length,
+            sharedStrings.join(''))
+        );
     }
 }
 
@@ -766,7 +773,7 @@ export class SharedStringsFile implements IExcelFile {
  * @hidden
  */
 export class TablesFile implements IExcelFile {
-    public writeElement(folder: Object, worksheetData: WorksheetData) {
+    public async writeElement(folder: Object, worksheetData: WorksheetData): Promise<void> {
         const columnCount = worksheetData.columnCount;
         const lastColumn = ExcelStrings.getExcelColumn(columnCount - 1) + worksheetData.rowCount;
         const autoFilterDimension = 'A1:' + lastColumn;
@@ -799,6 +806,7 @@ export class TablesFile implements IExcelFile {
             sortString = `<sortState ref="A2:${lastColumn}"><sortCondition descending="${dir}" ref="${sc}1:${sc}15"/></sortState>`;
         }
 
+        const { strToU8 } = await import('fflate');
         folder['table1.xml'] = strToU8(ExcelStrings.getTablesXML(autoFilterDimension, tableDimension, tableColumns, sortString));
     }
 }
@@ -807,7 +815,8 @@ export class TablesFile implements IExcelFile {
  * @hidden
  */
 export class WorksheetRelsFile implements IExcelFile {
-    public writeElement(folder: Object) {
+    public async writeElement(folder: Object): Promise<void> {
+        const { strToU8 } = await import('fflate');
         folder['sheet1.xml.rels'] = strToU8(ExcelStrings.getWorksheetRels());
     }
 }
