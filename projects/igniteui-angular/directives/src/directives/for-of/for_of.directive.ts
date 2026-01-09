@@ -1668,7 +1668,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
 
     public override onScroll(event) {
         this.scrollComponent.scrollAmount = event.target.scrollTop;
-        if (!parseInt(this.scrollComponent.nativeElement.style.height, 10)) {
+        if (!this.scrollComponent.size) {
             return;
         }
         if (!this._bScrollInternal) {
@@ -1678,7 +1678,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         }
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
 
-        requestAnimationFrame(() => {
+        this._zone.onStable.pipe(first()).subscribe(() => {
             this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
         });
 
