@@ -71,7 +71,7 @@ import {
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 import { IgxQueryBuilderComponent } from './query-builder.component';
 import { IgxQueryBuilderDragService } from './query-builder-drag.service';
-import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, IgxFieldFormatterPipe } from './query-builder.common';
+import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, IgxFieldFormatterPipe, IgxQueryBuilderSearchValueContext } from './query-builder.common';
 import { getCurrentI18n, IResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
@@ -1527,7 +1527,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public getSearchValueTemplateContext(defaultSearchValueTemplate): any {
+    public getSearchValueTemplateContext(defaultSearchValueTemplate): IgxQueryBuilderSearchValueContext {
         const ctx = {
             $implicit: this.searchValue,
             selectedField: this.selectedField,
