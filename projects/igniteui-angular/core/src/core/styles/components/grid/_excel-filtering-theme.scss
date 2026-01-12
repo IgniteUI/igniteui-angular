@@ -128,7 +128,7 @@
             background: var-get($theme, 'filtering-row-background');
 
             %igx-group-display {
-                --shadow: none;
+                --elevation: none;
                 --item-background: #{var-get($theme, 'filtering-row-background')};
                 --item-hover-background: #{color($color: 'gray', $variant: 100)};
                 --item-selected-background: #{color($color: 'gray', $variant: 100)};
@@ -242,10 +242,7 @@
     %grid-excel-menu__header-actions {
         display: flex;
         margin-inline-start: auto;
-
-        [igxButton] + [igxButton] {
-            margin-inline-start: rem(4px);
-        }
+        gap: rem(4px);
 
         %grid-excel-actions__action {
             padding: 0 !important;
