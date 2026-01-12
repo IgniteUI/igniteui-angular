@@ -77,7 +77,7 @@
     "express": "^5.2.1",
     "fflate": "^0.8.1",
     "igniteui-i18n-core": "^1.0.2",
-    "igniteui-theming": "^24.0.0",
+    "igniteui-theming": "^24.1.0",
     "igniteui-trial-watermark": "^3.1.0",
     "jspdf": "^3.0.4",
     "lodash-es": "^4.17.21",
