@@ -541,7 +541,7 @@
         position: absolute;
         box-shadow: var-get($theme, 'ghost-elevation');
         overflow: hidden;
-        color: var-get($theme, 'focus-text-color');
+        color: var-get($theme, 'ghost-text-color');
         background: var-get($theme, 'ghost-background');
         // If z-index is not set,
         //the chip would hide behind it's parent grid as it has a z-index of 1
