@@ -945,6 +945,21 @@ describe('Excel Exporter', () => {
             await expectAsync(getExportedData(hGrid, options)).toBeResolved();
         });
 
+        it('should export hierarchical grid with empty data and summaries without throwing error', async () => {
+            fix = TestBed.createComponent(IgxHierarchicalGridEmptyDataExportComponent);
+            fix.detectChanges();
+
+            hGrid = fix.componentInstance.hGrid;
+            const artistColumn = hGrid.columns.find(col => col.field === 'Artist');
+            artistColumn.hasSummary = true;
+            fix.detectChanges();
+
+            options = createExportOptions('HierarchicalGridEmptyDataWithSummariesExcelExport');
+            options.exportSummaries = true;
+
+            await expectAsync(getExportedData(hGrid, options)).toBeResolved();
+        });
+
         it('should export hierarchical grid with missing child data key without throwing error', async () => {
             fix = TestBed.createComponent(IgxHierarchicalGridMissingChildDataExportComponent);
             fix.detectChanges();
