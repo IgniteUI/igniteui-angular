@@ -8,8 +8,8 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The grid theme used to style the component.
 @mixin excel-filtering($theme) {
-    $variant: map.get($theme, '_meta', 'variant');
-    $theme-variant: map.get($theme, '_meta', 'theme-variant');
+    $variant: map.get($theme, '_meta', 'theme');
+    $theme-variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
     $tree-node-indent: (
@@ -167,11 +167,14 @@
             @if $theme-variant == 'light' {
                 background: contrast-color($color: 'gray', $variant: 900);
             } @else {
-                background: color($color: 'surface', $variant: 500);
+                background: color($color: 'gray', $variant: 50);
             }
 
             %igx-group-display {
                 --item-background: transparent;
+                @if $theme-variant == 'dark' {
+                    --item-text-color: #{contrast-color($color: 'surface', $variant: 500)};
+                }
                 --border-color: transparent;
                 --item-border-color: transparent;
                 --item-focused-border-color: transparent;
@@ -180,7 +183,7 @@
                 --item-selected-hover-border-color: transparent;
                 --item-disabled-border: transparent;
                 --disabled-selected-border-color: transparent;
-                --shadow: none;
+                --elevation: none;
             }
 
             %igx-group-item {
@@ -382,7 +385,7 @@
         justify-content: space-between;
 
         @if $variant == 'indigo' {
-            padding-block: pad-block(rem(6px));
+            padding-block: pad-block(rem(4px), rem(6px), rem(8px));
             padding-inline: pad-inline(rem(12px));
             margin-inline: rem(8px);
             margin-block-end: rem(4px);
@@ -757,7 +760,6 @@
     $header-comfortable: map.get($categories, 'header-comfortable');
     $header-compact: map.get($categories, 'header-compact');
 
-
     %grid-excel-menu {
         %grid-excel-menu__header > h4 {
             @include type-style('h6')
@@ -805,6 +807,10 @@
         %cbx-label {
             @include type-style('body-2');
         }
+    }
+
+    %igx-group-item {
+        @include type-style('button');
     }
 
     %grid-excel-menu__secondary--cosy {
