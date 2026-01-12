@@ -128,7 +128,7 @@
     "igniteui-dockmanager": "^1.17.0",
     "igniteui-i18n-resources": "^1.0.2",
     "igniteui-sassdoc-theme": "^2.1.0",
-    "igniteui-webcomponents": "^6.3.1",
+    "igniteui-webcomponents": "^6.4.0",
     "jasmine": "^5.6.0",
     "jasmine-core": "^5.6.0",
     "karma": "^6.4.4",
