@@ -1,5 +1,5 @@
 ﻿import { NgForOfContext } from '@angular/common';
-import { ChangeDetectorRef, ComponentRef, Directive, EmbeddedViewRef, EventEmitter, Input, IterableChanges, IterableDiffer, IterableDiffers, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, TemplateRef, TrackByFunction, ViewContainerRef, AfterViewInit, booleanAttribute, DOCUMENT, inject } from '@angular/core';
+import { ChangeDetectorRef, ComponentRef, Directive, EmbeddedViewRef, EventEmitter, Input, IterableChanges, IterableDiffer, IterableDiffers, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, TemplateRef, TrackByFunction, ViewContainerRef, AfterViewInit, booleanAttribute, DOCUMENT, inject, afterNextRender, runInInjectionContext, EnvironmentInjector } from '@angular/core';
 
 import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
@@ -88,6 +88,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     private _viewContainer = inject(ViewContainerRef);
     protected _template = inject<TemplateRef<NgForOfContext<T>>>(TemplateRef);
     protected _differs = inject(IterableDiffers);
+    protected _injector = inject(EnvironmentInjector);
     public cdr = inject(ChangeDetectorRef);
     protected _zone = inject(NgZone);
     protected syncScrollService = inject(IgxForOfScrollSyncService);
@@ -606,7 +607,13 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             // Actual scroll delta that was added is smaller than 1 and onScroll handler doesn't trigger when scrolling < 1px
             const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
             // scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
-            this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
+            runInInjectionContext(this._injector, () => {
+                afterNextRender({
+                    write: () => {
+                        this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
+                    }
+                  });
+              });
         }
 
         const maxRealScrollTop = this.scrollComponent.nativeElement.scrollHeight - containerSize;
@@ -901,7 +908,13 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         const prevStartIndex = this.state.startIndex;
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
 
-        this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
+        runInInjectionContext(this._injector, () => {
+            afterNextRender({
+                write: () => {
+                    this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
+                }
+              });
+          });
 
         this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
 
@@ -1677,10 +1690,13 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
             this._bScrollInternal = false;
         }
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
-
-        this._zone.onStable.pipe(first()).subscribe(() => {
-            this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
-        });
+        runInInjectionContext(this._injector, () => {
+            afterNextRender({
+                write: () => {
+                    this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
+                }
+              });
+          });
 
         this.cdr.markForCheck();
     }
