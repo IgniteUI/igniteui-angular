@@ -90,8 +90,7 @@ import {
     IGridResourceStrings,
     IgxOverlayOutletDirective,
     DEFAULT_LOCALE,
-    onResourceChangeHandle,
-    PerformanceService
+    onResourceChangeHandle
 } from 'igniteui-angular/core';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
@@ -135,7 +134,6 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 @Directive()
 export abstract class IgxGridBaseDirective implements GridType,
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
-    private performance = inject(PerformanceService);
 
     public readonly validation = inject(IgxGridValidationService);
     /** @hidden @internal */
@@ -3866,8 +3864,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     public ngOnInit() {
         this._setupServices();
         this._setupListeners();
-        this.performance.setLogEnabled(true);
-        this.performance.attachObserver();
         this.rowListDiffer = this.differs.find([]).create(null);
         // compare based on field, not on object ref.
         this.columnListDiffer = this.differs.find([]).create((_index, col: ColumnType) => col.field);
