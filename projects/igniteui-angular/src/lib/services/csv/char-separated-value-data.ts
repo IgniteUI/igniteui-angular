@@ -42,13 +42,15 @@ export class CharSeparatedValueData {
         return this._headerRecord + this._dataRecords;
     }
 
-    public prepareDataAsync(done: (result: string) => void) {
+    public prepareDataAsync(done: (result: string) => void, alwaysExportHeaders: boolean = true) {
         const columns = this.columns?.filter(c => !c.skip)
                         .sort((a, b) => a.startIndex - b.startIndex)
                         .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
         const keys = columns && columns.length ? columns.map(c => c.field) : ExportUtilities.getKeysFromData(this._data);
 
-        this._isSpecialData = ExportUtilities.isSpecialData(this._data[0]);
+        if (this._data && this._data.length > 0) {
+            this._isSpecialData = ExportUtilities.isSpecialData(this._data[0]);
+        }
         this._escapeCharacters.push(this._delimiter);
 
         const headers = columns && columns.length ?
@@ -57,7 +59,11 @@ export class CharSeparatedValueData {
 
         this._headerRecord = this.processHeaderRecord(headers, this._data.length);
         if (keys.length === 0 || ((!this._data || this._data.length === 0) && keys.length === 0)) {
-            done('');
+            if (alwaysExportHeaders && headers && headers.length > 0) {
+                done(this._headerRecord);
+            } else {
+                done('');
+            }
         } else {
             this.processDataRecordsAsync(this._data, keys, (dr) => {
                 done(this._headerRecord + dr);
