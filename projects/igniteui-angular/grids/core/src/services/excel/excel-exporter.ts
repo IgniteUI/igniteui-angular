@@ -1,5 +1,3 @@
-import { zip } from 'fflate';
-
 import { EventEmitter, Injectable } from '@angular/core';
 import { ExcelElementsFactory } from './excel-elements-factory';
 import { ExcelFolderTypes } from './excel-enums';
@@ -135,14 +133,31 @@ export class IgxExcelExporterService extends IgxBaseExporter {
 
         const rootFolder = ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder);
         const fileData = {};
-        IgxExcelExporterService.populateZipFileConfig(fileData, rootFolder, worksheetData)
-            .then(() => {
-                zip(fileData, (_, result) => {
-                    this.saveFile(result, options.fileName);
-                    this.exportEnded.emit({ xlsx: fileData });
-                    done();
+        (async () => {
+            try {
+                await IgxExcelExporterService.populateZipFileConfig(fileData, rootFolder, worksheetData);
+
+                // Dynamically import fflate to reduce initial bundle size
+                const { zip } = await import('fflate');
+
+                await new Promise<void>((resolve, reject) => {
+                    zip(fileData, (error, result) => {
+                        if (error) {
+                            reject(error);
+                            return;
+                        }
+                        this.saveFile(result, options.fileName);
+                        this.exportEnded.emit({ xlsx: fileData });
+                        resolve();
+                    });
                 });
-            });
+
+                done();
+            } catch (error) {
+                console.error('Excel export failed:', error);
+                done();
+            }
+        })();
     }
 
     private saveFile(data: Uint8Array, fileName: string): void {
