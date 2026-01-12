@@ -839,6 +839,7 @@ export var registerConfig = [
     contentQueries: [],
     additionalProperties: [],
     methods: ["canCommit", "commit", "discard", "onExpressionTreeChange"],
+    templateProps: ["searchValueTemplate"],
     boolProps: [
       "showEntityChangeDialog",
       "disableEntityChange",

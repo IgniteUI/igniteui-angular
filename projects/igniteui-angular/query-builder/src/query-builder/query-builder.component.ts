@@ -1,4 +1,4 @@
-import { booleanAttribute, ContentChild, EventEmitter, Output, TemplateRef, inject } from '@angular/core';
+import { booleanAttribute, ContentChild, EventEmitter, Output, TemplateRef, inject, AfterContentInit } from '@angular/core';
 import {
     Component, Input, ViewChild, ElementRef, OnDestroy, HostBinding
 } from '@angular/core';
@@ -18,6 +18,7 @@ import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { IgxIconService } from 'igniteui-angular/icon';
 import { editor } from '@igniteui/material-icons-extended';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
+import { IgxQueryBuilderSearchValueContext } from './query-builder.common';
 
 /* wcElementTag: igc-query-builder-header */
 /**
@@ -36,7 +37,7 @@ import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.dir
     templateUrl: './query-builder.component.html',
     imports: [IgxQueryBuilderTreeComponent]
 })
-export class IgxQueryBuilderComponent implements OnDestroy {
+export class IgxQueryBuilderComponent implements AfterContentInit,OnDestroy {
     protected iconService = inject(IgxIconService);
 
     /**
@@ -186,6 +187,18 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     public disableEntityChange = false;
 
     /**
+     * Sets/gets the search value template.
+     */
+    @Input()
+    public set searchValueTemplate(template: TemplateRef<IgxQueryBuilderSearchValueContext>) {
+        this._searchValueTemplate = template;
+    }
+
+    public get searchValueTemplate(): TemplateRef<IgxQueryBuilderSearchValueContext> {
+        return this._searchValueTemplate;
+    }
+
+    /**
      * Disables return fields changes at the root level.
      */
      @Input()
@@ -204,8 +217,8 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    @ContentChild(IgxQueryBuilderSearchValueTemplateDirective, { read: TemplateRef })
-    public searchValueTemplate: TemplateRef<IgxQueryBuilderSearchValueTemplateDirective>;
+    @ContentChild(IgxQueryBuilderSearchValueTemplateDirective)
+    protected searchValueTemplateDirective: IgxQueryBuilderSearchValueTemplateDirective;
 
     /**
      * @hidden @internal
@@ -220,12 +233,22 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     private _fields: FieldType[];
     private _entities: EntityType[];
     private _shouldEmitTreeChange = true;
+    private _searchValueTemplate: TemplateRef<IgxQueryBuilderSearchValueContext>;
 
     constructor() {
         this.registerSVGIcons();
         onResourceChangeHandle(this.destroy$, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
         }, this);
+    }
+
+    /**
+     * @hidden
+     */
+    public ngAfterContentInit(): void {
+        if (this.searchValueTemplateDirective) {
+            this._searchValueTemplate = this.searchValueTemplateDirective.template;
+        }
     }
 
     /**

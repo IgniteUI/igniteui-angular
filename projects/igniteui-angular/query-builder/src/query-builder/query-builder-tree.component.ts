@@ -162,7 +162,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * Sets/gets the search value template.
      */
     @Input()
-    public searchValueTemplate: TemplateRef<IgxQueryBuilderSearchValueTemplateDirective> = null;
+    public searchValueTemplate: TemplateRef<IgxQueryBuilderSearchValueContext> = null;
 
     /**
     * Returns the parent expression operand.
