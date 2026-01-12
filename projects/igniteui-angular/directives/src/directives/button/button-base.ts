@@ -119,7 +119,9 @@ export abstract class IgxButtonBaseDirective implements AfterViewInit, OnDestroy
     }
 
     public ngOnDestroy(): void {
-        this._animationScheduler.unsubscribe();
+        if (this._animationScheduler) {
+            this._animationScheduler.unsubscribe();
+        }
     }
 
     /**
