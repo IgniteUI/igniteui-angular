@@ -6033,6 +6033,39 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(checkboxes[0].indeterminate).toBeTrue();
         }));
 
+        it('Should enable the `Apply` button & filter properly when "Add to current filter selection" is the only selected option.', fakeAsync(() => {
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+
+            // Type string in search box.
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, '5', fix);
+            fix.detectChanges();
+            tick();
+
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
+            expect(checkboxes.length).toBe(3);
+            checkboxes[0].click(); // Uncheck 'Select All'
+            checkboxes[1].click(); // Check 'Add to current filter selection'
+            fix.detectChanges();
+            tick();
+
+            // Click 'apply' button to apply filter.
+            const applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix, excelMenu);
+            expect(applyButton.disabled).toBeFalse();
+            applyButton.click();
+            fix.detectChanges();
+            tick();
+
+            // Get the results and verify that they match the list items.
+            const gridCellValues = GridFunctions.getColumnCells(fix, 'Downloads');
+
+            // Record with '254' downloads is filtered out.
+            expect(gridCellValues.length).toEqual(7);
+        }));
+
         it('Should commit and close ESF on pressing \'Enter\'', fakeAsync(() => {
             // Open excel style filtering dialog.
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
