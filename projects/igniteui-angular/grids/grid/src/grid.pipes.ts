@@ -119,7 +119,7 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
             return collection;
         }
 
-        let result = cloneArray(collection) as any;
+        const result = cloneArray(collection) as any;
         uniqueRoots.forEach(x => {
             const index = collection.indexOf(x);
             const colKeys = [...x.cellMergeMeta.keys()];
