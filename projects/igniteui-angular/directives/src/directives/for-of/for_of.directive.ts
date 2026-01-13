@@ -433,7 +433,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
         this._maxSize = this._calcMaxBrowserSize();
         if (this.igxForScrollOrientation === 'vertical') {
-            this.dc.instance._viewContainer.element.nativeElement.style.top = '0px';
+            this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(0px)`;
             this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation);
             if (!this.scrollComponent || this.scrollComponent.destroyed) {
                 this.scrollComponent = vc.createComponent(VirtualHelperComponent).instance;
@@ -1466,8 +1466,10 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         const scroll = this.scrollComponent.nativeElement;
         scrollOffset = scroll && this.scrollComponent.size ?
         currentScroll - this.sizesCache[this.state.startIndex] : 0;
-        const dir = this.igxForScrollOrientation === 'horizontal' ? 'left' : 'top';
-        this.dc.instance._viewContainer.element.nativeElement.style[dir] = -(scrollOffset) + 'px';
+        const dir = this.igxForScrollOrientation === 'horizontal' ? 'left' : 'transform';
+        this.dc.instance._viewContainer.element.nativeElement.style[dir] = this.igxForScrollOrientation === 'horizontal' ?
+         -(scrollOffset) + 'px' :
+         `translateY(${-scrollOffset}px)`;
     }
 
     protected _adjustScrollPositionAfterSizeChange(sizeDiff) {
@@ -1477,7 +1479,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             this.recalcUpdateSizes();
             const offset = this.igxForScrollOrientation === 'horizontal' ?
                 parseInt(this.dc.instance._viewContainer.element.nativeElement.style.left, 10) :
-                parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+                Number(this.dc.instance._viewContainer.element.nativeElement.style.transform?.match(/translateY\((-?\d+\.?\d*)px\)/)?.[1]);
             const newSize = this.sizesCache[this.state.startIndex] - offset;
             this.scrollPosition = newSize;
             if (this.scrollPosition !== newSize) {
