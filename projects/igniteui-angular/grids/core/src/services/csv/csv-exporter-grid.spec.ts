@@ -405,7 +405,7 @@ describe('CSV Grid Exporter', () => {
         wrapper.verifyData('Country,Region,Test Header', 'Only headers should be exported.');
     });
 
-    fit('should export grid with summaries correctly, not as [object Object]', async () => {
+    it('should export grid with summaries correctly, not as [object Object]', async () => {
         const fix = TestBed.createComponent(GridCustomSummaryComponent);
         fix.detectChanges();
 
