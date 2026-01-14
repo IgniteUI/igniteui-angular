@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { GridType } from 'igniteui-angular/grids/core';
-import { formatDate, GridColumnDataType, IGroupingExpression, IgxSorting } from 'igniteui-angular/core';
+import { GridColumnDataType, IGroupingExpression, IgxSorting } from 'igniteui-angular/core';
 
 const HIDDEN_FIELD_NAME = '_Igx_Hidden_Data_';
 
@@ -120,7 +120,7 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
         const map: Map<any, GroupByRecord> = new Map<any, GroupByRecord>();
         for (const record of array) {
             const value = isDateTime
-                ? formatDate(record[key], column.pipeArgs.format, this.grid.locale)
+                ? this.grid.i18nFormatter.formatDate(record[key], column.pipeArgs.format, this.grid.locale)
                 : record[key];
 
             let valueCase = value;

@@ -1,5 +1,5 @@
 import { AfterViewInit, EventEmitter, LOCALE_ID, Output, TemplateRef, inject } from '@angular/core';
-import { getLocaleFirstDayOfWeek, NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
+import { NgTemplateOutlet, NgClass } from '@angular/common';
 
 import {
     Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding
@@ -37,6 +37,9 @@ import {
     IgxPickerToggleComponent,
     IgxPickerClearComponent,
     getCurrentResourceStrings,
+    DEFAULT_LOCALE,
+    onResourceChangeHandle,
+    IgxDateFormatterPipe,
     isTree,
     IgxOverlayOutletDirective
 } from 'igniteui-angular/core';
@@ -69,6 +72,7 @@ import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.dir
 import { IgxQueryBuilderComponent } from './query-builder.component';
 import { IgxQueryBuilderDragService } from './query-builder-drag.service';
 import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, IgxFieldFormatterPipe } from './query-builder.common';
+import { getCurrentI18n, IResourceChangeEventArgs } from 'igniteui-i18n-core';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -82,7 +86,7 @@ const DEFAULT_CHIP_FOCUS_DELAY = 50;
     templateUrl: './query-builder-tree.component.html',
     host: { 'class': 'igx-query-builder-tree' },
     imports: [
-        DatePipe,
+        IgxDateFormatterPipe,
         FormsModule,
         IgxButtonDirective,
         IgxCheckboxComponent,
@@ -229,7 +233,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     @Input()
     public get locale(): string {
-        return this._locale;
+        return this._locale || this._defaultLocale;
     }
 
     /**
@@ -238,12 +242,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public set locale(value: string) {
         this._locale = value;
-        // if value is invalid, set it back to _localeId
-        try {
-            getLocaleFirstDayOfWeek(this._locale);
-        } catch {
-            this._locale = this._localeId;
-        }
+        this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false, this._locale);
     }
 
     /**
@@ -259,7 +258,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * Returns the resource strings.
      */
     public get resourceStrings(): IQueryBuilderResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -493,8 +492,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _expandedExpressions: IFilteringExpression[] = [];
     private _fields: FieldType[];
     private _locale;
+    private _defaultLocale;
     private _entityNewValue: EntityType;
-    private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+    private _resourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 
     /**
      * Returns if the select entity dropdown at the root level is disabled after the initial selection.
@@ -561,10 +562,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     constructor() {
-        const elRef = this.elRef;
-
-        this.locale = this.locale || this._localeId;
-        this.dragService.register(this, elRef);
+        this.initLocale();
+        this.dragService.register(this, this.elRef);
     }
 
     /**
@@ -1739,6 +1738,19 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (this.rootGroup?.children?.length == 0) {
             this.rootGroup = null;
             this.currentGroup = null;
+        }
+    }
+
+    private initLocale() {
+        this._defaultLocale = getCurrentI18n();
+        this._locale = this._localeId !== DEFAULT_LOCALE ? this._localeId : this._locale;
+        onResourceChangeHandle(this.destroy$, this.onResourceChange, this);
+    }
+
+    private onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
+        this._defaultLocale = args.detail.newLocale;
+        if (!this._locale) {
+            this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
         }
     }
 

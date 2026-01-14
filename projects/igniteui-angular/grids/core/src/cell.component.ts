@@ -20,21 +20,23 @@ import {
     booleanAttribute,
     inject
 } from '@angular/core';
-import { formatPercent, NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe, getLocaleCurrencyCode, getCurrencySymbol } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { first, takeUntil, takeWhile } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 import {
-    formatCurrency,
-    formatDate,
     PlatformUtil,
     AutoPositionStrategy,
     HorizontalAlignment,
     IgxOverlayService,
     GridColumnDataType,
-    ColumnType
+    ColumnType,
+    IgxNumberFormatterPipe,
+    IgxDateFormatterPipe,
+    IgxCurrencyFormatterPipe,
+    IgxPercentFormatterPipe
 } from 'igniteui-angular/core';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { HammerGesturesManager } from 'igniteui-angular/core';
@@ -82,10 +84,10 @@ import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
     imports: [
         NgClass,
         NgTemplateOutlet,
-        DecimalPipe,
-        PercentPipe,
-        CurrencyPipe,
-        DatePipe,
+        IgxNumberFormatterPipe,
+        IgxPercentFormatterPipe,
+        IgxCurrencyFormatterPipe,
+        IgxDateFormatterPipe,
         ReactiveFormsModule,
         IgxChipComponent,
         IgxTextHighlightDirective,
@@ -431,16 +433,17 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
         const args = this.column.pipeArgs;
         const locale = this.grid.locale;
+        const i18nFormatter = this.grid.i18nFormatter;
 
         switch (this.column.dataType) {
             case GridColumnDataType.Percent:
-                return formatPercent(this.value, locale, args.digitsInfo);
+                return i18nFormatter.formatPercent(this.value, locale, args.digitsInfo);
             case GridColumnDataType.Currency:
-                return formatCurrency(this.value, this.currencyCode, args.display, args.digitsInfo, locale);
+                return i18nFormatter.formatCurrency(this.value, locale, args.display, this.currencyCode, args.digitsInfo);
             case GridColumnDataType.Date:
             case GridColumnDataType.DateTime:
             case GridColumnDataType.Time:
-                return formatDate(this.value, args.format, locale, args.timezone);
+                return i18nFormatter.formatDate(this.value, args.format, locale, args.timezone);
         }
         return this.value;
     }
@@ -829,13 +832,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /** @hidden @internal */
     public get currencyCode(): string {
-        return this.column.pipeArgs.currencyCode ?
-            this.column.pipeArgs.currencyCode : getLocaleCurrencyCode(this.grid.locale);
+        return this.grid.i18nFormatter.getCurrencyCode(this.grid.locale, this.column.pipeArgs.currencyCode);
     }
 
     /** @hidden @internal */
     public get currencyCodeSymbol(): string {
-        return getCurrencySymbol(this.currencyCode, 'wide', this.grid.locale);
+        return this.grid.i18nFormatter.getCurrencySymbol(this.currencyCode, this.grid.locale);
     }
 
     protected _lastSearchInfo: ISearchInfo;

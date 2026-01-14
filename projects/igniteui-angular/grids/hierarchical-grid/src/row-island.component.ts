@@ -29,7 +29,7 @@ import {
     ISearchInfo
 } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
-import { IgxActionStripToken } from 'igniteui-angular/core';
+import { IgxActionStripToken, IGridResourceStrings } from 'igniteui-angular/core';
 import { first, filter, takeUntil, pluck } from 'rxjs/operators';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IGridCreatedEventArgs } from './events';
@@ -101,6 +101,22 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /* blazorInclude,wcInclude */
     public set childDataKey(value: string) {
         this.key = value;
+    }
+
+    /**
+     * Gets/Sets the resource strings.
+     *
+     * @remarks
+     * By default it uses the root grid resources.
+     */
+    @Input()
+    public override set resourceStrings(value: IGridResourceStrings) {
+        super.resourceStrings = value;
+        this.updateGridsResources();
+    }
+
+    public override get resourceStrings() {
+        return super.resourceStrings ?? this.rootGrid.resourceStrings;
     }
 
     /**
@@ -528,5 +544,11 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         });
         grid.childGridTemplates.clear();
         grid.onRowIslandChange();
+    }
+
+    private updateGridsResources() {
+        this.rowIslandAPI.getChildGrids().forEach((grid) => {
+            grid.resourceStrings = this.resourceStrings;
+        });
     }
 }

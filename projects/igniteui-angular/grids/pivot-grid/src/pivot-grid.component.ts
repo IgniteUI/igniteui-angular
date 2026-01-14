@@ -33,7 +33,7 @@ import { DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from 'i
 import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective } from 'igniteui-angular/grids/core';
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
 import { IgxPivotColumnResizingService } from 'igniteui-angular/grids/core';
-import { State, Transaction, TransactionService } from 'igniteui-angular/core';
+import { State, Transaction, TransactionService, onResourceChangeHandle } from 'igniteui-angular/core';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
 import { GridBaseAPIService } from 'igniteui-angular/grids/core';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
@@ -993,6 +993,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 this.generateConfig();
             }
             this.setupColumns();
+            // Bind to onResourceChange after the columns have initialized the first time to avoid premature initialization.
+            onResourceChangeHandle(this.destroy$, () => {
+                // Since the columns are kinda static, due to assigning DisplayName on init, they need to be regenerated.
+                this.setupColumns();
+            }, this);
         });
         if (this.valueChipTemplateDirective) {
             this.valueChipTemplate = this.valueChipTemplateDirective.template;
@@ -1009,6 +1014,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         Promise.resolve().then(() => {
             super.ngAfterViewInit();
         });
+
     }
 
     /**

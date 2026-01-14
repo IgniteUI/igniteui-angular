@@ -10,6 +10,7 @@ import {
     HostBinding,
     InjectionToken,
     inject,
+    DestroyRef,
 } from "@angular/core";
 import { noop } from "rxjs";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
@@ -18,7 +19,16 @@ import {
     IgxCalendarMonthDirective,
     IgxCalendarYearDirective,
 } from "../calendar.directives";
-import { CalendarDay, DateRangeType, DayInterval, getNextActiveDate, isDate, isDateInRanges } from 'igniteui-angular/core';
+import { getCurrentI18n, getDateFormatter, IResourceChangeEventArgs } from 'igniteui-i18n-core';
+import {
+    CalendarDay,
+    DateRangeType,
+    DayInterval,
+    getNextActiveDate,
+    isDate,
+    isDateInRanges,
+    onResourceChangeHandle
+} from 'igniteui-angular/core';
 
 
 export enum IgxCalendarNavDirection {
@@ -42,7 +52,7 @@ export const DAY_INTERVAL_TOKEN = new InjectionToken<DayInterval>(
 })
 export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     protected dayInterval = inject<DayInterval>(DAY_INTERVAL_TOKEN);
-    
+
     @HostBinding("attr.role")
     @Input()
     public role = 'grid';
@@ -108,18 +118,22 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    protected _formatter: Intl.DateTimeFormat;
+    protected get formatter(): Intl.DateTimeFormat {
+        return getDateFormatter().getIntlFormatter(this.locale);
+    }
 
     /**
      * @hidden
      */
-    protected _locale = "en";
+    protected _locale;
 
     /**
      * @hidden
-     * @internal
      */
-    private _date = new Date();
+    protected _defaultLocale;
+
+   private _date = new Date();
+   private _destroyRef = inject(DestroyRef);
 
     /**
      * @hidden
@@ -162,7 +176,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      */
     @Input()
     public get locale(): string {
-        return this._locale;
+        return this._locale || this._defaultLocale;
     }
 
     /**
@@ -174,11 +188,10 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      */
     public set locale(value: string) {
         this._locale = value;
-        this.initFormatter();
     }
 
     constructor() {
-        this.initFormatter();
+        this.initLocale();
     }
 
     /**
@@ -331,10 +344,12 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    protected abstract initFormatter(): void;
-
-    /**
-     * @hidden
-     */
     protected abstract get range(): Date[];
+
+    private initLocale() {
+        this._defaultLocale = getCurrentI18n();
+        onResourceChangeHandle(this._destroyRef, (args: CustomEvent<IResourceChangeEventArgs>) => {
+            this._defaultLocale = args.detail.newLocale;
+        }, this);
+    }
 }
