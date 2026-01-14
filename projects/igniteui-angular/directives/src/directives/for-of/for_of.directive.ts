@@ -109,7 +109,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
     public set igxForOf(value: U & T[] | null) {
         this._igxForOf = value;
-        this.resolveDataDiff();
+        if(this._differ) {
+            this.resolveDataDiff();
+        }
     }
 
     /**
@@ -473,6 +475,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             }
             this._updateScrollOffset();
         }
+        this.resolveDataDiff();
     }
 
     public ngAfterViewInit(): void {
