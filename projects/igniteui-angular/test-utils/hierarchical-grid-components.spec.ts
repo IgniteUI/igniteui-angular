@@ -748,3 +748,44 @@ export class IgxHierarchicalGridDefaultComponent {
         this.data = SampleTestData.hierarchicalGridSingersFullData();
     }
 }
+
+@Component({
+    template: `
+    <igx-hierarchical-grid [data]="data" [height]="'1200px'" [width]="'700px'" #hierarchicalGrid>
+        <igx-column field="Artist" [sortable]="true"></igx-column>
+        <igx-column field="Debut" [sortable]="true" dataType="number"></igx-column>
+        <igx-column field="GrammyNominations" header="Grammy Nominations" [sortable]="true"></igx-column>
+        <igx-column field="GrammyAwards" header="Grammy Awards" [sortable]="true"></igx-column>
+
+        <igx-row-island [key]="'Albums'" [autoGenerate]="true">
+        </igx-row-island>
+    </igx-hierarchical-grid>
+    `,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+})
+export class IgxHierarchicalGridEmptyDataExportComponent {
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
+    public data = [];
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid [data]="data" [height]="'1200px'" [width]="'700px'" #hierarchicalGrid>
+        <igx-column field="Artist" [sortable]="true"></igx-column>
+        <igx-column field="Debut" [sortable]="true" dataType="number"></igx-column>
+        <igx-column field="GrammyNominations" header="Grammy Nominations" [sortable]="true"></igx-column>
+        <igx-column field="GrammyAwards" header="Grammy Awards" [sortable]="true"></igx-column>
+
+        <igx-row-island [key]="'Albums'" [autoGenerate]="true">
+        </igx-row-island>
+    </igx-hierarchical-grid>
+    `,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+})
+export class IgxHierarchicalGridMissingChildDataExportComponent {
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
+    // Data without the 'Albums' key that the row island expects
+    public data = [
+        { Artist: 'Artist1', Debut: 2000, GrammyNominations: 5, GrammyAwards: 2 }
+    ];
+}

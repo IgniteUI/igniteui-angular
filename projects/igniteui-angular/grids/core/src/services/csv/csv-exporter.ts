@@ -51,7 +51,7 @@ export class IgxCsvExporterService extends IgxBaseExporter {
 
     protected exportDataImplementation(data: IExportRecord[], options: IgxCsvExporterOptions, done: () => void) {
         const dimensionKeys = data[0]?.dimensionKeys;
-        data = dimensionKeys?.length ?
+        data = dimensionKeys?.length ? 
             data.map((item) => item.rawData):
             data.map((item) => item.data);
         const columnList = this._ownersMap.get(DEFAULT_OWNER);
