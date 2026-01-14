@@ -7,6 +7,7 @@ export interface IMergeByResult {
     childRecords?: any[];
 }
 
+/* csSuppress */
 /**
  * Merge strategy interface.
  */
@@ -40,6 +41,7 @@ export interface IGridMergeStrategy {
     comparer: (prevRecord: any, record: any, field: string) => boolean;
 }
 
+/* csSuppress */
 export class DefaultMergeStrategy implements IGridMergeStrategy {
     protected static _instance: DefaultMergeStrategy = null;
 
@@ -142,7 +144,7 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
     }
 }
 
-
+/* csSuppress */
 export class DefaultTreeGridMergeStrategy extends DefaultMergeStrategy {
     /* blazorCSSuppress */
     public override comparer(prevRecord: any, record: any, field: string, isDate = false, isTime = false): boolean {
@@ -162,6 +164,7 @@ export class DefaultTreeGridMergeStrategy extends DefaultMergeStrategy {
     }
 }
 
+/* csSuppress */
 export class ByLevelTreeGridMergeStrategy extends DefaultMergeStrategy {
     /* blazorCSSuppress */
     public override comparer(prevRecord: any, record: any, field: string, isDate = false, isTime = false): boolean {
