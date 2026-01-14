@@ -78,7 +78,7 @@
     "fflate": "^0.8.1",
     "igniteui-theming": "^24.1.1",
     "igniteui-trial-watermark": "^3.1.0",
-    "jspdf": "^3.0.4",
+    "jspdf": "^4.0.0",
     "lodash-es": "^4.17.21",
     "marked": "^17.0.1",
     "marked-shiki": "^1.2.1",
