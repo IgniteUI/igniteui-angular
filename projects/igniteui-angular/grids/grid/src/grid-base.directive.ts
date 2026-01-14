@@ -135,21 +135,25 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 export abstract class IgxGridBaseDirective implements GridType,
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
 
+    /* blazorSuppress */
     public readonly validation = inject(IgxGridValidationService);
     /** @hidden @internal */
     public readonly selectionService = inject(IgxGridSelectionService);
     protected colResizingService = inject(IgxColumnResizingService);
+    /* blazorSuppress */
     public readonly gridAPI = inject<GridServiceType>(IGX_GRID_SERVICE_BASE);
     protected transactionFactory = inject(IgxFlatTransactionFactory);
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     protected zone = inject(NgZone);
     /** @hidden @internal */
     public document = inject(DOCUMENT);
+    /* blazorSuppress */
     public readonly cdr = inject(ChangeDetectorRef);
     protected differs = inject(IterableDiffers);
     protected viewRef = inject(ViewContainerRef);
     protected injector = inject(Injector);
     protected envInjector = inject(EnvironmentInjector);
+    /* blazorSuppress */
     public navigation = inject(IgxGridNavigationService);
     /** @hidden @internal */
     public filteringService = inject(IgxFilteringService);
