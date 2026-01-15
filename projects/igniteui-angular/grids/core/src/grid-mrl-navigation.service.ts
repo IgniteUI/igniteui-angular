@@ -127,9 +127,6 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const nextBlock = !this.isDataRow(this.activeNode.row) ||
         (previous ? currentRowStart === 1 : currentRowStart === this.lastRowStartPerBlock());
         const nextRI = previous ? this.activeNode.row - 1 : this.activeNode.row + 1;
-        if (!previous && nextBlock && nextRI >= this.grid.dataView.length) {
-            return { row: this.activeNode.row, column: this.activeNode.column };
-        }
         if (nextBlock && !this.isDataRow(nextRI)) {
             return {row: nextRI,  column: this.activeNode.column};
         }
@@ -357,7 +354,8 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
     private hasNextVerticalPosition(prev = false) {
         if ((prev && this.activeNode.row === 0 && (!this.isDataRow(this.activeNode.row) || this.activeNode.layout.rowStart === 1)) ||
-            (!prev && this.activeNode.row >= this.grid.dataView.length - 1 && this.activeNode.column === this.lastColIndexPerMRLBlock())) {
+            (!prev && this.activeNode.row >= this.grid.dataView.length - 1 &&
+                this.activeNode.layout.rowStart === this.lastRowStartPerBlock())) {
             return false;
         }
         return true;
