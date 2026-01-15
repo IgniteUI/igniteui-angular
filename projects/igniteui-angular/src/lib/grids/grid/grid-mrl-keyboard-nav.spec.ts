@@ -12,6 +12,7 @@ import { GridFunctions, GRID_MRL_BLOCK } from '../../test-utils/grid-functions.s
 import { CellType } from '../common/grid.interface';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { IGridCellEventArgs, IgxColumnComponent } from '../public_api';
+import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 
 const DEBOUNCE_TIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
