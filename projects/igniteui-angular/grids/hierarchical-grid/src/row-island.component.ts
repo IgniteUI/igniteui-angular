@@ -255,6 +255,15 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     }
 
     /** @hidden */
+    public override get pinnedStartColumns(): IgxColumnComponent[] {
+        return [];
+    }
+    /** @hidden */
+    public override get pinnedEndColumns(): IgxColumnComponent[] {
+        return [];
+    }
+
+    /** @hidden */
     public override get unpinnedColumns(): IgxColumnComponent[] {
         return [];
     }
