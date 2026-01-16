@@ -7877,8 +7877,10 @@ export abstract class IgxGridBaseDirective implements GridType,
      * If record is pinned but is not in pinned area then it is a ghost record.
      *
      * @param dataViewIndex The index of that record in the data view.
+     * @hidden
+     * @internal
      */
-    private isGhostRecordAtIndex(dataViewIndex) {
+    public isGhostRecordAtIndex(dataViewIndex) {
         const isPinned = this.isRecordPinned(this.dataView[dataViewIndex]);
         const isInPinnedArea = this.isRecordPinnedByViewIndex(dataViewIndex);
         return isPinned && !isInPinnedArea;
