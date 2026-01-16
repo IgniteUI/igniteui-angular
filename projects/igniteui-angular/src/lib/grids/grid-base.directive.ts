@@ -2322,12 +2322,14 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.resetCaches();
         }
         // Filter out undefined values to prevent overriding defaults
-        const filteredValue = Object.keys(value || {}).reduce((acc, key) => {
-            if (value[key] !== undefined) {
-                acc[key] = value[key];
-            }
-            return acc;
-        }, {});
+        const filteredValue: Partial<IPinningConfig> = {};
+        if (value) {
+            Object.keys(value).forEach(key => {
+                if (value[key] !== undefined) {
+                    filteredValue[key] = value[key];
+                }
+            });
+        }
         this._pinning = Object.assign({}, this._pinning, filteredValue);
     }
 
