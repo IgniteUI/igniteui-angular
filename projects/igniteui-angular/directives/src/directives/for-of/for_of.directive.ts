@@ -1097,13 +1097,14 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         if (!parseInt(firstScrollChild.style.width, 10)) {
             return;
         }
+        this.scrollComponent.scrollAmount = event.target.scrollLeft;
         if (!this._bScrollInternal) {
-            this._calcVirtualScrollPosition(event.target.scrollLeft);
+            this._calcVirtualScrollPosition(this.scrollComponent.scrollAmount);
         } else {
             this._bScrollInternal = false;
         }
         const prevStartIndex = this.state.startIndex;
-        const scrLeft = event.target.scrollLeft;
+        const scrLeft = this.scrollComponent.scrollAmount;
         // Updating horizontal chunks
         const scrollOffset = this.fixedUpdateAllElements(Math.abs(this._virtScrollPosition));
         if (scrLeft < 0) {
