@@ -2322,7 +2322,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.resetCaches();
         }
         // Filter out undefined values to prevent overriding defaults
-        const filteredValue: IPinningConfig = {} as IPinningConfig;
+        const filteredValue: Partial<IPinningConfig> = {};
         if (value) {
             if (value.columns !== undefined) {
                 filteredValue.columns = value.columns;
