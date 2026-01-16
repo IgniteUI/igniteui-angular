@@ -16,7 +16,7 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { CellType } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 
-const DEBOUNCETIME = 30;
+const DEBOUNCETIME = 50;
 
 describe('IgxGrid - Keyboard navigation #grid', () => {
 
@@ -426,7 +426,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             selectedCell = fix.componentInstance.selectedCell;
-            expect(parseInt(displayContainer.style.top, 10)).toBeLessThanOrEqual(-1 * (grid.rowHeight - bottomCellVisibleHeight));
+            expect(grid.navigation.containerTopOffset).toBeLessThanOrEqual(-1 * (grid.rowHeight - bottomCellVisibleHeight));
             expect(displayContainer.parentElement.scrollTop).toEqual(0);
             expect(selectedCell.value).toEqual(40);
             expect(selectedCell.column.field).toMatch('1');
@@ -439,12 +439,11 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.componentInstance.data = fix.componentInstance.generateData(1000);
             fix.detectChanges();
 
-            const displayContainer = GridFunctions.getGridDisplayContainer(fix).nativeElement;
             fix.componentInstance.scrollTop(25);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            expect(displayContainer.style.top).toEqual('-25px');
+            expect(grid.navigation.containerTopOffset).toEqual(-25);
             const cell = grid.gridAPI.get_cell_by_index(1, '1');
             UIInteractions.simulateClickAndSelectEvent(cell);
             await wait();
@@ -458,7 +457,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             fix.detectChanges();
-            expect(displayContainer.style.top).toEqual('0px');
+            expect(grid.navigation.containerTopOffset).toEqual(0);
             expect(fix.componentInstance.selectedCell.value).toEqual(0);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
         });

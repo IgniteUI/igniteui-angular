@@ -173,7 +173,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         await wait(100);
         fixture.detectChanges();
         const startIndex = hierarchicalGrid.verticalScrollContainer.state.startIndex;
-        const topOffset = GridFunctions.getGridDisplayContainer(fixture).nativeElement.style.top;
+        const topOffset = hierarchicalGrid.navigation.containerTopOffset;
         const secondRow = hierarchicalGrid.dataRowList.toArray()[1];
         // expand second row
         (secondRow.nativeElement.children[0] as HTMLElement).click();
@@ -182,8 +182,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
         expect(hierarchicalGrid.verticalScrollContainer.state.startIndex).toEqual(startIndex);
         expect(
-            parseInt(GridFunctions.getGridDisplayContainer(fixture).nativeElement.style.top, 10) -
-            parseInt(topOffset, 10)
+            hierarchicalGrid.navigation.containerTopOffset -
+            topOffset
         ).toBeLessThanOrEqual(1);
 
         (secondRow.nativeElement.children[0] as HTMLElement).click();
@@ -192,8 +192,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         // collapse second row
         expect(hierarchicalGrid.verticalScrollContainer.state.startIndex).toEqual(startIndex);
         expect(
-            parseInt(GridFunctions.getGridDisplayContainer(fixture).nativeElement.style.top, 10) -
-            parseInt(topOffset, 10)
+            hierarchicalGrid.navigation.containerTopOffset -
+            topOffset
         ).toBeLessThanOrEqual(1);
     });
 
@@ -231,7 +231,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         await firstValueFrom(hierarchicalGrid.verticalScrollContainer.chunkLoad);
         fixture.detectChanges();
         const startIndex = hierarchicalGrid.verticalScrollContainer.state.startIndex;
-        const topOffset = GridFunctions.getGridDisplayContainer(fixture).nativeElement.style.top;
+        const topOffset = hierarchicalGrid.navigation.containerTopOffset;
         const secondRow = hierarchicalGrid.rowList.toArray()[2];
         // expand second row
         (secondRow.nativeElement.children[0] as HTMLElement).click();
@@ -240,8 +240,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
         expect(hierarchicalGrid.verticalScrollContainer.state.startIndex).toEqual(startIndex);
         expect(
-            parseInt(GridFunctions.getGridDisplayContainer(fixture).nativeElement.style.top, 10) -
-            parseInt(topOffset, 10)
+            hierarchicalGrid.navigation.containerTopOffset -
+            topOffset
         ).toBeLessThanOrEqual(1);
 
         (secondRow.nativeElement.children[0] as HTMLElement).click();
@@ -250,8 +250,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         // collapse second row
         expect(hierarchicalGrid.verticalScrollContainer.state.startIndex).toEqual(startIndex);
         expect(
-            parseInt(GridFunctions.getGridDisplayContainer(fixture).nativeElement.style.top, 10) -
-            parseInt(topOffset, 10)
+            hierarchicalGrid.navigation.containerTopOffset -
+            topOffset
         ).toBeLessThanOrEqual(1);
     });
 
