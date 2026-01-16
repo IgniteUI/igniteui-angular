@@ -2,7 +2,7 @@
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { ColumnPinningPosition, GridSelectionMode } from '../common/enums';
+import { ColumnPinningPosition, GridSelectionMode, RowPinningPosition } from '../common/enums';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import {
     CELL_PINNED_CLASS,
@@ -1009,5 +1009,77 @@ describe('IgxGrid - Column Pinning #grid', () => {
             // check visible indexes
             expect(rootMRLGroups.map(x => x.visibleIndex)).toEqual([0, 2, 1])
         }));
+    });
+
+    describe('Pinning Configuration Merge', () => {
+        let fix;
+        let grid: IgxGridComponent;
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(PinningComponent);
+            grid = fix.componentInstance.grid;
+        });
+
+        it('should merge partial user configuration with default values', () => {
+            // Default is { columns: ColumnPinningPosition.Start }
+            // Set only rows property
+            grid.pinning = { rows: RowPinningPosition.Bottom };
+            fix.detectChanges();
+
+            // Should merge, keeping default columns value
+            expect(grid.pinning.columns).toBe(ColumnPinningPosition.Start);
+            expect(grid.pinning.rows).toBe(RowPinningPosition.Bottom);
+        });
+
+        it('should not override existing defaults with undefined values in user config', () => {
+            // Default is { columns: ColumnPinningPosition.Start }
+            // Set rows and leave columns undefined
+            grid.pinning = { rows: RowPinningPosition.Top, columns: undefined };
+            fix.detectChanges();
+
+            // Should keep default columns value since user provided undefined
+            expect(grid.pinning.columns).toBe(ColumnPinningPosition.Start);
+            expect(grid.pinning.rows).toBe(RowPinningPosition.Top);
+        });
+
+        it('should replace default values with explicitly set user values', () => {
+            // Default is { columns: ColumnPinningPosition.Start }
+            // Explicitly set columns to End
+            grid.pinning = { columns: ColumnPinningPosition.End };
+            fix.detectChanges();
+
+            // Should use user-provided value
+            expect(grid.pinning.columns).toBe(ColumnPinningPosition.End);
+        });
+
+        it('should handle complete user configuration override', () => {
+            // Set both properties
+            grid.pinning = { 
+                columns: ColumnPinningPosition.End, 
+                rows: RowPinningPosition.Bottom 
+            };
+            fix.detectChanges();
+
+            // Should use all user-provided values
+            expect(grid.pinning.columns).toBe(ColumnPinningPosition.End);
+            expect(grid.pinning.rows).toBe(RowPinningPosition.Bottom);
+        });
+
+        it('should preserve existing user values when setting new partial config', () => {
+            // First set both values
+            grid.pinning = { 
+                columns: ColumnPinningPosition.End, 
+                rows: RowPinningPosition.Bottom 
+            };
+            fix.detectChanges();
+
+            // Then set only columns
+            grid.pinning = { columns: ColumnPinningPosition.Start };
+            fix.detectChanges();
+
+            // Should update columns but preserve rows
+            expect(grid.pinning.columns).toBe(ColumnPinningPosition.Start);
+            expect(grid.pinning.rows).toBe(RowPinningPosition.Bottom);
+        });
     });
 });
