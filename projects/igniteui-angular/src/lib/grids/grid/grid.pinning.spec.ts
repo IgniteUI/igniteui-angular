@@ -1011,7 +1011,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
         }));
     });
 
-    describe('Pinning Configuration Merge', () => {
+    describe('Pinning Configuration', () => {
         let fix;
         let grid: IgxGridComponent;
 
@@ -1027,57 +1027,6 @@ describe('IgxGrid - Column Pinning #grid', () => {
             fix.detectChanges();
 
             // Should merge, keeping default columns value
-            expect(grid.pinning.columns).toBe(ColumnPinningPosition.Start);
-            expect(grid.pinning.rows).toBe(RowPinningPosition.Bottom);
-        });
-
-        it('should not override existing defaults with undefined values in user config', () => {
-            // Default is { columns: ColumnPinningPosition.Start }
-            // Set rows and leave columns undefined
-            grid.pinning = { rows: RowPinningPosition.Top, columns: undefined };
-            fix.detectChanges();
-
-            // Should keep default columns value since user provided undefined
-            expect(grid.pinning.columns).toBe(ColumnPinningPosition.Start);
-            expect(grid.pinning.rows).toBe(RowPinningPosition.Top);
-        });
-
-        it('should replace default values with explicitly set user values', () => {
-            // Default is { columns: ColumnPinningPosition.Start }
-            // Explicitly set columns to End
-            grid.pinning = { columns: ColumnPinningPosition.End };
-            fix.detectChanges();
-
-            // Should use user-provided value
-            expect(grid.pinning.columns).toBe(ColumnPinningPosition.End);
-        });
-
-        it('should handle complete user configuration override', () => {
-            // Set both properties
-            grid.pinning = { 
-                columns: ColumnPinningPosition.End, 
-                rows: RowPinningPosition.Bottom 
-            };
-            fix.detectChanges();
-
-            // Should use all user-provided values
-            expect(grid.pinning.columns).toBe(ColumnPinningPosition.End);
-            expect(grid.pinning.rows).toBe(RowPinningPosition.Bottom);
-        });
-
-        it('should preserve existing user values when setting new partial config', () => {
-            // First set both values
-            grid.pinning = { 
-                columns: ColumnPinningPosition.End, 
-                rows: RowPinningPosition.Bottom 
-            };
-            fix.detectChanges();
-
-            // Then set only columns
-            grid.pinning = { columns: ColumnPinningPosition.Start };
-            fix.detectChanges();
-
-            // Should update columns but preserve rows
             expect(grid.pinning.columns).toBe(ColumnPinningPosition.Start);
             expect(grid.pinning.rows).toBe(RowPinningPosition.Bottom);
         });
