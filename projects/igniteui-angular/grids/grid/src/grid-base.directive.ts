@@ -2461,7 +2461,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._sortingStrategy = value;
     }
 
-
+    /* csSuppress */
     /**
      * Gets/Sets the merge strategy of the grid.
      *
