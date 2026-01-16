@@ -16,7 +16,7 @@ import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxInputDirective, IgxInputGroupComponent } from 'igniteui-angular/input-group';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 
-const DEBOUNCE_TIME = 30;
+const DEBOUNCE_TIME = 60;
 const ROW_TAG = 'igx-grid-row';
 const GROUP_ROW_TAG = 'igx-grid-groupby-row';
 const SUMMARY_ROW_TAG = 'igx-grid-summary-row';

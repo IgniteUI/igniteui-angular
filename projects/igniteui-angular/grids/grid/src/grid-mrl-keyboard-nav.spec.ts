@@ -12,7 +12,7 @@ import { CellType, IGridCellEventArgs, IgxColumnComponent, IgxGridMRLNavigationS
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 
-const DEBOUNCE_TIME = 30;
+const DEBOUNCE_TIME = 60;
 const CELL_CSS_CLASS = '.igx-grid__td';
 const ROW_CSS_CLASS = '.igx-grid__tr';
 const CELL_BLOCK = `.${GRID_MRL_BLOCK}`;

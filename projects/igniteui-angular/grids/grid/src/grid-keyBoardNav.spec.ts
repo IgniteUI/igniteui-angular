@@ -16,7 +16,7 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { CellType } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 
-const DEBOUNCETIME = 50;
+const DEBOUNCETIME = 60;
 
 describe('IgxGrid - Keyboard navigation #grid', () => {
 
@@ -287,7 +287,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
         it('should allow navigating up', async () => {
             grid.verticalScrollContainer.scrollTo(104);
-            await wait();
+            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             const cell = grid.gridAPI.get_cell_by_index(100, 'value');
@@ -548,6 +548,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(fix.componentInstance.selectedCell.value).toEqual(10);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', grid.tbody.nativeElement, true);
+            fix.detectChanges();
             await wait(DEBOUNCETIME);
 
             fix.detectChanges();
