@@ -903,8 +903,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         if (!parseInt(this.scrollComponent.nativeElement.style.height, 10)) {
             return;
         }
+        this.scrollComponent.scrollAmount = event.target.scrollTop;
         if (!this._bScrollInternal) {
-            this._calcVirtualScrollPosition(event.target.scrollTop);
+            this._calcVirtualScrollPosition(this.scrollComponent.scrollAmount);
         } else {
             this._bScrollInternal = false;
         }
