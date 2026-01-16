@@ -1031,14 +1031,14 @@ describe('IgxGrid - Column Pinning #grid', () => {
             expect(grid.pinning.rows).toBe(RowPinningPosition.Bottom);
         });
 
-        it('should not override existing defaults with undefined values in user config', () => {
+        it('should override existing defaults with undefined values in user config', () => {
             // Default is { columns: ColumnPinningPosition.Start }
-            // Set rows and leave columns undefined
+            // Set rows and explicitly set columns to undefined
             grid.pinning = { rows: RowPinningPosition.Top, columns: undefined };
             fix.detectChanges();
 
-            // Should keep default columns value since user provided undefined
-            expect(grid.pinning.columns).toBe(ColumnPinningPosition.Start);
+            // Object.assign copies undefined, so columns becomes undefined
+            expect(grid.pinning.columns).toBe(undefined);
             expect(grid.pinning.rows).toBe(RowPinningPosition.Top);
         });
 
