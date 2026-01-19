@@ -1715,6 +1715,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         if (!this.scrollComponent || !parseInt(firstScrollChild.style.width, 10)) {
             return;
         }
+        this.scrollComponent.scrollAmount = scrollAmount;
         // Updating horizontal chunks
         const scrollOffset = this.fixedUpdateAllElements(Math.abs(scrollAmount));
         if (scrollAmount < 0) {
