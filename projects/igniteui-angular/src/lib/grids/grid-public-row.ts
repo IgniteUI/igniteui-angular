@@ -8,7 +8,7 @@ import { IgxPivotGridComponent } from './pivot-grid/pivot-grid.component';
 import { PivotUtil } from './pivot-grid/pivot-util';
 import { mergeWith } from 'lodash-es';
 import { CellType, GridServiceType, GridType, IGridValidationState, RowType, ValidationStatus } from './common/grid.interface';
-import { IgxGridComponent } from 'igniteui-angular';
+import { IgxGridComponent } from './grid/grid.component';
 
 abstract class BaseRow implements RowType {
     public index: number;
