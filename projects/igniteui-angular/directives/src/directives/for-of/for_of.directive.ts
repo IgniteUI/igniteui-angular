@@ -475,6 +475,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             }
             this._updateScrollOffset();
         }
+        this._differ = this._differs.find(this.igxForOf || []).create(this.igxForTrackBy);
         this.resolveDataDiff();
     }
 

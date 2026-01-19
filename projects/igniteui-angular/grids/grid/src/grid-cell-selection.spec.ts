@@ -1707,7 +1707,7 @@ describe('IgxGrid - Cell selection #grid', () => {
                     }
                 }
                 UIInteractions.triggerKeyDownEvtUponElem('arrowdown', obj.nativeElement, true, false, true);
-                await wait(50);
+                await wait(60);
                 fix.detectChanges();
             }
 
@@ -1717,7 +1717,7 @@ describe('IgxGrid - Cell selection #grid', () => {
                 const summaryCell = grid.summariesRowList.find(row => row.index === 8)
                     .summaryCells.find(sCell => sCell.visibleColumnIndex === i);
                 UIInteractions.triggerKeyDownEvtUponElem('arrowright', summaryCell.nativeElement, true);
-                await wait(50);
+                await wait(60);
                 fix.detectChanges();
             }
 
@@ -1726,7 +1726,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             const sumCell = grid.summariesRowList.find(row => row.index === 8)
                 .summaryCells.find(sCell => sCell.visibleColumnIndex === 5);
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', sumCell.nativeElement, true);
-            await wait(50);
+            await wait(60);
             fix.detectChanges();
 
             GridSelectionFunctions.verifySelectedRange(grid, 7, 7, 5, 5);
