@@ -75,7 +75,7 @@
         "igniteui-trial-watermark": "^3.1.0",
         "jspdf": "^3.0.2",
         "lodash-es": "^4.17.21",
-        "igniteui-theming": "^24.0.0",
+        "igniteui-theming": "^24.1.1",
         "@igniteui/material-icons-extended": "^3.1.0"
     },
     "peerDependencies": {
@@ -87,7 +87,7 @@
         "@types/hammerjs": "^2.0.46",
         "igniteui-webcomponents": "^6.3.0",
         "dompurify": "^3.2.0",
-        "marked": "^16.3.0",
+        "marked": ">=16.3.0",
         "marked-shiki": "^1.2.0",
         "shiki": "^3.12.0"
     },
