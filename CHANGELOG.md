@@ -4,6 +4,18 @@ All notable changes for each version of this project will be documented in this 
 
 ## 21.1.0
 
+### New Features
+
+- `IgxTooltipTarget`
+    - Added new properties:
+        - `showTriggers` - Which event triggers will show the tooltip. Expects a comma-separated string of different event triggers. Defaults to `pointerenter`.
+        - `hideTriggers` - Which event triggers will hide the tooltip. Expects a comma-separated string of different event triggers. Defaults to `pointerleave` and `click`.
+
+        ```html
+        <igx-icon [igxTooltipTarget]="tooltipRef" [showTriggers]="'click,focus'" [hideTriggers]="'keypress,blur'">info</igx-icon>
+        <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+        ```
+
 # Localization(i18n)
 
 - `IgxActionStrip`, `IgxBanner`, `IgxCalendar`, `IgxCarousel`, `IgxChip`, `IgxCombo`, `IgxDatePicker`, `IgxDateRangePicker`, `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`, `IgxInputs`, `IgxList`, `IgxPaginator`, `IgxQueryBuilder`, `IgxTimePicker`, `IgxTree`

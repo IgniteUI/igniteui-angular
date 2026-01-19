@@ -55,6 +55,7 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
     standalone: true
 })
 export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnType {
+    /* blazorSuppress */
     public grid = inject<GridType>(IGX_GRID_BASE);
     private _validators = inject<Validator[]>(NG_VALIDATORS, { optional: true, self: true });
 
