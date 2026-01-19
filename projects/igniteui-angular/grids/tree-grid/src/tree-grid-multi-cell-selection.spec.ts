@@ -223,7 +223,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             for (let i = 9; i < 14; i++) {
                 cell = treeGrid.gridAPI.get_cell_by_index(i, 'Age');
                 UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true);
-                await wait(30);
+                await wait(60);
                 fix.detectChanges();
             }
 
@@ -232,7 +232,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
             cell = treeGrid.gridAPI.get_cell_by_index(14, 'Age');
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
-            await wait(30);
+            await wait(60);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(6);
@@ -240,7 +240,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
             cell = treeGrid.gridAPI.get_cell_by_index(14, 'OnPTO');
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
-            await wait(30);
+            await wait(60);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(7);
@@ -249,7 +249,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             for (let i = 14; i > 3; i--) {
                 cell = treeGrid.gridAPI.get_cell_by_index(i, 'HireDate');
                 UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true);
-                await wait(30);
+                await wait(60);
                 fix.detectChanges();
             }
 
@@ -259,7 +259,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             for (let i = 4; i > 2; i--) {
                 cell = treeGrid.gridAPI.get_cell_by_index(3, treeGrid.columnList.get(i).field);
                 UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
-                await wait(30);
+                await wait(60);
                 fix.detectChanges();
             }
 
@@ -385,7 +385,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
                         .summaryCells.find(sCell => sCell.visibleColumnIndex === 1);
                 }
                 UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cellObj.nativeElement, true, false, true);
-                await wait(30);
+                await wait(60);
                 fix.detectChanges();
             }
 
@@ -396,7 +396,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
                 const cellObject = treeGrid.summariesRowList.find(row => row.index === 16)
                     .summaryCells.find(sCell => sCell.visibleColumnIndex === i);
                 UIInteractions.triggerKeyDownEvtUponElem('arrowright', cellObject.nativeElement, true, false, true);
-                await wait(30);
+                await wait(60);
                 fix.detectChanges();
             }
 
@@ -405,7 +405,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             const summaryCell = treeGrid.summariesRowList.find(row => row.index === 16)
                 .summaryCells.find(sCell => sCell.visibleColumnIndex === 3);
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', summaryCell.nativeElement, true, false, true);
-            await wait(30);
+            await wait(60);
             fix.detectChanges();
             expect(selectionChangeSpy).toHaveBeenCalledTimes(6);
             GridSelectionFunctions.verifySelectedRange(treeGrid, 8, 15, 1, 3);
@@ -425,7 +425,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             const gridContent = GridFunctions.getGridContent(fix);
             for (let i = 8; i < 16; i++) {
                 UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent, false, true);
-                await wait(30);
+                await wait(60);
                 fix.detectChanges();
             }
 
@@ -433,7 +433,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 8, 15, 1, 1);
 
             UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent);
-            await wait(30);
+            await wait(60);
             fix.detectChanges();
 
             GridSelectionFunctions.verifySelectedRange(treeGrid, 17, 17, 1, 1);

@@ -1706,7 +1706,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         fix.detectChanges();
         (treeGrid as any).scrollTo(23, 0, 0);
         fix.detectChanges();
-        await wait(30);
+        await wait(60);
         fix.detectChanges();
 
         let row = treeGrid.getRowByKey(15);

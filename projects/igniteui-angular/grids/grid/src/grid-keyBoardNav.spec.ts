@@ -590,8 +590,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            let scrollContainer = grid.verticalScrollContainer.dc.instance._viewContainer;
-            let scrollContainerOffset = scrollContainer.element.nativeElement.offsetTop;
+            let scrollContainerOffset = grid.navigation.containerTopOffset;
             expect(scrollContainerOffset).toEqual(-25);
 
             const cell = grid.gridAPI.get_cell_by_index(1, 'value');
@@ -605,8 +604,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            scrollContainer = grid.verticalScrollContainer.dc.instance._viewContainer;
-            scrollContainerOffset = scrollContainer.element.nativeElement.offsetTop;
+            scrollContainerOffset = grid.navigation.containerTopOffset;
 
             expect(scrollContainerOffset).toEqual(0);
             expect(fix.componentInstance.selectedCell.value).toEqual(0);

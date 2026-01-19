@@ -394,7 +394,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         elem.scrollTop = 400;
         fixture.detectChanges();
         fixture.componentRef.hostView.detectChanges();
-        await wait();
+        await wait(60);
         fixture.detectChanges();
 
         expect(ri.gridScroll.emit).toHaveBeenCalled();

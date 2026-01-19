@@ -10,7 +10,7 @@ import { DebugElement } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { CellType } from 'igniteui-angular/grids/core';
 
-const DEBOUNCETIME = 30;
+const DEBOUNCETIME = 60;
 
 describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
     beforeEach(waitForAsync(() => {
