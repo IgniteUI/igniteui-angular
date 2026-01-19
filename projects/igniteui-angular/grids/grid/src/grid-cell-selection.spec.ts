@@ -1586,14 +1586,14 @@ describe('IgxGrid - Cell selection #grid', () => {
                     obj = grid.gridAPI.get_row_by_index(i);
                 }
                 UIInteractions.triggerKeyDownEvtUponElem('arrowdown', obj.nativeElement, true, false, true);
-                await wait(50);
+                await wait(60);
                 fix.detectChanges();
             }
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
             cell = grid.gridAPI.get_cell_by_index(10, 'Name');
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
-            await wait(50);
+            await wait(60);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(6);
