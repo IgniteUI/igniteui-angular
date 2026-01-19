@@ -607,6 +607,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
             await wait(DEBOUNCE_TIME);
+            fix.detectChanges();
 
             const lastRow = grid.gridAPI.get_row_by_index(52);
             expect(lastRow).not.toBeUndefined();
@@ -1022,7 +1023,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 // check row can be expanded
                 const lastRow = grid.rowList.last;
                 GridFunctions.toggleMasterRow(fix, lastRow);
-                await wait();
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
                 expect(lastRow.expanded).toBeTruthy();
                 const lastRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.last);
@@ -1124,19 +1125,21 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix.detectChanges();
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 let targetCellElement2 = grid.getCellByColumn(0, 'Address');
                 expect(targetCellElement2.active).toBeTruthy();
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 const firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
                 GridFunctions.verifyMasterDetailRowFocused(firstRowDetail);
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
-                await wait();
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 targetCellElement2 = grid.getCellByColumn(2, 'CompanyName');
@@ -1151,19 +1154,21 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix.detectChanges();
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
-                await wait();
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 let targetCellElement2 = grid.getCellByColumn(2, 'CompanyName');
                 expect(targetCellElement2.active).toBeTruthy();
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 const firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
                 GridFunctions.verifyMasterDetailRowFocused(firstRowDetail);
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 targetCellElement2 = grid.getCellByColumn(0, 'Address');
