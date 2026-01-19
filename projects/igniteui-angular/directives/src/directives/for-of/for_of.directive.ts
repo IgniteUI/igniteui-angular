@@ -1701,6 +1701,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
             afterNextRender({
                 write: () => {
                     this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
+                    this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
                 }
               });
           });
