@@ -319,6 +319,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             grid.transactions.add(transaction);
         } else {
             grid.data.push(rowData);
+            grid.data = cloneArray(grid.data);
         }
         grid.validation.markAsTouched(rowId);
         grid.validation.update(rowId, rowData);
