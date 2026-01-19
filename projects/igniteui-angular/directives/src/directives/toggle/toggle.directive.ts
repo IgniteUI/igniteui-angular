@@ -23,15 +23,11 @@ import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
 export interface ToggleViewEventArgs extends IBaseEventArgs {
     /** Id of the toggle view */
     id: string;
-    /** Provides reference to the owner component (from IBaseEventArgs) */
-    owner?: any;
     /* blazorSuppress */
     event?: Event;
 }
 
-export interface ToggleViewCancelableEventArgs extends ToggleViewEventArgs, CancelableBrowserEventArgs {
-    cancel: boolean;
-}
+export interface ToggleViewCancelableEventArgs extends ToggleViewEventArgs, CancelableBrowserEventArgs { }
 
 @Directive({
     exportAs: 'toggle',

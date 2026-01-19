@@ -30,6 +30,7 @@ import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
     imports: [IgxGridForOfDirective, IgxGridCellComponent, NgClass, NgStyle, IgxCheckboxComponent, IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridTransactionStatePipe, IgxPivotGridCellStyleClassesPipe]
 })
 export class IgxPivotRowComponent extends IgxRowDirective {
+    /* blazorSuppress */
     public override grid = inject<PivotGridType>(IGX_GRID_BASE);
     protected viewRef = inject(ViewContainerRef);
 
