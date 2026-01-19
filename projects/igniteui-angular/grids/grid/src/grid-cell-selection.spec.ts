@@ -1586,7 +1586,7 @@ describe('IgxGrid - Cell selection #grid', () => {
                     obj = grid.gridAPI.get_row_by_index(i);
                 }
                 UIInteractions.triggerKeyDownEvtUponElem('arrowdown', obj.nativeElement, true, false, true);
-                await wait(60);
+                await wait(100);
                 fix.detectChanges();
             }
 

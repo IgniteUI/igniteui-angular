@@ -16,7 +16,7 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { CellType } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 
-const DEBOUNCETIME = 60;
+const DEBOUNCETIME = 100;
 
 describe('IgxGrid - Keyboard navigation #grid', () => {
 

@@ -223,7 +223,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             for (let i = 9; i < 14; i++) {
                 cell = treeGrid.gridAPI.get_cell_by_index(i, 'Age');
                 UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true);
-                await wait(60);
+                await wait(100);
                 fix.detectChanges();
             }
 
@@ -249,7 +249,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             for (let i = 14; i > 3; i--) {
                 cell = treeGrid.gridAPI.get_cell_by_index(i, 'HireDate');
                 UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true);
-                await wait(60);
+                await wait(100);
                 fix.detectChanges();
             }
 
@@ -425,7 +425,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             const gridContent = GridFunctions.getGridContent(fix);
             for (let i = 8; i < 16; i++) {
                 UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent, false, true);
-                await wait(60);
+                await wait(100);
                 fix.detectChanges();
             }
 
