@@ -1,0 +1,28 @@
+<div class="h-grid-container">
+    <h2>Hierarchical Grid Example</h2>
+
+    <igx-hierarchical-grid
+        [data]="data"
+        [primaryKey]="'ID'"
+        [autoGenerate]="false"
+        [height]="'600px'"
+        [width]="'100%'">
+
+        <igx-column field="ID" header="ID" [width]="'100px'"></igx-column>
+        <igx-column field="CompanyName" header="Company Name" [width]="'200px'"></igx-column>
+        <igx-column field="ContactName" header="Contact Name" [width]="'200px'"></igx-column>
+        <igx-column field="ContactTitle" header="Contact Title" [width]="'180px'"></igx-column>
+        <igx-column field="City" header="City" [width]="'150px'"></igx-column>
+        <igx-column field="Country" header="Country" [width]="'120px'"></igx-column>
+        <igx-column field="Phone" header="Phone" [width]="'150px'"></igx-column>
+
+        <igx-row-island [key]="'ChildCompanies'" [primaryKey]="'ID'" [autoGenerate]="false">
+            <igx-column field="ID" header="ID" [width]="'100px'"></igx-column>
+            <igx-column field="CompanyName" header="Company Name" [width]="'200px'"></igx-column>
+            <igx-column field="ContactName" header="Contact Name" [width]="'200px'"></igx-column>
+            <igx-column field="ContactTitle" header="Contact Title" [width]="'180px'"></igx-column>
+            <igx-column field="City" header="City" [width]="'150px'"></igx-column>
+            <igx-column field="Phone" header="Phone" [width]="'150px'"></igx-column>
+        </igx-row-island>
+    </igx-hierarchical-grid>
+</div>

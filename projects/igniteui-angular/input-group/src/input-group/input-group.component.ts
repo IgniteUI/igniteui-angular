@@ -1,0 +1,493 @@
+import { NgTemplateOutlet } from '@angular/common';
+import {
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    ContentChildren,
+    DestroyRef,
+    ElementRef,
+    HostBinding,
+    HostListener, Input,
+    QueryList, booleanAttribute,
+    inject,
+    DOCUMENT,
+    AfterContentChecked
+} from '@angular/core';
+import { IInputResourceStrings, InputResourceStringsEN } from 'igniteui-angular/core';
+import { PlatformUtil, getComponentTheme } from 'igniteui-angular/core';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
+import { IgxHintDirective } from './directives-hint/hint.directive';
+import {
+    IgxInputDirective,
+    IgxInputState
+} from './directives-input/input.directive';
+import { IgxPrefixDirective } from './directives-prefix/prefix.directive';
+import { IgxSuffixDirective } from './directives-suffix/suffix.directive';
+
+import { IgxInputGroupBase } from './input-group.common';
+import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
+import { IgxTheme, THEME_TOKEN, ThemeToken } from 'igniteui-angular/core';
+
+@Component({
+    selector: 'igx-input-group',
+    templateUrl: 'input-group.component.html',
+    providers: [{ provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }],
+    imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
+})
+export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentChecked {
+    public element = inject<ElementRef<HTMLElement>>(ElementRef);
+    private _inputGroupType = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE, { optional: true });
+    private document = inject(DOCUMENT);
+    private platform = inject(PlatformUtil);
+    private cdr = inject(ChangeDetectorRef);
+    private themeToken = inject<ThemeToken>(THEME_TOKEN);
+
+    /**
+     * Sets the resource strings.
+     * By default it uses EN resources.
+     */
+    @Input()
+    public set resourceStrings(value: IInputResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
+
+    /**
+     * Returns the resource strings.
+     */
+    public get resourceStrings(): IInputResourceStrings {
+        return this._resourceStrings || this._defaultResourceStrings;
+    }
+
+    /**
+     * Property that enables/disables the auto-generated class of the `IgxInputGroupComponent`.
+     * By default applied the class is applied.
+     * ```typescript
+     *  @ViewChild("MyInputGroup")
+     *  public inputGroup: IgxInputGroupComponent;
+     *  ngAfterViewInit(){
+     *  this.inputGroup.defaultClass = false;
+     * ```
+     * }
+     */
+    @HostBinding('class.igx-input-group')
+    public defaultClass = true;
+
+    /** @hidden */
+    @HostBinding('class.igx-input-group--placeholder')
+    public hasPlaceholder = false;
+
+    /** @hidden */
+    @HostBinding('class.igx-input-group--required')
+    public isRequired = false;
+
+    /** @hidden */
+    @HostBinding('class.igx-input-group--focused')
+    public isFocused = false;
+
+    /**
+     * @hidden @internal
+     * When truthy, disables the `IgxInputGroupComponent`.
+     * Controlled by the underlying `IgxInputDirective`.
+     * ```html
+     * <igx-input-group [disabled]="true"></igx-input-group>
+     * ```
+     */
+    @HostBinding('class.igx-input-group--disabled')
+    public disabled = false;
+
+    /**
+     * Prevents automatically focusing the input when clicking on other elements in the input group (e.g. prefix or suffix).
+     *
+     * @remarks Automatic focus causes software keyboard to show on mobile devices.
+     *
+     * @example
+     * ```html
+     * <igx-input-group [suppressInputAutofocus]="true"></igx-input-group>
+     * ```
+     */
+    @Input({ transform: booleanAttribute })
+    public suppressInputAutofocus = false;
+
+    /** @hidden */
+    @HostBinding('class.igx-input-group--warning')
+    public hasWarning = false;
+
+    /** @hidden */
+    @ContentChildren(IgxHintDirective, { read: IgxHintDirective })
+    protected hints: QueryList<IgxHintDirective>;
+
+    @ContentChildren(IgxPrefixDirective, { read: IgxPrefixDirective, descendants: true })
+    protected _prefixes: QueryList<IgxPrefixDirective>;
+
+    @ContentChildren(IgxSuffixDirective, { read: IgxSuffixDirective, descendants: true })
+    protected _suffixes: QueryList<IgxSuffixDirective>;
+
+    /** @hidden */
+    @ContentChild(IgxInputDirective, { read: IgxInputDirective, static: true })
+    protected input: IgxInputDirective;
+
+    private _destroyRef = inject(DestroyRef);
+    private _type: IgxInputGroupType = null;
+    private _filled = false;
+    private _theme: IgxTheme;
+    private _resourceStrings: IInputResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
+    private _readOnly: undefined | boolean;
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-input-group--readonly')
+    public get readOnly(): boolean {
+        return this._readOnly ?? (this.input?.nativeElement.readOnly || false);
+    }
+
+    /** @hidden @internal */
+    public set readOnly(value: boolean) {
+        this._readOnly = value;
+    }
+
+    /** @hidden */
+    @HostBinding('class.igx-input-group--valid')
+    public get validClass(): boolean {
+        return this.input.valid === IgxInputState.VALID;
+    }
+
+    /** @hidden */
+    @HostBinding('class.igx-input-group--invalid')
+    public get invalidClass(): boolean {
+        return this.input.valid === IgxInputState.INVALID;
+    }
+
+    /** @hidden */
+    @HostBinding('class.igx-input-group--filled')
+    public get isFilled() {
+        return this._filled || (this.input && this.input.value);
+    }
+
+    /** @hidden */
+    @HostBinding('class.igx-input-group--textarea-group')
+    public get textAreaClass(): boolean {
+        return this.input.isTextArea;
+    }
+
+    /**
+     * Sets how the input will be styled.
+     * Allowed values of type IgxInputGroupType.
+     * ```html
+     * <igx-input-group [type]="'search'">
+     * ```
+     */
+    @Input()
+    public set type(value: IgxInputGroupType) {
+        this._type = value;
+    }
+
+    /**
+     * Returns the type of the `IgxInputGroupComponent`. How the input is styled.
+     * The default is `line`.
+     * ```typescript
+     * @ViewChild("MyInputGroup")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit(){
+     *    let inputType = this.inputGroup.type;
+     * }
+     * ```
+     */
+    public get type() {
+        return this._type || this._inputGroupType || 'line';
+    }
+
+    /**
+     * Sets the theme of the input.
+     * Allowed values of type IgxInputGroupTheme.
+     * ```typescript
+     * @ViewChild("MyInputGroup")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit() {
+     *  let inputTheme = 'fluent';
+     * }
+     */
+    @Input()
+    public set theme(value: IgxTheme) {
+        this._theme = value;
+    }
+
+    /**
+     * Returns the theme of the input.
+     * The returned value is of type IgxInputGroupType.
+     * ```typescript
+     * @ViewChild("MyInputGroup")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit() {
+     *  let inputTheme = this.inputGroup.theme;
+     * }
+     */
+    public get theme(): IgxTheme {
+        return this._theme;
+    }
+
+    constructor() {
+        this._theme = this.themeToken.theme;
+        const themeChange = this.themeToken.onChange((theme) => {
+            if (this._theme !== theme) {
+                this._theme = theme;
+                this.cdr.detectChanges();
+            }
+        });
+        this._destroyRef.onDestroy(() => themeChange.unsubscribe());
+        onResourceChangeHandle(this._destroyRef, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(InputResourceStringsEN, false);
+        }, this);
+    }
+
+    /** @hidden */
+    @HostListener('click', ['$event'])
+    public onClick(event: MouseEvent) {
+        if (
+            !this.isFocused &&
+            event.target !== this.input.nativeElement &&
+            !this.suppressInputAutofocus
+        ) {
+            this.input.focus();
+        }
+    }
+
+    /** @hidden */
+    @HostListener('pointerdown', ['$event'])
+    public onPointerDown(event: PointerEvent) {
+        if (this.isFocused && event.target !== this.input.nativeElement) {
+            event.preventDefault();
+        }
+    }
+
+    /** @hidden @internal */
+    public hintClickHandler(event: MouseEvent) {
+        event.stopPropagation();
+    }
+
+    /**
+     * Returns whether the `IgxInputGroupComponent` has hints.
+     * ```typescript
+     * @ViewChild("MyInputGroup")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit(){
+     *    let inputHints = this.inputGroup.hasHints;
+     * }
+     * ```
+     */
+    public get hasHints() {
+        return this.hints.length > 0;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-input-group--prefixed')
+    public get hasPrefixes() {
+        return this._prefixes.length > 0;
+    }
+
+    /** @hidden @internal */
+    public set prefixes(items: QueryList<IgxPrefixDirective>) {
+        this._prefixes = items;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-input-group--suffixed')
+    public get hasSuffixes() {
+        return this._suffixes.length > 0 || this.isFileType && this.isFilled;
+    }
+
+    /** @hidden @internal */
+    public set suffixes(items: QueryList<IgxSuffixDirective>) {
+        this._suffixes = items;
+    }
+
+    /**
+     * Returns whether the `IgxInputGroupComponent` has border.
+     * ```typescript
+     * @ViewChild("MyInputGroup")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit(){
+     *    let inputBorder = this.inputGroup.hasBorder;
+     * }
+     * ```
+     */
+    public get hasBorder() {
+        return (
+            (this.type === 'line' || this.type === 'box') &&
+            this._theme === 'material'
+        );
+    }
+
+    /**
+     * Returns whether the `IgxInputGroupComponent` type is line.
+     * ```typescript
+     * @ViewChild("MyInputGroup1")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit(){
+     *    let isTypeLine = this.inputGroup.isTypeLine;
+     * }
+     * ```
+     */
+    public get isTypeLine(): boolean {
+        return this.type === 'line' && this._theme === 'material';
+    }
+
+    /**
+     * Returns whether the `IgxInputGroupComponent` type is box.
+     * ```typescript
+     * @ViewChild("MyInputGroup1")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit(){
+     *    let isTypeBox = this.inputGroup.isTypeBox;
+     * }
+     * ```
+     */
+    @HostBinding('class.igx-input-group--box')
+    public get isTypeBox() {
+        return this.type === 'box' && this._theme === 'material';
+    }
+
+    /** @hidden @internal */
+    public clearValueHandler() {
+        this.input.clear();
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-input-group--file')
+    public get isFileType() {
+        return this.input.type === 'file';
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-file-input')
+    public get isFileInput() {
+        return this.input.type === 'file';
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-file-input--filled')
+    public get isFileInputFilled() {
+        return this.isFileType && this.isFilled;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-file-input--focused')
+    public get isFileInputFocused() {
+        return this.isFileType && this.isFocused;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-file-input--disabled')
+    public get isFileInputDisabled() {
+        return this.isFileType && this.disabled;
+    }
+
+    /** @hidden @internal */
+    public get fileNames() {
+        return this.input.fileNames || this.resourceStrings.igx_input_file_placeholder;
+    }
+
+    /**
+     * Returns whether the `IgxInputGroupComponent` type is border.
+     * ```typescript
+     * @ViewChild("MyInputGroup1")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit(){
+     *    let isTypeBorder = this.inputGroup.isTypeBorder;
+     * }
+     * ```
+     */
+    @HostBinding('class.igx-input-group--border')
+    public get isTypeBorder() {
+        return this.type === 'border' && this._theme === 'material';
+    }
+
+    /**
+     * Returns true if the `IgxInputGroupComponent` theme is Fluent.
+     * ```typescript
+     * @ViewChild("MyInputGroup1")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit(){
+     *    let isTypeFluent = this.inputGroup.isTypeFluent;
+     * }
+     * ```
+     */
+    @HostBinding('class.igx-input-group--fluent')
+    public get isTypeFluent() {
+        return this._theme === 'fluent';
+    }
+
+    /**
+     * Returns true if the `IgxInputGroupComponent` theme is Bootstrap.
+     * ```typescript
+     * @ViewChild("MyInputGroup1")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit(){
+     *    let isTypeBootstrap = this.inputGroup.isTypeBootstrap;
+     * }
+     * ```
+     */
+    @HostBinding('class.igx-input-group--bootstrap')
+    public get isTypeBootstrap() {
+        return this._theme === 'bootstrap';
+    }
+
+    /**
+     * Returns true if the `IgxInputGroupComponent` theme is Indigo.
+     * ```typescript
+     * @ViewChild("MyInputGroup1")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit(){
+     *    let isTypeIndigo = this.inputGroup.isTypeIndigo;
+     * }
+     * ```
+     */
+    @HostBinding('class.igx-input-group--indigo')
+    public get isTypeIndigo() {
+        return this._theme === 'indigo';
+    }
+
+    /**
+     * Returns whether the `IgxInputGroupComponent` type is search.
+     * ```typescript
+     * @ViewChild("MyInputGroup1")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit(){
+     *    let isTypeSearch = this.inputGroup.isTypeSearch;
+     * }
+     * ```
+     */
+    @HostBinding('class.igx-input-group--search')
+    public get isTypeSearch() {
+        if(!this.isFileType && !this.input.isTextArea) {
+            return this.type === 'search';
+        }
+    }
+
+    /** @hidden */
+    public get filled() {
+        return this._filled;
+    }
+
+    /** @hidden */
+    public set filled(val) {
+        this._filled = val;
+    }
+
+    private setComponentTheme() {
+        if (!this.themeToken.preferToken) {
+            const theme = getComponentTheme(this.element.nativeElement);
+
+            if (theme && theme !== this._theme) {
+                this.theme = theme;
+                this.cdr.markForCheck();
+            }
+        }
+    }
+
+    /** @hidden @internal */
+    public ngAfterContentChecked() {
+        this.setComponentTheme();
+    }
+}
