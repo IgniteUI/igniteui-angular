@@ -213,6 +213,11 @@ export class AppComponent implements OnInit {
             name: 'Forms'
         },
         {
+            link: '/grid-lite',
+            icon: 'view_column',
+            name: 'Grid Lite'
+        },
+        {
             link: '/grid',
             icon: 'view_column',
             name: 'Grid'
