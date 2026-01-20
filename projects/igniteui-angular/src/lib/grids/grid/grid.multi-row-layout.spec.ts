@@ -940,7 +940,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         // check group size is correct
         expect(horizontalVirtualization.getSizeAt(0)).toBe(700);
-        expect(horizontalVirtualization.getSizeAt(1)).toBe(300);
+        expect(horizontalVirtualization.getSizeAt(1)).toBe(grid.calcWidth * 0.5);
 
         // check DOM
         gridFirstRow = grid.rowList.first;
@@ -968,7 +968,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         // check group size is correct
         expect(horizontalVirtualization.getSizeAt(0)).toBe(700);
-        expect(horizontalVirtualization.getSizeAt(1)).toBe(300);
+        expect(horizontalVirtualization.getSizeAt(1)).toBe(grid.calcWidth * 0.5);
         expect(horizontalVirtualization.getSizeAt(2)).toBe(136 * 4);
 
         // check DOM
