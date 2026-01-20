@@ -409,7 +409,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
                     const nextElem = node.nextElementSibling;
                     if (nextElem) {
                         result[i] = nextElem;
-                        break;
                     }
                 }
             }
@@ -1735,15 +1734,15 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         let totalSize = 0;
         let size = 0;
         let i = 0;
-        this.sizesCache = [];
-        this.individualSizeCache = [];
-        this.sizesCache.push(0);
         const count = this.isRemote ? this.totalItemCount : items.length;
+        this.sizesCache = new Array(count + 1);
+        this.sizesCache[0] = 0;
+        this.individualSizeCache = new Array(count);
         for (i; i < count; i++) {
             size = this.getItemSize(items[i]);
-            this.individualSizeCache.push(size);
+            this.individualSizeCache[i] = size;
             totalSize += size;
-            this.sizesCache.push(totalSize);
+            this.sizesCache[ i + 1] = totalSize;
         }
         return totalSize;
     }
