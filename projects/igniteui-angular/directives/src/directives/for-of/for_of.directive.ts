@@ -1209,15 +1209,15 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         let size = 0;
         const dimension = this.igxForSizePropName || 'height';
         let i = 0;
-        this.sizesCache = [];
-        this.individualSizeCache = [];
-        this.sizesCache.push(0);
         const count = this.isRemote ? this.totalItemCount : items.length;
+        this.sizesCache = new Array(count + 1);
+        this.sizesCache[0] = 0;
+        this.individualSizeCache = new Array(count);
         for (i; i < count; i++) {
             size = this._getItemSize(items[i], dimension);
-            this.individualSizeCache.push(size);
+            this.individualSizeCache[i] = size;
             totalSize += size;
-            this.sizesCache.push(totalSize);
+            this.sizesCache[i + 1] = totalSize;
         }
         return totalSize;
     }
