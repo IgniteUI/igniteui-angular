@@ -1731,11 +1731,9 @@ const getColGroup = (grid: IgxGridComponent, headerName: string): IgxColumnGroup
     const colGroups = grid.columnList.filter(c => c.columnGroup && c.header === headerName);
     if (colGroups.length === 0) {
         return null;
-    }
-    else if (colGroups.length === 1) {
+    } else if (colGroups.length === 1) {
         return colGroups[0];
-    }
-    else {
+    } else {
         throw new Error('More than one column group found.');
     }
 };

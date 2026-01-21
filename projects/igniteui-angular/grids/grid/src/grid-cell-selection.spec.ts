@@ -713,11 +713,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             let errorMessage = '';
             try {
                 grid.selectRange(range);
-            }
-            catch (error) {
+            } catch (error) {
                 errorMessage = error.message;
-            }
-            finally {
+            } finally {
                 fix.detectChanges();
             }
             expect(errorMessage).toContain('visibleIndex');
@@ -747,11 +745,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             let errorMessage = '';
             try {
                 grid.selectRange(range2);
-            }
-            catch (error) {
+            } catch (error) {
                 errorMessage = error.message;
-            }
-            finally {
+            } finally {
                 fix.detectChanges();
             }
             expect(errorMessage).toContain('visibleIndex');
@@ -768,11 +764,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             let errorMessage = '';
             try {
                 grid.selectRange(range);
-            }
-            catch (error) {
+            } catch (error) {
                 errorMessage = error.message;
-            }
-            finally {
+            } finally {
                 fix.detectChanges();
             }
             expect(errorMessage).toContain('visibleIndex');

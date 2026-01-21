@@ -413,8 +413,7 @@ const verifySearchResult = (nativeParent, expectedHighlightSpansCount, expectedA
     if (expectedActiveSpanIndex !== -1) {
         // If active element should exist.
         expect(activeSpan).toBe(spans[expectedActiveSpanIndex], 'incorrect active element');
-    }
-    else {
+    } else {
         // If active element should not exist. (used when spans.length is expected to be 0 as well)
         expect(activeSpan).toBeNull('active element was found');
     }

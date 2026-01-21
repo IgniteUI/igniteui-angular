@@ -356,8 +356,7 @@ describe('IgxButtonGroup', () => {
 
             buttongroup.deselectButton(-1);
             buttongroup.deselectButton(3000);
-        }
-        catch (ex) {
+        } catch (ex) {
             error = ex.message;
         }
 
@@ -377,8 +376,7 @@ describe('IgxButtonGroup', () => {
 
             if (i < groupChildren.length - 1) {
                 expect(button.nativeElement.disabled).toBe(false);
-            }
-            else {
+            } else {
                 expect(button.nativeElement.disabled).toBe(true);
             }
         }

@@ -81,8 +81,7 @@ export class IgxHierarchicalGridTestBaseComponent {
     public pinColumn(column: ColumnType) {
         if (column.pinned) {
             column.unpin();
-        }
-        else {
+        } else {
             column.pin();
         }
     }
@@ -157,8 +156,7 @@ export class IgxHierarchicalGridWithTransactionProviderComponent {
     public pinColumn(column: IgxColumnComponent) {
         if (column.pinned) {
             column.unpin();
-        }
-        else {
+        } else {
             column.pin();
         }
     }
@@ -335,8 +333,7 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
     public handleHeadSelectorClick(headContext) {
         if (headContext.totalCount !== headContext.selectedCount) {
             headContext.selectAll();
-        }
-        else {
+        } else {
             headContext.deselectAll();
         }
     }
@@ -344,8 +341,7 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
     public handleRowSelectorClick(rowContext) {
         if (rowContext.selected) {
             rowContext.deselect();
-        }
-        else {
+        } else {
             rowContext.select();
         }
     }

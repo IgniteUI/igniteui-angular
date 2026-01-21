@@ -1326,8 +1326,7 @@ export class GridCustomSelectorsComponent extends BasicGridComponent implements 
         event.preventDefault();
         if (rowContext.selected) {
             this.grid.deselectRows([rowContext.rowID]);
-        }
-        else {
+        } else {
             this.grid.selectRows([rowContext.rowID]);
         }
     }
@@ -1338,8 +1337,7 @@ export class GridCustomSelectorsComponent extends BasicGridComponent implements 
         event.preventDefault();
         if (headContext.selected) {
             this.grid.deselectAllRows();
-        }
-        else {
+        } else {
             this.grid.selectAllRows();
         }
     }

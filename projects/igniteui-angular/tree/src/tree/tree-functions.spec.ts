@@ -62,8 +62,7 @@ export class TreeTestFunctions {
             expect(this.getNodeCheckboxDiv(node.nativeElement)).not.toBeNull();
             expect(TreeTestFunctions.getNodeCheckboxInput(node.nativeElement).checked).toBe(selected);
             expect(TreeTestFunctions.getNodeCheckboxInput(node.nativeElement).indeterminate).toBe(indeterminate);
-        }
-        else {
+        } else {
             expect(this.getNodeCheckboxDiv(node.nativeElement)).toBeNull();
         }
     }

@@ -61,8 +61,7 @@ export class ZipWrapper {
             if (ArrayBuffer.isView(obj[key])) {
                 this._files.set(`${prefix}${key}`, obj[key] as Uint8Array);
                 this._filesAndFolders.push(`${prefix}${key}`);
-            }
-            else {
+            } else {
                 const newPrefix = `${prefix}${key}/`;
                 this._filesAndFolders.push(newPrefix);
                 this.createFilesAndFolders(obj[key], newPrefix);
@@ -217,8 +216,7 @@ export class ObjectComparer {
             for (let i = 0; i < actual.length; i++) {
                 result = (result && actual[i] === template[i]);
             }
-        }
-        else {
+        } else {
             for (const key in actual) {
                 if (actual.hasOwnProperty(key)) {
                     // Compare the item
@@ -242,8 +240,7 @@ export class ObjectComparer {
             for (let i = 0; i < actual.length; i++) {
                 result = (result && template.indexof(actual[i]) >= 0);
             }
-        }
-        else {
+        } else {
             for (const key in actual) {
                 if (actual.hasOwnProperty(key)) {
                     // Compare the item

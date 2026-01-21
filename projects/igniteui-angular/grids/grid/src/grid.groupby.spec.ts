@@ -68,8 +68,7 @@ describe('IgxGrid - GroupBy #grid', () => {
                 }
                 if (groupRow.groupRow.expression.ignoreCase) {
                     expect(rec[field]?.toString().toLowerCase()).toEqual(val?.toString().toLowerCase());
-                }
-                else {
+                } else {
                     expect(rec[field]).toEqual(val);
                 }
             }
@@ -85,8 +84,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
             if (icon === SORTING_ICON_ASC_CONTENT) {
                 expect(grouping[index].dir).toBe(SortingDirection.Asc);
-            }
-            else {
+            } else {
                 expect(grouping[index].dir).toBe(SortingDirection.Desc);
             }
         });
@@ -3142,8 +3140,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         try {
             grid.groupBy(expr);
             tick();
-        }
-        catch (e) {
+        } catch (e) {
             m = e.message;
         }
         tick();

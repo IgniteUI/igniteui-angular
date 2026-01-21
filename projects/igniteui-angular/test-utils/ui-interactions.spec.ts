@@ -131,8 +131,7 @@ export class UIInteractions {
         };
         if (elem.hasOwnProperty('triggerEventHandler')) {
             elem.triggerEventHandler('keydown', event);
-        }
-        else {
+        } else {
             (elem.nativeElement as HTMLElement).dispatchEvent(new KeyboardEvent('keydown', { ...event }));
         }
     }
@@ -212,8 +211,7 @@ export class UIInteractions {
         if (startPos !== endPos) {
             // replaced selection, cursor goes to end
             target.nativeElement.selectionStart = target.nativeElement.selectionEnd = startPos + inputValue.length;
-        }
-        else {
+        } else {
             // typing move the cursor after the typed value
             target.nativeElement.selectionStart = target.nativeElement.selectionEnd = endPos + inputValue.length;
         }

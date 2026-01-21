@@ -2138,8 +2138,7 @@ describe("IgxCalendar - ", () => {
                 try {
                     calendar.locale = "frrr";
                     fixture.detectChanges();
-                }
-                catch (err) {
+                } catch (err) {
                     errorThrown = err;
                 }
 

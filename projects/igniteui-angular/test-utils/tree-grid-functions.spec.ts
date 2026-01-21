@@ -156,8 +156,7 @@ export class TreeGridFunctions {
         if (expectedIndentationLevel === 0) {
             expect(divChildren.length).toBe(2, 'root treeCell has incorrect divs count');
             expect(indentationDiv).toBeNull();
-        }
-        else {
+        } else {
             expect(divChildren.length).toBe(3, 'child treeCell has incorrect divs count');
             expect(indentationDiv).toBeDefined();
             expect(indentationDiv).not.toBeNull();
@@ -356,8 +355,7 @@ export class TreeGridFunctions {
             // Verify selection of row through treeGrid
             const selectedRows = (treeGrid as IgxTreeGridComponent).selectedRows;
             expect(selectedRows.includes(rowComponent.key)).toBe(false);
-        }
-        else {
+        } else {
             expect(checkboxComponent.checked).toBe(expectedCheckboxState, 'Incorrect checkbox selection state');
             expect(checkboxComponent.nativeInput.nativeElement.checked).toBe(expectedCheckboxState, 'Incorrect native checkbox selection state');
 
@@ -384,8 +382,7 @@ export class TreeGridFunctions {
             expect(checkboxComponent.indeterminate).toBe(true);
             expect(checkboxComponent.checked).toBe(false, 'Incorrect checkbox selection state');
             expect(checkboxComponent.nativeInput.nativeElement.checked).toBe(false, 'Incorrect native checkbox selection state');
-        }
-        else {
+        } else {
             expect(checkboxComponent.indeterminate).toBe(false);
             expect(checkboxComponent.checked).toBe(expectedSelection, 'Incorrect checkbox selection state');
             expect(checkboxComponent.nativeInput.nativeElement.checked).toBe(expectedSelection, 'Incorrect native checkbox selection state');
@@ -431,8 +428,7 @@ export class TreeGridFunctions {
         if (isLoading) {
             expect(loadingDiv).toBeDefined();
             expect(indicatorDiv).toBeNull();
-        }
-        else {
+        } else {
             expect(loadingDiv).toBeNull();
             expect(indicatorDiv).toBeDefined();
             expect(indicatorDiv.nativeElement.style.visibility).toBe(isExpandVisible ? 'visible' : 'hidden');

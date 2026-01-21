@@ -310,8 +310,7 @@ describe('igxCombo', () => {
             let errorMessage = '';
             try {
                 combo.data = null;
-            }
-            catch (ex) {
+            } catch (ex) {
                 errorMessage = ex.message;
             }
             expect(errorMessage).toBe('');
@@ -325,8 +324,7 @@ describe('igxCombo', () => {
             let errorMessage = '';
             try {
                 combo.data = undefined;
-            }
-            catch (ex) {
+            } catch (ex) {
                 errorMessage = ex.message;
             }
             expect(errorMessage).toBe('');
@@ -1104,8 +1102,7 @@ describe('igxCombo', () => {
                             await wait(30);
                             checkGroupedItemsClass();
                         });
-                    }
-                    else {
+                    } else {
                         ;
                     }
                 };

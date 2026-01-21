@@ -303,15 +303,12 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             if (val) {
                 if (val.getFullYear() <= 2010) {
                     return 'Senior';
-                }
-                else if (val.getFullYear() < 2014) {
+                } else if (val.getFullYear() < 2014) {
                     return 'Middle';
-                }
-                else {
+                } else {
                     return 'Junior';
                 }
-            }
-            else {
+            } else {
                 return null;
             }
         };

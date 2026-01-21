@@ -391,8 +391,7 @@ describe('IgxAutocomplete', () => {
                     const hasFocusedClass = itemElement.classList.contains(CSS_CLASS_DROP_DOWN_ITEM_FOCUSED);
                     if (isFocused) {
                         expect(hasFocusedClass).toBeTruthy();
-                    }
-                    else {
+                    } else {
                         expect(hasFocusedClass).toBeFalsy();
                     }
                     expect(dropDown.items[itemIndex].focused).toEqual(isFocused);

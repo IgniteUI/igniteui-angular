@@ -60,7 +60,6 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
                 emit: vi.fn().mockName("emitter.emit")
             };
             mockTree = {
-                : vi.fn().mockName("tree."),
                 selection: IgxTreeSelectionType.BiState, nodeSelection: mockEmitter, nodes: mockQuery1
             };
             selectionService.register(mockTree);
@@ -326,8 +325,7 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
                     expect(selectionService.isNodeSelected(node)).toBeTruthy();
                     expect(node.selectedChange.emit).toHaveBeenCalled();
                     expect(node.selectedChange.emit).toHaveBeenCalledWith(true);
-                }
-                else {
+                } else {
                     expect(selectionService.isNodeSelected(node)).toBeFalsy();
                 }
             });
@@ -360,8 +358,7 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
                     expect(selectionService.isNodeSelected(node)).toBeTruthy();
                     expect(node.selectedChange.emit).toHaveBeenCalled();
                     expect(node.selectedChange.emit).toHaveBeenCalledWith(true);
-                }
-                else {
+                } else {
                     expect(selectionService.isNodeSelected(node)).toBeFalsy();
                 }
             });
@@ -380,7 +377,6 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
                 emit: vi.fn().mockName("emitter.emit")
             };
             mockTree = {
-                : vi.fn().mockName("tree."),
                 selection: IgxTreeSelectionType.Cascading, nodeSelection: mockEmitter, nodes: mockQuery1
             };
             selectionService.register(mockTree);
@@ -537,11 +533,9 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
                     expect(selectionService.isNodeSelected(node)).toBeTruthy();
                     expect(node.selectedChange.emit).toHaveBeenCalled();
                     expect(node.selectedChange.emit).toHaveBeenCalledWith(true);
-                }
-                else if (index === 3) {
+                } else if (index === 3) {
                     expect(selectionService.isNodeSelected(node)).toBeTruthy();
-                }
-                else {
+                } else {
                     expect(selectionService.isNodeSelected(node)).toBeFalsy();
                 }
             });
@@ -584,8 +578,7 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
                         expect(node.selectedChange.emit).toHaveBeenCalled();
                         expect(node.selectedChange.emit).toHaveBeenCalledWith(true);
                     }
-                }
-                else {
+                } else {
                     expect(selectionService.isNodeSelected(node)).toBeFalsy();
                 }
             });

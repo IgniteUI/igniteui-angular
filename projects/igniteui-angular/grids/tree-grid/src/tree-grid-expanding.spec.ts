@@ -86,8 +86,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 for (let rowToCheck = 0; rowToCheck < rows.length; rowToCheck++) {
                     if (rowToCheck === rowToToggle) {
                         TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[rowToCheck]);
-                    }
-                    else {
+                    } else {
                         TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[rowToCheck]);
                     }
                 }
@@ -115,8 +114,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 for (let rowToCheck = 0; rowToCheck < rows.length; rowToCheck++) {
                     if (rowToCheck === rowToToggle) {
                         TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[rowToCheck]);
-                    }
-                    else {
+                    } else {
                         TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[rowToCheck]);
                     }
                 }
@@ -532,8 +530,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 for (let rowToCheck = 0; rowToCheck < rows.length; rowToCheck++) {
                     if (rowToCheck === rowToToggle) {
                         TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[rowToCheck]);
-                    }
-                    else {
+                    } else {
                         TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[rowToCheck]);
                     }
                 }
@@ -560,8 +557,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 for (let rowToCheck = 0; rowToCheck < rows.length; rowToCheck++) {
                     if (rowToCheck === rowToToggle && (treeGrid.gridAPI as IgxTreeGridAPIService).allow_expansion_state_change(ri, false)) {
                         TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[rowToCheck]);
-                    }
-                    else {
+                    } else {
                         TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[rowToCheck]);
                     }
                 }

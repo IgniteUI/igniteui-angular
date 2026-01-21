@@ -1523,8 +1523,7 @@ describe('IgxDatePicker', () => {
                 parseIsoDate.mockImplementation((val: string) => {
                     if (val === undefined || mockDate1) {
                         return mockDate2;
-                    }
-                    else {
+                    } else {
                         return init(val);
                     }
                 });
@@ -1559,8 +1558,7 @@ describe('IgxDatePicker', () => {
                 const mockCheck = (value: Date): value is Date => {
                     if (value === mockMinValue || value === mockMaxValue) {
                         return true;
-                    }
-                    else {
+                    } else {
                         return defaultCheck(value);
                     }
                 };

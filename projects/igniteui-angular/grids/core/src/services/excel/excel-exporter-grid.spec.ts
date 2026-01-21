@@ -444,8 +444,7 @@ describe('Excel Exporter', () => {
             exporter.columnExporting.subscribe((value: IColumnExportingEventArgs) => {
                 if (value.columnIndex === 0) {
                     value.columnIndex = 4;
-                }
-                else if (value.columnIndex === 2) {
+                } else if (value.columnIndex === 2) {
                     value.columnIndex = -1;
                 }
             });
@@ -1146,8 +1145,7 @@ describe('Excel Exporter', () => {
             try {
                 exporter.export(treeGrid, options);
                 await wait();
-            }
-            catch (ex) {
+            } catch (ex) {
                 error = ex.message;
             }
             expect(error).toMatch('Can create an outline of up to eight levels!');
@@ -1160,8 +1158,7 @@ describe('Excel Exporter', () => {
             try {
                 exporter.export(treeGrid, options);
                 await wait();
-            }
-            catch (ex) {
+            } catch (ex) {
                 error = ex.message;
             }
             expect(error).toEqual('');
@@ -1174,8 +1171,7 @@ describe('Excel Exporter', () => {
             try {
                 exporter.export(treeGrid, options);
                 await wait();
-            }
-            catch (ex) {
+            } catch (ex) {
                 error = ex.message;
             }
             expect(error).toMatch('Can create an outline of up to eight levels!');

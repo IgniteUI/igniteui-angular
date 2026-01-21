@@ -2255,11 +2255,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const downloadsFormatter = (val: number): number => {
                 if (!val || val > 0 && val < 100) {
                     return 1;
-                }
-                else if (val >= 100 && val < 500) {
+                } else if (val >= 100 && val < 500) {
                     return 2;
-                }
-                else {
+                } else {
                     return 3;
                 }
             };
@@ -4331,8 +4329,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Open excel style filtering component
             try {
                 GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ReleaseDate');
-            }
-            catch (ex) {
+            } catch (ex) {
                 expect(ex).toBeNull();
             }
 
@@ -5450,8 +5447,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                     const date = new Date(rec.ReleaseDate);
                     date.setHours(date.getHours() + Math.floor(Math.random() * 24));
                     newRec.ReleaseDate = date.toISOString();
-                }
-                else {
+                } else {
                     newRec.ReleaseDate = null;
                 }
 
@@ -6043,11 +6039,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 const val = value ? value.toLowerCase() : '';
                 if (val.includes('script')) {
                     return 'Web';
-                }
-                else if (val.includes('netadvantage')) {
+                } else if (val.includes('netadvantage')) {
                     return 'Desktop';
-                }
-                else {
+                } else {
                     return 'Other';
                 }
             };
@@ -7181,8 +7175,7 @@ const checkUIForType = (type: string, elem: DebugElement) => {
         const input = filterUIRow.query(By.css('.igx-input-group__input'));
         expect(input.nativeElement.type).toBe(expectedInputType);
         expect(input.nativeElement.attributes.hasOwnProperty('readonly')).toBe(isReadOnly);
-    }
-    else {
+    } else {
         const datePicker = filterUIRow.query(By.directive(IgxDatePickerComponent));
         expect(datePicker).not.toBe(null);
     }
@@ -7238,8 +7231,7 @@ const verifyPinningHidingSize = (fix: ComponentFixture<any>, expectedSize: ɵSiz
         // Verify icons in actions area are present.
         expect(actionsPinArea !== null).toBe(true, 'actionsArea pin/unpin icon is  NOT present');
         expect(actionsAreaColumnHidingIcon).not.toBeNull('actionsArea column hiding icon is  NOT present');
-    }
-    else {
+    } else {
         // Verify icons in header are present.
         expect((headerAreaPinIcon !== null) || (headerAreaUnpinIcon !== null)).toBe(true, 'headerArea pin/unpin icon is  NOT present');
         expect(headerAreaColumnHidingIcon).not.toBeNull('headerArea column hiding icon is  NOT present');
