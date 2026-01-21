@@ -1,7 +1,7 @@
 ﻿import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { GridSelectionMode, IgxGridHeaderRowComponent, IgxGridMRLNavigationService, IPinningConfig } from 'igniteui-angular/grids/core';
+import { GridSelectionMode, IgxGridHeaderRowComponent, IgxGridMRLNavigationService, IPinningConfig, RowPinningPosition } from 'igniteui-angular/grids/core';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import {
     CELL_PINNED_CLASS,
@@ -1011,4 +1011,27 @@ describe('IgxGrid - Column Pinning #grid', () => {
             expect(rootMRLGroups.map(x => x.visibleIndex)).toEqual([0, 2, 1])
         }));
     });
+
+
+    describe('Pinning Configuration', () => {
+        let fix;
+        let grid: IgxGridComponent;
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(PinningComponent);
+            grid = fix.componentInstance.grid;
+        });
+
+        it('should merge partial user configuration with default values', () => {
+            // Default is { columns: ColumnPinningPosition.Start }
+            // Set only rows property
+            grid.pinning = { rows: RowPinningPosition.Bottom };
+            fix.detectChanges();
+
+            // Should merge, keeping default columns value
+            expect(grid.pinning.columns).toBe(ColumnPinningPosition.Start);
+            expect(grid.pinning.rows).toBe(RowPinningPosition.Bottom);
+        });
+    });
+
 });
