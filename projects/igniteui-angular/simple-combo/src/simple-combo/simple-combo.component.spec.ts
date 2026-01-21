@@ -2893,7 +2893,7 @@ describe('IgxSimpleCombo', () => {
                 const targetCell = grid.gridAPI.get_cell_by_index(i, 'Region') as any;
                 comboNativeEl = targetCell.nativeElement.querySelector(SIMPLE_COMBO_ELEMENT);
                 const comboInput = comboNativeEl.querySelector('input');
-                expect(comboInput.value).toBe('', `Failed on index: ${i.toString()}`);
+                expect(comboInput.value, `Failed on index: ${i.toString()}`).toBe('');
             }
 
             for (let i = virtState.startIndex; i < virtState.startIndex + virtState.chunkSize && i < grid.dataView.length; i++) {

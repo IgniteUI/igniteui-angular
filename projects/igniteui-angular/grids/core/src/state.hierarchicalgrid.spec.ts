@@ -53,7 +53,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         };
 
         const state = fix.componentInstance.state;
-        expect(state).toBeDefined('IgxGridState directive is initialized');
+        expect(state, 'IgxGridState directive is initialized').toBeDefined();
         expect(state.options).toEqual(expect.objectContaining(defaultOptions));
     });
 
@@ -94,7 +94,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
 
         const state = fix.componentInstance.state;
         const gridState = state.getState();
-        expect(gridState).toBe(initialGridState, 'JSON string representation of the initial grid state is not correct');
+        expect(gridState, 'JSON string representation of the initial grid state is not correct').toBe(initialGridState);
     });
 
     it('getState should return corect IGridState object when using default options', () => {
@@ -516,8 +516,8 @@ class HelperFunctions {
     }
 
     public static verifyFilteringExpressions(expressions: IFilteringExpressionsTree, gridState: IGridState) {
-        expect(expressions.fieldName).toBe(gridState.filtering.fieldName, 'Filtering expression field name is not correct');
-        expect(expressions.operator).toBe(gridState.filtering.operator, 'Filtering expression operator value is not correct');
+        expect(expressions.fieldName, 'Filtering expression field name is not correct').toBe(gridState.filtering.fieldName);
+        expect(expressions.operator, 'Filtering expression operator value is not correct').toBe(gridState.filtering.operator);
         expressions.filteringOperands.forEach((expr, i) => {
             expect(expr).toEqual(expect.objectContaining(gridState.filtering.filteringOperands[i]));
         });
@@ -525,8 +525,8 @@ class HelperFunctions {
 
     public static verifyAdvancedFilteringExpressions(expressions: IFilteringExpressionsTree, gridState: IGridState) {
         if (gridState.advancedFiltering) {
-            expect(expressions.fieldName).toBe(gridState.advancedFiltering.fieldName, 'Filtering expression field name is not correct');
-            expect(expressions.operator).toBe(gridState.advancedFiltering.operator, 'Filtering expression operator value is not correct');
+            expect(expressions.fieldName, 'Filtering expression field name is not correct').toBe(gridState.advancedFiltering.fieldName);
+            expect(expressions.operator, 'Filtering expression operator value is not correct').toBe(gridState.advancedFiltering.operator);
             expressions.filteringOperands.forEach((expr, i) => {
                 expect(expr).toEqual(expect.objectContaining(gridState.advancedFiltering.filteringOperands[i]));
             });

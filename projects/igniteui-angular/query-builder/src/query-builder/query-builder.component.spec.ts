@@ -1058,7 +1058,7 @@ describe('IgxQueryBuilder', () => {
 
             //Check for the active element
             const searchValueInput = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
-            expect(document.activeElement).toBe(searchValueInput, 'The input should be the active element.');
+            expect(document.activeElement, 'The input should be the active element.').toBe(searchValueInput);
         }));
 
         it('Should display add button when hovering a chip.', fakeAsync(() => {
@@ -1066,8 +1066,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Verify actions container is not visible. (This container contains the 'add' button.)
-            expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
-                .toBeNull('actions container is visible');
+            expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]), 'actions container is visible').toBeNull();
 
             // Hover the first chip and verify actions container is visible.
             UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement);
@@ -1080,8 +1079,7 @@ describe('IgxQueryBuilder', () => {
             UIInteractions.unhoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement);
             tick(50);
             fix.detectChanges();
-            expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
-                .toBeNull('actions container is visible');
+            expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]), 'actions container is visible').toBeNull();
         }));
 
         it('Should have disabled adding buttons when an expression is in edit mode.', fakeAsync(() => {

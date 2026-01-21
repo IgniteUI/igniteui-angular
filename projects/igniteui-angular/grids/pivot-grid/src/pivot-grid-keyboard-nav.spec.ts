@@ -342,7 +342,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
             const rowDimension = fixture.debugElement.queryAll(By.css(CSS_CLASS_ROW_DIMENSION_CONTAINER));
             let allHeaders = fixture.debugElement.queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
 
-            expect(allHeaders.length).toBe(5, 'There should initially be 5 row dimension headers');
+            expect(allHeaders.length, 'There should initially be 5 row dimension headers').toBe(5);
 
             UIInteractions.simulateClickAndSelectEvent(allHeaders[0]);
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', rowDimension[0], true);
@@ -350,7 +350,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
 
             allHeaders = fixture.debugElement.queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
 
-            expect(allHeaders.length).toBe(1, 'There should be only 1 row dimension header after collapse with Alt + ArrowUp');
+            expect(allHeaders.length, 'There should be only 1 row dimension header after collapse with Alt + ArrowUp').toBe(1);
 
             UIInteractions.simulateClickAndSelectEvent(allHeaders[0]);
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', rowDimension[0], true);
@@ -358,7 +358,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
 
             allHeaders = fixture.debugElement.queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
 
-            expect(allHeaders.length).toBe(5, 'There should be 5 row dimension headers after expand with Alt + ArrowDown');
+            expect(allHeaders.length, 'There should be 5 row dimension headers after expand with Alt + ArrowDown').toBe(5);
 
             UIInteractions.simulateClickAndSelectEvent(allHeaders[0]);
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', rowDimension[0], true);
@@ -366,7 +366,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
 
             allHeaders = fixture.debugElement.queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
 
-            expect(allHeaders.length).toBe(1, 'There should be 1 row dimension header after collapse with Alt + ArrowLeft');
+            expect(allHeaders.length, 'There should be 1 row dimension header after collapse with Alt + ArrowLeft').toBe(1);
 
             UIInteractions.simulateClickAndSelectEvent(allHeaders[0]);
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', rowDimension[0], true);
@@ -374,7 +374,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
 
             allHeaders = fixture.debugElement.queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
 
-            expect(allHeaders.length).toBe(5, 'There should be 5 row dimension headers after expand with Alt + ArrowRight');
+            expect(allHeaders.length, 'There should be 5 row dimension headers after expand with Alt + ArrowRight').toBe(5);
         });
     });
 });

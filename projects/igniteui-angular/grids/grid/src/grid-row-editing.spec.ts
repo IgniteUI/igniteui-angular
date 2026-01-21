@@ -2733,8 +2733,8 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             targetRowElement = targetRow.element.nativeElement;
             targetCellElement = targetRow.cells.toArray()[1].nativeElement;
-            expect(targetRowElement.classList).toContain(ROW_EDITED_CLASS, 'row does not contain edited class w/ edits');
-            expect(targetCellElement.classList).toContain('igx-grid__td--edited', 'cell does not contain edited class w/ edits');
+            expect(targetRowElement.classList, 'row does not contain edited class w/ edits').toContain(ROW_EDITED_CLASS);
+            expect(targetCellElement.classList, 'cell does not contain edited class w/ edits').toContain('igx-grid__td--edited');
         });
 
         it('Should change pages when the only item on the last page is a pending added row that gets deleted', () => {

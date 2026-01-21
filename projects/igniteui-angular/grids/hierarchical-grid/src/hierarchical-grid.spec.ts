@@ -1066,15 +1066,15 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
         it('should update columns property of row islands on columns change.', fakeAsync(() => {
 
-            expect(hierarchicalGrid.childLayoutList.first.columns.length).toEqual(2, 'Initial columns length should be 2');
-            expect(hierarchicalGrid.childLayoutList.first.columnList.length).toEqual(2, 'Initial columnList length should be 2');
+            expect(hierarchicalGrid.childLayoutList.first.columns.length, 'Initial columns length should be 2').toEqual(2);
+            expect(hierarchicalGrid.childLayoutList.first.columnList.length, 'Initial columnList length should be 2').toEqual(2);
 
             fixture.componentInstance.toggleColumns = false;
             fixture.detectChanges();
             tick();
 
-            expect(hierarchicalGrid.childLayoutList.first.columns.length).toEqual(0, 'Columns length should be 0 after toggle');
-            expect(hierarchicalGrid.childLayoutList.first.columnList.length).toEqual(0, 'ColumnList length should be 0 after toggle');
+            expect(hierarchicalGrid.childLayoutList.first.columns.length, 'Columns length should be 0 after toggle').toEqual(0);
+            expect(hierarchicalGrid.childLayoutList.first.columnList.length, 'ColumnList length should be 0 after toggle').toEqual(0);
         }));
 
         it('should resolve child grid cols default editable prop correctly based on row island\'s rowEditable.', () => {
