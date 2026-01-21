@@ -70,17 +70,24 @@ export class TreeTestFunctions {
     public static createNodeSpy(properties: {
         [key: string]: any;
     } = null, methodNames: (keyof IgxTreeNode<any>)[] = ['selected']): MockedObject<IgxTreeNode<any>> {
-        if (!properties) {
-            // TODO: vitest-migration: Cannot transform jasmine.createSpyObj with a dynamic variable. Please migrate this manually. See: https://vitest.dev/api/vi.html#vi-fn
-            return jasmine.createSpyObj<IgxTreeNodeComponent<any>>(methodNames);
+        const spy: any = {};
+        
+        // Create mock functions for each method name
+        methodNames.forEach(methodName => {
+            spy[methodName] = vi.fn().mockName(String(methodName));
+        });
+        
+        // Add properties if provided
+        if (properties) {
+            Object.assign(spy, properties);
         }
-        // TODO: vitest-migration: Cannot transform jasmine.createSpyObj with a dynamic variable. Please migrate this manually. See: https://vitest.dev/api/vi.html#vi-fn
-        return jasmine.createSpyObj<IgxTreeNodeComponent<any>>(methodNames, properties);
+        
+        return spy as MockedObject<IgxTreeNode<any>>;
     }
 
     public static createNodeSpies(level: number, count: number, parentNode?: IgxTreeNodeComponent<any>, children?: any[], allChildren?: any[]): IgxTreeNodeComponent<any>[] {
         const nodesArr = [];
-        const mockEmitter: EventEmitter<boolean> = {
+        const mockEmitter: any = {
             emit: vi.fn().mockName("emitter.emit")
         };
         for (let i = 0; i < count; i++) {

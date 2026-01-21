@@ -6,6 +6,7 @@ import { SampleTestData, DataParent } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions, TemplateDefinitions, ExternalTemplateDefinitions } from './template-strings.spec';
 
 import { ColumnPinningPosition, ColumnType, FilteringExpressionsTree, FilteringLogic, FilteringStrategy, FormattedValuesSortingStrategy, IDataCloneStrategy, IFilteringExpressionsTree, IgxFilteringOperand, IgxFilterItem, IgxNumberFilteringOperand, IgxSummaryResult, ISortingOptions, ISortingStrategy, OverlaySettings, SortingDirection } from 'igniteui-angular/core';
+import { GridColumnDataType } from 'igniteui-angular/core';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -14,6 +15,7 @@ import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxButtonDirective, IgxFocusDirective } from 'igniteui-angular/directives';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { CellType, IGridCellEventArgs, IgxAdvancedFilteringDialogComponent, IgxCellEditorTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxDateSummaryOperand, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleHeaderIconDirective, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleSearchComponent, IgxExcelStyleSelectingComponent, IgxFilterCellTemplateDirective, IgxGridEditingActionsComponent, IgxGridExcelStyleFilteringComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGroupByRowSelectorDirective, IgxHeadSelectorDirective, IgxNumberSummaryOperand, IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective, IgxRowSelectorDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from 'igniteui-angular/grids/core';
+import { GridSelectionMode } from 'igniteui-angular/grids/core';
 
 @Component({
     template: GridTemplateStrings.declareGrid('', '', `<igx-column field="ID" [hidden]="true"></igx-column>`),
@@ -389,7 +391,7 @@ export class GridHireDateComponent extends BasicGridComponent {
 export class MovableColumnsComponent extends BasicGridComponent {
     public override data = SampleTestData.personIDNameRegionData();
     public autoGenerate = false;
-    public rowSelection = 'none';
+    public rowSelection: GridSelectionMode = GridSelectionMode.none;
     public isFilterable = false;
     public isSortable = false;
     public isResizable = false;
@@ -439,6 +441,9 @@ export class MovableTemplatedColumnsComponent extends BasicGridComponent {
     public isFilterable = false;
     public isSortable = false;
     public isResizable = false;
+    public isEditable = false;
+    public isHidden = false;
+    public isGroupable = false;
 }
 
 @Component({
@@ -451,6 +456,7 @@ export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
 
     public width = '500px';
     public height = '400px';
+    public paging = false;
 
     public columnInit(column: IgxColumnComponent) {
         column.sortable = true;
@@ -1138,16 +1144,16 @@ export class IgxGridAdvancedFilteringWithToolbarComponent extends BasicGridCompo
 })
 export class IgxGridAdvancedFilteringDynamicColumnsComponent extends BasicGridComponent implements OnInit {
     public override data = [];
-    public columns = [];
+    public columns: Array<{ field: string; header: string; width: string; type: GridColumnDataType }> = [];
 
     public ngOnInit(): void {
         this.columns = [
-            { field: 'ID', header: 'HeaderID', width: '100px', type: 'number' },
-            { field: 'ProductName', header: 'Product Name', width: '200px', type: 'string' },
-            { field: 'Downloads', header: 'Downloads', width: '100px', type: 'number' },
-            { field: 'Released', header: 'Released', width: '100px', type: 'boolean' },
-            { field: 'ReleaseDate', header: 'Release Date', width: '200px', type: 'date' },
-            { field: 'AnotherField', header: 'Another Field', width: '200px', type: 'string' },
+            { field: 'ID', header: 'HeaderID', width: '100px', type: GridColumnDataType.Number },
+            { field: 'ProductName', header: 'Product Name', width: '200px', type: GridColumnDataType.String },
+            { field: 'Downloads', header: 'Downloads', width: '100px', type: GridColumnDataType.Number },
+            { field: 'Released', header: 'Released', width: '100px', type: GridColumnDataType.Boolean },
+            { field: 'ReleaseDate', header: 'Release Date', width: '200px', type: GridColumnDataType.Date },
+            { field: 'AnotherField', header: 'Another Field', width: '200px', type: GridColumnDataType.String },
         ];
         this.data = SampleTestData.excelFilteringData();
     }
