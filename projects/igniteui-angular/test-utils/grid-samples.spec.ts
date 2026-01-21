@@ -441,6 +441,9 @@ export class MovableTemplatedColumnsComponent extends BasicGridComponent {
     public isFilterable = false;
     public isSortable = false;
     public isResizable = false;
+    public isEditable = false;
+    public isHidden = false;
+    public isGroupable = false;
 }
 
 @Component({
@@ -453,6 +456,7 @@ export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
 
     public width = '500px';
     public height = '400px';
+    public paging = false;
 
     public columnInit(column: IgxColumnComponent) {
         column.sortable = true;
