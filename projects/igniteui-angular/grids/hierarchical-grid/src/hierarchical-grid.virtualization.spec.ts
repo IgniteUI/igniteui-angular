@@ -14,6 +14,7 @@ import { IgxHierarchicalGridDefaultComponent } from '../../../test-utils/hierarc
 import { firstValueFrom } from 'rxjs';
 import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand } from 'igniteui-angular/core';
 import { IgxGridNavigationService } from 'igniteui-angular/grids/core';
+import { SCROLL_THROTTLE_TIME } from './../../grid/src/grid-base.directive';
 
 describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     let fixture;
@@ -33,6 +34,9 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     }));
 
     beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+        });
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;

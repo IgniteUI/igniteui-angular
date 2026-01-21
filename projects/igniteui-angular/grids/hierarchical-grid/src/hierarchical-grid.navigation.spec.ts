@@ -10,6 +10,7 @@ import { clearGridSubs, setupHierarchicalGridScrollDetection } from '../../../te
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IGridCellEventArgs, IgxColumnComponent, IgxGridCellComponent, IgxGridNavigationService } from 'igniteui-angular/grids/core';
 import { IPathSegment } from 'igniteui-angular/core';
+import { SCROLL_THROTTLE_TIME } from './../../grid/src/grid-base.directive';
 
 const DEBOUNCE_TIME = 60;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
@@ -37,11 +38,20 @@ describe('IgxHierarchicalGrid Navigation', () => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = defaultTimeout * 2;
     }));
 
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+        });
+    }));
+
     afterAll(() => jasmine.DEFAULT_TIMEOUT_INTERVAL = defaultTimeout);
 
     describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 
         beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+            });
             fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;

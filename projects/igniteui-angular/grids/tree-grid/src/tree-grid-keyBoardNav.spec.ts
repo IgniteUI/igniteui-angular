@@ -9,6 +9,7 @@ import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { DebugElement } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { CellType } from 'igniteui-angular/grids/core';
+import { SCROLL_THROTTLE_TIME } from './../../grid/src/grid-base.directive';
 
 const DEBOUNCETIME = 60;
 
@@ -396,6 +397,9 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         const treeColumns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
 
         beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+            });
             fix = TestBed.createComponent(IgxTreeGridWithScrollsComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
