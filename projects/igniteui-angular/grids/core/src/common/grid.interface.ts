@@ -332,7 +332,7 @@ export interface GridServiceType {
     grid: GridType;
     /** Represents the type of the CRUD service (Create, Read, Update, Delete) operations on the grid data. */
     crudService: any;
-    /** A service responsible for handling column moving within the grid. It contains a reference to the column, its icon, and indicator for cancelation. */
+    /** A service responsible for handling column moving within the grid. It contains a reference to the column, its icon, and indicator for cancellation. */
     cms: IgxColumnMovingService;
 
     /** Represents a method declaration for retrieving the data used in the grid. The returned values could be of any type */
