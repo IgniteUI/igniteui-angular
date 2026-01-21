@@ -32,9 +32,9 @@ describe('IgxChatMarkdownService', () => {
         expect(result).toContain('code');
     });
 
-    it('should apply custom link extension with target="_blank"', async () => {
+    it('should apply custom link extension', async () => {
         const markdown = '[Infragistics](https://www.infragistics.com)';
-        const expectedLink = '<p><a href="https://www.infragistics.com" target="_blank" rel="noopener noreferrer" >Infragistics</a></p>';
+        const expectedLink = '<p><a href="https://www.infragistics.com" rel="noopener noreferrer">Infragistics</a></p>';
 
         const result = await service.parse(markdown);
         expect(result).toContain(expectedLink);

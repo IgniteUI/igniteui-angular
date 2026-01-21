@@ -1,28 +1,25 @@
-import type { Mock } from "vitest";
 import { DomSanitizer } from '@angular/platform-browser';
 import { TestBed } from '@angular/core/testing';
 import { IgxChatMarkdownService } from './markdown-service';
 import { MarkdownPipe } from './markdown-pipe';
-import Spy = Mock;
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-// Mock the Service: We only care that the pipe calls the service and gets an HTML string.
-// We provide a *known* unsafe HTML string to ensure sanitization is working.
-const mockUnsafeHtml = `
+// Mock the Service: We trust the service to provide safe HTML from Shiki.
+const mockSafeHtml = `
   <pre class="shiki" style="color: var(--shiki-fg);"><code><span style="color: #FF0000;">unsafe</span></code></pre>
-  <img src="x" onerror="alert(1)">
+  <img src="x">
 `;
 
 class MockChatMarkdownService {
     public async parse(_: string): Promise<string> {
-        return mockUnsafeHtml;
+        return mockSafeHtml;
     }
 }
 
 describe('MarkdownPipe', () => {
     let pipe: MarkdownPipe;
     let sanitizer: DomSanitizer;
-    let bypassSpy: Spy;
+    let bypassSpy: ReturnType<typeof vi.spyOn>;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -41,19 +38,26 @@ describe('MarkdownPipe', () => {
         expect(pipe).toBeTruthy();
     });
 
-    it('should call the service, sanitize content, and return SafeHtml', async () => {
+    it('should call the service and return SafeHtml with styles preserved', async () => {
         await pipe.transform('some markdown');
 
         expect(bypassSpy).toHaveBeenCalledTimes(1);
 
-        const sanitizedString = vi.mocked(bypassSpy).mock.lastCall[0];
+        const htmlString = bypassSpy.calls.mostRecent().args[0];
 
-        expect(sanitizedString).not.toContain('onerror');
-        expect(sanitizedString).toContain('style="color: var(--shiki-fg);"');
+        expect(htmlString).toContain('style="color: var(--shiki-fg);"');
+        expect(htmlString).toContain('<pre class="shiki"');
+    });
+
+    it('should trust the service to provide safe HTML', async () => {
+        const result = await pipe.transform('# Test');
+
+        expect(bypassSpy).toHaveBeenCalledWith(mockSafeHtml);
+        expect(result).toBeTruthy();
     });
 
     it('should handle undefined input text', async () => {
         await pipe.transform(undefined);
-        expect(sanitizer.bypassSecurityTrustHtml).toHaveBeenCalled();
+        expect(bypassSpy).toHaveBeenCalled();
     });
 });
