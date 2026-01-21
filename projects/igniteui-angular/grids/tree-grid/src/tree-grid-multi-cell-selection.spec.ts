@@ -11,6 +11,7 @@ import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridSelectionFunctions, GridSummaryFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
 import { IgxStringFilteringOperand } from 'igniteui-angular/core';
+import { SCROLL_THROTTLE_TIME } from './../../grid/src/grid-base.directive';
 
 describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
@@ -24,6 +25,12 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
                 IgxTreeGridFKeySelectionWithTransactionComponent
             ]
         }).compileComponents();
+    }));
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+        });
     }));
 
     describe('Flat Data', () => {
