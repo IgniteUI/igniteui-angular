@@ -133,13 +133,13 @@ export class TreeGridFunctions {
             // Verify each row's cell count
             const treeCell = TreeGridFunctions.getTreeCell(row);
             const normalCells = TreeGridFunctions.getNormalCells(row);
-            expect(1 + normalCells.length).toBe(expectedColumnsCount, 'incorrect cell count for a row');
+            expect(1 + normalCells.length, 'incorrect cell count for a row').toBe(expectedColumnsCount);
 
             const treeCellRectRight = treeCell.nativeElement.getBoundingClientRect().right;
             normalCells.forEach((normalCell) => {
                 // Verify that the treeCell is the first cell (on the left of all the other cells)
                 const normalCellRectLeft = normalCell.nativeElement.getBoundingClientRect().left;
-                expect(treeCellRectRight <= normalCellRectLeft).toBe(true, 'TreeCell is not on the left of a normal cell.');
+                expect(treeCellRectRight <= normalCellRectLeft, 'TreeCell is not on the left of a normal cell.').toBe(true);
             });
         });
     }
@@ -155,10 +155,10 @@ export class TreeGridFunctions {
         // and thus it has no indentation div.
         const indentationDiv = treeCell.query(By.css(TREE_CELL_DIV_INDENTATION_CSS_CLASS + expectedIndentationLevel));
         if (expectedIndentationLevel === 0) {
-            expect(divChildren.length).toBe(2, 'root treeCell has incorrect divs count');
+            expect(divChildren.length, 'root treeCell has incorrect divs count').toBe(2);
             expect(indentationDiv).toBeNull();
         } else {
-            expect(divChildren.length).toBe(3, 'child treeCell has incorrect divs count');
+            expect(divChildren.length, 'child treeCell has incorrect divs count').toBe(3);
             expect(indentationDiv).toBeDefined();
             expect(indentationDiv).not.toBeNull();
         }
@@ -197,9 +197,9 @@ export class TreeGridFunctions {
         const headerCellRect = headerCell.nativeElement.getBoundingClientRect();
         treeCells.forEach(treeCell => {
             const treeCellRect = treeCell.nativeElement.getBoundingClientRect();
-            expect(headerCellRect.bottom <= treeCellRect.top).toBe(true, 'headerCell is not on top of a treeCell');
-            expect(headerCellRect.left).toBe(treeCellRect.left, 'headerCell and treeCell are not left-aligned');
-            expect(headerCellRect.right).toBe(treeCellRect.right, 'headerCell and treeCell are not right-aligned');
+            expect(headerCellRect.bottom <= treeCellRect.top, 'headerCell is not on top of a treeCell').toBe(true);
+            expect(headerCellRect.left, 'headerCell and treeCell are not left-aligned').toBe(treeCellRect.left);
+            expect(headerCellRect.right, 'headerCell and treeCell are not right-aligned').toBe(treeCellRect.right);
         });
     }
 
@@ -220,9 +220,9 @@ export class TreeGridFunctions {
         const headerCellRect = headerCell.nativeElement.getBoundingClientRect();
         treeCells.forEach(treeCell => {
             const treeCellRect = treeCell.nativeElement.getBoundingClientRect();
-            expect(headerCellRect.bottom <= treeCellRect.top).toBe(true, 'headerCell is not above a treeCell');
-            expect(headerCellRect.left).toBe(treeCellRect.left, 'headerCell and treeCell are not left-aligned');
-            expect(headerCellRect.right).toBe(treeCellRect.right, 'headerCell and treeCell are not right-aligned');
+            expect(headerCellRect.bottom <= treeCellRect.top, 'headerCell is not above a treeCell').toBe(true);
+            expect(headerCellRect.left, 'headerCell and treeCell are not left-aligned').toBe(treeCellRect.left);
+            expect(headerCellRect.right, 'headerCell and treeCell are not right-aligned').toBe(treeCellRect.right);
         });
     }
 
@@ -269,8 +269,7 @@ export class TreeGridFunctions {
 
         const iconDiv = TreeGridFunctions.getExpansionIndicatorDiv(treeRowDOM);
         const iconDivRect = iconDiv.nativeElement.getBoundingClientRect();
-        expect((iconDivRect.left - (treeCellRect.left + treeCellPaddingLeft + indentation)) < 2)
-            .toBe(true, 'TreeRow icon has incorrect position');
+        expect((iconDivRect.left - (treeCellRect.left + treeCellPaddingLeft + indentation)) < 2, 'TreeRow icon has incorrect position').toBe(true);
     }
 
     /**
@@ -294,11 +293,11 @@ export class TreeGridFunctions {
         // Verfiy selection of checkbox
         const checkboxDiv = rowDOM.query(By.css(TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS));
         const checkboxComponent = checkboxDiv.query(By.css('igx-checkbox')).componentInstance as IgxCheckboxComponent;
-        expect(checkboxComponent.checked).toBe(expectedSelection, 'Incorrect checkbox selection state');
-        expect(checkboxComponent.nativeInput.nativeElement.checked).toBe(expectedSelection, 'Incorrect native checkbox selection state');
+        expect(checkboxComponent.checked, 'Incorrect checkbox selection state').toBe(expectedSelection);
+        expect(checkboxComponent.nativeInput.nativeElement.checked, 'Incorrect native checkbox selection state').toBe(expectedSelection);
 
         // Verify selection of row
-        expect(rowComponent.selected).toBe(expectedSelection, 'Incorrect row selection state');
+        expect(rowComponent.selected, 'Incorrect row selection state').toBe(expectedSelection);
         expect(rowDOM.nativeElement.classList.contains(TREE_ROW_SELECTION_CSS_CLASS)).toBe(expectedSelection);
 
         // Verify selection of row through treeGrid
@@ -325,7 +324,7 @@ export class TreeGridFunctions {
     public static verifyDataRowsSelection(fix, expectedSelectedRowIndices: any[], expectedSelection: boolean) {
         if (expectedSelection) {
             const treeGrid = fix.debugElement.query(By.css('igx-tree-grid')).componentInstance as IgxTreeGridComponent;
-            expect(treeGrid.selectedRows.length).toBe(expectedSelectedRowIndices.length, 'Incorrect number of rows that are selected.');
+            expect(treeGrid.selectedRows.length, 'Incorrect number of rows that are selected.').toBe(expectedSelectedRowIndices.length);
         }
 
         expectedSelectedRowIndices.forEach(rowIndex => {
@@ -346,22 +345,22 @@ export class TreeGridFunctions {
 
         if (expectedCheckboxState === null) {
             expect(checkboxComponent.indeterminate).toBe(true);
-            expect(checkboxComponent.checked).toBe(false, 'Incorrect checkbox selection state');
-            expect(checkboxComponent.nativeInput.nativeElement.checked).toBe(false, 'Incorrect native checkbox selection state');
+            expect(checkboxComponent.checked, 'Incorrect checkbox selection state').toBe(false);
+            expect(checkboxComponent.nativeInput.nativeElement.checked, 'Incorrect native checkbox selection state').toBe(false);
 
             // Verify selection of row
-            expect(rowComponent.selected).toBe(false, 'Incorrect row selection state');
+            expect(rowComponent.selected, 'Incorrect row selection state').toBe(false);
             expect((rowDOM.nativeElement as HTMLElement).classList.contains(TREE_ROW_SELECTION_CSS_CLASS)).toBe(false);
 
             // Verify selection of row through treeGrid
             const selectedRows = (treeGrid as IgxTreeGridComponent).selectedRows;
             expect(selectedRows.includes(rowComponent.key)).toBe(false);
         } else {
-            expect(checkboxComponent.checked).toBe(expectedCheckboxState, 'Incorrect checkbox selection state');
-            expect(checkboxComponent.nativeInput.nativeElement.checked).toBe(expectedCheckboxState, 'Incorrect native checkbox selection state');
+            expect(checkboxComponent.checked, 'Incorrect checkbox selection state').toBe(expectedCheckboxState);
+            expect(checkboxComponent.nativeInput.nativeElement.checked, 'Incorrect native checkbox selection state').toBe(expectedCheckboxState);
 
             // Verify selection of row
-            expect(rowComponent.selected).toBe(expectedSelection, 'Incorrect row selection state');
+            expect(rowComponent.selected, 'Incorrect row selection state').toBe(expectedSelection);
             expect((rowDOM.nativeElement as HTMLElement).classList.contains(TREE_ROW_SELECTION_CSS_CLASS)).toBe(expectedSelection);
 
             // Verify selection of row through treeGrid
@@ -381,12 +380,12 @@ export class TreeGridFunctions {
 
         if (expectedSelection === null) {
             expect(checkboxComponent.indeterminate).toBe(true);
-            expect(checkboxComponent.checked).toBe(false, 'Incorrect checkbox selection state');
-            expect(checkboxComponent.nativeInput.nativeElement.checked).toBe(false, 'Incorrect native checkbox selection state');
+            expect(checkboxComponent.checked, 'Incorrect checkbox selection state').toBe(false);
+            expect(checkboxComponent.nativeInput.nativeElement.checked, 'Incorrect native checkbox selection state').toBe(false);
         } else {
             expect(checkboxComponent.indeterminate).toBe(false);
-            expect(checkboxComponent.checked).toBe(expectedSelection, 'Incorrect checkbox selection state');
-            expect(checkboxComponent.nativeInput.nativeElement.checked).toBe(expectedSelection, 'Incorrect native checkbox selection state');
+            expect(checkboxComponent.checked, 'Incorrect checkbox selection state').toBe(expectedSelection);
+            expect(checkboxComponent.nativeInput.nativeElement.checked, 'Incorrect native checkbox selection state').toBe(expectedSelection);
         }
     }
 

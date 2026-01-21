@@ -264,8 +264,8 @@ describe('IgxGrid - Summaries #grid', () => {
                 const lastColumnSummaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 4);
                 const lastColumnSummaryCellRect = lastColumnSummaryCell.nativeElement.getBoundingClientRect();
 
-                expect(lastColumnSummaryCellRect.left).toBe(lastColumnNormalCellRect.left, 'summary cell and data cell are not left aligned');
-                expect(lastColumnSummaryCellRect.right).toBe(lastColumnNormalCellRect.right, 'summary cell and data cell are not right aligned');
+                expect(lastColumnSummaryCellRect.left, 'summary cell and data cell are not left aligned').toBe(lastColumnNormalCellRect.left);
+                expect(lastColumnSummaryCellRect.right, 'summary cell and data cell are not right aligned').toBe(lastColumnNormalCellRect.right);
             });
 
             it('should apply disabledSummaries with custom summary', fakeAsync(() => {

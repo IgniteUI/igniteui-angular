@@ -74,7 +74,7 @@ describe('IgxDatePicker', () => {
 
                 expect(datePicker['_calendar'].hasHeader).toBe(false);
                 const calendarHeader = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR_HEADER));
-                expect(calendarHeader).toBeFalsy('Calendar header should not be present');
+                expect(calendarHeader, 'Calendar header should not be present').toBeFalsy();
             }));
 
             it('should set calendar orientation property', fakeAsync(() => {
@@ -663,7 +663,7 @@ describe('IgxDatePicker', () => {
                 fixture.detectChanges();
 
                 const headerTitleElement = fixture.debugElement.query(By.css('.igx-calendar__header-year'));
-                expect(headerTitleElement).toBeTruthy('Header title element should be present');
+                expect(headerTitleElement, 'Header title element should be present').toBeTruthy();
                 if (headerTitleElement) {
                     expect(headerTitleElement.nativeElement.textContent.trim()).toBe('2024');
                 }
@@ -677,7 +677,7 @@ describe('IgxDatePicker', () => {
                 fixture.detectChanges();
 
                 const headerElement = fixture.debugElement.query(By.css('.igx-calendar__header-date'));
-                expect(headerElement).toBeTruthy('Header element should be present');
+                expect(headerElement, 'Header element should be present').toBeTruthy();
                 if (headerElement) {
                     expect(headerElement.nativeElement.textContent.trim()).toBe('Nov');
                 }
@@ -1341,7 +1341,7 @@ describe('IgxDatePicker', () => {
                     id: 'mock-id'
                 };
                 datePicker.ngAfterViewChecked();
-                expect(renderer2.setAttribute).toHaveBeenCalledWith(mockInputDirective.nativeElement, 'aria-labelledby', 'mock-id');
+                expect(renderer2.setAttribute, 'mock-id').toHaveBeenCalledWith(mockInputDirective.nativeElement, 'aria-labelledby');
             });
 
             it('Should properly handle click on editor provider', () => {

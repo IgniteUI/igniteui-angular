@@ -125,7 +125,7 @@ describe('Excel Exporter', () => {
             grid.filter('JobTitle', 'Director', IgxStringFilteringOperand.instance().condition('equals'), true);
             fix.detectChanges();
 
-            expect(grid.rowList.length).toEqual(2, 'Invalid number of rows after filtering!');
+            expect(grid.rowList.length, 'Invalid number of rows after filtering!').toEqual(2);
             wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(actualData.simpleGridDataDirectors, 'Two rows should have been exported!');
         });
@@ -140,7 +140,7 @@ describe('Excel Exporter', () => {
             options.ignoreColumnsVisibility = false;
             fix.detectChanges();
 
-            expect(grid.visibleColumns.length).toEqual(2, 'Invalid number of visible columns!');
+            expect(grid.visibleColumns.length, 'Invalid number of visible columns!').toEqual(2);
             let wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle, 'Two columns should have been exported!');
 
@@ -158,28 +158,28 @@ describe('Excel Exporter', () => {
             const grid = fix.componentInstance.grid;
             options.ignoreColumnsVisibility = false;
 
-            expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
+            expect(grid.visibleColumns.length, 'Invalid number of visible columns!').toEqual(3);
             let wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
 
             grid.columnList.get(0).hidden = true;
             fix.detectChanges();
 
-            expect(grid.visibleColumns.length).toEqual(2, 'Invalid number of visible columns!');
+            expect(grid.visibleColumns.length, 'Invalid number of visible columns!').toEqual(2);
             wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle, 'Two columns should have been exported!');
 
             grid.columnList.get(0).hidden = false;
             fix.detectChanges();
 
-            expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
+            expect(grid.visibleColumns.length, 'Invalid number of visible columns!').toEqual(3);
             wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
 
             grid.columnList.get(0).hidden = undefined;
             fix.detectChanges();
 
-            expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
+            expect(grid.visibleColumns.length, 'Invalid number of visible columns!').toEqual(3);
             wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
         });

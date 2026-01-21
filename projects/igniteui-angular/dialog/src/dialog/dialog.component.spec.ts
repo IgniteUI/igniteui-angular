@@ -458,9 +458,9 @@ describe('Dialog', () => {
             expect(dialog.isOpen).toEqual(true);
             const firstContentRect = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0].getBoundingClientRect();
             const middleDialogPosition = document.documentElement.offsetHeight / 2 - firstContentRect.height / 2;
-            expect(firstContentRect.left).toEqual(0, 'OffsetLeft position check');
-            expect(firstContentRect.top).toBeGreaterThanOrEqual(middleDialogPosition - 2, 'OffsetTop position check');
-            expect(firstContentRect.top).toBeLessThanOrEqual(middleDialogPosition + 2, 'OffsetTop position check');
+            expect(firstContentRect.left, 'OffsetLeft position check').toEqual(0);
+            expect(firstContentRect.top, 'OffsetTop position check').toBeGreaterThanOrEqual(middleDialogPosition - 2);
+            expect(firstContentRect.top, 'OffsetTop position check').toBeLessThanOrEqual(middleDialogPosition + 2);
 
             dialog.close();
             tick(16);
@@ -478,9 +478,9 @@ describe('Dialog', () => {
             expect(dialog.isOpen).toEqual(true);
             const secondContentRect = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0].getBoundingClientRect();
             const topDialogPosition = document.documentElement.offsetWidth / 2 - secondContentRect.width / 2;
-            expect(secondContentRect.top).toEqual(0, 'OffsetTop position check');
-            expect(secondContentRect.left).toBeGreaterThanOrEqual(topDialogPosition - 2, 'OffsetLeft position check');
-            expect(secondContentRect.left).toBeLessThanOrEqual(topDialogPosition + 2, 'OffsetLeft position check');
+            expect(secondContentRect.top, 'OffsetTop position check').toEqual(0);
+            expect(secondContentRect.left, 'OffsetLeft position check').toBeGreaterThanOrEqual(topDialogPosition - 2);
+            expect(secondContentRect.left, 'OffsetLeft position check').toBeLessThanOrEqual(topDialogPosition + 2);
 
             dialog.close();
             tick(16);
@@ -493,18 +493,18 @@ describe('Dialog', () => {
             const currentElement = fix.componentInstance;
 
             // Check initial animation settings
-            expect(dialog.positionSettings.openAnimation.animation.type).toEqual(8, 'Animation type is set');
-            expect(dialog.positionSettings.openAnimation.options.params.duration).toEqual('200ms', 'Animation duration is set to 200ms');
+            expect(dialog.positionSettings.openAnimation.animation.type, 'Animation type is set').toEqual(8);
+            expect(dialog.positionSettings.openAnimation.options.params.duration, 'Animation duration is set to 200ms').toEqual('200ms');
 
-            expect(dialog.positionSettings.closeAnimation.animation.type).toEqual(8, 'Animation type is set');
-            expect(dialog.positionSettings.closeAnimation.options.params.duration).toEqual('200ms', 'Animation duration is set to 200ms');
+            expect(dialog.positionSettings.closeAnimation.animation.type, 'Animation type is set').toEqual(8);
+            expect(dialog.positionSettings.closeAnimation.options.params.duration, 'Animation duration is set to 200ms').toEqual('200ms');
 
             dialog.positionSettings = currentElement.animationSettings;
             fix.detectChanges();
 
             // Check the new animation settings
-            expect(dialog.positionSettings.openAnimation.options.params.duration).toEqual('800ms', 'Animation duration is set to 800ms');
-            expect(dialog.positionSettings.closeAnimation.options.params.duration).toEqual('700ms', 'Animation duration is set to 700ms');
+            expect(dialog.positionSettings.openAnimation.options.params.duration, 'Animation duration is set to 800ms').toEqual('800ms');
+            expect(dialog.positionSettings.closeAnimation.options.params.duration, 'Animation duration is set to 700ms').toEqual('700ms');
         });
     });
 

@@ -95,7 +95,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
 
             // Verify page 1
             let rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
-            expect(rows.length).toBe(4, 'Incorrect number of rows on page 1.');
+            expect(rows.length, 'Incorrect number of rows on page 1.').toBe(4);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(2), rows[2], 1);
@@ -107,7 +107,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
 
             // Verify page 2
             rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
-            expect(rows.length).toBe(4, 'Incorrect number of rows on page 2.');
+            expect(rows.length, 'Incorrect number of rows on page 2.').toBe(4);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 2);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 2);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(2), rows[2], 2);
@@ -119,7 +119,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
 
             // Verify page 3
             rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
-            expect(rows.length).toBe(2, 'Incorrect number of rows on page 3.');
+            expect(rows.length, 'Incorrect number of rows on page 3.').toBe(2);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
         }));
@@ -256,7 +256,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
 
             // Verify page 1
             let rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
-            expect(rows.length).toBe(3, 'Incorrect number of rows on page 1.');
+            expect(rows.length, 'Incorrect number of rows on page 1.').toBe(3);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(2), rows[2], 2);
@@ -267,7 +267,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
 
             // Verify page 2
             rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
-            expect(rows.length).toBe(3, 'Incorrect number of rows on page 2.');
+            expect(rows.length, 'Incorrect number of rows on page 2.').toBe(3);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 2);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(2), rows[2], 0);
@@ -278,7 +278,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
 
             // Verify page 3
             rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
-            expect(rows.length).toBe(2, 'Incorrect number of rows on page 3.');
+            expect(rows.length, 'Incorrect number of rows on page 3.').toBe(2);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
         }));
@@ -346,8 +346,7 @@ const verifyCellsContentAlignment = (fix, columnKey, shouldBeLeftAligned: boolea
     const cells = TreeGridFunctions.getColumnCells(fix, columnKey);
     if (shouldBeLeftAligned) {
         cells.forEach((cell) => {
-            expect(cell.nativeElement.classList.contains(NUMBER_CELL_CSS_CLASS))
-                .toBe(false, 'cell has number css class');
+            expect(cell.nativeElement.classList.contains(NUMBER_CELL_CSS_CLASS), 'cell has number css class').toBe(false);
 
             // TreeCells have either 2 or 3 div children (2 for root rows and 3 for child rows).
             const cellDivChildren = cell.queryAll(By.css('div'));
@@ -355,8 +354,7 @@ const verifyCellsContentAlignment = (fix, columnKey, shouldBeLeftAligned: boolea
         });
     } else { // Should be right-aligned
         cells.forEach((cell) => {
-            expect(cell.nativeElement.classList.contains(NUMBER_CELL_CSS_CLASS))
-                .toBe(true, 'cell does not have number css class');
+            expect(cell.nativeElement.classList.contains(NUMBER_CELL_CSS_CLASS), 'cell does not have number css class').toBe(true);
 
             // NormalCells have 1 div child (no div for indentation and no div for expander).
             const cellDivChildren = cell.queryAll(By.css('div'));

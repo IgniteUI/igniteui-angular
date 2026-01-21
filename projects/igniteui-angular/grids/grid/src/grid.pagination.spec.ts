@@ -13,7 +13,7 @@ const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisib
     const grid = fix.componentInstance.grid;
 
     expect(grid.getCellByColumn(0, 'ID').value).toMatch(firstCellValue);
-    expect(grid.rowList.length).toEqual(rowsCount, 'Invalid number of rows initialized');
+    expect(grid.rowList.length, 'Invalid number of rows initialized').toEqual(rowsCount);
 
     if (pagerText != null) {
         expect(grid.nativeElement.querySelector(PAGER_CLASS)).toBeDefined();
@@ -149,14 +149,14 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.detectChanges();
 
             expect(paginator).toBeDefined();
-            expect(paginator.perPage).toEqual(5, 'Invalid page size');
+            expect(paginator.perPage, 'Invalid page size').toEqual(5);
             expect(grid.totalRecords).toBe(10);
             verifyGridPager(fix, 5, '1', '1\xA0of\xA02', []);
 
             grid.totalRecords = 4;
             fix.detectChanges();
 
-            expect(paginator.perPage).toEqual(5, 'Invalid page size');
+            expect(paginator.perPage, 'Invalid page size').toEqual(5);
             expect(grid.totalRecords).toBe(4);
             verifyGridPager(fix, 4, '1', '1\xA0of\xA01', []);
         });
@@ -165,7 +165,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         it('change paging settings UI', () => {
             fix.detectChanges();
             expect(paginator).toBeDefined();
-            expect(paginator.perPage).toEqual(3, 'Invalid page size');
+            expect(paginator.perPage, 'Invalid page size').toEqual(3);
 
             verifyGridPager(fix, 3, '1', '1\xA0of\xA04', []);
 
@@ -175,7 +175,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             ControlsFunction.clickDropDownItem(fix, 2);
 
             expect(paginator).toBeDefined();
-            expect(paginator.perPage).toEqual(10, 'Invalid page size');
+            expect(paginator.perPage, 'Invalid page size').toEqual(10);
             verifyGridPager(fix, 10, '1', '1\xA0of\xA01', []);
         });
 
@@ -186,7 +186,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.detectChanges();
 
             expect(paginator).toBeDefined();
-            expect(paginator.perPage).toEqual(2, 'Invalid page size');
+            expect(paginator.perPage, 'Invalid page size').toEqual(2);
             verifyGridPager(fix, 2, '1', '1\xA0of\xA05', []);
 
             // Turn off paging
@@ -212,7 +212,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.detectChanges();
 
             expect(grid.paginator).toBeDefined();
-            expect(paginator.perPage).toEqual(2, 'Invalid page size');
+            expect(paginator.perPage, 'Invalid page size').toEqual(2);
             verifyGridPager(fix, 2, '3', '2\xA0of\xA05', []);
 
             // Change page size to be 5

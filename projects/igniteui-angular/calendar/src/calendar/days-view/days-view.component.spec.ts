@@ -132,12 +132,12 @@ describe("Days View Component", () => {
         // 1. Verify Programmatic Access (formattedDate method)
         // Should return the raw formatted string from the formatter (with suffix)
         const programmaticResult = daysView.formattedDate(date);
-        expect(programmaticResult).toBe('25日', 'Programmatic API should return the full locale string (including suffix, in this case 日)');
+        expect(programmaticResult, 'Programmatic API should return the full locale string (including suffix, in this case 日)').toBe('25日');
 
         // 2. Verify Pipe Logic
         // The pipe takes the formatted string "25日" and strips non-digits to return "25"
         const pipeResult = pipe.transform(programmaticResult, daysView.formatViews);
-        expect(pipeResult).toBe('25', 'Pipe should strip non-numeric characters from the input string');
+        expect(pipeResult, 'Pipe should strip non-numeric characters from the input string').toBe('25');
 
         // 3. Confirm the difference implies the pipe did its job
         expect(programmaticResult).not.toEqual(pipeResult);

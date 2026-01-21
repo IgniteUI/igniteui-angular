@@ -52,21 +52,21 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         it('Should show/hide Advanced Filtering button in toolbar based on respective input.', fakeAsync(() => {
             // Verify Advanced Filtering button in toolbar is visible.
             let advFilterButton = GridFunctions.getAdvancedFilteringButton(fix);
-            expect(advFilterButton !== null && advFilterButton !== undefined).toBe(true, 'Adv.Filter button is not visible.');
+            expect(advFilterButton !== null && advFilterButton !== undefined, 'Adv.Filter button is not visible.').toBe(true);
 
             grid.allowAdvancedFiltering = false;
             fix.detectChanges();
 
             // Verify Advanced Filtering button in toolbar is not visible.
             advFilterButton = GridFunctions.getAdvancedFilteringButton(fix);
-            expect(advFilterButton !== null && advFilterButton !== undefined).toBe(false, 'Adv.Filter button is visible.');
+            expect(advFilterButton !== null && advFilterButton !== undefined, 'Adv.Filter button is visible.').toBe(false);
 
             grid.allowAdvancedFiltering = true;
             fix.detectChanges();
 
             // Verify Advanced Filtering button in toolbar is visible.
             advFilterButton = GridFunctions.getAdvancedFilteringButton(fix);
-            expect(advFilterButton !== null && advFilterButton !== undefined).toBe(true, 'Adv.Filter button is not visible.');
+            expect(advFilterButton !== null && advFilterButton !== undefined, 'Adv.Filter button is not visible.').toBe(true);
         }));
 
         it('Should correctly initialize the Advanced Filtering dialog.', fakeAsync(() => {
@@ -172,8 +172,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         it('Should update the Advanced Filtering button in toolbar when (filtering)/(clear filtering).', fakeAsync(() => {
             // Verify that the advanced filtering button indicates there are no filters.
             let advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
-            expect(Array.from(advFilterBtn.children).some(c => (c as any).classList.contains('igx-adv-filter--column-number')))
-                .toBe(false, 'Button indicates there is active filtering.');
+            expect(Array.from(advFilterBtn.children).some(c => (c as any).classList.contains('igx-adv-filter--column-number')), 'Button indicates there is active filtering.').toBe(false);
 
             // Open Advanced Filtering dialog.
             grid.openAdvancedFilteringDialog();
@@ -200,8 +199,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Verify that the advanced filtering button indicates there are filters.
             advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
-            expect(Array.from(advFilterBtn.children).some(c => (c as any).classList.contains('igx-adv-filter--column-number')))
-                .toBe(true, 'Button indicates there is no active filtering.');
+            expect(Array.from(advFilterBtn.children).some(c => (c as any).classList.contains('igx-adv-filter--column-number')), 'Button indicates there is no active filtering.').toBe(true);
 
             // Open Advanced Filtering dialog.
             grid.openAdvancedFilteringDialog();
@@ -217,8 +215,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Verify that the advanced filtering button indicates there are no filters.
             advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
-            expect(Array.from(advFilterBtn.children).some(c => (c as any).classList.contains('igx-adv-filter--column-number')))
-                .toBe(false, 'Button indicates there is active filtering.');
+            expect(Array.from(advFilterBtn.children).some(c => (c as any).classList.contains('igx-adv-filter--column-number')), 'Button indicates there is active filtering.').toBe(false);
         }));
 
         it('The Clear/Cancel/Apply buttons type should be set to "button"', fakeAsync(() => {
@@ -234,9 +231,9 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const expectedButtonType = 'button';
 
             // Verify buttons type is set to "button".
-            expect(clearButtonType).toBe(expectedButtonType, 'Clear button type is not "button"');
-            expect(cancelButtonType).toBe(expectedButtonType, 'Cancel button type is not "button"');
-            expect(applyButtonType).toBe(expectedButtonType, 'Apply button type is not "button"');
+            expect(clearButtonType, 'Clear button type is not "button"').toBe(expectedButtonType);
+            expect(cancelButtonType, 'Cancel button type is not "button"').toBe(expectedButtonType);
+            expect(applyButtonType, 'Apply button type is not "button"').toBe(expectedButtonType);
         }));
 
         it('Should emit the filtering event when applying filters.', fakeAsync(() => {
@@ -973,7 +970,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             const rows = GridFunctions.getRows(fix);
-            expect(rows.length).toEqual(3, 'Wrong filtered rows count');
+            expect(rows.length, 'Wrong filtered rows count').toEqual(3);
         }));
 
         it('Should filter by cells formatted data when using FormattedValuesFilteringStrategy with rowData', fakeAsync(() => {
@@ -1007,7 +1004,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             const rows = GridFunctions.getRows(fix);
-            expect(rows.length).toEqual(1, 'Wrong filtered rows count');
+            expect(rows.length, 'Wrong filtered rows count').toEqual(1);
         }));
 
         it('DateTime: Should set editorOptions.dateTimeFormat prop as inputFormat for the filter value editor', fakeAsync(() => {
@@ -1913,8 +1910,8 @@ const verifyElementIsInExpressionsContainerView = (fix, element: HTMLElement) =>
     const elementRect = element.getBoundingClientRect();
     const exprContainer: HTMLElement = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix) as HTMLElement;
     const exprContainerRect = exprContainer.getBoundingClientRect();
-    expect(elementRect.top >= exprContainerRect.top).toBe(true, 'top is not in view');
-    expect(elementRect.bottom <= exprContainerRect.bottom).toBe(true, 'bottom is not in view');
-    expect(elementRect.left >= exprContainerRect.left).toBe(true, 'left is not in view');
-    expect(elementRect.right <= exprContainerRect.right).toBe(true, 'right is not in view');
+    expect(elementRect.top >= exprContainerRect.top, 'top is not in view').toBe(true);
+    expect(elementRect.bottom <= exprContainerRect.bottom, 'bottom is not in view').toBe(true);
+    expect(elementRect.left >= exprContainerRect.left, 'left is not in view').toBe(true);
+    expect(elementRect.right <= exprContainerRect.right, 'right is not in view').toBe(true);
 };

@@ -261,14 +261,14 @@ describe('Column Hiding UI #grid', () => {
             GridFunctions.clickColumnChooserItem(columnChooserElement, name);
             fix.detectChanges();
 
-            expect(GridFunctions.getColumnChooserItemInput(checkbox).checked).toBe(true, 'Checkbox is not checked!');
+            expect(GridFunctions.getColumnChooserItemInput(checkbox).checked, 'Checkbox is not checked!').toBe(true);
             ControlsFunction.verifyButtonIsDisabled(showAll);
             ControlsFunction.verifyButtonIsDisabled(hideAll, false);
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, name);
             fix.detectChanges();
 
-            expect(GridFunctions.getColumnChooserItemInput(checkbox).checked).toBe(false, 'Checkbox is not unchecked!');
+            expect(GridFunctions.getColumnChooserItemInput(checkbox).checked, 'Checkbox is not unchecked!').toBe(false);
 
             ControlsFunction.verifyButtonIsDisabled(showAll, false);
             ControlsFunction.verifyButtonIsDisabled(hideAll);
@@ -489,7 +489,7 @@ describe('Column Hiding UI #grid', () => {
             tick();
             fix.detectChanges();
 
-            expect(columnChooser.filterCriteria).toBe('', 'Filter criteria is not empty string!');
+            expect(columnChooser.filterCriteria, 'Filter criteria is not empty string!').toBe('');
             expect(GridFunctions.getColumnChooserItemInput(checkbox).checked).toBe(false);
             checkbox = GridFunctions.getColumnChooserItemElement(columnChooserElement, 'ID');
             expect(GridFunctions.getColumnChooserItemInput(checkbox).checked).toBe(true);
@@ -604,7 +604,7 @@ describe('Column Hiding UI #grid', () => {
             fix.detectChanges();
             tick();
 
-            expect(columnChooser.filterCriteria).toBe('', 'Filter criteria is not empty string!');
+            expect(columnChooser.filterCriteria, 'Filter criteria is not empty string!').toBe('');
 
             checkbox = GridFunctions.getColumnChooserItemElement(columnChooserElement, 'ID');
             expect(GridFunctions.getColumnChooserItemInput(checkbox).checked).toBe(true);
@@ -628,18 +628,18 @@ describe('Column Hiding UI #grid', () => {
             fix.detectChanges();
 
             ControlsFunction.verifyButtonIsDisabled(showAll.nativeElement);
-            expect(grid.columnList.get(2).hidden).toBe(false, 'Downloads column is not hidden!');
+            expect(grid.columnList.get(2).hidden, 'Downloads column is not hidden!').toBe(false);
 
             UIInteractions.triggerInputEvent(filterInput, '');
             fix.detectChanges();
 
             ControlsFunction.verifyButtonIsDisabled(showAll.nativeElement);
-            expect(grid.columnList.get(0).hidden).toBe(false, 'ID column is not shown!');
+            expect(grid.columnList.get(0).hidden, 'ID column is not shown!').toBe(false);
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'ID');
             fix.detectChanges();
 
             ControlsFunction.verifyButtonIsDisabled(showAll.nativeElement, false);
-            expect(grid.columnList.get(0).hidden).toBe(true, 'ID column is not hidden!');
+            expect(grid.columnList.get(0).hidden, 'ID column is not hidden!').toBe(true);
         });
 
         it('height can be controlled via columnsAreaMaxHeight input.', () => {
