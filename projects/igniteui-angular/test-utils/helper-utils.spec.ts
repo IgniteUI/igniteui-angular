@@ -7,16 +7,14 @@ import { expect, beforeEach, afterEach, vi } from 'vitest';
 
 /**
  * Global beforeEach and afterEach checks to ensure test fails on specific warnings
- * Use direct env because karma-parallel's wrap ignores these in secondary shards
- * https://github.com/joeljeske/karma-parallel/issues/64
+ * Note: Vitest doesn't support global hooks like Jasmine's getEnv().
+ * These checks should be implemented in individual test suites as needed.
  */
-// TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-(jasmine.getEnv() as any).beforeEach(() => {
+beforeEach(() => {
     vi.spyOn(console, 'warn');
 });
 
-// TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-(jasmine.getEnv() as any).afterEach(() => {
+afterEach(() => {
     expect(console.warn, 'Components & tests should be free of @for track duplicated keys warnings').not.toHaveBeenCalledWith(expect.stringContaining('NG0955'));
     expect(console.warn, 'Components & tests should be free of @for track DOM re-creation warnings').not.toHaveBeenCalledWith(expect.stringContaining('NG0956'));
 });
@@ -104,26 +102,9 @@ export class TestNgZone extends NgZone {
 /* eslint-disable no-console */
 // TODO: enable on re-run by selecting enable debug logging
 // https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/troubleshooting-workflows/enabling-debug-logging
+// Note: Vitest uses a different reporter system. Custom reporters should be configured in vitest.config.ts
 const shardLogging = false;
 if (shardLogging) {
-    const myReporter = {
-        suiteStarted: function (result) {
-            const id = new URLSearchParams(window.parent.location.search).get('id');
-            console.log(`[${id}] Suite started: ${result.fullName}`);
-        },
-        suiteDone: function (result) {
-            const id = new URLSearchParams(window.parent.location.search).get('id');
-            console.log(`[${id}] Suite: ${result.fullName} has ${result.status}`);
-            for (const expectation of result.failedExpectations) {
-                console.log('Suite ' + expectation.message);
-                console.log(expectation.stack);
-            }
-            var memory = (performance as any).memory;
-            console.log(`[${id}] totalJSHeapSize: ${memory['totalJSHeapSize']} usedJSHeapSize: ${memory['usedJSHeapSize']} jsHeapSizeLimit: ${memory['jsHeapSizeLimit']}`);
-            if (memory['totalJSHeapSize'] >= memory['jsHeapSizeLimit'])
-                console.log('--------------------Heap Size limit reached!!!-------------------');
-        },
-    };
-    // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-    jasmine.getEnv().addReporter(myReporter);
+    // Vitest reporter configuration should be done in vitest.config.ts, not at runtime
+    console.log('Shard logging is enabled. Configure custom reporters in vitest.config.ts');
 }

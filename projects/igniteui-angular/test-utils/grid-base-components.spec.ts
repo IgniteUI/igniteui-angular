@@ -126,15 +126,13 @@ export class SelectionComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` [autoGenerate]="true" [exportExcel]="exportExcel" [exportCsv]="exportCsv"`, '', ''),
+    template: GridTemplateStrings.declareGrid(` [autoGenerate]="true"`, '', ''),
     imports: [IgxGridComponent]
 })
 export class GridWithToolbarComponent extends GridWithSizeComponent {
     public showToolbar = true;
     public columnHiding = true;
     public columnPinning = true;
-    public exportExcel = true;
-    public exportCsv = true;
 
     public override data = SampleTestData.contactInfoData();
 }
