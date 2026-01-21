@@ -283,8 +283,7 @@ describe('IgxForOf directive -', () => {
             try {
                 fix.componentInstance.itemSize = '100px';
                 fix.detectChanges();
-            }
-            catch (ex) {
+            } catch (ex) {
                 errorMessage = ex.message;
             }
             expect(errorMessage).toBe('');
@@ -1150,8 +1149,7 @@ describe('IgxForOf directive -', () => {
                 }
                 if (i % 2 === 0) {
                     expect(allItems[i].classes['even']).toBe(true);
-                }
-                else {
+                } else {
                     expect(allItems[i].classes['odd']).toBe(true);
                 }
             }
@@ -1310,8 +1308,7 @@ class DataGenerator {
         if (instance) {
             instance.cols = cols;
             instance.data = dummyData;
-        }
-        else {
+        } else {
             return { data: dummyData, cols };
         }
     }
@@ -1320,8 +1317,7 @@ class DataGenerator {
         if (this.data300x50000.length !== 0) {
             instance.cols = this.cols300;
             instance.data = this.data300x50000;
-        }
-        else {
+        } else {
             const result = this.generateData(300, 50000);
             this.data300x50000 = result.data;
             this.cols300 = result.cols;

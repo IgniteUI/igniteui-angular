@@ -440,8 +440,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         fix = TestBed.createComponent(GridWithUndefinedDataComponent);
         try {
             fix.detectChanges();
-        }
-        catch (ex) {
+        } catch (ex) {
             errorMessage = ex.message;
         }
         expect(errorMessage).toBe('');

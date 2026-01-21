@@ -690,8 +690,7 @@ describe('Carousel', () => {
                 const indicator = HelperTestFunctions.getIndicators(fixture)[index] as HTMLElement;
                 if (index === 1) {
                     expect(indicator.innerText).toEqual('1: Active');
-                }
-                else {
+                } else {
                     expect(indicator.innerText).toEqual(index.toString());
                 }
             }
@@ -1082,8 +1081,7 @@ class HelperTestFunctions {
         const carouselNative = fixture.nativeElement;
         if (position === CarouselIndicatorsOrientation.end) {
             return carouselNative.querySelector(HelperTestFunctions.INDICATORS_END_CLASS);
-        }
-        else {
+        } else {
             return carouselNative.querySelector(HelperTestFunctions.INDICATORS_START_CLASS);
         }
     }
@@ -1127,8 +1125,7 @@ class HelperTestFunctions {
         let event;
         if (dir === 'horizontal') {
             event = deltaOffset < 0 ? 'panleft' : 'panright';
-        }
-        else {
+        } else {
             event = deltaOffset < 0 ? 'panup' : 'pandown';
         }
         const panOptions = {

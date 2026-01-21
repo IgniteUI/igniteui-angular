@@ -111,8 +111,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 try {
                     treeGrid.addRow(newRow, 12345);
                     fix.detectChanges();
-                }
-                catch (ex) {
+                } catch (ex) {
                     error = (ex as Error).message;
                 }
                 expect(error).toMatch('Invalid parent row ID!');
@@ -252,8 +251,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 try {
                     treeGrid.addRow(newRow, 12345);
                     fix.detectChanges();
-                }
-                catch (ex) {
+                } catch (ex) {
                     error = (ex as Error).message;
                 }
                 expect(error).toMatch('Invalid parent row ID!');

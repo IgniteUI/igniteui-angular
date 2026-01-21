@@ -348,8 +348,7 @@ describe('IgxSimpleCombo', () => {
             let errorMessage = '';
             try {
                 combo.data = null;
-            }
-            catch (ex) {
+            } catch (ex) {
                 errorMessage = ex.message;
             }
             expect(errorMessage).toBe('');
@@ -362,8 +361,7 @@ describe('IgxSimpleCombo', () => {
             let errorMessage = '';
             try {
                 combo.data = undefined;
-            }
-            catch (ex) {
+            } catch (ex) {
                 errorMessage = ex.message;
             }
             expect(errorMessage).toBe('');
@@ -2882,8 +2880,7 @@ describe('IgxSimpleCombo', () => {
                 grid.navigateTo(fixture.componentInstance.data.length - 1, 0);
                 await wait(30);
                 fixture.detectChanges();
-            }
-            catch (error) {
+            } catch (error) {
                 throw new Error(`Test failed with error: ${error}`);
             }
 

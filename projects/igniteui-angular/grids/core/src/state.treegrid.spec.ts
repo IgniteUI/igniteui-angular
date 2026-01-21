@@ -312,8 +312,7 @@ class HelperFunctions {
             expressions.filteringOperands.forEach((expr, i) => {
                 expect(expr).toEqual(expect.objectContaining(gridState.advancedFiltering.filteringOperands[i]));
             });
-        }
-        else {
+        } else {
             expect(expressions).toBeFalsy();
         }
     }

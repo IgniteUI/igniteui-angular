@@ -57,8 +57,7 @@ const testAnimationBehavior = (val: any, fix: ComponentFixture<IgxStepperSampleT
     if (!isHorAnimTypeInvalidTest) {
         expect(previousActiveStep.activeChange.emit, val).toHaveBeenCalledTimes(1);
         expect(previousActiveStep.activeChange.emit, val).toHaveBeenCalledWith(false);
-    }
-    else {
+    } else {
         expect(previousActiveStep.activeChange.emit, val).not.toHaveBeenCalled();
     }
     activeChangeSpy.mockClear();

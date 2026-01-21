@@ -104,15 +104,13 @@ describe('Excel Exporter', () => {
     it('should throw an exception when setting negative width and height.', () => {
         try {
             options.columnWidth = -1;
-        }
-        catch (ex) {
+        } catch (ex) {
             expect((ex as Error).message).toBe('Invalid value for column width!');
         }
 
         try {
             options.rowHeight = -1;
-        }
-        catch (ex) {
+        } catch (ex) {
             expect((ex as Error).message).toBe('Invalid value for row height!');
         }
     });

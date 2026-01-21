@@ -640,8 +640,7 @@ describe('IgxGrid - search API #grid', () => {
                 expect(highlights.length).toBe(1);
                 if (ind === 1) {
                     verifyActiveHighlight(0);
-                }
-                else {
+                } else {
                     expect(activeHighlight).toBeNull();
                 }
                 expect((highlights[0] as HTMLElement).innerText).toEqual('12');

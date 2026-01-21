@@ -939,11 +939,9 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const downloadsFormatter = (val: number): number => {
                 if (!val || val > 0 && val < 100) {
                     return 1;
-                }
-                else if (val >= 100 && val < 500) {
+                } else if (val >= 100 && val < 500) {
                     return 2;
-                }
-                else {
+                } else {
                     return 3;
                 }
             };

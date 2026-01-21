@@ -157,11 +157,9 @@ export class GridFunctions {
         const colGroups = grid.columns.filter(c => c.columnGroup && c.header === headerName);
         if (colGroups.length === 0) {
             return null;
-        }
-        else if (colGroups.length === 1) {
+        } else if (colGroups.length === 1) {
             return colGroups[0];
-        }
-        else {
+        } else {
             throw new Error('More than one column group found.');
         }
     }
@@ -542,8 +540,7 @@ export class GridFunctions {
             if (chipDirection === SORTING_ICON_ASC_CONTENT) {
                 expect(grp.dir).toBe(SortingDirection.Asc);
                 expect(s.dir).toBe(SortingDirection.Asc);
-            }
-            else {
+            } else {
                 expect(grp.dir).toBe(SortingDirection.Desc);
                 expect(s.dir).toBe(SortingDirection.Desc);
             }
@@ -856,8 +853,7 @@ export class GridFunctions {
             const headerAreaPinIcon = headerIcons.find((buttonIcon: DebugElement) => buttonIcon.query(By.directive(IgxIconComponent)).componentInstance.name === "pin");
             const headerAreaUnpinIcon = headerIcons.find((buttonIcon: DebugElement) => buttonIcon.query(By.directive(IgxIconComponent)).componentInstance.name === "unpin");
             pinUnpinIcon = headerAreaPinIcon ? headerAreaPinIcon.nativeElement : headerAreaUnpinIcon.nativeElement;
-        }
-        else {
+        } else {
             const pinContainer = GridFunctions.getExcelFilteringPinContainer(fix);
             const unpinContainer = GridFunctions.getExcelFilteringUnpinContainer(fix);
             pinUnpinIcon = pinContainer ? pinContainer : unpinContainer;
@@ -874,8 +870,7 @@ export class GridFunctions {
         if (isIconInHeader) {
             const headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix);
             hideIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerText === 'visibility_off');
-        }
-        else {
+        } else {
             hideIcon = GridFunctions.getExcelFilteringHideContainer(fix);
         }
         hideIcon.click();
@@ -1514,8 +1509,7 @@ export class GridFunctions {
 
         if (collapsible === false) {
             expect(GridFunctions.getColGroupExpandIndicator(groupHeader)).toBeNull();
-        }
-        else {
+        } else {
             expect(group.expanded).toEqual(isExpanded);
             const text = isExpanded ? indicatorText[0] : indicatorText[1];
             expect(GridFunctions.getColGroupExpandIndicator(groupHeader)).toBeDefined();
@@ -1553,8 +1547,7 @@ export class GridFunctions {
             const sortIconText = sortedDesc ? SORTING_ICON_DESC_CONTENT : SORTING_ICON_ASC_CONTENT;
             expect(sortIcon.nativeElement.textContent.trim()).toEqual(sortIconText);
             expect(header.nativeElement.classList.contains(SORTED_COLUMN_CLASS)).toEqual(sortedAsc || sortedDesc);
-        }
-        else {
+        } else {
             expect(sortIcon).toBeNull();
         }
     }
@@ -1690,8 +1683,7 @@ export class GridFunctions {
                 const acc = (accum, c) => {
                     if (c.column.colStart < col.colStart && c.column.rowStart === col.rowStart) {
                         return accum += parseFloat(c.column.calcWidth) * c.column.gridColumnSpan;
-                    }
-                    else {
+                    } else {
                         return accum;
                     }
                 };
@@ -1760,8 +1752,7 @@ export class GridSummaryFunctions {
         if (summaryLabels.length === 0) {
             expect(summary.nativeElement.classList.contains('igx-grid-summary--empty')).toBeTruthy();
             expect(summaryItems.length).toBe(0);
-        }
-        else {
+        } else {
             expect(summary.nativeElement.classList.contains('igx-grid-summary--empty')).toBeFalsy();
             expect(summaryItems.length).toEqual(summaryLabels.length);
             if (summaryItems.length === summaryLabels.length) {
@@ -1983,18 +1974,15 @@ export class GridSelectionFunctions {
         const checkboxDiv = GridSelectionFunctions.getRowCheckboxDiv(rowDOM);
         if (!hasCheckbox && !hasCheckboxDiv) {
             expect(GridSelectionFunctions.getRowCheckboxDiv(rowDOM)).toBeNull();
-        }
-        else {
+        } else {
             expect(checkboxDiv).toBeDefined();
             const rowCheckbox = GridSelectionFunctions.getRowCheckbox(rowDOM);
             expect(rowCheckbox).toBeDefined();
             if (!hasCheckbox) {
                 expect(rowCheckbox.style.visibility).toEqual('hidden');
-            }
-            else if (verifyHeader) {
+            } else if (verifyHeader) {
                 expect(rowCheckbox.style.visibility).toEqual('visible');
-            }
-            else {
+            } else {
                 expect(rowCheckbox.style.visibility).toEqual('');
             }
         }

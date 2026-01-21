@@ -56,8 +56,7 @@ describe('IgxTree - Navigation #treeView', () => {
                 visibleNodes.forEach(node => {
                     if (node !== tree.nodes.first) {
                         expect(node.header.nativeElement.tabIndex).toEqual(-1);
-                    }
-                    else {
+                    } else {
                         expect(node.header.nativeElement.tabIndex).toEqual(0);
                     }
                 });

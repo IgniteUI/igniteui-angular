@@ -243,8 +243,7 @@ describe('IgxTree - Selection #treeView', () => {
             for (let i = 1; i < 14; i++) {
                 if (i < 10) {
                     TreeTestFunctions.verifyNodeSelected(tree.nodes.toArray()[i], false);
-                }
-                else {
+                } else {
                     TreeTestFunctions.verifyNodeSelected(tree.nodes.toArray()[i]);
                 }
             }
@@ -299,8 +298,7 @@ describe('IgxTree - Selection #treeView', () => {
             for (let i = 10; i < 18; i++) {
                 if (i !== 14) {
                     TreeTestFunctions.verifyNodeSelected(tree.nodes.toArray()[i]);
-                }
-                else {
+                } else {
                     TreeTestFunctions.verifyNodeSelected(tree.nodes.toArray()[i], false, true, true);
                 }
             }
@@ -626,7 +624,6 @@ describe('IgxTree - Selection #treeView', () => {
             emit: vi.fn().mockName("emitter.emit")
         };
         const mockTree: IgxTree = {
-            : vi.fn().mockName("tree."),
             selection: IgxTreeSelectionType.BiState, nodeSelection: mockEmitter, nodes: {
                 find: () => true
             }

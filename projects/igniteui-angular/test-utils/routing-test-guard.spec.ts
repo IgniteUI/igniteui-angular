@@ -6,8 +6,7 @@ export class RoutingTestGuard {
     public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         if (state.url === '/view5') {
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }

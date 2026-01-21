@@ -2253,8 +2253,7 @@ describe('IgxQueryBuilder', () => {
                 queryBuilder.commit();
                 tick(100);
                 fix.detectChanges();
-            }
-            catch (err) {
+            } catch (err) {
                 errMessage = err.message;
             }
 

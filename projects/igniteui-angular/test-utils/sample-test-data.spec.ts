@@ -850,8 +850,7 @@ export class SampleTestData {
                     dataType: columnsType,
                     editable: true
                 });
-            }
-            else {
+            } else {
                 cols.push({
                     key: namePrefix + i,
                     dataType: columnsType,
@@ -4684,11 +4683,9 @@ export class SampleTestData {
         for (let row = 0; row < rows; row++) {
             if (type === 'Number') {
                 data.push(row);
-            }
-            else if (type === 'String') {
+            } else if (type === 'String') {
                 data.push(`Row ${row}`);
-            }
-            else if (type === 'Boolean') {
+            } else if (type === 'Boolean') {
                 data.push(row % 7 === 0);
             }
         }
@@ -4761,14 +4758,11 @@ export class SampleTestData {
 
         if (dataItem['ID']) {
             return 'ID';
-        }
-        else if (dataItem['Id']) {
+        } else if (dataItem['Id']) {
             return 'Id';
-        }
-        else if (dataItem['id']) {
+        } else if (dataItem['id']) {
             return 'id';
-        }
-        else {
+        } else {
             return undefined;
         }
     }

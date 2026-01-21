@@ -961,8 +961,7 @@ export class IgxTreeGridCustomRowSelectorsComponent implements OnInit {
         event.preventDefault();
         if (rowContext.selected) {
             this.treeGrid.deselectRows([rowContext.rowID]);
-        }
-        else {
+        } else {
             this.treeGrid.selectRows([rowContext.rowID]);
         }
     }
@@ -973,8 +972,7 @@ export class IgxTreeGridCustomRowSelectorsComponent implements OnInit {
         event.preventDefault();
         if (headContext.selected) {
             this.treeGrid.deselectAllRows();
-        }
-        else {
+        } else {
             this.treeGrid.selectAllRows();
         }
     }

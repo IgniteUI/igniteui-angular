@@ -352,8 +352,7 @@ const verifyCellsContentAlignment = (fix, columnKey, shouldBeLeftAligned: boolea
             const cellDivChildren = cell.queryAll(By.css('div'));
             expect((cellDivChildren.length === 2) || (cellDivChildren.length === 3)).toBe(true);
         });
-    }
-    else { // Should be right-aligned
+    } else { // Should be right-aligned
         cells.forEach((cell) => {
             expect(cell.nativeElement.classList.contains(NUMBER_CELL_CSS_CLASS))
                 .toBe(true, 'cell does not have number css class');

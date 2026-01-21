@@ -302,8 +302,7 @@ describe('igxExpansionPanel', () => {
             }
             if (collapsed) {
                 expect(panelContainer.lastElementChild.nodeName).toEqual('IGX-EXPANSION-PANEL-HEADER');
-            }
-            else {
+            } else {
                 const panelBody = panelContainer.getElementsByTagName(CSS_CLASS_PANEL_BODY)[0];
                 expect(panelBody).toBeDefined();
                 const list = panelBody.getElementsByTagName(CSS_CLASS_LIST)[0];

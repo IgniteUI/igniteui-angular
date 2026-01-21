@@ -525,8 +525,7 @@ export class QueryBuilderFunctions {
         if (operator === 'and') {
             expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_AND)).toBe(true, 'incorrect operator line');
             expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_OR)).toBe(false, 'incorrect operator line');
-        }
-        else {
+        } else {
             expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_AND)).toBe(false, 'incorrect operator line');
             expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_OR)).toBe(true, 'incorrect operator line');
         }
@@ -968,8 +967,7 @@ export class QueryBuilderFunctions {
             if (dropGhost.previousElementSibling?.className &&
                 dropGhost.previousElementSibling?.className?.indexOf(QueryBuilderSelectors.FILTER_TREE_SUBQUERY) !== -1) {
                 prevElement = QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling.previousElementSibling);
-            }
-            else if (dropGhost.previousElementSibling?.previousElementSibling) {
+            } else if (dropGhost.previousElementSibling?.previousElementSibling) {
                 prevElement = QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling);
             }
 

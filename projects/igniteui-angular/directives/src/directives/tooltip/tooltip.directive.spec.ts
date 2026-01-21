@@ -1191,16 +1191,13 @@ export const verifyTooltipPosition = (tooltipNativeElement: HTMLElement, actualT
     if (placement.startsWith('top')) {
         actualOffset = target.top - tooltip.bottom;
         directionCheckPassed = Math.abs(actualOffset - offset) <= directionTolerance;
-    }
-    else if (placement.startsWith('bottom')) {
+    } else if (placement.startsWith('bottom')) {
         actualOffset = tooltip.top - target.bottom;
         directionCheckPassed = Math.abs(actualOffset - offset) <= directionTolerance;
-    }
-    else if (placement.startsWith('left')) {
+    } else if (placement.startsWith('left')) {
         actualOffset = target.left - tooltip.right;
         directionCheckPassed = Math.abs(actualOffset - offset) <= directionTolerance;
-    }
-    else if (placement.startsWith('right')) {
+    } else if (placement.startsWith('right')) {
         actualOffset = tooltip.left - target.right;
         directionCheckPassed = Math.abs(actualOffset - offset) <= directionTolerance;
     }
@@ -1209,8 +1206,7 @@ export const verifyTooltipPosition = (tooltipNativeElement: HTMLElement, actualT
     // --- alignment check ---
     if (placement.startsWith('top') || placement.startsWith('bottom')) {
         alignmentCheckPassed = horizontalAlignmentMatches(tooltip, target, placement);
-    }
-    else {
+    } else {
         alignmentCheckPassed = verticalAlignmentMatches(tooltip, target, placement);
     }
 
@@ -1218,8 +1214,7 @@ export const verifyTooltipPosition = (tooltipNativeElement: HTMLElement, actualT
 
     if (shouldAlign) {
         expect(result).toBeTruthy(`Tooltip misaligned for "${placement}": actual offset=${actualOffset}, wanted offset=${offset}, accurate placement=${directionCheckPassed}, accurate alignment=${alignmentCheckPassed}`);
-    }
-    else {
+    } else {
         expect(result).toBeFalsy(`Tooltip was unexpectedly aligned`);
     }
 };
@@ -1227,11 +1222,9 @@ export const verifyTooltipPosition = (tooltipNativeElement: HTMLElement, actualT
 function horizontalAlignmentMatches(tooltip: DOMRect, target: DOMRect, placement: Placement): boolean {
     if (placement.endsWith('start')) {
         return Math.abs(tooltip.left - target.left) <= alignmentTolerance;
-    }
-    else if (placement.endsWith('end')) {
+    } else if (placement.endsWith('end')) {
         return Math.abs(tooltip.right - target.right) <= alignmentTolerance;
-    }
-    else {
+    } else {
         const tooltipMid = tooltip.left + tooltip.width / 2;
         const targetMid = target.left + target.width / 2;
         return Math.abs(tooltipMid - targetMid) <= alignmentTolerance;
@@ -1241,11 +1234,9 @@ function horizontalAlignmentMatches(tooltip: DOMRect, target: DOMRect, placement
 function verticalAlignmentMatches(tooltip: DOMRect, target: DOMRect, placement: Placement): boolean {
     if (placement.endsWith('start')) {
         return Math.abs(tooltip.top - target.top) <= alignmentTolerance;
-    }
-    else if (placement.endsWith('end')) {
+    } else if (placement.endsWith('end')) {
         return Math.abs(tooltip.bottom - target.bottom) <= alignmentTolerance;
-    }
-    else {
+    } else {
         const tooltipMid = tooltip.top + tooltip.height / 2;
         const targetMid = target.top + target.height / 2;
         return Math.abs(tooltipMid - targetMid) <= alignmentTolerance;

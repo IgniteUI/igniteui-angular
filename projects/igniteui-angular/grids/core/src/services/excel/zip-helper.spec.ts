@@ -161,8 +161,7 @@ export class ZipFiles {
                 `xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="x14ac" ` +
                 `xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac">${sheetData}` +
                 `<pageMargins left="0.7" right="0.7" top="0.75" bottom="0.75" header="0.3" footer="0.3"/>${tablePart}</worksheet>`;
-        }
-        else {
+        } else {
             const dimensionsPart = isHGrid ? '' : '<dimension ref="A1"/>';
 
             return `<?xml version="1.0" encoding="UTF-8"?>
