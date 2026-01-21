@@ -1,4 +1,4 @@
-﻿import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -12,8 +12,7 @@ import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 
 
-type FixtureType = ColumnLayoutGroupingTestComponent | ColumnLayoutHidingTestComponent | ColumnLayoutResizingTestComponent
-    | ColumnLayoutPinningTestComponent;
+type FixtureType = ColumnLayoutGroupingTestComponent | ColumnLayoutHidingTestComponent | ColumnLayoutResizingTestComponent | ColumnLayoutPinningTestComponent;
 interface ColGroupsType {
     group: string;
     hidden?: boolean;
@@ -319,30 +318,29 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
         });
 
-        it('UI - hidden columns count and drop-down items text in hiding toolbar should be correct when group is hidden/shown. ',
-            waitForAsync(async () => {
-                // enable toolbar for hiding
-                fixture.componentInstance.showToolbar = true;
-                fixture.detectChanges();
-                await fixture.whenStable();
-                fixture.detectChanges();
+        it('UI - hidden columns count and drop-down items text in hiding toolbar should be correct when group is hidden/shown. ', waitForAsync(async () => {
+            // enable toolbar for hiding
+            fixture.componentInstance.showToolbar = true;
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
 
-                const hidingButton = GridFunctions.getColumnHidingButton(fixture);
-                hidingButton.click();
-                fixture.detectChanges();
-                // should show count for actual hidden igxColumns
-                expect(parseInt(hidingButton.querySelector('span').textContent.trim(), 10)).toBe(4);
-                const columnChooserElement = GridFunctions.getColumnHidingElement(fixture);
-                const checkboxes = columnChooserElement.queryAll(By.css('igx-checkbox'));
-                // should show 2 checkboxes - one for each group
-                expect(checkboxes.length).toBe(2);
-                expect(checkboxes[0].query(By.css('.igx-checkbox__label')).nativeElement.textContent.trim()).toBe('group1');
-                expect(checkboxes[1].query(By.css('.igx-checkbox__label')).nativeElement.textContent.trim()).toBe('group2');
+            const hidingButton = GridFunctions.getColumnHidingButton(fixture);
+            hidingButton.click();
+            fixture.detectChanges();
+            // should show count for actual hidden igxColumns
+            expect(parseInt(hidingButton.querySelector('span').textContent.trim(), 10)).toBe(4);
+            const columnChooserElement = GridFunctions.getColumnHidingElement(fixture);
+            const checkboxes = columnChooserElement.queryAll(By.css('igx-checkbox'));
+            // should show 2 checkboxes - one for each group
+            expect(checkboxes.length).toBe(2);
+            expect(checkboxes[0].query(By.css('.igx-checkbox__label')).nativeElement.textContent.trim()).toBe('group1');
+            expect(checkboxes[1].query(By.css('.igx-checkbox__label')).nativeElement.textContent.trim()).toBe('group2');
 
-                // verify checked state
-                expect(checkboxes[0].componentInstance.checked).toBeFalse();
-                expect(checkboxes[1].componentInstance.checked).toBeTrue();
-            }));
+            // verify checked state
+            expect(checkboxes[0].componentInstance.checked).toBe(false);
+            expect(checkboxes[1].componentInstance.checked).toBe(true);
+        }));
 
         it(`UI - toggling column checkbox checked state successfully changes the column's hidden state. `, waitForAsync(async () => {
             // enable toolbar for hiding
@@ -361,7 +359,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             verifyCheckbox('group1', false, false, columnChooserElement);
 
             const column = grid.getColumnByName('group1');
-            expect(column.hidden).toBeTrue();
+            expect(column.hidden).toBe(true);
 
             let gridFirstRow = grid.rowList.first;
 
@@ -373,7 +371,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
 
             expect(checkbox.checked).toBe(true);
-            expect(column.hidden).toBeFalse();
+            expect(column.hidden).toBe(false);
 
             gridFirstRow = grid.rowList.first;
             GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
@@ -383,7 +381,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
 
             expect(checkbox.checked).toBe(false);
-            expect(column.hidden).toBeTrue();
+            expect(column.hidden).toBe(true);
         }));
 
     });
@@ -504,19 +502,19 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(allArgs.length).toBe(5);
 
             expect(allArgs[0].column instanceof IgxColumnLayoutComponent).toBeTruthy();
-            expect(allArgs[0].isPinned).toBeTrue();
+            expect(allArgs[0].isPinned).toBe(true);
 
             expect(allArgs[1].column.field).toBe('PostalCode');
-            expect(allArgs[1].isPinned).toBeTrue();
+            expect(allArgs[1].isPinned).toBe(true);
 
             expect(allArgs[2].column.field).toBe('City');
-            expect(allArgs[2].isPinned).toBeTrue();
+            expect(allArgs[2].isPinned).toBe(true);
 
             expect(allArgs[3].column.field).toBe('Country');
-            expect(allArgs[3].isPinned).toBeTrue();
+            expect(allArgs[3].isPinned).toBe(true);
 
             expect(allArgs[4].column.field).toBe('Address');
-            expect(allArgs[4].isPinned).toBeTrue();
+            expect(allArgs[4].isPinned).toBe(true);
 
             allArgs = [];
             grid.pinColumn('ID');
@@ -525,19 +523,19 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(allArgs.length).toBe(5);
 
             expect(allArgs[0].column instanceof IgxColumnLayoutComponent).toBeTruthy();
-            expect(allArgs[0].isPinned).toBeFalse();
+            expect(allArgs[0].isPinned).toBe(false);
 
             expect(allArgs[1].column.field).toBe('ID');
-            expect(allArgs[1].isPinned).toBeFalse();
+            expect(allArgs[1].isPinned).toBe(false);
 
             expect(allArgs[2].column.field).toBe('CompanyName');
-            expect(allArgs[2].isPinned).toBeFalse();
+            expect(allArgs[2].isPinned).toBe(false);
 
             expect(allArgs[3].column.field).toBe('ContactName');
-            expect(allArgs[3].isPinned).toBeFalse();
+            expect(allArgs[3].isPinned).toBe(false);
 
             expect(allArgs[4].column.field).toBe('ContactTitle');
-            expect(allArgs[4].isPinned).toBeFalse();
+            expect(allArgs[4].isPinned).toBe(false);
 
         });
 
@@ -636,31 +634,30 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 .toBeLessThanOrEqual(2);
         });
 
-        it('UI - pinned columns count and drop-down items text in pinning toolbar should be correct when group is pinned. ',
-            waitForAsync(async () => {
-                // enable toolbar for pinning
-                fixture.componentInstance.showToolbar = true;
-                fixture.detectChanges();
-                await fixture.whenStable();
-                fixture.detectChanges();
+        it('UI - pinned columns count and drop-down items text in pinning toolbar should be correct when group is pinned. ', waitForAsync(async () => {
+            // enable toolbar for pinning
+            fixture.componentInstance.showToolbar = true;
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
 
-                const pinningButton = GridFunctions.getColumnPinningButton(fixture);
-                const pinningButtonLabel = pinningButton.querySelector('span');
-                pinningButton.click();
-                fixture.detectChanges();
-                // should show count for actual igxColumns displayed in the pinned area
-                expect(parseInt(pinningButtonLabel.textContent.trim(), 10)).toBe(4);
-                const columnChooserElement = GridFunctions.getColumnPinningElement(fixture);
-                const checkboxes = columnChooserElement.queryAll(By.css('igx-checkbox'));
-                // should show 2 checkboxes - one for each group
-                expect(checkboxes.length).toBe(2);
-                expect(checkboxes[0].query(By.css('.igx-checkbox__label')).nativeElement.textContent.trim()).toBe('group1');
-                expect(checkboxes[1].query(By.css('.igx-checkbox__label')).nativeElement.textContent.trim()).toBe('group2');
+            const pinningButton = GridFunctions.getColumnPinningButton(fixture);
+            const pinningButtonLabel = pinningButton.querySelector('span');
+            pinningButton.click();
+            fixture.detectChanges();
+            // should show count for actual igxColumns displayed in the pinned area
+            expect(parseInt(pinningButtonLabel.textContent.trim(), 10)).toBe(4);
+            const columnChooserElement = GridFunctions.getColumnPinningElement(fixture);
+            const checkboxes = columnChooserElement.queryAll(By.css('igx-checkbox'));
+            // should show 2 checkboxes - one for each group
+            expect(checkboxes.length).toBe(2);
+            expect(checkboxes[0].query(By.css('.igx-checkbox__label')).nativeElement.textContent.trim()).toBe('group1');
+            expect(checkboxes[1].query(By.css('.igx-checkbox__label')).nativeElement.textContent.trim()).toBe('group2');
 
-                // verify checked state
-                expect(checkboxes[0].componentInstance.checked).toBeTruthy();
-                expect(checkboxes[1].componentInstance.checked).toBeFalsy();
-            }));
+            // verify checked state
+            expect(checkboxes[0].componentInstance.checked).toBeTruthy();
+            expect(checkboxes[1].componentInstance.checked).toBeFalsy();
+        }));
 
         it(`UI - toggling column checkbox checked state successfully changes the column's pinned state. `, waitForAsync(async () => {
             const uniqueGroups = [
@@ -808,7 +805,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const filterIcons = fixture.debugElement.queryAll(By.css('.igx-excel-filter__icon'));
             expect(filterIcons.length).not.toBe(0);
 
-            const gridFirstRow =  grid.rowList.first;
+            const gridFirstRow = grid.rowList.first;
 
             // headers are aligned to cells
             GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow, true);
@@ -939,19 +936,19 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         it('should correctly resize column on upper level with 3 spans and the two cols below it with span 1 that have width', async () => {
             grid.width = '1500px';
             fixture.componentInstance.colGroups = [{
-                group: 'group1',
-                columns: [
-                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4, width: '300px', resizable: true },
-                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px', resizable: true },
-                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px', resizable: true },
-                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px', resizable: true },
-                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5, resizable: true },
-                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px', resizable: true },
-                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px', resizable: true },
-                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px', resizable: true },
-                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
-                ]
-            }];
+                    group: 'group1',
+                    columns: [
+                        { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4, width: '300px', resizable: true },
+                        { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px', resizable: true },
+                        { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px', resizable: true },
+                        { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px', resizable: true },
+                        { field: 'City', rowStart: 2, colStart: 3, colEnd: 5, resizable: true },
+                        { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px', resizable: true },
+                        { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px', resizable: true },
+                        { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px', resizable: true },
+                        { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
+                    ]
+                }];
             fixture.detectChanges();
             await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
@@ -979,19 +976,19 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         it('should correctly resize column with span 2 and the ones below it that have span 1 with width set', async () => {
             grid.width = '1500px';
             fixture.componentInstance.colGroups = [{
-                group: 'group1',
-                columns: [
-                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4, width: '300px', resizable: true },
-                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px', resizable: true },
-                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px', resizable: true },
-                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px', resizable: true },
-                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5, resizable: true },
-                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px', resizable: true },
-                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px', resizable: true },
-                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px', resizable: true },
-                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
-                ]
-            }];
+                    group: 'group1',
+                    columns: [
+                        { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4, width: '300px', resizable: true },
+                        { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px', resizable: true },
+                        { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px', resizable: true },
+                        { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px', resizable: true },
+                        { field: 'City', rowStart: 2, colStart: 3, colEnd: 5, resizable: true },
+                        { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px', resizable: true },
+                        { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px', resizable: true },
+                        { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px', resizable: true },
+                        { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
+                    ]
+                }];
             fixture.detectChanges();
             await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
@@ -1019,19 +1016,19 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         it('should correctly resize column that spans 1 column that is used to size the column templates', async () => {
             grid.width = '1500px';
             fixture.componentInstance.colGroups = [{
-                group: 'group1',
-                columns: [
-                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4, width: '300px', resizable: true },
-                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px', resizable: true },
-                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px', resizable: true },
-                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px', resizable: true },
-                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5, resizable: true },
-                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px', resizable: true },
-                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px', resizable: true },
-                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px', resizable: true },
-                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
-                ]
-            }];
+                    group: 'group1',
+                    columns: [
+                        { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4, width: '300px', resizable: true },
+                        { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px', resizable: true },
+                        { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px', resizable: true },
+                        { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px', resizable: true },
+                        { field: 'City', rowStart: 2, colStart: 3, colEnd: 5, resizable: true },
+                        { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px', resizable: true },
+                        { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px', resizable: true },
+                        { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px', resizable: true },
+                        { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
+                    ]
+                }];
             fixture.detectChanges();
             await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
@@ -1059,19 +1056,19 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         it('should correctly resize column with span 1 and bigger columns that start with same colStart with bigger span', async () => {
             grid.width = '1500px';
             fixture.componentInstance.colGroups = [{
-                group: 'group1',
-                columns: [
-                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4, width: '300px', resizable: true },
-                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px', resizable: true },
-                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px', resizable: true },
-                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px', resizable: true },
-                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5, resizable: true },
-                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px', resizable: true },
-                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px', resizable: true },
-                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px', resizable: true },
-                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
-                ]
-            }];
+                    group: 'group1',
+                    columns: [
+                        { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4, width: '300px', resizable: true },
+                        { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px', resizable: true },
+                        { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px', resizable: true },
+                        { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px', resizable: true },
+                        { field: 'City', rowStart: 2, colStart: 3, colEnd: 5, resizable: true },
+                        { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px', resizable: true },
+                        { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px', resizable: true },
+                        { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px', resizable: true },
+                        { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
+                    ]
+                }];
             fixture.detectChanges();
             await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
@@ -1099,19 +1096,19 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         it('should correctly resize column while there is another column that does not have width set', async () => {
             grid.width = 1500 + grid.scrollSize + 'px';
             fixture.componentInstance.colGroups = [{
-                group: 'group1',
-                columns: [
-                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4, resizable: true },
-                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px', resizable: true },
-                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px', resizable: true },
-                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px', resizable: true },
-                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5, resizable: true },
-                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px', resizable: true },
-                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px', resizable: true },
-                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px', resizable: true },
-                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
-                ]
-            }];
+                    group: 'group1',
+                    columns: [
+                        { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4, resizable: true },
+                        { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px', resizable: true },
+                        { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px', resizable: true },
+                        { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px', resizable: true },
+                        { field: 'City', rowStart: 2, colStart: 3, colEnd: 5, resizable: true },
+                        { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px', resizable: true },
+                        { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px', resizable: true },
+                        { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px', resizable: true },
+                        { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
+                    ]
+                }];
             fixture.detectChanges();
             await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
@@ -1142,19 +1139,19 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             grid.width = 1500 + grid.scrollSize + 'px';
             fixture.detectChanges();
             fixture.componentInstance.colGroups = [{
-                group: 'group1',
-                columns: [
-                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4, resizable: true },
-                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px', resizable: true },
-                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px', resizable: true },
-                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px', resizable: true },
-                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5, resizable: true },
-                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px', resizable: true },
-                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px', resizable: true },
-                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px', resizable: true },
-                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
-                ]
-            }];
+                    group: 'group1',
+                    columns: [
+                        { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4, resizable: true },
+                        { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px', resizable: true },
+                        { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px', resizable: true },
+                        { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px', resizable: true },
+                        { field: 'City', rowStart: 2, colStart: 3, colEnd: 5, resizable: true },
+                        { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px', resizable: true },
+                        { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px', resizable: true },
+                        { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px', resizable: true },
+                        { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
+                    ]
+                }];
             fixture.detectChanges();
             await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
@@ -1194,17 +1191,17 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
         it('should return correct selected data via getSelectedData API.', () => {
             const selectedData1 = [{
-                ID: 'ALFKI',
-                CompanyName: 'Alfreds Futterkiste',
-                ContactName: 'Maria Anders',
-                ContactTitle: 'Sales Representative'
-            }];
+                    ID: 'ALFKI',
+                    CompanyName: 'Alfreds Futterkiste',
+                    ContactName: 'Maria Anders',
+                    ContactTitle: 'Sales Representative'
+                }];
             const selectedData2 = [{
-                PostalCode: '05021',
-                City: 'México D.F.',
-                Country: 'Mexico',
-                Address: 'Avda. de la Constitución 2222'
-            }];
+                    PostalCode: '05021',
+                    City: 'México D.F.',
+                    Country: 'Mexico',
+                    Address: 'Avda. de la Constitución 2222'
+                }];
             let cellElem = grid.gridAPI.get_cell_by_index(0, 'CompanyName');
             UIInteractions.simulateClickAndSelectEvent(cellElem);
             fixture.detectChanges();

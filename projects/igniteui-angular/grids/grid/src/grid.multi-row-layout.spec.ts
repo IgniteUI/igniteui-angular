@@ -1,4 +1,4 @@
-﻿import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -79,17 +79,17 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         fixture.detectChanges();
         // creating an incomplete layout
         fixture.componentInstance.colGroups = [{
-            group: 'group1',
-            columns: [
-                { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 4, rowEnd: 3 },
-                { field: 'CompanyName', rowStart: 1, colStart: 1 },
-                { field: 'PostalCode', rowStart: 1, colStart: 2 },
-                // { field: 'Fax', rowStart: 1, colStart: 3},
-                { field: 'Country', rowStart: 3, colStart: 1 },
-                // { field: 'Region', rowStart: 3, colStart: 2},
-                { field: 'Phone', rowStart: 3, colStart: 3 }
-            ]
-        }];
+                group: 'group1',
+                columns: [
+                    { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 4, rowEnd: 3 },
+                    { field: 'CompanyName', rowStart: 1, colStart: 1 },
+                    { field: 'PostalCode', rowStart: 1, colStart: 2 },
+                    // { field: 'Fax', rowStart: 1, colStart: 3},
+                    { field: 'Country', rowStart: 3, colStart: 1 },
+                    // { field: 'Region', rowStart: 3, colStart: 2},
+                    { field: 'Phone', rowStart: 3, colStart: 3 }
+                ]
+            }];
         fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -107,14 +107,14 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         // creating an incomplete layout 2
         fixture.componentInstance.colGroups = [{
-            group: 'group1',
-            columns: [
-                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4, rowEnd: 3 },
-                { field: 'CompanyName', rowStart: 3, colStart: 1 },
-                // { field: 'PostalCode', rowStart: 1, colStart: 2},
-                { field: 'Fax', rowStart: 3, colStart: 3 }
-            ]
-        }];
+                group: 'group1',
+                columns: [
+                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4, rowEnd: 3 },
+                    { field: 'CompanyName', rowStart: 3, colStart: 1 },
+                    // { field: 'PostalCode', rowStart: 1, colStart: 2},
+                    { field: 'Fax', rowStart: 3, colStart: 3 }
+                ]
+            }];
         fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
         sizes = grid.columnList.first.getGridTemplate(false).split(' ').map(width => parseFloat(width).toFixed(2) + "px").join(' ');
@@ -226,14 +226,14 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.detectChanges();
         fixture.componentInstance.colGroups = [{
-            group: 'group1',
-            columns: [
-                { field: 'ID', rowStart: 1, colStart: 1, width: '100px' },
-                { field: 'CompanyName', rowStart: 1, colStart: 2, width: '200px' },
-                { field: 'ContactName', rowStart: 1, colStart: 3, width: '300px' },
-                { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd: 4 },
-            ]
-        }];
+                group: 'group1',
+                columns: [
+                    { field: 'ID', rowStart: 1, colStart: 1, width: '100px' },
+                    { field: 'CompanyName', rowStart: 1, colStart: 2, width: '200px' },
+                    { field: 'ContactName', rowStart: 1, colStart: 3, width: '300px' },
+                    { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd: 4 },
+                ]
+            }];
         fixture.detectChanges();
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -321,19 +321,19 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         // creating an incomplete layout
         fixture.componentInstance.grid.width = '1200px';
         fixture.componentInstance.colGroups = [{
-            group: 'group1',
-            columns: [
-                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4 },
-                { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px' },
-                { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px' },
-                { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px' },
-                { field: 'City', rowStart: 2, colStart: 3, colEnd: 5 },
-                { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px' },
-                { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px' },
-                { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px' },
-                { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
-            ]
-        }];
+                group: 'group1',
+                columns: [
+                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4 },
+                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px' },
+                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px' },
+                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px' },
+                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5 },
+                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px' },
+                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px' },
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px' },
+                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
+                ]
+            }];
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
         const gridFirstRow = grid.rowList.first;
@@ -353,19 +353,19 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         // creating an incomplete layout
         fixture.componentInstance.grid.width = '1200px';
         fixture.componentInstance.colGroups = [{
-            group: 'group1',
-            columns: [
-                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4, width: '300px' },
-                { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px' },
-                { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px' },
-                { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px' },
-                { field: 'City', rowStart: 2, colStart: 3, colEnd: 5 },
-                { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px' },
-                { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px' },
-                { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px' },
-                { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
-            ]
-        }];
+                group: 'group1',
+                columns: [
+                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4, width: '300px' },
+                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px' },
+                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px' },
+                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px' },
+                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5 },
+                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px' },
+                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px' },
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px' },
+                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
+                ]
+            }];
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
         const gridFirstRow = grid.rowList.first;
@@ -377,13 +377,12 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 100px 100px 100px 200px');
     }));
 
-    it('should correctly size column without width when it overlaps partially with bigger column that has width bellow it',
-        fakeAsync(() => {
-            // In this case it would be for City column and 3rd template column overlapping width ContactName.
-            const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
-            // creating an incomplete layout
-            fixture.componentInstance.grid.width = '1200px';
-            fixture.componentInstance.colGroups = [{
+    it('should correctly size column without width when it overlaps partially with bigger column that has width bellow it', fakeAsync(() => {
+        // In this case it would be for City column and 3rd template column overlapping width ContactName.
+        const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
+        // creating an incomplete layout
+        fixture.componentInstance.grid.width = '1200px';
+        fixture.componentInstance.colGroups = [{
                 group: 'group1',
                 columns: [
                     { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 5, width: '200px' },
@@ -397,16 +396,16 @@ describe('IgxGrid - multi-row-layout #grid', () => {
                     { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7, width: '200px' },
                 ]
             }];
-            fixture.detectChanges();
-            const grid = fixture.componentInstance.grid;
-            const gridFirstRow = grid.rowList.first;
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        const gridFirstRow = grid.rowList.first;
 
-            // headers are aligned to cells
-            GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
+        // headers are aligned to cells
+        GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
 
-            const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(GRID_MRL_BLOCK_CLASS));
-            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 100px 100px 200px 150px');
-        }));
+        const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(GRID_MRL_BLOCK_CLASS));
+        expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 100px 100px 200px 150px');
+    }));
 
     it('should correctly set column width when there is bigger column at the bottom where there is not width yet', fakeAsync(() => {
         // In this case it would be for City column and 3rd template column.
@@ -414,19 +413,19 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         // creating an incomplete layout
         fixture.componentInstance.grid.width = '1200px';
         fixture.componentInstance.colGroups = [{
-            group: 'group1',
-            columns: [
-                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4 },
-                { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px' },
-                { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px' },
-                { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px' },
-                { field: 'City', rowStart: 2, colStart: 3, colEnd: 5 },
-                { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px' },
-                { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px' },
-                { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px' },
-                { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7, width: '400px' },
-            ]
-        }];
+                group: 'group1',
+                columns: [
+                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4 },
+                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px' },
+                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px' },
+                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px' },
+                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5 },
+                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px' },
+                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px' },
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px' },
+                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7, width: '400px' },
+                ]
+            }];
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
         const gridFirstRow = grid.rowList.first;
@@ -444,19 +443,19 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         // creating an incomplete layout
         fixture.componentInstance.grid.width = '1200px';
         fixture.componentInstance.colGroups = [{
-            group: 'group1',
-            columns: [
-                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4, width: '360px' },
-                { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px' },
-                { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px' },
-                { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px' },
-                { field: 'City', rowStart: 2, colStart: 3, colEnd: 5 },
-                { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px' },
-                { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px' },
-                { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px' },
-                { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7, width: '400px' },
-            ]
-        }];
+                group: 'group1',
+                columns: [
+                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4, width: '360px' },
+                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px' },
+                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px' },
+                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px' },
+                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5 },
+                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px' },
+                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px' },
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px' },
+                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7, width: '400px' },
+                ]
+            }];
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
         const gridFirstRow = grid.rowList.first;
@@ -474,19 +473,19 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         // creating an incomplete layout
         fixture.componentInstance.grid.width = '700px';
         fixture.componentInstance.colGroups = [{
-            group: 'group1',
-            columns: [
-                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4 },
-                { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px' },
-                { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px' },
-                { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px' },
-                { field: 'City', rowStart: 2, colStart: 3, colEnd: 5 },
-                { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px' },
-                { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px' },
-                { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px' },
-                { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
-            ]
-        }];
+                group: 'group1',
+                columns: [
+                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4 },
+                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px' },
+                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px' },
+                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px' },
+                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5 },
+                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px' },
+                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px' },
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px' },
+                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
+                ]
+            }];
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
         const gridFirstRow = grid.rowList.first;
@@ -504,19 +503,19 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         // creating an incomplete layout
         fixture.componentInstance.grid.width = '700px';
         fixture.componentInstance.colGroups = [{
-            group: 'group1',
-            columns: [
-                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4 },
-                { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px' },
-                { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px' },
-                { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3 },
-                { field: 'City', rowStart: 2, colStart: 3, colEnd: 5 },
-                { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px' },
-                { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px' },
-                { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3 },
-                { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
-            ]
-        }];
+                group: 'group1',
+                columns: [
+                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4 },
+                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px' },
+                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px' },
+                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3 },
+                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5 },
+                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px' },
+                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px' },
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3 },
+                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
+                ]
+            }];
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
         const gridFirstRow = grid.rowList.first;
@@ -528,13 +527,12 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 136px 136px 100px 100px 200px');
     }));
 
-    it('should use column width of a column with span 2 that has width when there are no columns with span 1 to take width from',
-        fakeAsync(() => {
-            // In this case it would be for Phone, CompanyName  and PostalCode columns and first 2 template columns.
-            const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
-            // creating an incomplete layout
-            fixture.componentInstance.grid.width = '700px';
-            fixture.componentInstance.colGroups = [{
+    it('should use column width of a column with span 2 that has width when there are no columns with span 1 to take width from', fakeAsync(() => {
+        // In this case it would be for Phone, CompanyName  and PostalCode columns and first 2 template columns.
+        const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
+        // creating an incomplete layout
+        fixture.componentInstance.grid.width = '700px';
+        fixture.componentInstance.colGroups = [{
                 group: 'group1',
                 columns: [
                     { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4 },
@@ -548,16 +546,16 @@ describe('IgxGrid - multi-row-layout #grid', () => {
                     { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
                 ]
             }];
-            fixture.detectChanges();
-            const grid = fixture.componentInstance.grid;
-            const gridFirstRow = grid.rowList.first;
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        const gridFirstRow = grid.rowList.first;
 
-            // headers are aligned to cells
-            GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
+        // headers are aligned to cells
+        GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
 
-            const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(GRID_MRL_BLOCK_CLASS));
-            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('100px 100px 136px 100px 100px 200px');
-        }));
+        const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(GRID_MRL_BLOCK_CLASS));
+        expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('100px 100px 136px 100px 100px 200px');
+    }));
 
     it('should use divided column width when there is stairway type of defined columns and they have widths set', fakeAsync(() => {
         // In this case it would be for Country and Address columns  and last 3 template columns.
@@ -565,19 +563,19 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         // creating an incomplete layout
         fixture.componentInstance.grid.width = '700px';
         fixture.componentInstance.colGroups = [{
-            group: 'group1',
-            columns: [
-                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4 },
-                { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px' },
-                { field: 'Country', rowStart: 1, colStart: 6, colEnd: 8, width: '200px' },
-                { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px' },
-                { field: 'City', rowStart: 2, colStart: 3, colEnd: 5 },
-                { field: 'Address', rowStart: 2, colStart: 5, colEnd: 8, width: '150px' },
-                { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2 },
-                { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3 },
-                { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 8 },
-            ]
-        }];
+                group: 'group1',
+                columns: [
+                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4 },
+                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px' },
+                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 8, width: '200px' },
+                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px' },
+                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5 },
+                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 8, width: '150px' },
+                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2 },
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3 },
+                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 8 },
+                ]
+            }];
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
         const gridFirstRow = grid.rowList.first;
@@ -595,14 +593,14 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         const grid = fixture.componentInstance.grid;
         fixture.componentInstance.colGroups = [{
-            group: 'group1',
-            columns: [
-                { field: 'ID', rowStart: 1, colStart: 1, width: '10%' },
-                { field: 'CompanyName', rowStart: 1, colStart: 2, width: '20%' },
-                { field: 'ContactName', rowStart: 1, colStart: 3, width: '30%' },
-                { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd: 4 },
-            ]
-        }];
+                group: 'group1',
+                columns: [
+                    { field: 'ID', rowStart: 1, colStart: 1, width: '10%' },
+                    { field: 'CompanyName', rowStart: 1, colStart: 2, width: '20%' },
+                    { field: 'ContactName', rowStart: 1, colStart: 3, width: '30%' },
+                    { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd: 4 },
+                ]
+            }];
         fixture.detectChanges();
         fixture.componentInstance.grid.width = (1000 + grid.scrollSize) + 'px';
         fixture.detectChanges();
@@ -651,16 +649,16 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridFirstRow, fixture.componentInstance.colGroups);
 
         fixture.componentInstance.colGroups = [{
-            group: 'group3',
-            columns: [
-                { field: 'ID', rowStart: 1, colStart: 1 },
-                { field: 'CompanyName', rowStart: 1, colStart: 2 },
-                { field: 'ContactName', rowStart: 1, colStart: 3 },
-                { field: 'Country', rowStart: 2, colStart: 1, colEnd: 3 },
-                { field: 'Region', rowStart: 2, colStart: 3 },
-                { field: 'ContactTitle', rowStart: 3, colStart: 1, rowEnd: 5, colEnd: 4, width: '60%' },
-            ]
-        }];
+                group: 'group3',
+                columns: [
+                    { field: 'ID', rowStart: 1, colStart: 1 },
+                    { field: 'CompanyName', rowStart: 1, colStart: 2 },
+                    { field: 'ContactName', rowStart: 1, colStart: 3 },
+                    { field: 'Country', rowStart: 2, colStart: 1, colEnd: 3 },
+                    { field: 'Region', rowStart: 2, colStart: 3 },
+                    { field: 'ContactTitle', rowStart: 3, colStart: 1, rowEnd: 5, colEnd: 4, width: '60%' },
+                ]
+            }];
         fixture.detectChanges();
         fixture.detectChanges();
 
@@ -687,14 +685,14 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         const grid = fixture.componentInstance.grid;
         fixture.componentInstance.colGroups = [{
-            group: 'group1',
-            columns: [
-                { field: 'ID', rowStart: 1, colStart: 1 },
-                { field: 'CompanyName', rowStart: 1, colStart: 2 },
-                { field: 'ContactName', rowStart: 1, colStart: 3, colEnd: 5 },
-                { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 3, colEnd: 4 },
-            ]
-        }];
+                group: 'group1',
+                columns: [
+                    { field: 'ID', rowStart: 1, colStart: 1 },
+                    { field: 'CompanyName', rowStart: 1, colStart: 2 },
+                    { field: 'ContactName', rowStart: 1, colStart: 3, colEnd: 5 },
+                    { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 3, colEnd: 4 },
+                ]
+            }];
         fixture.componentInstance.grid.width = '100%';
         fixture.detectChanges();
 
@@ -712,14 +710,14 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         const grid = fixture.componentInstance.grid;
         fixture.componentInstance.colGroups = [{
-            group: 'group2',
-            columns: [
-                { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 4, rowEnd: 4, width: '500px' },
-                { field: 'CompanyName', rowStart: 1, colStart: 1, width: '100px' },
-                { field: 'PostalCode', rowStart: 1, colStart: 2, width: '200px' },
-                { field: 'Fax', rowStart: 1, colStart: 3, width: '100px' }
-            ]
-        }];
+                group: 'group2',
+                columns: [
+                    { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 4, rowEnd: 4, width: '500px' },
+                    { field: 'CompanyName', rowStart: 1, colStart: 1, width: '100px' },
+                    { field: 'PostalCode', rowStart: 1, colStart: 2, width: '200px' },
+                    { field: 'Fax', rowStart: 1, colStart: 3, width: '100px' }
+                ]
+            }];
         fixture.detectChanges();
 
         // check group blocks
@@ -728,14 +726,14 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         expect(groupHeaderBlocks[0].clientWidth).toBe(400);
         expect((groupHeaderBlocks[0] as HTMLElement).style.gridTemplateColumns).toBe('100px 200px 100px');
         fixture.componentInstance.colGroups = [{
-            group: 'group2',
-            columns: [
-                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4, rowEnd: 2, width: '500px' },
-                { field: 'CompanyName', rowStart: 2, colStart: 1, width: '100px' },
-                { field: 'PostalCode', rowStart: 2, colStart: 2, width: '200px' },
-                { field: 'Fax', rowStart: 2, colStart: 3, width: '100px' }
-            ]
-        }];
+                group: 'group2',
+                columns: [
+                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4, rowEnd: 2, width: '500px' },
+                    { field: 'CompanyName', rowStart: 2, colStart: 1, width: '100px' },
+                    { field: 'PostalCode', rowStart: 2, colStart: 2, width: '200px' },
+                    { field: 'Fax', rowStart: 2, colStart: 3, width: '100px' }
+                ]
+            }];
         fixture.detectChanges();
         // check group blocks
         groupHeaderBlocks = grid.theadRow.nativeElement.querySelectorAll(GRID_MRL_BLOCK_CLASS);
@@ -780,7 +778,8 @@ describe('IgxGrid - multi-row-layout #grid', () => {
                     { field: 'PostalCode', rowStart: 2, colStart: 2 },
                     { field: 'Fax', rowStart: 2, colStart: 3 }
                 ]
-            }];
+            }
+        ];
         fixture.detectChanges();
 
         // check first group has height of 2 row spans in header and rows but the header itself should span 1 row
@@ -881,8 +880,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         const gridFirstRow = grid.rowList.first;
         GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
-        GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridFirstRow,
-            fixture.componentInstance.colGroups.slice(0, horizontalVirtualization.state.chunkSize));
+        GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridFirstRow, fixture.componentInstance.colGroups.slice(0, horizontalVirtualization.state.chunkSize));
 
         // check last column group can be scrolled in view
         horizontalVirtualization.scrollTo(11);
@@ -890,10 +888,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         fixture.detectChanges();
 
         // last 3 blocks should be rendered
-        GridFunctions.verifyDOMMatchesLayoutSettings(grid, grid.rowList.first,
-            fixture.componentInstance.colGroups.slice(
-                horizontalVirtualization.state.startIndex,
-                horizontalVirtualization.state.startIndex + horizontalVirtualization.state.chunkSize));
+        GridFunctions.verifyDOMMatchesLayoutSettings(grid, grid.rowList.first, fixture.componentInstance.colGroups.slice(horizontalVirtualization.state.startIndex, horizontalVirtualization.state.startIndex + horizontalVirtualization.state.chunkSize));
 
     });
 
@@ -901,15 +896,15 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         // test with px
         fixture.componentInstance.colGroups = [{
-            group: 'group1',
-            // total colspan 3
-            columns: [
-                { field: 'Address', rowStart: 1, colStart: 1, colEnd: 4, rowEnd: 3 },
-                { field: 'County', rowStart: 3, colStart: 1, width: '200px' },
-                { field: 'Region', rowStart: 3, colStart: 2, width: '300px' },
-                { field: 'City', rowStart: 3, colStart: 3, width: '200px' }
-            ]
-        }];
+                group: 'group1',
+                // total colspan 3
+                columns: [
+                    { field: 'Address', rowStart: 1, colStart: 1, colEnd: 4, rowEnd: 3 },
+                    { field: 'County', rowStart: 3, colStart: 1, width: '200px' },
+                    { field: 'Region', rowStart: 3, colStart: 2, width: '300px' },
+                    { field: 'City', rowStart: 3, colStart: 3, width: '200px' }
+                ]
+            }];
         fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
         tick(); // Required to render scrollbars
@@ -985,17 +980,17 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         const grid = fixture.componentInstance.grid;
         fixture.componentInstance.colGroups = [{
-            group: 'group4',
-            // total rowspan 3
-            columns: [
-                { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
-                { field: 'Phone', rowStart: 1, colStart: 3, rowEnd: 3 },
-                { field: 'Address', rowStart: 1, colStart: 4, rowEnd: 4 },
-                { field: 'Region', rowStart: 2, colStart: 1 },
-                { field: 'City', rowStart: 2, colStart: 2 },
-                { field: 'ContactName', rowStart: 3, colStart: 1, colEnd: 4 },
-            ]
-        }];
+                group: 'group4',
+                // total rowspan 3
+                columns: [
+                    { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
+                    { field: 'Phone', rowStart: 1, colStart: 3, rowEnd: 3 },
+                    { field: 'Address', rowStart: 1, colStart: 4, rowEnd: 4 },
+                    { field: 'Region', rowStart: 2, colStart: 1 },
+                    { field: 'City', rowStart: 2, colStart: 2 },
+                    { field: 'ContactName', rowStart: 3, colStart: 1, colEnd: 4 },
+                ]
+            }];
         fixture.detectChanges();
 
         const rows = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('igx-grid-row'));
@@ -1040,19 +1035,19 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         fixture.componentInstance.grid.columnWidth = '10%';
         fixture.detectChanges();
         fixture.componentInstance.colGroups = [{
-            group: 'group1',
-            columns: [
-                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4 },
-                { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6 },
-                { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7 },
-                { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3 },
-                { field: 'City', rowStart: 2, colStart: 3, colEnd: 5 },
-                { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7 },
-                { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2 },
-                { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3 },
-                { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
-            ]
-        }];
+                group: 'group1',
+                columns: [
+                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4 },
+                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6 },
+                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7 },
+                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3 },
+                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5 },
+                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7 },
+                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2 },
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3 },
+                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
+                ]
+            }];
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
         const gridFirstRow = grid.rowList.first;
@@ -1067,19 +1062,19 @@ describe('IgxGrid - multi-row-layout #grid', () => {
     it('should disregard hideGroupedColumns option and not hide columns when grouping when having column layouts.', fakeAsync(() => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.componentInstance.colGroups = [{
-            group: 'group1',
-            columns: [
-                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4 },
-                { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6 },
-                { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7 },
-                { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3 },
-                { field: 'City', rowStart: 2, colStart: 3, colEnd: 5 },
-                { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7 },
-                { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2 },
-                { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3 },
-                { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
-            ]
-        }];
+                group: 'group1',
+                columns: [
+                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 4 },
+                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6 },
+                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7 },
+                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3 },
+                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5 },
+                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7 },
+                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2 },
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3 },
+                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7 },
+                ]
+            }];
         const grid = fixture.componentInstance.grid;
         grid.hideGroupedColumns = true;
         fixture.detectChanges();
@@ -1099,13 +1094,13 @@ describe('IgxGrid - multi-row-layout #grid', () => {
     it('should get the correct next and previous cell when in MRL scenario', fakeAsync(() => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.componentInstance.colGroups = [{
-            group: 'group1',
-            columns: [
-                { field: 'CompanyName', rowStart: 1, rowEnd: 2, colStart: 3, colEnd: 4, dataType: 'number', editable: true },
-                { field: 'ID', rowStart: 1, rowEnd: 2, colStart: 1, colEnd: 2, dataType: 'number', editable: false },
-                { field: 'ContactName', rowStart: 1, rowEnd: 2, colStart: 2, colEnd: 3, dataType: 'string', editable: false },
-            ]
-        }];
+                group: 'group1',
+                columns: [
+                    { field: 'CompanyName', rowStart: 1, rowEnd: 2, colStart: 3, colEnd: 4, dataType: 'number', editable: true },
+                    { field: 'ID', rowStart: 1, rowEnd: 2, colStart: 1, colEnd: 2, dataType: 'number', editable: false },
+                    { field: 'ContactName', rowStart: 1, rowEnd: 2, colStart: 2, colEnd: 3, dataType: 'string', editable: false },
+                ]
+            }];
         const grid = fixture.componentInstance.grid;
         fixture.detectChanges();
         let pos: ICellPosition;
@@ -1202,5 +1197,4 @@ export class ColumnLayoutTestComponent {
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent]
 })
 export class ColumnLayoutAndGroupsTestComponent extends ColumnLayoutTestComponent {
-
 }

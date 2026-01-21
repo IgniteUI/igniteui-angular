@@ -1,5 +1,5 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
-import { IgxChatComponent, IgxChatMessageContextDirective, type IgxChatTemplates } from './chat.component'
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { IgxChatComponent, IgxChatMessageContextDirective, type IgxChatTemplates } from './chat.component';
 import { Component, signal, TemplateRef, viewChild } from '@angular/core';
 import type { IgcChatComponent, IgcChatMessage, IgcTextareaComponent } from 'igniteui-webcomponents';
 
@@ -20,7 +20,7 @@ describe('Chat wrapper', () => {
         chatComponent = fixture.componentInstance;
         chatElement = getChatElement(fixture);
         fixture.detectChanges();
-    })
+    });
 
     it('is created', () => {
         expect(chatComponent).toBeDefined();
@@ -127,10 +127,10 @@ describe('Chat dynamic templates binding', () => {
 })
 class ChatTemplatesBed {
     public messages = signal<IgcChatMessage[]>([{
-        id: '1',
-        sender: 'user',
-        text: 'Hello world'
-    }]);
+            id: '1',
+            sender: 'user',
+            text: 'Hello world'
+        }]);
     public messageTemplate = viewChild.required<TemplateRef<any>>('message');
 }
 
@@ -146,10 +146,10 @@ class ChatTemplatesBed {
 class ChatDynamicTemplatesBed {
     public templates = signal<IgxChatTemplates | null>(null);
     public messages = signal<IgcChatMessage[]>([{
-        id: '1',
-        sender: 'user',
-        text: 'Hello world'
-    }]);
+            id: '1',
+            sender: 'user',
+            text: 'Hello world'
+        }]);
     public messageTemplate = viewChild.required<TemplateRef<any>>('message');
 
     public bindTemplates(): void {

@@ -1,4 +1,4 @@
-import {IgxSelectionAPIService} from './selection';
+import { IgxSelectionAPIService } from './selection';
 
 describe('IgxSelectionAPIService', () => {
     let service;

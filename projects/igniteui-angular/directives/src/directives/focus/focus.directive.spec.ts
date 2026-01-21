@@ -120,13 +120,15 @@ describe('igxFocus', () => {
     `,
     imports: [IgxFocusDirective]
 })
-class SetFocusComponent { }
+class SetFocusComponent {
+}
 
 @Component({
     template: `<input type="text" [igxFocus]="false" value="First" />`,
     imports: [IgxFocusDirective]
 })
-class NoFocusComponent { }
+class NoFocusComponent {
+}
 
 @Component({
     template: `
@@ -138,12 +140,12 @@ class NoFocusComponent { }
     imports: [IgxFocusDirective]
 })
 class TriggerFocusOnClickComponent {
-    @ViewChild(IgxFocusDirective, { static: true }) public focusRef: IgxFocusDirective;
+    @ViewChild(IgxFocusDirective, { static: true })
+    public focusRef: IgxFocusDirective;
 
     public focus() {
         this.focusRef.trigger();
     }
-
 }
 
 @Component({
@@ -156,11 +158,18 @@ class TriggerFocusOnClickComponent {
     imports: [IgxFocusDirective, IgxCheckboxComponent, IgxSwitchComponent, IgxRadioComponent, IgxDatePickerComponent]
 })
 class CheckboxPickerComponent {
-    @ViewChild(IgxCheckboxComponent, { static: true }) public checkbox: IgxCheckboxComponent;
-    @ViewChild(IgxRadioComponent, { static: true }) public radio: IgxRadioComponent;
-    @ViewChild(IgxSwitchComponent, { static: true }) public switch: IgxSwitchComponent;
-    @ViewChild(IgxDatePickerComponent, { static: true }) public picker: IgxDatePickerComponent;
-    @ViewChild('radio', { read: IgxFocusDirective, static: true }) public radioFocusRef: IgxFocusDirective;
-    @ViewChild('switch', { read: IgxFocusDirective, static: true }) public switchFocusRef: IgxFocusDirective;
-    @ViewChild('picker', { read: IgxFocusDirective, static: true }) public pickerFocusRef: IgxFocusDirective;
+    @ViewChild(IgxCheckboxComponent, { static: true })
+    public checkbox: IgxCheckboxComponent;
+    @ViewChild(IgxRadioComponent, { static: true })
+    public radio: IgxRadioComponent;
+    @ViewChild(IgxSwitchComponent, { static: true })
+    public switch: IgxSwitchComponent;
+    @ViewChild(IgxDatePickerComponent, { static: true })
+    public picker: IgxDatePickerComponent;
+    @ViewChild('radio', { read: IgxFocusDirective, static: true })
+    public radioFocusRef: IgxFocusDirective;
+    @ViewChild('switch', { read: IgxFocusDirective, static: true })
+    public switchFocusRef: IgxFocusDirective;
+    @ViewChild('picker', { read: IgxFocusDirective, static: true })
+    public pickerFocusRef: IgxFocusDirective;
 }

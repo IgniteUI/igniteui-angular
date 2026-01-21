@@ -5,7 +5,8 @@ import { BaseProgressDirective } from './progressbar.component';
 @Component({
     template: ``,
 })
-class TestComponent extends BaseProgressDirective {}
+class TestComponent extends BaseProgressDirective {
+}
 
 describe('BaseProgressDirective', () => {
     let fixture: ComponentFixture<TestComponent>;
@@ -14,7 +15,7 @@ describe('BaseProgressDirective', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [TestComponent],  // Declare the test component
+            imports: [TestComponent], // Declare the test component
         }).compileComponents();
 
         fixture = TestBed.createComponent(TestComponent);
@@ -173,7 +174,7 @@ describe('BaseProgressDirective', () => {
     }));
 
     it('should trigger progressChanged event when value changes', () => {
-        spyOn(component.progressChanged, 'emit');
+        vi.spyOn(component.progressChanged, 'emit');
 
         component.value = 30;
         expect(component.progressChanged.emit).toHaveBeenCalledWith({
@@ -189,14 +190,14 @@ describe('BaseProgressDirective', () => {
     });
 
     it('should not trigger progressChanged event when value remains the same', () => {
-        spyOn(component.progressChanged, 'emit');
+        vi.spyOn(component.progressChanged, 'emit');
 
         component.value = 0; // Default value is already 0
         expect(component.progressChanged.emit).not.toHaveBeenCalled();
     });
 
     it('should trigger progressChanged event when indeterminate is true', () => {
-        spyOn(component.progressChanged, 'emit');
+        vi.spyOn(component.progressChanged, 'emit');
 
         component.indeterminate = true;
         component.value = 30;

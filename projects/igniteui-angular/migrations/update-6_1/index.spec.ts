@@ -12,15 +12,11 @@ describe('Update 6.1.0', () => {
     });
 
     it('should update igxToggle events and selectors', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.html',
-            `<igx-tab-bar attr igxForRemote="true"></igx-tab-bar>` +
-            `<elem igxToggle (onOpen)="handler" (onClose)="handler"></elem>`
-        );
+        appTree.create('/testSrc/appPrefix/component/test.component.html', `<igx-tab-bar attr igxForRemote="true"></igx-tab-bar>` +
+            `<elem igxToggle (onOpen)="handler" (onClose)="handler"></elem>`);
         const tree = await schematicRunner.runSchematic('migration-04', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
-            .toEqual(
-                `<igx-bottom-nav attr></igx-bottom-nav>` +
-                `<elem igxToggle (onOpened)="handler" (onClosed)="handler"></elem>`);
+            .toEqual(`<igx-bottom-nav attr></igx-bottom-nav>` +
+            `<elem igxToggle (onOpened)="handler" (onClosed)="handler"></elem>`);
     });
 });

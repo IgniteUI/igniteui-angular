@@ -1,3 +1,5 @@
+import type { MockedObject } from "vitest";
+import { vi } from 'vitest';
 import { EventEmitter, QueryList } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -60,29 +62,28 @@ export class TreeTestFunctions {
             expect(this.getNodeCheckboxDiv(node.nativeElement)).not.toBeNull();
             expect(TreeTestFunctions.getNodeCheckboxInput(node.nativeElement).checked).toBe(selected);
             expect(TreeTestFunctions.getNodeCheckboxInput(node.nativeElement).indeterminate).toBe(indeterminate);
-        } else {
+        }
+        else {
             expect(this.getNodeCheckboxDiv(node.nativeElement)).toBeNull();
         }
     }
 
-    public static createNodeSpy(
-        properties: { [key: string]: any } = null,
-        methodNames: (keyof IgxTreeNode<any>)[] = ['selected']): jasmine.SpyObj<IgxTreeNode<any>> {
+    public static createNodeSpy(properties: {
+        [key: string]: any;
+    } = null, methodNames: (keyof IgxTreeNode<any>)[] = ['selected']): MockedObject<IgxTreeNode<any>> {
         if (!properties) {
+            // TODO: vitest-migration: Cannot transform jasmine.createSpyObj with a dynamic variable. Please migrate this manually. See: https://vitest.dev/api/vi.html#vi-fn
             return jasmine.createSpyObj<IgxTreeNodeComponent<any>>(methodNames);
         }
+        // TODO: vitest-migration: Cannot transform jasmine.createSpyObj with a dynamic variable. Please migrate this manually. See: https://vitest.dev/api/vi.html#vi-fn
         return jasmine.createSpyObj<IgxTreeNodeComponent<any>>(methodNames, properties);
     }
 
-    public static createNodeSpies(
-        level: number,
-        count: number,
-        parentNode?: IgxTreeNodeComponent<any>,
-        children?: any[],
-        allChildren?: any[]
-    ): IgxTreeNodeComponent<any>[] {
+    public static createNodeSpies(level: number, count: number, parentNode?: IgxTreeNodeComponent<any>, children?: any[], allChildren?: any[]): IgxTreeNodeComponent<any>[] {
         const nodesArr = [];
-        const mockEmitter: EventEmitter<boolean> = jasmine.createSpyObj('emitter', ['emit']);
+        const mockEmitter: EventEmitter<boolean> = {
+            emit: vi.fn().mockName("emitter.emit")
+        };
         for (let i = 0; i < count; i++) {
             nodesArr.push(this.createNodeSpy({
                 level,
@@ -99,14 +100,18 @@ export class TreeTestFunctions {
         return nodesArr;
     }
 
-    public static createQueryListSpy(nodes: IgxTreeNodeComponent<any>[]): jasmine.SpyObj<QueryList<IgxTreeNodeComponent<any>>> {
-        const mockQuery = jasmine.createSpyObj(['toArray', 'filter', 'forEach']);
+    public static createQueryListSpy(nodes: IgxTreeNodeComponent<any>[]): MockedObject<QueryList<IgxTreeNodeComponent<any>>> {
+        const mockQuery = {
+            toArray: vi.fn(),
+            filter: vi.fn(),
+            forEach: vi.fn()
+        };
         Object.defineProperty(mockQuery, 'first', { value: nodes[0], enumerable: true });
         Object.defineProperty(mockQuery, 'last', { value: nodes[nodes.length - 1], enumerable: true });
         Object.defineProperty(mockQuery, 'length', { value: nodes.length, enumerable: true });
-        mockQuery.toArray.and.returnValue(nodes);
-        mockQuery.filter.and.callFake((cb) => nodes.filter(cb));
-        mockQuery.forEach.and.callFake((cb) => nodes.forEach(cb));
+        mockQuery.toArray.mockReturnValue(nodes);
+        mockQuery.filter.mockImplementation((cb) => nodes.filter(cb));
+        mockQuery.forEach.mockImplementation((cb) => nodes.forEach(cb));
         return mockQuery;
     }
 }

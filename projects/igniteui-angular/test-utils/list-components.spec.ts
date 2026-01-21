@@ -44,8 +44,10 @@ export class ListDirectivesComponent {
     imports: [IgxListComponent, IgxListItemComponent]
 })
 export class BasicListComponent {
-    @ViewChild(IgxListComponent, { static: true }) public list: IgxListComponent;
-    @ViewChild('wrapper', { static: true }) public wrapper;
+    @ViewChild(IgxListComponent, { static: true })
+    public list: IgxListComponent;
+    @ViewChild('wrapper', { static: true })
+    public wrapper;
 }
 
 @Component({
@@ -221,24 +223,24 @@ export class ListWithPanningTemplatesComponent extends ListWithPanningComponent 
     imports: [IgxListComponent, IgxListItemComponent, IgxForOfDirective]
 })
 export class ListWithIgxForAndScrollingComponent {
-    @ViewChild('forOfList', {read: IgxListComponent, static: true })
+    @ViewChild('forOfList', { read: IgxListComponent, static: true })
     public forOfList: IgxListComponent;
 
     @ViewChild(IgxForOfDirective)
     public igxFor: IgxForOfDirective<any>;
 
     public data = [
-        {key: 1, name: 'John'},
-        {key: 2, name: 'Brian'},
-        {key: 3, name: 'Christian'},
-        {key: 4, name: 'Mark'},
-        {key: 5, name: 'William'},
-        {key: 6, name: 'Dave'},
-        {key: 7, name: 'Riley'},
-        {key: 8, name: 'Terrance'},
-        {key: 9, name: 'Erick'},
-        {key: 10, name: 'Victor'},
-        {key: 11, name: 'Rick'},
-        {key: 12, name: 'Stefan'}
+        { key: 1, name: 'John' },
+        { key: 2, name: 'Brian' },
+        { key: 3, name: 'Christian' },
+        { key: 4, name: 'Mark' },
+        { key: 5, name: 'William' },
+        { key: 6, name: 'Dave' },
+        { key: 7, name: 'Riley' },
+        { key: 8, name: 'Terrance' },
+        { key: 9, name: 'Erick' },
+        { key: 10, name: 'Victor' },
+        { key: 11, name: 'Rick' },
+        { key: 12, name: 'Stefan' }
     ];
 }

@@ -182,7 +182,7 @@ describe('IgxInputGroup', () => {
 
         const pointOnPrefix = UIInteractions.getPointFromElement(prefix.nativeElement);
         const pointerEvent = UIInteractions.createPointerEvent('pointerdown', pointOnPrefix);
-        const preventDefaultSpy = spyOn(pointerEvent, 'preventDefault');
+        const preventDefaultSpy = vi.spyOn(pointerEvent, 'preventDefault');
 
         Object.defineProperty(pointerEvent, 'target', { value: input.nativeElement, configurable: true });
         const inputGroupDebugElement = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
@@ -253,10 +253,14 @@ describe('IgxInputGroup', () => {
 class InputGroupComponent {
     public IGTOKEN = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE);
 
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild('igxInput', { read: IgxInputDirective, static: true }) public igxInput: IgxInputDirective;
-    @ViewChild(IgxPrefixDirective, { read: ElementRef }) public prefix: ElementRef;
-    @ViewChild(IgxSuffixDirective, { read: ElementRef }) public suffix: ElementRef;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInput', { read: IgxInputDirective, static: true })
+    public igxInput: IgxInputDirective;
+    @ViewChild(IgxPrefixDirective, { read: ElementRef })
+    public prefix: ElementRef;
+    @ViewChild(IgxSuffixDirective, { read: ElementRef })
+    public suffix: ElementRef;
     public suppressInputAutofocus = false;
 }
 
@@ -267,7 +271,8 @@ class InputGroupComponent {
     imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupBoxComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
 }
 
 @Component({
@@ -277,7 +282,8 @@ class InputGroupBoxComponent {
     imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupBorderComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
 }
 
 @Component({
@@ -287,7 +293,8 @@ class InputGroupBorderComponent {
     imports: [IgxInputDirective, IgxInputGroupComponent]
 })
 class InputGroupSearchComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
 }
 
 @Component({
@@ -296,7 +303,8 @@ class InputGroupSearchComponent {
                 </igx-input-group>`,
     imports: [IgxInputGroupComponent, IgxInputDirective]
 })
-class InputGroupFileComponent { }
+class InputGroupFileComponent {
+}
 
 const testInputGroupType = (type: IgxInputGroupType, component: IgxInputGroupComponent, nativeElement: HTMLInputElement) => {
     let isLine = false;
@@ -337,7 +345,8 @@ const testInputGroupType = (type: IgxInputGroupType, component: IgxInputGroupCom
     imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupDisabledComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
 
     public disabled = false;
 
@@ -371,7 +380,8 @@ class InputGroupDisabledWithoutValueComponent {
     imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupDisabledByDefaultComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
 
     public disabled = true;
 }

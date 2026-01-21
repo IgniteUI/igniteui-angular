@@ -263,11 +263,11 @@ describe('Dialog', () => {
             cancel: false
         };
 
-        spyOn(dialog.opening, 'emit');
-        spyOn(dialog.opened, 'emit');
-        spyOn(dialog.isOpenChange, 'emit');
-        spyOn(dialog.closing, 'emit');
-        spyOn(dialog.closed, 'emit');
+        vi.spyOn(dialog.opening, 'emit');
+        vi.spyOn(dialog.opened, 'emit');
+        vi.spyOn(dialog.isOpenChange, 'emit');
+        vi.spyOn(dialog.closing, 'emit');
+        vi.spyOn(dialog.closed, 'emit');
 
         dialog.open();
         tick();
@@ -293,11 +293,11 @@ describe('Dialog', () => {
         const leftButton = buttons[0];
         const rightButton = buttons[1];
 
-        spyOn(dialog.leftButtonSelect, 'emit');
+        vi.spyOn(dialog.leftButtonSelect, 'emit');
         dispatchEvent(leftButton, 'click');
         expect(dialog.leftButtonSelect.emit).toHaveBeenCalled();
 
-        spyOn(dialog.rightButtonSelect, 'emit');
+        vi.spyOn(dialog.rightButtonSelect, 'emit');
         dispatchEvent(rightButton, 'click');
         tick();
         expect(dialog.rightButtonSelect.emit).toHaveBeenCalled();
@@ -357,10 +357,10 @@ describe('Dialog', () => {
 
     it('Should initialize igx-dialog custom title and actions', () => {
         const data = [{
-            component: CustomTemplates1DialogComponent
-        }, {
-            component: CustomTemplates2DialogComponent
-        }];
+                component: CustomTemplates1DialogComponent
+            }, {
+                component: CustomTemplates2DialogComponent
+            }];
 
         data.forEach((item) => {
             const fixture = TestBed.createComponent(item.component);
@@ -527,7 +527,8 @@ describe('Dialog', () => {
     imports: [IgxDialogComponent]
 })
 class AlertComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true })
+    public dialog: IgxDialogComponent;
     public isModal = false;
 }
 
@@ -546,7 +547,8 @@ class AlertComponent {
     imports: [IgxDialogComponent]
 })
 class DialogComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true })
+    public dialog: IgxDialogComponent;
 }
 
 @Component({
@@ -565,7 +567,8 @@ class DialogComponent {
     imports: [IgxDialogComponent]
 })
 class DialogTwoWayDataBindingComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true })
+    public dialog: IgxDialogComponent;
     public myDialog = false;
 }
 
@@ -587,7 +590,8 @@ class DialogTwoWayDataBindingComponent {
     imports: [IgxDialogComponent]
 })
 class DialogSampleComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true })
+    public dialog: IgxDialogComponent;
 }
 @Component({
     template: `
@@ -601,7 +605,8 @@ class DialogSampleComponent {
     imports: [IgxDialogComponent]
 })
 class CustomDialogComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true })
+    public dialog: IgxDialogComponent;
 }
 
 @Component({
@@ -622,8 +627,10 @@ class CustomDialogComponent {
     imports: [IgxDialogComponent]
 })
 class NestedDialogsComponent {
-    @ViewChild('child', { static: true }) public child: IgxDialogComponent;
-    @ViewChild('main', { static: true }) public main: IgxDialogComponent;
+    @ViewChild('child', { static: true })
+    public child: IgxDialogComponent;
+    @ViewChild('main', { static: true })
+    public main: IgxDialogComponent;
 }
 
 @Component({
@@ -639,7 +646,8 @@ class NestedDialogsComponent {
     imports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective]
 })
 class CustomTemplates1DialogComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true })
+    public dialog: IgxDialogComponent;
 }
 
 @Component({
@@ -651,7 +659,8 @@ class CustomTemplates1DialogComponent {
     imports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective]
 })
 class CustomTemplates2DialogComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true })
+    public dialog: IgxDialogComponent;
 }
 
 
@@ -663,7 +672,8 @@ class CustomTemplates2DialogComponent {
     imports: [IgxDialogComponent]
 })
 class PositionSettingsDialogComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true })
+    public dialog: IgxDialogComponent;
 
     public positionSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Left,
@@ -683,5 +693,4 @@ class PositionSettingsDialogComponent {
         openAnimation: useAnimation(slideInTop, { params: { duration: '800ms' } }),
         closeAnimation: useAnimation(slideOutBottom, { params: { duration: '700ms' } })
     };
-
 }

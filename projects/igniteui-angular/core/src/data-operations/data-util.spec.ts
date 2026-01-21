@@ -11,12 +11,7 @@ import { FilteringStrategy, FilterUtil } from './filtering-strategy';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from './filtering-expressions-tree';
 import { IFilteringState } from './filtering-state.interface';
 import { FilteringLogic } from './filtering-expression.interface';
-import {
-    IgxNumberFilteringOperand,
-    IgxStringFilteringOperand,
-    IgxDateFilteringOperand,
-    IgxBooleanFilteringOperand
-} from './filtering-condition';
+import { IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxDateFilteringOperand, IgxBooleanFilteringOperand } from './filtering-condition';
 import { IPagingState, PagingError } from './paging-state.interface';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/public_api';
@@ -195,10 +190,10 @@ const testGroupBy = () => {
             const result = groupRecords.data;
             expect(dataGenerator.getValuesForColumn(result, 'boolean'))
                 .toEqual([undefined, undefined, false, undefined, false,
-                    undefined, false, undefined, undefined, true, undefined, true]);
+                undefined, false, undefined, undefined, true, undefined, true]);
             expect(dataGenerator.getValuesForColumn(result, 'string'))
                 .toEqual([undefined, undefined, 'row0, col1', undefined, 'row2, col1',
-                    undefined, 'row4, col1', undefined, undefined, 'row1, col1', undefined, 'row3, col1']);
+                undefined, 'row4, col1', undefined, undefined, 'row1, col1', undefined, 'row3, col1']);
             const group1: IGroupByRecord = groupRecords.metadata[2];
             const group2: IGroupByRecord = group1.groupParent;
             const group3: IGroupByRecord = groupRecords.metadata[9];
@@ -278,7 +273,7 @@ const testGroupBy = () => {
             state.expressions.push(expr2);
             // sort
             const sorted = DataUtil.sort(data, [expr, expr2]);
-             // group by
+            // group by
             DataUtil.group(sorted, state, undefined, null, groupRecords);
             expect(groupRecords.length).toEqual(2);
             expect(groupRecords[0].records.length).toEqual(3);
@@ -390,7 +385,9 @@ const testFilter = () => {
             let res = FilterUtil.filter(data, state);
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                 .toEqual(dataGenerator.getValuesForColumn(data, 'number'));
-            (res[0] as { string: string }).string = 'ROW';
+            (res[0] as {
+                string: string;
+            }).string = 'ROW';
             // case-sensitive
             res = FilterUtil.filter(res, stateIgnoreCase);
             expect(dataGenerator.getValuesForColumn(res, 'number'))
@@ -591,7 +588,7 @@ const testMerging = () => {
                 },
             ];
 
-            DataUtil.mergeHierarchicalTransactions(data, transactions, 'Employees', 'ID',cloneStrategy, false);
+            DataUtil.mergeHierarchicalTransactions(data, transactions, 'Employees', 'ID', cloneStrategy, false);
             expect(data[1].Name).toBe(updateRootRow.Name);
             expect(data[1].Age).toBe(updateRootRow.Age);
 

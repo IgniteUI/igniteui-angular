@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef, inject } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxChipComponent } from './chip.component';
@@ -127,7 +127,9 @@ describe('IgxChipsArea ', () => {
         });
 
         it('should add chips when adding data items ', () => {
-            expect(chipAreaElement.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['customClass', CHIP_AREA_CLASS]));
+            // TODO: vitest-migration: Verify this matches strict array content (multiset equality). Vitest's arrayContaining is a subset check.
+            expect(chipAreaElement.nativeElement.classList).toHaveLength(2);
+            expect(chipAreaElement.nativeElement.classList).toEqual(expect.arrayContaining(['customClass', CHIP_AREA_CLASS]));
             expect(chipAreaElement.nativeElement.children.length).toEqual(2);
 
             fix.componentInstance.chipList.push({ id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true });
@@ -177,7 +179,7 @@ describe('IgxChipsArea ', () => {
             fix = TestBed.createComponent(TestChipSelectComponent);
             chipArea = fix.componentInstance.chipsArea;
 
-            spyOn(chipArea.selectionChange, 'emit');
+            vi.spyOn(chipArea.selectionChange, 'emit');
 
             fix.detectChanges();
 
@@ -235,7 +237,7 @@ describe('IgxChipsArea ', () => {
 
             const secondChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[1];
             const chipAreaComp: IgxChipsAreaComponent = fix.debugElement.query(By.directive(IgxChipsAreaComponent)).componentInstance;
-            spyOn(chipAreaComp.selectionChange, 'emit');
+            vi.spyOn(chipAreaComp.selectionChange, 'emit');
 
             secondChipComp.onChipKeyDown(spaceKeyEvent);
             fix.detectChanges();
@@ -273,7 +275,7 @@ describe('IgxChipsArea ', () => {
             chipAreaComponent.chipList.push({ id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true });
             fix.detectChanges();
 
-            spyOn(chipAreaComponent.chipsArea.selectionChange, `emit`);
+            vi.spyOn(chipAreaComponent.chipsArea.selectionChange, `emit`);
             chipAreaComponent.chipsArea.chipsList.toArray()[1].selected = true;
             fix.detectChanges();
             chipAreaComponent.chipsArea.chipsList.toArray()[2].selected = true;
@@ -306,7 +308,7 @@ describe('IgxChipsArea ', () => {
             fix = TestBed.createComponent(TestChipSelectComponent);
             chipArea = fix.componentInstance.chipsArea;
 
-            spyOn(chipArea.selectionChange, 'emit');
+            vi.spyOn(chipArea.selectionChange, 'emit');
 
             fix.detectChanges();
 
@@ -329,7 +331,7 @@ describe('IgxChipsArea ', () => {
             fix.detectChanges();
 
             expect(igxChip.selected).toBe(true);
-            expect(igxChipItem).toHaveClass(`igx-chip__item--selected`);
+            expect(igxChipItem.classList.contains(`igx-chip__item--selected`)).toBe(true);
         });
 
         it('should fire only onSelection event for chip area when selecting a chip using spacebar', () => {
@@ -340,10 +342,10 @@ describe('IgxChipsArea ', () => {
             chipArea = fix.componentInstance.chipsArea;
             const secondChip = fix.componentInstance.chips.toArray()[1];
 
-            spyOn(chipArea.reorder, 'emit');
-            spyOn(chipArea.selectionChange, 'emit');
-            spyOn(chipArea.moveStart, 'emit');
-            spyOn(chipArea.moveEnd, 'emit');
+            vi.spyOn(chipArea.reorder, 'emit');
+            vi.spyOn(chipArea.selectionChange, 'emit');
+            vi.spyOn(chipArea.moveStart, 'emit');
+            vi.spyOn(chipArea.moveEnd, 'emit');
 
 
             secondChip.onChipKeyDown(spaceKeyEvent);
@@ -363,7 +365,7 @@ describe('IgxChipsArea ', () => {
             const secondChip = fix.componentInstance.chips.toArray()[1];
             const pointerUpEvt = new PointerEvent('pointerup');
 
-            spyOn(chipArea.selectionChange, 'emit');
+            vi.spyOn(chipArea.selectionChange, 'emit');
             fix.detectChanges();
 
             secondChip.onChipDragClicked({
@@ -437,44 +439,42 @@ describe('IgxChipsArea ', () => {
             expect(newSecondChipLeft).toEqual(secondChipLeft);
         });
 
-        it('should reorder chips and keeps focus when Shift + Left Arrow is pressed and Shift + Right Arrow is pressed twice',
-            (async () => {
-                chipArea = fix.componentInstance.chipsArea;
-                const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-                const targetChip = chipComponents[2].componentInstance;
-                const targetChipElem = targetChip.nativeElement;
+        it('should reorder chips and keeps focus when Shift + Left Arrow is pressed and Shift + Right Arrow is pressed twice', (async () => {
+            chipArea = fix.componentInstance.chipsArea;
+            const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            const targetChip = chipComponents[2].componentInstance;
+            const targetChipElem = targetChip.nativeElement;
 
-                targetChipElem.focus();
-                fix.detectChanges();
+            targetChipElem.focus();
+            fix.detectChanges();
 
-                expect(document.activeElement).toBe(targetChipElem);
-                expect(chipArea.chipsList.toArray()[2].id).toEqual('Town');
-                expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
+            expect(document.activeElement).toBe(targetChipElem);
+            expect(chipArea.chipsList.toArray()[2].id).toEqual('Town');
+            expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
 
-                targetChip.onChipKeyDown(rightKeyEvent);
-                fix.detectChanges();
+            targetChip.onChipKeyDown(rightKeyEvent);
+            fix.detectChanges();
 
-                expect(document.activeElement).toBe(targetChipElem);
-                expect(chipArea.chipsList.toArray()[2].id).toEqual('FirstName');
-                expect(chipArea.chipsList.toArray()[3].id).toEqual('Town');
+            expect(document.activeElement).toBe(targetChipElem);
+            expect(chipArea.chipsList.toArray()[2].id).toEqual('FirstName');
+            expect(chipArea.chipsList.toArray()[3].id).toEqual('Town');
 
-                targetChip.onChipKeyDown(leftKeyEvent);
-                fix.detectChanges();
-                await wait();
+            targetChip.onChipKeyDown(leftKeyEvent);
+            fix.detectChanges();
+            await wait();
 
-                expect(document.activeElement).toBe(targetChipElem);
-                expect(chipArea.chipsList.toArray()[2].id).toEqual('Town');
-                expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
+            expect(document.activeElement).toBe(targetChipElem);
+            expect(chipArea.chipsList.toArray()[2].id).toEqual('Town');
+            expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
 
-                targetChip.onChipKeyDown(leftKeyEvent);
-                fix.detectChanges();
-                await wait();
+            targetChip.onChipKeyDown(leftKeyEvent);
+            fix.detectChanges();
+            await wait();
 
-                expect(document.activeElement).toBe(targetChipElem);
-                expect(chipArea.chipsList.toArray()[2].id).toEqual('City');
-                expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
-            })
-        );
+            expect(document.activeElement).toBe(targetChipElem);
+            expect(chipArea.chipsList.toArray()[2].id).toEqual('City');
+            expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
+        }));
 
         it('should not reorder chips for shift + leftarrow when the chip is going out of bounds', () => {
             const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
@@ -529,11 +529,11 @@ describe('IgxChipsArea ', () => {
             chipArea = fix.componentInstance.chipsArea;
             const secondChip = fix.componentInstance.chips.toArray()[1];
 
-            spyOn(chipArea.reorder, 'emit');
-            spyOn(chipArea.selectionChange, 'emit');
-            spyOn(chipArea.moveStart, 'emit');
-            spyOn(chipArea.moveEnd, 'emit');
-            spyOn(secondChip.remove, 'emit');
+            vi.spyOn(chipArea.reorder, 'emit');
+            vi.spyOn(chipArea.selectionChange, 'emit');
+            vi.spyOn(chipArea.moveStart, 'emit');
+            vi.spyOn(chipArea.moveEnd, 'emit');
+            vi.spyOn(secondChip.remove, 'emit');
 
             secondChip.onChipKeyDown(deleteKeyEvent);
             fix.detectChanges();
@@ -640,7 +640,7 @@ describe('IgxChipsArea ', () => {
             fix.detectChanges();
 
             const firstChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[1];
-            spyOn(firstChipComp.chipClick, 'emit');
+            vi.spyOn(firstChipComp.chipClick, 'emit');
 
             UIInteractions.clickDragDirective(fix, firstChipComp.dragDirective);
 

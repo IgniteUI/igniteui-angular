@@ -5,6 +5,7 @@ import { IgxNavbarComponent, IgxNavbarTitleDirective, IgxNavbarActionDirective }
 
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxIconComponent } from 'igniteui-angular/icon';
+import { vi } from 'vitest';
 
 const LEFT_AREA_CSS_CLAS = '.igx-navbar__left';
 
@@ -22,7 +23,9 @@ describe('IgxNavbar', () => {
         }).compileComponents();
     }));
 
-    let fixture; let component; let domNavbar;
+    let fixture;
+    let component;
+    let domNavbar;
 
     describe('Default Action Icon', () => {
         beforeEach(() => {
@@ -66,7 +69,7 @@ describe('IgxNavbar', () => {
             component.actionButtonIcon = 'home';
             fixture.detectChanges();
 
-            spyOn(component.navbar.action, 'emit');
+            vi.spyOn(component.navbar.action, 'emit');
             fixture.debugElement.nativeElement.querySelector('igx-icon').click();
             fixture.detectChanges();
 
@@ -195,7 +198,8 @@ describe('IgxNavbar', () => {
     imports: [IgxNavbarComponent]
 })
 class NavbarIntializeTestComponent {
-    @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
+    @ViewChild(IgxNavbarComponent, { static: true })
+    public navbar: IgxNavbarComponent;
     public title: string;
     public actionButtonIcon: string;
     public isActionButtonVisible: boolean;
@@ -214,7 +218,8 @@ class NavbarIntializeTestComponent {
     imports: [IgxNavbarComponent, IgxNavbarActionDirective]
 })
 class NavbarCustomActionIconTestComponent {
-    @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
+    @ViewChild(IgxNavbarComponent, { static: true })
+    public navbar: IgxNavbarComponent;
 }
 
 @Component({
@@ -230,7 +235,8 @@ class NavbarCustomActionIconTestComponent {
     imports: [IgxNavbarComponent, IgxNavbarActionDirective, IgxIconComponent]
 })
 class NavbarCustomIgxIconTestComponent {
-    @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
+    @ViewChild(IgxNavbarComponent, { static: true })
+    public navbar: IgxNavbarComponent;
 }
 
 @Component({
@@ -244,7 +250,8 @@ class NavbarCustomIgxIconTestComponent {
     imports: [IgxNavbarComponent, IgxIconComponent, IgxNavbarActionDirective]
 })
 class NavbarCustomIgxIconDirectiveTestComponent {
-    @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
+    @ViewChild(IgxNavbarComponent, { static: true })
+    public navbar: IgxNavbarComponent;
 }
 
 @Component({
@@ -261,7 +268,8 @@ class NavbarCustomIgxIconDirectiveTestComponent {
     imports: [IgxNavbarComponent, IgxNavbarActionDirective, IgxNavbarTitleDirective, IgxIconComponent]
 })
 class NavbarCustomTitleTestComponent {
-    @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
+    @ViewChild(IgxNavbarComponent, { static: true })
+    public navbar: IgxNavbarComponent;
 }
 
 @Component({
@@ -281,5 +289,6 @@ class NavbarCustomTitleTestComponent {
     imports: [IgxNavbarComponent, IgxNavbarActionDirective, IgxNavbarTitleDirective, IgxIconComponent]
 })
 class NavbarCustomTitleDirectiveTestComponent {
-    @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
+    @ViewChild(IgxNavbarComponent, { static: true })
+    public navbar: IgxNavbarComponent;
 }

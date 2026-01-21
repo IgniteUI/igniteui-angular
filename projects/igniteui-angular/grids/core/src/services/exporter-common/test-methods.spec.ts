@@ -26,7 +26,7 @@ export class TestMethods {
         const myGrid = fix.componentInstance.grid;
 
         filterParams = (filterParams.length === 0) ?
-                        ['JobTitle', 'Senior', IgxStringFilteringOperand.instance().condition('contains'), true] : filterParams;
+            ['JobTitle', 'Senior', IgxStringFilteringOperand.instance().condition('contains'), true] : filterParams;
 
         myGrid.filter(filterParams[0], filterParams[1], filterParams[2], filterParams[3]);
         fix.detectChanges();
@@ -50,5 +50,4 @@ export class TestMethods {
 
         return { fixture: fix, grid: myGrid };
     }
-
 }

@@ -31,8 +31,10 @@ describe('Scroll Inertia Directive - Rendering', () => {
     });
 
     // Unit tests for inertia function.
-    it('inertia should accelerate and then deccelerate vertically.', async () => {
-        pending('This should be tested in the e2e test');
+    it.skip('inertia should accelerate and then deccelerate vertically.', async () => {
+        // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
+        // pending('This should be tested in the e2e test');
+        ;
         const scrInertiaDir = fix.componentInstance.scrInertiaDir;
 
         // vertical inertia
@@ -50,8 +52,10 @@ describe('Scroll Inertia Directive - Rendering', () => {
         expect(end).toBeLessThan(mid);
     });
 
-    it('inertia should accelerate and then deccelerate horizontally.', async () => {
-        pending('This should be tested in the e2e test');
+    it.skip('inertia should accelerate and then deccelerate horizontally.', async () => {
+        // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
+        // pending('This should be tested in the e2e test');
+        ;
         const scrInertiaDir = fix.componentInstance.scrInertiaDir;
 
         // horizontal inertia
@@ -189,18 +193,18 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     it('should change scroll top for related scrollbar on touch start/move/end', fakeAsync(() => {
         let evt = {
             touches: [{
-                pageX: 0,
-                pageY: 0
-            }],
+                    pageX: 0,
+                    pageY: 0
+                }],
             preventDefault: () => { }
         };
         scrollInertiaDir.onTouchStart(evt);
 
         evt = {
             touches: [{
-                pageX: 0,
-                pageY: -100
-            }],
+                    pageX: 0,
+                    pageY: -100
+                }],
             preventDefault: () => { }
         };
         tick(10);
@@ -215,18 +219,18 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     it('should stop inertia if another touch event is initiated while inertia is executing.', fakeAsync(() => {
         let evt = {
             touches: [{
-                pageX: 0,
-                pageY: 0
-            }],
+                    pageX: 0,
+                    pageY: 0
+                }],
             preventDefault: () => { }
         };
         scrollInertiaDir.onTouchStart(evt);
 
         evt = {
             touches: [{
-                pageX: 0,
-                pageY: -100
-            }],
+                    pageX: 0,
+                    pageY: -100
+                }],
             preventDefault: () => { }
         };
         tick(10);
@@ -238,9 +242,9 @@ describe('Scroll Inertia Directive - Scrolling', () => {
         // don't wait for inertia to end. Instead start another touch interaction.
         evt = {
             touches: [{
-                pageX: 0,
-                pageY: 0
-            }],
+                    pageX: 0,
+                    pageY: 0
+                }],
             preventDefault: () => { }
         };
         scrollInertiaDir.onTouchStart(evt);
@@ -252,17 +256,17 @@ describe('Scroll Inertia Directive - Scrolling', () => {
         // if scroll is initiated on Y and on X within the defined tolerance no scrolling should occur on X.
         let evt = {
             touches: [{
-                pageX: 0,
-                pageY: 0
-            }],
+                    pageX: 0,
+                    pageY: 0
+                }],
             preventDefault: () => { }
         };
         scrollInertiaDir.onTouchStart(evt);
         evt = {
             touches: [{
-                pageX: -10,
-                pageY: -50
-            }],
+                    pageX: -10,
+                    pageY: -50
+                }],
             preventDefault: () => { }
         };
         tick(10);
@@ -278,18 +282,18 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     it('should change scroll left for related scrollbar on touch start/move/end', fakeAsync(() => {
         let evt = {
             touches: [{
-                pageX: 0,
-                pageY: 0
-            }],
+                    pageX: 0,
+                    pageY: 0
+                }],
             preventDefault: () => { }
         };
         scrollInertiaDir.onTouchStart(evt);
 
         evt = {
             touches: [{
-                pageX: -100,
-                pageY: 0
-            }],
+                    pageX: -100,
+                    pageY: 0
+                }],
             preventDefault: () => { }
         };
         tick(10);
@@ -349,8 +353,10 @@ export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
     imports: [IgxTestScrollInertiaDirective]
 })
 export class ScrollInertiaComponent implements OnInit {
-    @ViewChild('container', { static: true }) public container: ElementRef;
-    @ViewChild('scrBar', { static: true }) public scrollContainer: ElementRef;
+    @ViewChild('container', { static: true })
+    public container: ElementRef;
+    @ViewChild('scrBar', { static: true })
+    public scrollContainer: ElementRef;
     @ViewChild('scrInertiaContainer', { read: IgxTestScrollInertiaDirective, static: true })
     public scrInertiaDir: IgxTestScrollInertiaDirective;
 

@@ -121,9 +121,9 @@ describe('IgxAutocomplete', () => {
         }));
         it('Should close the dropdown when no items match the filter', fakeAsync(() => {
             expect((autocomplete as any).collapsed).toEqual(true);
-            spyOn(autocomplete.target, 'close').and.callThrough();
-            spyOn(autocomplete, 'open').and.callThrough();
-            spyOn(autocomplete.target, 'open').and.callThrough();
+            vi.spyOn(autocomplete.target, 'close');
+            vi.spyOn(autocomplete, 'open');
+            vi.spyOn(autocomplete.target, 'open');
             expect(autocomplete.target.close).not.toHaveBeenCalled();
             UIInteractions.setInputElementValue(input, 'a', fixture);
             tick();
@@ -150,8 +150,8 @@ describe('IgxAutocomplete', () => {
 
         }));
         it('Should close the dropdown when disabled dynamically', fakeAsync(() => {
-            spyOn(autocomplete.target, 'open').and.callThrough();
-            spyOn(autocomplete.target, 'close').and.callThrough();
+            vi.spyOn(autocomplete.target, 'open');
+            vi.spyOn(autocomplete.target, 'close');
 
             UIInteractions.setInputElementValue(input, 's', fixture);
             tick();
@@ -190,9 +190,7 @@ describe('IgxAutocomplete', () => {
 
             // Click in center of the body.
             const bodyRect = document.body.getBoundingClientRect();
-            UIInteractions.simulateMouseEvent('click', document.body,
-                                    bodyRect.left + bodyRect.width / 2,
-                                    bodyRect.top + bodyRect.height / 2);
+            UIInteractions.simulateMouseEvent('click', document.body, bodyRect.left + bodyRect.width / 2, bodyRect.top + bodyRect.height / 2);
             tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
@@ -312,7 +310,7 @@ describe('IgxAutocomplete', () => {
         });
         it('Should not open dropdown when disabled', fakeAsync(() => {
             fixture.detectChanges();
-            spyOn(autocomplete.target, 'open').and.callThrough();
+            vi.spyOn(autocomplete.target, 'open');
             const dropdownListScrollElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_SCROLL));
 
             autocomplete.disabled = true;
@@ -388,13 +386,13 @@ describe('IgxAutocomplete', () => {
                 for (let itemIndex = 0; itemIndex < filteredTowns.length; itemIndex++) {
                     const itemElement = dropdownListScrollElement.children[itemIndex].nativeElement;
                     expect(itemElement.textContent.trim()).
-                    toEqual(filteredTowns[itemIndex]);
+                        toEqual(filteredTowns[itemIndex]);
                     const isFocused = itemIndex === 0 ? true : false;
-                    const hasFocusedClass =
-                    itemElement.classList.contains(CSS_CLASS_DROP_DOWN_ITEM_FOCUSED);
+                    const hasFocusedClass = itemElement.classList.contains(CSS_CLASS_DROP_DOWN_ITEM_FOCUSED);
                     if (isFocused) {
                         expect(hasFocusedClass).toBeTruthy();
-                    } else {
+                    }
+                    else {
                         expect(hasFocusedClass).toBeFalsy();
                     }
                     expect(dropDown.items[itemIndex].focused).toEqual(isFocused);
@@ -585,7 +583,7 @@ describe('IgxAutocomplete', () => {
         it('Should trigger selectionChanging event on item selection', fakeAsync(() => {
             let startsWith = 'st';
             let filteredTowns = fixture.componentInstance.filterTowns(startsWith);
-            spyOn(autocomplete.selectionChanging, 'emit').and.callThrough();
+            vi.spyOn(autocomplete.selectionChanging, 'emit');
             UIInteractions.setInputElementValue(input, startsWith, fixture);
             tick();
 
@@ -616,7 +614,7 @@ describe('IgxAutocomplete', () => {
             expect(fixture.componentInstance.townSelected).toBe('s');
         }));
         it('Should trigger selectionChanging only once when the event is cancelled (issue #7483)', fakeAsync(() => {
-            spyOn(autocomplete.selectionChanging, 'emit').and.callThrough();
+            vi.spyOn(autocomplete.selectionChanging, 'emit');
 
             fixture.componentInstance.selectionChanging = (args) => {
                 args.cancel = true;
@@ -646,12 +644,12 @@ describe('IgxAutocomplete', () => {
         }));
         it('Should call onInput/open/close methods properly', fakeAsync(() => {
             let startsWith = 'g';
-            spyOn(autocomplete, 'onInput').and.callThrough();
-            spyOn(autocomplete, 'handleKeyDown').and.callThrough();
-            spyOn(autocomplete, 'close').and.callThrough();
-            spyOn(autocomplete.target, 'close').and.callThrough();
-            spyOn(autocomplete.target, 'open').and.callThrough();
-            spyOn(autocomplete.target.opening, 'emit').and.callThrough();
+            vi.spyOn(autocomplete, 'onInput');
+            vi.spyOn(autocomplete, 'handleKeyDown');
+            vi.spyOn(autocomplete, 'close');
+            vi.spyOn(autocomplete.target, 'close');
+            vi.spyOn(autocomplete.target, 'open');
+            vi.spyOn(autocomplete.target.opening, 'emit');
 
             UIInteractions.setInputElementValue(input, startsWith, fixture);
             tick();
@@ -681,7 +679,7 @@ describe('IgxAutocomplete', () => {
             expect(autocomplete.target.close).toHaveBeenCalledTimes(2);
 
             // IgxDropDownItemNavigationDirective handleKeyDown is not called when dropdown is closed
-            spyOn(IgxDropDownItemNavigationDirective.prototype, 'handleKeyDown').and.callThrough();
+            vi.spyOn(IgxDropDownItemNavigationDirective.prototype, 'handleKeyDown');
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
             fixture.detectChanges();
             tick();
@@ -726,9 +724,9 @@ describe('IgxAutocomplete', () => {
             const mockObj = {
                 key: 'Home',
                 code: 'Home',
-                preventDefault: () => {}
+                preventDefault: () => { }
             };
-            spyOn(mockObj, 'preventDefault');
+            vi.spyOn(mockObj, 'preventDefault');
             const inputDebug = fixture.debugElement.queryAll(By.css('.' + INPUT_CSS_CLASS))[0];
             inputDebug.triggerEventHandler('keydown', mockObj);
             expect(mockObj.preventDefault).not.toHaveBeenCalled();
@@ -965,10 +963,14 @@ export class IgxAutocompletePipeStartsWith implements PipeTransform {
     ]
 })
 class AutocompleteComponent {
-    @ViewChild(IgxAutocompleteDirective, { static: true }) public autocomplete: IgxAutocompleteDirective;
-    @ViewChild(IgxInputGroupComponent, { static: true }) public group: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, { static: true }) public input: IgxInputDirective;
-    @ViewChild(IgxDropDownComponent, { static: true }) public dropDown: IgxDropDownComponent;
+    @ViewChild(IgxAutocompleteDirective, { static: true })
+    public autocomplete: IgxAutocompleteDirective;
+    @ViewChild(IgxInputGroupComponent, { static: true })
+    public group: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true })
+    public input: IgxInputDirective;
+    @ViewChild(IgxDropDownComponent, { static: true })
+    public dropDown: IgxDropDownComponent;
     public townSelected;
     public towns;
     public ddWidth = null;
@@ -1010,8 +1012,10 @@ class AutocompleteComponent {
     ]
 })
 class AutocompleteInputComponent extends AutocompleteComponent {
-    @ViewChild('plainInput', { static: true }) public plainInput: ElementRef<HTMLInputElement>;
-    @ViewChild('textarea', { static: true }) public textarea: ElementRef<HTMLTextAreaElement>;
+    @ViewChild('plainInput', { static: true })
+    public plainInput: ElementRef<HTMLInputElement>;
+    @ViewChild('textarea', { static: true })
+    public textarea: ElementRef<HTMLTextAreaElement>;
 }
 
 @Component({
@@ -1052,11 +1056,16 @@ class AutocompleteInputComponent extends AutocompleteComponent {
 })
 
 class AutocompleteFormComponent {
-    @ViewChild(IgxAutocompleteDirective, { static: true }) public autocomplete: IgxAutocompleteDirective;
-    @ViewChild(IgxInputGroupComponent, { static: true }) public group: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, { static: true }) public input: IgxInputDirective;
-    @ViewChild(IgxDropDownComponent, { static: true }) public dropDown: IgxDropDownComponent;
-    @ViewChild('plainInput', { static: true }) public plainInput: ElementRef<HTMLInputElement>;
+    @ViewChild(IgxAutocompleteDirective, { static: true })
+    public autocomplete: IgxAutocompleteDirective;
+    @ViewChild(IgxInputGroupComponent, { static: true })
+    public group: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true })
+    public input: IgxInputDirective;
+    @ViewChild(IgxDropDownComponent, { static: true })
+    public dropDown: IgxDropDownComponent;
+    @ViewChild('plainInput', { static: true })
+    public plainInput: ElementRef<HTMLInputElement>;
     public towns: string[];
 
     public reactiveForm: UntypedFormGroup;

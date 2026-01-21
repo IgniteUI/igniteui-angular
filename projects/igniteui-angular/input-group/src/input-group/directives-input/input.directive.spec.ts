@@ -777,7 +777,7 @@ describe('IgxInput', () => {
         fixture.detectChanges();
 
         expect(igxInput.value).toEqual('C:\\fakepath\\filename.jpg');
-        expect(form.controls['fileInput'].value).toEqual('C:\\fakepath\\filename.jpg')
+        expect(form.controls['fileInput'].value).toEqual('C:\\fakepath\\filename.jpg');
 
         const clearButton = igxInputGroup.element.nativeElement.querySelector('.igx-input-group__clear-icon');
         expect(clearButton).toBeDefined();
@@ -942,8 +942,10 @@ describe('IgxInput', () => {
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, FormsModule]
 })
 class InputsWithSameNameAttributesComponent {
-    @ViewChildren('igxInputGroup') public igxInputGroup: QueryList<DebugElement>;
-    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
+    @ViewChildren('igxInputGroup')
+    public igxInputGroup: QueryList<DebugElement>;
+    @ViewChild(IgxInputDirective, { static: true })
+    public igxInput: IgxInputDirective;
 
     public model = {
         firstName: null
@@ -961,8 +963,10 @@ class InputsWithSameNameAttributesComponent {
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 class InputComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true })
+    public igxInput: IgxInputDirective;
 }
 
 @Component({
@@ -987,7 +991,8 @@ class TextareaComponent {
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 class InputWithPlaceholderComponent {
-    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
+    @ViewChild(IgxInputDirective, { static: true })
+    public igxInput: IgxInputDirective;
 }
 
 @Component({
@@ -1000,8 +1005,10 @@ class InputWithPlaceholderComponent {
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 class FilledInputComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true })
+    public igxInput: IgxInputDirective;
 }
 
 @Component({
@@ -1014,8 +1021,10 @@ class FilledInputComponent {
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 class DisabledInputComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true })
+    public igxInput: IgxInputDirective;
 }
 
 @Component({
@@ -1028,8 +1037,10 @@ class DisabledInputComponent {
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 class RequiredInputComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true })
+    public igxInput: IgxInputDirective;
 }
 
 @Component({
@@ -1040,8 +1051,10 @@ class RequiredInputComponent {
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, FormsModule]
 })
 class RequiredTwoWayDataBoundInputComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true })
+    public igxInput: IgxInputDirective;
 
     public user = {
         firstName: ''
@@ -1093,15 +1106,23 @@ class RequiredTwoWayDataBoundInputComponent {
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, FormsModule]
 })
 class InitiallyFilledInputComponent {
-    @ViewChild('igxInputGroupNotFilledUndefined', { static: true }) public igxInputGroupNotFilledUndefined: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupNotFilledNull', { static: true }) public igxInputGroupNotFilledNull: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupNotFilledEmpty', { static: true }) public igxInputGroupNotFilledEmpty: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupNotFilledUndefined', { static: true })
+    public igxInputGroupNotFilledUndefined: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupNotFilledNull', { static: true })
+    public igxInputGroupNotFilledNull: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupNotFilledEmpty', { static: true })
+    public igxInputGroupNotFilledEmpty: IgxInputGroupComponent;
 
-    @ViewChild('igxInputGroupFilledString', { static: true }) public igxInputGroupFilledString: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupFilledNumber', { static: true }) public igxInputGroupFilledNumber: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupFilledBoolFalse', { static: true }) public igxInputGroupFilledBoolFalse: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupFilledBoolTrue', { static: true }) public igxInputGroupFilledBoolTrue: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupFilledDate', { static: true }) public igxInputGroupFilledDate: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledString', { static: true })
+    public igxInputGroupFilledString: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledNumber', { static: true })
+    public igxInputGroupFilledNumber: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledBoolFalse', { static: true })
+    public igxInputGroupFilledBoolFalse: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledBoolTrue', { static: true })
+    public igxInputGroupFilledBoolTrue: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledDate', { static: true })
+    public igxInputGroupFilledDate: IgxInputGroupComponent;
 
     public notFilledUndefined = undefined;
     public notFilledNull = null;
@@ -1125,8 +1146,10 @@ class InitiallyFilledInputComponent {
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 class DataBoundDisabledInputComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true })
+    public igxInput: IgxInputDirective;
 
     public disabled = false;
 }
@@ -1190,7 +1213,8 @@ class DataBoundDisabledInputWithoutValueComponent extends DataBoundDisabledInput
 class ReactiveFormComponent {
     private fb = inject(UntypedFormBuilder);
 
-    @ViewChild('strinput', { static: true, read: IgxInputDirective }) public strIgxInput: IgxInputDirective;
+    @ViewChild('strinput', { static: true, read: IgxInputDirective })
+    public strIgxInput: IgxInputDirective;
 
     public form = this.fb.group({
         str: ['', Validators.required],
@@ -1266,8 +1290,10 @@ class ToggleRequiredWithNgModelInputComponent {
 })
 
 class InputReactiveFormComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild('inputReactive', { read: IgxInputDirective }) public input: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('inputReactive', { read: IgxInputDirective })
+    public input: IgxInputDirective;
     public reactiveForm: UntypedFormGroup;
 
     public validationType = {
@@ -1332,10 +1358,14 @@ class InputReactiveFormComponent {
 })
 
 class FileInputFormComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild('fileInput', { read: IgxInputDirective }) public input: IgxInputDirective;
-    @ViewChild('igxInputGroupNgModel', { static: true }) public igxInputGroupNgModel: IgxInputGroupComponent;
-    @ViewChild('inputNgModel', { read: IgxInputDirective }) public inputWithNgModel: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('fileInput', { read: IgxInputDirective })
+    public input: IgxInputDirective;
+    @ViewChild('igxInputGroupNgModel', { static: true })
+    public igxInputGroupNgModel: IgxInputGroupComponent;
+    @ViewChild('inputNgModel', { read: IgxInputDirective })
+    public inputWithNgModel: IgxInputDirective;
     public formWithFileInput: UntypedFormGroup;
     public model = {
         inputValue: null

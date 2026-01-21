@@ -23,8 +23,8 @@ describe('Filter', () => {
         const items = list.items;
 
         for (const item of items) {
-                expect(item instanceof IgxListItemComponent).toBeTruthy();
-            }
+            expect(item instanceof IgxListItemComponent).toBeTruthy();
+        }
 
         visibleItems = items.filter((listItem) => !listItem.hidden);
         expect(visibleItems.length).toBe(3);
@@ -178,8 +178,10 @@ describe('Filter', () => {
     imports: [IgxListComponent, IgxListItemComponent, IgxFilterDirective]
 })
 class DeclarativeListTestComponent {
-    @ViewChild(IgxListComponent, { static: true }) public list: IgxListComponent;
-    @ViewChild('logInput', { static: true }) public logInput: any;
+    @ViewChild(IgxListComponent, { static: true })
+    public list: IgxListComponent;
+    @ViewChild('logInput', { static: true })
+    public logInput: any;
 
     public filterValue: string;
     public isCanceled = false;
@@ -194,13 +196,13 @@ class DeclarativeListTestComponent {
         return options;
     }
 
-    public filteringHandler = function(args) {
+    public filteringHandler = function (args) {
         args.cancel = this.isCanceled;
         this.logInput.nativeElement.value += 'filtering;';
         this.filteringArgs = args;
     };
 
-    public filteredHandler = function(args) {
+    public filteredHandler = function (args) {
         this.logInput.nativeElement.value += 'filtered;';
         this.filteredArgs = args;
     };
@@ -216,7 +218,8 @@ class DeclarativeListTestComponent {
     imports: [IgxListComponent, IgxListItemComponent, IgxFilterPipe]
 })
 class DynamicListTestComponent {
-    @ViewChild(IgxListComponent, { static: true }) public list: IgxListComponent;
+    @ViewChild(IgxListComponent, { static: true })
+    public list: IgxListComponent;
 
     public filterValue: string;
     public isCanceled = false;

@@ -3,12 +3,7 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { BottomTabBarTestComponent,
-        TabBarRoutingTestComponent,
-        TabBarTabsOnlyModeTestComponent,
-        TabBarTestComponent,
-        BottomNavRoutingGuardTestComponent,
-        BottomNavTestHtmlAttributesComponent } from '../../../test-utils/bottom-nav-components.spec';
+import { BottomTabBarTestComponent, TabBarRoutingTestComponent, TabBarTabsOnlyModeTestComponent, TabBarTestComponent, BottomNavRoutingGuardTestComponent, BottomNavTestHtmlAttributesComponent } from '../../../test-utils/bottom-nav-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxBottomNavContentComponent } from './bottom-nav-content.component';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
@@ -324,9 +319,9 @@ describe('IgxBottomNav', () => {
                 bottomNav = fixture.componentInstance.bottomNav;
                 tabItems = bottomNav.items.toArray();
                 headers = tabItems.map(item => item.headerComponent.nativeElement);
-                itemChangeSpy = spyOn(bottomNav.selectedItemChange, 'emit').and.callThrough();
-                indexChangeSpy = spyOn(bottomNav.selectedIndexChange, 'emit').and.callThrough();
-                indexChangingSpy = spyOn(bottomNav.selectedIndexChanging, 'emit').and.callThrough();
+                itemChangeSpy = vi.spyOn(bottomNav.selectedItemChange, 'emit');
+                indexChangeSpy = vi.spyOn(bottomNav.selectedIndexChange, 'emit');
+                indexChangingSpy = vi.spyOn(bottomNav.selectedIndexChanging, 'emit');
             }));
 
             it('Validate the fired events on clicking tab headers.', fakeAsync(() => {
@@ -384,9 +379,9 @@ describe('IgxBottomNav', () => {
                 bottomNav = fixture.componentInstance.bottomNav;
                 tabItems = bottomNav.items.toArray();
                 headers = tabItems.map(item => item.headerComponent.nativeElement);
-                itemChangeSpy = spyOn(bottomNav.selectedItemChange, 'emit');
-                indexChangeSpy = spyOn(bottomNav.selectedIndexChange, 'emit');
-                indexChangingSpy = spyOn(bottomNav.selectedIndexChanging, 'emit');
+                itemChangeSpy = vi.spyOn(bottomNav.selectedItemChange, 'emit');
+                indexChangeSpy = vi.spyOn(bottomNav.selectedIndexChange, 'emit');
+                indexChangingSpy = vi.spyOn(bottomNav.selectedIndexChanging, 'emit');
             }));
 
             it('Validate the events are not fired on clicking tab headers before pressing enter/space key.', fakeAsync(() => {

@@ -35,7 +35,7 @@ describe('Localization', () => {
             expect(i18nFormatter.formatCurrency(12345, 'en', 'symbol', 'EUR', '1.1-3')).toEqual('€12,345.0');
             expect(i18nFormatter.formatCurrency('12345', 'en', 'symbol', 'EUR', '1.1-3')).toEqual('€12,345.0');
         });
-    })
+    });
 
     describe('date formatting', () => {
         it('should format string to dateTime using Angular', () => {

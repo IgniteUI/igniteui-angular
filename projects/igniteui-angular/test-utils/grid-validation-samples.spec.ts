@@ -55,7 +55,8 @@ export class IgxGridValidationTestBaseComponent {
     ];
     public data = [...data];
 
-    @ViewChild('grid', { read: IgxGridComponent, static: true }) public grid: IgxGridComponent;
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
 }
 
 @Component({
@@ -105,10 +106,10 @@ export class IgxGridValidationTestCustomErrorComponent extends IgxGridValidation
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellEditorTemplateDirective, ForbiddenValidatorDirective, IGX_GRID_VALIDATION_DIRECTIVES, ReactiveFormsModule, FormsModule]
 })
 export class IgxGridCustomEditorsComponent extends IgxGridValidationTestCustomErrorComponent {
-    @ViewChild('modelTemplate', {read: TemplateRef })
+    @ViewChild('modelTemplate', { read: TemplateRef })
     public modelTemplate: TemplateRef<any>;
 
-    @ViewChild('formControlTemplate', {read: TemplateRef })
+    @ViewChild('formControlTemplate', { read: TemplateRef })
     public formControlTemplate: TemplateRef<any>;
 }
 
@@ -146,5 +147,6 @@ export class IgxTreeGridValidationTestComponent {
     ];
     public data = [...SampleTestData.employeeSmallTreeData()];
 
-    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, { static: true })
+    public treeGrid: IgxTreeGridComponent;
 }

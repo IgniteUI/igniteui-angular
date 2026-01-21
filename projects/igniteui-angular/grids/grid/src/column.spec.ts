@@ -8,15 +8,7 @@ import localeJa from '@angular/common/locales/ja';
 import { IgxGridComponent } from './grid.component';
 import { GridTemplateStrings, ColumnDefinitions } from '../../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
-import {
-    ColumnHiddenFromMarkupComponent,
-    ColumnCellFormatterComponent,
-    DynamicColumnsComponent,
-    GridAddColumnComponent,
-    IgxGridCurrencyColumnComponent,
-    IgxGridPercentColumnComponent,
-    IgxGridDateTimeColumnComponent
-} from '../../../test-utils/grid-samples.spec';
+import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent, DynamicColumnsComponent, GridAddColumnComponent, IgxGridCurrencyColumnComponent, IgxGridPercentColumnComponent, IgxGridDateTimeColumnComponent } from '../../../test-utils/grid-samples.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
@@ -195,7 +187,7 @@ describe('IgxGrid - Column properties #grid', () => {
         expect(headers[1].nativeElement.textContent).toMatch('Name');
     }));
 
-    it('should support adding and removing columns through a declared iterable', fakeAsync(/** columnList.changes rAF */() => {
+    it('should support adding and removing columns through a declared iterable', fakeAsync(/** columnList.changes rAF */ () => {
         const fix = TestBed.createComponent(ColumnsFromIterableComponent);
         fix.detectChanges();
 
@@ -331,14 +323,11 @@ describe('IgxGrid - Column properties #grid', () => {
 
         const grid = fixture.componentInstance.instance;
 
-        grid.getColumnByName('Name')._cells.forEach(c =>
-            expect(c.nativeElement.querySelector('.customCellTemplate')).toBeDefined());
+        grid.getColumnByName('Name')._cells.forEach(c => expect(c.nativeElement.querySelector('.customCellTemplate')).toBeDefined());
 
-        grid.headerCellList.forEach(header =>
-            expect(header.nativeElement.querySelector('.customHeaderTemplate')).toBeDefined());
+        grid.headerCellList.forEach(header => expect(header.nativeElement.querySelector('.customHeaderTemplate')).toBeDefined());
 
-        grid.summariesRowList.forEach(summary =>
-            expect(summary.nativeElement.querySelector('.customSummaryTemplate')).not.toBeNull());
+        grid.summariesRowList.forEach(summary => expect(summary.nativeElement.querySelector('.customSummaryTemplate')).not.toBeNull());
 
         const cell = grid.getCellByColumn(0, 'ID');
         cell.editMode = true;
@@ -632,15 +621,13 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '$0', '$20,000', '$39,004', '$3,900.4']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '$0', '$20,000', '$39,004', '$3,900.4']);
 
             grid.locale = 'fr-FR';
             fix.detectChanges();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0 €', '20 000 €', '39 004 €', '3 900,4 €']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0 €', '20 000 €', '39 004 €', '3 900,4 €']);
         });
 
         it('filtering UI list should be populated with correct values based on the currency code, locale and/or pipeArgs', fakeAsync(() => {
@@ -790,8 +777,7 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '-70%', '1,100%', '2,153.9%', '215.39%']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '-70%', '1,100%', '2,153.9%', '215.39%']);
         });
 
         it('filtering UI list should be populated with correct values based on the currency code, locale and/or pipeArgs', fakeAsync(() => {
@@ -971,10 +957,8 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
-                ['Count', 'Earliest', 'Latest'], ['10', 'Mar 12, 2015, 9:31:22 PM', 'Aug 3, 2021, 3:15:00 PM']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['10', '6:40:18 AM', '8:20:24 PM']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['10', 'Mar 12, 2015, 9:31:22 PM', 'Aug 3, 2021, 3:15:00 PM']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['10', '6:40:18 AM', '8:20:24 PM']);
 
             column.pipeArgs = { format: 'short' };
             receiveTimeColumn.pipeArgs = { format: 'shortTime' };
@@ -982,10 +966,8 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
-                ['Count', 'Earliest', 'Latest'], ['10', '3/12/15, 9:31 PM', '8/3/21, 3:15 PM']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['10', '6:40 AM', '8:20 PM']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['10', '3/12/15, 9:31 PM', '8/3/21, 3:15 PM']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['10', '6:40 AM', '8:20 PM']);
         });
 
         it('DateTime: filtering UI list should be populated with correct values based on the pipeArgs', fakeAsync(() => {
@@ -1091,7 +1073,7 @@ describe('IgxGrid - Column properties #grid', () => {
             receiveTimeColumn.editorOptions = { dateTimeFormat: 'h-mm-ss aaaaa' };
             fix.detectChanges();
 
-            producedDateColumn._cells[0].setEditMode(true)
+            producedDateColumn._cells[0].setEditMode(true);
             fix.detectChanges();
             tick();
 
@@ -1103,7 +1085,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             expect((dateTimeEditor.nativeElement as any).value).toEqual('2014-10-01');
 
-            orderDateColumn._cells[0].setEditMode(true)
+            orderDateColumn._cells[0].setEditMode(true);
             fix.detectChanges();
             tick();
 
@@ -1115,7 +1097,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             expect((dateTimeEditor.nativeElement as any).value).toEqual('2015--10--01');
 
-            receiveTimeColumn._cells[0].setEditMode(true)
+            receiveTimeColumn._cells[0].setEditMode(true);
             fix.detectChanges();
             tick();
 
@@ -1267,7 +1249,7 @@ describe('IgxGrid - Column properties #grid', () => {
             };
             fix.detectChanges();
 
-            producedDateColumn._cells[0].setEditMode(true)
+            producedDateColumn._cells[0].setEditMode(true);
             fix.detectChanges();
 
             let inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
@@ -1278,7 +1260,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             expect(dateTimeEditor.nativeElement.value).toEqual('10/01/2014');
 
-            orderDateColumn._cells[0].setEditMode(true)
+            orderDateColumn._cells[0].setEditMode(true);
             fix.detectChanges();
 
             inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
@@ -1289,7 +1271,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             expect(dateTimeEditor.nativeElement.value.normalize('NFKC')).toEqual('10/01/2015, 11:37:22 AM');
 
-            receiveTimeColumn._cells[0].setEditMode(true)
+            receiveTimeColumn._cells[0].setEditMode(true);
             fix.detectChanges();
 
             inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
@@ -1307,9 +1289,9 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             const sortedValues = [new Date(2015, 2, 12, 21, 31, 22), new Date(2015, 9, 1, 11, 37, 22), new Date(2016, 7, 18, 11, 17, 22),
-            new Date(2018, 6, 14, 17, 27, 23), new Date(2019, 3, 17, 5, 5, 15), new Date(2019, 9, 30, 16, 17, 27),
-            new Date(2021, 4, 11, 7, 47, 1), new Date(2021, 4, 11, 18, 37, 2),
-            new Date(2021, 7, 3, 15, 15, 0), new Date(2021, 7, 3, 15, 15, 0)];
+                new Date(2018, 6, 14, 17, 27, 23), new Date(2019, 3, 17, 5, 5, 15), new Date(2019, 9, 30, 16, 17, 27),
+                new Date(2021, 4, 11, 7, 47, 1), new Date(2021, 4, 11, 18, 37, 2),
+                new Date(2021, 7, 3, 15, 15, 0), new Date(2021, 7, 3, 15, 15, 0)];
 
             expect(grid.rowList.length).toEqual(sortedValues.length);
             sortedValues.forEach((value, index) => {
@@ -1353,41 +1335,41 @@ describe('IgxGrid - Column properties #grid', () => {
         let fix: ComponentFixture<IgxGridComponent>;
         let grid: IgxGridComponent;
         const dataWithImages = [{
-            avatar: './test-utils/assets/images/avatar/1.jpg',
-            phone: '770-504-2217',
-            text: 'Terrance Orta',
-            available: false
-        }, {
-            avatar: './test-utils/assets/images/avatar/2.jpg',
-            phone: '423-676-2869',
-            text: 'Richard Mahoney',
-            available: true
-        }, {
-            avatar: './test-utils/assets/images/avatar/3.jpg',
-            phone: '859-496-2817',
-            text: 'Donna Price',
-            available: true
-        }, {
-            avatar: './test-utils/assets/images/avatar/4.jpg',
-            phone: '901-747-3428',
-            text: 'Lisa Landers',
-            available: true
-        }, {
-            avatar: './test-utils/assets/images/avatar/12.jpg',
-            phone: '573-394-9254',
-            text: 'Dorothy H. Spencer',
-            available: true
-        }, {
-            avatar: './test-utils/assets/images/avatar/13.jpg',
-            phone: '323-668-1482',
-            text: 'Stephanie May',
-            available: false
-        }, {
-            avatar: './test-utils/assets/images/avatar/14.jpg',
-            phone: '401-661-3742',
-            text: 'Marianne Taylor',
-            available: true
-        }];
+                avatar: './test-utils/assets/images/avatar/1.jpg',
+                phone: '770-504-2217',
+                text: 'Terrance Orta',
+                available: false
+            }, {
+                avatar: './test-utils/assets/images/avatar/2.jpg',
+                phone: '423-676-2869',
+                text: 'Richard Mahoney',
+                available: true
+            }, {
+                avatar: './test-utils/assets/images/avatar/3.jpg',
+                phone: '859-496-2817',
+                text: 'Donna Price',
+                available: true
+            }, {
+                avatar: './test-utils/assets/images/avatar/4.jpg',
+                phone: '901-747-3428',
+                text: 'Lisa Landers',
+                available: true
+            }, {
+                avatar: './test-utils/assets/images/avatar/12.jpg',
+                phone: '573-394-9254',
+                text: 'Dorothy H. Spencer',
+                available: true
+            }, {
+                avatar: './test-utils/assets/images/avatar/13.jpg',
+                phone: '323-668-1482',
+                text: 'Stephanie May',
+                available: false
+            }, {
+                avatar: './test-utils/assets/images/avatar/14.jpg',
+                phone: '401-661-3742',
+                text: 'Marianne Taylor',
+                available: true
+            }];
 
         beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxGridComponent);
@@ -1402,11 +1384,11 @@ describe('IgxGrid - Column properties #grid', () => {
         it('should initialize correctly with autoGenerate and image data', () => {
             const column = grid.getColumnByName('avatar');
             expect(column.dataType).toBe(GridColumnDataType.Image);
-            expect(column.sortable).toBeFalse();
-            expect(column.groupable).toBeFalse();
-            expect(column.filterable).toBeFalse();
-            expect(column.editable).toBeFalse();
-            expect(column.hasSummary).toBeFalse();
+            expect(column.sortable).toBe(false);
+            expect(column.groupable).toBe(false);
+            expect(column.filterable).toBe(false);
+            expect(column.editable).toBe(false);
+            expect(column.hasSummary).toBe(false);
 
             const cell = column._cells[0];
             expect(cell.nativeElement.firstElementChild.tagName).toBe('IMG');
@@ -1652,7 +1634,7 @@ describe('IgxGrid - Column properties #grid', () => {
             for (const attr of columnAttributes) {
                 expect(column[attr]).toBe(true, `Column attribute: '${attr}' failed`);
             }
-        }))
+        }));
     });
 });
 
@@ -1669,8 +1651,8 @@ export class ColumnsFromIterableComponent {
 }
 
 interface IColumnConfig {
-    field: string,
-    width: string,
+    field: string;
+    width: string;
     minWidth?: string;
     maxWidth?: string;
     hidden?: boolean;

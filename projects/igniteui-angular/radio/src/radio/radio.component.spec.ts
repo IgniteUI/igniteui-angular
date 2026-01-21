@@ -262,7 +262,8 @@ describe('IgxRadio', () => {
     imports: [IgxRadioComponent]
 })
 class InitRadioComponent {
-    @ViewChild('radio', { static: true }) public radio: IgxRadioComponent;
+    @ViewChild('radio', { static: true })
+    public radio: IgxRadioComponent;
 }
 
 @Component({
@@ -274,7 +275,8 @@ class InitRadioComponent {
     imports: [FormsModule, IgxRadioComponent]
 })
 class RadioWithModelComponent {
-    @ViewChildren(IgxRadioComponent) public radios;
+    @ViewChildren(IgxRadioComponent)
+    public radios;
 
     public selected = 'Foo';
 }
@@ -292,15 +294,16 @@ class RadioWithModelComponent {
     imports: [FormsModule, IgxRadioComponent]
 })
 class DisabledRadioComponent {
-    @ViewChildren(IgxRadioComponent) public radios;
+    @ViewChildren(IgxRadioComponent)
+    public radios;
 
     public items = [{
-        value: 'Foo',
-        disabled: false
-    }, {
-        value: 'Bar',
-        disabled: true
-    }];
+            value: 'Foo',
+            disabled: false
+        }, {
+            value: 'Bar',
+            disabled: true
+        }];
 
     public selected = 'Foo';
 }
@@ -318,7 +321,8 @@ class DisabledRadioComponent {
     imports: [FormsModule, IgxRadioComponent]
 })
 class RequiredRadioComponent {
-    @ViewChildren(IgxRadioComponent) public radios;
+    @ViewChildren(IgxRadioComponent)
+    public radios;
 }
 
 @Component({
@@ -327,7 +331,8 @@ class RequiredRadioComponent {
     imports: [IgxRadioComponent]
 })
 class RadioExternalLabelComponent {
-    @ViewChild('radio', { static: true }) public radio: IgxRadioComponent;
+    @ViewChild('radio', { static: true })
+    public radio: IgxRadioComponent;
     public label = 'My Label';
 }
 
@@ -336,7 +341,8 @@ class RadioExternalLabelComponent {
     imports: [IgxRadioComponent]
 })
 class RadioInvisibleLabelComponent {
-    @ViewChild('radio', { static: true }) public radio: IgxRadioComponent;
+    @ViewChild('radio', { static: true })
+    public radio: IgxRadioComponent;
     public label = 'Invisible Label';
 }
 

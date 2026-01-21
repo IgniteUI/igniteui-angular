@@ -51,8 +51,7 @@ export class ControlsFunction {
 
     public static getCheckboxElement(name: string, element: DebugElement) {
         const checkboxElements = element.queryAll(By.css('igx-checkbox'));
-        const chkElement = checkboxElements.find((el) =>
-            (el.context as IgxCheckboxComponent).placeholderLabel.nativeElement.innerText === name);
+        const chkElement = checkboxElements.find((el) => (el.context as IgxCheckboxComponent).placeholderLabel.nativeElement.innerText === name);
 
         return chkElement;
     }

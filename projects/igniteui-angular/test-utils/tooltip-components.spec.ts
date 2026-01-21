@@ -20,8 +20,10 @@ import { IgxToggleActionDirective, IgxToggleDirective, IgxTooltipDirective, IgxT
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
 export class IgxTooltipSingleTargetComponent {
-    @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
-    @ViewChild(IgxTooltipTargetDirective, { static: false }) public tooltipTarget: IgxTooltipTargetDirective;
+    @ViewChild(IgxTooltipDirective, { static: true })
+    public tooltip: IgxTooltipDirective;
+    @ViewChild(IgxTooltipTargetDirective, { static: false })
+    public tooltipTarget: IgxTooltipTargetDirective;
     public cancelShowing = false;
     public cancelHiding = false;
     public showButton = true;
@@ -66,11 +68,16 @@ export class IgxTooltipSingleTargetComponent {
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
 export class IgxTooltipMultipleTargetsComponent {
-    @ViewChild('targetOne', { read: IgxTooltipTargetDirective, static: true }) public targetOne: IgxTooltipTargetDirective;
-    @ViewChild('targetTwo', { read: IgxTooltipTargetDirective, static: true }) public targetTwo: IgxTooltipTargetDirective;
-    @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
-    @ViewChild('customClose', { static: true }) public customCloseTemplate: TemplateRef<any>;
-    @ViewChild('secondCustomClose', { static: true }) public secondCustomCloseTemplate: TemplateRef<any>;
+    @ViewChild('targetOne', { read: IgxTooltipTargetDirective, static: true })
+    public targetOne: IgxTooltipTargetDirective;
+    @ViewChild('targetTwo', { read: IgxTooltipTargetDirective, static: true })
+    public targetTwo: IgxTooltipTargetDirective;
+    @ViewChild(IgxTooltipDirective, { static: true })
+    public tooltip: IgxTooltipDirective;
+    @ViewChild('customClose', { static: true })
+    public customCloseTemplate: TemplateRef<any>;
+    @ViewChild('secondCustomClose', { static: true })
+    public secondCustomCloseTemplate: TemplateRef<any>;
 }
 
 @Component({
@@ -95,10 +102,14 @@ export class IgxTooltipMultipleTargetsComponent {
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
 export class IgxTooltipMultipleTooltipsComponent {
-    @ViewChild('targetOne', { read: IgxTooltipTargetDirective, static: true }) public targetOne: IgxTooltipTargetDirective;
-    @ViewChild('targetTwo', { read: IgxTooltipTargetDirective, static: true }) public targetTwo: IgxTooltipTargetDirective;
-    @ViewChild('tooltipRef1', { read: IgxTooltipDirective, static: true }) public tooltipOne: IgxTooltipDirective;
-    @ViewChild('tooltipRef2', { read: IgxTooltipDirective, static: true }) public tooltipTwo: IgxTooltipDirective;
+    @ViewChild('targetOne', { read: IgxTooltipTargetDirective, static: true })
+    public targetOne: IgxTooltipTargetDirective;
+    @ViewChild('targetTwo', { read: IgxTooltipTargetDirective, static: true })
+    public targetTwo: IgxTooltipTargetDirective;
+    @ViewChild('tooltipRef1', { read: IgxTooltipDirective, static: true })
+    public tooltipOne: IgxTooltipDirective;
+    @ViewChild('tooltipRef2', { read: IgxTooltipDirective, static: true })
+    public tooltipTwo: IgxTooltipDirective;
 }
 
 
@@ -111,7 +122,8 @@ export class IgxTooltipMultipleTooltipsComponent {
     imports: [IgxTooltipTargetDirective]
 })
 export class IgxTooltipPlainStringComponent {
-    @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
+    @ViewChild(IgxTooltipTargetDirective, { static: true })
+    public tooltipTarget: IgxTooltipTargetDirective;
 }
 
 @Component({
@@ -125,9 +137,12 @@ export class IgxTooltipPlainStringComponent {
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective, IgxToggleActionDirective, IgxToggleDirective]
 })
 export class IgxTooltipWithToggleActionComponent {
-    @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
-    @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
-    @ViewChild(IgxToggleDirective, { static: true }) public toggleDir: IgxToggleDirective;
+    @ViewChild(IgxTooltipDirective, { static: true })
+    public tooltip: IgxTooltipDirective;
+    @ViewChild(IgxTooltipTargetDirective, { static: true })
+    public tooltipTarget: IgxTooltipTargetDirective;
+    @ViewChild(IgxToggleDirective, { static: true })
+    public toggleDir: IgxToggleDirective;
 }
 
 @Component({
@@ -145,8 +160,10 @@ export class IgxTooltipWithToggleActionComponent {
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
 export class IgxTooltipWithCloseButtonComponent {
-    @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
-    @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
+    @ViewChild(IgxTooltipDirective, { static: true })
+    public tooltip: IgxTooltipDirective;
+    @ViewChild(IgxTooltipTargetDirective, { static: true })
+    public tooltipTarget: IgxTooltipTargetDirective;
 }
 
 @Component({
@@ -165,8 +182,10 @@ export class IgxTooltipWithCloseButtonComponent {
     standalone: true
 })
 export class IgxTooltipWithNestedContentComponent {
-    @ViewChild(IgxTooltipDirective, { static: true }) public tooltip!: IgxTooltipDirective;
-    @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget!: IgxTooltipTargetDirective;
+    @ViewChild(IgxTooltipDirective, { static: true })
+    public tooltip!: IgxTooltipDirective;
+    @ViewChild(IgxTooltipTargetDirective, { static: true })
+    public tooltipTarget!: IgxTooltipTargetDirective;
 }
 
 @Component({
@@ -199,11 +218,17 @@ export class IgxTooltipWithNestedContentComponent {
     standalone: true
 })
 export class IgxTooltipNestedTooltipsComponent {
-    @ViewChild('targetLevel1', { read: IgxTooltipTargetDirective, static: true }) public targetLevel1: IgxTooltipTargetDirective;
-    @ViewChild('targetLevel2', { read: IgxTooltipTargetDirective, static: true }) public targetLevel2: IgxTooltipTargetDirective;
-    @ViewChild('targetLevel3', { read: IgxTooltipTargetDirective, static: true }) public targetLevel3: IgxTooltipTargetDirective;
+    @ViewChild('targetLevel1', { read: IgxTooltipTargetDirective, static: true })
+    public targetLevel1: IgxTooltipTargetDirective;
+    @ViewChild('targetLevel2', { read: IgxTooltipTargetDirective, static: true })
+    public targetLevel2: IgxTooltipTargetDirective;
+    @ViewChild('targetLevel3', { read: IgxTooltipTargetDirective, static: true })
+    public targetLevel3: IgxTooltipTargetDirective;
 
-    @ViewChild('tooltipLevel1', { read: IgxTooltipDirective, static: true }) public tooltipLevel1: IgxTooltipDirective;
-    @ViewChild('tooltipLevel2', { read: IgxTooltipDirective, static: true }) public tooltipLevel2: IgxTooltipDirective;
-    @ViewChild('tooltipLevel3', { read: IgxTooltipDirective, static: true }) public tooltipLevel3: IgxTooltipDirective;
+    @ViewChild('tooltipLevel1', { read: IgxTooltipDirective, static: true })
+    public tooltipLevel1: IgxTooltipDirective;
+    @ViewChild('tooltipLevel2', { read: IgxTooltipDirective, static: true })
+    public tooltipLevel2: IgxTooltipDirective;
+    @ViewChild('tooltipLevel3', { read: IgxTooltipDirective, static: true })
+    public tooltipLevel3: IgxTooltipDirective;
 }

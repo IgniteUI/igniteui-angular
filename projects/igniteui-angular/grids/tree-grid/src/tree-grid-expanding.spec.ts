@@ -1,14 +1,6 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-    IgxTreeGridExpandingComponent,
-    IgxTreeGridPrimaryForeignKeyComponent,
-    IgxTreeGridRowEditingComponent,
-    IgxTreeGridLoadOnDemandComponent,
-    IgxTreeGridLoadOnDemandHasChildrenComponent,
-    IgxTreeGridLoadOnDemandChildDataComponent,
-    IgxTreeGridCustomExpandersTemplateComponent
-} from '../../../test-utils/tree-grid-components.spec';
+import { IgxTreeGridExpandingComponent, IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridRowEditingComponent, IgxTreeGridLoadOnDemandComponent, IgxTreeGridLoadOnDemandHasChildrenComponent, IgxTreeGridLoadOnDemandChildDataComponent, IgxTreeGridCustomExpandersTemplateComponent } from '../../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec';
 import { first } from 'rxjs/operators';
 import { wait } from '../../../test-utils/ui-interactions.spec';
@@ -94,7 +86,8 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 for (let rowToCheck = 0; rowToCheck < rows.length; rowToCheck++) {
                     if (rowToCheck === rowToToggle) {
                         TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[rowToCheck]);
-                    } else {
+                    }
+                    else {
                         TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[rowToCheck]);
                     }
                 }
@@ -122,7 +115,8 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 for (let rowToCheck = 0; rowToCheck < rows.length; rowToCheck++) {
                     if (rowToCheck === rowToToggle) {
                         TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[rowToCheck]);
-                    } else {
+                    }
+                    else {
                         TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[rowToCheck]);
                     }
                 }
@@ -277,19 +271,19 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             expect(rows.length).toBe(4);
         });
 
-        it('should emit an event when expanding rows (API)', (done) => {
+        it('should emit an event when expanding rows (API)', async () => {
             const aRow = treeGrid.gridAPI.get_row_by_index(0);
             treeGrid.rowToggle.pipe(first()).subscribe((args) => {
                 expect(args.cancel).toBe(false);
                 expect(args.event).toBeUndefined();
                 expect(args.expanded).toBe(true);
                 expect(args.rowID.ID).toBe(147);
-                done();
+                ;
             });
             aRow.expanded = true;
         });
 
-        it('should emit an event when collapsing rows (API)', (done) => {
+        it('should emit an event when collapsing rows (API)', async () => {
             const aRow = treeGrid.gridAPI.get_row_by_index(0);
             aRow.expanded = true;
             fix.detectChanges();
@@ -298,26 +292,26 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(args.event).toBeUndefined();
                 expect(args.expanded).toBe(false);
                 expect(args.rowID.ID).toBe(147);
-                done();
+                ;
             });
             aRow.expanded = false;
             fix.detectChanges();
         });
 
-        it('should emit an event when expanding rows (UI)', (done) => {
+        it('should emit an event when expanding rows (UI)', async () => {
             treeGrid.rowToggle.pipe(first()).subscribe((args) => {
                 expect(args.cancel).toBe(false);
                 expect(args.event).toBeDefined();
                 expect(args.expanded).toBe(true);
                 expect(args.rowID.ID).toBe(147);
-                done();
+                ;
             });
             const rowsDOM = TreeGridFunctions.getAllRows(fix);
             const indicatorDivDOM = TreeGridFunctions.getExpansionIndicatorDiv(rowsDOM[0]);
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
         });
 
-        it('should emit an event when collapsing rows (UI)', (done) => {
+        it('should emit an event when collapsing rows (UI)', async () => {
             const rowsDOM = TreeGridFunctions.getAllRows(fix);
             const indicatorDivDOM = TreeGridFunctions.getExpansionIndicatorDiv(rowsDOM[0]);
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
@@ -327,7 +321,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(args.event).toBeDefined();
                 expect(args.expanded).toBe(false);
                 expect(args.rowID.ID).toBe(147);
-                done();
+                ;
             });
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
             fix.detectChanges();
@@ -538,7 +532,8 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 for (let rowToCheck = 0; rowToCheck < rows.length; rowToCheck++) {
                     if (rowToCheck === rowToToggle) {
                         TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[rowToCheck]);
-                    } else {
+                    }
+                    else {
                         TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[rowToCheck]);
                     }
                 }
@@ -565,7 +560,8 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 for (let rowToCheck = 0; rowToCheck < rows.length; rowToCheck++) {
                     if (rowToCheck === rowToToggle && (treeGrid.gridAPI as IgxTreeGridAPIService).allow_expansion_state_change(ri, false)) {
                         TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[rowToCheck]);
-                    } else {
+                    }
+                    else {
                         TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[rowToCheck]);
                     }
                 }
@@ -719,19 +715,19 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             expect(rows.length).toBe(3);
         });
 
-        it('should emit an event when expanding rows (API)', (done) => {
+        it('should emit an event when expanding rows (API)', async () => {
             const aRow = treeGrid.getRowByIndex(0);
             treeGrid.rowToggle.pipe(first()).subscribe((args) => {
                 expect(args.cancel).toBe(false);
                 expect(args.event).toBeUndefined();
                 expect(args.expanded).toBe(true);
                 expect(args.rowID).toBe(1);
-                done();
+                ;
             });
             aRow.expanded = true;
         });
 
-        it('should emit an event when collapsing rows (API)', (done) => {
+        it('should emit an event when collapsing rows (API)', async () => {
             const aRow = treeGrid.getRowByIndex(0);
             aRow.expanded = true;
             fix.detectChanges();
@@ -741,25 +737,25 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(args.event).toBeUndefined();
                 expect(args.expanded).toBe(false);
                 expect(args.rowID).toBe(1);
-                done();
+                ;
             });
             aRow.expanded = false;
         });
 
-        it('should emit an event when expanding rows (UI)', (done) => {
+        it('should emit an event when expanding rows (UI)', async () => {
             treeGrid.rowToggle.pipe(first()).subscribe((args) => {
                 expect(args.cancel).toBe(false);
                 expect(args.event).toBeDefined();
                 expect(args.expanded).toBe(true);
                 expect(args.rowID).toBe(1);
-                done();
+                ;
             });
             const rowsDOM = TreeGridFunctions.getAllRows(fix);
             const indicatorDivDOM = TreeGridFunctions.getExpansionIndicatorDiv(rowsDOM[0]);
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
         });
 
-        it('should emit an event when collapsing rows (UI)', (done) => {
+        it('should emit an event when collapsing rows (UI)', async () => {
             const rowsDOM = TreeGridFunctions.getAllRows(fix);
             const indicatorDivDOM = TreeGridFunctions.getExpansionIndicatorDiv(rowsDOM[0]);
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
@@ -770,7 +766,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(args.event).toBeDefined();
                 expect(args.expanded).toBe(false);
                 expect(args.rowID).toBe(1);
-                done();
+                ;
             });
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
         });
@@ -1163,7 +1159,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
-                                                                            treeGrid.nativeElement.getBoundingClientRect().height);
+                treeGrid.nativeElement.getBoundingClientRect().height);
 
             const firstRow = rows[0];
             const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(firstRow);
@@ -1173,7 +1169,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should not hide');
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
-                                                                            treeGrid.nativeElement.getBoundingClientRect().height);
+                treeGrid.nativeElement.getBoundingClientRect().height);
 
             indicatorDiv.triggerEventHandler('click', new Event('click'));
             fix.detectChanges();
@@ -1181,7 +1177,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should still be shown');
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
-                                                                            treeGrid.nativeElement.getBoundingClientRect().height);
+                treeGrid.nativeElement.getBoundingClientRect().height);
         });
 
         it('Do not hide banner with collapsing a node, using API', () => {
@@ -1196,21 +1192,21 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
-                                                                            treeGrid.nativeElement.getBoundingClientRect().height);
+                treeGrid.nativeElement.getBoundingClientRect().height);
 
             treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
             expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should not hide');
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
-                                                                            treeGrid.nativeElement.getBoundingClientRect().height);
+                treeGrid.nativeElement.getBoundingClientRect().height);
 
             treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
             expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should still be shown');
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
-                                                                            treeGrid.nativeElement.getBoundingClientRect().height);
+                treeGrid.nativeElement.getBoundingClientRect().height);
         });
 
         // The following tests were written,
@@ -1240,7 +1236,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
             expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
-                                                                            treeGrid.nativeElement.getBoundingClientRect().height);
+                treeGrid.nativeElement.getBoundingClientRect().height);
 
             indicatorDiv.triggerEventHandler('click', new Event('click'));
             fix.detectChanges();
@@ -1248,7 +1244,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
             expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
-                                                                            treeGrid.nativeElement.getBoundingClientRect().height);
+                treeGrid.nativeElement.getBoundingClientRect().height);
         });
 
         it('Do not hide parent banner while collapsing the parent node, using API', () => {
@@ -1268,7 +1264,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
             expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
-                                                                            treeGrid.nativeElement.getBoundingClientRect().height);
+                treeGrid.nativeElement.getBoundingClientRect().height);
 
             treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
@@ -1276,7 +1272,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
             expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
-                                                                            treeGrid.nativeElement.getBoundingClientRect().height);
+                treeGrid.nativeElement.getBoundingClientRect().height);
         });
 
         it('Do not hide banner while collapsing node that is NOT a parent one, using UI', () => {
@@ -1299,7 +1295,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
             expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
-                                                                            treeGrid.nativeElement.getBoundingClientRect().height);
+                treeGrid.nativeElement.getBoundingClientRect().height);
 
             indicatorDiv.triggerEventHandler('click', new Event('click'));
             fix.detectChanges();
@@ -1307,7 +1303,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
             expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
-                                                                            treeGrid.nativeElement.getBoundingClientRect().height);
+                treeGrid.nativeElement.getBoundingClientRect().height);
         });
 
         it('Do not hide banner while collapsing node that is NOT a parent one, using API', () => {
@@ -1327,7 +1323,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
             expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
-                                                                            treeGrid.nativeElement.getBoundingClientRect().height);
+                treeGrid.nativeElement.getBoundingClientRect().height);
 
             treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
@@ -1335,7 +1331,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
             expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
-                                                                            treeGrid.nativeElement.getBoundingClientRect().height);
+                treeGrid.nativeElement.getBoundingClientRect().height);
         });
 
         it('Hide banner while collapsing node that is NOT a parent one, but goes outside visible area, using UI', () => {
@@ -1370,14 +1366,14 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
             expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
             expect(overlayContent.getBoundingClientRect().top).toBeGreaterThan(treeGrid.nativeElement.getBoundingClientRect().top +
-                                                                            treeGrid.nativeElement.getBoundingClientRect().height);
+                treeGrid.nativeElement.getBoundingClientRect().height);
 
             indicatorDiv.triggerEventHandler('click', new Event('click'));
             fix.detectChanges();
 
             expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible but outside of bounds');
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
-                                                                            treeGrid.nativeElement.getBoundingClientRect().height);
+                treeGrid.nativeElement.getBoundingClientRect().height);
         });
     });
 

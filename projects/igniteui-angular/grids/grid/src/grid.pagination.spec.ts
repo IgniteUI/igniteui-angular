@@ -86,7 +86,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.detectChanges();
 
             // Goto page 3 through API and listen for event
-            spyOn(paginator.pagingDone, 'emit');
+            vi.spyOn(paginator.pagingDone, 'emit');
             paginator.paginate(2);
 
             fix.detectChanges();
@@ -440,7 +440,8 @@ describe('IgxGrid - Grid Paging #grid', () => {
         fix = TestBed.createComponent(GridWithUndefinedDataComponent);
         try {
             fix.detectChanges();
-        } catch (ex) {
+        }
+        catch (ex) {
             errorMessage = ex.message;
         }
         expect(errorMessage).toBe('');
@@ -475,7 +476,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         tick();
         expect(grid.page).toBe(desiredPageIndex);
 
-        expect(grid.getRowByIndex(0).cells[1].value).toBe('Debra Morton')
+        expect(grid.getRowByIndex(0).cells[1].value).toBe('Debra Morton');
         expect(grid.getRowByIndex(0).viewIndex).toBe(6);
     }));
 });

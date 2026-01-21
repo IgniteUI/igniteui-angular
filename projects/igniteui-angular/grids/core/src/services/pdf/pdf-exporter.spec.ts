@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxPdfExporterService } from './pdf-exporter';
 import { IgxPdfExporterOptions } from './pdf-exporter-options';
@@ -17,23 +18,23 @@ describe('PDF Exporter', () => {
         (exporter as any)._ownersMap.clear();
 
         // Spy the saveBlobToFile method so the files are not really created
-        spyOn(ExportUtilities, 'saveBlobToFile');
+        vi.spyOn(ExportUtilities, 'saveBlobToFile');
     });
 
     it('should be created', () => {
         expect(exporter).toBeTruthy();
     });
 
-    it('should export empty data without errors', (done) => {
+    it('should export empty data without errors', async () => {
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            done();
+            ;
         });
 
         exporter.exportData([], options);
     });
 
-    it('should export simple data successfully', (done) => {
+    it('should export simple data successfully', async () => {
         const simpleData = [
             { Name: 'John', Age: 30 },
             { Name: 'Jane', Age: 25 }
@@ -41,66 +42,66 @@ describe('PDF Exporter', () => {
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            done();
+            ;
         });
 
         exporter.exportData(simpleData, options);
     });
 
-    it('should export contacts data successfully', (done) => {
+    it('should export contacts data successfully', async () => {
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            done();
+            ;
         });
 
         exporter.exportData(SampleTestData.contactsData(), options);
     });
 
-    it('should export with custom page orientation', (done) => {
+    it('should export with custom page orientation', async () => {
         options.pageOrientation = 'landscape';
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            done();
+            ;
         });
 
         exporter.exportData(SampleTestData.contactsData(), options);
     });
 
-    it('should export with custom page size', (done) => {
+    it('should export with custom page size', async () => {
         options.pageSize = 'letter';
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            done();
+            ;
         });
 
         exporter.exportData(SampleTestData.contactsData(), options);
     });
 
-    it('should export without table borders', (done) => {
+    it('should export without table borders', async () => {
         options.showTableBorders = false;
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            done();
+            ;
         });
 
         exporter.exportData(SampleTestData.contactsData(), options);
     });
 
-    it('should export with custom font size', (done) => {
+    it('should export with custom font size', async () => {
         options.fontSize = 12;
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            done();
+            ;
         });
 
         exporter.exportData(SampleTestData.contactsData(), options);
     });
 
-    it('should handle null and undefined values', (done) => {
+    it('should handle null and undefined values', async () => {
         const dataWithNulls = [
             { Name: 'John', Age: null },
             { Name: undefined, Age: 25 }
@@ -108,13 +109,13 @@ describe('PDF Exporter', () => {
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            done();
+            ;
         });
 
         exporter.exportData(dataWithNulls, options);
     });
 
-    it('should handle date values', (done) => {
+    it('should handle date values', async () => {
         const dataWithDates = [
             { Name: 'John', BirthDate: new Date('1990-01-01') },
             { Name: 'Jane', BirthDate: new Date('1995-06-15') }
@@ -122,31 +123,31 @@ describe('PDF Exporter', () => {
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            done();
+            ;
         });
 
         exporter.exportData(dataWithDates, options);
     });
 
-    it('should export with portrait orientation', (done) => {
+    it('should export with portrait orientation', async () => {
         options.pageOrientation = 'portrait';
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            done();
+            ;
         });
 
         exporter.exportData(SampleTestData.contactsData(), options);
     });
 
-    it('should export with various page sizes', (done) => {
+    it('should export with various page sizes', async () => {
         const pageSizes = ['a3', 'a5', 'legal'];
         let completed = 0;
 
         const exportNext = (index: number) => {
             if (index >= pageSizes.length) {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(pageSizes.length);
-                done();
+                ;
                 return;
             }
 
@@ -164,18 +165,18 @@ describe('PDF Exporter', () => {
         exportNext(0);
     });
 
-    it('should export with different font sizes', (done) => {
+    it('should export with different font sizes', async () => {
         options.fontSize = 14;
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            done();
+            ;
         });
 
         exporter.exportData(SampleTestData.contactsData(), options);
     });
 
-    it('should export large dataset requiring pagination', (done) => {
+    it('should export large dataset requiring pagination', async () => {
         const largeData = [];
         for (let i = 0; i < 100; i++) {
             largeData.push({ Name: `Person ${i}`, Age: 20 + (i % 50), City: `City ${i % 10}` });
@@ -183,13 +184,13 @@ describe('PDF Exporter', () => {
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            done();
+            ;
         });
 
         exporter.exportData(largeData, options);
     });
 
-    it('should handle long text values with truncation', (done) => {
+    it('should handle long text values with truncation', async () => {
         const dataWithLongText = [
             { Name: 'John', Description: 'This is a very long description that should be truncated with ellipsis in the PDF export to fit within the cell width' },
             { Name: 'Jane', Description: 'Another extremely long text that needs to be handled properly in the PDF export without breaking the layout' }
@@ -197,13 +198,13 @@ describe('PDF Exporter', () => {
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            done();
+            ;
         });
 
         exporter.exportData(dataWithLongText, options);
     });
 
-    it('should export data with mixed data types', (done) => {
+    it('should export data with mixed data types', async () => {
         const mixedData = [
             { String: 'Text', Number: 42, Boolean: true, Date: new Date('2023-01-01'), Null: null, Undefined: undefined },
             { String: 'More text', Number: 3.14, Boolean: false, Date: new Date('2023-12-31'), Null: null, Undefined: undefined }
@@ -211,26 +212,26 @@ describe('PDF Exporter', () => {
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            done();
+            ;
         });
 
         exporter.exportData(mixedData, options);
     });
 
-    it('should export with custom filename', (done) => {
+    it('should export with custom filename', async () => {
         const customOptions = new IgxPdfExporterOptions('CustomFileName');
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            const callArgs = (ExportUtilities.saveBlobToFile as jasmine.Spy).calls.mostRecent().args;
+            const callArgs = vi.mocked((ExportUtilities.saveBlobToFile as Mock)).mock.lastCall;
             expect(callArgs[1]).toBe('CustomFileName.pdf');
-            done();
+            ;
         });
 
         exporter.exportData(SampleTestData.contactsData(), customOptions);
     });
 
-    it('should handle empty rows in data', (done) => {
+    it('should handle empty rows in data', async () => {
         const dataWithEmptyRows = [
             { Name: 'John', Age: 30 },
             {},
@@ -239,24 +240,24 @@ describe('PDF Exporter', () => {
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            done();
+            ;
         });
 
         exporter.exportData(dataWithEmptyRows, options);
     });
 
-    it('should emit exportEnded event with pdf object', (done) => {
+    it('should emit exportEnded event with pdf object', async () => {
         exporter.exportEnded.pipe(first()).subscribe((args) => {
             expect(args).toBeDefined();
             expect(args.pdf).toBeDefined();
-            done();
+            ;
         });
 
         exporter.exportData(SampleTestData.contactsData(), options);
     });
 
     describe('Pivot Grid Export', () => {
-        it('should export pivot grid with single dimension', (done) => {
+        it('should export pivot grid with single dimension', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { Product: 'Product A', 'City-London-Sum': 100, 'City-Paris-Sum': 200 },
@@ -335,13 +336,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should export multi-dimensional pivot grid with multiple row dimensions', (done) => {
+        it('should export multi-dimensional pivot grid with multiple row dimensions', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { Product: 'Product A', Category: 'Category 1', 'City-London-Sum': 100, 'City-Paris-Sum': 200 },
@@ -450,13 +451,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should export pivot grid with row dimension headers and multi-level column headers', (done) => {
+        it('should export pivot grid with row dimension headers and multi-level column headers', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { Product: 'Product A', 'City-London-Sum': 100, 'City-London-Avg': 50, 'City-Paris-Sum': 200 },
@@ -539,13 +540,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should export pivot grid with PivotMergedHeader columns', (done) => {
+        it('should export pivot grid with PivotMergedHeader columns', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { Product: 'Product A', 'City-London-Sum': 100 },
@@ -595,13 +596,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should export pivot grid when dimensionKeys are inferred from record data', (done) => {
+        it('should export pivot grid when dimensionKeys are inferred from record data', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { Product: 'Product A', Category: 'Category 1', 'City-London-Sum': 100 },
@@ -651,13 +652,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should export pivot grid with MultiRowHeader columns', (done) => {
+        it('should export pivot grid with MultiRowHeader columns', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { Product: 'Product A', Category: 'Category 1', 'City-London-Sum': 100 },
@@ -738,13 +739,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should export pivot grid with row dimension columns by level', (done) => {
+        it('should export pivot grid with row dimension columns by level', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { Product: 'Product A', Category: 'Category 1', 'City-London-Sum': 100 },
@@ -824,7 +825,7 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
@@ -832,7 +833,7 @@ describe('PDF Exporter', () => {
     });
 
     describe('Hierarchical Grid Export', () => {
-        it('should export hierarchical grid with child records', (done) => {
+        it('should export hierarchical grid with child records', async () => {
             const childOwner = 'child1';
             const childColumns: IColumnInfo[] = [
                 {
@@ -923,13 +924,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(hierarchicalData, options);
         });
 
-        it('should export hierarchical grid with multiple child levels', (done) => {
+        it('should export hierarchical grid with multiple child levels', async () => {
             const grandChildOwner = 'grandchild1';
             const childOwner = 'child1';
 
@@ -1025,13 +1026,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(hierarchicalData, options);
         });
 
-        it('should export hierarchical grid with multi-level headers in child grid', (done) => {
+        it('should export hierarchical grid with multi-level headers in child grid', async () => {
             const childOwner = 'child1';
 
             const childColumns: IColumnInfo[] = [
@@ -1111,7 +1112,7 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(hierarchicalData, options);
@@ -1119,7 +1120,7 @@ describe('PDF Exporter', () => {
     });
 
     describe('Tree Grid Export', () => {
-        it('should export tree grid with hierarchical levels', (done) => {
+        it('should export tree grid with hierarchical levels', async () => {
             const treeData: IExportRecord[] = [
                 {
                     data: { name: 'Root 1', value: 100 },
@@ -1175,7 +1176,7 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(treeData, options);
@@ -1183,7 +1184,7 @@ describe('PDF Exporter', () => {
     });
 
     describe('Summary Records Export', () => {
-        it('should export summary records with label and value', (done) => {
+        it('should export summary records with label and value', async () => {
             const summaryData: IExportRecord[] = [
                 {
                     data: { name: 'Total', value: { label: 'Sum', value: 500 } },
@@ -1224,13 +1225,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(summaryData, options);
         });
 
-        it('should export summary records with summaryResult property', (done) => {
+        it('should export summary records with summaryResult property', async () => {
             const summaryData: IExportRecord[] = [
                 {
                     data: { name: 'Total', value: { summaryResult: 1000 } },
@@ -1271,7 +1272,7 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(summaryData, options);
@@ -1279,7 +1280,7 @@ describe('PDF Exporter', () => {
     });
 
     describe('Edge Cases and Special Scenarios', () => {
-        it('should skip hidden records', (done) => {
+        it('should skip hidden records', async () => {
             const dataWithHidden: IExportRecord[] = [
                 {
                     data: { Name: 'Visible', Age: 30 },
@@ -1301,13 +1302,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(dataWithHidden, options);
         });
 
-        it('should handle pagination when data exceeds page height', (done) => {
+        it('should handle pagination when data exceeds page height', async () => {
             const largeData: IExportRecord[] = [];
             for (let i = 0; i < 50; i++) {
                 largeData.push({
@@ -1319,13 +1320,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(largeData, options);
         });
 
-        it('should handle pivot grid with empty row dimension fields', (done) => {
+        it('should handle pivot grid with empty row dimension fields', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { 'City-London-Sum': 100 },
@@ -1359,13 +1360,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should handle pivot grid when no columns are defined', (done) => {
+        it('should handle pivot grid when no columns are defined', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { Product: 'Product A', Value: 100 },
@@ -1385,13 +1386,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should handle pivot grid with row dimension headers longer than fields', (done) => {
+        it('should handle pivot grid with row dimension headers longer than fields', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { Product: 'Product A', 'City-London-Sum': 100 },
@@ -1441,13 +1442,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should handle pivot grid with date values in row dimensions', (done) => {
+        it('should handle pivot grid with date values in row dimensions', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { Date: new Date('2023-01-01'), 'City-London-Sum': 100 },
@@ -1489,13 +1490,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should handle hierarchical grid with HeaderRecord type', (done) => {
+        it('should handle hierarchical grid with HeaderRecord type', async () => {
             const childOwner = 'child1';
             const childColumns: IColumnInfo[] = [
                 {
@@ -1562,13 +1563,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(hierarchicalData, options);
         });
 
-        it('should handle hierarchical grid with empty child columns', (done) => {
+        it('should handle hierarchical grid with empty child columns', async () => {
             const childOwner = 'child1';
             const childOwnerList: IColumnList = {
                 columns: [],
@@ -1617,13 +1618,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(hierarchicalData, options);
         });
 
-        it('should handle pagination with hierarchical grid', (done) => {
+        it('should handle pagination with hierarchical grid', async () => {
             const childOwner = 'child1';
             const childColumns: IColumnInfo[] = [
                 {
@@ -1686,7 +1687,7 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(hierarchicalData, options);
@@ -1694,7 +1695,7 @@ describe('PDF Exporter', () => {
     });
 
     describe('Additional Edge Cases and Error Paths', () => {
-        it('should handle pivot grid with no defaultOwner', (done) => {
+        it('should handle pivot grid with no defaultOwner', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { Product: 'Product A', 'City-London-Sum': 100 },
@@ -1709,13 +1710,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should handle pivot grid dimension inference from columnGroup', (done) => {
+        it('should handle pivot grid dimension inference from columnGroup', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { Product: 'Product A', Category: 'Category 1', 'City-London-Sum': 100 },
@@ -1767,13 +1768,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should handle pivot grid with simple keys inference', (done) => {
+        it('should handle pivot grid with simple keys inference', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { SimpleKey: 'Value1', 'Complex-Key-With-Separators': 100, 'Another_Complex_Key': 200 },
@@ -1807,13 +1808,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should handle pivot grid with row dimension headers longer than fields and trim them', (done) => {
+        it('should handle pivot grid with row dimension headers longer than fields and trim them', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { Product: 'Product A', 'City-London-Sum': 100 },
@@ -1871,13 +1872,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should handle multi-level headers with empty headersForLevel', (done) => {
+        it('should handle multi-level headers with empty headersForLevel', async () => {
             const columns: IColumnInfo[] = [
                 {
                     header: 'Name',
@@ -1929,13 +1930,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(data, options);
         });
 
-        it('should handle columns with skip: true', (done) => {
+        it('should handle columns with skip: true', async () => {
             const columns: IColumnInfo[] = [
                 {
                     header: 'Name',
@@ -1976,13 +1977,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(data, options);
         });
 
-        it('should handle GRID_LEVEL_COL column', (done) => {
+        it('should handle GRID_LEVEL_COL column', async () => {
             const columns: IColumnInfo[] = [
                 {
                     header: 'Name',
@@ -2023,13 +2024,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(data, options);
         });
 
-        it('should handle records with missing data property', (done) => {
+        it('should handle records with missing data property', async () => {
             const data: IExportRecord[] = [
                 {
                     data: { Name: 'John', Age: 30 },
@@ -2045,13 +2046,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(data, options);
         });
 
-        it('should handle pivot grid with fuzzy key matching', (done) => {
+        it('should handle pivot grid with fuzzy key matching', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { 'ProductName': 'Product A', 'City-London-Sum': 100 },
@@ -2093,13 +2094,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should handle pivot grid with possible dimension keys by index fallback', (done) => {
+        it('should handle pivot grid with possible dimension keys by index fallback', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { SimpleKey1: 'Value1', SimpleKey2: 'Value2', 'Complex-Key': 100 },
@@ -2141,13 +2142,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should handle summary records with only label', (done) => {
+        it('should handle summary records with only label', async () => {
             const summaryData: IExportRecord[] = [
                 {
                     data: { name: 'Total', value: { label: 'Sum' } },
@@ -2188,13 +2189,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(summaryData, options);
         });
 
-        it('should handle summary records with only value', (done) => {
+        it('should handle summary records with only value', async () => {
             const summaryData: IExportRecord[] = [
                 {
                     data: { name: 'Total', value: { value: 500 } },
@@ -2235,13 +2236,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(summaryData, options);
         });
 
-        it('should handle pivot grid with empty PivotRowHeader columns', (done) => {
+        it('should handle pivot grid with empty PivotRowHeader columns', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { Product: 'Product A', 'City-London-Sum': 100 },
@@ -2283,13 +2284,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should handle hierarchical grid with owner not in map', (done) => {
+        it('should handle hierarchical grid with owner not in map', async () => {
             const childOwner = 'nonexistent-owner';
             const parentColumns: IColumnInfo[] = [
                 {
@@ -2330,13 +2331,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(hierarchicalData, options);
         });
 
-        it('should handle tree grid with undefined level', (done) => {
+        it('should handle tree grid with undefined level', async () => {
             const treeData: IExportRecord[] = [
                 {
                     data: { name: 'Root 1', value: 100 },
@@ -2377,13 +2378,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(treeData, options);
         });
 
-        it('should handle pivot grid with columnGroupParent as non-string', (done) => {
+        it('should handle pivot grid with columnGroupParent as non-string', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { Product: 'Product A', Category: 'Category 1', 'City-London-Sum': 100 },
@@ -2434,13 +2435,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should handle pivot grid with column header matching record values', (done) => {
+        it('should handle pivot grid with column header matching record values', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { Product: 'Product A', 'City-London-Sum': 100 },
@@ -2482,13 +2483,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should handle pivot grid with record index-based column selection', (done) => {
+        it('should handle pivot grid with record index-based column selection', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { Product: 'Product A', 'City-London-Sum': 100 },
@@ -2552,13 +2553,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should handle pivot grid with empty allColumns in drawDataRow', (done) => {
+        it('should handle pivot grid with empty allColumns in drawDataRow', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { Product: 'Product A', 'City-London-Sum': 100 },
@@ -2592,13 +2593,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should handle very long header text truncation', (done) => {
+        it('should handle very long header text truncation', async () => {
             const longHeaderText = 'This is a very long header text that should be truncated because it exceeds the maximum width of the column header cell in the PDF export';
             const columns: IColumnInfo[] = [
                 {
@@ -2631,13 +2632,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(data, options);
         });
 
-        it('should handle pivot grid with row dimension columns but no matching data', (done) => {
+        it('should handle pivot grid with row dimension columns but no matching data', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { 'City-London-Sum': 100 }, // No dimension fields in data
@@ -2679,13 +2680,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should handle column field as non-string gracefully', (done) => {
+        it('should handle column field as non-string gracefully', async () => {
             // This test verifies that non-string fields are handled without crashing
             // The base exporter may filter these out, so we test with valid data structure
             const columns: IColumnInfo[] = [
@@ -2728,13 +2729,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(data, options);
         });
 
-        it('should handle empty rowDimensionHeaders fallback path', (done) => {
+        it('should handle empty rowDimensionHeaders fallback path', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { Product: 'Product A', 'City-London-Sum': 100 },
@@ -2768,13 +2769,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should handle PivotMergedHeader with empty header text', (done) => {
+        it('should handle PivotMergedHeader with empty header text', async () => {
             const pivotData: IExportRecord[] = [
                 {
                     data: { Product: 'Product A', 'City-London-Sum': 100 },
@@ -2816,13 +2817,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(pivotData, options);
         });
 
-        it('should handle resolveLayoutStartIndex with no child columns', (done) => {
+        it('should handle resolveLayoutStartIndex with no child columns', async () => {
             const columns: IColumnInfo[] = [
                 {
                     header: 'Parent',
@@ -2856,13 +2857,13 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(data, options);
         });
 
-        it('should handle data with zero total columns', (done) => {
+        it('should handle data with zero total columns', async () => {
             const data: IExportRecord[] = [
                 {
                     data: {},
@@ -2882,7 +2883,7 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe(() => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                done();
+                ;
             });
 
             exporter.exportData(data, options);

@@ -8,6 +8,7 @@ import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '..
 import { IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipTargetDirective } from './tooltip-target.directive';
 import { Placement, PositionsMap } from './tooltip.common';
+import { vi } from 'vitest';
 
 const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip';
@@ -89,7 +90,7 @@ describe('IgxTooltip', () => {
         }));
 
         it('should not render a default arrow', fakeAsync(() => {
-            expect(tooltipTarget.hasArrow).toBeFalse();
+            expect(tooltipTarget.hasArrow).toBe(false);
 
             hoverElement(button);
             flush();
@@ -102,7 +103,7 @@ describe('IgxTooltip', () => {
         }));
 
         it('should show/hide the arrow via the `hasArrow` property', fakeAsync(() => {
-            expect(tooltipTarget.hasArrow).toBeFalse();
+            expect(tooltipTarget.hasArrow).toBe(false);
 
             tooltipTarget.hasArrow = true;
             fix.detectChanges();
@@ -112,7 +113,7 @@ describe('IgxTooltip', () => {
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
-            expect(tooltipTarget.hasArrow).toBeTrue();
+            expect(tooltipTarget.hasArrow).toBe(true);
             const arrow = tooltipNativeElement.querySelector(TOOLTIP_ARROW_SELECTOR) as HTMLElement;
             expect(arrow.style.display).toEqual("");
 
@@ -306,8 +307,8 @@ describe('IgxTooltip', () => {
 
         describe('Tooltip events', () => {
             it('should emit the proper events when hovering/unhovering target', fakeAsync(() => {
-                spyOn(tooltipTarget.tooltipShow, 'emit');
-                spyOn(tooltipTarget.tooltipHide, 'emit');
+                vi.spyOn(tooltipTarget.tooltipShow, 'emit');
+                vi.spyOn(tooltipTarget.tooltipHide, 'emit');
 
                 hoverElement(button);
                 expect(tooltipTarget.tooltipShow.emit).toHaveBeenCalled();
@@ -320,8 +321,8 @@ describe('IgxTooltip', () => {
             }));
 
             it('should emit the proper events when showing/hiding tooltip through API', fakeAsync(() => {
-                spyOn(tooltipTarget.tooltipShow, 'emit');
-                spyOn(tooltipTarget.tooltipHide, 'emit');
+                vi.spyOn(tooltipTarget.tooltipShow, 'emit');
+                vi.spyOn(tooltipTarget.tooltipHide, 'emit');
 
                 tooltipTarget.showTooltip();
                 expect(tooltipTarget.tooltipShow.emit).toHaveBeenCalled();
@@ -334,8 +335,8 @@ describe('IgxTooltip', () => {
             }));
 
             it('should emit the proper events with correct eventArgs when hover/unhover', fakeAsync(() => {
-                spyOn(tooltipTarget.tooltipShow, 'emit');
-                spyOn(tooltipTarget.tooltipHide, 'emit');
+                vi.spyOn(tooltipTarget.tooltipShow, 'emit');
+                vi.spyOn(tooltipTarget.tooltipHide, 'emit');
 
                 const tooltipShowArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip, cancel: false };
                 const tooltipHideArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip, cancel: false };
@@ -351,8 +352,8 @@ describe('IgxTooltip', () => {
             }));
 
             it('should emit the proper events with correct eventArgs when show/hide through API', fakeAsync(() => {
-                spyOn(tooltipTarget.tooltipShow, 'emit');
-                spyOn(tooltipTarget.tooltipHide, 'emit');
+                vi.spyOn(tooltipTarget.tooltipShow, 'emit');
+                vi.spyOn(tooltipTarget.tooltipHide, 'emit');
 
                 const tooltipShowArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip, cancel: false };
                 const tooltipHideArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip, cancel: false };
@@ -603,7 +604,7 @@ describe('IgxTooltip', () => {
             const arrowTopOffset = '-4px';
             const arrowLeftOffset = getArrowLeftOffset(tooltip) + 'px';
 
-            expect(tooltip.arrow.classList.contains(arrowClassName)).toBeTrue();
+            expect(tooltip.arrow.classList.contains(arrowClassName)).toBe(true);
             expect(tooltip.arrow.style.top).toBe(arrowTopOffset);
             expect(tooltip.arrow.style.left).toBe(arrowLeftOffset);
         };
@@ -625,19 +626,19 @@ describe('IgxTooltip', () => {
             hoverElement(tooltipTarget1);
             flush();
             verifyTooltipVisibility(tooltip1.element, tooltipTarget1, true);
-            expect(tooltipTarget1.hasArrow).toBeTrue();
+            expect(tooltipTarget1.hasArrow).toBe(true);
             verifyTooltipArrowAlignment(tooltip1);
 
             hoverElement(tooltipTarget2);
             flush();
             verifyTooltipVisibility(tooltip2.element, tooltipTarget2, true);
-            expect(tooltipTarget2.hasArrow).toBeTrue();
+            expect(tooltipTarget2.hasArrow).toBe(true);
             verifyTooltipArrowAlignment(tooltip2);
 
             hoverElement(tooltipTarget3);
             flush();
             verifyTooltipVisibility(tooltip3.element, tooltipTarget3, true);
-            expect(tooltipTarget3.hasArrow).toBeTrue();
+            expect(tooltipTarget3.hasArrow).toBe(true);
             verifyTooltipArrowAlignment(tooltip3);
 
         }));
@@ -748,8 +749,8 @@ describe('IgxTooltip', () => {
         }));
 
         it('should not emit tooltipHide event multiple times', fakeAsync(() => {
-            spyOn(targetOne.tooltipHide, 'emit');
-            spyOn(targetTwo.tooltipHide, 'emit');
+            vi.spyOn(targetOne.tooltipHide, 'emit');
+            vi.spyOn(targetTwo.tooltipHide, 'emit');
 
             hoverElement(buttonOne);
             flush();
@@ -759,7 +760,8 @@ describe('IgxTooltip', () => {
 
             unhoverElement(buttonOne);
             tick(500);
-            expect(targetOne.tooltipHide.emit).toHaveBeenCalledOnceWith(tooltipHideArgsTargetOne);
+            expect(targetOne.tooltipHide.emit).toHaveBeenCalledTimes(1);
+            expect(targetOne.tooltipHide.emit).toHaveBeenCalledWith(tooltipHideArgsTargetOne);
             expect(targetTwo.tooltipHide.emit).not.toHaveBeenCalled();
             flush();
 
@@ -768,8 +770,10 @@ describe('IgxTooltip', () => {
 
             unhoverElement(buttonTwo);
             tick(500);
-            expect(targetOne.tooltipHide.emit).toHaveBeenCalledOnceWith(tooltipHideArgsTargetOne);
-            expect(targetTwo.tooltipHide.emit).toHaveBeenCalledOnceWith(tooltipHideArgsTargetTwo);
+            expect(targetOne.tooltipHide.emit).toHaveBeenCalledTimes(1);
+            expect(targetOne.tooltipHide.emit).toHaveBeenCalledWith(tooltipHideArgsTargetOne);
+            expect(targetTwo.tooltipHide.emit).toHaveBeenCalledTimes(1);
+            expect(targetTwo.tooltipHide.emit).toHaveBeenCalledWith(tooltipHideArgsTargetTwo);
             flush();
         }));
 
@@ -1070,9 +1074,9 @@ describe('IgxTooltip', () => {
                 cancelable: true
             });
             document.dispatchEvent(escapeEvent);
-            flush()
+            flush();
 
-            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false)
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
         it('should correctly display a sticky tooltip on custom show trigger', fakeAsync(() => {
@@ -1149,11 +1153,11 @@ describe('IgxTooltip', () => {
             expect(arrow).not.toBeNull();
             expect(arrow.style.left).toBe("");
         }));
-    })
+    });
 });
 
 interface ElementRefLike {
-    nativeElement: HTMLElement
+    nativeElement: HTMLElement;
 }
 
 const hoverElement = (element: ElementRefLike) => element.nativeElement.dispatchEvent(new MouseEvent('pointerenter'));
@@ -1172,13 +1176,9 @@ const directionTolerance = 2;
 const alignmentTolerance = 2;
 
 
-export const verifyTooltipPosition = (
-    tooltipNativeElement: HTMLElement,
-    actualTarget: { nativeElement: HTMLElement },
-    shouldAlign:boolean = true,
-    placement: Placement = Placement.Bottom,
-    offset: number = 6
-) => {
+export const verifyTooltipPosition = (tooltipNativeElement: HTMLElement, actualTarget: {
+    nativeElement: HTMLElement;
+}, shouldAlign: boolean = true, placement: Placement = Placement.Bottom, offset: number = 6) => {
     const tooltip = tooltipNativeElement.getBoundingClientRect();
     const target = actualTarget.nativeElement.getBoundingClientRect();
 
@@ -1191,13 +1191,16 @@ export const verifyTooltipPosition = (
     if (placement.startsWith('top')) {
         actualOffset = target.top - tooltip.bottom;
         directionCheckPassed = Math.abs(actualOffset - offset) <= directionTolerance;
-    } else if (placement.startsWith('bottom')) {
+    }
+    else if (placement.startsWith('bottom')) {
         actualOffset = tooltip.top - target.bottom;
         directionCheckPassed = Math.abs(actualOffset - offset) <= directionTolerance;
-    } else if (placement.startsWith('left')) {
+    }
+    else if (placement.startsWith('left')) {
         actualOffset = target.left - tooltip.right;
         directionCheckPassed = Math.abs(actualOffset - offset) <= directionTolerance;
-    } else if (placement.startsWith('right')) {
+    }
+    else if (placement.startsWith('right')) {
         actualOffset = tooltip.left - target.right;
         directionCheckPassed = Math.abs(actualOffset - offset) <= directionTolerance;
     }
@@ -1206,49 +1209,43 @@ export const verifyTooltipPosition = (
     // --- alignment check ---
     if (placement.startsWith('top') || placement.startsWith('bottom')) {
         alignmentCheckPassed = horizontalAlignmentMatches(tooltip, target, placement);
-    } else {
+    }
+    else {
         alignmentCheckPassed = verticalAlignmentMatches(tooltip, target, placement);
     }
 
     const result = directionCheckPassed && alignmentCheckPassed;
 
     if (shouldAlign) {
-        expect(result).toBeTruthy(
-            `Tooltip misaligned for "${placement}": actual offset=${actualOffset}, wanted offset=${offset}, accurate placement=${directionCheckPassed}, accurate alignment=${alignmentCheckPassed}`
-        );
-    } else {
-        expect(result).toBeFalsy(
-            `Tooltip was unexpectedly aligned`
-        );
+        expect(result).toBeTruthy(`Tooltip misaligned for "${placement}": actual offset=${actualOffset}, wanted offset=${offset}, accurate placement=${directionCheckPassed}, accurate alignment=${alignmentCheckPassed}`);
+    }
+    else {
+        expect(result).toBeFalsy(`Tooltip was unexpectedly aligned`);
     }
 };
 
-function horizontalAlignmentMatches(
-    tooltip: DOMRect,
-    target: DOMRect,
-    placement: Placement
-): boolean {
+function horizontalAlignmentMatches(tooltip: DOMRect, target: DOMRect, placement: Placement): boolean {
     if (placement.endsWith('start')) {
         return Math.abs(tooltip.left - target.left) <= alignmentTolerance;
-    } else if (placement.endsWith('end')) {
+    }
+    else if (placement.endsWith('end')) {
         return Math.abs(tooltip.right - target.right) <= alignmentTolerance;
-    } else {
+    }
+    else {
         const tooltipMid = tooltip.left + tooltip.width / 2;
         const targetMid = target.left + target.width / 2;
         return Math.abs(tooltipMid - targetMid) <= alignmentTolerance;
     }
 }
 
-function verticalAlignmentMatches(
-    tooltip: DOMRect,
-    target: DOMRect,
-    placement: Placement
-): boolean {
+function verticalAlignmentMatches(tooltip: DOMRect, target: DOMRect, placement: Placement): boolean {
     if (placement.endsWith('start')) {
         return Math.abs(tooltip.top - target.top) <= alignmentTolerance;
-    } else if (placement.endsWith('end')) {
+    }
+    else if (placement.endsWith('end')) {
         return Math.abs(tooltip.bottom - target.bottom) <= alignmentTolerance;
-    } else {
+    }
+    else {
         const tooltipMid = tooltip.top + tooltip.height / 2;
         const targetMid = target.top + target.height / 2;
         return Math.abs(tooltipMid - targetMid) <= alignmentTolerance;

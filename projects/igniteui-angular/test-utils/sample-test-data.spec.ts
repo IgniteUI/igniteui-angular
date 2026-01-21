@@ -7,7 +7,7 @@ export class SampleTestData {
 
     public static timeGenerator: Calendar = new Calendar();
     public static today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
-    public static todayFullDate: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 10,  15, 35);
+    public static todayFullDate: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 10, 15, 35);
 
     public static stringArray = () => ([
         'Terrance Orta',
@@ -188,28 +188,25 @@ export class SampleTestData {
     /* Data fields: ID: number, Name: string, JobTitle: string, WokingHours: number, HireDate: string, Performance: array;
        3 items, sorted by ID. */
     public static personJobHoursDataPerformance = () => ([
-        { ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President', WorkingHours: 4, HireDate: '2017-06-19T11:43:07.714Z', Performance:
-            [
-                {Points: 3, Week: 1},
-                {Points: 6, Week: 2},
-                {Points: 1, Week: 3},
-                {Points: 12, Week: 4}
+        { ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President', WorkingHours: 4, HireDate: '2017-06-19T11:43:07.714Z', Performance: [
+                { Points: 3, Week: 1 },
+                { Points: 6, Week: 2 },
+                { Points: 1, Week: 3 },
+                { Points: 12, Week: 4 }
             ]
         },
-        { ID: 2, Name: 'Gilberto Todd', JobTitle: 'Director', WorkingHours: 6, HireDate: '2015-12-18T11:23:17.714Z', Performance:
-            [
-                {Points: 8, Week: 1},
-                {Points: 7, Week: 2},
-                {Points: 4, Week: 3},
-                {Points: 9, Week: 4}
+        { ID: 2, Name: 'Gilberto Todd', JobTitle: 'Director', WorkingHours: 6, HireDate: '2015-12-18T11:23:17.714Z', Performance: [
+                { Points: 8, Week: 1 },
+                { Points: 7, Week: 2 },
+                { Points: 4, Week: 3 },
+                { Points: 9, Week: 4 }
             ]
         },
-        { ID: 3, Name: 'Tanya Bennett', JobTitle: 'Director', WorkingHours: 8, HireDate: '2005-11-18T11:23:17.714Z', Performance:
-            [
-                {Points: 1, Week: 1},
-                {Points: 3, Week: 2},
-                {Points: 14, Week: 3},
-                {Points: 29, Week: 4}
+        { ID: 3, Name: 'Tanya Bennett', JobTitle: 'Director', WorkingHours: 8, HireDate: '2005-11-18T11:23:17.714Z', Performance: [
+                { Points: 1, Week: 1 },
+                { Points: 3, Week: 2 },
+                { Points: 14, Week: 3 },
+                { Points: 29, Week: 4 }
             ]
         }
     ]);
@@ -228,7 +225,7 @@ export class SampleTestData {
         { Name: 'Gilberto Todd', BirthDate: new Date(1985, 4, 17), LastLogin: new Date(2023, 3, 14).setHours(14, 25, 23), MeetingTime: new Date(2023, 6, 7).setHours(9, 35, 31), AttendanceRate: 0.46 },
         { Name: 'Tanya Bennett', BirthDate: new Date(1987, 6, 19), LastLogin: new Date(2023, 2, 23).setHours(19, 7, 13), MeetingTime: new Date(2023, 6, 7).setHours(13, 10, 36), AttendanceRate: 0.289 },
         { Name: 'Jack Simon', BirthDate: new Date(1995, 8, 23), LastLogin: new Date(2023, 1, 27).setHours(17, 17, 41), MeetingTime: new Date(2023, 6, 7).setHours(14, 50, 47), AttendanceRate: 1 },
-        { Name: 'Celia Martinez', BirthDate: new Date(1994, 10, 27), LastLogin: new Date(2023, 2, 14).setHours(1, 31, 49), MeetingTime: new Date(2023, 6, 7).setHours(7, 0, 17), AttendanceRate: 0.384}
+        { Name: 'Celia Martinez', BirthDate: new Date(1994, 10, 27), LastLogin: new Date(2023, 2, 14).setHours(1, 31, 49), MeetingTime: new Date(2023, 6, 7).setHours(7, 0, 17), AttendanceRate: 0.384 }
     ]);
 
     /* Data fields: ID: number, Name: string, JobTitle: string; 10 items, sorted by ID. */
@@ -263,14 +260,14 @@ export class SampleTestData {
     JobTitle: string, Company: string; 10 items, sorted by ID. */
     public static personNameObjectJobCompany = () => ([
         { ID: 1, Name: { FirstName: 'Casey', LastName: 'Houston' }, JobTitle: 'Vice President', Company: 'Company A' },
-        { ID: 2, Name: { FirstName: 'Gilberto', LastName: 'Todd' } , JobTitle: 'Director', Company: 'Company C' },
-        { ID: 3, Name: { FirstName: 'Tanya', LastName: 'Bennett' } , JobTitle: 'Director', Company: 'Company A' },
+        { ID: 2, Name: { FirstName: 'Gilberto', LastName: 'Todd' }, JobTitle: 'Director', Company: 'Company C' },
+        { ID: 3, Name: { FirstName: 'Tanya', LastName: 'Bennett' }, JobTitle: 'Director', Company: 'Company A' },
         { ID: 4, Name: { FirstName: 'Jack', LastName: 'Simon' }, JobTitle: 'Software Developer', Company: 'Company D' },
         { ID: 5, Name: { FirstName: 'Celia', LastName: 'Martinez' }, JobTitle: 'Senior Software DEVELOPER', Company: 'Company B' },
         { ID: 6, Name: { FirstName: 'Erma', LastName: 'Walsh' }, JobTitle: 'CEO', Company: 'Company C' },
-        { ID: 7, Name: { FirstName: 'Debra', LastName: 'Morton' } , JobTitle: 'Associate Software Developer', Company: 'Company B' },
-        { ID: 8, Name: { FirstName: 'Erika', LastName: 'Wells' } , JobTitle: 'Software Development Team Lead', Company: 'Company A' },
-        { ID: 9, Name: { FirstName: 'Leslie', LastName: 'Hansen' } , JobTitle: 'Associate Software Developer', Company: 'Company D' },
+        { ID: 7, Name: { FirstName: 'Debra', LastName: 'Morton' }, JobTitle: 'Associate Software Developer', Company: 'Company B' },
+        { ID: 8, Name: { FirstName: 'Erika', LastName: 'Wells' }, JobTitle: 'Software Development Team Lead', Company: 'Company A' },
+        { ID: 9, Name: { FirstName: 'Leslie', LastName: 'Hansen' }, JobTitle: 'Associate Software Developer', Company: 'Company D' },
         { ID: 10, Name: { FirstName: 'Eduardo', LastName: 'Ramirez' }, JobTitle: 'Manager', Company: 'Company E' }
     ]);
     /* Data fields: ID: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
@@ -497,18 +494,18 @@ export class SampleTestData {
     /* Data fields: ID: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
         City: string, Region: string, PostalCode: string, Country: string, Phone: string, Fax: string; 1 item. */
     public static contactMariaAndersData = () => ([{
-        ID: 'ALFKI',
-        CompanyName: 'Alfreds Futterkiste',
-        ContactName: 'Maria Anders',
-        ContactTitle: 'Sales Representative',
-        Address: 'Obere Str. 57',
-        City: 'Berlin',
-        Region: null,
-        PostalCode: '12209',
-        Country: 'Germany',
-        Phone: '030-0074321',
-        Fax: '030-0076545'
-    }]);
+            ID: 'ALFKI',
+            CompanyName: 'Alfreds Futterkiste',
+            ContactName: 'Maria Anders',
+            ContactTitle: 'Sales Representative',
+            Address: 'Obere Str. 57',
+            City: 'Berlin',
+            Region: null,
+            PostalCode: '12209',
+            Country: 'Germany',
+            Phone: '030-0074321',
+            Fax: '030-0076545'
+        }]);
 
     /* Data fields: Downloads: number, ID: number, ProductName: string, ReleaseDate: Date, Released: boolean;
         8 items, sorted by ID. */
@@ -676,23 +673,23 @@ export class SampleTestData {
         { ProductID: 1, ProductName: 'Chai', InStock: true, UnitsInStock: 2760, OrderDate: new Date(2015, 9, 1, 11, 37, 22),
             ReceiveTime: new Date(2015, 10, 1, 8, 37, 11), ProducedDate: new Date(2014, 9, 1, 11, 37, 22) },
         { ProductID: 2, ProductName: 'Aniseed Syrup', InStock: false, UnitsInStock: 198, OrderDate: new Date(2016, 7, 18, 11, 17, 22),
-        ReceiveTime: new Date(2016, 10, 8, 12, 12, 2), ProducedDate: new Date(2015, 7, 18, 11, 17, 22) },
+            ReceiveTime: new Date(2016, 10, 8, 12, 12, 2), ProducedDate: new Date(2015, 7, 18, 11, 17, 22) },
         { ProductID: 3, ProductName: 'Antons Cajun Seasoning', InStock: true, UnitsInStock: 52, OrderDate: new Date(2021, 4, 11, 7, 47, 1),
-        ReceiveTime: new Date(2021, 4, 29, 14, 7, 12), ProducedDate: new Date(2020, 4, 11, 7, 47, 1) },
+            ReceiveTime: new Date(2021, 4, 29, 14, 7, 12), ProducedDate: new Date(2020, 4, 11, 7, 47, 1) },
         { ProductID: 4, ProductName: 'Boysenberry Spread', InStock: false, UnitsInStock: 0, OrderDate: new Date(2021, 4, 11, 18, 37, 2),
-        ReceiveTime: new Date(2021, 4, 27, 6, 40, 18), ProducedDate: new Date(2020, 4, 11, 18, 37, 2) },
+            ReceiveTime: new Date(2021, 4, 27, 6, 40, 18), ProducedDate: new Date(2020, 4, 11, 18, 37, 2) },
         { ProductID: 5, ProductName: 'Uncle Bobs Dried Pears', InStock: false, UnitsInStock: 0, OrderDate: new Date(2019, 3, 17, 5, 5, 15),
-        ReceiveTime: new Date(2019, 3, 31, 12, 47, 42), ProducedDate: new Date(2018, 3, 17, 5, 5, 15) },
+            ReceiveTime: new Date(2019, 3, 31, 12, 47, 42), ProducedDate: new Date(2018, 3, 17, 5, 5, 15) },
         { ProductID: 6, ProductName: 'Cranberry Sauce', InStock: true, UnitsInStock: 1098, OrderDate: new Date(2019, 9, 30, 16, 17, 27),
-        ReceiveTime: new Date(2019, 10, 11, 12, 47, 42), ProducedDate: new Date(2018, 9, 30, 16, 17, 27) },
+            ReceiveTime: new Date(2019, 10, 11, 12, 47, 42), ProducedDate: new Date(2018, 9, 30, 16, 17, 27) },
         { ProductID: 7, ProductName: 'Queso Cabrales', InStock: false, UnitsInStock: 0, OrderDate: new Date(2015, 2, 12, 21, 31, 22),
-        ReceiveTime: new Date(2015, 3, 3, 20, 20, 24), ProducedDate: new Date(2014, 2, 12, 21, 31, 22) },
+            ReceiveTime: new Date(2015, 3, 3, 20, 20, 24), ProducedDate: new Date(2014, 2, 12, 21, 31, 22) },
         { ProductID: 8, ProductName: 'Tofu', InStock: true, UnitsInStock: 7898, OrderDate: new Date(2018, 6, 14, 17, 27, 23),
-        ReceiveTime: new Date(2018, 6, 18, 15, 30, 30), ProducedDate: new Date(2017, 6, 14, 17, 27, 23) },
+            ReceiveTime: new Date(2018, 6, 18, 15, 30, 30), ProducedDate: new Date(2017, 6, 14, 17, 27, 23) },
         { ProductID: 9, ProductName: 'Chocolate Biscuits', InStock: true, UnitsInStock: 6998, OrderDate: new Date(2021, 7, 3, 15, 15, 0),
-        ReceiveTime: new Date(2021, 7, 7, 15, 30, 22), ProducedDate: new Date(2020, 7, 3, 15, 15, 0) },
+            ReceiveTime: new Date(2021, 7, 7, 15, 30, 22), ProducedDate: new Date(2020, 7, 3, 15, 15, 0) },
         { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: new Date(2021, 7, 3, 15, 15, 0),
-        ReceiveTime: new Date(2021, 7, 11, 14, 30, 0), ProducedDate: new Date(2020, 7, 3, 15, 15, 0) }
+            ReceiveTime: new Date(2021, 7, 11, 14, 30, 0), ProducedDate: new Date(2020, 7, 3, 15, 15, 0) }
     ]);
 
     public static foodPercentProductData = () => ([
@@ -700,11 +697,11 @@ export class SampleTestData {
         { ProductID: 2, ProductName: 'Syrup', InStock: false, UnitsInStock: 198, OrderDate: ymd('2008-01-15'), Discount: 0.83 },
         { ProductID: 3, ProductName: 'Seasoning', InStock: true, UnitsInStock: 5, OrderDate: ymd('2010-11-20'), Discount: -0.7 },
         { ProductID: 4, ProductName: 'Spread', InStock: false, UnitsInStock: 0, OrderDate: ymd('2007-10-11'), Discount: 11 },
-        { ProductID: 5, ProductName: 'Bobs Pears', InStock: false, UnitsInStock: 0, OrderDate: ymd('2001-07-27'), Discount: -0.5},
+        { ProductID: 5, ProductName: 'Bobs Pears', InStock: false, UnitsInStock: 0, OrderDate: ymd('2001-07-27'), Discount: -0.5 },
         { ProductID: 6, ProductName: 'Sauce', InStock: true, UnitsInStock: 1098, OrderDate: ymd('1990-05-17'), Discount: 0.027 },
         { ProductID: 7, ProductName: 'Queso Cabrale', InStock: false, UnitsInStock: 0, OrderDate: ymd('2005-03-03'), Discount: 0.099 },
         { ProductID: 8, ProductName: 'Tofu', InStock: true, UnitsInStock: 7898, OrderDate: ymd('2017-09-09'), Discount: 10 },
-        { ProductID: 9, ProductName: 'Chocolate', InStock: true, UnitsInStock: 698, OrderDate: ymd('2025-12-25'), Discount: .123},
+        { ProductID: 9, ProductName: 'Chocolate', InStock: true, UnitsInStock: 698, OrderDate: ymd('2025-12-25'), Discount: .123 },
         { ProductID: 10, ProductName: 'Biscuits', InStock: true, UnitsInStock: 20000, OrderDate: ymd('2018-03-01'), Discount: 0.39 }
     ]);
 
@@ -853,7 +850,8 @@ export class SampleTestData {
                     dataType: columnsType,
                     editable: true
                 });
-            } else {
+            }
+            else {
                 cols.push({
                     key: namePrefix + i,
                     dataType: columnsType,
@@ -928,24 +926,24 @@ export class SampleTestData {
     Certain characters serving as delimiters can be changed. Mostly used in CSV exporters tests. */
     public static getContactsFunkyData(delimiter) {
         return [{
-            name: 'Terrance Mc\'Orta',
-            phone: '(+359)770-504-2217 | 2218'
-        }, {
-            name: 'Richard Mahoney /LongerName/',
-            phone: ''
-        }, {
-            name: 'Donna' + delimiter + ' \/; Price',
-            phone: '859 496 28**'
-        }, {
-            name: '\r\n',
-            phone: '901-747-3428'
-        }, {
-            name: 'Dorothy "H." Spencer',
-            phone: '573-394-9254[fax]'
-        }, {
-            name: 'Иван Иванов (1' + delimiter + '2)',
-            phone: '№ 573-394-9254'
-        }];
+                name: 'Terrance Mc\'Orta',
+                phone: '(+359)770-504-2217 | 2218'
+            }, {
+                name: 'Richard Mahoney /LongerName/',
+                phone: ''
+            }, {
+                name: 'Donna' + delimiter + ' \/; Price',
+                phone: '859 496 28**'
+            }, {
+                name: '\r\n',
+                phone: '901-747-3428'
+            }, {
+                name: 'Dorothy "H." Spencer',
+                phone: '573-394-9254[fax]'
+            }, {
+                name: 'Иван Иванов (1' + delimiter + '2)',
+                phone: '№ 573-394-9254'
+            }];
     }
 
     /* Tree data: Every employee node has ID, Name, HireDate, Age and Employees */
@@ -995,7 +993,8 @@ export class SampleTestData {
                             OnPTO: false,
                         }
                     ]
-                }]
+                }
+            ]
         },
         {
             ID: 847,
@@ -1026,7 +1025,8 @@ export class SampleTestData {
                             Age: 39
                         }
                     ]
-                }]
+                }
+            ]
         },
         {
             ID: 19,
@@ -1042,7 +1042,8 @@ export class SampleTestData {
                     Age: 44,
                     OnPTO: true,
                     Employees: []
-                }]
+                }
+            ]
         },
         {
             ID: 17,
@@ -1088,7 +1089,8 @@ export class SampleTestData {
                     HireDate: new Date(2016, 2, 19),
                     OnPTO: false,
                     Age: 27
-                }]
+                }
+            ]
         }
     ]);
 
@@ -1173,7 +1175,8 @@ export class SampleTestData {
                             Age: 25
                         }
                     ]
-                }]
+                }
+            ]
         },
         {
             ID: 19,
@@ -1192,7 +1195,8 @@ export class SampleTestData {
                     Name: 'Elizabeth Richards',
                     HireDate: new Date(2017, 11, 9),
                     Age: 25
-                }]
+                }
+            ]
         }
     ]);
 
@@ -1323,7 +1327,8 @@ export class SampleTestData {
                             Age: 25
                         }
                     ]
-                }]
+                }
+            ]
         },
         {
             ID: 19,
@@ -1345,7 +1350,8 @@ export class SampleTestData {
                     HireDate: new Date(2017, 11, 9),
                     JobTitle: 'Software Developer',
                     Age: 25
-                }]
+                }
+            ]
         }
     ]);
 
@@ -1403,7 +1409,8 @@ export class SampleTestData {
                             OnPTO: false,
                         }
                     ]
-                }]
+                }
+            ]
         },
         {
             ID: 19,
@@ -1425,7 +1432,8 @@ export class SampleTestData {
                     HireDate: new Date(2017, 11, 9),
                     Age: 25,
                     OnPTO: true
-                }]
+                }
+            ]
         }
     ]);
 
@@ -2382,33 +2390,33 @@ export class SampleTestData {
                     USBillboard200: 1,
                     Artist: 'Naomí Yepes',
                     Songs: [{
-                        Number: 1,
-                        Title: 'Ambitious',
-                        Released: new Date('28 Apr 2015'),
-                        Genre: 'Dance-pop R&B',
-                        Album: 'Initiation'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'My heart will go on',
-                        Released: new Date('24 May 2015'),
-                        Genre: 'Dance-pop R&B',
-                        Album: 'Initiation'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'Sing to me',
-                        Released: new Date('28 May 2015'),
-                        Genre: 'Dance-pop R&B',
-                        Album: 'Initiation'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'Want to dance with somebody',
-                        Released: new Date('03 Jun 2015'),
-                        Genre: 'Dance-pop R&B',
-                        Album: 'Initiation'
-                    }]
+                            Number: 1,
+                            Title: 'Ambitious',
+                            Released: new Date('28 Apr 2015'),
+                            Genre: 'Dance-pop R&B',
+                            Album: 'Initiation'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'My heart will go on',
+                            Released: new Date('24 May 2015'),
+                            Genre: 'Dance-pop R&B',
+                            Album: 'Initiation'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'Sing to me',
+                            Released: new Date('28 May 2015'),
+                            Genre: 'Dance-pop R&B',
+                            Album: 'Initiation'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'Want to dance with somebody',
+                            Released: new Date('03 Jun 2015'),
+                            Genre: 'Dance-pop R&B',
+                            Album: 'Initiation'
+                        }]
                 },
                 {
                     Album: 'Dream Driven',
@@ -2417,89 +2425,89 @@ export class SampleTestData {
                     USBillboard200: 1,
                     Artist: 'Naomí Yepes',
                     Songs: [{
-                        Number: 1,
-                        Title: 'Intro',
-                        Released: null,
-                        Genre: '*',
-                        Album: 'Dream Driven'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'Ferocious',
-                        Released: new Date('28 Apr 2014'),
-                        Genre: 'Dance-pop R&B',
-                        Album: 'Dream Driven'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'Going crazy',
-                        Released: new Date('10 Feb 2015'),
-                        Genre: 'Dance-pop EDM',
-                        Album: 'Dream Driven'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'Future past',
-                        Released: null,
-                        Genre: '*',
-                        Album: 'Dream Driven'
-                    },
-                    {
-                        Number: 5,
-                        Title: 'Roaming like them',
-                        Released: new Date('2 Jul 2014'),
-                        Genre: 'Electro house Electropop',
-                        Album: 'Dream Driven'
-                    },
-                    {
-                        Number: 6,
-                        Title: 'Last Wishes',
-                        Released: new Date('12 Aug 2014'),
-                        Genre: 'R&B',
-                        Album: 'Dream Driven'
-                    },
-                    {
-                        Number: 7,
-                        Title: 'Stay where you are',
-                        Released: null,
-                        Genre: '*',
-                        Album: 'Dream Driven'
-                    },
-                    {
-                        Number: 8,
-                        Title: 'Imaginarium',
-                        Released: null,
-                        Genre: '*',
-                        Album: 'Dream Driven'
-                    },
-                    {
-                        Number: 9,
-                        Title: 'Tell me',
-                        Released: new Date('30 Sep 2014'),
-                        Genre: 'Synth-pop R&B',
-                        Album: 'Dream Driven'
-                    },
-                    {
-                        Number: 10,
-                        Title: 'Shredded into pieces',
-                        Released: null,
-                        Genre: '*',
-                        Album: 'Dream Driven'
-                    },
-                    {
-                        Number: 11,
-                        Title: 'Capture this moment',
-                        Released: null,
-                        Genre: '*',
-                        Album: 'Dream Driven'
-                    },
-                    {
-                        Number: 12,
-                        Title: 'Dream Driven',
-                        Released: null,
-                        Genre: '*',
-                        Album: 'Dream Driven'
-                    }]
+                            Number: 1,
+                            Title: 'Intro',
+                            Released: null,
+                            Genre: '*',
+                            Album: 'Dream Driven'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'Ferocious',
+                            Released: new Date('28 Apr 2014'),
+                            Genre: 'Dance-pop R&B',
+                            Album: 'Dream Driven'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'Going crazy',
+                            Released: new Date('10 Feb 2015'),
+                            Genre: 'Dance-pop EDM',
+                            Album: 'Dream Driven'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'Future past',
+                            Released: null,
+                            Genre: '*',
+                            Album: 'Dream Driven'
+                        },
+                        {
+                            Number: 5,
+                            Title: 'Roaming like them',
+                            Released: new Date('2 Jul 2014'),
+                            Genre: 'Electro house Electropop',
+                            Album: 'Dream Driven'
+                        },
+                        {
+                            Number: 6,
+                            Title: 'Last Wishes',
+                            Released: new Date('12 Aug 2014'),
+                            Genre: 'R&B',
+                            Album: 'Dream Driven'
+                        },
+                        {
+                            Number: 7,
+                            Title: 'Stay where you are',
+                            Released: null,
+                            Genre: '*',
+                            Album: 'Dream Driven'
+                        },
+                        {
+                            Number: 8,
+                            Title: 'Imaginarium',
+                            Released: null,
+                            Genre: '*',
+                            Album: 'Dream Driven'
+                        },
+                        {
+                            Number: 9,
+                            Title: 'Tell me',
+                            Released: new Date('30 Sep 2014'),
+                            Genre: 'Synth-pop R&B',
+                            Album: 'Dream Driven'
+                        },
+                        {
+                            Number: 10,
+                            Title: 'Shredded into pieces',
+                            Released: null,
+                            Genre: '*',
+                            Album: 'Dream Driven'
+                        },
+                        {
+                            Number: 11,
+                            Title: 'Capture this moment',
+                            Released: null,
+                            Genre: '*',
+                            Album: 'Dream Driven'
+                        },
+                        {
+                            Number: 12,
+                            Title: 'Dream Driven',
+                            Released: null,
+                            Genre: '*',
+                            Album: 'Dream Driven'
+                        }]
                 },
                 {
                     Album: 'The dragon journey',
@@ -2508,33 +2516,33 @@ export class SampleTestData {
                     USBillboard200: 2,
                     Artist: 'Naomí Yepes',
                     Songs: [{
-                        Number: 1,
-                        Title: 'My dream',
-                        Released: new Date('13 Jan 2017'),
-                        Genre: 'Dance-pop EDM',
-                        Album: 'The dragon journey'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'My passion',
-                        Released: new Date('23 Sep 2017'),
-                        Genre: 'Crunk reggaeton',
-                        Album: 'The dragon journey'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'What is love',
-                        Released: new Date('28 Nov 2018'),
-                        Genre: 'Dance-pop R&B',
-                        Album: 'The dragon journey'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'Negative',
-                        Released: new Date('01 Dec 2018'),
-                        Genre: 'Dance-pop EDM',
-                        Album: 'The dragon journey'
-                    }]
+                            Number: 1,
+                            Title: 'My dream',
+                            Released: new Date('13 Jan 2017'),
+                            Genre: 'Dance-pop EDM',
+                            Album: 'The dragon journey'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'My passion',
+                            Released: new Date('23 Sep 2017'),
+                            Genre: 'Crunk reggaeton',
+                            Album: 'The dragon journey'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'What is love',
+                            Released: new Date('28 Nov 2018'),
+                            Genre: 'Dance-pop R&B',
+                            Album: 'The dragon journey'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'Negative',
+                            Released: new Date('01 Dec 2018'),
+                            Genre: 'Dance-pop EDM',
+                            Album: 'The dragon journey'
+                        }]
                 },
                 {
                     Album: 'Organic me',
@@ -2543,82 +2551,82 @@ export class SampleTestData {
                     USBillboard200: 1,
                     Artist: 'Naomí Yepes',
                     Songs: [{
-                        Number: 1,
-                        Title: 'I Love',
-                        Released: new Date('11 May 2019'),
-                        Genre: 'Crunk reggaeton',
-                        Album: 'Organic me'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'Early Morning Compass',
-                        Released: new Date('15 Jan 2020'),
-                        Genre: 'mystical parody-bap ',
-                        Album: 'Organic me'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'Key Fields Forever',
-                        Released: new Date('2 Jan 2020'),
-                        Genre: 'Dance-pop EDM',
-                        Album: 'Organic me'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'Stand by Your Goblins',
-                        Released: new Date('20 Nov 2019'),
-                        Genre: '*',
-                        Album: 'Organic me'
-                    },
-                    {
-                        Number: 5,
-                        Title: 'Mad to Walk',
-                        Released: new Date('12 May 2019'),
-                        Genre: 'Electro house Electropop',
-                        Album: 'Organic me'
-                    },
-                    {
-                        Number: 6,
-                        Title: 'Alice\'s Waiting',
-                        Released: new Date('28 Jan 2020'),
-                        Genre: 'R&B',
-                        Album: 'Organic me'
-                    },
-                    {
-                        Number: 7,
-                        Title: 'We Shall Kiss',
-                        Released: new Date('30 Oct 2019'),
-                        Genre: '*',
-                        Album: 'Organic me'
-                    },
-                    {
-                        Number: 8,
-                        Title: 'Behind Single Ants',
-                        Released: new Date('2 Oct 2019'),
-                        Genre: '*',
-                        Album: 'Organic me'
-                    },
-                    {
-                        Number: 9,
-                        Title: 'Soap Autopsy',
-                        Released: new Date('8 Aug 2019'),
-                        Genre: 'Synth-pop R&B',
-                        Album: 'Organic me'
-                    },
-                    {
-                        Number: 10,
-                        Title: 'Have You Met Rich?',
-                        Released: new Date('1 Jul 2019'),
-                        Genre: 'ethno-tunes',
-                        Album: 'Organic me'
-                    },
-                    {
-                        Number: 11,
-                        Title: 'Livin\' on a Banana',
-                        Released: new Date('22 Nov 2019'),
-                        Genre: 'Crunk reggaeton',
-                        Album: 'Organic me'
-                    }]
+                            Number: 1,
+                            Title: 'I Love',
+                            Released: new Date('11 May 2019'),
+                            Genre: 'Crunk reggaeton',
+                            Album: 'Organic me'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'Early Morning Compass',
+                            Released: new Date('15 Jan 2020'),
+                            Genre: 'mystical parody-bap ',
+                            Album: 'Organic me'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'Key Fields Forever',
+                            Released: new Date('2 Jan 2020'),
+                            Genre: 'Dance-pop EDM',
+                            Album: 'Organic me'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'Stand by Your Goblins',
+                            Released: new Date('20 Nov 2019'),
+                            Genre: '*',
+                            Album: 'Organic me'
+                        },
+                        {
+                            Number: 5,
+                            Title: 'Mad to Walk',
+                            Released: new Date('12 May 2019'),
+                            Genre: 'Electro house Electropop',
+                            Album: 'Organic me'
+                        },
+                        {
+                            Number: 6,
+                            Title: 'Alice\'s Waiting',
+                            Released: new Date('28 Jan 2020'),
+                            Genre: 'R&B',
+                            Album: 'Organic me'
+                        },
+                        {
+                            Number: 7,
+                            Title: 'We Shall Kiss',
+                            Released: new Date('30 Oct 2019'),
+                            Genre: '*',
+                            Album: 'Organic me'
+                        },
+                        {
+                            Number: 8,
+                            Title: 'Behind Single Ants',
+                            Released: new Date('2 Oct 2019'),
+                            Genre: '*',
+                            Album: 'Organic me'
+                        },
+                        {
+                            Number: 9,
+                            Title: 'Soap Autopsy',
+                            Released: new Date('8 Aug 2019'),
+                            Genre: 'Synth-pop R&B',
+                            Album: 'Organic me'
+                        },
+                        {
+                            Number: 10,
+                            Title: 'Have You Met Rich?',
+                            Released: new Date('1 Jul 2019'),
+                            Genre: 'ethno-tunes',
+                            Album: 'Organic me'
+                        },
+                        {
+                            Number: 11,
+                            Title: 'Livin\' on a Banana',
+                            Released: new Date('22 Nov 2019'),
+                            Genre: 'Crunk reggaeton',
+                            Album: 'Organic me'
+                        }]
                 },
                 {
                     Album: 'Curiosity',
@@ -2627,47 +2635,47 @@ export class SampleTestData {
                     USBillboard200: 12,
                     Artist: 'Naomí Yepes',
                     Songs: [{
-                        Number: 1,
-                        Title: 'Goals',
-                        Released: new Date('07 Dec 2019'),
-                        Genre: '*',
-                        Album: 'Curiosity'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'Explorer',
-                        Released: new Date('08 Dec 2019'),
-                        Genre: 'Crunk reggaeton',
-                        Album: 'Curiosity'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'I need to know',
-                        Released: new Date('09 Dec 2019'),
-                        Genre: 'Dance-pop R&B',
-                        Album: 'Curiosity'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'Finding my purpose',
-                        Released: new Date('10 Dec 2019'),
-                        Genre: 'Heavy metal',
-                        Album: 'Curiosity'
-                    },
-                    {
-                        Number: 5,
-                        Title: 'Faster than the speed of love',
-                        Released: new Date('21 Dec 2019'),
-                        Genre: 'Dance-pop EDM',
-                        Album: 'Curiosity'
-                    },
-                    {
-                        Number: 6,
-                        Title: 'I like it',
-                        Released: new Date('01 Jan 2020'),
-                        Genre: 'Dance-pop EDM',
-                        Album: 'Curiosity'
-                    }]
+                            Number: 1,
+                            Title: 'Goals',
+                            Released: new Date('07 Dec 2019'),
+                            Genre: '*',
+                            Album: 'Curiosity'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'Explorer',
+                            Released: new Date('08 Dec 2019'),
+                            Genre: 'Crunk reggaeton',
+                            Album: 'Curiosity'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'I need to know',
+                            Released: new Date('09 Dec 2019'),
+                            Genre: 'Dance-pop R&B',
+                            Album: 'Curiosity'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'Finding my purpose',
+                            Released: new Date('10 Dec 2019'),
+                            Genre: 'Heavy metal',
+                            Album: 'Curiosity'
+                        },
+                        {
+                            Number: 5,
+                            Title: 'Faster than the speed of love',
+                            Released: new Date('21 Dec 2019'),
+                            Genre: 'Dance-pop EDM',
+                            Album: 'Curiosity'
+                        },
+                        {
+                            Number: 6,
+                            Title: 'I like it',
+                            Released: new Date('01 Jan 2020'),
+                            Genre: 'Dance-pop EDM',
+                            Album: 'Curiosity'
+                        }]
                 }
             ]
         },
@@ -2713,7 +2721,8 @@ export class SampleTestData {
                     Location: 'North America',
                     Headliner: 'YES',
                     TouredBy: 'Babila Ebwélé'
-                }],
+                }
+            ],
             Albums: [
                 {
                     Album: 'Pushing up daisies',
@@ -2722,75 +2731,75 @@ export class SampleTestData {
                     USBillboard200: 42,
                     Artist: 'Babila Ebwélé',
                     Songs: [{
-                        Number: 1,
-                        Title: 'Wood Shavings Forever',
-                        Released: new Date('9 Jun 2019'),
-                        Genre: '*',
-                        Album: 'Pushing up daisies'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'Early Morning Drive',
-                        Released: new Date('20 May 2019'),
-                        Genre: '*',
-                        Album: 'Pushing up daisies'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'Don\'t Natter',
-                        Released: new Date('10 Jun 2019'),
-                        Genre: 'adult calypso-industrial',
-                        Album: 'Pushing up daisies'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'Stairway to Balloons',
-                        Released: new Date('18 Jun 2019'),
-                        Genre: 'calypso and mariachi',
-                        Album: 'Pushing up daisies'
-                    },
-                    {
-                        Number: 5,
-                        Title: 'The Number of your Apple',
-                        Released: new Date('29 Oct 2019'),
-                        Genre: '*',
-                        Album: 'Pushing up daisies'
-                    },
-                    {
-                        Number: 6,
-                        Title: 'Your Delightful Heart',
-                        Released: new Date('24 Feb 2019'),
-                        Genre: '*',
-                        Album: 'Pushing up daisies'
-                    },
-                    {
-                        Number: 7,
-                        Title: 'Nice Weather For Balloons',
-                        Released: new Date('1 Aug 2019'),
-                        Genre: 'rap-hop',
-                        Album: 'Pushing up daisies'
-                    },
-                    {
-                        Number: 8,
-                        Title: 'The Girl From Cornwall',
-                        Released: new Date('4 May 2019'),
-                        Genre: 'enigmatic rock-and-roll',
-                        Album: 'Pushing up daisies'
-                    },
-                    {
-                        Number: 9,
-                        Title: 'Here Without Jack',
-                        Released: new Date('24 Oct 2019'),
-                        Genre: '*',
-                        Album: 'Pushing up daisies'
-                    },
-                    {
-                        Number: 10,
-                        Title: 'Born Rancid',
-                        Released: new Date('19 Mar 2019'),
-                        Genre: '*',
-                        Album: 'Pushing up daisies'
-                    }]
+                            Number: 1,
+                            Title: 'Wood Shavings Forever',
+                            Released: new Date('9 Jun 2019'),
+                            Genre: '*',
+                            Album: 'Pushing up daisies'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'Early Morning Drive',
+                            Released: new Date('20 May 2019'),
+                            Genre: '*',
+                            Album: 'Pushing up daisies'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'Don\'t Natter',
+                            Released: new Date('10 Jun 2019'),
+                            Genre: 'adult calypso-industrial',
+                            Album: 'Pushing up daisies'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'Stairway to Balloons',
+                            Released: new Date('18 Jun 2019'),
+                            Genre: 'calypso and mariachi',
+                            Album: 'Pushing up daisies'
+                        },
+                        {
+                            Number: 5,
+                            Title: 'The Number of your Apple',
+                            Released: new Date('29 Oct 2019'),
+                            Genre: '*',
+                            Album: 'Pushing up daisies'
+                        },
+                        {
+                            Number: 6,
+                            Title: 'Your Delightful Heart',
+                            Released: new Date('24 Feb 2019'),
+                            Genre: '*',
+                            Album: 'Pushing up daisies'
+                        },
+                        {
+                            Number: 7,
+                            Title: 'Nice Weather For Balloons',
+                            Released: new Date('1 Aug 2019'),
+                            Genre: 'rap-hop',
+                            Album: 'Pushing up daisies'
+                        },
+                        {
+                            Number: 8,
+                            Title: 'The Girl From Cornwall',
+                            Released: new Date('4 May 2019'),
+                            Genre: 'enigmatic rock-and-roll',
+                            Album: 'Pushing up daisies'
+                        },
+                        {
+                            Number: 9,
+                            Title: 'Here Without Jack',
+                            Released: new Date('24 Oct 2019'),
+                            Genre: '*',
+                            Album: 'Pushing up daisies'
+                        },
+                        {
+                            Number: 10,
+                            Title: 'Born Rancid',
+                            Released: new Date('19 Mar 2019'),
+                            Genre: '*',
+                            Album: 'Pushing up daisies'
+                        }]
                 },
                 {
                     Album: 'Death\'s dead',
@@ -2799,83 +2808,84 @@ export class SampleTestData {
                     USBillboard200: 95,
                     Artist: 'Babila Ebwélé',
                     Songs: [{
-                        Number: 1,
-                        Title: 'Men Sound Better With You',
-                        Released: new Date('20 Oct 2016'),
-                        Genre: 'rap-hop',
-                        Album: 'Death\'s dead'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'Ghost in My Rod',
-                        Released: new Date('5 Oct 2016'),
-                        Genre: 'enigmatic rock-and-roll',
-                        Album: 'Death\'s dead'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'Bed of Men',
-                        Released: new Date('14 Nov 2016'),
-                        Genre: 'whimsical comedy-grass ',
-                        Album: 'Death\'s dead'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'Don\'t Push',
-                        Released: new Date('2 Jan 2017'),
-                        Genre: 'unblack electronic-trip-hop',
-                        Album: 'Death\'s dead'
-                    },
-                    {
-                        Number: 5,
-                        Title: 'Nice Weather For Men',
-                        Released: new Date('18 Dec 2017'),
-                        Genre: '*',
-                        Album: 'Death\'s dead'
-                    },
-                    {
-                        Number: 6,
-                        Title: 'Rancid Rhapsody',
-                        Released: new Date('10 Mar 2017'),
-                        Genre: '*',
-                        Album: 'Death\'s dead'
-                    },
-                    {
-                        Number: 7,
-                        Title: 'Push, Push, Push!',
-                        Released: new Date('21 Feb 2017'),
-                        Genre: '*',
-                        Album: 'Death\'s dead'
-                    },
-                    {
-                        Number: 8,
-                        Title: 'My Name is Sarah',
-                        Released: new Date('15 Nov 2017'),
-                        Genre: '*',
-                        Album: 'Death\'s dead'
-                    },
-                    {
-                        Number: 9,
-                        Title: 'The Girl From My Hotel',
-                        Released: new Date('6 Nov 2017'),
-                        Genre: '*',
-                        Album: 'Death\'s dead'
-                    },
-                    {
-                        Number: 10,
-                        Title: 'Free Box',
-                        Released: new Date('18 Apr 2017'),
-                        Genre: 'splitter-funk',
-                        Album: 'Death\'s dead'
-                    },
-                    {
-                        Number: 11,
-                        Title: 'Hotel Cardiff',
-                        Released: new Date('30 Dec 2017'),
-                        Genre: 'guilty pleasure ebm',
-                        Album: 'Death\'s dead'
-                    }]
-                }]
+                            Number: 1,
+                            Title: 'Men Sound Better With You',
+                            Released: new Date('20 Oct 2016'),
+                            Genre: 'rap-hop',
+                            Album: 'Death\'s dead'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'Ghost in My Rod',
+                            Released: new Date('5 Oct 2016'),
+                            Genre: 'enigmatic rock-and-roll',
+                            Album: 'Death\'s dead'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'Bed of Men',
+                            Released: new Date('14 Nov 2016'),
+                            Genre: 'whimsical comedy-grass ',
+                            Album: 'Death\'s dead'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'Don\'t Push',
+                            Released: new Date('2 Jan 2017'),
+                            Genre: 'unblack electronic-trip-hop',
+                            Album: 'Death\'s dead'
+                        },
+                        {
+                            Number: 5,
+                            Title: 'Nice Weather For Men',
+                            Released: new Date('18 Dec 2017'),
+                            Genre: '*',
+                            Album: 'Death\'s dead'
+                        },
+                        {
+                            Number: 6,
+                            Title: 'Rancid Rhapsody',
+                            Released: new Date('10 Mar 2017'),
+                            Genre: '*',
+                            Album: 'Death\'s dead'
+                        },
+                        {
+                            Number: 7,
+                            Title: 'Push, Push, Push!',
+                            Released: new Date('21 Feb 2017'),
+                            Genre: '*',
+                            Album: 'Death\'s dead'
+                        },
+                        {
+                            Number: 8,
+                            Title: 'My Name is Sarah',
+                            Released: new Date('15 Nov 2017'),
+                            Genre: '*',
+                            Album: 'Death\'s dead'
+                        },
+                        {
+                            Number: 9,
+                            Title: 'The Girl From My Hotel',
+                            Released: new Date('6 Nov 2017'),
+                            Genre: '*',
+                            Album: 'Death\'s dead'
+                        },
+                        {
+                            Number: 10,
+                            Title: 'Free Box',
+                            Released: new Date('18 Apr 2017'),
+                            Genre: 'splitter-funk',
+                            Album: 'Death\'s dead'
+                        },
+                        {
+                            Number: 11,
+                            Title: 'Hotel Cardiff',
+                            Released: new Date('30 Dec 2017'),
+                            Genre: 'guilty pleasure ebm',
+                            Album: 'Death\'s dead'
+                        }]
+                }
+            ]
         },
         {
             ID: 2,
@@ -2893,61 +2903,61 @@ export class SampleTestData {
                     USBillboard200: 69,
                     Artist: 'Ahmad Nazeri',
                     Songs: [{
-                        Number: 1,
-                        Title: 'I am machine',
-                        Released: new Date('20 Oct 2004'),
-                        Genre: 'Heavy metal',
-                        Album: 'Emergency'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'I wish I knew',
-                        Released: new Date('21 Oct 2004'),
-                        Genre: 'rap-hop',
-                        Album: 'Emergency'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'How I feel',
-                        Released: new Date('22 Oct 2004'),
-                        Genre: 'Heavy metal',
-                        Album: 'Emergency'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'I am machine',
-                        Released: new Date('30 Oct 2004'),
-                        Genre: 'Heavy metal',
-                        Album: 'Emergency'
-                    },
-                    {
-                        Number: 5,
-                        Title: 'Monsters under my bed',
-                        Released: new Date('01 Nov 2004'),
-                        Genre: 'rap-hop',
-                        Album: 'Emergency'
-                    },
-                    {
-                        Number: 6,
-                        Title: 'I know what you want',
-                        Released: new Date('20 Nov 2004'),
-                        Genre: 'rap-hop',
-                        Album: 'Emergency'
-                    },
-                    {
-                        Number: 7,
-                        Title: 'Lies',
-                        Released: new Date('21 Nov 2004'),
-                        Genre: 'Heavy metal',
-                        Album: 'Emergency'
-                    },
-                    {
-                        Number: 8,
-                        Title: 'I did it for you',
-                        Released: new Date('22 Nov 2004'),
-                        Genre: 'rap-hop',
-                        Album: 'Emergency'
-                    }]
+                            Number: 1,
+                            Title: 'I am machine',
+                            Released: new Date('20 Oct 2004'),
+                            Genre: 'Heavy metal',
+                            Album: 'Emergency'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'I wish I knew',
+                            Released: new Date('21 Oct 2004'),
+                            Genre: 'rap-hop',
+                            Album: 'Emergency'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'How I feel',
+                            Released: new Date('22 Oct 2004'),
+                            Genre: 'Heavy metal',
+                            Album: 'Emergency'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'I am machine',
+                            Released: new Date('30 Oct 2004'),
+                            Genre: 'Heavy metal',
+                            Album: 'Emergency'
+                        },
+                        {
+                            Number: 5,
+                            Title: 'Monsters under my bed',
+                            Released: new Date('01 Nov 2004'),
+                            Genre: 'rap-hop',
+                            Album: 'Emergency'
+                        },
+                        {
+                            Number: 6,
+                            Title: 'I know what you want',
+                            Released: new Date('20 Nov 2004'),
+                            Genre: 'rap-hop',
+                            Album: 'Emergency'
+                        },
+                        {
+                            Number: 7,
+                            Title: 'Lies',
+                            Released: new Date('21 Nov 2004'),
+                            Genre: 'Heavy metal',
+                            Album: 'Emergency'
+                        },
+                        {
+                            Number: 8,
+                            Title: 'I did it for you',
+                            Released: new Date('22 Nov 2004'),
+                            Genre: 'rap-hop',
+                            Album: 'Emergency'
+                        }]
                 },
                 {
                     Album: 'Bursting bubbles',
@@ -2956,33 +2966,33 @@ export class SampleTestData {
                     USBillboard200: 39,
                     Artist: 'Ahmad Nazeri',
                     Songs: [{
-                        Number: 1,
-                        Title: 'Ghosts',
-                        Released: new Date('20 Apr 2006'),
-                        Genre: 'Hip-hop',
-                        Album: 'Bursting bubbles'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'What goes around comes around',
-                        Released: new Date('20 Apr 2006'),
-                        Genre: 'Heavy metal',
-                        Album: 'Bursting bubbles'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'I want nothing',
-                        Released: new Date('21 Apr 2006'),
-                        Genre: 'Heavy metal',
-                        Album: 'Bursting bubbles'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'Me and you',
-                        Released: new Date('22 Apr 2006'),
-                        Genre: 'Rock',
-                        Album: 'Bursting bubbles'
-                    }]
+                            Number: 1,
+                            Title: 'Ghosts',
+                            Released: new Date('20 Apr 2006'),
+                            Genre: 'Hip-hop',
+                            Album: 'Bursting bubbles'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'What goes around comes around',
+                            Released: new Date('20 Apr 2006'),
+                            Genre: 'Heavy metal',
+                            Album: 'Bursting bubbles'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'I want nothing',
+                            Released: new Date('21 Apr 2006'),
+                            Genre: 'Heavy metal',
+                            Album: 'Bursting bubbles'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'Me and you',
+                            Released: new Date('22 Apr 2006'),
+                            Genre: 'Rock',
+                            Album: 'Bursting bubbles'
+                        }]
                 }
             ]
         },
@@ -3001,40 +3011,40 @@ export class SampleTestData {
                     USBillboard200: 1,
                     Artist: 'Kimmy McIlmorie',
                     Songs: [{
-                        Number: 1,
-                        Title: 'Same old love',
-                        Released: new Date('20 Nov 2017'),
-                        Genre: 'Hip-hop',
-                        Album: 'Here we go again'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'Sick of it',
-                        Released: new Date('20 Nov 2017'),
-                        Genre: 'Hip-hop',
-                        Album: 'Here we go again'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'No one',
-                        Released: new Date('21 Nov 2017'),
-                        Genre: 'Metal',
-                        Album: 'Here we go again'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'Circles',
-                        Released: new Date('22 Nov 2017'),
-                        Genre: 'Heavy metal',
-                        Album: 'Here we go again'
-                    },
-                    {
-                        Number: 5,
-                        Title: 'Coming for you',
-                        Released: new Date('30 Nov 2017'),
-                        Genre: 'Hip-hop',
-                        Album: 'Here we go again'
-                    }]
+                            Number: 1,
+                            Title: 'Same old love',
+                            Released: new Date('20 Nov 2017'),
+                            Genre: 'Hip-hop',
+                            Album: 'Here we go again'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'Sick of it',
+                            Released: new Date('20 Nov 2017'),
+                            Genre: 'Hip-hop',
+                            Album: 'Here we go again'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'No one',
+                            Released: new Date('21 Nov 2017'),
+                            Genre: 'Metal',
+                            Album: 'Here we go again'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'Circles',
+                            Released: new Date('22 Nov 2017'),
+                            Genre: 'Heavy metal',
+                            Album: 'Here we go again'
+                        },
+                        {
+                            Number: 5,
+                            Title: 'Coming for you',
+                            Released: new Date('30 Nov 2017'),
+                            Genre: 'Hip-hop',
+                            Album: 'Here we go again'
+                        }]
                 }
             ]
         },
@@ -3053,40 +3063,40 @@ export class SampleTestData {
                     USBillboard200: 2,
                     Artist: 'Mar Rueda',
                     Songs: [{
-                        Number: 1,
-                        Title: 'You knew I was trouble',
-                        Released: new Date('20 Nov 2017'),
-                        Genre: 'Pop',
-                        Album: 'Trouble'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'Cannot live without you',
-                        Released: new Date('20 Nov 2017'),
-                        Genre: 'Pop',
-                        Album: 'Trouble'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'Lost you',
-                        Released: new Date('21 Nov 2017'),
-                        Genre: 'Metal',
-                        Album: 'Trouble'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'Happiness starts with you',
-                        Released: new Date('22 Nov 2017'),
-                        Genre: '*',
-                        Album: 'Trouble'
-                    },
-                    {
-                        Number: 5,
-                        Title: 'I saw it coming',
-                        Released: new Date('30 Dec 2017'),
-                        Genre: 'Hip-hop',
-                        Album: 'Trouble'
-                    }]
+                            Number: 1,
+                            Title: 'You knew I was trouble',
+                            Released: new Date('20 Nov 2017'),
+                            Genre: 'Pop',
+                            Album: 'Trouble'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'Cannot live without you',
+                            Released: new Date('20 Nov 2017'),
+                            Genre: 'Pop',
+                            Album: 'Trouble'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'Lost you',
+                            Released: new Date('21 Nov 2017'),
+                            Genre: 'Metal',
+                            Album: 'Trouble'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'Happiness starts with you',
+                            Released: new Date('22 Nov 2017'),
+                            Genre: '*',
+                            Album: 'Trouble'
+                        },
+                        {
+                            Number: 5,
+                            Title: 'I saw it coming',
+                            Released: new Date('30 Dec 2017'),
+                            Genre: 'Hip-hop',
+                            Album: 'Trouble'
+                        }]
                 }
             ]
         },
@@ -3135,75 +3145,75 @@ export class SampleTestData {
                     USBillboard200: 53,
                     Artist: 'Izabella Tabakova',
                     Songs: [{
-                        Number: 1,
-                        Title: 'Whole Lotta Super Cats',
-                        Released: new Date('21 May 2019'),
-                        Genre: '*',
-                        Album: 'Once bitten'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'Enter Becky',
-                        Released: new Date('16 Jan 2020'),
-                        Genre: '*',
-                        Album: 'Once bitten'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'Your Cheatin\' Flamingo',
-                        Released: new Date('14 Jan 2020'),
-                        Genre: '*',
-                        Album: 'Once bitten'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'Mad to Kiss',
-                        Released: new Date('6 Nov 2019'),
-                        Genre: 'Synth-pop R&B',
-                        Album: 'Once bitten'
-                    },
-                    {
-                        Number: 5,
-                        Title: 'Hotel Prague',
-                        Released: new Date('20 Oct 2019'),
-                        Genre: 'ethno-tunes',
-                        Album: 'Once bitten'
-                    },
-                    {
-                        Number: 6,
-                        Title: 'Jail on My Mind',
-                        Released: new Date('31 May 2019'),
-                        Genre: 'Crunk reggaeton',
-                        Album: 'Once bitten'
-                    },
-                    {
-                        Number: 7,
-                        Title: 'Amazing Blues',
-                        Released: new Date('29 May 2019'),
-                        Genre: 'mystical parody-bap ',
-                        Album: 'Once bitten'
-                    },
-                    {
-                        Number: 8,
-                        Title: 'Goody Two Iron Filings',
-                        Released: new Date('4 Jul 2019'),
-                        Genre: 'Electro house Electropop',
-                        Album: 'Once bitten'
-                    },
-                    {
-                        Number: 9,
-                        Title: 'I Love in Your Arms',
-                        Released: new Date('7 Jun 2019'),
-                        Genre: 'R&B',
-                        Album: 'Once bitten'
-                    },
-                    {
-                        Number: 10,
-                        Title: 'Truly Madly Amazing',
-                        Released: new Date('12 Sep 2019'),
-                        Genre: 'ethno-tunes',
-                        Album: 'Once bitten'
-                    }
+                            Number: 1,
+                            Title: 'Whole Lotta Super Cats',
+                            Released: new Date('21 May 2019'),
+                            Genre: '*',
+                            Album: 'Once bitten'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'Enter Becky',
+                            Released: new Date('16 Jan 2020'),
+                            Genre: '*',
+                            Album: 'Once bitten'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'Your Cheatin\' Flamingo',
+                            Released: new Date('14 Jan 2020'),
+                            Genre: '*',
+                            Album: 'Once bitten'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'Mad to Kiss',
+                            Released: new Date('6 Nov 2019'),
+                            Genre: 'Synth-pop R&B',
+                            Album: 'Once bitten'
+                        },
+                        {
+                            Number: 5,
+                            Title: 'Hotel Prague',
+                            Released: new Date('20 Oct 2019'),
+                            Genre: 'ethno-tunes',
+                            Album: 'Once bitten'
+                        },
+                        {
+                            Number: 6,
+                            Title: 'Jail on My Mind',
+                            Released: new Date('31 May 2019'),
+                            Genre: 'Crunk reggaeton',
+                            Album: 'Once bitten'
+                        },
+                        {
+                            Number: 7,
+                            Title: 'Amazing Blues',
+                            Released: new Date('29 May 2019'),
+                            Genre: 'mystical parody-bap ',
+                            Album: 'Once bitten'
+                        },
+                        {
+                            Number: 8,
+                            Title: 'Goody Two Iron Filings',
+                            Released: new Date('4 Jul 2019'),
+                            Genre: 'Electro house Electropop',
+                            Album: 'Once bitten'
+                        },
+                        {
+                            Number: 9,
+                            Title: 'I Love in Your Arms',
+                            Released: new Date('7 Jun 2019'),
+                            Genre: 'R&B',
+                            Album: 'Once bitten'
+                        },
+                        {
+                            Number: 10,
+                            Title: 'Truly Madly Amazing',
+                            Released: new Date('12 Sep 2019'),
+                            Genre: 'ethno-tunes',
+                            Album: 'Once bitten'
+                        }
                     ]
                 },
                 {
@@ -3282,7 +3292,8 @@ export class SampleTestData {
                             Released: new Date('25 Jul 2019'),
                             Genre: '*',
                             Album: 'Your graciousness'
-                        }]
+                        }
+                    ]
                 },
                 {
                     Album: 'Dark matters',
@@ -3291,33 +3302,33 @@ export class SampleTestData {
                     USBillboard200: 85,
                     Artist: 'Izabella Tabakova',
                     Songs: [{
-                        Number: 1,
-                        Title: 'The Sun',
-                        Released: new Date('31 Oct 2002'),
-                        Genre: 'old emo-garage ',
-                        Album: 'Dark matters'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'I will survive',
-                        Released: new Date('03 Nov 2002'),
-                        Genre: 'old emo-garage ',
-                        Album: 'Dark matters'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'Try',
-                        Released: new Date('04 Nov 2002'),
-                        Genre: 'old emo-garage ',
-                        Album: 'Dark matters'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'Miracle',
-                        Released: new Date('05 Nov 2002'),
-                        Genre: 'old emo-garage ',
-                        Album: 'Dark matters'
-                    }]
+                            Number: 1,
+                            Title: 'The Sun',
+                            Released: new Date('31 Oct 2002'),
+                            Genre: 'old emo-garage ',
+                            Album: 'Dark matters'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'I will survive',
+                            Released: new Date('03 Nov 2002'),
+                            Genre: 'old emo-garage ',
+                            Album: 'Dark matters'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'Try',
+                            Released: new Date('04 Nov 2002'),
+                            Genre: 'old emo-garage ',
+                            Album: 'Dark matters'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'Miracle',
+                            Released: new Date('05 Nov 2002'),
+                            Genre: 'old emo-garage ',
+                            Album: 'Dark matters'
+                        }]
                 }
             ]
         },
@@ -3336,47 +3347,47 @@ export class SampleTestData {
                     USBillboard200: 5,
                     Artist: 'Nguyễn Diệp Chi',
                     Songs: [{
-                        Number: 1,
-                        Title: 'Book of love',
-                        Released: new Date('31 Dec 2003'),
-                        Genre: 'Hip-hop',
-                        Album: 'Library of liberty'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'Commitment',
-                        Released: new Date('01 Jan 2004'),
-                        Genre: 'Hip-hop',
-                        Album: 'Library of liberty'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'Satisfaction',
-                        Released: new Date('01 Jan 2004'),
-                        Genre: 'Hip-hop',
-                        Album: 'Library of liberty'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'Obsession',
-                        Released: new Date('01 Jan 2004'),
-                        Genre: 'Hip-hop',
-                        Album: 'Library of liberty'
-                    },
-                    {
-                        Number: 5,
-                        Title: 'Oblivion',
-                        Released: new Date('02 Jan 2004'),
-                        Genre: 'Hip-hop',
-                        Album: 'Library of liberty'
-                    },
-                    {
-                        Number: 6,
-                        Title: 'Energy',
-                        Released: new Date('03 Jan 2004'),
-                        Genre: 'Hip-hop',
-                        Album: 'Library of liberty'
-                    }]
+                            Number: 1,
+                            Title: 'Book of love',
+                            Released: new Date('31 Dec 2003'),
+                            Genre: 'Hip-hop',
+                            Album: 'Library of liberty'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'Commitment',
+                            Released: new Date('01 Jan 2004'),
+                            Genre: 'Hip-hop',
+                            Album: 'Library of liberty'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'Satisfaction',
+                            Released: new Date('01 Jan 2004'),
+                            Genre: 'Hip-hop',
+                            Album: 'Library of liberty'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'Obsession',
+                            Released: new Date('01 Jan 2004'),
+                            Genre: 'Hip-hop',
+                            Album: 'Library of liberty'
+                        },
+                        {
+                            Number: 5,
+                            Title: 'Oblivion',
+                            Released: new Date('02 Jan 2004'),
+                            Genre: 'Hip-hop',
+                            Album: 'Library of liberty'
+                        },
+                        {
+                            Number: 6,
+                            Title: 'Energy',
+                            Released: new Date('03 Jan 2004'),
+                            Genre: 'Hip-hop',
+                            Album: 'Library of liberty'
+                        }]
                 }
             ]
         },
@@ -3395,40 +3406,40 @@ export class SampleTestData {
                     USBillboard200: 29,
                     Artist: 'Eva Lee',
                     Songs: [{
-                        Number: 1,
-                        Title: 'We shall see',
-                        Released: new Date('03 May 2001'),
-                        Genre: 'rap-hop',
-                        Album: 'Just a tease'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'Hopeless',
-                        Released: new Date('04 May 2001'),
-                        Genre: 'rap-hop',
-                        Album: 'Just a tease'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'Ignorant',
-                        Released: new Date('04 May 2001'),
-                        Genre: 'rap-hop',
-                        Album: 'Just a tease'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'Dance',
-                        Released: new Date('05 May 2019'),
-                        Genre: 'Metal',
-                        Album: 'Just a tease'
-                    },
-                    {
-                        Number: 5,
-                        Title: 'Fire',
-                        Released: new Date('06 May 2019'),
-                        Genre: 'Metal',
-                        Album: 'Just a tease'
-                    }]
+                            Number: 1,
+                            Title: 'We shall see',
+                            Released: new Date('03 May 2001'),
+                            Genre: 'rap-hop',
+                            Album: 'Just a tease'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'Hopeless',
+                            Released: new Date('04 May 2001'),
+                            Genre: 'rap-hop',
+                            Album: 'Just a tease'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'Ignorant',
+                            Released: new Date('04 May 2001'),
+                            Genre: 'rap-hop',
+                            Album: 'Just a tease'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'Dance',
+                            Released: new Date('05 May 2019'),
+                            Genre: 'Metal',
+                            Album: 'Just a tease'
+                        },
+                        {
+                            Number: 5,
+                            Title: 'Fire',
+                            Released: new Date('06 May 2019'),
+                            Genre: 'Metal',
+                            Album: 'Just a tease'
+                        }]
                 }
             ]
         },
@@ -3652,26 +3663,26 @@ export class SampleTestData {
                     USBillboard200: 98,
                     Artist: 'Pablo Cambeiro',
                     Songs: [{
-                        Number: 1,
-                        Title: 'Silence',
-                        Released: new Date('25 Aug 2017'),
-                        Genre: 'rap-hop',
-                        Album: 'Fluke'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'Nothing matters anymore',
-                        Released: new Date('25 Aug 2017'),
-                        Genre: '*',
-                        Album: 'Fluke'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'Everything wrong with me',
-                        Released: new Date('25 Aug 2017'),
-                        Genre: '*',
-                        Album: 'Fluke'
-                    }]
+                            Number: 1,
+                            Title: 'Silence',
+                            Released: new Date('25 Aug 2017'),
+                            Genre: 'rap-hop',
+                            Album: 'Fluke'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'Nothing matters anymore',
+                            Released: new Date('25 Aug 2017'),
+                            Genre: '*',
+                            Album: 'Fluke'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'Everything wrong with me',
+                            Released: new Date('25 Aug 2017'),
+                            Genre: '*',
+                            Album: 'Fluke'
+                        }]
                 },
                 {
                     Album: 'Crowd control',
@@ -3680,69 +3691,70 @@ export class SampleTestData {
                     USBillboard200: 84,
                     Artist: 'Pablo Cambeiro',
                     Songs: [{
-                        Number: 1,
-                        Title: 'My Bed on My Mind',
-                        Released: new Date('25 Mar 2019'),
-                        Genre: 'ethno-tunes',
-                        Album: 'Crowd control'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'Bright Blues',
-                        Released: new Date('28 Sep 2019'),
-                        Genre: 'neuro-tunes',
-                        Album: 'Crowd control'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'Sail, Sail, Sail!',
-                        Released: new Date('5 Mar 2019'),
-                        Genre: '*',
-                        Album: 'Crowd control'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'Hotel My Bed',
-                        Released: new Date('22 Mar 2019'),
-                        Genre: '*',
-                        Album: 'Crowd control'
-                    },
-                    {
-                        Number: 5,
-                        Title: 'Gonna Make You Mash',
-                        Released: new Date('18 May 2019'),
-                        Genre: '*',
-                        Album: 'Crowd control'
-                    },
-                    {
-                        Number: 6,
-                        Title: 'Straight Outta America',
-                        Released: new Date('16 Jan 2020'),
-                        Genre: 'hardcore opera',
-                        Album: 'Crowd control'
-                    },
-                    {
-                        Number: 7,
-                        Title: 'I Drive',
-                        Released: new Date('23 Feb 2019'),
-                        Genre: 'emotional C-jam ',
-                        Album: 'Crowd control'
-                    },
-                    {
-                        Number: 8,
-                        Title: 'Like a Teddy',
-                        Released: new Date('31 Aug 2019'),
-                        Genre: '*',
-                        Album: 'Crowd control'
-                    },
-                    {
-                        Number: 9,
-                        Title: 'Teddy Boogie',
-                        Released: new Date('30 Nov 2019'),
-                        Genre: '*',
-                        Album: 'Crowd control'
-                    }]
-                }]
+                            Number: 1,
+                            Title: 'My Bed on My Mind',
+                            Released: new Date('25 Mar 2019'),
+                            Genre: 'ethno-tunes',
+                            Album: 'Crowd control'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'Bright Blues',
+                            Released: new Date('28 Sep 2019'),
+                            Genre: 'neuro-tunes',
+                            Album: 'Crowd control'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'Sail, Sail, Sail!',
+                            Released: new Date('5 Mar 2019'),
+                            Genre: '*',
+                            Album: 'Crowd control'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'Hotel My Bed',
+                            Released: new Date('22 Mar 2019'),
+                            Genre: '*',
+                            Album: 'Crowd control'
+                        },
+                        {
+                            Number: 5,
+                            Title: 'Gonna Make You Mash',
+                            Released: new Date('18 May 2019'),
+                            Genre: '*',
+                            Album: 'Crowd control'
+                        },
+                        {
+                            Number: 6,
+                            Title: 'Straight Outta America',
+                            Released: new Date('16 Jan 2020'),
+                            Genre: 'hardcore opera',
+                            Album: 'Crowd control'
+                        },
+                        {
+                            Number: 7,
+                            Title: 'I Drive',
+                            Released: new Date('23 Feb 2019'),
+                            Genre: 'emotional C-jam ',
+                            Album: 'Crowd control'
+                        },
+                        {
+                            Number: 8,
+                            Title: 'Like a Teddy',
+                            Released: new Date('31 Aug 2019'),
+                            Genre: '*',
+                            Album: 'Crowd control'
+                        },
+                        {
+                            Number: 9,
+                            Title: 'Teddy Boogie',
+                            Released: new Date('30 Nov 2019'),
+                            Genre: '*',
+                            Album: 'Crowd control'
+                        }]
+                }
+            ]
         },
         {
             ID: 10,
@@ -3759,33 +3771,33 @@ export class SampleTestData {
                     USBillboard200: 77,
                     Artist: 'Athar Malakooti',
                     Songs: [{
-                        Number: 1,
-                        Title: 'Actions',
-                        Released: new Date('25 Feb 2016'),
-                        Genre: 'ethno-tunes',
-                        Album: 'Pushing up daisies'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'Blinding lights',
-                        Released: new Date('28 Feb 2016'),
-                        Genre: 'neuro-tunes',
-                        Album: 'Pushing up daisies'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'I want more',
-                        Released: new Date('5 Mar 2016'),
-                        Genre: '*',
-                        Album: 'Pushing up daisies'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'House by the lake',
-                        Released: new Date('22 Mar 2016'),
-                        Genre: '*',
-                        Album: 'Pushing up daisies'
-                    }]
+                            Number: 1,
+                            Title: 'Actions',
+                            Released: new Date('25 Feb 2016'),
+                            Genre: 'ethno-tunes',
+                            Album: 'Pushing up daisies'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'Blinding lights',
+                            Released: new Date('28 Feb 2016'),
+                            Genre: 'neuro-tunes',
+                            Album: 'Pushing up daisies'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'I want more',
+                            Released: new Date('5 Mar 2016'),
+                            Genre: '*',
+                            Album: 'Pushing up daisies'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'House by the lake',
+                            Released: new Date('22 Mar 2016'),
+                            Genre: '*',
+                            Album: 'Pushing up daisies'
+                        }]
                 }
             ]
         },
@@ -3810,7 +3822,8 @@ export class SampleTestData {
                     Location: 'United States, Europe',
                     Headliner: 'NO',
                     TouredBy: 'Marti Valencia'
-                }],
+                }
+            ],
             Albums: [
                 {
                     Album: 'Nemesis',
@@ -3819,33 +3832,33 @@ export class SampleTestData {
                     USBillboard200: 9,
                     Artist: 'Marti Valencia',
                     Songs: [{
-                        Number: 1,
-                        Title: 'Love in motion',
-                        Released: new Date('25 Jun 2004'),
-                        Genre: 'ethno-tunes',
-                        Album: 'Nemesis'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'The picture',
-                        Released: new Date('28 Jun 2004'),
-                        Genre: 'neuro-tunes',
-                        Album: 'Nemesis'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'Flowers',
-                        Released: new Date('5 Jul 2004'),
-                        Genre: '*',
-                        Album: 'Nemesis'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'Regret',
-                        Released: new Date('22 Avg 2004'),
-                        Genre: 'Heavy metal',
-                        Album: 'Nemesis'
-                    }]
+                            Number: 1,
+                            Title: 'Love in motion',
+                            Released: new Date('25 Jun 2004'),
+                            Genre: 'ethno-tunes',
+                            Album: 'Nemesis'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'The picture',
+                            Released: new Date('28 Jun 2004'),
+                            Genre: 'neuro-tunes',
+                            Album: 'Nemesis'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'Flowers',
+                            Released: new Date('5 Jul 2004'),
+                            Genre: '*',
+                            Album: 'Nemesis'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'Regret',
+                            Released: new Date('22 Avg 2004'),
+                            Genre: 'Heavy metal',
+                            Album: 'Nemesis'
+                        }]
                 },
                 {
                     Album: 'First chance',
@@ -3854,89 +3867,89 @@ export class SampleTestData {
                     USBillboard200: 19,
                     Artist: 'Marti Valencia',
                     Songs: [{
-                        Number: 1,
-                        Title: 'My Name is Jason',
-                        Released: new Date('12 Jul 2019'),
-                        Genre: '*',
-                        Album: 'First chance'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'Amazing Andy',
-                        Released: new Date('5 Mar 2019'),
-                        Genre: '*',
-                        Album: 'First chance'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'The Number of your Knight',
-                        Released: new Date('4 Dec 2019'),
-                        Genre: '*',
-                        Album: 'First chance'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'I Sail',
-                        Released: new Date('3 Mar 2019'),
-                        Genre: '*',
-                        Album: 'First chance'
-                    },
-                    {
-                        Number: 5,
-                        Title: 'Goody Two Hands',
-                        Released: new Date('11 Oct 2019'),
-                        Genre: 'Electro house Electropop',
-                        Album: 'First chance'
-                    },
-                    {
-                        Number: 6,
-                        Title: 'Careful With That Knife',
-                        Released: new Date('18 Dec 2019'),
-                        Genre: 'R&B',
-                        Album: 'First chance'
-                    },
-                    {
-                        Number: 7,
-                        Title: 'Four Single Ants',
-                        Released: new Date('18 Jan 2020'),
-                        Genre: '*',
-                        Album: 'First chance'
-                    },
-                    {
-                        Number: 8,
-                        Title: 'Kiss Forever',
-                        Released: new Date('10 Aug 2019'),
-                        Genre: '*',
-                        Album: 'First chance'
-                    },
-                    {
-                        Number: 9,
-                        Title: 'Rich\'s Waiting',
-                        Released: new Date('15 Mar 2019'),
-                        Genre: 'Synth-pop R&B',
-                        Album: 'First chance'
-                    },
-                    {
-                        Number: 10,
-                        Title: 'Japan is Your Land',
-                        Released: new Date('7 Mar 2019'),
-                        Genre: 'ethno-tunes',
-                        Album: 'First chance'
-                    },
-                    {
-                        Number: 11,
-                        Title: 'Pencils in My Banana',
-                        Released: new Date('21 Jun 2019'),
-                        Genre: 'Crunk reggaeton',
-                        Album: 'First chance'
-                    },
-                    {
-                        Number: 12,
-                        Title: 'I Sail in Your Arms',
-                        Released: new Date('30 Apr 2019'),
-                        Genre: 'Synth-pop R&B',
-                        Album: 'First chance'
-                    }]
+                            Number: 1,
+                            Title: 'My Name is Jason',
+                            Released: new Date('12 Jul 2019'),
+                            Genre: '*',
+                            Album: 'First chance'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'Amazing Andy',
+                            Released: new Date('5 Mar 2019'),
+                            Genre: '*',
+                            Album: 'First chance'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'The Number of your Knight',
+                            Released: new Date('4 Dec 2019'),
+                            Genre: '*',
+                            Album: 'First chance'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'I Sail',
+                            Released: new Date('3 Mar 2019'),
+                            Genre: '*',
+                            Album: 'First chance'
+                        },
+                        {
+                            Number: 5,
+                            Title: 'Goody Two Hands',
+                            Released: new Date('11 Oct 2019'),
+                            Genre: 'Electro house Electropop',
+                            Album: 'First chance'
+                        },
+                        {
+                            Number: 6,
+                            Title: 'Careful With That Knife',
+                            Released: new Date('18 Dec 2019'),
+                            Genre: 'R&B',
+                            Album: 'First chance'
+                        },
+                        {
+                            Number: 7,
+                            Title: 'Four Single Ants',
+                            Released: new Date('18 Jan 2020'),
+                            Genre: '*',
+                            Album: 'First chance'
+                        },
+                        {
+                            Number: 8,
+                            Title: 'Kiss Forever',
+                            Released: new Date('10 Aug 2019'),
+                            Genre: '*',
+                            Album: 'First chance'
+                        },
+                        {
+                            Number: 9,
+                            Title: 'Rich\'s Waiting',
+                            Released: new Date('15 Mar 2019'),
+                            Genre: 'Synth-pop R&B',
+                            Album: 'First chance'
+                        },
+                        {
+                            Number: 10,
+                            Title: 'Japan is Your Land',
+                            Released: new Date('7 Mar 2019'),
+                            Genre: 'ethno-tunes',
+                            Album: 'First chance'
+                        },
+                        {
+                            Number: 11,
+                            Title: 'Pencils in My Banana',
+                            Released: new Date('21 Jun 2019'),
+                            Genre: 'Crunk reggaeton',
+                            Album: 'First chance'
+                        },
+                        {
+                            Number: 12,
+                            Title: 'I Sail in Your Arms',
+                            Released: new Date('30 Apr 2019'),
+                            Genre: 'Synth-pop R&B',
+                            Album: 'First chance'
+                        }]
                 },
                 {
                     Album: 'God\'s advocate',
@@ -3945,47 +3958,47 @@ export class SampleTestData {
                     USBillboard200: 37,
                     Artist: 'Marti Valencia',
                     Songs: [{
-                        Number: 1,
-                        Title: 'Destiny',
-                        Released: new Date('07 May 2007'),
-                        Genre: '*',
-                        Album: 'God\'s advocate'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'I am the chosen one',
-                        Released: new Date('08 May 2007'),
-                        Genre: 'Heavy metal',
-                        Album: 'God\'s advocate'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'New me',
-                        Released: new Date('09 May 2007'),
-                        Genre: 'Dance-pop R&B',
-                        Album: 'God\'s advocate'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'Miss you',
-                        Released: new Date('10 May 2007'),
-                        Genre: 'Heavy metal',
-                        Album: 'God\'s advocate'
-                    },
-                    {
-                        Number: 5,
-                        Title: 'Turn back the time',
-                        Released: new Date('21 May 2007'),
-                        Genre: 'Dance-pop EDM',
-                        Album: 'God\'s advocate'
-                    },
-                    {
-                        Number: 6,
-                        Title: 'Let us have fun',
-                        Released: new Date('01 Jun 2007'),
-                        Genre: 'Dance-pop EDM',
-                        Album: 'God\'s advocate'
-                    }]
+                            Number: 1,
+                            Title: 'Destiny',
+                            Released: new Date('07 May 2007'),
+                            Genre: '*',
+                            Album: 'God\'s advocate'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'I am the chosen one',
+                            Released: new Date('08 May 2007'),
+                            Genre: 'Heavy metal',
+                            Album: 'God\'s advocate'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'New me',
+                            Released: new Date('09 May 2007'),
+                            Genre: 'Dance-pop R&B',
+                            Album: 'God\'s advocate'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'Miss you',
+                            Released: new Date('10 May 2007'),
+                            Genre: 'Heavy metal',
+                            Album: 'God\'s advocate'
+                        },
+                        {
+                            Number: 5,
+                            Title: 'Turn back the time',
+                            Released: new Date('21 May 2007'),
+                            Genre: 'Dance-pop EDM',
+                            Album: 'God\'s advocate'
+                        },
+                        {
+                            Number: 6,
+                            Title: 'Let us have fun',
+                            Released: new Date('01 Jun 2007'),
+                            Genre: 'Dance-pop EDM',
+                            Album: 'God\'s advocate'
+                        }]
                 }
             ]
         },
@@ -4004,33 +4017,33 @@ export class SampleTestData {
                     USBillboard200: 7,
                     Artist: 'Alicia Stanger',
                     Songs: [{
-                        Number: 1,
-                        Title: 'Brothers',
-                        Released: new Date('25 Oct 2005'),
-                        Genre: 'Hip-hop',
-                        Album: 'Forever alone'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'Alone',
-                        Released: new Date('28 Oct 2005'),
-                        Genre: 'Heavy metal',
-                        Album: 'Forever alone'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'I will go on',
-                        Released: new Date('5 Nov 2005'),
-                        Genre: 'Heavy metal',
-                        Album: 'Forever alone'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'Horses',
-                        Released: new Date('22 Dec 2005'),
-                        Genre: '*',
-                        Album: 'Forever alone'
-                    }]
+                            Number: 1,
+                            Title: 'Brothers',
+                            Released: new Date('25 Oct 2005'),
+                            Genre: 'Hip-hop',
+                            Album: 'Forever alone'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'Alone',
+                            Released: new Date('28 Oct 2005'),
+                            Genre: 'Heavy metal',
+                            Album: 'Forever alone'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'I will go on',
+                            Released: new Date('5 Nov 2005'),
+                            Genre: 'Heavy metal',
+                            Album: 'Forever alone'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'Horses',
+                            Released: new Date('22 Dec 2005'),
+                            Genre: '*',
+                            Album: 'Forever alone'
+                        }]
                 }
             ]
         },
@@ -4093,33 +4106,33 @@ export class SampleTestData {
                     USBillboard200: 35,
                     Artist: 'Peter Taylor',
                     Songs: [{
-                        Number: 1,
-                        Title: 'Now that I am alone',
-                        Released: new Date('25 Apr 2008'),
-                        Genre: '*',
-                        Album: 'Decisions decisions'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'Hopefully',
-                        Released: new Date('26 Apr 2008'),
-                        Genre: '*',
-                        Album: 'Decisions decisions'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'Wonderful life',
-                        Released: new Date('5 May 2008'),
-                        Genre: '*',
-                        Album: 'Decisions decisions'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'Amazing world',
-                        Released: new Date('22 Dec 2008'),
-                        Genre: '*',
-                        Album: 'Decisions decisions'
-                    }]
+                            Number: 1,
+                            Title: 'Now that I am alone',
+                            Released: new Date('25 Apr 2008'),
+                            Genre: '*',
+                            Album: 'Decisions decisions'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'Hopefully',
+                            Released: new Date('26 Apr 2008'),
+                            Genre: '*',
+                            Album: 'Decisions decisions'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'Wonderful life',
+                            Released: new Date('5 May 2008'),
+                            Genre: '*',
+                            Album: 'Decisions decisions'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'Amazing world',
+                            Released: new Date('22 Dec 2008'),
+                            Genre: '*',
+                            Album: 'Decisions decisions'
+                        }]
                 },
                 {
                     Album: 'Climate changed',
@@ -4128,536 +4141,536 @@ export class SampleTestData {
                     USBillboard200: 89,
                     Artist: 'Peter Taylor',
                     Songs: [{
-                        Number: 1,
-                        Title: 'This is how I am now',
-                        Released: new Date('22 Jun 2015'),
-                        Genre: 'Hip-hop',
-                        Album: 'Climate changed'
-                    },
-                    {
-                        Number: 2,
-                        Title: 'I feel',
-                        Released: new Date('26 Jun 2015'),
-                        Genre: 'rap-hop',
-                        Album: 'Climate changed'
-                    },
-                    {
-                        Number: 3,
-                        Title: 'Do I want to know',
-                        Released: new Date('5 Jul 2015'),
-                        Genre: 'rap-hop',
-                        Album: 'Climate changed'
-                    },
-                    {
-                        Number: 4,
-                        Title: 'Natural love',
-                        Released: new Date('22 Jul 2015'),
-                        Genre: '*',
-                        Album: 'Climate changed'
-                    },
-                    {
-                        Number: 5,
-                        Title: 'I will help',
-                        Released: new Date('22 Jul 2015'),
-                        Genre: '*',
-                        Album: 'Climate changed'
-                    },
-                    {
-                        Number: 6,
-                        Title: 'No matter what',
-                        Released: new Date('22 Jul 2015'),
-                        Genre: 'hip-hop',
-                        Album: 'Climate changed'
-                    }]
+                            Number: 1,
+                            Title: 'This is how I am now',
+                            Released: new Date('22 Jun 2015'),
+                            Genre: 'Hip-hop',
+                            Album: 'Climate changed'
+                        },
+                        {
+                            Number: 2,
+                            Title: 'I feel',
+                            Released: new Date('26 Jun 2015'),
+                            Genre: 'rap-hop',
+                            Album: 'Climate changed'
+                        },
+                        {
+                            Number: 3,
+                            Title: 'Do I want to know',
+                            Released: new Date('5 Jul 2015'),
+                            Genre: 'rap-hop',
+                            Album: 'Climate changed'
+                        },
+                        {
+                            Number: 4,
+                            Title: 'Natural love',
+                            Released: new Date('22 Jul 2015'),
+                            Genre: '*',
+                            Album: 'Climate changed'
+                        },
+                        {
+                            Number: 5,
+                            Title: 'I will help',
+                            Released: new Date('22 Jul 2015'),
+                            Genre: '*',
+                            Album: 'Climate changed'
+                        },
+                        {
+                            Number: 6,
+                            Title: 'No matter what',
+                            Released: new Date('22 Jul 2015'),
+                            Genre: 'hip-hop',
+                            Album: 'Climate changed'
+                        }]
                 }
             ]
         }
     ]);
 
     public static gridProductData = () => [{
-        ProductID: 1,
-        ProductName: "Chai",
-        SupplierID: 1,
-        CategoryID: 1,
-        QuantityPerUnit: "10 boxes x 20 bags",
-        UnitPrice: 18.0000,
-        UnitsInStock: 39,
-        UnitsOnOrder: 30,
-        ReorderLevel: 10,
-        Discontinued: false,
-        OrderDate: new Date("2012-02-12")
-      }, {
-        ProductID: 2,
-        ProductName: "Chang",
-        SupplierID: 1,
-        CategoryID: 1,
-        QuantityPerUnit: "24 - 12 oz bottles",
-        UnitPrice: 19.0000,
-        UnitsInStock: 17,
-        UnitsOnOrder: 40,
-        ReorderLevel: 25,
-        Discontinued: true,
-        OrderDate: new Date("2003-03-17")
-      }, {
-        ProductID: 3,
-        ProductName: "Aniseed Syrup",
-        SupplierID: 1,
-        CategoryID: 2,
-        QuantityPerUnit: "12 - 550 ml bottles",
-        UnitPrice: 10.0000,
-        UnitsInStock: 13,
-        UnitsOnOrder: 70,
-        ReorderLevel: 25,
-        Discontinued: false,
-        OrderDate: new Date("2006-03-17")
-      }, {
-        ProductID: 4,
-        ProductName: "Chef Antons Cajun Seasoning",
-        SupplierID: 2,
-        CategoryID: 2,
-        QuantityPerUnit: "48 - 6 oz jars",
-        UnitPrice: 22.0000,
-        UnitsInStock: 53,
-        UnitsOnOrder: 30,
-        ReorderLevel: 0,
-        Discontinued: false,
-        OrderDate: new Date("2016-03-17")
-      }, {
-        ProductID: 5,
-        ProductName: "Chef Antons Gumbo Mix",
-        SupplierID: 2,
-        CategoryID: 2,
-        QuantityPerUnit: "36 boxes",
-        UnitPrice: 21.3500,
-        UnitsInStock: 0,
-        UnitsOnOrder: 30,
-        ReorderLevel: 0,
-        Discontinued: true,
-        OrderDate: new Date("2011-11-11")
-      }, {
-        ProductID: 6,
-        ProductName: "Grandmas Boysenberry Spread",
-        SupplierID: 3,
-        CategoryID: 2,
-        QuantityPerUnit: "12 - 8 oz jars",
-        UnitPrice: 25.0000,
-        UnitsInStock: 0,
-        UnitsOnOrder: 30,
-        ReorderLevel: 25,
-        Discontinued: false,
-        OrderDate: new Date("2017-12-17")
-      }, {
-        ProductID: 7,
-        ProductName: "Uncle Bobs Organic Dried Pears",
-        SupplierID: 3,
-        CategoryID: 7,
-        QuantityPerUnit: "12 - 1 lb pkgs.",
-        UnitPrice: 30.0000,
-        UnitsInStock: 150,
-        UnitsOnOrder: 30,
-        ReorderLevel: 10,
-        Discontinued: false,
-        OrderDate: new Date("2016-07-17")
-      }, {
-        ProductID: 8,
-        ProductName: "Northwoods Cranberry Sauce",
-        SupplierID: 3,
-        CategoryID: 2,
-        QuantityPerUnit: "12 - 12 oz jars",
-        UnitPrice: 40.0000,
-        UnitsInStock: 6,
-        UnitsOnOrder: 30,
-        ReorderLevel: 0,
-        Discontinued: false,
-        OrderDate: new Date("2018-01-17")
-      }, {
-        ProductID: 9,
-        ProductName: "Mishi Kobe Niku",
-        SupplierID: 4,
-        CategoryID: 6,
-        QuantityPerUnit: "18 - 500 g pkgs.",
-        UnitPrice: 97.0000,
-        UnitsInStock: 29,
-        UnitsOnOrder: 30,
-        ReorderLevel: 0,
-        Discontinued: true,
-        OrderDate: new Date("2010-02-17")
-      }, {
-        ProductID: 10,
-        ProductName: "Ikura",
-        SupplierID: 4,
-        CategoryID: 8,
-        QuantityPerUnit: "12 - 200 ml jars",
-        UnitPrice: 31.0000,
-        UnitsInStock: 31,
-        UnitsOnOrder: 30,
-        ReorderLevel: 0,
-        Discontinued: false,
-        OrderDate: new Date("2008-05-17")
-      }, {
-        ProductID: 11,
-        ProductName: "Queso Cabrales",
-        SupplierID: 5,
-        CategoryID: 4,
-        QuantityPerUnit: "1 kg pkg.",
-        UnitPrice: 21.0000,
-        UnitsInStock: 22,
-        UnitsOnOrder: 30,
-        ReorderLevel: 30,
-        Discontinued: false,
-        OrderDate: new Date("2009-01-17")
-      }, {
-        ProductID: 12,
-        ProductName: "Queso Manchego La Pastora",
-        SupplierID: 5,
-        CategoryID: 4,
-        QuantityPerUnit: "10 - 500 g pkgs.",
-        UnitPrice: 38.0000,
-        UnitsInStock: 86,
-        UnitsOnOrder: 30,
-        ReorderLevel: 0,
-        Discontinued: false,
-        OrderDate: new Date("2015-11-17")
-      }, {
-        ProductID: 13,
-        ProductName: "Konbu",
-        SupplierID: 6,
-        CategoryID: 8,
-        QuantityPerUnit: "2 kg box",
-        UnitPrice: 6.0000,
-        UnitsInStock: 24,
-        UnitsOnOrder: 30,
-        ReorderLevel: 5,
-        Discontinued: false,
-        OrderDate: new Date("2015-03-17")
-      }, {
-        ProductID: 14,
-        ProductName: "Tofu",
-        SupplierID: 6,
-        CategoryID: 7,
-        QuantityPerUnit: "40 - 100 g pkgs.",
-        UnitPrice: 23.2500,
-        UnitsInStock: 35,
-        UnitsOnOrder: 30,
-        ReorderLevel: 0,
-        Discontinued: false,
-        OrderDate: new Date("2017-06-17")
-      }, {
-        ProductID: 15,
-        ProductName: "Genen Shouyu",
-        SupplierID: 6,
-        CategoryID: 2,
-        QuantityPerUnit: "24 - 250 ml bottles",
-        UnitPrice: 15.5000,
-        UnitsInStock: 39,
-        UnitsOnOrder: 30,
-        ReorderLevel: 5,
-        Discontinued: false,
-        OrderDate: new Date("2014-03-17")
-      }, {
-        ProductID: 16,
-        ProductName: "Pavlova",
-        SupplierID: 7,
-        CategoryID: 3,
-        QuantityPerUnit: "32 - 500 g boxes",
-        UnitPrice: 17.4500,
-        UnitsInStock: 29,
-        UnitsOnOrder: 30,
-        ReorderLevel: 10,
-        Discontinued: false,
-        OrderDate: new Date("2018-03-28")
-      }, {
-        ProductID: 17,
-        ProductName: "Alice Mutton",
-        SupplierID: 7,
-        CategoryID: 6,
-        QuantityPerUnit: "20 - 1 kg tins",
-        UnitPrice: 39.0000,
-        UnitsInStock: 0,
-        UnitsOnOrder: 30,
-        ReorderLevel: 0,
-        Discontinued: true,
-        OrderDate: new Date("2015-08-17")
-      }, {
-        ProductID: 18,
-        ProductName: "Carnarvon Tigers",
-        SupplierID: 7,
-        CategoryID: 8,
-        QuantityPerUnit: "16 kg pkg.",
-        UnitPrice: 62.5000,
-        UnitsInStock: 42,
-        UnitsOnOrder: 30,
-        ReorderLevel: 0,
-        Discontinued: false,
-        OrderDate: new Date("2005-09-27")
-      }, {
-        ProductID: 19,
-        ProductName: "Teatime Chocolate Biscuits",
-        SupplierID: 8,
-        CategoryID: 3,
-        QuantityPerUnit: "",
-        UnitPrice: 9.2000,
-        UnitsInStock: 25,
-        UnitsOnOrder: 30,
-        ReorderLevel: 5,
-        Discontinued: false,
-        OrderDate: new Date("2001-03-17")
-      }, {
-        ProductID: 20,
-        ProductName: "Sir Rodneys Marmalade",
-        SupplierID: 8,
-        CategoryID: 3,
-        QuantityPerUnit: undefined,
-        UnitPrice: 4.5,
-        UnitsInStock: 40,
-        UnitsOnOrder: 30,
-        ReorderLevel: 0,
-        Discontinued: false,
-        OrderDate: new Date("2005-03-17")
-      }
+            ProductID: 1,
+            ProductName: "Chai",
+            SupplierID: 1,
+            CategoryID: 1,
+            QuantityPerUnit: "10 boxes x 20 bags",
+            UnitPrice: 18.0000,
+            UnitsInStock: 39,
+            UnitsOnOrder: 30,
+            ReorderLevel: 10,
+            Discontinued: false,
+            OrderDate: new Date("2012-02-12")
+        }, {
+            ProductID: 2,
+            ProductName: "Chang",
+            SupplierID: 1,
+            CategoryID: 1,
+            QuantityPerUnit: "24 - 12 oz bottles",
+            UnitPrice: 19.0000,
+            UnitsInStock: 17,
+            UnitsOnOrder: 40,
+            ReorderLevel: 25,
+            Discontinued: true,
+            OrderDate: new Date("2003-03-17")
+        }, {
+            ProductID: 3,
+            ProductName: "Aniseed Syrup",
+            SupplierID: 1,
+            CategoryID: 2,
+            QuantityPerUnit: "12 - 550 ml bottles",
+            UnitPrice: 10.0000,
+            UnitsInStock: 13,
+            UnitsOnOrder: 70,
+            ReorderLevel: 25,
+            Discontinued: false,
+            OrderDate: new Date("2006-03-17")
+        }, {
+            ProductID: 4,
+            ProductName: "Chef Antons Cajun Seasoning",
+            SupplierID: 2,
+            CategoryID: 2,
+            QuantityPerUnit: "48 - 6 oz jars",
+            UnitPrice: 22.0000,
+            UnitsInStock: 53,
+            UnitsOnOrder: 30,
+            ReorderLevel: 0,
+            Discontinued: false,
+            OrderDate: new Date("2016-03-17")
+        }, {
+            ProductID: 5,
+            ProductName: "Chef Antons Gumbo Mix",
+            SupplierID: 2,
+            CategoryID: 2,
+            QuantityPerUnit: "36 boxes",
+            UnitPrice: 21.3500,
+            UnitsInStock: 0,
+            UnitsOnOrder: 30,
+            ReorderLevel: 0,
+            Discontinued: true,
+            OrderDate: new Date("2011-11-11")
+        }, {
+            ProductID: 6,
+            ProductName: "Grandmas Boysenberry Spread",
+            SupplierID: 3,
+            CategoryID: 2,
+            QuantityPerUnit: "12 - 8 oz jars",
+            UnitPrice: 25.0000,
+            UnitsInStock: 0,
+            UnitsOnOrder: 30,
+            ReorderLevel: 25,
+            Discontinued: false,
+            OrderDate: new Date("2017-12-17")
+        }, {
+            ProductID: 7,
+            ProductName: "Uncle Bobs Organic Dried Pears",
+            SupplierID: 3,
+            CategoryID: 7,
+            QuantityPerUnit: "12 - 1 lb pkgs.",
+            UnitPrice: 30.0000,
+            UnitsInStock: 150,
+            UnitsOnOrder: 30,
+            ReorderLevel: 10,
+            Discontinued: false,
+            OrderDate: new Date("2016-07-17")
+        }, {
+            ProductID: 8,
+            ProductName: "Northwoods Cranberry Sauce",
+            SupplierID: 3,
+            CategoryID: 2,
+            QuantityPerUnit: "12 - 12 oz jars",
+            UnitPrice: 40.0000,
+            UnitsInStock: 6,
+            UnitsOnOrder: 30,
+            ReorderLevel: 0,
+            Discontinued: false,
+            OrderDate: new Date("2018-01-17")
+        }, {
+            ProductID: 9,
+            ProductName: "Mishi Kobe Niku",
+            SupplierID: 4,
+            CategoryID: 6,
+            QuantityPerUnit: "18 - 500 g pkgs.",
+            UnitPrice: 97.0000,
+            UnitsInStock: 29,
+            UnitsOnOrder: 30,
+            ReorderLevel: 0,
+            Discontinued: true,
+            OrderDate: new Date("2010-02-17")
+        }, {
+            ProductID: 10,
+            ProductName: "Ikura",
+            SupplierID: 4,
+            CategoryID: 8,
+            QuantityPerUnit: "12 - 200 ml jars",
+            UnitPrice: 31.0000,
+            UnitsInStock: 31,
+            UnitsOnOrder: 30,
+            ReorderLevel: 0,
+            Discontinued: false,
+            OrderDate: new Date("2008-05-17")
+        }, {
+            ProductID: 11,
+            ProductName: "Queso Cabrales",
+            SupplierID: 5,
+            CategoryID: 4,
+            QuantityPerUnit: "1 kg pkg.",
+            UnitPrice: 21.0000,
+            UnitsInStock: 22,
+            UnitsOnOrder: 30,
+            ReorderLevel: 30,
+            Discontinued: false,
+            OrderDate: new Date("2009-01-17")
+        }, {
+            ProductID: 12,
+            ProductName: "Queso Manchego La Pastora",
+            SupplierID: 5,
+            CategoryID: 4,
+            QuantityPerUnit: "10 - 500 g pkgs.",
+            UnitPrice: 38.0000,
+            UnitsInStock: 86,
+            UnitsOnOrder: 30,
+            ReorderLevel: 0,
+            Discontinued: false,
+            OrderDate: new Date("2015-11-17")
+        }, {
+            ProductID: 13,
+            ProductName: "Konbu",
+            SupplierID: 6,
+            CategoryID: 8,
+            QuantityPerUnit: "2 kg box",
+            UnitPrice: 6.0000,
+            UnitsInStock: 24,
+            UnitsOnOrder: 30,
+            ReorderLevel: 5,
+            Discontinued: false,
+            OrderDate: new Date("2015-03-17")
+        }, {
+            ProductID: 14,
+            ProductName: "Tofu",
+            SupplierID: 6,
+            CategoryID: 7,
+            QuantityPerUnit: "40 - 100 g pkgs.",
+            UnitPrice: 23.2500,
+            UnitsInStock: 35,
+            UnitsOnOrder: 30,
+            ReorderLevel: 0,
+            Discontinued: false,
+            OrderDate: new Date("2017-06-17")
+        }, {
+            ProductID: 15,
+            ProductName: "Genen Shouyu",
+            SupplierID: 6,
+            CategoryID: 2,
+            QuantityPerUnit: "24 - 250 ml bottles",
+            UnitPrice: 15.5000,
+            UnitsInStock: 39,
+            UnitsOnOrder: 30,
+            ReorderLevel: 5,
+            Discontinued: false,
+            OrderDate: new Date("2014-03-17")
+        }, {
+            ProductID: 16,
+            ProductName: "Pavlova",
+            SupplierID: 7,
+            CategoryID: 3,
+            QuantityPerUnit: "32 - 500 g boxes",
+            UnitPrice: 17.4500,
+            UnitsInStock: 29,
+            UnitsOnOrder: 30,
+            ReorderLevel: 10,
+            Discontinued: false,
+            OrderDate: new Date("2018-03-28")
+        }, {
+            ProductID: 17,
+            ProductName: "Alice Mutton",
+            SupplierID: 7,
+            CategoryID: 6,
+            QuantityPerUnit: "20 - 1 kg tins",
+            UnitPrice: 39.0000,
+            UnitsInStock: 0,
+            UnitsOnOrder: 30,
+            ReorderLevel: 0,
+            Discontinued: true,
+            OrderDate: new Date("2015-08-17")
+        }, {
+            ProductID: 18,
+            ProductName: "Carnarvon Tigers",
+            SupplierID: 7,
+            CategoryID: 8,
+            QuantityPerUnit: "16 kg pkg.",
+            UnitPrice: 62.5000,
+            UnitsInStock: 42,
+            UnitsOnOrder: 30,
+            ReorderLevel: 0,
+            Discontinued: false,
+            OrderDate: new Date("2005-09-27")
+        }, {
+            ProductID: 19,
+            ProductName: "Teatime Chocolate Biscuits",
+            SupplierID: 8,
+            CategoryID: 3,
+            QuantityPerUnit: "",
+            UnitPrice: 9.2000,
+            UnitsInStock: 25,
+            UnitsOnOrder: 30,
+            ReorderLevel: 5,
+            Discontinued: false,
+            OrderDate: new Date("2001-03-17")
+        }, {
+            ProductID: 20,
+            ProductName: "Sir Rodneys Marmalade",
+            SupplierID: 8,
+            CategoryID: 3,
+            QuantityPerUnit: undefined,
+            UnitPrice: 4.5,
+            UnitsInStock: 40,
+            UnitsOnOrder: 30,
+            ReorderLevel: 0,
+            Discontinued: false,
+            OrderDate: new Date("2005-03-17")
+        }
     ];
 
     public static gridCustomSummaryData = () => [{
-        ProductID: 1,
-        ProductName: "Chai",
-        SupplierID: 1,
-        CategoryID: 1,
-        QuantityPerUnit: "10 boxes x 20 bags",
-        UnitPrice: 18.0000,
-        UnitsInStock: 39,
-        UnitsOnOrder: 30,
-        ReorderLevel: 10,
-        Discontinued: false,
-        OrderDate: new Date("2012-02-12")
-      }, {
-        ProductID: 2,
-        ProductName: "Chang",
-        SupplierID: 1,
-        CategoryID: 1,
-        QuantityPerUnit: "24 - 12 oz bottles",
-        UnitPrice: 19.0000,
-        UnitsInStock: 17,
-        UnitsOnOrder: 40,
-        ReorderLevel: 25,
-        Discontinued: true,
-        OrderDate: new Date("2003-03-17")
-      }, {
-        ProductID: 3,
-        ProductName: "Aniseed Syrup",
-        SupplierID: 1,
-        CategoryID: 2,
-        QuantityPerUnit: "12 - 550 ml bottles",
-        UnitPrice: 10.0000,
-        UnitsInStock: 13,
-        UnitsOnOrder: 70,
-        ReorderLevel: 25,
-        Discontinued: false,
-        OrderDate: new Date("2006-03-17")
-      }, {
-        ProductID: 4,
-        ProductName: "Chef Antons Cajun Seasoning",
-        SupplierID: 2,
-        CategoryID: 2,
-        QuantityPerUnit: "48 - 6 oz jars",
-        UnitPrice: 22.0000,
-        UnitsInStock: 53,
-        UnitsOnOrder: 30,
-        ReorderLevel: 0,
-        Discontinued: false,
-        OrderDate: new Date("2016-03-17")
-      }, {
-        ProductID: 5,
-        ProductName: "Chef Antons Gumbo Mix",
-        SupplierID: 2,
-        CategoryID: 2,
-        QuantityPerUnit: "36 boxes",
-        UnitPrice: 21.3500,
-        UnitsInStock: 0,
-        UnitsOnOrder: 30,
-        ReorderLevel: 0,
-        Discontinued: true,
-        OrderDate: new Date("2011-11-11")
-      }, {
-        ProductID: 6,
-        ProductName: "Grandmas Boysenberry Spread",
-        SupplierID: 3,
-        CategoryID: 2,
-        QuantityPerUnit: "12 - 8 oz jars",
-        UnitPrice: 25.0000,
-        UnitsInStock: 0,
-        UnitsOnOrder: 30,
-        ReorderLevel: 25,
-        Discontinued: false,
-        OrderDate: new Date("2017-12-17")
-      }, {
-        ProductID: 7,
-        ProductName: "Uncle Bobs Organic Dried Pears",
-        SupplierID: 3,
-        CategoryID: 7,
-        QuantityPerUnit: "12 - 1 lb pkgs.",
-        UnitPrice: 30.0000,
-        UnitsInStock: 150,
-        UnitsOnOrder: 30,
-        ReorderLevel: 10,
-        Discontinued: false,
-        OrderDate: new Date("2016-07-17")
-      }, {
-        ProductID: 8,
-        ProductName: "Northwoods Cranberry Sauce",
-        SupplierID: 3,
-        CategoryID: 2,
-        QuantityPerUnit: "12 - 12 oz jars",
-        UnitPrice: 40.0000,
-        UnitsInStock: 6,
-        UnitsOnOrder: 30,
-        ReorderLevel: 0,
-        Discontinued: false,
-        OrderDate: new Date("2018-01-17")
-      }, {
-        ProductID: 9,
-        ProductName: "Mishi Kobe Niku",
-        SupplierID: 4,
-        CategoryID: 6,
-        QuantityPerUnit: "18 - 500 g pkgs.",
-        UnitPrice: 97.0000,
-        UnitsInStock: 29,
-        UnitsOnOrder: 30,
-        ReorderLevel: 0,
-        Discontinued: true,
-        OrderDate: new Date("2010-02-17")
-      }, {
-        ProductID: 10,
-        ProductName: "Ikura",
-        SupplierID: 4,
-        CategoryID: 8,
-        QuantityPerUnit: "12 - 200 ml jars",
-        UnitPrice: 31.0000,
-        UnitsInStock: 31,
-        UnitsOnOrder: 30,
-        ReorderLevel: 0,
-        Discontinued: false,
-        OrderDate: new Date("2008-05-17")
-      }, {
-        ProductID: 11,
-        ProductName: "Queso Cabrales",
-        SupplierID: 5,
-        CategoryID: 4,
-        QuantityPerUnit: "1 kg pkg.",
-        UnitPrice: 21.0000,
-        UnitsInStock: 22,
-        UnitsOnOrder: 30,
-        ReorderLevel: 30,
-        Discontinued: false,
-        OrderDate: new Date("2009-01-17")
-      }, {
-        ProductID: 12,
-        ProductName: "Queso Manchego La Pastora",
-        SupplierID: 5,
-        CategoryID: 4,
-        QuantityPerUnit: "10 - 500 g pkgs.",
-        UnitPrice: 38.0000,
-        UnitsInStock: 86,
-        UnitsOnOrder: 30,
-        ReorderLevel: 0,
-        Discontinued: false,
-        OrderDate: new Date("2015-11-17")
-      }, {
-        ProductID: 13,
-        ProductName: "Konbu",
-        SupplierID: 6,
-        CategoryID: 8,
-        QuantityPerUnit: "2 kg box",
-        UnitPrice: 6.0000,
-        UnitsInStock: 24,
-        UnitsOnOrder: 30,
-        ReorderLevel: 5,
-        Discontinued: false,
-        OrderDate: new Date("2015-03-17")
-      }, {
-        ProductID: 14,
-        ProductName: "Tofu",
-        SupplierID: 6,
-        CategoryID: 7,
-        QuantityPerUnit: "40 - 100 g pkgs.",
-        UnitPrice: 23.2500,
-        UnitsInStock: 35,
-        UnitsOnOrder: 30,
-        ReorderLevel: 0,
-        Discontinued: false,
-        OrderDate: new Date("2017-06-17")
-      }, {
-        ProductID: 15,
-        ProductName: "Genen Shouyu",
-        SupplierID: 6,
-        CategoryID: 2,
-        QuantityPerUnit: "24 - 250 ml bottles",
-        UnitPrice: 15.5000,
-        UnitsInStock: 39,
-        UnitsOnOrder: 30,
-        ReorderLevel: 5,
-        Discontinued: false,
-        OrderDate: new Date("2014-03-17")
-      }, {
-        ProductID: 16,
-        ProductName: "Pavlova",
-        SupplierID: 7,
-        CategoryID: 3,
-        QuantityPerUnit: "32 - 500 g boxes",
-        UnitPrice: 17.4500,
-        UnitsInStock: 29,
-        UnitsOnOrder: 30,
-        ReorderLevel: 10,
-        Discontinued: false,
-        OrderDate: new Date("2018-03-28")
-      }, {
-        ProductID: 17,
-        ProductName: "Alice Mutton",
-        SupplierID: 7,
-        CategoryID: 6,
-        QuantityPerUnit: "20 - 1 kg tins",
-        UnitPrice: 39.0000,
-        UnitsInStock: 0,
-        UnitsOnOrder: 30,
-        ReorderLevel: 0,
-        Discontinued: true,
-        OrderDate: new Date("2015-08-17")
-      }, {
-        ProductID: 18,
-        ProductName: "Carnarvon Tigers",
-        SupplierID: 7,
-        CategoryID: 8,
-        QuantityPerUnit: "16 kg pkg.",
-        UnitPrice: 62.5000,
-        UnitsInStock: 42,
-        UnitsOnOrder: 30,
-        ReorderLevel: 0,
-        Discontinued: false,
-        OrderDate: new Date("2005-09-27")
-      }, {
-        ProductID: 19,
-        ProductName: "Teatime Chocolate Biscuits",
-        SupplierID: 8,
-        CategoryID: 3,
-        QuantityPerUnit: "",
-        UnitPrice: 9.2000,
-        UnitsInStock: 25,
-        UnitsOnOrder: 30,
-        ReorderLevel: 5,
-        Discontinued: false,
-        OrderDate: new Date("2001-03-17")
-      }, {
-        ProductID: 20,
-        ProductName: "Sir Rodneys Marmalade",
-        SupplierID: 8,
-        CategoryID: 3,
-        QuantityPerUnit: undefined,
-        UnitPrice: 4.5,
-        UnitsInStock: 40,
-        UnitsOnOrder: 30,
-        ReorderLevel: 0,
-        Discontinued: false,
-        OrderDate: new Date("2005-03-17")
-      }
+            ProductID: 1,
+            ProductName: "Chai",
+            SupplierID: 1,
+            CategoryID: 1,
+            QuantityPerUnit: "10 boxes x 20 bags",
+            UnitPrice: 18.0000,
+            UnitsInStock: 39,
+            UnitsOnOrder: 30,
+            ReorderLevel: 10,
+            Discontinued: false,
+            OrderDate: new Date("2012-02-12")
+        }, {
+            ProductID: 2,
+            ProductName: "Chang",
+            SupplierID: 1,
+            CategoryID: 1,
+            QuantityPerUnit: "24 - 12 oz bottles",
+            UnitPrice: 19.0000,
+            UnitsInStock: 17,
+            UnitsOnOrder: 40,
+            ReorderLevel: 25,
+            Discontinued: true,
+            OrderDate: new Date("2003-03-17")
+        }, {
+            ProductID: 3,
+            ProductName: "Aniseed Syrup",
+            SupplierID: 1,
+            CategoryID: 2,
+            QuantityPerUnit: "12 - 550 ml bottles",
+            UnitPrice: 10.0000,
+            UnitsInStock: 13,
+            UnitsOnOrder: 70,
+            ReorderLevel: 25,
+            Discontinued: false,
+            OrderDate: new Date("2006-03-17")
+        }, {
+            ProductID: 4,
+            ProductName: "Chef Antons Cajun Seasoning",
+            SupplierID: 2,
+            CategoryID: 2,
+            QuantityPerUnit: "48 - 6 oz jars",
+            UnitPrice: 22.0000,
+            UnitsInStock: 53,
+            UnitsOnOrder: 30,
+            ReorderLevel: 0,
+            Discontinued: false,
+            OrderDate: new Date("2016-03-17")
+        }, {
+            ProductID: 5,
+            ProductName: "Chef Antons Gumbo Mix",
+            SupplierID: 2,
+            CategoryID: 2,
+            QuantityPerUnit: "36 boxes",
+            UnitPrice: 21.3500,
+            UnitsInStock: 0,
+            UnitsOnOrder: 30,
+            ReorderLevel: 0,
+            Discontinued: true,
+            OrderDate: new Date("2011-11-11")
+        }, {
+            ProductID: 6,
+            ProductName: "Grandmas Boysenberry Spread",
+            SupplierID: 3,
+            CategoryID: 2,
+            QuantityPerUnit: "12 - 8 oz jars",
+            UnitPrice: 25.0000,
+            UnitsInStock: 0,
+            UnitsOnOrder: 30,
+            ReorderLevel: 25,
+            Discontinued: false,
+            OrderDate: new Date("2017-12-17")
+        }, {
+            ProductID: 7,
+            ProductName: "Uncle Bobs Organic Dried Pears",
+            SupplierID: 3,
+            CategoryID: 7,
+            QuantityPerUnit: "12 - 1 lb pkgs.",
+            UnitPrice: 30.0000,
+            UnitsInStock: 150,
+            UnitsOnOrder: 30,
+            ReorderLevel: 10,
+            Discontinued: false,
+            OrderDate: new Date("2016-07-17")
+        }, {
+            ProductID: 8,
+            ProductName: "Northwoods Cranberry Sauce",
+            SupplierID: 3,
+            CategoryID: 2,
+            QuantityPerUnit: "12 - 12 oz jars",
+            UnitPrice: 40.0000,
+            UnitsInStock: 6,
+            UnitsOnOrder: 30,
+            ReorderLevel: 0,
+            Discontinued: false,
+            OrderDate: new Date("2018-01-17")
+        }, {
+            ProductID: 9,
+            ProductName: "Mishi Kobe Niku",
+            SupplierID: 4,
+            CategoryID: 6,
+            QuantityPerUnit: "18 - 500 g pkgs.",
+            UnitPrice: 97.0000,
+            UnitsInStock: 29,
+            UnitsOnOrder: 30,
+            ReorderLevel: 0,
+            Discontinued: true,
+            OrderDate: new Date("2010-02-17")
+        }, {
+            ProductID: 10,
+            ProductName: "Ikura",
+            SupplierID: 4,
+            CategoryID: 8,
+            QuantityPerUnit: "12 - 200 ml jars",
+            UnitPrice: 31.0000,
+            UnitsInStock: 31,
+            UnitsOnOrder: 30,
+            ReorderLevel: 0,
+            Discontinued: false,
+            OrderDate: new Date("2008-05-17")
+        }, {
+            ProductID: 11,
+            ProductName: "Queso Cabrales",
+            SupplierID: 5,
+            CategoryID: 4,
+            QuantityPerUnit: "1 kg pkg.",
+            UnitPrice: 21.0000,
+            UnitsInStock: 22,
+            UnitsOnOrder: 30,
+            ReorderLevel: 30,
+            Discontinued: false,
+            OrderDate: new Date("2009-01-17")
+        }, {
+            ProductID: 12,
+            ProductName: "Queso Manchego La Pastora",
+            SupplierID: 5,
+            CategoryID: 4,
+            QuantityPerUnit: "10 - 500 g pkgs.",
+            UnitPrice: 38.0000,
+            UnitsInStock: 86,
+            UnitsOnOrder: 30,
+            ReorderLevel: 0,
+            Discontinued: false,
+            OrderDate: new Date("2015-11-17")
+        }, {
+            ProductID: 13,
+            ProductName: "Konbu",
+            SupplierID: 6,
+            CategoryID: 8,
+            QuantityPerUnit: "2 kg box",
+            UnitPrice: 6.0000,
+            UnitsInStock: 24,
+            UnitsOnOrder: 30,
+            ReorderLevel: 5,
+            Discontinued: false,
+            OrderDate: new Date("2015-03-17")
+        }, {
+            ProductID: 14,
+            ProductName: "Tofu",
+            SupplierID: 6,
+            CategoryID: 7,
+            QuantityPerUnit: "40 - 100 g pkgs.",
+            UnitPrice: 23.2500,
+            UnitsInStock: 35,
+            UnitsOnOrder: 30,
+            ReorderLevel: 0,
+            Discontinued: false,
+            OrderDate: new Date("2017-06-17")
+        }, {
+            ProductID: 15,
+            ProductName: "Genen Shouyu",
+            SupplierID: 6,
+            CategoryID: 2,
+            QuantityPerUnit: "24 - 250 ml bottles",
+            UnitPrice: 15.5000,
+            UnitsInStock: 39,
+            UnitsOnOrder: 30,
+            ReorderLevel: 5,
+            Discontinued: false,
+            OrderDate: new Date("2014-03-17")
+        }, {
+            ProductID: 16,
+            ProductName: "Pavlova",
+            SupplierID: 7,
+            CategoryID: 3,
+            QuantityPerUnit: "32 - 500 g boxes",
+            UnitPrice: 17.4500,
+            UnitsInStock: 29,
+            UnitsOnOrder: 30,
+            ReorderLevel: 10,
+            Discontinued: false,
+            OrderDate: new Date("2018-03-28")
+        }, {
+            ProductID: 17,
+            ProductName: "Alice Mutton",
+            SupplierID: 7,
+            CategoryID: 6,
+            QuantityPerUnit: "20 - 1 kg tins",
+            UnitPrice: 39.0000,
+            UnitsInStock: 0,
+            UnitsOnOrder: 30,
+            ReorderLevel: 0,
+            Discontinued: true,
+            OrderDate: new Date("2015-08-17")
+        }, {
+            ProductID: 18,
+            ProductName: "Carnarvon Tigers",
+            SupplierID: 7,
+            CategoryID: 8,
+            QuantityPerUnit: "16 kg pkg.",
+            UnitPrice: 62.5000,
+            UnitsInStock: 42,
+            UnitsOnOrder: 30,
+            ReorderLevel: 0,
+            Discontinued: false,
+            OrderDate: new Date("2005-09-27")
+        }, {
+            ProductID: 19,
+            ProductName: "Teatime Chocolate Biscuits",
+            SupplierID: 8,
+            CategoryID: 3,
+            QuantityPerUnit: "",
+            UnitPrice: 9.2000,
+            UnitsInStock: 25,
+            UnitsOnOrder: 30,
+            ReorderLevel: 5,
+            Discontinued: false,
+            OrderDate: new Date("2001-03-17")
+        }, {
+            ProductID: 20,
+            ProductName: "Sir Rodneys Marmalade",
+            SupplierID: 8,
+            CategoryID: 3,
+            QuantityPerUnit: undefined,
+            UnitPrice: 4.5,
+            UnitsInStock: 40,
+            UnitsOnOrder: 30,
+            ReorderLevel: 0,
+            Discontinued: false,
+            OrderDate: new Date("2005-03-17")
+        }
     ];
 
     /**
@@ -4671,9 +4684,11 @@ export class SampleTestData {
         for (let row = 0; row < rows; row++) {
             if (type === 'Number') {
                 data.push(row);
-            } else if (type === 'String') {
+            }
+            else if (type === 'String') {
                 data.push(`Row ${row}`);
-            } else if (type === 'Boolean') {
+            }
+            else if (type === 'Boolean') {
                 data.push(row % 7 === 0);
             }
         }
@@ -4687,12 +4702,13 @@ export class SampleTestData {
         let children;
         for (let i = 0; i < count; i++) {
             const rowID = parendID ? parendID + i : i.toString();
-           if (level > 0 ) {
-                children = this.generateHGridData(count / 2 , currLevel - 1, rowID);
-           }
-           prods.push({
-            ID: rowID, ChildLevels: currLevel,  ProductName: 'Product: A' + i, Col1: i,
-            Col2: i, Col3: i, childData: children, childData2: children });
+            if (level > 0) {
+                children = this.generateHGridData(count / 2, currLevel - 1, rowID);
+            }
+            prods.push({
+                ID: rowID, ChildLevels: currLevel, ProductName: 'Product: A' + i, Col1: i,
+                Col2: i, Col3: i, childData: children, childData2: children
+            });
         }
         return prods;
     }
@@ -4745,11 +4761,14 @@ export class SampleTestData {
 
         if (dataItem['ID']) {
             return 'ID';
-        } else if (dataItem['Id']) {
+        }
+        else if (dataItem['Id']) {
             return 'Id';
-        } else if (dataItem['id']) {
+        }
+        else if (dataItem['id']) {
             return 'id';
-        } else {
+        }
+        else {
             return undefined;
         }
     }

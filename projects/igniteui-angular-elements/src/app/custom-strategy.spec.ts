@@ -4,34 +4,14 @@ import { firstValueFrom, fromEvent, skip, timer } from 'rxjs';
 import { ComponentRefKey, IgcNgElement } from './custom-strategy';
 import hgridData from '../assets/data/projects-hgrid.js';
 import { SampleTestData } from 'igniteui-angular/test-utils/sample-test-data.spec';
-import {
-    IgcGridComponent,
-    IgcHierarchicalGridComponent,
-    IgcPivotGridComponent,
-    IgcColumnComponent,
-    IgcPaginatorComponent,
-    IgcGridStateComponent,
-    IgcColumnLayoutComponent,
-    IgcActionStripComponent,
-    IgcGridEditingActionsComponent,
-} from './components';
+import { IgcGridComponent, IgcHierarchicalGridComponent, IgcPivotGridComponent, IgcColumnComponent, IgcPaginatorComponent, IgcGridStateComponent, IgcColumnLayoutComponent, IgcActionStripComponent, IgcGridEditingActionsComponent, } from './components';
 import { defineComponents } from '../utils/register';
 
 describe('Elements: ', () => {
     let testContainer: HTMLDivElement;
 
-    beforeAll(async () =>{
-        defineComponents(
-            IgcGridComponent,
-            IgcHierarchicalGridComponent,
-            IgcPivotGridComponent,
-            IgcColumnComponent,
-            IgcColumnLayoutComponent,
-            IgcPaginatorComponent,
-            IgcGridStateComponent,
-            IgcActionStripComponent,
-            IgcGridEditingActionsComponent
-        );
+    beforeAll(async () => {
+        defineComponents(IgcGridComponent, IgcHierarchicalGridComponent, IgcPivotGridComponent, IgcColumnComponent, IgcColumnLayoutComponent, IgcPaginatorComponent, IgcGridStateComponent, IgcActionStripComponent, IgcGridEditingActionsComponent);
     });
 
     beforeEach(async () => {
@@ -72,10 +52,10 @@ describe('Elements: ', () => {
             gridEl.primaryKey = 'id';
             gridEl.data = [{ id: '1' }];
             (gridEl as any).detailTemplate = (ctx) => {
-                return html`<div>
+                return html `<div>
                     <igc-grid id="child${ctx.implicit.id}"></igc-grid>
                 </div>`;
-            }
+            };
 
             // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
             await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
@@ -163,7 +143,7 @@ describe('Elements: ', () => {
 
             gridEl.data = SampleTestData.foodProductData();
             gridEl.addEventListener("columnInit", (args: CustomEvent<any>) => {
-                args.detail.headerTemplate = (ctx) => html`<span>Templated ${args.detail.field}</span>`;
+                args.detail.headerTemplate = (ctx) => html `<span>Templated ${args.detail.field}</span>`;
             });
             testContainer.appendChild(gridEl);
 
@@ -235,7 +215,7 @@ describe('Elements: ', () => {
             expect(grid.getColumnByVisibleIndex(1).field).toEqual('ProductName');
         });
 
-        it('should not destroy action strip when row it is shown in is destroyed or cached.', async() => {
+        it('should not destroy action strip when row it is shown in is destroyed or cached.', async () => {
             const innerHtml = `
             <igc-grid id="testGrid" auto-generate>
             <igc-action-strip id="testStrip">
@@ -258,16 +238,16 @@ describe('Elements: ', () => {
             actionStrip.show(row);
             await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
 
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBe(false);
 
             grid.data = [];
             await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
 
-           // row destroyed
-            expect((row.cdr as any).destroyed).toBeTrue();
+            // row destroyed
+            expect((row.cdr as any).destroyed).toBe(true);
             // action strip still in DOM, only hidden.
-            expect(actionStrip.hidden).toBeTrue();
-            expect(actionStrip.isConnected).toBeTrue();
+            expect(actionStrip.hidden).toBe(true);
+            expect(actionStrip.isConnected).toBe(true);
 
             grid.data = SampleTestData.foodProductData();
             grid.groupBy({ fieldName: 'InStock', dir: 1, ignoreCase: false });
@@ -279,7 +259,7 @@ describe('Elements: ', () => {
             actionStrip.show(row);
             await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
 
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBe(false);
 
             // collapse all data rows, leave only groups
             grid.toggleAllGroupRows();
@@ -288,12 +268,12 @@ describe('Elements: ', () => {
             await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
 
             // row not destroyed, but also not in dom anymore
-            expect((row.cdr as any).destroyed).toBeFalse();
+            expect((row.cdr as any).destroyed).toBe(false);
             expect(row.element.nativeElement.isConnected).toBe(false);
 
-             // action strip still in DOM, only hidden.
-            expect(actionStrip.hidden).toBeTrue();
-            expect(actionStrip.isConnected).toBeTrue();
+            // action strip still in DOM, only hidden.
+            expect(actionStrip.hidden).toBe(true);
+            expect(actionStrip.isConnected).toBe(true);
         });
     });
 });

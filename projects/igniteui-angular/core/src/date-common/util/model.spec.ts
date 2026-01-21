@@ -29,26 +29,26 @@ describe("Calendar Day Model", () => {
 
             // 2024/01/01 is a Monday
             expect(firstOfJan.day).toEqual(1);
-            expect(firstOfJan.weekend).toBeFalse();
+            expect(firstOfJan.weekend).toBe(false);
         });
 
         it("comparators", () => {
             const today = CalendarDay.today;
 
-            expect(today.greaterThan(firstOfJan)).toBeTrue();
-            expect(firstOfJan.lessThan(today)).toBeTrue();
+            expect(today.greaterThan(firstOfJan)).toBe(true);
+            expect(firstOfJan.lessThan(today)).toBe(true);
             expect(today.equalTo(new Date(Date.now())));
         });
 
         describe("Deltas", () => {
             it("day", () => {
-                expect(firstOfJan.add("day", 0).equalTo(firstOfJan)).toBeTrue();
-                expect(firstOfJan.add("day", 1).greaterThan(firstOfJan)).toBeTrue();
-                expect(firstOfJan.add("day", -1).lessThan(firstOfJan)).toBeTrue();
+                expect(firstOfJan.add("day", 0).equalTo(firstOfJan)).toBe(true);
+                expect(firstOfJan.add("day", 1).greaterThan(firstOfJan)).toBe(true);
+                expect(firstOfJan.add("day", -1).lessThan(firstOfJan)).toBe(true);
             });
 
             it("quarters", () => {
-                expect(firstOfJan.add("quarter", 0).equalTo(firstOfJan)).toBeTrue();
+                expect(firstOfJan.add("quarter", 0).equalTo(firstOfJan)).toBe(true);
                 const nextQ = firstOfJan.add("quarter", 1);
                 expect(nextQ.month).toEqual(3);
                 const prevQ = firstOfJan.add("quarter", -1);
@@ -119,13 +119,13 @@ describe("Calendar Day Model", () => {
             const testDate = new CalendarDay({ year: 2024, month: 2, date: 15 }); // March 15, 2024 (Friday)
 
             // Test different week start days
-            const mondayStart = testDate.getWeekNumber(1);     // ISO 8601
-            const tuesdayStart = testDate.getWeekNumber(2);    // Simple counting
-            const wednesdayStart = testDate.getWeekNumber(3);  // Simple counting
-            const thursdayStart = testDate.getWeekNumber(4);   // Simple counting
-            const fridayStart = testDate.getWeekNumber(5);     // Simple counting
-            const saturdayStart = testDate.getWeekNumber(6);   // Simple counting
-            const sundayStart = testDate.getWeekNumber(0);     // Simple counting
+            const mondayStart = testDate.getWeekNumber(1); // ISO 8601
+            const tuesdayStart = testDate.getWeekNumber(2); // Simple counting
+            const wednesdayStart = testDate.getWeekNumber(3); // Simple counting
+            const thursdayStart = testDate.getWeekNumber(4); // Simple counting
+            const fridayStart = testDate.getWeekNumber(5); // Simple counting
+            const saturdayStart = testDate.getWeekNumber(6); // Simple counting
+            const sundayStart = testDate.getWeekNumber(0); // Simple counting
 
             // All should be valid week numbers (positive integers)
             expect(mondayStart).toBeGreaterThan(0);
@@ -226,9 +226,7 @@ describe("Calendar Day Model", () => {
         });
 
         it("generating date ranges (end > start)", () => {
-            const weekFuture = Array.from(
-                calendarRange({ start, end: endFuture }),
-            );
+            const weekFuture = Array.from(calendarRange({ start, end: endFuture }));
 
             expect(weekFuture.length).toEqual(end);
 
@@ -263,57 +261,45 @@ describe("Calendar Day Model", () => {
         ];
 
         it("After", () => {
-            expect(
-                isDateInRanges(start, [
-                    { type: DateRangeType.After, dateRange: [dayBefore] },
-                ]),
-            ).toBeTrue();
+            expect(isDateInRanges(start, [
+                { type: DateRangeType.After, dateRange: [dayBefore] },
+            ])).toBe(true);
         });
 
         it("Before", () => {
-            expect(
-                isDateInRanges(start, [
-                    { type: DateRangeType.Before, dateRange: [dayAfter] },
-                ]),
-            ).toBeTrue();
+            expect(isDateInRanges(start, [
+                { type: DateRangeType.Before, dateRange: [dayAfter] },
+            ])).toBe(true);
         });
 
         it("Between", () => {
-            expect(
-                isDateInRanges(start, [
-                    {
-                        type: DateRangeType.Between,
-                        dateRange: [begin, end],
-                    },
-                ]),
-            ).toBeTrue();
+            expect(isDateInRanges(start, [
+                {
+                    type: DateRangeType.Between,
+                    dateRange: [begin, end],
+                },
+            ])).toBe(true);
         });
 
         it("Specific", () => {
-            expect(
-                isDateInRanges(start, [
-                    {
-                        type: DateRangeType.Specific,
-                        dateRange: [],
-                    },
-                ]),
-            ).toBeFalse();
+            expect(isDateInRanges(start, [
+                {
+                    type: DateRangeType.Specific,
+                    dateRange: [],
+                },
+            ])).toBe(false);
         });
 
         it("Weekday", () => {
-            expect(
-                isDateInRanges(start, [{ type: DateRangeType.Weekdays }]),
-            ).toBeTrue();
+            expect(isDateInRanges(start, [{ type: DateRangeType.Weekdays }])).toBe(true);
         });
 
         it("Weekends", () => {
-            expect(
-                isDateInRanges(start, [
-                    {
-                        type: DateRangeType.Weekends,
-                    },
-                ]),
-            ).toBeFalse();
+            expect(isDateInRanges(start, [
+                {
+                    type: DateRangeType.Weekends,
+                },
+            ])).toBe(false);
         });
     });
 });

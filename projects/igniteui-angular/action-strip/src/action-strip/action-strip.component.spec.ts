@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { wait } from '../../../test-utils/ui-interactions.spec';
+import { it } from 'vitest';
 
 const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__actions';
 const DROP_DOWN_LIST = 'igx-drop-down__list';
@@ -114,8 +115,10 @@ describe('igxActionStrip', () => {
             expect(dropDownItems.length).toBe(3);
         });
 
-        it('should emit onMenuOpen/onMenuOpening when toggling the menu', () => {
-            pending('implementation');
+        it.skip('should emit onMenuOpen/onMenuOpening when toggling the menu', () => {
+            // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
+            // pending('implementation');
+            ;
         });
 
         it('should allow combining content outside and inside the menu', () => {

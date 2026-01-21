@@ -1,3 +1,5 @@
+import type { Mock } from "vitest";
+import { vi } from 'vitest';
 import { EventEmitter } from '@angular/core';
 import { IgxTree, IgxTreeNode, IgxTreeSelectionType, ITreeNodeSelectionEvent } from './common';
 import { TreeTestFunctions } from './tree-functions.spec';
@@ -54,9 +56,13 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
 
     describe('IgxTreeSelectionService - BiState & None', () => {
         beforeEach(() => {
-            mockEmitter = jasmine.createSpyObj('emitter', ['emit']);
-            mockTree = jasmine.createSpyObj('tree', [''],
-                { selection: IgxTreeSelectionType.BiState, nodeSelection: mockEmitter, nodes: mockQuery1 });
+            mockEmitter = {
+                emit: vi.fn().mockName("emitter.emit")
+            };
+            mockTree = {
+                : vi.fn().mockName("tree."),
+                selection: IgxTreeSelectionType.BiState, nodeSelection: mockEmitter, nodes: mockQuery1
+            };
             selectionService.register(mockTree);
         });
 
@@ -74,7 +80,7 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
 
             expect(selectionSet.size).toBe(0);
 
-            spyOn(selectionSet, 'clear').and.callThrough();
+            vi.spyOn(selectionSet, 'clear');
 
             const mockNode1 = TreeTestFunctions.createNodeSpy();
             const mockNode2 = TreeTestFunctions.createNodeSpy();
@@ -96,19 +102,20 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
         });
 
         it('Should handle selection based on tree.selection', () => {
-            const mockSelectedChangeEmitter: EventEmitter<boolean> = jasmine.createSpyObj('emitter', ['emit']);
+            const mockSelectedChangeEmitter: EventEmitter<boolean> = {
+                emit: vi.fn().mockName("emitter.emit")
+            };
             const mockNode = TreeTestFunctions.createNodeSpy({ selectedChange: mockSelectedChangeEmitter });
 
             // None
-            (Object.getOwnPropertyDescriptor(mockTree, 'selection').get as jasmine.Spy<any>).and.returnValue(IgxTreeSelectionType.None);
+            (Object.getOwnPropertyDescriptor(mockTree, 'selection').get as Mock).mockReturnValue(IgxTreeSelectionType.None);
             selectionService.selectNode(mockNode);
             expect(selectionService.isNodeSelected(mockNode)).toBeFalsy();
             expect(mockTree.nodeSelection.emit).not.toHaveBeenCalled();
             expect(mockNode.selectedChange.emit).not.toHaveBeenCalled();
 
             // BiState
-            (Object.getOwnPropertyDescriptor(mockTree, 'selection').get as jasmine.Spy<any>)
-                .and.returnValue(IgxTreeSelectionType.BiState);
+            (Object.getOwnPropertyDescriptor(mockTree, 'selection').get as Mock).mockReturnValue(IgxTreeSelectionType.BiState);
             let expected: ITreeNodeSelectionEvent = {
                 oldSelection: [], newSelection: [mockNode],
                 added: [mockNode], removed: [], event: undefined, cancel: false, owner: mockTree
@@ -125,8 +132,7 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
             // Cascading
             selectionService.deselectNode(mockNode);
 
-            (Object.getOwnPropertyDescriptor(mockTree, 'selection').get as jasmine.Spy<any>)
-                .and.returnValue(IgxTreeSelectionType.Cascading);
+            (Object.getOwnPropertyDescriptor(mockTree, 'selection').get as Mock).mockReturnValue(IgxTreeSelectionType.Cascading);
             selectionService.selectNode(allNodes[1]);
 
             expected = {
@@ -147,7 +153,9 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
         });
 
         it('Should deselect nodes', () => {
-            const mockSelectedChangeEmitter: EventEmitter<boolean> = jasmine.createSpyObj('emitter', ['emit']);
+            const mockSelectedChangeEmitter: EventEmitter<boolean> = {
+                emit: vi.fn().mockName("emitter.emit")
+            };
             const mockNode1 = TreeTestFunctions.createNodeSpy({ selectedChange: mockSelectedChangeEmitter });
             const mockNode2 = TreeTestFunctions.createNodeSpy({ selectedChange: mockSelectedChangeEmitter });
 
@@ -318,7 +326,8 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
                     expect(selectionService.isNodeSelected(node)).toBeTruthy();
                     expect(node.selectedChange.emit).toHaveBeenCalled();
                     expect(node.selectedChange.emit).toHaveBeenCalledWith(true);
-                } else {
+                }
+                else {
                     expect(selectionService.isNodeSelected(node)).toBeFalsy();
                 }
             });
@@ -351,7 +360,8 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
                     expect(selectionService.isNodeSelected(node)).toBeTruthy();
                     expect(node.selectedChange.emit).toHaveBeenCalled();
                     expect(node.selectedChange.emit).toHaveBeenCalledWith(true);
-                } else {
+                }
+                else {
                     expect(selectionService.isNodeSelected(node)).toBeFalsy();
                 }
             });
@@ -366,9 +376,13 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
 
     describe('IgxTreeSelectionService - Cascading', () => {
         beforeEach(() => {
-            mockEmitter = jasmine.createSpyObj('emitter', ['emit']);
-            mockTree = jasmine.createSpyObj('tree', [''],
-                { selection: IgxTreeSelectionType.Cascading, nodeSelection: mockEmitter, nodes: mockQuery1 });
+            mockEmitter = {
+                emit: vi.fn().mockName("emitter.emit")
+            };
+            mockTree = {
+                : vi.fn().mockName("tree."),
+                selection: IgxTreeSelectionType.Cascading, nodeSelection: mockEmitter, nodes: mockQuery1
+            };
             selectionService.register(mockTree);
         });
 
@@ -405,7 +419,7 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
                 expect(node.selectedChange.emit).toHaveBeenCalled();
                 expect(node.selectedChange.emit).toHaveBeenCalledWith(false);
             }
-            expect(selectionService.isNodeIndeterminate(allNodes[0])).toBeFalse();
+            expect(selectionService.isNodeIndeterminate(allNodes[0])).toBe(false);
             expect(mockTree.nodeSelection.emit).toHaveBeenCalledTimes(2);
             expect(mockTree.nodeSelection.emit).toHaveBeenCalledWith(expected);
         });
@@ -523,9 +537,11 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
                     expect(selectionService.isNodeSelected(node)).toBeTruthy();
                     expect(node.selectedChange.emit).toHaveBeenCalled();
                     expect(node.selectedChange.emit).toHaveBeenCalledWith(true);
-                } else if (index === 3) {
+                }
+                else if (index === 3) {
                     expect(selectionService.isNodeSelected(node)).toBeTruthy();
-                } else {
+                }
+                else {
                     expect(selectionService.isNodeSelected(node)).toBeFalsy();
                 }
             });
@@ -568,7 +584,8 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
                         expect(node.selectedChange.emit).toHaveBeenCalled();
                         expect(node.selectedChange.emit).toHaveBeenCalledWith(true);
                     }
-                } else {
+                }
+                else {
                     expect(selectionService.isNodeSelected(node)).toBeFalsy();
                 }
             });
@@ -583,13 +600,13 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
 
         it('Should ensure correct state after a node entry is destroyed', () => {
             // instant frames go 'BRRRR'
-            spyOn(window, 'requestAnimationFrame').and.callFake((callback: any) => callback());
-            const deselectSpy = spyOn(selectionService, 'deselectNodesWithNoEvent');
-            const selectSpy = spyOn(selectionService, 'selectNodesWithNoEvent');
+            vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback: any) => callback());
+            const deselectSpy = vi.spyOn(selectionService, 'deselectNodesWithNoEvent');
+            const selectSpy = vi.spyOn(selectionService, 'selectNodesWithNoEvent');
             const tree = {
                 selection: IgxTreeSelectionType.None
             } as any;
-            const selectedNodeSpy = spyOn(selectionService, 'isNodeSelected').and.returnValue(false);
+            const selectedNodeSpy = vi.spyOn(selectionService, 'isNodeSelected').mockReturnValue(false);
             const mockNode = {
                 selected: false
             } as any;
@@ -606,7 +623,7 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
             expect(selectSpy).not.toHaveBeenCalled();
             expect(selectedNodeSpy).not.toHaveBeenCalled();
             tree.selection = IgxTreeSelectionType.Cascading;
-            selectedNodeSpy.and.returnValue(true);
+            selectedNodeSpy.mockReturnValue(true);
 
             selectionService.ensureStateOnNodeDelete(mockNode);
             expect(selectedNodeSpy).toHaveBeenCalledTimes(1);
@@ -615,14 +632,16 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
             expect(deselectSpy).toHaveBeenCalledWith([mockNode], false);
             expect(selectSpy).not.toHaveBeenCalled();
             mockNode.parentNode = false;
-            selectedNodeSpy.and.returnValue(false);
+            selectedNodeSpy.mockReturnValue(false);
 
             selectionService.ensureStateOnNodeDelete(mockNode);
             expect(selectedNodeSpy).toHaveBeenCalledTimes(2);
             expect(deselectSpy).toHaveBeenCalledTimes(1);
             expect(selectSpy).not.toHaveBeenCalled();
-            const childrenSpy = jasmine.createSpyObj('creep', ['find']);
-            childrenSpy.find.and.returnValue(null);
+            const childrenSpy = {
+                find: vi.fn().mockName("creep.find")
+            };
+            childrenSpy.find.mockReturnValue(null);
             mockNode.parentNode = {
                 allChildren: childrenSpy
             };
@@ -634,7 +653,7 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
             const mockChild = {
                 selected: true
             } as any;
-            childrenSpy.find.and.returnValue(mockChild);
+            childrenSpy.find.mockReturnValue(mockChild);
 
             selectionService.ensureStateOnNodeDelete(mockNode);
             expect(selectedNodeSpy).toHaveBeenCalledTimes(4);

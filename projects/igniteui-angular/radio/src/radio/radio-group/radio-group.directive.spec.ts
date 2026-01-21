@@ -26,7 +26,7 @@ describe('IgxRadioGroupDirective', () => {
                 RadioGroupVerticalComponent
             ]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     it('Properly initialize the radio group buttons\' properties.', fakeAsync(() => {
@@ -57,7 +57,7 @@ describe('IgxRadioGroupDirective', () => {
         fixture.detectChanges();
         tick();
 
-        expect(radioInstance.checked).toBeTrue();
+        expect(radioInstance.checked).toBe(true);
     }));
 
     it('Setting radioGroup\'s properties should affect all radio buttons.', fakeAsync(() => {
@@ -106,7 +106,7 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioInstance.selected).toBeDefined();
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.last);
 
-        spyOn(radioInstance.change, 'emit');
+        vi.spyOn(radioInstance.change, 'emit');
 
         radioInstance.value = 'Foo';
         fixture.detectChanges();
@@ -129,7 +129,7 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioInstance.selected).toBeDefined();
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.last);
 
-        spyOn(radioInstance.change, 'emit');
+        vi.spyOn(radioInstance.change, 'emit');
 
         radioInstance.selected = radioInstance.radioButtons.first;
         fixture.detectChanges();
@@ -205,7 +205,7 @@ describe('IgxRadioGroupDirective', () => {
         fixture.detectChanges();
         tick();
 
-        fixture.componentInstance.choices = [ 0, 1, 4, 7 ];
+        fixture.componentInstance.choices = [0, 1, 4, 7];
         fixture.detectChanges();
         tick();
 
@@ -548,7 +548,7 @@ describe('IgxRadioGroupDirective', () => {
             fixture.detectChanges();
             tick();
 
-            spyOn(radioGroup.radioButtons.toArray()[1].nativeElement, 'focus');
+            vi.spyOn(radioGroup.radioButtons.toArray()[1].nativeElement, 'focus');
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown' });
@@ -571,7 +571,7 @@ describe('IgxRadioGroupDirective', () => {
             fixture.detectChanges();
             tick();
 
-            spyOn(firstButton.nativeElement, 'blur');
+            vi.spyOn(firstButton.nativeElement, 'blur');
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown' });
@@ -595,7 +595,7 @@ describe('IgxRadioGroupDirective', () => {
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown', cancelable: true });
-            spyOn(event, 'preventDefault');
+            vi.spyOn(event, 'preventDefault');
 
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
@@ -718,7 +718,8 @@ describe('IgxRadioGroupDirective', () => {
     imports: [IgxRadioGroupDirective, IgxRadioComponent]
 })
 class RadioGroupSimpleComponent {
-    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true })
+    public radioGroup: IgxRadioGroupDirective;
 }
 
 @Component({
@@ -733,7 +734,8 @@ class RadioGroupSimpleComponent {
     imports: [IgxRadioComponent, IgxRadioGroupDirective]
 })
 class RadioGroupComponent {
-    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true })
+    public radioGroup: IgxRadioGroupDirective;
 }
 
 @Component({
@@ -748,7 +750,8 @@ class RadioGroupComponent {
     imports: [IgxRadioComponent, IgxRadioGroupDirective]
 })
 class RadioGroupRequiredComponent {
-    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true })
+    public radioGroup: IgxRadioGroupDirective;
 }
 
 interface Person {
@@ -790,7 +793,8 @@ class RadioGroupOnPushComponent {
     imports: [IgxRadioComponent, IgxRadioGroupDirective, FormsModule]
 })
 class RadioGroupWithModelComponent {
-    @ViewChild('radioGroupSeasons', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+    @ViewChild('radioGroupSeasons', { read: IgxRadioGroupDirective, static: true })
+    public radioGroup: IgxRadioGroupDirective;
 
     public seasons = [
         'Winter',
@@ -894,7 +898,7 @@ class RadioGroupDeepProjectionComponent {
 }
 
 @Component({
-  template: `
+    template: `
     <igx-radio-group
         [alignment]="alignment"
         [required]="required"
@@ -904,7 +908,7 @@ class RadioGroupDeepProjectionComponent {
         <ng-container #radioContainer></ng-container>
     </igx-radio-group>
   `,
-  imports: [IgxRadioComponent, IgxRadioGroupDirective]
+    imports: [IgxRadioComponent, IgxRadioGroupDirective]
 })
 
 class RadioGroupTestComponent implements OnInit {
@@ -915,7 +919,10 @@ class RadioGroupTestComponent implements OnInit {
     public required = false;
     public value: any;
 
-    public radios: { label: string; value: any }[] = [];
+    public radios: {
+        label: string;
+        value: any;
+    }[] = [];
 
     public handleChange(args: any) {
         this.value = args.value;
@@ -924,11 +931,10 @@ class RadioGroupTestComponent implements OnInit {
     public ngOnInit(): void {
         this.container.clear();
         this.radios.forEach((option) => {
-            const componentRef: ComponentRef<IgxRadioComponent> =
-            this.container.createComponent(IgxRadioComponent);
+            const componentRef: ComponentRef<IgxRadioComponent> = this.container.createComponent(IgxRadioComponent);
 
             componentRef.instance.placeholderLabel.nativeElement.textContent =
-            option.label;
+                option.label;
             componentRef.instance.value = option.value;
         });
     }
@@ -972,7 +978,8 @@ class DynamicRadioGroupComponent {
     imports: [IgxRadioGroupDirective, IgxRadioComponent]
 })
 class RadioGroupVerticalComponent {
-    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true })
+    public radioGroup: IgxRadioGroupDirective;
 }
 
 const dispatchRadioEvent = (eventName, radioNativeElement, fixture) => {

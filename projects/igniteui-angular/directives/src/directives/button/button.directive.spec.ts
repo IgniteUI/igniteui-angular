@@ -87,7 +87,7 @@ describe('IgxButton', () => {
         const fixture = TestBed.createComponent(InitButtonComponent);
         fixture.detectChanges();
         const button = fixture.componentInstance.button;
-        spyOn(button.buttonSelected, 'emit');
+        vi.spyOn(button.buttonSelected, 'emit');
 
         expect(button.buttonSelected.emit).not.toHaveBeenCalled();
 

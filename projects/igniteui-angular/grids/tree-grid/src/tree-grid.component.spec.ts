@@ -2,14 +2,7 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { By } from '@angular/platform-browser';
-import {
-    IgxTreeGridWrappedInContComponent,
-    IgxTreeGridDefaultLoadingComponent,
-    IgxTreeGridCellSelectionComponent,
-    IgxTreeGridSummariesTransactionsComponent,
-    IgxTreeGridNoDataComponent,
-    IgxTreeGridWithNoForeignKeyComponent
-} from '../../../test-utils/tree-grid-components.spec';
+import { IgxTreeGridWrappedInContComponent, IgxTreeGridDefaultLoadingComponent, IgxTreeGridCellSelectionComponent, IgxTreeGridSummariesTransactionsComponent, IgxTreeGridNoDataComponent, IgxTreeGridWithNoForeignKeyComponent } from '../../../test-utils/tree-grid-components.spec';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
@@ -82,15 +75,15 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
         it(`should render all records exactly if height is 100% and parent container\'s height is unset and
             there are fewer than 10 records in the data view`, () => {
-                grid.height = '100%';
-                fix.componentInstance.data = fix.componentInstance.data.slice(0, 1);
-                fix.detectChanges();
-                // fakeAsync is not needed. Need a second change detection cycle for height changes to be applied.
-                fix.detectChanges();
-                const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-                expect(defaultHeight).toBeFalsy();
-                expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeFalsy();
-                expect(grid.rowList.length).toEqual(6);
+            grid.height = '100%';
+            fix.componentInstance.data = fix.componentInstance.data.slice(0, 1);
+            fix.detectChanges();
+            // fakeAsync is not needed. Need a second change detection cycle for height changes to be applied.
+            fix.detectChanges();
+            const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            expect(defaultHeight).toBeFalsy();
+            expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeFalsy();
+            expect(grid.rowList.length).toEqual(6);
         });
 
         it(`should render 11 records if height is 100% and parent container\'s height is unset and grid size is changed`, async () => {
@@ -152,16 +145,15 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         });
 
         it('should throw a warning when primaryKey is set to a non-existing data field', () => {
+            // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
             jasmine.getEnv().allowRespy(true);
-            const warnSpy = spyOn(console, 'warn');
+            const warnSpy = vi.spyOn(console, 'warn');
             grid.primaryKey = 'testField';
             fix.detectChanges();
 
             expect(console.warn).toHaveBeenCalledTimes(1);
-            expect(console.warn).toHaveBeenCalledWith(
-                `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
-            );
-            warnSpy.calls.reset();
+            expect(console.warn).toHaveBeenCalledWith(`Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`);
+            warnSpy.mockClear();
 
             const oldData = fix.componentInstance.data;
             const newData = fix.componentInstance.data.map(rec => Object.assign({}, rec, { testField: 0 }));
@@ -174,9 +166,8 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             fix.detectChanges();
 
             expect(console.warn).toHaveBeenCalledTimes(1);
-            expect(console.warn).toHaveBeenCalledWith(
-                `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
-            );
+            expect(console.warn).toHaveBeenCalledWith(`Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`);
+            // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
             jasmine.getEnv().allowRespy(false);
         });
     });
@@ -310,7 +301,8 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             tick();
             fix.detectChanges();
 
-            let fixEl = fix.nativeElement; let gridEl = grid.nativeElement;
+            let fixEl = fix.nativeElement;
+            let gridEl = grid.nativeElement;
             let tHeadItems = fixEl.querySelector('igx-grid-header-group');
             let gridRows = fixEl.querySelector('igx-tree-grid-row');
             let paging = fixEl.querySelector('.igx-paginator');

@@ -107,7 +107,7 @@ describe('i18n', () => {
             });
 
             setCurrentI18n('en-US');
-        })
+        });
 
         it('should return default strings if locale is changed using new API, but its missing resources', () => {
             // Components init their default locales

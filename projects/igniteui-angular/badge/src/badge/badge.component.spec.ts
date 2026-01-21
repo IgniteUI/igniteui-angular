@@ -115,7 +115,8 @@ describe('Badge', () => {
     imports: [IgxBadgeComponent]
 })
 class InitBadgeComponent {
-    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
+    @ViewChild(IgxBadgeComponent, { static: true })
+    public badge: IgxBadgeComponent;
 }
 
 @Component({
@@ -123,7 +124,8 @@ class InitBadgeComponent {
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithDefaultsComponent {
-    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
+    @ViewChild(IgxBadgeComponent, { static: true })
+    public badge: IgxBadgeComponent;
 }
 
 @Component({
@@ -131,7 +133,8 @@ class InitBadgeWithDefaultsComponent {
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithIconComponent {
-    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
+    @ViewChild(IgxBadgeComponent, { static: true })
+    public badge: IgxBadgeComponent;
 }
 
 @Component({
@@ -139,7 +142,8 @@ class InitBadgeWithIconComponent {
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithIconARIAComponent {
-    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
+    @ViewChild(IgxBadgeComponent, { static: true })
+    public badge: IgxBadgeComponent;
 }
 
 @Component({
@@ -147,5 +151,6 @@ class InitBadgeWithIconARIAComponent {
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithDotComponent {
-    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
+    @ViewChild(IgxBadgeComponent, { static: true })
+    public badge: IgxBadgeComponent;
 }

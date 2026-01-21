@@ -1,15 +1,9 @@
-import {
-    waitForAsync,
-    TestBed,
-    ComponentFixture,
-    flushMicrotasks,
-    fakeAsync,
-} from '@angular/core/testing';
+import { waitForAsync, TestBed, ComponentFixture, flushMicrotasks, fakeAsync, } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-    IgxToastComponent
-} from './toast.component';
-import { HorizontalAlignment, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';;
+import { IgxToastComponent } from './toast.component';
+import { HorizontalAlignment, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
+import { vi } from 'vitest';
+;
 
 describe('IgxToast', () => {
     let fixture: ComponentFixture<IgxToastComponent>;
@@ -53,14 +47,15 @@ describe('IgxToast', () => {
     });
 
     it('should properly toggle and emit isVisibleChange', fakeAsync(() => {
-        spyOn(toast.isVisibleChange, 'emit').and.callThrough();
+        vi.spyOn(toast.isVisibleChange, 'emit');
         expect(toast.isVisible).toBe(false);
         expect(toast.isVisibleChange.emit).toHaveBeenCalledTimes(0);
 
         toast.toggle();
         expect(toast.isVisible).toBe(true);
         flushMicrotasks();
-        expect(toast.isVisibleChange.emit).toHaveBeenCalledOnceWith({ owner: toast, id: '0' });
+        expect(toast.isVisibleChange.emit).toHaveBeenCalledTimes(1);
+        expect(toast.isVisibleChange.emit).toHaveBeenCalledWith({ owner: toast, id: '0' });
 
         toast.toggle();
         flushMicrotasks();

@@ -81,7 +81,7 @@ describe('igxGridEditingActions #grid ', () => {
 
         it('should focus the first cell when editing mode is cell', () => {
             fixture.detectChanges();
-            grid.selectRange({rowStart: 0, rowEnd: 0, columnStart: 'ContactName', columnEnd: 'ContactName'});
+            grid.selectRange({ rowStart: 0, rowEnd: 0, columnStart: 'ContactName', columnEnd: 'ContactName' });
             fixture.detectChanges();
             grid.actionStrip.show(grid.rowList.first);
             fixture.detectChanges();
@@ -95,23 +95,23 @@ describe('igxGridEditingActions #grid ', () => {
         });
 
         it('should allow hiding/showing the edit/delete actions via the related property.', () => {
-           const editActions = fixture.componentInstance.actionStrip.actionButtons.first;
-           editActions.editRow = false;
-           fixture.detectChanges();
+            const editActions = fixture.componentInstance.actionStrip.actionButtons.first;
+            editActions.editRow = false;
+            fixture.detectChanges();
 
-           grid.actionStrip.show(grid.rowList.first);
-           fixture.detectChanges();
-           let icons = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`));
-           let iconsText = icons.map(x => x.nativeElement.innerText);
-           expect(iconsText).toEqual(['delete']);
+            grid.actionStrip.show(grid.rowList.first);
+            fixture.detectChanges();
+            let icons = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`));
+            let iconsText = icons.map(x => x.nativeElement.innerText);
+            expect(iconsText).toEqual(['delete']);
 
-           editActions.editRow = true;
-           editActions.deleteRow = false;
-           fixture.detectChanges();
+            editActions.editRow = true;
+            editActions.deleteRow = false;
+            fixture.detectChanges();
 
-           icons = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`));
-           iconsText = icons.map(x => x.nativeElement.innerText);
-           expect(iconsText).toEqual(['edit']);
+            icons = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`));
+            iconsText = icons.map(x => x.nativeElement.innerText);
+            expect(iconsText).toEqual(['edit']);
         });
     });
 
@@ -136,7 +136,7 @@ describe('igxGridEditingActions #grid ', () => {
             actionStrip.menu.selectItem(editMenuItem);
             fixture.detectChanges();
 
-            expect(row.inEditMode).toBeTrue();
+            expect(row.inEditMode).toBe(true);
 
             grid.gridAPI.crudService.endEdit();
             fixture.detectChanges();
@@ -170,7 +170,7 @@ describe('igxGridEditingActions #grid ', () => {
             UIInteractions.simulateMouseEvent('mouseleave', rowElem.element.nativeElement, 0, 200);
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBe(false);
         });
     });
 
@@ -194,7 +194,7 @@ describe('igxGridEditingActions #grid ', () => {
         });
 
         it('should emit correct rowPinning arguments with pinning actions', () => {
-            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            vi.spyOn(grid.rowPinning, 'emit');
             const row = grid.getRowByIndex(1);
 
             actionStrip.show(grid.rowList.toArray()[1]);
@@ -206,7 +206,7 @@ describe('igxGridEditingActions #grid ', () => {
 
             expect(grid.rowPinning.emit).toHaveBeenCalledTimes(1);
             expect(grid.rowPinning.emit).toHaveBeenCalledWith({
-                rowID : row.key,
+                rowID: row.key,
                 rowKey: row.key,
                 insertAtIndex: 0,
                 isPinned: true,
@@ -224,7 +224,7 @@ describe('igxGridEditingActions #grid ', () => {
 
             expect(grid.rowPinning.emit).toHaveBeenCalledTimes(2);
             expect(grid.rowPinning.emit).toHaveBeenCalledWith({
-                rowID : row5.key,
+                rowID: row5.key,
                 rowKey: row5.key,
                 insertAtIndex: 1,
                 isPinned: true,
@@ -248,7 +248,7 @@ describe('igxGridEditingActions #grid ', () => {
             fixture.detectChanges();
 
             expect(actionStrip.context).toBe(row);
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBe(false);
         });
         it('should auto-hide on mouse leave of row.', async () => {
             fixture = TestBed.createComponent(IgxActionStripOneRowComponent);
@@ -263,22 +263,22 @@ describe('igxGridEditingActions #grid ', () => {
             actionStrip.show(row);
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBe(false);
             UIInteractions.simulateMouseEvent('mouseleave', rowElem.element.nativeElement, 0, 200);
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeTrue();
+            expect(actionStrip.hidden).toBe(true);
         });
         it('should auto-hide on mouse leave of grid.', () => {
             const row = grid.getRowByIndex(0);
             actionStrip.show(row);
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBe(false);
             UIInteractions.simulateMouseEvent('mouseleave', grid.nativeElement, 0, 0);
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeTrue();
+            expect(actionStrip.hidden).toBe(true);
         });
 
         it('should auto-hide on delete action click.', () => {
@@ -286,14 +286,14 @@ describe('igxGridEditingActions #grid ', () => {
             actionStrip.show(row);
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBe(false);
 
             const deleteIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[1];
             expect(deleteIcon.nativeElement.innerText).toBe('delete');
             deleteIcon.parent.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeTrue();
+            expect(actionStrip.hidden).toBe(true);
 
         });
 
@@ -302,14 +302,14 @@ describe('igxGridEditingActions #grid ', () => {
             actionStrip.show(row);
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBe(false);
 
             // bind to no data, which removes all rows.
             grid.data = [];
             grid.cdr.detectChanges();
 
-            expect((row.cdr as any).destroyed).toBeTrue();
-            expect(actionStrip.hidden).toBeTrue();
+            expect((row.cdr as any).destroyed).toBe(true);
+            expect(actionStrip.hidden).toBe(true);
         });
 
         it('should auto-hide if context row is cached.', () => {
@@ -327,16 +327,18 @@ describe('igxGridEditingActions #grid ', () => {
             fixture.detectChanges();
 
             // not destroyed, but not in DOM anymore
-            expect((row.cdr as any).destroyed).toBeFalse();
+            expect((row.cdr as any).destroyed).toBe(false);
             expect(row.element.nativeElement.isConnected).toBe(false);
 
             // action strip should be hidden
-            expect(actionStrip.hidden).toBeTrue();
+            expect(actionStrip.hidden).toBe(true);
         });
     });
 
     describe('auto show/hide in HierarchicalGrid', () => {
-        let actionStripRoot; let actionStripChild; let hierarchicalGrid: IgxHierarchicalGridComponent;
+        let actionStripRoot;
+        let actionStripChild;
+        let hierarchicalGrid: IgxHierarchicalGridComponent;
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridActionStripComponent);
             fixture.detectChanges();
@@ -352,7 +354,7 @@ describe('igxGridEditingActions #grid ', () => {
             fixture.detectChanges();
 
             expect(actionStripRoot.context).toBe(row);
-            expect(actionStripRoot.hidden).toBeFalse();
+            expect(actionStripRoot.hidden).toBe(false);
             expect(actionStripChild.context).toBeUndefined();
         });
 
@@ -369,7 +371,7 @@ describe('igxGridEditingActions #grid ', () => {
             fixture.detectChanges();
 
             expect(actionStripChild.context).toBe(childRow);
-            expect(actionStripChild.hidden).toBeFalse();
+            expect(actionStripChild.hidden).toBe(false);
 
             expect(actionStripRoot.context).toBeUndefined();
         });
@@ -389,8 +391,8 @@ describe('igxGridEditingActions #grid ', () => {
             UIInteractions.simulateMouseEvent('mouseleave', hierarchicalGrid.nativeElement, 0, 0);
             fixture.detectChanges();
 
-            expect(actionStripRoot.hidden).toBeTrue();
-            expect(actionStripChild.hidden).toBeTrue();
+            expect(actionStripRoot.hidden).toBe(true);
+            expect(actionStripChild.hidden).toBe(true);
         });
     });
 
@@ -404,8 +406,8 @@ describe('igxGridEditingActions #grid ', () => {
         });
 
         it('should allow deleting row', () => {
-            spyOn(treeGrid.rowDelete, 'emit').and.callThrough();
-            spyOn(treeGrid.rowDeleted, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.rowDelete, 'emit');
+            vi.spyOn(treeGrid.rowDeleted, 'emit');
             const row = treeGrid.rowList.toArray()[0];
             actionStrip.show(row);
             fixture.detectChanges();
@@ -437,8 +439,11 @@ describe('igxGridEditingActions #grid ', () => {
             deleteChildBtn.actionClick.emit();
             fixture.detectChanges();
 
-            expect(treeGrid.rowDelete.emit).toHaveBeenCalledOnceWith(rowDeleteArgs);
-            expect(treeGrid.rowDeleted.emit).toHaveBeenCalledOnceWith(rowDeletedArgs);
+            expect(treeGrid.rowDelete.emit).toHaveBeenCalledTimes(1);
+
+            expect(treeGrid.rowDelete.emit).toHaveBeenCalledWith(rowDeleteArgs);
+            expect(treeGrid.rowDeleted.emit).toHaveBeenCalledTimes(1);
+            expect(treeGrid.rowDeleted.emit).toHaveBeenCalledWith(rowDeletedArgs);
             expect(treeGrid.rowList.first.data['ID']).toBe(6);
         });
     });

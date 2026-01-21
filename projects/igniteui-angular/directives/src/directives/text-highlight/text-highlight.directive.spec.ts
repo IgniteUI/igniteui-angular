@@ -1,7 +1,7 @@
 import { Component, ViewChild, inject } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 
-import { IgxTextHighlightDirective, IActiveHighlightInfo} from './text-highlight.directive';
+import { IgxTextHighlightDirective, IActiveHighlightInfo } from './text-highlight.directive';
 
 import { IgxTextHighlightService } from './text-highlight.service';
 
@@ -100,10 +100,8 @@ describe('IgxHighlight', () => {
         fix.detectChanges();
 
         const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
-        const count = component.highlightText(
-            'LoReM ipsuM dolor sit AMET, consectetur adipiscing elit. Vestibulum vulputate LucTUS dui ut maximus.' +
-            ' Quisque sed suscipit lorem. Vestibulum sit.',
-            false, true);
+        const count = component.highlightText('LoReM ipsuM dolor sit AMET, consectetur adipiscing elit. Vestibulum vulputate LucTUS dui ut maximus.' +
+            ' Quisque sed suscipit lorem. Vestibulum sit.', false, true);
 
         let spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         expect(spans.length).toBe(1);

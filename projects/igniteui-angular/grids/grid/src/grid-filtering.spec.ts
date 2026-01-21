@@ -1,6 +1,6 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import {  NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
@@ -18,7 +18,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
         }).compileComponents();
     }));
 
-    let fix; let grid;
+    let fix;
+    let grid;
     beforeEach(fakeAsync(() => {
         fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
@@ -237,8 +238,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         const expectedResults = GridFunctions.createDateFilterConditions(grid, today);
 
         // After filter
-        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
-            IgxDateFilteringOperand.instance().condition('after'));
+        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4), IgxDateFilteringOperand.instance().condition('after'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
 
@@ -246,24 +246,21 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(8);
-        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
-            IgxDateFilteringOperand.instance().condition('before'));
+        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4), IgxDateFilteringOperand.instance().condition('before'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(5);
 
         // DoesNotEqual filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', today,
-            IgxDateFilteringOperand.instance().condition('doesNotEqual'));
+        grid.filter('ReleaseDate', today, IgxDateFilteringOperand.instance().condition('doesNotEqual'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(7);
 
         // Equals filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', today,
-            IgxDateFilteringOperand.instance().condition('equals'));
+        grid.filter('ReleaseDate', today, IgxDateFilteringOperand.instance().condition('equals'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
 
@@ -353,8 +350,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         // At or After, Empty, Not Empty, Null, Not Null
 
         // At 11:15:35
-        grid.filter('ReleaseTime', cal.timedelta(today, 'hour', 1),
-            IgxTimeFilteringOperand.instance().condition('at'));
+        grid.filter('ReleaseTime', cal.timedelta(today, 'hour', 1), IgxTimeFilteringOperand.instance().condition('at'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
 
@@ -362,8 +358,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.clearFilter('ReleaseTime');
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(8);
-        grid.filter('ReleaseTime', cal.timedelta(today, 'hour', -1),
-            IgxTimeFilteringOperand.instance().condition('not_at'));
+        grid.filter('ReleaseTime', cal.timedelta(today, 'hour', -1), IgxTimeFilteringOperand.instance().condition('not_at'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(7);
 
@@ -371,8 +366,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.clearFilter('ReleaseTime');
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(8);
-        grid.filter('ReleaseTime', cal.timedelta(today, 'minute', +10),
-            IgxTimeFilteringOperand.instance().condition('before'));
+        grid.filter('ReleaseTime', cal.timedelta(today, 'minute', +10), IgxTimeFilteringOperand.instance().condition('before'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(4);
 
@@ -380,8 +374,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.clearFilter('ReleaseTime');
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(8);
-        grid.filter('ReleaseTime', cal.timedelta(today, 'second', +20),
-            IgxTimeFilteringOperand.instance().condition('after'));
+        grid.filter('ReleaseTime', cal.timedelta(today, 'second', +20), IgxTimeFilteringOperand.instance().condition('after'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(2);
 
@@ -389,8 +382,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.clearFilter('ReleaseTime');
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(8);
-        grid.filter('ReleaseTime', cal.timedelta(today, 'minute', +10),
-            IgxTimeFilteringOperand.instance().condition('at_before'));
+        grid.filter('ReleaseTime', cal.timedelta(today, 'minute', +10), IgxTimeFilteringOperand.instance().condition('at_before'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(5);
 
@@ -398,8 +390,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.clearFilter('ReleaseTime');
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(8);
-        grid.filter('ReleaseTime', cal.timedelta(today, 'second', +20),
-            IgxTimeFilteringOperand.instance().condition('at_after'));
+        grid.filter('ReleaseTime', cal.timedelta(today, 'second', +20), IgxTimeFilteringOperand.instance().condition('at_after'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(3);
 
@@ -441,21 +432,19 @@ describe('IgxGrid - Filtering actions #grid', () => {
         const today = SampleTestData.todayFullDate;
 
         // Equals 11:15:35
-        grid.filter('ReleaseDateTime', cal.timedelta(today, 'hour', 1),
-            IgxDateTimeFilteringOperand.instance().condition('equals'));
+        grid.filter('ReleaseDateTime', cal.timedelta(today, 'hour', 1), IgxDateTimeFilteringOperand.instance().condition('equals'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
 
         // Does not equal 11:15:35
-        grid.filter('ReleaseDateTime', cal.timedelta(today, 'hour', 1),
-            IgxDateTimeFilteringOperand.instance().condition('doesNotEqual'));
+        grid.filter('ReleaseDateTime', cal.timedelta(today, 'hour', 1), IgxDateTimeFilteringOperand.instance().condition('doesNotEqual'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(7);
     }));
 
     it('should correctly filter with earliest/latest \'date\' values', fakeAsync(() => {
         const earliest = new Date(SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', -1).getTime() + 7200 * 1000);
-        const latest =  new Date(SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', 1).getTime() - 7200 * 1000);
+        const latest = new Date(SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', 1).getTime() - 7200 * 1000);
 
         // Before filter
         expect(grid.rowList.length).toEqual(8);
@@ -503,7 +492,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         const cal = SampleTestData.timeGenerator;
         const today = SampleTestData.today;
 
-        grid.data =  grid.data.map(rec => {
+        grid.data = grid.data.map(rec => {
             const newRec = Object.assign({}, rec) as any;
             newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.toISOString() : rec.ReleaseDate;
             return newRec;
@@ -513,8 +502,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         const expectedResults = GridFunctions.createDateFilterConditions(grid, today);
 
         // After filter
-        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
-            IgxDateFilteringOperand.instance().condition('after'));
+        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4), IgxDateFilteringOperand.instance().condition('after'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
 
@@ -522,24 +510,21 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(8);
-        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
-            IgxDateFilteringOperand.instance().condition('before'));
+        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4), IgxDateFilteringOperand.instance().condition('before'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(5);
 
         // DoesNotEqual filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', today,
-            IgxDateFilteringOperand.instance().condition('doesNotEqual'));
+        grid.filter('ReleaseDate', today, IgxDateFilteringOperand.instance().condition('doesNotEqual'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(7);
 
         // Equals filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', today,
-            IgxDateFilteringOperand.instance().condition('equals'));
+        grid.filter('ReleaseDate', today, IgxDateFilteringOperand.instance().condition('equals'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
 
@@ -625,7 +610,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         const cal = SampleTestData.timeGenerator;
         const today = SampleTestData.today;
 
-        grid.data =  grid.data.map(rec => {
+        grid.data = grid.data.map(rec => {
             const newRec = Object.assign({}, rec) as any;
             newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.getTime() : rec.ReleaseDate;
             return newRec;
@@ -635,8 +620,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         const expectedResults = GridFunctions.createDateFilterConditions(grid, today);
 
         // After filter
-        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
-            IgxDateFilteringOperand.instance().condition('after'));
+        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4), IgxDateFilteringOperand.instance().condition('after'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
 
@@ -644,24 +628,21 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(8);
-        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
-            IgxDateFilteringOperand.instance().condition('before'));
+        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4), IgxDateFilteringOperand.instance().condition('before'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(5);
 
         // DoesNotEqual filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', today,
-            IgxDateFilteringOperand.instance().condition('doesNotEqual'));
+        grid.filter('ReleaseDate', today, IgxDateFilteringOperand.instance().condition('doesNotEqual'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(7);
 
         // Equals filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', today,
-            IgxDateFilteringOperand.instance().condition('equals'));
+        grid.filter('ReleaseDate', today, IgxDateFilteringOperand.instance().condition('equals'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
 
@@ -754,8 +735,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
     }));
 
     it('should correctly apply multiple filtering through API', fakeAsync(() => {
-        spyOn(grid.filtering, 'emit');
-        spyOn(grid.filteringDone, 'emit');
+        vi.spyOn(grid.filtering, 'emit');
+        vi.spyOn(grid.filteringDone, 'emit');
 
         const gridExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
         gridExpressionsTree.filteringOperands = [
@@ -786,8 +767,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
     }));
 
     it('should correctly apply global filtering', fakeAsync(() => {
-        spyOn(grid.filtering, 'emit');
-        spyOn(grid.filteringDone, 'emit');
+        vi.spyOn(grid.filtering, 'emit');
+        vi.spyOn(grid.filteringDone, 'emit');
 
         grid.filteringLogic = FilteringLogic.Or;
         grid.filterGlobal('some', IgxStringFilteringOperand.instance().condition('contains'));
@@ -1029,8 +1010,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
     }));
 
     it('Should always emit filteringDone with proper eventArgs, even when column does not exist', fakeAsync(() => {
-        spyOn(grid.filtering, 'emit');
-        spyOn(grid.filteringDone, 'emit');
+        vi.spyOn(grid.filtering, 'emit');
+        vi.spyOn(grid.filteringDone, 'emit');
 
         grid.filteringLogic = FilteringLogic.Or;
         grid.filter('Nonexisting', 'ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
@@ -1043,8 +1024,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
     }));
 
     it('Should emit filteringDone when filtering globally', fakeAsync(() => {
-        spyOn(grid.filtering, 'emit');
-        spyOn(grid.filteringDone, 'emit');
+        vi.spyOn(grid.filtering, 'emit');
+        vi.spyOn(grid.filteringDone, 'emit');
 
         grid.filteringLogic = FilteringLogic.Or;
         grid.filterGlobal('some', IgxStringFilteringOperand.instance().condition('contains'));
@@ -1057,8 +1038,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
     }));
 
     it('Should keep existing expressionTree when filtering with a null expressionTree.', fakeAsync(() => {
-        spyOn(grid.filtering, 'emit');
-        spyOn(grid.filteringDone, 'emit');
+        vi.spyOn(grid.filtering, 'emit');
+        vi.spyOn(grid.filteringDone, 'emit');
 
         const expression1 = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
         const expression11 = {
@@ -1099,8 +1080,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
     }));
 
     it('Should not clear previous filtering when filterGlobal() is called with invalid condition', fakeAsync(() => {
-        spyOn(grid.filtering, 'emit');
-        spyOn(grid.filteringDone, 'emit');
+        vi.spyOn(grid.filtering, 'emit');
+        vi.spyOn(grid.filteringDone, 'emit');
 
         grid.filter('Downloads', 100, IgxNumberFilteringOperand.instance().condition('greaterThan'), true);
         tick(30);
@@ -1124,8 +1105,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
     }));
 
     it('Should disable filtering feature when using NoopFilteringStrategy.', fakeAsync(() => {
-        spyOn(grid.filtering, 'emit');
-        spyOn(grid.filteringDone, 'emit');
+        vi.spyOn(grid.filtering, 'emit');
+        vi.spyOn(grid.filteringDone, 'emit');
 
         // Use the NoopFilteringStrategy.
         grid.filterStrategy = NoopFilteringStrategy.instance();
@@ -1157,7 +1138,8 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
         }).compileComponents();
     }));
 
-    let fix; let grid: IgxGridComponent;
+    let fix;
+    let grid: IgxGridComponent;
     beforeEach(fakeAsync(() => {
         fix = TestBed.createComponent(IgxGridFilteringBindingComponent);
         fix.detectChanges();
@@ -1165,8 +1147,8 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
     }));
 
     it('should correctly filter with \'filteringExpressionsTree\' binding', fakeAsync(() => {
-        spyOn(grid.filtering, 'emit');
-        spyOn(grid.filteringDone, 'emit');
+        vi.spyOn(grid.filtering, 'emit');
+        vi.spyOn(grid.filteringDone, 'emit');
 
         // Verify initially filtered 'Downloads > 200'
         expect(grid.rowList.length).toEqual(3);
@@ -1189,8 +1171,7 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
     }));
 });
 
-const verifyExpressionUI = (expressionUI: ExpressionUI, expression: IFilteringExpression,
-    afterOperator: FilteringLogic, beforeOperator: FilteringLogic) => {
+const verifyExpressionUI = (expressionUI: ExpressionUI, expression: IFilteringExpression, afterOperator: FilteringLogic, beforeOperator: FilteringLogic) => {
     expect(expressionUI.expression).toBe(expression);
     expect(expressionUI.afterOperator).toBe(afterOperator);
     expect(expressionUI.beforeOperator).toBe(beforeOperator);

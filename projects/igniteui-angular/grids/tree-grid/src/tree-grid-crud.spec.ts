@@ -111,7 +111,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 try {
                     treeGrid.addRow(newRow, 12345);
                     fix.detectChanges();
-                } catch (ex) {
+                }
+                catch (ex) {
                     error = (ex as Error).message;
                 }
                 expect(error).toMatch('Invalid parent row ID!');
@@ -243,7 +244,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 let error = '';
                 const newRow = {
                     ID: 777,
-                    ParentID: 12345,  // there is no row with ID=12345
+                    ParentID: 12345, // there is no row with ID=12345
                     Name: 'New Employee 1',
                     JobTitle: 'Senior Web Developer',
                     Age: 33
@@ -251,7 +252,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 try {
                     treeGrid.addRow(newRow, 12345);
                     fix.detectChanges();
-                } catch (ex) {
+                }
+                catch (ex) {
                     error = (ex as Error).message;
                 }
                 expect(error).toMatch('Invalid parent row ID!');
@@ -828,12 +830,12 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 fix.detectChanges();
                 cell.editMode = true;
                 fix.detectChanges();
-                expect(cell.row.inEditMode).toBeTrue();
+                expect(cell.row.inEditMode).toBe(true);
                 treeGrid.rowEditable = false;
                 fix.detectChanges();
                 cell.editValue = true;
                 fix.detectChanges();
-                expect(cell.row.inEditMode).toBeFalse();
+                expect(cell.row.inEditMode).toBe(false);
             });
         });
 
@@ -934,8 +936,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
             });
 
             it('should delete a root level row by ID', () => {
-                spyOn(treeGrid.rowDelete, 'emit').and.callThrough();
-                spyOn(treeGrid.rowDeleted, 'emit').and.callThrough();
+                vi.spyOn(treeGrid.rowDelete, 'emit');
+                vi.spyOn(treeGrid.rowDeleted, 'emit');
                 let someRow = treeGrid.getRowByIndex(0);
                 expect(someRow.key).toBe(1);
 
@@ -965,8 +967,11 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.deleteRow(someRow.key);
                 fix.detectChanges();
 
-                expect(treeGrid.rowDelete.emit).toHaveBeenCalledOnceWith(rowDeleteArgs);
-                expect(treeGrid.rowDeleted.emit).toHaveBeenCalledOnceWith(rowDeletedArgs);
+                expect(treeGrid.rowDelete.emit).toHaveBeenCalledTimes(1);
+
+                expect(treeGrid.rowDelete.emit).toHaveBeenCalledWith(rowDeleteArgs);
+                expect(treeGrid.rowDeleted.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.rowDeleted.emit).toHaveBeenCalledWith(rowDeletedArgs);
 
                 someRow = treeGrid.getRowByIndex(0);
                 expect(someRow.key).toBe(2);
@@ -977,8 +982,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
             });
 
             it('should cancel rowDelete event', () => {
-                spyOn(treeGrid.rowDelete, 'emit').and.callThrough();
-                spyOn(treeGrid.rowDeleted, 'emit').and.callThrough();
+                vi.spyOn(treeGrid.rowDelete, 'emit');
+                vi.spyOn(treeGrid.rowDeleted, 'emit');
                 let someRow = treeGrid.getRowByIndex(0);
                 expect(someRow.key).toBe(1);
 
@@ -1004,7 +1009,9 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.deleteRow(someRow.key);
                 fix.detectChanges();
 
-                expect(treeGrid.rowDelete.emit).toHaveBeenCalledOnceWith(rowDeleteArgs);
+                expect(treeGrid.rowDelete.emit).toHaveBeenCalledTimes(1);
+
+                expect(treeGrid.rowDelete.emit).toHaveBeenCalledWith(rowDeleteArgs);
                 expect(treeGrid.rowDeleted.emit).toHaveBeenCalledTimes(0);
 
                 someRow = treeGrid.getRowByIndex(0);

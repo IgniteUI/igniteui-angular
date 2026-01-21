@@ -16,8 +16,7 @@ describe(`Update to ${version}`, () => {
                 sourceRoot: '/testSrc',
                 architect: {
                     build: {
-                      options: {
-                      }
+                        options: {}
                     }
                 }
             }
@@ -33,8 +32,7 @@ describe(`Update to ${version}`, () => {
                 projectType: ProjectType.Library,
                 architect: {
                     build: {
-                      options: {
-                      }
+                        options: {}
                     }
                 }
             }

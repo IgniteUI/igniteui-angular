@@ -29,18 +29,18 @@ describe('IgcFormControlDirective - ', () => {
 
         const elementRef = { nativeElement: document.createElement('igc-rating') };
 
-        const mockNgControl = jasmine.createSpyObj('NgControl', [
-            'writeValue',
-            'onChange',
-            'setDisabledState',
-            'onChange',
-            'registerOnChangeCb',
-            'registerOnTouchedCb'
-        ]);
+        const mockNgControl = {
+            writeValue: vi.fn().mockName("NgControl.writeValue"),
+            onChange: vi.fn().mockName("NgControl.onChange"),
+            setDisabledState: vi.fn().mockName("NgControl.setDisabledState"),
+            onChange: vi.fn().mockName("NgControl.onChange"),
+            registerOnChangeCb: vi.fn().mockName("NgControl.registerOnChangeCb"),
+            registerOnTouchedCb: vi.fn().mockName("NgControl.registerOnTouchedCb")
+        };
 
-        const renderer2Mock = jasmine.createSpyObj('renderer2Mock', [
-            'setProperty'
-        ]);
+        const renderer2Mock = {
+            setProperty: vi.fn().mockName("renderer2Mock.setProperty")
+        };
 
         it('should correctly implement interface methods - ControlValueAccessor ', () => {
             directive = TestBed.inject(IgcFormControlDirective);

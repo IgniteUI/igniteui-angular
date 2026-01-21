@@ -16,7 +16,7 @@ describe('IgxHint', () => {
                 EndHintComponent
             ]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     it('Initializes a hint.', () => {

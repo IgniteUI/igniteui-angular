@@ -18,7 +18,9 @@ describe('IgxGrid - search API #grid', () => {
     const HIGHLIGHT_CSS_CLASS = '.igx-highlight';
     const HIGHLIGHT_ACTIVE_CSS_CLASS = '.igx-highlight__active';
     let fix: ComponentFixture<any>;
-    let component; let grid: IgxGridComponent; let fixNativeElement;
+    let component;
+    let grid: IgxGridComponent;
+    let fixNativeElement;
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -30,7 +32,7 @@ describe('IgxGrid - search API #grid', () => {
                 ScrollableGridSearchComponent
             ]
         }).compileComponents();
-    }))
+    }));
 
     describe('BasicGrid - ', () => {
         beforeEach(() => {
@@ -280,7 +282,7 @@ describe('IgxGrid - search API #grid', () => {
             expect(activeHighlight).toBe(highlights[0]);
         });
 
-        xit('Should scroll properly when using paging', () => {
+        it.skip('Should scroll properly when using paging', () => {
             fix.componentInstance.paging = true;
             grid.height = '240px';
             grid.paginator.perPage = 7;
@@ -638,7 +640,8 @@ describe('IgxGrid - search API #grid', () => {
                 expect(highlights.length).toBe(1);
                 if (ind === 1) {
                     verifyActiveHighlight(0);
-                } else {
+                }
+                else {
                     expect(activeHighlight).toBeNull();
                 }
                 expect((highlights[0] as HTMLElement).innerText).toEqual('12');
@@ -940,16 +943,16 @@ describe('IgxGrid - search API #grid', () => {
             expect(highlight !== null).toBeTruthy();
 
             grid.groupBy([{
-                fieldName: 'JobTitle',
-                dir: SortingDirection.Asc,
-                ignoreCase: true,
-                strategy: DefaultSortingStrategy.instance()
-            }, {
-                fieldName: 'Company',
-                dir: SortingDirection.Desc,
-                ignoreCase: true,
-                strategy: DefaultSortingStrategy.instance()
-            }]);
+                    fieldName: 'JobTitle',
+                    dir: SortingDirection.Asc,
+                    ignoreCase: true,
+                    strategy: DefaultSortingStrategy.instance()
+                }, {
+                    fieldName: 'Company',
+                    dir: SortingDirection.Desc,
+                    ignoreCase: true,
+                    strategy: DefaultSortingStrategy.instance()
+                }]);
             fix.detectChanges();
             cell = grid.gridAPI.get_cell_by_index(4, 'JobTitle');
             highlight = cell.nativeElement.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);

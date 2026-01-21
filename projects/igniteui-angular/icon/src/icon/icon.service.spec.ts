@@ -7,7 +7,8 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { Component, inject } from "@angular/core";
 import { IgxIconComponent } from "./icon.component";
 import { By } from "@angular/platform-browser";
-import { IgxTheme, THEME_TOKEN, ThemeToken } from 'igniteui-angular/core';;
+import { IgxTheme, THEME_TOKEN, ThemeToken } from 'igniteui-angular/core';
+;
 
 describe("Icon Service", () => {
     const FAMILY: IconFamily = {
@@ -20,7 +21,11 @@ describe("Icon Service", () => {
     <path d="M10 10h181v181H10V10zm38.2 38.2v104.6h104.6V48.2H48.2z"></path>
 </svg>`;
 
-    let iconRef: { name: string; family: string; icon: IconMeta };
+    let iconRef: {
+        name: string;
+        family: string;
+        icon: IconMeta;
+    };
     let iconService: IgxIconService;
 
     beforeEach(() => {
@@ -119,19 +124,15 @@ describe("Icon Service", () => {
     it("should get the className by family name", () => {
         iconService.setFamily(FAMILY.name, FAMILY.meta);
 
-        expect(iconService.familyClassName(FAMILY.name)).toBe(
-            FAMILY.meta.className,
-        );
+        expect(iconService.familyClassName(FAMILY.name)).toBe(FAMILY.meta.className);
     });
 
-    it("should add custom svg icon from url", fakeAsync((
-        done: () => object,
-    ) => {
+    it("should add custom svg icon from url", fakeAsync((done: () => object) => {
         const iconName = "test";
         const familyName = "svg-icons";
 
-        spyOn(XMLHttpRequest.prototype, "open").and.callThrough();
-        spyOn(XMLHttpRequest.prototype, "send");
+        vi.spyOn(XMLHttpRequest.prototype, "open");
+        vi.spyOn(XMLHttpRequest.prototype, "send");
 
         iconService.addSvgIcon(iconName, "test.svg", familyName);
 
@@ -139,9 +140,7 @@ describe("Icon Service", () => {
         expect(XMLHttpRequest.prototype.send).toHaveBeenCalledTimes(1);
 
         iconService.iconLoaded.pipe().subscribe(() => {
-            expect(
-                iconService.isSvgIconCached(iconName, familyName),
-            ).toBeTruthy();
+            expect(iconService.isSvgIconCached(iconName, familyName)).toBeTruthy();
             done();
         });
     }));
@@ -193,18 +192,18 @@ describe("Icon Service", () => {
         expect(svgText).toContain(svg.innerHTML);
     });
 
-    it("should emit loading event for a custom svg icon from url", (done) => {
+    it("should emit loading event for a custom svg icon from url", async () => {
         iconService.iconLoaded.pipe(first()).subscribe((event) => {
             expect(event.name).toMatch("test");
             expect(event.family).toMatch("svg-icons");
-            done();
+            ;
         });
 
         const iconName = "test";
         const familyName = "svg-icons";
 
-        spyOn(XMLHttpRequest.prototype, "open").and.callThrough();
-        spyOn(XMLHttpRequest.prototype, "send").and.callFake(() => {
+        vi.spyOn(XMLHttpRequest.prototype, "open");
+        vi.spyOn(XMLHttpRequest.prototype, "send").mockImplementation(() => {
             (iconService as any)._iconLoaded.next({
                 name: iconName,
                 value: svgText,
@@ -224,9 +223,9 @@ describe("Icon Service", () => {
 
         expect(fixture.componentInstance.themeToken.theme).toBe('material');
         expect(arrow_prev).toBeTruthy();
-        expect(arrow_prev.classes['material-icons']).toBeTrue();
+        expect(arrow_prev.classes['material-icons']).toBe(true);
         expect(expand_more).toBeTruthy();
-        expect(expand_more.classes['material-icons']).toBeTrue();
+        expect(expand_more.classes['material-icons']).toBe(true);
 
         fixture.componentInstance.setTheme('indigo');
         fixture.detectChanges();
@@ -238,11 +237,11 @@ describe("Icon Service", () => {
 
         // The class change should be reflected as the family changes
         expect(arrow_prev).toBeTruthy();
-        expect(arrow_prev.classes['internal_indigo']).toBeTrue();
+        expect(arrow_prev.classes['internal_indigo']).toBe(true);
 
         // The expand_more shouldn't change as its reference is set explicitly
         expect(expand_more).toBeTruthy();
-        expect(expand_more.classes['material-icons']).toBeTrue();
+        expect(expand_more.classes['material-icons']).toBe(true);
     });
 });
 
@@ -253,13 +252,15 @@ describe("Icon Service", () => {
      `,
     imports: [IgxIconComponent]
 })
-class IconTestComponent { }
+class IconTestComponent {
+}
 
 @Component({
     template: `<igx-icon name="reference" family="default"></igx-icon>`,
     imports: [IgxIconComponent]
 })
-class IconRefComponent { }
+class IconRefComponent {
+}
 
 @Component({
     template: `

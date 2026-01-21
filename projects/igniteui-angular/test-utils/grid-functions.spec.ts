@@ -157,9 +157,11 @@ export class GridFunctions {
         const colGroups = grid.columns.filter(c => c.columnGroup && c.header === headerName);
         if (colGroups.length === 0) {
             return null;
-        } else if (colGroups.length === 1) {
+        }
+        else if (colGroups.length === 1) {
             return colGroups[0];
-        } else {
+        }
+        else {
             throw new Error('More than one column group found.');
         }
     }
@@ -235,13 +237,12 @@ export class GridFunctions {
         return element.getBoundingClientRect().top >= gridTop && element.getBoundingClientRect().bottom <= gridBottom;
     }
 
-    public static toggleMasterRowByClick =
-        async (fix, row: IgxGridRowComponent, debounceTime) => {
-            const icon = row.element.nativeElement.querySelector('igx-icon');
-            UIInteractions.simulateClickAndSelectEvent(icon.parentElement);
-            await wait(debounceTime);
-            fix.detectChanges();
-        };
+    public static toggleMasterRowByClick = async (fix, row: IgxGridRowComponent, debounceTime) => {
+        const icon = row.element.nativeElement.querySelector('igx-icon');
+        UIInteractions.simulateClickAndSelectEvent(icon.parentElement);
+        await wait(debounceTime);
+        fix.detectChanges();
+    };
 
     public static toggleMasterRow(fix: ComponentFixture<any>, row: IgxRowDirective) {
         const rowDE = fix.debugElement.queryAll(By.directive(IgxRowDirective)).find(el => el.componentInstance === row);
@@ -359,20 +360,15 @@ export class GridFunctions {
     public static createDateFilterConditions(grid: IgxGridComponent, today) {
         const expectedResults = [];
         // day + 15
-        const dateItem0 = GridFunctions.generateICalendarDate(grid.data[0].ReleaseDate,
-            today.getFullYear(), today.getMonth());
+        const dateItem0 = GridFunctions.generateICalendarDate(grid.data[0].ReleaseDate, today.getFullYear(), today.getMonth());
         // month - 1
-        const dateItem1 = GridFunctions.generateICalendarDate(grid.data[1].ReleaseDate,
-            today.getFullYear(), today.getMonth());
+        const dateItem1 = GridFunctions.generateICalendarDate(grid.data[1].ReleaseDate, today.getFullYear(), today.getMonth());
         // day - 1
-        const dateItem3 = GridFunctions.generateICalendarDate(grid.data[3].ReleaseDate,
-            today.getFullYear(), today.getMonth());
+        const dateItem3 = GridFunctions.generateICalendarDate(grid.data[3].ReleaseDate, today.getFullYear(), today.getMonth());
         // day + 1
-        const dateItem5 = GridFunctions.generateICalendarDate(grid.data[5].ReleaseDate,
-            today.getFullYear(), today.getMonth());
+        const dateItem5 = GridFunctions.generateICalendarDate(grid.data[5].ReleaseDate, today.getFullYear(), today.getMonth());
         // month + 1
-        const dateItem6 = GridFunctions.generateICalendarDate(grid.data[6].ReleaseDate,
-            today.getFullYear(), today.getMonth());
+        const dateItem6 = GridFunctions.generateICalendarDate(grid.data[6].ReleaseDate, today.getFullYear(), today.getMonth());
 
         let thisMonthCountItems = 1;
         let nextMonthCountItems = 1;
@@ -546,7 +542,8 @@ export class GridFunctions {
             if (chipDirection === SORTING_ICON_ASC_CONTENT) {
                 expect(grp.dir).toBe(SortingDirection.Asc);
                 expect(s.dir).toBe(SortingDirection.Asc);
-            } else {
+            }
+            else {
                 expect(grp.dir).toBe(SortingDirection.Desc);
                 expect(s.dir).toBe(SortingDirection.Desc);
             }
@@ -859,7 +856,8 @@ export class GridFunctions {
             const headerAreaPinIcon = headerIcons.find((buttonIcon: DebugElement) => buttonIcon.query(By.directive(IgxIconComponent)).componentInstance.name === "pin");
             const headerAreaUnpinIcon = headerIcons.find((buttonIcon: DebugElement) => buttonIcon.query(By.directive(IgxIconComponent)).componentInstance.name === "unpin");
             pinUnpinIcon = headerAreaPinIcon ? headerAreaPinIcon.nativeElement : headerAreaUnpinIcon.nativeElement;
-        } else {
+        }
+        else {
             const pinContainer = GridFunctions.getExcelFilteringPinContainer(fix);
             const unpinContainer = GridFunctions.getExcelFilteringUnpinContainer(fix);
             pinUnpinIcon = pinContainer ? pinContainer : unpinContainer;
@@ -876,7 +874,8 @@ export class GridFunctions {
         if (isIconInHeader) {
             const headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix);
             hideIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerText === 'visibility_off');
-        } else {
+        }
+        else {
             hideIcon = GridFunctions.getExcelFilteringHideContainer(fix);
         }
         hideIcon.click();
@@ -934,8 +933,7 @@ export class GridFunctions {
         return expr.querySelectorAll('.igx-input-group__input').item(1) as HTMLInputElement;
     }
 
-    public static getExcelFilteringDDInput(fix: ComponentFixture<any>,
-        expressionIndex = 0, isDate = false): HTMLInputElement {
+    public static getExcelFilteringDDInput(fix: ComponentFixture<any>, expressionIndex = 0, isDate = false): HTMLInputElement {
         const allExpressions = isDate ? GridFunctions.getExcelCustomFilteringDateExpressions(fix) :
             GridFunctions.getExcelCustomFilteringDefaultExpressions(fix);
         return allExpressions[expressionIndex].querySelectorAll('.igx-input-group__input').item(0) as HTMLInputElement;
@@ -1001,8 +999,7 @@ export class GridFunctions {
      */
     public static clickFilterConditionChip(fix: ComponentFixture<any>, index: number) {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-        const conditionChips = GridFunctions.sortNativeElementsHorizontally(
-            filterUIRow.queryAll(By.directive(IgxChipComponent)).map((ch) => ch.nativeElement));
+        const conditionChips = GridFunctions.sortNativeElementsHorizontally(filterUIRow.queryAll(By.directive(IgxChipComponent)).map((ch) => ch.nativeElement));
         conditionChips[index].click();
     }
 
@@ -1012,8 +1009,7 @@ export class GridFunctions {
     public static clickChipOperator(fix: ComponentFixture<any>, index: number) {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const allIcons = filterUIRow.queryAll(By.css('igx-icon')).map((icon) => icon.nativeElement);
-        const operatorIcons = GridFunctions.sortNativeElementsHorizontally(
-            allIcons.filter((icon) => icon.innerText === 'expand_more'));
+        const operatorIcons = GridFunctions.sortNativeElementsHorizontally(allIcons.filter((icon) => icon.innerText === 'expand_more'));
         const operatorIcon = operatorIcons[index];
         operatorIcon.click();
     }
@@ -1023,8 +1019,7 @@ export class GridFunctions {
      */
     public static clickChipOperatorValue(fix: ComponentFixture<any>, operatorValue: string) {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-        const operators = GridFunctions.sortNativeElementsVertically(
-            Array.from(gridNativeElement.querySelectorAll('.igx-drop-down__item')));
+        const operators = GridFunctions.sortNativeElementsVertically(Array.from(gridNativeElement.querySelectorAll('.igx-drop-down__item')));
         const operator = operators.find((op) => op.innerText.toLowerCase() === operatorValue.toLowerCase());
         operator.click();
         fix.detectChanges();
@@ -1284,8 +1279,7 @@ export class GridFunctions {
 
     public static getAllFilterConditionChips(fix) {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-        const conditionChips = GridFunctions.sortNativeElementsHorizontally(
-            filterUIRow.queryAll(By.directive(IgxChipComponent)).map((ch) => ch.nativeElement));
+        const conditionChips = GridFunctions.sortNativeElementsHorizontally(filterUIRow.queryAll(By.directive(IgxChipComponent)).map((ch) => ch.nativeElement));
         return conditionChips;
     }
 
@@ -1327,8 +1321,7 @@ export class GridFunctions {
 
     public static getExcelCustomFilteringDateExpressions(fix: ComponentFixture<any>) {
         const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
-        return GridFunctions.sortNativeElementsVertically(
-            Array.from(customFilterMenu.querySelectorAll(ESF_DATE_EXPR)));
+        return GridFunctions.sortNativeElementsVertically(Array.from(customFilterMenu.querySelectorAll(ESF_DATE_EXPR)));
     }
 
     public static clickAdvancedFilteringButton(fix: ComponentFixture<any>) {
@@ -1521,7 +1514,8 @@ export class GridFunctions {
 
         if (collapsible === false) {
             expect(GridFunctions.getColGroupExpandIndicator(groupHeader)).toBeNull();
-        } else {
+        }
+        else {
             expect(group.expanded).toEqual(isExpanded);
             const text = isExpanded ? indicatorText[0] : indicatorText[1];
             expect(GridFunctions.getColGroupExpandIndicator(groupHeader)).toBeDefined();
@@ -1535,8 +1529,7 @@ export class GridFunctions {
         expandInd.dispatchEvent(new Event('click', {}));
     }
 
-    public static simulateGridContentKeydown(fix: ComponentFixture<any>, keyName: string,
-        altKey = false, shiftKey = false, ctrlKey = false) {
+    public static simulateGridContentKeydown(fix: ComponentFixture<any>, keyName: string, altKey = false, shiftKey = false, ctrlKey = false) {
         const gridContent = GridFunctions.getGridContent(fix);
         UIInteractions.triggerEventHandlerKeyDown(keyName, gridContent, altKey, shiftKey, ctrlKey);
     }
@@ -1560,7 +1553,8 @@ export class GridFunctions {
             const sortIconText = sortedDesc ? SORTING_ICON_DESC_CONTENT : SORTING_ICON_ASC_CONTENT;
             expect(sortIcon.nativeElement.textContent.trim()).toEqual(sortIconText);
             expect(header.nativeElement.classList.contains(SORTED_COLUMN_CLASS)).toEqual(sortedAsc || sortedDesc);
-        } else {
+        }
+        else {
             expect(sortIcon).toBeNull();
         }
     }
@@ -1696,7 +1690,8 @@ export class GridFunctions {
                 const acc = (accum, c) => {
                     if (c.column.colStart < col.colStart && c.column.rowStart === col.rowStart) {
                         return accum += parseFloat(c.column.calcWidth) * c.column.gridColumnSpan;
-                    } else {
+                    }
+                    else {
                         return accum;
                     }
                 };
@@ -1765,7 +1760,8 @@ export class GridSummaryFunctions {
         if (summaryLabels.length === 0) {
             expect(summary.nativeElement.classList.contains('igx-grid-summary--empty')).toBeTruthy();
             expect(summaryItems.length).toBe(0);
-        } else {
+        }
+        else {
             expect(summary.nativeElement.classList.contains('igx-grid-summary--empty')).toBeFalsy();
             expect(summaryItems.length).toEqual(summaryLabels.length);
             if (summaryItems.length === summaryLabels.length) {
@@ -1838,18 +1834,17 @@ export class GridSummaryFunctions {
     }
 }
 export class GridSelectionFunctions {
-    public static selectCellsRange =
-        async (fix, startCell, endCell, ctrl = false, shift = false) => {
-            UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement, shift, ctrl);
-            fix.detectChanges();
-            await wait();
-            fix.detectChanges();
+    public static selectCellsRange = async (fix, startCell, endCell, ctrl = false, shift = false) => {
+        UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement, shift, ctrl);
+        fix.detectChanges();
+        await wait();
+        fix.detectChanges();
 
-            UIInteractions.simulatePointerOverElementEvent('pointerenter', endCell.nativeElement, shift, ctrl);
-            UIInteractions.simulatePointerOverElementEvent('pointerup', endCell.nativeElement, shift, ctrl);
-            await wait();
-            fix.detectChanges();
-        };
+        UIInteractions.simulatePointerOverElementEvent('pointerenter', endCell.nativeElement, shift, ctrl);
+        UIInteractions.simulatePointerOverElementEvent('pointerup', endCell.nativeElement, shift, ctrl);
+        await wait();
+        fix.detectChanges();
+    };
 
     public static selectCellsRangeNoWait(fix, startCell, endCell, ctrl = false, shift = false) {
         UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement, shift, ctrl);
@@ -1860,16 +1855,15 @@ export class GridSelectionFunctions {
         fix.detectChanges();
     }
 
-    public static selectCellsRangeWithShiftKey =
-        async (fix, startCell, endCell) => {
-            UIInteractions.simulateClickAndSelectEvent(startCell);
-            await wait();
-            fix.detectChanges();
+    public static selectCellsRangeWithShiftKey = async (fix, startCell, endCell) => {
+        UIInteractions.simulateClickAndSelectEvent(startCell);
+        await wait();
+        fix.detectChanges();
 
-            UIInteractions.simulateClickAndSelectEvent(endCell, true);
-            await wait();
-            fix.detectChanges();
-        };
+        UIInteractions.simulateClickAndSelectEvent(endCell, true);
+        await wait();
+        fix.detectChanges();
+    };
 
     public static selectCellsRangeWithShiftKeyNoWait(fix, startCell, endCell) {
         UIInteractions.simulateClickAndSelectEvent(startCell);
@@ -1989,15 +1983,18 @@ export class GridSelectionFunctions {
         const checkboxDiv = GridSelectionFunctions.getRowCheckboxDiv(rowDOM);
         if (!hasCheckbox && !hasCheckboxDiv) {
             expect(GridSelectionFunctions.getRowCheckboxDiv(rowDOM)).toBeNull();
-        } else {
+        }
+        else {
             expect(checkboxDiv).toBeDefined();
             const rowCheckbox = GridSelectionFunctions.getRowCheckbox(rowDOM);
             expect(rowCheckbox).toBeDefined();
             if (!hasCheckbox) {
                 expect(rowCheckbox.style.visibility).toEqual('hidden');
-            } else if (verifyHeader) {
+            }
+            else if (verifyHeader) {
                 expect(rowCheckbox.style.visibility).toEqual('visible');
-            } else {
+            }
+            else {
                 expect(rowCheckbox.style.visibility).toEqual('');
             }
         }

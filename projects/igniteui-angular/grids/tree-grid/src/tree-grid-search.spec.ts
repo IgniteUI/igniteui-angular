@@ -1,10 +1,7 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { TreeGridFunctions, CELL_VALUE_DIV_CSS_CLASS } from '../../../test-utils/tree-grid-functions.spec';
-import {
-    IgxTreeGridSearchComponent,
-    IgxTreeGridPrimaryForeignKeyComponent,
-    IgxTreeGridSummariesScrollingComponent } from '../../../test-utils/tree-grid-components.spec';
+import { IgxTreeGridSearchComponent, IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridSummariesScrollingComponent } from '../../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
@@ -181,13 +178,13 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             // Apply asc sorting
             treeGrid.columnList.filter(c => c.field === 'JobTitle')[0].sortable = true;
             fix.detectChanges();
-            treeGrid.sort({fieldName: 'JobTitle', dir: SortingDirection.Asc, ignoreCase: true });
+            treeGrid.sort({ fieldName: 'JobTitle', dir: SortingDirection.Asc, ignoreCase: true });
             fix.detectChanges();
 
             verifySearchResult(fixNativeElement, 6, 3);
 
             // Apply desc sorting
-            treeGrid.sort({fieldName: 'JobTitle', dir: SortingDirection.Desc, ignoreCase: true });
+            treeGrid.sort({ fieldName: 'JobTitle', dir: SortingDirection.Desc, ignoreCase: true });
             fix.detectChanges();
 
             verifySearchResult(fixNativeElement, 6, 1);
@@ -197,7 +194,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             // Apply asc sorting
             treeGrid.columnList.filter(c => c.field === 'JobTitle')[0].sortable = true;
             fix.detectChanges();
-            treeGrid.sort({fieldName: 'JobTitle', dir: SortingDirection.Asc, ignoreCase: true });
+            treeGrid.sort({ fieldName: 'JobTitle', dir: SortingDirection.Asc, ignoreCase: true });
             fix.detectChanges();
 
             treeGrid.findNext('er');
@@ -416,7 +413,8 @@ const verifySearchResult = (nativeParent, expectedHighlightSpansCount, expectedA
     if (expectedActiveSpanIndex !== -1) {
         // If active element should exist.
         expect(activeSpan).toBe(spans[expectedActiveSpanIndex], 'incorrect active element');
-    } else {
+    }
+    else {
         // If active element should not exist. (used when spans.length is expected to be 0 as well)
         expect(activeSpan).toBeNull('active element was found');
     }

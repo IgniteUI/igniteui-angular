@@ -61,8 +61,8 @@ describe('IgxToggle', () => {
         fixture.detectChanges();
 
         const toggle = fixture.componentInstance.toggle;
-        spyOn(toggle.opening, 'emit');
-        spyOn(toggle.opened, 'emit');
+        vi.spyOn(toggle.opening, 'emit');
+        vi.spyOn(toggle.opened, 'emit');
         toggle.open();
         tick();
         fixture.detectChanges();
@@ -76,7 +76,7 @@ describe('IgxToggle', () => {
         fixture.detectChanges();
 
         const toggle = fixture.componentInstance.toggle;
-        spyOn(toggle.appended, 'emit');
+        vi.spyOn(toggle.appended, 'emit');
         toggle.open();
         tick();
         fixture.detectChanges();
@@ -102,8 +102,8 @@ describe('IgxToggle', () => {
         tick();
         fixture.detectChanges();
 
-        spyOn(toggle.closing, 'emit');
-        spyOn(toggle.closed, 'emit');
+        vi.spyOn(toggle.closing, 'emit');
+        vi.spyOn(toggle.closed, 'emit');
         toggle.close();
         tick();
         fixture.detectChanges();
@@ -118,8 +118,8 @@ describe('IgxToggle', () => {
 
         const toggle = fixture.componentInstance.toggle;
         const overlay = fixture.componentInstance.overlay;
-        spyOn(toggle.opened, 'emit');
-        spyOn(toggle.closed, 'emit');
+        vi.spyOn(toggle.opened, 'emit');
+        vi.spyOn(toggle.closed, 'emit');
 
         toggle.open();
         tick();
@@ -186,8 +186,8 @@ describe('IgxToggle', () => {
         const divEl = fixture.debugElement.query(By.directive(IgxToggleDirective)).nativeElement;
         const toggle = fixture.componentInstance.toggle;
         const p = fixture.debugElement.query(By.css('p'));
-        spyOn(toggle.opening, 'emit');
-        spyOn(toggle.opened, 'emit');
+        vi.spyOn(toggle.opening, 'emit');
+        vi.spyOn(toggle.opened, 'emit');
 
         fixture.componentInstance.toggleAction.onClick();
         tick();
@@ -196,8 +196,8 @@ describe('IgxToggle', () => {
 
         expect(fixture.componentInstance.toggle.collapsed).toBe(false);
         expect(divEl.classList.contains(TOGGLER_CLASS)).toBe(true);
-        spyOn(toggle.closing, 'emit');
-        spyOn(toggle.closed, 'emit');
+        vi.spyOn(toggle.closing, 'emit');
+        vi.spyOn(toggle.closed, 'emit');
 
         p.nativeElement.click();
         tick();
@@ -215,7 +215,7 @@ describe('IgxToggle', () => {
         fixture.detectChanges();
 
         const overlayService = TestBed.inject(IgxOverlayService);
-        spyOn(overlayService, 'setOffset').and.callThrough();
+        vi.spyOn(overlayService, 'setOffset');
         fixture.detectChanges();
 
         // Set initial offset
@@ -254,8 +254,8 @@ describe('IgxToggle', () => {
         const toggleElm = fix.debugElement.query(By.directive(IgxToggleDirective)).nativeElement;
         const button: DebugElement = fix.debugElement.query(By.css('button'));
 
-        spyOn(toggle.opened, 'emit');
-        spyOn(toggle.closed, 'emit');
+        vi.spyOn(toggle.opened, 'emit');
+        vi.spyOn(toggle.closed, 'emit');
         button.triggerEventHandler('click', null);
 
         tick();
@@ -278,10 +278,10 @@ describe('IgxToggle', () => {
 
         const toggle = fixture.componentInstance.toggle;
 
-        spyOn(toggle.opening, 'emit').and.callThrough();
-        spyOn(toggle.opened, 'emit').and.callThrough();
-        spyOn(toggle.closing, 'emit').and.callThrough();
-        spyOn(toggle.closed, 'emit').and.callThrough();
+        vi.spyOn(toggle.opening, 'emit');
+        vi.spyOn(toggle.opened, 'emit');
+        vi.spyOn(toggle.closing, 'emit');
+        vi.spyOn(toggle.closed, 'emit');
 
         let cancelClosing = true;
         toggle.closing.pipe(first()).subscribe((e: CancelableEventArgs) => e.cancel = cancelClosing);
@@ -421,8 +421,8 @@ describe('IgxToggle', () => {
         fixture.detectChanges();
 
         const toggle = fixture.componentInstance.toggle;
-        spyOn(toggle.opening, 'emit');
-        spyOn(toggle.opened, 'emit');
+        vi.spyOn(toggle.opening, 'emit');
+        vi.spyOn(toggle.opened, 'emit');
         toggle.open();
         tick();
         fixture.detectChanges();
@@ -443,8 +443,8 @@ describe('IgxToggle', () => {
         fixture.detectChanges();
 
         const toggle = fixture.componentInstance.toggle;
-        spyOn(toggle.opening, 'emit');
-        spyOn(toggle.opened, 'emit');
+        vi.spyOn(toggle.opening, 'emit');
+        vi.spyOn(toggle.opened, 'emit');
         toggle.open();
         tick();
         fixture.detectChanges();
@@ -452,8 +452,8 @@ describe('IgxToggle', () => {
         expect(toggle.opening.emit).toHaveBeenCalledTimes(1);
         expect(toggle.opened.emit).toHaveBeenCalledTimes(1);
 
-        spyOn(toggle.closing, 'emit');
-        spyOn(toggle.closed, 'emit');
+        vi.spyOn(toggle.closing, 'emit');
+        vi.spyOn(toggle.closed, 'emit');
         toggle.close();
         tick();
         fixture.detectChanges();
@@ -478,8 +478,8 @@ describe('IgxToggle', () => {
             toggle.open();
         });
 
-        spyOn(toggle.opening, 'emit');
-        spyOn(toggle.closed, 'emit').and.callThrough();
+        vi.spyOn(toggle.opening, 'emit');
+        vi.spyOn(toggle.closed, 'emit');
 
         toggle.open();
         tick();
@@ -503,15 +503,15 @@ describe('IgxToggle', () => {
         it('should pass correct defaults from IgxToggleActionDirective and respect outsideClickClose', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
             fixture.detectChanges();
-            spyOn(IgxToggleDirective.prototype, 'toggle');
+            vi.spyOn(IgxToggleDirective.prototype, 'toggle');
             const button = fixture.debugElement.query(By.directive(IgxToggleActionDirective)).nativeElement as HTMLElement;
 
             const defaults: OverlaySettings = {
                 target: button,
-                positionStrategy: jasmine.any(ConnectedPositioningStrategy) as any,
+                positionStrategy: expect.any(ConnectedPositioningStrategy) as any,
                 closeOnOutsideClick: true,
                 modal: false,
-                scrollStrategy: jasmine.any(AbsoluteScrollStrategy) as any,
+                scrollStrategy: expect.any(AbsoluteScrollStrategy) as any,
                 excludeFromOutsideClick: [button]
             };
 
@@ -528,15 +528,15 @@ describe('IgxToggle', () => {
         it('should pass overlaySettings input from IgxToggleActionDirective and respect outsideClickClose', () => {
             const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
             fixture.detectChanges();
-            spyOn(IgxToggleDirective.prototype, 'toggle');
+            vi.spyOn(IgxToggleDirective.prototype, 'toggle');
             const button = fixture.debugElement.query(By.directive(IgxToggleActionDirective)).nativeElement;
 
             const settings: OverlaySettings = {
                 target: button,
-                positionStrategy: jasmine.any(ConnectedPositioningStrategy) as any,
+                positionStrategy: expect.any(ConnectedPositioningStrategy) as any,
                 closeOnOutsideClick: true,
                 modal: false,
-                scrollStrategy: jasmine.any(AbsoluteScrollStrategy) as any,
+                scrollStrategy: expect.any(AbsoluteScrollStrategy) as any,
                 excludeFromOutsideClick: [button]
             };
 
@@ -548,7 +548,7 @@ describe('IgxToggle', () => {
             fixture.componentInstance.settings.modal = true;
             fixture.componentInstance.settings.positionStrategy = new AutoPositionStrategy();
             settings.modal = true;
-            settings.positionStrategy = jasmine.any(AutoPositionStrategy) as any;
+            settings.positionStrategy = expect.any(AutoPositionStrategy) as any;
             fixture.detectChanges();
             fixture.componentInstance.toggleAction.onClick();
             expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(settings);
@@ -564,14 +564,14 @@ describe('IgxToggle', () => {
         it('should pass input overlaySettings from igxToggleAction and set position target if not provided', () => {
             const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
             fixture.detectChanges();
-            const toggleSpy = spyOn(IgxToggleDirective.prototype, 'toggle');
+            const toggleSpy = vi.spyOn(IgxToggleDirective.prototype, 'toggle');
             const button = fixture.debugElement.query(By.directive(IgxToggleActionDirective)).nativeElement;
 
             const settings: OverlaySettings = {
-                positionStrategy: jasmine.any(ConnectedPositioningStrategy) as any,
+                positionStrategy: expect.any(ConnectedPositioningStrategy) as any,
                 closeOnOutsideClick: true,
                 modal: false,
-                scrollStrategy: jasmine.any(AbsoluteScrollStrategy) as any,
+                scrollStrategy: expect.any(AbsoluteScrollStrategy) as any,
                 excludeFromOutsideClick: [button]
             };
             fixture.componentInstance.settings.positionStrategy = new ConnectedPositioningStrategy();
@@ -588,11 +588,11 @@ describe('IgxToggle', () => {
 
             const toggle = fixture.componentInstance.toggle;
 
-            spyOn(toggle, 'toggle').and.callThrough();
-            spyOn(toggle.closed, 'emit').and.callThrough();
-            spyOn(toggle.closing, 'emit').and.callThrough();
-            spyOn(toggle.opening, 'emit').and.callThrough();
-            spyOn(toggle.opened, 'emit').and.callThrough();
+            vi.spyOn(toggle, 'toggle');
+            vi.spyOn(toggle.closed, 'emit');
+            vi.spyOn(toggle.closing, 'emit');
+            vi.spyOn(toggle.opening, 'emit');
+            vi.spyOn(toggle.opened, 'emit');
 
             const button = fixture.debugElement.query(By.css('button')).nativeElement;
             button.click();
@@ -614,23 +614,23 @@ describe('IgxToggle', () => {
         it('should pass IgxOverlayOutletDirective input from IgxToggleActionDirective', () => {
             const fixture = TestBed.createComponent(IgxToggleOutletComponent);
             const outlet = fixture.debugElement.query(By.css('.outlet-container')).nativeElement;
-            const toggleSpy = spyOn(IgxToggleDirective.prototype, 'toggle');
+            const toggleSpy = vi.spyOn(IgxToggleDirective.prototype, 'toggle');
             const button = fixture.debugElement.query(By.directive(IgxToggleActionDirective)).nativeElement;
             fixture.detectChanges();
 
             const settings: OverlaySettings = {
                 target: button,
-                positionStrategy: jasmine.any(ConnectedPositioningStrategy) as any,
+                positionStrategy: expect.any(ConnectedPositioningStrategy) as any,
                 closeOnOutsideClick: true,
                 modal: false,
-                scrollStrategy: jasmine.any(AbsoluteScrollStrategy) as any,
-                outlet: jasmine.any(IgxOverlayOutletDirective) as any,
+                scrollStrategy: expect.any(AbsoluteScrollStrategy) as any,
+                outlet: expect.any(IgxOverlayOutletDirective) as any,
                 excludeFromOutsideClick: [button]
             };
 
             fixture.componentInstance.toggleAction.onClick();
             expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(settings);
-            const directive = toggleSpy.calls.mostRecent().args[0].outlet as IgxOverlayOutletDirective;
+            const directive = vi.mocked(toggleSpy).mock.lastCall[0].outlet as IgxOverlayOutletDirective;
             expect(directive.nativeElement).toBe(outlet);
         });
     });
@@ -650,7 +650,8 @@ describe('IgxToggle', () => {
     imports: [IgxToggleDirective]
 })
 export class IgxToggleTestComponent {
-    @ViewChild(IgxToggleDirective, { static: true }) public toggle: IgxToggleDirective;
+    @ViewChild(IgxToggleDirective, { static: true })
+    public toggle: IgxToggleDirective;
     public open() { }
     public close() { }
 }
@@ -670,8 +671,10 @@ export class IgxToggleTestComponent {
     imports: [IgxToggleDirective, IgxToggleActionDirective]
 })
 export class IgxToggleActionTestComponent {
-    @ViewChild(IgxToggleDirective, { static: true }) public toggle: IgxToggleDirective;
-    @ViewChild(IgxToggleActionDirective, { static: true }) public toggleAction: IgxToggleActionDirective;
+    @ViewChild(IgxToggleDirective, { static: true })
+    public toggle: IgxToggleDirective;
+    @ViewChild(IgxToggleActionDirective, { static: true })
+    public toggleAction: IgxToggleActionDirective;
     public settings: OverlaySettings = {};
     constructor() {
         this.settings.closeOnOutsideClick = true;
@@ -686,7 +689,8 @@ export class IgxToggleActionTestComponent {
     `,
     imports: [IgxToggleActionDirective, IgxToggleDirective, IgxOverlayOutletDirective]
 })
-export class IgxToggleOutletComponent extends IgxToggleActionTestComponent { }
+export class IgxToggleOutletComponent extends IgxToggleActionTestComponent {
+}
 
 @Component({
     template: `
@@ -699,8 +703,10 @@ export class IgxToggleOutletComponent extends IgxToggleActionTestComponent { }
     imports: [IgxToggleActionDirective, IgxToggleDirective]
 })
 export class IgxToggleServiceInjectComponent {
-    @ViewChild(IgxToggleDirective, { static: true }) public toggle: IgxToggleDirective;
-    @ViewChild(IgxToggleActionDirective, { static: true }) public toggleAction: IgxToggleActionDirective;
+    @ViewChild(IgxToggleDirective, { static: true })
+    public toggle: IgxToggleDirective;
+    @ViewChild(IgxToggleActionDirective, { static: true })
+    public toggleAction: IgxToggleActionDirective;
 }
 
 @Component({
@@ -718,8 +724,10 @@ export class IgxToggleServiceInjectComponent {
 export class IgxOverlayServiceComponent {
     public overlay = inject(IgxOverlayService);
 
-    @ViewChild(IgxToggleDirective, { static: true }) public toggle: IgxToggleDirective;
-    @ViewChild(`other`, { static: true }) public other: ElementRef;
+    @ViewChild(IgxToggleDirective, { static: true })
+    public toggle: IgxToggleDirective;
+    @ViewChild(`other`, { static: true })
+    public other: ElementRef;
 }
 
 @Component({
@@ -734,7 +742,8 @@ export class IgxOverlayServiceComponent {
     imports: [IgxToggleActionDirective, IgxToggleDirective]
 })
 export class TestWithOnPushComponent {
-    @ViewChild(IgxToggleDirective, { static: true }) public toggle: IgxToggleDirective;
+    @ViewChild(IgxToggleDirective, { static: true })
+    public toggle: IgxToggleDirective;
 }
 
 @Component({
@@ -763,9 +772,12 @@ export class TestWithOnPushComponent {
     imports: [IgxToggleActionDirective, IgxToggleDirective]
 })
 export class TestWithThreeToggleActionsComponent implements OnInit {
-    @ViewChild('button1', { static: true }) public button1: ElementRef;
-    @ViewChild('button2', { static: true }) public button2: ElementRef;
-    @ViewChild('button3', { static: true }) public button3: ElementRef;
+    @ViewChild('button1', { static: true })
+    public button1: ElementRef;
+    @ViewChild('button2', { static: true })
+    public button2: ElementRef;
+    @ViewChild('button3', { static: true })
+    public button3: ElementRef;
 
     public overlaySettings: OverlaySettings = {};
 

@@ -22,7 +22,8 @@ describe('Unit testing SortingStrategy', () => {
                 fieldName: 'number',
                 ignoreCase: false,
                 strategy: DefaultSortingStrategy.instance()
-            }]);
+            }
+        ]);
         expect(dataGenerator.getValuesForColumn(res, 'number'))
             .toEqual([4, 2, 0, 3, 1]);
     });
@@ -38,18 +39,19 @@ describe('Unit testing SortingStrategy', () => {
             .toBeTruthy('compare 0, 1');
         expect(strategy.compareValues(0, 0) === 0 &&
             strategy.compareValues(true, true) === 0 &&
-            strategy.compareValues('test', 'test') === 0
-        )
+            strategy.compareValues('test', 'test') === 0)
             .toBeTruthy('Comare equal variables');
     });
     it('tests default settings', () => {
-        (data[4] as { string: string }).string = 'ROW';
+        (data[4] as {
+            string: string;
+        }).string = 'ROW';
         const res = sorting.sort(data, [{
-            dir: SortingDirection.Asc,
-            fieldName: 'string',
-            ignoreCase: true,
-            strategy: DefaultSortingStrategy.instance()
-        }]);
+                dir: SortingDirection.Asc,
+                fieldName: 'string',
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
+            }]);
         expect(dataGenerator.getValuesForColumn(res, 'number'))
             .toEqual([4, 0, 1, 2, 3]);
     });
@@ -57,11 +59,11 @@ describe('Unit testing SortingStrategy', () => {
     it('should not sort when sorting direction is None', () => {
         const unsortedData = [{ number: 3 }, { number: 1 }, { number: 4 }, { number: 0 }, { number: 2 }];
         const res = sorting.sort(unsortedData, [{
-            dir: SortingDirection.None,
-            fieldName: 'number',
-            ignoreCase: false,
-            strategy: DefaultSortingStrategy.instance()
-        }]);
+                dir: SortingDirection.None,
+                fieldName: 'number',
+                ignoreCase: false,
+                strategy: DefaultSortingStrategy.instance()
+            }]);
         expect(res.map(d => d.number))
             .toEqual([3, 1, 4, 0, 2]);
     });

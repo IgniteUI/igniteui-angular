@@ -3,16 +3,11 @@ import { Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators'
+import { takeUntil } from 'rxjs/operators';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
 import { IgxTooltipTargetDirective } from 'igniteui-angular/directives';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
-import {
-    IgxGridCustomEditorsComponent,
-    IgxGridValidationTestBaseComponent,
-    IgxGridValidationTestCustomErrorComponent,
-    IgxTreeGridValidationTestComponent
-} from '../../../test-utils/grid-validation-samples.spec';
+import { IgxGridCustomEditorsComponent, IgxGridValidationTestBaseComponent, IgxGridValidationTestCustomErrorComponent, IgxTreeGridValidationTestComponent } from '../../../test-utils/grid-validation-samples.spec';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IGridFormGroupCreatedEventArgs } from 'igniteui-angular/grids/core';
 import { IgxGridComponent } from './grid.component';
@@ -118,7 +113,7 @@ describe('IgxGrid - Validation #grid', () => {
             cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
             //the name should be correct email
             GridFunctions.verifyCellValid(cell, false);
-            expect(cell.formControl.errors.email).toBeTrue();
+            expect(cell.formControl.errors.email).toBe(true);
 
             cell.editMode = true;
             cell.update('m@in.com');
@@ -222,13 +217,13 @@ describe('IgxGrid - Validation #grid', () => {
             cell.errorTooltip.first.close();
             tick();
             fixture.detectChanges();
-            expect(cell.errorTooltip.first.collapsed).toBeTrue();
+            expect(cell.errorTooltip.first.collapsed).toBe(true);
 
             const element = fixture.debugElement.query(By.directive(IgxTooltipTargetDirective)).nativeElement;
             element.dispatchEvent(new MouseEvent('pointerenter'));
             flush();
             fixture.detectChanges();
-            expect(cell.errorTooltip.first.collapsed).toBeFalse();
+            expect(cell.errorTooltip.first.collapsed).toBe(false);
         }));
 
         it('should allow preventing edit mode for cell/row to end by canceling the related event if isValid event argument is false', () => {
@@ -264,7 +259,7 @@ describe('IgxGrid - Validation #grid', () => {
 
         it('should trigger the validationStatusChange event on grid when validation status changes', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
-            spyOn(grid.validationStatusChange, "emit").and.callThrough();
+            vi.spyOn(grid.validationStatusChange, "emit");
 
             let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);

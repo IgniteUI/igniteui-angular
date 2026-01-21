@@ -1,8 +1,9 @@
+import type { Mock } from "vitest";
 import { DomSanitizer } from '@angular/platform-browser';
 import { TestBed } from '@angular/core/testing';
 import { IgxChatMarkdownService } from './markdown-service';
 import { MarkdownPipe } from './markdown-pipe';
-import Spy = jasmine.Spy;
+import Spy = Mock;
 
 // Mock the Service: We only care that the pipe calls the service and gets an HTML string.
 // We provide a *known* unsafe HTML string to ensure sanitization is working.
@@ -32,7 +33,7 @@ describe('MarkdownPipe', () => {
 
         pipe = TestBed.inject(MarkdownPipe);
         sanitizer = TestBed.inject(DomSanitizer);
-        bypassSpy = spyOn(sanitizer, 'bypassSecurityTrustHtml').and.callThrough();
+        bypassSpy = vi.spyOn(sanitizer, 'bypassSecurityTrustHtml');
     });
 
     it('should be created', () => {
@@ -44,7 +45,7 @@ describe('MarkdownPipe', () => {
 
         expect(bypassSpy).toHaveBeenCalledTimes(1);
 
-        const sanitizedString = bypassSpy.calls.mostRecent().args[0];
+        const sanitizedString = vi.mocked(bypassSpy).mock.lastCall[0];
 
         expect(sanitizedString).not.toContain('onerror');
         expect(sanitizedString).toContain('style="color: var(--shiki-fg);"');

@@ -16,9 +16,7 @@ describe('Update 7.2.0', () => {
     });
 
     it(`should replace **ONLY** 'isSelected' and 'isFocused'`, async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/custom.component.html',
-            `<igx-drop-down #myDropDown>
+        appTree.create('/testSrc/appPrefix/component/custom.component.html', `<igx-drop-down #myDropDown>
                 <igx-drop-down-item
                     isSelected="something"
                     isFocused="isSelected"
@@ -44,8 +42,7 @@ describe('Update 7.2.0', () => {
 
         const tree = await schematicRunner.runSchematic('migration-08', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
-            .toEqual(
-                `<igx-drop-down #myDropDown>
+            .toEqual(`<igx-drop-down #myDropDown>
                 <igx-drop-down-item
                     selected="something"
                     focused="isSelected"
@@ -74,14 +71,13 @@ describe('Update 7.2.0', () => {
     it(`should add minireset css package and import`, async () => {
         appTree.create('/testSrc/styles.scss', '');
         appTree.create('package.json', '{}');
-        spyOn(addNormalize, 'addResetCss').and.callThrough();
+        vi.spyOn(addNormalize, 'addResetCss');
         const tree = await schematicRunner.runSchematic('migration-08', {}, appTree);
 
-        expect(addNormalize.addResetCss).toHaveBeenCalledWith(
-            jasmine.objectContaining<workspaces.WorkspaceDefinition>({
-                extensions: jasmine.anything(),
-                projects: jasmine.anything()
-            }), appTree);
+        expect(addNormalize.addResetCss).toHaveBeenCalledWith(expect.objectContaining<workspaces.WorkspaceDefinition>({
+            extensions: expect.anything(),
+            projects: expect.anything()
+        }), appTree);
         expect(tree.readContent('/testSrc/styles.scss')).toContain(addNormalize.scssImport);
         expect(JSON.parse(tree.readContent('package.json'))).toEqual({
             dependencies: { 'minireset.css': '~0.0.4' }

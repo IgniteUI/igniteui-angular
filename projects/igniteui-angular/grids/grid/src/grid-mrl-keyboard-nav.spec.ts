@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -78,17 +78,17 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should navigate between column layouts with right arrow key', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    columns: [
-                        { field: 'ContactName', rowStart: 1, colStart: 1 },
-                        { field: 'City', rowStart: 2, colStart: 1 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        { field: 'Phone', rowStart: 1, colStart: 1, rowEnd: 3 }
-                    ]
-                }];
+                        group: 'group1',
+                        columns: [
+                            { field: 'ContactName', rowStart: 1, colStart: 1 },
+                            { field: 'City', rowStart: 2, colStart: 1 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            { field: 'Phone', rowStart: 1, colStart: 1, rowEnd: 3 }
+                        ]
+                    }];
                 fix.detectChanges();
 
                 const [_firstCell, secondCell, _thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
@@ -107,17 +107,17 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should navigate between column layouts with left key', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    columns: [
-                        { field: 'ContactName', rowStart: 1, colStart: 1, rowEnd: 3 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        { field: 'Phone', rowStart: 1, colStart: 1 },
-                        { field: 'City', rowStart: 2, colStart: 1 }
-                    ]
-                }];
+                        group: 'group1',
+                        columns: [
+                            { field: 'ContactName', rowStart: 1, colStart: 1, rowEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            { field: 'Phone', rowStart: 1, colStart: 1 },
+                            { field: 'City', rowStart: 2, colStart: 1 }
+                        ]
+                    }];
                 fix.detectChanges();
 
                 const [_firstCell, _secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
@@ -136,13 +136,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should navigate down and up to a cell from the same column layout from a cell with bigger col span', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    columns: [
-                        { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'Phone', rowStart: 2, colStart: 1 },
-                        { field: 'City', rowStart: 2, colStart: 2 }
-                    ]
-                }];
+                        group: 'group1',
+                        columns: [
+                            { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'Phone', rowStart: 2, colStart: 1 },
+                            { field: 'City', rowStart: 2, colStart: 2 }
+                        ]
+                    }];
                 fix.detectChanges();
 
                 const [firstCell, _secondCell, _thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
@@ -164,13 +164,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should navigate down and up to a cell from the same column layout to a cell with bigger col span', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    columns: [
-                        { field: 'Phone', rowStart: 1, colStart: 1 },
-                        { field: 'City', rowStart: 1, colStart: 2 },
-                        { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 3 }
-                    ]
-                }];
+                        group: 'group1',
+                        columns: [
+                            { field: 'Phone', rowStart: 1, colStart: 1 },
+                            { field: 'City', rowStart: 1, colStart: 2 },
+                            { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 3 }
+                        ]
+                    }];
                 fix.detectChanges();
 
                 const [_firstCell, secondCell, _thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
@@ -192,14 +192,14 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should navigate down and up to a cell from the same column layout according to its starting location', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    columns: [
-                        { field: 'Phone', rowStart: 1, colStart: 1 },
-                        { field: 'City', rowStart: 1, colStart: 2, colEnd: 4 },
-                        { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 3 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 3 }
-                    ]
-                }];
+                        group: 'group1',
+                        columns: [
+                            { field: 'Phone', rowStart: 1, colStart: 1 },
+                            { field: 'City', rowStart: 1, colStart: 2, colEnd: 4 },
+                            { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 3 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 3 }
+                        ]
+                    }];
                 fix.detectChanges();
 
                 const [_firstCell, secondCell, _thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
@@ -221,13 +221,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should allow navigating down to a cell from the next row', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    columns: [
-                        { field: 'Phone', rowStart: 1, colStart: 1 },
-                        { field: 'City', rowStart: 1, colStart: 2 },
-                        { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 3 }
-                    ]
-                }];
+                        group: 'group1',
+                        columns: [
+                            { field: 'Phone', rowStart: 1, colStart: 1 },
+                            { field: 'City', rowStart: 1, colStart: 2 },
+                            { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 3 }
+                        ]
+                    }];
                 fix.detectChanges();
 
                 const [_firstCell, _secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
@@ -244,19 +244,19 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should allow navigating down to a cell from the next row with hidden column layout', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    hidden: true,
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        { field: 'Phone', rowStart: 1, colStart: 1 },
-                        { field: 'City', rowStart: 1, colStart: 2 },
-                        { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 3 }
-                    ]
-                }];
+                        group: 'group1',
+                        hidden: true,
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            { field: 'Phone', rowStart: 1, colStart: 1 },
+                            { field: 'City', rowStart: 1, colStart: 2 },
+                            { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 3 }
+                        ]
+                    }];
                 fix.detectChanges();
 
                 const [_firstCell, _secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
@@ -273,13 +273,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should retain the focus when the first cell is reached', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    columns: [
-                        { field: 'Phone', rowStart: 1, colStart: 1 },
-                        { field: 'City', rowStart: 1, colStart: 2 },
-                        { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 3 }
-                    ]
-                }];
+                        group: 'group1',
+                        columns: [
+                            { field: 'Phone', rowStart: 1, colStart: 1 },
+                            { field: 'City', rowStart: 1, colStart: 2 },
+                            { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 3 }
+                        ]
+                    }];
                 fix.detectChanges();
 
                 const [_firstCell, secondCell, _thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
@@ -299,13 +299,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should navigate up correctly', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    columns: [
-                        { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'Phone', rowStart: 2, colStart: 1 },
-                        { field: 'City', rowStart: 2, colStart: 2 }
-                    ]
-                }];
+                        group: 'group1',
+                        columns: [
+                            { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'Phone', rowStart: 2, colStart: 1 },
+                            { field: 'City', rowStart: 2, colStart: 2 }
+                        ]
+                    }];
 
                 fix.detectChanges();
 
@@ -323,19 +323,19 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('navigate to right and left with hidden columns', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    hidden: true,
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'Phone', rowStart: 2, colStart: 1 },
-                        { field: 'City', rowStart: 2, colStart: 2 }
-                    ]
-                }];
+                        group: 'group1',
+                        hidden: true,
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'Phone', rowStart: 2, colStart: 1 },
+                            { field: 'City', rowStart: 2, colStart: 2 }
+                        ]
+                    }];
                 fix.detectChanges();
 
                 const [_firstCell, secondCell, _thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
@@ -359,34 +359,34 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             it(`should navigate to the first cell from the layout by pressing Ctrl + Arrow Left and Right key
                 and then Arrow Up + Down to same cell`, async () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    hidden: true,
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'ContactName', rowStart: 2, colStart: 1 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 2 },
-                        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
-                    ]
-                }, {
-                    group: 'group3',
-                    columns: [
-                        { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
-                        { field: 'Region', rowStart: 3, colStart: 1 },
-                        { field: 'PostalCode', rowStart: 3, colStart: 2 }
-                    ]
-                }, {
-                    group: 'group4',
-                    columns: [
-                        { field: 'Country', rowStart: 1, colStart: 1 },
-                        { field: 'Phone', rowStart: 1, colStart: 2 },
-                        { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
-                    ]
-                }];
+                        group: 'group1',
+                        hidden: true,
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'ContactName', rowStart: 2, colStart: 1 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                            { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group3',
+                        columns: [
+                            { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
+                            { field: 'Region', rowStart: 3, colStart: 1 },
+                            { field: 'PostalCode', rowStart: 3, colStart: 2 }
+                        ]
+                    }, {
+                        group: 'group4',
+                        columns: [
+                            { field: 'Country', rowStart: 1, colStart: 1 },
+                            { field: 'Phone', rowStart: 1, colStart: 2 },
+                            { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
+                        ]
+                    }];
                 fix.detectChanges();
                 const rows = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
                 const firstRowCell = rows[1].queryAll(By.css(CELL_CSS_CLASS));
@@ -427,34 +427,34 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             it(`should navigate to the first cell from the layout by pressing Ctrl + Arrow Right and Left key
                 and then Arrow Up + Down to same cell`, async () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    hidden: true,
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        { field: 'Country', rowStart: 1, colStart: 1 },
-                        { field: 'Phone', rowStart: 1, colStart: 2 },
-                        { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
-                    ]
-                }, {
-                    group: 'group3',
-                    columns: [
-                        { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
-                        { field: 'Region', rowStart: 3, colStart: 1 },
-                        { field: 'PostalCode', rowStart: 3, colStart: 2 }
-                    ]
-                }, {
-                    group: 'group4',
-                    columns: [
-                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'ContactName', rowStart: 2, colStart: 1 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 2 },
-                        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
-                    ]
-                }];
+                        group: 'group1',
+                        hidden: true,
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            { field: 'Country', rowStart: 1, colStart: 1 },
+                            { field: 'Phone', rowStart: 1, colStart: 2 },
+                            { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
+                        ]
+                    }, {
+                        group: 'group3',
+                        columns: [
+                            { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
+                            { field: 'Region', rowStart: 3, colStart: 1 },
+                            { field: 'PostalCode', rowStart: 3, colStart: 2 }
+                        ]
+                    }, {
+                        group: 'group4',
+                        columns: [
+                            { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'ContactName', rowStart: 2, colStart: 1 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                            { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+                        ]
+                    }];
                 await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
                 const rows = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
@@ -495,17 +495,17 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should navigate using Arrow Left through bigger cell with same rowStart but bigger row span', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1 },
-                        { field: 'CompanyName', rowStart: 1, colStart: 2, rowEnd: 3 },
-                        { field: 'ContactName', rowStart: 1, colStart: 3 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 1 },
-                        { field: 'City', rowStart: 2, colStart: 3 },
-                        { field: 'Country', rowStart: 3, colStart: 1 },
-                        { field: 'Address', rowStart: 3, colStart: 2, colEnd: 4 },
-                    ]
-                }];
+                        group: 'group1',
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1 },
+                            { field: 'CompanyName', rowStart: 1, colStart: 2, rowEnd: 3 },
+                            { field: 'ContactName', rowStart: 1, colStart: 3 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 1 },
+                            { field: 'City', rowStart: 2, colStart: 3 },
+                            { field: 'Country', rowStart: 3, colStart: 1 },
+                            { field: 'Address', rowStart: 3, colStart: 2, colEnd: 4 },
+                        ]
+                    }];
                 fix.detectChanges();
 
                 const [_thirdCell, _secondCell, firstCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
@@ -528,17 +528,17 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should navigate using Arrow Left through bigger cell with smaller rowStart and bigger rowEnd', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1 },
-                        { field: 'CompanyName', rowStart: 1, colStart: 2, rowEnd: 3 },
-                        { field: 'ContactName', rowStart: 1, colStart: 3 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 1 },
-                        { field: 'City', rowStart: 2, colStart: 3 },
-                        { field: 'Country', rowStart: 3, colStart: 1 },
-                        { field: 'Address', rowStart: 3, colStart: 2, colEnd: 4 },
-                    ]
-                }];
+                        group: 'group1',
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1 },
+                            { field: 'CompanyName', rowStart: 1, colStart: 2, rowEnd: 3 },
+                            { field: 'ContactName', rowStart: 1, colStart: 3 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 1 },
+                            { field: 'City', rowStart: 2, colStart: 3 },
+                            { field: 'Country', rowStart: 3, colStart: 1 },
+                            { field: 'Address', rowStart: 3, colStart: 2, colEnd: 4 },
+                        ]
+                    }];
                 fix.detectChanges();
 
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[4];
@@ -561,17 +561,17 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should navigate using Arrow Right through bigger cell with same rowStart but bigger row', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1 },
-                        { field: 'CompanyName', rowStart: 1, colStart: 2, rowEnd: 3 },
-                        { field: 'ContactName', rowStart: 1, colStart: 3 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 1 },
-                        { field: 'City', rowStart: 2, colStart: 3 },
-                        { field: 'Country', rowStart: 3, colStart: 1 },
-                        { field: 'Address', rowStart: 3, colStart: 2, colEnd: 4 },
-                    ]
-                }];
+                        group: 'group1',
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1 },
+                            { field: 'CompanyName', rowStart: 1, colStart: 2, rowEnd: 3 },
+                            { field: 'ContactName', rowStart: 1, colStart: 3 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 1 },
+                            { field: 'City', rowStart: 2, colStart: 3 },
+                            { field: 'Country', rowStart: 3, colStart: 1 },
+                            { field: 'Address', rowStart: 3, colStart: 2, colEnd: 4 },
+                        ]
+                    }];
                 fix.detectChanges();
 
                 const [firstCell, _secondCell, _thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
@@ -594,17 +594,17 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should navigate using Arrow Right through bigger cell with smaller rowStart and bigger rowEnd', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1 },
-                        { field: 'CompanyName', rowStart: 1, colStart: 2, rowEnd: 3 },
-                        { field: 'ContactName', rowStart: 1, colStart: 3 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 1 },
-                        { field: 'City', rowStart: 2, colStart: 3 },
-                        { field: 'Country', rowStart: 3, colStart: 1 },
-                        { field: 'Address', rowStart: 3, colStart: 2, colEnd: 4 },
-                    ]
-                }];
+                        group: 'group1',
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1 },
+                            { field: 'CompanyName', rowStart: 1, colStart: 2, rowEnd: 3 },
+                            { field: 'ContactName', rowStart: 1, colStart: 3 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 1 },
+                            { field: 'City', rowStart: 2, colStart: 3 },
+                            { field: 'Country', rowStart: 3, colStart: 1 },
+                            { field: 'Address', rowStart: 3, colStart: 2, colEnd: 4 },
+                        ]
+                    }];
                 fix.detectChanges();
 
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
@@ -627,17 +627,17 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should navigate using Arrow Down through cell with same colStart but bigger colEnd', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1 },
-                        { field: 'CompanyName', rowStart: 1, colStart: 2, rowEnd: 3 },
-                        { field: 'ContactName', rowStart: 1, colStart: 3 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 1 },
-                        { field: 'City', rowStart: 2, colStart: 3 },
-                        { field: 'Country', rowStart: 3, colStart: 1 },
-                        { field: 'Address', rowStart: 3, colStart: 2, colEnd: 4 },
-                    ]
-                }];
+                        group: 'group1',
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1 },
+                            { field: 'CompanyName', rowStart: 1, colStart: 2, rowEnd: 3 },
+                            { field: 'ContactName', rowStart: 1, colStart: 3 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 1 },
+                            { field: 'City', rowStart: 2, colStart: 3 },
+                            { field: 'Country', rowStart: 3, colStart: 1 },
+                            { field: 'Address', rowStart: 3, colStart: 2, colEnd: 4 },
+                        ]
+                    }];
                 fix.detectChanges();
 
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
@@ -669,17 +669,17 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should navigate using Arrow Down through cell with smaller colStart and bigger colEnd', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1 },
-                        { field: 'CompanyName', rowStart: 1, colStart: 2, rowEnd: 3 },
-                        { field: 'ContactName', rowStart: 1, colStart: 3 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 1 },
-                        { field: 'City', rowStart: 2, colStart: 3 },
-                        { field: 'Country', rowStart: 3, colStart: 1 },
-                        { field: 'Address', rowStart: 3, colStart: 2, colEnd: 4 },
-                    ]
-                }];
+                        group: 'group1',
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1 },
+                            { field: 'CompanyName', rowStart: 1, colStart: 2, rowEnd: 3 },
+                            { field: 'ContactName', rowStart: 1, colStart: 3 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 1 },
+                            { field: 'City', rowStart: 2, colStart: 3 },
+                            { field: 'Country', rowStart: 3, colStart: 1 },
+                            { field: 'Address', rowStart: 3, colStart: 2, colEnd: 4 },
+                        ]
+                    }];
                 fix.detectChanges();
 
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[4];
@@ -711,17 +711,17 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should navigate using Arrow Up through cell with smaller colStart and bigger colEnd', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1 },
-                        { field: 'CompanyName', rowStart: 1, colStart: 2, rowEnd: 3 },
-                        { field: 'ContactName', rowStart: 1, colStart: 3 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 1 },
-                        { field: 'City', rowStart: 2, colStart: 3 },
-                        { field: 'Country', rowStart: 3, colStart: 1 },
-                        { field: 'Address', rowStart: 3, colStart: 2, colEnd: 4 },
-                    ]
-                }];
+                        group: 'group1',
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1 },
+                            { field: 'CompanyName', rowStart: 1, colStart: 2, rowEnd: 3 },
+                            { field: 'ContactName', rowStart: 1, colStart: 3 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 1 },
+                            { field: 'City', rowStart: 2, colStart: 3 },
+                            { field: 'Country', rowStart: 3, colStart: 1 },
+                            { field: 'Address', rowStart: 3, colStart: 2, colEnd: 4 },
+                        ]
+                    }];
                 fix.detectChanges();
 
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[9];
@@ -753,29 +753,29 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should navigate correctly with column group is hidden.', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    // row span 3
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        // col span 2
-                        { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'Phone', rowStart: 2, colStart: 1 },
-                        { field: 'City', rowStart: 2, colStart: 2 },
-                        // col span 2
-                        { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
-                    ]
-                }, {
-                    group: 'group3',
-                    columns: [
-                        // row span 2
-                        { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
-                        { field: 'PostalCode', rowStart: 3, colStart: 1 }
-                    ]
-                }];
+                        group: 'group1',
+                        // row span 3
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            // col span 2
+                            { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'Phone', rowStart: 2, colStart: 1 },
+                            { field: 'City', rowStart: 2, colStart: 2 },
+                            // col span 2
+                            { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group3',
+                        columns: [
+                            // row span 2
+                            { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                            { field: 'PostalCode', rowStart: 3, colStart: 1 }
+                        ]
+                    }];
                 fix.detectChanges();
                 const grid = fix.componentInstance.grid;
                 // hide second group
@@ -817,29 +817,29 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         describe('GroupBy Integration', () => {
             it('should allow navigation through group rows with arrow keys starting from group row.', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    // row span 3
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        // col span 2
-                        { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'Phone', rowStart: 2, colStart: 1 },
-                        { field: 'City', rowStart: 2, colStart: 2 },
-                        // col span 2
-                        { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
-                    ]
-                }, {
-                    group: 'group3',
-                    columns: [
-                        // row span 2
-                        { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
-                        { field: 'PostalCode', rowStart: 3, colStart: 1 }
-                    ]
-                }];
+                        group: 'group1',
+                        // row span 3
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            // col span 2
+                            { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'Phone', rowStart: 2, colStart: 1 },
+                            { field: 'City', rowStart: 2, colStart: 2 },
+                            // col span 2
+                            { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group3',
+                        columns: [
+                            // row span 2
+                            { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                            { field: 'PostalCode', rowStart: 3, colStart: 1 }
+                        ]
+                    }];
                 fix.detectChanges();
                 // group by city
                 const grid = fix.componentInstance.grid;
@@ -889,29 +889,29 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should allow navigation through group rows with arrow keys starting from middle of grid row', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    // row span 3
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        // col span 2
-                        { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'Phone', rowStart: 2, colStart: 1 },
-                        { field: 'City', rowStart: 2, colStart: 2 },
-                        // col span 2
-                        { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
-                    ]
-                }, {
-                    group: 'group3',
-                    columns: [
-                        // row span 2
-                        { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
-                        { field: 'PostalCode', rowStart: 3, colStart: 1 }
-                    ]
-                }];
+                        group: 'group1',
+                        // row span 3
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            // col span 2
+                            { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'Phone', rowStart: 2, colStart: 1 },
+                            { field: 'City', rowStart: 2, colStart: 2 },
+                            // col span 2
+                            { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group3',
+                        columns: [
+                            // row span 2
+                            { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                            { field: 'PostalCode', rowStart: 3, colStart: 1 }
+                        ]
+                    }];
 
                 fix.detectChanges();
                 // group by city
@@ -972,29 +972,29 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         describe('Column Moving Integration', () => {
             it('tab navigation should follow correct sequence if a column is moved.', fakeAsync(() => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    // row span 3
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        // col span 2
-                        { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'Phone', rowStart: 2, colStart: 1 },
-                        { field: 'City', rowStart: 2, colStart: 2 },
-                        // col span 2
-                        { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
-                    ]
-                }, {
-                    group: 'group3',
-                    columns: [
-                        // row span 2
-                        { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
-                        { field: 'PostalCode', rowStart: 3, colStart: 1 }
-                    ]
-                }];
+                        group: 'group1',
+                        // row span 3
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            // col span 2
+                            { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'Phone', rowStart: 2, colStart: 1 },
+                            { field: 'City', rowStart: 2, colStart: 2 },
+                            // col span 2
+                            { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group3',
+                        columns: [
+                            // row span 2
+                            { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                            { field: 'PostalCode', rowStart: 3, colStart: 1 }
+                        ]
+                    }];
                 fix.detectChanges();
                 const grid = fix.componentInstance.grid;
                 // move second group
@@ -1018,29 +1018,29 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         describe('Pinning integration', () => {
             it('tab navigation should follow correct sequence if a column is pinned runtime.', () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    // row span 3
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        // col span 2
-                        { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'Phone', rowStart: 2, colStart: 1 },
-                        { field: 'City', rowStart: 2, colStart: 2 },
-                        // col span 2
-                        { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
-                    ]
-                }, {
-                    group: 'group3',
-                    columns: [
-                        // row span 2
-                        { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
-                        { field: 'PostalCode', rowStart: 3, colStart: 1 }
-                    ]
-                }];
+                        group: 'group1',
+                        // row span 3
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            // col span 2
+                            { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'Phone', rowStart: 2, colStart: 1 },
+                            { field: 'City', rowStart: 2, colStart: 2 },
+                            // col span 2
+                            { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group3',
+                        columns: [
+                            // row span 2
+                            { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                            { field: 'PostalCode', rowStart: 3, colStart: 1 }
+                        ]
+                    }];
                 fix.detectChanges();
                 const grid = fix.componentInstance.grid;
                 // hide second group
@@ -1423,13 +1423,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         describe('General', () => {
             it('should allow navigating down with scrolling', async () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    columns: [
-                        { field: 'Phone', rowStart: 1, colStart: 1 },
-                        { field: 'City', rowStart: 1, colStart: 2 },
-                        { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 3 }
-                    ]
-                }];
+                        group: 'group1',
+                        columns: [
+                            { field: 'Phone', rowStart: 1, colStart: 1 },
+                            { field: 'City', rowStart: 1, colStart: 2 },
+                            { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 3 }
+                        ]
+                    }];
                 await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
                 const rows = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
@@ -1454,14 +1454,14 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should navigate correctly by pressing Ctrl + ArrowUp/ArrowDown key', async () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    pinned: true,
-                    columns: [
-                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'ContactName', rowStart: 2, colStart: 1 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 2 }
-                    ]
-                }];
+                        group: 'group1',
+                        pinned: true,
+                        columns: [
+                            { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'ContactName', rowStart: 2, colStart: 1 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 2 }
+                        ]
+                    }];
                 await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
                 setupGridScrollDetection(fix, fix.componentInstance.grid);
@@ -1493,34 +1493,34 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should navigate to the last cell from the layout by pressing Home/End or Ctrl + ArrowLeft/ArrowRight key', async () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    hidden: true,
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'ContactName', rowStart: 2, colStart: 1 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 2 },
-                        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
-                    ]
-                }, {
-                    group: 'group3',
-                    columns: [
-                        { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
-                        { field: 'Region', rowStart: 3, colStart: 1 },
-                        { field: 'PostalCode', rowStart: 3, colStart: 2 }
-                    ]
-                }, {
-                    group: 'group4',
-                    columns: [
-                        { field: 'Country', rowStart: 1, colStart: 1 },
-                        { field: 'Phone', rowStart: 1, colStart: 2 },
-                        { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
-                    ]
-                }];
+                        group: 'group1',
+                        hidden: true,
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'ContactName', rowStart: 2, colStart: 1 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                            { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group3',
+                        columns: [
+                            { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
+                            { field: 'Region', rowStart: 3, colStart: 1 },
+                            { field: 'PostalCode', rowStart: 3, colStart: 2 }
+                        ]
+                    }, {
+                        group: 'group4',
+                        columns: [
+                            { field: 'Country', rowStart: 1, colStart: 1 },
+                            { field: 'Phone', rowStart: 1, colStart: 2 },
+                            { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
+                        ]
+                    }];
                 await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
@@ -1559,34 +1559,34 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should navigate to the last cell from the first/last layout by pressing Ctrl + Home/End key', async () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    hidden: true,
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'ContactName', rowStart: 2, colStart: 1 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 2 },
-                        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
-                    ]
-                }, {
-                    group: 'group3',
-                    columns: [
-                        { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
-                        { field: 'Region', rowStart: 3, colStart: 1 },
-                        { field: 'PostalCode', rowStart: 3, colStart: 2 }
-                    ]
-                }, {
-                    group: 'group4',
-                    columns: [
-                        { field: 'Country', rowStart: 1, colStart: 1 },
-                        { field: 'Phone', rowStart: 1, colStart: 2 },
-                        { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
-                    ]
-                }];
+                        group: 'group1',
+                        hidden: true,
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'ContactName', rowStart: 2, colStart: 1 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                            { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group3',
+                        columns: [
+                            { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
+                            { field: 'Region', rowStart: 3, colStart: 1 },
+                            { field: 'PostalCode', rowStart: 3, colStart: 2 }
+                        ]
+                    }, {
+                        group: 'group4',
+                        columns: [
+                            { field: 'Country', rowStart: 1, colStart: 1 },
+                            { field: 'Phone', rowStart: 1, colStart: 2 },
+                            { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
+                        ]
+                    }];
                 await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
@@ -1621,34 +1621,34 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             it(`should navigate to the last cell from the layout by pressing Home/End or Ctrl + ArrowLeft/ArrowRight key
                     and keep same rowStart from the first selection when last cell spans more rows`, async () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    hidden: true,
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'ContactName', rowStart: 2, colStart: 1 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 2 },
-                        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
-                    ]
-                }, {
-                    group: 'group3',
-                    columns: [
-                        { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
-                        { field: 'Region', rowStart: 3, colStart: 1 },
-                        { field: 'PostalCode', rowStart: 3, colStart: 2 }
-                    ]
-                }, {
-                    group: 'group4',
-                    columns: [
-                        { field: 'Country', rowStart: 1, colStart: 1 },
-                        { field: 'Phone', rowStart: 1, colStart: 2 },
-                        { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
-                    ]
-                }];
+                        group: 'group1',
+                        hidden: true,
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'ContactName', rowStart: 2, colStart: 1 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                            { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group3',
+                        columns: [
+                            { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
+                            { field: 'Region', rowStart: 3, colStart: 1 },
+                            { field: 'PostalCode', rowStart: 3, colStart: 2 }
+                        ]
+                    }, {
+                        group: 'group4',
+                        columns: [
+                            { field: 'Country', rowStart: 1, colStart: 1 },
+                            { field: 'Phone', rowStart: 1, colStart: 2 },
+                            { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
+                        ]
+                    }];
                 await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
@@ -1690,34 +1690,34 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             it(`should navigate to the last cell from the layout by pressing Home/End and Ctrl key
                 and keep same rowStart from the first selection when last cell spans more rows`, async () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    hidden: true,
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'ContactName', rowStart: 2, colStart: 1 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 2 },
-                        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
-                    ]
-                }, {
-                    group: 'group3',
-                    columns: [
-                        { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
-                        { field: 'Region', rowStart: 3, colStart: 1 },
-                        { field: 'PostalCode', rowStart: 3, colStart: 2 }
-                    ]
-                }, {
-                    group: 'group4',
-                    columns: [
-                        { field: 'Country', rowStart: 1, colStart: 1 },
-                        { field: 'Phone', rowStart: 1, colStart: 2 },
-                        { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
-                    ]
-                }];
+                        group: 'group1',
+                        hidden: true,
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'ContactName', rowStart: 2, colStart: 1 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                            { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group3',
+                        columns: [
+                            { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
+                            { field: 'Region', rowStart: 3, colStart: 1 },
+                            { field: 'PostalCode', rowStart: 3, colStart: 2 }
+                        ]
+                    }, {
+                        group: 'group4',
+                        columns: [
+                            { field: 'Country', rowStart: 1, colStart: 1 },
+                            { field: 'Phone', rowStart: 1, colStart: 2 },
+                            { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
+                        ]
+                    }];
                 await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
@@ -1751,34 +1751,34 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             it(`should navigate to the last cell from the layout by pressing Ctrl + Arrow Right key
                 and then Arrow Down + Up to same cell`, async () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    hidden: true,
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'ContactName', rowStart: 2, colStart: 1 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 2 },
-                        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
-                    ]
-                }, {
-                    group: 'group3',
-                    columns: [
-                        { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
-                        { field: 'Region', rowStart: 3, colStart: 1 },
-                        { field: 'PostalCode', rowStart: 3, colStart: 2 }
-                    ]
-                }, {
-                    group: 'group4',
-                    columns: [
-                        { field: 'Country', rowStart: 1, colStart: 1 },
-                        { field: 'Phone', rowStart: 1, colStart: 2 },
-                        { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
-                    ]
-                }];
+                        group: 'group1',
+                        hidden: true,
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'ContactName', rowStart: 2, colStart: 1 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                            { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group3',
+                        columns: [
+                            { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
+                            { field: 'Region', rowStart: 3, colStart: 1 },
+                            { field: 'PostalCode', rowStart: 3, colStart: 2 }
+                        ]
+                    }, {
+                        group: 'group4',
+                        columns: [
+                            { field: 'Country', rowStart: 1, colStart: 1 },
+                            { field: 'Phone', rowStart: 1, colStart: 2 },
+                            { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
+                        ]
+                    }];
                 await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
                 setupGridScrollDetection(fix, fix.componentInstance.grid);
@@ -1814,34 +1814,34 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             it(`should navigate to the last cell from the layout by pressing Ctrl + Arrow Right key
                 and then Arrow Up + Down to same cell`, async () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    hidden: true,
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'ContactName', rowStart: 2, colStart: 1 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 2 },
-                        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
-                    ]
-                }, {
-                    group: 'group3',
-                    columns: [
-                        { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
-                        { field: 'Region', rowStart: 3, colStart: 1 },
-                        { field: 'PostalCode', rowStart: 3, colStart: 2 }
-                    ]
-                }, {
-                    group: 'group4',
-                    columns: [
-                        { field: 'Country', rowStart: 1, colStart: 1 },
-                        { field: 'Phone', rowStart: 1, colStart: 2 },
-                        { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
-                    ]
-                }];
+                        group: 'group1',
+                        hidden: true,
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'ContactName', rowStart: 2, colStart: 1 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                            { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group3',
+                        columns: [
+                            { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
+                            { field: 'Region', rowStart: 3, colStart: 1 },
+                            { field: 'PostalCode', rowStart: 3, colStart: 2 }
+                        ]
+                    }, {
+                        group: 'group4',
+                        columns: [
+                            { field: 'Country', rowStart: 1, colStart: 1 },
+                            { field: 'Phone', rowStart: 1, colStart: 2 },
+                            { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
+                        ]
+                    }];
                 await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
                 setupGridScrollDetection(fix, fix.componentInstance.grid);
@@ -1902,7 +1902,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         columns: [
                             { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
                         ]
-                    }];
+                    }
+                ];
                 await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
@@ -1987,18 +1988,18 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should scroll active cell fully in view when navigating with arrow keys and column is partially visible.', async () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    columns: [
-                        // col span 2
-                        { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 5 },
-                        { field: 'Phone', rowStart: 2, colStart: 1 },
-                        { field: 'City', rowStart: 2, colStart: 2 },
-                        { field: 'Address', rowStart: 2, colStart: 3 },
-                        { field: 'Country', rowStart: 2, colStart: 4 },
-                        // col span 2
-                        { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 5 }
-                    ]
-                }];
+                        group: 'group1',
+                        columns: [
+                            // col span 2
+                            { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 5 },
+                            { field: 'Phone', rowStart: 2, colStart: 1 },
+                            { field: 'City', rowStart: 2, colStart: 2 },
+                            { field: 'Address', rowStart: 2, colStart: 3 },
+                            { field: 'Country', rowStart: 2, colStart: 4 },
+                            // col span 2
+                            { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 5 }
+                        ]
+                    }];
                 const grid = fix.componentInstance.grid;
                 grid.columnWidth = '300px';
                 grid.width = '300px';
@@ -2033,29 +2034,29 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             it(`should navigate to the last cell from the layout by pressing Ctrl + ArrowLeft/ArrowRight key
             in grid with horizontal virtualization`, async () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    // row span 3
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        // col span 2
-                        { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'Phone', rowStart: 2, colStart: 1 },
-                        { field: 'City', rowStart: 2, colStart: 2 },
-                        // col span 2
-                        { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
-                    ]
-                }, {
-                    group: 'group3',
-                    columns: [
-                        // row span 2
-                        { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
-                        { field: 'PostalCode', rowStart: 3, colStart: 1 }
-                    ]
-                }];
+                        group: 'group1',
+                        // row span 3
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            // col span 2
+                            { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'Phone', rowStart: 2, colStart: 1 },
+                            { field: 'City', rowStart: 2, colStart: 2 },
+                            // col span 2
+                            { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group3',
+                        columns: [
+                            // row span 2
+                            { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                            { field: 'PostalCode', rowStart: 3, colStart: 1 }
+                        ]
+                    }];
                 const grid = fix.componentInstance.grid;
                 grid.columnWidth = '300px';
                 grid.width = '400px';
@@ -2095,22 +2096,22 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         describe('Pinning', () => {
             it('should navigate from pinned to unpinned area and backwards', async () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    pinned: true,
-                    columns: [
-                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'ContactName', rowStart: 2, colStart: 1 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 2 },
-                        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
-                        { field: 'Region', rowStart: 3, colStart: 1 },
-                        { field: 'PostalCode', rowStart: 3, colStart: 2 }
-                    ]
-                }];
+                        group: 'group1',
+                        pinned: true,
+                        columns: [
+                            { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'ContactName', rowStart: 2, colStart: 1 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                            { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
+                            { field: 'Region', rowStart: 3, colStart: 1 },
+                            { field: 'PostalCode', rowStart: 3, colStart: 2 }
+                        ]
+                    }];
                 await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
@@ -2136,29 +2137,29 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             it('when navigating from pinned to unpinned area cell should be fully scrolled in view.', async () => {
                 //pending('This should be tested in the e2e test');
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    // row span 3
-                    columns: [
-                        { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        // col span 2
-                        { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'Phone', rowStart: 2, colStart: 1 },
-                        { field: 'City', rowStart: 2, colStart: 2 },
-                        // col span 2
-                        { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
-                    ]
-                }, {
-                    group: 'group3',
-                    columns: [
-                        // row span 2
-                        { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
-                        { field: 'PostalCode', rowStart: 3, colStart: 1 }
-                    ]
-                }];
+                        group: 'group1',
+                        // row span 3
+                        columns: [
+                            { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            // col span 2
+                            { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'Phone', rowStart: 2, colStart: 1 },
+                            { field: 'City', rowStart: 2, colStart: 2 },
+                            // col span 2
+                            { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group3',
+                        columns: [
+                            // row span 2
+                            { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                            { field: 'PostalCode', rowStart: 3, colStart: 1 }
+                        ]
+                    }];
                 fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;
@@ -2221,22 +2222,22 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should navigate to unpinned area when the column layout is bigger than the display container', async () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    pinned: true,
-                    columns: [
-                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3, width: '300px' },
-                        { field: 'ContactName', rowStart: 2, colStart: 1 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 2 },
-                        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3, width: '400px' },
-                        { field: 'Region', rowStart: 3, colStart: 1 },
-                        { field: 'PostalCode', rowStart: 3, colStart: 2 }
-                    ]
-                }];
+                        group: 'group1',
+                        pinned: true,
+                        columns: [
+                            { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3, width: '300px' },
+                            { field: 'ContactName', rowStart: 2, colStart: 1 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                            { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3, width: '400px' },
+                            { field: 'Region', rowStart: 3, colStart: 1 },
+                            { field: 'PostalCode', rowStart: 3, colStart: 2 }
+                        ]
+                    }];
                 fix.componentInstance.grid.width = '600px';
                 await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
@@ -2262,22 +2263,22 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should navigate from pinned to unpinned area and backwards using Home/End', async () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    pinned: true,
-                    columns: [
-                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'ContactName', rowStart: 2, colStart: 1 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 2 },
-                        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
-                        { field: 'Region', rowStart: 3, colStart: 1 },
-                        { field: 'PostalCode', rowStart: 3, colStart: 2 }
-                    ]
-                }];
+                        group: 'group1',
+                        pinned: true,
+                        columns: [
+                            { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'ContactName', rowStart: 2, colStart: 1 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                            { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
+                            { field: 'Region', rowStart: 3, colStart: 1 },
+                            { field: 'PostalCode', rowStart: 3, colStart: 2 }
+                        ]
+                    }];
                 await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
                 const secondCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
@@ -2301,22 +2302,22 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it('should navigate from pinned to unpinned area and backwards using Ctrl+Left/Right', async () => {
                 fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    pinned: true,
-                    columns: [
-                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'ContactName', rowStart: 2, colStart: 1 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 2 },
-                        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
-                    ]
-                }, {
-                    group: 'group2',
-                    columns: [
-                        { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
-                        { field: 'Region', rowStart: 3, colStart: 1 },
-                        { field: 'PostalCode', rowStart: 3, colStart: 2 }
-                    ]
-                }];
+                        group: 'group1',
+                        pinned: true,
+                        columns: [
+                            { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
+                            { field: 'ContactName', rowStart: 2, colStart: 1 },
+                            { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                            { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+                        ]
+                    }, {
+                        group: 'group2',
+                        columns: [
+                            { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
+                            { field: 'Region', rowStart: 3, colStart: 1 },
+                            { field: 'PostalCode', rowStart: 3, colStart: 2 }
+                        ]
+                    }];
                 fix.detectChanges();
                 const secondCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
 

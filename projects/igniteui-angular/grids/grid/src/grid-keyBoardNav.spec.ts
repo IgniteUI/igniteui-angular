@@ -4,11 +4,7 @@ import { IgxGridComponent } from './grid.component';
 import { IGridCellEventArgs, IActiveNodeChangeEventArgs } from 'igniteui-angular/grids/core';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
-import {
-    VirtualGridComponent,
-    NoScrollsComponent,
-    IgxGridGroupByComponent
-} from '../../../test-utils/grid-samples.spec';
+import { VirtualGridComponent, NoScrollsComponent, IgxGridGroupByComponent } from '../../../test-utils/grid-samples.spec';
 
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { DebugElement, QueryList } from '@angular/core';
@@ -126,7 +122,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         });
 
         it('Should emit when activeNode ref is changed', () => {
-            spyOn(grid.activeNodeChange, 'emit').and.callThrough();
+            vi.spyOn(grid.activeNodeChange, 'emit');
 
             const args: IActiveNodeChangeEventArgs = {
                 row: 0,
@@ -164,7 +160,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
 
         it('should emit activeNodeChange once when you click over the same element', () => {
-            spyOn(grid.activeNodeChange, 'emit').and.callThrough();
+            vi.spyOn(grid.activeNodeChange, 'emit');
 
             gridContent.triggerEventHandler('focus', null);
             fix.detectChanges();
@@ -667,8 +663,8 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             GridFunctions.focusFirstCell(fix, grid);
 
             grid.navigateTo(50, 50, (args) => {
- args.target.activate(null);
-});
+                args.target.activate(null);
+            });
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
@@ -684,7 +680,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(25);
             fix.componentInstance.data = fix.componentInstance.generateData(25);
             fix.detectChanges();
-            const gridKeydown = spyOn<any>(grid.gridKeydown, 'emit').and.callThrough();
+            const gridKeydown = vi.spyOn<any>(grid.gridKeydown, 'emit');
 
             const cell = grid.gridAPI.get_cell_by_index(1, '2');
             UIInteractions.simulateClickAndSelectEvent(cell);
@@ -867,7 +863,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             row = grid.gridAPI.get_row_by_index(1);
-            expect(row.focused).toBeTrue();
+            expect(row.focused).toBe(true);
         }));
 
         it('should persist last selected cell column index when navigate through group rows.', async () => {
@@ -999,8 +995,8 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             grid.navigateTo(9, -1, (args) => {
- args.target.nativeElement.dispatchEvent(new Event('pointerdown'));
-});
+                args.target.nativeElement.dispatchEvent(new Event('pointerdown'));
+            });
             await wait(100);
             fix.detectChanges();
             await wait(100);
@@ -1021,7 +1017,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             UIInteractions.simulateClickAndSelectEvent(rowEl);
             fix.detectChanges();
 
-            const gridKeydown = spyOn<any>(grid.gridKeydown, 'emit').and.callThrough();
+            const gridKeydown = vi.spyOn<any>(grid.gridKeydown, 'emit');
             UIInteractions.triggerKeyDownEvtUponElem('Enter', rowEl.nativeElement, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();

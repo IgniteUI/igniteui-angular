@@ -9,16 +9,7 @@ import { IgxInputDirective, IgxInputGroupComponent } from '../../../input-group/
 import { IgxAngularAnimationService, PlatformUtil, ɵDirection } from 'igniteui-angular/core';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxStepComponent } from './step/step.component';
-import {
-    HorizontalAnimationType,
-    IGX_STEPPER_COMPONENT,
-    IgxStepperOrientation,
-    IgxStepperTitlePosition,
-    IgxStepType,
-    IStepChangedEventArgs,
-    IStepChangingEventArgs,
-    VerticalAnimationType
-} from './stepper.common';
+import { HorizontalAnimationType, IGX_STEPPER_COMPONENT, IgxStepperOrientation, IgxStepperTitlePosition, IgxStepType, IStepChangedEventArgs, IStepChangingEventArgs, VerticalAnimationType } from './stepper.common';
 import { IgxStepperComponent } from './stepper.component';
 import { IgxStepActiveIndicatorDirective, IgxStepCompletedIndicatorDirective, IgxStepContentDirective, IgxStepIndicatorDirective, IgxStepInvalidIndicatorDirective, IgxStepSubtitleDirective, IgxStepTitleDirective } from './stepper.directive';
 import { IgxStepperService } from './stepper.service';
@@ -53,43 +44,39 @@ const getStepperPositions = (): string[] => {
     return positions;
 };
 
-const testAnimationBehavior = (
-    val: any,
-    fix: ComponentFixture<IgxStepperSampleTestComponent>,
-    isHorAnimTypeInvalidTest: boolean
-): void => {
+const testAnimationBehavior = (val: any, fix: ComponentFixture<IgxStepperSampleTestComponent>, isHorAnimTypeInvalidTest: boolean): void => {
     const stepper = fix.componentInstance.stepper;
     stepper.steps[0].active = true;
     fix.detectChanges();
     const previousActiveStep = stepper.steps[0];
-    const activeChangeSpy = spyOn(previousActiveStep.activeChange, 'emit');
-    activeChangeSpy.calls.reset();
+    const activeChangeSpy = vi.spyOn(previousActiveStep.activeChange, 'emit');
+    activeChangeSpy.mockClear();
     stepper.next();
     fix.detectChanges();
     tick(1000);
     if (!isHorAnimTypeInvalidTest) {
-        expect(previousActiveStep.activeChange.emit).withContext(val).toHaveBeenCalledOnceWith(false);
-    } else {
-        expect(previousActiveStep.activeChange.emit).withContext(val).not.toHaveBeenCalled();
+        expect(previousActiveStep.activeChange.emit, val).toHaveBeenCalledTimes(1);
+        expect(previousActiveStep.activeChange.emit, val).toHaveBeenCalledWith(false);
     }
-    activeChangeSpy.calls.reset();
+    else {
+        expect(previousActiveStep.activeChange.emit, val).not.toHaveBeenCalled();
+    }
+    activeChangeSpy.mockClear();
 };
 
 describe('Rendering Tests', () => {
     let fix: ComponentFixture<IgxStepperSampleTestComponent>;
     let stepper: IgxStepperComponent;
 
-    beforeEach(
-        waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [
-                    NoopAnimationsModule,
-                    IgxStepperSampleTestComponent,
-                    IgxStepperLinearComponent
-                ]
-            }).compileComponents();
-        })
-    );
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                IgxStepperSampleTestComponent,
+                IgxStepperLinearComponent
+            ]
+        }).compileComponents();
+    }));
     beforeEach(() => {
         fix = TestBed.createComponent(IgxStepperSampleTestComponent);
         fix.detectChanges();
@@ -108,15 +95,15 @@ describe('Rendering Tests', () => {
         });
 
         it('should not allow activating a step with next/prev methods when disabled is set to true', fakeAsync(() => {
-            const serviceExpandSpy = spyOn((stepper as any).stepperService, 'expand').and.callThrough();
-            const serviceCollapseSpy = spyOn((stepper as any).stepperService, 'collapse').and.callThrough();
+            const serviceExpandSpy = vi.spyOn((stepper as any).stepperService, 'expand');
+            const serviceCollapseSpy = vi.spyOn((stepper as any).stepperService, 'collapse');
             stepper.orientation = IgxStepperOrientation.Horizontal;
             stepper.steps[0].active = true;
             stepper.steps[1].disabled = true;
             fix.detectChanges();
             tick();
 
-            expect(stepper.steps[1].nativeElement).toHaveClass('igx-stepper__step--disabled');
+            expect(stepper.steps[1].nativeElement.classList.contains('igx-stepper__step--disabled')).toBe(true);
 
             stepper.next();
             fix.detectChanges();
@@ -125,11 +112,13 @@ describe('Rendering Tests', () => {
             expect(stepper.steps[1].active).toBeFalsy();
             expect(stepper.steps[2].isAccessible).toBeTruthy();
             expect(stepper.steps[2].active).toBeTruthy();
-            expect(serviceExpandSpy).toHaveBeenCalledOnceWith(stepper.steps[2]);
-            expect(serviceCollapseSpy).toHaveBeenCalledOnceWith(stepper.steps[0]);
+            expect(serviceExpandSpy).toHaveBeenCalledTimes(1);
+            expect(serviceExpandSpy).toHaveBeenCalledWith(stepper.steps[2]);
+            expect(serviceCollapseSpy).toHaveBeenCalledTimes(1);
+            expect(serviceCollapseSpy).toHaveBeenCalledWith(stepper.steps[0]);
 
-            serviceExpandSpy.calls.reset();
-            serviceCollapseSpy.calls.reset();
+            serviceExpandSpy.mockClear();
+            serviceCollapseSpy.mockClear();
 
             stepper.orientation = IgxStepperOrientation.Vertical;
             stepper.steps[0].active = true;
@@ -144,8 +133,10 @@ describe('Rendering Tests', () => {
             expect(stepper.steps[1].active).toBeFalsy();
             expect(stepper.steps[2].isAccessible).toBeTruthy();
             expect(stepper.steps[2].active).toBeTruthy();
-            expect(serviceExpandSpy).toHaveBeenCalledOnceWith(stepper.steps[2]);
-            expect(serviceCollapseSpy).toHaveBeenCalledOnceWith(stepper.steps[0]);
+            expect(serviceExpandSpy).toHaveBeenCalledTimes(1);
+            expect(serviceExpandSpy).toHaveBeenCalledWith(stepper.steps[2]);
+            expect(serviceCollapseSpy).toHaveBeenCalledTimes(1);
+            expect(serviceCollapseSpy).toHaveBeenCalledWith(stepper.steps[0]);
         }));
 
         it('should calculate disabled steps properly when the stepper is initially in linear mode', fakeAsync(() => {
@@ -153,7 +144,7 @@ describe('Rendering Tests', () => {
             fixture.detectChanges();
             const linearStepper = fixture.componentInstance.stepper;
 
-            const serviceExpandSpy = spyOn((linearStepper as any).stepperService, 'expand').and.callThrough();
+            const serviceExpandSpy = vi.spyOn((linearStepper as any).stepperService, 'expand');
             linearStepper.next();
             fixture.detectChanges();
             tick();
@@ -165,7 +156,7 @@ describe('Rendering Tests', () => {
         }));
 
         it('should not allow moving forward to next step in linear mode if the previous step is invalid', fakeAsync(() => {
-            const serviceExpandSpy = spyOn((stepper as any).stepperService, 'expand').and.callThrough();
+            const serviceExpandSpy = vi.spyOn((stepper as any).stepperService, 'expand');
             stepper.orientation = IgxStepperOrientation.Horizontal;
             stepper.linear = true;
             stepper.steps[0].isValid = false;
@@ -222,10 +213,10 @@ describe('Rendering Tests', () => {
         }));
 
         it('should emit ing and ed events when a step is activated', fakeAsync(() => {
-            const changingSpy = spyOn(stepper.activeStepChanging, 'emit').and.callThrough();
-            const changedSpy = spyOn(stepper.activeStepChanged, 'emit').and.callThrough();
-            const serviceExpandSpy = spyOn((stepper as any).stepperService, 'expand').and.callThrough();
-            const serviceCollapseSpy = spyOn((stepper as any).stepperService, 'collapse').and.callThrough();
+            const changingSpy = vi.spyOn(stepper.activeStepChanging, 'emit');
+            const changedSpy = vi.spyOn(stepper.activeStepChanged, 'emit');
+            const serviceExpandSpy = vi.spyOn((stepper as any).stepperService, 'expand');
+            const serviceCollapseSpy = vi.spyOn((stepper as any).stepperService, 'collapse');
 
             expect(changingSpy).not.toHaveBeenCalled();
             expect(changedSpy).not.toHaveBeenCalled();
@@ -257,16 +248,20 @@ describe('Rendering Tests', () => {
             tick();
 
             expect(stepper.steps[1].active).toBeTruthy();
-            expect(changingSpy).toHaveBeenCalledOnceWith(argsIng);
-            expect(changedSpy).toHaveBeenCalledOnceWith(argsEd);
-            expect(serviceExpandSpy).toHaveBeenCalledOnceWith(stepper.steps[1]);
-            expect(serviceCollapseSpy).toHaveBeenCalledOnceWith(stepper.steps[0]);
+            expect(changingSpy).toHaveBeenCalledTimes(1);
+            expect(changingSpy).toHaveBeenCalledWith(argsIng);
+            expect(changedSpy).toHaveBeenCalledTimes(1);
+            expect(changedSpy).toHaveBeenCalledWith(argsEd);
+            expect(serviceExpandSpy).toHaveBeenCalledTimes(1);
+            expect(serviceExpandSpy).toHaveBeenCalledWith(stepper.steps[1]);
+            expect(serviceCollapseSpy).toHaveBeenCalledTimes(1);
+            expect(serviceCollapseSpy).toHaveBeenCalledWith(stepper.steps[0]);
         }));
 
         it('should be able to cancel the activeStepChanging event', fakeAsync(() => {
-            const changingSpy = spyOn(stepper.activeStepChanging, 'emit').and.callThrough();
-            const serviceExpandSpy = spyOn((stepper as any).stepperService, 'expand').and.callThrough();
-            const serviceCollapseSpy = spyOn((stepper as any).stepperService, 'collapse').and.callThrough();
+            const changingSpy = vi.spyOn(stepper.activeStepChanging, 'emit');
+            const serviceExpandSpy = vi.spyOn((stepper as any).stepperService, 'expand');
+            const serviceCollapseSpy = vi.spyOn((stepper as any).stepperService, 'collapse');
 
             expect(changingSpy).not.toHaveBeenCalled();
 
@@ -287,34 +282,38 @@ describe('Rendering Tests', () => {
 
             expect(stepper.steps[1].active).toBeFalsy();
             expect(stepper.steps[0].active).toBeTruthy();
-            expect(changingSpy).toHaveBeenCalledOnceWith(argsIng);
-            expect(serviceExpandSpy).toHaveBeenCalledOnceWith(stepper.steps[1]);
+            expect(changingSpy).toHaveBeenCalledTimes(1);
+            expect(changingSpy).toHaveBeenCalledWith(argsIng);
+            expect(serviceExpandSpy).toHaveBeenCalledTimes(1);
+            expect(serviceExpandSpy).toHaveBeenCalledWith(stepper.steps[1]);
             expect(serviceCollapseSpy).not.toHaveBeenCalled();
         }));
 
         it('a step should emit activeChange event when its active property changes', fakeAsync(() => {
-            const fourthActiveChangeSpy = spyOn(stepper.steps[3].activeChange, 'emit').and.callThrough();
-            const fifthActiveChangeSpy = spyOn(stepper.steps[4].activeChange, 'emit').and.callThrough();
-            const serviceExpandAPISpy = spyOn((stepper as any).stepperService, 'expandThroughApi').and.callThrough();
+            const fourthActiveChangeSpy = vi.spyOn(stepper.steps[3].activeChange, 'emit');
+            const fifthActiveChangeSpy = vi.spyOn(stepper.steps[4].activeChange, 'emit');
+            const serviceExpandAPISpy = vi.spyOn((stepper as any).stepperService, 'expandThroughApi');
 
             expect(fourthActiveChangeSpy).not.toHaveBeenCalled();
             expect(fifthActiveChangeSpy).not.toHaveBeenCalled();
 
             stepper.steps[0].active = true;
             fix.detectChanges();
-            expect(serviceExpandAPISpy).toHaveBeenCalledOnceWith(stepper.steps[0]);
+            expect(serviceExpandAPISpy).toHaveBeenCalledTimes(1);
+            expect(serviceExpandAPISpy).toHaveBeenCalledWith(stepper.steps[0]);
 
             stepper.steps[3].active = true;
             fix.detectChanges();
             tick();
 
             expect(stepper.steps[3].active).toBeTruthy();
-            expect(stepper.steps[3].activeChange.emit).toHaveBeenCalledOnceWith(true);
+            expect(stepper.steps[3].activeChange.emit).toHaveBeenCalledTimes(1);
+            expect(stepper.steps[3].activeChange.emit).toHaveBeenCalledWith(true);
             expect(fifthActiveChangeSpy).not.toHaveBeenCalled();
-            expect(serviceExpandAPISpy.calls.mostRecent().args[0]).toBe(stepper.steps[3]);
+            expect(vi.mocked(serviceExpandAPISpy).mock.lastCall[0]).toBe(stepper.steps[3]);
 
-            fourthActiveChangeSpy.calls.reset();
-            serviceExpandAPISpy.calls.reset();
+            fourthActiveChangeSpy.mockClear();
+            serviceExpandAPISpy.mockClear();
 
             stepper.steps[4].active = true;
             fix.detectChanges();
@@ -322,18 +321,23 @@ describe('Rendering Tests', () => {
 
             expect(stepper.steps[4].active).toBeTruthy();
             expect(stepper.steps[3].active).toBeFalsy();
-            expect(fifthActiveChangeSpy).toHaveBeenCalledOnceWith(true);
-            expect(fourthActiveChangeSpy).toHaveBeenCalledOnceWith(false);
-            expect(serviceExpandAPISpy).toHaveBeenCalledOnceWith(stepper.steps[4]);
+            expect(fifthActiveChangeSpy).toHaveBeenCalledTimes(1);
+            expect(fifthActiveChangeSpy).toHaveBeenCalledWith(true);
+            expect(fourthActiveChangeSpy).toHaveBeenCalledTimes(1);
+            expect(fourthActiveChangeSpy).toHaveBeenCalledWith(false);
+            expect(serviceExpandAPISpy).toHaveBeenCalledTimes(1);
+            expect(serviceExpandAPISpy).toHaveBeenCalledWith(stepper.steps[4]);
         }));
     });
 
     describe('Appearance', () => {
         beforeAll(() => {
+            // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
             jasmine.getEnv().allowRespy(true);
         });
 
         afterAll(() => {
+            // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
             jasmine.getEnv().allowRespy(false);
         });
 
@@ -341,19 +345,19 @@ describe('Rendering Tests', () => {
             stepper.orientation = IgxStepperOrientation.Horizontal;
             fix.detectChanges();
 
-            expect(stepper.nativeElement).toHaveClass('igx-stepper--horizontal');
+            expect(stepper.nativeElement.classList.contains('igx-stepper--horizontal')).toBe(true);
             // no css class is applied when the stepper is in vertical mode
         });
 
         it('should indicate the currently active step', () => {
             const step0Header = stepper.steps[0].nativeElement.querySelector(`.${STEP_HEADER}`);
             const step1Header = stepper.steps[1].nativeElement.querySelector(`.${STEP_HEADER}`);
-            const serviceExpandSpy = spyOn((stepper as any).stepperService, 'expand').and.callThrough();
+            const serviceExpandSpy = vi.spyOn((stepper as any).stepperService, 'expand');
 
             stepper.steps[0].active = true;
             fix.detectChanges();
 
-            expect(step0Header).toHaveClass(CURRENT_CLASS);
+            expect(step0Header.classList.contains(CURRENT_CLASS)).toBe(true);
 
             stepper.steps[1].active = true;
             stepper.steps[1].nativeElement.focus();
@@ -362,9 +366,10 @@ describe('Rendering Tests', () => {
             UIInteractions.triggerKeyDownEvtUponElem(' ', stepper.steps[1].nativeElement);
             fix.detectChanges();
 
-            expect(step0Header).not.toHaveClass(CURRENT_CLASS);
-            expect(step1Header).toHaveClass(CURRENT_CLASS);
-            expect(serviceExpandSpy).toHaveBeenCalledOnceWith(stepper.steps[1]);
+            expect(step0Header.classList.contains(CURRENT_CLASS)).toBe(false);
+            expect(step1Header.classList.contains(CURRENT_CLASS)).toBe(true);
+            expect(serviceExpandSpy).toHaveBeenCalledTimes(1);
+            expect(serviceExpandSpy).toHaveBeenCalledWith(stepper.steps[1]);
         });
 
         it('should indicate that a step is completed', () => {
@@ -372,17 +377,17 @@ describe('Rendering Tests', () => {
             fix.detectChanges();
 
             expect(stepper.steps[0].completed).toBeFalsy();
-            expect(stepper.steps[0].nativeElement).not.toHaveClass(COMPLETED_CLASS);
+            expect(stepper.steps[0].nativeElement.classList.contains(COMPLETED_CLASS)).toBe(false);
 
             stepper.steps[0].completed = true;
             fix.detectChanges();
 
-            expect(stepper.steps[0].nativeElement).toHaveClass(COMPLETED_CLASS);
+            expect(stepper.steps[0].nativeElement.classList.contains(COMPLETED_CLASS)).toBe(true);
 
             stepper.steps[1].completed = true;
             fix.detectChanges();
 
-            expect(stepper.steps[1].nativeElement).toHaveClass(COMPLETED_CLASS);
+            expect(stepper.steps[1].nativeElement.classList.contains(COMPLETED_CLASS)).toBe(true);
         });
 
         it('should indicate that a step is invalid', () => {
@@ -390,24 +395,24 @@ describe('Rendering Tests', () => {
             stepper.steps[0].isValid = true;
             fix.detectChanges();
 
-            expect(step0Header).not.toHaveClass(INVALID_CLASS);
+            expect(step0Header.classList.contains(INVALID_CLASS)).toBe(false);
 
             stepper.steps[0].isValid = false;
             fix.detectChanges();
 
-            expect(step0Header).not.toHaveClass(INVALID_CLASS);
+            expect(step0Header.classList.contains(INVALID_CLASS)).toBe(false);
 
             stepper.steps[1].active = true;
             fix.detectChanges();
 
-            expect(step0Header).toHaveClass(INVALID_CLASS);
+            expect(step0Header.classList.contains(INVALID_CLASS)).toBe(true);
 
             //indicate that a step is disabled without indicating that it is also invalid
             stepper.steps[0].disabled = true;
             fix.detectChanges();
 
-            expect(step0Header).not.toHaveClass(INVALID_CLASS);
-            expect(stepper.steps[0].nativeElement).toHaveClass(DISABLED_CLASS);
+            expect(step0Header.classList.contains(INVALID_CLASS)).toBe(false);
+            expect(stepper.steps[0].nativeElement.classList.contains(DISABLED_CLASS)).toBe(true);
         });
 
         it('should render the visual step element according to the specified stepType', () => {
@@ -471,7 +476,7 @@ describe('Rendering Tests', () => {
             for (const step of stepper.steps) {
                 expect(step.titlePosition).toBe(stepper._defaultTitlePosition);
                 expect(step.titlePosition).toBe(IgxStepperTitlePosition.Bottom);
-                expect(step.nativeElement).toHaveClass(`igx-stepper__step--${stepper._defaultTitlePosition}`);
+                expect(step.nativeElement.classList.contains(`igx-stepper__step--${stepper._defaultTitlePosition}`)).toBe(true);
             }
 
             const positions = getStepperPositions();
@@ -480,7 +485,7 @@ describe('Rendering Tests', () => {
                 fix.detectChanges();
 
                 for (const step of stepper.steps) {
-                    expect(step.nativeElement).toHaveClass(`igx-stepper__step--${pos}`);
+                    expect(step.nativeElement.classList.contains(`igx-stepper__step--${pos}`)).toBe(true);
                 }
             });
 
@@ -492,7 +497,7 @@ describe('Rendering Tests', () => {
             for (const step of stepper.steps) {
                 expect(step.titlePosition).toBe(stepper._defaultTitlePosition);
                 expect(step.titlePosition).toBe(IgxStepperTitlePosition.End);
-                expect(step.nativeElement).toHaveClass(`igx-stepper__step--${stepper._defaultTitlePosition}`);
+                expect(step.nativeElement.classList.contains(`igx-stepper__step--${stepper._defaultTitlePosition}`)).toBe(true);
             }
 
             positions.forEach((pos: IgxStepperTitlePosition) => {
@@ -500,7 +505,7 @@ describe('Rendering Tests', () => {
                 fix.detectChanges();
 
                 for (const step of stepper.steps) {
-                    expect(step.nativeElement).toHaveClass(`igx-stepper__step--${pos}`);
+                    expect(step.nativeElement.classList.contains(`igx-stepper__step--${pos}`)).toBe(true);
                 }
             });
         });
@@ -528,9 +533,9 @@ describe('Rendering Tests', () => {
             const step0Header = stepper.steps[0].nativeElement.querySelector(`.${STEP_HEADER}`);
             let indicatorElement = step0Header.querySelector(`.${STEP_INDICATOR_CLASS}`).children[0];
 
-            expect(step0Header).not.toHaveClass(INVALID_CLASS);
-            expect(step0Header).toHaveClass(CURRENT_CLASS);
-            expect(stepper.steps[0].nativeElement).not.toHaveClass(COMPLETED_CLASS);
+            expect(step0Header.classList.contains(INVALID_CLASS)).toBe(false);
+            expect(step0Header.classList.contains(CURRENT_CLASS)).toBe(true);
+            expect(stepper.steps[0].nativeElement.classList.contains(COMPLETED_CLASS)).toBe(false);
             expect(indicatorElement.tagName).toBe('IGX-ICON');
             expect(indicatorElement.textContent).toBe('edit');
 
@@ -541,9 +546,9 @@ describe('Rendering Tests', () => {
 
             indicatorElement = step0Header.querySelector(`.${STEP_INDICATOR_CLASS}`).children[0];
 
-            expect(step0Header).toHaveClass(INVALID_CLASS);
-            expect(step0Header).not.toHaveClass(CURRENT_CLASS);
-            expect(stepper.steps[0].nativeElement).not.toHaveClass(COMPLETED_CLASS);
+            expect(step0Header.classList.contains(INVALID_CLASS)).toBe(true);
+            expect(step0Header.classList.contains(CURRENT_CLASS)).toBe(false);
+            expect(stepper.steps[0].nativeElement.classList.contains(COMPLETED_CLASS)).toBe(false);
             expect(indicatorElement.tagName).toBe('IGX-ICON');
             expect(indicatorElement.textContent).toBe('error');
 
@@ -553,9 +558,9 @@ describe('Rendering Tests', () => {
 
             indicatorElement = step0Header.querySelector(`.${STEP_INDICATOR_CLASS}`).children[0];
 
-            expect(step0Header).not.toHaveClass(INVALID_CLASS);
-            expect(step0Header).not.toHaveClass(CURRENT_CLASS);
-            expect(stepper.steps[0].nativeElement).toHaveClass(COMPLETED_CLASS);
+            expect(step0Header.classList.contains(INVALID_CLASS)).toBe(false);
+            expect(step0Header.classList.contains(CURRENT_CLASS)).toBe(false);
+            expect(stepper.steps[0].nativeElement.classList.contains(COMPLETED_CLASS)).toBe(true);
             expect(indicatorElement.tagName).toBe('IGX-ICON');
             expect(indicatorElement.textContent).toBe('check');
         });
@@ -565,14 +570,14 @@ describe('Rendering Tests', () => {
             fix.detectChanges();
             expect(stepper.contentTop).toBeFalsy();
 
-            expect(stepper.nativeElement.children[0]).toHaveClass(STEPPER_HEADER);
-            expect(stepper.nativeElement.children[1]).toHaveClass(STEPPER_BODY);
+            expect(stepper.nativeElement.children[0].classList.contains(STEPPER_HEADER)).toBe(true);
+            expect(stepper.nativeElement.children[1].classList.contains(STEPPER_BODY)).toBe(true);
 
             stepper.contentTop = true;
             fix.detectChanges();
 
-            expect(stepper.nativeElement.children[0]).toHaveClass(STEPPER_BODY);
-            expect(stepper.nativeElement.children[1]).toHaveClass(STEPPER_HEADER);
+            expect(stepper.nativeElement.children[0].classList.contains(STEPPER_BODY)).toBe(true);
+            expect(stepper.nativeElement.children[1].classList.contains(STEPPER_HEADER)).toBe(true);
         });
 
         it('should allow modifying animationSettings that are used for transitioning between steps ', fakeAsync(() => {
@@ -726,8 +731,8 @@ describe('Rendering Tests', () => {
 
     describe('Keyboard navigation', () => {
         it('should navigate to first/last step on Home/End key press', fakeAsync(() => {
-            const serviceExpandSpy = spyOn((stepper as any).stepperService, 'expand').and.callThrough();
-            const serviceCollapseSpy = spyOn((stepper as any).stepperService, 'collapse').and.callThrough();
+            const serviceExpandSpy = vi.spyOn((stepper as any).stepperService, 'expand');
+            const serviceCollapseSpy = vi.spyOn((stepper as any).stepperService, 'collapse');
 
             stepper.steps[3].active = true;
             stepper.steps[3].nativeElement.focus();
@@ -751,7 +756,7 @@ describe('Rendering Tests', () => {
         }));
 
         it('should activate the currently focused step on Enter/Space key press', fakeAsync(() => {
-            const serviceExpandSpy = spyOn((stepper as any).stepperService, 'expand').and.callThrough();
+            const serviceExpandSpy = vi.spyOn((stepper as any).stepperService, 'expand');
             stepper.steps[0].active = true;
             fix.detectChanges();
 
@@ -767,7 +772,8 @@ describe('Rendering Tests', () => {
 
             expect(stepper.steps[3].nativeElement as Element).toBe(document.activeElement);
             expect(stepper.steps[3].active).toBeTruthy();
-            expect(serviceExpandSpy).toHaveBeenCalledOnceWith(stepper.steps[3]);
+            expect(serviceExpandSpy).toHaveBeenCalledTimes(1);
+            expect(serviceExpandSpy).toHaveBeenCalledWith(stepper.steps[3]);
 
             stepper.steps[4].nativeElement.focus();
             fix.detectChanges();
@@ -779,7 +785,7 @@ describe('Rendering Tests', () => {
             fix.detectChanges();
 
             expect(stepper.steps[4].active).toBeTruthy();
-            expect(serviceExpandSpy.calls.mostRecent().args[0]).toBe(stepper.steps[4]);
+            expect(vi.mocked(serviceExpandSpy).mock.lastCall[0]).toBe(stepper.steps[4]);
         }));
 
         it('should navigate to the next/previous step in horizontal orientation on Arrow Right/Left key press', fakeAsync(() => {
@@ -939,10 +945,12 @@ describe('Stepper service unit tests', () => {
     let stepper: IgxStepperComponent;
 
     beforeAll(() => {
+        // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
         jasmine.getEnv().allowRespy(true);
     });
 
     afterAll(() => {
+        // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
         jasmine.getEnv().allowRespy(false);
     });
 
@@ -1041,27 +1049,28 @@ describe('Stepper service unit tests', () => {
     });
 
     it('should expand a step by activating it and firing the step\'s activeChange event', () => {
-        spyOnProperty(stepper, 'orientation', 'get').and.returnValue(IgxStepperOrientation.Horizontal);
-        spyOnProperty(stepper, 'steps', 'get').and.returnValue(steps);
+        vi.spyOn(stepper, 'orientation', 'get').mockReturnValue(IgxStepperOrientation.Horizontal);
+        vi.spyOn(stepper, 'steps', 'get').mockReturnValue(steps);
 
         stepperService.activeStep = steps[0];
 
         steps[0].contentContainer = mockElementRef;
         steps[1].contentContainer = mockElementRef;
 
-        spyOn(steps[0].activeChange, 'emit').and.callThrough();
-        spyOn(steps[1].activeChange, 'emit').and.callThrough();
+        vi.spyOn(steps[0].activeChange, 'emit');
+        vi.spyOn(steps[1].activeChange, 'emit');
 
         stepperService.expand(steps[1]);
         expect(stepperService.activeStep).toBe(steps[1]);
         expect(steps[1].activeChange.emit).toHaveBeenCalledTimes(1);
         expect(steps[1].activeChange.emit).toHaveBeenCalledWith(true);
 
-        spyOnProperty(stepper, 'orientation', 'get').and.returnValue(IgxStepperOrientation.Vertical);
+        vi.spyOn(stepper, 'orientation', 'get').mockReturnValue(IgxStepperOrientation.Vertical);
         stepperService.expand(steps[0]);
 
         expect(stepperService.activeStep).toBe(steps[0]);
-        expect(steps[0].activeChange.emit).toHaveBeenCalledOnceWith(true);
+        expect(steps[0].activeChange.emit).toHaveBeenCalledTimes(1);
+        expect(steps[0].activeChange.emit).toHaveBeenCalledWith(true);
 
         const testValues = [null, undefined, [], {}, 'sampleString'];
 
@@ -1073,21 +1082,23 @@ describe('Stepper service unit tests', () => {
     });
 
     it('should expand a step through API by activating it and firing the step\'s activeChange event', () => {
-        spyOnProperty(stepper, 'orientation', 'get').and.returnValue(IgxStepperOrientation.Horizontal);
-        spyOnProperty(stepper, 'steps', 'get').and.returnValue(steps);
+        vi.spyOn(stepper, 'orientation', 'get').mockReturnValue(IgxStepperOrientation.Horizontal);
+        vi.spyOn(stepper, 'steps', 'get').mockReturnValue(steps);
 
         stepperService.activeStep = steps[0];
 
-        spyOn(steps[0].activeChange, 'emit');
-        spyOn(steps[1].activeChange, 'emit');
+        vi.spyOn(steps[0].activeChange, 'emit');
+        vi.spyOn(steps[1].activeChange, 'emit');
 
         stepperService.expandThroughApi(steps[1]);
 
         expect(stepperService.activeStep).toBe(steps[1]);
-        expect(steps[0].activeChange.emit).toHaveBeenCalledOnceWith(false);
-        expect(steps[1].activeChange.emit).toHaveBeenCalledOnceWith(true);
+        expect(steps[0].activeChange.emit).toHaveBeenCalledTimes(1);
+        expect(steps[0].activeChange.emit).toHaveBeenCalledWith(false);
+        expect(steps[1].activeChange.emit).toHaveBeenCalledTimes(1);
+        expect(steps[1].activeChange.emit).toHaveBeenCalledWith(true);
 
-        spyOnProperty(stepper, 'orientation', 'get').and.returnValue(IgxStepperOrientation.Vertical);
+        vi.spyOn(stepper, 'orientation', 'get').mockReturnValue(IgxStepperOrientation.Vertical);
         stepperService.expandThroughApi(steps[0]);
 
         expect(stepperService.activeStep).toBe(steps[0]);
@@ -1106,8 +1117,8 @@ describe('Stepper service unit tests', () => {
     });
 
     it('should collapse the currently active step and fire the change event', () => {
-        spyOnProperty(stepper, 'orientation', 'get').and.returnValue(IgxStepperOrientation.Horizontal);
-        spyOnProperty(stepper, 'steps', 'get').and.returnValue(steps);
+        vi.spyOn(stepper, 'orientation', 'get').mockReturnValue(IgxStepperOrientation.Horizontal);
+        vi.spyOn(stepper, 'steps', 'get').mockReturnValue(steps);
 
         stepperService.previousActiveStep = steps[0];
         stepperService.activeStep = steps[1];
@@ -1116,18 +1127,19 @@ describe('Stepper service unit tests', () => {
         expect(stepperService.collapsingSteps).toContain(steps[0]);
         expect(stepperService.collapsingSteps).not.toContain(steps[1]);
 
-        spyOn(steps[0].activeChange, 'emit');
-        spyOn(steps[1].activeChange, 'emit');
+        vi.spyOn(steps[0].activeChange, 'emit');
+        vi.spyOn(steps[1].activeChange, 'emit');
 
         stepperService.collapse(steps[0]);
 
         expect(stepperService.collapsingSteps).not.toContain(steps[0]);
         expect(stepperService.activeStep).not.toBe(steps[0]);
         expect(stepperService.activeStep).toBe(steps[1]);
-        expect(steps[0].activeChange.emit).toHaveBeenCalledOnceWith(false);
+        expect(steps[0].activeChange.emit).toHaveBeenCalledTimes(1);
+        expect(steps[0].activeChange.emit).toHaveBeenCalledWith(false);
         expect(steps[1].activeChange.emit).not.toHaveBeenCalled();
 
-        spyOnProperty(stepper, 'orientation', 'get').and.returnValue(IgxStepperOrientation.Vertical);
+        vi.spyOn(stepper, 'orientation', 'get').mockReturnValue(IgxStepperOrientation.Vertical);
 
         stepperService.previousActiveStep = steps[1];
         stepperService.activeStep = steps[0];
@@ -1142,7 +1154,9 @@ describe('Stepper service unit tests', () => {
         expect(stepperService.activeStep).not.toBe(steps[1]);
         expect(stepperService.activeStep).toBe(steps[0]);
 
-        expect(steps[1].activeChange.emit).toHaveBeenCalledOnceWith(false);
+        expect(steps[1].activeChange.emit).toHaveBeenCalledTimes(1);
+
+        expect(steps[1].activeChange.emit).toHaveBeenCalledWith(false);
         expect(steps[0].activeChange.emit).not.toHaveBeenCalledTimes(2);
 
         const testValues = [null, undefined, [], {}, 'sampleString'];
@@ -1155,7 +1169,7 @@ describe('Stepper service unit tests', () => {
     });
 
     it('should determine the steps that are marked as visited based on the active step', () => {
-        spyOnProperty(stepper, 'steps', 'get').and.returnValue(steps);
+        vi.spyOn(stepper, 'steps', 'get').mockReturnValue(steps);
         let sampleSet: Set<IgxStepComponent>;
 
         stepperService.activeStep = steps[0];
@@ -1178,15 +1192,15 @@ describe('Stepper service unit tests', () => {
     });
 
     it('should determine the steps that should be disabled in linear mode based on the validity of the active step', () => {
-        spyOnProperty(stepper, 'orientation', 'get').and.returnValue(IgxStepperOrientation.Horizontal);
-        spyOnProperty(stepper, 'steps').and.returnValue(steps);
+        vi.spyOn(stepper, 'orientation', 'get').mockReturnValue(IgxStepperOrientation.Horizontal);
+        vi.spyOn(stepper, 'steps').mockReturnValue(steps);
 
         for (const step of steps) {
-            spyOnProperty(step, 'isValid').and.returnValue(false);
+            vi.spyOn(step, 'isValid').mockReturnValue(false);
         }
-        spyOnProperty(stepper, 'linear').and.returnValue(true);
+        vi.spyOn(stepper, 'linear').mockReturnValue(true);
         stepperService.activeStep = steps[0];
-        spyOnProperty(steps[0], 'active').and.returnValue(true);
+        vi.spyOn(steps[0], 'active').mockReturnValue(true);
 
         expect(stepperService.linearDisabledSteps.size).toBe(0);
         stepperService.calculateLinearDisabledSteps();
@@ -1194,19 +1208,19 @@ describe('Stepper service unit tests', () => {
         let sampleSet = new Set<IgxStepComponent>([steps[1], steps[2], steps[3]]);
         expect(stepperService.linearDisabledSteps).toEqual(sampleSet);
 
-        spyOnProperty(steps[0], 'isValid').and.returnValue(true);
+        vi.spyOn(steps[0], 'isValid').mockReturnValue(true);
         stepperService.calculateLinearDisabledSteps();
         sampleSet = new Set<IgxStepComponent>([steps[2], steps[3]]);
         expect(stepperService.linearDisabledSteps.size).toBe(2);
         expect(stepperService.linearDisabledSteps).toEqual(sampleSet);
 
-        spyOnProperty(steps[1], 'active').and.returnValue(true);
-        spyOnProperty(steps[1], 'isValid').and.returnValue(false);
+        vi.spyOn(steps[1], 'active').mockReturnValue(true);
+        vi.spyOn(steps[1], 'isValid').mockReturnValue(false);
         stepperService.calculateLinearDisabledSteps();
         expect(stepperService.linearDisabledSteps.size).toBe(2);
         expect(stepperService.linearDisabledSteps).toEqual(sampleSet);
 
-        spyOnProperty(steps[1], 'isValid').and.returnValue(true);
+        vi.spyOn(steps[1], 'isValid').mockReturnValue(true);
         stepperService.activeStep = steps[1];
         sampleSet = new Set<IgxStepComponent>([steps[3]]);
         stepperService.calculateLinearDisabledSteps();
@@ -1214,8 +1228,8 @@ describe('Stepper service unit tests', () => {
         expect(stepperService.linearDisabledSteps).toEqual(sampleSet);
         expect(stepperService.linearDisabledSteps).toContain(steps[3]);
 
-        spyOnProperty(steps[2], 'isValid').and.returnValue(true);
-        spyOnProperty(steps[3], 'isValid').and.returnValue(true);
+        vi.spyOn(steps[2], 'isValid').mockReturnValue(true);
+        vi.spyOn(steps[3], 'isValid').mockReturnValue(true);
         stepperService.activeStep = steps[3];
         stepperService.calculateLinearDisabledSteps();
         expect(stepperService.linearDisabledSteps.size).toBe(0);
@@ -1223,9 +1237,9 @@ describe('Stepper service unit tests', () => {
     });
 
     it('should emit activating event', () => {
-        spyOnProperty(stepper, 'orientation', 'get').and.returnValue(IgxStepperOrientation.Horizontal);
-        spyOnProperty(stepper, 'steps').and.returnValue(steps);
-        const activeChangingSpy = spyOn(stepper.activeStepChanging, 'emit');
+        vi.spyOn(stepper, 'orientation', 'get').mockReturnValue(IgxStepperOrientation.Horizontal);
+        vi.spyOn(stepper, 'steps').mockReturnValue(steps);
+        const activeChangingSpy = vi.spyOn(stepper.activeStepChanging, 'emit');
         stepperService.activeStep = steps[0];
 
         let activeChangingEventArgs: any = {
@@ -1237,9 +1251,10 @@ describe('Stepper service unit tests', () => {
 
         let result: boolean = stepperService.emitActivatingEvent(steps[1]);
         expect(result).toEqual(false);
-        expect(activeChangingSpy).toHaveBeenCalledOnceWith(activeChangingEventArgs);
+        expect(activeChangingSpy).toHaveBeenCalledTimes(1);
+        expect(activeChangingSpy).toHaveBeenCalledWith(activeChangingEventArgs);
 
-        activeChangingSpy.calls.reset();
+        activeChangingSpy.mockClear();
 
         stepperService.activeStep = steps[1];
         stepperService.previousActiveStep = steps[0];
@@ -1351,13 +1366,13 @@ describe('Stepper service unit tests', () => {
     ]
 })
 export class IgxStepperSampleTestComponent {
-    @ViewChild(IgxStepperComponent) public stepper: IgxStepperComponent;
+    @ViewChild(IgxStepperComponent)
+    public stepper: IgxStepperComponent;
 
     public horizontalAnimationType: HorizontalAnimationType = 'slide';
     public verticalAnimationType: VerticalAnimationType = 'grow';
     public animationDuration = 300;
     public displayHiddenStep = false;
-
 }
 
 @Component({
@@ -1376,5 +1391,6 @@ export class IgxStepperSampleTestComponent {
     imports: [IgxStepperComponent, IgxStepComponent]
 })
 export class IgxStepperLinearComponent {
-    @ViewChild(IgxStepperComponent) public stepper: IgxStepperComponent;
+    @ViewChild(IgxStepperComponent)
+    public stepper: IgxStepperComponent;
 }

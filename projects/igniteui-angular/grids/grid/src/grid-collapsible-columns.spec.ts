@@ -1,11 +1,7 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-    CollapsibleColumnGroupTestComponent,
-    CollapsibleGroupsTemplatesTestComponent,
-    CollapsibleGroupsDynamicColComponent
-} from '../../../test-utils/grid-samples.spec';
+import { CollapsibleColumnGroupTestComponent, CollapsibleGroupsTemplatesTestComponent, CollapsibleGroupsDynamicColComponent } from '../../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { DropPosition } from 'igniteui-angular/grids/core';
@@ -58,7 +54,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             GridFunctions.verifyGroupIsExpanded(fixture, addressInf);
             GridFunctions.verifyGroupIsExpanded(fixture, contactInf, false);
 
-            spyOn(addressInf.collapsibleChange, 'emit').and.callThrough();
+            vi.spyOn(addressInf.collapsibleChange, 'emit');
             addressInf.collapsible = false;
             fixture.detectChanges();
 
@@ -108,7 +104,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         });
 
         it('verify setting expanded to a column group', () => {
-            spyOn(addressInf.expandedChange, 'emit').and.callThrough();
+            vi.spyOn(addressInf.expandedChange, 'emit');
             addressInf.expanded = false;
             fixture.detectChanges();
 
@@ -133,7 +129,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         });
 
         it('verify setting expanded to a column group form UI', () => {
-            spyOn(addressInf.expandedChange, 'emit').and.callThrough();
+            vi.spyOn(addressInf.expandedChange, 'emit');
             GridFunctions.clickGroupExpandIndicator(fixture, addressInf);
             fixture.detectChanges();
 
@@ -162,9 +158,9 @@ describe('IgxGrid - multi-column headers #grid', () => {
             countryCol.visibleWhenCollapsed = false;
             regionInf.visibleWhenCollapsed = false;
             fixture.detectChanges();
-            spyOn(countryCol.visibleWhenCollapsedChange, 'emit').and.callThrough();
-            spyOn(cityInf.visibleWhenCollapsedChange, 'emit').and.callThrough();
-            spyOn(emptyCol.visibleWhenCollapsedChange, 'emit').and.callThrough();
+            vi.spyOn(countryCol.visibleWhenCollapsedChange, 'emit');
+            vi.spyOn(cityInf.visibleWhenCollapsedChange, 'emit');
+            vi.spyOn(emptyCol.visibleWhenCollapsedChange, 'emit');
 
             GridFunctions.verifyGroupIsExpanded(fixture, countryInf);
             GridFunctions.verifyColumnsAreHidden([countryCol, emptyCol, regionInf], false, 13);
@@ -208,9 +204,9 @@ describe('IgxGrid - multi-column headers #grid', () => {
             countryInf.expanded = false;
             fixture.detectChanges();
 
-            spyOn(regionInf.visibleWhenCollapsedChange, 'emit').and.callThrough();
-            spyOn(cityInf.visibleWhenCollapsedChange, 'emit').and.callThrough();
-            spyOn(countryCol.visibleWhenCollapsedChange, 'emit').and.callThrough();
+            vi.spyOn(regionInf.visibleWhenCollapsedChange, 'emit');
+            vi.spyOn(cityInf.visibleWhenCollapsedChange, 'emit');
+            vi.spyOn(countryCol.visibleWhenCollapsedChange, 'emit');
 
             // set visibleWhenCollapsed to true
             regionInf.visibleWhenCollapsed = true;
@@ -318,14 +314,16 @@ describe('IgxGrid - multi-column headers #grid', () => {
             grid = fixture.componentInstance.grid;
         });
 
-        it('verify adding columns', () => {
-            pending('The test will work when use Angular 9');
+        it.skip('verify adding columns', () => {
+            // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
+            // pending('The test will work when use Angular 9');
+            ;
             const firstGroup = GridFunctions.getColGroup(grid, 'First');
             GridFunctions.verifyGroupIsExpanded(fixture, firstGroup, false);
             fixture.detectChanges();
 
             // add a column to first group
-            fixture.componentInstance.columnGroups[0].columns.push({ field: 'Fax', type: 'string', visibleWhenCollapsed: false  });
+            fixture.componentInstance.columnGroups[0].columns.push({ field: 'Fax', type: 'string', visibleWhenCollapsed: false });
             fixture.detectChanges();
 
             GridFunctions.verifyGroupIsExpanded(fixture, firstGroup);
@@ -334,13 +332,14 @@ describe('IgxGrid - multi-column headers #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyGroupIsExpanded(fixture, firstGroup, true, false);
-            GridFunctions.verifyColumnsAreHidden(
-                [grid.getColumnByName('ID'), grid.getColumnByName('CompanyName'), grid.getColumnByName('ContactName')], false, 7);
+            GridFunctions.verifyColumnsAreHidden([grid.getColumnByName('ID'), grid.getColumnByName('CompanyName'), grid.getColumnByName('ContactName')], false, 7);
             GridFunctions.verifyColumnIsHidden(grid.getColumnByName('Fax'), true, 7);
         });
 
-        it('verify deleting columns', () => {
-            pending('The test will work when use Angular 9');
+        it.skip('verify deleting columns', () => {
+            // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
+            // pending('The test will work when use Angular 9');
+            ;
             const secondGroup = GridFunctions.getColGroup(grid, 'Second');
             GridFunctions.verifyGroupIsExpanded(fixture, secondGroup);
             fixture.detectChanges();
@@ -360,8 +359,10 @@ describe('IgxGrid - multi-column headers #grid', () => {
             GridFunctions.verifyGroupIsExpanded(fixture, secondGroup, false);
         });
 
-        it('verify updating columns', () => {
-            pending('The test will work when use Angular 9');
+        it.skip('verify updating columns', () => {
+            // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
+            // pending('The test will work when use Angular 9');
+            ;
             const secondGroup = GridFunctions.getColGroup(grid, 'Second');
             const firstGroup = GridFunctions.getColGroup(grid, 'First');
 

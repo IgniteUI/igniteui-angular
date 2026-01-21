@@ -9,7 +9,9 @@ class MockTogglePlayer extends ToggleAnimationPlayer {
 }
 
 describe('Toggle animation component', () => {
-    const mockBuilder = jasmine.createSpyObj<any>('mockBuilder', ['build'], {});
+    const mockBuilder = {
+        build: vi.fn().mockName("mockBuilder.build")
+    };
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -24,13 +26,15 @@ describe('Toggle animation component', () => {
     describe('Unit tests', () => {
         it('Should initialize player with give settings', () => {
             const player = TestBed.inject(MockTogglePlayer);
-            const startPlayerSpy = spyOn<any>(player, 'startPlayer');
-            const mockEl = jasmine.createSpyObj('mockRef', ['focus'], {});
+            const startPlayerSpy = vi.spyOn<any>(player, 'startPlayer');
+            const mockEl = {
+                focus: vi.fn().mockName("mockRef.focus")
+            };
             player.playOpenAnimation(mockEl);
             expect(startPlayerSpy).toHaveBeenCalledWith(ANIMATION_TYPE.OPEN, mockEl, noop);
             player.playCloseAnimation(mockEl);
             expect(startPlayerSpy).toHaveBeenCalledWith(ANIMATION_TYPE.CLOSE, mockEl, noop);
-            const mockCB = () => {};
+            const mockCB = () => { };
             player.playOpenAnimation(mockEl, mockCB);
             expect(startPlayerSpy).toHaveBeenCalledWith(ANIMATION_TYPE.OPEN, mockEl, mockCB);
             player.playCloseAnimation(mockEl, mockCB);
@@ -54,19 +58,19 @@ describe('Toggle animation component', () => {
         it('Should not throw if called with a falsy animationSettings value', () => {
             const player = TestBed.inject(MockTogglePlayer);
             player.animationSettings = null;
-            const mockCb = jasmine.createSpy('mockCb');
-            const mockElement = jasmine.createSpy('element');
-            spyOn(player.openAnimationStart, 'emit');
-            spyOn(player.openAnimationDone, 'emit');
-            spyOn(player.closeAnimationStart, 'emit');
-            spyOn(player.closeAnimationDone, 'emit');
+            const mockCb = vi.fn();
+            const mockElement = vi.fn();
+            vi.spyOn(player.openAnimationStart, 'emit');
+            vi.spyOn(player.openAnimationDone, 'emit');
+            vi.spyOn(player.closeAnimationStart, 'emit');
+            vi.spyOn(player.closeAnimationDone, 'emit');
 
             player.playOpenAnimation({ nativeElement: mockElement }, mockCb);
             expect(player.openAnimationStart.emit).toHaveBeenCalledTimes(1);
             expect(player.openAnimationDone.emit).toHaveBeenCalledTimes(1);
             expect(player.closeAnimationStart.emit).toHaveBeenCalledTimes(0);
             expect(player.closeAnimationDone.emit).toHaveBeenCalledTimes(0);
-            expect(player.openAnimationStart.emit).toHaveBeenCalledBefore(player.openAnimationDone.emit);
+            expect(Math.min(...vi.mocked(player.openAnimationStart.emit).mock.invocationCallOrder)).toBeLessThan(Math.min(...vi.mocked(player.openAnimationDone.emit).mock.invocationCallOrder));
             expect(mockCb).toHaveBeenCalledTimes(1);
 
             player.playCloseAnimation({ nativeElement: mockElement }, mockCb);
@@ -74,7 +78,7 @@ describe('Toggle animation component', () => {
             expect(player.openAnimationDone.emit).toHaveBeenCalledTimes(1);
             expect(player.closeAnimationStart.emit).toHaveBeenCalledTimes(1);
             expect(player.closeAnimationDone.emit).toHaveBeenCalledTimes(1);
-            expect(player.closeAnimationStart.emit).toHaveBeenCalledBefore(player.closeAnimationDone.emit);
+            expect(Math.min(...vi.mocked(player.closeAnimationStart.emit).mock.invocationCallOrder)).toBeLessThan(Math.min(...vi.mocked(player.closeAnimationDone.emit).mock.invocationCallOrder));
 
             expect(mockCb).toHaveBeenCalledTimes(2);
         });

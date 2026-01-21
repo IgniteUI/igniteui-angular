@@ -303,12 +303,15 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             if (val) {
                 if (val.getFullYear() <= 2010) {
                     return 'Senior';
-                } else if (val.getFullYear() < 2014) {
+                }
+                else if (val.getFullYear() < 2014) {
                     return 'Middle';
-                } else {
+                }
+                else {
                     return 'Junior';
                 }
-            } else {
+            }
+            else {
                 return null;
             }
         };
@@ -588,9 +591,9 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             tick();
 
             checkboxes = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu, 'igx-tree-grid'));
-            const addToFilterCheckbox = checkboxes.splice(1,1)[0];
+            const addToFilterCheckbox = checkboxes.splice(1, 1)[0];
 
-            expect(addToFilterCheckbox.checked).toBe(false, 'incorrect checkbox state')
+            expect(addToFilterCheckbox.checked).toBe(false, 'incorrect checkbox state');
             checkboxes.forEach(ch => expect(ch.checked).toBe(true, 'incorrect checkbox state'));
         }));
 
@@ -751,7 +754,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
         it('Should not throw console error when number column with dataType string is filtered.', fakeAsync(() => {
             tGrid.columns[0].dataType = GridColumnDataType.String;
             fix.detectChanges();
-            spyOn(console, 'error');
+            vi.spyOn(console, 'error');
 
             GridFunctions.clickExcelFilterIcon(fix, 'ID');
             fix.detectChanges();
@@ -881,144 +884,142 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             expect(treeGrid.data.filter(c => c.Name === newCellValue).length).toBeGreaterThan(0);
         }));
 
-        it('should not remove an edited parent node from the filtered list if it has a child node that meets the criteria',
-            fakeAsync(() => {
-                const newCellValue = 'John McJohn';
-                treeGrid.filter('Name', 'on', IgxStringFilteringOperand.instance().condition('contains'), true);
-                tick();
+        it('should not remove an edited parent node from the filtered list if it has a child node that meets the criteria', fakeAsync(() => {
+            const newCellValue = 'John McJohn';
+            treeGrid.filter('Name', 'on', IgxStringFilteringOperand.instance().condition('contains'), true);
+            tick();
 
-                // modify a parent node which has a child that matches the filtering condition
-                const targetCell = treeGrid.getCellByColumn(0, 'Name');
-                targetCell.update(newCellValue);
-                tick();
-                fix.detectChanges();
+            // modify a parent node which has a child that matches the filtering condition
+            const targetCell = treeGrid.getCellByColumn(0, 'Name');
+            targetCell.update(newCellValue);
+            tick();
+            fix.detectChanges();
 
-                // verify that the parent node is still in the filtered list
-                expect(treeGrid.filteredData.filter(p => p.Name === targetCell.value).length).toBeGreaterThan(0);
+            // verify that the parent node is still in the filtered list
+            expect(treeGrid.filteredData.filter(p => p.Name === targetCell.value).length).toBeGreaterThan(0);
 
-                treeGrid.clearFilter();
-                tick();
-                fix.detectChanges();
+            treeGrid.clearFilter();
+            tick();
+            fix.detectChanges();
 
-                // verify the changes were preserved after the filtering is removed
-                expect(treeGrid.data.filter(p => p.Name === targetCell.value).length).toBeGreaterThan(0);
-            }));
+            // verify the changes were preserved after the filtering is removed
+            expect(treeGrid.data.filter(p => p.Name === targetCell.value).length).toBeGreaterThan(0);
+        }));
 
         it(`should remove the parent node from the filtered list if
-                its only matching child is modified and does not match the filtering condition anymore`,
-            fakeAsync(() => {
-                const newCellValue = 'John McJohn';
-                const filterValue = 'Langdon';
-                treeGrid.filter('Name', filterValue, IgxStringFilteringOperand.instance().condition('contains'), true);
-                tick();
+                its only matching child is modified and does not match the filtering condition anymore`, fakeAsync(() => {
+            const newCellValue = 'John McJohn';
+            const filterValue = 'Langdon';
+            treeGrid.filter('Name', filterValue, IgxStringFilteringOperand.instance().condition('contains'), true);
+            tick();
 
-                // modify the first child node that meets the filtering condition
-                const targetCell = treeGrid.getCellByColumn(1, 'Name');
-                targetCell.update(newCellValue);
-                tick();
-                fix.detectChanges();
+            // modify the first child node that meets the filtering condition
+            const targetCell = treeGrid.getCellByColumn(1, 'Name');
+            targetCell.update(newCellValue);
+            tick();
+            fix.detectChanges();
 
-                // verify that the parent node is no longer in the filtered list
-                expect(grid.filteredData).toBeFalsy();
+            // verify that the parent node is no longer in the filtered list
+            expect(grid.filteredData).toBeFalsy();
 
-                treeGrid.clearFilter();
-                tick();
-                fix.detectChanges();
+            treeGrid.clearFilter();
+            tick();
+            fix.detectChanges();
 
-                // verify that there is a parent which contains the updated child node
-                const filteredParentNodes = treeGrid.data.filter(n => n.Employees.filter(e => e.Name === newCellValue).length !== 0);
+            // verify that there is a parent which contains the updated child node
+            const filteredParentNodes = treeGrid.data.filter(n => n.Employees.filter(e => e.Name === newCellValue).length !== 0);
 
-                // if there are any parent nodes in this collection then the changes were preserved
-                expect(filteredParentNodes.length).toBeGreaterThan(0);
-            }));
+            // if there are any parent nodes in this collection then the changes were preserved
+            expect(filteredParentNodes.length).toBeGreaterThan(0);
+        }));
 
-        it('should not remove a parent node from the filtered list if it has at least one child node which matches the filtering condition',
-            fakeAsync(() => {
-                const newCellValue = 'Peter Peterson';
-                treeGrid.filter('Name', 'h', IgxStringFilteringOperand.instance().condition('contains'), true);
-                tick();
+        it('should not remove a parent node from the filtered list if it has at least one child node which matches the filtering condition', fakeAsync(() => {
+            const newCellValue = 'Peter Peterson';
+            treeGrid.filter('Name', 'h', IgxStringFilteringOperand.instance().condition('contains'), true);
+            tick();
 
-                // modify the first child node which meets the filtering condition
-                const targetCell = treeGrid.getCellByColumn(1, 'Name');
-                targetCell.update(newCellValue);
-                tick();
-                fix.detectChanges();
+            // modify the first child node which meets the filtering condition
+            const targetCell = treeGrid.getCellByColumn(1, 'Name');
+            targetCell.update(newCellValue);
+            tick();
+            fix.detectChanges();
 
-                // check if the edited child row is removed
-                expect(treeGrid.filteredData.filter(c => c.Name === newCellValue).length).toBe(0);
+            // check if the edited child row is removed
+            expect(treeGrid.filteredData.filter(c => c.Name === newCellValue).length).toBe(0);
 
-                // check if the parent which contains the edited row is not removed
-                expect(treeGrid.filteredData.filter(p => p.Name === targetCell.row.parent.data.Name).length).toBeGreaterThan(0);
+            // check if the parent which contains the edited row is not removed
+            expect(treeGrid.filteredData.filter(p => p.Name === targetCell.row.parent.data.Name).length).toBeGreaterThan(0);
 
-                treeGrid.clearFilter();
-                tick();
-                fix.detectChanges();
+            treeGrid.clearFilter();
+            tick();
+            fix.detectChanges();
 
-                // verify that there is a parent which contains the updated child node
-                const filteredParentNodes = treeGrid.data.filter(n => n.Employees.filter(e => e.Name === newCellValue).length !== 0);
+            // verify that there is a parent which contains the updated child node
+            const filteredParentNodes = treeGrid.data.filter(n => n.Employees.filter(e => e.Name === newCellValue).length !== 0);
 
-                // if there are any parent nodes in this collection then the changes were preserved
-                expect(filteredParentNodes.length).toBeGreaterThan(0);
-            }));
+            // if there are any parent nodes in this collection then the changes were preserved
+            expect(filteredParentNodes.length).toBeGreaterThan(0);
+        }));
 
-            it('should be able to apply custom filter strategy', fakeAsync(() => {
-                expect(treeGrid.filterStrategy).toBeDefined();
-                treeGrid.filter('Name', 'd', IgxStringFilteringOperand.instance().condition('contains'), true);
-                tick();
-                fix.detectChanges();
+        it('should be able to apply custom filter strategy', fakeAsync(() => {
+            expect(treeGrid.filterStrategy).toBeDefined();
+            treeGrid.filter('Name', 'd', IgxStringFilteringOperand.instance().condition('contains'), true);
+            tick();
+            fix.detectChanges();
 
-                expect(treeGrid.rowList.length).toBe(9);
+            expect(treeGrid.rowList.length).toBe(9);
 
-                treeGrid.clearFilter();
-                fix.detectChanges();
+            treeGrid.clearFilter();
+            fix.detectChanges();
 
-                const customFilter = new CustomTreeGridFilterStrategy();
-                // apply the same filter condition but with custu
-                treeGrid.filterStrategy = customFilter;
-                fix.detectChanges();
+            const customFilter = new CustomTreeGridFilterStrategy();
+            // apply the same filter condition but with custu
+            treeGrid.filterStrategy = customFilter;
+            fix.detectChanges();
 
-                treeGrid.filter('Name', 'd', IgxStringFilteringOperand.instance().condition('contains'), true);
-                tick();
-                fix.detectChanges();
+            treeGrid.filter('Name', 'd', IgxStringFilteringOperand.instance().condition('contains'), true);
+            tick();
+            fix.detectChanges();
 
-                expect(treeGrid.rowList.length).toBe(4);
-                expect(treeGrid.filteredData.map(rec => rec.ID)).toEqual([ 847, 225, 663, 141]);
-            }));
+            expect(treeGrid.rowList.length).toBe(4);
+            expect(treeGrid.filteredData.map(rec => rec.ID)).toEqual([847, 225, 663, 141]);
+        }));
 
-            it('should display only the filtered records when using TreeGridMatchingRecordsOnlyFilteringStrategy', fakeAsync(() => {
-                expect(treeGrid.filterStrategy).toBeDefined();
-                treeGrid.filter('Name', 'Trevor', IgxStringFilteringOperand.instance().condition('contains'), true);
-                tick();
-                fix.detectChanges();
+        it('should display only the filtered records when using TreeGridMatchingRecordsOnlyFilteringStrategy', fakeAsync(() => {
+            expect(treeGrid.filterStrategy).toBeDefined();
+            treeGrid.filter('Name', 'Trevor', IgxStringFilteringOperand.instance().condition('contains'), true);
+            tick();
+            fix.detectChanges();
 
-                expect(treeGrid.rowList.length).toBe(3);
+            expect(treeGrid.rowList.length).toBe(3);
 
-                const matchingRecordsOnlyStrategy = new TreeGridMatchingRecordsOnlyFilteringStrategy();
-                treeGrid.filterStrategy = matchingRecordsOnlyStrategy;
-                fix.detectChanges();
+            const matchingRecordsOnlyStrategy = new TreeGridMatchingRecordsOnlyFilteringStrategy();
+            treeGrid.filterStrategy = matchingRecordsOnlyStrategy;
+            fix.detectChanges();
 
-                treeGrid.filter('Name', 'Trevor', IgxStringFilteringOperand.instance().condition('contains'), true);
-                tick();
-                fix.detectChanges();
+            treeGrid.filter('Name', 'Trevor', IgxStringFilteringOperand.instance().condition('contains'), true);
+            tick();
+            fix.detectChanges();
 
-                expect(treeGrid.rowList.length).toBe(1);
-                expect(treeGrid.filteredData.map(rec => rec.ID)).toEqual([141]);
-            }));
+            expect(treeGrid.rowList.length).toBe(1);
+            expect(treeGrid.filteredData.map(rec => rec.ID)).toEqual([141]);
+        }));
     });
-    class CustomTreeGridFilterStrategy  extends FilteringStrategy {
+    class CustomTreeGridFilterStrategy extends FilteringStrategy {
 
-        public override filter(data: [], expressionsTree): any[] {
-                const result = [];
-                if (!expressionsTree || !expressionsTree.filteringOperands ||
-                    expressionsTree.filteringOperands.length === 0 || !data.length) {
-                    return data;
-                }
-                data.forEach((rec: any) => {
-                    if (this.matchRecord(rec.data, expressionsTree)) {
-                        result.push(rec);
-                    }
-                });
-                return result;
+        public override filter(data: [
+        ], expressionsTree): any[] {
+            const result = [];
+            if (!expressionsTree || !expressionsTree.filteringOperands ||
+                expressionsTree.filteringOperands.length === 0 || !data.length) {
+                return data;
             }
+            data.forEach((rec: any) => {
+                if (this.matchRecord(rec.data, expressionsTree)) {
+                    result.push(rec);
+                }
+            });
+            return result;
+        }
     }
 });
