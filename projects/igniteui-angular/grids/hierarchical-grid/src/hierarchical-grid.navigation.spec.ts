@@ -964,6 +964,9 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
     describe('IgxHierarchicalGrid Navigation API #hGrid', () => {
         beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 1 }]
+            });
             fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -1014,16 +1017,16 @@ describe('IgxHierarchicalGrid Navigation', () => {
             };
 
             hierarchicalGrid.navigation.navigateToChildGrid([targetRoot, targetNested], () => {
-                fixture.detectChanges();
+            fixture.detectChanges();
                 const childGrid =  hierarchicalGrid.gridAPI.getChildGrid([targetRoot]).nativeElement;
-                expect(childGrid).not.toBe(undefined);
+            expect(childGrid).not.toBe(undefined);
                 const childGridNested =  hierarchicalGrid.gridAPI.getChildGrid([targetRoot, targetNested]).nativeElement;
-                expect(childGridNested).not.toBe(undefined);
+            expect(childGridNested).not.toBe(undefined);
 
-                const parentBottom = childGrid.getBoundingClientRect().bottom;
-                const parentTop = childGrid.getBoundingClientRect().top;
-                // check it's in view within its parent
-                expect(childGridNested.getBoundingClientRect().bottom <= parentBottom && childGridNested.getBoundingClientRect().top >= parentTop);
+            const parentBottom = childGrid.getBoundingClientRect().bottom;
+            const parentTop = childGrid.getBoundingClientRect().top;
+            // check it's in view within its parent
+            expect(childGridNested.getBoundingClientRect().bottom <= parentBottom && childGridNested.getBoundingClientRect().top >= parentTop);
                 done();
             });
         });
